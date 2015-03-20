@@ -53,7 +53,7 @@
                     </div>
 
                 </div>
-                <div class="panel panel-default ">
+                <div class="panel panel-default" >
                     <div id="headingTwo" role="tab" class="panel-heading">
                         <h4 class="panel-title">
                             <a aria-controls="collapseTwo" aria-expanded="true" href="#collapseTwo"
@@ -66,10 +66,10 @@
                          aria-expanded="true">
                         <div class="panel-body">
                             <ul>
-                                <li><a href="../../Trendanalysis/Visitor.html">实时访客</a></li>
-                                <li  ><a href="../../Trendanalysis/tongji.html">今日统计</a></li>
-                                <li><a href="../../Trendanalysis/Yesterday.html">昨日统计</a></li>
-                                <li><a href="../../Trendanalysis/Month.html">最近30天</a></li>
+                                <li><a href="../../trend/Visitor.html">实时访客</a></li>
+                                <li><a href="../../trend/tongji.html">今日统计</a></li>
+                                <li ><a href="../../trend/Yesterday.html">昨日统计</a></li>
+                                <li><a href="../../trend/Month.html">最近30天</a></li>
                             </ul>
                         </div>
                     </div>
@@ -87,15 +87,15 @@
                          aria-expanded="false">
                         <div class="panel-body">
                             <ul>
-                                <li><a href="../../Source/Source.html">全部来源</a></li>
-                                <li><a href="../../Source/Searchengine.html">搜索引擎</a></li>
-                                <li><a href="../../Source/Searchterm.html">搜索词</a></li>
-                                <li><a href="../../Source/Externallinks.html">外部链接</a></li>
+                                <li><a href="../../source/Source.html">全部来源</a></li>
+                                <li><a href="../../source/Searchengine.html">搜索引擎</a></li>
+                                <li><a href="../../source/Searchterm.html">搜索词</a></li>
+                                <li><a href="../../source/Externallinks.html">外部链接</a></li>
                             </ul>
                         </div>
                     </div>
                 </div>
-                <div class="panel panel-default current">
+                <div class="panel panel-default  current">
                     <div id="headingFive" role="tab" class="panel-heading">
                         <h4 class="panel-title">
                             <a aria-controls="collapseFive" aria-expanded="false" href="#collapseFive"
@@ -129,10 +129,10 @@
                          aria-expanded="false">
                         <div class="panel-body">
                             <ul>
-                                <li><a href="../../Visitorsanalysis/VisitorMap.html">访客地图</a></li>
-                                <li><a href="../../Visitorsanalysis/Equipment.html">设备环境</a></li>
-                                <li><a href="../../Visitorsanalysis/Novisitors.html">新老访客</a></li>
-                                <li><a href="../../Visitorsanalysis/Visitorfeature.html">访客特征</a></li>
+                                <li><a href="../../visitor/VisitorMap.html">访客地图</a></li>
+                                <li><a href="../../visitor/Equipment.html">设备环境</a></li>
+                                <li><a href="../../visitor/Novisitors.html">新老访客</a></li>
+                                <li><a href="../../visitor/Visitorfeature.html">访客特征</a></li>
                             </ul>
                         </div>
                     </div>
@@ -143,10 +143,11 @@
             <div class="middle_containers">
                 <div class="date_select">
                     <div aria-label="First group" role="group" class="btn-group fl">
-                        <button class="btn btn-default" type="button">指标概览 </button>
-                        <button class="btn btn-default " type="button"> 页面价值分析</button>
-                        <button class="btn btn-default " type="button">入口页分析 </button>
-                        <button class="btn btn-default current" type="button">退出页分析 </button>
+                        <button class="btn btn-default current" type="button"><a href="../Entrancepage.html">指标概览</a>  </button>
+                        <button class="btn btn-default " type="button"> <a href="Flowanalysis.html">流量分析</a></button>
+                        <button class="btn btn-default " type="button"> <a href="Newvisitors.html">新访客分析</a> </button>
+                        <button class="btn btn-default " type="button"> <a href="Attractivenessanalysis.html">吸引力分析</a> </button>
+                        <button class="btn btn-default " type="button"> <a href="Analysistransformation.html">转化分析</a> </button>
                     </div>
                     <div aria-label="First group" role="group" class="btn-group fl">
                         <button class="btn btn-default disabled" type="button">时间</button>
@@ -180,27 +181,106 @@
                     </div>
                 </div>
                 <div class="my_concent">
-                    <div class="date_show dateshow2 dateshow_width ">
+                    <div class="date_show">
                         <ul>
                             <li class="date_first"><h4>浏览量(PV)</h4><span>34</span></li>
-                            <li class="date_third"><h4>访客数(UV) </h4><span>100%</span></li>
-                            <li class="date_four"><h4>退出页次数 </h4><span>2,574</span></li>
-                            <li class="date_four"><h4>退出率</h4><span>2,574</span></li>
+                            <li class="date_secend"><h4>访客数(UV) </h4><span>100%</span></li>
+                            <li class="date_third"><h4>IP数</h4><span>2,574</span></li>
+                            <li class="date_four"><h4>入口页次数 (UV)</h4><span>90</span></li>
+                            <li class="date_five"><h4>贡献下游浏览量 </h4><span>90</span></li>
+                            <li class="date_last"><h4>退出页次数 </h4><span>00:02:34</span></li>
                         </ul>
-                    </div>
-                    <div class="index_chart">
 
                     </div>
                     <div class="table_content">
                         <ul role="tablist" class="nav nav-tabs" id="myTab">
                             <li class="active" role="presentation"><a aria-expanded="true" aria-controls="home"
                                                                       data-toggle="tab" role="tab" id="home-tab"
-                                                                      href="#home">高级筛选</a></li>
-
+                                                                      href="#home">自定义指标</a></li>
+                            <li role="presentation" class=""><a aria-controls="profile" data-toggle="tab"
+                                                                id="profile-tab" role="tab" href="#profile"
+                                                                aria-expanded="false">高级筛选</a></li>
 
                         </ul>
                         <div class="tab-content" id="myTabContent">
                             <div aria-labelledby="home-tab" id="home" class="tab-pane fade active in" role="tabpanel">
+                                <div class="custom_title">
+                                    <div class="chart_top">
+                                        <ul>
+                                            <li><a href="#">系统默认指标</a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="chart_top">
+                                        <ul>
+                                            <li><span>网站基础指标 :</span></li>
+                                            <li><input type="checkbox" checked="checked" name="radio1"/>
+                                                <label>浏览量(PV)</label></li>
+                                            <li><input type="checkbox" name="radio1"/> <label>访问次数</label></li>
+                                            <li><input type="checkbox" name="radio1"/> <label>访客数(UV)</label></li>
+                                            <li><input type="checkbox" name="radio1"/> <label>新访客数</label></li>
+                                            <li><input type="checkbox" name="radio1"/> <label>新访客比率</label></li>
+                                            <li><input type="checkbox" name="radio1"/> <label>IP数</label></li>
+                                        </ul>
+                                    </div>
+                                    <div class="chart_top">
+                                        <ul>
+                                            <li><span>流量质量指标:</span></li>
+                                            <li><input type="checkbox" checked="checked" name="radio1"/>
+                                                <label>跳出率</label></li>
+                                            <li><input type="checkbox" name="radio1"/> <label>平均访问时长</label></li>
+                                            <li><input type="checkbox" name="radio1"/> <label>平均访问页数</label></li>
+                                        </ul>
+                                    </div>
+                                    <div class="chart_top">
+                                        <ul>
+                                            <li><span>转化指标:</span></li>
+                                            <li><input type="checkbox" checked="checked" name="radio1"/>
+                                                <label>转化次数</label></li>
+                                            <li><input type="checkbox" name="radio1"/> <label>转化率</label></li>
+                                        </ul>
+                                    </div>
+                                    <div class="chart_top">
+                                        <button class="btn btn-primary" type="button">确定</button>
+                                        * 最多只能勾选两项
+                                    </div>
+
+                                </div>
+                                <div class="custom_secendtitle">
+                                    <div class="custom_select">
+                                        <div class="input-group fl">
+                                            <input type="text" placeholder="关键词/搜索词…" class="form-control fl">
+                                       <span class="input-group-btn fl">
+                                 <button type="button" class="btn btn-default"><span aria-hidden="true" class="glyphicon glyphicon-search"></span></button>
+                                   </span>
+                                        </div>
+                                        <b></b>
+                                        转化目标
+                                        <div role="group" class="btn-group">
+                                            <button aria-expanded="false" data-toggle="dropdown"
+                                                    class="btn btn-default dropdown-toggle" type="button"
+                                                    id="btnGroupDrop">
+                                                全部页面目标
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
+                                                <li><a href="#">全部页面目标</a></li>
+                                                <li><a href="#">公告</a></li>
+                                                <li><a href="#">全部事件目标</a></li>
+                                                <li><a href="#">完整下载</a></li>
+                                                <li><a href="#">在线下载</a></li>
+                                                <li><a href="#">时长目标</a></li>
+                                                <li><a href="#">访问页数目标</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="custom_table">
+                                       <table id="Indexoverview"  class="table table-hover" >
+                                       </table>
+                                        <div id="pager"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div aria-labelledby="profile-tab" id="profile" class="tab-pane fade" role="tabpanel">
                                 <div class="custom_title">
                                     <div class="chart_top2">
                                         <ul>
@@ -220,6 +300,8 @@
                                             <li><a href="#">Google</a></li>
                                         </ul>
                                     </div>
+
+
                                 </div>
                                 <div class="custom_secendtitle">
                                     <div class="custom_select">
@@ -231,9 +313,9 @@
                                         </div>
                                     </div>
                                     <div class="custom_table">
-                                        <table id="vister"  class="table table-hover" >
+                                        <table id="overview_table"  class="table table-hover" >
                                         </table>
-                                        <div id="pager"></div>
+                                        <div id="pager2"></div>
                                     </div>
                                 </div>
                             </div>

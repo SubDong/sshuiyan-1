@@ -66,10 +66,10 @@
                          aria-expanded="true">
                         <div class="panel-body">
                             <ul>
-                                <li><a href="../Trendanalysis/Visitor.html">实时访客</a></li>
-                                <li><a href="../Trendanalysis/tongji.html">今日统计</a></li>
-                                <li><a href="../Trendanalysis/Yesterday.html">昨日统计</a></li>
-                                <li><a href="../Trendanalysis/Month.html">最近30天</a></li>
+                                <li><a href="../trend/Visitor.html">实时访客</a></li>
+                                <li><a href="../trend/tongji.html">今日统计</a></li>
+                                <li><a href="../trend/Yesterday.html">昨日统计</a></li>
+                                <li><a href="../trend/Month.html">最近30天</a></li>
                             </ul>
                         </div>
                     </div>
@@ -87,10 +87,10 @@
                          aria-expanded="false">
                         <div class="panel-body">
                             <ul>
-                                <li><a href="../Source/Source.html">全部来源</a></li>
-                                <li><a href="../Source/Searchengine.html">搜索引擎</a></li>
-                                <li><a href="../Source/Searchterm.html">搜索词</a></li>
-                                <li><a href="../Source/Externallinks.html">外部链接</a></li>
+                                <li><a href="../source/Source.html">全部来源</a></li>
+                                <li><a href="../source/Searchengine.html">搜索引擎</a></li>
+                                <li><a href="../source/Searchterm.html">搜索词</a></li>
+                                <li><a href="../source/Externallinks.html">外部链接</a></li>
                             </ul>
                         </div>
                     </div>
@@ -108,9 +108,9 @@
                          aria-expanded="false">
                         <div class="panel-body">
                             <ul>
-                                <li><a href="../Pageanalysis/Visitedpages.html">受访页面</a></li>
-                                <li ><a href="../Pageanalysis/Entrancepage.html">入口页面</a></li>
-                                <li ><a href="../Pageanalysis/pagetitle.html">页面标题</a></li>
+                                <li><a href="../page/Visitedpages.html">受访页面</a></li>
+                                <li ><a href="../page/Entrancepage.html">入口页面</a></li>
+                                <li ><a href="../page/pagetitle.html">页面标题</a></li>
                                 <li><a href="#">离站链接</a></li>
                             </ul>
                         </div>
@@ -129,9 +129,9 @@
                          aria-expanded="false">
                         <div class="panel-body">
                             <ul>
-                                <li class="current"><a href="VisitorMap.html">访客地图</a></li>
+                                <li><a href="VisitorMap.html">访客地图</a></li>
                                 <li><a href="Equipment.html">设备环境</a></li>
-                                <li><a href="Novisitors.html">新老访客</a></li>
+                                <li class="current"><a href="Novisitors.html">新老访客</a></li>
                                 <li><a href="Visitorfeature.html">访客特征</a></li>
                             </ul>
                         </div>
@@ -142,9 +142,16 @@
         <div class="middle ">
             <div class="middle_containers">
                 <div class="date_select">
-                    <div aria-label="First group" role="group" class="btn-group fl">
-                        <button class="btn btn-default" type="button">按国家 </button>
-                        <button class="btn btn-default current" type="button">按省</button>
+                    <div role="group" class="btn-group fl">
+                        <button aria-expanded="false" data-toggle="dropdown" class="btn btn-default dropdown-toggle"
+                                type="button" id="btnGroupDrop7">
+                            客户端属性：浏览器
+                            <span class="caret"></span>
+                        </button>
+                        <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
+                            <li><a href="#"></a></li>
+                            <li><a href="#">导出</a></li>
+                        </ul>
                     </div>
                     <div aria-label="First group" role="group" class="btn-group fl">
                         <button class="btn btn-default disabled" type="button">时间</button>
@@ -160,14 +167,6 @@
                         <button class="btn btn-default" type="button"><input type="checkbox" checked="checked"/>
                             与其他时间段对比
                         </button>
-                        <button class="btn btn-default current" type="button"><input type="checkbox"/>前一日</button>
-                        <button class="btn btn-default" type="button"><input type="checkbox"/>上周同期</button>
-                    </div>
-                    <div aria-label="First group" role="group" class="btn-group fl">
-                        <button class="btn btn-default" type="button">按时</button>
-                        <button class="btn btn-default current" type="button">按日</button>
-                        <button class="btn btn-default" type="button">按周</button>
-                        <button class="btn btn-default" type="button">按月</button>
                     </div>
                     <div class="fr">
                         <button class="btn btn-default" type="button"><span aria-hidden="true"
@@ -187,38 +186,221 @@
                     </div>
                 </div>
                 <div class="my_concent">
-                    <div class="date_show dateshow2">
-                        <ul>
-                            <li class="date_first"><h4>浏览量(PV)</h4><span>34</span></li>
-                            <li class="date_secend"><h4>访客数(UV)</h4><span>100%</span></li>
-                            <li class="date_four"><h4>IP数</h4><span>2,574</span></li>
-                            <li class="date_four"><h4>跳出率</h4><span>88.24%</span></li>
-                            <li class="date_four"><h4>平均访问时长</h4><span>90</span></li>
-                        </ul>
-                    </div>
-                    <div class="index_chart">
-                        <div class="chart_top">
-                            <ul>
-                                <li><label>指标：</label></li>
-                                <li><input type="checkbox" checked="checked" name="radio1"/> <label>浏览量(PV)</label></li>
-                                <li><input type="checkbox" checked="checked" name="radio1"/> <label>访问次数</label></li>
-                                <li><input type="checkbox" name="radio1"/> <label>访客数(UV)</label></li>
-                                <li><input type="checkbox" name="radio1"/> <label>新访客数</label></li>
-                                <li><input type="checkbox" name="radio1"/> <label>IP数</label></li>
-                                <li><input type="checkbox" name="radio1"/> <label>转化次数</label></li>
-                                <li class="disabled">* 最多只能勾选1项</li>
-                            </ul>
+                    <div class="novisitor">
+                        <div class="newvisitor fl">
+                          <div class="nesvisitor_top">
+                              <p>新访客</p>
+                              <div class="nesvisitor_img">
+                                  <div>
+                                      <span><img src="../img/new_people.png"></span>
+                                      <span>100</span>
+                                  </div>
+                              </div>
+                              <div class="nesvisitor_text">
+                                  <ul>
+                                      <li><span>浏览量:</span><a>21</a></li>
+                                      <li><span>访客数:</span><a>22</a></li>
+                                      <li><span>跳出率:</span><a>22%</a></li>
+                                      <li><span>平均访问时长:</span><a>00:00：12</a></li>
+                                      <li><span>平均访问页数:</span><a>12</a></li>
+                                  </ul>
+
+                              </div>
+                              <div class="newvisitor_table">
+                                  <h4>访问来源网站TOP5</h4>
+                                  <table class="table table-hover">
+                                      <thead>
+                                      <tr>
+                                          <th>排名</th>
+                                          <th>来源网站</th>
+                                          <th>浏览量(PV)</th>
+                                      </tr>
+                                      </thead>
+                                      <tbody>
+                                      <tr>
+                                          <td>1</td>
+                                          <td>www.baidu.com</td>
+                                          <td>1,141</td>
+
+                                      </tr>
+                                      <tr>
+                                          <td>2</td>
+                                          <td>www.baidu.com</td>
+                                          <td>1,141</td>
+                                      </tr>
+                                      <tr>
+                                          <td>3</td>
+                                          <td>www.baidu.com</td>
+                                          <td>1,141</td>
+                                      </tr>
+                                      <tr>
+                                          <td>4</td>
+                                          <td>www.baidu.com</td>
+                                          <td>1,141</td>
+
+                                      </tr>
+                                      <tr>
+                                          <td>5</td>
+                                          <td>www.baidu.com</td>
+                                          <td>1,141</td>
+                                      </tr>
+                                      </tbody>
+                                  </table>
+
+                              </div>
+                              <div class="newvisitor_table">
+                                  <h4>访问入口页TOP5</h4>
+                                  <table class="table table-hover">
+                                      <thead>
+                                      <tr>
+                                          <th>排名</th>
+                                          <th>来源网站</th>
+                                          <th>浏览量(PV)</th>
+                                      </tr>
+                                      </thead>
+                                      <tbody>
+                                      <tr>
+                                          <td>1</td>
+                                          <td>www.baidu.com</td>
+                                          <td>1,141</td>
+
+                                      </tr>
+                                      <tr>
+                                          <td>2</td>
+                                          <td>www.baidu.com</td>
+                                          <td>1,141</td>
+                                      </tr>
+                                      <tr>
+                                          <td>3</td>
+                                          <td>www.baidu.com</td>
+                                          <td>1,141</td>
+                                      </tr>
+                                      <tr>
+                                          <td>4</td>
+                                          <td>www.baidu.com</td>
+                                          <td>1,141</td>
+
+                                      </tr>
+                                      <tr>
+                                          <td>5</td>
+                                          <td>www.baidu.com</td>
+                                          <td>1,141</td>
+                                      </tr>
+                                      </tbody>
+                                  </table>
+
+                              </div>
+                          </div>
                         </div>
-                        <div id="VistorMap_charts" style="width:80%;height:400px;"></div>
+                        <div class="oldvisitior fl">
+                            <p>老访客</p>
+                            <div class="nesvisitor_img">
+                                <div>
+                                    <span><img src="../img/old_people.png"></span>
+                                    <span>100</span>
+                                </div>
+                            </div>
+                            <div class="nesvisitor_text">
+                                <ul>
+                                    <li><span>浏览量:</span><a>21</a></li>
+                                    <li><span>访客数:</span><a>22</a></li>
+                                    <li><span>跳出率:</span><a>22%</a></li>
+                                    <li><span>平均访问时长:</span><a>00:00：12</a></li>
+                                    <li><span>平均访问页数:</span><a>12</a></li>
+                                </ul>
+
+                            </div>
+                            <div class="newvisitor_table">
+                                <h4>访问来源网站TOP5</h4>
+                                <table class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>排名</th>
+                                        <th>来源网站</th>
+                                        <th>浏览量(PV)</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>www.baidu.com</td>
+                                        <td>1,141</td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>www.baidu.com</td>
+                                        <td>1,141</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>www.baidu.com</td>
+                                        <td>1,141</td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td>www.baidu.com</td>
+                                        <td>1,141</td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>5</td>
+                                        <td>www.baidu.com</td>
+                                        <td>1,141</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                            <div class="newvisitor_table">
+                                <h4>访问入口页TOP5</h4>
+                                <table class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>排名</th>
+                                        <th>来源网站</th>
+                                        <th>浏览量(PV)</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>www.baidu.com</td>
+                                        <td>1,141</td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>www.baidu.com</td>
+                                        <td>1,141</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>www.baidu.com</td>
+                                        <td>1,141</td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td>www.baidu.com</td>
+                                        <td>1,141</td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>5</td>
+                                        <td>www.baidu.com</td>
+                                        <td>1,141</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
                     </div>
                     <div class="table_content">
                         <ul role="tablist" class="nav nav-tabs" id="myTab">
                             <li class="active" role="presentation"><a aria-expanded="true" aria-controls="home"
                                                                       data-toggle="tab" role="tab" id="home-tab"
                                                                       href="#home">自定义指标</a></li>
-                            <li role="presentation" class=""><a aria-controls="profile" data-toggle="tab"
-                                                                id="profile-tab" role="tab" href="#profile"
-                                                                aria-expanded="false">高级筛选</a></li>
 
                         </ul>
                         <div class="tab-content" id="myTabContent">
@@ -287,112 +469,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <div aria-labelledby="profile-tab" id="profile" class="tab-pane fade" role="tabpanel">
-                                <div class="custom_title">
-                                    <div class="chart_top2">
-                                        <ul>
-                                            <li><span>来源过滤 :</span></li>
-                                            <li><div role="group" class="btn-group">
-                                                <button aria-expanded="false" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" id="btnGroupDrop4">
-                                                    全部
-                                                    <span class="caret"></span>
-                                                </button>
-                                                <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
-                                                    <li><a href="#">百度</a></li>
-                                                    <li><a href="#">Google</a></li>
-                                                </ul>
-                                            </div></li>
-                                            <li><a href="#">百度</a></li>
-                                            <li><a href="#">Google</a></li>
-                                        </ul>
-                                    </div>
-                                    <div class="chart_top2">
-                                        <ul>
-                                            <li><span>设备过滤:</span></li>
-                                            <li><input type="radio" checked="checked" name="radio1"/>
-                                                <label>全部</label></li>
-                                            <li><input type="radio" name="radio1"/> <label>计算机</label></li>
-                                            <li><input type="radio" name="radio1"/> <label>移动设备</label></li>
-                                        </ul>
-                                    </div>
-                                    <div class="chart_top2">
-                                        <ul>
-                                            <li><span>地域过滤:</span></li>
-                                            <li> <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
-                                                <div role="group" class="btn-group">
-                                                    <button aria-expanded="false" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" id="btnGroupDrop1">
-                                                        大洲
-                                                        <span class="caret"></span>
-                                                    </button>
-                                                    <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
-                                                        <li><a href="#">欧洲</a></li>
-                                                        <li><a href="#">南美洲</a></li>
-                                                    </ul>
-                                                </div>
-                                                <div role="group" class="btn-group">
-                                                    <button aria-expanded="false" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" id="btnGroupDrop5">
-                                                        国家
-                                                        <span class="caret"></span>
-                                                    </button>
-                                                    <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
-                                                        <li><a href="#">印度</a></li>
-                                                        <li><a href="#">俄罗斯</a></li>
-                                                    </ul>
-                                                </div>
-
-                                                <div role="group" class="btn-group">
-                                                    <button aria-expanded="false" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" id="btnGroupDrop6">
-                                                        城市
-                                                        <span class="caret"></span>
-                                                    </button>
-                                                    <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
-                                                        <li><a href="#"> 成都</a></li>
-                                                        <li><a href="#">成都 </a></li>
-                                                        <li><a href="#">成都</a></li>
-                                                        <li><a href="#">成都</a></li>
-                                                        <li><a href="#">成都</a></li>
-                                                        <li><a href="#">成都</a></li>
-                                                        <li><a href="#">转化次数</a></li>
-
-                                                    </ul>
-                                                </div>
-
-                                            </div></li>
-                                            <li><a href="#">北京</a></li>
-                                            <li><a href="#">上海</a></li>
-                                            <li><a href="#">上海</a></li>
-
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="custom_secendtitle">
-                                    <div class="custom_select">
-                                        转化目标
-                                        <div role="group" class="btn-group">
-                                            <button aria-expanded="false" data-toggle="dropdown"
-                                                    class="btn btn-default dropdown-toggle" type="button"
-                                                    id="btnGroupDrop2">
-                                                全部页面目标
-                                                <span class="caret"></span>
-                                            </button>
-                                            <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
-                                                <li><a href="#">全部页面目标</a></li>
-                                                <li><a href="#">公告</a></li>
-                                                <li><a href="#">全部事件目标</a></li>
-                                                <li><a href="#">完整下载</a></li>
-                                                <li><a href="#">在线下载</a></li>
-                                                <li><a href="#">时长目标</a></li>
-                                                <li><a href="#">访问页数目标</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="custom_table">
-                                        <table id="Screening_table"  class="table table-hover" >
-                                        </table>
-                                        <div id="pager2"></div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -405,7 +481,7 @@
 <script type="text/javascript" src="../js/less.js"></script>
 <script src="../js/jquery.jqGrid.src.js"></script>
 <script src="http://echarts.baidu.com/build/dist/echarts-all.js"></script>
-<script type="text/javascript" src="../js/chart/VisitorMap_charts.js"></script>
+<script type="text/javascript" src="../js/chart/Equipment_charts.js"></script>
 <script type="text/javascript" src="../js/table/custom_table.js"></script>
 <script type="text/javascript" src="../js/table/Screening_table.js"></script>
 </body>
