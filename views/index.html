@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<% include commons/header.html %>
+<body>
+<div class="container-fluid">
+
+    <div ng-app="myApp" ng-controller="myCtr">
+        {{ now.time }}
+    </div>
+
+    <script type="text/javascript" src="js/controllers.js" />
+    <script type="text/javascript">
+//        var myApp = angular.module('myApp', [])
+//
+//        myApp.controller('myCtr', function ($scope) {
+//            $scope.now = {
+//                time: new Date()
+//            }
+//        })
+    </script>
+
+    <% include commons/nav.html %>
+    <div class="containers">
+        <% include commons/left.html %>
+        <div class="middle ">
+            <div class="middle_containers">
+                <div class="date_select">
+                    <div aria-label="First group" role="group" class="btn-group">
+                        <button class="btn btn-default disabled" type="button">时间</button>
+                        <button class="btn btn-default current" type="button"> 昨天</button>
+                        <button class="btn btn-default" type="button">最近7天</button>
+                        <button class="btn btn-default" type="button">最近30天</button>
+                        <button class="btn btn-default" type="button">自定义<span aria-hidden="true"
+                                                                               class="glyphicon glyphicon-calendar"></span>
+                        </button>
+                    </div>
+                    <button class="btn btn-default" type="button"><span aria-hidden="true"
+                                                                        class="glyphicon glyphicon-refresh"></span>
+                    </button>
+                </div>
+                <div class="my_concent">
+                    <div class="index_chart">
+                        <div class="chart_top">
+                            <ul>
+                                <li><label>展示曲线</label></li>
+                                <li><input type="checkbox" checked="checked" name="radio1"/> <label>浏览量(PV)</label></li>
+                                <li><input type="checkbox" checked="checked" name="radio1"/> <label>访问次数</label></li>
+                                <li><input type="checkbox" name="radio1"/> <label>跳出率</label></li>
+                                <li><input type="checkbox" name="radio1"/> <label>抵达率</label></li>
+                                <li><input type="checkbox" name="radio1"/> <label>平均访问时长</label></li>
+                                <li><input type="checkbox" name="radio1"/> <label>平均访问时长</label></li>
+                                <li><input type="checkbox" name="radio1"/> <label>页面转化</label></li>
+                                <li class="disabled">* 最多只能勾选两项</li>
+                            </ul>
+                        </div>
+                        <div id="index_charts" style="height:400px;"></div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span1">
+                            <div class="under_title">
+                                <div class="under_top_title"><span aria-hidden="true"
+                                                                   class="glyphicon glyphicon-globe"></span>访客地图
+                                </div>
+                                <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
+                                    <div role="group" class="btn-group">
+                                        <button aria-expanded="false" data-toggle="dropdown"
+                                                class="btn btn-default dropdown-toggle" type="button"
+                                                id="btnGroupDrop1">
+                                            亚洲
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
+                                            <li><a href="#">欧洲</a></li>
+                                            <li><a href="#">南美洲</a></li>
+                                        </ul>
+                                    </div>
+                                    <div role="group" class="btn-group">
+                                        <button aria-expanded="false" data-toggle="dropdown"
+                                                class="btn btn-default dropdown-toggle" type="button"
+                                                id="btnGroupDrop2">
+                                            中国
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
+                                            <li><a href="#">印度</a></li>
+                                            <li><a href="#">俄罗斯</a></li>
+                                        </ul>
+                                    </div>
+
+                                    <div role="group" class="btn-group">
+                                        <button aria-expanded="false" data-toggle="dropdown"
+                                                class="btn btn-default dropdown-toggle" type="button"
+                                                id="btnGroupDrop3">
+                                            浏览量
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
+                                            <li><a href="#">浏览量(PV)</a></li>
+                                            <li><a href="#">访客次数(UV) </a></li>
+                                            <li><a href="#">新访客数</a></li>
+                                            <li><a href="#">IP数</a></li>
+                                            <li><a href="#">跳出率</a></li>
+                                            <li><a href="#">平均访问时长</a></li>
+                                            <li><a href="#">转化次数</a></li>
+
+                                        </ul>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div id="gest_map" style="height:300px;"></div>
+                        </div>
+                        <div class="span2">
+                            <div class="under_title">
+                                <div class="under_top_title"><span aria-hidden="true"
+                                                                   class="glyphicon glyphicon-asterisk"></span>设备环境
+                                </div>
+                                <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
+                                    <div role="group" class="btn-group">
+                                        <button aria-expanded="false" data-toggle="dropdown"
+                                                class="btn btn-default dropdown-toggle" type="button"
+                                                id="btnGroupDrop4">
+                                            浏览量
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul aria-labelledby="btnGroupDrop4" role="menu" class="dropdown-menu">
+                                            <li><a href="#">浏览量(PV)</a></li>
+                                            <li><a href="#">访客次数(UV) </a></li>
+                                            <li><a href="#">新访客数</a></li>
+                                            <li><a href="#">IP数</a></li>
+                                            <li><a href="#">跳出率</a></li>
+                                            <li><a href="#">平均访问时长</a></li>
+                                            <li><a href="#">转化次数</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="environment_map" style="height:300px;"></div>
+                        </div>
+                        <div class="span3">
+                            <div class="under_title">
+                                <div class="under_top_title"><span aria-hidden="true"
+                                                                   class="glyphicon glyphicon-search"></span>搜索词
+                                </div>
+                                <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
+                                    <div role="group" class="btn-group">
+                                        <button aria-expanded="false" data-toggle="dropdown"
+                                                class="btn btn-default dropdown-toggle" type="button"
+                                                id="btnGroupDrop7">
+                                            浏览量
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul aria-labelledby="btnGroupDrop7" role="menu" class="dropdown-menu">
+                                            <li><a href="#">浏览量(PV)</a></li>
+                                            <li><a href="#">访客次数(UV) </a></li>
+                                            <li><a href="#">新访客数</a></li>
+                                            <li><a href="#">IP数</a></li>
+                                            <li><a href="#">跳出率</a></li>
+                                            <li><a href="#">平均访问时长</a></li>
+                                            <li><a href="#">转化次数</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>关键词</th>
+                                    <th>浏览量</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>立刻贷</td>
+                                    <td>1,141</td>
+
+                                </tr>
+                                <tr>
+                                    <td>立刻贷</td>
+                                    <td>1,141</td>
+                                </tr>
+                                <tr>
+                                    <td>立刻贷</td>
+                                    <td>1,141</td>
+                                </tr>
+                                <tr>
+                                    <td>立刻贷</td>
+                                    <td>1,141</td>
+
+                                </tr>
+                                <tr>
+                                    <td>立刻贷</td>
+                                    <td>1,141</td>
+                                </tr>
+                                <tr>
+                                    <td>立刻贷</td>
+                                    <td>1,141</td>
+                                </tr>
+                                <tr>
+                                    <td>立刻贷</td>
+                                    <td>1,141</td>
+                                </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% include commons/js.html %>
+</body>
+</html>

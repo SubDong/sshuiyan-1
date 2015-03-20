@@ -1,3 +1,4 @@
+@charset "utf-8";
 /*Grid*/
 .ui-jqgrid {
   position: relative;
@@ -7461,7 +7462,7 @@ nav,
   margin-right: 0.8em;
 }
 .date_select .dete_refresh {
-  margin: 8px;
+  margin: 18px;
 }
 .date_text {
   line-height: 50px;
