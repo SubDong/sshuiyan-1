@@ -4,17 +4,16 @@ var url = require('url')
 var dateutils = {
     between: function (req, prefix) {
         var parsed = url.parse(req.url, true)
+        var start = this.fromTime(parsed.query['start'])
 
-        var start = new Date(parsed.query['start'])
-        var end = parsed.query['end']
-        if (end) {
-            end = new Date(end)
-        } else {
-            end = new Date()
+        var end
+        if(parsed.query['end']){
+            end = this.fromTime(parsed.query['end'])
+        }else{
+            end = new Date().getTime();
         }
 
-
-        var number = Math.floor((end.getTime() - start.getTime()) / (24 * 60 * 60 * 1000))
+        var number = Math.floor((end - start) / (24 * 60 * 60 * 1000))
 
         var dates = [prefix + fmt("%F", start)]
 
@@ -25,6 +24,12 @@ var dateutils = {
         }
 
         return dates;
+    },
+
+    fromTime: function (time) {
+        var date = new Date()
+        date.setTime(time)
+        return date
     }
 }
 

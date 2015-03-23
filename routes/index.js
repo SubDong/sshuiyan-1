@@ -3,8 +3,18 @@ var express = require('express');
 var router = express.Router();
 
 /* GET home page. */
-router.get('/*', function (req, res, next) {
-    res.render(req.url.substring(1) + ".html", {});
+router.get('/*.html', function (req, res, next) {
+
+    var url = req.url.substring(1);
+
+    if (!url)
+        url = "index"
+
+    res.render((url.indexOf(".html")) > -1 ? url : url + ".html", {});
 });
+
+router.get("/", function (req, res, next) {
+    res.render("index.html", {});
+})
 
 module.exports = router;

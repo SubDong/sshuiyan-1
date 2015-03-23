@@ -9,14 +9,42 @@
         <div class="middle ">
             <div class="middle_containers">
                 <div class="date_select">
-                    <div aria-label="First group" role="group" class="btn-group">
-                        <button class="btn btn-default disabled" type="button">时间</button>
-                        <button class="btn btn-default current" type="button"> 昨天</button>
-                        <button class="btn btn-default" type="button">最近7天</button>
-                        <button class="btn btn-default" type="button">最近30天</button>
+                    <div aria-label="First group" role="group" class="btn-group" ng-app="indexapp"
+                         ng-controller="datechart">
+                        <button class="btn btn-default" type="button" ng-click="today()">今天</button>
+                        <button class="btn btn-default current" type="button" ng-click="yesterday()"> 昨天</button>
+                        <button class="btn btn-default" type="button" ng-click="lastseven()">最近7天</button>
+                        <button class="btn btn-default" type="button" ng-click="lastthirty()">最近30天</button>
                         <button class="btn btn-default" type="button">自定义<span aria-hidden="true"
                                                                                class="glyphicon glyphicon-calendar"></span>
                         </button>
+
+                        <script type="text/javascript">
+                            var chartapp = angular.module('indexapp', [])
+                            chartapp.controller('datechart', ['$scope', '$http', function ($scope, $http) {
+                                $scope.today = function () {
+                                    var end = new Date()
+
+                                    var start = new Date()
+                                    start.setMilliseconds(0)
+                                    start.setSeconds(0)
+                                    start.setMinutes(0)
+                                    start.setHours(0);
+
+                                    update('index_charts', start.getTime(), end.getTime(), 'pv,uv')
+                                }
+
+                                $scope.yesterday = function () {
+
+                                }
+
+                                $scope.lastseven = function () {
+
+                                }
+
+                            }])
+                        </script>
+
                     </div>
                     <button class="btn btn-default" type="button"><span aria-hidden="true"
                                                                         class="glyphicon glyphicon-refresh"></span>
