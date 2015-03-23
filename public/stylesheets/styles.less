@@ -1,5 +1,5 @@
 @import "ui.jqgrid.less";
-@import "bootstrap.less";
+/*@import "bootstrap.less";*/
 
 * {
   margin: 0px;
@@ -102,6 +102,14 @@ nav, .navbar-default {
   .btn-group {
     .btn-default input {
       margin-right: 0.8em;
+
+    }
+    a{
+      display:block;
+      color:#333;
+    }
+    .current a{
+      color:#fff;
 
     }
   }
@@ -652,99 +660,114 @@ nav, .navbar-default {
   color: #ff937a;
 
 }
-
-.pagetitle_search {
-  overflow: hidden;
-  margin-bottom: 30px;
-  .input-group {
-    .form-control {
-      width: 200px;
+.pagetitle_search{
+  overflow:hidden;
+  margin-bottom:30px;
+  .input-group{
+    .form-control{
+      width:200px;
     }
   }
-  .pagetitle_text {
-    margin-left: 10px;
-    line-height: 30px;
-    color: #a7b1c2;
+  .pagetitle_text{
+    margin-left:10px;
+    line-height:30px;
+    color:#a7b1c2;
   }
 }
-
-.dropdown-menu {
-  min-width: 100%;
+.dropdown-menu{
+  min-width:100%;
 }
-
-.novisitor {
-  overflow: hidden;
-  .nesvisitor_top {
+.novisitor{
+  overflow:hidden;
+  .nesvisitor_top{
     text-align: center;
   }
-  .newvisitor {
-    width: 50%;
+  .newvisitor{
+    width:50%;
 
-    color: #01addd;
-    a {
-      color: #01addd;
+    color:#01addd;
+    a{
+      color:#01addd;
+    }
+    .newvisitor_table table thead{
+      background:#e1effa;
+      color:#969998;
     }
 
   }
-  .nesvisitor_img {
-    width: 100%;
+  .nesvisitor_img{
+    width:100%;
     text-align: center;
     vertical-align: middle;
-    margin: 10px 0;
-    overflow: hidden;
-    span {
-      display: block;
-      float: left;
-      font-weight: bold;
-      font-size: 18px;
+    margin:10px 0;
+    overflow:hidden;
+    span{
+      display:block;
+      float:left;
+      font-weight:bold;
+      font-size:18px;
     }
 
-    div {
-      overflow: hidden;
-      width: 120px;
-      margin: 0 auto;
+    div{
+      overflow:hidden;
+      width:120px;
+      margin:0 auto;
+
 
     }
   }
   .nesvisitor_text {
-    margin: 0 auto;
+    margin:0 auto;
 
-    overflow: hidden;
-    ul {
-      width: 100%;
+    overflow:hidden;
+    ul{
+      width:100%;
     }
-    ul li span {
-      display: inline-block;
-      width: 50%;
+    ul li span{
+      display:inline-block;
+      width:50%;
       text-align: right;
-      color: #999999;
+      color:#999999;
 
-    }
-    ul li {
-      margin-bottom: 10px;
-    }
+    }    ul li{
+           margin-bottom:10px;
+         }
 
-    ul li a {
-      display: inline-block;
-      width: 50%;
-      padding-left: 2%;
+    ul li a{
+      display:inline-block;
+      width:50%;
+      padding-left:2%;
       text-align: left;
     }
   }
-  .oldvisitior {
-    width: 50%;
+  .oldvisitior{
+    width:50%;
     text-align: center;
-    color: #666666;
-    a {
-      color: #999999;
+    color:#666666;
+    a{
+      color:#999999;
+    }
+    .newvisitor_table table thead{
+      background:#dddddd;
+      color:#989898;
     }
   }
-  .newvisitor_table {
-    h4 {
-      text-align: left;
-      color: #00abef;
+  .newvisitor_table
+  {
+    margin-bottom:30px;
+    padding-right:10%;
+    h4 { text-align: left;
+      color:#00abef;
     }
-    color: #343434;
+    color:#343434;
   }
+  .table th{
+    text-align: center;
+  }
+  .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td{
+    border-top:none;
+    border-bottom:1px solid #e5e5e5;
+  }
+
 
 }
