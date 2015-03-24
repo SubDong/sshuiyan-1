@@ -15,6 +15,15 @@ function request(id, start, end, option) {
 
         var option = {
             calculable: true,
+            toolbox: {
+                show : true,
+                feature : {
+                    mark : {show: true},
+                    magicType : {show: true, type: ['line', 'bar']},
+                    restore : {show: true},
+                    saveAsImage : {show: true}
+                }
+            },
             xAxis: [
                 {
                     type: 'category',

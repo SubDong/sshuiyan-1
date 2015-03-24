@@ -1,54 +1,24 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="IndexApp">
 <% include commons/header.html %>
 <body>
 <div class="container-fluid">
     <% include commons/nav.html %>
     <div class="containers">
         <% include commons/left.html %>
-
         <div class="middle ">
             <div class="middle_containers">
                 <div class="date_select">
-                    <div aria-label="First group" role="group" class="btn-group" ng-app="indexapp"
+                    <div aria-label="First group" role="group" class="btn-group"
                          ng-controller="datechart">
+                        <button class="btn btn-default disabled" type="button" >时间</button>
                         <button class="btn btn-default" type="button" ng-click="today()">今天</button>
-                        <button class="btn btn-default current" type="button" ng-click="yesterday()"> 昨天</button>
+                        <button class="btn btn-default" type="button" ng-click="yesterday()"> 昨天</button>
                         <button class="btn btn-default" type="button" ng-click="lastseven()">最近7天</button>
                         <button class="btn btn-default" type="button" ng-click="lastthirty()">最近30天</button>
                         <button class="btn btn-default" type="button">自定义<span aria-hidden="true"
                                                                                class="glyphicon glyphicon-calendar"></span>
                         </button>
-
-                        <script type="text/javascript">
-                            var chartapp = angular.module('indexapp', [])
-                            chartapp.controller('datechart', ['$scope', '$http', function ($scope, $http) {
-                                $scope.today = function () {
-                                    var date = new Date();
-
-                                    var start = today_start(),
-                                            end = today_end();
-
-
-                                    var option = {
-                                        type: "pv,uv",
-                                        chart: "line"
-
-                                    }
-                                    request('index_charts', start.getTime(), end.getTime(), option)
-                                }
-
-                                $scope.yesterday = function () {
-
-                                }
-
-                                $scope.lastseven = function () {
-
-                                }
-
-                            }])
-                        </script>
-
                     </div>
                     <button class="btn btn-default" type="button"><span aria-hidden="true"
                                                                         class="glyphicon glyphicon-refresh"></span>
@@ -102,7 +72,6 @@
                                             <li><a href="#">俄罗斯</a></li>
                                         </ul>
                                     </div>
-
                                     <div role="group" class="btn-group">
                                         <button aria-expanded="false" data-toggle="dropdown"
                                                 class="btn btn-default dropdown-toggle" type="button"
@@ -118,10 +87,8 @@
                                             <li><a href="#">跳出率</a></li>
                                             <li><a href="#">平均访问时长</a></li>
                                             <li><a href="#">转化次数</a></li>
-
                                         </ul>
                                     </div>
-
                                 </div>
                             </div>
                             <div id="gest_map" style="height:300px;"></div>
@@ -178,7 +145,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <table class="table table-hover">
+                          <!--  <table class="table table-hover">
                                 <thead>
                                 <tr>
                                     <th>关键词</th>
@@ -217,17 +184,48 @@
                                     <td>1,141</td>
                                 </tr>
                                 </tbody>
-                            </table>
+                            </table>-->
 
+                                <div ng-controller="MyCtrl">
+                                    <div class="gridStyle" ng-grid="gridOptions">
+                                    </div>
+                                </div>
                         </div>
-
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 <% include commons/js.html %>
+
+<script type="text/javascript">
+    var chartapp = angular.module('indexapp', [])
+    chartapp.controller('datechart', ['$scope', '$http', function ($scope, $http) {
+        $scope.today = function () {
+            var date = new Date();
+
+            var start = today_start(),
+                    end = today_end();
+
+
+            var option = {
+                type: "pv,uv",
+                chart: "line"
+
+            }
+            request('index_charts', start.getTime(), end.getTime(), option)
+        }
+
+        $scope.yesterday = function () {
+
+        }
+
+        $scope.lastseven = function () {
+
+        }
+
+    }])
+</script>
 </body>
 </html>
