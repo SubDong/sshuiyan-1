@@ -2,11 +2,14 @@
  * Created by yousheng on 15/3/21.
  */
 
-function update(id, start, end, type) {
-    $.get("/api/time?start=" + start + "&end=" + end + "&type=" + type).success(function (data) {
+function request(id, start, end, option) {
+    var chart = echarts.init(document.getElementById(id));
 
-        var myChart = echarts.init(document.getElementById(id));
+    chart.showLoading({
+        text: "正在努力的读取数据中..."
+    })
 
+    $.get("/api/data?start=" + start + "&end=" + end + "&type=" + type).success(function (data) {
 
         var jsons = JSON.parse(data);
 
@@ -24,8 +27,7 @@ function update(id, start, end, type) {
                     type: 'value'
                 }
             ],
-            series: [
-            ]
+            series: []
         };
 
         var types = type.split(",")
@@ -61,7 +63,10 @@ function update(id, start, end, type) {
         //    option.xAxis[0].data.push(data['key'])
         //})
 
-        myChart.setOption(option);
+
+        chart.hideLoading();
+
+        chart.setOption(option);
 
 
     }).error(function (err) {

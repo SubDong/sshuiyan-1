@@ -6,6 +6,7 @@
     <% include commons/nav.html %>
     <div class="containers">
         <% include commons/left.html %>
+
         <div class="middle ">
             <div class="middle_containers">
                 <div class="date_select">
@@ -23,15 +24,18 @@
                             var chartapp = angular.module('indexapp', [])
                             chartapp.controller('datechart', ['$scope', '$http', function ($scope, $http) {
                                 $scope.today = function () {
-                                    var end = new Date()
+                                    var date = new Date();
 
-                                    var start = new Date()
-                                    start.setMilliseconds(0)
-                                    start.setSeconds(0)
-                                    start.setMinutes(0)
-                                    start.setHours(0);
+                                    var start = today_start(),
+                                            end = today_end();
 
-                                    update('index_charts', start.getTime(), end.getTime(), 'pv,uv')
+
+                                    var option = {
+                                        type: "pv,uv",
+                                        chart: "line"
+
+                                    }
+                                    request('index_charts', start.getTime(), end.getTime(), option)
                                 }
 
                                 $scope.yesterday = function () {

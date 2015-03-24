@@ -2,11 +2,10 @@ var express = require('express');
 //var controller = require('controllers')
 var router = express.Router();
 
-/* GET home page. */
+/* 所有html页面的router */
 router.get('/*.html', function (req, res, next) {
 
     var url = req.url.substring(1);
-
     if (!url)
         url = "index"
 

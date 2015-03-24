@@ -5,6 +5,5 @@
 module.exports = {
     init: function (res) {
         res.statusCode = 200
-        //res.writeHead('Content-Type', "application/json")
     }
 }

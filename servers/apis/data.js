@@ -1,10 +1,12 @@
 var express = require('express')
 var url = require('url')
 var date = require('../utils/date')
-var resutil = require('../utils/responseutils')
 var api = express.Router()
 
-api.get('/time', function (req, res) {
+api.get('/charts', function (req, res) {
+
+
+
     var parsed = url.parse(req.url, true)
     var indexs = date.between(req, "access-")
     var type = parsed.query['type']
@@ -12,14 +14,13 @@ api.get('/time', function (req, res) {
     if (!type) {
         type = 'pv'
     }
-    var types = type.split(",")
 
+
+    var types = type.split(",")
     var searchbody = {
         "aggs": {},
         "size": 0
     }
-
-
     types.forEach(function (type) {
         searchbody.aggs[type] = {
             "date_histogram": {
@@ -27,7 +28,6 @@ api.get('/time', function (req, res) {
                 "interval": "1m"
             }
         }
-
     })
 
     req.es.search({
@@ -35,7 +35,6 @@ api.get('/time', function (req, res) {
         type: 1,
         body: searchbody
     }).then(function (body) {
-
         var result = {}
         result['hits'] = body.hits
         var aggs = body.aggregations
