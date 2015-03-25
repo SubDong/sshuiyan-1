@@ -7,7 +7,7 @@ function request(id, start, end, option) {
 
     chart.showLoading({
         text: "正在努力的读取数据中..."
-    })
+    });
 
     $.get("/api/data?start=" + start + "&end=" + end + "&type=" + type).success(function (data) {
 
@@ -16,12 +16,12 @@ function request(id, start, end, option) {
         var option = {
             calculable: true,
             toolbox: {
-                show : true,
-                feature : {
-                    mark : {show: true},
-                    magicType : {show: true, type: ['line', 'bar']},
-                    restore : {show: true},
-                    saveAsImage : {show: true}
+                show: true,
+                feature: {
+                    mark: {show: true},
+                    magicType: {show: true, type: ['line', 'bar']},
+                    restore: {show: true},
+                    saveAsImage: {show: true}
                 }
             },
             xAxis: [
@@ -39,7 +39,7 @@ function request(id, start, end, option) {
             series: []
         };
 
-        var types = type.split(",")
+        var types = type.split(",");
         var lables = [];
         types.forEach(function (item) {
 
@@ -66,7 +66,7 @@ function request(id, start, end, option) {
             //    lables.push(bucket['key'])
             //})
             option.series.push(serie)
-        })
+        });
 
         //datas.forEach(function (data) {
         //    option.xAxis[0].data.push(data['key'])

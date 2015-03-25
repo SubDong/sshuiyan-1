@@ -1,0 +1,166 @@
+<div class="middle_containers">
+    <div class="date_select">
+        <div class="fr">
+            <button class="btn btn-default" type="button"><span aria-hidden="true"
+                                                                class="glyphicon glyphicon-refresh"></span>
+            </button>
+            <div role="group" class="btn-group">
+                <button aria-expanded="false" data-toggle="dropdown" class="btn btn-default dropdown-toggle"
+                        type="button" id="btnGroupDrop3">
+                    导出
+                    <span class="caret"></span>
+                </button>
+                <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
+                    <li><a href="#">保存</a></li>
+                    <li><a href="#">导出</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="my_concent">
+        <div class="Visitor_concent">
+            <div class="Visitor_number">
+                <div class="Visitor_number_img">
+                    <img src="../img/Visitor_img.png">
+                </div>
+                <div class="Visitor_text">
+                    <h4>30分钟内</h4>
+                    <h5>当前在线人数</h5>
+
+                    <h1>12000</h1>
+                </div>
+            </div>
+            <div class="Visitor_chart">
+                <div class="index_chart">
+                    <div class="chart_top">
+                        <ul>
+                            <li><label>指标：</label></li>
+                            <li><input type="checkbox" checked="checked" name="radio1"/> <label>浏览量(PV))</label>
+                            </li>
+                            <li><input type="checkbox" checked="checked" name="radio1"/> <label>访客数(UV)</label></li>
+                            <li><input type="checkbox" name="radio1"/> <label>IP数</label></li>
+                            <li class="disabled">* 最多只能勾选两项</li>
+                        </ul>
+                    </div>
+                </div>
+                <div id="indicators_charts" style="height:300px;"></div>
+            </div>
+        </div>
+        <div class="table_content">
+            <ul role="tablist" class="nav nav-tabs" id="myTab">
+
+                <li role="presentation" class="active"><a aria-controls="profile" data-toggle="tab"
+                                                          id="profile-tab" role="tab" href="#profile"
+                                                          aria-expanded="false">高级筛选</a></li>
+
+            </ul>
+            <div class="tab-content" id="myTabContent">
+
+                <div aria-labelledby="profile-tab" id="profile" class="tab-pane fade active in" role="tabpanel">
+                    <div class="custom_title">
+                        <div class="chart_top2">
+                            <ul>
+                                <li><span>来源过滤 :</span></li>
+                                <li>
+                                    <div role="group" class="btn-group">
+                                        <button aria-expanded="false" data-toggle="dropdown"
+                                                class="btn btn-default dropdown-toggle" type="button"
+                                                id="btnGroupDrop4">
+                                            全部
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
+                                            <li><a href="#">直接访问</a></li>
+                                            <li><a href="#">搜索引擎</a></li>
+                                            <li><a href="#">外部连接</a></li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><a href="#">百度</a></li>
+                                <li><a href="#">Google</a></li>
+                            </ul>
+                        </div>
+                        <div class="chart_top2">
+                            <ul>
+                                <li><span>设备过滤:</span></li>
+                                <li><input type="radio" checked="checked" name="radio1"/>
+                                    <label>全部</label></li>
+                                <li><input type="radio" name="radio1"/> <label>计算机</label></li>
+                                <li><input type="radio" name="radio1"/> <label>移动设备</label></li>
+                            </ul>
+                        </div>
+                        <div class="chart_top2">
+                            <ul>
+                                <li><span>地域过滤:</span></li>
+                                <li>
+                                    <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
+                                        <div role="group" class="btn-group">
+                                            <button aria-expanded="false" data-toggle="dropdown"
+                                                    class="btn btn-default dropdown-toggle" type="button">
+                                                城市
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
+                                                <li><a href="#"> 四川</a></li>
+                                                <li><a href="#">成都 </a></li>
+                                                <li><a href="#">成都</a></li>
+                                                <li><a href="#">成都</a></li>
+                                                <li><a href="#">成都</a></li>
+                                                <li><a href="#">成都</a></li>
+                                                <li><a href="#">转化次数</a></li>
+
+                                            </ul>
+                                        </div>
+                                        <div role="group" class="btn-group">
+                                            <button aria-expanded="false" data-toggle="dropdown"
+                                                    class="btn btn-default dropdown-toggle" type="button">
+                                                成都市
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
+                                                <li><a href="#"> 成都</a></li>
+                                                <li><a href="#">成都 </a></li>
+                                                <li><a href="#">成都</a></li>
+                                                <li><a href="#">成都</a></li>
+                                                <li><a href="#">成都</a></li>
+                                                <li><a href="#">成都</a></li>
+                                                <li><a href="#">转化次数</a></li>
+
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li><a href="#">北京</a></li>
+                                <li><a href="#">上海</a></li>
+                                <li><a href="#">上海</a></li>
+
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="custom_secendtitle">
+                        <div class="custom_select ">
+                            <ul class="visitor_table_select">
+                                <li><span>关键词/搜索词:</span>
+                                    <input type="text" class="form-control" placeholder=".col-xs-1" value="请输入..."></li>
+                                <li><span> 入口页面:</span>
+                                    <input type="text" class="form-control" placeholder=".col-xs-1" value="请输入..."></li>
+                                <li><span>IP:</span>
+                                    <input type="text" class="form-control" placeholder=".col-xs-1" value="请输入..."></li>
+                                <li>
+                                    <button class="btn btn-info" type="button">查询</button>
+                                </li>
+                                <li></li>
+                            </ul>
+
+                        </div>
+                    </div>
+                    <div class="custom_table">
+                        <table id="vistior_table" class="table table-hover">
+                        </table>
+                        <div id="pager2"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
