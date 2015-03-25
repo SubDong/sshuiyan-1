@@ -1,13 +1,21 @@
 app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
 
-    $locationProvider.html5Mode(true);
+    //$locationProvider.html5Mode(true);
 
-    $urlRouterProvider.when('/', '/index');
+    $urlRouterProvider.when('', '/index');
 
     $stateProvider
         .state('index', {
             url: '/index',
-            templateUrl: '../home/main.html'
+            templateUrl: '../home/main.html',
+            controller: function ($scope, requestService) {
+                $scope.init = function () {
+                    requestService.request('index_charts', today_start(), today_end(), "pv,uv");
+
+                };
+
+                $scope.init();
+            }
         })
         .state('visitor', {
             url: "/trend/visitor",
