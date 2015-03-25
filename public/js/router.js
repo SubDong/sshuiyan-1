@@ -1,6 +1,8 @@
-app.config(function ($stateProvider, $urlRouterProvider) {
+app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
 
-    $urlRouterProvider.when('', '/index');
+    $locationProvider.html5Mode(true);
+
+    $urlRouterProvider.when('/', '/index');
 
     $stateProvider
         .state('index', {
@@ -27,18 +29,18 @@ app.config(function ($stateProvider, $urlRouterProvider) {
             url: "/source/source",
             templateUrl: "../source/source.html"
         })
-     .state('searchengine', {
-        url: "/source/searchengine",
-        templateUrl: "../source/searchengine.html"
-    })
+        .state('searchengine', {
+            url: "/source/searchengine",
+            templateUrl: "../source/searchengine.html"
+        })
         .state('searchterm', {
             url: "/source/searchterm",
             templateUrl: "../source/searchterm.html"
         })
-    .state('externallinks', {
-        url: "/source/externallinks",
-        templateUrl: "../source/externallinks.html"
-    })
+        .state('externallinks', {
+            url: "/source/externallinks",
+            templateUrl: "../source/externallinks.html"
+        })
         .state('visitedpages', {
             url: "/page/visitedpages",
             templateUrl: "../page/visitedpages.html"
@@ -67,7 +69,6 @@ app.config(function ($stateProvider, $urlRouterProvider) {
             url: "/visitor/visitorfeature",
             templateUrl: "../visitor/visitorfeature.html"
         })
-
 
 
 });
