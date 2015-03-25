@@ -22,5 +22,52 @@ app.config(function ($stateProvider, $urlRouterProvider) {
         .state('month', {
             url: "/trend/month",
             templateUrl: "../trend/month.html"
-        });
+        })
+        .state('source', {
+            url: "/source/source",
+            templateUrl: "../source/source.html"
+        })
+     .state('searchengine', {
+        url: "/source/searchengine",
+        templateUrl: "../source/searchengine.html"
+    })
+        .state('searchterm', {
+            url: "/source/searchterm",
+            templateUrl: "../source/searchterm.html"
+        })
+    .state('externallinks', {
+        url: "/source/externallinks",
+        templateUrl: "../source/externallinks.html"
+    })
+        .state('visitedpages', {
+            url: "/page/visitedpages",
+            templateUrl: "../page/visitedpages.html"
+        })
+        .state('entrancepage', {
+            url: "/page/entrancepage",
+            templateUrl: "../page/entrancepage.html"
+        })
+        .state('pagetitle', {
+            url: "/page/pagetitle",
+            templateUrl: "../page/pagetitle.html"
+        })
+        .state('visitormap', {
+            url: "/visitor/visitormap",
+            templateUrl: "../visitor/visitormap.html"
+        })
+        .state('equipment', {
+            url: "/visitor/equipment",
+            templateUrl: "../visitor/equipment.html"
+        })
+        .state('novisitors', {
+            url: "/visitor/novisitors",
+            templateUrl: "../visitor/novisitors.html"
+        })
+        .state('visitorfeature', {
+            url: "/visitor/visitorfeature",
+            templateUrl: "../visitor/visitorfeature.html"
+        })
+
+
+
 });
