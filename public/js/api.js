@@ -2,34 +2,16 @@
  * Created by yousheng on 15/3/21.
  */
 
-function request(id, start, end, opt) {
-    var chart = echarts.init(document.getElementById(id));
+function update(id, start, end, type) {
+    $.get("/api/time?start=" + start + "&end=" + end + "&type=" + type).success(function (data) {
 
-    chart.showLoading({
-        text: "正在努力的读取数据中..."
-    });
+        var myChart = echarts.init(document.getElementById(id));
 
-    $.get("/api/charts?start=" + start + "&end=" + end + "&type=" + opt.type).success(function (data) {
 
         var jsons = JSON.parse(data);
 
         var option = {
             calculable: true,
-            legend:{
-                data:['PV','UV']
-            },
-            tooltip : {
-                trigger: 'axis'
-            },
-            toolbox: {
-                show: true,
-                feature: {
-                    mark: {show: true},
-                    magicType: {show: true, type: ['line', 'bar']},
-                    restore: {show: true},
-                    saveAsImage: {show: true}
-                }
-            },
             xAxis: [
                 {
                     type: 'category',
@@ -39,22 +21,20 @@ function request(id, start, end, opt) {
             ],
             yAxis: [
                 {
-                    type: 'value',
-                    axisLabel : {
-                        formatter: '{value} 次访问'
-                    }
+                    type: 'value'
                 }
             ],
-            series: []
+            series: [
+            ]
         };
 
-        var types = opt.type.split(",")
+        var types = type.split(",")
         var lables = [];
         types.forEach(function (item) {
 
             var serie = {
                 name: item,
-                type: opt.chart,
+                type: 'line',
                 data: jsons[item],
                 markPoint: {
                     data: [
@@ -75,16 +55,13 @@ function request(id, start, end, opt) {
             //    lables.push(bucket['key'])
             //})
             option.series.push(serie)
-        });
+        })
 
         //datas.forEach(function (data) {
         //    option.xAxis[0].data.push(data['key'])
         //})
 
-
-        chart.hideLoading();
-
-        chart.setOption(option);
+        myChart.setOption(option);
 
 
     }).error(function (err) {

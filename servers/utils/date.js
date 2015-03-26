@@ -30,6 +30,9 @@ var dateutils = {
         var date = new Date()
         date.setTime(time)
         return date
+    },
+    formatTime:function(time){
+        return new Date(parseInt(time)).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ")
     }
 }
 

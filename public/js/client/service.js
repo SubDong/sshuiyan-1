@@ -2,14 +2,14 @@
  * Created by baizz on 15-3-25.
  */
 app.service('requestService', ['$rootScope',function ($rootScope) {
-    this.request = function (id, start, end, option) {
+    this.request = function (id, start, end, opt) {
         var chart = echarts.init(document.getElementById(id));
 
         chart.showLoading({
             text: "正在努力的读取数据中..."
         });
 
-        $.get("/api/data?start=" + start + "&end=" + end + "&type=" + type).success(function (data) {
+        $.get("/api/charts?start=" + start + "&end=" + end + "&type=" + opt.type).success(function (data) {
 
             var jsons = JSON.parse(data);
 
@@ -45,7 +45,7 @@ app.service('requestService', ['$rootScope',function ($rootScope) {
 
                 var serie = {
                     name: item,
-                    type: 'line',
+                    type: opt.chart,
                     data: jsons[item],
                     markPoint: {
                         data: [

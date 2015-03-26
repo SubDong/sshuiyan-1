@@ -5,8 +5,8 @@
             <button class="btn btn-default disabled" type="button">时间</button>
             <button class="btn btn-default" type="button" ng-click="today()">今天</button>
             <button class="btn btn-default" type="button" ng-click="yesterday()"> 昨天</button>
-            <button class="btn btn-default" type="button" ng-click="lastseven()">最近7天</button>
-            <button class="btn btn-default" type="button" ng-click="lastthirty()">最近30天</button>
+            <button class="btn btn-default" type="button" ng-click="lastWeek()">最近7天</button>
+            <button class="btn btn-default" type="button" ng-click="lasMonth()">最近30天</button>
             <button class="btn btn-default" type="button">自定义<span aria-hidden="true"
                                                                    class="glyphicon glyphicon-calendar"></span>
             </button>
@@ -20,13 +20,13 @@
             <div class="chart_top">
                 <ul>
                     <li><label>展示曲线</label></li>
-                    <li><input type="checkbox" checked="checked" name="radio1"/> <label>浏览量(PV)</label></li>
-                    <li><input type="checkbox" checked="checked" name="radio1"/> <label>访问次数</label></li>
-                    <li><input type="checkbox" name="radio1"/> <label>跳出率</label></li>
-                    <li><input type="checkbox" name="radio1"/> <label>抵达率</label></li>
-                    <li><input type="checkbox" name="radio1"/> <label>平均访问时长</label></li>
-                    <li><input type="checkbox" name="radio1"/> <label>平均访问时长</label></li>
-                    <li><input type="checkbox" name="radio1"/> <label>页面转化</label></li>
+                    <li><input type="checkbox" checked="checked" name="radio1" value="pv"/> <label>浏览量(PV)</label></li>
+                    <li><input type="checkbox" checked="checked"  name="radio1" value="uv"/> <label>访问次数</label></li>
+                    <li><input type="checkbox" name="radio1" value="outCount"/> <label>跳出率</label></li>
+                    <li><input type="checkbox" name="radio1" value="comCount"/> <label>抵达率</label></li>
+                    <li><input type="checkbox" name="radio1" value="avgHoldTime1"/> <label>平均访问时长</label></li>
+                    <li><input type="checkbox" name="radio1" value="avgHoldTime1"/> <label>平均访问时长</label></li>
+                    <li><input type="checkbox" name="radio1" value="convertUse"/> <label>页面转化</label></li>
                     <li class="disabled">* 最多只能勾选两项</li>
                 </ul>
             </div>

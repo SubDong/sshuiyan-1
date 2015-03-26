@@ -1,9 +1,10 @@
 app.controller('DateChartController', ['$scope', '$http', function ($scope, $http) {
     $scope.today = function () {
         var start = today_start(), end = today_end();
-
+        var selectedType=getCheckbox("radio1");
+        if(!selectedType){alert("请选择统计指标");return;}
         var option = {
-            type: "pv,uv",
+            type:selectedType,
             chart: "line"
 
         };
@@ -11,12 +12,26 @@ app.controller('DateChartController', ['$scope', '$http', function ($scope, $htt
     };
 
     $scope.yesterday = function () {
+        var selectedType=getCheckbox("radio1");
+        if(!selectedType){alert("请选择统计指标");return;}
+        var start=yesterday_start(),end=yesterday_end(),option={type:selectedType,chart:'line'};
+        request('index_charts',start.getTime(),end.getTime(),option);
+    };
+
+    $scope.lastWeek = function () {
+        var selectedType=getCheckbox("radio1");
+        if(!selectedType){alert("请选择统计指标");return;}
+        var start=lastWeek_start(),end=lastWeek_end(),option={type:selectedType,chart:'line'};
+        request('index_charts',start.getTime(),end.getTime(),option);
 
     };
 
-    $scope.lastseven = function () {
-
-    };
+    $scope.lasMonth=function(){
+        var selectedType=getCheckbox("radio1");
+        if(!selectedType){alert("请选择统计指标");return;}
+        var start=lastWeek_start(),end=lastWeek_end(),option={type:selectedType,chart:'line'};
+        request('index_charts',start.getTime(),end.getTime(),option);
+    }
 
 }]).controller('IndexController', ['$scope', '$http', function ($scope, $http) {
     // grid
@@ -35,67 +50,3 @@ app.controller('DateChartController', ['$scope', '$http', function ($scope, $htt
     };
 }]);
 
-function update(id, start, end, type) {
-    $.get("/api/time?start=" + start + "&end=" + end + "&type=" + type).success(function (data) {
-
-        var myChart = echarts.init(document.getElementById(id));
-
-        var jsons = JSON.parse(data);
-
-        var option = {
-            calculable: true,
-            xAxis: [
-                {
-                    type: 'category',
-                    boundaryGap: false,
-                    data: jsons.lables
-                }
-            ],
-            yAxis: [
-                {
-                    type: 'value'
-                }
-            ],
-            series: []
-        };
-
-        var types = type.split(",");
-        var lables = [];
-        types.forEach(function (item) {
-
-            var serie = {
-                name: item,
-                type: 'line',
-                data: jsons[item],
-                markPoint: {
-                    data: [
-                        {type: 'max', name: '最大值'},
-                        {type: 'min', name: '最小值'}
-                    ]
-                },
-                markLine: {
-                    data: [
-                        {type: 'average', name: '平均值'}
-                    ]
-                }
-            };
-
-            //var buckets = aggs[item].buckets
-            //buckets.forEach(function (bucket) {
-            //    serie.data.push(bucket['doc_count'])
-            //    lables.push(bucket['key'])
-            //})
-            option.series.push(serie)
-        });
-
-        //datas.forEach(function (data) {
-        //    option.xAxis[0].data.push(data['key'])
-        //})
-
-        myChart.setOption(option);
-
-
-    }).error(function (err) {
-        console.error(err)
-    })
-}
