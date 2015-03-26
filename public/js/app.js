@@ -1,1 +1,1 @@
-var app = angular.module('myApp', ['ui.router', 'ui.grid', 'ui.grid.pagination']);
+var app = angular.module('myApp', ['ui.router' ,'ui.grid', 'ui.grid.pagination','ui.bootstrap']);
