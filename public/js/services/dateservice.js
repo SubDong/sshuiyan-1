@@ -4,7 +4,6 @@
 app.service('requestService', ['$rootScope', '$http', function ($rootScope, $http) {
     this.request = function (id, start, end, opt) {
         var chart = echarts.init(document.getElementById(id));
-
         chart.showLoading({
             text: "正在努力的读取数据中..."
         });
@@ -17,6 +16,12 @@ app.service('requestService', ['$rootScope', '$http', function ($rootScope, $htt
 
             var option = {
                 calculable: true,
+                legend: {
+                    data: ['PV', 'UV']
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
                 toolbox: {
                     show: true,
                     feature: {
@@ -35,16 +40,18 @@ app.service('requestService', ['$rootScope', '$http', function ($rootScope, $htt
                 ],
                 yAxis: [
                     {
-                        type: 'value'
+                        type: 'value',
+                        axisLabel: {
+                            formatter: '{value} 次访问'
+                        }
                     }
                 ],
                 series: []
             };
 
-            var types = type.split(",");
+            var types = opt.type.split(",");
             var lables = [];
             types.forEach(function (item) {
-
                 var serie = {
                     name: item,
                     type: opt.chart,

@@ -15,7 +15,7 @@ app.controller('indexctr', function ($scope, $http, requestService) {
             chart: "line"
 
         };
-        requestService.request('index_charts', start.getTime(), end.getTime(), option)
+        requestService.request('index_charts', start.getTime(), end.getTime(), option);
     };
 
     $scope.yesterday = function () {
@@ -48,7 +48,6 @@ app.controller('indexctr', function ($scope, $http, requestService) {
         var start = lastWeek_start(), end = lastWeek_end(), option = {type: selectedType, chart: 'line'};
         requestService.request('index_charts', start.getTime(), end.getTime(), option);
     }
-
 
     $scope.today();
 

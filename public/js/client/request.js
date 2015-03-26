@@ -15,10 +15,10 @@ function request(id, start, end, opt) {
 
         var option = {
             calculable: true,
-            legend:{
-                data:['PV','UV']
+            legend: {
+                data: ['PV', 'UV']
             },
-            tooltip : {
+            tooltip: {
                 trigger: 'axis'
             },
             toolbox: {
@@ -40,7 +40,7 @@ function request(id, start, end, opt) {
             yAxis: [
                 {
                     type: 'value',
-                    axisLabel : {
+                    axisLabel: {
                         formatter: '{value} 次访问'
                     }
                 }
