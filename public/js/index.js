@@ -1,4 +1,4 @@
-app.controller('DateChartController', ['$scope', '$http', function ($scope, $http) {
+app.controller('DateChartController', function ($scope,requestService) {
     $scope.today = function () {
         var start = today_start(), end = today_end();
         var selectedType=getCheckbox("radio1");
@@ -8,21 +8,21 @@ app.controller('DateChartController', ['$scope', '$http', function ($scope, $htt
             chart: "line"
 
         };
-        request('index_charts', start.getTime(), end.getTime(), option)
+        requestService.request('index_charts', start.getTime(), end.getTime(), option);
     };
 
     $scope.yesterday = function () {
         var selectedType=getCheckbox("radio1");
         if(!selectedType){alert("请选择统计指标");return;}
         var start=yesterday_start(),end=yesterday_end(),option={type:selectedType,chart:'line'};
-        request('index_charts',start.getTime(),end.getTime(),option);
+        requestService.request('index_charts',start.getTime(),end.getTime(),option);
     };
 
     $scope.lastWeek = function () {
         var selectedType=getCheckbox("radio1");
         if(!selectedType){alert("请选择统计指标");return;}
         var start=lastWeek_start(),end=lastWeek_end(),option={type:selectedType,chart:'line'};
-        request('index_charts',start.getTime(),end.getTime(),option);
+        requestService.request('index_charts',start.getTime(),end.getTime(),option);
 
     };
 
@@ -30,10 +30,10 @@ app.controller('DateChartController', ['$scope', '$http', function ($scope, $htt
         var selectedType=getCheckbox("radio1");
         if(!selectedType){alert("请选择统计指标");return;}
         var start=lastWeek_start(),end=lastWeek_end(),option={type:selectedType,chart:'line'};
-        request('index_charts',start.getTime(),end.getTime(),option);
+        requestService.request('index_charts',start.getTime(),end.getTime(),option);
     }
 
-}]).controller('IndexController', ['$scope', '$http', function ($scope, $http) {
+}).controller('IndexController', ['$scope', '$http', function ($scope, $http) {
     // grid
     $scope.gridOptions = {
         paginationPageSizes: [10, 15, 20],

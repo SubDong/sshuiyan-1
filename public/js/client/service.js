@@ -1,20 +1,22 @@
 /**
  * Created by baizz on 15-3-25.
  */
-app.service('requestService', ['$rootScope',function ($rootScope) {
-    this.request = function (id, start, end, opt) {
+app.service('requestService', ['$rootScope','$http',function ($rootScope,$http) {
+    this.request = function (id,start,end,opt) {
         var chart = echarts.init(document.getElementById(id));
-
         chart.showLoading({
             text: "正在努力的读取数据中..."
         });
-
-        $.get("/api/charts?start=" + start + "&end=" + end + "&type=" + opt.type).success(function (data) {
-
-            var jsons = JSON.parse(data);
-
+        $http.get("/api/charts?start=" + start + "&end=" + end + "&type=" + opt.type).success(function (result) {
+            var jsons = result;
             var option = {
                 calculable: true,
+                legend:{
+                    data:['PV','UV']
+                },
+                tooltip : {
+                    trigger: 'axis'
+                },
                 toolbox: {
                     show: true,
                     feature: {
@@ -33,19 +35,21 @@ app.service('requestService', ['$rootScope',function ($rootScope) {
                 ],
                 yAxis: [
                     {
-                        type: 'value'
+                        type: 'value',
+                        axisLabel : {
+                            formatter: '{value} 次访问'
+                        }
                     }
                 ],
                 series: []
             };
 
-            var types = type.split(",");
+            var types = opt.type.split(",");
             var lables = [];
             types.forEach(function (item) {
-
                 var serie = {
                     name: item,
-                    type: opt.chart,
+                    type:opt.chart,
                     data: jsons[item],
                     markPoint: {
                         data: [

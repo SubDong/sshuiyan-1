@@ -10,7 +10,8 @@ app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
             templateUrl: '../home/main.html',
             controller: function ($scope, requestService) {
                 $scope.init = function () {
-                    requestService.request('index_charts', today_start(), today_end(), "pv,uv");
+                    var selectType=getCheckbox("radio1");
+                    requestService.request('index_charts', today_start().getTime(), today_end().getTime(), {type:selectType,chart:"line"});
 
                 };
 
