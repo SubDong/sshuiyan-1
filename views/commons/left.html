@@ -1,55 +1,56 @@
 <div class="menu">
-<div ng-controller="AccordionDemoCtrl">
-    <accordion close-others="oneAtATime"  >
-        <accordion-group  heading=""  is-open="status.isFirstOpen" is-disabled="status.isFirstDisabled" ng-class="{'current':currentMenu == 'menu1'}" ng-click="selectMenu('menu1')">
-            <accordion-heading  ui-sref="index">
-               <span class="glyphicon glyphicon-th-large" aria-hidden="true"></span>网站概览
-            </accordion-heading>
-        </accordion-group>
-        <accordion-group heading="" ng-class="{'current':currentMenu == 'menu2'}" ng-click="selectMenu('menu2')">
-            <accordion-heading>
-                <span class="glyphicon glyphicon-stats" aria-hidden="true"></span>趋向分析
-            </accordion-heading>
-            <ul>
-                <li><a ui-sref="visitor" ui-sref-active="active">实时访客</a></li>
-                <li><a ui-sref="today" ui-sref-active="active">今日统计</a></li>
-                <li><a ui-sref="yesterday" ui-sref-active="active">昨日统计</a></li>
-                <li><a ui-sref="month" ui-sref-active="active">最近30天</a></li>
-            </ul>
-        </accordion-group>
-        <accordion-group  heading="" ng-class="{'current':currentMenu == 'menu3'}" ng-click="selectMenu('menu3')">
-            <accordion-heading>
-                <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>来源分析
-            </accordion-heading>
-            <ul>
-                <li><a ui-sref="source" ui-sref-active="active">全部来源</a></li>
-                <li><a ui-sref="searchengine" ui-sref-active="active">搜索引擎</a></li>
-                <li><a ui-sref="searchterm" ui-sref-active="active">搜索词</a></li>
-                <li><a ui-sref="externallinks" ui-sref-active="active">外部链接</a></li>
-            </ul>
-        </accordion-group>
-        <accordion-group heading="" ng-class="{'current':currentMenu == 'menu4'}" ng-click="selectMenu('menu4')">
-            <accordion-heading>
-                <span class="glyphicon glyphicon-blackboard" aria-hidden="true"></span>页面分析
-            </accordion-heading>
-            <ul>
-                <li><a ui-sref="visitedpages" ui-sref-active="active">受访页面</a></li>
-                <li><a ui-sref="entrancepage" ui-sref-active="active">入口页面</a></li>
-                <li><a ui-sref="pagetitle" ui-sref-active="active">页面标题</a></li>
-                <li><a href="#">离站链接</a></li>
-            </ul>
-        </accordion-group>
-        <accordion-group heading=""  ng-class="{'current':currentMenu == 'menu5'}" ng-click="selectMenu('menu5')">
-            <accordion-heading>
-                <span class="glyphicon glyphicon-signal" aria-hidden="true"></span>访客分析
-            </accordion-heading>
-            <ul>
-                <li><a ui-sref="visitormap" ui-sref-active="active">访客地图</a></li>
-                <li><a ui-sref="equipment" ui-sref-active="active">设备环境</a></li>
-                <li><a ui-sref="novisitors" ui-sref-active="active">新老访客</a></li>
-                <li><a ui-sref="visitorfeature" ui-sref-active="active">访客特征</a></li>
-            </ul>
-        </accordion-group>
-    </accordion>
-</div>
+    <div ng-controller="AccordionDemoCtrl">
+        <accordion close-others="oneAtATime">
+            <accordion-group heading="" is-open="status.isFirstOpen" is-disabled="status.isFirstDisabled"
+                             ng-class="{'current':currentMenu == 'menu1'}" ng-click="selectMenu('menu1')">
+                <accordion-heading ui-sref="index">
+                    <span class="glyphicon glyphicon-th-large" aria-hidden="true"></span>网站概览
+                </accordion-heading>
+            </accordion-group>
+            <accordion-group heading="" ng-class="{'current':currentMenu == 'menu2'}" ng-click="selectMenu('menu2')">
+                <accordion-heading>
+                    <span class="glyphicon glyphicon-stats" aria-hidden="true"></span>趋向分析
+                </accordion-heading>
+                <ul>
+                    <li><a ui-sref="visitor" ui-sref-active="active">实时访客</a></li>
+                    <li><a ui-sref="today" ui-sref-active="active">今日统计</a></li>
+                    <li><a ui-sref="yesterday" ui-sref-active="active">昨日统计</a></li>
+                    <li><a ui-sref="month" ui-sref-active="active">最近30天</a></li>
+                </ul>
+            </accordion-group>
+            <accordion-group heading="" ng-class="{'current':currentMenu == 'menu3'}" ng-click="selectMenu('menu3')">
+                <accordion-heading>
+                    <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>来源分析
+                </accordion-heading>
+                <ul>
+                    <li><a ui-sref="source" ui-sref-active="active">全部来源</a></li>
+                    <li><a ui-sref="searchengine" ui-sref-active="active">搜索引擎</a></li>
+                    <li><a ui-sref="searchterm" ui-sref-active="active">搜索词</a></li>
+                    <li><a ui-sref="externallinks" ui-sref-active="active">外部链接</a></li>
+                </ul>
+            </accordion-group>
+            <accordion-group heading="" ng-class="{'current':currentMenu == 'menu4'}" ng-click="selectMenu('menu4')">
+                <accordion-heading>
+                    <span class="glyphicon glyphicon-blackboard" aria-hidden="true"></span>页面分析
+                </accordion-heading>
+                <ul>
+                    <li><a ui-sref="visitedpages" ui-sref-active="active">受访页面</a></li>
+                    <li><a ui-sref="entrancepage" ui-sref-active="active">入口页面</a></li>
+                    <li><a ui-sref="pagetitle" ui-sref-active="active">页面标题</a></li>
+                    <li><a href="#">离站链接</a></li>
+                </ul>
+            </accordion-group>
+            <accordion-group heading="" ng-class="{'current':currentMenu == 'menu5'}" ng-click="selectMenu('menu5')">
+                <accordion-heading>
+                    <span class="glyphicon glyphicon-signal" aria-hidden="true"></span>访客分析
+                </accordion-heading>
+                <ul>
+                    <li><a ui-sref="visitormap" ui-sref-active="active">访客地图</a></li>
+                    <li><a ui-sref="equipment" ui-sref-active="active">设备环境</a></li>
+                    <li><a ui-sref="novisitors" ui-sref-active="active">新老访客</a></li>
+                    <li><a ui-sref="visitorfeature" ui-sref-active="active">访客特征</a></li>
+                </ul>
+            </accordion-group>
+        </accordion>
+    </div>
 </div>

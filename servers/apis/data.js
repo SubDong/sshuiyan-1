@@ -2,22 +2,36 @@ var express = require('express')
 var url = require('url')
 var date = require('../utils/date')
 var resutil = require('../utils/responseutils')
+
 var api = express.Router()
 
 api.get('/charts', function (req, res) {
     var parsed = url.parse(req.url, true)
 
     var type = parsed.query['type']
+    var querytypes = []
 
     if (!type) {
         type = 'pv'
     }
 
-    if (type == 'uv') {
-        var times = date.between(req, "visitor-")
-    }else{
 
-    }
+    querytypes = type.split(",")
+    var result = {}
+
+    querytypes.forEach(function (qtype) {
+        var qresult
+
+        if (qtype == 'uv') {
+            var uvresult = require('../services/uv').uv(req)
+        } else if (qtype == 'pv' || qtype == 'ip' || qtype == 'outnum' || qtype == 'outrate' || qtype == 'city' || qtype == 'province') {
+
+        }
+
+        result[qtype] = qresult;
+
+
+    })
 
     var types = type.split(",")
     var searchbody = {

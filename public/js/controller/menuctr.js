@@ -1,6 +1,8 @@
 /**
  * Created by john on 2015/3/25.
  */
+
+console.log('init menu.')
 app.controller('AccordionDemoCtrl', function ($scope) {
     $scope.oneAtATime = true;
 
@@ -9,8 +11,6 @@ app.controller('AccordionDemoCtrl', function ($scope) {
             title: '趋向分析 ',
             content: 'Dynamic Group Body - 1',
             template: "<h3>Hello, Directive</h3>"
-
-
         },
         {
             title: 'Dynamic Group Header - 2',
