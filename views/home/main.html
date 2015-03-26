@@ -3,10 +3,10 @@
         <div aria-label="First group" role="group" class="btn-group"
              ng-controller="DateChartController">
             <button class="btn btn-default disabled" type="button">时间</button>
-            <button class="btn btn-default" type="button" ng-click="today()">今天</button>
-            <button class="btn btn-default" type="button" ng-click="yesterday()"> 昨天</button>
-            <button class="btn btn-default" type="button" ng-click="lastWeek()">最近7天</button>
-            <button class="btn btn-default" type="button" ng-click="lasMonth()">最近30天</button>
+            <button class="btn btn-default" type="button" ng-click="checkMenu('menu1')" ng-class="{'current':onMeun == 'menu1'}">今天</button>
+            <button class="btn btn-default" type="button" ng-click="checkMenu('menu2')" ng-class="{'current':onMenu == 'menu2'}"> 昨天</button>
+            <button class="btn btn-default" type="button" ng-click="checkMenu('menu3')" ng-class="{'current':onMenu == 'menu3'}">最近7天</button>
+            <button class="btn btn-default" type="button" ng-click="checkMenu('menu4')" ng-class="{'current':onMenu == 'menu4'}">最近30天</button>
             <button class="btn btn-default" type="button">自定义<span aria-hidden="true"
                                                                    class="glyphicon glyphicon-calendar"></span>
             </button>
@@ -136,9 +136,9 @@
                         </div>
                     </div>
                 </div>
-                <div ng-controller="IndexController">
-                    <div class="ui-grid" ui-grid="gridOptions" ui-grid-pagination>
-                    </div>
+                <!--<div ng-controller="IndexController">-->
+                    <!--<div class="ui-grid" ui-grid="gridOptions" ui-grid-pagination>-->
+                    <!--</div>-->
                 </div>
             </div>
         </div>

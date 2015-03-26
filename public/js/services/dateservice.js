@@ -54,7 +54,7 @@ app.service('requestService', ['$rootScope', '$http', function ($rootScope, $htt
             types.forEach(function (item) {
                 var serie = {
                     name: item,
-                    type: opt.chart,
+                    type: "line",
                     data: jsons[item],
                     markPoint: {
                         data: [
