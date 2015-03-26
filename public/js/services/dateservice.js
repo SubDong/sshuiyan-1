@@ -8,12 +8,8 @@ app.service('requestService', ['$rootScope', '$http', function ($rootScope, $htt
             text: "正在努力的读取数据中..."
         });
 
-        $http.get("/api/charts?start=" + start.getTime() + "&end=" + end.getTime() + "&type=" + opt.type).success(function (data) {
-
-            console.log(data)
-
-            var jsons = JSON.parse(data);
-
+        $http.get("/api/charts?start=" + start + "&end=" + end + "&type=" + opt.type).success(function (data) {
+            var jsons = data;
             var option = {
                 calculable: true,
                 legend: {
@@ -54,7 +50,7 @@ app.service('requestService', ['$rootScope', '$http', function ($rootScope, $htt
             types.forEach(function (item) {
                 var serie = {
                     name: item,
-                    type: opt.chart,
+                    type: "line",
                     data: jsons[item],
                     markPoint: {
                         data: [
