@@ -8,14 +8,7 @@ app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
         .state('index', {
             url: '/index',
             templateUrl: '../home/main.html',
-            controller: function ($scope, requestService) {
-                $scope.init = function () {
-                    requestService.request('index_charts', today_start(), today_end(), "pv,uv");
-
-                };
-
-                $scope.init();
-            }
+            controller: 'indexctr'
         })
         .state('visitor', {
             url: "/trend/visitor",
@@ -79,4 +72,4 @@ app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
         })
 
 
-});
+})

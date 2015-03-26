@@ -1,7 +1,7 @@
 /**
  * Created by baizz on 15-3-25.
  */
-app.service('requestService', ['$rootScope',function ($rootScope) {
+app.service('requestService', ['$rootScope', '$http', function ($rootScope, $http) {
     this.request = function (id, start, end, opt) {
         var chart = echarts.init(document.getElementById(id));
 
@@ -9,7 +9,9 @@ app.service('requestService', ['$rootScope',function ($rootScope) {
             text: "正在努力的读取数据中..."
         });
 
-        $.get("/api/charts?start=" + start + "&end=" + end + "&type=" + opt.type).success(function (data) {
+        $http.get("/api/charts?start=" + start.getTime() + "&end=" + end.getTime() + "&type=" + opt.type).success(function (data) {
+
+            console.log(data)
 
             var jsons = JSON.parse(data);
 
@@ -59,18 +61,8 @@ app.service('requestService', ['$rootScope',function ($rootScope) {
                         ]
                     }
                 };
-
-                //var buckets = aggs[item].buckets
-                //buckets.forEach(function (bucket) {
-                //    serie.data.push(bucket['doc_count'])
-                //    lables.push(bucket['key'])
-                //})
                 option.series.push(serie)
             });
-
-            //datas.forEach(function (data) {
-            //    option.xAxis[0].data.push(data['key'])
-            //})
 
 
             chart.hideLoading();

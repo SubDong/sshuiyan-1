@@ -1,7 +1,7 @@
 /**
  * Created by john on 2015/3/25.
  */
-angular.module('myApp').controller('AccordionDemoCtrl', function ($scope) {
+app.controller('AccordionDemoCtrl', function ($scope) {
     $scope.oneAtATime = true;
 
     $scope.groups = [
@@ -20,7 +20,7 @@ angular.module('myApp').controller('AccordionDemoCtrl', function ($scope) {
 
     $scope.items = ['Item 1', 'Item 2', 'Item 3'];
 
-    $scope.addItem = function() {
+    $scope.addItem = function () {
         var newItemNo = $scope.items.length + 1;
         $scope.items.push('Item ' + newItemNo);
     };

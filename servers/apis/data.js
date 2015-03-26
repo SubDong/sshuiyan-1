@@ -6,13 +6,19 @@ var api = express.Router()
 
 api.get('/charts', function (req, res) {
     var parsed = url.parse(req.url, true)
-    var indexs = date.between(req, "access-")
-    console.log(indexs);
+
     var type = parsed.query['type']
 
     if (!type) {
         type = 'pv'
     }
+
+    if (type == 'uv') {
+        var times = date.between(req, "visitor-")
+    }else{
+
+    }
+
     var types = type.split(",")
     var searchbody = {
         "aggs": {},
