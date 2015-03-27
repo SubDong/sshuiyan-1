@@ -16,16 +16,16 @@ function yesterday_end() {
 function yesterday_start() {
     return start(yesterday())
 }
-function lastWeek_start(){
-    return start(lastWeek());
+function lastWeek_start() {
+    return start(lastSevenDays());
 }
-function lastWeek_end(){
+function lastWeek_end() {
     return end(new Date());
 }
-function lastMonth_start(){
-    return start(lastMonth());
+function lastMonth_start() {
+    return start(lastThirtyDays());
 }
-function lastMonth_end(){
+function lastMonth_end() {
     return end(new Date());
 }
 
@@ -35,14 +35,14 @@ function yesterday() {
     return date
 }
 
-function lastWeek(){
-    var date=new Date();
+function lastSevenDays() {
+    var date = new Date();
     date.setDate(date.getDate() - 7);
     return date;
 }
-function lastMonth(){
-    var date=new Date();
-    date.setMonth(date.getMonth()-1);
+function lastThirtyDays() {
+    var date = new Date();
+    date.setDate(date.getDate() - 30);
     return date;
 }
 

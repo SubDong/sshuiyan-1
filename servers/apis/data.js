@@ -1,29 +1,41 @@
 var express = require('express')
 var url = require('url')
 var date = require('../utils/date')
+var uv = require('../services/uv')
+var pv = require('../services/pv')
 var resutil = require('../utils/responseutils')
 
 var api = express.Router()
 
 api.get('/charts', function (req, res) {
-    var parsed = url.parse(req.url, true)
+    var query = url.parse(req.url, true).query
 
-    var type = parsed.query['type']
+    var type = query['type']
     var querytypes = []
 
     if (!type) {
         type = 'pv'
     }
 
+    type = 'uv'
+
+    var uvindexs = date.between(req, "visitor-")
+    var pvindexs = date.between(req, "access-")
 
     querytypes = type.split(",")
+    var start = Number(query['start'])
+    var end = Number(query['end'])
+    var inv = Number(query['int'])
+    var interval = Math.ceil((end - start) / inv)
     var result = {}
 
     querytypes.forEach(function (qtype) {
         var qresult
 
         if (qtype == 'uv') {
-            var uvresult = require('../services/uv').uv(req)
+            qb.udatechart(req.es, start, end, interval, uvindexs, 1, "tt", function (body) {
+                console.log(body)
+            })
         } else if (qtype == 'pv' || qtype == 'ip' || qtype == 'outnum' || qtype == 'outrate' || qtype == 'city' || qtype == 'province') {
 
         }

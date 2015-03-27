@@ -15,7 +15,8 @@ app.controller('Indexctr', function ($scope, $http, requestService) {
                 }
                 var option = {
                     type: selectedType,
-                    chart: "line"
+                    chart: "line",
+                    interval: 24
 
                 };
                 requestService.request('index_charts', start.getTime(), end.getTime(), option);
@@ -26,7 +27,11 @@ app.controller('Indexctr', function ($scope, $http, requestService) {
                     alert("请选择统计指标");
                     return;
                 }
-                var start = yesterday_start(), end = yesterday_end(), option = {type: selectedType, chart: 'line'};
+                var start = yesterday_start(), end = yesterday_end(), option = {
+                    type: selectedType,
+                    chart: 'line',
+                    interval: 24
+                };
                 requestService.request('index_charts', start.getTime(), end.getTime(), option);
                 break;
             case "menuAweek":
@@ -35,7 +40,11 @@ app.controller('Indexctr', function ($scope, $http, requestService) {
                     alert("请选择统计指标");
                     return;
                 }
-                var start = lastWeek_start(), end = lastWeek_end(), option = {type: selectedType, chart: 'line'};
+                var start = lastWeek_start(), end = today_end(), option = {
+                    type: selectedType,
+                    chart: 'line',
+                    interval: 7
+                };
                 requestService.request('index_charts', start.getTime(), end.getTime(), option);
                 break;
             case "menuMoth":
@@ -44,7 +53,11 @@ app.controller('Indexctr', function ($scope, $http, requestService) {
                     alert("请选择统计指标");
                     return;
                 }
-                var start = lastWeek_start(), end = lastWeek_end(), option = {type: selectedType, chart: 'line'};
+                var start = lastMonth_start(), end = today_end(), option = {
+                    type: selectedType,
+                    chart: 'line',
+                    interval: 30
+                };
                 requestService.request('index_charts', start.getTime(), end.getTime(), option);
                 break;
         }
