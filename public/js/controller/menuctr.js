@@ -24,9 +24,28 @@ app.controller('AccordionDemoCtrl', function ($scope) {
         var newItemNo = $scope.items.length + 1;
         $scope.items.push('Item ' + newItemNo);
     };
-    $scope.currentMenu = "menu1";
+    $scope.currentMenu = "menuFirst";
     $scope.selectMenu = function (menu) {
         $scope.currentMenu = menu;
     }
 
 });
+/*********nav-select*********/
+app.controller('ngSelect', function ($scope) {
+
+    var vm = $scope.vm = {};
+
+    //数组对象用来给ng-options遍历
+    vm.optionsData = [{
+        title : "www.perfect.com"
+    },{
+        title : "www.perfect.com"
+    },{
+        title : "www.perfect.com"
+    },{
+        title : "www.perfect.com"
+    }];
+
+})
+
+

@@ -2,11 +2,11 @@
  * Created by yousheng on 15/3/26.
  */
 
-app.controller('DateChartController', function ($scope, $http, requestService) {
-    $scope.onMeun = "menu1";
+app.controller('Indexctr', function ($scope, $http, requestService) {
+    $scope.onMeun = "menuTody";
     $scope.checkMenu = function (menu) {
         switch (menu) {
-            case "menu1":
+            case "menuTody":
                 var start = today_start(), end = today_end();
                 var selectedType = getCheckbox("radio1");
                 if (!selectedType) {
@@ -20,7 +20,7 @@ app.controller('DateChartController', function ($scope, $http, requestService) {
                 };
                 requestService.request('index_charts', start.getTime(), end.getTime(), option);
                 break;
-            case "menu2":
+            case "menuYesterday":
                 var selectedType = getCheckbox("radio1");
                 if (!selectedType) {
                     alert("请选择统计指标");
@@ -29,7 +29,7 @@ app.controller('DateChartController', function ($scope, $http, requestService) {
                 var start = yesterday_start(), end = yesterday_end(), option = {type: selectedType, chart: 'line'};
                 requestService.request('index_charts', start.getTime(), end.getTime(), option);
                 break;
-            case "menu3":
+            case "menuAweek":
                 var selectedType = getCheckbox("radio1");
                 if (!selectedType) {
                     alert("请选择统计指标");
@@ -38,7 +38,7 @@ app.controller('DateChartController', function ($scope, $http, requestService) {
                 var start = lastWeek_start(), end = lastWeek_end(), option = {type: selectedType, chart: 'line'};
                 requestService.request('index_charts', start.getTime(), end.getTime(), option);
                 break;
-            case "menu4":
+            case "menuMoth":
                 var selectedType = getCheckbox("radio1");
                 if (!selectedType) {
                     alert("请选择统计指标");
@@ -66,5 +66,5 @@ app.controller('DateChartController', function ($scope, $http, requestService) {
         requestService.request('index_charts', start.getTime(), end.getTime(), option);
     }
 
-    $scope.checkMenu("menu1");
+    $scope.checkMenu("menuTody");
 })
