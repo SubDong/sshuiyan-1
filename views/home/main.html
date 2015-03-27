@@ -1,12 +1,12 @@
 <div class="middle_containers">
     <div class="date_select">
         <div aria-label="First group" role="group" class="btn-group"
-             ng-controller="DateChartController">
+             ng-controller="Indexctr">
             <button class="btn btn-default disabled" type="button">时间</button>
-            <button class="btn btn-default" type="button" ng-click="checkMenu('menu1')" ng-class="{'current':onMeun == 'menu1'}">今天</button>
-            <button class="btn btn-default" type="button" ng-click="checkMenu('menu2')" ng-class="{'current':onMenu == 'menu2'}"> 昨天</button>
-            <button class="btn btn-default" type="button" ng-click="checkMenu('menu3')" ng-class="{'current':onMenu == 'menu3'}">最近7天</button>
-            <button class="btn btn-default" type="button" ng-click="checkMenu('menu4')" ng-class="{'current':onMenu == 'menu4'}">最近30天</button>
+            <button class="btn btn-default" type="button" ng-click="checkMenu('menuTody')" ng-class="{'current':onMeun == 'menuTody'}">今天</button>
+            <button class="btn btn-default" type="button" ng-click="checkMenu('menuYesterday')" ng-class="{'current':onMenu == 'menuYesterday'}"> 昨天</button>
+            <button class="btn btn-default" type="button" ng-click="checkMenu('menuAweek')" ng-class="{'current':onMenu == 'menuAweek'}">最近7天</button>
+            <button class="btn btn-default" type="button" ng-click="checkMenu('menuMoth')" ng-class="{'current':onMenu == 'menuMoth'}">最近30天</button>
             <button class="btn btn-default" type="button">自定义<span aria-hidden="true"
                                                                    class="glyphicon glyphicon-calendar"></span>
             </button>

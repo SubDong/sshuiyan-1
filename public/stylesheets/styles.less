@@ -124,6 +124,7 @@ nav, .navbar-default {
   color: #a1a1a1;
 }
 
+
 .top_menu {
   .fr;
   height: 60px;
@@ -137,12 +138,15 @@ nav, .navbar-default {
   display: @block;
   border-left: 1px solid @color;
   /*padding:0 1em;*/
-  color: @color - #525252;
+  color:#525252;
+  padding:15px;
+  font-size: 12px;
 }
 
 .top_menu ul li a {
-  color: @color - #525252;
-  font-size: 12px;
+  color:#525252;
+
+  padding:0px;
 }
 
 .top_menu ul li a:hover {
@@ -156,7 +160,6 @@ nav, .navbar-default {
   }
 
 }
-
 .navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
   background-color: #f9f9f9;
   color: #01aeef;
@@ -166,10 +169,13 @@ nav, .navbar-default {
   position: fixed;
   top: 52px;
   bottom: 0px;
+  ul li{
+    color:#fff;
+  }
   .fl;
-  width: 155px;
-  margin-right: -100%;
-  background: #334e72;
+   width: 155px;
+   margin-right: -100%;
+   background: #334e72;
   .panel-default > .panel-heading {
     background: #334e72;
     border: 0px;
