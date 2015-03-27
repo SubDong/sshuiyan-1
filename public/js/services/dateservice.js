@@ -8,7 +8,7 @@ app.service('requestService', ['$rootScope', '$http', function ($rootScope, $htt
             text: "正在努力的读取数据中..."
         });
 
-        $http.get("/api/charts?start=" + start + "&end=" + end + "&type=" + opt.type).success(function (data) {
+        $http.get("/api/charts?start=" + start + "&end=" + end + "&type=" + opt.type + "&int=" + opt.interval).success(function (data) {
 
             console.log(data)
 

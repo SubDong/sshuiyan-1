@@ -8,6 +8,4 @@ var client = new elasticsearch.Client({
     keepAlive: true
 })
 
-console.log('es connected!')
-
 module.exports = client
