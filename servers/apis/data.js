@@ -9,153 +9,88 @@ var api = express.Router()
 
 api.get('/charts', function (req, res) {
     var query = url.parse(req.url, true).query
-
-    var type = query['type']
-    var querytypes = []
-
-    if (!type) {
-        type = 'pv'
-    }
-
-    type = 'uv'
+    var querytypes = [];
+    var type = query['type'];
+    if (type.indexOf("," > -1))for (var i = 0; i < type.split(",").length; i++) {
+        querytypes.push(type.split(",")[i]);
+    } else querytypes.push(type);
+    console.log(querytypes);
 
     var uvindexs = date.between(req, "visitor-")
     var pvindexs = date.between(req, "access-")
 
-    querytypes = type.split(",")
     var start = Number(query['start'])
     var end = Number(query['end'])
     var inv = Number(query['int'])
     var interval = Math.ceil((end - start) / inv)
-    var result = {}
+    var finally_result = {};
 
     querytypes.forEach(function (qtype) {
-        var qresult
-
         if (qtype == 'uv') {
-            qb.udatechart(req.es, start, end, interval, uvindexs, 1, "tt", function (body) {
-                console.log(body)
-            })
+            uv.udatechart(req.es, start, end, interval, uvindexs, 1, "tt",function(body){
+                //var result = body.aggregations;
+                //var pv = result.result;
+                //var uv_Data = [];
+                //pv.buckets.forEach(function (e) {
+                //    var vo = {};
+                //    vo["time"] = e.key;
+                //    vo["value"] = e.doc_count;
+                //    uv_Data.push(vo);
+                //});
+            });
+            finally_result[qtype] = body;
         } else if (qtype == 'pv' || qtype == 'ip' || qtype == 'outnum' || qtype == 'outrate' || qtype == 'city' || qtype == 'province') {
-
+            //finally_result[qtype]=....
         }
-
-        result[qtype] = qresult;
-
-
-    })
-
-    var types = type.split(",")
-    var searchbody = {
-        "aggs": {},
-        "size": 10
-    }
-    types.forEach(function (type) {
-        if (type == 'pv') {
-            searchbody = {
-                "query": {
-                    "match_all": {}
-                },
-                "aggs": {
-                    "pv": {
-                        "terms": {"field": "utime"}
-                    }
-                }
-            }
-            console.log(searchbody);
-        } else {
-            searchbody.aggs[type] = {
-                "date_histogram": {
-                    "field": "utime",
-                    "interval": "1m"
-                }
-            }
-        }
-    })
-    req.es.search({
-        index: indexs.toString(),
-        body: searchbody
-    }).then(function (body) {
-        console.log(body);
-        var result = {}
-        result['hits'] = body.hits
-        var aggs = body.aggregations
-
-
-        var lables = []
-
-        types.forEach(function (type) {
-            var values = []
-            aggs[type].buckets.forEach(function (bucket) {
-                values.push(bucket['doc_count'])
-                if (lables.indexOf(bucket['key']) == -1) {
-                    lables.push(date.formatTime(bucket['key']));
-                }
-            })
-            result[type] = values
-        })
-
-        result['lables'] = lables
-        res.write(JSON.stringify(result));
-        res.end()
-    }, function (err) {
-        console.error(err);
-        res.status(500);
-        res.end();
-    })
-
+    });
+    res.write(JSON.stringify(finally_result));
+    res.end();
 })
 
-//api.get('/map', function (req, res) {
-//    var parsed = url.parse(req.url, true);
-//    var indexs = date.between(req, "access-");
-//    var type = parsed.query['type'];
-//    var types;
-//    var searchbody = {
-//        "aggs": {},
-//        "size": 10
-//    }
-//    if (type.indexOf(",") > -1) {
-//        types=type.split(",");
-//        types.forEach(function(type){
-//            searchbody.aggs[type]={
-//                "histogram":{
-//                    "field":"city",
-//                    "interval":"day"
-//                },
-//                "aggs":{
-//                    "revenue":{
-//                        "sum":{
-//                            "field":"city"
-//                        }
-//                    }
-//                }
-//            }
-//        });
-//    }else{
-//        searchbody.aggs[type]={
-//            "histogram":{
-//                "field":"city",
-//                "interval":"day"
-//            },
-//            "aggs":{
-//                "revenue":{
-//                    "sum":{
-//                        "field":"city"
-//                    }
-//                }
-//            }
-//        }
-//    }
-//
-//console.log(searchbody);
-//    req.es.search({
-//        index:indexs.toString(),
-//        body:searchbody
-//    },function(err,result){
-//        res.json(result);
-//        res.end();
-//    });
-//});
+api.get('/map', function (req, res) {
+    var query = url.parse(req.url, true).query;
+    var indexs = date.between(req, "access-");
+    var type = query['type'];
+    var start = Number(query['start']);
+    var end = Number(query['end']);
+    if (type == "pv") {
+        pv.mapChart(req.es, start, end, null, indexs, 1, null, function (body) {
+            var result = body.aggregations;
+            var region = result.pv.region;
+            var data = {};
+            var result_data = [];
+            region.buckets.forEach(function (e) {
+                var data = {};
+                var name = e.key;
+                if (name.indexOf("自治") > -1)data["name"] = name.slice(0, 2); else data["name"] = name.slice(0, -1);
+                data["value"] = e.doc_count;
+                result_data.push(data);
+            });
+            data["name"] = type;
+            data["data"] = result_data;
+            res.write(JSON.stringify(data));
+            res.end();
+        });
+    } else if (type == "uv") {
+        indexs = date.between(req, "visitor-");
+        uv.mapChart(req.es, start, end, null, indexs, 1, null, function (body) {
+            var result = body.aggregations;
+            var region = result.uv.region;
+            var data = {};
+            var result_data = [];
+            region.buckets.forEach(function (e) {
+                var data = {};
+                var name = e.key;
+                if (name.indexOf("自治") > -1)data["name"] = name.slice(0, 2); else data["name"] = name.slice(0, -1);
+                data["value"] = e.doc_count;
+                result_data.push(data);
+            });
+            data["name"] = type;
+            data["data"] = result_data;
+            res.write(JSON.stringify(data));
+            res.end();
+        });
+    }
+});
 
-module.exports = api
+module.exports = api;

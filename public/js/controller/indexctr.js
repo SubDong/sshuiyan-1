@@ -79,5 +79,13 @@ app.controller('Indexctr', function ($scope, $http, requestService) {
         requestService.request('index_charts', start.getTime(), end.getTime(), option);
     }
 
+
     $scope.checkMenu("menuTody");
+
+    $scope.initMap = function () {
+        var start = today_start(), end = today_end();
+        requestService.mapRequest('gest_map', start.getTime(), end.getTime(), "pv");
+    }
+    $scope.initMap();
+
 })
