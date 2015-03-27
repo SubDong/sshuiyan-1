@@ -1,18 +1,25 @@
 <div class="middle_containers">
     <div class="date_select">
-        <div aria-label="First group" role="group" class="btn-group"
-             ng-controller="Indexctr">
+        <div aria-label="First group" role="group" class="btn-group" ng-controller="Indexctr">
             <button class="btn btn-default disabled" type="button">时间</button>
-            <button class="btn btn-default" type="button" ng-click="checkMenu('menuTody')" ng-class="{'current':onMeun == 'menuTody'}">今天</button>
-            <button class="btn btn-default" type="button" ng-click="checkMenu('menuYesterday')" ng-class="{'current':onMenu == 'menuYesterday'}"> 昨天</button>
-            <button class="btn btn-default" type="button" ng-click="checkMenu('menuAweek')" ng-class="{'current':onMenu == 'menuAweek'}">最近7天</button>
-            <button class="btn btn-default" type="button" ng-click="checkMenu('menuMoth')" ng-class="{'current':onMenu == 'menuMoth'}">最近30天</button>
-            <button class="btn btn-default" type="button">自定义<span aria-hidden="true"
-                                                                   class="glyphicon glyphicon-calendar"></span>
+            <button class="btn btn-default" type="button" ng-click="tody()" ng-class="{'current':todayClass}">今天
             </button>
+            <button class="btn btn-default" type="button" ng-click="yesterday()" ng-class="{'current':yesterdayClass}">
+                昨天
+            </button>
+            <button class="btn btn-default" type="button" ng-click="sevenday()" ng-class="{'current':sevendayClass}">
+                最近7天
+            </button>
+            <button class="btn btn-default" type="button" ng-click="mothday()" ng-class="{'current':mothClass}">最近30天
+            </button>
+            <button type="button" class="btn btn-default" datepicker-popup="{{format}}" ng-model="dt" is-open="opened"
+                    date-disabled="disabled(date, mode)" current-text="今天" clear-text="清空" close-text="关闭"
+                    ng-click="open($event)" ng-class="{'current':definClass}">
+                自定义<i class="glyphicon glyphicon-calendar"></i></button>
+            <span class="dateshow fl">{{dt | date:'yyyy-MM-dd' }}</span>
         </div>
-        <button class="btn btn-default" type="button">
-            <span aria-hidden="true" class="glyphicon glyphicon-refresh"></span>
+        <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-refresh"
+                                                            aria-hidden="true"></span>
         </button>
     </div>
     <div class="my_concent">
@@ -136,11 +143,11 @@
                     </div>
                 </div>
                 <!--<div ng-controller="IndexController">-->
-                    <!--<div class="ui-grid" ui-grid="gridOptions" ui-grid-pagination>-->
-                    <!--</div>-->
-                </div>
+                <!--<div class="ui-grid" ui-grid="gridOptions" ui-grid-pagination>-->
+                <!--</div>-->
             </div>
         </div>
     </div>
+</div>
 </div>
 
