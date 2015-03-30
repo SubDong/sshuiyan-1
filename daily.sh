@@ -7,4 +7,4 @@ git pull
 git checkout develop
 
 cd ../logs
-forever restart -l sshuiyan.log -o sshuiyan.out -e sshuiyan.error ../sshuiyan/app.js
+forever restart -l sshuiyan.log -o sshuiyan.out -e sshuiyan.error ../sshuiyan/app.js $1
