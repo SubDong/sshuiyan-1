@@ -1,51 +1,44 @@
-var express = require('express')
-var url = require('url')
-var date = require('../utils/date')
-var uv = require('../services/uv')
-var pv = require('../services/pv')
-var resutil = require('../utils/responseutils')
+var express = require('express');
+var url = require('url');
+var date = require('../utils/date');
+var uv = require('../services/uv');
+var pv = require('../services/pv');
+var resutil = require('../utils/responseutils');
 
-var api = express.Router()
+var api = express.Router();
 
 api.get('/charts', function (req, res) {
-    var query = url.parse(req.url, true).query
+    var query = url.parse(req.url, true).query;
     var querytypes = [];
     var type = query['type'];
-    if (type.indexOf("," > -1))for (var i = 0; i < type.split(",").length; i++) {
-        querytypes.push(type.split(",")[i]);
-    } else querytypes.push(type);
+    if (type.indexOf("," > -1))
+        for (var i = 0, l = type.split(",").length; i < l; i++) {
+            querytypes.push(type.split(",")[i]);
+        }
+    else
+        querytypes.push(type);
+
     console.log(querytypes);
 
-    var uvindexs = date.between(req, "visitor-")
-    var pvindexs = date.between(req, "access-")
+    var uvindexs = date.between(req, "visitor-");
+    var pvindexs = date.between(req, "access-");
 
-    var start = Number(query['start'])
-    var end = Number(query['end'])
-    var inv = Number(query['int'])
-    var interval = Math.ceil((end - start) / inv)
+    var start = Number(query['start']);
+    var end = Number(query['end']);
+    var inv = Number(query['int']);
+    var interval = Math.ceil((end - start) / inv);
     var finally_result = {};
 
     querytypes.forEach(function (qtype) {
-        if (qtype == 'uv') {
-            uv.udatechart(req.es, start, end, interval, uvindexs, 1, "tt",function(body){
-                //var result = body.aggregations;
-                //var pv = result.result;
-                //var uv_Data = [];
-                //pv.buckets.forEach(function (e) {
-                //    var vo = {};
-                //    vo["time"] = e.key;
-                //    vo["value"] = e.doc_count;
-                //    uv_Data.push(vo);
-                //});
-            });
-            finally_result[qtype] = body;
-        } else if (qtype == 'pv' || qtype == 'ip' || qtype == 'outnum' || qtype == 'outrate' || qtype == 'city' || qtype == 'province') {
-            //finally_result[qtype]=....
-        }
+        uv.udatechart(req.es, start, end, interval, uvindexs, 1, "tt", function (hits) {
+            finally_result[qtype] = hits;
+            console.log("hits: \n" + JSON.stringify(hits));
+        });
+
     });
     res.write(JSON.stringify(finally_result));
     res.end();
-})
+});
 
 api.get('/map', function (req, res) {
     var query = url.parse(req.url, true).query;

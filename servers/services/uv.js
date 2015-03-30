@@ -7,7 +7,7 @@ var uv = {
                     "field": field
                 }
             }
-        })
+        });
 
         var request = {
             "index": indexs.toString(),
@@ -21,7 +21,7 @@ var uv = {
                         }
                     }
                 },
-                "size": 0,
+                //"size": 0,
                 "aggs": {
                     "result": {
                         "histogram": {
@@ -33,18 +33,15 @@ var uv = {
                     }
                 }
             }
-        }
+        };
 
-        es.search(request).then(function (body) {
-                if (cb) {
-                    cb(body)
-                }
-            }, function (err) {
-                if (err) {
-                    console.error(err)
-                }
-            }
-        )
+        es.search(request, function (error, response) {
+            if (response != undefined)
+                cb(response.hits.hits);
+            else
+                console.error(error);
+        });
+
     },
     mapChart: function (es, start, end, intervals, indexs, type, fields, cb) {
         var request = {
@@ -72,7 +69,7 @@ var uv = {
                     }
                 }
             }
-        }
+        };
         console.log(request);
         es.search(request).then(function (body) {
                 if (cb) {
@@ -85,6 +82,6 @@ var uv = {
             }
         )
     }
-}
+};
 
 module.exports = uv;

@@ -2,22 +2,22 @@
  * Created by yousheng on 15/3/26.
  */
 
-app.controller('Indexctr', function ($scope, $http, requestService) {
+app.controller('IndexCtrl', function ($scope, $http, requestService, messageService) {
     $scope.todayClass = true;
     $scope.reset = function () {
         $scope.todayClass = false;
         $scope.yesterdayClass = false;
-        $scope.sevendayClass = false;
-        $scope.mothClass = false;
+        $scope.sevenDayClass = false;
+        $scope.monthClass = false;
         $scope.definClass = false;
-    }
-    $scope.tody = function () {
+    };
+    $scope.today = function () {
         $scope.reset();
         $scope.todayClass = true;
         var start = today_start(), end = today_end();
         var selectedType = getCheckbox("radio1");
         if (!selectedType) {
-            alert("请选择统计指标");
+            messageService.alertMsg("请选择统计指标");
             return;
         }
         var option = {
@@ -33,7 +33,7 @@ app.controller('Indexctr', function ($scope, $http, requestService) {
         $scope.yesterdayClass = true;
         var selectedType = getCheckbox("radio1");
         if (!selectedType) {
-            alert("请选择统计指标");
+            messageService.alertMsg("请选择统计指标");
             return;
         }
         var start = yesterday_start(), end = yesterday_end(), option = {
@@ -42,13 +42,13 @@ app.controller('Indexctr', function ($scope, $http, requestService) {
             interval: 24
         };
         requestService.request('index_charts', start.getTime(), end.getTime(), option);
-    }
-    $scope.sevenday = function () {
+    };
+    $scope.sevenDay = function () {
         $scope.reset();
-        $scope.sevendayClass = true;
+        $scope.sevenDayClass = true;
         var selectedType = getCheckbox("radio1");
         if (!selectedType) {
-            alert("请选择统计指标");
+            messageService.alertMsg("请选择统计指标");
             return;
         }
         var start = lastWeek_start(), end = today_end(), option = {
@@ -58,13 +58,13 @@ app.controller('Indexctr', function ($scope, $http, requestService) {
         };
         requestService.request('index_charts', start.getTime(), end.getTime(), option);
 
-    }
-    $scope.mothday = function () {
+    };
+    $scope.month = function () {
         $scope.reset();
-        $scope.mothClass = true;
+        $scope.monthClass = true;
         var selectedType = getCheckbox("radio1");
         if (!selectedType) {
-            alert("请选择统计指标");
+            messageService.alertMsg("请选择统计指标");
             return;
         }
         var start = lastMonth_start(), end = today_end(), option = {
@@ -82,10 +82,14 @@ app.controller('Indexctr', function ($scope, $http, requestService) {
         $scope.reset();
         $scope.definClass = true;
     };
-    $scope.tody();
+
     $scope.initMap = function () {
         var start = today_start(), end = today_end();
         requestService.mapRequest('gest_map', start.getTime(), end.getTime(), "pv");
-    }
+    };
+
+
+    // initialize
+    $scope.today();
     $scope.initMap();
-})
+});
