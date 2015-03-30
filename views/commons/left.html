@@ -6,6 +6,18 @@
                <span class="glyphicon glyphicon-th-large" aria-hidden="true"></span>网站概览
             </accordion-heading>
         </accordion-group>
+        <accordion-group heading="" ng-class="{'current':currentMenu == 'menuone'}" ng-click="selectMenu('menuone')">
+            <accordion-heading>
+            <!--    <span  class="baidu_icon"></span>--><span aria-hidden="true" class="glyphicon glyphicon-asterisk"></span>百度推广
+            </accordion-heading>
+            <ul>
+                <li><a ui-sref="survey" ui-sref-active="active">推广概况</a></li>
+                <li><a ui-sref="today" ui-sref-active="active">推广方式</a></li>
+                <li><a ui-sref="search" ui-sref-active="active">搜索推广</a></li>
+                <li><a ui-sref="month" ui-sref-active="active">网盟推广</a></li>
+                <li><a ui-sref="month" ui-sref-active="active">推广URL速度</a></li>
+            </ul>
+        </accordion-group>
         <accordion-group heading="" ng-class="{'current':currentMenu == 'menuSecend'}" ng-click="selectMenu('menuSecend')">
             <accordion-heading>
                 <span class="glyphicon glyphicon-stats" aria-hidden="true"></span>趋向分析

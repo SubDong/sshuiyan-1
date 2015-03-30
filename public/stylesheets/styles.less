@@ -66,6 +66,9 @@ nav, .navbar-default {
   width: 100%;
   background-color: @background-color;
   z-index: 100;
+ .dropdown a{
+    padding-left:15px;
+  }
 }
 
 .head {
@@ -110,6 +113,14 @@ nav, .navbar-default {
       color:#fff;
 
     }
+  }
+  b{
+    line-height:45px;
+    color:#838383;
+    font-weight:bold;
+    padding:0 10px;
+    .fl;
+
   }
   .dete_refresh {
     margin: 8px;
@@ -240,6 +251,15 @@ nav, .navbar-default {
   .glyphicon {
     padding-right: 8px;
   }
+  .baidu_icon{
+    display:block;
+    .fl;
+    padding-right: 8px;
+    width:14px;
+    height:14px;
+    background:url(../img/baidu_icon.png) no-repeat;
+
+  }
 }
 
 .middle {
@@ -333,6 +353,11 @@ nav, .navbar-default {
   .btn-group {
     margin: 0px;
   }
+  select{
+    height:35px;
+    padding:0 10px;
+    font-size:14px;
+  }
 
 }
 
@@ -412,7 +437,9 @@ nav, .navbar-default {
       background: #8a65ce;
 
     }
+
   }
+
   ul li {
     display: @block;
     .fl;
@@ -431,6 +458,15 @@ nav, .navbar-default {
   margin-bottom: 20px;
 
   overflow: hidden;
+  b{
+    .fl;
+    font-size:14px;
+    line-height:35px;
+
+  }
+  select{
+    color:#01aeef;
+  }
 }
 
 .table_content {
@@ -482,6 +518,7 @@ nav, .navbar-default {
       .fl;
       color: #727272;
       margin-right: 15px;
+      line-height:35px;
       span {
         /* text-align: right;*/
         color: #5b5b5b;
@@ -574,10 +611,10 @@ nav, .navbar-default {
     height: 40px;
   }
 }
-//
-//.tab-content {
-//  overflow: hidden;
-//}
+
+.tab-content {
+  overflow: hidden;
+}
 
 /************visitor***********/
 .Visitor_concent {
@@ -774,9 +811,8 @@ nav, .navbar-default {
 
 
 }
-.gridStyle {
+.grid{
   width:100%;
-  height: 300px
 }
 .date_select{
 
@@ -788,4 +824,82 @@ nav, .navbar-default {
   .dropdown-menu {
     min-width: 320px;
   }
+}
+.btnchecked{
+  display:none;
+}
+.select_top{
+  padding:5px;
+  background:#f6f5f5;
+  select{
+    height:35px;
+    padding:0 10px;
+  }
+}
+.ui-grid-header-canvas{
+  background:#eeeeee;
+}
+.myconcent{
+  background:#fcfdfd;
+  overflow:hidden;
+}
+.survey_chart{
+  padding-top:10px;
+  margin-top:26px;
+  border:1px solid #eeeeee;
+  background:#ffffff;
+  .select_top{
+    background:#ffffff;
+  }
+
+}
+.survey_under{
+
+  .under_top{
+    background:#ffffff;
+    padding:10px;
+    vertical-align: middle;
+   text-align: center;
+    select{
+      height:35px;
+      padding:0 10px;
+      margin-right:20px;
+      color:#01aeef;
+
+    }
+  }
+  .under_concent{
+    background: #eaf9ff;
+    padding:10px;
+
+  }
+}
+.under_concent{
+  .row{
+    .col-xs-6{
+      .grid{
+       min-height:200px;
+        background:#ffffff;
+        margin-top:10px;
+        overflow: inherit;
+      }
+      .ui-grid-header-canvas{
+        background:#fff;
+      }
+    }
+  }
+}
+.indextable{
+  .ui-grid{
+    border:none;
+  }
+}
+.my_concent{
+  select{
+    height:35px;
+    padding:0 10px;
+    margin-right:20px;
+    font-size:14px;
+  }
+
 }

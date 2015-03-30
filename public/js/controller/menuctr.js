@@ -2,7 +2,7 @@
  * Created by john on 2015/3/25.
  */
 
-console.log('init menu.')
+/*console.log('init menu.')*/
 app.controller('AccordionDemoCtrl', function ($scope) {
     $scope.oneAtATime = true;
 

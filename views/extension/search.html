@@ -1,0 +1,159 @@
+<div class="middle_containers">
+    <div class="date_select">
+        <b>推广方式</b>
+        <div aria-label="First group" role="group" class="btn-group fl">
+            <button class="btn btn-default disabled" type="button">时间</button>
+            <button class="btn btn-default current" type="button"> 昨天</button>
+            <button class="btn btn-default" type="button">最近7天</button>
+            <button class="btn btn-default" type="button">最近30天</button>
+            <button class="btn btn-default" type="button">自定义<span aria-hidden="true"
+                                                                   class="glyphicon glyphicon-calendar"></span>
+            </button>
+        </div>
+        <div aria-label="First group" role="group" class="btn-group fl">
+            <button class="btn btn-default" type="button"> <input type="checkbox" checked="checked"/>
+                与其他时间段对比
+            </button>
+        </div>
+    </div>
+    <div class="my_concent">
+        <div class="date_show">
+          <b>指标：</b> <select ng-options="o.title for o in select.optionsData" ng-model="select.selectVal" class="ng-pristine ng-valid ng-touched"><option value="" class="">展现量、点击量</option></select>
+        </div>
+        <div class="index_chart">
+            <div id="indicators_charts" style="height:400px;"></div>
+        </div>
+        <div class="table_content">
+            <ul role="tablist" class="nav nav-tabs" id="myTab">
+                <li class="" role="presentation"><a aria-expanded="true" aria-controls="home"
+                                                    data-toggle="tab" role="tab" id="home-tab"
+                                                    href="#home">自定义指标</a></li>
+                <li role="presentation" class="active"><a aria-controls="profile" data-toggle="tab"
+                                                          id="profile-tab" role="tab" href="#profile"
+                                                          aria-expanded="false">高级筛选</a></li>
+
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <div aria-labelledby="home-tab" id="home" class="tab-pane fade " role="tabpanel">
+                    <div class="custom_title">
+                        <div class="chart_top">
+                            <ul>
+                                <li><span>网站基础指标 :</span></li>
+                                <li><input type="checkbox" checked="checked" name="radio1"/>
+                                    <label>浏览量(PV)</label></li>
+                                <li><input type="checkbox" name="radio1"/> <label>访问次数</label></li>
+                                <li><input type="checkbox" name="radio1"/> <label>访客数(UV)</label></li>
+                                <li><input type="checkbox" name="radio1"/> <label>新访客数</label></li>
+                                <li><input type="checkbox" name="radio1"/> <label>新访客比率</label></li>
+                                <li><input type="checkbox" name="radio1"/> <label>IP数</label></li>
+                            </ul>
+                        </div>
+                        <div class="chart_top">
+                            <ul>
+                                <li><span>流量质量指标:</span></li>
+                                <li><input type="checkbox" checked="checked" name="radio1"/>
+                                    <label>跳出率</label></li>
+                                <li><input type="checkbox" name="radio1"/> <label>平均访问时长</label></li>
+                                <li><input type="checkbox" name="radio1"/> <label>平均访问页数</label></li>
+                            </ul>
+                        </div>
+                        <div class="chart_top">
+                            <ul>
+                                <li><span>转化指标:</span></li>
+                                <li><input type="checkbox" checked="checked" name="radio1"/>
+                                    <label>转化次数</label></li>
+                                <li><input type="checkbox" name="radio1"/> <label>转化率</label></li>
+                            </ul>
+                        </div>
+                        <div class="chart_top">
+                            <button class="btn btn-primary" type="button">确定</button>
+                            * 最多只能勾选两项
+                        </div>
+
+                    </div>
+                    <div class="custom_secendtitle">
+                        <div class="custom_select">
+                            转化目标
+                            <div role="group" class="btn-group">
+                                <button aria-expanded="false" data-toggle="dropdown"
+                                        class="btn btn-default dropdown-toggle" type="button"
+                                        id="btnGroupDrop">
+                                    全部页面目标
+                                    <span class="caret"></span>
+                                </button>
+                                <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
+                                    <li><a href="#">全部页面目标</a></li>
+                                    <li><a href="#">公告</a></li>
+                                    <li><a href="#">全部事件目标</a></li>
+                                    <li><a href="#">完整下载</a></li>
+                                    <li><a href="#">在线下载</a></li>
+                                    <li><a href="#">时长目标</a></li>
+                                    <li><a href="#">访问页数目标</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="custom_table">
+                            <table id="mytable" class="table table-hover">
+                            </table>
+                            <div id="pager"></div>
+                        </div>
+                    </div>
+                </div>
+                <div aria-labelledby="profile-tab" id="profile" class="tab-pane fade active in" role="tabpanel">
+                    <div class="custom_title">
+
+                        <div class="chart_top2">
+                            <ul>
+                                <li><span>地域过滤:</span></li>
+                                <li>
+                                    <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
+                                        <div role="group" class="btn-group">
+                                            <select ng-options="o.title for o in select.optionsData" ng-model="select.selectVal" class="ng-pristine ng-valid ng-touched"><option value="" class="">大洲</option></select>
+
+                                        </div>
+                                        <div role="group" class="btn-group">
+                                            <select ng-options="o.title for o in select.optionsData" ng-model="select.selectVal" class="ng-pristine ng-valid ng-touched"><option value="" class="">国家</option></select>
+                                        </div>
+
+                                        <div role="group" class="btn-group">
+                                            <select ng-options="o.title for o in select.optionsData" ng-model="select.selectVal" class="ng-pristine ng-valid ng-touched"><option value="" class="">城市</option></select>
+
+                                        </div>
+
+                                    </div>
+                                </li>
+                                <li><a href="#">北京</a></li>
+                                <li><a href="#">上海</a></li>
+                                <li><a href="#">上海</a></li>
+
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="custom_secendtitle">
+                        <div class="custom_select">
+                            转化目标
+                            <div role="group" class="btn-group">
+                                <select ng-options="o.title for o in select.optionsData" ng-model="select.selectVal" class="ng-pristine ng-valid ng-touched"><option value="" class="">全部页面目标</option></select>
+                       <!--         <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
+                                    <li><a href="#">全部页面目标</a></li>
+                                    <li><a href="#">公告</a></li>
+                                    <li><a href="#">全部事件目标</a></li>
+                                    <li><a href="#">完整下载</a></li>
+                                    <li><a href="#">在线下载</a></li>
+                                    <li><a href="#">时长目标</a></li>
+                                    <li><a href="#">访问页数目标</a></li>
+                                </ul>-->
+                            </div>
+                        </div>
+                        <div class="custom_table">
+                            <div class="uconcentctrl" ng-controller="SearchCtrl" >
+                                <div ui-grid="gridOptions" class="grid" ui-grid-pinning ></div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

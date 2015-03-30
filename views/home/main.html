@@ -18,6 +18,10 @@
                 自定义<i class="glyphicon glyphicon-calendar"></i></button>
             <span class="dateshow fl">{{dt | date:'yyyy-MM-dd' }}</span>
         </div>
+        <!--    <div aria-label="First group" role="group" class="btn-group" ng-hide="btnchecked">
+          <button class="btn btn-default" type="button">按时</button>
+          <button class="btn btn-default" type="button">按天</button>
+      </div>-->
         <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-refresh"
                                                             aria-hidden="true"></span>
         </button>
@@ -45,47 +49,15 @@
                                                        class="glyphicon glyphicon-globe"></span>访客地图
                     </div>
                     <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
-                        <div role="group" class="btn-group">
-                            <button aria-expanded="false" data-toggle="dropdown"
-                                    class="btn btn-default dropdown-toggle" type="button"
-                                    id="btnGroupDrop1">
-                                亚洲
-                                <span class="caret"></span>
-                            </button>
-                            <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
-                                <li><a href="#">欧洲</a></li>
-                                <li><a href="#">南美洲</a></li>
-                            </ul>
-                        </div>
-                        <div role="group" class="btn-group">
-                            <button aria-expanded="false" data-toggle="dropdown"
-                                    class="btn btn-default dropdown-toggle" type="button"
-                                    id="btnGroupDrop2">
-                                中国
-                                <span class="caret"></span>
-                            </button>
-                            <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
-                                <li><a href="#">印度</a></li>
-                                <li><a href="#">俄罗斯</a></li>
-                            </ul>
-                        </div>
-                        <div role="group" class="btn-group">
-                            <button aria-expanded="false" data-toggle="dropdown"
-                                    class="btn btn-default dropdown-toggle" type="button"
-                                    id="btnGroupDrop3">
-                                浏览量
-                                <span class="caret"></span>
-                            </button>
-                            <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
-                                <li><a href="#">浏览量(PV)</a></li>
-                                <li><a href="#">访客次数(UV) </a></li>
-                                <li><a href="#">新访客数</a></li>
-                                <li><a href="#">IP数</a></li>
-                                <li><a href="#">跳出率</a></li>
-                                <li><a href="#">平均访问时长</a></li>
-                                <li><a href="#">转化次数</a></li>
-                            </ul>
-                        </div>
+                        <select ng-model="select.selectVal" ng-options="o.title for o in select.optionsData">
+                            <option value="">亚洲</option>
+                        </select>
+                        <select ng-model="select.selectVal" ng-options="o.title for o in select.optionsData">
+                            <option value="">中国</option>
+                        </select>
+                        <select ng-model="select.selectVal" ng-options="o.title for o in select.optionsData">
+                            <option value="">浏览量</option>
+                        </select>
                     </div>
                 </div>
                 <div id="gest_map" style="height:300px;"></div>
@@ -97,54 +69,30 @@
                     </div>
                     <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
                         <div role="group" class="btn-group">
-                            <button aria-expanded="false" data-toggle="dropdown"
-                                    class="btn btn-default dropdown-toggle" type="button"
-                                    id="btnGroupDrop4">
-                                浏览量
-                                <span class="caret"></span>
-                            </button>
-                            <ul aria-labelledby="btnGroupDrop4" role="menu" class="dropdown-menu">
-                                <li><a href="#">浏览量(PV)</a></li>
-                                <li><a href="#">访客次数(UV) </a></li>
-                                <li><a href="#">新访客数</a></li>
-                                <li><a href="#">IP数</a></li>
-                                <li><a href="#">跳出率</a></li>
-                                <li><a href="#">平均访问时长</a></li>
-                                <li><a href="#">转化次数</a></li>
-                            </ul>
+                            <select ng-model="select.selectVal" ng-options="o.title for o in select.optionsData">
+                                <option value="">浏览量</option>
+                            </select>
                         </div>
                     </div>
                 </div>
                 <div id="environment_map" style="height:300px;"></div>
             </div>
-            <div class="span3">
+            <div class="span3 indextable">
                 <div class="under_title">
                     <div class="under_top_title"><span aria-hidden="true"
                                                        class="glyphicon glyphicon-search"></span>搜索词
                     </div>
                     <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
                         <div role="group" class="btn-group">
-                            <button aria-expanded="false" data-toggle="dropdown"
-                                    class="btn btn-default dropdown-toggle" type="button"
-                                    id="btnGroupDrop7">
-                                浏览量
-                                <span class="caret"></span>
-                            </button>
-                            <ul aria-labelledby="btnGroupDrop7" role="menu" class="dropdown-menu">
-                                <li><a href="#">浏览量(PV)</a></li>
-                                <li><a href="#">访客次数(UV) </a></li>
-                                <li><a href="#">新访客数</a></li>
-                                <li><a href="#">IP数</a></li>
-                                <li><a href="#">跳出率</a></li>
-                                <li><a href="#">平均访问时长</a></li>
-                                <li><a href="#">转化次数</a></li>
-                            </ul>
+                            <select ng-model="select.selectVal" ng-options="o.title for o in select.optionsData">
+                                <option value="">浏览量</option>
+                            </select>
                         </div>
                     </div>
                 </div>
-                <!--<div ng-controller="IndexController">-->
-                <!--<div class="ui-grid" ui-grid="gridOptions" ui-grid-pagination>-->
-                <!--</div>-->
+                <div ng-controller="Indextable">
+                <div class="ui-grid" ui-grid="gridOptions" ui-grid-pinning>
+                </div>
             </div>
         </div>
     </div>

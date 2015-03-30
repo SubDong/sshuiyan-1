@@ -70,6 +70,16 @@ app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
             url: "/visitor/visitorfeature",
             templateUrl: "../visitor/visitorfeature.html"
         })
+        .state('survey', {
+            url: "/extension/survey",
+            templateUrl: "../extension/survey.html"
+        })
+        .state('search', {
+            url: "/extension/search",
+            templateUrl: "../extension/search.html"
+        })
+
+
 
 
 })
