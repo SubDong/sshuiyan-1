@@ -37,7 +37,6 @@ var pv = {
                 }
             }
         }
-
         es.search(request).then(function (body) {
                 if (cb) {
                     cb(body)
@@ -62,6 +61,7 @@ var pv = {
                         }
                     }
                 },
+                "size": 0,
                 "aggs": {
                     "pv": {
                         "global": {},

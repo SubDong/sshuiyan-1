@@ -21,7 +21,7 @@ var uv = {
                         }
                     }
                 },
-                //"size": 0,
+                "size": 0,
                 "aggs": {
                     "result": {
                         "histogram": {
@@ -37,7 +37,7 @@ var uv = {
 
         es.search(request, function (error, response) {
             if (response != undefined)
-                cb(response.hits.hits);
+                cb(response);
             else
                 console.error(error);
         });
@@ -56,6 +56,7 @@ var uv = {
                         }
                     }
                 },
+                "size": 0,
                 "aggs": {
                     "uv": {
                         "global": {},
@@ -69,8 +70,7 @@ var uv = {
                     }
                 }
             }
-        };
-        console.log(request);
+        }
         es.search(request).then(function (body) {
                 if (cb) {
                     cb(body)
