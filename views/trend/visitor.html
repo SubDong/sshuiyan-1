@@ -63,17 +63,15 @@
                                 <li><span>来源过滤 :</span></li>
                                 <li>
                                     <div role="group" class="btn-group">
-                                        <button aria-expanded="false" data-toggle="dropdown"
-                                                class="btn btn-default dropdown-toggle" type="button"
-                                                id="btnGroupDrop4">
-                                            全部
-                                            <span class="caret"></span>
-                                        </button>
-                                        <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
+                                        <select ng-options="o.title for o in select.optionsData"
+                                                ng-model="select.selectVal" class="ng-pristine ng-valid ng-touched">
+                                            <option value="" class="">全部</option>
+                                        </select>
+                                 <!--       <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
                                             <li><a href="#">直接访问</a></li>
                                             <li><a href="#">搜索引擎</a></li>
                                             <li><a href="#">外部连接</a></li>
-                                        </ul>
+                                        </ul>-->
                                     </div>
                                 </li>
                                 <li><a href="#">百度</a></li>
@@ -95,12 +93,11 @@
                                 <li>
                                     <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
                                         <div role="group" class="btn-group">
-                                            <button aria-expanded="false" data-toggle="dropdown"
-                                                    class="btn btn-default dropdown-toggle" type="button">
-                                                城市
-                                                <span class="caret"></span>
-                                            </button>
-                                            <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
+                                            <select ng-options="o.title for o in select.optionsData"
+                                                    ng-model="select.selectVal" class="ng-pristine ng-valid ng-touched">
+                                                <option value="" class="">国家</option>
+                                            </select>
+                                        <!--    <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
                                                 <li><a href="#"> 四川</a></li>
                                                 <li><a href="#">成都 </a></li>
                                                 <li><a href="#">成都</a></li>
@@ -109,24 +106,13 @@
                                                 <li><a href="#">成都</a></li>
                                                 <li><a href="#">转化次数</a></li>
 
-                                            </ul>
+                                            </ul>-->
                                         </div>
                                         <div role="group" class="btn-group">
-                                            <button aria-expanded="false" data-toggle="dropdown"
-                                                    class="btn btn-default dropdown-toggle" type="button">
-                                                成都市
-                                                <span class="caret"></span>
-                                            </button>
-                                            <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
-                                                <li><a href="#"> 成都</a></li>
-                                                <li><a href="#">成都 </a></li>
-                                                <li><a href="#">成都</a></li>
-                                                <li><a href="#">成都</a></li>
-                                                <li><a href="#">成都</a></li>
-                                                <li><a href="#">成都</a></li>
-                                                <li><a href="#">转化次数</a></li>
-
-                                            </ul>
+                                            <select ng-options="o.title for o in select.optionsData"
+                                                    ng-model="select.selectVal" class="ng-pristine ng-valid ng-touched">
+                                                <option value="" class="">城市</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </li>
@@ -154,10 +140,8 @@
 
                         </div>
                     </div>
-                    <div class="custom_table">
-                        <table id="vistior_table" class="table table-hover">
-                        </table>
-                        <div id="pager2"></div>
+                    <div class="custom_table" ng-controller="Vistiorctr">
+                        <div ui-grid="gridOptions" class="grid" ui-grid-pagination ui-grid-expandable></div>
                     </div>
                 </div>
             </div>

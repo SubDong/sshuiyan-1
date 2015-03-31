@@ -19,17 +19,9 @@
     </div>
     <div class="my_concent">
         <div class="date_show">
-            <div class="date_show">
-                <ul>
-                    <li class="date_first"><h4>点击量</h4><span>34</span></li>
-                    <li class="date_third"><h4>消费</h4><span>34</span></li>
-                    <li class="date_first"><h4>浏览量(PV)</h4><span>2,574</span></li>
-                    <li class="date_last"><h4>跳出率 </h4><span>90</span></li>
-                    <li class="date_last"><h4>平均访问时长 </h4><span>90</span></li>
-                    <li class="date_first"><h4>平均访问时长 </h4><span>00:02:34</span></li>
-                </ul>
-
-            </div>
+            <b>指标：</b> <select ng-options="o.title for o in select.optionsData" ng-model="select.selectVal"
+                               class="ng-pristine ng-valid ng-touched">
+            <option value="" class="">展现量、点击量</option>
         </select>
         </div>
         <div class="index_chart">
@@ -40,53 +32,54 @@
                 <tab heading="自定义指标">
                     <div class="custom_title">
                         <p class="chart_top_title"><b>系统默认指标 </b></p>
+
                         <div class="chart_top">
-                                <span>消费指标 :</span>
-                                <ul>
-                                    <li ng-repeat="item in target" ng-class='{current:$index==selectedRow}'
-                                        ng-click='selectedWhich($index)'>{{item.consumption_name}}
-                                    </li>
-                                </ul>
+                            <span>消费指标 :</span>
+                            <ul>
+                                <li ng-repeat="item in target" ng-class='{current:$index==selectedRow}'
+                                    ng-click='selectedWhich($index)'>{{item.consumption_name}}
+                                </li>
+                            </ul>
                         </div>
                         <div class="chart_top">
-                                <span>网站基础指标 :</span>
-                                <ul>
-                                    <li ng-repeat="item in Webbased" ng-class='{current:$index==selectedWeb}'
-                                        ng-click='selectedWebbased($index)'>{{item.consumption_name}}
-                                    </li>
-                                </ul>
+                            <span>网站基础指标 :</span>
+                            <ul>
+                                <li ng-repeat="item in Webbased" ng-class='{current:$index==selectedWeb}'
+                                    ng-click='selectedWebbased($index)'>{{item.consumption_name}}
+                                </li>
+                            </ul>
                         </div>
                         <div class="chart_top">
-                                <span>流量质量指标:</span>
-                                <ul>
-                                    <li ng-repeat="item in flow" ng-class='{current:$index==selectedflow}'
-                                        ng-click='selectflowd($index)'>{{item.consumption_name}}
-                                    </li>
-                                </ul>
+                            <span>流量质量指标:</span>
+                            <ul>
+                                <li ng-repeat="item in flow" ng-class='{current:$index==selectedflow}'
+                                    ng-click='selectflowd($index)'>{{item.consumption_name}}
+                                </li>
+                            </ul>
                         </div>
                         <div class="chart_top">
-                                <span>转化指标:</span>
-                                <ul>
-                                    <li ng-repeat="item in transform" ng-class='{current:$index==selectedtransform}'
-                                        ng-click='selectedform($index)'>{{item.consumption_name}}
-                                    </li>
-                                </ul>
+                            <span>转化指标:</span>
+                            <ul>
+                                <li ng-repeat="item in transform" ng-class='{current:$index==selectedtransform}'
+                                    ng-click='selectedform($index)'>{{item.consumption_name}}
+                                </li>
+                            </ul>
                         </div>
                         <div class="chart_top">
-                                <span>移动搜索页指标:</span>
-                                <ul>
-                                    <li ng-repeat="item in mobile" ng-class='{current:$index==selectedmobile}'
-                                        ng-click='selectedmobiles($index)'>{{item.consumption_name}}
-                                    </li>
-                                </ul>
+                            <span>移动搜索页指标:</span>
+                            <ul>
+                                <li ng-repeat="item in mobile" ng-class='{current:$index==selectedmobile}'
+                                    ng-click='selectedmobiles($index)'>{{item.consumption_name}}
+                                </li>
+                            </ul>
                         </div>
                         <div class="chart_top">
-                                <span>离线宝回呼指标:</span>
-                                <ul>
-                                    <li ng-repeat="item in  recall" ng-class='{current:$index==selectedrecall}'
-                                        ng-click='selectedrecalls($index)'>{{item.consumption_name}}
-                                    </li>
-                                </ul>
+                            <span>离线宝回呼指标:</span>
+                            <ul>
+                                <li ng-repeat="item in  recall" ng-class='{current:$index==selectedrecall}'
+                                    ng-click='selectedrecalls($index)'>{{item.consumption_name}}
+                                </li>
+                            </ul>
                         </div>
                         <div class="chart_top">
                             <button class="btn btn-primary" type="button">确定</button>
@@ -159,6 +152,15 @@
                                         class="ng-pristine ng-valid ng-touched">
                                     <option value="" class="">全部页面目标</option>
                                 </select>
+                                <!--         <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
+                                             <li><a href="#">全部页面目标</a></li>
+                                             <li><a href="#">公告</a></li>
+                                             <li><a href="#">全部事件目标</a></li>
+                                             <li><a href="#">完整下载</a></li>
+                                             <li><a href="#">在线下载</a></li>
+                                             <li><a href="#">时长目标</a></li>
+                                             <li><a href="#">访问页数目标</a></li>
+                                         </ul>-->
                             </div>
                         </div>
                         <div class="custom_table">

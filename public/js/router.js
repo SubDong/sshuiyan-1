@@ -77,8 +77,9 @@ app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
             url: "/extension/search",
             templateUrl: "../extension/search.html"
         })
-
-
-
+        .state('way', {
+            url: "/extension/way",
+            templateUrl: "../extension/way.html"
+        })
 
 })

@@ -3,7 +3,7 @@
  */
 app.service('requestService', ['$rootScope', '$http', function ($rootScope, $http) {
     this.request = function (id, start, end, opt) {
-        var chart = echarts.init(document.getElementById(id));
+        var chart = echarts.init(document.getElementById());
         chart.showLoading({
             text: "正在努力的读取数据中..."
         });
