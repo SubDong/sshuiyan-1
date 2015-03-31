@@ -64,6 +64,21 @@ app.service('requestService', ['$rootScope', '$http', function ($rootScope, $htt
             }).error(function (err) {
                 console.error(err)
             });
+        },
+        this.pieRequest=function(id,start,end){
+            $http.get("/api/pie?start=" + start + "&end=" + end).success(function (data) {
+                var chartConfig = {
+                    tt: "item",
+                    legendData: [data.label],
+                    chartType: "pie",
+                    dataKey: "name",
+                    dataValue: "value",
+                    serieName:""
+                }
+                chartFactory.lineChart.chartInit(data, chart, chartConfig);
+            }).error(function (err) {
+                console.error(err)
+            });
         }
 }]);
 

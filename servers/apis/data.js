@@ -58,5 +58,12 @@ api.get('/map', function (req, res) {
             break;
     }
 });
+api.get('/pie', function (req, res) {
+    var query = url.parse(req.url, true).query;
+    var indexs = date.between(req, "access-");
+    var type = query['type'];
+    var start = Number(query['start']);
+    var end = Number(query['end']);
+});
 
 module.exports = api;
