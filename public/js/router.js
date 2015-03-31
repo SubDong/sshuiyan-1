@@ -7,8 +7,7 @@ app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
     $stateProvider
         .state('index', {
             url: '/index',
-            templateUrl: '../home/main.html',
-            controller: 'IndexCtrl'
+            templateUrl: '../home/main.html'
         })
         .state('visitor', {
             url: "/trend/visitor",

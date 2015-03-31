@@ -76,7 +76,6 @@ var pv = {
                 }
             }
         }
-        console.log(request);
         es.search(request).then(function (body) {
                 if (cb) {
                     cb(body)

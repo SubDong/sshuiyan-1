@@ -15,13 +15,8 @@ app.controller('IndexCtrl', function ($scope, $http, requestService, messageServ
         $scope.reset();
         $scope.todayClass = true;
         var start = today_start(), end = today_end();
-        var selectedType = getCheckbox("radio1");
-        if (!selectedType) {
-            messageService.alertMsg("请选择统计指标");
-            return;
-        }
         var option = {
-            type: selectedType,
+            type: "pv",
             chart: "line",
             interval: 24
         };
@@ -31,13 +26,8 @@ app.controller('IndexCtrl', function ($scope, $http, requestService, messageServ
     $scope.yesterday = function () {
         $scope.reset();
         $scope.yesterdayClass = true;
-        var selectedType = getCheckbox("radio1");
-        if (!selectedType) {
-            messageService.alertMsg("请选择统计指标");
-            return;
-        }
         var start = yesterday_start(), end = yesterday_end(), option = {
-            type: selectedType,
+            type: "pv",
             chart: 'line',
             interval: 24
         };
@@ -47,13 +37,8 @@ app.controller('IndexCtrl', function ($scope, $http, requestService, messageServ
     $scope.sevenDay = function () {
         $scope.reset();
         $scope.sevenDayClass = true;
-        var selectedType = getCheckbox("radio1");
-        if (!selectedType) {
-            messageService.alertMsg("请选择统计指标");
-            return;
-        }
         var start = lastWeek_start(), end = today_end(), option = {
-            type: selectedType,
+            type: "pv",
             chart: 'line',
             interval: 7
         };
@@ -63,13 +48,8 @@ app.controller('IndexCtrl', function ($scope, $http, requestService, messageServ
     $scope.month = function () {
         $scope.reset();
         $scope.monthClass = true;
-        var selectedType = getCheckbox("radio1");
-        if (!selectedType) {
-            messageService.alertMsg("请选择统计指标");
-            return;
-        }
         var start = lastMonth_start(), end = today_end(), option = {
-            type: selectedType,
+            type: "pv",
             chart: 'line',
             interval: 30
         };
@@ -88,9 +68,7 @@ app.controller('IndexCtrl', function ($scope, $http, requestService, messageServ
         var start = today_start(), end = today_end();
         requestService.mapRequest('gest_map', start.getTime(), end.getTime(), "pv");
     };
-
-
     // initialize
-    //$scope.today();
+    $scope.today();
     //$scope.initMap();
 });

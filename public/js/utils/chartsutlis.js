@@ -45,18 +45,20 @@ var chartFactory = {
                 name: data.label,
                 type: chartConfig.chartType,
                 data: [],
-                markPoint: {
-                    data: [
-                        {type: 'max', name: '最大值'},
-                        {type: 'min', name: '最小值'}
-                    ]
-                },
                 markLine: {
                     data: [
                         {type: 'average', name: '平均值'}
                     ]
                 }
             };
+            if (chartConfig.min_max) {
+                serie["markPoint"] = {
+                    data: [
+                        {type: 'max', name: '最大值'},
+                        {type: 'min', name: '最小值'}
+                    ]
+                }
+            }
             if (data.data[0] != undefined) {
                 var json = data.data;
                 var xData = [];
@@ -73,7 +75,7 @@ var chartFactory = {
         chartAddData: function (data, chartObj, chartConfig) {
 
             if (data.data[0] != undefined) {
-                var option=chartObj.getOption();
+                var option = chartObj.getOption();
                 var json = data.data;
                 var xData = [];
                 var serie = {
@@ -92,12 +94,21 @@ var chartFactory = {
                         ]
                     }
                 };
-                json.forEach(function (item) {
-                    serie.data.push(item[chartConfig.dataValue]);
+                var old_series = option.series;
+                var find = true;
+                old_series.forEach(function (e) {
+                    if (e.name == chartConfig.showTarget) {
+                        find = false;
+                        return;
+                    }
                 });
-               option.series.push(serie);
+                if (find) {
+                    json.forEach(function (item) {
+                        serie.data.push(item[chartConfig.dataValue]);
+                    });
+                    option.series.push(serie);
+                }
                 chartObj.setOption(option);
-                console.log(option);
             }
         }
     }, mapChart: {
@@ -164,6 +175,21 @@ var chartFactory = {
         },
         chartAddData: function () {
 
+        }
+    }
+}
+var chartUtils = {
+    allowSelected: function (chartObj, param, allSelectedItem) {
+        var selectedCount = [];
+        var legend = chartObj.getOption().legend.data;
+        var selected = param.selected;
+        legend.forEach(function (e) {
+            if (selected[e] == true) {
+                selectedCount.push(selected[e]);
+            }
+        });
+        if (selectedCount.length > allSelectedItem) {
+            selected[param.target] = false;
         }
     }
 }

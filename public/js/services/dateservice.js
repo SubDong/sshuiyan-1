@@ -7,17 +7,15 @@ app.service('requestService', ['$rootScope', '$http', function ($rootScope, $htt
         chart.showLoading({
             text: "正在努力的读取数据中..."
         });
-        //chart.on(echarts.EVENT.LEGEND_SELECTED, function (param){
-        //    console.log(param);
-        //});
         chart.on(echarts.config.EVENT.LEGEND_SELECTED, function (param) {
-            console.log(param);
-            var chartConfig={
-                chartType:"line",
+            chartUtils.allowSelected(this,param,2);//定义能选中的item为多少
+            var chartConfig = {
+                showTarget: param.target,
+                chartType: "line",
                 dataValue: "value"
             }
             $http.get("/api/charts?start=" + start + "&end=" + end + "&type=" + param.target + "&int=" + opt.interval).success(function (data) {
-                chartFactory.lineChart.chartAddData(data,chart,chartConfig);
+                chartFactory.lineChart.chartAddData(data, chart, chartConfig);
             });
         });
         var types = opt.type.toString();
@@ -27,20 +25,19 @@ app.service('requestService', ['$rootScope', '$http', function ($rootScope, $htt
         queryTypes.forEach(function (etype) {
             $http.get("/api/charts?start=" + start + "&end=" + end + "&type=" + etype + "&int=" + opt.interval).success(function (data) {
                 var chartConfig = {
-                    legendData: ["pv", "uv", "outrate"],
-                    ledLayout: "horizontal",
-                    tt: "axis",
-                    bGap: false,
-                    xType: "category",
-                    yType: "value",
-                    axFormat: "{value} 次访问",
-                    chartType: "line",
-                    dataKey: "time",
-                    dataValue: "value"
+                    min_max: true,//是否允许最小值,
+                    legendData: ["pv", "uv", "outrate"],//显示几种数据
+                    ledLayout: "horizontal",//显示数据的按钮排列方式
+                    tt: "axis",//鼠标浮动样式
+                    bGap: false,//首行缩进
+                    xType: "category",//x轴数据类型
+                    yType: "value",//y轴数据类型
+                    axFormat: "{value} 次访问",//y轴数据格式化格式
+                    chartType: opt.chart,//图表类型
+                    dataKey: "time",//传入数据的key值
+                    dataValue: "value"//传入数据的value值
                 }
-                if (data.data[0] != undefined) {
-                    chartFactory.lineChart.chartInit(data, chart, chartConfig);
-                }
+                chartFactory.lineChart.chartInit(data, chart, chartConfig);
             }).error(function (err) {
                 console.error(err)
             })
@@ -53,6 +50,7 @@ app.service('requestService', ['$rootScope', '$http', function ($rootScope, $htt
             });
             $http.get("/api/map?start=" + start + "&end=" + end + "&type=" + type).success(function (data) {
                 var chartConfig = {
+                    min_max: false,
                     tt: "axis",
                     legendData: [data.label],
                     bGap: true,
@@ -62,9 +60,7 @@ app.service('requestService', ['$rootScope', '$http', function ($rootScope, $htt
                     dataKey: "name",
                     dataValue: "value"
                 }
-                if (data.data[0] != undefined) {
-                    chartFactory.lineChart.chartInit(data, chart, chartConfig);
-                }
+                chartFactory.lineChart.chartInit(data, chart, chartConfig);
             }).error(function (err) {
                 console.error(err)
             });

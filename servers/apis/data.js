@@ -28,12 +28,12 @@ api.get('/charts', function (req, res) {
     querytypes.forEach(function (qtype) {
         if (qtype == 'uv') {
             uv.udatechart(req.es, start, end, interval, uvindexs, 1, "tt", function (body) {
-                datautils.chartData(res, body,qtype);
+                datautils.chartData(res, body, qtype);
             });
         } else if (qtype == 'pv' || qtype == 'ip' || qtype == 'outnum' || qtype == 'outrate' || qtype == 'city' || qtype == 'province') {
             //finally_result[qtype]=....
             pv.pdatechart(req.es, start, end, interval, pvindexs, 1, "utime", function (body) {
-                datautils.chartData(res, body,qtype);
+                datautils.chartData(res, body, qtype);
             });
         }
     });
@@ -46,14 +46,14 @@ api.get('/map', function (req, res) {
     var end = Number(query['end']);
     switch (type) {
         case "pv":
-            pv.barChart(req.es, start, end, null, "access-2015-03-27", 1, null, function (body) {
-                datautils.mapData(res,body,type);
+            pv.barChart(req.es, start, end, null, indexs, 1, null, function (body) {
+                datautils.mapData(res, body, type);
             });
             break;
         case "uv":
             indexs = date.between(req, "visitor-");
             uv.barChart(req.es, start, end, null, indexs, 1, null, function (body) {
-                datautils.mapData(res,body,type);
+                datautils.mapData(res, body, type);
             });
             break;
     }

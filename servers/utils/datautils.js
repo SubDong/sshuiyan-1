@@ -5,26 +5,30 @@ var date = require('../utils/date');
 var datautils = {
     chartData: function (res, esBody, qtype) {
         var result = esBody.aggregations;
-        var pv = result.result;
         var resultData = {};
-        var uv_Data = [];
-        pv.buckets.forEach(function (e) {
-            var vo = {};
-            vo["time"] = date.formatTime(e.key);
-            vo["value"] = e.doc_count;
-            uv_Data.push(vo);
-        });
-        resultData["label"] = qtype;
-        resultData["data"] = uv_Data;
-        res.write(JSON.stringify(resultData));
-        res.end();
+        if (result != undefined) {
+            var pv = result.result;
+            var uv_Data = [];
+            pv.buckets.forEach(function (e) {
+                var vo = {};
+                vo["time"] = date.formatTime(e.key);
+                vo["value"] = e.doc_count;
+                uv_Data.push(vo);
+            });
+            resultData["label"] = qtype;
+            resultData["data"] = uv_Data;
+            res.write(JSON.stringify(resultData));
+            res.end();
+        } else {
+            res.write(JSON.stringify(resultData));
+            res.end();
+        }
+
     },
     mapData: function (res, esBody, qtype) {
         var data = {};
         var result = esBody.aggregations;
-        var qData=result[qtype];
-        console.log(qData);
-        console.log(JSON.stringify(result));
+        var qData = result[qtype];
         if (qData.region != undefined) {
             var region = qData.region;
             var result_data = [];
