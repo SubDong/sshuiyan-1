@@ -3,12 +3,12 @@
  */
 app.service('requestService', ['$rootScope', '$http', function ($rootScope, $http) {
     this.request = function (id, start, end, opt) {
-        var chart = echarts.init(document.getElementById());
+        var chart = echarts.init(document.getElementById(id));
         chart.showLoading({
             text: "正在努力的读取数据中..."
         });
         chart.on(echarts.config.EVENT.LEGEND_SELECTED, function (param) {
-            chartUtils.allowSelected(this,param,2);//定义能选中的item为多少
+            chartUtils.allowSelected(this, param, 2);//定义能选中的item为多少
             var chartConfig = {
                 showTarget: param.target,
                 chartType: "line",
@@ -65,17 +65,19 @@ app.service('requestService', ['$rootScope', '$http', function ($rootScope, $htt
                 console.error(err)
             });
         },
-        this.pieRequest=function(id,start,end){
-            $http.get("/api/pie?start=" + start + "&end=" + end).success(function (data) {
+        this.pieRequest = function (id, start, end, field,desc) {
+            var chart = echarts.init(document.getElementById(id));
+            $http.get("/api/pie?start=" + start + "&end=" + end + "&field=" + field).success(function (data) {
                 var chartConfig = {
                     tt: "item",
-                    legendData: [data.label],
+                    legendData: data.label,
+                    ledLayout:"vertical",
                     chartType: "pie",
+                    serieName: desc,
                     dataKey: "name",
-                    dataValue: "value",
-                    serieName:""
+                    dataValue: "value"
                 }
-                chartFactory.lineChart.chartInit(data, chart, chartConfig);
+                chartFactory.pieChart.chartInit(data,chart,chartConfig);
             }).error(function (err) {
                 console.error(err)
             });

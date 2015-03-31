@@ -3,7 +3,7 @@
  */
 var date = require('../utils/date');
 var datautils = {
-    chartData: function (res, esBody, qtype) {
+    lineData: function (res, esBody, qtype) {
         var result = esBody.aggregations;
         var resultData = {};
         if (result != undefined) {
@@ -25,7 +25,7 @@ var datautils = {
         }
 
     },
-    mapData: function (res, esBody, qtype) {
+    barData: function (res, esBody, qtype) {
         var data = {};
         var result = esBody.aggregations;
         var qData = result[qtype];
@@ -45,6 +45,29 @@ var datautils = {
             res.end();
         } else {
             res.write(JSON.stringify(data));
+            res.end();
+        }
+    },
+    pieData: function (res, esBody) {
+        var result_data = {};
+        var data = [];
+        var name_data=[];
+        var result = esBody.aggregations;
+        var qData = result["result"];
+        if (qData.buckets.length > 0) {
+            qData.buckets.forEach(function (e) {
+                var tmp_data = {};
+                name_data.push(e.key);
+                tmp_data["name"] = e.key;
+                tmp_data["value"] = e.doc_count;
+                data.push(tmp_data);
+            });
+            result_data["label"]=name_data;
+            result_data["data"]=data;
+            res.write(JSON.stringify(result_data));
+            res.end();
+        } else {
+            res.write(JSON.stringify(result_data));
             res.end();
         }
     }

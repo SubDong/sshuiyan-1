@@ -178,6 +178,7 @@ var chartFactory = {
         }
     }, pieChart: {
         chartInit: function (data, chartObj, chartConfig) {
+            var jsonData=data.data;
             var option = {
                 tooltip: {
                     trigger: chartConfig.tt,
@@ -221,6 +222,15 @@ var chartFactory = {
                 //{value: 335, name: '直接访问'},
                 //{value: 310, name: '邮件营销'}
             }
+            jsonData.forEach(function (item) {
+                var push_data = {};
+                push_data[chartConfig.dataKey] = item[chartConfig.dataKey];
+                push_data[chartConfig.dataValue]=item[chartConfig.dataValue];
+                serie.data.push(push_data);
+            });
+            option.series.push(serie);
+            chartObj.hideLoading();
+            chartObj.setOption(option);
 
         }
     }
