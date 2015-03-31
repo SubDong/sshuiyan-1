@@ -48,7 +48,7 @@ var pv = {
             }
         )
     },
-    mapChart: function (es, start, end, intervals, indexs, type, fields, cb) {
+    barChart: function (es, start, end, intervals, indexs, type, fields, cb) {
         var request = {
             "index": indexs.toString(),
             "type": type,

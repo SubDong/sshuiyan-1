@@ -46,13 +46,13 @@ api.get('/map', function (req, res) {
     var end = Number(query['end']);
     switch (type) {
         case "pv":
-            pv.mapChart(req.es, start, end, null, indexs, 1, null, function (body) {
+            pv.barChart(req.es, start, end, null, "access-2015-03-27", 1, null, function (body) {
                 datautils.mapData(res,body,type);
             });
             break;
         case "uv":
             indexs = date.between(req, "visitor-");
-            uv.mapChart(req.es, start, end, null, indexs, 1, null, function (body) {
+            uv.barChart(req.es, start, end, null, indexs, 1, null, function (body) {
                 datautils.mapData(res,body,type);
             });
             break;

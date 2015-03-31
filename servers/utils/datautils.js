@@ -22,8 +22,11 @@ var datautils = {
     mapData: function (res, esBody, qtype) {
         var data = {};
         var result = esBody.aggregations;
-        if (result.qtype, region != undefined) {
-            var region = result.qtype.region;
+        var qData=result[qtype];
+        console.log(qData);
+        console.log(JSON.stringify(result));
+        if (qData.region != undefined) {
+            var region = qData.region;
             var result_data = [];
             region.buckets.forEach(function (e) {
                 var data = {};
@@ -32,7 +35,7 @@ var datautils = {
                 data["value"] = e.doc_count;
                 result_data.push(data);
             });
-            data["name"] = qtype;
+            data["label"] = qtype;
             data["data"] = result_data;
             res.write(JSON.stringify(data));
             res.end();

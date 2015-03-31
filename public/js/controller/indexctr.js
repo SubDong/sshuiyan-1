@@ -24,9 +24,9 @@ app.controller('IndexCtrl', function ($scope, $http, requestService, messageServ
             type: selectedType,
             chart: "line",
             interval: 24
-
         };
         requestService.request('index_charts', start.getTime(), end.getTime(), option);
+        requestService.mapRequest('gest_map', start.getTime(), end.getTime(), "pv");
     };
     $scope.yesterday = function () {
         $scope.reset();
@@ -42,6 +42,7 @@ app.controller('IndexCtrl', function ($scope, $http, requestService, messageServ
             interval: 24
         };
         requestService.request('index_charts', start.getTime(), end.getTime(), option);
+        requestService.mapRequest('gest_map', start.getTime(), end.getTime(), "pv");
     };
     $scope.sevenDay = function () {
         $scope.reset();
@@ -90,6 +91,6 @@ app.controller('IndexCtrl', function ($scope, $http, requestService, messageServ
 
 
     // initialize
-    $scope.today();
-    $scope.initMap();
+    //$scope.today();
+    //$scope.initMap();
 });
