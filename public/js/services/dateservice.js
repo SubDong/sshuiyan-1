@@ -7,6 +7,12 @@ app.service('requestService', ['$rootScope', '$http', function ($rootScope, $htt
         chart.showLoading({
             text: "正在努力的读取数据中..."
         });
+        //chart.on(echarts.EVENT.LEGEND_SELECTED, function (param){
+        //    console.log(param);
+        //});
+        chart.on(echarts.config.EVENT.LEGEND_SELECTED, function (param){
+            console.log(param.target);
+        });
         var types = opt.type.toString();
         var queryTypes = [];
         if (types.indexOf(",") > -1)queryTypes = types.split(",");
