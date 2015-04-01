@@ -22,7 +22,7 @@ app.controller('IndexCtrl', function ($scope, $http, requestService, messageServ
         };
         requestService.request('index_charts', start.getTime(), end.getTime(), option);
         requestService.mapRequest('gest_map', start.getTime(), end.getTime(), "pv");
-        requestService.pieRequest("environment_map",start.getTime(),end.getTime(),"pm","设备环境");
+        requestService.pieRequest("environment_map",start.getTime(),end.getTime(),"pv");
     };
     $scope.yesterday = function () {
         $scope.reset();
@@ -34,7 +34,7 @@ app.controller('IndexCtrl', function ($scope, $http, requestService, messageServ
         };
         requestService.request('index_charts', start.getTime(), end.getTime(), option);
         requestService.mapRequest('gest_map', start.getTime(), end.getTime(), "pv");
-        requestService.pieRequest("environment_map",start.getTime(),end.getTime(),"isp","网络供应商");
+        requestService.pieRequest("environment_map",start.getTime(),end.getTime(),"pv");
     };
     $scope.sevenDay = function () {
         $scope.reset();

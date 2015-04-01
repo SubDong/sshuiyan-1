@@ -31,7 +31,7 @@ var chartFactory = {
                 ],
                 series: []
             };
-            chartConfig.toolShow= chartConfig.toolShow==undefined?false:true;
+            chartConfig.toolShow = chartConfig.toolShow == undefined ? false : true;
             if (chartConfig.toolShow) {
                 option["toolbox"] = {
                     show: true,
@@ -54,7 +54,7 @@ var chartFactory = {
                     ]
                 }
             };
-            chartConfig.min_max=chartConfig.min_max==undefined?true:false;
+            chartConfig.min_max = chartConfig.min_max == undefined ? true : false;
             if (chartConfig.min_max) {
                 serie["markPoint"] = {
                     data: [
@@ -77,13 +77,11 @@ var chartFactory = {
             chartObj.setOption(option);
         },
         chartAddData: function (data, chartObj, chartConfig) {
-
             if (data.data[0] != undefined) {
                 var option = chartObj.getOption();
                 var json = data.data;
-                var xData = [];
                 var serie = {
-                    name: data.label,
+                    name: chartConfig.showTarget,
                     type: chartConfig.chartType,
                     data: [],
                     markPoint: {
@@ -117,65 +115,6 @@ var chartFactory = {
         }
     }, mapChart: {
         chartInit: function () {
-            //var option = {
-            //    tooltip: {
-            //        trigger: 'item'
-            //    },
-            //    legend: {
-            //        orient: 'vertical',
-            //        x: 'left',
-            //        data: ['访客']
-            //    },
-            //    dataRange: {
-            //        min: 0,
-            //        max: 2500,
-            //        x: 'left',
-            //        y: 'bottom',
-            //        text: ['高', '低'],           // 文本，默认为数值文本
-            //        calculable: true
-            //    },
-            //    toolbox: {
-            //        show: true,
-            //        orient: 'vertical',
-            //        x: 'right',
-            //        y: 'center',
-            //        feature: {
-            //            mark: {show: true},
-            //            dataView: {show: true, readOnly: false},
-            //            restore: {show: true},
-            //            saveAsImage: {show: true}
-            //        }
-            //    },
-            //    series: []
-            //};
-            //var name = data.name;
-            //var series = {
-            //    name: name,
-            //    type: 'map',
-            //    mapType: 'china',
-            //    data: [],
-            //    itemStyle: {
-            //        normal: {label: {show: true}},
-            //        emphasis: {label: {show: true}}
-            //    }
-            //};
-            //var name = data.name;
-            //var series = {
-            //    name: name,
-            //    type: 'map',
-            //    mapType: 'china',
-            //    data: [],
-            //    itemStyle: {
-            //        normal: {label: {show: true}},
-            //        emphasis: {label: {show: true}}
-            //    }
-            //}
-            //data.data.forEach(function (item) {
-            //    series.data.push(item);
-            //});
-            //option.series.push(series);
-            //chart.hideLoading();
-            //chart.setOption(option);
         },
         chartAddData: function () {
 
@@ -196,7 +135,7 @@ var chartFactory = {
                 calculable: true,
                 series: []
             };
-            chartConfig.toolShow= chartConfig.toolShow==undefined?false:true;
+            chartConfig.toolShow = chartConfig.toolShow == undefined ? false : true;
             if (chartConfig.toolShow) {
                 option["toolbox"] = {
                     show: true,
@@ -249,12 +188,14 @@ var chartFactory = {
                 //{value: 335, name: '直接访问'},
                 //{value: 310, name: '邮件营销'}
             }
-            jsonData.forEach(function (item) {
-                var push_data = {};
-                push_data[chartConfig.dataKey] = item[chartConfig.dataKey];
-                push_data[chartConfig.dataValue] = item[chartConfig.dataValue];
-                serie.data.push(push_data);
-            });
+            if (jsonData != undefined) {
+                jsonData.forEach(function (item) {
+                    var push_data = {};
+                    push_data[chartConfig.dataKey] = item[chartConfig.dataKey];
+                    push_data[chartConfig.dataValue] = item[chartConfig.dataValue];
+                    serie.data.push(push_data);
+                });
+            }
             option.series.push(serie);
             chartObj.hideLoading();
             chartObj.setOption(option);
@@ -275,7 +216,44 @@ var chartUtils = {
         if (selectedCount.length > allSelectedItem) {
             selected[param.target] = false;
         }
+    },
+    convertEnglish: function (chi) {
+        switch (chi) {
+            case "uv":
+                return "uv";
+            case "跳出率":
+                return "outRate";
+            case "抵达率":
+                return "arrRate";
+                break;
+            case "平均访问时长":
+                return "avgVisitTime";
+                break;
+            case "页面转化":
+                return "convertRate";
+            default :
+                return "pv";
+        }
+    },
+    convertChinese: function (eng) {
+        switch (eng) {
+            case "uv":
+                return "uv";
+            case "outRate":
+                return "跳出率";
+            case "arrRate":
+                return "抵达率";
+                break;
+            case "avgVisitTime":
+                return "平均访问时长";
+                break;
+            case "convertRate":
+                return "页面转化";
+            default :
+                return "pv";
+        }
     }
+
 }
 
 function chart_factory(params) {

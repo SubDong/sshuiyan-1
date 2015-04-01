@@ -3,16 +3,20 @@
  */
 
 app.controller("Indextable", function ($scope, $http, requestService) {
+    var start = today_start().getTime(), end = today_end().getTime();
     $scope.gridOptions = {
         enableScrollbars: false,
+        enableGridMenu: true,
         enableHorizontalScrollbar: 0,
         enableVerticalScrollbar: 0,
         columnDefs: [
-            {name: '关键词'},
-            {name: '浏览量'}
+            {name: 'name', displayName: "关键词"},
+            {name: 'value', displayName: "浏览量"}
         ]
     };
-
+    $http.get("/api/pie?start=" + start + "&end=" + end + "&type=pv").success(function (data) {
+        $scope.gridOptions.data = data.data;
+    });
 
 });
 app.controller("TabsCtrl", function ($scope, $http, requestService) {

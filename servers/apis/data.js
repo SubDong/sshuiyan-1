@@ -4,7 +4,8 @@ var date = require('../utils/date');
 var uv = require('../services/uv');
 var pv = require('../services/pv');
 var pie = require('../services/pie');
-var jump_rate = require('../services/jump_rate');
+var line = require('../services/line');
+var bar = require('../services/bar');
 var resutil = require('../utils/responseutils');
 var datautils = require('../utils/datautils');
 
@@ -29,28 +30,31 @@ api.get('/charts', function (req, res) {
     var inv = Number(query['int']);
     var interval = Math.ceil((end - start) / inv);
     var finally_result = {};
-    
+
     querytypes.forEach(function (qtype) {
         switch (qtype) {
             case "uv":
-                uv.udatechart(req.es, start, end, interval, uvindexs, 1, "tt", function (body) {
-                    datautils.lineData(res, body, qtype);
+                line.pu(req.es, start, end, interval, uvindexs, 1, qtype, "tt", function (body) {
+                    datautils.send(res, body);
                 });
                 break;
             case "pv":
-                pv.pdatechart(req.es, start, end, interval, pvindexs, 1, "utime", function (body) {
-                    datautils.lineData(res, body, qtype);
+                line.pu(req.es, start, end, interval, pvindexs, 1, qtype, "loc", function (body) {
+                    datautils.send(res, body);
+                    //datautils.lineData(res, body, qtype);
                 });
                 break;
             case "ip":
                 break;
-            case "outnum":
-                jump_rate.calAvgVisitTime(req.es, start, end, interval, uvindexs, 1, "utime", function (result) {
-                    console.log(JSON.stringify(result));
+            case "avgVisitTime":
+                line.calAvgVisitTime(req.es, start, end, interval, uvindexs, 1, qtype, "utime", function (result) {
+                    datautils.send(res, result);
+                    //console.log(JSON.stringify(result));
                 });
                 break;
-            case "outrate":
-                jump_rate.calJumpRate(req.es, start, end, interval, uvindexs, 1, function (result) {
+            case "outRate":
+                line.calJumpRate(req.es, start, end, interval, uvindexs, 1, qtype, function (result) {
+                    datautils.send(res, result);
                     console.log(JSON.stringify(result));
                 });
                 break;
@@ -65,35 +69,44 @@ api.get('/charts', function (req, res) {
 });
 api.get('/map', function (req, res) {
     var query = url.parse(req.url, true).query;
-
     var type = query['type'];
     var start = Number(query['start']);
     var end = Number(query['end']);
     switch (type) {
         case "pv":
             var indexs = date.between(req, "access-");
-            pv.barChart(req.es, start, end, null, indexs, 1, null, function (body) {
-                datautils.barData(res, body, type);
+            bar.pu(req.es, start, end, null, indexs, 1, type, null, function (body) {
+                datautils.send(res, body);
             });
             break;
         case "uv":
             var indexs = date.between(req, "visitor-");
-            uv.barChart(req.es, start, end, null, indexs, 1, null, function (body) {
-                datautils.barData(res, body, type);
+            bar.pu(req.es, start, end, null, indexs, 1, type, null, function (body) {
+                datautils.send(res, body);
             });
             break;
     }
 });
 api.get('/pie', function (req, res) {
     var query = url.parse(req.url, true).query;
-    var indexs = date.between(req, "access-");
     var type = query['type'];
-    var field = query["field"];
     var start = Number(query['start']);
     var end = Number(query['end']);
-    pie.pieChart(req.es, start, end, indexs, 1, field, function (body) {
-        datautils.pieData(res, body, field);
-    })
+    switch (type) {
+        case "pv":
+            var indexs = date.between(req, "access-");
+            pie.on(req.es, start, end, indexs, 1, type, function (body) {
+                datautils.send(res, body);
+            })
+            break;
+        case "uv":
+            var indexs = date.between(req, "visitor-");
+            pie.on(req.es, start, end, indexs, 1, type, function (body) {
+                datautils.send(res, body);
+            })
+            break;
+    }
+
 });
 
 module.exports = api;
