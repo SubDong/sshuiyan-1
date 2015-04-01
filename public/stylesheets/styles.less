@@ -355,7 +355,6 @@ nav, .navbar-default {
   }
   select {
     height: 35px;
-    padding: 0 10px;
     font-size: 14px;
   }
 
@@ -700,6 +699,7 @@ nav, .navbar-default {
 
 .index_chart {
   overflow: hidden;
+  margin-bottom: 20px;
 }
 
 .custom_table table tbody tr .xuhao_color {
@@ -910,11 +910,11 @@ nav, .navbar-default {
     text-align: center;
     select {
       height: 35px;
-      padding: 0 10px;
-      margin-right: 20px;
+      margin-right: 10px;
       color: #01aeef;
 
     }
+
   }
   .under_concent {
     background: #eaf9ff;
@@ -948,12 +948,19 @@ nav, .navbar-default {
 .my_concent {
   select {
     height: 35px;
-    margin-right: 20px;
+    margin-right: 10px;
     font-size: 14px;
-    min-width: 100px;
     text-align: center;
   }
-
+}
+@media screen and (max-width: 1180px) {
+  .my_concent select {
+    margin-right: 10px;
+    padding: 0px;
+  }
+  .btn{
+    padding:6px;
+  }
 }
 
 .nav-tabs.nav-justified > li {
