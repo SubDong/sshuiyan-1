@@ -20,7 +20,7 @@ api.get('/charts', function (req, res) {
     }
     else
         querytypes.push(type);
-    
+
     var uvindexs = date.between(req, "visitor-");
     var pvindexs = date.between(req, "access-");
 
@@ -29,7 +29,7 @@ api.get('/charts', function (req, res) {
     var inv = Number(query['int']);
     var interval = Math.ceil((end - start) / inv);
     var finally_result = {};
-
+    
     querytypes.forEach(function (qtype) {
         switch (qtype) {
             case "uv":
@@ -45,9 +45,12 @@ api.get('/charts', function (req, res) {
             case "ip":
                 break;
             case "outnum":
+                jump_rate.calAvgVisitTime(req.es, start, end, interval, uvindexs, 1, "utime", function (result) {
+                    console.log(JSON.stringify(result));
+                });
                 break;
             case "outrate":
-                jump_rate.cal(req.es, start, end, interval, uvindexs, 1, function (result) {
+                jump_rate.calJumpRate(req.es, start, end, interval, uvindexs, 1, function (result) {
                     console.log(JSON.stringify(result));
                 });
                 break;

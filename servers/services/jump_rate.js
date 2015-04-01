@@ -1,14 +1,22 @@
 /**
  * Created by baizz on 2015-4-1.
  *
+ * ======================================== 跳出率 ========================================
  * key: millisecond
  * rate: 跳出率
  *
  * 返回的数据格式: [{"key":1427853600000,"rate":"100.00%"},{"key":1427857200000,"rate":"33.33%"}]
+ *
+ *
+ * ====================================== 平均访问时长 ======================================
+ * key: millisecond
+ * time: 平均访问时长
+ *
+ * 返回的数据格式: [{"key":1427860800000,"time":"4829840"},{"key":1427864400000,"time":"4799125"}]
  */
 
 var jump_rate = {
-    cal: function (es, start, end, intervals, index, type, callbackFn) {
+    calJumpRate: function (es, start, end, intervals, index, type, callbackFn) {
         var single_uv_request = {
             "index": index.toString(),
             "type": type,
@@ -131,6 +139,62 @@ var jump_rate = {
                 console.error(error);
         });
 
+    },
+    calAvgVisitTime: function (es, start, end, intervals, index, type, field, callbackFn) {
+        var request = {
+            "index": index.toString(),
+            "type": type,
+            "body": {
+                "query": {
+                    "range": {
+                        "utime": {
+                            "gte": start,
+                            "lte": end
+                        }
+                    }
+                },
+                "size": 0,
+                "aggs": {
+                    "result": {
+                        "date_histogram": {
+                            "field": field,
+                            "interval": intervals / 1000 + "s",
+                            "time_zone": "+08:00",
+                            "order": {
+                                "_key": "asc"
+                            },
+                            "min_doc_count": 0,
+                            "extended_bounds": {
+                                "min": start,
+                                "max": end
+                            }
+                        },
+                        "aggs": {
+                            "total_time": {
+                                "sum": {
+                                    "script": "sum_time = 0; tmp = 0; for (t in doc[\"" + field + "\"].values) { if (tmp > 0) { sum_time += (t - tmp) }; tmp = t}; sum_time"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        es.search(request, function (error, response) {
+            if (response != undefined) {
+                var result = [];
+                response.aggregations.result.buckets.forEach(function (hit) {
+                    var obj = {};
+                    obj["key"] = hit.key;
+                    obj["time"] = hit.total_time.value;
+                    result.push(obj);
+                });
+
+                callbackFn(result);
+            } else
+                console.error(error);
+        });
     }
 };
 
