@@ -4,6 +4,7 @@ var date = require('../utils/date');
 var uv = require('../services/uv');
 var pv = require('../services/pv');
 var pie = require('../services/pie');
+var jump_rate = require('../services/jump_rate');
 var resutil = require('../utils/responseutils');
 var datautils = require('../utils/datautils');
 
@@ -16,9 +17,12 @@ api.get('/charts', function (req, res) {
 
     if (type.indexOf(",") > -1)for (var i = 0; i < type.split(",").length; i++) {
         querytypes.push(type.split(",")[i]);
-    } else querytypes.push(type);
-    var uvindexs = date.between(req, "visitor-")
-    var pvindexs = date.between(req, "access-")
+    }
+    else
+        querytypes.push(type);
+    
+    var uvindexs = date.between(req, "visitor-");
+    var pvindexs = date.between(req, "access-");
 
     var start = Number(query['start']);
     var end = Number(query['end']);
@@ -27,18 +31,35 @@ api.get('/charts', function (req, res) {
     var finally_result = {};
 
     querytypes.forEach(function (qtype) {
-        if (qtype == 'uv') {
-            uv.udatechart(req.es, start, end, interval, uvindexs, 1, "tt", function (body) {
-                datautils.lineData(res, body, qtype);
-            });
-        } else if (qtype == 'pv' || qtype == 'ip' || qtype == 'outnum' || qtype == 'outrate' || qtype == 'city' || qtype == 'province') {
-            //finally_result[qtype]=....
-            pv.pdatechart(req.es, start, end, interval, pvindexs, 1, "utime", function (body) {
-                datautils.lineData(res, body, qtype);
-            });
+        switch (qtype) {
+            case "uv":
+                uv.udatechart(req.es, start, end, interval, uvindexs, 1, "tt", function (body) {
+                    datautils.lineData(res, body, qtype);
+                });
+                break;
+            case "pv":
+                pv.pdatechart(req.es, start, end, interval, pvindexs, 1, "utime", function (body) {
+                    datautils.lineData(res, body, qtype);
+                });
+                break;
+            case "ip":
+                break;
+            case "outnum":
+                break;
+            case "outrate":
+                jump_rate.cal(req.es, start, end, interval, uvindexs, 1, function (result) {
+                    console.log(JSON.stringify(result));
+                });
+                break;
+            case "city":
+                break;
+            case "province":
+                break;
+            default :
+                break;
         }
     });
-})
+});
 api.get('/map', function (req, res) {
     var query = url.parse(req.url, true).query;
 
