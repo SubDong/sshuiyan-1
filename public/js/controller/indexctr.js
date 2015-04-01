@@ -22,7 +22,7 @@ app.controller('IndexCtrl', function ($scope, $http, requestService, messageServ
         };
         requestService.request('index_charts', start.getTime(), end.getTime(), option);
         requestService.mapRequest('gest_map', start.getTime(), end.getTime(), "pv");
-        requestService.pieRequest("environment_map",start.getTime(),end.getTime(),"os","pc访问系统比例");
+        requestService.pieRequest("environment_map",start.getTime(),end.getTime(),"pm","设备环境");
     };
     $scope.yesterday = function () {
         $scope.reset();

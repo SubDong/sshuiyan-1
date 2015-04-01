@@ -25,13 +25,9 @@ app.service('requestService', ['$rootScope', '$http', function ($rootScope, $htt
         queryTypes.forEach(function (etype) {
             $http.get("/api/charts?start=" + start + "&end=" + end + "&type=" + etype + "&int=" + opt.interval).success(function (data) {
                 var chartConfig = {
-                    min_max: true,//是否允许最小值,
+                    //min_max: true,//是否允许最小值,默认显示
                     legendData: ["pv", "uv", "outrate"],//显示几种数据
-                    ledLayout: "horizontal",//显示数据的按钮排列方式
-                    tt: "axis",//鼠标浮动样式
                     bGap: false,//首行缩进
-                    xType: "category",//x轴数据类型
-                    yType: "value",//y轴数据类型
                     axFormat: "{value} 次访问",//y轴数据格式化格式
                     chartType: opt.chart,//图表类型
                     dataKey: "time",//传入数据的key值
@@ -51,11 +47,8 @@ app.service('requestService', ['$rootScope', '$http', function ($rootScope, $htt
             $http.get("/api/map?start=" + start + "&end=" + end + "&type=" + type).success(function (data) {
                 var chartConfig = {
                     min_max: false,
-                    tt: "axis",
                     legendData: [data.label],
                     bGap: true,
-                    xType: "category",
-                    yType: "value",
                     chartType: "bar",
                     dataKey: "name",
                     dataValue: "value"
@@ -69,10 +62,7 @@ app.service('requestService', ['$rootScope', '$http', function ($rootScope, $htt
             var chart = echarts.init(document.getElementById(id));
             $http.get("/api/pie?start=" + start + "&end=" + end + "&field=" + field).success(function (data) {
                 var chartConfig = {
-                    tt: "item",
                     legendData: data.label,
-                    ledLayout:"vertical",
-                    chartType: "pie",
                     serieName: desc,
                     dataKey: "name",
                     dataValue: "value"

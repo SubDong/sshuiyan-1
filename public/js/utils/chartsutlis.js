@@ -7,13 +7,33 @@ var chartFactory = {
         chartInit: function (data, chartObj, chartConfig) {
             var option = {
                 legend: {
-                    orient: chartConfig.ledLayout,
+                    orient: chartConfig.ledLayout == undefined ? "horizontal" : chartConfig.ledLayout,
                     data: chartConfig.legendData
                 },
                 tooltip: {
-                    trigger: chartConfig.tt
+                    trigger: chartConfig.tt == undefined ? "axis" : chartConfig.tt
                 },
-                toolbox: {
+                calculable: true,
+                xAxis: [
+                    {
+                        type: chartConfig.xType == undefined ? "category" : chartConfig.xType,
+                        boundaryGap: chartConfig.bGap,
+                        data: []
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: chartConfig.yType == undefined ? "value" : chartConfig.yType,
+                        axisLabel: {
+                            formatter: chartConfig.axFormat
+                        }
+                    }
+                ],
+                series: []
+            };
+            chartConfig.toolShow= chartConfig.toolShow==undefined?false:true;
+            if (chartConfig.toolShow) {
+                option["toolbox"] = {
                     show: true,
                     feature: {
                         mark: {show: true},
@@ -22,25 +42,8 @@ var chartFactory = {
                         restore: {show: true},
                         saveAsImage: {show: true}
                     }
-                },
-                calculable: true,
-                xAxis: [
-                    {
-                        type: chartConfig.xType,
-                        boundaryGap: chartConfig.bGap,
-                        data: []
-                    }
-                ],
-                yAxis: [
-                    {
-                        type: chartConfig.yType,
-                        axisLabel: {
-                            formatter: chartConfig.axFormat
-                        }
-                    }
-                ],
-                series: []
-            };
+                }
+            }
             var serie = {
                 name: data.label,
                 type: chartConfig.chartType,
@@ -51,6 +54,7 @@ var chartFactory = {
                     ]
                 }
             };
+            chartConfig.min_max=chartConfig.min_max==undefined?true:false;
             if (chartConfig.min_max) {
                 serie["markPoint"] = {
                     data: [
@@ -178,18 +182,23 @@ var chartFactory = {
         }
     }, pieChart: {
         chartInit: function (data, chartObj, chartConfig) {
-            var jsonData=data.data;
+            var jsonData = data.data;
             var option = {
                 tooltip: {
-                    trigger: chartConfig.tt,
+                    trigger: chartConfig.tt == undefined ? "item" : chartConfig.tt,
                     formatter: "{a} <br/>{b} : {c} ({d}%)"
                 },
                 legend: {
-                    orient: chartConfig.ledLayout,
+                    orient: chartConfig.ledLayout == undefined ? "vertical" : chartConfig.ledLayout,
                     x: 'left',
                     data: chartConfig.legendData
                 },
-                toolbox: {
+                calculable: true,
+                series: []
+            };
+            chartConfig.toolShow= chartConfig.toolShow==undefined?false:true;
+            if (chartConfig.toolShow) {
+                option["toolbox"] = {
                     show: true,
                     feature: {
                         mark: {show: true},
@@ -209,15 +218,33 @@ var chartFactory = {
                         restore: {show: true},
                         saveAsImage: {show: true}
                     }
-                },
-                calculable: true,
-                series: []
-            };
+                }
+            }
             var serie = {
                 name: chartConfig.serieName,
-                type: chartConfig.chartType,
+                type: "pie",
                 radius: '55%',
                 center: ['50%', '60%'],
+                itemStyle: {
+                    normal: {
+                        label: {
+                            position: 'inner',
+                            formatter: function (params) {
+                                return (params.percent - 0).toFixed(0) + '%'
+                            }
+                        },
+                        labelLine: {
+                            show: false
+                        }
+                    },
+                    emphasis: {
+                        label: {
+                            show: true,
+                            formatter: "{b}\n{d}%"
+                        }
+                    }
+
+                },
                 data: []
                 //{value: 335, name: '直接访问'},
                 //{value: 310, name: '邮件营销'}
@@ -225,7 +252,7 @@ var chartFactory = {
             jsonData.forEach(function (item) {
                 var push_data = {};
                 push_data[chartConfig.dataKey] = item[chartConfig.dataKey];
-                push_data[chartConfig.dataValue]=item[chartConfig.dataValue];
+                push_data[chartConfig.dataValue] = item[chartConfig.dataValue];
                 serie.data.push(push_data);
             });
             option.series.push(serie);

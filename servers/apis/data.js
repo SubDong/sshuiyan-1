@@ -41,18 +41,19 @@ api.get('/charts', function (req, res) {
 })
 api.get('/map', function (req, res) {
     var query = url.parse(req.url, true).query;
-    var indexs = date.between(req, "access-");
+
     var type = query['type'];
     var start = Number(query['start']);
     var end = Number(query['end']);
     switch (type) {
         case "pv":
+            var indexs = date.between(req, "access-");
             pv.barChart(req.es, start, end, null, indexs, 1, null, function (body) {
                 datautils.barData(res, body, type);
             });
             break;
         case "uv":
-            indexs = date.between(req, "visitor-");
+            var indexs = date.between(req, "visitor-");
             uv.barChart(req.es, start, end, null, indexs, 1, null, function (body) {
                 datautils.barData(res, body, type);
             });
@@ -66,8 +67,8 @@ api.get('/pie', function (req, res) {
     var field = query["field"];
     var start = Number(query['start']);
     var end = Number(query['end']);
-    pie.pieChart(req.es, start, end, indexs,1, field, function (body) {
-        datautils.pieData(res, body);
+    pie.pieChart(req.es, start, end, indexs, 1, field, function (body) {
+        datautils.pieData(res, body, field);
     })
 });
 
