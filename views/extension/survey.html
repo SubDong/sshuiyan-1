@@ -1,4 +1,4 @@
-<div class="middle_containers">
+<div class="middle_containers" ng-controller="SurveryCtrl">
     <div class="date_select">
        <b>推广概况</b>
         <div>
@@ -7,7 +7,7 @@
         </div>
     </div>
     <div class="my_concent" >
-        <div ng-controller="SurveryCtrl">
+        <div>
             <div class="select_top" >
                 <select ng-model="select.selectVal" ng-options="o.title for o in select.optionsData">
                     <option value="">全部推广方式</option>

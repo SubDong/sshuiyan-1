@@ -13,7 +13,6 @@ app.controller('searchctr', function ($scope, $http) {
         $scope.today = function () {
             $scope.reset();
             $scope.todayClass = true;
-
         };
         $scope.yesterday = function () {
             $scope.reset();
@@ -23,13 +22,10 @@ app.controller('searchctr', function ($scope, $http) {
         $scope.sevenDay = function () {
             $scope.reset();
             $scope.sevenDayClass = true;
-
-
         };
         $scope.month = function () {
             $scope.reset();
             $scope.monthClass = true;
-
 
         };
         $scope.open = function ($event) {
@@ -39,7 +35,13 @@ app.controller('searchctr', function ($scope, $http) {
             $event.stopPropagation();
             $scope.opened = true;
         };
-
+        $scope.checkopen = function ($event) {
+            $scope.reset();
+            $scope.othersdateClass = true;
+            $event.preventDefault();
+            $event.stopPropagation();
+            $scope.opens = true;
+        };
         // initialize
         $scope.today();
         //$scope.initMap();
