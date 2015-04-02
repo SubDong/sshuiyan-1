@@ -14,9 +14,9 @@ app.controller("Indextable", function ($scope, $http, requestService) {
             {name: 'value', displayName: "浏览量"}
         ]
     };
-    $http.get("/api/pie?start=" + start + "&end=" + end + "&type=pv").success(function (data) {
-        $scope.gridOptions.data = data.data;
-    });
+    //$http.get("/api/pie?start=" + start + "&end=" + end + "&type=pv").success(function (data) {
+    //    $scope.gridOptions.data = data.data;
+    //});
 
 });
 app.controller("TabsCtrl", function ($scope, $http, requestService) {
