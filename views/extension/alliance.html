@@ -1,12 +1,12 @@
 <div class="middle_containers"  ng-controller="searchctr">
     <div class="date_select">
-        <b>搜索推广</b>
+        <b>网盟推广</b>
         <div aria-label="First group" role="group" class="btn-group fl">
             <button class="btn btn-default disabled" type="button" >计划</button>
-            <button class="btn btn-default current" type="button">单元</button>
-            <button class="btn btn-default" type="button"> 创意</button>
-            <button class="btn btn-default" type="button">搜索词</button>
-            <button class="btn btn-default" type="button">推广URL </button>
+            <button class="btn btn-default current" type="button">组</button>
+            <button class="btn btn-default" type="button">投放网络</button>
+            <button class="btn btn-default" type="button">创意</button>
+            <button class="btn btn-default" type="button">关键词 </button>
         </div>
         <div>
             <calendar></calendar>
@@ -26,7 +26,7 @@
                 </ul>
 
             </div>
-        </select>
+            </select>
         </div>
         <div class="index_chart">
             <div id="indicators_charts" style="height:400px;"></div>
@@ -37,52 +37,52 @@
                     <div class="custom_title">
                         <p class="chart_top_title"><b>系统默认指标 </b></p>
                         <div class="chart_top">
-                                <span>消费指标 :</span>
-                                <ul>
-                                    <li ng-repeat="item in target" ng-class='{current:$index==selectedRow}'
-                                        ng-click='selectedWhich($index)'>{{item.consumption_name}}
-                                    </li>
-                                </ul>
+                            <span>消费指标 :</span>
+                            <ul>
+                                <li ng-repeat="item in target" ng-class='{current:$index==selectedRow}'
+                                    ng-click='selectedWhich($index)'>{{item.consumption_name}}
+                                </li>
+                            </ul>
                         </div>
                         <div class="chart_top">
-                                <span>网站基础指标 :</span>
-                                <ul>
-                                    <li ng-repeat="item in Webbased" ng-class='{current:$index==selectedWeb}'
-                                        ng-click='selectedWebbased($index)'>{{item.consumption_name}}
-                                    </li>
-                                </ul>
+                            <span>网站基础指标 :</span>
+                            <ul>
+                                <li ng-repeat="item in Webbased" ng-class='{current:$index==selectedWeb}'
+                                    ng-click='selectedWebbased($index)'>{{item.consumption_name}}
+                                </li>
+                            </ul>
                         </div>
                         <div class="chart_top">
-                                <span>流量质量指标:</span>
-                                <ul>
-                                    <li ng-repeat="item in flow" ng-class='{current:$index==selectedflow}'
-                                        ng-click='selectflowd($index)'>{{item.consumption_name}}
-                                    </li>
-                                </ul>
+                            <span>流量质量指标:</span>
+                            <ul>
+                                <li ng-repeat="item in flow" ng-class='{current:$index==selectedflow}'
+                                    ng-click='selectflowd($index)'>{{item.consumption_name}}
+                                </li>
+                            </ul>
                         </div>
                         <div class="chart_top">
-                                <span>转化指标:</span>
-                                <ul>
-                                    <li ng-repeat="item in transform" ng-class='{current:$index==selectedtransform}'
-                                        ng-click='selectedform($index)'>{{item.consumption_name}}
-                                    </li>
-                                </ul>
+                            <span>转化指标:</span>
+                            <ul>
+                                <li ng-repeat="item in transform" ng-class='{current:$index==selectedtransform}'
+                                    ng-click='selectedform($index)'>{{item.consumption_name}}
+                                </li>
+                            </ul>
                         </div>
                         <div class="chart_top">
-                                <span>移动搜索页指标:</span>
-                                <ul>
-                                    <li ng-repeat="item in mobile" ng-class='{current:$index==selectedmobile}'
-                                        ng-click='selectedmobiles($index)'>{{item.consumption_name}}
-                                    </li>
-                                </ul>
+                            <span>移动搜索页指标:</span>
+                            <ul>
+                                <li ng-repeat="item in mobile" ng-class='{current:$index==selectedmobile}'
+                                    ng-click='selectedmobiles($index)'>{{item.consumption_name}}
+                                </li>
+                            </ul>
                         </div>
                         <div class="chart_top">
-                                <span>离线宝回呼指标:</span>
-                                <ul>
-                                    <li ng-repeat="item in  recall" ng-class='{current:$index==selectedrecall}'
-                                        ng-click='selectedrecalls($index)'>{{item.consumption_name}}
-                                    </li>
-                                </ul>
+                            <span>离线宝回呼指标:</span>
+                            <ul>
+                                <li ng-repeat="item in  recall" ng-class='{current:$index==selectedrecall}'
+                                    ng-click='selectedrecalls($index)'>{{item.consumption_name}}
+                                </li>
+                            </ul>
                         </div>
                         <div class="chart_top">
                             <button class="btn btn-primary" type="button">确定</button>

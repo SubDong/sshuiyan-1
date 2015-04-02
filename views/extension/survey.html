@@ -1,8 +1,12 @@
 <div class="middle_containers">
     <div class="date_select">
        <b>推广概况</b>
+        <div>
+            <calendar></calendar>
+            <datecontrast></datecontrast>
+        </div>
     </div>
-    <div class="my_concent myconcent" >
+    <div class="my_concent" >
         <div ng-controller="SurveryCtrl">
             <div class="select_top" >
                 <select ng-model="select.selectVal" ng-options="o.title for o in select.optionsData">

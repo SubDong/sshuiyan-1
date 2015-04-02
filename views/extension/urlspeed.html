@@ -1,0 +1,60 @@
+<div class="middle_containers"  ng-controller="searchctr">
+    <div class="date_select">
+        <b>推广URL速度</b>
+        <div aria-label="First group" role="group" class="btn-group fl">
+            <button class="btn btn-default disabled" type="button" >按页面 </button>
+            <button class="btn btn-default current" type="button">按网络提供商</button>
+            <button class="btn btn-default" type="button"> 按地域</button>
+        </div>
+        <div>
+            <calendar></calendar>
+            <datecontrast></datecontrast>
+        </div>
+    </div>
+    <div class="my_concent">
+        <div class="date_show">
+            <div class="date_show datelatshow">
+                <ul>
+                    <li class="date_first"><h4>打开速度</h4><span>34</span></li>
+                    <li class="date_third"><h4>访问次数</h4><span>34</span></li>
+                </ul>
+            </div>
+            </select>
+        </div>
+        <div class="index_chart">
+            <div id="indicators_charts" style="height:400px;"></div>
+        </div>
+        <div class="table_content" ng-controller="TabsCtrl">
+            <tabset justified="true">
+                <tab heading="高级筛选">
+                    <div class="custom_secendtitle">
+                        <div class="custom_select">
+                            <div class="btn-group fl" role="group">
+                                <p class="fl">计划</p>
+                                <button id="btnGroupDrop2" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                    全部
+                                    <span class="caret"></span>
+                                </button>
+                            </div>
+                            <div class="input-group fl">
+                                <input type="text" class="form-control fl" placeholder="请输入推广URL…">
+                                       <span class="input-group-btn fl">
+                                 <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                                   </span>
+                            </div>
+
+                        </div>
+                        <div class="custom_table">
+                            <div class="uconcentctrl" ng-controller="SearchCtrl">
+                                <div ui-grid="gridOptions" class="grid" ui-grid-pinning></div>
+                            </div>
+
+                        </div>
+                    </div>
+                </tab>
+            </tabset>
+
+
+        </div>
+    </div>
+</div>

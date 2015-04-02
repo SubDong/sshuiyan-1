@@ -81,5 +81,13 @@ app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
             url: "/extension/way",
             templateUrl: "../extension/way.html"
         })
+        .state('urlspeed', {
+            url: "/extension/urlspeed",
+            templateUrl: "../extension/urlspeed.html"
+        })
+        .state('alliance', {
+            url: "/extension/alliance",
+            templateUrl: "../extension/alliance.html"
+        })
 
 })

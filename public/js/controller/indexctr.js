@@ -10,10 +10,12 @@ app.controller('IndexCtrl', function ($scope, $http, requestService, messageServ
         $scope.sevenDayClass = false;
         $scope.monthClass = false;
         $scope.definClass = false;
+        $scope.btnchecked=true;
     };
     $scope.today = function () {
         $scope.reset();
         $scope.todayClass = true;
+        $scope.btnchecked = false;
         var start = today_start(), end = today_end();
         var option = {
             type: "pv",

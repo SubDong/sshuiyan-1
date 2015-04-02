@@ -1,14 +1,8 @@
 <div class="middle_containers">
     <div class="date_select">
-        <div aria-label="First group" role="group" class="btn-group fl" ng-controller="TodydateCtrl" >
+        <div ng-controller="TodydateCtrl" >
             <calendar></calendar>
-        </div>
-        <div aria-label="First group" role="group" class="btn-group fl">
-            <button class="btn btn-default" type="button"><input type="checkbox" checked="checked"/>
-                与其他时间段对比
-            </button>
-            <button class="btn btn-default current" type="button"><input type="checkbox"/>前一日</button>
-            <button class="btn btn-default" type="button"><input type="checkbox"/>上周同期</button>
+             <datecontrast></datecontrast>
         </div>
         <div aria-label="First group" role="group" class="btn-group fl">
             <button class="btn btn-default" type="button">按时</button>

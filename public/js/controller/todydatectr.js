@@ -35,11 +35,19 @@ app.controller('TodydateCtrl', function ($scope, $http) {
     $scope.open = function ($event) {
         $scope.reset();
         $scope.definClass = true;
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.opened = true;
     };
-    $scope.initMap = function () {
-        var start = today_start(), end = today_end();
-        requestService.mapRequest('gest_map', start.getTime(), end.getTime(), "pv");
+    $scope.checkopen = function ($event) {
+        $scope.reset();
+        $scope.definClass = true;
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.opens = true;
     };
+
+
     // initialize
     $scope.today();
     //$scope.initMap();
