@@ -6,5 +6,5 @@ cd $CMD_PATH
 git pull
 git checkout develop
 
-cd ../logs
-forever restart -l sshuiyan.log -o sshuiyan.out -e sshuiyan.error ../sshuiyan/app.js $1
+mkdir - p ../logs
+forever restart -l ../logs/sshuiyan.log -o ../logs/sshuiyan.out -e ../logs/sshuiyan.error app.js $1
