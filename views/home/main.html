@@ -1,31 +1,37 @@
 <div class="middle_containers">
     <div class="date_select">
         <div ng-controller="IndexCtrl">
-                <calendar></calendar>
+            <calendar></calendar>
             <div aria-label="First group" role="group" class="btn-group fl" ng-hide="btnchecked">
-                <button class="btn btn-default" type="button" ng-click="" ng-class="">按时</button>
-                <button class="btn btn-default" type="button">按天</button>
+                <button class="btn btn-default" type="button" ng-click="daycheck()" ng-class="{'current':dayClass}">按天
+                </button>
+                <button class="btn btn-default" type="button" ng-click="hourcheck()"
+                        ng-class="{'current':hourcheckClass}">按时
+                </button>
+                <select ng-model="selected" ng-options="m.id as m.when for m in model" ng-hide="timeselect">
+                    <option value="">00:00-01:00</option>
+                </select>
             </div>
         </div>
         <div role="group" class="btn-group fl">
-        <button type="button" class="btn btn-default fl"><span class="glyphicon glyphicon-refresh"
-                                                            aria-hidden="true"></span>
-        </button>
+            <button type="button" class="btn btn-default fl"><span class="glyphicon glyphicon-refresh"
+                                                                   aria-hidden="true"></span>
+            </button>
         </div>
     </div>
     <div class="my_concent">
         <div class="index_chart">
             <!--<div class="chart_top">-->
-                <!--<ul>-->
-                    <!--<li><label>展示曲线</label></li>-->
-                    <!--<li><input type="checkbox" checked="checked" name="radio1" value="pv"/> <label>浏览量(PV)</label></li>-->
-                    <!--<li><input type="checkbox" checked="checked" name="radio1" value="uv"/> <label>访问次数</label></li>-->
-                    <!--<li><input type="checkbox" name="radio1" value="outRate"/> <label>跳出率</label></li>-->
-                    <!--<li><input type="checkbox" name="radio1" value="arrRate"/> <label>抵达率</label></li>-->
-                    <!--<li><input type="checkbox" name="radio1" value="avgVisitTime"/> <label>平均访问时长</label></li>-->
-                    <!--<li><input type="checkbox" name="radio1" value="convertRate"/> <label>页面转化</label></li>-->
-                    <!--<li class="disabled">* 最多只能勾选两项</li>-->
-                <!--</ul>-->
+            <!--<ul>-->
+            <!--<li><label>展示曲线</label></li>-->
+            <!--<li><input type="checkbox" checked="checked" name="radio1" value="pv"/> <label>浏览量(PV)</label></li>-->
+            <!--<li><input type="checkbox" checked="checked" name="radio1" value="uv"/> <label>访问次数</label></li>-->
+            <!--<li><input type="checkbox" name="radio1" value="outRate"/> <label>跳出率</label></li>-->
+            <!--<li><input type="checkbox" name="radio1" value="arrRate"/> <label>抵达率</label></li>-->
+            <!--<li><input type="checkbox" name="radio1" value="avgVisitTime"/> <label>平均访问时长</label></li>-->
+            <!--<li><input type="checkbox" name="radio1" value="convertRate"/> <label>页面转化</label></li>-->
+            <!--<li class="disabled">* 最多只能勾选两项</li>-->
+            <!--</ul>-->
             <!--</div>-->
             <div id="index_charts" style="height:400px;"></div>
         </div>
@@ -78,11 +84,11 @@
                     </div>
                 </div>
                 <div ng-controller="Indextable">
-                <div class="ui-grid" ui-grid="gridOptions" ui-grid-pinning id="searchWordGrid">
+                    <div class="ui-grid" ui-grid="gridOptions" ui-grid-pinning id="searchWordGrid">
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 </div>
 
