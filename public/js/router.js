@@ -9,9 +9,9 @@ app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
             url: '/index',
             templateUrl: '../home/main.html'
         })
-        .state('visitor', {
-            url: "/trend/visitor",
-            templateUrl: "../trend/visitor.html"
+        .state('realtime', {
+            url: "/trend/realtime",
+            templateUrl: "../trend/realtime.html"
         })
         .state('today', {
             url: "/trend/today",
