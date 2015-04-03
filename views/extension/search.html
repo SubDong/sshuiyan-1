@@ -2,8 +2,8 @@
     <div class="date_select">
         <b>搜索推广</b>
         <div aria-label="First group" role="group" class="btn-group fl">
-            <button class="btn btn-default" type="button" >计划</button>
-            <button class="btn btn-default current" type="button">单元</button>
+            <button class="btn btn-default current" type="button" >计划</button>
+            <button class="btn btn-default " type="button">单元</button>
             <button class="btn btn-default" type="button"> 创意</button>
             <button class="btn btn-default" type="button">搜索词</button>
             <button class="btn btn-default" type="button">推广URL </button>
@@ -22,11 +22,64 @@
                     <li class="date_first"><h4>浏览量(PV)</h4><span>2,574</span></li>
                     <li class="date_last"><h4>跳出率 </h4><span>90</span></li>
                     <li class="date_last"><h4>平均访问时长 </h4><span>90</span></li>
-                    <li class="date_first"><h4>平均访问时长 </h4><span>00:02:34</span></li>
+                    <li class="date_first"><h4>转化次数</h4><span>00:02:34</span></li>
                 </ul>
 
             </div>
-        </select>
+        </div>
+        <div class="plancheck">
+            <div class="plancheck_top">
+                <select class="ng-pristine ng-valid ng-touched fr" ng-model="select.selectVal" ng-options="o.title for o in select.optionsData">指标：<option class="" value="">浏览量(PV)、转化次数</option></select>
+            </div>
+            <div class="plancheckbox">
+                <ul>
+                    <li><input type="checkbox" name="radio1" checked="checked"> <label>展现量</label>
+                    </li>
+                    <li><input type="checkbox" name="radio1" checked="checked"> <label>点击量</label></li>
+                    <li><input type="checkbox" name="radio1"> <label>消费</label></li>
+                    <li><input type="checkbox" name="radio1"> <label>点击率</label></li>
+                    <li><input type="checkbox" name="radio1"> <label>平均点击价格</label></li>
+                </ul>
+                <ul>
+                    <li><input type="checkbox" name="radio1" checked="checked"> <label>浏览量(PV)</label>
+                    </li>
+                    <li><input type="checkbox" name="radio1" checked="checked"> <label>访问次数</label></li>
+                    <li><input type="checkbox" name="radio1"> <label>访客数(UV)</label></li>
+                    <li><input type="checkbox" name="radio1"> <label>新访客数</label></li>
+                    <li><input type="checkbox" name="radio1"> <label>新访客比率</label></li>
+                    <li><input type="checkbox" name="radio1"> <label>页头访问次数</label></li>
+                </ul>
+                <ul>
+                    <li><input type="checkbox" name="radio1" checked="checked"> <label>跳出率</label>
+                    </li>
+                    <li><input type="checkbox" name="radio1" checked="checked"> <label>平均访问时长</label></li>
+                    <li><input type="checkbox" name="radio1"> <label>平均访问页数</label></li>
+                    <li><input type="checkbox" name="radio1"> <label>抵达率</label></li>
+                </ul>
+                <ul>
+                    <li><input type="checkbox" name="radio1" checked="checked"> <label>转化次数</label>
+                    </li>
+                    <li><input type="checkbox" name="radio1" checked="checked"> <label>转化率</label></li>
+                    <li><input type="checkbox" name="radio1"> <label>平均转化成本</label></li>
+                    <li><input type="checkbox" name="radio1"> <label>收益</label></li>
+                    <li><input type="checkbox" name="radio1"> <label>利润</label></li>
+                    <li><input type="checkbox" name="radio1"> <label>投资回报率</label></li>
+                </ul>
+                <ul>
+                    <li><input type="checkbox" name="radio1" checked="checked"> <label>搜索页直拨电话展现</label></li>
+                    <li><input type="checkbox" name="radio1" checked="checked"> <label>搜索页直拨电话点击</label></li>
+                    <li><input type="checkbox" name="radio1"> <label>搜索页直拨电话消费</label></li>
+                    <li><input type="checkbox" name="radio1"> <label>搜索页回呼电话点击</label></li>
+                    <li><input type="checkbox" name="radio1"> <label>搜索页回呼电话消费</label></li>
+                    <li><input type="checkbox" name="radio1"> <label>搜索页APP下载展现</label></li>
+                    <li><input type="checkbox" name="radio1"> <label>搜索页APP下载点击</label></li>
+                </ul>
+                <ul>
+                    <li><input type="checkbox" name="radio1" checked="checked"> <label>搜索页APP下载消费</label> </li>
+                    <li><span>* 最多只能勾选两项</span></li>
+                </ul>
+            </div>
+
         </div>
         <div class="index_chart">
             <div id="indicators_charts" style="height:400px;"></div>
