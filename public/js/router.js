@@ -90,4 +90,4 @@ app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
             templateUrl: "../extension/alliance.html"
         })
 
-})
+});
