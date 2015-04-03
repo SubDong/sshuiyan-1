@@ -2,23 +2,27 @@
  * Created by john on 2015/3/30.
  */
 
-app.controller("Indextable", function ($scope, $http, requestService) {
-    var start = today_start().getTime(), end = today_end().getTime();
-    $scope.gridOptions = {
-        enableScrollbars: false,
-        enableGridMenu: true,
-        enableHorizontalScrollbar: 0,
-        enableVerticalScrollbar: 0,
-        columnDefs: [
-            {name: 'name', displayName: "关键词"},
-            {name: 'value', displayName: "浏览量"}
-        ]
-    };
-    //$http.get("/api/pie?start=" + start + "&end=" + end + "&type=pv").success(function (data) {
-    //    $scope.gridOptions.data = data.data;
-    //});
-
-});
+//app.controller("Indextable", function ($scope, $http, requestService) {
+//    var start = today_start().getTime(), end = today_end().getTime();
+//    $scope.gridOptions = {
+//        enableScrollbars: false,
+//        enableGridMenu: true,
+//        enableHorizontalScrollbar: 0,
+//        enableVerticalScrollbar: 0,
+//        columnDefs: [
+//            {name: 'name', displayName: "关键词"},
+//            {name: 'value', displayName: "浏览量"}
+//        ]
+//    };
+//    //requestService.gridRequest({}, function (data) {
+//    //
+//    //});
+//    //$http.get("/api/grid?start=" + start + "&end=" + end + "&type=pv").success(function (data) {
+//    //    console.log(data);
+//    //    //$scope.gridOptions.data = data.data;
+//    //});
+//
+//});
 app.controller("TabsCtrl", function ($scope, $http, requestService) {
     $scope.tabs = [
         {title: 'Dynamic Title 1', content: 'Dynamic content 1'},

@@ -31,33 +31,41 @@ var bar = {
                 }
             }
         }
-        es.search(request).then(function (esBody) {
-                var data = {};
-                var result = esBody.aggregations;
-                var qData = result["pu"];
-                if (qData.region != undefined) {
-                    var region = qData.region;
-                    var result_data = [];
-                    region.buckets.forEach(function (e) {
-                        var data = {};
-                        data["name"] = e.key;
-                        data["value"] = e.doc_count;
-                        result_data.push(data);
-                    });
-                    data["label"] = qtype;
-                    data["data"] = result_data;
-                    if (cb)
-                        cb(data)
+        es.search(request, function (err, esBody) {
+            var data = {label: "暂无数据", data: []};
+            if (esBody != undefined) {
+                if (esBody.status == undefined) {
+                    var result = esBody.aggregations;
+                    var qData = result.pu;
+                    if (qData.region != undefined) {
+                        var region = qData.region;
+                        var result_data = [];
+                        region.buckets.forEach(function (e) {
+                            var data = {};
+                            data["name"] = e.key;
+                            data["value"] = e.doc_count;
+                            result_data.push(data);
+                        });
+                        data["label"] = qtype;
+                        data["data"] = result_data;
+                        if (cb)
+                            cb(data)
+                    } else {
+                        if (cb)
+                            cb(data)
+                    }
                 } else {
                     if (cb)
-                        cb(data)
-                }
-            }, function (err) {
-                if (err) {
-                    console.error(err)
+                        cb(data);
                 }
             }
-        )
+            else {
+                if (cb)
+                    cb(data);
+                console.error(err);
+            }
+
+        });
 
     }
 };
