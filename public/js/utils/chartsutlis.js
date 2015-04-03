@@ -27,6 +27,10 @@ var chartFactory = {
                         axisLabel: {
                             formatter: chartConfig.axFormat
                         }
+                    },
+                    {
+                        'type': 'value',
+                        'name': '平均访问时间'
                     }
                 ],
                 series: []
@@ -47,12 +51,7 @@ var chartFactory = {
             var serie = {
                 name: data.label,
                 type: chartConfig.chartType,
-                data: [],
-                markLine: {
-                    data: [
-                        {type: 'average', name: '平均值'}
-                    ]
-                }
+                data: []
             };
             chartConfig.min_max = chartConfig.min_max == undefined ? true : false;
             if (chartConfig.min_max) {
@@ -79,10 +78,11 @@ var chartFactory = {
             } else {
                 this.chartDefaultData(serie, option, chartConfig);
             }
+            console.log(option);
             chartObj.hideLoading();
             chartObj.setOption(option);
         },
-        chartAddData: function (data, chartObj, chartConfig, $http) {
+        chartAddData: function (data, chartObj, chartConfig) {
             if (data.data == undefined)return;
             if (data.data[0] != undefined) {
                 var option = chartObj.getOption();
@@ -103,20 +103,15 @@ var chartFactory = {
                         ]
                     }
                 };
-                //var old_series = option.series;
-                //var find = true;
-                //old_series.forEach(function (e) {
-                //    if (e.name == chartConfig.showTarget) {
-                //        find = false;
-                //        return;
-                //    }
-                //});
-                //if (find) {
+                if (data.label != "uv")
+                    serie["yAxisIndex"] = 1;
+                else
+                    serie["yAxisIndex"] = 0;
+
                 json.forEach(function (item) {
                     serie.data.push(item[chartConfig.dataValue]);
                 });
-                option.series.push(serie);
-                //}
+                console.log(option);
                 chartObj.setOption(option);
             }
         }, chartDefaultData: function (serie, option, chartConfig) {

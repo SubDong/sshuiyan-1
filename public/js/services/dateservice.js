@@ -21,26 +21,21 @@ app.service('requestService', ['$rootScope', '$http', function ($rootScope, $htt
                 });
             }
         });
-        var types = opt.type.toString();
-        var queryTypes = [];
-        if (types.indexOf(",") > -1)queryTypes = types.split(",");
-        else queryTypes.push(types);
-        queryTypes.forEach(function (etype) {
-            $http.get("/api/charts?start=" + start + "&end=" + end + "&type=" + etype + "&int=" + opt.interval).success(function (data) {
-                var chartConfig = {
-                    //min_max: true,//是否允许最小值,默认显示
-                    legendData: ["pv", "uv", "跳出率", "抵达率", "平均访问时长", "页面转化"],//显示几种数据
-                    bGap: false,//首行缩进
-                    axFormat: "{value} 次访问",//y轴数据格式化格式
-                    chartType: opt.chart,//图表类型
-                    dataKey: "time",//传入数据的key值
-                    dataValue: "value"//传入数据的value值
-                }
-                chartFactory.lineChart.chartInit(data, chart, chartConfig);
-            }).error(function (err) {
-                console.error(err)
-            })
-        });
+
+        $http.get("/api/charts?start=" + start + "&end=" + end + "&type=" + opt.type + "&int=" + opt.interval).success(function (data) {
+            var chartConfig = {
+                //min_max: true,//是否允许最小值,默认显示
+                legendData: ["pv", "uv", "跳出率", "抵达率", "平均访问时长", "页面转化"],//显示几种数据
+                bGap: false,//首行缩进
+                axFormat: "{value} 次访问",//y轴数据格式化格式
+                chartType: opt.chart,//图表类型
+                dataKey: "time",//传入数据的key值
+                dataValue: "value"//传入数据的value值
+            }
+            chartFactory.lineChart.chartInit(data, chart, chartConfig);
+        }).error(function (err) {
+            console.error(err)
+        })
     },
         this.mapRequest = function (id, start, end, type) {
             var chart = echarts.init(document.getElementById(id));
