@@ -14,6 +14,16 @@ app.controller('IndexCtrl', function ($scope, $http, requestService, messageServ
         $scope.definClass = false;
         $scope.btnchecked = true;
     };
+    $scope.gridOptions = {
+        enableScrollbars: false,
+        enableGridMenu: true,
+        enableHorizontalScrollbar: 0,
+        enableVerticalScrollbar: 0,
+        columnDefs: [
+            {name: 'name', displayName: "关键词"},
+            {name: 'value', displayName: "浏览量"}
+        ]
+    };
     $scope.today = function () {
         $scope.reset();
         $scope.todayClass = true;
@@ -25,9 +35,9 @@ app.controller('IndexCtrl', function ($scope, $http, requestService, messageServ
             interval: 24
         };
         requestService.request('index_charts', start.getTime(), end.getTime(), option);
-        requestService.mapRequest('gest_map', start.getTime(), end.getTime(), "pv");
+        requestService.mapRequest('gest_map', start.getTime(), start.getTime(), "pv");
         requestService.pieRequest("environment_map", start.getTime(), end.getTime(), "pv");
-
+        requestService.gridRequest({}, $scope.gridOptions,"uv");
     };
     $scope.yesterday = function () {
         $scope.reset();
@@ -40,6 +50,7 @@ app.controller('IndexCtrl', function ($scope, $http, requestService, messageServ
         requestService.request('index_charts', start.getTime(), end.getTime(), option);
         requestService.mapRequest('gest_map', start.getTime(), end.getTime(), "pv");
         requestService.pieRequest("environment_map", start.getTime(), end.getTime(), "pv");
+        requestService.gridRequest({start: start.getTime(), end: end.getTime()}, $scope.gridOptions,"uv");
     };
     $scope.sevenDay = function () {
         $scope.reset();
@@ -50,7 +61,9 @@ app.controller('IndexCtrl', function ($scope, $http, requestService, messageServ
             interval: 7
         };
         requestService.request('index_charts', start.getTime(), end.getTime(), option);
-
+        requestService.mapRequest('gest_map', start.getTime(), end.getTime(), "pv");
+        requestService.pieRequest("environment_map", start.getTime(), end.getTime(), "pv");
+        requestService.gridRequest({start: start.getTime(), end: end.getTime()}, $scope.gridOptions,"uv");
     };
     $scope.month = function () {
         $scope.reset();
@@ -61,6 +74,9 @@ app.controller('IndexCtrl', function ($scope, $http, requestService, messageServ
             interval: 30
         };
         requestService.request('index_charts', start.getTime(), end.getTime(), option);
+        requestService.mapRequest('gest_map', start.getTime(), end.getTime(), "pv");
+        requestService.pieRequest("environment_map", start.getTime(), end.getTime(), "pv");
+        requestService.gridRequest({start: start.getTime(), end: end.getTime()}, $scope.gridOptions,"uv");
 
     };
     $scope.open = function ($event) {

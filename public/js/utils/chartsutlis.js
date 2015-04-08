@@ -27,6 +27,10 @@ var chartFactory = {
                         axisLabel: {
                             formatter: chartConfig.axFormat
                         }
+                    },
+                    {
+                        'type': 'value',
+                        'name': '平均访问时间'
                     }
                 ],
                 series: []
@@ -47,12 +51,7 @@ var chartFactory = {
             var serie = {
                 name: data.label,
                 type: chartConfig.chartType,
-                data: [],
-                markLine: {
-                    data: [
-                        {type: 'average', name: '平均值'}
-                    ]
-                }
+                data: []
             };
             chartConfig.min_max = chartConfig.min_max == undefined ? true : false;
             if (chartConfig.min_max) {
@@ -63,20 +62,28 @@ var chartFactory = {
                     ]
                 }
             }
-            if (data.data[0] != undefined) {
-                var json = data.data;
-                var xData = [];
-                json.forEach(function (item) {
-                    xData.push(item[chartConfig.dataKey]);
-                    serie.data.push(item[chartConfig.dataValue]);
-                });
-                option.xAxis[0].data = xData;
-                option.series.push(serie);
+            if (data.data != undefined) {
+                if (data.data[0] != undefined) {
+                    var json = data.data;
+                    var xData = [];
+                    json.forEach(function (item) {
+                        xData.push(item[chartConfig.dataKey]);
+                        serie.data.push(item[chartConfig.dataValue]);
+                    });
+                    option.xAxis[0].data = xData;
+                    option.series.push(serie);
+                } else {
+                    this.chartDefaultData(serie, option, chartConfig);
+                }
+            } else {
+                this.chartDefaultData(serie, option, chartConfig);
             }
+            console.log(option);
             chartObj.hideLoading();
             chartObj.setOption(option);
         },
         chartAddData: function (data, chartObj, chartConfig) {
+            if (data.data == undefined)return;
             if (data.data[0] != undefined) {
                 var option = chartObj.getOption();
                 var json = data.data;
@@ -96,22 +103,36 @@ var chartFactory = {
                         ]
                     }
                 };
-                var old_series = option.series;
-                var find = true;
-                old_series.forEach(function (e) {
-                    if (e.name == chartConfig.showTarget) {
-                        find = false;
-                        return;
-                    }
+                if (data.label != "uv")
+                    serie["yAxisIndex"] = 1;
+                else
+                    serie["yAxisIndex"] = 0;
+
+                json.forEach(function (item) {
+                    serie.data.push(item[chartConfig.dataValue]);
                 });
-                if (find) {
-                    json.forEach(function (item) {
-                        serie.data.push(item[chartConfig.dataValue]);
-                    });
-                    option.series.push(serie);
-                }
+                console.log(option);
                 chartObj.setOption(option);
             }
+        }, chartDefaultData: function (serie, option, chartConfig) {
+            var xData = [0];
+            serie.data.push(0);
+            option.xAxis[0].data = xData;
+            option.series.push(serie);
+            if (chartConfig.chartType == "bar") {
+                option.legend.data = ["暂无数据"];
+            }
+        },
+        chartSerieExist: function (chartObj, target) {
+            var option = chartObj.getOption();
+            var old_series = option.series;
+            var result = true;
+            old_series.forEach(function (e) {
+                if (e.name == target) {
+                    result = false;
+                }
+            });
+            return result;
         }
     }, mapChart: {
         chartInit: function () {
@@ -121,7 +142,6 @@ var chartFactory = {
         }
     }, pieChart: {
         chartInit: function (data, chartObj, chartConfig) {
-            var jsonData = data.data;
             var option = {
                 tooltip: {
                     trigger: chartConfig.tt == undefined ? "item" : chartConfig.tt,
@@ -130,7 +150,7 @@ var chartFactory = {
                 legend: {
                     orient: chartConfig.ledLayout == undefined ? "vertical" : chartConfig.ledLayout,
                     x: 'left',
-                    data: chartConfig.legendData
+                    data: chartConfig.legendData == undefined ? ["暂无数据"] : chartConfig.legendData
                 },
                 calculable: true,
                 series: []
@@ -188,6 +208,10 @@ var chartFactory = {
                 //{value: 335, name: '直接访问'},
                 //{value: 310, name: '邮件营销'}
             }
+            if (data.data == undefined) {
+                return;
+            }
+            var jsonData = data.data;
             if (jsonData != undefined) {
                 jsonData.forEach(function (item) {
                     var push_data = {};
@@ -199,6 +223,9 @@ var chartFactory = {
             option.series.push(serie);
             chartObj.hideLoading();
             chartObj.setOption(option);
+
+        },
+        chartDefault: function (serie, option, chartConfig) {
 
         }
     }

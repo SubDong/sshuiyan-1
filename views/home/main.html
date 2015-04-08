@@ -1,6 +1,6 @@
-<div class="middle_containers">
+<div class="middle_containers" ng-controller="IndexCtrl">
     <div class="date_select">
-        <div ng-controller="IndexCtrl">
+        <div >
             <calendar></calendar>
             <div aria-label="First group" role="group" class="btn-group fl" ng-hide="btnchecked">
                 <button class="btn btn-default" type="button" ng-click="daycheck()" ng-class="{'current':dayClass}">按天
@@ -77,7 +77,7 @@
                         </div>
                     </div>
                 </div>
-                <div ng-controller="Indextable">
+                <div >
                     <div class="ui-grid" ui-grid="gridOptions" ui-grid-pinning id="searchWordGrid">
                     </div>
                 </div>

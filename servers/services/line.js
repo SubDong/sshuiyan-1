@@ -16,7 +16,7 @@
  */
 var date = require('../utils/date');
 var line = {
-    calJumpRate: function (es, start, end, intervals, index, type, qtype,callbackFn) {
+    calJumpRate: function (es, start, end, intervals, index, type, qtype, callbackFn) {
         var single_uv_request = {
             "index": index.toString(),
             "type": type,
@@ -107,42 +107,55 @@ var line = {
         }
 
         es.search(single_uv_request, function (error, response) {
-            if (response != undefined)
-                single_uv_result = response.aggregations.result.buckets;
-            else
-                console.error(error);
+            var result_data = {label: "暂无数据", data: []};
+            if (error)
+                return;
+
+            if (response != undefined) {
+                if (response.status == undefined)
+                    single_uv_result = response.aggregations.result.buckets;
+                else
+                    console.error(error);
+            }
+
         });
 
         es.search(total_uv_request, function (error, response) {
-            var result_data={};
+            var result_data = {label: "暂无数据", data: []};
             if (response != undefined) {
-                var total_uv_result = response.aggregations.result.buckets;
-                var single_uv_result = getSingleUVResult();
-                if (single_uv_result != null && total_uv_result != null) {
-                    var result = [];
-                    for (var i = 0, l = total_uv_result.length; i < l; i++) {
-                        var obj = {};
-                        if (total_uv_result[i].tuv.value === 0) {
-                            obj["time"] = date.formatTime(total_uv_result[i].key);
-                            obj["value"] = "0%";
-                            result.push(obj);
-                        } else {
-                            obj["time"] = date.formatTime(total_uv_result[i].key);
-                            obj["value"] = (parseFloat(single_uv_result[i].doc_count) / parseFloat(total_uv_result[i].tuv.value) * 100).toFixed(2) + "%";
-                            result.push(obj);
+                if (response.status == undefined) {
+                    var total_uv_result = response.aggregations.result.buckets;
+                    var single_uv_result = getSingleUVResult();
+                    if (single_uv_result != null && total_uv_result != null) {
+                        var result = [];
+                        for (var i = 0, l = total_uv_result.length; i < l; i++) {
+                            var obj = {};
+                            if (total_uv_result[i].tuv.value === 0) {
+                                obj["time"] = date.formatTime(total_uv_result[i].key);
+                                obj["value"] = "0%";
+                                result.push(obj);
+                            } else {
+                                obj["time"] = date.formatTime(total_uv_result[i].key);
+                                obj["value"] = (parseFloat(single_uv_result[i].doc_count) / parseFloat(total_uv_result[i].tuv.value) * 100).toFixed(2) + "%";
+                                result.push(obj);
+                            }
                         }
+                        result_data["label"] = qtype;
+                        result_data["data"] = result;
+                        callbackFn(result_data);
                     }
-                    result_data["label"]=qtype;
-                    result_data["data"]=result;
+                }
+                else {
                     callbackFn(result_data);
                 }
+            } else {
+                callbackFn(result_data);
             }
-            else
-                console.error(error);
+
         });
 
     },
-    calAvgVisitTime: function (es, start, end, intervals, index, type,qtype, field, callbackFn) {
+    calAvgVisitTime: function (es, start, end, intervals, index, type, qtype, field, callbackFn) {
         var request = {
             "index": index.toString(),
             "type": type,
@@ -184,20 +197,25 @@ var line = {
         };
 
         es.search(request, function (error, response) {
-            var result_data={};
+            var result_data = {label: "暂无数据", data: []};
             if (response != undefined) {
-                var result = [];
-                response.aggregations.result.buckets.forEach(function (hit) {
-                    var obj = {};
-                    obj["time"] =date.formatTime(hit.key);
-                    obj["value"] = hit.total_time.value;
-                    result.push(obj);
-                });
-                result_data["label"]=qtype;
-                result_data["data"]=result;
+                if (response.status == undefined) {
+                    var result = [];
+                    response.aggregations.result.buckets.forEach(function (hit) {
+                        var obj = {};
+                        obj["time"] = date.formatTime(hit.key);
+                        obj["value"] = hit.total_time.value;
+                        result.push(obj);
+                    });
+                    result_data["label"] = qtype;
+                    result_data["data"] = result;
+                    callbackFn(result_data);
+                } else {
+                    callbackFn(result_data);
+                }
+            } else {
                 callbackFn(result_data);
-            } else
-                console.error(error);
+            }
         });
     },
     pu: function (es, start, end, intervals, indexs, type, qtype, field, cb) {//pv，uv
@@ -241,28 +259,35 @@ var line = {
         };
 
         es.search(request, function (error, response) {
-            var resultData = {};
+            var resultData = {label: "暂无数据", data: []};
             if (response != undefined) {
-                var result = response.aggregations;
-                if (result != undefined) {
-                    var pv = result.result;
-                    var uv_Data = [];
-                    pv.buckets.forEach(function (e) {
-                        var vo = {};
-                        vo["time"] = date.formatTime(e.key);
-                        vo["value"] = e["pu"].value;
-                        uv_Data.push(vo);
-                    });
-                    resultData["label"] = qtype;
-                    resultData["data"] = uv_Data;
-                    if (cb)
-                        cb(resultData);
+                if (response.status == undefined) {
+                    var result = response.aggregations;
+                    if (result != undefined) {
+                        var pv = result.result;
+                        var uv_Data = [];
+                        pv.buckets.forEach(function (e) {
+                            var vo = {};
+                            vo["time"] = date.formatTime(e.key);
+                            vo["value"] = e["pu"].value;
+                            uv_Data.push(vo);
+                        });
+                        resultData["label"] = qtype;
+                        resultData["data"] = uv_Data;
+                        if (cb)
+                            cb(resultData);
+                    } else {
+                        if (cb)
+                            cb(resultData);
+                    }
                 } else {
                     if (cb)
                         cb(resultData);
                 }
             }
             else {
+                if (cb)
+                    cb(resultData);
                 console.error(error);
             }
         });

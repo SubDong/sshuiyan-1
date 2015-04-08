@@ -1,4 +1,4 @@
-<div class="middle_containers">
+<div class="middle_containers" ng-controller="Trend_realtime_ctrl">
     <div class="date_select">
         <div class="fr">
             <button class="btn btn-default" type="button"><span aria-hidden="true"
@@ -27,7 +27,7 @@
                     <h4>30分钟内</h4>
                     <h5>当前在线人数</h5>
 
-                    <h1>12000</h1>
+                    <h1>{{visitorCount}}}</h1>
                 </div>
             </div>
             <div class="Visitor_chart">
@@ -65,13 +65,11 @@
                                     <div role="group" class="btn-group">
                                         <select ng-options="o.title for o in select.optionsData"
                                                 ng-model="select.selectVal" class="ng-pristine ng-valid ng-touched">
-                                            <option value="" class="">全部</option>
+                                            <option value="0" class="">全部</option>
+                                            <option value="1" class="">直接访问</option>
+                                            <option value="2" class="">搜索引擎</option>
+                                            <option value="3" class="">外部链接</option>
                                         </select>
-                                 <!--       <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
-                                            <li><a href="#">直接访问</a></li>
-                                            <li><a href="#">搜索引擎</a></li>
-                                            <li><a href="#">外部连接</a></li>
-                                        </ul>-->
                                     </div>
                                 </li>
                                 <li><a href="#">百度</a></li>
@@ -97,16 +95,16 @@
                                                     ng-model="select.selectVal" class="ng-pristine ng-valid ng-touched">
                                                 <option value="" class="">国家</option>
                                             </select>
-                                        <!--    <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
-                                                <li><a href="#"> 四川</a></li>
-                                                <li><a href="#">成都 </a></li>
-                                                <li><a href="#">成都</a></li>
-                                                <li><a href="#">成都</a></li>
-                                                <li><a href="#">成都</a></li>
-                                                <li><a href="#">成都</a></li>
-                                                <li><a href="#">转化次数</a></li>
+                                            <!--    <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
+                                                    <li><a href="#"> 四川</a></li>
+                                                    <li><a href="#">成都 </a></li>
+                                                    <li><a href="#">成都</a></li>
+                                                    <li><a href="#">成都</a></li>
+                                                    <li><a href="#">成都</a></li>
+                                                    <li><a href="#">成都</a></li>
+                                                    <li><a href="#">转化次数</a></li>
 
-                                            </ul>-->
+                                                </ul>-->
                                         </div>
                                         <div role="group" class="btn-group">
                                             <select ng-options="o.title for o in select.optionsData"
@@ -140,8 +138,8 @@
 
                         </div>
                     </div>
-                    <div class="custom_table" ng-controller="Vistiorctr">
-                        <div ui-grid="gridOptions" class="grid" ui-grid-pagination ui-grid-expandable></div>
+                    <div class="custom_table">
+                        <div ui-grid="gridOptions" class="grid" ui-grid-pagination></div>
                     </div>
                 </div>
             </div>
