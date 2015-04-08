@@ -2,13 +2,23 @@
  * Created by yousheng on 15/3/24.
  */
 //typeOption={type:"xxxxx",data:object....}
+var charConfigDef = {
+    chartType: "line",
+    tt:"axis",
+    xType:"category",
+    yType:"value",
+    bGap:false,
+    dataKey: "time",
+    dataValue: "value"
+}
 var chartFactory = {
     lineChart: {
         chartInit: function (data, chartObj, chartConfig) {
+            chartConfig = !chartConfig ? charConfigDef: chartConfig;
             var option = {
                 legend: {
-                    orient: chartConfig.ledLayout == undefined ? "horizontal" : chartConfig.ledLayout,
-                    data: chartConfig.legendData
+                    orient: !chartConfig.ledLayout ? "horizontal" : chartConfig.ledLayout,
+                    data: !chartConfig.legendData?[data.label]:chartConfig.legendData
                 },
                 tooltip: {
                     trigger: chartConfig.tt == undefined ? "axis" : chartConfig.tt
@@ -16,14 +26,14 @@ var chartFactory = {
                 calculable: true,
                 xAxis: [
                     {
-                        type: chartConfig.xType == undefined ? "category" : chartConfig.xType,
+                        type: !chartConfig.xType ? "category" : chartConfig.xType,
                         boundaryGap: chartConfig.bGap,
                         data: []
                     }
                 ],
                 yAxis: [
                     {
-                        type: chartConfig.yType == undefined ? "value" : chartConfig.yType,
+                        type: !chartConfig.yType? "value" : chartConfig.yType,
                         axisLabel: {
                             formatter: chartConfig.axFormat
                         }
@@ -35,7 +45,7 @@ var chartFactory = {
                 ],
                 series: []
             };
-            chartConfig.toolShow = chartConfig.toolShow == undefined ? false : true;
+            chartConfig.toolShow = !chartConfig.toolShow? false : true;
             if (chartConfig.toolShow) {
                 option["toolbox"] = {
                     show: true,
@@ -53,7 +63,7 @@ var chartFactory = {
                 type: chartConfig.chartType,
                 data: []
             };
-            chartConfig.min_max = chartConfig.min_max == undefined ? true : false;
+            chartConfig.min_max = !chartConfig.min_max  ? false : true;
             if (chartConfig.min_max) {
                 serie["markPoint"] = {
                     data: [
@@ -147,14 +157,14 @@ var chartFactory = {
                     formatter: "{a} <br/>{b} : {c} ({d}%)"
                 },
                 legend: {
-                    orient: chartConfig.ledLayout == undefined ? "vertical" : chartConfig.ledLayout,
+                    orient: !chartConfig.ledLayout ? "vertical" : chartConfig.ledLayout,
                     x: 'left',
-                    data: chartConfig.legendData == undefined ? ["暂无数据"] : chartConfig.legendData
+                    data: !chartConfig.legendData ? ["暂无数据"] : chartConfig.legendData
                 },
                 calculable: true,
                 series: []
             };
-            chartConfig.toolShow = chartConfig.toolShow == undefined ? false : true;
+            chartConfig.toolShow = !chartConfig.toolShow ? false : true;
             if (chartConfig.toolShow) {
                 option["toolbox"] = {
                     show: true,
