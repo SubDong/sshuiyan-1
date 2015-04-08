@@ -27,7 +27,6 @@ app.service('requestService', ['$rootScope', '$http', function ($rootScope, $htt
                 //min_max: true,//是否允许最小值,默认显示
                 legendData: ["pv", "uv", "跳出率", "抵达率", "平均访问时长", "页面转化"],//显示几种数据
                 bGap: false,//首行缩进
-                axFormat: "{value} 次访问",//y轴数据格式化格式
                 chartType: opt.chart,//图表类型
                 dataKey: "time",//传入数据的key值
                 dataValue: "value"//传入数据的value值

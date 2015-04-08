@@ -62,8 +62,8 @@ var chartFactory = {
                     ]
                 }
             }
-            if (data.data != undefined) {
-                if (data.data[0] != undefined) {
+            if (data.data) {
+                if (data.data[0]) {
                     var json = data.data;
                     var xData = [];
                     json.forEach(function (item) {
@@ -78,13 +78,12 @@ var chartFactory = {
             } else {
                 this.chartDefaultData(serie, option, chartConfig);
             }
-            console.log(option);
             chartObj.hideLoading();
             chartObj.setOption(option);
         },
         chartAddData: function (data, chartObj, chartConfig) {
-            if (data.data == undefined)return;
-            if (data.data[0] != undefined) {
+            if (!data.data)return;
+            if (data.data[0]) {
                 var option = chartObj.getOption();
                 var json = data.data;
                 var serie = {
@@ -111,7 +110,7 @@ var chartFactory = {
                 json.forEach(function (item) {
                     serie.data.push(item[chartConfig.dataValue]);
                 });
-                console.log(option);
+                option.series.push(serie);
                 chartObj.setOption(option);
             }
         }, chartDefaultData: function (serie, option, chartConfig) {
@@ -208,11 +207,11 @@ var chartFactory = {
                 //{value: 335, name: '直接访问'},
                 //{value: 310, name: '邮件营销'}
             }
-            if (data.data == undefined) {
+            if (!data.data) {
                 return;
             }
             var jsonData = data.data;
-            if (jsonData != undefined) {
+            if (jsonData) {
                 jsonData.forEach(function (item) {
                     var push_data = {};
                     push_data[chartConfig.dataKey] = item[chartConfig.dataKey];
