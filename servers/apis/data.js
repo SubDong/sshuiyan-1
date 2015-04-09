@@ -7,6 +7,7 @@ var bar = require('../services/bar');
 var grid = require('../services/grid');
 var resutil = require('../utils/responseutils');
 var datautils = require('../utils/datautils');
+var es_request = require('../services/es_request');
 
 var api = express.Router();
 
@@ -132,5 +133,35 @@ api.get('/grid', function (req, res) {
     }
 });
 
+// ================================= baizz ================================
+// 推广概况
+api.get('/survey', function (req, res) {
+    var query = url.parse(req.url, true).query;
+
+    var type = query['type'];
+    var qtype = query['qtype'];
+    var start = Number(query['start']);
+    var end = Number(query['end']);
+    var indexes = date.between(req, "visitor-");
+
+    switch (qtype) {
+        case "outRate":
+            var category = query['c'];
+            es_request.calOutRate(req.es, start, end, category, type, indexes[0], function (result) {
+                datautils.send(res, JSON.stringify(result));
+            });
+            break;
+        case "avgTime":
+            es_request.calAvgTime(req.es, start, end, category, type, indexes[0], function (result) {
+                datautils.send(res, JSON.stringify(result));
+            });
+            break;
+    }
+
+});
+// 推广方式
+
+// 搜索推广
+// ========================================================================
 
 module.exports = api;

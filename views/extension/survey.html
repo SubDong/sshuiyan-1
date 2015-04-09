@@ -1,32 +1,29 @@
-<div class="middle_containers" ng-controller="SurveryCtrl">
+<div class="middle_containers" ng-controller="SurveyCtrl">
     <div class="date_select">
-       <b>推广概况</b>
-        <div>
-            <calendar></calendar>
-            <datecontrast></datecontrast>
-        </div>
+        <b>推广概况</b>
     </div>
-    <div class="my_concent" >
+    <div class="my_concent">
         <div>
-            <div class="select_top" >
-                <select ng-model="select.selectVal" ng-options="o.title for o in select.optionsData">
+            <div class="select_top">
+                <select ng-model="way.selectVal" ng-options="o.title for o in select.optionsData">
                     <option value="">全部推广方式</option>
                 </select>
             </div>
             <div ui-grid="gridOptions" class="grid" ui-grid-pinning></div>
         </div>
         <div class="survey_chart">
-            <div class="select_top" >
-                <select ng-model="vm.selectVal" ng-options="o.title for o in select.optionsData">
+            <div class="select_top">
+                <select ng-model="out.selectVal" ng-options="o.title for o in select.outQuota">
                     <option value="">投放指标：消费</option>
                 </select>
-                <select ng-model="vm.selectVal" ng-options="o.title for o in select.optionsData">
+                <select ng-model="effect.selectVal" ng-options="o.title for o in select.effectQuota">
                     <option value="">效果指标：访问次数</option>
                 </select>
+
                 <div aria-label="First group" role="group" class="btn-group fr">
                     <button class="btn btn-default disabled" type="button">时间</button>
-                    <button class="btn btn-default current" type="button"> 今天</button>
-                    <button class="btn btn-default" type="button"> 昨天</button>
+                    <button class="btn btn-default current" type="button">今天</button>
+                    <button class="btn btn-default" type="button">昨天</button>
                     <button class="btn btn-default" type="button">最近7天</button>
                     <button class="btn btn-default" type="button">最近30天</button>
                 </div>
@@ -34,29 +31,29 @@
             <div id="index_charts" style="height:400px;"></div>
             <div class="survey_under">
                 <div class="under_top">
-                    消费对比： <select ng-model="vm.selectVal" ng-options="o.title for o in select.optionsData">
-                        <option value="">请选择对比项</option>
-                    </select>
-                    页面转化对比<select ng-model="vm.selectVal" ng-options="o.title for o in select.optionsData">
-                        <option value="">页面转化对比</option>
-                    </select>
+                    消费对比: <select ng-model="vm.selectVal" ng-options="o.title for o in select.optionsData">
+                    <option value="">请选择对比项</option>
+                </select>
+                    页面转化对比: <select ng-model="vm.selectVal" ng-options="o.title for o in select.optionsData">
+                    <option value="">页面转化对比</option>
+                </select>
                 </div>
                 <div class="under_concent">
                     <div class="row">
                         <div class="col-xs-6">
-                            <div class="uconcentctrl" ng-controller="UconcentCtrl" >
+                            <div class="uconcentctrl" ng-controller="UconcentCtrl">
                                 <div ui-grid="gridOptions" class="grid" ui-grid-pinning></div>
                             </div>
-                            <div class="uconcentctrl" ng-controller="EconcentCtrl" >
-                                <div ui-grid="gridOptions" class="grid" ui-grid-pinning ></div>
+                            <div class="uconcentctrl" ng-controller="EconcentCtrl">
+                                <div ui-grid="gridOptions" class="grid" ui-grid-pinning></div>
                             </div>
                         </div>
                         <div class="col-xs-6">
-                            <div class="uconcentctrl" ng-controller="UconcentCtrl" >
+                            <div class="uconcentctrl" ng-controller="UconcentCtrl">
                                 <div ui-grid="gridOptions" class="grid" ui-grid-pinning></div>
                             </div>
-                            <div class="uconcentctrl" ng-controller="EconcentCtrl" >
-                                <div ui-grid="gridOptions" class="grid" ui-grid-pinning ></div>
+                            <div class="uconcentctrl" ng-controller="EconcentCtrl">
+                                <div ui-grid="gridOptions" class="grid" ui-grid-pinning></div>
                             </div>
                         </div>
                     </div>
