@@ -2,19 +2,9 @@
  * Created by yousheng on 15/3/24.
  */
 //typeOption={type:"xxxxx",data:object....}
-var charConfigDef = {
-    chartType: "line",
-    tt:"axis",
-    xType:"category",
-    yType:"value",
-    bGap:false,
-    dataKey: "time",
-    dataValue: "value"
-}
 var chartFactory = {
     lineChart: {
         chartInit: function (data, chartObj, chartConfig) {
-            chartConfig = !chartConfig ? charConfigDef: chartConfig;
             var option = {
                 legend: {
                     orient: !chartConfig.ledLayout ? "horizontal" : chartConfig.ledLayout,

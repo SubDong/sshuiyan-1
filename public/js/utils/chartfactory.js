@@ -19,6 +19,7 @@ var cf = {
                 break;
             case "map":
                 _self.mapChart(data, chartConfig);
+                break;
             default :
                 _self.lineChart(data, chartConfig);
                 break;
@@ -35,7 +36,7 @@ var op = {
                 data: !chartConfig.legendData ? [data.label] : chartConfig.legendData
             },
             tooltip: {
-                trigger: chartConfig.tt == undefined ? "axis" : chartConfig.tt
+                trigger: !chartConfig.tt ? "axis" : chartConfig.tt
             },
             calculable: true,
             xAxis: [
@@ -104,18 +105,184 @@ var op = {
         } else {
             def.lineDefData(serie, option, chartConfig);
         }
-        console.log(chartObj);
         chartObj.hideLoading();
         chartObj.setOption(option);
     },
     barChart: function (data, chartConfig) {
+        chartConfig.dataKey = !chartConfig.dataKey ? "name" : chartConfig.dataKey;
         this.lineChart(data, chartConfig);
     },
     pieChart: function (data, chartConfig) {
+        if (!chartConfig.chartObj)return;
+        var chartObj = chartConfig.chartObj;
+        var option = {
+            tooltip: {
+                trigger: !chartConfig.tt ? "item" : chartConfig.tt,
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+            legend: {
+                orient: !chartConfig.ledLayout ? "vertical" : chartConfig.ledLayout,
+                x: 'left',
+                data: !chartConfig.legendData ? [data.label] : chartConfig.legendData
+            },
+            calculable: true,
+            series: []
+        };
+        chartConfig.toolShow = !chartConfig.toolShow ? false : true;
+        if (chartConfig.toolShow) {
+            option["toolbox"] = {
+                show: true,
+                feature: {
+                    mark: {show: true},
+                    dataView: {show: true, readOnly: false},
+                    magicType: {
+                        show: true,
+                        type: ['pie', 'funnel'],
+                        option: {
+                            funnel: {
+                                x: '25%',
+                                width: '50%',
+                                funnelAlign: 'left',
+                                max: 1548
+                            }
+                        }
+                    },
+                    restore: {show: true},
+                    saveAsImage: {show: true}
+                }
+            }
+        }
+        var serie = {
+            name: !chartConfig.serieName ? "请配置图例说明" : chartConfig.serieName,
+            type: "pie",
+            radius: '55%',
+            center: ['50%', '60%'],
+            itemStyle: {
+                normal: {
+                    label: {
+                        position: 'inner',
+                        formatter: function (params) {
+                            return (params.percent - 0).toFixed(0) + '%'
+                        }
+                    },
+                    labelLine: {
+                        show: false
+                    }
+                },
+                emphasis: {
+                    label: {
+                        show: true,
+                        formatter: "{b}\n{d}%"
+                    }
+                }
 
+            },
+            data: []
+        }
+        if (!data.data) {
+            return;
+        }
+        chartConfig.dataKey = !chartConfig.dataKey ? "name" : chartConfig.dataKey;
+        chartConfig.dataValue = !chartConfig.dataValue ? "value" : chartConfig.dataValue;
+        var jsonData = data.data;
+        if (jsonData) {
+            jsonData.forEach(function (item) {
+                var push_data = {};
+                push_data[chartConfig.dataKey] = item[chartConfig.dataKey];
+                push_data[chartConfig.dataValue] = item[chartConfig.dataValue];
+                serie.data.push(push_data);
+            });
+        }
+        option.series.push(serie);
+        chartObj.hideLoading();
+        chartObj.setOption(option);
     },
     mapChart: function (data, chartConfig) {
-
+        if (!chartConfig.chartObj)return;
+        var chartObj = chartConfig.chartObj;
+        var option = {
+            title: {
+                text: !chartConfig.titleText ? "暂无说明" : chartConfig.titleText,
+                x: 'center'
+            },
+            tooltip: {
+                trigger: !chartConfig.tt ? 'item' : chartConfig.tt
+            },
+            legend: {
+                orient: !chartConfig.ledLayout ? 'vertical' : chartConfig.ledLayout,
+                x: 'left',
+                data: !chartConfig.legendData ? [data.label] : chartConfig.legendData
+            },
+            series: []
+        };
+        chartConfig.toolbox = !chartConfig.toolbox ? false : chartConfig.toolbox;
+        if (chartConfig.toolbox) {
+            option["toolbox"] = {
+                show: true,
+                orient: 'vertical',
+                x: 'right',
+                y: 'center',
+                feature: {
+                    mark: {show: true},
+                    dataView: {show: true, readOnly: false},
+                    restore: {show: true},
+                    saveAsImage: {show: true}
+                }
+            }
+        }
+        if (chartConfig.dataRange == undefined) {
+            option["dataRange"] = {
+                min: 0,
+                max: 2500,
+                x: 'left',
+                y: 'bottom',
+                text: ['高', '低'],           // 文本，默认为数值文本
+                calculable: true
+            }
+        }
+        chartConfig.roamController = !chartConfig.roamController ? false : chartConfig.roamController;
+        if (chartConfig.roamController) {
+            option["roamController"] = {
+                show: true,
+                x: 'right',
+                mapTypeControl: {
+                    'china': true
+                }
+            }
+        }
+        var serie = {
+            //name: chartConfig.serieName,
+            type: chartConfig.chartType,
+            mapType: 'china',
+            roam: false,
+            itemStyle: {
+                normal: {label: {show: true}},
+                emphasis: {label: {show: true}}
+            },
+            data: []
+        }
+        chartConfig.dataKey = !chartConfig.dataKey ? "name" : chartConfig.dataKey;
+        chartConfig.dataValue = !chartConfig.dataValue ? "value" : chartConfig.dataValue;
+        if (data.data) {
+            if (data.data[0]) {
+                data.data.forEach(function (e) {
+                    serie['name'] = data.label;
+                    var push_data = {};
+                    var key = e[chartConfig.dataKey];
+                    if (key.indexOf("自治区") > -1 || key.indexOf("行政区")) {
+                        push_data[chartConfig.dataKey] = key.slice(0, 2);
+                    } else {
+                        push_data[chartConfig.dataKey] = key.slice(0, -1);
+                    }
+                    push_data[chartConfig.dataValue] = e[chartConfig.dataValue];
+                    push_data["value"]
+                    serie.data.push(push_data);
+                });
+                option.series.push(serie);
+            }
+        }
+        chartObj.hideLoading();
+        chartObj.setOption(option);
     }
 }
 var def = {

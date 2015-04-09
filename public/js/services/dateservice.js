@@ -23,21 +23,13 @@ app.service('requestService', ['$rootScope', '$http', function ($rootScope, $htt
         });
 
         $http.get("/api/charts?start=" + start + "&end=" + end + "&type=" + opt.type + "&int=" + opt.interval).success(function (data) {
-            //var chartConfig = {
-            //    //min_max: true,//是否允许最小值,默认显示
-            //    legendData: ["pv", "uv", "跳出率", "抵达率", "平均访问时长", "页面转化"],//显示几种数据
-            //    bGap: false,//首行缩进
-            //    chartType: opt.chart,//图表类型
-            //    dataKey: "time",//传入数据的key值
-            //    dataValue: "value"//传入数据的value值
-            //}
             var chartConfig={
-                chartObj:chart,
-                chartType:"bar",
-                legendData: ["pv", "uv", "跳出率", "抵达率", "平均访问时长", "页面转化"],//显示几种数据
+                chartObj:chart,//渲染的chart对象Id
+                chartType:"line",
+                min_max:true,//是否允许最小值,默认显示
+                legendData: ["pv", "uv", "跳出率", "抵达率", "平均访问时长", "页面转化"]//显示几种数据
             }
             cf.renderChart(data,chartConfig);
-            //chartFactory.lineChart.chartInit(data, chart,chartConfig);
         }).error(function (err) {
             console.error(err)
         })
@@ -49,14 +41,12 @@ app.service('requestService', ['$rootScope', '$http', function ($rootScope, $htt
             });
             $http.get("/api/map?start=" + start + "&end=" + end + "&type=" + type).success(function (data) {
                 var chartConfig = {
-                    min_max: false,
-                    legendData: [data.label],
-                    bGap: true,
+                    legendData:[data.label],
                     chartType: "bar",
-                    dataKey: "name",
-                    dataValue: "value"
+                    chartObj:chart,
+                    bGap:true
                 }
-                chartFactory.lineChart.chartInit(data, chart, chartConfig);
+                cf.renderChart(data,chartConfig);
             }).error(function (err) {
                 console.error(err)
             });
@@ -65,20 +55,21 @@ app.service('requestService', ['$rootScope', '$http', function ($rootScope, $htt
             var chart = echarts.init(document.getElementById(id));
             $http.get("/api/pie?start=" + start + "&end=" + end + "&type=" + type).success(function (data) {
                 var chartConfig = {
-                    legendData: data.label,
-                    serieName: "设备环境",
+                    chartType:"pie",
+                    legendData:data.label,
                     dataKey: "name",
-                    dataValue: "value"
+                    chartObj:chart
                 }
-                chartFactory.pieChart.chartInit(data, chart, chartConfig);
+                //chartFactory.pieChart.chartInit(data, chart, chartConfig);
+                cf.renderChart(data,chartConfig);
             }).error(function (err) {
                 console.error(err)
             });
         }
     this.gridRequest = function (time, uiGridOpt, type) {
-        var start = time.start == undefined ? today_start().getTime() : time.start, end = time.end == undefined ? today_end().getTime() : time.end;
+        var start = !time.start ? today_start().getTime() : time.start, end = !time.end ? today_end().getTime() : time.end;
         $http.get("/api/grid?start=" + start + "&end=" + end + "&type=" + type).success(function (data) {
-            if (data.data != undefined)
+            if (data.data)
                 uiGridOpt.data = data.data;
             else
                 uiGridOpt.data = [];
