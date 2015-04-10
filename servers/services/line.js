@@ -122,7 +122,7 @@ var line = {
 
         es.search(total_uv_request, function (error, response) {
             var result_data = {label: "暂无数据", data: []};
-            if (response != undefined) {
+            if (response) {
                 if (response.status == undefined) {
                     var total_uv_result = response.aggregations.result.buckets;
                     var single_uv_result = getSingleUVResult();
@@ -198,7 +198,7 @@ var line = {
 
         es.search(request, function (error, response) {
             var result_data = {label: "暂无数据", data: []};
-            if (response != undefined) {
+            if (response) {
                 if (response.status == undefined) {
                     var result = [];
                     response.aggregations.result.buckets.forEach(function (hit) {
@@ -260,7 +260,7 @@ var line = {
 
         es.search(request, function (error, response) {
             var resultData = {label: "暂无数据", data: []};
-            if (response != undefined) {
+            if (response) {
                 if (response.status == undefined) {
                     var result = response.aggregations;
                     if (result != undefined) {
@@ -290,6 +290,92 @@ var line = {
                     cb(resultData);
                 console.error(error);
             }
+        });
+
+    },
+    convertRate: function (es, start, end, intervals, index, type, qtype, urls, cb) {
+        var should = [], convertUrl, term = {}, item = {};
+        if (urls.indexOf("," > -1)) {
+            convertUrl = urls.split(",");
+            for (var i = 0; i < urls.split(",").length; i++) {
+                item["loc"] = convertUrl[i];
+                term["term"] = item;
+                should.push(term);
+            }
+        } else {
+            item["loc"] = urls;
+            term["term"] = item;
+            should.push(term);
+        }
+
+        var request = {
+            "index": index,
+            "type": type,
+            "body": {
+                "query": {
+                    "range": {
+                        "utime": {
+                            "gte": start,
+                            "lte": end
+                        }
+                    }
+                },
+                "size": 0,
+                "aggs": {
+                    "convertRate": {
+                        "filters": {
+                            "filters": {
+                                "convert": {
+                                    "bool": {
+                                        "should": should
+                                    }
+                                }
+                            }
+                        },
+                        "aggs": {
+                            "result": {
+                                "date_histogram": {
+                                    "field": "utime",
+                                    "interval": intervals / 1000 + "s",
+                                    "time_zone": "+08:00",
+                                    "order": {
+                                        "_key": "asc"
+                                    },
+                                    "min_doc_count": 0,
+                                    "extended_bounds": {
+                                        "min": start,
+                                        "max": end
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        es.search(request, function (err, esBody) {
+            var result_data = {label: "暂无数据", data: []};
+            if (esBody) {
+                if (esBody.status == undefined) {
+                    var aggs = esBody.aggregations;
+                    var convert = aggs.convertRate.buckets.convert.result.buckets;
+                    var data = [];
+                    convert.forEach(function (e) {
+                        var vo = {};
+                        vo["time"] = date.formatTime(e.key);
+                        vo["value"] = e.doc_count;
+                        data.push(vo);
+                    });
+                    result_data["label"] = qtype;
+                    result_data["data"] = data;
+                    if (cb)
+                        cb(result_data);
+                } else {
+                    if (cb)
+                        cb(result_data)
+                }
+            } else
+                cb(result_data);
         });
 
     }

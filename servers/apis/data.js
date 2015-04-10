@@ -61,6 +61,11 @@ api.get('/charts', function (req, res) {
                 break;
             case "city":
                 break;
+            case "convertRate":
+                line.convertRate(req.es, start, end, interval, pvindexs, 1, qtype, "http://sem.best-ad.cn/login,http://sem.best-ad.cn/home", function (result) {
+                    datautils.send(res,result);
+                });
+                break;
             case "province":
                 break;
             default :
