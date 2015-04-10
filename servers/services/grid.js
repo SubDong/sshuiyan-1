@@ -34,8 +34,12 @@ var grid = {
                                 tmp_data.push(data);
                             }
                         });
+                        var config={};
+                        config["dataKey"]="name";
+                        config["dataValue"]="value";
                         result_data["label"] = "搜索词";
                         result_data["data"] = tmp_data;
+                        result_data["config"]=config
                         func(result_data);
                     } else {
                         func(result_data);

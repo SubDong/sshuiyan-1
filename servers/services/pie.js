@@ -43,8 +43,12 @@ var pie = {
                             tmp_data["value"] = e.doc_count;
                             data.push(tmp_data);
                         });
+                        var config={};
+                        config["dataKey"]="name";
+                        config["dataValue"]="value";
                         result_data["label"] = name_data;
                         result_data["data"] = data;
+                        result_data["config"]=config;
                         if (func)
                             func(result_data);
                     } else {

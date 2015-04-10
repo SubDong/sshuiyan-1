@@ -96,10 +96,14 @@ var chartFactory = {
                 if(option.series[s_index].markPoint){
                     serie["markPoint"]=option.series[s_index].markPoint;
                 }
-                if (data.label != "uv")
+                if (data.label != "uv") {
                     serie["yAxisIndex"] = 1;
-                else
+                    option.yAxis[1]["axisLabel"]= {
+                        formatter: !chartConfig.axFormat?undefined:"{value}"+chartConfig.axFormat
+                    };
+                }else{
                     serie["yAxisIndex"] = 0;
+                }
 
                 json.forEach(function (item) {
                     serie.data.push(item[chartConfig.dataValue]);
@@ -129,11 +133,14 @@ var chartFactory = {
         }
     }, mapChart: {
         chartInit: function () {
-        },
+        }
+        ,
         chartAddData: function () {
 
         }
-    }, pieChart: {
+    }
+    ,
+    pieChart: {
         chartInit: function (data, chartObj, chartConfig) {
             var option = {
                 tooltip: {
@@ -217,7 +224,8 @@ var chartFactory = {
             chartObj.hideLoading();
             chartObj.setOption(option);
 
-        },
+        }
+        ,
         chartDefault: function (serie, option, chartConfig) {
 
         }
@@ -251,6 +259,8 @@ var chartUtils = {
                 break;
             case "页面转化":
                 return "convertRate";
+            case "IP数":
+                return "ip";
             default :
                 return "pv";
         }

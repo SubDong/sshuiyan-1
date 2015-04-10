@@ -78,8 +78,7 @@ var op = {
             type: !chartConfig.chartType ? "line" : chartConfig.chartType,
             data: []
         };
-        chartConfig.min_max = !chartConfig.min_max ? false : true;
-        if (chartConfig.min_max) {
+        if (chartConfig.min_max == undefined) {
             serie["markPoint"] = {
                 data: [
                     {type: 'max', name: '最大值'},
@@ -114,7 +113,7 @@ var op = {
     },
     pieChart: function (data, chartConfig) {
         if (!chartConfig.chartObj)return;
-        var chartObj = chartConfig.chartObj;
+        var chartObj =chartConfig.chartObj
         var option = {
             tooltip: {
                 trigger: !chartConfig.tt ? "item" : chartConfig.tt,
@@ -199,7 +198,7 @@ var op = {
     },
     mapChart: function (data, chartConfig) {
         if (!chartConfig.chartObj)return;
-        var chartObj = chartConfig.chartObj;
+        var chartObj = chartConfig.chartObj
         var option = {
             title: {
                 text: !chartConfig.titleText ? "暂无说明" : chartConfig.titleText,
@@ -281,7 +280,8 @@ var op = {
     }
 }
 var ad = {
-    addData: function (data, chartObj, targetParams) {
+    addData: function (data,chartObj, chartConfig) {
+        if (!chartObj)return;
         if (!data.data)return;
         if (data.data[0]) {
             var option = chartObj.getOption();
@@ -296,11 +296,14 @@ var ad = {
             if (option.series[s_index].markPoint) {
                 serie["markPoint"] = option.series[s_index].markPoint;
             }
-            if (data.label != "uv")
+            if (data.label != "uv") {
                 serie["yAxisIndex"] = 1;
-            else
+                option.yAxis[1]["axisLabel"] = {
+                    formatter: !chartConfig.axFormat ? undefined : "{value}" +chartConfig.axFormat
+                };
+            } else {
                 serie["yAxisIndex"] = 0;
-
+            }
             json.forEach(function (item) {
                 serie.data.push(item[chartConfig.dataValue]);
             });

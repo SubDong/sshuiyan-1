@@ -46,8 +46,12 @@ var bar = {
                             data["value"] = e.doc_count;
                             result_data.push(data);
                         });
+                        var config={};
+                        config["dataKey"]="name";
+                        config["dataValue"]="value";
                         data["label"] = qtype;
                         data["data"] = result_data;
+                        data["config"]=config;
                         if (cb)
                             cb(data)
                     } else {
