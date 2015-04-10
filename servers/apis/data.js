@@ -9,6 +9,7 @@ var grid = require('../services/grid');
 var resutil = require('../utils/responseutils');
 var datautils = require('../utils/datautils');
 var es_request = require('../services/es_request');
+var initial = require('../services/visitors/initialData');
 
 var api = express.Router();
 
@@ -172,5 +173,20 @@ api.get('/survey', function (req, res) {
 
 // 搜索推广
 // ========================================================================
+
+// ================================= SubDong ================================
+//访客地图
+api.get('/visitormap', function (req, res) {
+    var query = url.parse(req.url, true).query;
+    var type = query['type'];
+    var start = Number(query['start']);
+    var end = Number(query['end']);
+    var indexes = date.between(req, "visitor-");
+    initial.visitorMapBasic(req.es,indexes,type,function (data){
+        datautils.send(res, JSON.stringify(data));
+    })
+});
+
+// ==========================================================================
 
 module.exports = api;

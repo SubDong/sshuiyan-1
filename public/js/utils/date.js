@@ -37,12 +37,12 @@ function yesterday() {
 
 function lastSevenDays() {
     var date = new Date();
-    date.setDate(date.getDate() - 7);
+    date.setDate(date.getDate() - 6);
     return date;
 }
 function lastThirtyDays() {
     var date = new Date();
-    date.setDate(date.getDate() - 30);
+    date.setDate(date.getDate() - 29);
     return date;
 }
 
