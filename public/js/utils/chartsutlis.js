@@ -257,6 +257,8 @@ var chartUtils = {
                 break;
             case "页面转化":
                 return "convertRate";
+            case "IP数":
+                return "ip";
             default :
                 return "pv";
         }

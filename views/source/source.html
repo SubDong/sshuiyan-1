@@ -52,69 +52,53 @@
                         <div id="indicators_charts" style="height:400px;float:right;width:70%;"></div>
 
                     </div>
-                    <div class="table_content">
-                        <ul role="tablist" class="nav nav-tabs" id="myTab">
-                            <li class="" role="presentation"><a aria-expanded="true" aria-controls="home"
-                                                                      data-toggle="tab" role="tab" id="home-tab"
-                                                                      href="#home">自定义指标</a></li>
-                            <li role="presentation" class="active"><a aria-controls="profile" data-toggle="tab"
-                                                                id="profile-tab" role="tab" href="#profile"
-                                                                aria-expanded="false">高级筛选</a></li>
-
-                        </ul>
-                        <div class="tab-content" id="myTabContent">
-                            <div aria-labelledby="home-tab" id="home" class="tab-pane" role="tabpanel">
-                                <div class="custom_title">
-                                    <div class="chart_top">
-                                        <ul>
-                                            <li><a href="#">系统默认指标</a></li>
-                                            <li><a href="#">订单默认指标</a></li>
-                                        </ul>
-                                    </div>
-                                    <div class="chart_top">
-                                        <ul>
-                                            <li><span>网站基础指标 :</span></li>
-                                            <li><input type="checkbox" checked="checked" name="radio1"/>
-                                                <label>浏览量(PV)</label></li>
-                                            <li><input type="checkbox" name="radio1"/> <label>访问次数</label></li>
-                                            <li><input type="checkbox" name="radio1"/> <label>访客数(UV)</label></li>
-                                            <li><input type="checkbox" name="radio1"/> <label>新访客数</label></li>
-                                            <li><input type="checkbox" name="radio1"/> <label>新访客比率</label></li>
-                                            <li><input type="checkbox" name="radio1"/> <label>IP数</label></li>
-                                        </ul>
-                                    </div>
-                                    <div class="chart_top">
-                                        <ul>
-                                            <li><span>流量质量指标:</span></li>
-                                            <li><input type="checkbox" checked="checked" name="radio1"/>
-                                                <label>跳出率</label></li>
-                                            <li><input type="checkbox" name="radio1"/> <label>平均访问时长</label></li>
-                                            <li><input type="checkbox" name="radio1"/> <label>平均访问页数</label></li>
-                                        </ul>
-                                    </div>
-                                    <div class="chart_top">
-                                        <ul>
-                                            <li><span>转化指标:</span></li>
-                                            <li><input type="checkbox" checked="checked" name="radio1"/>
-                                                <label>转化次数</label></li>
-                                            <li><input type="checkbox" name="radio1"/> <label>转化率</label></li>
-                                        </ul>
-                                    </div>
-                                    <div class="chart_top">
-                                        <ul>
-                                            <li><span>订单转化指标:</span></li>
-                                            <li><input type="checkbox" checked="checked" name="radio1"/>
-                                                <label>订单数</label></li>
-                                            <li><input type="checkbox" name="radio1"/> <label>订单金额</label></li>
-                                            <li><input type="checkbox" name="radio1"/> <label>订单转化率</label></li>
-                                        </ul>
-                                    </div>
-                                    <div class="chart_top">
-                                        <button class="btn btn-primary" type="button">确定</button>
-                                        * 可同时选择6项
-                                    </div>
-
+                    <div class="table_content" ng-controller="TabsCtrl">
+                        <tabset justified="true">
+                            <tab heading="自定义指标">    <div class="custom_title">
+                                <div class="chart_top">
+                                    <ul>
+                                        <li><a href="#">系统默认指标</a></li>
+                                        <li><a href="#">订单默认指标</a></li>
+                                    </ul>
                                 </div>
+                                <div class="chart_top">
+                                    <span>网站基础指标 :</span>
+                                    <ul>
+                                        <li ng-repeat="item in TodayWeb" ng-class='{current:$index==TodayWebbaseds}'
+                                            ng-click='TodayWebbased($index)'>{{item.consumption_name}}
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="chart_top">
+                                    <span>流量质量指标:</span>
+                                    <ul>
+                                        <li ng-repeat="item in flow" ng-class='{current:$index==selectedflow}'
+                                            ng-click='selectflowd($index)'>{{item.consumption_name}}
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="chart_top">
+                                    <span>转化指标:</span>
+                                    <ul>
+                                        <li ng-repeat="item in Todytransform" ng-class='{current:$index==todytransforms}'
+                                            ng-click='todytransform($index)'>{{item.consumption_name}}
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="chart_top">
+                                    <span>订单转化指标:</span>
+                                    <ul>
+                                        <li ng-repeat="item in Order" ng-class='{current:$index==Orderforms}'
+                                            ng-click='Orderform($index)'>{{item.consumption_name}}
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="chart_top">
+                                    <button class="btn btn-primary" type="button">确定</button>
+                                    * 可同时选择6项
+                                </div>
+
+                            </div>
                                 <div class="custom_secendtitle">
                                     <div class="custom_select">
                                         <input type="radio" checked="checked" name="radio1"/>
@@ -143,13 +127,13 @@
                                         </div>
                                     </div>
                                     <div class="custom_table">
-                                       <table id="source_table"  class="table table-hover" >
-                                       </table>
+                                        <table id="source_table"  class="table table-hover" >
+                                        </table>
                                         <div id="pager"></div>
                                     </div>
                                 </div>
-                            </div>
-                            <div aria-labelledby="profile-tab" id="profile" class="tab-pane fade  fade active in" role="tabpanel">
+                            </tab>
+                            <tab heading="高级筛选">
                                 <div class="custom_title">
                                     <div class="chart_top2">
                                         <ul>
@@ -192,8 +176,9 @@
                                         <div id="pager2"></div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+                            </tab>
+                        </tabset>
+
                     </div>
                 </div>
             </div>

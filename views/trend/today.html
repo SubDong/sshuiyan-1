@@ -67,8 +67,8 @@
                         <div class="chart_top">
                             <span>网站基础指标 :</span>
                             <ul>
-                                <li ng-repeat="item in Webbased" ng-class='{current:$index==selectedWeb}'
-                                    ng-click='selectedWebbased($index)'>{{item.consumption_name}}
+                                <li ng-repeat="item in TodayWeb" ng-class='{current:$index==selectedWeb}'
+                                    ng-click='TodayWebbased($index)'>{{item.consumption_name}}
                                 </li>
                             </ul>
                         </div>
@@ -83,8 +83,8 @@
                         <div class="chart_top">
                             <span>转化指标:</span>
                             <ul>
-                                <li ng-repeat="item in transform" ng-class='{current:$index==selectedtransform}'
-                                    ng-click='selectedform($index)'>{{item.consumption_name}}
+                                <li ng-repeat="item in flow" ng-class='{current:$index==selectedflow}'
+                                    ng-click='selectflowd($index)'>{{item.consumption_name}}
                                 </li>
                             </ul>
                         </div>

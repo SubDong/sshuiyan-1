@@ -1,14 +1,19 @@
 /**
- * Created by john on 2015/4/1.
+ * Created by john on 2015/4/3.
  */
-app.controller('TodydateCtrl', function ($scope, $http,requestService,messageService) {
-    $scope.todayClass = true;
+app.controller('Trend_yesterday_ctrl', function ($scope, $http,requestService,messageService) {
+    $scope.yesterdayClass = true;
     $scope.reset = function () {
         $scope.todayClass = false;
         $scope.yesterdayClass = false;
         $scope.sevenDayClass = false;
         $scope.monthClass = false;
         $scope.definClass = false;
+    };
+    $scope.today = function () {
+        $scope.reset();
+        $scope.todayClass = true;
+
     };
     $scope.gridOptions = {
         enableScrollbars: false,
@@ -29,33 +34,25 @@ app.controller('TodydateCtrl', function ($scope, $http,requestService,messageSer
         dataKey: "time",//传入数据的key值
         dataValue: "value"//传入数据的value值
     }
-    $scope.today = function () {
-        $scope.reset();
-        $scope.todayClass = true;
-        var start = today_start(), end = today_end();
-        var option = {
-            type: "pv",
-            chart: "line",
-            interval: 24
-        };
-        requestService.request('index_charts', start.getTime(), end.getTime(), option);
-
-    };
     $scope.yesterday = function () {
         $scope.reset();
         $scope.yesterdayClass = true;
-
+        var start = yesterday_start(), end = yesterday_end(), option = {
+            type: "pv",
+            chart: 'line',
+            interval: 24
+        };
+        requestService.request('indicators_charts', start.getTime(), end.getTime(), option,$scope.lineChartConfig);
+        requestService.gridRequest({}, $scope.gridOptions, "uv");
     };
     $scope.sevenDay = function () {
         $scope.reset();
         $scope.sevenDayClass = true;
 
-
     };
     $scope.month = function () {
         $scope.reset();
         $scope.monthClass = true;
-
 
     };
     $scope.open = function ($event) {
@@ -73,8 +70,8 @@ app.controller('TodydateCtrl', function ($scope, $http,requestService,messageSer
         $scope.opens = true;
     };
 
-
     // initialize
-    $scope.today();
+    $scope.yesterday();
     //$scope.initMap();
-});
+
+})
