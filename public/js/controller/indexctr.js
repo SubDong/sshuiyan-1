@@ -24,6 +24,27 @@ app.controller('IndexCtrl', function ($scope, $http, requestService, messageServ
             {name: 'value', displayName: "浏览量"}
         ]
     };
+    $scope.lineChartConfig = {
+        legendData: ["pv", "uv", "跳出率", "抵达率", "平均访问时长", "页面转化"],//显示几种数据
+        bGap: false,//首行缩进
+        chartType: "line",//图表类型
+        dataKey: "time",//传入数据的key值
+        dataValue: "value"//传入数据的value值
+    }
+    $scope.barchartConfig = {
+        min_max: false,
+        legendData: [],
+        bGap: true,
+        chartType: "bar",
+        dataKey: "name",
+        dataValue: "value"
+    }
+    $scope.piechartConfig = {
+        legendData: [],
+        serieName: "设备环境",
+        dataKey: "name",
+        dataValue: "value"
+    }
     $scope.today = function () {
         $scope.reset();
         $scope.todayClass = true;
@@ -31,13 +52,12 @@ app.controller('IndexCtrl', function ($scope, $http, requestService, messageServ
         var start = today_start(), end = today_end();
         var option = {
             type: "pv",
-            chart: "line",
             interval: 24
         };
-        requestService.request('index_charts', start.getTime(), end.getTime(), option);
-        requestService.mapRequest('gest_map', start.getTime(), start.getTime(), "pv");
-        requestService.pieRequest("environment_map", start.getTime(), end.getTime(), "pv");
-        requestService.gridRequest({}, $scope.gridOptions,"uv");
+        requestService.request('index_charts', start.getTime(), end.getTime(), option,$scope.lineChartConfig);
+        requestService.mapRequest('gest_map', start.getTime(), start.getTime(), "pv",$scope.barchartConfig);
+        requestService.pieRequest("environment_map", start.getTime(), end.getTime(), "pv",$scope.piechartConfig);
+        requestService.gridRequest({}, $scope.gridOptions, "uv");
     };
     $scope.yesterday = function () {
         $scope.reset();
@@ -47,10 +67,10 @@ app.controller('IndexCtrl', function ($scope, $http, requestService, messageServ
             chart: 'line',
             interval: 24
         };
-        requestService.request('index_charts', start.getTime(), end.getTime(), option);
-        requestService.mapRequest('gest_map', start.getTime(), end.getTime(), "pv");
-        requestService.pieRequest("environment_map", start.getTime(), end.getTime(), "pv");
-        requestService.gridRequest({start: start.getTime(), end: end.getTime()}, $scope.gridOptions,"uv");
+        requestService.request('index_charts', start.getTime(), end.getTime(), option,$scope.lineChartConfig);
+        requestService.mapRequest('gest_map', start.getTime(), end.getTime(), "pv",$scope.barchartConfig);
+        requestService.pieRequest("environment_map", start.getTime(), end.getTime(), "pv",$scope.piechartConfig);
+        requestService.gridRequest({start: start.getTime(), end: end.getTime()}, $scope.gridOptions, "uv");
     };
     $scope.sevenDay = function () {
         $scope.reset();
@@ -60,10 +80,10 @@ app.controller('IndexCtrl', function ($scope, $http, requestService, messageServ
             chart: 'line',
             interval: 7
         };
-        requestService.request('index_charts', start.getTime(), end.getTime(), option);
-        requestService.mapRequest('gest_map', start.getTime(), end.getTime(), "pv");
-        requestService.pieRequest("environment_map", start.getTime(), end.getTime(), "pv");
-        requestService.gridRequest({start: start.getTime(), end: end.getTime()}, $scope.gridOptions,"uv");
+        requestService.request('index_charts', start.getTime(), end.getTime(), option,$scope.lineChartConfig);
+        requestService.mapRequest('gest_map', start.getTime(), end.getTime(), "pv",$scope.barchartConfig);
+        requestService.pieRequest("environment_map", start.getTime(), end.getTime(), "pv",$scope.piechartConfig);
+        requestService.gridRequest({start: start.getTime(), end: end.getTime()}, $scope.gridOptions, "uv");
     };
     $scope.month = function () {
         $scope.reset();
@@ -73,10 +93,10 @@ app.controller('IndexCtrl', function ($scope, $http, requestService, messageServ
             chart: 'line',
             interval: 30
         };
-        requestService.request('index_charts', start.getTime(), end.getTime(), option);
-        requestService.mapRequest('gest_map', start.getTime(), end.getTime(), "pv");
-        requestService.pieRequest("environment_map", start.getTime(), end.getTime(), "pv");
-        requestService.gridRequest({start: start.getTime(), end: end.getTime()}, $scope.gridOptions,"uv");
+        requestService.request('index_charts', start.getTime(), end.getTime(), option,$scope.lineChartConfig);
+        requestService.mapRequest('gest_map', start.getTime(), end.getTime(), "pv",$scope.barchartConfig);
+        requestService.pieRequest("environment_map", start.getTime(), end.getTime(), "pv",$scope.piechartConfig);
+        requestService.gridRequest({start: start.getTime(), end: end.getTime()}, $scope.gridOptions, "uv");
 
     };
     $scope.open = function ($event) {
