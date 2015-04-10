@@ -268,12 +268,7 @@ var op = {
                 data.data.forEach(function (e) {
                     serie['name'] = data.label;
                     var push_data = {};
-                    var key = e[chartConfig.dataKey];
-                    if (key.indexOf("自治区") > -1 || key.indexOf("行政区")) {
-                        push_data[chartConfig.dataKey] = key.slice(0, 2);
-                    } else {
-                        push_data[chartConfig.dataKey] = key.slice(0, -1);
-                    }
+                    push_data[chartConfig.dataKey] = e[chartConfig.dataKey]
                     push_data[chartConfig.dataValue] = e[chartConfig.dataValue];
                     push_data["value"]
                     serie.data.push(push_data);
@@ -283,6 +278,46 @@ var op = {
         }
         chartObj.hideLoading();
         chartObj.setOption(option);
+    }
+}
+var ad = {
+    addData: function (data, chartObj, targetParams) {
+        if (!data.data)return;
+        if (data.data[0]) {
+            var option = chartObj.getOption();
+            var s_index = option.series.length - 1;
+            var c_type = option.series[s_index].type;
+            var json = data.data;
+            var serie = {
+                name: chartConfig.showTarget,
+                type: c_type,
+                data: []
+            };
+            if (option.series[s_index].markPoint) {
+                serie["markPoint"] = option.series[s_index].markPoint;
+            }
+            if (data.label != "uv")
+                serie["yAxisIndex"] = 1;
+            else
+                serie["yAxisIndex"] = 0;
+
+            json.forEach(function (item) {
+                serie.data.push(item[chartConfig.dataValue]);
+            });
+            option.series.push(serie);
+            chartObj.setOption(option);
+        }
+    },
+    seriesExist: function (chartObj, target) {
+        var option = chartObj.getOption();
+        var old_series = option.series;
+        var result = true;
+        old_series.forEach(function (e) {
+            if (e.name == target) {
+                result = false;
+            }
+        });
+        return result;
     }
 }
 var def = {

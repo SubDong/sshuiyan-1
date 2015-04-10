@@ -8,7 +8,7 @@ var chartFactory = {
             var option = {
                 legend: {
                     orient: !chartConfig.ledLayout ? "horizontal" : chartConfig.ledLayout,
-                    data: !chartConfig.legendData?[data.label]:chartConfig.legendData
+                    data: !chartConfig.legendData ? [data.label] : chartConfig.legendData
                 },
                 tooltip: {
                     trigger: chartConfig.tt == undefined ? "axis" : chartConfig.tt
@@ -23,7 +23,7 @@ var chartFactory = {
                 ],
                 yAxis: [
                     {
-                        type: !chartConfig.yType? "value" : chartConfig.yType,
+                        type: !chartConfig.yType ? "value" : chartConfig.yType,
                         axisLabel: {
                             formatter: chartConfig.axFormat
                         }
@@ -35,7 +35,7 @@ var chartFactory = {
                 ],
                 series: []
             };
-            chartConfig.toolShow = !chartConfig.toolShow? false : true;
+            chartConfig.toolShow = !chartConfig.toolShow ? false : true;
             if (chartConfig.toolShow) {
                 option["toolbox"] = {
                     show: true,
@@ -53,7 +53,7 @@ var chartFactory = {
                 type: chartConfig.chartType,
                 data: []
             };
-            chartConfig.min_max = !chartConfig.min_max  ? false : true;
+            chartConfig.min_max = !chartConfig.min_max ? false : true;
             if (chartConfig.min_max) {
                 serie["markPoint"] = {
                     data: [
@@ -85,23 +85,17 @@ var chartFactory = {
             if (!data.data)return;
             if (data.data[0]) {
                 var option = chartObj.getOption();
+                var s_index=option.series.length-1;
+                var c_type=option.series[s_index].type;
                 var json = data.data;
                 var serie = {
                     name: chartConfig.showTarget,
-                    type: chartConfig.chartType,
-                    data: [],
-                    markPoint: {
-                        data: [
-                            {type: 'max', name: '最大值'},
-                            {type: 'min', name: '最小值'}
-                        ]
-                    },
-                    markLine: {
-                        data: [
-                            {type: 'average', name: '平均值'}
-                        ]
-                    }
+                    type:c_type,
+                    data: []
                 };
+                if(option.series[s_index].markPoint){
+                    serie["markPoint"]=option.series[s_index].markPoint;
+                }
                 if (data.label != "uv")
                     serie["yAxisIndex"] = 1;
                 else
@@ -122,7 +116,7 @@ var chartFactory = {
                 option.legend.data = ["暂无数据"];
             }
         },
-        chartSerieExist: function (chartObj, target) {
+        chartSeriesExist: function (chartObj, target) {
             var option = chartObj.getOption();
             var old_series = option.series;
             var result = true;

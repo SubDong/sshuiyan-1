@@ -38,6 +38,7 @@ api.get('/charts', function (req, res) {
                 });
                 break;
             case "pv":
+                console.log(interval);
                 line.pu(req.es, start, end, interval, pvindexs, 1, qtype, "loc", function (body) {
                     datautils.send(res, body);
                     //datautils.lineData(res, body, qtype);

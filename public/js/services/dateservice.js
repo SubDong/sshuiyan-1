@@ -15,7 +15,7 @@ app.service('requestService', ['$rootScope', '$http', function ($rootScope, $htt
                 chartType: "line",
                 dataValue: "value"
             }
-            if (chartFactory.lineChart.chartSerieExist(chart, param.target)) {
+            if (ad.seriesExist(chart, param.target)) {
                 $http.get("/api/charts?start=" + start + "&end=" + end + "&type=" + type + "&int=" + opt.interval).success(function (data) {
                     chartFactory.lineChart.chartAddData(data, chart, chartConfig);
                 });
