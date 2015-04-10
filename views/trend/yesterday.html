@@ -1,20 +1,8 @@
-<div class="middle_containers">
+<div class="middle_containers" ng-controller="Trend_yesterday_ctrl">
     <div class="date_select">
-        <div aria-label="First group" role="group" class="btn-group fl">
-            <button class="btn btn-default disabled" type="button">时间</button>
-            <button class="btn btn-default current" type="button"> 昨天</button>
-            <button class="btn btn-default" type="button">最近7天</button>
-            <button class="btn btn-default" type="button">最近30天</button>
-            <button class="btn btn-default" type="button">自定义<span aria-hidden="true"
-                                                                   class="glyphicon glyphicon-calendar"></span>
-            </button>
-        </div>
-        <div aria-label="First group" role="group" class="btn-group fl">
-            <button class="btn btn-default" type="button"><input type="checkbox" checked="checked"/>
-                与其他时间段对比
-            </button>
-            <button class="btn btn-default current" type="button"><input type="checkbox"/>前一日</button>
-            <button class="btn btn-default" type="button"><input type="checkbox"/>上周同期</button>
+        <div>
+            <calendar></calendar>
+            <dateother></dateother>
         </div>
         <div aria-label="First group" role="group" class="btn-group fl">
             <button class="btn btn-default" type="button">按时</button>
@@ -53,7 +41,7 @@
         </div>
         <div class="index_chart">
             <div class="chart_top">
-                <ul>
+              <!--  <ul>
                     <li><label>展示曲线</label></li>
                     <li><input type="checkbox" checked="checked" name="radio1"/> <label>浏览量(PV))</label>
                     </li>
@@ -68,50 +56,36 @@
                     <li><input type="checkbox" name="radio1"/> <label>转化次数</label></li>
                     <li><input type="checkbox" name="radio1"/> <label>转化率</label></li>
                     <li class="disabled">* 最多只能勾选两项</li>
-                </ul>
+                </ul>-->
             </div>
             <div id="indicators_charts" style="height:400px;"></div>
         </div>
-        <div class="table_content">
-            <ul role="tablist" class="nav nav-tabs" id="myTab">
-                <li class="" role="presentation"><a aria-expanded="true" aria-controls="home"
-                                                    data-toggle="tab" role="tab" id="home-tab"
-                                                    href="#home">自定义指标</a></li>
-                <li role="presentation" class="active"><a aria-controls="profile" data-toggle="tab"
-                                                          id="profile-tab" role="tab" href="#profile"
-                                                          aria-expanded="false">高级筛选</a></li>
-
-            </ul>
-            <div class="tab-content" id="myTabContent">
-                <div aria-labelledby="home-tab" id="home" class="tab-pane fade " role="tabpanel">
+        <div class="table_content" ng-controller="TabsCtrl">
+            <tabset justified="true">
+                <tab heading="自定义指标">
                     <div class="custom_title">
                         <div class="chart_top">
+                            <span>网站基础指标 :</span>
                             <ul>
-                                <li><span>网站基础指标 :</span></li>
-                                <li><input type="checkbox" checked="checked" name="radio1"/>
-                                    <label>浏览量(PV)</label></li>
-                                <li><input type="checkbox" name="radio1"/> <label>访问次数</label></li>
-                                <li><input type="checkbox" name="radio1"/> <label>访客数(UV)</label></li>
-                                <li><input type="checkbox" name="radio1"/> <label>新访客数</label></li>
-                                <li><input type="checkbox" name="radio1"/> <label>新访客比率</label></li>
-                                <li><input type="checkbox" name="radio1"/> <label>IP数</label></li>
+                                <li ng-repeat="item in TodayWeb" ng-class='{current:$index==TodayWebbaseds}'
+                                    ng-click='TodayWebbased($index)'>{{item.consumption_name}}
+                                </li>
                             </ul>
                         </div>
                         <div class="chart_top">
+                            <span>流量质量指标:</span>
                             <ul>
-                                <li><span>流量质量指标:</span></li>
-                                <li><input type="checkbox" checked="checked" name="radio1"/>
-                                    <label>跳出率</label></li>
-                                <li><input type="checkbox" name="radio1"/> <label>平均访问时长</label></li>
-                                <li><input type="checkbox" name="radio1"/> <label>平均访问页数</label></li>
+                                <li ng-repeat="item in flow" ng-class='{current:$index==selectedflow}'
+                                    ng-click='selectflowd($index)'>{{item.consumption_name}}
+                                </li>
                             </ul>
                         </div>
                         <div class="chart_top">
+                            <span>转化指标:</span>
                             <ul>
-                                <li><span>转化指标:</span></li>
-                                <li><input type="checkbox" checked="checked" name="radio1"/>
-                                    <label>转化次数</label></li>
-                                <li><input type="checkbox" name="radio1"/> <label>转化率</label></li>
+                                <li ng-repeat="item in Todytransform" ng-class='{current:$index==todytransforms}'
+                                    ng-click='todytransform($index)'>{{item.consumption_name}}
+                                </li>
                             </ul>
                         </div>
                         <div class="chart_top">
@@ -147,8 +121,8 @@
                             <div id="pager"></div>
                         </div>
                     </div>
-                </div>
-                <div aria-labelledby="profile-tab" id="profile" class="tab-pane fade active in" role="tabpanel">
+                </tab>
+                <tab heading="高级筛选">
                     <div class="custom_title">
                         <div class="chart_top2">
                             <ul>
@@ -265,8 +239,8 @@
                             <div id="pager2"></div>
                         </div>
                     </div>
-                </div>
-            </div>
+                </tab>
+            </tabset>
         </div>
     </div>
 </div>

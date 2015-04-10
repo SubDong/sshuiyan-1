@@ -46,7 +46,7 @@ app.controller("TabsCtrl", function ($scope, $http, requestService) {
     $scope.flow = [
         {consumption_name: "跳出率"},
         {consumption_name: "平均访问时长"},
-        {consumption_name: "平均访问页数"},
+   /*     {consumption_name: "平均访问页数"},*/
         {consumption_name: "平均访问页数"},
     ];
     $scope.transform = [
@@ -77,6 +77,23 @@ app.controller("TabsCtrl", function ($scope, $http, requestService) {
         {consumption_name: "漏接电话量"},
         {consumption_name: "漏接电话量"}
     ];
+    $scope.TodayWeb= [
+        {consumption_name: "浏览量(PV)"},
+        {consumption_name: "访问次数"},
+        {consumption_name: "访客数(UV)"},
+        {consumption_name: "新访客数"},
+        {consumption_name: "新访客比率"},
+        {consumption_name: "IP数"}
+    ];
+    $scope.Todytransform = [
+        {consumption_name: "转化次数"},
+        {consumption_name: "转化率"}
+    ];
+    $scope.Order = [
+        {consumption_name: "订单数"},
+        {consumption_name: "订单金额"},
+        {consumption_name: "订单转化率"}
+    ];
 
 
     $scope.selectedWhich = function (row) {
@@ -96,6 +113,15 @@ app.controller("TabsCtrl", function ($scope, $http, requestService) {
     };
     $scope.selectedrecalls = function (row) {
         $scope.selectedrecall = row;
+    };
+    $scope.TodayWebbased = function (row) {
+        $scope.TodayWebbaseds = row;
+    };
+    $scope.todytransform = function (row) {
+        $scope.todytransforms = row;
+    };
+    $scope.Orderform = function (row) {
+        $scope.Orderforms = row;
     };
 });
 app.controller("TodytableCtrl", function ($scope, $http, requestService) {
