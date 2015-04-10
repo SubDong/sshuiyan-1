@@ -1,6 +1,7 @@
 var express = require('express');
 var url = require('url');
 var date = require('../utils/date');
+var dateFormat = require('../utils/dateFormat');
 var pie = require('../services/pie');
 var line = require('../services/line');
 var bar = require('../services/bar');
@@ -139,22 +140,25 @@ api.get('/survey', function (req, res) {
     var query = url.parse(req.url, true).query;
 
     var type = query['type'];
-    var qtype = query['qtype'];
+    var qtype = Number(query['qtype']);
     var start = Number(query['start']);
     var end = Number(query['end']);
     var indexes = date.between(req, "visitor-");
 
+    //
+    var target_pages = [];
+    target_pages.push("http://sem.best-ad.cn/login");
+    //
+
     switch (qtype) {
-        case "outRate":
-            var category = query['c'];
-            es_request.calOutRate(req.es, start, end, category, type, indexes[0], function (result) {
+        case 0:
+            es_request.survey(req.es, query['c'], start, end, type, indexes[0], function (result) {
                 datautils.send(res, JSON.stringify(result));
             });
             break;
-        case "avgTime":
-            es_request.calAvgTime(req.es, start, end, category, type, indexes[0], function (result) {
-                datautils.send(res, JSON.stringify(result));
-            });
+        case 1:
+            break;
+        default :
             break;
     }
 

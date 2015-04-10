@@ -57,10 +57,10 @@ app.controller('SurveyCtrl', function ($scope, $http) {
             {name: ' ', field: 'category'},
             {name: '消费', field: 'cost'},
             {name: '展现量', filed: 'show'},
-            {name: '点击量', field: 'click'},
-            {name: '访问次数', field: 'visitCount'},
-            {name: '页面转化', field: 'pageTrans'},
-            {name: '事件转化', field: 'eventTrans'},
+            {name: '点击量', field: 'pv'},
+            {name: '访问次数', field: 'uv'},
+            {name: '页面转化', field: 'page_conv'},
+            {name: '事件转化', field: 'event_conv'},
             {name: '跳出率', field: 'outRate'},
             {name: '平均访问时长', field: 'avgTime'}
         ]
@@ -136,14 +136,18 @@ app.controller('SurveyCtrl', function ($scope, $http) {
     $scope.surveyData = [];
 
     // 推广概况获取
-    $scope.doSearch = function (start, end, type, category, qtype) {
+    $scope.doSearch = function (start, end, type, category) {
         $http({
             method: 'GET',
-            url: '/api/survey/?start=' + start + "&end=" + end + "&type=" + type + "&c=" + category + "&qtype=" + qtype
+            url: '/api/survey/?start=' + start + "&end=" + end + "&type=" + type + "&c=" + category + "&qtype=0"
         }).success(function (data, status) {
             var _data = JSON.parse(eval('(' + data + ')').toString());
             var _surveyObj = {};
-            _surveyObj[_data.label] = _data.data;
+            _surveyObj["pv"] = _data.pv;
+            _surveyObj["uv"] = _data.uv;
+            _surveyObj["outRate"] = _data.outRate;
+            _surveyObj["avgTime"] = _data.avgTime;
+            _surveyObj["event_conv"] = _data.event_conv;
 
             switch (_data.category) {
                 case "t":
@@ -163,10 +167,8 @@ app.controller('SurveyCtrl', function ($scope, $http) {
     };
 
     $scope.init = function () {
-        //if ($scope.surveyData.length > 0)
-        //    $scope.surveyData = [{'category':'今天', 'click': 312,'outRate':'65.00%'}];
-        $scope.doSearch(today_start().valueOf(), new Date().valueOf(), "1", "t", "outRate");
-        $scope.doSearch(yesterday_start().valueOf(), yesterday_end().valueOf(), "1", "y", "outRate");
+        $scope.doSearch(yesterday_start().valueOf(), yesterday_end().valueOf(), "1", "y");
+        $scope.doSearch(today_start().valueOf(), new Date().valueOf(), "1", "t");
         $scope.gridOptions.data = $scope.surveyData;
     };
 
