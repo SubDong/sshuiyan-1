@@ -1,25 +1,14 @@
 /**
- * Created by john on 2015/4/3.
+ * Created by john on 2015/4/1.
  */
-app.controller('Trend_yesterday_ctrl', function ($scope, $http,requestService,messageService) {
-    $scope.yesterdayClass = true;
+app.controller('trend_month_ctrl', function ($scope, $http,requestService,messageService) {
+    $scope.monthClass = true;
     $scope.reset = function () {
         $scope.todayClass = false;
         $scope.yesterdayClass = false;
         $scope.sevenDayClass = false;
         $scope.monthClass = false;
         $scope.definClass = false;
-    };
-    $scope.today = function () {
-        $scope.reset();
-        $scope.todayClass = true;
-        var start = today_start(), end = today_end();
-        var option = {
-            type: "pv",
-            interval: 24
-        };
-        requestService.request('indicators_charts', start.getTime(), end.getTime(), option,$scope.lineChartConfig);
-
     };
     $scope.gridOptions = {
         enableScrollbars: false,
@@ -40,6 +29,19 @@ app.controller('Trend_yesterday_ctrl', function ($scope, $http,requestService,me
         dataKey: "time",//传入数据的key值
         dataValue: "value"//传入数据的value值
     }
+    $scope.today = function () {
+        $scope.reset();
+        $scope.todayClass = true;
+        var start = today_start(), end = today_end();
+        var option = {
+            type: "pv",
+            chart: "line",
+            interval: 24
+        };
+        requestService.request('indicators_charts', start.getTime(), end.getTime(), option, $scope.lineChartConfig);
+        requestService.gridRequest({}, $scope.gridOptions, "uv");
+
+    };
     $scope.yesterday = function () {
         $scope.reset();
         $scope.yesterdayClass = true;
@@ -49,7 +51,7 @@ app.controller('Trend_yesterday_ctrl', function ($scope, $http,requestService,me
             interval: 24
         };
         requestService.request('indicators_charts', start.getTime(), end.getTime(), option,$scope.lineChartConfig);
-        requestService.gridRequest({}, $scope.gridOptions, "uv");
+
     };
     $scope.sevenDay = function () {
         $scope.reset();
@@ -61,6 +63,7 @@ app.controller('Trend_yesterday_ctrl', function ($scope, $http,requestService,me
         };
         requestService.request('indicators_charts', start.getTime(), end.getTime(), option,$scope.lineChartConfig);
 
+
     };
     $scope.month = function () {
         $scope.reset();
@@ -71,7 +74,6 @@ app.controller('Trend_yesterday_ctrl', function ($scope, $http,requestService,me
             interval: 30
         };
         requestService.request('indicators_charts', start.getTime(), end.getTime(), option,$scope.lineChartConfig);
-
     };
     $scope.open = function ($event) {
         $scope.reset();
@@ -88,8 +90,8 @@ app.controller('Trend_yesterday_ctrl', function ($scope, $http,requestService,me
         $scope.opens = true;
     };
 
-    // initialize
-    $scope.yesterday();
-    //$scope.initMap();
 
-})
+    // initialize
+    $scope.month();
+    //$scope.initMap();
+});

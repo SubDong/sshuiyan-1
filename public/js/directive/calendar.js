@@ -26,6 +26,14 @@ app.directive("dateother", function () {
     };
     return option;
 });
+app.directive("dateweek", function () {
+    var option = {
+        restrict: "EA",
+        template: " <div aria-label=\"First group\" role=\"group\" class=\"btn-group fl\"><button class=\"btn btn-default\" type=\"button\">按时</button><button class=\"btn btn-default current\" type=\"button\">按日</button><button class=\"btn btn-default\" type=\"button\">按周</button><button class=\"btn btn-default\" type=\"button\">按月</button></div>",
+        transclude: true
+    };
+    return option;
+});
 app.directive("views", function () {
     var option = {
         restrict: "EA",

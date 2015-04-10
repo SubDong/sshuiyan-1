@@ -1,14 +1,9 @@
 <div class="middle_containers">
     <div class="date_select">
-        <div ng-controller="TodydateCtrl" >
+        <div ng-controller="trend_today_ctrl" >
             <calendar></calendar>
              <datecontrast></datecontrast>
-        </div>
-        <div aria-label="First group" role="group" class="btn-group fl">
-            <button class="btn btn-default" type="button">按时</button>
-            <button class="btn btn-default current" type="button">按日</button>
-            <button class="btn btn-default" type="button">按周</button>
-            <button class="btn btn-default" type="button">按月</button>
+             <dateweek></dateweek>
         </div>
         <div class="fr">
             <button class="btn btn-default" type="button"><span aria-hidden="true"
@@ -40,34 +35,16 @@
 
         </div>
         <div class="index_chart">
-            <div class="chart_top">
-                <ul>
-                    <li><label>展示曲线</label></li>
-                    <li><input type="checkbox" checked="checked" name="radio1"/> <label>浏览量(PV))</label>
-                    </li>
-                    <li><input type="checkbox" checked="checked" name="radio1"/> <label>访问次数</label></li>
-                    <li><input type="checkbox" name="radio1"/> <label>访客数(UV)</label></li>
-                    <li><input type="checkbox" name="radio1"/> <label>新访客数</label></li>
-                    <li><input type="checkbox" name="radio1"/> <label>新访客比率</label></li>
-                    <li><input type="checkbox" name="radio1"/> <label>IP数</label></li>
-                    <li><input type="checkbox" name="radio1"/> <label>跳出率</label></li>
-                    <li><input type="checkbox" name="radio1"/> <label>平均访问时长</label></li>
-                    <li><input type="checkbox" name="radio1"/> <label>平均访问页数</label></li>
-                    <li><input type="checkbox" name="radio1"/> <label>转化次数</label></li>
-                    <li><input type="checkbox" name="radio1"/> <label>转化率</label></li>
-                    <li class="disabled">* 最多只能勾选两项</li>
-                </ul>
-            </div>
-            <div id="indicators_charts" style="height:400px;"></div>
+            <div id="Today_charts" style="height:400px;"></div>
         </div>
-        <div class="table_content" ng-controller="TodytableCtrl">
+        <div class="table_content" ng-controller="TabsCtrl">
             <tabset justified="true">
                 <tab heading="自定义指标">
                     <div class="custom_title">
                         <div class="chart_top">
                             <span>网站基础指标 :</span>
                             <ul>
-                                <li ng-repeat="item in TodayWeb" ng-class='{current:$index==selectedWeb}'
+                                <li ng-repeat="item in TodayWeb" ng-class='{current:$index==TodayWebbaseds}'
                                     ng-click='TodayWebbased($index)'>{{item.consumption_name}}
                                 </li>
                             </ul>
@@ -105,7 +82,7 @@
                             </div>
                         </div>
                         <div class="custom_table">
-                            <div class="uconcentctrl" ng-controller="SearchCtrl">
+                            <div class="uconcentctrl">
                                 <div ui-grid="gridOptions" class="grid" ui-grid-pinning></div>
                             </div>
                         </div>
@@ -189,7 +166,7 @@
                             </div>
                         </div>
                         <div class="custom_table">
-                            <div class="uconcentctrl" ng-controller="SearchCtrl">
+                            <div class="uconcentctrl">
                                 <div ui-grid="gridOptions" class="grid" ui-grid-pinning></div>
                             </div>
                         </div>

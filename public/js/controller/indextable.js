@@ -123,35 +123,6 @@ app.controller("TabsCtrl", function ($scope, $http, requestService) {
     $scope.Orderform = function (row) {
         $scope.Orderforms = row;
     };
-});
-app.controller("TodytableCtrl", function ($scope, $http, requestService) {
-
-    $scope.Webbased = [
-        {consumption_name: "浏览量(PV)"},
-        {consumption_name: "访问次数"},
-        {consumption_name: "访客数(UV)"},
-        {consumption_name: "新访客数"},
-        {consumption_name: "新访客比率"},
-        {consumption_name: "IP数"}
-    ];
-    $scope.flow = [
-        {consumption_name: "跳出率"},
-        {consumption_name: "平均访问时长"},
-        {consumption_name: "平均访问页数"},
-    ];
-    $scope.transform = [
-        {consumption_name: "转化次数"},
-        {consumption_name: "转化率"}
-    ];
-    $scope.selectedWebbased = function (row) {
-        $scope.selectedWeb = row;
-    };
-    $scope.selectflowd = function (row) {
-        $scope.selectedflow = row;
-    };
-    $scope.selectedform = function (row) {
-        $scope.selectedtransform = row;
-    };
     var select = $scope.select = {};
 
     //数组对象用来给ng-options遍历
@@ -172,4 +143,3 @@ app.controller("TodytableCtrl", function ($scope, $http, requestService) {
     }
     ];
 });
-

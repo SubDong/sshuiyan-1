@@ -27,23 +27,11 @@
                     <h4>30分钟内</h4>
                     <h5>当前在线人数</h5>
 
-                    <h1>{{visitorCount}}}</h1>
+                    <h1>{{visitorCount}}</h1>
                 </div>
             </div>
             <div class="Visitor_chart">
-                <div class="index_chart">
-                    <div class="chart_top">
-                        <ul>
-                            <li><label>指标：</label></li>
-                            <li><input type="checkbox" checked="checked" name="radio1"/> <label>浏览量(PV))</label>
-                            </li>
-                            <li><input type="checkbox" checked="checked" name="radio1"/> <label>访客数(UV)</label></li>
-                            <li><input type="checkbox" name="radio1"/> <label>IP数</label></li>
-                            <li class="disabled">* 最多只能勾选两项</li>
-                        </ul>
-                    </div>
-                </div>
-                <div id="indicators_charts" style="height:300px;"></div>
+                <div id="Realtime_charts" style="height:300px;"></div>
             </div>
         </div>
         <div class="table_content">
@@ -95,16 +83,6 @@
                                                     ng-model="select.selectVal" class="ng-pristine ng-valid ng-touched">
                                                 <option value="" class="">国家</option>
                                             </select>
-                                            <!--    <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
-                                                    <li><a href="#"> 四川</a></li>
-                                                    <li><a href="#">成都 </a></li>
-                                                    <li><a href="#">成都</a></li>
-                                                    <li><a href="#">成都</a></li>
-                                                    <li><a href="#">成都</a></li>
-                                                    <li><a href="#">成都</a></li>
-                                                    <li><a href="#">转化次数</a></li>
-
-                                                </ul>-->
                                         </div>
                                         <div role="group" class="btn-group">
                                             <select ng-options="o.title for o in select.optionsData"
@@ -117,7 +95,6 @@
                                 <li><a href="#">北京</a></li>
                                 <li><a href="#">上海</a></li>
                                 <li><a href="#">上海</a></li>
-
                             </ul>
                         </div>
                     </div>
@@ -135,7 +112,6 @@
                                 </li>
                                 <li></li>
                             </ul>
-
                         </div>
                     </div>
                     <div class="custom_table">

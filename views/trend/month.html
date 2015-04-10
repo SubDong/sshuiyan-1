@@ -1,27 +1,8 @@
-<div class="middle_containers">
-    <div class="date_select">
-        <div aria-label="First group" role="group" class="btn-group fl">
-            <button class="btn btn-default disabled" type="button">时间</button>
-            <button class="btn btn-default current" type="button"> 昨天</button>
-            <button class="btn btn-default" type="button">最近7天</button>
-            <button class="btn btn-default" type="button">最近30天</button>
-            <button class="btn btn-default" type="button">自定义<span aria-hidden="true"
-                                                                   class="glyphicon glyphicon-calendar"></span>
-            </button>
-        </div>
-        <div aria-label="First group" role="group" class="btn-group fl">
-            <button class="btn btn-default" type="button"><input type="checkbox" checked="checked"/>
-                与其他时间段对比
-            </button>
-            <button class="btn btn-default current" type="button"><input type="checkbox"/>前一日</button>
-            <button class="btn btn-default" type="button"><input type="checkbox"/>上周同期</button>
-        </div>
-        <div aria-label="First group" role="group" class="btn-group fl">
-            <button class="btn btn-default" type="button">按时</button>
-            <button class="btn btn-default current" type="button">按日</button>
-            <button class="btn btn-default" type="button">按周</button>
-            <button class="btn btn-default" type="button">按月</button>
-        </div>
+<div class="middle_containers" >
+    <div class="date_select" ng-controller="trend_month_ctrl">
+        <calendar></calendar>
+        <datecontrast></datecontrast>
+        <dateweek></dateweek>
         <div class="fr">
             <button class="btn btn-default" type="button"><span aria-hidden="true"
                                                                 class="glyphicon glyphicon-refresh"></span>
@@ -49,27 +30,8 @@
                 <li class="date_five"><h4>新访客比率 </h4><span>90</span></li>
                 <li class="date_last"><h4>平均访问时长 </h4><span>00:02:34</span></li>
             </ul>
-
         </div>
         <div class="index_chart">
-            <div class="chart_top">
-                <ul>
-                    <li><label>展示曲线</label></li>
-                    <li><input type="checkbox" checked="checked" name="radio1"/> <label>浏览量(PV))</label>
-                    </li>
-                    <li><input type="checkbox" checked="checked" name="radio1"/> <label>访问次数</label></li>
-                    <li><input type="checkbox" name="radio1"/> <label>访客数(UV)</label></li>
-                    <li><input type="checkbox" name="radio1"/> <label>新访客数</label></li>
-                    <li><input type="checkbox" name="radio1"/> <label>新访客比率</label></li>
-                    <li><input type="checkbox" name="radio1"/> <label>IP数</label></li>
-                    <li><input type="checkbox" name="radio1"/> <label>跳出率</label></li>
-                    <li><input type="checkbox" name="radio1"/> <label>平均访问时长</label></li>
-                    <li><input type="checkbox" name="radio1"/> <label>平均访问页数</label></li>
-                    <li><input type="checkbox" name="radio1"/> <label>转化次数</label></li>
-                    <li><input type="checkbox" name="radio1"/> <label>转化率</label></li>
-                    <li class="disabled">* 最多只能勾选两项</li>
-                </ul>
-            </div>
             <div id="indicators_charts" style="height:400px;"></div>
         </div>
         <div class="table_content" ng-controller="TabsCtrl">
