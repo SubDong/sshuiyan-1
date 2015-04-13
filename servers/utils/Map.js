@@ -22,14 +22,12 @@
  * ……
  *
  */
-function Map() {
+var Map = function () {
     this.elements = new Array();
-
     //获取MAP元素个数
     this.size = function() {
         return this.elements.length;
     };
-
     //判断MAP是否为空
     this.isEmpty = function() {
         return (this.elements.length < 1);
@@ -135,4 +133,4 @@ function Map() {
         return arr;
     };
 }
-module.exports = Map();
+module.exports = Map;

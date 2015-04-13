@@ -2,8 +2,9 @@
  * Created by SubDong on 2015/4/9.
  * 访客基础数据
  */
+var Map = require("../../utils/Map");
 var initial = {
-    /**
+    /** 
      *
      * @param es
      * @param index es文档
@@ -70,14 +71,14 @@ var initial = {
                 result["pv"] = response.aggregations.pv.value;
                 result["uv"] = response.hits.total;
                 var s = response.aggregations.ip.value_count.buckets;
-         /*       new Map()
-                for(var t in s){
-                    var d = t.key.substring(0, t.key.indexOf(":"));
-                    if(!ipList.containsKey(t.key.substring(0, t.key.indexOf(":")))){
-                        ipList.put(t.key.substring(0, t.key.indexOf(":")),"");
+                var map =  new Map();
+                for(var t = 0; t < s.length; t++){
+                    var d = s[t].key.substring(0, s[t].key.indexOf(":"));
+                    if(!map.containsKey(d)){
+                        map.put(d,d);
                     }
-                }*/
-                result["ip"] = response.aggregations.ip.value_count.buckets.length;
+                }
+                result["ip"] = map.size();
                 callbackFn(result)
             } else {
                 console.log(err);
