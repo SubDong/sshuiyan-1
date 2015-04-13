@@ -34,11 +34,13 @@ app.directive("dateweek", function () {
     };
     return option;
 });
+/*
 app.directive("views", function () {
     var option = {
         restrict: "EA",
-        template: "<select ng-model=\"selected\" ng-options=\"m.id as m.when for m in model\" > <option value=\"\">浏览量</option></select>",
+        template: "<select ng-model=\"selected\" ng-options=\"m.id as m.when for m in view\" > <option value=\"\">浏览量</option></select>",
         transclude: true
     };
     return option;
 });
+*/

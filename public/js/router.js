@@ -53,6 +53,39 @@ app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
             url: "/page/pagetitle",
             templateUrl: "../page/pagetitle.html"
         })
+        .state('indexoverview', {
+            url: "/page/indexoverview",
+            templateUrl: "../page/indexoverview.html"
+        })
+        /*.state('flowanalysis', {
+            url: "/page/secendpage/flowanalysis",
+            templateUrl: "../page/secendpage/flowanalysis.html"
+        })
+        .state('newvisitors', {
+            url: "/page/secendpage/newvisitors",
+            templateUrl: "../page/secendpage/newvisitors.html"
+        })
+        .state('attractivenessanalysis', {
+            url: "/page/secendpage/attractivenessanalysis",
+            templateUrl: "../page/secendpage/attractivenessanalysis.html"
+        })
+        .state('analysistransformation', {
+            url: "/page/secendpage/analysistransformation",
+            templateUrl: "../page/secendpage/analysistransformation.html"
+        })
+        .state('pagevalue', {
+            url: "/page/secendpage/pagevalue",
+            templateUrl: "../page/secendpage/pagevalue.html"
+        })
+        .state('visitedpages', {
+            url: "/page/secendpage/visitedpages",
+            templateUrl: "../page/secendpage/visitedpages.html"
+        })
+        .state('exitpages', {
+            url: "/page/secendpage/exitpages",
+            templateUrl: "../page/secendpage/exitpages.html"
+        })
+*/
         .state('visitormap', {
             url: "/visitor/visitormap",
             templateUrl: "../visitor/visitormap.html"

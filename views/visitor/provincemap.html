@@ -1,7 +1,17 @@
-         <div class="middle_containers">
+        <div class="middle_containers" ng-controller="Vistiorctr">
                 <div class="date_select">
+                    <div aria-label="First group" role="group" class="btn-group fl">
+                        <button class="btn btn-default" type="button">按国家 </button>
+                        <button class="btn btn-default current" type="button">按省</button>
+                    </div>
                     <calendar></calendar>
-                    <dateother></dateother>
+                    <datecontrast></datecontrast>
+                    <div aria-label="First group" role="group" class="btn-group fl">
+                        <button class="btn btn-default" type="button">按时</button>
+                        <button class="btn btn-default current" type="button">按日</button>
+                        <button class="btn btn-default" type="button">按周</button>
+                        <button class="btn btn-default" type="button">按月</button>
+                    </div>
                     <div class="fr">
                         <button class="btn btn-default" type="button"><span aria-hidden="true"
                                                                             class="glyphicon glyphicon-refresh"></span>
@@ -20,44 +30,34 @@
                     </div>
                 </div>
                 <div class="my_concent">
-                    <div class="date_show dateshow3">
+                    <div class="date_show dateshow2">
                         <ul>
-                            <li class="date_first"><h4>浏览量(PV)</h4><span>34</span></li>
-                            <li class="date_third"><h4>浏览量占比</h4><span>100%</span></li>
-                            <li class="date_four"><h4>访客数(UV) </h4><span>2,574</span></li>
+                            <li class="date_first"><h4>浏览量(PV)</h4><span ng-bind="pv"></span></li>
+                            <li class="date_secend"><h4>访客数(UV)</h4><span ng-bind="uv">100%</span></li>
+                            <li class="date_four"><h4>IP数</h4><span ng-bind="ip">2,574</span></li>
+                            <li class="date_four"><h4>跳出率</h4><span ng-bind="jump">88.24%</span></li>
+                            <li class="date_four"><h4>平均访问时长</h4><span ng-bind="avgTime">90</span></li>
                         </ul>
                     </div>
                     <div class="index_chart">
                         <div class="chart_top">
                             <ul>
                                 <li><label>指标：</label></li>
-                                <li><input type="checkbox" checked="checked" name="radio1"/> <label>浏览量(PV)</label>
-                                </li>
+                                <li><input type="checkbox" checked="checked" name="radio1"/> <label>浏览量(PV)</label></li>
                                 <li><input type="checkbox" checked="checked" name="radio1"/> <label>访问次数</label></li>
                                 <li><input type="checkbox" name="radio1"/> <label>访客数(UV)</label></li>
                                 <li><input type="checkbox" name="radio1"/> <label>新访客数</label></li>
                                 <li><input type="checkbox" name="radio1"/> <label>IP数</label></li>
                                 <li><input type="checkbox" name="radio1"/> <label>转化次数</label></li>
-                                <li><input type="checkbox" name="radio1"/> <label>订单数</label></li>
-                                <li><input type="checkbox" name="radio1"/> <label>订单金额</label></li>
-                                <li><input type="checkbox" name="radio1"/> <label>订单转化率</label></li>
-                                <li class="disabled">* 可同时选择1项</li>
+                                <li class="disabled">* 最多只能勾选1项</li>
                             </ul>
                         </div>
-                        <div id="sourse_charts" style="height:400px;float:left;width:30%;"></div>
-                        <div id="indicators_charts" style="height:400px;float:right;width:70%;"></div>
-
+                        <div id="VistorMap_charts" style="width:80%;height:400px;"></div>
                     </div>
                     <div class="table_content" ng-controller="TabsCtrl">
                         <tabset justified="true">
                             <tab heading="自定义指标">
                                 <div class="custom_title">
-                                    <div class="chart_tops">
-                                        <ul>
-                                            <li><a href="#">系统默认指标 </a></li>
-                                            <li><a href="#"> 订单默认指标</a></li>
-                                        </ul>
-                                    </div>
                                     <div class="chart_top">
                                         <span>网站基础指标 :</span>
                                         <ul>
@@ -69,8 +69,8 @@
                                     <div class="chart_top">
                                         <span>流量质量指标:</span>
                                         <ul>
-                                            <li ng-repeat="item in Todayfloweds" ng-class='{current:$index==todyflowser}'
-                                                ng-click='todyflowed($index)'>{{item.consumption_name}}
+                                            <li ng-repeat="item in flow" ng-class='{current:$index==selectedflow}'
+                                                ng-click='selectflowd($index)'>{{item.consumption_name}}
                                             </li>
                                         </ul>
                                     </div>
@@ -83,28 +83,13 @@
                                         </ul>
                                     </div>
                                     <div class="chart_top">
-                                        <span>订单转化指标:</span>
-                                        <ul>
-                                            <li ng-repeat="item in Order" ng-class='{current:$index==Orderforms}'
-                                                ng-click='Orderform($index)'>{{item.consumption_name}}
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="chart_top">
                                         <button class="btn btn-primary" type="button">确定</button>
-                                        * 可同时选择6项
+                                        * 最多只能勾选两项
                                     </div>
 
                                 </div>
                                 <div class="custom_secendtitle">
                                     <div class="custom_select">
-                                        <input type="radio" checked="checked" name="radio1"/>
-                                        <label>按域名</label>
-                                        <input type="radio" checked="checked" name="radio1"/>
-                                        <label>按URL</label>
-                                        <input type="radio" checked="checked" name="radio1"/>
-                                        <label>转化目标</label>
-                                        <b></b>
                                         转化目标
                                         <div role="group" class="btn-group">
                                             <button aria-expanded="false" data-toggle="dropdown"
@@ -125,15 +110,31 @@
                                         </div>
                                     </div>
                                     <div class="custom_table">
-                                        <table id="source_table"  class="table table-hover" >
+                                        <table id="mytable"  class="table table-hover" >
                                         </table>
                                         <div id="pager"></div>
                                     </div>
                                 </div>
-
                             </tab>
                             <tab heading="高级筛选">
                                 <div class="custom_title">
+                                    <div class="chart_top2">
+                                        <ul>
+                                            <li><span>来源过滤 :</span></li>
+                                            <li><div role="group" class="btn-group">
+                                                <button aria-expanded="false" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" id="btnGroupDrop4">
+                                                    全部
+                                                    <span class="caret"></span>
+                                                </button>
+                                                <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
+                                                    <li><a href="#">百度</a></li>
+                                                    <li><a href="#">Google</a></li>
+                                                </ul>
+                                            </div></li>
+                                            <li><a href="#">百度</a></li>
+                                            <li><a href="#">Google</a></li>
+                                        </ul>
+                                    </div>
                                     <div class="chart_top2">
                                         <ul>
                                             <li><span>设备过滤:</span></li>
@@ -145,24 +146,45 @@
                                     </div>
                                     <div class="chart_top2">
                                         <ul>
-                                            <li><span>网站类型:</span></li>
-                                            <li><input type="radio" checked="checked" name="radio1"/>
-                                                <label>全部 </label></li>
-                                            <li><input type="radio" name="radio1"/> <label>社会化媒体</label></li>
-                                            <li><input type="radio" name="radio1"/> <label>导航网站</label></li>
-                                            <li><input type="radio" name="radio1"/> <label>电子邮箱</label></li>
+                                            <li><span>地域过滤:</span></li>
+                                            <li> <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
+                                                <div role="group" class="btn-group">
+                                                    <button aria-expanded="false" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" id="btnGroupDrop5">
+                                                        地域
+                                                        <span class="caret"></span>
+                                                    </button>
+                                                    <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
+                                                        <li><a href="#">四川</a></li>
+                                                        <li><a href="#">云南</a></li>
+                                                    </ul>
+                                                </div>
+
+                                                <div role="group" class="btn-group">
+                                                    <button aria-expanded="false" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" id="btnGroupDrop6">
+                                                        城市
+                                                        <span class="caret"></span>
+                                                    </button>
+                                                    <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
+                                                        <li><a href="#"> 成都</a></li>
+                                                        <li><a href="#">成都 </a></li>
+                                                        <li><a href="#">成都</a></li>
+                                                        <li><a href="#">成都</a></li>
+                                                        <li><a href="#">成都</a></li>
+                                                        <li><a href="#">成都</a></li>
+                                                    </ul>
+                                                </div>
+
+                                            </div></li>
+                                            <li><a href="#">北京</a></li>
+                                            <li><a href="#">上海</a></li>
+                                            <li><a href="#">上海</a></li>
+
                                         </ul>
                                     </div>
                                 </div>
                                 <div class="custom_secendtitle">
                                     <div class="custom_select">
-                                        <input type="radio" checked="checked" name="radio1"/>
-                                        <label>按域名</label>
-                                        <input type="radio" checked="checked" name="radio1"/>
-                                        <label>按URL</label>
-                                        <input type="radio" checked="checked" name="radio1"/>
-                                        <label>转化目标</label>
-                                        <b></b>转化目标
+                                        转化目标
                                         <div role="group" class="btn-group">
                                             <button aria-expanded="false" data-toggle="dropdown"
                                                     class="btn btn-default dropdown-toggle" type="button"
@@ -182,7 +204,7 @@
                                         </div>
                                     </div>
                                     <div class="custom_table">
-                                        <table id="source_table2"  class="table table-hover" >
+                                        <table id="Screening_table"  class="table table-hover" >
                                         </table>
                                         <div id="pager2"></div>
                                     </div>

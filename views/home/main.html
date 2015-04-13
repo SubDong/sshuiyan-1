@@ -21,18 +21,6 @@
     </div>
     <div class="my_concent">
         <div class="index_chart">
-            <!--<div class="chart_top">-->
-            <!--<ul>-->
-            <!--<li><label>展示曲线</label></li>-->
-            <!--<li><input type="checkbox" checked="checked" name="radio1" value="pv"/> <label>浏览量(PV)</label></li>-->
-            <!--<li><input type="checkbox" checked="checked" name="radio1" value="uv"/> <label>访问次数</label></li>-->
-            <!--<li><input type="checkbox" name="radio1" value="outRate"/> <label>跳出率</label></li>-->
-            <!--<li><input type="checkbox" name="radio1" value="arrRate"/> <label>抵达率</label></li>-->
-            <!--<li><input type="checkbox" name="radio1" value="avgVisitTime"/> <label>平均访问时长</label></li>-->
-            <!--<li><input type="checkbox" name="radio1" value="convertRate"/> <label>页面转化</label></li>-->
-            <!--<li class="disabled">* 最多只能勾选两项</li>-->
-            <!--</ul>-->
-            <!--</div>-->
             <div id="index_charts" style="height:400px;"></div>
         </div>
         <div class="row-fluid">
@@ -48,7 +36,7 @@
                         <select ng-model="select.selectVal" ng-options="o.title for o in select.optionsData">
                             <option value="">中国</option>
                         </select>
-                        <views></views>
+                        <select ng-model="selected" ng-options="v.id as v.when for v in view" > <option value="">浏览量</option></select>
                     </div>
                 </div>
                 <div id="gest_map" style="height:300px;"></div>
@@ -60,7 +48,7 @@
                     </div>
                     <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
                         <div role="group" class="btn-group">
-                            <views></views>
+                            <select ng-model="selected" ng-options="two.id as two.when for two in twoview" > <option value="">浏览量</option></select>
                         </div>
                     </div>
                 </div>
@@ -73,7 +61,7 @@
                     </div>
                     <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
                         <div role="group" class="btn-group">
-                                <views></views>
+                            <select ng-model="selected" ng-options="three.id as three.when for three in threeview" > <option value="">浏览量</option></select>
                         </div>
                     </div>
                 </div>

@@ -41,10 +41,10 @@
                         <tabset justified="true">
                             <tab heading="自定义指标">
                                 <div class="custom_title">
-                                    <div class="chart_top">
+                                    <div class="chart_tops">
                                         <ul>
-                                            <li><a href="#">系统默认指标</a></li>
-                                            <li><a href="#">订单默认指标</a></li>
+                                            <li><a href="#">系统默认指标 </a></li>
+                                            <li><a href="#"> 订单默认指标</a></li>
                                         </ul>
                                     </div>
                                     <div class="chart_top">
@@ -56,15 +56,15 @@
                                         </ul>
                                     </div>
                                     <div class="chart_top">
-                                     <span>流量质量指标:</span>
+                                        <span>流量质量指标:</span>
                                         <ul>
-                                            <li ng-repeat="item in flow" ng-class='{current:$index==selectedflow}'
-                                                ng-click='selectflowd($index)'>{{item.consumption_name}}
+                                            <li ng-repeat="item in Todayfloweds" ng-class='{current:$index==todyflowser}'
+                                                ng-click='todyflowed($index)'>{{item.consumption_name}}
                                             </li>
                                         </ul>
                                     </div>
                                     <div class="chart_top">
-                                       <span>转化指标:</span>
+                                        <span>转化指标:</span>
                                         <ul>
                                             <li ng-repeat="item in Todytransform" ng-class='{current:$index==todytransforms}'
                                                 ng-click='todytransform($index)'>{{item.consumption_name}}

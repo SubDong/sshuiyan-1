@@ -30,6 +30,7 @@
             </div>
         </div>
     </div>
+
     <div class="my_concent">
         <div class="date_show">
             <ul>
@@ -55,30 +56,32 @@
                         <div class="chart_top">
                             <span>网站基础指标 :</span>
                             <ul>
-                                <li ng-repeat="item in Webbased" ng-class='{current:$index==selectedWeb}'
-                                    ng-click='selectedWebbased($index)'>{{item.consumption_name}}
+                                <li ng-repeat="item in TodayWeb" ng-class='{current:$index==TodayWebbaseds}'
+                                    ng-click='TodayWebbased($index)'>{{item.consumption_name}}
                                 </li>
                             </ul>
                         </div>
                         <div class="chart_top">
                             <span>流量质量指标:</span>
                             <ul>
-                                <li ng-repeat="item in flow" ng-class='{current:$index==selectedflow}'
-                                    ng-click='selectflowd($index)'>{{item.consumption_name}}
+                                <li ng-repeat="item in Indexfloweds" ng-class='{current:$index==Indexflowes}'
+                                    ng-click='Indexflowed($index)'>{{item.consumption_name}}
                                 </li>
+
                             </ul>
                         </div>
                         <div class="chart_top">
                             <span>转化指标:</span>
                             <ul>
-                                <li ng-repeat="item in transform" ng-class='{current:$index==selectedtransform}'
-                                    ng-click='selectedform($index)'>{{item.consumption_name}}
+                                <li ng-repeat="item in Indexform" ng-class='{current:$index==Indexforms}'
+                                    ng-click='Indexformed($index)'>{{item.consumption_name}}
                                 </li>
+
                             </ul>
                         </div>
                         <div class="chart_top">
                             <button class="btn btn-primary" type="button">确定</button>
-                            * 最多只能勾选两项
+                            * 可同时选择6项
                         </div>
 
                     </div>
@@ -108,52 +111,6 @@
                         </div>
                     </div>
                 </tab>
-                <tab heading="高级筛选">
-                    <div class="custom_title">
-                        <div class="chart_top2">
-                            <ul>
-                                <li><span>来源过滤 :</span></li>
-                                <li>
-                                    <div role="group" class="btn-group">
-                                        <button aria-expanded="false" data-toggle="dropdown"
-                                                class="btn btn-default dropdown-toggle" type="button"
-                                                id="btnGroupDrop4">
-                                            全部
-                                            <span class="caret"></span>
-                                        </button>
-                                        <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
-                                            <li><a href="#">直接访问</a></li>
-                                            <li><a href="#">搜索引擎</a></li>
-                                            <li><a href="#">外部连接</a></li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li><a href="#">百度</a></li>
-                                <li><a href="#">Google</a></li>
-                            </ul>
-                        </div>
-
-
-                    </div>
-                    <div class="custom_secendtitle">
-                        <div class="custom_select">
-                            <div class="input-group fl">
-                                <input type="text" placeholder="关键词/搜索词…" class="form-control fl">
-                                       <span class="input-group-btn fl">
-                                 <button type="button" class="btn btn-default"><span aria-hidden="true"
-                                                                                     class="glyphicon glyphicon-search"></span>
-                                 </button>
-                                   </span>
-                            </div>
-                        </div>
-                        <div class="custom_table">
-                            <table id="overview_table" class="table table-hover">
-                            </table>
-                            <div id="pager2"></div>
-                        </div>
-                    </div>
-                </tab>
-
             </tabset>
 
         </div>

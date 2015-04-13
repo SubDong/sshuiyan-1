@@ -225,5 +225,97 @@ app.controller('IndexCtrl', function ($scope, $http, requestService, messageServ
 
 
     ];
+    $scope.view = [
+        {
+            id: 1,
+            when: '浏览量(PV)'
+        },
+        {
+            id: 2,
+            when: '访客次数(UV) '
+        },
+        {
+            id: 3,
+            when: '新访客数'
+        },
+        {
+            id: 4,
+            when: 'IP数'
+        },
+        {
+            id: 5,
+            when: '跳出率'
+        },
+        {
+            id: 6,
+            when: '平均访问时长'
+
+        },   {
+            id: 7,
+            when: '转化次数'
+        },
+
+
+    ]
+    $scope.twoview = [
+        {
+            id: 7,
+            when: '浏览量(PV)'
+        },
+        {
+            id: 8,
+            when: '访客次数(UV) '
+        },
+        {
+            id: 9,
+            when: '新访客数'
+        },
+        {
+            id: 10,
+            when: 'IP数'
+        },
+        {
+            id:11,
+            when: '跳出率'
+        },
+        {
+            id: 12,
+            when: '平均访问时长'
+        },   {
+            id: 13,
+            when: '转化次数'
+        },
+
+
+    ]
+    $scope.threeview = [
+        {
+            id: 14,
+            when: '浏览量(PV)'
+        },
+        {
+            id: 15,
+            when: '访客次数(UV) '
+        },
+        {
+            id: 16,
+            when: '新访客数'
+        },
+        {
+            id: 17,
+            when: 'IP数'
+        },
+        {
+            id:18,
+            when: '跳出率'
+        },
+        {
+            id:19,
+            when: '平均访问时长'
+        },   {
+            id: 20,
+            when: '转化次数'
+        },
+    ]
 
 });

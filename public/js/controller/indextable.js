@@ -37,17 +37,17 @@ app.controller("TabsCtrl", function ($scope, $http, requestService) {
     ];
     $scope.Webbased = [
         {consumption_name: "浏览量(PV)"},
-        {consumption_name: "浏览量(PV)"},
+        {consumption_name: "访问次数"},
         {consumption_name: "访客数(UV)"},
         {consumption_name: "新访客数"},
-        {consumption_name: "新访客数"},
+        {consumption_name: "新访客比率"},
         {consumption_name: "页头访问次数"}
     ];
     $scope.flow = [
         {consumption_name: "跳出率"},
         {consumption_name: "平均访问时长"},
-   /*     {consumption_name: "平均访问页数"},*/
         {consumption_name: "平均访问页数"},
+        {consumption_name: "抵达率"},
     ];
     $scope.transform = [
         {consumption_name: "转化次数"},
@@ -89,13 +89,42 @@ app.controller("TabsCtrl", function ($scope, $http, requestService) {
         {consumption_name: "转化次数"},
         {consumption_name: "转化率"}
     ];
+    $scope.Todayfloweds = [
+        {consumption_name: "跳出率"},
+        {consumption_name: "平均访问时长"},
+        {consumption_name: "平均访问页数"},
+    ];
     $scope.Order = [
         {consumption_name: "订单数"},
         {consumption_name: "订单金额"},
         {consumption_name: "订单转化率"}
     ];
-
-
+    $scope.Indexform = [
+        {consumption_name: "转化指标"},
+        {consumption_name: "转化率"}
+    ];
+    $scope.Indexfloweds = [
+        {consumption_name: "贡献浏览量"},
+        {consumption_name: "跳出率"},
+        {consumption_name: "平均访问时长"},
+        {consumption_name: "平均访问页数"},
+    ];
+    $scope.Mapwebbase = [
+        {consumption_name: "浏览量(PV)"},
+        {consumption_name: "浏览量占比"},
+        {consumption_name: "访问次数"},
+        {consumption_name: "访客数(UV)"},
+        {consumption_name: "新访客数"},
+        {consumption_name: "新访客比率"},
+        {consumption_name: "IP数"}
+    ];
+    $scope.Novisitorbase = [
+        {consumption_name: "浏览量(PV)"},
+        {consumption_name: "浏览量占比"},
+        {consumption_name: "访问次数"},
+        {consumption_name: "访客数(UV)"},
+        {consumption_name: "IP数"}
+    ];
     $scope.selectedWhich = function (row) {
         $scope.selectedRow = row;
     };
@@ -120,9 +149,25 @@ app.controller("TabsCtrl", function ($scope, $http, requestService) {
     $scope.todytransform = function (row) {
         $scope.todytransforms = row;
     };
+    $scope.todyflowed = function (row) {
+        $scope.todyflowser = row;
+    }
     $scope.Orderform = function (row) {
         $scope.Orderforms = row;
     };
+    $scope.Indexformed = function (row) {
+        $scope.Indexforms = row;
+    };
+    $scope.Indexflowed = function (row) {
+        $scope.Indexflowes = row;
+    };
+    $scope.Mapwebbased = function (row) {
+        $scope.Mapwebbaseds = row;
+    };
+    $scope.Novisitorbased = function (row) {
+        $scope.Novisitorbases = row;
+    };
+
     var select = $scope.select = {};
 
     //数组对象用来给ng-options遍历

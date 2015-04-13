@@ -1,8 +1,11 @@
-        <div class="middle_containers" ng-controller="Vistiorctr">
+           <div class="middle_containers">
                 <div class="date_select">
                     <div aria-label="First group" role="group" class="btn-group fl">
-                        <button class="btn btn-default current" type="button">按国家 </button>
-                        <button class="btn btn-default " type="button">按省</button>
+                        <button class="btn btn-default current" type="button"><a href="entrancepage.html">指标概览</a>  </button>
+                        <button class="btn btn-default " type="button"> <a href="secendpage/flowanalysis.html">流量分析</a></button>
+                        <button class="btn btn-default " type="button"> <a href="secendpage/newvisitors.html">新访客分析</a> </button>
+                        <button class="btn btn-default " type="button"> <a href="secendpage/attractivenessanalysis.html">吸引力分析</a> </button>
+                        <button class="btn btn-default " type="button"> <a href="secendpage/analysistransformation.html">转化分析</a> </button>
                     </div>
                     <calendar></calendar>
                     <dateother></dateother>
@@ -24,63 +27,79 @@
                     </div>
                 </div>
                 <div class="my_concent">
-                    <div class="date_show dateshow3">
+                    <div class="date_show">
                         <ul>
-                            <li class="date_third"><h4>访问次数</h4><span>34</span></li>
-                            <li class="date_four"><h4>访客数(UV) </h4><span>100%</span></li>
-                            <li class="date_last"><h4>平均访问页数</h4><span>2,574</span></li>
+                            <li class="date_first"><h4>浏览量(PV)</h4><span>34</span></li>
+                            <li class="date_secend"><h4>访客数(UV) </h4><span>100%</span></li>
+                            <li class="date_third"><h4>IP数</h4><span>2,574</span></li>
+                            <li class="date_four"><h4>入口页次数 (UV)</h4><span>90</span></li>
+                            <li class="date_five"><h4>贡献下游浏览量 </h4><span>90</span></li>
+                            <li class="date_last"><h4>退出页次数 </h4><span>00:02:34</span></li>
                         </ul>
-                    </div>
-                    <div class="index_chart">
-                        <div class="chart_top">
-                            <ul>
-                                <li><label>指标：</label></li>
-                                <li><input type="checkbox" checked="checked" name="radio1"/> <label>浏览量(PV)</label></li>
-                                <li><input type="checkbox" checked="checked" name="radio1"/> <label>访问次数</label></li>
-                                <li><input type="checkbox" name="radio1"/> <label>访客数(UV)</label></li>
-                                <li><input type="checkbox" name="radio1"/> <label>IP数</label></li>
-                                <li><input type="checkbox" name="radio1"/> <label>转化次数</label></li>
-                                <li class="disabled">* 最多只能勾选1项</li>
-                            </ul>
-                        </div>
-                        <div id="VistorMap_charts" style="width:80%;height:400px;"></div>
+
                     </div>
                     <div class="table_content" ng-controller="TabsCtrl">
+             <!--           <ul role="tablist" class="nav nav-tabs" id="myTab">
+                            <li class="active" role="presentation"><a aria-expanded="true" aria-controls="home"
+                                                                      data-toggle="tab" role="tab" id="home-tab"
+                                                                      href="#home">自定义指标</a></li>
+                            <li role="presentation" class=""><a aria-controls="profile" data-toggle="tab"
+                                                                id="profile-tab" role="tab" href="#profile"
+                                                                aria-expanded="false">高级筛选</a></li>
+
+                        </ul>-->
                         <tabset justified="true">
                             <tab heading="自定义指标">
                                 <div class="custom_title">
                                     <div class="chart_top">
-                                        <span>网站基础指标 :</span>
                                         <ul>
-                                            <li ng-repeat="item in Mapwebbase" ng-class='{current:$index==Mapwebbaseds}'
-                                                ng-click='Mapwebbased($index)'>{{item.consumption_name}}
-                                            </li>
+                                            <li><a href="#">系统默认指标</a></li>
                                         </ul>
                                     </div>
                                     <div class="chart_top">
-                                        <span>流量质量指标:</span>
                                         <ul>
-                                            <li ng-repeat="item in Todayfloweds" ng-class='{current:$index==todyflowser}'
-                                                ng-click='todyflowed($index)'>{{item.consumption_name}}
-                                            </li>
+                                            <li><span>网站基础指标 :</span></li>
+                                            <li><input type="checkbox" checked="checked" name="radio1"/>
+                                                <label>浏览量(PV)</label></li>
+                                            <li><input type="checkbox" name="radio1"/> <label>访问次数</label></li>
+                                            <li><input type="checkbox" name="radio1"/> <label>访客数(UV)</label></li>
+                                            <li><input type="checkbox" name="radio1"/> <label>新访客数</label></li>
+                                            <li><input type="checkbox" name="radio1"/> <label>新访客比率</label></li>
+                                            <li><input type="checkbox" name="radio1"/> <label>IP数</label></li>
                                         </ul>
                                     </div>
                                     <div class="chart_top">
-                                        <span>转化指标:</span>
                                         <ul>
-                                            <li ng-repeat="item in Todytransform" ng-class='{current:$index==todytransforms}'
-                                                ng-click='todytransform($index)'>{{item.consumption_name}}
-                                            </li>
+                                            <li><span>流量质量指标:</span></li>
+                                            <li><input type="checkbox" checked="checked" name="radio1"/>
+                                                <label>跳出率</label></li>
+                                            <li><input type="checkbox" name="radio1"/> <label>平均访问时长</label></li>
+                                            <li><input type="checkbox" name="radio1"/> <label>平均访问页数</label></li>
+                                        </ul>
+                                    </div>
+                                    <div class="chart_top">
+                                        <ul>
+                                            <li><span>转化指标:</span></li>
+                                            <li><input type="checkbox" checked="checked" name="radio1"/>
+                                                <label>转化次数</label></li>
+                                            <li><input type="checkbox" name="radio1"/> <label>转化率</label></li>
                                         </ul>
                                     </div>
                                     <div class="chart_top">
                                         <button class="btn btn-primary" type="button">确定</button>
-                                        * 最多只能勾选6项
+                                        * 最多只能勾选两项
                                     </div>
 
                                 </div>
                                 <div class="custom_secendtitle">
                                     <div class="custom_select">
+                                        <div class="input-group fl">
+                                            <input type="text" placeholder="关键词/搜索词…" class="form-control fl">
+                                       <span class="input-group-btn fl">
+                                 <button type="button" class="btn btn-default"><span aria-hidden="true" class="glyphicon glyphicon-search"></span></button>
+                                   </span>
+                                        </div>
+                                        <b></b>
                                         转化目标
                                         <div role="group" class="btn-group">
                                             <button aria-expanded="false" data-toggle="dropdown"
@@ -101,7 +120,7 @@
                                         </div>
                                     </div>
                                     <div class="custom_table">
-                                        <table id="mytable"  class="table table-hover" >
+                                        <table id="Indexoverview"  class="table table-hover" >
                                         </table>
                                         <div id="pager"></div>
                                     </div>
@@ -118,44 +137,35 @@
                                                     <span class="caret"></span>
                                                 </button>
                                                 <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
-                                                    <li><a href="#">百度</a></li>
-                                                    <li><a href="#">Google</a></li>
+                                                    <li><a href="#">直接访问</a></li>
+                                                    <li><a href="#">搜索引擎</a></li>
+                                                    <li><a href="#">外部连接</a></li>
                                                 </ul>
                                             </div></li>
                                             <li><a href="#">百度</a></li>
                                             <li><a href="#">Google</a></li>
                                         </ul>
                                     </div>
+
+
                                 </div>
                                 <div class="custom_secendtitle">
                                     <div class="custom_select">
-                                        转化目标
-                                        <div role="group" class="btn-group">
-                                            <button aria-expanded="false" data-toggle="dropdown"
-                                                    class="btn btn-default dropdown-toggle" type="button"
-                                                    id="btnGroupDrop2">
-                                                全部页面目标
-                                                <span class="caret"></span>
-                                            </button>
-                                            <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
-                                                <li><a href="#">全部页面目标</a></li>
-                                                <li><a href="#">公告</a></li>
-                                                <li><a href="#">全部事件目标</a></li>
-                                                <li><a href="#">完整下载</a></li>
-                                                <li><a href="#">在线下载</a></li>
-                                                <li><a href="#">时长目标</a></li>
-                                                <li><a href="#">访问页数目标</a></li>
-                                            </ul>
+                                        <div class="input-group fl">
+                                            <input type="text" placeholder="关键词/搜索词…" class="form-control fl">
+                                       <span class="input-group-btn fl">
+                                 <button type="button" class="btn btn-default"><span aria-hidden="true" class="glyphicon glyphicon-search"></span></button>
+                                   </span>
                                         </div>
                                     </div>
                                     <div class="custom_table">
-                                        <table id="Screening_table"  class="table table-hover" >
+                                        <table id="overview_table"  class="table table-hover" >
                                         </table>
                                         <div id="pager2"></div>
                                     </div>
                                 </div>
                             </tab>
-                        </tabset>
+                            <tabset>
                     </div>
                 </div>
             </div>

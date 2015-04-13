@@ -243,7 +243,7 @@
                 </div>
             </div>
         </div>
-        <div class="table_content" ng-controller="TodytableCtrl">
+        <div class="table_content" ng-controller="TabsCtrl">
             <ul role="tablist" class="nav nav-tabs" id="myTab">
                 <li class="active" role="presentation"><a aria-expanded="true" aria-controls="home"
                                                           data-toggle="tab" role="tab" id="home-tab"
@@ -256,30 +256,30 @@
                         <div class="chart_top">
                             <span>网站基础指标 :</span>
                             <ul>
-                                <li ng-repeat="item in Webbased" ng-class='{current:$index==selectedWeb}'
-                                    ng-click='selectedWebbased($index)'>{{item.consumption_name}}
+                                <li ng-repeat="item in Novisitorbase" ng-class='{current:$index==Novisitorbases}'
+                                    ng-click='Novisitorbased($index)'>{{item.consumption_name}}
                                 </li>
                             </ul>
                         </div>
                         <div class="chart_top">
                             <span>流量质量指标:</span>
                             <ul>
-                                <li ng-repeat="item in flow" ng-class='{current:$index==selectedflow}'
-                                    ng-click='selectflowd($index)'>{{item.consumption_name}}
+                                <li ng-repeat="item in Todayfloweds" ng-class='{current:$index==todyflowser}'
+                                    ng-click='todyflowed($index)'>{{item.consumption_name}}
                                 </li>
                             </ul>
                         </div>
                         <div class="chart_top">
                             <span>转化指标:</span>
                             <ul>
-                                <li ng-repeat="item in transform" ng-class='{current:$index==selectedtransform}'
-                                    ng-click='selectedform($index)'>{{item.consumption_name}}
+                                <li ng-repeat="item in Todytransform" ng-class='{current:$index==todytransforms}'
+                                    ng-click='todytransform($index)'>{{item.consumption_name}}
                                 </li>
                             </ul>
                         </div>
                         <div class="chart_top">
                             <button class="btn btn-primary" type="button">确定</button>
-                            * 最多只能勾选两项
+                            * 最多只能勾选6项
                         </div>
 
                     </div>

@@ -52,8 +52,8 @@
                         <div class="chart_top">
                             <span>流量质量指标:</span>
                             <ul>
-                                <li ng-repeat="item in flow" ng-class='{current:$index==selectedflow}'
-                                    ng-click='selectflowd($index)'>{{item.consumption_name}}
+                                <li ng-repeat="item in Todayfloweds" ng-class='{current:$index==todyflowser}'
+                                    ng-click='todyflowed($index)'>{{item.consumption_name}}
                                 </li>
                             </ul>
                         </div>
@@ -67,7 +67,7 @@
                         </div>
                         <div class="chart_top">
                             <button class="btn btn-primary" type="button">确定</button>
-                            * 最多只能勾选两项
+                            * 最多只能勾选6项
                         </div>
 
                     </div>
