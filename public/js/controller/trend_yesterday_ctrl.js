@@ -34,7 +34,7 @@ app.controller('Trend_yesterday_ctrl', function ($scope, $http,requestService,me
         ]
     };
     $scope.lineChartConfig = {
-        legendData: ["pv", "uv", "访问次数", "新访客数", "新访客比率", "IP数","跳出率","平均访问时长","平均访问页数","转化次数","转化率"],//显示几种数据
+        legendData: ["浏览量(PV)","访客数(UV)","访问次数","新访客数","新访客比率","IP数","跳出率","平均访问时长","平均访问页数","转化次数","转化率"],//显示几种数据
         chartId: "indicators_charts",
         bGap: false,//首行缩进
         chartType: "line",//图表类型
@@ -93,4 +93,40 @@ app.controller('Trend_yesterday_ctrl', function ($scope, $http,requestService,me
     $scope.yesterday();
     //$scope.initMap();
 
+})
+app.controller('todaydefine', function ($scope, $http,requestService,messageService) {
+    $scope.gridOptions = {
+        enableScrollbars: false,
+        enableGridMenu: true,
+        enableHorizontalScrollbar: 0,
+        enableVerticalScrollbar: 0,
+        columnDefs: [
+            {name: 'date', displayName: "日期"},
+            {name: 'number', displayName: "访问次数"},
+            {name: 'uv', displayName: "uv"},
+            {name: 'ratio', displayName: "新访客比率"}
+        ]
+    };
+    $scope.Todytable = function (type) {
+        requestService.request( option, $scope.lineChartConfig);
+        //requestService.request("Realtime_charts", $scope.startTime, $scope.endTime, option, $scope.lineChartConfig);
+    };
+})
+app.controller('todayfilter', function ($scope, $http,requestService,messageService) {
+    $scope.gridOptions = {
+        enableScrollbars: false,
+        enableGridMenu: true,
+        enableHorizontalScrollbar: 0,
+        enableVerticalScrollbar: 0,
+        columnDefs: [
+            {name: 'date', displayName: "日期"},
+            {name: 'number', displayName: "访问次数"},
+            {name: 'uv', displayName: "uv"},
+            {name: 'ratio', displayName: "新访客比率"}
+        ]
+    };
+    $scope.Todytable = function (type) {
+        requestService.request( option, $scope.lineChartConfig);
+
+    };
 })

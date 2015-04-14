@@ -2,21 +2,12 @@
     <div class="date_select">
         <div >
             <calendar></calendar>
-            <div aria-label="First group" role="group" class="btn-group fl" ng-hide="btnchecked">
-                <button class="btn btn-default" type="button" ng-click="daycheck()" ng-class="{'current':dayClass}">按天
+            <div aria-label="First group" role="group" class="btn-group fl">
+                <button class="btn btn-default" type="button" ng-click="hourcheck()" ng-class="{'current':hourcheckClass}">按时
                 </button>
-                <button class="btn btn-default" type="button" ng-click="hourcheck()"
-                        ng-class="{'current':hourcheckClass}">按时
+                <button class="btn btn-default" type="button" ng-click="daycheck()" ng-class="{'current':dayClass}">按日
                 </button>
-                <select ng-model="selected" ng-options="m.id as m.when for m in model" ng-hide="timeselect">
-                    <option value="">00:00-01:00</option>
-                </select>
             </div>
-        </div>
-        <div role="group" class="btn-group fl">
-            <button type="button" class="btn btn-default fl"><span class="glyphicon glyphicon-refresh"
-                                                                   aria-hidden="true"></span>
-            </button>
         </div>
     </div>
     <div class="my_concent">

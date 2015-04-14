@@ -23,7 +23,7 @@ app.controller('trend_month_ctrl', function ($scope, $http,requestService,messag
         ]
     };
     $scope.lineChartConfig = {
-        legendData: ["pv", "uv", "访问次数", "新访客数", "新访客比率", "IP数","跳出率","平均访问时长","平均访问页数","转化次数","转化率"],//显示几种数据
+        legendData: ["浏览量(PV)","访客数(UV)","访问次数","新访客数","新访客比率","IP数","跳出率","平均访问时长","平均访问页数","转化次数","转化率"],//显示几种数据
         chartId: "indicators_charts",
         bGap: false,//首行缩进
         chartType: "line",//图表类型

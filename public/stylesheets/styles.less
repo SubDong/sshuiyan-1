@@ -69,6 +69,7 @@ nav, .navbar-default {
   .dropdown a {
     padding-left: 15px;
   }
+  overflow:hidden;
 }
 
 .head {
@@ -98,9 +99,10 @@ nav, .navbar-default {
 }
 
 .date_select {
-  height: 50px;
-  background: #f0f0f0;
-  .btn-group {
+      width:100%;
+     background: #f0f0f0;
+     min-height:50px;
+      .btn-group {
     .btn-default input {
       margin-right: 0.8em;
 
@@ -1029,4 +1031,79 @@ nav, .navbar-default {
   }
   margin-bottom:10px;
   overflow: hidden;
+}
+.trendbox{
+  width:100%;
+  border-top:1px solid #eeeeee;
+  border-bottom:1px solid #eeeeee;
+  background:#fdfdfd;
+  overflow:hidden;
+  .trend_top{
+    width:100%;
+    border-bottom:1px solid #eeeeee;
+    overflow: hidden;
+  }
+.trend_left{
+  .fl;
+  width:280px;
+  overflow:hidden
+
+} .trend_right{
+    .fl;
+   height:200px;
+  ul{
+    padding:18px 18px 0 10px;
+    li{
+      margin-bottom:10px;
+    }
+  }
+
+  }
+  .trend_img{
+    width:100px;
+    height:100px;
+    .fl;
+    padding:18px 0;
+    text-align: center;
+    border-right:1px solid #eeeeee;
+
+  }
+  .left_top,.left_under{
+    overflow: hidden;
+  }
+  .left_top{
+    border-bottom:1px solid #eeeeee;
+
+      }
+
+  .left_under{
+    .trend_text{
+      border-bottom: 0px;
+    }
+  }
+  .trend_text{
+    height:100px;
+    width:180px;
+    .fl;
+    padding:15px;
+    border-right:1px solid #eeeeee;
+  }
+  .trendunder{
+    padding:18px 0;
+    overflow: hidden;
+    b{
+      .fl;
+    }
+    ul{
+      .fl;
+      margin-left:10px;
+      li{
+        margin-bottom:10px;
+        text-align: center;
+      }
+    }
+  }
+}
+.ui-grid-cell{
+  border: none;
 }
