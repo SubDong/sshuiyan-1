@@ -14,9 +14,9 @@ app.service('requestService', ['$rootScope', '$http', function ($rootScope, $htt
             if (ad.seriesExist(chart, param.target)) {
                 $http.get("/api/charts?start=" + start + "&end=" + end + "&type=" + type + "&int=" + opt.interval).success(function (data) {
                     var chartConfig = {
-                        showTarget: param.target,
-                        dataValue: data.config.dataValue
+                        showTarget: param.target
                     }
+                    if(data.config)chartConfig["dataValue"]= data.config.dataValue;
                     if(data.format) chartConfig["axFormat"]=data.format;
                     ad.addData(data, chart, chartConfig);
                 });

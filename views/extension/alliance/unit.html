@@ -2,84 +2,31 @@
     <div class="date_select">
         <b>网盟推广</b>
         <div aria-label="First group" role="group" class="btn-group fl">
-            <button class="btn btn-default current" type="button" ><a ui-sref="alliance.uni">计划</a></button>
-            <button class="btn btn-default " type="button"><a ui-sref="alliance.uni">组</a></button>
-            <button class="btn btn-default" type="button"><a ui-sref="alliance.uni">投放网络</a></button>
-            <button class="btn btn-default" type="button"><a ui-sref="alliance.uni">创意</a></button>
-            <button class="btn btn-default" type="button"><a ui-sref="alliance.uni">关键词</a> </button>
+            <button class="btn btn-default" type="button" >计划</button>
+            <button class="btn btn-default current" type="button">组</button>
+            <button class="btn btn-default" type="button">投放网络</button>
+            <button class="btn btn-default" type="button">创意</button>
+            <button class="btn btn-default" type="button">关键词 </button>
         </div>
         <div>
             <calendar></calendar>
             <dateother></dateother>
         </div>
     </div>
-    <div class="my_concent" >
+    <div class="my_concent">
         <div class="date_show">
             <div class="date_show">
                 <ul>
                     <li class="date_first"><h4>点击量</h4><span>34</span></li>
-                    <li class="date_five"><h4>消费</h4><span>34</span></li>
-                    <li class="date_third"><h4>访问次数</h4><span>2,574</span></li>
-                    <li class="date_four"><h4>访客数(UV)</h4><span>90</span></li>
-                    <li class="date_last"><h4>抵达率</h4><span>90</span></li>
-                    <li class="date_first"><h4>转化次数</h4><span>00:02:34</span></li>
+                    <li class="date_third"><h4>消费</h4><span>34</span></li>
+                    <li class="date_first"><h4>浏览量(PV)</h4><span>2,574</span></li>
+                    <li class="date_last"><h4>跳出率 </h4><span>90</span></li>
+                    <li class="date_last"><h4>平均访问时长 </h4><span>90</span></li>
+                    <li class="date_first"><h4>平均访问时长 </h4><span>00:02:34</span></li>
                 </ul>
+
             </div>
             </select>
-        </div>
-        <div class="plancheck">
-            <div class="plancheck_top">
-             <select ng-options="o.title for o in select.optionsData" ng-model="select.selectVal" class="ng-pristine ng-valid ng-touched fr ng-untouched"><option value="" class="">浏览量(PV)、转化次数</option></select>
-            </div>
-            <div class="plancheckbox">
-                <ul>
-                    <li><input type="checkbox" checked="checked" name="radio1"> <label>展现量</label>
-                    </li>
-                    <li><input type="checkbox" checked="checked" name="radio1"> <label>点击量</label></li>
-                    <li><input type="checkbox" name="radio1"> <label>消费</label></li>
-                    <li><input type="checkbox" name="radio1"> <label>点击率</label></li>
-                    <li><input type="checkbox" name="radio1"> <label>平均点击价格</label></li>
-                </ul>
-                <ul>
-                    <li><input type="checkbox" checked="checked" name="radio1"> <label>浏览量(PV)</label>
-                    </li>
-                    <li><input type="checkbox" checked="checked" name="radio1"> <label>访问次数</label></li>
-                    <li><input type="checkbox" name="radio1"> <label>访客数(UV)</label></li>
-                    <li><input type="checkbox" name="radio1"> <label>新访客数</label></li>
-                    <li><input type="checkbox" name="radio1"> <label>新访客比率</label></li>
-                    <li><input type="checkbox" name="radio1"> <label>页头访问次数</label></li>
-                </ul>
-                <ul>
-                    <li><input type="checkbox" checked="checked" name="radio1"> <label>跳出率</label>
-                    </li>
-                    <li><input type="checkbox" checked="checked" name="radio1"> <label>平均访问时长</label></li>
-                    <li><input type="checkbox" name="radio1"> <label>平均访问页数</label></li>
-                    <li><input type="checkbox" name="radio1"> <label>抵达率</label></li>
-                </ul>
-                <ul>
-                    <li><input type="checkbox" checked="checked" name="radio1"> <label>转化次数</label>
-                    </li>
-                    <li><input type="checkbox" checked="checked" name="radio1"> <label>转化率</label></li>
-                    <li><input type="checkbox" name="radio1"> <label>平均转化成本</label></li>
-                    <li><input type="checkbox" name="radio1"> <label>收益</label></li>
-                    <li><input type="checkbox" name="radio1"> <label>利润</label></li>
-                    <li><input type="checkbox" name="radio1"> <label>投资回报率</label></li>
-                </ul>
-                <ul>
-                    <li><input type="checkbox" checked="checked" name="radio1"> <label>搜索页直拨电话展现</label></li>
-                    <li><input type="checkbox" checked="checked" name="radio1"> <label>搜索页直拨电话点击</label></li>
-                    <li><input type="checkbox" name="radio1"> <label>搜索页直拨电话消费</label></li>
-                    <li><input type="checkbox" name="radio1"> <label>搜索页回呼电话点击</label></li>
-                    <li><input type="checkbox" name="radio1"> <label>搜索页回呼电话消费</label></li>
-                    <li><input type="checkbox" name="radio1"> <label>搜索页APP下载展现</label></li>
-                    <li><input type="checkbox" name="radio1"> <label>搜索页APP下载点击</label></li>
-                </ul>
-                <ul>
-                    <li><input type="checkbox" checked="checked" name="radio1"> <label>搜索页APP下载消费</label> </li>
-                    <li><span>* 最多只能勾选两项</span></li>
-                </ul>
-            </div>
-
         </div>
         <div class="index_chart">
             <div id="indicators_charts" style="height:400px;"></div>

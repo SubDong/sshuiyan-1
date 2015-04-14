@@ -13,10 +13,10 @@
         <ul class="nav navbar-nav">
             <li><a href="#"  ui-sref="index"><span aria-hidden="true" class="glyphicon glyphicon-home"></span>网站概览</a></a></li>
             <li class="dropdown" ng-controller="ngSelect">
-                网站：<select ng-model="vm.selectVal" ng-options="o.title for o in vm.optionsData">
+                <span class="fl">网站：</span><select ng-model="vm.selectVal" class="fl"ng-options="o.title for o in vm.optionsData">
                     <option value="">www.best-ad.cn</option>
                 </select>
-                <a href="#" class="fr">管理设置</a>
+                <a href="#" class="fl">管理设置</a>
             </li>
             <li><a href="#"> <span aria-hidden="true" class="glyphicon glyphicon-user"></span>best-renrenche1234</a></li>
             <li><a href="#"><span aria-hidden="true" class="glyphicon glyphicon-share"></span>退出</a></li>
