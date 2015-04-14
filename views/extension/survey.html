@@ -13,10 +13,12 @@
         </div>
         <div class="survey_chart">
             <div class="select_top">
-                <select ng-model="out.selectVal" ng-options="o.title for o in select.outQuota">
+                <select ng-model="outQuota" ng-change="setOutQuota(outQuota)"
+                        ng-options="o.title for o in select.outQuota">
                     <option value="">投放指标：消费</option>
                 </select>
-                <select ng-model="effect.selectVal" ng-options="o.title for o in select.effectQuota">
+                <select ng-model="effectQuota" ng-change="setEffectQuota(effectQuota)"
+                        ng-options="o.title for o in select.effectQuota">
                     <option value="">效果指标：访问次数</option>
                 </select>
 
@@ -25,10 +27,12 @@
                     <button class="btn btn-default" ng-class="{'current':todayClass}" ng-click="today()" type="button">
                         今天
                     </button>
-                    <button class="btn btn-default" ng-class="{'current':yesterdayClass}" ng-click="yesterday()" type="button">
+                    <button class="btn btn-default" ng-class="{'current':yesterdayClass}" ng-click="yesterday()"
+                            type="button">
                         昨天
                     </button>
-                    <button class="btn btn-default" ng-class="{'current':sevenDayClass}" ng-click="sevenDay()" type="button">
+                    <button class="btn btn-default" ng-class="{'current':sevenDayClass}" ng-click="sevenDay()"
+                            type="button">
                         最近7天
                     </button>
                     <button class="btn btn-default" ng-class="{'current':monthClass}" ng-click="month()" type="button">

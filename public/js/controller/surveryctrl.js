@@ -56,8 +56,8 @@ app.controller('SurveyCtrl', function ($scope, $http) {
         columnDefs: [
             {name: ' ', field: 'category'},
             {name: '消费', field: 'cost'},
-            {name: '展现量', filed: 'show'},
-            {name: '点击量', field: 'pv'},
+            {name: '展现量', field: 'impression'},
+            {name: '点击量', field: 'click'},
             {name: '访问次数', field: 'uv'},
             {name: '页面转化', field: 'page_conv'},
             {name: '事件转化', field: 'event_conv'},
@@ -80,102 +80,153 @@ app.controller('SurveyCtrl', function ($scope, $http) {
     // 投放指标 outQuota
     $scope.select.outQuota = [
         {
-            title: "消费"
+            title: "消费",
+            value: "cost"
         },
         {
-            title: "展现量"
+            title: "展现量",
+            value: "impression"
         },
         {
-            title: "点击量"
+            title: "点击量",
+            value: "click"
         },
         {
-            title: "访问次数"
+            title: "点击率",
+            value: "ctr"
         },
         {
-            title: "页面转化"
-        },
-        {
-            title: "事件转化"
-        },
-        {
-            title: "跳出率"
-        },
-        {
-            title: "平均访问时长"
+            title: "平均点击价格",
+            value: "cpc"
         }
     ];
 
     // 效果指标 effectQuota
     $scope.select.effectQuota = [
         {
-            title: "消费"
+            title: "访问次数",
+            value: "vc"
         },
         {
-            title: "展现量"
+            title: "页面转化",
+            value: "page_conv"
         },
         {
-            title: "点击量"
+            title: "事件转化",
+            value: "event_conv"
         },
         {
-            title: "访问次数"
+            title: "跳出率",
+            value: "outRate"
         },
         {
-            title: "页面转化"
-        },
-        {
-            title: "事件转化"
-        },
-        {
-            title: "跳出率"
-        },
-        {
-            title: "平均访问时长"
+            title: "平均访问时长",
+            value: "avgTime"
         }
     ];
+
+    $scope.outQuota_ = "cost";
+    $scope.effectQuota_ = "vc";
+    $scope.time = today_start().valueOf();
+
+    $scope.setOutQuota = function (outQuota) {
+        $scope.outQuota_ = outQuota.value;
+        $scope.getSemQuotaRealTimeData("baidu-bjjiehun2123585", "account", $scope.time, today_end().valueOf(), 0, 7, $scope.outQuota_);
+    };
+
+    $scope.setEffectQuota = function (effectQuota) {
+        $scope.effectQuota_ = effectQuota.value;
+    };
+
+    $scope.loadLineData = function () {
+    };
+
+    $scope.map = new Map();
 
     $scope.surveyData = [];
 
     // 推广概况获取
-    $scope.doSearch = function (start, end, type, category) {
+    $scope.doSearch = function (startDate, endDate, type, category) {
         $http({
             method: 'GET',
-            url: '/api/survey/?start=' + start + "&end=" + end + "&type=" + type + "&c=" + category + "&qtype=0"
+            url: '/api/survey/?start=' + startDate + "&end=" + endDate + "&type=" + type + "&c=" + category + "&qtype=0"
         }).success(function (data, status) {
             var _data = JSON.parse(eval('(' + data + ')').toString());
-            var _surveyObj = {};
-            _surveyObj["pv"] = _data.pv;
-            _surveyObj["uv"] = _data.uv;
-            _surveyObj["outRate"] = _data.outRate;
-            _surveyObj["avgTime"] = _data.avgTime;
-            _surveyObj["event_conv"] = _data.event_conv;
+            var obj = {};
+            obj["uv"] = _data.uv;
+            obj["outRate"] = _data.outRate;
+            obj["avgTime"] = _data.avgTime;
+            obj["page_conv"] = _data.page_conv;
+            obj["event_conv"] = _data.event_conv;
 
             switch (_data.category) {
                 case "t":
-                    _surveyObj["category"] = "今天";
+                    obj["category"] = "今天";
                     break;
                 case "y":
-                    _surveyObj["category"] = "昨日";
+                    obj["category"] = "昨日";
                     break;
                 default :
                     break;
             }
 
-            $scope.surveyData.push(_surveyObj);
+            $scope.map.put(endDate, obj);
         }).error(function (error) {
             alert(error);
         });
     };
 
-    $scope.init = function () {
-        $scope.doSearch(yesterday_start().valueOf(), yesterday_end().valueOf(), "1", "y");
-        $scope.doSearch(today_start().valueOf(), new Date().valueOf(), "1", "t");
-        $scope.gridOptions.data = $scope.surveyData;
+    $scope.getAccountSemRealTimeData = function (bun, type, startDate, endDate, device, unitOfTime, performanceData) {
+        var url = "http://192.168.1.105:9080/?bun=" + bun + "&type=" + type + "&start=" + startDate + "&end=" + endDate + "&device=" + device + "&uot=" + unitOfTime + "&pd=" + performanceData;
+
+        $http({
+            method: 'GET',
+            url: url
+        }).success(function (data, status) {
+            var obj = $scope.map.get(endDate);
+            obj["cost"] = data[0].kPIs[0];
+            obj["impression"] = data[0].kPIs[1];
+            obj["click"] = data[0].kPIs[2];
+            $scope.map.put(endDate, obj);
+            $scope.gridOptions.data = $scope.map.values();
+        });
+    };
+
+    $scope.getSemQuotaRealTimeData = function (bun, type, startDate, endDate, device, unitOfTime, performanceData) {
+        var url = "http://192.168.1.105:9080/?bun=" + bun + "&type=" + type + "&start=" + startDate + "&end=" + endDate + "&device=" + device + "&uot=" + unitOfTime + "&pd=" + performanceData;
+
+        $http({
+            method: 'GET',
+            url: url
+        }).success(function (data, status) {
+            console.log(JSON.stringify(data));
+            //=====================================
+            //var chart = echarts.init(document.getElementById("index_charts"));
+            //chart.showLoading({
+            //    text: "正在努力的读取数据中..."
+            //});
+
+            //=====================================
+        });
+    };
+
+    $scope.init = function (trackId) {
+        //
+        var performanceData = "cost,impression,click,ctr,cpc";
+        //
+        var now = new Date().valueOf();
+        $scope.doSearch(today_start().valueOf(), now, trackId, "t");
+        $scope.getAccountSemRealTimeData("baidu-bjjiehun2123585", "account", today_start().valueOf(), now, 0, 5, performanceData);
+        $scope.doSearch(yesterday_start().valueOf(), yesterday_end().valueOf(), trackId, "y");
+        $scope.getAccountSemRealTimeData("baidu-bjjiehun2123585", "account", yesterday_start().valueOf(), yesterday_end().valueOf(), 0, 5, performanceData);
+        // 分小时数据
+        //$scope.getSemRealTimeData("baidu-bjjiehun2123585", "account", yesterday_start().valueOf(), yesterday_end().valueOf(), 0, 7);
     };
 
 
     // initialize
     $scope.today();
-    $scope.init();
+    $scope.init("1");
 
 }).controller('UconcentCtrl', function ($scope, $http) {
     $scope.gridOptions = {

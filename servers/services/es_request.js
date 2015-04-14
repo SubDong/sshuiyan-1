@@ -19,7 +19,7 @@ var es_request = {
                 },
                 "size": 0,
                 "aggs": {
-                    "single_uv_aggs": {
+                    "single_visitor_aggs": {
                         "filter": {
                             "script": {
                                 "script": "doc['loc'].values.size() == param1",
@@ -29,7 +29,7 @@ var es_request = {
                             }
                         },
                         "aggs": {
-                            "single_uv_count": {
+                            "single_visitor_count": {
                                 "value_count": {
                                     "field": "loc"
                                 }
@@ -37,15 +37,20 @@ var es_request = {
                         }
                     },
                     "total_uv_count": {
+                        "cardinality": {
+                            "field": "_ucv"
+                        }
+                    },
+                    "total_visitor_count": {
                         "value_count": {
                             "field": "tt"
                         }
                     },
-                    "total_pv_count": {
-                        "value_count": {
-                            "field": "loc"
-                        }
-                    },
+                    //"total_pv_count": {
+                    //    "value_count": {
+                    //        "field": "loc"
+                    //    }
+                    //},
                     "total_visit_time": {
                         "sum": {
                             "script": "sum_time = 0; tmp = 0; for (t in doc['utime'].values) { if (tmp > 0) { sum_time += (t - tmp) }; tmp = t}; sum_time"
@@ -86,9 +91,10 @@ var es_request = {
             };
             if (response != undefined) {
                 var aggs = response.aggregations;
-                var _single_uv_count = aggs.single_uv_aggs.single_uv_count.value;
+                var _single_visitor_count = aggs.single_visitor_aggs.single_visitor_count.value;
                 var _total_uv_count = aggs.total_uv_count.value;
-                var _total_pv_count = aggs.total_pv_count.value;
+                var _total_visitor_count = aggs.total_visitor_count.value;
+                //var _total_pv_count = aggs.total_pv_count.value;
                 var _total_visit_time = aggs.total_visit_time.value;
                 //var _page_conv_count = aggs.page_conv_count.value;
                 var _event_conv_count = aggs.event_conv_count.value;
@@ -96,12 +102,12 @@ var es_request = {
                 var outRate = "0%";
                 var avgTime = "00:00:00";
                 if (_total_uv_count > 0) {
-                    outRate = (parseFloat(_single_uv_count) / parseFloat(_total_uv_count) * 100).toFixed(2) + "%";
-                    avgTime = Math.ceil(parseFloat(_total_visit_time) / parseFloat((_total_uv_count)));
+                    outRate = (parseFloat(_single_visitor_count) / parseFloat(_total_visitor_count) * 100).toFixed(2) + "%";
+                    avgTime = Math.ceil(parseFloat(_total_visit_time) / parseFloat((_total_visitor_count)));
                     avgTime = new Date(avgTime).Format("hh:mm:ss");
 
                 }
-                result["pv"] = _total_pv_count;
+                //result["pv"] = _total_pv_count;
                 result["uv"] = _total_uv_count;
                 //result["page_conv"] = _page_conv_count;
                 result["event_conv"] = _event_conv_count;
