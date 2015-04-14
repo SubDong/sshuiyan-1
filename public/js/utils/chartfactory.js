@@ -5,7 +5,6 @@ var cf = {
     renderChart: function (data, chartConfig) {
         var _self = op;
         if (!chartConfig)console.error("chartConfig is required");
-        if (!chartConfig.legendData)console.error("legendData is required");
         var chartType = !chartConfig.chartType ? "line" : chartConfig.chartType;
         switch (chartType) {
             case "line":
@@ -54,8 +53,7 @@ var op = {
                     }
                 },
                 {
-                    'type': 'value',
-                    'name': '平均访问时间'
+                    'type': !chartConfig.yType ? "value" : chartConfig.yType
                 }
             ],
             series: []
@@ -113,7 +111,7 @@ var op = {
     },
     pieChart: function (data, chartConfig) {
         if (!chartConfig.chartObj)return;
-        var chartObj =chartConfig.chartObj
+        var chartObj = chartConfig.chartObj
         var option = {
             tooltip: {
                 trigger: !chartConfig.tt ? "item" : chartConfig.tt,
@@ -156,7 +154,11 @@ var op = {
             type: "pie",
             radius: '55%',
             center: ['50%', '60%'],
-            itemStyle: {
+            data: []
+        }
+        if (chartConfig.pieStyle==undefined) {
+            serie["itemStyle"] =
+            {
                 normal: {
                     label: {
                         position: 'inner',
@@ -175,8 +177,7 @@ var op = {
                     }
                 }
 
-            },
-            data: []
+            };
         }
         if (!data.data) {
             return;
@@ -280,7 +281,7 @@ var op = {
     }
 }
 var ad = {
-    addData: function (data,chartObj, chartConfig) {
+    addData: function (data, chartObj, chartConfig) {
         if (!chartObj)return;
         if (!data.data)return;
         if (data.data[0]) {
@@ -299,7 +300,7 @@ var ad = {
             if (data.label != "uv") {
                 serie["yAxisIndex"] = 1;
                 option.yAxis[1]["axisLabel"] = {
-                    formatter: !chartConfig.axFormat ? undefined : "{value}" +chartConfig.axFormat
+                    formatter: !chartConfig.axFormat ? undefined : "{value}" + chartConfig.axFormat
                 };
             } else {
                 serie["yAxisIndex"] = 0;

@@ -136,17 +136,17 @@ var line = {
                                 result.push(obj);
                             } else {
                                 obj["time"] = date.formatTime(total_uv_result[i].key);
-                                obj["value"] = (parseFloat(single_uv_result[i].doc_count) / parseFloat(total_uv_result[i].tuv.value) * 100).toFixed(2) ;
+                                obj["value"] = parseFloat(single_uv_result[i].doc_count) / parseFloat(total_uv_result[i].tuv.value) * 100;
                                 result.push(obj);
                             }
                         }
-                        var config={};
-                        config["dataKey"]="time";
-                        config["dataValue"]="value";
+                        var config = {};
+                        config["dataKey"] = "time";
+                        config["dataValue"] = "value";
                         result_data["label"] = qtype;
                         result_data["data"] = result;
-                        result_data["format"]="%";
-                        result_data["config"]=config
+                        result_data["format"] = "%";
+                        result_data["config"] = config
                         callbackFn(result_data);
                     }
                 }
@@ -212,12 +212,12 @@ var line = {
                         obj["value"] = hit.total_time.value;
                         result.push(obj);
                     });
-                    var config={};
-                    config["dataKey"]="time";
-                    config["dataValue"]="value";
+                    var config = {};
+                    config["dataKey"] = "time";
+                    config["dataValue"] = "value";
                     result_data["label"] = qtype;
                     result_data["data"] = result;
-                    result_data["config"]=config;
+                    result_data["config"] = config;
                     callbackFn(result_data);
                 } else {
                     callbackFn(result_data);
@@ -227,7 +227,7 @@ var line = {
             }
         });
     },
-    pu: function (es, start, end, intervals, indexs, type, qtype, field, cb) {//pv，uv
+    pv: function (es, start, end, intervals, indexs, type, qtype, field, cb) {//pv，uv
         var aggsflag = {
             "pu": {
                 "value_count": {
@@ -275,20 +275,18 @@ var line = {
                     if (result != undefined) {
                         var pv = result.result;
                         var uv_Data = [];
-                        var config_Data=[]
                         pv.buckets.forEach(function (e) {
                             var vo = {};
-
                             vo["time"] = date.formatTime(e.key);
                             vo["value"] = e["pu"].value;
                             uv_Data.push(vo);
                         });
-                        var config={};
-                        config["dataKey"]="time";
-                        config["dataValue"]="value";
+                        var config = {};
+                        config["dataKey"] = "time";
+                        config["dataValue"] = "value";
                         resultData["label"] = qtype;
                         resultData["data"] = uv_Data;
-                        resultData["config"]=config;
+                        resultData["config"] = config;
                         if (cb)
                             cb(resultData);
                     } else {
@@ -306,7 +304,74 @@ var line = {
                 console.error(error);
             }
         });
+    },
+    uv: function (es, start, end, intervals, indexs, type, qtype, field, cb) {
+        var request = {
+            "index": indexs.toString(),
+            "type": type,
+            "body": {
+                "size": 0,
+                "query": {
+                    "range": {
+                        "utime": {
+                            "gte": start,
+                            "lte": end
+                        }
+                    }
+                },
+                "aggs": {
+                    "result": {
+                        "date_histogram": {
+                            "field": "utime",
+                            "interval": intervals / 1000 + "s",
+                            "time_zone": "+08:00",
+                            "order": {
+                                "_key": "asc"
+                            },
+                            "min_doc_count": 0,
+                            "extended_bounds": {
+                                "min": start,
+                                "max": end
+                            }
+                        },
+                        "aggs": {
+                            "uv": {
+                                "cardinality": {
+                                    "field": "Cookie"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
 
+        es.search(request, function (err, esBody) {
+            console.log(JSON.stringify(esBody));
+            var resultData = {label: "暂无数据", data: []};
+            if (esBody) {
+                if (esBody.status == undefined) {
+                    var result = esBody.aggregations;
+                    if (result != undefined) {
+                        var pv = result.result;
+                        var uv_Data = [];
+                        pv.buckets.forEach(function (e) {
+                            var vo = {};
+                            vo["time"] = date.formatTime(e.key);
+                            vo["value"] = e["uv"].value;
+                            uv_Data.push(vo);
+                        });
+                        var config = {};
+                        config["dataKey"] = "time";
+                        config["dataValue"] = "value";
+                        resultData["label"] = qtype;
+                        resultData["data"] = uv_Data;
+                        resultData["config"] = config;
+                        cb(resultData);
+                    } else cb(resultData);
+                } else cb(resultData);
+            } else cb(resultData);
+        });
     },
     convertRate: function (es, start, end, intervals, index, type, qtype, urls, cb) {
         var should = [], convertUrl, term = {}, item = {};
@@ -381,12 +446,12 @@ var line = {
                         vo["value"] = e.doc_count;
                         data.push(vo);
                     });
-                    var config={};
-                    config["dataKey"]="time";
-                    config["dataValue"]="value";
+                    var config = {};
+                    config["dataKey"] = "time";
+                    config["dataValue"] = "value";
                     result_data["label"] = qtype;
                     result_data["data"] = data;
-                    result_data["config"]=config;
+                    result_data["config"] = config;
                     if (cb)
                         cb(result_data);
                 } else {
