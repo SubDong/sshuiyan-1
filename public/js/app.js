@@ -1,1 +1,1 @@
-var app = angular.module('mainapp', ['ui.router', 'ui.grid', 'ui.grid.pagination', 'ui.bootstrap', 'ngDialog']);
+var app = angular.module('mainapp', ['ui.router', 'ui.grid', 'ui.grid.expandable', 'ui.grid.pagination', 'ui.bootstrap', 'ngDialog']);

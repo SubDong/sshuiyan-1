@@ -26,7 +26,7 @@
                 <li class="date_first"><h4>浏览量(PV) </h4><span>34</span></li>
                 <li class="date_secend"><h4>访问次数</h4><span>34</span></li>
                 <li class="date_third"><h4>访客数(UV)</h4><span>2,574</span></li>
-                <li class="date_four"><h4>新访客比率 </h4><span>90</span></li>
+                <li class="date_four"><h4>新访客数 </h4><span>90</span></li>
                 <li class="date_five"><h4>新访客比率 </h4><span>90</span></li>
                 <li class="date_last"><h4>平均访问时长 </h4><span>00:02:34</span></li>
             </ul>
@@ -36,7 +36,7 @@
         </div>
         <div class="table_content" ng-controller="TabsCtrl">
             <tabset justified="true">
-                <tab heading="自定义指标">
+                <tab heading="自定义指标" ng-controller="todaydefine">
                     <div class="custom_title">
                         <div class="chart_top">
                             <span>网站基础指标 :</span>
@@ -97,7 +97,7 @@
                     </div>
 
                 </tab>
-                <tab heading="高级筛选">
+                <tab heading="高级筛选" ng-controller="todayfilter">
                     <div class="custom_title">
                         <div class="chart_top2">
                             <ul>

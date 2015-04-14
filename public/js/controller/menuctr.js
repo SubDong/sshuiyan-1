@@ -3,7 +3,7 @@
  */
 
 /*console.log('init menu.')*/
-app.controller('AccordionDemoCtrl', function ($scope) {
+app.controller('menuctr', function ($scope) {
     $scope.oneAtATime = true;
 
     $scope.groups = [
@@ -28,7 +28,6 @@ app.controller('AccordionDemoCtrl', function ($scope) {
     $scope.selectMenu = function (menu) {
         $scope.currentMenu = menu;
     }
-
 });
 /*********nav-select*********/
 app.controller('ngSelect', function ($scope) {

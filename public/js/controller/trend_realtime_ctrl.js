@@ -1,26 +1,34 @@
 /**
  * Created by baizz on 2015-4-3.
  */
-app.controller('Trend_realtime_ctrl', function ($scope, $http, requestService, messageService) {
+app.controller('Trend_realtime_ctrl', function ($scope, $http, requestService, messageService, $log) {
 
     $scope.visitorCount = 0;
     $scope.gridOptions = {
+        expandableRowTemplate: '../trend/trendtree.html',
+        expandableRowHeight:360,
         enableScrollbars: false,
         enableGridMenu: true,
         enableHorizontalScrollbar: 0,
         enableVerticalScrollbar: 0,
-        columnDefs: [
-            {name: 'name', displayName: "地域"},
-            {name: 'time', displayName: "访问时间"},
-            {name: 'name', displayName: "来源"},
-            {name: 'ip', displayName: "访问IP"},
-            {name: 'times', displayName: "访问时长"},
-            {name: 'page', displayName: "访问页数"}
-
-        ]
-    };
+        onRegisterApi: function (gridApi) {
+        }
+    }
+    $scope.gridOptions.columnDefs = [
+        {name: 'name', displayName: "地域"},
+        {name: 'time', displayName: "访问时间"},
+        {name: 'name', displayName: "来源"},
+        {name: 'ip', displayName: "访问IP"},
+        {name: 'times', displayName: "访问时长"},
+        {name: 'page', displayName: "访问页数"}
+    ];
+    //效果演示数据
+    $http.get('https://cdn.rawgit.com/angular-ui/ui-grid.info/gh-pages/data/500_complex.json')
+        .success(function(data) {
+            $scope.gridOptions.data = data;
+        });
     $scope.lineChartConfig = {
-        legendData: ["pv", "uv", "IP数"],//显示几种数据
+        legendData: ["浏览量(PV)","访客数(UV)", "IP数"],//显示几种数据
         bGap: false,//首行缩进
         chartId:"Realtime_charts",
         chartType: "line",//图表类型
@@ -38,7 +46,7 @@ app.controller('Trend_realtime_ctrl', function ($scope, $http, requestService, m
         //requestService.request("Realtime_charts", $scope.startTime, $scope.endTime, option, $scope.lineChartConfig);
     };
 
-    $scope.search = function (keyword, entryPage, ip) {
+    $scope.search = function (keyword, time, ip) {
         requestService.gridRequest($scope.startTime, $scope.endTime, $scope.gridOptions, "uv");
     };
 

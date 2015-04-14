@@ -1,11 +1,14 @@
 <div class="menu">
-<div ng-controller="AccordionDemoCtrl">
+<div ng-controller="menuctr">
     <accordion close-others="oneAtATime"  >
-        <accordion-group  heading=""  is-open="status.isFirstOpen" is-disabled="status.isFirstDisabled" ng-class="{'current':currentMenu == 'menuFirst'}" ng-click="selectMenu('menuFirst')">
-            <accordion-heading  ui-sref="index">
-               <span class="glyphicon glyphicon-th-large" aria-hidden="true"></span>网站概览
-            </accordion-heading>
-        </accordion-group>
+        <div class="panel panel-default ng-isolate-scope current" ng-click="selectMenu('menuFirst')" ng-class="{'current':currentMenu == 'menuFirst'}">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                   <a class="accordion-toggle" href=""><a ui-sref="index" class="ng-scope"> <span class="glyphicon glyphicon-th-large ng-scope" aria-hidden="true"></span>  网站概览</a>
+                    </a>
+                </h4>
+            </div>
+        </div>
         <accordion-group heading="" ng-class="{'current':currentMenu == 'menuone'}" ng-click="selectMenu('menuone')">
             <accordion-heading>
             <!--    <span  class="baidu_icon"></span>--><span aria-hidden="true" class="glyphicon glyphicon-asterisk"></span>百度推广
