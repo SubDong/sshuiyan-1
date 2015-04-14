@@ -25,7 +25,7 @@ app.controller('IndexCtrl', function ($scope, $http, requestService, messageServ
         ]
     };
     $scope.lineChartConfig = {
-        legendData: ["pv", "uv", "跳出率", "抵达率", "平均访问时长", "页面转化"],//显示几种数据
+        legendData: ["浏览量(PV)", "访客数(UV)", "跳出率", "抵达率", "平均访问时长", "页面转化"],//显示几种数据
         chartId:"index_charts",
         bGap: false,//首行缩进
         chartType: "line",//图表类型
@@ -60,7 +60,7 @@ app.controller('IndexCtrl', function ($scope, $http, requestService, messageServ
         };
         requestService.request(start.getTime(), end.getTime(), option,$scope.lineChartConfig);
         requestService.mapRequest(start.getTime(), start.getTime(), "pv",$scope.barchartConfig);
-        requestService.pieRequest(start.getTime(), end.getTime(), "pv",$scope.piechartConfig);
+        requestService.pieRequest(start.getTime(), end.getTime(), option,$scope.piechartConfig);
         requestService.gridRequest({}, $scope.gridOptions, "uv");
     };
     $scope.yesterday = function () {
@@ -73,7 +73,7 @@ app.controller('IndexCtrl', function ($scope, $http, requestService, messageServ
         };
         requestService.request(start.getTime(), end.getTime(), option,$scope.lineChartConfig);
         requestService.mapRequest(start.getTime(), end.getTime(), "pv",$scope.barchartConfig);
-        requestService.pieRequest( start.getTime(), end.getTime(), "pv",$scope.piechartConfig);
+        requestService.pieRequest( start.getTime(), end.getTime(), option,$scope.piechartConfig);
         requestService.gridRequest({start: start.getTime(), end: end.getTime()}, $scope.gridOptions, "uv");
     };
     $scope.sevenDay = function () {
@@ -86,7 +86,7 @@ app.controller('IndexCtrl', function ($scope, $http, requestService, messageServ
         };
         requestService.request(start.getTime(), end.getTime(), option,$scope.lineChartConfig);
         requestService.mapRequest( start.getTime(), end.getTime(), "pv",$scope.barchartConfig);
-        requestService.pieRequest( start.getTime(), end.getTime(), "pv",$scope.piechartConfig);
+        requestService.pieRequest( start.getTime(), end.getTime(),option,$scope.piechartConfig);
         requestService.gridRequest({start: start.getTime(), end: end.getTime()}, $scope.gridOptions, "uv");
     };
     $scope.month = function () {
@@ -99,7 +99,7 @@ app.controller('IndexCtrl', function ($scope, $http, requestService, messageServ
         };
         requestService.request(start.getTime(), end.getTime(), option,$scope.lineChartConfig);
         requestService.mapRequest(start.getTime(), end.getTime(), "pv",$scope.barchartConfig);
-        requestService.pieRequest( start.getTime(), end.getTime(), "pv",$scope.piechartConfig);
+        requestService.pieRequest( start.getTime(), end.getTime(),option,$scope.piechartConfig);
         requestService.gridRequest({start: start.getTime(), end: end.getTime()}, $scope.gridOptions, "uv");
 
     };

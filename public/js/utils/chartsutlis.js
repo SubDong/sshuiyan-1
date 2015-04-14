@@ -247,7 +247,7 @@ var chartUtils = {
     },
     convertEnglish: function (chi) {
         switch (chi) {
-            case "uv":
+            case "访客数(UV)":
                 return "uv";
             case "跳出率":
                 return "outRate";
@@ -262,13 +262,13 @@ var chartUtils = {
             case "IP数":
                 return "ip";
             default :
-                return "pv";
+                return "浏览量(PV)";
         }
     },
     convertChinese: function (eng) {
         switch (eng) {
             case "uv":
-                return "uv";
+                return "访客数(UV)";
             case "outRate":
                 return "跳出率";
             case "arrRate":
@@ -280,7 +280,7 @@ var chartUtils = {
             case "convertRate":
                 return "页面转化";
             default :
-                return "pv";
+                return "浏览量(PV)";
         }
     }
 

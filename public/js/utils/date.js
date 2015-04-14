@@ -61,7 +61,10 @@ function end(date) {
     date.setMilliseconds(999);
     return date
 }
-
+function custom_end(date,hour){
+    date.setHours(hour);
+    return date
+}
 function date_split(start, end, interval) {
     var buckets = [];
     for (var i = start.getTime(); i <= end.getTime(); i += interval) {

@@ -2,7 +2,7 @@
  * Created by baizz on 2015-3-25.
  */
 app.service('requestService', ['$rootScope', '$http', function ($rootScope, $http) {
-    this.request = function (start, end, opt,chartConfig) {
+    this.request = function (start, end, opt, chartConfig) {
         var chart = echarts.init(document.getElementById(chartConfig.chartId));
         chart.showLoading({
             text: "正在努力的读取数据中..."
@@ -14,43 +14,58 @@ app.service('requestService', ['$rootScope', '$http', function ($rootScope, $htt
             if (ad.seriesExist(chart, param.target)) {
                 $http.get("/api/charts?start=" + start + "&end=" + end + "&type=" + type + "&int=" + opt.interval).success(function (data) {
                     var chartConfig = {
-                        showTarget: param.target,
-                        dataValue: data.config.dataValue
+                        showTarget: param.target
                     }
+                    if(data.config)chartConfig["dataValue"]= data.config.dataValue;
                     if(data.format) chartConfig["axFormat"]=data.format;
                     ad.addData(data, chart, chartConfig);
                 });
             }
         });
         $http.get("/api/charts?start=" + start + "&end=" + end + "&type=" + opt.type + "&int=" + opt.interval).success(function (data) {
-            chartConfig.chartObj=chart;
-            cf.renderChart(data,chartConfig);
+            chartConfig.chartObj = chart;
+            data.label=chartUtils.convertChinese(data.label);
+            cf.renderChart(data, chartConfig);
         }).error(function (err) {
             console.error(err)
         })
     },
-        this.mapRequest = function (start, end, type,chartConfig) {
-            var chart =echarts.init(document.getElementById(chartConfig.chartId));
+        this.mapRequest = function (start, end, type, chartConfig) {
+            var chart = echarts.init(document.getElementById(chartConfig.chartId));
             chart.showLoading({
                 text: "正在努力的读取数据中..."
             });
             $http.get("/api/map?start=" + start + "&end=" + end + "&type=" + type).success(function (data) {
-                chartConfig.legendData=[data.label];
-                chartConfig.chartObj=chart;
-                cf.renderChart(data,chartConfig);
+                chartConfig.legendData = [data.label];
+                chartConfig.chartObj = chart;
+                cf.renderChart(data, chartConfig);
             }).error(function (err) {
                 console.error(err)
             });
         },
-        this.pieRequest = function ( start, end, type,chartConfig) {
-            var chart =echarts.init(document.getElementById(chartConfig.chartId));
-            $http.get("/api/pie?start=" + start + "&end=" + end + "&type=" + type).success(function (data) {
-                chartConfig.legendData=data.label;
-                chartConfig.chartObj=chart;
-                cf.renderChart(data,chartConfig);
-            }).error(function (err) {
-                console.error(err)
-            });
+        this.pieRequest = function (start, end, opt, chartConfig) {
+            var chart = echarts.init(document.getElementById(chartConfig.chartId));
+            var pieType=opt.pieType?opt.pieType:undefined;
+            switch (pieType){
+                case "vapie":
+                    $http.get("/api/vapie?start=" + start + "&end=" + end + "&type=" + opt.type).success(function (data) {
+                        chartConfig.legendData = data.label;
+                        chartConfig.chartObj = chart;
+                        cf.renderChart(data, chartConfig);
+                    }).error(function (err) {
+                        console.error(err)
+                    });
+                    break;
+                default :
+                    $http.get("/api/pie?start=" + start + "&end=" + end + "&type=" + opt.type).success(function (data) {
+                        chartConfig.legendData = data.label;
+                        chartConfig.chartObj = chart;
+                        cf.renderChart(data, chartConfig);
+                    }).error(function (err) {
+                        console.error(err)
+                    });
+                    break;
+            }
         }
     this.gridRequest = function (time, uiGridOpt, type) {
         var start = !time.start ? today_start().getTime() : time.start, end = !time.end ? today_end().getTime() : time.end;

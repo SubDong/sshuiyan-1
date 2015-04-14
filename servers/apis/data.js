@@ -36,12 +36,12 @@ api.get('/charts', function (req, res) {
     querytypes.forEach(function (qtype) {
         switch (qtype) {
             case "uv":
-                line.pu(req.es, start, end, interval, uvindexs, 1, qtype, "tt", function (body) {
+                line.uv(req.es, start, end, interval, uvindexs, 1, qtype, "tt", function (body) {
                     datautils.send(res, body);
                 });
                 break;
             case "pv":
-                line.pu(req.es, start, end, interval, pvindexs, 1, qtype, "loc", function (body) {
+                line.pv(req.es, start, end, interval, pvindexs, 1, qtype, "loc", function (body) {
                     datautils.send(res, body);
                     //datautils.lineData(res, body, qtype);
                 });
@@ -57,14 +57,18 @@ api.get('/charts', function (req, res) {
             case "outRate":
                 line.calJumpRate(req.es, start, end, interval, uvindexs, 1, qtype, function (result) {
                     datautils.send(res, result);
-                    console.log(JSON.stringify(result));
                 });
                 break;
             case "city":
                 break;
+            case "arrRate":
+                line.convertRate(req.es, start, end, interval, pvindexs, 1, qtype, "http://sem.best-ad.cn/index", function (result) {
+                    datautils.send(res, result);
+                });
+                break;
             case "convertRate":
                 line.convertRate(req.es, start, end, interval, pvindexs, 1, qtype, "http://sem.best-ad.cn/login,http://sem.best-ad.cn/home", function (result) {
-                    datautils.send(res,result);
+                    datautils.send(res, result);
                 });
                 break;
             case "province":
@@ -97,6 +101,7 @@ api.get('/map', function (req, res) {
 api.get('/pie', function (req, res) {
     var query = url.parse(req.url, true).query;
     var type = query['type'];
+    var field = query['field'];
     var start = Number(query['start']);
     var end = Number(query['end']);
     switch (type) {
@@ -182,11 +187,35 @@ api.get('/visitormap', function (req, res) {
     var start = Number(query['start']);
     var end = Number(query['end']);
     var indexes = date.between(req, "visitor-");
-    initial.visitorMapBasic(req.es,indexes,type,function (data){
+    initial.visitorMapBasic(req.es, indexes, type, function (data) {
         datautils.send(res, JSON.stringify(data));
     })
 });
 
-// ==========================================================================
-
+// ================================XiaoWei=====================================
+api.get("/vapie", function (req, res) {
+    var query = url.parse(req.url, true).query;
+    var type = query['type'];
+    var start = Number(query['start']);
+    var end = Number(query['end']);
+    switch (type) {
+        case "pv":
+            var indexs = date.between(req, "access-");
+            pie.comeForm(req.es, start, end, indexs, 1, function (body) {
+                datautils.send(res, body);
+            });
+            break;
+        case "uv":
+            var indexs = date.between(req, "visitor-");
+            pie.comeForm(req.es, start, end, indexs, 1, function (body) {
+                datautils.send(res, body);
+            });
+            break;
+        case "arrCount":
+            pie.comeForm(req.es, start, end, indexs, 1, function (body) {
+                datautils.send(res, body);
+            });
+            break;
+    }
+});
 module.exports = api;
