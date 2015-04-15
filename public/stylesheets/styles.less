@@ -105,7 +105,7 @@ nav, .navbar-default {
   .btn-group {
     .btn
     {
-      font-size:12px;
+      font-size:12px; line-height: 26px; padding: 0 20px;
     }
     .btn-default input {
       margin-right: 0.8em;
@@ -286,7 +286,7 @@ nav, .navbar-default {
 
   }
   .btn-group {
-    margin: 5px;
+    margin: 7px;
   }
   .btn-group .current {
     background: #01aeef;
@@ -879,8 +879,9 @@ nav, .navbar-default {
     width:88px;
     text-align:center;
     line-height: 30px;
-    font-weight: bold;
+    font-weight: bold; display: none;
   }
+
   .dropdown-menu {
     min-width: 320px;
   }
@@ -991,7 +992,19 @@ nav, .navbar-default {
 .ng-isolate-scope {
   table{
     width:100%;
+    tbody{
+      .btn {
+      border-radius:50px; border: none; width: 26px !important; height: 26px; line-height: 26px; padding: 0 !important; margin: 0;
+    }
+      .active{
+        span{
+          color:#fff;
+        }
+      }
+    }
+
   }
+
 }
 .pull-right {
   margin: 8px 0;
