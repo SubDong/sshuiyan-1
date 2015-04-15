@@ -46,7 +46,7 @@ var line = {
                     "result": {
                         "date_histogram": {
                             "field": "utime",
-                            "interval": intervals / 1000 + "s",
+                            "interval": intervals,
                             "time_zone": "+08:00",
                             "order": {
                                 "_key": "asc"
@@ -79,7 +79,7 @@ var line = {
                     "result": {
                         "date_histogram": {
                             "field": "utime",
-                            "interval": intervals / 1000 + "s",
+                            "interval": intervals,
                             "time_zone": "+08:00",
                             "order": {"_key": "asc"},
                             "min_doc_count": 0,
@@ -131,11 +131,11 @@ var line = {
                         for (var i = 0, l = total_uv_result.length; i < l; i++) {
                             var obj = {};
                             if (total_uv_result[i].tuv.value === 0) {
-                                obj["time"] = date.formatTime(total_uv_result[i].key);
+                                if (intervals.indexOf("day") > -1)obj["time"] = date.formatDate(total_uv_result[i].key); else obj["time"] = date.formatTime(total_uv_result[i].key);
                                 obj["value"] = 0;
                                 result.push(obj);
                             } else {
-                                obj["time"] = date.formatTime(total_uv_result[i].key);
+                                if (intervals.indexOf("day") > -1)obj["time"] = date.formatDate(total_uv_result[i].key); else obj["time"] = date.formatTime(total_uv_result[i].key);
                                 obj["value"] = parseFloat(single_uv_result[i].doc_count) / parseFloat(total_uv_result[i].tuv.value) * 100;
                                 result.push(obj);
                             }
@@ -145,8 +145,8 @@ var line = {
                         config["dataValue"] = "value";
                         result_data["label"] = qtype;
                         result_data["data"] = result;
-                        result_data["format"] = "%";
-                        result_data["config"] = config
+                        result_data["format"] = "outRate";
+                        result_data["config"] = config;
                         callbackFn(result_data);
                     }
                 }
@@ -178,8 +178,9 @@ var line = {
                     "result": {
                         "date_histogram": {
                             "field": field,
-                            "interval": intervals / 1000 + "s",
-                            "time_zone": "+08:00",
+                            "interval": intervals,
+                            "pre_zone": "+08:00",
+                            "post_zone": "+08:00",
                             "order": {
                                 "_key": "asc"
                             },
@@ -190,9 +191,14 @@ var line = {
                             }
                         },
                         "aggs": {
-                            "total_time": {
+                            "tvt": {
                                 "sum": {
                                     "script": "sum_time = 0; tmp = 0; for (t in doc[\"" + field + "\"].values) { if (tmp > 0) { sum_time += (t - tmp) }; tmp = t}; sum_time"
+                                }
+                            },
+                            "vc": {
+                                "value_count": {
+                                    "field": "tt"
                                 }
                             }
                         }
@@ -208,8 +214,8 @@ var line = {
                     var result = [];
                     response.aggregations.result.buckets.forEach(function (hit) {
                         var obj = {};
-                        obj["time"] = date.formatTime(hit.key);
-                        obj["value"] = hit.total_time.value;
+                        if (intervals.indexOf("day") > -1)obj["time"] = date.formatDate(hit.key); else obj["time"] = date.formatTime(hit.key);
+                        if (hit.vc.value != 0) obj["value"] = parseInt(hit.tvt.value /(hit.vc.value*1000)); else obj["value"] = hit.tvt.value;
                         result.push(obj);
                     });
                     var config = {};
@@ -217,6 +223,7 @@ var line = {
                     config["dataValue"] = "value";
                     result_data["label"] = qtype;
                     result_data["data"] = result;
+                    result_data["format"] = "avgTime";
                     result_data["config"] = config;
                     callbackFn(result_data);
                 } else {
@@ -252,7 +259,7 @@ var line = {
                     "result": {
                         "date_histogram": {
                             "field": "utime",
-                            "interval": intervals / 1000 + "s",
+                            "interval": intervals,
                             "time_zone": "+08:00",
                             "order": {"_key": "asc"},
                             "min_doc_count": 0,
@@ -277,7 +284,7 @@ var line = {
                         var uv_Data = [];
                         pv.buckets.forEach(function (e) {
                             var vo = {};
-                            vo["time"] = date.formatTime(e.key);
+                            if (intervals.indexOf("day") > -1)vo["time"] = date.formatDate(e.key); else vo["time"] = date.formatTime(e.key);
                             vo["value"] = e["pu"].value;
                             uv_Data.push(vo);
                         });
@@ -323,7 +330,7 @@ var line = {
                     "result": {
                         "date_histogram": {
                             "field": "utime",
-                            "interval": intervals / 1000 + "s",
+                            "interval": intervals,
                             "time_zone": "+08:00",
                             "order": {
                                 "_key": "asc"
@@ -337,7 +344,7 @@ var line = {
                         "aggs": {
                             "uv": {
                                 "cardinality": {
-                                    "field": "Cookie"
+                                    "field": "_ucv"
                                 }
                             }
                         }
@@ -347,7 +354,6 @@ var line = {
         };
 
         es.search(request, function (err, esBody) {
-            console.log(JSON.stringify(esBody));
             var resultData = {label: "暂无数据", data: []};
             if (esBody) {
                 if (esBody.status == undefined) {
@@ -357,7 +363,7 @@ var line = {
                         var uv_Data = [];
                         pv.buckets.forEach(function (e) {
                             var vo = {};
-                            vo["time"] = date.formatTime(e.key);
+                            if (intervals.indexOf("day") > -1)  vo["time"] = date.formatDate(e.key); else vo["time"] = date.formatTime(e.key);
                             vo["value"] = e["uv"].value;
                             uv_Data.push(vo);
                         });
@@ -416,7 +422,7 @@ var line = {
                             "result": {
                                 "date_histogram": {
                                     "field": "utime",
-                                    "interval": intervals / 1000 + "s",
+                                    "interval": intervals,
                                     "time_zone": "+08:00",
                                     "order": {
                                         "_key": "asc"
@@ -442,7 +448,7 @@ var line = {
                     var data = [];
                     convert.forEach(function (e) {
                         var vo = {};
-                        vo["time"] = date.formatTime(e.key);
+                        if (intervals.indexOf("day") > -1)  vo["time"] = date.formatDate(e.key); else vo["time"] = date.formatTime(e.key);
                         vo["value"] = e.doc_count;
                         data.push(vo);
                     });

@@ -1,4 +1,4 @@
-<div class="middle_containers" ng-controller="SourceIndexCtrl">
+<div class="middle_containers" ng-controller="sourcectr">
                 <div class="date_select">
                     <calendar></calendar>
                     <dateother></dateother>
@@ -35,15 +35,15 @@
                         <div class="chart_top">
                             <ul>
                                 <li><label>指标：</label></li>
-                                <li><label><input type="radio"  ng-model="value"  value="pv"   name="radio1"  ng-change="change(value)"  checked="checked"/> 浏览量(PV)</label></li>
-                                <li> <label><input type="radio" ng-model="value" value="arrCount" name="radio1" ng-change="change(value)"/> 访问次数</label></li>
-                                <li><label><input type="radio" ng-model="value" value="uv" name="radio1" ng-change="change(value)"/> 访客数(UV)</label></li>
-                                <li> <label><input type="radio" ng-model="value" value="newClient" name="radio1" ng-change="change(value)"/> 新访客数</label></li>
-                                <li><label><input type="radio" ng-model="value" value="ip" name="radio1" ng-change="change(value)"/> IP数</label></li>
-                                <li><label><input type="radio" ng-model="value" value="convertRate" name="radio1" ng-change="change(value)"/> 转化次数</label></li>
-                                <li><label><input type="radio" ng-model="value" value="order" name="radio1" ng-change="change(value)"/> 订单数</label></li>
-                                <li><label><input type="radio" ng-model="value" value="orderPrice" name="radio1" ng-change="change(value)"/> 订单金额</label></li>
-                                <li> <label><input type="radio" ng-model="value" value="orderConvert"  name="radio1" ng-change="change(value)"/> 订单转化率</label></li>
+                                <li><label><input type="radio"  checked="checked" name="rate" value="pv" ng-model="value" />浏览量(PV)</label></li>
+                                <li><label><input type="radio" ng-model="value" value="arrCount" name="rate" ng-change="change(value)"/> 访问次数</label></li>
+                                <li><label><input type="radio" ng-model="value" value="uv" name="rate" ng-change="change(value)"/> 访客数(UV)</label></li>
+                                <li><label><input type="radio" ng-model="value" value="newClient" name="rate" ng-change="change(value)"/> 新访客数</label></li>
+                                <li><label><input type="radio" ng-model="value" value="ip" name="rate" ng-change="change(value)"/> IP数</label></li>
+                                <li><label><input type="radio" ng-model="value" value="convertRate" name="rate" ng-change="change(value)"/> 转化次数</label></li>
+                                <li><label><input type="radio" ng-model="value" value="order" name="rate" ng-change="change(value)"/> 订单数</label></li>
+                                <li><label><input type="radio" ng-model="value" value="orderPrice" name="rate" ng-change="change(value)"/> 订单金额</label></li>
+                                <li><label><input type="radio" ng-model="value" value="orderConvert"  name="rate" ng-change="change(value)"/> 订单转化率</label></li>
                                 <li class="disabled">* 可同时选择1项</li>
                             </ul>
                         </div>

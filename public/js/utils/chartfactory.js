@@ -156,7 +156,7 @@ var op = {
             center: ['50%', '60%'],
             data: []
         }
-        if (chartConfig.pieStyle==undefined) {
+        if (chartConfig.pieStyle == undefined) {
             serie["itemStyle"] =
             {
                 normal: {
@@ -300,7 +300,9 @@ var ad = {
             if (data.label != "uv") {
                 serie["yAxisIndex"] = 1;
                 option.yAxis[1]["axisLabel"] = {
-                    formatter: !chartConfig.axFormat ? undefined : "{value}" + chartConfig.axFormat
+                    formatter: function (value) {
+                        return ad.formatFunc(value, !chartConfig.axFormat ? undefined : chartConfig.axFormat);
+                    }
                 };
             } else {
                 serie["yAxisIndex"] = 0;
@@ -309,6 +311,7 @@ var ad = {
                 serie.data.push(item[chartConfig.dataValue]);
             });
             option.series.push(serie);
+            chartObj.hideLoading();
             chartObj.setOption(option);
         }
     },
@@ -322,6 +325,23 @@ var ad = {
             }
         });
         return result;
+    },
+    formatFunc: function (value, formatType) {
+        switch (formatType) {
+            case "avgVisitTime":
+                var days = Math.floor(value / 1440 / 60);
+                var hours = Math.floor((value - days * 1440 * 60) / 3600);
+                var minutes = Math.floor((value - days * 1440 * 60 - hours * 3600) / 60);
+                var seconds = (value - days * 1440 * 60 - hours * 3600 - minutes * 60);
+                if (days) {
+                    return days + "d:" + hours + ":" + minutes + ":" + seconds
+                }
+                return hours + ":" + minutes + ":" + seconds;
+            case "outRate":
+                return value + "%";
+            default :
+                return value;
+        }
     }
 }
 var def = {

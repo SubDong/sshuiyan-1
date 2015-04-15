@@ -22,7 +22,7 @@ var pie = {
             }
         }
         var request = {
-            "index": indexs,
+            "index": indexs.toString(),
             "type": type,
             "body": searchBody
         }
@@ -100,7 +100,7 @@ var pie = {
             }
         };
         var request = {
-            "index": indexs,
+            "index": indexs.toString(),
             "type": type,
             "body": searchBody
         }
@@ -110,18 +110,18 @@ var pie = {
                 if (esBody.status == undefined) {
                     var result = esBody.aggregations.result;
                     var bucket = result.buckets;
-                    var data=[];
-                    var zj={};
-                    zj["name"]="直接访问";
-                    zj["value"]=bucket.zj.doc_count;
+                    var data = [];
+                    var zj = {};
+                    zj["name"] = "直接访问";
+                    zj["value"] = bucket.zj.doc_count;
                     data.push(zj);
-                    var yq={};
-                    yq["name"]="搜索引擎";
-                    yq["value"]=bucket.yq.doc_count;
+                    var yq = {};
+                    yq["name"] = "搜索引擎";
+                    yq["value"] = bucket.yq.doc_count;
                     data.push(yq);
-                    var ot={};
-                    ot["name"]="外部链接";
-                    ot["value"]=bucket.ot.doc_count;
+                    var ot = {};
+                    ot["name"] = "外部链接";
+                    ot["value"] = bucket.ot.doc_count;
                     data.push(ot);
                     result_data["label"] = ["外部链接", "搜索引擎", "直接访问"];
                     result_data["data"] = data;
@@ -134,8 +134,82 @@ var pie = {
             }
         });
     },
-    arrCount: function (es, start, end, indexs, type, fb) {
+    uv: function (es, start, end, indexs, type, fb) {
+        var request = {
+            "index": indexs.toString(),
+            "type": type,
+            "body": {
+                "size": 0,
+                "query": {
+                    "range": {
+                        "utime": {
+                            "gte": start,
+                            "lte": end
+                        }
+                    }
+                },
+                "aggs": {
+                    "result": {
+                        "filters": {
+                            "filters": {
+                                "zj": {
+                                    "term": {
+                                        "rf_type": 1
+                                    }
+                                },
+                                "yq": {
+                                    "term": {
+                                        "rf_type": 2
+                                    }
+                                },
+                                "ot": {
+                                    "term": {
+                                        "rf_type": 3
+                                    }
+                                }
+                            }
+                        },
+                        "aggs": {
+                            "uv": {
+                                "cardinality": {
+                                    "field": "_ucv"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
 
+        es.search(request, function (err, esBody) {
+            var result_data = {label: ["直接访问", "搜索引擎", "外部链接"], data: []};
+            if (esBody) {
+                if (esBody.status == undefined) {
+                    var result = esBody.aggregations.result;
+                    var bucket = result.buckets;
+                    var data = [];
+                    var zj = {};
+                    zj["name"] = "直接访问";
+                    zj["value"] = bucket.zj.uv.value;
+                    data.push(zj);
+                    var yq = {};
+                    yq["name"] = "搜索引擎";
+                    yq["value"] = bucket.yq.uv.value;
+                    data.push(yq);
+                    var ot = {};
+                    ot["name"] = "外部链接";
+                    ot["value"] = bucket.ot.uv.value;
+                    data.push(ot);
+                    result_data["label"] = ["外部链接", "搜索引擎", "直接访问"];
+                    result_data["data"] = data;
+                    fb(result_data);
+                } else fb(result_data);
+            } else fb(result_data);
+        });
+
+    },
+    arrCount: function (es, start, end, indexs, type, qtype, fb) {
+        this.on(es, start, end, indexs, type, qtype, fb);
     }
 }
 module.exports = pie;

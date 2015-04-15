@@ -85,23 +85,23 @@ var chartFactory = {
             if (!data.data)return;
             if (data.data[0]) {
                 var option = chartObj.getOption();
-                var s_index=option.series.length-1;
-                var c_type=option.series[s_index].type;
+                var s_index = option.series.length - 1;
+                var c_type = option.series[s_index].type;
                 var json = data.data;
                 var serie = {
                     name: chartConfig.showTarget,
-                    type:c_type,
+                    type: c_type,
                     data: []
                 };
-                if(option.series[s_index].markPoint){
-                    serie["markPoint"]=option.series[s_index].markPoint;
+                if (option.series[s_index].markPoint) {
+                    serie["markPoint"] = option.series[s_index].markPoint;
                 }
                 if (data.label != "uv") {
                     serie["yAxisIndex"] = 1;
-                    option.yAxis[1]["axisLabel"]= {
-                        formatter: !chartConfig.axFormat?undefined:"{value}"+chartConfig.axFormat
+                    option.yAxis[1]["axisLabel"] = {
+                        formatter: !chartConfig.axFormat ? undefined : "{value}" + chartConfig.axFormat
                     };
-                }else{
+                } else {
                     serie["yAxisIndex"] = 0;
                 }
 
@@ -234,16 +234,31 @@ var chartFactory = {
 var chartUtils = {
     allowSelected: function (chartObj, param, allSelectedItem) {
         var selectedCount = [];
+        var noSelectedCount = [];
         var legend = chartObj.getOption().legend.data;
         var selected = param.selected;
         legend.forEach(function (e) {
             if (selected[e] == true) {
-                selectedCount.push(selected[e]);
+                selectedCount.push(e);
+            } else {
+                noSelectedCount.push(e);
             }
         });
+        //var option = chartObj.getOption();
+        //var series = option.series;
+        //for (var i = 0; i < series.length; i++) {
+        //    if (noSelectedCount.toString().indexOf(series[i].name) > -1) {
+        //        series[i] = undefined;
+        //        chartObj.hideLoading();
+        //        chartObj.setOption(option);
+        //    }
+        //}
         if (selectedCount.length > allSelectedItem) {
             selected[param.target] = false;
+            return false;
         }
+        chartObj.hideLoading();
+        return true;
     },
     convertEnglish: function (chi) {
         switch (chi) {
@@ -261,8 +276,10 @@ var chartUtils = {
                 return "convertRate";
             case "IP数":
                 return "ip";
+            case "访问次数":
+                return "arrCount";
             default :
-                return "浏览量(PV)";
+                return "pv";
         }
     },
     convertChinese: function (eng) {
@@ -279,10 +296,15 @@ var chartUtils = {
                 break;
             case "convertRate":
                 return "页面转化";
+            case "ip":
+                return "IP数";
+            case "arrCount":
+                return "访问次数";
             default :
                 return "浏览量(PV)";
         }
     }
+
 
 }
 

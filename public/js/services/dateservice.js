@@ -8,23 +8,34 @@ app.service('requestService', ['$rootScope', '$http', function ($rootScope, $htt
             text: "正在努力的读取数据中..."
         });
         chart.on(echarts.config.EVENT.LEGEND_SELECTED, function (param) {
-            chartUtils.allowSelected(this, param, 2);//定义能选中的item为多少
-            var type = chartUtils.convertEnglish(param.target)
-
-            if (ad.seriesExist(chart, param.target)) {
-                $http.get("/api/charts?start=" + start + "&end=" + end + "&type=" + type + "&int=" + opt.interval).success(function (data) {
-                    var chartConfig = {
-                        showTarget: param.target
-                    }
-                    if(data.config)chartConfig["dataValue"]= data.config.dataValue;
-                    if(data.format) chartConfig["axFormat"]=data.format;
-                    ad.addData(data, chart, chartConfig);
-                });
+            if (chartConfig.onLegendClick) {
+                chartConfig.onLegendClick(this, param, start, end, opt);
+            } else {
+                var type = chartUtils.convertEnglish(param.target);
+                var allowSelected = chartUtils.allowSelected(this, param, 2);//定义能选中的item为多少
+                if (!allowSelected) {
+                    chart.hideLoading();
+                    return;
+                }
+                if (ad.seriesExist(chart, param.target)) {
+                    chart.showLoading({
+                        text: "正在努力的读取数据中..."
+                    });
+                    $http.get("/api/charts?start=" + start + "&end=" + end + "&type=" + type + "&int=" + opt.interval).success(function (data) {
+                        var chartConfig = {
+                            showTarget: param.target
+                        }
+                        if (data.config)chartConfig["dataValue"] = data.config.dataValue;
+                        chartConfig["axFormat"] = type;
+                        ad.addData(data, chart, chartConfig);
+                        chart.hideLoading();
+                    });
+                }
             }
         });
         $http.get("/api/charts?start=" + start + "&end=" + end + "&type=" + opt.type + "&int=" + opt.interval).success(function (data) {
             chartConfig.chartObj = chart;
-            data.label=chartUtils.convertChinese(data.label);
+            data.label = chartUtils.convertChinese(data.label);
             cf.renderChart(data, chartConfig);
         }).error(function (err) {
             console.error(err)
@@ -45,8 +56,11 @@ app.service('requestService', ['$rootScope', '$http', function ($rootScope, $htt
         },
         this.pieRequest = function (start, end, opt, chartConfig) {
             var chart = echarts.init(document.getElementById(chartConfig.chartId));
-            var pieType=opt.pieType?opt.pieType:undefined;
-            switch (pieType){
+            chart.showLoading({
+                text: "正在努力的读取数据中..."
+            });
+            var pieType = opt.pieType ? opt.pieType : undefined;
+            switch (pieType) {
                 case "vapie":
                     $http.get("/api/vapie?start=" + start + "&end=" + end + "&type=" + opt.type).success(function (data) {
                         chartConfig.legendData = data.label;

@@ -31,8 +31,7 @@ api.get('/charts', function (req, res) {
     var end = Number(query['end']);
     var inv = Number(query['int']);
     var interval = Math.ceil((end - start) / inv);
-    var finally_result = {};
-
+    if (interval >= 86400000) interval = "day"; else interval = interval / 1000 + "s";
     querytypes.forEach(function (qtype) {
         switch (qtype) {
             case "uv":
@@ -206,12 +205,13 @@ api.get("/vapie", function (req, res) {
             });
             break;
         case "uv":
-            var indexs = date.between(req, "visitor-");
-            pie.comeForm(req.es, start, end, indexs, 1, function (body) {
+            var indexs = date.between(req, "access-");
+            pie.uv(req.es, start, end, indexs, 1, function (body) {
                 datautils.send(res, body);
             });
             break;
         case "arrCount":
+            var indexs = date.between(req, "visitor-");
             pie.comeForm(req.es, start, end, indexs, 1, function (body) {
                 datautils.send(res, body);
             });

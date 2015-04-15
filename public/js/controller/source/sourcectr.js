@@ -1,7 +1,7 @@
 /**
  * Created by XiaoWei on 2015/4/13.
  */
-app.controller("SourceIndexCtrl", function ($scope, $http, requestService) {
+app.controller("sourcectr", function ($scope, $http, requestService) {
     $scope.todayClass = true;
     $scope.start = today_start().getTime();
     $scope.end = custom_end(new Date(), 20).getTime();
@@ -13,16 +13,32 @@ app.controller("SourceIndexCtrl", function ($scope, $http, requestService) {
         $scope.definClass = false;
         $scope.btnchecked = true;
     };
+    $scope.onLegendClick = function (chart, param, start, end, opt) {
+        var type = chartUtils.convertEnglish(param.target);
+        $scope.reset();
+        $scope.todayClass = true;
+        $scope.btnchecked = false;
+        var opt = {
+            type: type,
+            interval: 12,
+            pieType: "vapie"
+        }
+        requestService.request($scope.start, $scope.end, opt, $scope.lineChartConfig);
+        requestService.pieRequest($scope.start, $scope.end, opt, $scope.pieChartConfig);
+
+    }
     $scope.lineChartConfig = {
+        legendData: ["浏览量(PV)", "访客数(UV)", "访问次数", "新访客数", "IP数", "页面转化", "订单数", "订单金额", "订单转化率"],
         chartId: "indicators_charts",
         chartType: "line",
         dataKey: "time",
-        dataValue: "value"
+        dataValue: "value",
+        onLegendClick: $scope.onLegendClick
     }
     $scope.pieChartConfig = {
         legendData: [],
         chartId: "sourse_charts",
-        pieStyle:true,
+        pieStyle: true,
         serieName: "访问情况",
         chartType: "pie",
         dataKey: "name",
@@ -36,11 +52,10 @@ app.controller("SourceIndexCtrl", function ($scope, $http, requestService) {
         var opt = {
             type: "pv",
             interval: 12,
-            pieType:"vapie"
+            pieType: "vapie"
         }
         requestService.request($scope.start, $scope.end, opt, $scope.lineChartConfig);
         requestService.pieRequest($scope.start, $scope.end, opt, $scope.pieChartConfig);
-
     };
     $scope.yesterday = function () {
         $scope.reset();
@@ -69,7 +84,7 @@ app.controller("SourceIndexCtrl", function ($scope, $http, requestService) {
         var opt = {
             type: value,
             interval: 12,
-            pieType:"vapie"
+            pieType: "vapie"
         }
         requestService.request($scope.start, $scope.end, opt, $scope.lineChartConfig);
         requestService.pieRequest($scope.start, $scope.end, opt, $scope.pieChartConfig);

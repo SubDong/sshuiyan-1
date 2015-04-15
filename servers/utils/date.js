@@ -33,6 +33,9 @@ var dateutils = {
     },
     formatTime:function(time){
         return new Date(parseInt(time)).toLocaleTimeString();
+    },
+    formatDate:function(time){
+        return new Date(parseInt(time)).toLocaleDateString();
     }
 }
 
