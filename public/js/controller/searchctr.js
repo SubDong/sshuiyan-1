@@ -13,6 +13,7 @@ app.controller('searchctr', function ($scope, $http) {
         $scope.today = function () {
             $scope.reset();
             $scope.todayClass = true;
+            $scope.dt = new Date();
         };
         $scope.yesterday = function () {
             $scope.reset();

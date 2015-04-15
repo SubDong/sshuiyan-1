@@ -69,6 +69,7 @@ app.controller('trend_month_ctrl', function ($scope, $http,requestService,messag
     $scope.month = function () {
         $scope.reset();
         $scope.monthClass = true;
+        $scope.dt = new Date();
         var start = lastMonth_start(), end = today_end(), option = {
             type: "pv",
             chart: 'line',

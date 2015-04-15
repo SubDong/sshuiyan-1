@@ -44,6 +44,7 @@ app.controller('Trend_yesterday_ctrl', function ($scope, $http,requestService,me
     $scope.yesterday = function () {
         $scope.reset();
         $scope.yesterdayClass = true;
+        $scope.dt = new Date();
         var start = yesterday_start(), end = yesterday_end(), option = {
             type: "pv",
             chart: 'line',

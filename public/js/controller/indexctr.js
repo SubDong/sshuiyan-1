@@ -51,6 +51,7 @@ app.controller('IndexCtrl', function ($scope, $http, requestService, messageServ
     $scope.today = function () {
         $scope.reset();
         $scope.todayClass = true;
+        $scope.dt = new Date();
         var start = today_start(), end = today_end();
         var option = {
             type: "pv",
@@ -126,10 +127,6 @@ app.controller('IndexCtrl', function ($scope, $http, requestService, messageServ
     $scope.selected = '';
     $scope.view = [
         {
-            id: 1,
-            when: '浏览量(PV)'
-        },
-        {
             id: 2,
             when: '访客次数(UV) '
         },
@@ -158,10 +155,6 @@ app.controller('IndexCtrl', function ($scope, $http, requestService, messageServ
     ]
     $scope.twoview = [
         {
-            id: 7,
-            when: '浏览量(PV)'
-        },
-        {
             id: 8,
             when: '访客次数(UV) '
         },
@@ -188,10 +181,6 @@ app.controller('IndexCtrl', function ($scope, $http, requestService, messageServ
 
     ]
     $scope.threeview = [
-        {
-            id: 14,
-            when: '浏览量(PV)'
-        },
         {
             id: 15,
             when: '访客次数(UV) '

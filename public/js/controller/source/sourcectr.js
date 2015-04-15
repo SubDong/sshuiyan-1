@@ -32,6 +32,7 @@ app.controller("SourceIndexCtrl", function ($scope, $http, requestService) {
         $scope.reset();
         $scope.todayClass = true;
         $scope.btnchecked = false;
+        $scope.dt = new Date();
         var opt = {
             type: "pv",
             interval: 12,

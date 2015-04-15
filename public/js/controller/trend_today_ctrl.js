@@ -35,6 +35,7 @@ app.controller('trend_today_ctrl', function ($scope, $http,requestService,messag
     $scope.today = function () {
         $scope.reset();
         $scope.todayClass = true;
+        $scope.dt = new Date();
         var start = today_start(), end = today_end();
         var option = {
             type: "pv",

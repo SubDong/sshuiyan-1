@@ -74,7 +74,7 @@ app.controller("TabsCtrl", function ($scope, $http, requestService) {
     $scope.recall = [
         {consumption_name: "电话量"},
         {consumption_name: "已接电话量"},
-        {consumption_name: "漏接电话量"},
+        {consumption_name: "平均通话时长"},
         {consumption_name: "漏接电话量"}
     ];
     $scope.TodayWeb= [
