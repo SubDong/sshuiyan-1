@@ -150,26 +150,64 @@ api.get('/survey', function (req, res) {
     var query = url.parse(req.url, true).query;
 
     var type = query['type'];
-    var qtype = Number(query['qtype']);
+    var qtype = query['qtype'];
     var start = Number(query['start']);
     var end = Number(query['end']);
     var indexes = date.between(req, "visitor-");
 
-    //
-    var target_pages = [];
-    target_pages.push("http://sem.best-ad.cn/login");
-    //
 
-    switch (qtype) {
-        case 0:
-            es_request.survey(req.es, query['c'], start, end, type, indexes[0], function (result) {
-                datautils.send(res, JSON.stringify(result));
-            });
-            break;
-        case 1:
-            break;
-        default :
-            break;
+    if (qtype == 0) {
+        es_request.survey(req.es, query['c'], start, end, type, indexes[0], function (result) {
+            datautils.send(res, JSON.stringify(result));
+        });
+    } else {
+        var inv = Number(query['int']);
+        var interval = Math.ceil((end - start) / inv);
+
+        switch (qtype) {
+            case "pv":
+                es_request.pv(req.es, indexes[0], type, start, end, interval, function (result) {
+                    datautils.send(res, JSON.stringify(result));
+                });
+                break;
+            case "uv":
+                es_request.uv(req.es, indexes[0], type, start, end, interval, function (result) {
+                    datautils.send(res, JSON.stringify(result));
+                });
+                break;
+            case "vc":
+                es_request.vc(req.es, indexes[0], type, start, end, interval, function (result) {
+                    datautils.send(res, JSON.stringify(result));
+                });
+                break;
+            case "outRate":
+                es_request.outRate(req.es, indexes[0], type, start, end, interval, function (result) {
+                    datautils.send(res, JSON.stringify(result));
+                });
+                break;
+            case "avgTime":
+                es_request.avgTime(req.es, indexes[0], type, start, end, interval, function (result) {
+                    datautils.send(res, JSON.stringify(result));
+                });
+                break;
+            case "pageConversion":
+                es_request.pageConversion(req.es, indexes[0], type, start, end, interval, function (result) {
+                    datautils.send(res, JSON.stringify(result));
+                });
+                break;
+            case "eventConversion":
+                es_request.eventConversion(req.es, indexes[0], type, start, end, interval, function (result) {
+                    datautils.send(res, JSON.stringify(result));
+                });
+                break;
+            case "arrivedRate":
+                es_request.arrivedRate(req.es, indexes[0], type, start, end, interval, function (result) {
+                    datautils.send(res, JSON.stringify(result));
+                });
+                break;
+            default :
+                break;
+        }
     }
 
 });
