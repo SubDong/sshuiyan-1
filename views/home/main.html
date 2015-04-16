@@ -17,17 +17,27 @@
         <div class="row-fluid">
             <div class="span1">
                 <div class="under_title">
-                    <div class="under_top_title"><span aria-hidden="true"
-                                                       class="glyphicon glyphicon-globe"></span>访客地图
+                    <div class="under_top_title"><span aria-hidden="true" class="glyphicon glyphicon-globe"></span>访客地图
                     </div>
                     <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
-                        <select ng-model="select.selectVal" ng-options="o.title for o in select.optionsData">
-                            <option value="">亚洲</option>
-                        </select>
-                        <select ng-model="select.selectVal" ng-options="o.title for o in select.optionsData">
-                            <option value="">中国</option>
-                        </select>
-                        <select ng-model="selected" ng-options="v.id as v.when for v in view" ><option value="">浏览量PV</option></select>
+                        <ui-select ng-model="continent.selected" theme="selectize" ng-disabled="disabled" class="fl" style="width: 80px;">
+                        <ui-select-match placeholder="亚洲">{{$select.selected.name}}</ui-select-match>
+                        <ui-select-choices repeat="continent in continents">
+                                 <span ng-bind-html="continent.name"></span>
+                        </ui-select-choices>
+                      </ui-select>
+                        <ui-select ng-model="country.selected" theme="selectize" ng-disabled="disabled" class="fl" style="width: 80px;">
+                            <ui-select-match placeholder="中国">{{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices repeat="country in countrys">
+                                <span ng-bind-html="country.name"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                        <ui-select ng-model="maptarget.selected" theme="selectize" class="fl" style="width: 120px;">
+                            <ui-select-match placeholder="浏览量PV">{{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices repeat="maptarget in maptargets">
+                                <span ng-bind-html="maptarget.name"></span>
+                            </ui-select-choices>
+                        </ui-select>
                     </div>
                 </div>
                 <div id="gest_map" style="height:300px;"></div>
@@ -39,7 +49,12 @@
                     </div>
                     <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
                         <div role="group" class="btn-group">
-                            <select ng-model="selected" ng-options="two.id as two.when for two in twoview" ><option value="">浏览量PV</option></select>
+                            <ui-select ng-model="equipmenttarget.selected" theme="selectize" class="fl" style="width: 120px;">
+                                <ui-select-match placeholder="浏览量PV">{{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="equipmenttarget in equipmenttargets">
+                                    <span ng-bind-html="equipmenttarget.name"></span>
+                                </ui-select-choices>
+                            </ui-select>
                         </div>
                     </div>
                 </div>
@@ -52,11 +67,16 @@
                     </div>
                     <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
                         <div role="group" class="btn-group">
-                            <select ng-model="selected" ng-options="three.id as three.when for three in threeview" > <option value="">浏览量PV</option></select>
+                            <ui-select ng-model="searchtarget.selected" theme="selectize" class="fl" style="width: 120px;">
+                                <ui-select-match placeholder="浏览量PV">{{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="searchtarget in searchtargets">
+                                    <span ng-bind-html="searchtarget.name"></span>
+                                </ui-select-choices>
+                            </ui-select>
                         </div>
                     </div>
                 </div>
-                <div >
+                <div>
                     <div class="ui-grid" ui-grid="gridOptions" ui-grid-pinning id="searchWordGrid">
                     </div>
                 </div>

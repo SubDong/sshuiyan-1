@@ -351,26 +351,29 @@ nav, .navbar-default {
     .fl;
     font-size: 16px;
     color: #000000;
+    line-height:30px;
     .glyphicon {
       padding-right: 15px;
     }
   }
   .btn-group {
     .fr;
-  }
-  .btn-group {
     margin: 0px;
+    line-height:inherit;
+    .ui-select-container{
+      margin-right:10px;
+    }
   }
   select {
     height: 35px;
     font-size: 14px;
   }
 
+
 }
 
 .row-fluid {
   background: #ffffff;
-  line-height: 30px;
   .span1 {
     width: 35%;
     .fl;
@@ -522,7 +525,7 @@ nav, .navbar-default {
     color: #727272;
     text-align: left;
     border: 1px solid #f6f5f5;
-    padding: 8px;
+    padding: 5px;
     cursor: pointer;
     span {
       display: @block;
@@ -896,7 +899,6 @@ nav, .navbar-default {
 }
 
 .select_top {
-  padding: 5px;
   background: #f6f5f5;
   select {
     height: 30px;
@@ -1121,6 +1123,15 @@ nav, .navbar-default {
     }
   }
 }
+.ui-grid{
+  line-height:30px;
+}
 .ui-grid-cell{
   border: none;
+}
+.ui-select-container{
+  line-height:inherit;
+}
+.selectize-dropdown{
+  margin: -5px 0 0;
 }
