@@ -228,6 +228,23 @@ api.get('/visitormap', function (req, res) {
         datautils.send(res, JSON.stringify(data));
     })
 });
+//访客地图
+api.get('/provincemap', function (req, res) {
+    var query = url.parse(req.url, true).query;
+    var type = query['type'];
+    var start = Number(query['start']);
+    var end = Number(query['end']);
+    var areas = query['areas'];
+    var property = query['property'];
+    if(property == "ct"){
+        var indexes = date.between(req, "access-");
+    }else{
+        var indexes = date.between(req, "visitor-");
+    }
+    initial.chartData(req.es,indexes,type,areas,property,function (data){
+        datautils.send(res,data);
+    })
+});
 
 // ================================XiaoWei=====================================
 api.get("/vapie", function (req, res) {

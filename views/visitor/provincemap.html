@@ -1,8 +1,8 @@
         <div class="middle_containers" ng-controller="Vistiorctr">
                 <div class="date_select">
                     <div aria-label="First group" role="group" class="btn-group fl">
-                        <button class="btn btn-default" type="button">按国家 </button>
-                        <button class="btn btn-default current" type="button">按省</button>
+                        <button class="btn btn-default" type="button" ng-click="setArea('country')">按国家 </button>
+                        <button class="btn btn-default current" type="button"ng-click="setArea('province')">按省</button>
                     </div>
                     <calendar></calendar>
                     <datecontrast></datecontrast>
@@ -43,12 +43,15 @@
                         <div class="chart_top">
                             <ul>
                                 <li><label>指标：</label></li>
-                                <li><input type="checkbox" checked="checked" name="radio1"/> <label>浏览量(PV)</label></li>
-                                <li><input type="checkbox" checked="checked" name="radio1"/> <label>访问次数</label></li>
-                                <li><input type="checkbox" name="radio1"/> <label>访客数(UV)</label></li>
-                                <li><input type="checkbox" name="radio1"/> <label>新访客数</label></li>
-                                <li><input type="checkbox" name="radio1"/> <label>IP数</label></li>
-                                <li><input type="checkbox" name="radio1"/> <label>转化次数</label></li>
+                                <!--<li ng-repeat="item in mapselect" ng-class='{current:$index==map}'
+                                    ng-click='mapset($index)'>{{item.consumption_name}}
+                                </li>-->
+                                <li><input type="checkbox" checked="checked" ng-click="setProperty('loc',$index, entities)"/> <label>浏览量(PV)</label></li>
+                                <li><input type="checkbox" ng-click="setProperty('tt')"/> <label>访问次数</label></li>
+                                <li><input type="checkbox" ng-click="setProperty('_ucv')"/> <label>访客数(UV)</label></li>
+                                <li><input type="checkbox" ng-click="setProperty('ct')"/> <label>新访客数</label></li>
+                                <li><input type="checkbox" ng-click="setProperty('remote')"/> <label>IP数</label></li>
+                                <li><input type="checkbox"/> <label>转化次数</label></li>
                                 <li class="disabled">* 最多只能勾选1项</li>
                             </ul>
                         </div>

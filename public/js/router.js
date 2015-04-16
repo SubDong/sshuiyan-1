@@ -102,6 +102,11 @@ app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
             url: "/visitor/visitorfeature",
             templateUrl: "../visitor/visitorfeature.html"
         })
+        .state('provincemap', {
+            url: "/visitor/provincemap",
+            templateUrl: "../visitor/provincemap.html"
+        })
+
         .state('survey', {
             url: "/extension/survey",
             templateUrl: "../extension/survey.html"

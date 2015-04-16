@@ -5,7 +5,7 @@
 var Map = require("../../utils/Map");
 var initial = {
     /** 
-     *
+     *  基础数据
      * @param es
      * @param index es文档
      * @param type ͳ统计js安装id
@@ -36,6 +36,11 @@ var initial = {
                             }
                         }
                     },
+                    "uv": {
+                        "value_count": {
+                            "field": "_ucv"
+                        }
+                    },
                     "jump": {
                         "filter": {
                             "script": {
@@ -64,12 +69,12 @@ var initial = {
                 if (response.hits.total == 0)
                     jump = "0%";
                 else
-                    jump = (parseFloat(response.aggregations.jump.doc_count) / parseFloat(response.hits.total)).toFixed(2) * 100 + "%";
+                    jump = (parseFloat(response.aggregations.jump.doc_count) / parseFloat(response.hits.total) * 100).toFixed(2)  + "%";
 
                 result["avgTime"] = new Date(calAvgTime).Format("hh:mm:sss");
                 result["jump"] = jump;
                 result["pv"] = response.aggregations.pv.value;
-                result["uv"] = response.hits.total;
+                result["uv"] = response.aggregations.uv.value;
                 var s = response.aggregations.ip.value_count.buckets;
                 var map =  new Map();
                 for(var t = 0; t < s.length; t++){
@@ -82,6 +87,111 @@ var initial = {
                 callbackFn(result)
             } else {
                 console.log(err);
+            }
+        });
+    },
+
+    /**
+     *
+     * @param es
+     * @param index
+     * @param type
+     * @param areas 地域分组
+     * @param property  统计依据
+     * @param callbackFn
+     */
+    chartData: function(es, index, type, areas, property, callbackFn){
+        var mapRequest = {};
+        if(property == 'ct'){
+            mapRequest = {
+                "index": index.toString(),
+                "type": type,
+                "body": {
+                    "query": {
+                        "match_all": {}
+                    },
+                    "size": 0,
+                    "aggs": {
+                        "areas": {
+                            "terms": {
+                                "field": "region",
+                                "order": {
+                                    "data_count": "desc"
+                                }
+                            },
+                            "aggs": {
+                                "data_count": {
+                                    "sum": {
+                                        "script": "v1=0; if (doc['ct'].value == 0) { v1 +=1;};v1"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }else{
+            mapRequest = {
+                "index": index.toString(),
+                "type": type,
+                "body": {
+                    "query": {
+                        "match_all": {}
+                    },
+                    "size": 0,
+                    "aggs": {
+                        "areas": {
+                            "terms": {
+                                "field": areas,
+                                "order": {
+                                    "data_count": "desc"
+                                }
+                            },
+                            "aggs": {
+                                "data_count": {
+                                    "value_count": {
+                                        "field": property
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+        }
+
+        es.search(mapRequest, function (err, response) {
+            if(response != undefined){
+                var result = {};
+                var chart_data_array = new Array();
+                var data_name = new Array();
+
+                var areas = response.aggregations.areas.buckets;
+                for(var i = 0 ; i < 10; i++){
+                    if(areas[i] != undefined){
+                        var chart_data = {};
+                        data_name.push(areas[i].key.replace("市","").replace("省",""));
+                        chart_data["name"] = areas[i].key.replace("市","").replace("省","");
+                        chart_data["value"] = areas[i].data_count.value;
+                        chart_data_array.push(chart_data);
+                    }
+                }
+                if(areas.length >=10){
+                    var chart_data = {};
+                    var other = 0;
+                    for(var a = 10 ; a < areas.length; a++){
+                        other+= areas[a].data_count.value
+                    }
+                    data_name.push("其他");
+                    chart_data["name"] = "其他";
+                    chart_data["value"] = other;
+                    chart_data_array.push(chart_data);
+                }
+                result["data_name"] = data_name;
+                result["chart_data"] = chart_data_array;
+                callbackFn(result)
+            }else{
+                console.log(err)
             }
         });
     }
