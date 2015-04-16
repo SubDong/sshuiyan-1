@@ -289,7 +289,7 @@ app.controller('SurveyCtrl', function ($scope, $http, SEM_API_URL, PERFORMANCE_D
                                     return value + '次';
                                     break;
                                 case "avgTime":
-                                    return value;
+                                    return new Date(value).Format("hh:mm:ss");
                                     break;
                                 case "outRate":
                                     return value + '%';
@@ -310,13 +310,13 @@ app.controller('SurveyCtrl', function ($scope, $http, SEM_API_URL, PERFORMANCE_D
             ],
             series: [
                 {
-                    name: $scope.quotaMap.get($scope.effectQuota_),
+                    name: $scope.quotaMap.get($scope.outQuota_),
                     type: 'line',
                     data: $scope.semDataArray,
                     itemStyle: {normal: {areaStyle: {type: 'default'}}}
                 },
                 {
-                    name: $scope.quotaMap.get($scope.outQuota_),
+                    name: $scope.quotaMap.get($scope.effectQuota_),
                     type: 'line',
                     yAxisIndex: 1,
                     data: $scope.effectDataArray,

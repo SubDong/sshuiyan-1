@@ -14,14 +14,13 @@
         <div class="survey_chart">
             <div class="select_top">
                 <b>投放指标：</b>
-                <select ng-model="outQuota" ng-change="setOutQuota(outQuota)"
+                <select ng-init="outQuota = select.outQuota[0]" ng-model="outQuota" ng-change="setOutQuota(outQuota)"
                         ng-options="o.title for o in select.outQuota">
-                    <option value="">消费</option>
                 </select>
                 <b>效果指标:</b>
-                <select ng-model="effectQuota" ng-change="setEffectQuota(effectQuota)"
+                <select ng-init="effectQuota = select.effectQuota[0]" ng-model="effectQuota"
+                        ng-change="setEffectQuota(effectQuota)"
                         ng-options="o.title for o in select.effectQuota">
-                    <option value="">访问次数</option>
                 </select>
 
                 <div aria-label="First group" role="group" class="btn-group fr">

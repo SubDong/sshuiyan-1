@@ -32,8 +32,8 @@ var es_request = {
                         },
                         "aggs": {
                             "single_visitor_count": {
-                                "value_count": {
-                                    "field": "tt"
+                                "sum": {
+                                    "script": "1"
                                 }
                             }
                         }
@@ -44,8 +44,8 @@ var es_request = {
                         }
                     },
                     "total_visitor_count": {
-                        "value_count": {
-                            "field": "tt"
+                        "sum": {
+                            "script": "1"
                         }
                     },
                     //"total_pv_count": {
@@ -102,7 +102,7 @@ var es_request = {
                 var _event_conv_count = aggs.event_conv_count.value;
 
                 var outRate = "0%";
-                var avgTime = "00:00:00";
+                var avgTime = "00:00";
                 if (_total_uv_count > 0) {
                     outRate = (parseFloat(_single_visitor_count) / parseFloat(_total_visitor_count) * 100).toFixed(2) + "%";
                     avgTime = Math.ceil(parseFloat(_total_visit_time) / parseFloat((_total_visitor_count)));
@@ -154,8 +154,8 @@ var es_request = {
                         },
                         "aggs": {
                             "pv": {
-                                "value_count": {
-                                    "field": "loc"
+                                "sum": {
+                                    "script": "c=0; c+=doc['loc'].values.size(); c"
                                 }
                             }
                         }
@@ -175,7 +175,7 @@ var es_request = {
                 for (var i = 0, l = results.length; i < l; i++) {
                     var pv = results[i].pv.value;
                     //var dateStr = new Date(parseInt(results[i].key)).Format("yyyy-MM-dd hh:mm:ss");
-                    var dateStr = (results[i].key_as_string + "").replace("T", " ").replace("00:00.000Z", "00:00:00");
+                    var dateStr = (results[i].key_as_string + "").replace("T", " ").replace("00:00.000Z", "00:00");
                     result.time.push(dateStr);
                     result.quota.push(pv);
                 }
@@ -237,7 +237,7 @@ var es_request = {
                 var results = response.aggregations.result.buckets;
                 for (var i = 0, l = results.length; i < l; i++) {
                     var uv = results[i].uv.value;
-                    var dateStr = (results[i].key_as_string + "").replace("T", " ").replace("00:00.000Z", "00:00:00");
+                    var dateStr = (results[i].key_as_string + "").replace("T", " ").replace("00:00.000Z", "00:00");
                     result.time.push(dateStr);
                     result.quota.push(uv);
                 }
@@ -279,8 +279,8 @@ var es_request = {
                         },
                         "aggs": {
                             "vc": {
-                                "value_count": {
-                                    "field": "tt"
+                                "sum": {
+                                    "script": "1"
                                 }
                             }
                         }
@@ -299,7 +299,7 @@ var es_request = {
                 var results = response.aggregations.result.buckets;
                 for (var i = 0, l = results.length; i < l; i++) {
                     var vc = results[i].vc.value;
-                    var dateStr = (results[i].key_as_string + "").replace("T", " ").replace("00:00.000Z", "00:00:00");
+                    var dateStr = (results[i].key_as_string + "").replace("T", " ").replace("00:00.000Z", "00:00");
                     result.time.push(dateStr);
                     result.quota.push(vc);
                 }
@@ -351,15 +351,15 @@ var es_request = {
                                 },
                                 "aggs": {
                                     "svc": {
-                                        "value_count": {
-                                            "field": "tt"
+                                        "sum": {
+                                            "script": "1"
                                         }
                                     }
                                 }
                             },
                             "vc": {
-                                "value_count": {
-                                    "field": "tt"
+                                "sum": {
+                                    "script": "1"
                                 }
                             }
                         }
@@ -377,14 +377,14 @@ var es_request = {
             if (response != undefined) {
                 var results = response.aggregations.result.buckets;
                 for (var i = 0, l = results.length; i < l; i++) {
-                    var svc = results[i].vc.value;
-                    var vc = results[i].single_visitor_aggs.svc.value;
-                    var dateStr = (results[i].key_as_string + "").replace("T", " ").replace("00:00.000Z", "00:00:00");
+                    var svc = results[i].single_visitor_aggs.svc.value;
+                    var vc = results[i].vc.value;
+                    var dateStr = (results[i].key_as_string + "").replace("T", " ").replace("00:00.000Z", "00:00");
                     result.time.push(dateStr);
 
-                    var outRate = "0%";
+                    var outRate = 0;
                     if (vc > 0)
-                        outRate = (parseFloat(svc) / parseFloat(vc) * 100).toFixed(2) + "%";
+                        outRate = (parseFloat(svc) / parseFloat(vc) * 100).toFixed(2);
                     result.quota.push(outRate);
                 }
                 callbackFn(result);
@@ -430,8 +430,8 @@ var es_request = {
                                 }
                             },
                             "vc": {
-                                "value_count": {
-                                    "field": "tt"
+                                "sum": {
+                                    "script": "1"
                                 }
                             }
                         }
@@ -451,13 +451,13 @@ var es_request = {
                 for (var i = 0, l = results.length; i < l; i++) {
                     var tvt = results[i].tvt.value;
                     var vc = results[i].vc.value;
-                    var dateStr = (results[i].key_as_string + "").replace("T", " ").replace("00:00.000Z", "00:00:00");
+                    var dateStr = (results[i].key_as_string + "").replace("T", " ").replace("00:00.000Z", "00:00");
                     result.time.push(dateStr);
 
-                    var avgTime = "00:00:00";
+                    var avgTime = 0;
                     if (vc > 0) {
                         avgTime = Math.ceil(parseFloat(tvt) / parseFloat((vc)));
-                        avgTime = new Date(avgTime).Format("hh:mm:ss");
+                        //avgTime = new Date(avgTime).Format("hh:mm:ss");
                     }
                     result.quota.push(avgTime);
                 }
