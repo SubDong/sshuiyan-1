@@ -83,6 +83,24 @@ app.controller('SurveyCtrl', function ($scope, $http, SEM_API_URL, PERFORMANCE_D
         }];
 
     // 投放指标 outQuota
+    //推广select
+    $scope.disabled = undefined;
+    $scope.enable = function() {
+        $scope.disabled = false;
+    };
+
+    $scope.disable = function() {
+        $scope.disabled = true;
+    };
+    $scope.clear = function() {
+        $scope.survey.selected = undefined;
+    }
+    $scope.survey = {};
+    $scope.surveys = [
+        { name: '全部推广方式'},
+        { name: '搜索推广'},
+        { name: '网盟推广'},
+    ];
     $scope.select.outQuota = [
         {
             title: "消费",

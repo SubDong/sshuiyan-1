@@ -360,6 +360,10 @@ nav, .navbar-default {
   }
   .btn-group {
     margin: 0px;
+    line-height:inherit;
+    .ui-select-container{
+      margin-right:10px;
+    }
   }
   select {
     height: 35px;
@@ -370,7 +374,7 @@ nav, .navbar-default {
 
 .row-fluid {
   background: #ffffff;
-  line-height: 30px;
+
   .span1 {
     width: 35%;
     .fl;
@@ -922,9 +926,14 @@ nav, .navbar-default {
 .select_top {
   padding: 5px;
   background: #f6f5f5;
+  min-height:56px;
   select {
     height: 30px;
     padding: 0 10px;
+  }
+  .ui-select-container{
+    margin:5px;
+
   }
 }
 
@@ -1158,6 +1167,23 @@ nav, .navbar-default {
     }
   }
 }
+.ui-grid{
+  line-height:30px;
+}
 .ui-grid-cell{
   border: none;
+}
+.ui-select-container{
+  line-height:inherit;
+  .ui-select-match{
+    span{
+      padding:0 10px;
+    }
+  }
+}
+.selectize-control.single .selectize-input::after{
+  right:5px;
+}
+.selectize-dropdown{
+  margin: -5px 0 0;
 }
