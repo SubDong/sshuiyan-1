@@ -83,6 +83,24 @@ app.controller('SurveyCtrl', function ($scope, $http, SEM_API_URL, PERFORMANCE_D
         }];
 
     // 投放指标 outQuota
+    //推广select
+    $scope.disabled = undefined;
+    $scope.enable = function() {
+        $scope.disabled = false;
+    };
+
+    $scope.disable = function() {
+        $scope.disabled = true;
+    };
+    $scope.clear = function() {
+        $scope.survey.selected = undefined;
+    }
+    $scope.survey = {};
+    $scope.surveys = [
+        { name: '全部推广方式'},
+        { name: '搜索推广'},
+        { name: '网盟推广'},
+    ];
     $scope.select.outQuota = [
         {
             title: "消费",
@@ -289,7 +307,7 @@ app.controller('SurveyCtrl', function ($scope, $http, SEM_API_URL, PERFORMANCE_D
                                     return value + '次';
                                     break;
                                 case "avgTime":
-                                    return value;
+                                    return new Date(value).Format("hh:mm:ss");
                                     break;
                                 case "outRate":
                                     return value + '%';
@@ -310,13 +328,13 @@ app.controller('SurveyCtrl', function ($scope, $http, SEM_API_URL, PERFORMANCE_D
             ],
             series: [
                 {
-                    name: $scope.quotaMap.get($scope.effectQuota_),
+                    name: $scope.quotaMap.get($scope.outQuota_),
                     type: 'line',
                     data: $scope.semDataArray,
                     itemStyle: {normal: {areaStyle: {type: 'default'}}}
                 },
                 {
-                    name: $scope.quotaMap.get($scope.outQuota_),
+                    name: $scope.quotaMap.get($scope.effectQuota_),
                     type: 'line',
                     yAxisIndex: 1,
                     data: $scope.effectDataArray,
