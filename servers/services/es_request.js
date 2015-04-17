@@ -4,6 +4,8 @@
  * ES查询接口
  */
 
+require('../utils/dateFormat')();
+
 var buildQuery = function (filter, start, end) {
 
     var mustQuery = [{
@@ -236,7 +238,7 @@ var avgTimeFn = function (result) {
     for (var i = 0, l = result.length; i < l; i++) {
         var tvt = result[i].tvt_aggs.value;
         var vc = result[i].vc_aggs.value;
-        var dateStr = result[i].key_as_string + ""
+        var dateStr = result[i].key_as_string + "";
         timeArr.push(dateStr);
 
         var avgTime = 0;
@@ -277,15 +279,27 @@ var outRateFn = function (result) {
 };
 
 var arrivedRateFn = function (result) {
-
+    return {
+        "label": "arrivedRate",
+        "time": [],
+        "quota": []
+    };
 };
 
 var pageConversionFn = function (result) {
-
+    return {
+        "label": "pageConversion",
+        "time": [],
+        "quota": []
+    };
 };
 
 var eventConversionFn = function (result) {
-
+    return {
+        "label": "eventConversion",
+        "time": [],
+        "quota": []
+    };
 };
 
 var es_request = {
@@ -389,7 +403,7 @@ var es_request = {
                 if (_total_uv_count > 0) {
                     outRate = (parseFloat(_single_visitor_count) / parseFloat(_total_visitor_count) * 100).toFixed(2) + "%";
                     avgTime = Math.ceil(parseFloat(_total_visit_time) / parseFloat((_total_visitor_count)));
-                    avgTime = new Date(avgTime).Format("hh:mm:ss");
+                    avgTime = new Date(avgTime).format("hh:mm:ss");
 
                 }
                 //result["pv"] = _total_pv_count;
