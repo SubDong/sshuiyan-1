@@ -1,4 +1,4 @@
-<div class="middle_containers">
+<div class="middle_containers" ng-controller="wayctrl">
     <div class="date_select">
         <b>推广方式</b>
         <calendar></calendar>
@@ -6,10 +6,14 @@
     </div>
     <div class="my_concent">
         <div class="date_show">
-            <b>指标：</b> <select ng-options="o.title for o in select.optionsData" ng-model="select.selectVal"
-                               class="ng-pristine ng-valid ng-touched">
-            <option value="" class="">展现量、点击量</option>
-        </select>
+            <ul>
+                <li class="date_first"><h4>点击量</h4><span>34</span></li>
+                <li class="date_five"><h4>消费</h4><span>34</span></li>
+                <li class="date_third"><h4>浏览量PV</h4><span>2,574</span></li>
+                <li class="date_four"><h4>跳出率</h4><span>90</span></li>
+                <li class="date_last"><h4>平均访问时长</h4><span>90</span></li>
+                <li class="date_first"><h4>转化次数</h4><span>00:02:34</span></li>
+            </ul>
         </div>
         <div class="index_chart">
             <div id="indicators_charts" style="height:400px;"></div>
@@ -82,14 +86,16 @@
                         <div class="custom_select">
                             转化目标
                             <div role="group" class="btn-group">
-                                <select ng-options="o.title for o in select.optionsData" ng-model="select.selectVal"
-                                        class="ng-pristine ng-valid ng-touched">
-                                    <option value="" class="">全部页面目标</option>
-                                </select>
+                                <ui-select ng-model="page.selected" theme="selectize" class="fl" style="min-width: 120px;">
+                                    <ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>
+                                    <ui-select-choices repeat="page in pages">
+                                        <span ng-bind-html="page.name"></span>
+                                    </ui-select-choices>
+                                </ui-select>
                             </div>
                         </div>
                         <div class="custom_table">
-                            <table id="mytable" class="table table-hover">
+                            <table id="mytable" class="table table-hover" style="height:400px;">
                             </table>
                             <div id="pager"></div>
                         </div>
@@ -97,39 +103,43 @@
                 </tab>
                 <tab heading="高级筛选">
                     <div class="custom_title">
-
                         <div class="chart_top2">
                             <ul>
                                 <li><span>地域过滤:</span></li>
                                 <li>
                                     <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
                                         <div role="group" class="btn-group">
-                                            <select ng-options="o.title for o in select.optionsData"
-                                                    ng-model="select.selectVal" class="ng-pristine ng-valid ng-touched">
-                                                <option value="" class="">大洲</option>
-                                            </select>
-
+                                            <ui-select ng-model="continent.selected" theme="selectize" ng-disabled="disabled" class="fl"
+                                                       style="width:80px;">
+                                                <ui-select-match placeholder="大洲">{{$select.selected.name}}</ui-select-match>
+                                                <ui-select-choices repeat="continent in continents">
+                                                    <span ng-bind-html="continent.name"></span>
+                                                </ui-select-choices>
+                                            </ui-select>
                                         </div>
                                         <div role="group" class="btn-group">
-                                            <select ng-options="o.title for o in select.optionsData"
-                                                    ng-model="select.selectVal" class="ng-pristine ng-valid ng-touched">
-                                                <option value="" class="">国家</option>
-                                            </select>
+                                            <ui-select ng-model="country.selected" theme="selectize" ng-disabled="disabled" class="fl"
+                                                       style="width:80px;">
+                                                <ui-select-match placeholder="国家">{{$select.selected.name}}</ui-select-match>
+                                                <ui-select-choices repeat="country in countrys">
+                                                    <span ng-bind-html="country.name"></span>
+                                                </ui-select-choices>
+                                            </ui-select>
                                         </div>
-
                                         <div role="group" class="btn-group">
-                                            <select ng-options="o.title for o in select.optionsData"
-                                                    ng-model="select.selectVal" class="ng-pristine ng-valid ng-touched">
-                                                <option value="" class="">城市</option>
-                                            </select>
-
+                                            <ui-select ng-model="city.selected" theme="selectize" class="fl" style="width: 80px;">
+                                                <ui-select-match placeholder="城市">{{$select.selected.name}}</ui-select-match>
+                                                <ui-select-choices repeat="city in citys">
+                                                    <span ng-bind-html="city.name"></span>
+                                                </ui-select-choices>
+                                            </ui-select>
                                         </div>
 
                                     </div>
                                 </li>
                                 <li><a href="#">北京</a></li>
                                 <li><a href="#">上海</a></li>
-                                <li><a href="#">上海</a></li>
+                                <li><a href="#">广州</a></li>
 
                             </ul>
                         </div>
@@ -138,10 +148,12 @@
                         <div class="custom_select">
                             转化目标
                             <div role="group" class="btn-group">
-                                <select ng-options="o.title for o in select.optionsData" ng-model="select.selectVal"
-                                        class="ng-pristine ng-valid ng-touched">
-                                    <option value="" class="">全部页面目标</option>
-                                </select>
+                                <ui-select ng-model="page.selected" theme="selectize" class="fl" style="width: 140px;">
+                                    <ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>
+                                    <ui-select-choices repeat="page in pages">
+                                        <span ng-bind-html="page.name"></span>
+                                    </ui-select-choices>
+                                </ui-select>
                                 <!--         <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
                                              <li><a href="#">全部页面目标</a></li>
                                              <li><a href="#">公告</a></li>

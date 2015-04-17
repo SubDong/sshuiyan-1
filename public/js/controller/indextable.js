@@ -29,8 +29,8 @@ app.controller("TabsCtrl", function ($scope, $http, requestService) {
         {title: 'Dynamic Title 2', content: 'Dynamic content 2', disabled: true}
     ]
     $scope.target = [
-        {consumption_name: "展现量"},
-        {consumption_name: "点击量"},
+        {consumption_name: "展现量",name:"pv"},
+        {consumption_name: "点击量",name:""},
         {consumption_name: "消费"},
         {consumption_name: "点击率"},
         {consumption_name: "平均点击价格"}

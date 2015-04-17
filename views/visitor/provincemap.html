@@ -92,21 +92,12 @@
                                     <div class="custom_select">
                                         转化目标
                                         <div role="group" class="btn-group">
-                                            <button aria-expanded="false" data-toggle="dropdown"
-                                                    class="btn btn-default dropdown-toggle" type="button"
-                                                    id="btnGroupDrop">
-                                                全部页面目标
-                                                <span class="caret"></span>
-                                            </button>
-                                            <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
-                                                <li><a href="#">全部页面目标</a></li>
-                                                <li><a href="#">公告</a></li>
-                                                <li><a href="#">全部事件目标</a></li>
-                                                <li><a href="#">完整下载</a></li>
-                                                <li><a href="#">在线下载</a></li>
-                                                <li><a href="#">时长目标</a></li>
-                                                <li><a href="#">访问页数目标</a></li>
-                                            </ul>
+                                            <ui-select ng-model="extendway.selected" theme="selectize" class="fl" style="width: 120px;">
+                                                <ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>
+                                                <ui-select-choices repeat="extendway in extendways">
+                                                    <span ng-bind-html="extendway.name"></span>
+                                                </ui-select-choices>
+                                            </ui-select>
                                         </div>
                                     </div>
                                     <div class="custom_table">
@@ -121,64 +112,25 @@
                                     <div class="chart_top2">
                                         <ul>
                                             <li><span>来源过滤 :</span></li>
-                                            <li><div role="group" class="btn-group">
-                                                <button aria-expanded="false" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" id="btnGroupDrop4">
-                                                    全部
-                                                    <span class="caret"></span>
-                                                </button>
-                                                <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
-                                                    <li><a href="#">百度</a></li>
-                                                    <li><a href="#">Google</a></li>
-                                                </ul>
-                                            </div></li>
+                                            <li>
+                                                <div role="group" class="btn-group">
+                                                    <ui-select ng-model="souce.selected" theme="selectize" class="fl" style="width: 90px;">
+                                                        <ui-select-match placeholder="全部">{{$select.selected.name}}</ui-select-match>
+                                                        <ui-select-choices repeat="souce in souces">
+                                                            <span ng-bind-html="souce.name"></span>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                            </div>
+                                            </li>
                                             <li><a href="#">百度</a></li>
                                             <li><a href="#">Google</a></li>
                                         </ul>
                                     </div>
                                     <div class="chart_top2">
                                         <ul>
-                                            <li><span>设备过滤:</span></li>
                                             <li><input type="radio" checked="checked" name="radio1"/>
-                                                <label>全部</label></li>
-                                            <li><input type="radio" name="radio1"/> <label>计算机</label></li>
-                                            <li><input type="radio" name="radio1"/> <label>移动设备</label></li>
-                                        </ul>
-                                    </div>
-                                    <div class="chart_top2">
-                                        <ul>
-                                            <li><span>地域过滤:</span></li>
-                                            <li> <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
-                                                <div role="group" class="btn-group">
-                                                    <button aria-expanded="false" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" id="btnGroupDrop5">
-                                                        地域
-                                                        <span class="caret"></span>
-                                                    </button>
-                                                    <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
-                                                        <li><a href="#">四川</a></li>
-                                                        <li><a href="#">云南</a></li>
-                                                    </ul>
-                                                </div>
-
-                                                <div role="group" class="btn-group">
-                                                    <button aria-expanded="false" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" id="btnGroupDrop6">
-                                                        城市
-                                                        <span class="caret"></span>
-                                                    </button>
-                                                    <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
-                                                        <li><a href="#"> 成都</a></li>
-                                                        <li><a href="#">成都 </a></li>
-                                                        <li><a href="#">成都</a></li>
-                                                        <li><a href="#">成都</a></li>
-                                                        <li><a href="#">成都</a></li>
-                                                        <li><a href="#">成都</a></li>
-                                                    </ul>
-                                                </div>
-
-                                            </div></li>
-                                            <li><a href="#">北京</a></li>
-                                            <li><a href="#">上海</a></li>
-                                            <li><a href="#">上海</a></li>
-
+                                                <label>按地级市</label></li>
+                                            <li><input type="radio" name="radio1"/> <label>按网络设备商</label></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -186,21 +138,12 @@
                                     <div class="custom_select">
                                         转化目标
                                         <div role="group" class="btn-group">
-                                            <button aria-expanded="false" data-toggle="dropdown"
-                                                    class="btn btn-default dropdown-toggle" type="button"
-                                                    id="btnGroupDrop2">
-                                                全部页面目标
-                                                <span class="caret"></span>
-                                            </button>
-                                            <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
-                                                <li><a href="#">全部页面目标</a></li>
-                                                <li><a href="#">公告</a></li>
-                                                <li><a href="#">全部事件目标</a></li>
-                                                <li><a href="#">完整下载</a></li>
-                                                <li><a href="#">在线下载</a></li>
-                                                <li><a href="#">时长目标</a></li>
-                                                <li><a href="#">访问页数目标</a></li>
-                                            </ul>
+                                            <ui-select ng-model="extendway.selected" theme="selectize" class="fl" style="width: 120px;">
+                                                <ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>
+                                                <ui-select-choices repeat="extendway in extendways">
+                                                    <span ng-bind-html="extendway.name"></span>
+                                                </ui-select-choices>
+                                            </ui-select>
                                         </div>
                                     </div>
                                     <div class="custom_table">
