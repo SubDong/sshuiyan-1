@@ -918,15 +918,7 @@ nav, .navbar-default {
   }
 
 }
-
-.grid {
-  width: 100%;
-}
-
-.glyphicon {
-  top: 2px;
-}
-
+.glyphicon{top:2px;}
 .date_select {
   .btn-Refresh {
     padding: 3px 10px;
@@ -1032,10 +1024,9 @@ nav, .navbar-default {
 
 .my_concent {
   select {
-    height: 30px;
+    height: 26px;
     margin-right: 10px;
-    font-size: 14px;
-    text-align: center;
+    font-size: 12px;
   }
 }
 
@@ -1152,15 +1143,13 @@ nav, .navbar-default {
   overflow: hidden;
 }
 
-.trendbox {
-  width: 100%;
-  border-top: 1px solid #eeeeee;
-  border-bottom: 1px solid #eeeeee;
-  background: #fdfdfd;
-  overflow: hidden;
-  .trend_top {
-    width: 100%;
-    border-bottom: 1px solid #eeeeee;
+.trendbox{
+  width:100%;
+  background:#fdfdfd;
+  overflow:hidden;
+  .trend_top{
+    width:100%;
+    border-bottom:1px solid #eeeeee;
     overflow: hidden;
   }
   .trend_left {
@@ -1186,8 +1175,7 @@ nav, .navbar-default {
     .fl;
     padding: 18px 0;
     text-align: center;
-    border-right: 1px solid #eeeeee;
-
+    border-left:1px solid #eeeeee;
   }
   .left_top, .left_under {
     overflow: hidden;
@@ -1209,10 +1197,11 @@ nav, .navbar-default {
     padding: 15px;
     border-right: 1px solid #eeeeee;
   }
-  .trendunder {
-    padding: 18px 0;
-    overflow: hidden;
-    b {
+  .trendunder{
+    padding:18px 10px;
+    overflow: hidden;border-left:1px solid #eeeeee;
+    b{
+
       .fl;
     }
     ul {
@@ -1225,11 +1214,6 @@ nav, .navbar-default {
     }
   }
 }
-
-.ui-grid {
-  line-height: 25px;
-}
-
 .ui-grid-cell {
   border: none;
 }
@@ -1250,7 +1234,6 @@ nav, .navbar-default {
 .selectize-dropdown {
   margin: -5px 0 0;
 }
-
 .btn-group {
   .ui-select-container {
     .selectize-input{
@@ -1277,12 +1260,60 @@ nav, .navbar-default {
   }
 
 }
-
+.ui-grid-header-viewport{
+  .ui-grid-header-canvas{
+    line-height: 26px;
+    height: 26px;
+  }
+  .ui-grid-cell-contents{
+    padding:0 10px;
+  }
+}
+.ui-grid-cell-contents{
+  line-height: 26px;
+  height: 26px;
+}
 .ui-grid-pinned-container
 {
-  width: 30px !important;
-  .ui-grid-coluiGrid-003 {  width: 30px !important;  min-width: 30px !important;  max-width: 30px !important; cursor: pointer;
+  .ui-grid-coluiGrid-003 {
+    cursor: pointer;
+    border-right:1px solid #eeeeee;
   }
+}
+.ui-grid-row{
 
-
+.ng-scope{ margin: 0 !important;}
+}
+.ui-grid-column-menu{
+  padding-bottom: 50px;
+}
+.ui-grid-pager-panel{
+  background: #eeeeee;
+  border-top: 1px solid #ffffff;
+  padding: 10px;
+  .ui-grid-pager-control{
+    button{
+      border: none;
+      background: none;
+    }
+    .prev-triangle{
+      margin-left: 7px;
+    }
+    .first-triangle{
+      margin-left: 7px;
+    }
+    input{
+      padding: 5px;
+      border-radius: 3px;
+      border: 1px solid #eeeeee;
+    }
+    select{
+      padding: 5px;
+      border-radius: 3px !important;
+      border: 1px solid #eeeeee;}
+    option{
+      padding: 5px;
+      line-height: 26px;
+    }
+  }
 }
