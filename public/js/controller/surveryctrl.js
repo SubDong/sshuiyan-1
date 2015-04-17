@@ -55,7 +55,7 @@ app.controller('SurveyCtrl', function ($scope, $http, SEM_API_URL, PERFORMANCE_D
     $scope.gridOptions = {
         enableColumnMenus: false,
         enableHorizontalScrollbar: 0,
-        enableSorting: true,
+        enableSorting: false,
         enableScrollbars: false,
         enableVerticalScrollbar: 0,
         columnDefs: [

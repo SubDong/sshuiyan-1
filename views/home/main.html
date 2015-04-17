@@ -22,20 +22,20 @@
                     </div>
                     <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
                         <ui-select ng-model="continent.selected" theme="selectize" ng-disabled="disabled" class="fl"
-                                   style="width: 80px;">
+                                   style="width: 60px;">
                             <ui-select-match placeholder="亚洲">{{$select.selected.name}}</ui-select-match>
                             <ui-select-choices repeat="continent in continents">
                                 <span ng-bind-html="continent.name"></span>
                             </ui-select-choices>
                         </ui-select>
                         <ui-select ng-model="country.selected" theme="selectize" ng-disabled="disabled" class="fl"
-                                   style="width: 80px;">
+                                   style="width: 60px;">
                             <ui-select-match placeholder="中国">{{$select.selected.name}}</ui-select-match>
                             <ui-select-choices repeat="country in countrys">
                                 <span ng-bind-html="country.name"></span>
                             </ui-select-choices>
                         </ui-select>
-                        <ui-select ng-model="maptarget.selected" theme="selectize" class="fl" style="width: 120px;">
+                        <ui-select ng-model="maptarget.selected" theme="selectize" class="fl" style="width: 110px;">
                             <ui-select-match placeholder="浏览量PV">{{$select.selected.name}}</ui-select-match>
                             <ui-select-choices repeat="maptarget in maptargets">
                                 <span ng-bind-html="maptarget.name"></span>
@@ -53,7 +53,7 @@
                     <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
                         <div role="group" class="btn-group">
                             <ui-select ng-model="equipmenttarget.selected" theme="selectize" class="fl"
-                                       style="width: 120px;">
+                                       style="width: 110px;">
                                 <ui-select-match placeholder="浏览量PV">{{$select.selected.name}}</ui-select-match>
                                 <ui-select-choices repeat="equipmenttarget in equipmenttargets">
                                     <span ng-bind-html="equipmenttarget.name"></span>
@@ -72,7 +72,7 @@
                     <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
                         <div role="group" class="btn-group">
                             <ui-select ng-model="searchtarget.selected" theme="selectize" class="fl"
-                                       style="width: 120px;">
+                                       style="width: 110px;">
                                 <ui-select-match placeholder="浏览量PV">{{$select.selected.name}}</ui-select-match>
                                 <ui-select-choices repeat="searchtarget in searchtargets">
                                     <span ng-bind-html="searchtarget.name"></span>
