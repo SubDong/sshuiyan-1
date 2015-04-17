@@ -398,6 +398,16 @@ nav, .navbar-default {
   }
   overflow: hidden;
 }
+@media screen and (max-width: 1380px) {
+  .date_select .btn-group .btn{
+    padding:0 10px;
+  }
+}
+@media screen and (max-width: 1285px) {
+  .date_select .btn-group .btn{
+    padding:0 8px;
+  }
+}
 
 @media screen and (max-width: 1180px) {
   .row-fluid {
@@ -410,8 +420,11 @@ nav, .navbar-default {
     .span3 {
       width: 100%;
     }
-  }
 
+  }
+  .date_select .btn-group .btn{
+    padding:0 5px;
+  }
 }
 
 /*******自定义指标*************/
@@ -1237,10 +1250,10 @@ nav, .navbar-default {
 .btn-group {
   .ui-select-container {
     .selectize-input{
-      padding:5px;
+      padding:3px;
     }
     line-height: inherit;
-    margin-left: 10px;
+    margin-left: 5px;
     .selectize-input {
       line-height: inherit;
       .ui-select-match {
@@ -1316,4 +1329,7 @@ nav, .navbar-default {
       line-height: 26px;
     }
   }
+}
+.selectize-input > input{
+  font-size:12px;
 }
