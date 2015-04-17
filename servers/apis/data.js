@@ -176,6 +176,19 @@ api.get('/survey', function (req, res) {
 // ========================================================================
 
 // ================================= SubDong ================================
+/*********************自定义指标通用*************************/
+api.get('/indextable',function(req,res){
+    var query = url.parse(req.url, true).query;
+    var _indic = query["indic"].split(",");
+    var _lati = query["lati"];
+    var _startTime = Number(query["startTime"]);
+    var _endTime = Number(query["endTime"]);
+    var _type = query["type"];
+    datautils.send(res, JSON.stringify("1"));
+});
+
+
+/**************************************************************/
 //访客地图
 api.get('/visitormap', function (req, res) {
     var query = url.parse(req.url, true).query;

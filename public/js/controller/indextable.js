@@ -1,172 +1,208 @@
 /**
  * Created by john on 2015/3/30.
  */
+app.controller("TabsCtrl", function ($scope, $rootScope, $http, requestService) {
+    $scope.todayClass = true;
+    $scope.dateTimeStart = today_start().valueOf();
+    $scope.dateTimeEnd = today_end().valueOf();
+    $scope.reset = function () {
+        $scope.todayClass = false;
+        $scope.yesterdayClass = false;
+        $scope.sevenDayClass = false;
+        $scope.monthClass = false;
+        $scope.definClass = false;
+    };
+    $scope.today = function () {
+        $scope.reset();
+        $scope.todayClass = true;
+        $scope.dateTimeStart = today_start().valueOf();
+        $scope.dateTimeEnd = today_end().valueOf();
+    };
+    $scope.yesterday = function () {
+        $scope.reset();
+        $scope.yesterdayClass = true;
+        $scope.dateTimeStart = yesterday_start().valueOf();
+        $scope.dateTimeEnd = yesterday_end().valueOf();
+    };
+    $scope.sevenDay = function () {
+        $scope.reset();
+        $scope.sevenDayClass = true;
+        $scope.dateTimeStart = lastWeek_start().valueOf();
+        $scope.dateTimeEnd = lastWeek_end().valueOf();
+    };
+    $scope.month = function () {
+        $scope.reset();
+        $scope.monthClass = true;
+        $scope.dateTimeStart = lastMonth_start().valueOf();
+        $scope.dateTimeEnd = lastMonth_end().valueOf();
+    };
+    $scope.open = function ($event) {
+        $scope.reset();
+        $scope.definClass = true;
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.opened = true;
+    };
+    $scope.checkopen = function ($event) {
+        $scope.reset();
+        $scope.othersdateClass = true;
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.opens = true;
+    };
 
-//app.controller("Indextable", function ($scope, $http, requestService) {
-//    var start = today_start().getTime(), end = today_end().getTime();
-//    $scope.gridOptions = {
-//        enableScrollbars: false,
-//        enableGridMenu: true,
-//        enableHorizontalScrollbar: 0,
-//        enableVerticalScrollbar: 0,
-//        columnDefs: [
-//            {name: 'name', displayName: "关键词"},
-//            {name: 'value', displayName: "浏览量"}
-//        ]
-//    };
-//    //requestService.gridRequest({}, function (data) {
-//    //
-//    //});
-//    //$http.get("/api/grid?start=" + start + "&end=" + end + "&type=pv").success(function (data) {
-//    //    console.log(data);
-//    //    //$scope.gridOptions.data = data.data;
-//    //});
-//
-//});
-app.controller("TabsCtrl", function ($scope, $http, requestService) {
+
     $scope.tabs = [
         {title: 'Dynamic Title 1', content: 'Dynamic content 1'},
         {title: 'Dynamic Title 2', content: 'Dynamic content 2', disabled: true}
     ]
+    //sem
     $scope.target = [
-        {consumption_name: "展现量",name:"pv"},
-        {consumption_name: "点击量",name:""},
-        {consumption_name: "消费"},
-        {consumption_name: "点击率"},
-        {consumption_name: "平均点击价格"}
+        {consumption_name: "展现量", name: "h2"},
+        {consumption_name: "点击量", name: "h1"},
+        {consumption_name: "消费", name: "o9"},
+        {consumption_name: "点击率", name: "o8"},
+        {consumption_name: "平均点击价格", name: "o7"}
     ];
+    //
     $scope.Webbased = [
-        {consumption_name: "浏览量(PV)"},
-        {consumption_name: "访问次数"},
-        {consumption_name: "访客数(UV)"},
-        {consumption_name: "新访客数"},
-        {consumption_name: "新访客比率"},
-        {consumption_name: "页头访问次数"}
+        {consumption_name: "浏览量(PV)", name: "o6"},
+        {consumption_name: "访问次数", name: "o5"},
+        {consumption_name: "访客数(UV)", name: "o4"},
+        {consumption_name: "新访客数", name: "o3"},
+        {consumption_name: "新访客比率", name: "o2"},
+        {consumption_name: "页头访问次数", name: "o1"}
     ];
     $scope.flow = [
-        {consumption_name: "跳出率"},
-        {consumption_name: "平均访问时长"},
-        {consumption_name: "平均访问页数"},
-        {consumption_name: "抵达率"},
+        {consumption_name: "跳出率", name: "jump"},
+        {consumption_name: "平均访问时长", name: "avgTime"},
+        {consumption_name: "平均访问页数", name: "avgPage"},
+        {consumption_name: "抵达率", name: "dida"},
     ];
     $scope.transform = [
-        {consumption_name: "转化次数"},
-        {consumption_name: "转化率"},
-        {consumption_name: "平均转化成本"},
-        {consumption_name: "收益"},
-        {consumption_name: "利润"},
-        {consumption_name: "投资回报率"},
+        {consumption_name: "转化次数", name: "m1"},
+        {consumption_name: "转化率", name: "m2"},
+        {consumption_name: "平均转化成本", name: "m3"},
+        {consumption_name: "收益", name: "m4"},
+        {consumption_name: "利润", name: "m5"},
+        {consumption_name: "投资回报率", name: "m6"},
     ];
     $scope.mobile = [
-        {consumption_name: "搜索页直拨电话展现"},
-        {consumption_name: "搜索页直拨电话点击"},
-        {consumption_name: "搜索页直拨电话消费"},
-        {consumption_name: "搜索页沟通展现"},
-        {consumption_name: "搜索页沟通点击"},
-        {consumption_name: "搜索页沟通消费"},
-        {consumption_name: "搜索页回呼电话展现"},
-        {consumption_name: "搜索页回呼电话点击"},
-        {consumption_name: "搜索页回呼电话消费"},
-        {consumption_name: "搜索页APP下载展现"},
-        {consumption_name: "搜索页APP下载点击"},
-        {consumption_name: "搜索页APP下载消费"},
+        {consumption_name: "搜索页直拨电话展现", name: "v1"},
+        {consumption_name: "搜索页直拨电话点击", name: "v2"},
+        {consumption_name: "搜索页直拨电话消费", name: "v3"},
+        {consumption_name: "搜索页沟通展现", name: "v4"},
+        {consumption_name: "搜索页沟通点击", name: "v5"},
+        {consumption_name: "搜索页沟通消费", name: "v6"},
+        {consumption_name: "搜索页回呼电话展现", name: "v7"},
+        {consumption_name: "搜索页回呼电话点击", name: "v8"},
+        {consumption_name: "搜索页回呼电话消费", name: "v9"},
+        {consumption_name: "搜索页APP下载展现", name: "b1"},
+        {consumption_name: "搜索页APP下载点击", name: "b2"},
+        {consumption_name: "搜索页APP下载消费", name: "b3"},
     ];
     $scope.recall = [
-        {consumption_name: "电话量"},
-        {consumption_name: "已接电话量"},
-        {consumption_name: "平均通话时长"},
-        {consumption_name: "漏接电话量"}
+        {consumption_name: "电话量", name: "z7"},
+        {consumption_name: "已接电话量", name: "z8"},
+        {consumption_name: "平均通话时长", name: "z9"},
+        {consumption_name: "漏接电话量", name: "x1"}
     ];
-    $scope.TodayWeb= [
-        {consumption_name: "浏览量(PV)"},
-        {consumption_name: "访问次数"},
-        {consumption_name: "访客数(UV)"},
-        {consumption_name: "新访客数"},
-        {consumption_name: "新访客比率"},
-        {consumption_name: "IP数"}
+    $scope.TodayWeb = [
+        {consumption_name: "浏览量(PV)", name: "pv"},
+        {consumption_name: "访问次数", name: "fwen"},
+        {consumption_name: "访客数(UV)", name: "UV"},
+        {consumption_name: "新访客数", name: "newF"},
+        {consumption_name: "新访客比率", name: "newB"},
+        {consumption_name: "IP数", name: "ip"}
     ];
     $scope.Todytransform = [
-        {consumption_name: "转化次数"},
-        {consumption_name: "转化率"}
+        {consumption_name: "转化次数", name: "zhuanF"},
+        {consumption_name: "转化率", name: "zhuanN"}
     ];
     $scope.Todayfloweds = [
-        {consumption_name: "跳出率"},
-        {consumption_name: "平均访问时长"},
-        {consumption_name: "平均访问页数"},
+        {consumption_name: "跳出率", name: "q1"},
+        {consumption_name: "平均访问时长", name: "q2"},
+        {consumption_name: "平均访问页数", name: "q3"},
     ];
     $scope.Order = [
-        {consumption_name: "订单数"},
-        {consumption_name: "订单金额"},
-        {consumption_name: "订单转化率"}
+        {consumption_name: "订单数", name: "q4"},
+        {consumption_name: "订单金额", name: "q5"},
+        {consumption_name: "订单转化率", name: "q6"}
     ];
     $scope.Indexform = [
-        {consumption_name: "转化指标"},
-        {consumption_name: "转化率"}
+        {consumption_name: "转化指标", name: "q7"},
+        {consumption_name: "转化率", name: "q8"}
     ];
     $scope.Indexfloweds = [
-        {consumption_name: "贡献浏览量"},
-        {consumption_name: "跳出率"},
-        {consumption_name: "平均访问时长"},
-        {consumption_name: "平均访问页数"},
+        {consumption_name: "贡献浏览量", name: "q9"},
+        {consumption_name: "跳出率", name: "a1"},
+        {consumption_name: "平均访问时长", name: "a2"},
+        {consumption_name: "平均访问页数", name: "a3"},
     ];
     $scope.Mapwebbase = [
-        {consumption_name: "浏览量(PV)"},
-        {consumption_name: "浏览量占比"},
-        {consumption_name: "访问次数"},
-        {consumption_name: "访客数(UV)"},
-        {consumption_name: "新访客数"},
-        {consumption_name: "新访客比率"},
-        {consumption_name: "IP数"}
+        {consumption_name: "浏览量(PV)", name: "a4"},
+        {consumption_name: "浏览量占比", name: "a5"},
+        {consumption_name: "访问次数", name: "a6"},
+        {consumption_name: "访客数(UV)", name: "a7"},
+        {consumption_name: "新访客数", name: "a8"},
+        {consumption_name: "新访客比率", name: "a9"},
+        {consumption_name: "IP数", name: "z1"}
     ];
     $scope.Novisitorbase = [
-        {consumption_name: "浏览量(PV)"},
-        {consumption_name: "浏览量占比"},
-        {consumption_name: "访问次数"},
-        {consumption_name: "访客数(UV)"},
-        {consumption_name: "IP数"}
+        {consumption_name: "浏览量(PV)", name: "z2"},
+        {consumption_name: "浏览量占比", name: "z3"},
+        {consumption_name: "访问次数", name: "z4"},
+        {consumption_name: "访客数(UV)", name: "z5"},
+        {consumption_name: "IP数", name: "z6"}
     ];
-    $scope.selectedWhich = function (row) {
-        $scope.selectedRow = row;
+
+    $rootScope.latitude = "rogin"
+    $scope.checkedArray = new Array();
+    $scope.indicators = function (name, entities, number) {
+        var a = $scope.checkedArray.indexOf(name);
+        if (a != -1) {
+            ;
+            $scope.checkedArray.splice(a, 1);
+        } else {
+            if ($scope.checkedArray.length >= number) {
+                $scope.checkedArray.shift();
+                $scope.checkedArray.push(name);
+            } else {
+                $scope.checkedArray.push(name);
+            }
+        }
+        angular.forEach(entities, function (subscription, index) {
+            $scope.checkedArray;
+            if (subscription.name == name) {
+                $scope.classInfo = 'current';
+            }
+        });
+
     };
-    $scope.selectedWebbased = function (row) {
-        $scope.selectedWeb = row;
-    };
-    $scope.selectflowd = function (row) {
-        $scope.selectedflow = row;
-    };
-    $scope.selectedform = function (row) {
-        $scope.selectedtransform = row;
-    };
-    $scope.selectedmobiles = function (row) {
-        $scope.selectedmobile = row;
-    };
-    $scope.selectedrecalls = function (row) {
-        $scope.selectedrecall = row;
-    };
-    $scope.TodayWebbased = function (row) {
-        $scope.TodayWebbaseds = row;
-    };
-    $scope.todytransform = function (row) {
-        $scope.todytransforms = row;
-    };
-    $scope.todyflowed = function (row) {
-        $scope.todyflowser = row;
+
+    /**
+     *
+     * @param start 开始时间
+     * @param end   结束时间
+     * @param indic   查询指标
+     * @param lati   查询纬度
+     * @param type
+     */
+    $scope.targetSearch = function () {
+        if ($rootScope.latitude == undefined) {
+            console.error("error: latitude is not defined,Please check to see if the assignment.");
+            return;
+        }
+        $http({
+            method: 'GET',
+            url: '/api/indextable/?startTime=' + $scope.dateTimeStart + "&endTime=" + $scope.dateTimeEnd + "&indic=" + $scope.checkedArray + "&lati=" + $rootScope.latitude + "&type=1"
+        }).success(function (data, status) {
+            alert(data);
+
+        }).error(function (error) {
+            console.log(error);
+        });
     }
-    $scope.Orderform = function (row) {
-        $scope.Orderforms = row;
-    };
-    $scope.Indexformed = function (row) {
-        $scope.Indexforms = row;
-    };
-    $scope.Indexflowed = function (row) {
-        $scope.Indexflowes = row;
-    };
-    $scope.Mapwebbased = function (row) {
-        $scope.Mapwebbaseds = row;
-    };
-    $scope.Novisitorbased = function (row) {
-        $scope.Novisitorbases = row;
-    };
 
     var select = $scope.select = {};
 

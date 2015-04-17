@@ -1,162 +1,168 @@
-        <div class="middle_containers" ng-controller="Vistiorctr">
-                <div class="date_select">
-                    <div aria-label="First group" role="group" class="btn-group fl">
-                        <button class="btn btn-default" type="button" ng-click="setArea('country')">按国家 </button>
-                        <button class="btn btn-default current" type="button"ng-click="setArea('province')">按省</button>
-                    </div>
-                    <calendar></calendar>
-                    <datecontrast></datecontrast>
-                    <div aria-label="First group" role="group" class="btn-group fl">
-                        <button class="btn btn-default" type="button">按时</button>
-                        <button class="btn btn-default current" type="button">按日</button>
-                        <button class="btn btn-default" type="button">按周</button>
-                        <button class="btn btn-default" type="button">按月</button>
-                    </div>
-                    <div class="fr">
-                        <button class="btn btn-default" type="button"><span aria-hidden="true"
-                                                                            class="glyphicon glyphicon-refresh"></span>
-                        </button>
-                        <div role="group" class="btn-group">
-                            <button aria-expanded="false" data-toggle="dropdown" class="btn btn-default dropdown-toggle"
-                                    type="button" id="btnGroupDrop3">
-                                导出
-                                <span class="caret"></span>
-                            </button>
-                            <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
-                                <li><a href="#">保存</a></li>
-                                <li><a href="#">导出</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="my_concent">
-                    <div class="date_show dateshow2">
+<div class="middle_containers" ng-controller="Vistiorctr">
+    <div class="date_select">
+        <div aria-label="First group" role="group" class="btn-group fl">
+            <button class="btn btn-default" type="button" ng-click="setArea('country')">按国家</button>
+            <button class="btn btn-default current" type="button" ng-click="setArea('province')">按省</button>
+        </div>
+        <calendar></calendar>
+        <datecontrast></datecontrast>
+        <div aria-label="First group" role="group" class="btn-group fl">
+            <button class="btn btn-default" type="button">按时</button>
+            <button class="btn btn-default current" type="button">按日</button>
+            <button class="btn btn-default" type="button">按周</button>
+            <button class="btn btn-default" type="button">按月</button>
+        </div>
+        <div class="fr">
+            <button class="btn btn-default" type="button"><span aria-hidden="true"
+                                                                class="glyphicon glyphicon-refresh"></span>
+            </button>
+            <div role="group" class="btn-group">
+                <button aria-expanded="false" data-toggle="dropdown" class="btn btn-default dropdown-toggle"
+                        type="button" id="btnGroupDrop3">
+                    导出
+                    <span class="caret"></span>
+                </button>
+                <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
+                    <li><a href="#">保存</a></li>
+                    <li><a href="#">导出</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="my_concent">
+        <div class="date_show dateshow2">
+            <ul>
+                <li class="date_first"><h4>浏览量(PV)</h4><span ng-bind="pv"></span></li>
+                <li class="date_secend"><h4>访客数(UV)</h4><span ng-bind="uv">100%</span></li>
+                <li class="date_four"><h4>IP数</h4><span ng-bind="ip">2,574</span></li>
+                <li class="date_four"><h4>跳出率</h4><span ng-bind="jump">88.24%</span></li>
+                <li class="date_four"><h4>平均访问时长</h4><span ng-bind="avgTime">90</span></li>
+            </ul>
+        </div>
+        <div class="index_chart">
+            <div class="chart_top">
+                <ul>
+                    <li><label>指标：</label></li>
+                    <!--<li ng-repeat="item in mapselect" ng-class='{current:$index==map}'
+                        ng-click='mapset($index)'>{{item.consumption_name}}
+                    </li>-->
+                    <li><input type="checkbox" checked="checked" ng-click="setProperty('loc',$index, entities)"/>
+                        <label>浏览量(PV)</label></li>
+                    <li><input type="checkbox" ng-click="setProperty('tt')"/> <label>访问次数</label></li>
+                    <li><input type="checkbox" ng-click="setProperty('_ucv')"/> <label>访客数(UV)</label></li>
+                    <li><input type="checkbox" ng-click="setProperty('ct')"/> <label>新访客数</label></li>
+                    <li><input type="checkbox" ng-click="setProperty('remote')"/> <label>IP数</label></li>
+                    <li><input type="checkbox"/> <label>转化次数</label></li>
+                    <li class="disabled">* 最多只能勾选1项</li>
+                </ul>
+            </div>
+            <div id="VistorMap_charts" style="width:80%;height:400px;"></div>
+        </div>
+        <div class="table_content" ng-controller="TabsCtrl">
+            <tabset justified="true">
+                <div class="custom_title">
+                    <div class="chart_top">
+                        <span>网站基础指标 :</span>
                         <ul>
-                            <li class="date_first"><h4>浏览量(PV)</h4><span ng-bind="pv"></span></li>
-                            <li class="date_secend"><h4>访客数(UV)</h4><span ng-bind="uv">100%</span></li>
-                            <li class="date_four"><h4>IP数</h4><span ng-bind="ip">2,574</span></li>
-                            <li class="date_four"><h4>跳出率</h4><span ng-bind="jump">88.24%</span></li>
-                            <li class="date_four"><h4>平均访问时长</h4><span ng-bind="avgTime">90</span></li>
+                            <li ng-repeat="item in TodayWeb"
+                                class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                ng-click='indicators(item.name,TodayWeb,6)'>{{item.consumption_name}}
+                            </li>
                         </ul>
                     </div>
-                    <div class="index_chart">
-                        <div class="chart_top">
-                            <ul>
-                                <li><label>指标：</label></li>
-                                <!--<li ng-repeat="item in mapselect" ng-class='{current:$index==map}'
-                                    ng-click='mapset($index)'>{{item.consumption_name}}
-                                </li>-->
-                                <li><input type="checkbox" checked="checked" ng-click="setProperty('loc',$index, entities)"/> <label>浏览量(PV)</label></li>
-                                <li><input type="checkbox" ng-click="setProperty('tt')"/> <label>访问次数</label></li>
-                                <li><input type="checkbox" ng-click="setProperty('_ucv')"/> <label>访客数(UV)</label></li>
-                                <li><input type="checkbox" ng-click="setProperty('ct')"/> <label>新访客数</label></li>
-                                <li><input type="checkbox" ng-click="setProperty('remote')"/> <label>IP数</label></li>
-                                <li><input type="checkbox"/> <label>转化次数</label></li>
-                                <li class="disabled">* 最多只能勾选1项</li>
-                            </ul>
-                        </div>
-                        <div id="VistorMap_charts" style="width:80%;height:400px;"></div>
+                    <div class="chart_top">
+                        <span>流量质量指标:</span>
+                        <ul>
+                            <li ng-repeat="item in flow"
+                                class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                ng-click='indicators(item.name,flow,6)'>{{item.consumption_name}}
+                            </li>
+                        </ul>
                     </div>
-                    <div class="table_content" ng-controller="TabsCtrl">
-                        <tabset justified="true">
-                            <tab heading="自定义指标">
-                                <div class="custom_title">
-                                    <div class="chart_top">
-                                        <span>网站基础指标 :</span>
-                                        <ul>
-                                            <li ng-repeat="item in TodayWeb" ng-class='{current:$index==TodayWebbaseds}'
-                                                ng-click='TodayWebbased($index)'>{{item.consumption_name}}
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="chart_top">
-                                        <span>流量质量指标:</span>
-                                        <ul>
-                                            <li ng-repeat="item in flow" ng-class='{current:$index==selectedflow}'
-                                                ng-click='selectflowd($index)'>{{item.consumption_name}}
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="chart_top">
-                                        <span>转化指标:</span>
-                                        <ul>
-                                            <li ng-repeat="item in Todytransform" ng-class='{current:$index==todytransforms}'
-                                                ng-click='todytransform($index)'>{{item.consumption_name}}
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="chart_top chart_noborder">
-                                        <button class="btn btn-primary" type="button">确定</button>
-                                        * 最多只能勾选两项
-                                    </div>
+                    <div class="chart_top">
+                        <span>转化指标:</span>
+                        <ul>
+                            <li ng-repeat="item in Todytransform"
+                                class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                ng-click='indicators(item.name,Todytransform,6)'>{{item.consumption_name}}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="chart_top chart_noborder">
+                        <button class="btn btn-primary" type="button" ng-click="targetSearch()">确定</button>
+                        * 最多只能勾选两项
+                    </div>
 
-                                </div>
-                                <div class="custom_secendtitle">
-                                    <div class="custom_select">
-                                        转化目标
-                                        <div role="group" class="btn-group">
-                                            <ui-select ng-model="extendway.selected" theme="selectize" class="fl" style="width: 120px;">
-                                                <ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>
-                                                <ui-select-choices repeat="extendway in extendways">
-                                                    <span ng-bind-html="extendway.name"></span>
-                                                </ui-select-choices>
-                                            </ui-select>
-                                        </div>
-                                    </div>
-                                    <div class="custom_table">
-                                        <table id="mytable"  class="table table-hover" >
-                                        </table>
-                                        <div id="pager"></div>
-                                    </div>
-                                </div>
-                            </tab>
-                            <tab heading="高级筛选">
-                                <div class="custom_title">
-                                    <div class="chart_top2">
-                                        <ul>
-                                            <li><span>来源过滤 :</span></li>
-                                            <li>
-                                                <div role="group" class="btn-group">
-                                                    <ui-select ng-model="souce.selected" theme="selectize" class="fl" style="width: 90px;">
-                                                        <ui-select-match placeholder="全部">{{$select.selected.name}}</ui-select-match>
-                                                        <ui-select-choices repeat="souce in souces">
-                                                            <span ng-bind-html="souce.name"></span>
-                                                        </ui-select-choices>
-                                                    </ui-select>
-                                            </div>
-                                            </li>
-                                            <li><a href="#">百度</a></li>
-                                            <li><a href="#">Google</a></li>
-                                        </ul>
-                                    </div>
-                                    <div class="chart_top2">
-                                        <ul>
-                                            <li><input type="radio" checked="checked" name="radio1"/>
-                                                <label>按地级市</label></li>
-                                            <li><input type="radio" name="radio1"/> <label>按网络设备商</label></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="custom_secendtitle">
-                                    <div class="custom_select">
-                                        转化目标
-                                        <div role="group" class="btn-group">
-                                            <ui-select ng-model="extendway.selected" theme="selectize" class="fl" style="width: 120px;">
-                                                <ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>
-                                                <ui-select-choices repeat="extendway in extendways">
-                                                    <span ng-bind-html="extendway.name"></span>
-                                                </ui-select-choices>
-                                            </ui-select>
-                                        </div>
-                                    </div>
-                                    <div class="custom_table">
-                                        <table id="Screening_table"  class="table table-hover" >
-                                        </table>
-                                        <div id="pager2"></div>
-                                    </div>
-                                </div>
-                            </tab>
-                        </tabset>
+                </div>
+                <div class="custom_secendtitle">
+                    <div class="custom_select">
+                        转化目标
+                        <div role="group" class="btn-group">
+                            <ui-select ng-model="extendway.selected" theme="selectize" class="fl" style="width: 120px;">
+                                <ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="extendway in extendways">
+                                    <span ng-bind-html="extendway.name"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="custom_table">
+                        <table id="mytable" class="table table-hover">
+                        </table>
+                        <div id="pager"></div>
                     </div>
                 </div>
-            </div>
+                </tab>
+                <tab heading="高级筛选">
+                    <div class="custom_title">
+                        <div class="chart_top2">
+                            <ul>
+                                <li><span>来源过滤 :</span></li>
+                                <li>
+                                    <div role="group" class="btn-group">
+                                        <ui-select ng-model="souce.selected" theme="selectize" class="fl"
+                                                   style="width: 90px;">
+                                            <ui-select-match placeholder="全部">{{$select.selected.name}}
+                                            </ui-select-match>
+                                            <ui-select-choices repeat="souce in souces">
+                                                <span ng-bind-html="souce.name"></span>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                </li>
+                                <li><a href="#">百度</a></li>
+                                <li><a href="#">Google</a></li>
+                            </ul>
+                        </div>
+                        <div class="chart_top2">
+                            <ul>
+                                <li><input type="radio" checked="checked" name="radio1"/>
+                                    <label>按地级市</label></li>
+                                <li><input type="radio" name="radio1"/> <label>按网络设备商</label></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="custom_secendtitle">
+                        <div class="custom_select">
+                            转化目标
+                            <div role="group" class="btn-group">
+                                <ui-select ng-model="extendway.selected" theme="selectize" class="fl"
+                                           style="width: 120px;">
+                                    <ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>
+                                    <ui-select-choices repeat="extendway in extendways">
+                                        <span ng-bind-html="extendway.name"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                        <div class="custom_table">
+                            <table id="Screening_table" class="table table-hover">
+                            </table>
+                            <div id="pager2"></div>
+                        </div>
+                    </div>s
+                </tab>
+            </tabset>
+        </div>
+    </div>
+</div>

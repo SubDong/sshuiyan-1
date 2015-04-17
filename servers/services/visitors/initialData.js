@@ -2,7 +2,7 @@
  * Created by SubDong on 2015/4/9.
  * 访客基础数据
  */
-var Map = require("../../utils/Map");
+var Map = require("../../utils/map");
 var initial = {
     /** 
      *  基础数据
@@ -71,7 +71,7 @@ var initial = {
                 else
                     jump = (parseFloat(response.aggregations.jump.doc_count) / parseFloat(response.hits.total) * 100).toFixed(2)  + "%";
 
-                result["avgTime"] = new Date(calAvgTime).Format("hh:mm:sss");
+                result["avgTime"] = new Date(calAvgTime);
                 result["jump"] = jump;
                 result["pv"] = response.aggregations.pv.value;
                 result["uv"] = response.aggregations.uv.value;
@@ -169,6 +169,7 @@ var initial = {
                 var areas = response.aggregations.areas.buckets;
                 for(var i = 0 ; i < 10; i++){
                     if(areas[i] != undefined){
+                        if(areas[i].key == "国外")continue;
                         var chart_data = {};
                         data_name.push(areas[i].key.replace("市","").replace("省",""));
                         chart_data["name"] = areas[i].key.replace("市","").replace("省","");

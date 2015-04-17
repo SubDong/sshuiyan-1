@@ -60,7 +60,8 @@ app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
         .state('visitormap', {
             url: "/visitor/visitormap",
             templateUrl: "../visitor/visitormap.html"
-        }) .state('provincemap', {
+        })
+        .state('provincemap', {
             url: "/visitor/provincemap",
             templateUrl: "../visitor/provincemap.html"
         })
@@ -76,10 +77,6 @@ app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
         .state('visitorfeature', {
             url: "/visitor/visitorfeature",
             templateUrl: "../visitor/visitorfeature.html"
-        })
-        .state('provincemap', {
-            url: "/visitor/provincemap",
-            templateUrl: "../visitor/provincemap.html"
         })
 
         .state('survey', {

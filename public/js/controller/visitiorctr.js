@@ -183,7 +183,6 @@ app.controller("Vistiorctr", function ($scope, $http, requestService) {
                     break;
             }
             data["title_name"] = title_name;
-            console.log(data);
             mixingMap.mapOrPie(data, chart);
 
         }).error(function (error) {
@@ -197,7 +196,7 @@ app.controller("Vistiorctr", function ($scope, $http, requestService) {
     $scope.doSearch(today_start().valueOf(), today_end().valueOf(), "1");
     $scope.doSearchAreas(today_start().valueOf(), today_end().valueOf(), "1", $scope.mapOrPieConfig);
     $scope.mapselect= [
-        {consumption_name: "浏览量(PV)",template:"<input type='checkbox'/>"},
+        {consumption_name: "浏览量(PV)"},
         {consumption_name: "访问次数"},
         {consumption_name: "访客数(UV)"},
         {consumption_name: "新访客数"},
@@ -205,7 +204,10 @@ app.controller("Vistiorctr", function ($scope, $http, requestService) {
         {consumption_name: "IP数"}
     ];
     $scope.mapset = function (row) {
-        $scope.map= row;
+        console.log(row);
+        alert(row)
+
+
     };
 
 
