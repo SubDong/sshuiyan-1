@@ -92,5 +92,25 @@ app.controller("sourcectr", function ($scope, $http, requestService) {
         //    console.log(result);
         //});
     }
-    $scope.today();
+    $scope.disabled = undefined;
+    $scope.enable = function() {
+        $scope.disabled = false;
+    };
+    $scope.disable = function() {
+        $scope.disabled = true;
+    };
+    $scope.today();   $scope.clear = function() {
+        $scope.extendway.selected = undefined;
+    };
+    $scope.extendway = {};
+    $scope.extendways = [
+        { name: '全部页面目标'},
+        { name: '公告'},
+        { name: '全部事件目标'},
+        { name: '完整下载'},
+        { name: '在线下载'},
+        { name: '时长目标'},
+        { name: '访问页数目标'},
+    ];
+
 });

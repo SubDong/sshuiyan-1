@@ -14,7 +14,6 @@
         </div>
     </div>
     <div class="my_concent" >
-        <div class="date_show">
             <div class="date_show">
                 <ul>
                     <li class="date_first"><h4>点击量</h4><span>34</span></li>
@@ -25,8 +24,6 @@
                     <li class="date_first"><h4>转化次数</h4><span>00:02:34</span></li>
                 </ul>
             </div>
-            </select>
-        </div>
         <div class="plancheck">
             <div class="plancheck_top">
              <select ng-options="o.title for o in select.optionsData" ng-model="select.selectVal" class="ng-pristine ng-valid ng-touched fr ng-untouched"><option value="" class="">浏览量(PV)、转化次数</option></select>
@@ -66,16 +63,6 @@
                     <li><input type="checkbox" name="radio1"> <label>投资回报率</label></li>
                 </ul>
                 <ul>
-                    <li><input type="checkbox" checked="checked" name="radio1"> <label>搜索页直拨电话展现</label></li>
-                    <li><input type="checkbox" checked="checked" name="radio1"> <label>搜索页直拨电话点击</label></li>
-                    <li><input type="checkbox" name="radio1"> <label>搜索页直拨电话消费</label></li>
-                    <li><input type="checkbox" name="radio1"> <label>搜索页回呼电话点击</label></li>
-                    <li><input type="checkbox" name="radio1"> <label>搜索页回呼电话消费</label></li>
-                    <li><input type="checkbox" name="radio1"> <label>搜索页APP下载展现</label></li>
-                    <li><input type="checkbox" name="radio1"> <label>搜索页APP下载点击</label></li>
-                </ul>
-                <ul>
-                    <li><input type="checkbox" checked="checked" name="radio1"> <label>搜索页APP下载消费</label> </li>
                     <li><span>* 最多只能勾选两项</span></li>
                 </ul>
             </div>
@@ -153,10 +140,12 @@
                         <div class="custom_select">
                             转化目标
                             <div role="group" class="btn-group">
-                                <select ng-options="o.title for o in select.optionsData" ng-model="select.selectVal"
-                                        class="ng-pristine ng-valid ng-touched">
-                                    <option value="" class="">全部页面目标</option>
-                                </select>
+                                <ui-select ng-model="page.selected" theme="selectize" class="fl" style="min-width: 120px;">
+                                    <ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>
+                                    <ui-select-choices repeat="page in pages">
+                                        <span ng-bind-html="page.name"></span>
+                                    </ui-select-choices>
+                                </ui-select>
                             </div>
                         </div>
                         <div class="custom_table">
@@ -168,40 +157,43 @@
                 </tab>
                 <tab heading="高级筛选">
                     <div class="custom_title">
-
                         <div class="chart_top2">
                             <ul>
                                 <li><span>地域过滤:</span></li>
                                 <li>
                                     <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
                                         <div role="group" class="btn-group">
-                                            <select ng-options="o.title for o in select.optionsData"
-                                                    ng-model="select.selectVal" class="ng-pristine ng-valid ng-touched">
-                                                <option value="" class="">大洲</option>
-                                            </select>
-
+                                            <ui-select ng-model="continent.selected" theme="selectize" ng-disabled="disabled" class="fl"
+                                                       style="width: 100px;">
+                                                <ui-select-match placeholder="大洲">{{$select.selected.name}}</ui-select-match>
+                                                <ui-select-choices repeat="continent in continents">
+                                                    <span ng-bind-html="continent.name"></span>
+                                                </ui-select-choices>
+                                            </ui-select>
                                         </div>
                                         <div role="group" class="btn-group">
-                                            <select ng-options="o.title for o in select.optionsData"
-                                                    ng-model="select.selectVal" class="ng-pristine ng-valid ng-touched">
-                                                <option value="" class="">国家</option>
-                                            </select>
+                                            <ui-select ng-model="country.selected" theme="selectize" ng-disabled="disabled" class="fl"
+                                                       style="width: 100px;">
+                                                <ui-select-match placeholder="国家">{{$select.selected.name}}</ui-select-match>
+                                                <ui-select-choices repeat="country in countrys">
+                                                    <span ng-bind-html="country.name"></span>
+                                                </ui-select-choices>
+                                            </ui-select>
                                         </div>
-
                                         <div role="group" class="btn-group">
-                                            <select ng-options="o.title for o in select.optionsData"
-                                                    ng-model="select.selectVal" class="ng-pristine ng-valid ng-touched">
-                                                <option value="" class="">城市</option>
-                                            </select>
-
+                                            <ui-select ng-model="city.selected" theme="selectize" class="fl" style="width: 120px;">
+                                                <ui-select-match placeholder="城市">{{$select.selected.name}}</ui-select-match>
+                                                <ui-select-choices repeat="city in citys">
+                                                    <span ng-bind-html="city.name"></span>
+                                                </ui-select-choices>
+                                            </ui-select>
                                         </div>
 
                                     </div>
                                 </li>
                                 <li><a href="#">北京</a></li>
                                 <li><a href="#">上海</a></li>
-                                <li><a href="#">上海</a></li>
-
+                                <li><a href="#">广州</a></li>
                             </ul>
                         </div>
                     </div>
@@ -209,10 +201,12 @@
                         <div class="custom_select">
                             转化目标
                             <div role="group" class="btn-group">
-                                <select ng-options="o.title for o in select.optionsData" ng-model="select.selectVal"
-                                        class="ng-pristine ng-valid ng-touched">
-                                    <option value="" class="">全部页面目标</option>
-                                </select>
+                                <ui-select ng-model="page.selected" theme="selectize" class="fl" style="min-width: 120px;">
+                                    <ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>
+                                    <ui-select-choices repeat="page in pages">
+                                        <span ng-bind-html="page.name"></span>
+                                    </ui-select-choices>
+                                </ui-select>
                             </div>
                         </div>
                         <div class="custom_table">

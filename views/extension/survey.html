@@ -5,7 +5,7 @@
     <div class="my_concent">
         <div>
             <div class="select_top">
-                <ui-select ng-model="survey.selected" theme="selectize" class="fl" style="width: 110px;">
+                <ui-select ng-model="survey.selected" theme="selectize" class="fl" style="width: 120px;">
                     <ui-select-match placeholder="全部推广方式">{{$select.selected.name}}</ui-select-match>
                     <ui-select-choices repeat="survey in surveys">
                         <span ng-bind-html="survey.name"></span>
@@ -13,17 +13,15 @@
                 </ui-select>
             </div>
         </div>
-
             <div ui-grid="gridOptions" class="grid" ui-grid-pinning></div>
-
         <div class="survey_chart">
             <div class="select_top">
-                <b>投放指标：</b>
+                <b class="fl">投放指标：</b>
                 <select ng-init="outQuota = select.outQuota[0]" ng-model="outQuota" ng-change="setOutQuota(outQuota)"
                         ng-options="o.title for o in select.outQuota">
                 </select>
                 <b>效果指标:</b>
-                <select ng-init="effectQuota = select.effectQuota[0]" ng-model="effectQuota"
+                <select ng-init="effectQuota = select.effectQuota[1]" ng-model="effectQuota"
                         ng-change="setEffectQuota(effectQuota)"
                         ng-options="o.title for o in select.effectQuota">
                 </select>

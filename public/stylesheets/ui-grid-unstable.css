@@ -3,7 +3,7 @@
  * Copyright (c) 2015 ; License: MIT 
  */
 .ui-grid {
-    border: 1px solid #d4d4d4;
+    border: 1px solid #e6e5e5;
     box-sizing: content-box;
     -webkit-border-radius: 0px;
     -moz-border-radius: 0px;
@@ -27,17 +27,17 @@
 }
 
 .ui-grid-header-cell:not(:last-child) .ui-grid-vertical-bar {
-    background-color: #d4d4d4;
+    background-color: #e6e5e5;
 }
 
 .ui-grid-cell:not(:last-child) .ui-grid-vertical-bar {
-    background-color: #d4d4d4;
+    background-color: #e6e5e5;
 }
 
 .ui-grid-header-cell:last-child .ui-grid-vertical-bar {
     right: -1px;
     width: 1px;
-    background-color: #d4d4d4;
+    background-color: #e6e5e5;
 }
 
 .ui-grid-clearfix:before,
@@ -64,7 +64,7 @@
 }
 
 .ui-grid-header {
-    border-bottom: 1px solid #d4d4d4;
+    border-bottom: 1px solid #e6e5e5;
     box-sizing: content-box;
 }
 
@@ -122,7 +122,7 @@
     bottom: 0;
     background-color: inherit;
     border-right: 1px solid;
-    border-color: #d4d4d4;
+    border-color: #e6e5e5;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -243,7 +243,7 @@ input[type="text"].ui-grid-filter-input {
     margin: 0;
     border: 0;
     width: 100%;
-    border: 1px solid #d4d4d4;
+    border: 1px solid #e6e5e5;
     -webkit-border-top-right-radius: 0px;
     -webkit-border-bottom-right-radius: 0;
     -webkit-border-bottom-left-radius: 0;
@@ -262,7 +262,7 @@ input[type="text"].ui-grid-filter-input {
 }
 
 input[type="text"].ui-grid-filter-input:hover {
-    border: 1px solid #d4d4d4;
+    border: 1px solid #e6e5e5;
 }
 
 .ui-grid-render-container {
@@ -303,7 +303,7 @@ input[type="text"].ui-grid-filter-input:hover {
 }
 
 .ui-grid-row:nth-child(odd) .ui-grid-cell {
-    background-color: #fdfdfd;
+    background-color: #fdfdfd; border-top : 1px solid #f3f3f3;border-bottom : 1px solid #f3f3f3;
 }
 
 .ui-grid-row:nth-child(even) .ui-grid-cell {
@@ -311,7 +311,7 @@ input[type="text"].ui-grid-filter-input:hover {
 }
 
 .ui-grid-row:last-child .ui-grid-cell {
-    border-bottom-color: #d4d4d4;
+    border-bottom-color: #e6e5e5;
     border-bottom-style: solid;
 }
 
@@ -343,7 +343,7 @@ input[type="text"].ui-grid-filter-input:hover {
     -moz-background-clip: padding-box;
     -webkit-background-clip: padding-box;
     background-clip: padding-box;
-    border: 1px solid #d4d4d4;
+    border: 1px solid #e6e5e5;
     font-size: 2em;
     text-align: center;
 }
@@ -365,12 +365,12 @@ input[type="text"].ui-grid-filter-input:hover {
     float: left;
     background-color: inherit;
     border-right: 1px solid;
-    border-color: #d4d4d4;
+    border-color: #e6e5e5;
     box-sizing: border-box;
 }
 
 .ui-grid-cell-contents {
-    padding: 5px;
+    padding: 3px 10px;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
@@ -390,8 +390,8 @@ input[type="text"].ui-grid-filter-input:hover {
 }
 
 .ui-grid-row-header-cell {
-    background-color: #F0F0EE !important;
-    border-bottom: solid 1px #d4d4d4;
+
+    border-bottom: none;
 }
 
 .ui-grid-native-scrollbar {
@@ -426,8 +426,8 @@ input[type="text"].ui-grid-filter-input:hover {
 
 .ui-grid-footer-panel {
     position: relative;
-    border-bottom: 1px solid #d4d4d4;
-    border-top: 1px solid #d4d4d4;
+    border-bottom: 1px solid #e6e5e5;
+    border-top: 1px solid #e6e5e5;
     overflow: hidden;
     font-weight: bold;
     background: #f3f3f3;
@@ -482,7 +482,7 @@ input[type="text"].ui-grid-filter-input:hover {
     float: left;
     background-color: inherit;
     border-right: 1px solid;
-    border-color: #d4d4d4;
+    border-color: #e6e5e5;
     box-sizing: border-box;
 }
 
@@ -495,7 +495,7 @@ input[type="text"].ui-grid-filter-input {
     margin: 0;
     border: 0;
     width: 100%;
-    border: 1px solid #d4d4d4;
+    border: 1px solid #e6e5e5;
     -webkit-border-top-right-radius: 0px;
     -webkit-border-bottom-right-radius: 0;
     -webkit-border-bottom-left-radius: 0;
@@ -514,7 +514,7 @@ input[type="text"].ui-grid-filter-input {
 }
 
 input[type="text"].ui-grid-filter-input:hover {
-    border: 1px solid #d4d4d4;
+    border: 1px solid #e6e5e5;
 }
 
 .ui-grid-menu-button {
@@ -522,14 +522,14 @@ input[type="text"].ui-grid-filter-input:hover {
     position: absolute;
     right: 0;
     background: #f3f3f3;
-    border: 1px solid #d4d4d4;
+    border-left: 1px solid #e6e5e5;
     cursor: pointer;
-    min-height: 27px;
+    min-height: 26px;
     font-weight: normal;
 }
 
 .ui-grid-menu-button .ui-grid-icon-container {
-    margin-top: 3px;
+    margin-top: 5px;
 }
 
 .ui-grid-menu-button .ui-grid-menu {
@@ -539,7 +539,7 @@ input[type="text"].ui-grid-filter-input:hover {
 .ui-grid-menu-button .ui-grid-menu .ui-grid-menu-mid {
     overflow-y: scroll;
     max-height: 300px;
-    border: 1px solid #d4d4d4;
+    border: 1px solid #e6e5e5;
 }
 
 .ui-grid-menu {
@@ -553,7 +553,7 @@ input[type="text"].ui-grid-filter-input:hover {
 
 .ui-grid-menu .ui-grid-menu-inner {
     background: #f3f3f3;
-    border: 1px solid #d4d4d4;
+    border: 1px solid #e6e5e5;
     position: relative;
     white-space: nowrap;
     -webkit-border-radius: 0px;
@@ -589,7 +589,7 @@ input[type="text"].ui-grid-filter-input:hover {
 }
 
 .ui-grid-menu .ui-grid-menu-inner ul li:not(:last-child) {
-    border-bottom: 1px solid #d4d4d4;
+    border-bottom: 1px solid #e6e5e5;
 }
 
 .ui-grid-sortarrow {
@@ -693,7 +693,7 @@ input[type="text"].ui-grid-filter-input:hover {
 .ui-grid[dir=rtl] .ui-grid-cell:last-child,
 .ui-grid[dir=rtl] .ui-grid-header-cell:last-child {
     border-left: 1px solid;
-    border-color: #d4d4d4;
+    border-color: #e6e5e5;
 }
 
 .ui-grid[dir=rtl] .ui-grid-header-cell:first-child .ui-grid-vertical-bar,
@@ -708,7 +708,7 @@ input[type="text"].ui-grid-filter-input:hover {
     left: 0;
     right: auto;
     background: #f3f3f3;
-    border: 1px solid #d4d4d4;
+    border: 1px solid #e6e5e5;
     cursor: pointer;
     min-height: 27px;
     font-weight: normal;
@@ -921,7 +921,7 @@ div.ui-grid-cell input.ng-invalid {
 }
 
 div.ui-grid-cell input.ng-valid {
-    border: 1px solid #d4d4d4;
+    border: 1px solid #e6e5e5;
 }
 
 /* This file contains variable declarations (do not remove this line) */
@@ -1028,7 +1028,7 @@ div.ui-grid-cell input.ng-valid {
 /*-- END VARIABLES (DO NOT REMOVE THESE COMMENTS) --*/
 .movingColumn {
     position: fixed;
-    border: 1px solid #d4d4d4;
+    border: 1px solid #e6e5e5;
     box-shadow: inset 0 0 14px rgba(0, 0, 0, 0.2);
 }
 
@@ -1165,14 +1165,11 @@ div.ui-grid-cell input.ng-valid {
     box-sizing: border-box;
     border-right: 1px solid;
     border-width: 1px;
-    border-color: #aeaeae;
+    border-color: #e6e5e5;
 }
 
 .ui-grid-pinned-container.ui-grid-pinned-container-left .ui-grid-cell:last-child {
     box-sizing: border-box;
-    border-right: 1px solid;
-    border-width: 1px;
-    border-color: #aeaeae;
 }
 
 .ui-grid-pinned-container.ui-grid-pinned-container-left .ui-grid-header-cell:not(:last-child) .ui-grid-vertical-bar,
@@ -1181,31 +1178,31 @@ div.ui-grid-cell input.ng-valid {
 }
 
 .ui-grid-pinned-container.ui-grid-pinned-container-left .ui-grid-header-cell:not(:last-child) .ui-grid-vertical-bar {
-    background-color: #d4d4d4;
+    background-color: #e6e5e5;
 }
 
 .ui-grid-pinned-container.ui-grid-pinned-container-left .ui-grid-cell:not(:last-child) .ui-grid-vertical-bar {
-    background-color: #aeaeae;
+    background-color: #e6e5e5;
 }
 
 .ui-grid-pinned-container.ui-grid-pinned-container-left .ui-grid-header-cell:last-child .ui-grid-vertical-bar {
     right: -1px;
     width: 1px;
-    background-color: #aeaeae;
+    background-color: #e6e5e5;
 }
 
 .ui-grid-pinned-container.ui-grid-pinned-container-right .ui-grid-header-cell:first-child {
     box-sizing: border-box;
     border-left: 1px solid;
     border-width: 1px;
-    border-color: #aeaeae;
+    border-color: #e6e5e5;
 }
 
 .ui-grid-pinned-container.ui-grid-pinned-container-right .ui-grid-cell:first-child {
     box-sizing: border-box;
     border-left: 1px solid;
     border-width: 1px;
-    border-color: #aeaeae;
+    border-color: #e6e5e5;
 }
 
 .ui-grid-pinned-container.ui-grid-pinned-container-right .ui-grid-header-cell:not(:first-child) .ui-grid-vertical-bar,
@@ -1214,17 +1211,17 @@ div.ui-grid-cell input.ng-valid {
 }
 
 .ui-grid-pinned-container.ui-grid-pinned-container-right .ui-grid-header-cell:not(:first-child) .ui-grid-vertical-bar {
-    background-color: #d4d4d4;
+    background-color: #e6e5e5;
 }
 
 .ui-grid-pinned-container.ui-grid-pinned-container-right .ui-grid-cell:not(:last-child) .ui-grid-vertical-bar {
-    background-color: #aeaeae;
+    background-color: #e6e5e5;
 }
 
 .ui-grid-pinned-container.ui-grid-pinned-container-first .ui-grid-header-cell:first-child .ui-grid-vertical-bar {
     left: -1px;
     width: 1px;
-    background-color: #aeaeae;
+    background-color: #e6e5e5;
 }
 
 .ui-grid-render-container-body {
@@ -1279,7 +1276,7 @@ div.ui-grid-cell input.ng-valid {
     top: 0;
     height: 100%;
     width: 1px;
-    background-color: #aeaeae;
+    background-color: #e6e5e5;
 }
 
 /* This file contains variable declarations (do not remove this line) */

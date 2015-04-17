@@ -1,7 +1,7 @@
 /**
  * Created by john on 2015/4/3.
  */
-app.controller('Trend_yesterday_ctrl', function ($scope, $http,requestService,messageService) {
+app.controller('Trend_yesterday_ctrl', function ($scope, $http,requestService,areaService,messageService) {
     $scope.yesterdayClass = true;
     $scope.reset = function () {
         $scope.todayClass = false;

@@ -1,7 +1,7 @@
 var express = require('express');
 var url = require('url');
 var date = require('../utils/date');
-var dateFormat = require('../utils/dateFormat');
+var dateFormat = require('../utils/dateFormat')();
 var pie = require('../services/pie');
 var line = require('../services/line');
 var bar = require('../services/bar');
@@ -164,50 +164,9 @@ api.get('/survey', function (req, res) {
         var inv = Number(query['int']);
         var interval = Math.ceil((end - start) / inv);
 
-        switch (qtype) {
-            case "pv":
-                es_request.pv(req.es, indexes[0], type, start, end, interval, function (result) {
-                    datautils.send(res, JSON.stringify(result));
-                });
-                break;
-            case "uv":
-                es_request.uv(req.es, indexes[0], type, start, end, interval, function (result) {
-                    datautils.send(res, JSON.stringify(result));
-                });
-                break;
-            case "vc":
-                es_request.vc(req.es, indexes[0], type, start, end, interval, function (result) {
-                    datautils.send(res, JSON.stringify(result));
-                });
-                break;
-            case "outRate":
-                es_request.outRate(req.es, indexes[0], type, start, end, interval, function (result) {
-                    datautils.send(res, JSON.stringify(result));
-                });
-                break;
-            case "avgTime":
-                es_request.avgTime(req.es, indexes[0], type, start, end, interval, function (result) {
-                    datautils.send(res, JSON.stringify(result));
-                });
-                break;
-            case "pageConversion":
-                es_request.pageConversion(req.es, indexes[0], type, start, end, interval, function (result) {
-                    datautils.send(res, JSON.stringify(result));
-                });
-                break;
-            case "eventConversion":
-                es_request.eventConversion(req.es, indexes[0], type, start, end, interval, function (result) {
-                    datautils.send(res, JSON.stringify(result));
-                });
-                break;
-            case "arrivedRate":
-                es_request.arrivedRate(req.es, indexes[0], type, start, end, interval, function (result) {
-                    datautils.send(res, JSON.stringify(result));
-                });
-                break;
-            default :
-                break;
-        }
+        es_request.search(req.es, indexes[0], type, qtype, null, start, end, interval, function (result) {
+            datautils.send(res, JSON.stringify(result));
+        });
     }
 
 });

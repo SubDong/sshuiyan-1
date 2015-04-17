@@ -14,8 +14,10 @@ app.controller('indexctr', function ($scope, $http, requestService, messageServi
         $scope.definClass = false;
     };
     $scope.gridOptions = {
+        enableColumnMenus: false,
+        enableSorting: true,
         enableScrollbars: false,
-        enableGridMenu: true,
+        enableGridMenu: false,
         enableHorizontalScrollbar: 0,
         enableVerticalScrollbar: 0,
         columnDefs: [
@@ -148,7 +150,7 @@ app.controller('indexctr', function ($scope, $http, requestService, messageServi
     $scope.maptarget = {};
     $scope.maptargets = [
         { name: '浏览量PV'},
-        { name: '访客次数(UV) '},
+        { name: '访客数(UV) '},
         { name: '新访客数'},
         { name: 'IP数'},
         { name: '跳出率'},
@@ -159,7 +161,7 @@ app.controller('indexctr', function ($scope, $http, requestService, messageServi
     $scope.equipmenttarget = {};
     $scope.equipmenttargets = [
         { name: '浏览量PV'},
-        { name: '访客次数(UV) '},
+        { name: '访客数(UV) '},
         { name: '新访客数'},
         { name: 'IP数'},
         { name: '跳出率'},
@@ -170,7 +172,7 @@ app.controller('indexctr', function ($scope, $http, requestService, messageServi
     $scope.searchtarget = {};
     $scope.searchtargets = [
         { name: '浏览量PV'},
-        { name: '访客次数(UV) '},
+        { name: '访客数(UV) '},
         { name: '新访客数'},
         { name: 'IP数'},
         { name: '跳出率'},

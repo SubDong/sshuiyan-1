@@ -2,17 +2,16 @@
  * Created by baizz on 2015-4-3.
  */
 app.controller('Trend_realtime_ctrl', function ($scope, $http, requestService, messageService, $log) {
-
     $scope.visitorCount = 0;
     $scope.gridOptions = {
+        enableColumnMenus: false,
         expandableRowTemplate: '../trend/trendtree.html',
         expandableRowHeight:360,
         enableScrollbars: false,
-        enableGridMenu: true,
+        enableGridMenu: false,
+        enableSorting: true,
         enableHorizontalScrollbar: 0,
-        enableVerticalScrollbar: 0,
-        onRegisterApi: function (gridApi) {
-        }
+        enableVerticalScrollbar: 0
     }
     $scope.gridOptions.columnDefs = [
         {name: 'name', displayName: "地域"},
@@ -36,7 +35,6 @@ app.controller('Trend_realtime_ctrl', function ($scope, $http, requestService, m
         dataValue: "value"//传入数据的value值
     }
     $scope.readChartData = function (type) {
-
         var option = {
             type: "pv",
             chart: "line",
@@ -45,19 +43,47 @@ app.controller('Trend_realtime_ctrl', function ($scope, $http, requestService, m
         requestService.request($scope.startTime, $scope.endTime, option, $scope.lineChartConfig);
         //requestService.request("Realtime_charts", $scope.startTime, $scope.endTime, option, $scope.lineChartConfig);
     };
-
     $scope.search = function (keyword, time, ip) {
         requestService.gridRequest($scope.startTime, $scope.endTime, $scope.gridOptions, "uv");
     };
-
-
     $scope.calTimePeriod = function () {
         $scope.endTime = new Date().valueOf();
         $scope.startTime =  $scope.endTime - 30 * 60 * 1000;
     };
-
     // initialize
     $scope.calTimePeriod();
     $scope.readChartData();
+    $scope.disabled = undefined;
+    $scope.enable = function() {
+        $scope.disabled = false;
+    };
+
+    $scope.disable = function() {
+        $scope.disabled = true;
+    };
+
+    $scope.clear = function() {
+        $scope.city.selected = undefined;
+        $scope.country.selected = undefined;
+        $scope.souce.selected = undefined;
+    };
+
+    $scope.country = {};
+    $scope.countrys = [
+        { name: '中国'},
+    ];
+    $scope.souce = {};
+    $scope.souces = [
+        { name: '全部'},
+        { name: '直接访问'},
+        { name: '搜索引擎'},
+        {name: '外部链接'},
+    ];
+    $scope.city = {};
+    $scope.citys = [
+        { name: '北京'},
+        { name: '上海'},
+        { name: '广州'},
+    ];
 
 });

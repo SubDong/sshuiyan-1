@@ -105,10 +105,12 @@
                         <div class="custom_select">
                             转化目标
                             <div role="group" class="btn-group">
-                                <select ng-options="o.title for o in select.optionsData" ng-model="select.selectVal"
-                                        class="ng-pristine ng-valid ng-touched">
-                                    <option value="" class="">全部页面目标</option>
-                                </select>
+                                <ui-select ng-model="extendway.selected" theme="selectize" class="fl" style="width: 120px;">
+                                    <ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>
+                                    <ui-select-choices repeat="extendway in extendways">
+                                        <span ng-bind-html="extendway.name"></span>
+                                    </ui-select-choices>
+                                </ui-select>
                             </div>
                         </div>
                         <div class="custom_table">
