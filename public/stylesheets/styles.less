@@ -103,6 +103,7 @@ nav, .navbar-default {
   background: #f0f0f0;
   min-height:40px;
   .btn-group {
+    .dropdown-toggle{padding: 0 10px !important;}
     .btn
     {
       font-size:12px; line-height: 26px; padding: 0 20px;
@@ -177,7 +178,7 @@ nav, .navbar-default {
 }
 
 .navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
-  background-color: #f9f9f9;
+  background: #f9f9f9;
   color: #01aeef;
 }
 
@@ -242,7 +243,7 @@ nav, .navbar-default {
     background: none;
   }
   .panel-heading {
-    padding: 10px;
+    padding: 12px;
   }
 
   .current.panel-default > .panel-heading {
@@ -286,7 +287,7 @@ nav, .navbar-default {
 
   }
   .btn-group {
-    margin: 7px;
+    margin:7px 0 7px 5px;
   }
   .btn-group .current {
     background: #01aeef;
@@ -302,14 +303,13 @@ nav, .navbar-default {
 /**input***/
 .chart_top {
   overflow: hidden;
-  color: #727272;
-
+  color: #727272; border-bottom: 1px #e8e8e8 dashed; border-top: 1px #fff dashed;
 }
 
 .chart_top ul li {
   display: @block;
   .fl;
-  margin-right: 1%;
+  margin-right: 5px;
   /*  height: 24px;
     line-height: 22px;*/
 
@@ -360,6 +360,10 @@ nav, .navbar-default {
   }
   .btn-group {
     margin: 0px;
+    line-height:inherit;
+    .ui-select-container{
+      margin-right:10px;
+    }
   }
   select {
     height: 35px;
@@ -370,7 +374,7 @@ nav, .navbar-default {
 
 .row-fluid {
   background: #ffffff;
-  line-height: 30px;
+
   .span1 {
     width: 35%;
     .fl;
@@ -450,11 +454,11 @@ nav, .navbar-default {
   ul li {
     display: @block;
     .fl;
-    width: 14.5%;
-    margin-right: 2%;
+    width: 15.5%;
+    margin-right: 1%;
     color: #fff;
     padding: 18px;
-    border-radius: 4px;
+    border-radius: 3px;
     h4 {
       font-size: 12px;
     }
@@ -485,6 +489,21 @@ nav, .navbar-default {
   .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
     background-color: #eeeeee;
   }
+  .ng-isolate-scope{
+    .nav-tabs{
+      .active{
+        .ng-binding{
+          border:1px solid #eeeeee ;
+        }
+      }
+      .ng-isolate-scope{
+        a:hover{
+          border:1px solid #eeeeee;
+        }
+      }
+    }
+
+  }
   .nav-tabs {
     border-bottom: 4px solid #eeeeee;
   }
@@ -493,7 +512,7 @@ nav, .navbar-default {
 .custom_title {
   background: #f6f5f5;
   padding: 15px;
-
+  border-bottom: 1px solid #eeeeee;
 }
 
 .custom_title {
@@ -501,28 +520,37 @@ nav, .navbar-default {
     color: #40befb;
     margin-bottom: 10px;
   }
+  .chart_default{
+    border-top: none;
+    ul{
+      li{border: 1px solid #F6F5F5 !important;}
+      li:hover{ border: 1px solid #F6F5F5 !important; background: none !important; font-weight: bold;
+      }
+      a{ color: #01aeef;}
+    }
+
+  }
   .chart_top {
-    margin-bottom: 10px;
+
     .btn-primary {
-      background: #40befb;
+      background: #40befb; padding: 3px 14px; border-radius: 3px; margin-right: 10px; font-size: 12px;
       border: 0px;
     }
 
     span {
       display: block;
       float: left;
-      padding: 8px;
+      padding: 5px 8px;
       width: 120px;
-      font-weight: bold;
-      color: #5b5b5b;
+      color: #000;
     }
   }
-
+  .chart_noborder{border-top: 1px dashed #ffffff;border-bottom:none; padding-top: 15px; color: #aaaaaa;}
   .chart_top ul li {
     color: #727272;
     text-align: left;
     border: 1px solid #f6f5f5;
-    padding: 8px;
+    padding: 3px 8px;
     cursor: pointer;
     span {
       display: @block;
@@ -536,7 +564,7 @@ nav, .navbar-default {
     }
     a {
       display: block;
-      color: #727272;
+      color: #01aeef;
 
     }
 
@@ -598,11 +626,11 @@ nav, .navbar-default {
 
 .custom_secendtitle {
   background: #f6f5f5;
-  border-top: 1px solid #fcfcfc;
+  border-top: 2px solid #fcfcfc;
 
   .custom_select {
     padding: 0px 15px;
-    height: 50px;
+    height: 36px; line-height: 36px;
     label {
       display: inline-block;
       max-width: 100%;
@@ -872,9 +900,9 @@ nav, .navbar-default {
 .grid {
   width: 100%;
 }
-
+.glyphicon{top:2px;}
 .date_select {
-
+  .btn-Refresh{ padding: 3px 10px;}
   .dateshow {
     width:88px;
     text-align:center;
@@ -898,9 +926,14 @@ nav, .navbar-default {
 .select_top {
   padding: 5px;
   background: #f6f5f5;
+  min-height:56px;
   select {
     height: 30px;
     padding: 0 10px;
+  }
+  .ui-select-container{
+    margin:5px;
+
   }
 }
 
@@ -987,19 +1020,32 @@ nav, .navbar-default {
 }
 
 .nav-tabs.nav-justified > li {
-  width: 120px;
+  width: 108px;
+  a{
+    border: none;
+  }
 }
 .ng-isolate-scope {
+  a{ color: #a5a5a5; }
   table{
     width:100%;
-    tbody{
-      .btn {
+    .btn {
       border-radius:50px; border: none; width: 26px !important; height: 26px; line-height: 26px; padding: 0 !important; margin: 0;
     }
+    thead{
+      .btn {
+        border-radius:0px; border: none; width: 100% !important; height:  auto ; line-height:  auto ;
+      }
+      .btn:hover{ background: none; color: #01AEEF;}
+    }
+    tbody{
+
+      .h6{ width: 26px !important; height: 26px; line-height: 26px; padding: 0 !important; margin: 0;}
       .active{
         span{
           color:#fff;
         }
+
       }
     }
 
@@ -1121,6 +1167,23 @@ nav, .navbar-default {
     }
   }
 }
+.ui-grid{
+  line-height:30px;
+}
 .ui-grid-cell{
   border: none;
+}
+.ui-select-container{
+  line-height:inherit;
+  .ui-select-match{
+    span{
+      padding:0 10px;
+    }
+  }
+}
+.selectize-control.single .selectize-input::after{
+  right:5px;
+}
+.selectize-dropdown{
+  margin: -5px 0 0;
 }

@@ -5,12 +5,17 @@
     <div class="my_concent">
         <div>
             <div class="select_top">
-                <select ng-model="way.selectVal" ng-options="o.title for o in select.optionsData">
-                    <option value="">全部推广方式</option>
-                </select>
+                <ui-select ng-model="survey.selected" theme="selectize" class="fl" style="width: 110px;">
+                    <ui-select-match placeholder="全部推广方式">{{$select.selected.name}}</ui-select-match>
+                    <ui-select-choices repeat="survey in surveys">
+                        <span ng-bind-html="survey.name"></span>
+                    </ui-select-choices>
+                </ui-select>
             </div>
-            <div ui-grid="gridOptions" class="grid" ui-grid-pinning></div>
         </div>
+
+            <div ui-grid="gridOptions" class="grid" ui-grid-pinning></div>
+
         <div class="survey_chart">
             <div class="select_top">
                 <b>投放指标：</b>
