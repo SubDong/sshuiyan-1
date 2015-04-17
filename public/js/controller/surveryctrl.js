@@ -307,7 +307,7 @@ app.controller('SurveyCtrl', function ($scope, $http, SEM_API_URL, PERFORMANCE_D
                                     return value + '次';
                                     break;
                                 case "avgTime":
-                                    return new Date(value).Format("hh:mm:ss");
+                                    return parseFloat(value) / 1000 + "秒";
                                     break;
                                 case "outRate":
                                     return value + '%';

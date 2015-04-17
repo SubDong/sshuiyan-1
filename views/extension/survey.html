@@ -21,7 +21,7 @@
                         ng-options="o.title for o in select.outQuota">
                 </select>
                 <b>效果指标:</b>
-                <select ng-init="effectQuota = select.effectQuota[0]" ng-model="effectQuota"
+                <select ng-init="effectQuota = select.effectQuota[1]" ng-model="effectQuota"
                         ng-change="setEffectQuota(effectQuota)"
                         ng-options="o.title for o in select.effectQuota">
                 </select>
