@@ -26,9 +26,9 @@
             </div>
         <div class="plancheck">
             <div class="plancheck_top">
-             <select ng-options="o.title for o in select.optionsData" ng-model="select.selectVal" class="ng-pristine ng-valid ng-touched fr ng-untouched"><option value="" class="">浏览量(PV)、转化次数</option></select>
+                <button class="btn btn-default fr btn-sm" ng-click="isCollapsed = !isCollapsed">指标：<b>浏览量(PV)、转化次数</b><span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span></button>
             </div>
-            <div class="plancheckbox">
+            <div class="plancheckbox"  collapse="isCollapsed">
                 <ul>
                     <li><input type="checkbox" checked="checked" name="radio1"> <label>展现量</label>
                     </li>
@@ -164,7 +164,7 @@
                                     <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
                                         <div role="group" class="btn-group">
                                             <ui-select ng-model="continent.selected" theme="selectize" ng-disabled="disabled" class="fl"
-                                                       style="width: 100px;">
+                                                       style="width: 80px;">
                                                 <ui-select-match placeholder="大洲">{{$select.selected.name}}</ui-select-match>
                                                 <ui-select-choices repeat="continent in continents">
                                                     <span ng-bind-html="continent.name"></span>
@@ -173,7 +173,7 @@
                                         </div>
                                         <div role="group" class="btn-group">
                                             <ui-select ng-model="country.selected" theme="selectize" ng-disabled="disabled" class="fl"
-                                                       style="width: 100px;">
+                                                       style="width: 80px;">
                                                 <ui-select-match placeholder="国家">{{$select.selected.name}}</ui-select-match>
                                                 <ui-select-choices repeat="country in countrys">
                                                     <span ng-bind-html="country.name"></span>
@@ -181,7 +181,7 @@
                                             </ui-select>
                                         </div>
                                         <div role="group" class="btn-group">
-                                            <ui-select ng-model="city.selected" theme="selectize" class="fl" style="width: 120px;">
+                                            <ui-select ng-model="city.selected" theme="selectize" class="fl" style="width: 80px;">
                                                 <ui-select-match placeholder="城市">{{$select.selected.name}}</ui-select-match>
                                                 <ui-select-choices repeat="city in citys">
                                                     <span ng-bind-html="city.name"></span>

@@ -3,6 +3,7 @@
  */
 app.controller('searchctr', function ($scope, $http) {
         $scope.todayClass = true;
+        $scope.isCollapsed = true;
         $scope.reset = function () {
             $scope.todayClass = false;
             $scope.yesterdayClass = false;

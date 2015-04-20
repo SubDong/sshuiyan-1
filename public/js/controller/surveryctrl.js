@@ -54,9 +54,10 @@ app.controller('SurveyCtrl', function ($scope, $http, SEM_API_URL, PERFORMANCE_D
     // 推广概况表格配置项
     $scope.gridOptions = {
         enableColumnMenus: false,
-        enableHorizontalScrollbar: 0,
-        enableSorting: false,
+        enableSorting: true,
         enableScrollbars: false,
+        enableGridMenu: false,
+        enableHorizontalScrollbar: 0,
         enableVerticalScrollbar: 0,
         columnDefs: [
             {name: ' ', field: 'category'},
@@ -480,7 +481,10 @@ app.controller('SurveyCtrl', function ($scope, $http, SEM_API_URL, PERFORMANCE_D
 
 }).controller('UconcentCtrl', function ($scope, $http) {
     $scope.gridOptions = {
+        enableColumnMenus: false,
+        enableSorting: true,
         enableScrollbars: false,
+        enableGridMenu: false,
         enableHorizontalScrollbar: 0,
         enableVerticalScrollbar: 0,
         columnDefs: [
@@ -492,7 +496,10 @@ app.controller('SurveyCtrl', function ($scope, $http, SEM_API_URL, PERFORMANCE_D
     };
 }).controller('EconcentCtrl', function ($scope, $http) {
     $scope.gridOptions = {
+        enableColumnMenus: false,
+        enableSorting: true,
         enableScrollbars: false,
+        enableGridMenu: false,
         enableHorizontalScrollbar: 0,
         enableVerticalScrollbar: 0,
         columnDefs: [
@@ -503,7 +510,10 @@ app.controller('SurveyCtrl', function ($scope, $http, SEM_API_URL, PERFORMANCE_D
     };
 }).controller('SearchCtrl', function ($scope, $http) {
     $scope.gridOptions = {
+        enableColumnMenus: false,
+        enableSorting: true,
         enableScrollbars: false,
+        enableGridMenu: false,
         enableHorizontalScrollbar: 0,
         enableVerticalScrollbar: 0,
         columnDefs: [

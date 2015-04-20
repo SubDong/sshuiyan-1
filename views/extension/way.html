@@ -148,21 +148,12 @@
                         <div class="custom_select">
                             转化目标
                             <div role="group" class="btn-group">
-                                <ui-select ng-model="page.selected" theme="selectize" class="fl" style="width: 140px;">
+                                <ui-select ng-model="page.selected" theme="selectize" class="fl" style="min-width: 140px;">
                                     <ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>
                                     <ui-select-choices repeat="page in pages">
                                         <span ng-bind-html="page.name"></span>
                                     </ui-select-choices>
                                 </ui-select>
-                                <!--         <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
-                                             <li><a href="#">全部页面目标</a></li>
-                                             <li><a href="#">公告</a></li>
-                                             <li><a href="#">全部事件目标</a></li>
-                                             <li><a href="#">完整下载</a></li>
-                                             <li><a href="#">在线下载</a></li>
-                                             <li><a href="#">时长目标</a></li>
-                                             <li><a href="#">访问页数目标</a></li>
-                                         </ul>-->
                             </div>
                         </div>
                         <div class="custom_table">

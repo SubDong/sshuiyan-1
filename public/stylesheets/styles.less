@@ -246,7 +246,13 @@ nav, .navbar-default {
     background: none;
   }
   .panel-heading {
-    padding: 12px;
+/*    padding: 12px;*/
+    padding:0px;
+    a{
+      display:block;
+      width:100%;
+      padding: 10px 5px;
+    }
   }
 
   .current.panel-default > .panel-heading {
@@ -398,14 +404,16 @@ nav, .navbar-default {
   }
   overflow: hidden;
 }
+
 @media screen and (max-width: 1380px) {
-  .date_select .btn-group .btn{
-    padding:0 10px;
+  .date_select .btn-group .btn {
+    padding: 0 10px;
   }
 }
+
 @media screen and (max-width: 1285px) {
-  .date_select .btn-group .btn{
-    padding:0 8px;
+  .date_select .btn-group .btn {
+    padding: 0 8px;
   }
 }
 
@@ -422,8 +430,9 @@ nav, .navbar-default {
     }
 
   }
-  .date_select .btn-group .btn{
-    padding:0 5px;
+
+  .date_select .btn-group .btn {
+    padding: 0 5px;
   }
 }
 
@@ -632,10 +641,11 @@ nav, .navbar-default {
         /* text-align: right;*/
         color: #5b5b5b;
         font-weight: bold;
-        line-height: 35px;
+        line-height: 25px;
       }
       a {
-        line-height: 35px;
+        line-height: 25px;
+        color: #2fabe9;
       }
       label {
         font-weight: normal;
@@ -931,7 +941,11 @@ nav, .navbar-default {
   }
 
 }
-.glyphicon{top:2px;}
+
+.glyphicon {
+  top: 2px;
+}
+
 .date_select {
   .btn-Refresh {
     padding: 3px 10px;
@@ -965,6 +979,11 @@ nav, .navbar-default {
     height: 30px;
     padding: 0 10px;
   }
+  b {
+    line-height: 30px;
+    margin-right: 5px;
+    font-weight: normal;
+  }
   .ui-select-container {
     margin: 5px;
 
@@ -992,19 +1011,41 @@ nav, .navbar-default {
 }
 
 .survey_under {
-
   .under_top {
     background: #ffffff;
-    padding: 10px;
+    float: left;
+    position: relative;
+    left: 35%;
     vertical-align: middle;
-    text-align: center;
+    .ui-select-container {
+      margin: 0px;
+    }
+    .selectize-control.single {
+      .selectize-input {
+        background: none;
+      }
+      input {
+        color: #01aeef;
+
+      }
+    }
+
     select {
       height: 35px;
       margin-right: 10px;
       color: #01aeef;
+      float: left;
+      position: relative;
+      right: 30%;
 
     }
-
+    b {
+      display: inline-block;
+      float: left;
+      line-height: 30px;
+      margin-left: 5px;
+      font-weight: normal;
+    }
   }
   .under_concent {
     background: #eaf9ff;
@@ -1143,6 +1184,19 @@ nav, .navbar-default {
 
 .plancheck_top {
   height: 40px;
+  b{
+    margin:0 5px;
+    color:#2fabe9;
+    font-weight:normal;
+  }
+  span{
+    color:#949494;
+  }
+  .btn-default:hover,.btn-default:focus,.btn-default:active{
+    b,span{
+      color:#fff;
+  }
+  }
 }
 
 .chart_tops {
@@ -1156,13 +1210,13 @@ nav, .navbar-default {
   overflow: hidden;
 }
 
-.trendbox{
-  width:100%;
-  background:#fdfdfd;
-  overflow:hidden;
-  .trend_top{
-    width:100%;
-    border-bottom:1px solid #eeeeee;
+.trendbox {
+  width: 100%;
+  background: #fdfdfd;
+  overflow: hidden;
+  .trend_top {
+    width: 100%;
+    border-bottom: 1px solid #eeeeee;
     overflow: hidden;
   }
   .trend_left {
@@ -1188,7 +1242,7 @@ nav, .navbar-default {
     .fl;
     padding: 18px 0;
     text-align: center;
-    border-left:1px solid #eeeeee;
+    border-left: 1px solid #eeeeee;
   }
   .left_top, .left_under {
     overflow: hidden;
@@ -1210,10 +1264,11 @@ nav, .navbar-default {
     padding: 15px;
     border-right: 1px solid #eeeeee;
   }
-  .trendunder{
-    padding:18px 10px;
-    overflow: hidden;border-left:1px solid #eeeeee;
-    b{
+  .trendunder {
+    padding: 18px 10px;
+    overflow: hidden;
+    border-left: 1px solid #eeeeee;
+    b {
 
       .fl;
     }
@@ -1227,6 +1282,7 @@ nav, .navbar-default {
     }
   }
 }
+
 .ui-grid-cell {
   border: none;
 }
@@ -1247,10 +1303,11 @@ nav, .navbar-default {
 .selectize-dropdown {
   margin: -5px 0 0;
 }
+
 .btn-group {
   .ui-select-container {
-    .selectize-input{
-      padding:3px;
+    .selectize-input {
+      padding: 3px;
     }
     line-height: inherit;
     margin-left: 5px;
@@ -1273,63 +1330,78 @@ nav, .navbar-default {
   }
 
 }
-.ui-grid-header-viewport{
-  .ui-grid-header-canvas{
+
+.ui-grid-header-viewport {
+  .ui-grid-header-canvas {
     line-height: 26px;
     height: 26px;
   }
-  .ui-grid-cell-contents{
-    padding:0 10px;
+  .ui-grid-cell-contents {
+    padding: 0 10px;
   }
 }
-.ui-grid-cell-contents{
+
+.ui-grid-cell-contents {
   line-height: 26px;
   height: 26px;
 }
-.ui-grid-pinned-container
-{
+
+.ui-grid-pinned-container {
   .ui-grid-coluiGrid-003 {
     cursor: pointer;
-    border-right:1px solid #eeeeee;
+    border-right: 1px solid #eeeeee;
   }
 }
-.ui-grid-row{
 
-.ng-scope{ margin: 0 !important;}
+.ui-grid-row {
+
+  .ng-scope {
+    margin: 0 !important;
+  }
 }
-.ui-grid-column-menu{
+
+.ui-grid-column-menu {
   padding-bottom: 50px;
 }
-.ui-grid-pager-panel{
+
+.ui-grid-pager-panel {
   background: #eeeeee;
   border-top: 1px solid #ffffff;
   padding: 10px;
-  .ui-grid-pager-control{
-    button{
+  .ui-grid-pager-control {
+    button {
       border: none;
       background: none;
     }
-    .prev-triangle{
+    .prev-triangle {
       margin-left: 7px;
     }
-    .first-triangle{
+    .first-triangle {
       margin-left: 7px;
     }
-    input{
+    input {
       padding: 5px;
       border-radius: 3px;
       border: 1px solid #eeeeee;
     }
-    select{
+    select {
       padding: 5px;
       border-radius: 3px !important;
-      border: 1px solid #eeeeee;}
-    option{
+      border: 1px solid #eeeeee;
+    }
+    option {
       padding: 5px;
       line-height: 26px;
     }
   }
 }
-.selectize-input > input{
-  font-size:12px;
+.selectize-input > input {
+  font-size: 12px;
+}
+
+.selectize-input {
+  padding: 5px;
+}
+.selectize-control.single .selectize-input{
+  background:#fff;
 }

@@ -17,11 +17,11 @@
         <div class="survey_chart">
             <div class="select_top">
                 <b class="fl">投放指标：</b>
-                <select ng-init="outQuota = select.outQuota[0]" ng-model="outQuota" ng-change="setOutQuota(outQuota)"
+                <select class="fl" ng-init="outQuota = select.outQuota[0]" ng-model="outQuota" ng-change="setOutQuota(outQuota)"
                         ng-options="o.title for o in select.outQuota">
                 </select>
-                <b>效果指标:</b>
-                <select ng-init="effectQuota = select.effectQuota[1]" ng-model="effectQuota"
+                <b class="fl">效果指标:</b>
+                <select class="fl" ng-init="effectQuota = select.effectQuota[1]" ng-model="effectQuota"
                         ng-change="setEffectQuota(effectQuota)"
                         ng-options="o.title for o in select.effectQuota">
                 </select>
@@ -46,14 +46,24 @@
             </div>
             <div id="index_charts" style="height:400px;"></div>
             <div class="survey_under">
+                <div class="select_top">
                 <div class="under_top">
-                    消费对比: <select ng-model="vm.selectVal" ng-options="o.title for o in select.optionsData">
-                    <option value="">请选择对比项</option>
-                </select>
-                    页面转化对比: <select ng-model="vm.selectVal" ng-options="o.title for o in select.optionsData">
-                    <option value="">页面转化对比</option>
-                </select>
+                    <b> 消费对比：</b>
+                    <ui-select ng-model="survey.selected" theme="selectize" class="fl" style="width: 120px;">
+                        <ui-select-match placeholder="请选择对比项">{{$select.selected.name}}</ui-select-match>
+                        <ui-select-choices repeat="survey in surveys">
+                            <span ng-bind-html="survey.name"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                    <b> 页面转化对比: </b>
+                    <ui-select ng-model="survey.selected" theme="selectize" class="fl" style="width: 120px;">
+                        <ui-select-match placeholder="请选择对比项">{{$select.selected.name}}</ui-select-match>
+                        <ui-select-choices repeat="survey in surveys">
+                            <span ng-bind-html="survey.name"></span>
+                        </ui-select-choices>
+                    </ui-select>
                 </div>
+                    </div>
                 <div class="under_concent">
                     <div class="row">
                         <div class="col-xs-6">
