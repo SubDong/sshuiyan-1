@@ -2,20 +2,16 @@
  * Created by baizz on 2015-04-09.
  *
  * ES查询接口
+ * quotas: 指标
+ * dimension: 维度
+ * filter: 过滤器
  */
 
 require('../utils/dateFormat')();
 
-var buildQuery = function (filter, start, end) {
+var buildQuery = function (filter) {
 
-    var mustQuery = [{
-        "range": {
-            "utime": {
-                "gte": start,
-                "lte": end
-            }
-        }
-    }];
+    var mustQuery = [];
 
     if (filter != null) {
         mustQuery.push({
@@ -145,36 +141,68 @@ var es_aggs = {
     "loyalty": {}
 };
 
-var buildRequest = function (index, type, quota, filter, start, end, interval) {
-    return {
-        "index": index,
-        "type": type,
-        "body": {
-            "query": buildQuery(filter, start, end),
-            "size": 0,
-            "aggs": {
-                "result": {
-                    "date_histogram": {
-                        "field": "utime",
-                        "interval": interval / 1000 + "s",
-                        "format": "yyyy-MM-dd HH:mm:ss",
-                        //"time_zone": "+08:00",    // pre_zone, post_zone are replaced by time_zone in 1.5.0.
-                        "pre_zone": "+08:00",
-                        "post_zone": "+08:00",
-                        "order": {
-                            "_key": "asc"
+var buildRequest = function (indexes, type, quotas, dimension, filter, start, end, interval) {
+
+    var _aggs = {};
+
+    quotas.forEach(function (quota) {
+        for (var key in es_aggs[quota]) {
+            _aggs[key] = es_aggs[quota][key];
+        }
+    });
+
+    if (dimension == "period") {
+        return {
+            "index": indexes.toString(),
+            "type": type,
+            "body": {
+                "query": buildQuery(filter),
+                "size": 0,
+                "aggs": {
+                    "result": {
+                        "date_histogram": {
+                            "field": "utime",
+                            "interval": interval / 1000 + "s",
+                            "format": "yyyy-MM-dd HH:mm:ss",
+                            //"time_zone": "+08:00",    // pre_zone, post_zone are replaced by time_zone in 1.5.0.
+                            "pre_zone": "+08:00",
+                            "post_zone": "+08:00",
+                            "order": {
+                                "_key": "asc"
+                            },
+                            "min_doc_count": 0,
+                            "extended_bounds": {
+                                "min": start,
+                                "max": end
+                            }
                         },
-                        "min_doc_count": 0,
-                        "extended_bounds": {
-                            "min": start,
-                            "max": end
-                        }
-                    },
-                    "aggs": es_aggs[quota]
+                        "aggs": _aggs
+                    }
                 }
             }
-        }
-    };
+        };
+    } else {
+        return {
+            "index": indexes.toString(),
+            "type": type,
+            "body": {
+                "query": buildQuery(filter, start, end),
+                "size": 0,
+                "aggs": {
+                    "result": {
+                        "terms": {
+                            "field": dimension//,
+                            //"order": {
+                            //    "_key": "asc"
+                            //}
+                        },
+                        "aggs": _aggs
+                    }
+                }
+            }
+        };
+    }
+
 };
 
 var pvFn = function (result) {
@@ -303,18 +331,13 @@ var eventConversionFn = function (result) {
 };
 
 var es_request = {
-    survey: function (es, category, start, end, type, index, callbackFn) {  // 推广概况数据
+    survey: function (es, category, type, index, callbackFn) {  // 推广概况数据
         var request = {
-            "index": index.toString(),
+            "index": index,
             "type": type,
             "body": {
                 "query": {
-                    "range": {
-                        "utime": {
-                            "gte": start,
-                            "lte": end
-                        }
-                    }
+                    "match_all": {}
                 },
                 "size": 0,
                 "aggs": {
@@ -413,50 +436,53 @@ var es_request = {
                 result["outRate"] = outRate;
                 result["avgTime"] = avgTime;
 
-                callbackFn(result);
+                callbackFn([result]);
             } else
-                callbackFn(result);
+                callbackFn([]);
         });
     },
-    search: function (es, index, type, quota, filter, start, end, interval, callbackFn) {
-        var request = buildRequest(index, type, quota, filter, start, end, interval);
+    search: function (es, indexes, type, quotas, dimension, filter, start, end, interval, callbackFn) {
+        var request = buildRequest(indexes, type, quotas, dimension, filter, start, end, interval);
 
-        function getQuotaName() {
-            return quota;
+        function getQuotas() {
+            return quotas;
         }
 
         es.search(request, function (error, response) {
-            var data = {};
+            var data = [];
             if (response != undefined) {
                 var result = response.aggregations.result.buckets;
-                switch (getQuotaName()) {
-                    case "pv":
-                        data = pvFn(result);
-                        break;
-                    case "uv":
-                        data = uvFn(result);
-                        break;
-                    case "vc":
-                        data = vcFn(result);
-                        break;
-                    case "avgTime":
-                        data = avgTimeFn(result);
-                        break;
-                    case "outRate":
-                        data = outRateFn(result);
-                        break;
-                    case "arrivedRate":
-                        data = arrivedRateFn(result);
-                        break;
-                    case "pageConversion":
-                        data = pageConversionFn(result);
-                        break;
-                    case "eventConversion":
-                        data = eventConversionFn(result);
-                        break;
-                    default :
-                        break;
-                }
+                getQuotas().forEach(function (quota) {
+                    switch (quota) {
+                        case "pv":
+                            data.push(pvFn(result));
+                            break;
+                        case "uv":
+                            data.push(uvFn(result));
+                            break;
+                        case "vc":
+                            data.push(vcFn(result));
+                            break;
+                        case "avgTime":
+                            data.push(avgTimeFn(result));
+                            break;
+                        case "outRate":
+                            data.push(outRateFn(result));
+                            break;
+                        case "arrivedRate":
+                            data.push(arrivedRateFn(result));
+                            break;
+                        case "pageConversion":
+                            data.push(pageConversionFn(result));
+                            break;
+                        case "eventConversion":
+                            data.push(eventConversionFn(result));
+                            break;
+                        default :
+                            break;
+                    }
+                });
+
                 callbackFn(data);
             } else
                 callbackFn(data);

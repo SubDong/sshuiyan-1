@@ -2,7 +2,7 @@
  * Created by john on 2015/3/30.
  */
 app.controller('SurveyCtrl', function ($scope, $http, SEM_API_URL, PERFORMANCE_DATA) {
-    $scope.timeType = 0;    // 默认是今天(值为0), 值为1代表昨天, 值为7代表最近7天, 值为30代表最近30天
+    $scope.day_offset = 0;    // 默认是今天(值为0), 值为-1代表昨天, 值为-7代表最近7天, 值为-30代表最近30天
     $scope.todayClass = true;
     $scope.reset = function () {
         $scope.todayClass = false;
@@ -14,26 +14,26 @@ app.controller('SurveyCtrl', function ($scope, $http, SEM_API_URL, PERFORMANCE_D
     $scope.today = function () {
         $scope.reset();
         $scope.todayClass = true;
-        $scope.timeType = 0;
+        $scope.day_offset = 0;
         $scope.refreshData();
 
     };
     $scope.yesterday = function () {
         $scope.reset();
         $scope.yesterdayClass = true;
-        $scope.timeType = 1;
+        $scope.day_offset = -1;
         $scope.refreshData();
     };
     $scope.sevenDay = function () {
         $scope.reset();
         $scope.sevenDayClass = true;
-        $scope.timeType = 7;
+        $scope.day_offset = -7;
         $scope.refreshData();
     };
     $scope.month = function () {
         $scope.reset();
         $scope.monthClass = true;
-        $scope.timeType = 30;
+        $scope.day_offset = -30;
         $scope.refreshData();
     };
     $scope.open = function ($event) {
@@ -86,21 +86,21 @@ app.controller('SurveyCtrl', function ($scope, $http, SEM_API_URL, PERFORMANCE_D
     // 投放指标 outQuota
     //推广select
     $scope.disabled = undefined;
-    $scope.enable = function() {
+    $scope.enable = function () {
         $scope.disabled = false;
     };
 
-    $scope.disable = function() {
+    $scope.disable = function () {
         $scope.disabled = true;
     };
-    $scope.clear = function() {
+    $scope.clear = function () {
         $scope.survey.selected = undefined;
-    }
+    };
     $scope.survey = {};
     $scope.surveys = [
-        { name: '全部推广方式'},
-        { name: '搜索推广'},
-        { name: '网盟推广'},
+        {name: '全部推广方式'},
+        {name: '搜索推广'},
+        {name: '网盟推广'}
     ];
     $scope.select.outQuota = [
         {
@@ -158,27 +158,27 @@ app.controller('SurveyCtrl', function ($scope, $http, SEM_API_URL, PERFORMANCE_D
     // 默认效果指标
     $scope.effectQuota_ = "pv";
 
-    $scope.startDate_ = today_start().valueOf();
-    $scope.endDate_ = today_end().valueOf();
+    $scope.startDate_ = 0;
+    $scope.endDate_ = 0;
 
-    // 根据$scope.timeType计算startDate和endDate
+    // 根据$scope.day_offset计算startDate和endDate
     $scope.calDatePeriod = function () {
-        switch ($scope.timeType) {
+        switch ($scope.day_offset) {
             case 0:
-                $scope.startDate_ = today_start().valueOf();
-                $scope.endDate_ = today_end().valueOf();
+                $scope.startDate_ = 0;
+                $scope.endDate_ = 0;
                 break;
-            case 1:
-                $scope.startDate_ = yesterday_start().valueOf();
-                $scope.endDate_ = yesterday_end().valueOf();
+            case -1:
+                $scope.startDate_ = -1;
+                $scope.endDate_ = -1;
                 break;
-            case 7:
-                $scope.startDate_ = lastWeek_start().valueOf();
-                $scope.endDate_ = lastWeek_end().valueOf();
+            case -7:
+                $scope.startDate_ = -7;
+                $scope.endDate_ = -1;
                 break;
-            case 30:
-                $scope.startDate_ = lastMonth_start().valueOf();
-                $scope.endDate_ = lastMonth_end().valueOf();
+            case -30:
+                $scope.startDate_ = -30;
+                $scope.endDate_ = -1;
                 break;
             default :
                 break;
@@ -216,8 +216,8 @@ app.controller('SurveyCtrl', function ($scope, $http, SEM_API_URL, PERFORMANCE_D
     // 通过效果指标获取搜索结果
     $scope.doSearchByEffectQuota = function (type) {
         var interval = 24;
-        if ($scope.timeType == 7 || $scope.timeType == 30)
-            interval = $scope.timeType;
+        if ($scope.day_offset == -7 || $scope.day_offset == -30)
+            interval = -$scope.day_offset;
         $http({
             method: 'GET',
             url: "/api/survey/?start=" + $scope.startDate_ + "&end=" + $scope.endDate_ + "&type=" + type + "&int=" + interval + "&qtype=" + $scope.effectQuota_
@@ -227,14 +227,19 @@ app.controller('SurveyCtrl', function ($scope, $http, SEM_API_URL, PERFORMANCE_D
             $scope.effectDataArray.length = 0;
             $scope.timePeriod.length = 0;
 
-            data.quota.forEach(function (item, i) {
-                $scope.effectDataArray.push(item);
+            data.forEach(function (result) {
+                result.quota.forEach(function (item) {
+                    $scope.effectDataArray.push(item);
+                });
             });
 
-            data.time.forEach(function (item, i) {
-                $scope.timePeriod.push(item);
+            data.forEach(function (result) {
+                result.time.forEach(function (item) {
+                    $scope.timePeriod.push(item);
+                });
             });
 
+            console.log(JSON.stringify(data));
         }).error(function (error) {
             alert(error);
         });
@@ -458,10 +463,10 @@ app.controller('SurveyCtrl', function ($scope, $http, SEM_API_URL, PERFORMANCE_D
 
         //var performanceData = "cost,impression,click,ctr,cpc";
         var now = new Date().valueOf();
-        $scope.doSearch(today_start().valueOf(), now, trackId, "t");
-        $scope.getAccountSemRealTimeData("baidu-bjjiehun2123585", "account", today_start().valueOf(), now, 0, 5, PERFORMANCE_DATA);
-        $scope.doSearch(yesterday_start().valueOf(), yesterday_end().valueOf(), trackId, "y");
-        $scope.getAccountSemRealTimeData("baidu-bjjiehun2123585", "account", yesterday_start().valueOf(), yesterday_end().valueOf(), 0, 5, PERFORMANCE_DATA);
+        $scope.doSearch(0, 0, trackId, "t");
+        $scope.getAccountSemRealTimeData("baidu-bjjiehun2123585", "account", 0, 0, 0, 5, PERFORMANCE_DATA);
+        $scope.doSearch(-1, -1, trackId, "y");
+        $scope.getAccountSemRealTimeData("baidu-bjjiehun2123585", "account", -1, -1, 0, 5, PERFORMANCE_DATA);
 
         $scope.doSearchByEffectQuota("1");
         $scope.getSemQuotaRealTimeData("baidu-bjjiehun2123585", "account", $scope.startDate_, $scope.endDate_, 0, 7, PERFORMANCE_DATA);
