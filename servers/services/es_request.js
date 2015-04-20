@@ -205,69 +205,84 @@ var buildRequest = function (indexes, type, quotas, dimension, filter, start, en
 
 };
 
-var pvFn = function (result) {
-    var timeArr = [];
+var pvFn = function (result, dimension) {
+    var keyArr = [];
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
         var pv = result[i].pv_aggs.value;
-        var dateStr = result[i].key_as_string + "";
-        Array.prototype.push.call(timeArr, dateStr);
+        if (dimension == "period") {
+            var dateStr = result[i].key_as_string + "";
+            Array.prototype.push.call(keyArr, dateStr);
+        } else
+            Array.prototype.push.call(keyArr, result[i].key);
+
         Array.prototype.push.call(quotaArr, pv);
     }
 
     return {
         "label": "pv",
-        "time": timeArr,
+        "key": keyArr,
         "quota": quotaArr
     };
 };
 
-var uvFn = function (result) {
-    var timeArr = [];
+var uvFn = function (result, dimension) {
+    var keyArr = [];
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
         var uv = result[i].uv_aggs.value;
-        var dateStr = result[i].key_as_string + "";
-        timeArr.push(dateStr);
+        if (dimension == "period") {
+            var dateStr = result[i].key_as_string + "";
+            keyArr.push(dateStr);
+        } else
+            keyArr.push(result[i].key);
+
         quotaArr.push(uv);
     }
 
     return {
         "label": "uv",
-        "time": timeArr,
+        "key": keyArr,
         "quota": quotaArr
     };
 };
 
-var vcFn = function (result) {
-    var timeArr = [];
+var vcFn = function (result, dimension) {
+    var keyArr = [];
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
         var vc = result[i].vc_aggs.value;
-        var dateStr = result[i].key_as_string + "";
-        timeArr.push(dateStr);
+        if (dimension == "period") {
+            var dateStr = result[i].key_as_string + "";
+            keyArr.push(dateStr);
+        } else
+            keyArr.push(result[i].key);
+
         quotaArr.push(vc);
     }
 
     return {
         "label": "vc",
-        "time": timeArr,
+        "key": keyArr,
         "quota": quotaArr
     };
 };
 
-var avgTimeFn = function (result) {
-    var timeArr = [];
+var avgTimeFn = function (result, dimension) {
+    var keyArr = [];
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
         var tvt = result[i].tvt_aggs.value;
         var vc = result[i].vc_aggs.value;
-        var dateStr = result[i].key_as_string + "";
-        timeArr.push(dateStr);
+        if (dimension == "period") {
+            var dateStr = result[i].key_as_string + "";
+            keyArr.push(dateStr);
+        } else
+            keyArr.push(result[i].key);
 
         var avgTime = 0;
         if (vc > 0) {
@@ -278,20 +293,23 @@ var avgTimeFn = function (result) {
 
     return {
         "label": "avgTime",
-        "time": timeArr,
+        "key": keyArr,
         "quota": quotaArr
     };
 };
 
-var outRateFn = function (result) {
-    var timeArr = [];
+var outRateFn = function (result, dimension) {
+    var keyArr = [];
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
         var svc = result[i].single_visitor_aggs.svc_aggs.value;
         var vc = result[i].vc_aggs.value;
-        var dateStr = result[i].key_as_string + "";
-        timeArr.push(dateStr);
+        if (dimension == "period") {
+            var dateStr = result[i].key_as_string + "";
+            keyArr.push(dateStr);
+        } else
+            keyArr.push(result[i].key);
 
         var outRate = 0;
         if (vc > 0)
@@ -301,31 +319,31 @@ var outRateFn = function (result) {
 
     return {
         "label": "outRate",
-        "time": timeArr,
+        "key": keyArr,
         "quota": quotaArr
     };
 };
 
-var arrivedRateFn = function (result) {
+var arrivedRateFn = function (result, dimension) {
     return {
         "label": "arrivedRate",
-        "time": [],
+        "key": [],
         "quota": []
     };
 };
 
-var pageConversionFn = function (result) {
+var pageConversionFn = function (result, dimension) {
     return {
         "label": "pageConversion",
-        "time": [],
+        "key": [],
         "quota": []
     };
 };
 
-var eventConversionFn = function (result) {
+var eventConversionFn = function (result, dimension) {
     return {
         "label": "eventConversion",
-        "time": [],
+        "key": [],
         "quota": []
     };
 };
@@ -448,6 +466,10 @@ var es_request = {
             return quotas;
         }
 
+        function getDimension() {
+            return dimension;
+        }
+
         es.search(request, function (error, response) {
             var data = [];
             if (response != undefined) {
@@ -455,28 +477,28 @@ var es_request = {
                 getQuotas().forEach(function (quota) {
                     switch (quota) {
                         case "pv":
-                            data.push(pvFn(result));
+                            data.push(pvFn(result, getDimension()));
                             break;
                         case "uv":
-                            data.push(uvFn(result));
+                            data.push(uvFn(result, getDimension()));
                             break;
                         case "vc":
-                            data.push(vcFn(result));
+                            data.push(vcFn(result, getDimension()));
                             break;
                         case "avgTime":
-                            data.push(avgTimeFn(result));
+                            data.push(avgTimeFn(result, getDimension()));
                             break;
                         case "outRate":
-                            data.push(outRateFn(result));
+                            data.push(outRateFn(result, getDimension()));
                             break;
                         case "arrivedRate":
-                            data.push(arrivedRateFn(result));
+                            data.push(arrivedRateFn(result, getDimension()));
                             break;
                         case "pageConversion":
-                            data.push(pageConversionFn(result));
+                            data.push(pageConversionFn(result, getDimension()));
                             break;
                         case "eventConversion":
-                            data.push(eventConversionFn(result));
+                            data.push(eventConversionFn(result, getDimension()));
                             break;
                         default :
                             break;
