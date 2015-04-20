@@ -56,7 +56,7 @@
                     <li class="disabled">* 最多只能勾选1项</li>
                 </ul>
             </div>
-            <div id="VistorMap_charts" style="width:80%;height:400px;"></div>
+            <div id="VistorMap_charts" style="width:98%;height:400px;"></div>
         </div>
         <div class="table_content" ng-controller="TabsCtrl">
             <tabset justified="true">
@@ -108,8 +108,7 @@
                         </div>
                     </div>
                     <div class="custom_table">
-                        <table id="mytable" class="table table-hover">
-                        </table>
+                        <div ui-grid="gridOptions" class="grid" ui-grid-pinning></div>
                         <div id="pager"></div>
                     </div>
                 </div>

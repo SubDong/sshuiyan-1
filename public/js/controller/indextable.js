@@ -109,10 +109,10 @@ app.controller("TabsCtrl", function ($scope, $rootScope, $http, requestService) 
     ];
     $scope.TodayWeb = [
         {consumption_name: "浏览量(PV)", name: "pv"},
-        {consumption_name: "访问次数", name: "fwen"},
-        {consumption_name: "访客数(UV)", name: "UV"},
-        {consumption_name: "新访客数", name: "newF"},
-        {consumption_name: "新访客比率", name: "newB"},
+        {consumption_name: "访问次数", name: "tt"},
+        {consumption_name: "访客数(UV)", name: "uv"},
+        {consumption_name: "新访客数", name: "ct"},
+        {consumption_name: "新访客比率", name: "ctRate"},
         {consumption_name: "IP数", name: "ip"}
     ];
     $scope.Todytransform = [
@@ -156,12 +156,11 @@ app.controller("TabsCtrl", function ($scope, $rootScope, $http, requestService) 
         {consumption_name: "IP数", name: "z6"}
     ];
 
-    $rootScope.latitude = "rogin"
+    $rootScope.latitude = {name:"地域",value:"region"};
     $scope.checkedArray = new Array();
     $scope.indicators = function (name, entities, number) {
         var a = $scope.checkedArray.indexOf(name);
         if (a != -1) {
-            ;
             $scope.checkedArray.splice(a, 1);
         } else {
             if ($scope.checkedArray.length >= number) {
@@ -180,6 +179,26 @@ app.controller("TabsCtrl", function ($scope, $rootScope, $http, requestService) 
 
     };
 
+    // 推广概况表格配置项
+    $scope.gridOptions = {
+        enableColumnMenus: false,
+        enableHorizontalScrollbar: 0,
+        enableSorting: false,
+        enableScrollbars: false,
+        enableVerticalScrollbar: 0,
+        columnDefs: [
+            {name: '地域', field: 'columns'},
+            {name: '消费', field: 'pv'},
+            {name: '展现量', field: 'uv'},
+            {name: '点击量', field: 'ip'},
+            {name: '访问次数', field: 'uv'},
+            {name: '页面转化', field: 'tt'},
+            {name: '事件转化', field: 'ct'},
+            {name: '跳出率', field: 'outRate'},
+            {name: '平均访问时长', field: 'avgTime'}
+        ]
+    };
+
     /**
      *
      * @param start 开始时间
@@ -195,9 +214,10 @@ app.controller("TabsCtrl", function ($scope, $rootScope, $http, requestService) 
         }
         $http({
             method: 'GET',
-            url: '/api/indextable/?startTime=' + $scope.dateTimeStart + "&endTime=" + $scope.dateTimeEnd + "&indic=" + $scope.checkedArray + "&lati=" + $rootScope.latitude + "&type=1"
+            url: '/api/indextable/?start=' + $scope.dateTimeStart + "&end=" + $scope.dateTimeEnd + "&indic=" + $scope.checkedArray + "&lati=" + $rootScope.latitude.value + "&type=1"
         }).success(function (data, status) {
-            alert(data);
+            $scope.gridOptions.data = data;
+            console.log(data);
 
         }).error(function (error) {
             console.log(error);

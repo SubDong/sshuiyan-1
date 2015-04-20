@@ -3,6 +3,7 @@
  * 访客基础数据
  */
 var Map = require("../../utils/map");
+require("../../utils/dateFormat")();
 var initial = {
     /** 
      *  基础数据
@@ -71,7 +72,7 @@ var initial = {
                 else
                     jump = (parseFloat(response.aggregations.jump.doc_count) / parseFloat(response.hits.total) * 100).toFixed(2)  + "%";
 
-                result["avgTime"] = new Date(calAvgTime);
+                result["avgTime"] = new Date(calAvgTime).format("hh:mm:ss");
                 result["jump"] = jump;
                 result["pv"] = response.aggregations.pv.value;
                 result["uv"] = response.aggregations.uv.value;
@@ -162,35 +163,56 @@ var initial = {
 
         es.search(mapRequest, function (err, response) {
             if(response != undefined){
-                var result = {};
-                var chart_data_array = new Array();
-                var data_name = new Array();
+                callbackFn(response);
+            }else{
+                console.log(err)
+            }
+        });
+    },
 
-                var areas = response.aggregations.areas.buckets;
-                for(var i = 0 ; i < 10; i++){
-                    if(areas[i] != undefined){
-                        if(areas[i].key == "国外")continue;
-                        var chart_data = {};
-                        data_name.push(areas[i].key.replace("市","").replace("省",""));
-                        chart_data["name"] = areas[i].key.replace("市","").replace("省","");
-                        chart_data["value"] = areas[i].data_count.value;
-                        chart_data_array.push(chart_data);
+    /**
+     *
+     * @param es
+     * @param index
+     * @param type
+     * @param areas
+     * @param property
+     * @param callbackFn
+     */
+    chartDataCommon:function (es, index, type, areas, property, callbackFn){
+        var value = {};
+        property.forEach(function(item,i){
+            switch (item){
+                case "pv": value[item] = {"value_count": {"field": "loc"}} ;break;
+                case "tt": value[item] = {"value_count": {"field": "tt"}}; break;
+                case "uv": value[item] = {"value_count": {"field": "_ucv"}}; break;
+                case "ct": value[item] = {"sum": {"script": "v1=0; if (doc['ct'].value != 0) { v1 +=1;};v1"}};  break;
+                case "ip": value[item] = {"cardinality": {"field": "remote"}}; break;
+                case "jump": value["jumpTT"] = {"value_count": {"field": "tt"}}; value[item] = {"filter": {"script": {"script": "doc['loc'].values.size() == param1","params": {"param1": 1}}}}; break;
+                case "avgTime": value["avgPv"] = {"value_count": {"field": "loc"}}; value[item] = {"script": "sum_time = 0; tmp = 0; for (t in doc['utime'].values) { if (tmp > 0) { sum_time += (t - tmp) }; tmp = t}; sum_time"}; break;
+            }
+        });
+        var request = {
+            "index": index.toString(),
+            "type": type,
+            "body": {
+                "query": {
+                    "match_all": {}
+                },
+                "size": 0,
+                "aggs": {
+                    "areas": {
+                        "terms": {
+                            "field": areas
+                        },
+                        "aggs": value
                     }
                 }
-                if(areas.length >=10){
-                    var chart_data = {};
-                    var other = 0;
-                    for(var a = 10 ; a < areas.length; a++){
-                        other+= areas[a].data_count.value
-                    }
-                    data_name.push("其他");
-                    chart_data["name"] = "其他";
-                    chart_data["value"] = other;
-                    chart_data_array.push(chart_data);
-                }
-                result["data_name"] = data_name;
-                result["chart_data"] = chart_data_array;
-                callbackFn(result)
+            }
+        }
+        es.search(request, function (err, response){
+            if(response != undefined){
+                callbackFn(response);
             }else{
                 console.log(err)
             }

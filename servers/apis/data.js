@@ -185,10 +185,25 @@ api.get('/indextable', function (req, res) {
     var query = url.parse(req.url, true).query;
     var _indic = query["indic"].split(",");
     var _lati = query["lati"];
-    var _startTime = Number(query["startTime"]);
-    var _endTime = Number(query["endTime"]);
+    var _startTime = Number(query["start"]);
+    var _endTime = Number(query["end"]);
     var _type = query["type"];
-    datautils.send(res, JSON.stringify("1"));
+    var indexes = date.between(req, "visitor-");
+    initial.chartDataCommon(req.es, indexes, _type ,_lati, _indic, function (data) {
+        data = data.aggregations.areas.buckets;
+        var result = [];
+
+        var coumArray = new Array();
+        data.forEach(function(item,i){
+            var _obj = {};
+            _obj["columns"] = item.key;
+            _indic.forEach(function(items,i){
+                _obj[items]  = item[items].value;
+            });
+            result.push(_obj);
+        });
+        datautils.send(res, result);
+    })
 });
 
 
@@ -204,7 +219,7 @@ api.get('/visitormap', function (req, res) {
         datautils.send(res, JSON.stringify(data));
     })
 });
-//访客地图
+//访客地图 图标
 api.get('/provincemap', function (req, res) {
     var query = url.parse(req.url, true).query;
     var type = query['type'];
@@ -217,8 +232,36 @@ api.get('/provincemap', function (req, res) {
     } else {
         var indexes = date.between(req, "visitor-");
     }
-    initial.chartData(req.es, indexes, type, areas, property, function (data) {
-        datautils.send(res, data);
+    initial.chartData(req.es,indexes,type,areas,property,function (data){
+        var result = {};
+        var chart_data_array = new Array();
+        var data_name = new Array();
+
+        var areas = data.aggregations.areas.buckets;
+        for(var i = 0 ; i < 10; i++){
+            if(areas[i] != undefined){
+                if(areas[i].key == "国外")continue;
+                var chart_data = {};
+                data_name.push(areas[i].key.replace("市","").replace("省",""));
+                chart_data["name"] = areas[i].key.replace("市","").replace("省","");
+                chart_data["value"] = areas[i].data_count.value;
+                chart_data_array.push(chart_data);
+            }
+        }
+        if(areas.length >=10){
+            var chart_data = {};
+            var other = 0;
+            for(var a = 10 ; a < areas.length; a++){
+                other+= areas[a].data_count.value
+            }
+            data_name.push("其他");
+            chart_data["name"] = "其他";
+            chart_data["value"] = other;
+            chart_data_array.push(chart_data);
+        }
+        result["data_name"] = data_name;
+        result["chart_data"] = chart_data_array;
+        datautils.send(res,result);
     })
 });
 

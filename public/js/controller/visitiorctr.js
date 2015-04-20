@@ -125,10 +125,7 @@ app.controller("Vistiorctr", function ($scope, $http, requestService) {
         var jupName = "";
         chart.on("hover", function (param) {
             var option = this.getOption();
-            var mapSeries = option.series[0]
-            if (param.seriesIndex == 0) {
-
-            }
+            var mapSeries = option.series[0];
             if (param.seriesIndex == 1) {
                 var data = [];
                 if (jupName == param.name) {
@@ -177,7 +174,7 @@ app.controller("Vistiorctr", function ($scope, $http, requestService) {
                     break;
                 case "ct":
                 title_name = "新访客数";
-                break;
+                    break;
                 case "remote":
                     title_name = "IP数";
                     break;
