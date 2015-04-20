@@ -151,20 +151,24 @@ api.get('/survey', function (req, res) {
 
     var type = query['type'];
     var qtype = query['qtype'];
-    var start = Number(query['start']);
-    var end = Number(query['end']);
-    var indexes = date.between(req, "visitor-");
+    var startDay = Number(query['start']);
+    var endDay = Number(query['end']);
+    var indexes = date.createIndexes(startDay, endDay, "visitor-");
+
+    // 指标数组
+    var quotas = [];
+    quotas.push(qtype);
 
 
     if (qtype == 0) {
-        es_request.survey(req.es, query['c'], start, end, type, indexes[0], function (result) {
+        es_request.survey(req.es, query['c'], type, indexes[0], function (result) {
             datautils.send(res, JSON.stringify(result));
         });
     } else {
-        var inv = Number(query['int']);
-        var interval = Math.ceil((end - start) / inv);
+        var period = date.period(startDay, endDay);
+        var interval = date.interval(startDay, endDay, Number(query['int']));
 
-        es_request.search(req.es, indexes[0], type, qtype, null, start, end, interval, function (result) {
+        es_request.search(req.es, indexes, type, quotas, "period", null, period[0], period[1], interval, function (result) {
             datautils.send(res, JSON.stringify(result));
         });
     }
@@ -177,7 +181,7 @@ api.get('/survey', function (req, res) {
 
 // ================================= SubDong ================================
 /*********************自定义指标通用*************************/
-api.get('/indextable',function(req,res){
+api.get('/indextable', function (req, res) {
     var query = url.parse(req.url, true).query;
     var _indic = query["indic"].split(",");
     var _lati = query["lati"];
@@ -208,13 +212,13 @@ api.get('/provincemap', function (req, res) {
     var end = Number(query['end']);
     var areas = query['areas'];
     var property = query['property'];
-    if(property == "ct"){
+    if (property == "ct") {
         var indexes = date.between(req, "access-");
-    }else{
+    } else {
         var indexes = date.between(req, "visitor-");
     }
-    initial.chartData(req.es,indexes,type,areas,property,function (data){
-        datautils.send(res,data);
+    initial.chartData(req.es, indexes, type, areas, property, function (data) {
+        datautils.send(res, data);
     })
 });
 
