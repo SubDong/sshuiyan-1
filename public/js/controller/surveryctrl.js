@@ -234,7 +234,7 @@ app.controller('SurveyCtrl', function ($scope, $http, SEM_API_URL, PERFORMANCE_D
             });
 
             data.forEach(function (result) {
-                result.time.forEach(function (item) {
+                result.key.forEach(function (item) {
                     $scope.timePeriod.push(item);
                 });
             });
