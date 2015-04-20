@@ -1,7 +1,7 @@
 /**
  * Created by XiaoWei on 2015/4/13.
  */
-app.controller("sourcectr", function ($scope, $http, requestService) {
+app.controller("sourcectr", function ($scope, $rootScope, $http, requestService) {
     $scope.todayClass = true;
     $scope.start = today_start().getTime();
     $scope.end = custom_end(new Date(), 20).getTime();
@@ -13,64 +13,82 @@ app.controller("sourcectr", function ($scope, $http, requestService) {
         $scope.definClass = false;
         $scope.btnchecked = true;
     };
-    $scope.onLegendClick = function (chart, param, start, end, opt) {
-        var type = chartUtils.convertEnglish(param.target);
-        $scope.reset();
-        $scope.todayClass = true;
-        $scope.btnchecked = false;
-        var opt = {
-            type: type,
-            interval: 12,
-            pieType: "vapie"
+    $scope.onLegendClick = function (radio, chartInstance, config, checkedVal) {
+        $scope.charts[0].types = checkedVal;
+        var chartarray = [$scope.charts[0]];
+        requestService.refresh(chartarray);
+    }
+    $scope.charts = [
+        {
+            config: {
+                legendId: "source_charts_legend",
+                legendData: ["浏览量(PV)", "访客数(UV)", "访问次数", "新访客数", "IP数", "页面转化", "订单数", "订单金额", "订单转化率"],
+                legendClickListener: $scope.onLegendClick,
+                legendAllowCheckCount: 1,
+                id: "indicators_charts",
+                chartType: "line",
+                dataKey: "time",
+                dataValue: "value"
+            },
+            types: ["pv"],
+            quota: [],
+            interval: $rootScope.interval,
+            url:"/api/charts"
+        }, {
+            config: {
+                legendData: [],
+                id: "sourse_charts",
+                pieStyle: true,
+                serieName: "访问情况",
+                chartType: "pie",
+                dataKey: "name",
+                dataValue: "value"
+            },
+            types: ["pv"],
+            quota: [],
+            interval: $rootScope.interval,
+            url:"/api/vapie"
         }
-        requestService.request($scope.start, $scope.end, opt, $scope.lineChartConfig);
-        requestService.pieRequest($scope.start, $scope.end, opt, $scope.pieChartConfig);
+    ];
+    $scope.init = function () {
+        $scope.charts.forEach(function (e) {
+            var chart = echarts.init(document.getElementById(e.config.id));
+            e.config.instance = chart;
+            util.renderLegend(chart, e.config);
+        })
+        requestService.refresh($scope.charts);
+    }
+    $scope.init();
 
-    }
-    $scope.lineChartConfig = {
-        legendData: ["浏览量(PV)", "访客数(UV)", "访问次数", "新访客数", "IP数", "页面转化", "订单数", "订单金额", "订单转化率"],
-        chartId: "indicators_charts",
-        chartType: "line",
-        dataKey: "time",
-        dataValue: "value",
-        onLegendClick: $scope.onLegendClick
-    }
-    $scope.pieChartConfig = {
-        legendData: [],
-        chartId: "sourse_charts",
-        pieStyle: true,
-        serieName: "访问情况",
-        chartType: "pie",
-        dataKey: "name",
-        dataValue: "value"
-    }
     $scope.today = function () {
         $scope.reset();
         $scope.todayClass = true;
-        $scope.btnchecked = false;
-        $scope.dt = new Date();
-        var opt = {
-            type: "pv",
-            interval: 12,
-            pieType: "vapie"
-        }
-        requestService.request($scope.start, $scope.end, opt, $scope.lineChartConfig);
-        requestService.pieRequest($scope.start, $scope.end, opt, $scope.pieChartConfig);
-    };
+        $rootScope.start = today_start().getTime();
+        $rootScope.end = today_end().getTime();
+        $scope.charts[0].interval=12;
+        $scope.charts[1].interval=12;
+        requestService.refresh($scope.charts);
+    }
     $scope.yesterday = function () {
         $scope.reset();
         $scope.yesterdayClass = true;
-        console.log("yesterday");
+        $rootScope.start = yesterday_start().getTime();
+        $rootScope.end = yesterday_end().getTime();
+        requestService.refresh($scope.charts);
     };
     $scope.sevenDay = function () {
         $scope.reset();
         $scope.sevenDayClass = true;
-        console.log("sevenDay");
+        $rootScope.start = lastWeek_start().getTime();
+        $rootScope.end = lastWeek_end().getTime();
+        requestService.refresh($scope.charts);
     };
     $scope.month = function () {
         $scope.reset();
         $scope.monthClass = true;
-        console.log("month");
+        $rootScope.start = lastMonth_start().getTime();
+        $rootScope.end = lastMonth_end().getTime();
+        requestService.refresh($scope.charts);
     };
     $scope.open = function ($event) {
         $event.preventDefault();
@@ -80,37 +98,25 @@ app.controller("sourcectr", function ($scope, $http, requestService) {
         $scope.definClass = true;
     };
 
-    $scope.change = function (value) {
-        var opt = {
-            type: value,
-            interval: 12,
-            pieType: "vapie"
-        }
-        requestService.request($scope.start, $scope.end, opt, $scope.lineChartConfig);
-        requestService.pieRequest($scope.start, $scope.end, opt, $scope.pieChartConfig);
-        //$http.get("/api/charts?start=" + $scope.start + "&end=" +$scope.end + "&type="+value+"&int=7").success(function (result) {
-        //    console.log(result);
-        //});
-    }
     $scope.disabled = undefined;
-    $scope.enable = function() {
+    $scope.enable = function () {
         $scope.disabled = false;
     };
-    $scope.disable = function() {
+    $scope.disable = function () {
         $scope.disabled = true;
     };
-    $scope.today();   $scope.clear = function() {
+    $scope.clear = function () {
         $scope.extendway.selected = undefined;
     };
     $scope.extendway = {};
     $scope.extendways = [
-        { name: '全部页面目标'},
-        { name: '公告'},
-        { name: '全部事件目标'},
-        { name: '完整下载'},
-        { name: '在线下载'},
-        { name: '时长目标'},
-        { name: '访问页数目标'},
+        {name: '全部页面目标'},
+        {name: '公告'},
+        {name: '全部事件目标'},
+        {name: '完整下载'},
+        {name: '在线下载'},
+        {name: '时长目标'},
+        {name: '访问页数目标'},
     ];
 
 });

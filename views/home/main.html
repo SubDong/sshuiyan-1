@@ -12,8 +12,10 @@
         </div>
     </div>
     <div class="my_concent">
+        <div id="index_charts_legend" style="position:relative;"></div>
         <div class="index_chart">
-            <div id="index_charts" style="height:400px;"></div>
+            <div id="index_charts" style="height:400px;">
+            </div>
         </div>
         <div class="row-fluid">
             <div class="span1">
@@ -41,6 +43,7 @@
                                 <span ng-bind-html="maptarget.name"></span>
                             </ui-select-choices>
                         </ui-select>
+
                     </div>
                 </div>
                 <div id="gest_map" style="height:300px;"></div>
@@ -59,6 +62,7 @@
                                     <span ng-bind-html="equipmenttarget.name"></span>
                                 </ui-select-choices>
                             </ui-select>
+
                         </div>
                     </div>
                 </div>
@@ -78,6 +82,7 @@
                                     <span ng-bind-html="searchtarget.name"></span>
                                 </ui-select-choices>
                             </ui-select>
+
                         </div>
                     </div>
                 </div>

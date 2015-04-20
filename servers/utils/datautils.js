@@ -3,8 +3,12 @@
  */
 var datautils = {
     send: function (res, obj) {
-        res.write(JSON.stringify(obj));
-        res.end();
+        res.end(JSON.stringify(obj), function (err) {
+            if (err) {
+                console.log(err)
+            }
+        });
+
     }
 }
 module.exports = datautils;
