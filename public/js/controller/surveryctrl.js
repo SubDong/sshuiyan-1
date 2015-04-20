@@ -239,7 +239,6 @@ app.controller('SurveyCtrl', function ($scope, $http, SEM_API_URL, PERFORMANCE_D
                 });
             });
 
-            console.log(JSON.stringify(data));
         }).error(function (error) {
             alert(error);
         });
@@ -462,7 +461,7 @@ app.controller('SurveyCtrl', function ($scope, $http, SEM_API_URL, PERFORMANCE_D
         $scope.quotaMap.put("cpc", "平均点击价格");
 
         //var performanceData = "cost,impression,click,ctr,cpc";
-        var now = new Date().valueOf();
+        //var now = new Date().valueOf();
         $scope.doSearch(0, 0, trackId, "t");
         $scope.getAccountSemRealTimeData("baidu-bjjiehun2123585", "account", 0, 0, 0, 5, PERFORMANCE_DATA);
         $scope.doSearch(-1, -1, trackId, "y");

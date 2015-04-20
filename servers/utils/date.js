@@ -69,13 +69,17 @@ var dateutils = {
     },
     /**
      *
-     * @param startDay
-     * @param endDay
-     * @param inv 时间间隔(由前端传递参数, 24小时, 7天, 30天, 自定义天数)
+     * @param startOffset
+     * @param endOffset
      * @returns {number}    返回间隔的时间毫秒数
      */
-    interval: function (startDay, endDay, inv) {
+    interval: function (startOffset, endOffset) {
         var dayMills = 24 * 60 * 60 * 1000;
+
+        var inv = 24;
+        if (endOffset - startOffset > 0) {
+            inv = -startOffset;
+        }
 
         var date = new Date();
         date.setHours(0);
@@ -92,8 +96,8 @@ var dateutils = {
 
         var endTime = date.getTime();
 
-        var start_offset = parseInt(startDay);
-        var end_offset = parseInt(endDay);
+        var start_offset = parseInt(startOffset);
+        var end_offset = parseInt(endOffset);
 
         startTime = startTime + start_offset * dayMills;
         endTime = endTime + end_offset * dayMills;

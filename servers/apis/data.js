@@ -151,9 +151,9 @@ api.get('/survey', function (req, res) {
 
     var type = query['type'];
     var qtype = query['qtype'];
-    var startDay = Number(query['start']);
-    var endDay = Number(query['end']);
-    var indexes = date.createIndexes(startDay, endDay, "visitor-");
+    var startOffset = Number(query['start']);
+    var endOffset = Number(query['end']);
+    var indexes = date.createIndexes(startOffset, endOffset, "visitor-");
 
     // 指标数组
     var quotas = [];
@@ -165,8 +165,8 @@ api.get('/survey', function (req, res) {
             datautils.send(res, JSON.stringify(result));
         });
     } else {
-        var period = date.period(startDay, endDay);
-        var interval = date.interval(startDay, endDay, Number(query['int']));
+        var period = date.period(startOffset, endOffset);
+        var interval = date.interval(startOffset, endOffset);
 
         es_request.search(req.es, indexes, type, quotas, "period", null, period[0], period[1], interval, function (result) {
             datautils.send(res, JSON.stringify(result));
