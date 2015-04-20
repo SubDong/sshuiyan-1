@@ -434,7 +434,7 @@ var util = {
         var chartDiv = document.getElementById(c.legendId);
         var legendDiv = document.createElement("div");
         legendDiv.id = renderType + "_" + c.id;
-        legendDiv.setAttribute("style", "width:100%;position:absolute;margin:0px auto;text-align:center;z-index:1000;background: #ffffff;");
+        legendDiv.setAttribute("style", "width:100%;position:absolute;margin:0px auto;text-align:center;z-index:100;background: #ffffff;");
         for (var i = c.legendData.length - 1; i > -1; i--) {
             var lab = document.createElement("label");
             var spn = document.createElement("span");

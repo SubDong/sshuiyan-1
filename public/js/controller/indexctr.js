@@ -16,8 +16,10 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
             $scope.definClass = false;
         };
         $scope.gridOptions = {
+            enableColumnMenus: false,
+            enableSorting: true,
             enableScrollbars: false,
-            enableGridMenu: true,
+            enableGridMenu: false,
             enableHorizontalScrollbar: 0,
             enableVerticalScrollbar: 0,
             columnDefs: [
@@ -83,7 +85,7 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
         $scope.grids = [
             {
                 config: {
-                    gridOptions:$scope.gridOptions
+                    gridOptions: $scope.gridOptions
                 },
                 types: ["pv"],
                 quota: ["keyword"],
@@ -157,87 +159,64 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
 
             $scope.today();
         };
-        $scope.selected = '';
-        $scope.view = [
-            {
-                id: 2,
-                when: '访客次数(UV) '
-            },
-            {
-                id: 3,
-                when: '新访客数'
-            },
-            {
-                id: 4,
-                when: 'IP数'
-            },
-            {
-                id: 5,
-                when: '跳出率'
-            },
-            {
-                id: 6,
-                when: '平均访问时长'
+        //index select
+        $scope.disabled = undefined;
+        $scope.enable = function () {
+            $scope.disabled = false;
+        };
+        $scope.disable = function () {
+            $scope.disabled = true;
+        };
+        $scope.clear = function () {
+            $scope.maptarget.selected = undefined;
+            $scope.country.selected = undefined;
+            $scope.continent.selected = undefined;
+            $scope.equipmenttarget.selected = undefined;
+            $scope.searchtarget.selected = undefined;
+        },
+            $scope.searchtarget = {};
+        $scope.searchtargets = [
+            {name: '浏览量PV'},
+            {name: '访客数(UV) '},
+            {name: '新访客数'},
+            {name: 'IP数'},
+            {name: '跳出率'},
+            {name: '平均访问时长'},
+            {name: '转化次数'},
+        ];
+        $scope.continent = {};
+        $scope.country = {};
+        $scope.maptarget = {};
+        $scope.maptargets = [
+            {name: '浏览量PV'},
+            {name: '访客数(UV) '},
+            {name: '新访客数'},
+            {name: 'IP数'},
+            {name: '跳出率'},
+            {name: '平均访问时长'},
+            {name: '转化次数'},
 
-            }, {
-                id: 7,
-                when: '转化次数'
-            },
-
-
-        ]
-        $scope.twoview = [
-            {
-                id: 8,
-                when: '访客次数(UV) '
-            },
-            {
-                id: 9,
-                when: '新访客数'
-            },
-            {
-                id: 10,
-                when: 'IP数'
-            },
-            {
-                id: 11,
-                when: '跳出率'
-            },
-            {
-                id: 12,
-                when: '平均访问时长'
-            }, {
-                id: 13,
-                when: '转化次数'
-            },
-
-
-        ]
-        $scope.threeview = [
-            {
-                id: 15,
-                when: '访客次数(UV) '
-            },
-            {
-                id: 16,
-                when: '新访客数'
-            },
-            {
-                id: 17,
-                when: 'IP数'
-            },
-            {
-                id: 18,
-                when: '跳出率'
-            },
-            {
-                id: 19,
-                when: '平均访问时长'
-            }, {
-                id: 20,
-                when: '转化次数'
-            },
-        ]
+        ];
+        $scope.equipmenttarget = {};
+        $scope.equipmenttargets = [
+            {name: '浏览量PV'},
+            {name: '访客数(UV) '},
+            {name: '新访客数'},
+            {name: 'IP数'},
+            {name: '跳出率'},
+            {name: '平均访问时长'},
+            {name: '转化次数'},
+        ];
+        $scope.searchtarget = {};
+        $scope.searchtargets = [
+            {name: '浏览量PV'},
+            {name: '访客数(UV) '},
+            {name: '新访客数'},
+            {name: 'IP数'},
+            {name: '跳出率'},
+            {name: '平均访问时长'},
+            {name: '转化次数'},
+        ];
 
     }
 )

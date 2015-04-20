@@ -16,7 +16,9 @@ body {
 a:link,
 a:visited,
 a:hover,
-a:active {
+a:active
+a:focus{
+  outline: none;
   text-decoration: none;
 }
 
@@ -284,6 +286,7 @@ nav, .navbar-default {
   .btn-default:hover, .btn-default:focus, .btn-default.focus, .btn-default:active, .btn-default.active, .open > .dropdown-toggle.btn-default {
     background: #01aeef;
     color: #fff;
+    outline: none;
   }
   .btn-group .glyphicon {
     padding: 0 0 0 8px;
@@ -1404,4 +1407,13 @@ nav, .navbar-default {
 }
 .selectize-control.single .selectize-input{
   background:#fff;
+}
+.indextable{
+  .ui-grid-header-canvas,.ui-grid-header,.ui-grid-top-panel,.ui-grid-header-cell,.ui-grid-row:nth-child(2n+1) .ui-grid-cell,.ui-grid-row:nth-child(2n) .ui-grid-cell{
+    background:none;
+    border:none;
+  }
+  .ui-grid-row:hover{
+    background:#eaf9ff;
+  }
 }
