@@ -31,10 +31,12 @@
                         <div class="custom_select">
                             <div class="btn-group fl" role="group">
                                 <p class="fl">计划</p>
-                                <button id="btnGroupDrop2" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                    全部
-                                    <span class="caret"></span>
-                                </button>
+                                <ui-select ng-model="page.selected" theme="selectize" class="fl" style="min-width: 120px;">
+                                    <ui-select-match placeholder="全部">{{$select.selected.name}}</ui-select-match>
+                                    <ui-select-choices repeat="page in pages">
+                                        <span ng-bind-html="page.name"></span>
+                                    </ui-select-choices>
+                                </ui-select>
                             </div>
                             <div class="input-group fl">
                                 <input type="text" class="form-control fl" placeholder="请输入推广URL…">

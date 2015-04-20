@@ -69,9 +69,8 @@ nav, .navbar-default {
   background-color: @background-color;
   z-index: 100;
   .dropdown a {
-    padding-left: 15px;
+    padding-left: 5px;
   }
-  overflow: hidden;
 }
 
 .head {
@@ -791,6 +790,7 @@ nav, .navbar-default {
 }
 
 .index_chart {
+  position:relative;
   overflow: hidden;
   margin-bottom: 20px;
 }
@@ -1415,5 +1415,25 @@ nav, .navbar-default {
   }
   .ui-grid-row:hover{
     background:#eaf9ff;
+  }
+}
+.nav{
+  .selectize-input{
+    border:none;
+    padding:1px;
+    box-shadow: none;
+    input,.ng-scope{
+      color: #01aeef;
+    }
+
+  }
+  .selectize-control.single .selectize-input{
+    box-shadow: none;
+  }
+  .ui-select-container{
+    height:20px;
+  }
+  .selectize-dropdown .optgroup:first-child{
+    border-top:1px solid #808080;
   }
 }

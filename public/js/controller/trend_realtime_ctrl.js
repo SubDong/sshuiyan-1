@@ -1,7 +1,7 @@
 /**
  * Created by baizz on 2015-4-3.
  */
-app.controller('Trend_realtime_ctrl', function ($scope, $http, requestService, messageService, $log) {
+app.controller('Trend_realtime_ctrl', function ($scope,$rootScope , $http, requestService, messageService, $log) {
     $scope.visitorCount = 0;
     $scope.gridOptions = {
         enableColumnMenus: false,
@@ -26,26 +26,50 @@ app.controller('Trend_realtime_ctrl', function ($scope, $http, requestService, m
         .success(function(data) {
             $scope.gridOptions.data = data;
         });
-    $scope.lineChartConfig = {
-        legendData: ["浏览量(PV)","访客数(UV)", "IP数"],//显示几种数据
-        bGap: false,//首行缩进
-        chartId:"Realtime_charts",
-        chartType: "line",//图表类型
-        dataKey: "time",//传入数据的key值
-        dataValue: "value"//传入数据的value值
+    $scope.onLegendClickListener = function (radio, chartObj, chartConfig, checkedVal) {
+        $scope.charts[0].types = checkedVal;
+        var chartarray = [$scope.charts[0]];
+        requestService.refresh(chartarray);
     }
+    $scope.charts = [
+        {
+            config: {
+                legendId: "realtime_charts_legend",
+                legendAllowCheckCount: 2,
+                legendClickListener: $scope.onLegendClickListener,
+                legendData:  ["浏览量(PV)","访客数(UV)", "IP数"],//显示几种数据
+                id: "realtime_charts",
+                bGap: false,//首行缩进
+                chartType: "line",//图表类型
+                dataKey: "time",//传入数据的key值
+                dataValue: "value"//传入数据的value值
+
+            },
+            types: ["pv"],
+            quota: [],
+            interval: $rootScope.interval,
+            url: "/api/charts"
+        }];
+
+    $scope.init = function () {
+
+        $scope.charts.forEach(function (e) {
+            var chart = echarts.init(document.getElementById(e.config.id));
+            e.config.instance = chart;
+            if (e.config.legendData.length > 0) {
+                util.renderLegend(chart, e.config);
+            }
+        })
+        //requestService.initCharts($scope.charts);
+        requestService.refresh($scope.charts);
+    }
+    $scope.init();
     $scope.readChartData = function (type) {
-        var option = {
-            type: "pv",
-            chart: "line",
-            interval: 30
-        };
-        requestService.request($scope.startTime, $scope.endTime, option, $scope.lineChartConfig);
-        //requestService.request("Realtime_charts", $scope.startTime, $scope.endTime, option, $scope.lineChartConfig);
+        requestService.refresh($scope.charts);
     };
-    $scope.search = function (keyword, time, ip) {
+/*    $scope.search = function (keyword, time, ip) {
         requestService.gridRequest($scope.startTime, $scope.endTime, $scope.gridOptions, "uv");
-    };
+    };*/
     $scope.calTimePeriod = function () {
         $scope.endTime = new Date().valueOf();
         $scope.startTime =  $scope.endTime - 30 * 60 * 1000;

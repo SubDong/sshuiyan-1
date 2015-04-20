@@ -13,9 +13,13 @@
         <ul class="nav navbar-nav">
             <li><a href="#"  ui-sref="index"><span aria-hidden="true" class="glyphicon glyphicon-home"></span>网站概览</a></a></li>
             <li class="dropdown" ng-controller="ngSelect">
-                <span class="fl">网站：</span><select ng-model="vm.selectVal" class="fl"ng-options="o.title for o in vm.optionsData">
-                    <option value="">www.best-ad.cn</option>
-                </select>
+                <span class="fl">网站：</span>
+                <ui-select ng-model="userselect.selected" theme="selectize" class="fl" style="min-width: 100px;">
+                    <ui-select-match placeholder="www.best-ad.cn">{{$select.selected.name}}</ui-select-match>
+                    <ui-select-choices repeat="userselect in userselects">
+                        <span ng-bind-html="userselect.name"></span>
+                    </ui-select-choices>
+                </ui-select>
                 <a href="#" class="fl">管理设置</a>
             </li>
             <li><a href="#"> <span aria-hidden="true" class="glyphicon glyphicon-user"></span>best-renrenche1234</a></li>

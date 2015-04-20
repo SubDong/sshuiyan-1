@@ -31,20 +31,18 @@ app.controller('menuctr', function ($scope) {
 });
 /*********nav-select*********/
 app.controller('ngSelect', function ($scope) {
+    $scope.clear = function () {
+        $scope.userselect.selected = undefined;
 
-    var vm = $scope.vm = {};
-
-    //数组对象用来给ng-options遍历
-    vm.optionsData = [{
-        title : "www.perfect.com"
-    },{
-        title : "www.perfect.com"
-    },{
-        title : "www.perfect.com"
-    },{
-        title : "www.perfect.com"
-    }];
-
+    };
+    $scope.userselect = {};
+    $scope.userselects = [
+        {name: 'www.perfect.com'},
+        {name: 'www.perfect.com'},
+        {name: 'www.perfect.com'},
+        {name: 'www.perfect.com'},
+        {name: 'www.perfect.com'}
+    ];
 })
 
 

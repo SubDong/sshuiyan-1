@@ -30,11 +30,11 @@
         </div>
         <div class="plancheck">
             <div class="plancheck_top">
-                <button class="btn btn-default fr btn-sm" ng-click="isCollapsed = !isCollapsed">指标：<b>浏览量(PV)、转化次数</b><span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span></button>
+                <button class="btn btn-default fr btn-sm" ng-click="isCollapsed = !isCollapsed">指标：<b>浏览量(PV)、转化次数</b><span class="caret"></span></button>
             </div>
             <div class="plancheckbox" collapse="isCollapsed">
                 <ul>
-                    <li><input type="checkbox" name="radio1" checked="checked"> <label>展现量</label>
+                    <li><checkbox ng-model="checkboxModel"   name="custom-name"  ng-true-value="The Truth"  ng-false-value="The Untruth"   ng-change="onChange()"></checkbox><input type="checkbox" name="radio1" checked="checked"> <label>展现量</label>
                     </li>
                     <li><input type="checkbox" name="radio1" checked="checked"> <label>点击量</label></li>
                     <li><input type="checkbox" name="radio1"> <label>消费</label></li>

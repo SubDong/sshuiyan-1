@@ -38,7 +38,7 @@
                             </ui-select-choices>
                         </ui-select>
                         <ui-select ng-model="maptarget.selected" theme="selectize" class="fl" style="width: 110px;">
-                            <ui-select-match placeholder="浏览量PV">{{$select.selected.name}}</ui-select-match>
+                            <ui-select-match placeholder="浏览量(PV)">{{$select.selected.name}}</ui-select-match>
                             <ui-select-choices repeat="maptarget in maptargets">
                                 <span ng-bind-html="maptarget.name"></span>
                             </ui-select-choices>
@@ -57,7 +57,7 @@
                         <div role="group" class="btn-group">
                             <ui-select ng-model="equipmenttarget.selected" theme="selectize" class="fl"
                                        style="width: 110px;">
-                                <ui-select-match placeholder="浏览量PV">{{$select.selected.name}}</ui-select-match>
+                                <ui-select-match placeholder="浏览量(PV)">{{$select.selected.name}}</ui-select-match>
                                 <ui-select-choices repeat="equipmenttarget in equipmenttargets">
                                     <span ng-bind-html="equipmenttarget.name"></span>
                                 </ui-select-choices>
@@ -77,7 +77,7 @@
                         <div role="group" class="btn-group">
                             <ui-select ng-model="searchtarget.selected" theme="selectize" class="fl"
                                        style="width: 110px;">
-                                <ui-select-match placeholder="浏览量PV">{{$select.selected.name}}</ui-select-match>
+                                <ui-select-match placeholder="浏览量(PV)">{{$select.selected.name}}</ui-select-match>
                                 <ui-select-choices repeat="searchtarget in searchtargets">
                                     <span ng-bind-html="searchtarget.name"></span>
                                 </ui-select-choices>

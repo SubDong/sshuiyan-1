@@ -3,9 +3,8 @@
  */
 
 app.controller('indexctr', function ($scope, $rootScope, $http, requestService, messageService) {
-
-
         $scope.todayClass = true;
+        $scope.dt = new Date();
         $scope.dayClass = true;
         $scope.timeselect = true;
         $scope.reset = function () {
@@ -176,7 +175,7 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
         },
             $scope.searchtarget = {};
         $scope.searchtargets = [
-            {name: '浏览量PV'},
+            {name: '浏览量(PV)'},
             {name: '访客数(UV) '},
             {name: '新访客数'},
             {name: 'IP数'},
@@ -188,7 +187,7 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
         $scope.country = {};
         $scope.maptarget = {};
         $scope.maptargets = [
-            {name: '浏览量PV'},
+            {name: '浏览量(PV)'},
             {name: '访客数(UV) '},
             {name: '新访客数'},
             {name: 'IP数'},
@@ -199,7 +198,7 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
         ];
         $scope.equipmenttarget = {};
         $scope.equipmenttargets = [
-            {name: '浏览量PV'},
+            {name: '浏览量(PV)'},
             {name: '访客数(UV) '},
             {name: '新访客数'},
             {name: 'IP数'},
@@ -209,7 +208,7 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
         ];
         $scope.searchtarget = {};
         $scope.searchtargets = [
-            {name: '浏览量PV'},
+            {name: '浏览量(PV)'},
             {name: '访客数(UV) '},
             {name: '新访客数'},
             {name: 'IP数'},
