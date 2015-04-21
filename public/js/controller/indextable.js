@@ -3,53 +3,9 @@
  */
 app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, requestService) {
     $scope.todayClass = true;
-    $scope.dateTimeStart = today_start().valueOf();
-    $scope.dateTimeEnd = today_end().valueOf();
-    $scope.reset = function () {
-        $scope.todayClass = false;
-        $scope.yesterdayClass = false;
-        $scope.sevenDayClass = false;
-        $scope.monthClass = false;
-        $scope.definClass = false;
-    };
-    $scope.today = function () {
-        $scope.reset();
-        $scope.todayClass = true;
-        $scope.dateTimeStart = today_start().valueOf();
-        $scope.dateTimeEnd = today_end().valueOf();
-    };
-    $scope.yesterday = function () {
-        $scope.reset();
-        $scope.yesterdayClass = true;
-        $scope.dateTimeStart = yesterday_start().valueOf();
-        $scope.dateTimeEnd = yesterday_end().valueOf();
-    };
-    $scope.sevenDay = function () {
-        $scope.reset();
-        $scope.sevenDayClass = true;
-        $scope.dateTimeStart = lastWeek_start().valueOf();
-        $scope.dateTimeEnd = lastWeek_end().valueOf();
-    };
-    $scope.month = function () {
-        $scope.reset();
-        $scope.monthClass = true;
-        $scope.dateTimeStart = lastMonth_start().valueOf();
-        $scope.dateTimeEnd = lastMonth_end().valueOf();
-    };
-    $scope.open = function ($event) {
-        $scope.reset();
-        $scope.definClass = true;
-        $event.preventDefault();
-        $event.stopPropagation();
-        $scope.opened = true;
-    };
-    $scope.checkopen = function ($event) {
-        $scope.reset();
-        $scope.othersdateClass = true;
-        $event.preventDefault();
-        $event.stopPropagation();
-        $scope.opens = true;
-    };
+    $rootScope.tableTimeStart = today_start().valueOf();
+    $rootScope.tableTimeEnd = today_end().valueOf();
+    $rootScope.latitude = {name: "地域", field: "region"};
 
 
     $scope.tabs = [
@@ -156,17 +112,17 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
         {consumption_name: "IP数", name: "z6"}
     ];
 
-    $rootScope.latitude = {name: "地域", field: "region"};
+
     $scope.checkedArray = new Array();
     $scope.gridArray = new Array();
-    var gridNumber = 1;
     $scope.indicators = function (item, entities, number) {
-        gridNumber == 0 ? $scope.gridArray.shift() : "";
+        $scope.gridArray.shift();
         $scope.gridObj = {};
         var a = $scope.checkedArray.indexOf(item.name);
         if (a != -1) {
             $scope.checkedArray.splice(a, 1);
             $scope.gridArray.splice(a, 1);
+            $scope.gridArray.unshift($rootScope.latitude);
         } else {
             if ($scope.checkedArray.length >= number) {
                 $scope.checkedArray.shift();
@@ -176,11 +132,14 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
                 $scope.gridObj["name"] = item.consumption_name;
                 $scope.gridObj["field"] = item.name;
                 $scope.gridArray.push($scope.gridObj);
+                $scope.gridArray.unshift($rootScope.latitude);
             } else {
+                $scope.checkedArray.push(item.name);
+
                 $scope.gridObj["name"] = item.consumption_name;
                 $scope.gridObj["field"] = item.name;
                 $scope.gridArray.push($scope.gridObj);
-                $scope.checkedArray.push(item.name);
+                $scope.gridArray.unshift($rootScope.latitude);
             }
         }
         angular.forEach(entities, function (subscription, index) {
@@ -194,9 +153,12 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
     $scope.gridOptions = {
         paginationPageSizes: [25, 50, 75],
         paginationPageSize: 25,
-        useExternalPagination: true,
-        useExternalSorting: true,
-        enableGridMenu: true,
+        enableColumnMenus: false,
+        enableSorting: true,
+        enableScrollbars: false,
+        enableGridMenu: false,
+        enableHorizontalScrollbar: 0,
+        enableVerticalScrollbar: 0,
         columnDefs: $scope.gridArray
     };
 
@@ -216,10 +178,8 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
         }
         $http({
             method: 'GET',
-            url: '/api/indextable/?start=' + $scope.dateTimeStart + "&end=" + $scope.dateTimeEnd + "&indic=" + $scope.checkedArray + "&lati=" + $rootScope.latitude.field + "&type=1"
+            url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $scope.checkedArray + "&lati=" + $rootScope.latitude.field + "&type=1"
         }).success(function (data, status) {
-            gridNumber = 0;
-            $scope.gridArray.unshift($rootScope.latitude);
             $scope.gridOptions.data = data;
         }).error(function (error) {
             console.log(error);
