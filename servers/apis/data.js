@@ -196,9 +196,14 @@ api.get('/indextable', function (req, res) {
         var coumArray = new Array();
         data.forEach(function(item,i){
             var _obj = {};
-            _obj["columns"] = item.key;
+            _obj[_lati] = item.key;
             _indic.forEach(function(items,i){
-                _obj[items]  = item[items].value;
+                if(items == "jump"){
+                    _obj[items] = (parseFloat(item["jumpTT"].value) == 0?"0%":((parseFloat(item[items].doc_count)/parseFloat(item["jumpTT"].value))* 100).toFixed(2) +"%");
+                }else{
+                    _obj[items]  = item[items].value;
+                }
+
             });
             result.push(_obj);
         });

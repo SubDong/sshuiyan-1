@@ -1,7 +1,7 @@
 /**
  * Created by john on 2015/3/30.
  */
-app.controller("TabsCtrl", function ($scope, $rootScope, $http, requestService) {
+app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, requestService) {
     $scope.todayClass = true;
     $scope.dateTimeStart = today_start().valueOf();
     $scope.dateTimeEnd = today_end().valueOf();
@@ -156,48 +156,50 @@ app.controller("TabsCtrl", function ($scope, $rootScope, $http, requestService) 
         {consumption_name: "IP数", name: "z6"}
     ];
 
-    $rootScope.latitude = {name:"地域",value:"region"};
+    $rootScope.latitude = {name: "地域", field: "region"};
     $scope.checkedArray = new Array();
-    $scope.indicators = function (name, entities, number) {
-        var a = $scope.checkedArray.indexOf(name);
+    $scope.gridArray = new Array();
+    var gridNumber = 1;
+    $scope.indicators = function (item, entities, number) {
+        gridNumber == 0 ? $scope.gridArray.shift() : "";
+        $scope.gridObj = {};
+        var a = $scope.checkedArray.indexOf(item.name);
         if (a != -1) {
             $scope.checkedArray.splice(a, 1);
+            $scope.gridArray.splice(a, 1);
         } else {
             if ($scope.checkedArray.length >= number) {
                 $scope.checkedArray.shift();
-                $scope.checkedArray.push(name);
+                $scope.gridArray.shift();
+                $scope.checkedArray.push(item.name);
+
+                $scope.gridObj["name"] = item.consumption_name;
+                $scope.gridObj["field"] = item.name;
+                $scope.gridArray.push($scope.gridObj);
             } else {
-                $scope.checkedArray.push(name);
+                $scope.gridObj["name"] = item.consumption_name;
+                $scope.gridObj["field"] = item.name;
+                $scope.gridArray.push($scope.gridObj);
+                $scope.checkedArray.push(item.name);
             }
         }
         angular.forEach(entities, function (subscription, index) {
             $scope.checkedArray;
-            if (subscription.name == name) {
+            if (subscription.name == item.name) {
                 $scope.classInfo = 'current';
             }
         });
-
     };
-
     // 推广概况表格配置项
     $scope.gridOptions = {
-        enableColumnMenus: false,
-        enableHorizontalScrollbar: 0,
-        enableSorting: false,
-        enableScrollbars: false,
-        enableVerticalScrollbar: 0,
-        columnDefs: [
-            {name: '地域', field: 'columns'},
-            {name: '消费', field: 'pv'},
-            {name: '展现量', field: 'uv'},
-            {name: '点击量', field: 'ip'},
-            {name: '访问次数', field: 'uv'},
-            {name: '页面转化', field: 'tt'},
-            {name: '事件转化', field: 'ct'},
-            {name: '跳出率', field: 'outRate'},
-            {name: '平均访问时长', field: 'avgTime'}
-        ]
+        paginationPageSizes: [25, 50, 75],
+        paginationPageSize: 25,
+        useExternalPagination: true,
+        useExternalSorting: true,
+        enableGridMenu: true,
+        columnDefs: $scope.gridArray
     };
+
 
     /**
      *
@@ -214,11 +216,11 @@ app.controller("TabsCtrl", function ($scope, $rootScope, $http, requestService) 
         }
         $http({
             method: 'GET',
-            url: '/api/indextable/?start=' + $scope.dateTimeStart + "&end=" + $scope.dateTimeEnd + "&indic=" + $scope.checkedArray + "&lati=" + $rootScope.latitude.value + "&type=1"
+            url: '/api/indextable/?start=' + $scope.dateTimeStart + "&end=" + $scope.dateTimeEnd + "&indic=" + $scope.checkedArray + "&lati=" + $rootScope.latitude.field + "&type=1"
         }).success(function (data, status) {
+            gridNumber = 0;
+            $scope.gridArray.unshift($rootScope.latitude);
             $scope.gridOptions.data = data;
-            console.log(data);
-
         }).error(function (error) {
             console.log(error);
         });

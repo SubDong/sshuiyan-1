@@ -98,48 +98,48 @@
                         <div class="chart_top">
                                 <span>消费指标 :</span>
                                 <ul>
-                                    <li ng-repeat="item in target" ng-class='{current:$index==selectedRow}'
-                                        ng-click='selectedWhich($index)'>{{item.consumption_name}}
+                                    <li ng-repeat="item in target" class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                        ng-click='indicators(item.name,target,6)'>{{item.consumption_name}}
                                     </li>
                                 </ul>
                         </div>
                         <div class="chart_top">
                                 <span>网站基础指标 :</span>
                                 <ul>
-                                    <li ng-repeat="item in Webbased" ng-class='{current:$index==selectedWeb}'
-                                        ng-click='selectedWebbased($index)'>{{item.consumption_name}}
+                                    <li ng-repeat="item in Webbased" class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                        ng-click='indicators(item.name,Webbased,6)'>{{item.consumption_name}}
                                     </li>
                                 </ul>
                         </div>
                         <div class="chart_top">
                                 <span>流量质量指标:</span>
                                 <ul>
-                                    <li ng-repeat="item in flow" ng-class='{current:$index==selectedflow}'
-                                        ng-click='selectflowd($index)'>{{item.consumption_name}}
+                                    <li ng-repeat="item in flow" class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                        ng-click='indicators(item.name,flow,6)'>{{item.consumption_name}}
                                     </li>
                                 </ul>
                         </div>
                         <div class="chart_top">
                                 <span>转化指标:</span>
                                 <ul>
-                                    <li ng-repeat="item in transform" ng-class='{current:$index==selectedtransform}'
-                                        ng-click='selectedform($index)'>{{item.consumption_name}}
+                                    <li ng-repeat="item in transform" class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                        ng-click='indicators(item.name,transform,6)'>{{item.consumption_name}}
                                     </li>
                                 </ul>
                         </div>
                         <div class="chart_top">
                                 <span>移动搜索页指标:</span>
                                 <ul>
-                                    <li ng-repeat="item in mobile" ng-class='{current:$index==selectedmobile}'
-                                        ng-click='selectedmobiles($index)'>{{item.consumption_name}}
+                                    <li ng-repeat="item in mobile" class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                        ng-click='indicators(item.name,mobile,6)'>{{item.consumption_name}}
                                     </li>
                                 </ul>
                         </div>
                         <div class="chart_top">
                                 <span>离线宝回呼指标:</span>
                                 <ul>
-                                    <li ng-repeat="item in  recall" ng-class='{current:$index==selectedrecall}'
-                                        ng-click='selectedrecalls($index)'>{{item.consumption_name}}
+                                    <li ng-repeat="item in  recall" class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                        ng-click='indicators(item.name,recall,6)'>{{item.consumption_name}}
                                     </li>
                                 </ul>
                         </div>
@@ -163,8 +163,7 @@
                             </div>
                         </div>
                         <div class="custom_table">
-                            <table id="mytable" class="table table-hover">
-                            </table>
+                            <div ui-grid="gridOptions" class="grid" ui-grid-pinning></div>
                             <div id="pager"></div>
                         </div>
                     </div>
