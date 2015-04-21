@@ -49,6 +49,22 @@ app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
             url: "/page/entrancepage",
             templateUrl: "../page/entrancepage.html"
         })
+        .state('entrancepage/1', {
+            url: "/page/secendpage/flowanalysis",
+            templateUrl: "../page/secendpage/flowanalysis.html"
+        })
+        .state('entrancepage/2', {
+            url: "/page/secendpage/newvisitors",
+            templateUrl: "../page/secendpage/newvisitors.html"
+        })
+        .state('entrancepage/3', {
+            url: "/page/secendpage/attractivenessanalysis",
+            templateUrl: "../page/secendpage/attractivenessanalysis.html"
+        })
+        .state('entrancepage/4', {
+            url: "/page/secendpage/analysistransformation",
+            templateUrl: "../page/secendpage/analysistransformation.html"
+        })
         .state('pagetitle', {
             url: "/page/pagetitle",
             templateUrl: "../page/pagetitle.html"
@@ -57,7 +73,19 @@ app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
             url: "/page/indexoverview",
             templateUrl: "../page/indexoverview.html"
         })
-        .state('visitormap', {
+        .state('indexoverview/1', {
+            url: "/page/indexoverview/pagevalue",
+            templateUrl: "../page/secendpage/pagevalue.html"
+        })
+        .state('indexoverview/2', {
+            url: "/page/secendpage/visitedpages",
+            templateUrl: "../page/secendpage/visitedpages.html"
+        })
+        .state('indexoverview/3', {
+            url: "/page/secendpage/exitpages",
+            templateUrl: "../page/secendpage/exitpages.html"
+        })
+        .state('provincemap/1', {
             url: "/visitor/visitormap",
             templateUrl: "../visitor/visitormap.html"
         })

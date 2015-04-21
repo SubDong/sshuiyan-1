@@ -26,7 +26,7 @@
                             <li class="date_third"><h4>访客数(UV)</h4><span>34</span></li>
                             <li class="date_four"><h4>订单数 </h4><span>2,574</span></li>
                             <li class="date_five"><h4>订单金额 </h4><span>90</span></li>
-                            <li class="date_last"><h4>平均访问页数 </h4><span>90</span></li>
+                            <li class="date_last"><h4>订单转化率 </h4><span>90</span></li>
                         </ul>
 
                     </div>
@@ -101,7 +101,11 @@
                                 </div>
                                 <div class="custom_secendtitle">
                                     <div class="custom_select">
-                                        转化目标
+                                        <input type="radio" checked="checked" name="radio1"/>
+                                        <label>按域名</label>
+                                        <input type="radio" checked="checked" name="radio1"/>
+                                        <label>按URL</label>
+                                        <b></b>转化目标
                                         <div role="group" class="btn-group">
                                             <ui-select ng-model="extendway.selected" theme="selectize" class="fl" style="width: 120px;">
                                                 <ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>
@@ -129,15 +133,49 @@
                                             <li><input type="radio" name="radio1"/> <label>移动设备</label></li>
                                         </ul>
                                     </div>
+                                    <div class="chart_top2">
+                                        <ul>
+                                            <li><span>地域过滤:</span></li>
+                                            <li>
+                                                <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
+                                                    <div role="group" class="btn-group">
+                                                        <ui-select ng-model="continent.selected" theme="selectize" ng-disabled="disabled" class="fl"
+                                                                   style="width: 80px;">
+                                                            <ui-select-match placeholder="大洲">{{$select.selected.name}}</ui-select-match>
+                                                            <ui-select-choices repeat="continent in continents">
+                                                                <span ng-bind-html="continent.name"></span>
+                                                            </ui-select-choices>
+                                                        </ui-select>
+                                                    </div>
+                                                    <div role="group" class="btn-group">
+                                                        <ui-select ng-model="country.selected" theme="selectize" ng-disabled="disabled" class="fl"
+                                                                   style="width: 80px;">
+                                                            <ui-select-match placeholder="国家">{{$select.selected.name}}</ui-select-match>
+                                                            <ui-select-choices repeat="country in countrys">
+                                                                <span ng-bind-html="country.name"></span>
+                                                            </ui-select-choices>
+                                                        </ui-select>
+                                                    </div>
+                                                    <div role="group" class="btn-group">
+                                                        <ui-select ng-model="city.selected" theme="selectize" class="fl" style="width: 80px;">
+                                                            <ui-select-match placeholder="城市">{{$select.selected.name}}</ui-select-match>
+                                                            <ui-select-choices repeat="city in citys">
+                                                                <span ng-bind-html="city.name"></span>
+                                                            </ui-select-choices>
+                                                        </ui-select>
+                                                    </div>
+
+                                                </div>
+                                            </li>
+                                            <li><a href="#">北京</a></li>
+                                            <li><a href="#">上海</a></li>
+                                            <li><a href="#">广州</a></li>
+                                        </ul>
+                                    </div>
                                 </div>
                                 <div class="custom_secendtitle">
                                     <div class="custom_select">
-                                        <div class="input-group fl">
-                                            <input type="text" placeholder="关键词/搜索词…" class="form-control fl">
-                                       <span class="input-group-btn fl">
-                                 <button type="button" class="btn btn-default"><span aria-hidden="true" class="glyphicon glyphicon-search"></span></button>
-                                   </span>
-                                        </div><b></b>转化目标
+                                       转化目标
                                         <div role="group" class="btn-group">
                                             <ui-select ng-model="extendway.selected" theme="selectize" class="fl" style="width: 120px;">
                                                 <ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>

@@ -1,11 +1,6 @@
            <div class="middle_containers">
                 <div class="date_select">
-                    <div aria-label="First group" role="group" class="btn-group fl">
-                        <button class="btn btn-default current" type="button">指标概览 </button>
-                        <button class="btn btn-default " type="button"> 页面价值分析</button>
-                        <button class="btn btn-default " type="button">入口页分析 </button>
-                        <button class="btn btn-default" type="button">退出页分析 </button>
-                    </div>
+                    <indexoverview></indexoverview>
                     <calendar></calendar>
                     <dateother></dateother>
                     <div class="fr">
@@ -30,7 +25,7 @@
                         <ul>
                             <li class="date_first"><h4>浏览量(PV)</h4><span>34</span></li>
                             <li class="date_third"><h4>访客数(UV) </h4><span>100%</span></li>
-                            <li class="date_four"><h4>入口页次数</h4><span>2,574</span></li>
+                            <li class="date_last"><h4>入口页次数</h4><span>2,574</span></li>
                         </ul>
                     </div>
                     <div class="index_chart">
@@ -50,17 +45,16 @@
                                     <div class="chart_top2">
                                         <ul>
                                             <li><span>来源过滤 :</span></li>
-                                            <li><div role="group" class="btn-group">
-                                                <button aria-expanded="false" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" id="btnGroupDrop4">
-                                                    全部
-                                                    <span class="caret"></span>
-                                                </button>
-                                                <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
-                                                    <li><a href="#">直接访问</a></li>
-                                                    <li><a href="#">搜索引擎</a></li>
-                                                    <li><a href="#">外部连接</a></li>
-                                                </ul>
-                                            </div></li>
+                                            <li>
+                                                <div role="group" class="btn-group">
+                                                <ui-select ng-model="souce.selected" theme="selectize" class="fl" style="width: 90px;">
+                                                    <ui-select-match placeholder="全部">{{$select.selected.name}}</ui-select-match>
+                                                    <ui-select-choices repeat="souce in souces">
+                                                        <span ng-bind-html="souce.name"></span>
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                              </div>
+                                            </li>
                                             <li><a href="#">百度</a></li>
                                             <li><a href="#">Google</a></li>
                                         </ul>
@@ -69,7 +63,7 @@
                                 <div class="custom_secendtitle">
                                     <div class="custom_select">
                                         <div class="input-group fl">
-                                            <input type="text" placeholder="关键词/搜索词…" class="form-control fl">
+                                            <input type="text" placeholder="输入URL…" class="form-control fl">
                                        <span class="input-group-btn fl">
                                  <button type="button" class="btn btn-default"><span aria-hidden="true" class="glyphicon glyphicon-search"></span></button>
                                    </span>

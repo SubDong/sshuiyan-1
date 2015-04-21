@@ -1,8 +1,8 @@
 <div class="middle_containers" ng-controller="Vistiorctr">
     <div class="date_select">
         <div aria-label="First group" role="group" class="btn-group fl">
-            <button class="btn btn-default" type="button" ng-click="setArea('country')">按国家</button>
-            <button class="btn btn-default current" type="button" ng-click="setArea('province')">按省</button>
+            <a class="btn btn-default" ui-sref="provincemap/1"  ng-click="setArea('country')">按国家</a>
+            <a class="btn btn-default current" ui-sref="provincemap" ng-click="setArea('province')">按省</a>
         </div>
         <calendar></calendar>
         <datecontrast></datecontrast>
@@ -160,7 +160,7 @@
                             </table>
                             <div id="pager2"></div>
                         </div>
-                    </div>s
+                    </div>
                 </tab>
             </tabset>
         </div>
