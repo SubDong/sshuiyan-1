@@ -31,7 +31,7 @@
                         <div class="custom_select">
                             <div class="btn-group fl" role="group">
                                 <p class="fl">计划</p>
-                                <ui-select ng-model="page.selected" theme="selectize" class="fl" style="min-width: 120px;">
+                                <ui-select ng-model="page.selected" theme="selectize" class="fl btn-Plan" style="min-width: 120px;">
                                     <ui-select-match placeholder="全部">{{$select.selected.name}}</ui-select-match>
                                     <ui-select-choices repeat="page in pages">
                                         <span ng-bind-html="page.name"></span>

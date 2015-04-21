@@ -213,6 +213,7 @@ nav, .navbar-default {
   .panel-group .panel {
     border-radius: 0px;
     box-shadow: none;
+    margin-top: 0px;
   }
   .panel {
     border: 0px;
@@ -244,7 +245,9 @@ nav, .navbar-default {
   }
   .panel-body ul li {
     margin-bottom: 10px;
-
+  }
+  .panel-default{
+    border-left: 4px solid #334E72;
   }
   .panel-group .current {
     border-left: 4px solid #01aeef;
@@ -261,7 +264,7 @@ nav, .navbar-default {
     a{
       display:block;
       width:100%;
-      padding: 10px 5px;
+      padding: 13px 12px;
     }
   }
 
@@ -712,14 +715,16 @@ nav, .navbar-default {
         border-right:none;
       }
       .btn-default{
-        padding: 2px 6px;
+        padding: 0px 6px;
+        line-height: 26px;
+        height: 26px;
         color: #E6E4E5;
         border: 1px solid #E6E4E5;
         border-left:none;
       }
       .btn-default:hover{
-        color: #666;
-        background: #888888;
+        color: #888;
+        background: #ffffff;
       }
     }
     label {
@@ -1032,9 +1037,9 @@ nav, .navbar-default {
 }
 
 .select_top {
-  padding: 5px;
+  padding: 0px 0 5px 0 ;
   background: #f6f5f5;
-  min-height: 56px;
+  min-height: 40px;
   .btn-group{
     .btn-default{
       padding: 0 12px;
@@ -1572,9 +1577,6 @@ nav, .navbar-default {
   .btn-group{
     margin: 0;
     margin-top: 4px;
-    .ui-select-container{
-      margin-right: 10px;
-    }
     .selectize-input{
       padding: 0 5px;
       line-height: 26px;
@@ -1583,3 +1585,21 @@ nav, .navbar-default {
   }
 
 }
+.navbar-collapse{
+  padding-right: 0px;
+}
+.visitor_table_select{
+  button{
+    padding: 0 12px !important;;
+    line-height: 26px !important;
+    height: 26px !important;
+    font-size: 12px;
+    border-radius: 3px;
+    background-color: #31B0D5;
+    border-color: #269ABC;
+  }
+}
+.btn-Plan{
+  margin-right: 5px;
+}
+
