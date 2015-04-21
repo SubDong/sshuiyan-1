@@ -400,8 +400,9 @@ nav, .navbar-default {
     .fl;
   }
   .under_title {
-    height: 50px;
+    height: 38px;
     border-bottom: 1px solid #f0f0f0;
+    margin-bottom: 10px;
 
   }
   overflow: hidden;
@@ -782,6 +783,11 @@ nav, .navbar-default {
     .form-control {
       .fl;
       width: 200px;
+      font-size: 12px;
+      border-radius: 3px;
+      box-shadow: none;
+      border: 1px solid #E6E4E5;
+      height: 26px;
 
     }
 
@@ -978,6 +984,13 @@ nav, .navbar-default {
   padding: 5px;
   background: #f6f5f5;
   min-height: 56px;
+  .btn-group{
+    .btn-default{
+      padding: 0 12px;
+      height: 26px;
+    font-size: 12px;
+  }
+  }
   select {
     height: 30px;
     padding: 0 10px;
@@ -1186,7 +1199,7 @@ nav, .navbar-default {
 }
 
 .plancheck_top {
-  height: 40px;
+  height: 30px;
   b{
     margin:0 5px;
     color:#2fabe9;
@@ -1294,7 +1307,7 @@ nav, .navbar-default {
   line-height: inherit;
   .ui-select-match {
     span {
-      padding: 0 10px;
+      padding: 0px;
     }
   }
 }
@@ -1304,16 +1317,28 @@ nav, .navbar-default {
 }
 
 .selectize-dropdown {
-  margin: -5px 0 0;
+  margin: -6px 0 0;
+  position: absolute;
+  z-index: 10;
+  border: 1px solid #e6e4e5 !important;
+  background:  #FFF;
+  box-sizing: border-box;
+  box-shadow:0px 2px 15px #e6e4e5;
+  border-radius: 0px 0px 3px 3px;
+  .option:hover{
+    background: #01aeef;
+    color: #ffffff;
+  }
 }
+
+
 
 .btn-group {
   .ui-select-container {
     .selectize-input {
-      padding: 3px;
+      padding: 5px 7px;
     }
     line-height: inherit;
-    margin-left: 5px;
     .selectize-input {
       line-height: inherit;
       .ui-select-match {
@@ -1404,6 +1429,16 @@ nav, .navbar-default {
 
 .selectize-input {
   padding: 5px;
+  box-shadow:none !important;
+  background:#ffffff;
+  border:1px solid #e6e4e5 !important;
+  background-image:none;
+  background-repeat: repeat-x;
+  font-size: 12px;
+
+}
+.selectize-input.selectize-focus{
+  border-color:#f0f0f0 !important;
 }
 .selectize-control.single .selectize-input{
   background:#fff;
@@ -1417,23 +1452,56 @@ nav, .navbar-default {
     background:#eaf9ff;
   }
 }
-.nav{
-  .selectize-input{
-    border:none;
-    padding:1px;
+
+.nav {
+  .selectize-input {
+    border: none;
+    padding: 1px;
     box-shadow: none;
-    input,.ng-scope{
+    input, .ng-scope {
       color: #01aeef;
     }
 
   }
-  .selectize-control.single .selectize-input{
+
+  .selectize-control.single .selectize-input {
     box-shadow: none;
   }
-  .ui-select-container{
-    height:20px;
+  .ui-select-container {
+    height: 20px;
   }
-  .selectize-dropdown .optgroup:first-child{
-    border-top:1px solid #808080;
+  .selectize-dropdown .optgroup:first-child {
+    border-top: 1px solid #808080;
+  }
+}
+
+
+.btn-delta{
+  .selectize-input{
+    border-right: none !important;
+    border-radius:3px 0 0 3px ;
+  }
+}
+.btn-nation{
+  .selectize-input{
+    border-right: none !important;
+    border-radius: 0 ;
+  }
+}
+.btn-pv{
+  .selectize-input{
+    border-radius: 0 3px 3px 0 ;
+  }
+}
+.span3 {
+  .ui-grid-coluiGrid-004 {
+    .ui-grid-cell-contents {
+      text-align: right;
+      padding-right: 0px;
+    }
+    .ng-scope {
+      padding-right: 10px;
+    }
+
   }
 }
