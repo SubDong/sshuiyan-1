@@ -15,108 +15,120 @@ var api = express.Router();
 
 api.get('/charts', function (req, res) {
     var query = url.parse(req.url, true).query;
-    var querytypes = [];
+    var quotas = [];
     var type = query['type'];
-
+    var dimension = query.dimension;
     if (type.indexOf(",") > -1)for (var i = 0; i < type.split(",").length; i++) {
-        querytypes.push(type.split(",")[i]);
+        quotas.push(type.split(",")[i]);
     }
     else
-        querytypes.push(type);
+        quotas.push(type);
 
-    var uvindexs = date.between(req, "visitor-");
-    var pvindexs = date.between(req, "access-");
+    var start = Number(query['start']);//
+    var end = Number(query['end']);//
+    var indexes = date.createIndexes(start, end, "visitor-");
 
-    var start = Number(query['start']);
-    var end = Number(query['end']);
-    var inv = Number(query['int']);
-    var interval = Math.ceil((end - start) / inv);
-    if (interval >= 86400000) interval = "day"; else interval = interval / 1000 + "s";
-    querytypes.forEach(function (qtype) {
-        switch (qtype) {
-            case "uv":
-                line.uv(req.es, start, end, interval, uvindexs, 1, qtype, "tt", function (body) {
-                    datautils.send(res, body);
-                });
-                break;
-            case "pv":
-                line.pv(req.es, start, end, interval, pvindexs, 1, qtype, "loc", function (body) {
-                    datautils.send(res, body);
-                    //datautils.lineData(res, body, qtype);
-                });
-                break;
-            case "ip":
-                break;
-            case "avgVisitTime":
-                line.calAvgVisitTime(req.es, start, end, interval, uvindexs, 1, qtype, "utime", function (result) {
-                    datautils.send(res, result);
-                    //console.log(JSON.stringify(result));
-                });
-                break;
-            case "outRate":
-                line.calJumpRate(req.es, start, end, interval, uvindexs, 1, qtype, function (result) {
-                    datautils.send(res, result);
-                });
-                break;
-            case "city":
-                break;
-            case "arrRate":
-                line.convertRate(req.es, start, end, interval, pvindexs, 1, qtype, "http://sem.best-ad.cn/index", function (result) {
-                    datautils.send(res, result);
-                });
-                break;
-            case "convertRate":
-                line.convertRate(req.es, start, end, interval, pvindexs, 1, qtype, "http://sem.best-ad.cn/login,http://sem.best-ad.cn/home", function (result) {
-                    datautils.send(res, result);
-                });
-                break;
-            case "province":
-                break;
-            default :
-                break;
-        }
+    var period = date.period(start, end);
+    var interval = date.interval(start, end, Number(query['int']));
+
+    es_request.search(req.es, indexes, 1, quotas, dimension, null, period[0], period[1], interval, function (result) {
+        datautils.send(res, JSON.stringify(result));
     });
+
+    //querytypes.forEach(function (qtype) {
+    //    switch (qtype) {
+    //        case "uv":
+    //            line.uv(req.es, start, end, interval, uvindexs, 1, qtype, "tt", function (body) {
+    //                datautils.send(res, body);
+    //            });
+    //            break;
+    //        case "pv":
+    //            line.pv(req.es, start, end, interval, pvindexs, 1, qtype, "loc", function (body) {
+    //                datautils.send(res, body);
+    //                //datautils.lineData(res, body, qtype);
+    //            });
+    //            break;
+    //        case "ip":
+    //            break;
+    //        case "avgVisitTime"://平均访问时间
+    //            line.calAvgVisitTime(req.es, start, end, interval, uvindexs, 1, qtype, "utime", function (result) {
+    //                datautils.send(res, result);
+    //                //console.log(JSON.stringify(result));
+    //            });
+    //            break;
+    //        case "outRate"://跳出率
+    //            line.calJumpRate(req.es, start, end, interval, uvindexs, 1, qtype, function (result) {
+    //                datautils.send(res, result);
+    //            });
+    //            break;
+    //        case "city":
+    //            break;
+    //        case "arrRate"://抵达率
+    //            line.convertRate(req.es, start, end, interval, pvindexs, 1, qtype, "http://sem.best-ad.cn/index", function (result) {
+    //                datautils.send(res, result);
+    //            });
+    //            break;
+    //        case "arrCount"://访问次数
+    //            line.arrCount(req.es, start, end, interval, pvindexs, 1, qtype, function (result) {
+    //                datautils.send(res, result);
+    //            });
+    //            break;
+    //        case "convertRate"://页面转化
+    //            line.convertRate(req.es, start, end, interval, pvindexs, 1, qtype, "http://sem.best-ad.cn/login,http://sem.best-ad.cn/home", function (result) {
+    //                datautils.send(res, result);
+    //            });
+    //            break;
+    //        case "province":
+    //            break;
+    //        default :
+    //            break;
+    //    }
+    //});
 });
 api.get('/map', function (req, res) {
     var query = url.parse(req.url, true).query;
+    var quotas = [];
     var type = query['type'];
-    var start = Number(query['start']);
-    var end = Number(query['end']);
-    switch (type) {
-        case "pv":
-            var indexs = date.between(req, "access-");
-            bar.pu(req.es, start, end, null, indexs, 1, type, null, function (body) {
-                datautils.send(res, body);
-            });
-            break;
-        case "uv":
-            var indexs = date.between(req, "visitor-");
-            bar.pu(req.es, start, end, null, indexs, 1, type, null, function (body) {
-                datautils.send(res, body);
-            });
-            break;
+    var dimension = query.dimension;
+    if (type.indexOf(",") > -1)for (var i = 0; i < type.split(",").length; i++) {
+        quotas.push(type.split(",")[i]);
     }
+    else
+        quotas.push(type);
+
+    var start = Number(query['start']);//0
+    var end = Number(query['end']);
+    var indexes = date.createIndexes(start, end, "visitor-");
+
+    var period = date.period(start, end);
+    var interval = date.interval(start, end, Number(query['int']));
+
+    es_request.search(req.es, indexes, 1, quotas, dimension, null, period[0], period[1], interval, function (result) {
+        datautils.send(res, JSON.stringify(result));
+    });
 });
 api.get('/pie', function (req, res) {
     var query = url.parse(req.url, true).query;
+    var quotas = [];
     var type = query['type'];
-    var field = query['field'];
+    var dimension=query.dimension;
+    if (type.indexOf(",") > -1)for (var i = 0; i < type.split(",").length; i++) {
+        quotas.push(type.split(",")[i]);
+    }
+    else
+        quotas.push(type);
+
     var start = Number(query['start']);
     var end = Number(query['end']);
-    switch (type) {
-        case "pv":
-            var indexs = date.between(req, "access-");
-            pie.on(req.es, start, end, indexs, 1, type, function (body) {
-                datautils.send(res, body);
-            })
-            break;
-        case "uv":
-            var indexs = date.between(req, "visitor-");
-            pie.on(req.es, start, end, indexs, 1, type, function (body) {
-                datautils.send(res, body);
-            })
-            break;
-    }
+    var indexes = date.createIndexes(start, end, "visitor-");
+
+    var period = date.period(start, end);
+    var interval = date.interval(start, end, Number(query['int']));
+
+    es_request.search(req.es, indexes, 1, quotas, dimension, null, period[0], period[1], interval, function (result) {
+        datautils.send(res, JSON.stringify(result));
+    });
+
 });
 api.get('/grid', function (req, res) {
     var query = url.parse(req.url, true).query;
@@ -294,6 +306,7 @@ api.get("/vapie", function (req, res) {
             pie.comeForm(req.es, start, end, indexs, 1, function (body) {
                 datautils.send(res, body);
             });
+        case "convertRate":
             break;
     }
 });

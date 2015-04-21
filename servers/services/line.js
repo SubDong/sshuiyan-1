@@ -215,7 +215,7 @@ var line = {
                     response.aggregations.result.buckets.forEach(function (hit) {
                         var obj = {};
                         if (intervals.indexOf("day") > -1)obj["time"] = date.formatDate(hit.key); else obj["time"] = date.formatTime(hit.key);
-                        if (hit.vc.value != 0) obj["value"] = parseInt(hit.tvt.value /(hit.vc.value*1000)); else obj["value"] = hit.tvt.value;
+                        if (hit.vc.value != 0) obj["value"] = parseInt(hit.tvt.value / (hit.vc.value * 1000)); else obj["value"] = hit.tvt.value;
                         result.push(obj);
                     });
                     var config = {};
@@ -468,7 +468,84 @@ var line = {
                 cb(result_data);
         });
 
+    },
+    arrCount: function (es, start, end, intervals, indexs, type, qType, cb) {
+        console.log(intervals);
+        var request = {
+            "index": indexs.toString(),
+            "type": type,
+            "body": {
+                "query": {
+                    "range": {
+                        "utime": {
+                            "gte": start,
+                            "lte": end
+                        }
+                    }
+                },
+                "size": 0,
+                "aggs": {
+                    "result": {
+                        "date_histogram": {
+                            "field": "utime",
+                            "interval": intervals,
+                            "pre_zone": "+08:00",
+                            "post_zone": "+08:00",
+                            "order": {
+                                "_key": "asc"
+                            },
+                            "min_doc_count": 0,
+                            "extended_bounds": {
+                                "min": start,
+                                "max": end
+                            }
+                        },
+                        "aggs": {
+                            "arrCount": {
+                                "cardinality": {
+                                    "field": "tt"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+        };
+        es.search(request, function (err, esBody) {
+            var result_data = {label: "暂无数据", data: []};
+            if (esBody) {
+                if (esBody.status == undefined) {
+                    var result = esBody.aggregations;
+                    if (result != undefined) {
+                        var pv = result.result;
+                        var uv_Data = [];
+                        pv.buckets.forEach(function (e) {
+                            var vo = {};
+                            if (intervals.indexOf("day") > -1)  vo["time"] = date.formatDate(e.key); else vo["time"] = date.formatTime(e.key);
+                            vo["value"] = e["" + qType + ""].value;
+                            uv_Data.push(vo);
+                        });
+                        var config = {};
+                        config["dataKey"] = "time";
+                        config["dataValue"] = "value";
+                        result_data["label"] = qType;
+                        result_data["data"] = uv_Data;
+                        result_data["config"] = config;
+                        cb(result_data);
+                    } else {
+                        cb(result_data);
+                    }
+                } else {
+                    cb(result_data);
+                }
+            } else {
+                cb(result_data);
+            }
+        });
     }
-};
+
+}
+
 
 module.exports = line;

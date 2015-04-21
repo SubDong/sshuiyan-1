@@ -84,20 +84,25 @@ var init = {
             };
             option.series.push(serie);
         });
-        console.log(option);
         instance.setOption(option);
     }
 }
 var op = {
     lineChart: function (data, chartConfig) {
+        if (!data.length) return;
+        var json = JSON.parse(eval('(' + data + ')').toString()), labelData = [];
+        json.forEach(function (item) {
+            labelData.push(item.label);
+        });
         if (!chartConfig.instance)return;
         var chartObj = chartConfig.instance;
+        chartObj.xAxis = [];
         var option = {
             legend: {
                 show: false,
                 selectedMode: false,
                 orient: !chartConfig.ledLayout ? "horizontal" : chartConfig.ledLayout,
-                data: !chartConfig.legendData ? [data.label] : chartConfig.legendData
+                data: !chartConfig.legendData ? labelData : chartConfig.legendData
             },
             tooltip: {
                 trigger: !chartConfig.tt ? "axis" : chartConfig.tt
@@ -136,38 +141,60 @@ var op = {
                 }
             }
         }
-        var serie = {
-            name: chartUtils.convertChinese(data.label),
-            type: !chartConfig.chartType ? "line" : chartConfig.chartType,
-            itemStyle: {normal: {areaStyle: {type: 'default'}}},
-            data: []
-        };
-        if (chartConfig.min_max == undefined) {
-            serie["markPoint"] = {
-                data: [
-                    {type: 'max', name: '最大值'},
-                    {type: 'min', name: '最小值'}
-                ]
+        chartConfig.dataKey = !chartConfig.dataKey ? "key" : chartConfig.dataKey;
+        chartConfig.dataValue = !chartConfig.dataValue ? "quota" : chartConfig.dataValue;
+        var xData = [];
+        json.forEach(function (item) {
+            var serie = {
+                name: chartUtils.convertChinese(item.label),
+                type: !chartConfig.chartType ? "line" : chartConfig.chartType,
+                itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                data: item[chartConfig.dataValue]
+            };
+            if (chartConfig.min_max == undefined) {
+                serie["markPoint"] = {
+                    data: [
+                        {type: 'max', name: '最大值'},
+                        {type: 'min', name: '最小值'}
+                    ]
+                }
             }
-        }
-        chartConfig.dataKey = !chartConfig.dataKey ? "time" : chartConfig.dataKey;
-        chartConfig.dataValue = !chartConfig.dataValue ? "value" : chartConfig.dataValue;
-        if (data.data) {
-            if (data.data[0]) {
-                var json = data.data;
-                var xData = [];
-                json.forEach(function (item) {
-                    xData.push(item[chartConfig.dataKey]);
-                    serie.data.push(item[chartConfig.dataValue]);
-                });
-                option.xAxis[0].data = xData;
-                option.series.push(serie);
+            xData.push(item[chartConfig.dataKey]);
+            option.series.push(serie);
+        });
+        for (var i = 0; i < labelData.length; i++) {
+            if (labelData[i] == "uv" || labelData[i] == "pv") {
+                option.series[0]["yAxisIndex"] = 0;
             } else {
-                def.lineDefData(serie, option, chartConfig);
+                var formatType = labelData[i];
+                option.series[i]["yAxisIndex"] = i;
+                option.yAxis[i]["axisLabel"] = {
+                    formatter: function (value) {
+                        return ad.formatFunc(value, formatType);
+                    }
+                };
             }
-        } else {
-            def.lineDefData(serie, option, chartConfig);
         }
+        option.xAxis[0].data = xData[0];
+        //xData.push();
+        //serie.data.push(item[chartConfig.dataValue]);
+        //option.xAxis[0].data = xData;
+        //option.series.push(serie);
+
+
+        //if (data) {
+        //    if (data.data[0]) {
+        //        var json = data.data;
+        //        var xData = [];
+        //        json.forEach(function (item) {
+        //            xData.push(item[chartConfig.dataKey]);
+        //            serie.data.push(item[chartConfig.dataValue]);
+        //        });
+        //        option.xAxis[0].data = xData;
+        //        option.series.push(serie);
+        //    }
+        //}
+        //console.log(option);
         chartObj.setOption(option);
     },
     barChart: function (data, chartConfig) {
@@ -185,7 +212,7 @@ var op = {
             legend: {
                 orient: !chartConfig.ledLayout ? "vertical" : chartConfig.ledLayout,
                 x: 'left',
-                data: !chartConfig.legendData ? [data.label] : chartConfig.legendData
+                data: !chartConfig.legendData ? data.label : chartConfig.legendData
             },
             calculable: true,
             series: []
@@ -244,22 +271,18 @@ var op = {
 
             };
         }
-        if (!data.data) {
-            return;
-        }
-        chartConfig.dataKey = !chartConfig.dataKey ? "name" : chartConfig.dataKey;
-        chartConfig.dataValue = !chartConfig.dataValue ? "value" : chartConfig.dataValue;
-        var jsonData = data.data;
-        if (jsonData) {
-            jsonData.forEach(function (item) {
-                var push_data = {};
-                push_data[chartConfig.dataKey] = item[chartConfig.dataKey];
-                push_data[chartConfig.dataValue] = item[chartConfig.dataValue];
-                serie.data.push(push_data);
-            });
-        }
+        chartConfig.dataKey = !chartConfig.dataKey ? "key" : chartConfig.dataKey;
+        chartConfig.dataValue = !chartConfig.dataValue ? "quota" : chartConfig.dataValue;
+        data.forEach(function (e) {
+            for (var i = 0; i < e[chartConfig.dataKey].length; i++) {
+                var _val = {};
+                _val["name"] = e[chartConfig.dataKey][i]
+                _val["value"] = Number(e[chartConfig.dataValue][i]);
+                serie.data.push(_val);
+            }
+        })
         option.series.push(serie);
-        chartObj.hideLoading();
+        console.log(option);
         chartObj.setOption(option);
     },
     mapChart: function (data, chartConfig) {
@@ -393,16 +416,15 @@ var ad = {
     },
     formatFunc: function (value, formatType) {
         switch (formatType) {
-            case "avgVisitTime":
-                var days = Math.floor(value / 1440 / 60);
-                var hours = Math.floor((value - days * 1440 * 60) / 3600);
-                var minutes = Math.floor((value - days * 1440 * 60 - hours * 3600) / 60);
-                var seconds = (value - days * 1440 * 60 - hours * 3600 - minutes * 60);
-                if (days) {
-                    return days + "d:" + hours + ":" + minutes + ":" + seconds
-                }
-                return hours + ":" + minutes + ":" + seconds;
+            //case "avgTime":
+            //    var hours = parseFloat(value % 1000 * 60 * 60 * 24 / (1000 * 60 * 60)).toFixed(2);
+            //    var minutes = parseFloat(value % (1000 * 60 * 60)).toFixed(2) / parseFloat(1000 * 60).toFixed(2);
+            //    var seconds = parseFloat(value % (1000 * 60)).toFixed(2) / 1000;
+            //    return  hours + " : " + minutes + " : "
+            //        + seconds;
             case "outRate":
+                return value + "%";
+            case "arrivedRate":
                 return value + "%";
             default :
                 return value;
@@ -422,7 +444,7 @@ var def = {
 }
 var util = {
     renderLegend: function (chartObj, c) {
-        if (c.legendData.length > 0) {
+        if (c.legendData.length > 0 && c.chartType == "line") {
             if (c.legendAllowCheckCount > 1) {
                 this.makeEvent("checkBox", chartObj, c);
             } else {

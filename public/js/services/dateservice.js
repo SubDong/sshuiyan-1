@@ -5,14 +5,11 @@ app.service('requestService', ['$rootScope', '$http', function ($rootScope, $htt
     $rootScope.defaultcb = function (data, chartconfig) {
         cf.renderChart(data, chartconfig);
     }
-    $rootScope.start = today_start().getTime();
-    $rootScope.end = today_end().getTime();
+    $rootScope.start = 0;
+    $rootScope.end = 0;
     $rootScope.interval = 24;
-
-    this.initCharts = function (charts) {
-        charts.forEach(function (chart) {
-            init.lineChart(chart.config);
-        });
+    this.initChart = function (chart) {
+        init.lineChart(chart.config);
     }
     this.refresh = function (charts) {
         charts.forEach(function (chart) {
@@ -21,13 +18,13 @@ app.service('requestService', ['$rootScope', '$http', function ($rootScope, $htt
             });
         });
         charts.forEach(function (e) {
-            var req = e.url + "?type=" + e.types + "&quote=" + e.quota + "&start=" + $rootScope.start + "&end=" + $rootScope.end;
+            var req = e.url + "?type=" + e.types + "&dimension=" + e.dimension + "&start=" + $rootScope.start + "&end=" + $rootScope.end;
             if (e.interval) {
                 req = req + "&int=" + e.interval;
             }
             $http.get(req).success(function (result) {
                 if (e.cb) {
-                    e.cb(result);
+                    e.cb(result, e.config);
                 } else {
                     $rootScope.defaultcb(result, e.config);
                 }
@@ -117,11 +114,21 @@ app.service('requestService', ['$rootScope', '$http', function ($rootScope, $htt
     //    }
     this.gridRefresh = function (grids) {
         grids.forEach(function (grid) {
-            $http.get(grid.url + "?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + grids.types).success(function (data) {
-                if (data.data)
-                    grid.config.gridOptions.data = data.data;
-                else
-                    grid.config.gridOptions.data = [];
+            $http.get(grid.url + "?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + grid.types + "&dimension=" + grid.dimension).success(function (data) {
+                var json = JSON.parse((eval("(" + data + ")").toString()));
+                grid.config.gridOptions.data=[];
+                json.forEach(function (item) {
+                    for (var i = 0; i < item["key"].length; i++) {
+                        var _val = {};
+                        if (item["key"][i] != "-" && item["key"][i] != "") {
+                            _val["name"] = item["key"][i];
+                            _val["value"] = item["quota"][i];
+                            grid.config.gridOptions.data.push(_val);
+                        }
+                    }
+
+                })
+
             });
         })
 

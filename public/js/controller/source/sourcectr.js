@@ -3,8 +3,6 @@
  */
 app.controller("sourcectr", function ($scope, $rootScope, $http, requestService) {
     $scope.todayClass = true;
-    $scope.start = today_start().getTime();
-    $scope.end = custom_end(new Date(), 20).getTime();
     $scope.reset = function () {
         $scope.todayClass = false;
         $scope.yesterdayClass = false;
@@ -15,8 +13,19 @@ app.controller("sourcectr", function ($scope, $rootScope, $http, requestService)
     };
     $scope.onLegendClick = function (radio, chartInstance, config, checkedVal) {
         $scope.charts[0].types = checkedVal;
-        var chartarray = [$scope.charts[0]];
-        requestService.refresh(chartarray);
+        $scope.charts[1].types = checkedVal;
+        requestService.refresh($scope.charts);
+    }
+    $scope.pieFormat = function (data, config) {
+        var json = JSON.parse(eval("(" + data + ")").toString());
+        var tmpData = [];
+        json.forEach(function (e) {
+            e.key.forEach(function (item) {
+                tmpData.push(chartUtils.getLinked(item));
+            });
+            e.key = tmpData;
+        });
+        cf.renderChart(json, config);
     }
     $scope.charts = [
         {
@@ -27,27 +36,29 @@ app.controller("sourcectr", function ($scope, $rootScope, $http, requestService)
                 legendAllowCheckCount: 1,
                 id: "indicators_charts",
                 chartType: "line",
-                dataKey: "time",
-                dataValue: "value"
+                dataKey: "key",
+                dataValue: "quota"
             },
             types: ["pv"],
-            quota: [],
+            dimension: ["period"],
             interval: $rootScope.interval,
-            url:"/api/charts"
-        }, {
+            url: "/api/charts"
+        },
+        {
             config: {
-                legendData: [],
+                legendData: ["外部链接", "直接访问", "搜索引擎","外部链接"],
                 id: "sourse_charts",
                 pieStyle: true,
                 serieName: "访问情况",
                 chartType: "pie",
-                dataKey: "name",
-                dataValue: "value"
+                dataKey: "key",
+                dataValue: "quota"
             },
             types: ["pv"],
-            quota: [],
+            dimension: ["rf_type"],
             interval: $rootScope.interval,
-            url:"/api/vapie"
+            url: "/api/map",
+            cb: $scope.pieFormat
         }
     ];
     $scope.init = function () {
@@ -63,31 +74,48 @@ app.controller("sourcectr", function ($scope, $rootScope, $http, requestService)
     $scope.today = function () {
         $scope.reset();
         $scope.todayClass = true;
-        $rootScope.start = today_start().getTime();
-        $rootScope.end = today_end().getTime();
-        $scope.charts[0].interval=12;
-        $scope.charts[1].interval=12;
+        $rootScope.start = 0;
+        $rootScope.end = 0;
+        $rootScope.interval
+        $scope.charts.forEach(function (e) {
+            var chart = echarts.init(document.getElementById(e.config.id));
+            e.config.instance = chart;
+        })
         requestService.refresh($scope.charts);
     }
     $scope.yesterday = function () {
         $scope.reset();
         $scope.yesterdayClass = true;
-        $rootScope.start = yesterday_start().getTime();
-        $rootScope.end = yesterday_end().getTime();
+        $rootScope.start = -1;
+        $rootScope.end = -1;
+        $scope.charts.forEach(function (e) {
+            var chart = echarts.init(document.getElementById(e.config.id));
+            e.config.instance = chart;
+        })
         requestService.refresh($scope.charts);
     };
     $scope.sevenDay = function () {
         $scope.reset();
         $scope.sevenDayClass = true;
-        $rootScope.start = lastWeek_start().getTime();
-        $rootScope.end = lastWeek_end().getTime();
+        $rootScope.start =-7;
+        $rootScope.end =-1;
+        $rootScope.interval = 7;
+        $scope.charts.forEach(function (e) {
+            var chart = echarts.init(document.getElementById(e.config.id));
+            e.config.instance = chart;
+        })
         requestService.refresh($scope.charts);
     };
     $scope.month = function () {
         $scope.reset();
         $scope.monthClass = true;
-        $rootScope.start = lastMonth_start().getTime();
-        $rootScope.end = lastMonth_end().getTime();
+        $rootScope.start = -30;
+        $rootScope.end = -1;
+        $rootScope.interval = 30;
+        $scope.charts.forEach(function (e) {
+            var chart = echarts.init(document.getElementById(e.config.id));
+            e.config.instance = chart;
+        })
         requestService.refresh($scope.charts);
     };
     $scope.open = function ($event) {
