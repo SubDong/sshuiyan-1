@@ -93,7 +93,7 @@ var es_aggs = {
     "nuv": {
         "new_visitor_aggs": {
             "sum": {
-                "script": "c = 0; if (doc['ct'].value == 0) { c =1 }; c"
+                "script": "c = 0; if (doc['ct'].value == 0) { c = 1 }; c"
             }
         }
     },
@@ -101,7 +101,7 @@ var es_aggs = {
     "nuvRate": {
         "new_visitor_aggs": {
             "sum": {
-                "script": "c = 0; if (doc['ct'].value == 0) { c =1 }; c"
+                "script": "c = 0; if (doc['ct'].value == 0) { c = 1 }; c"
             }
         },
         "uv_aggs": {
@@ -131,14 +131,18 @@ var es_aggs = {
             }
         }
     },
-    // TODO 抵达率
-    "arrivedRate": {},
+    // 抵达率=访问次数/点击量
+    "arrivedRate": {
+        "vc_aggs": {
+            "sum": {
+                "script": "1"
+            }
+        }
+    },
     // TODO 页面转化
     "pageConversion": {},
     // TODO 事件转化
-    "eventConversion": {},
-    // TODO 忠诚度
-    "loyalty": {}
+    "eventConversion": {}
 };
 
 var buildRequest = function (indexes, type, quotas, dimension, filter, start, end, interval) {
@@ -285,9 +289,9 @@ var avgTimeFn = function (result, dimension) {
             keyArr.push(result[i].key);
 
         var avgTime = 0;
-        if (vc > 0) {
+        if (vc > 0)
             avgTime = Math.ceil(parseFloat(tvt) / parseFloat((vc)));
-        }
+
         quotaArr.push(avgTime);
     }
 
@@ -314,6 +318,7 @@ var outRateFn = function (result, dimension) {
         var outRate = 0;
         if (vc > 0)
             outRate = (parseFloat(svc) / parseFloat(vc) * 100).toFixed(2);
+
         quotaArr.push(outRate);
     }
 
@@ -324,27 +329,151 @@ var outRateFn = function (result, dimension) {
     };
 };
 
+var nuvFn = function (result, dimension) {
+    var keyArr = [];
+    var quotaArr = [];
+
+    for (var i = 0, l = result.length; i < l; i++) {
+        var nuv = result[i].new_visitor_aggs.value;
+        if (dimension == "period") {
+            var dateStr = result[i].key_as_string + "";
+            keyArr.push(dateStr);
+        } else
+            keyArr.push(result[i].key);
+
+        quotaArr.push(nuv);
+    }
+
+    return {
+        "label": "nuv",
+        "key": keyArr,
+        "quota": quotaArr
+    };
+};
+
+var nuvRateFn = function (result, dimension) {
+    var keyArr = [];
+    var quotaArr = [];
+
+    for (var i = 0, l = result.length; i < l; i++) {
+        var nuv = result[i].new_visitor_aggs.value;
+        var uv = result[i].uv_aggs.value;
+        if (dimension == "period") {
+            var dateStr = result[i].key_as_string + "";
+            keyArr.push(dateStr);
+        } else
+            keyArr.push(result[i].key);
+
+        var nuvRate = 0;
+        if (uv > 0)
+            nuvRate = (parseFloat(nuv) / parseFloat(uv) * 100).toFixed(2);
+
+        quotaArr.push(nuvRate);
+    }
+
+    return {
+        "label": "nuvRate",
+        "key": keyArr,
+        "quota": quotaArr
+    };
+};
+
+var ipFn = function (result, dimension) {
+    var keyArr = [];
+    var quotaArr = [];
+
+    for (var i = 0, l = result.length; i < l; i++) {
+        var ip_count = result[i].ip_aggs.value;
+        if (dimension == "period") {
+            var dateStr = result[i].key_as_string + "";
+            keyArr.push(dateStr);
+        } else
+            keyArr.push(result[i].key);
+
+        quotaArr.push(ip_count);
+    }
+
+    return {
+        "label": "ip",
+        "key": keyArr,
+        "quota": quotaArr
+    };
+};
+
+var avgPageFn = function (result, dimension) {
+    var keyArr = [];
+    var quotaArr = [];
+
+    for (var i = 0, l = result.length; i < l; i++) {
+        var pv = result[i].pv_aggs.value;
+        var uv = result[i].vc_aggs.value;
+        if (dimension == "period") {
+            var dateStr = result[i].key_as_string + "";
+            keyArr.push(dateStr);
+        } else
+            keyArr.push(result[i].key);
+
+        var avgPage = 0;
+        if (uv > 0)
+            avgPage = parseInt(pv) / parseInt(uv);
+
+        quotaArr.push(avgPage);
+    }
+
+    return {
+        "label": "avgPage",
+        "key": keyArr,
+        "quota": quotaArr
+    };
+};
+
 var arrivedRateFn = function (result, dimension) {
+    var keyArr = [];
+    var quotaArr = [];
+
+    for (var i = 0, l = result.length; i < l; i++) {
+        var vc = result[i].vc_aggs.value;
+        if (dimension == "period") {
+            var dateStr = result[i].key_as_string + "";
+            keyArr.push(dateStr);
+        } else
+            keyArr.push(result[i].key);
+
+        quotaArr.push(vc);
+    }
+
     return {
         "label": "arrivedRate",
-        "key": [],
-        "quota": []
+        "key": keyArr,
+        "quota": quotaArr
     };
 };
 
 var pageConversionFn = function (result, dimension) {
+    var keyArr = [];
+    var quotaArr = [];
+
+    for (var i = 0, l = result.length; i < l; i++) {
+    }
+
     return {
         "label": "pageConversion",
-        "key": [],
-        "quota": []
+        "key": keyArr,
+        "quota": quotaArr
     };
 };
 
 var eventConversionFn = function (result, dimension) {
+    var keyArr = [];
+    var quotaArr = [];
+
+    for (var i = 0, l = result.length; i < l; i++) {
+    }
+
     return {
         "label": "eventConversion",
-        "key": [],
-        "quota": []
+        "key": keyArr,
+        "quota": quotaArr
     };
 };
 
@@ -494,11 +623,23 @@ var es_request = {
                         case "arrivedRate":
                             data.push(arrivedRateFn(result, getDimension()));
                             break;
+                        case "avgPage":
+                            data.push(avgPageFn(result, getDimension()));
+                            break;
                         case "pageConversion":
                             data.push(pageConversionFn(result, getDimension()));
                             break;
                         case "eventConversion":
                             data.push(eventConversionFn(result, getDimension()));
+                            break;
+                        case "ip":
+                            data.push(ipFn(result, getDimension()));
+                            break;
+                        case "nuv":
+                            data.push(nuvFn(result, getDimension()));
+                            break;
+                        case "nuvRate":
+                            data.push(nuvRateFn(result, getDimension));
                             break;
                         default :
                             break;
