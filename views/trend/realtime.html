@@ -79,7 +79,7 @@
                                 <li>
                                     <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
                                         <div role="group" class="btn-group">
-                                            <ui-select ng-model="country.selected" theme="selectize" class="fl" style="width: 100px;">
+                                            <ui-select ng-model="country.selected" theme="selectize" class="fl btn-delta" style="width: 100px;">
                                                 <ui-select-match placeholder="国家">{{$select.selected.name}}</ui-select-match>
                                                 <ui-select-choices repeat="country in countrys">
                                                     <span ng-bind-html="country.name"></span>
@@ -87,7 +87,7 @@
                                             </ui-select>
                                         </div>
                                         <div role="group" class="btn-group">
-                                            <ui-select ng-model="city.selected" theme="selectize" class="fl" style="width: 100px;">
+                                            <ui-select ng-model="city.selected" theme="selectize" class="fl btn-pv" style="width: 100px;">
                                                 <ui-select-match placeholder="城市">{{$select.selected.name}}</ui-select-match>
                                                 <ui-select-choices repeat="city in citys">
                                                     <span ng-bind-html="city.name"></span>

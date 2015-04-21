@@ -65,6 +65,7 @@ nav, .navbar-default {
 
 .navbar {
   position: fixed;
+  border-radius: 0;
   width: 100%;
   background-color: @background-color;
   z-index: 100;
@@ -87,8 +88,8 @@ nav, .navbar-default {
   }
 ;
   margin-left: 1em;
-  height: 53px;
-  line-height: 53px;
+  height: 60px;
+  line-height: 60px;
 }
 
 .navbar-header {
@@ -159,14 +160,22 @@ nav, .navbar-default {
   border-left: 1px solid @color;
   /*padding:0 1em;*/
   color: #525252;
-  padding: 15px;
   font-size: 12px;
+  .ui-select-container
+  {
+    padding: 20px 0;
+  }
+  .website{
+    padding: 20px 0 20px 20px;
+  }
 }
-
+.top_menu ul li:hover{
+  background: #f9f9f9;
+}
 .top_menu ul li a {
   color: #525252;
-
-  padding: 0px;
+  display: block;
+  padding: 20px;
 }
 
 .top_menu ul li a:hover {
@@ -188,7 +197,7 @@ nav, .navbar-default {
 
 .menu {
   position: fixed;
-  top: 52px;
+  top: 60px;
   bottom: 0px;
   ul li {
     color: #fff;
@@ -281,7 +290,7 @@ nav, .navbar-default {
 .middle {
   .fl;
   width: 100%;
-  margin-top: 52px;
+  margin-top: 60px;
   .btn-default:hover, .btn-default:focus, .btn-default.focus, .btn-default:active, .btn-default.active, .open > .dropdown-toggle.btn-default {
     background: #01aeef;
     color: #fff;
@@ -678,7 +687,31 @@ nav, .navbar-default {
 
   .custom_select {
     padding: 0px 15px;
-    min-height: 40px;
+    min-height: 36px;
+    .input-group{
+      line-height: 26px;
+      height: 26px;
+      font-size: 12px;
+      .form-control{
+        font-size: 12px !important;
+        height: 26px;
+        line-height: 26px;
+        border-radius: 3px 0 0 3px;
+        box-shadow:none;
+        border: 1px solid #E6E4E5;
+        border-right:none;
+      }
+      .btn-default{
+        padding: 2px 6px;
+        color: #E6E4E5;
+        border: 1px solid #E6E4E5;
+        border-left:none;
+      }
+      .btn-default:hover{
+        color: #666;
+        background: #888888;
+      }
+    }
     label {
       display: inline-block;
       max-width: 100%;
@@ -699,7 +732,7 @@ nav, .navbar-default {
         width: 140px;
         .fl;
       }
-      margin-top: 10px;
+      margin-top: 4px;
       margin-right: 10px;
     }
 
@@ -1027,6 +1060,9 @@ nav, .navbar-default {
 }
 
 .survey_under {
+  .ui-grid-header-cell{
+    border-right: none;
+  }
   .under_top {
     background: #ffffff;
     float: left;
@@ -1039,6 +1075,9 @@ nav, .navbar-default {
     .selectize-control.single {
       .selectize-input {
         background: none;
+        border: none !important;
+        color: #01AEEF;
+
       }
       input {
         color: #01aeef;
@@ -1065,7 +1104,7 @@ nav, .navbar-default {
   }
   .under_concent {
     background: #eaf9ff;
-    padding: 10px;
+    padding: 20px;
 
   }
 }
@@ -1076,7 +1115,6 @@ nav, .navbar-default {
       .grid {
         min-height: 200px;
         background: #ffffff;
-        margin-top: 10px;
         overflow: inherit;
       }
       .ui-grid-header-canvas {
@@ -1327,7 +1365,7 @@ nav, .navbar-default {
   border-radius: 0px 0px 3px 3px;
   .option:hover{
     background: #01aeef;
-    color: #ffffff;
+    color: #ffffff; font-size: 12px;
   }
 }
 
@@ -1361,17 +1399,18 @@ nav, .navbar-default {
 
 .ui-grid-header-viewport {
   .ui-grid-header-canvas {
-    line-height: 26px;
-    height: 26px;
+    line-height: 30px;
+    height: 30px;
   }
   .ui-grid-cell-contents {
-    padding: 0 10px;
+    padding: 0 20px;
+    background: #fff;
   }
 }
 
 .ui-grid-cell-contents {
-  line-height: 26px;
-  height: 26px;
+  line-height: 30px;
+  height: 30px;
 }
 
 .ui-grid-pinned-container {
@@ -1455,13 +1494,17 @@ nav, .navbar-default {
 
 .nav {
   .selectize-input {
-    border: none;
+    border: none !important;
     padding: 1px;
     box-shadow: none;
+    background: none!important;
     input, .ng-scope {
       color: #01aeef;
+      background: none!important;
     }
-
+  }
+  .selectize-dropdown{
+    margin: 3px 0px 0px !important;
   }
 
   .selectize-control.single .selectize-input {
@@ -1471,7 +1514,7 @@ nav, .navbar-default {
     height: 20px;
   }
   .selectize-dropdown .optgroup:first-child {
-    border-top: 1px solid #808080;
+    border-top: none;
   }
 }
 
@@ -1504,4 +1547,19 @@ nav, .navbar-default {
     }
 
   }
+}
+.tab-pane{
+  .btn-group{
+    margin: 0;
+    margin-top: 4px;
+    .ui-select-container{
+      margin-right: 10px;
+    }
+    .selectize-input{
+      padding: 0 5px;
+      line-height: 26px;
+      height: 26px;
+    }
+  }
+
 }

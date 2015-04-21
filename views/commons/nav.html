@@ -13,7 +13,7 @@
         <ul class="nav navbar-nav">
             <li><a href="#"  ui-sref="index"><span aria-hidden="true" class="glyphicon glyphicon-home"></span>网站概览</a></a></li>
             <li class="dropdown" ng-controller="ngSelect">
-                <span class="fl">网站：</span>
+                <span class="fl website">网站：</span>
                 <ui-select ng-model="userselect.selected" theme="selectize" class="fl" style="min-width: 100px;">
                     <ui-select-match placeholder="www.best-ad.cn">{{$select.selected.name}}</ui-select-match>
                     <ui-select-choices repeat="userselect in userselects">
