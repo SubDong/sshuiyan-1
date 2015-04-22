@@ -1,12 +1,13 @@
-<div class="middle_containers"  ng-controller="searchctr">
+<div class="middle_containers" ng-controller="searchctr">
     <div class="date_select">
         <b>网盟推广</b>
+
         <div aria-label="First group" role="group" class="btn-group fl">
-            <button class="btn btn-default" type="button" >计划</button>
+            <button class="btn btn-default" type="button">计划</button>
             <button class="btn btn-default current" type="button">组</button>
             <button class="btn btn-default" type="button">投放网络</button>
             <button class="btn btn-default" type="button">创意</button>
-            <button class="btn btn-default" type="button">关键词 </button>
+            <button class="btn btn-default" type="button">关键词</button>
         </div>
         <div>
             <calendar></calendar>
@@ -36,51 +37,58 @@
                 <tab heading="自定义指标">
                     <div class="custom_title">
                         <p class="chart_top_title"><b>系统默认指标 </b></p>
+
                         <div class="chart_top">
                             <span>消费指标 :</span>
                             <ul>
-                                <li ng-repeat="item in target" ng-class='{current:$index==selectedRow}'
-                                    ng-click='selectedWhich($index)'>{{item.consumption_name}}
+                                <li ng-repeat="item in target"
+                                    class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                    ng-click='indicators(item,target,6)'>{{item.consumption_name}}
                                 </li>
                             </ul>
                         </div>
                         <div class="chart_top">
                             <span>网站基础指标 :</span>
                             <ul>
-                                <li ng-repeat="item in Webbased" ng-class='{current:$index==selectedWeb}'
-                                    ng-click='selectedWebbased($index)'>{{item.consumption_name}}
+                                <li ng-repeat="item in Webbased"
+                                    class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                    ng-click='indicators(item,Webbased,6)'>{{item.consumption_name}}
                                 </li>
                             </ul>
                         </div>
                         <div class="chart_top">
                             <span>流量质量指标:</span>
                             <ul>
-                                <li ng-repeat="item in flow" ng-class='{current:$index==selectedflow}'
-                                    ng-click='selectflowd($index)'>{{item.consumption_name}}
+                                <li ng-repeat="item in flow"
+                                    class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                    ng-click='indicators(item,flow,6)'>{{item.consumption_name}}
                                 </li>
                             </ul>
                         </div>
                         <div class="chart_top">
                             <span>转化指标:</span>
                             <ul>
-                                <li ng-repeat="item in transform" ng-class='{current:$index==selectedtransform}'
-                                    ng-click='selectedform($index)'>{{item.consumption_name}}
+                                <li ng-repeat="item in transform"
+                                    class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                    ng-click='indicators(item,transform,6)'>{{item.consumption_name}}
                                 </li>
                             </ul>
                         </div>
                         <div class="chart_top">
                             <span>移动搜索页指标:</span>
                             <ul>
-                                <li ng-repeat="item in mobile" ng-class='{current:$index==selectedmobile}'
-                                    ng-click='selectedmobiles($index)'>{{item.consumption_name}}
+                                <li ng-repeat="item in mobile"
+                                    class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                    ng-click='indicators(item,mobile,6)'>{{item.consumption_name}}
                                 </li>
                             </ul>
                         </div>
                         <div class="chart_top">
                             <span>离线宝回呼指标:</span>
                             <ul>
-                                <li ng-repeat="item in  recall" ng-class='{current:$index==selectedrecall}'
-                                    ng-click='selectedrecalls($index)'>{{item.consumption_name}}
+                                <li ng-repeat="item in  recall"
+                                    class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                    ng-click='indicators(item,recall,6)'>{{item.consumption_name}}
                                 </li>
                             </ul>
                         </div>
@@ -100,11 +108,6 @@
                                     <option value="" class="">全部页面目标</option>
                                 </select>
                             </div>
-                        </div>
-                        <div class="custom_table">
-                            <table id="mytable" class="table table-hover">
-                            </table>
-                            <div id="pager"></div>
                         </div>
                     </div>
                 </tab>
@@ -157,17 +160,12 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="custom_table">
-                            <div class="uconcentctrl" ng-controller="SearchCtrl">
-                                <div ui-grid="gridOptions" class="grid" ui-grid-pinning></div>
-                            </div>
-
-                        </div>
                     </div>
                 </tab>
             </tabset>
-
-
+            <div class="custom_table">
+                <div ui-grid="gridOptions" class="grid" ui-grid-pagination ui-grid-selection ui-grid-exporter></div>
+            </div>
         </div>
     </div>
 </div>

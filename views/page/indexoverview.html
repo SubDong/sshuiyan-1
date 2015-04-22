@@ -1,132 +1,135 @@
-           <div class="middle_containers">
-                <div class="date_select">
-                    <indexoverview></indexoverview>
-                    <calendar></calendar>
-                    <dateother></dateother>
-                    <div class="fr">
-                        <button class="btn btn-default btn-Refresh" type="button"><span aria-hidden="true"
+<div class="middle_containers">
+    <div class="date_select">
+        <indexoverview></indexoverview>
+        <calendar></calendar>
+        <dateother></dateother>
+        <div class="fr">
+            <button class="btn btn-default btn-Refresh" type="button"><span aria-hidden="true"
                                                                             class="glyphicon glyphicon-refresh"></span>
-                        </button>
-                        <div role="group" class="btn-group">
-                            <button aria-expanded="false" data-toggle="dropdown" class="btn btn-default dropdown-toggle"
-                                    type="button" id="btnGroupDrop3">
-                                导出
-                                <span class="caret"></span>
-                            </button>
-                            <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
-                                <li><a href="#">保存</a></li>
-                                <li><a href="#">导出</a></li>
+            </button>
+            <div role="group" class="btn-group">
+                <button aria-expanded="false" data-toggle="dropdown" class="btn btn-default dropdown-toggle"
+                        type="button" id="btnGroupDrop3">
+                    导出
+                    <span class="caret"></span>
+                </button>
+                <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
+                    <li><a href="#">保存</a></li>
+                    <li><a href="#">导出</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="my_concent">
+        <div class="date_show">
+            <ul>
+                <li class="date_first"><h4>浏览量(PV)</h4><span>34</span></li>
+                <li class="date_secend"><h4>访客数(UV) </h4><span>100%</span></li>
+                <li class="date_third"><h4>IP数</h4><span>2,574</span></li>
+                <li class="date_four"><h4>入口页次数</h4><span>90</span></li>
+                <li class="date_five"><h4>贡献下游浏览量 </h4><span>90</span></li>
+                <li class="date_last"><h4>退出页次数 </h4><span>00:02:34</span></li>
+            </ul>
+
+        </div>
+        <div class="table_content" ng-controller="TabsCtrl">
+            <tabset justified="true">
+                <tab heading="自定义指标">
+                    <div class="custom_title">
+                        <div class="chart_top chart_default">
+                            <ul>
+                                <li><a href="#">系统默认指标</a></li>
+                            </ul>
+                        </div>
+                        <div class="chart_top">
+                            <span>网站基础指标 :</span>
+                            <ul>
+                                <li ng-repeat="item in TodayWeb"
+                                    class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                    ng-click='indicators(item,TodayWeb,6)'>{{item.consumption_name}}
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="chart_top">
+                            <span>流量质量指标:</span>
+                            <ul>
+                                <li ng-repeat="item in Indexfloweds"
+                                    class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                    ng-click='indicators(item,Indexfloweds,6)'>{{item.consumption_name}}
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="chart_top">
+                            <span>转化指标:</span>
+                            <ul>
+                                <li ng-repeat="item in Indexform"
+                                    class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                    ng-click='indicators(item,Indexform,6)'>{{item.consumption_name}}
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="chart_top chart_noborder">
+                            <button class="btn btn-primary" type="button" ng-click="targetSearch()">确定</button>
+                            * 可同时选择6项
+                        </div>
+                    </div>
+                    <div class="custom_secendtitle">
+                        <div class="custom_select">
+                            <div class="input-group fl">
+                                <input type="text" placeholder="输入URL…" class="form-control fl">
+                                       <span class="input-group-btn fl">
+                                 <button type="button" class="btn btn-default"><span aria-hidden="true"
+                                                                                     class="glyphicon glyphicon-search"></span>
+                                 </button>
+                                   </span>
+                            </div>
+                        </div>
+                    </div>
+                </tab>
+                <tab heading="高级筛选">
+                    <div class="custom_title">
+                        <div class="chart_top2">
+                            <ul>
+                                <li><span>地域过滤 :</span></li>
+                                <li>
+                                    <div role="group" class="btn-group">
+                                        <ui-select ng-model="souce.selected" theme="selectize" class="fl"
+                                                   style="width: 90px;">
+                                            <ui-select-match placeholder="全部">{{$select.selected.name}}
+                                            </ui-select-match>
+                                            <ui-select-choices repeat="souce in souces">
+                                                <span ng-bind-html="souce.name"></span>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                </li>
+                                <li><a href="#">百度</a></li>
+                                <li><a href="#">Google</a></li>
                             </ul>
                         </div>
                     </div>
-                </div>
-                <div class="my_concent">
-                    <div class="date_show">
-                        <ul>
-                            <li class="date_first"><h4>浏览量(PV)</h4><span>34</span></li>
-                            <li class="date_secend"><h4>访客数(UV) </h4><span>100%</span></li>
-                            <li class="date_third"><h4>IP数</h4><span>2,574</span></li>
-                            <li class="date_four"><h4>入口页次数</h4><span>90</span></li>
-                            <li class="date_five"><h4>贡献下游浏览量 </h4><span>90</span></li>
-                            <li class="date_last"><h4>退出页次数 </h4><span>00:02:34</span></li>
-                        </ul>
-
-                    </div>
-                    <div class="table_content" ng-controller="TabsCtrl">
-                        <tabset justified="true">
-                            <tab heading="自定义指标">
-                                <div class="custom_title">
-                                    <div class="chart_top chart_default">
-                                        <ul>
-                                            <li><a href="#">系统默认指标</a></li>
-                                        </ul>
-                                    </div>
-                                    <div class="chart_top">
-                                        <span>网站基础指标 :</span>
-                                        <ul>
-                                            <li ng-repeat="item in TodayWeb" class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
-                                                ng-click='indicators(item,TodayWeb,6)'>{{item.consumption_name}}
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="chart_top">
-                                        <span>流量质量指标:</span>
-                                        <ul>
-                                            <li ng-repeat="item in Indexfloweds" class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
-                                                ng-click='indicators(item,Indexfloweds,6)'>{{item.consumption_name}}
-                                            </li>
-
-                                        </ul>
-                                    </div>
-                                    <div class="chart_top">
-                                        <span>转化指标:</span>
-                                        <ul>
-                                            <li ng-repeat="item in Indexform" class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
-                                                ng-click='indicators(item,Indexform,6)'>{{item.consumption_name}}
-                                            </li>
-
-                                        </ul>
-                                    </div>
-                                    <div class="chart_top chart_noborder">
-                                        <button class="btn btn-primary" type="button" ng-click="targetSearch()">确定</button>
-                                        * 可同时选择6项
-                                    </div>
-
-                                </div>
-                                <div class="custom_secendtitle">
-                                    <div class="custom_select">
-                                        <div class="input-group fl">
-                                            <input type="text" placeholder="输入URL…" class="form-control fl">
+                    <div class="custom_secendtitle">
+                        <div class="custom_select">
+                            <div class="input-group fl">
+                                <input type="text" placeholder="输入URL…" class="form-control fl">
                                        <span class="input-group-btn fl">
-                                 <button type="button" class="btn btn-default"><span aria-hidden="true" class="glyphicon glyphicon-search"></span></button>
+                                 <button type="button" class="btn btn-default"><span aria-hidden="true"
+                                                                                     class="glyphicon glyphicon-search"></span>
+                                 </button>
                                    </span>
-                                        </div>
-                                    </div>
-                                    <div class="custom_table">
-                                        <div ui-grid="gridOptions" class="grid" ui-grid-pagination ui-grid-selection ui-grid-exporter></div>
-                                        <div id="pager"></div>
-                                    </div>
-                                </div>
-                            </tab>
-                            <tab heading="高级筛选">
-                                <div class="custom_title">
-                                    <div class="chart_top2">
-                                        <ul>
-                                            <li><span>地域过滤 :</span></li>
-                                            <li>
-                                                <div role="group" class="btn-group">
-                                                <ui-select ng-model="souce.selected" theme="selectize" class="fl" style="width: 90px;">
-                                                    <ui-select-match placeholder="全部">{{$select.selected.name}}</ui-select-match>
-                                                    <ui-select-choices repeat="souce in souces">
-                                                        <span ng-bind-html="souce.name"></span>
-                                                    </ui-select-choices>
-                                                </ui-select>
-                                            </div>
-                                            </li>
-                                            <li><a href="#">百度</a></li>
-                                            <li><a href="#">Google</a></li>
-                                        </ul>
-                                    </div>
-
-
-                                </div>
-                                <div class="custom_secendtitle">
-                                    <div class="custom_select">
-                                        <div class="input-group fl">
-                                            <input type="text" placeholder="输入URL…" class="form-control fl">
-                                       <span class="input-group-btn fl">
-                                 <button type="button" class="btn btn-default"><span aria-hidden="true" class="glyphicon glyphicon-search"></span></button>
-                                   </span>
-                                        </div>
-                                    </div>
-                                    <div class="custom_table">
-                                        <table id="overview_table"  class="table table-hover" >
-                                        </table>
-                                        <div id="pager2"></div>
-                                    </div>
-                                </div>
-                            </tab>
-                            <tabset>
+                            </div>
+                        </div>
+                        <div class="custom_table">
+                            <table id="overview_table" class="table table-hover">
+                            </table>
+                            <div id="pager2"></div>
+                        </div>
                     </div>
-                </div>
+                </tab>
+            </tabset>
+            <div class="custom_table">
+                <div ui-grid="gridOptions" class="grid" ui-grid-pagination ui-grid-selection ui-grid-exporter></div>
             </div>
+        </div>
+    </div>
+</div>

@@ -64,32 +64,32 @@
                                 <div class="chart_top">
                                     <span>网站基础指标 :</span>
                                     <ul>
-                                        <li ng-repeat="item in TodayWeb" ng-class='{current:$index==TodayWebbaseds}'
-                                            ng-click='TodayWebbased($index)'>{{item.consumption_name}}
+                                        <li ng-repeat="item in TodayWeb" class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                            ng-click='indicators(item,TodayWeb,6)'>{{item.consumption_name}}
                                         </li>
                                     </ul>
                                 </div>
                                 <div class="chart_top">
                                     <span>流量质量指标:</span>
                                     <ul>
-                                        <li ng-repeat="item in Todayfloweds" ng-class='{current:$index==todyflowser}'
-                                            ng-click='todyflowed($index)'>{{item.consumption_name}}
+                                        <li ng-repeat="item in Todayfloweds" class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                            ng-click='indicators(item,Todayfloweds,6)'>{{item.consumption_name}}
                                         </li>
                                     </ul>
                                 </div>
                                 <div class="chart_top">
                                     <span>转化指标:</span>
                                     <ul>
-                                        <li ng-repeat="item in Todytransform" ng-class='{current:$index==todytransforms}'
-                                            ng-click='todytransform($index)'>{{item.consumption_name}}
+                                        <li ng-repeat="item in Todytransform" class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                            ng-click='indicators(item,Todytransform,6)'>{{item.consumption_name}}
                                         </li>
                                     </ul>
                                 </div>
                                 <div class="chart_top">
                                     <span>订单转化指标:</span>
                                     <ul>
-                                        <li ng-repeat="item in Order" ng-class='{current:$index==Orderforms}'
-                                            ng-click='Orderform($index)'>{{item.consumption_name}}
+                                        <li ng-repeat="item in Order" class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                            ng-click='indicators(item,Order,6)'>{{item.consumption_name}}
                                         </li>
                                     </ul>
                                 </div>
@@ -114,11 +114,6 @@
                                                 </ui-select-choices>
                                             </ui-select>
                                         </div>
-                                    </div>
-                                    <div class="custom_table">
-                                        <table id="source_table"  class="table table-hover" >
-                                        </table>
-                                        <div id="pager"></div>
                                     </div>
                                 </div>
                             </tab>
@@ -150,15 +145,12 @@
                                             </ui-select>
                                         </div>
                                     </div>
-                                    <div class="custom_table">
-                                        <table id="vistior_table2"  class="table table-hover" >
-                                        </table>
-                                        <div id="pager2"></div>
-                                    </div>
                                 </div>
                             </tab>
                         </tabset>
-
+                        <div class="custom_table">
+                            <div ui-grid="gridOptions" class="grid" ui-grid-pagination ui-grid-selection ui-grid-exporter></div>
+                        </div>
                     </div>
                 </div>
             </div>

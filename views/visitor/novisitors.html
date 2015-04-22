@@ -15,7 +15,7 @@
         <dateother></dateother>
         <div class="fr">
             <button class="btn btn-default btn-Refresh" type="button"><span aria-hidden="true"
-                                                                class="glyphicon glyphicon-refresh"></span>
+                                                                            class="glyphicon glyphicon-refresh"></span>
             </button>
             <div role="group" class="btn-group">
                 <button aria-expanded="false" data-toggle="dropdown" class="btn btn-default dropdown-toggle"
@@ -256,24 +256,24 @@
                         <div class="chart_top">
                             <span>网站基础指标 :</span>
                             <ul>
-                                <li ng-repeat="item in Novisitorbase" ng-class='{current:$index==Novisitorbases}'
-                                    ng-click='Novisitorbased($index)'>{{item.consumption_name}}
+                                <li ng-repeat="item in Novisitorbase" class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                    ng-click='indicators(item,Novisitorbase,6)'>{{item.consumption_name}}
                                 </li>
                             </ul>
                         </div>
                         <div class="chart_top">
                             <span>流量质量指标:</span>
                             <ul>
-                                <li ng-repeat="item in Todayfloweds" ng-class='{current:$index==todyflowser}'
-                                    ng-click='todyflowed($index)'>{{item.consumption_name}}
+                                <li ng-repeat="item in Todayfloweds" class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                    ng-click='indicators(item,Todayfloweds,6)'>{{item.consumption_name}}
                                 </li>
                             </ul>
                         </div>
                         <div class="chart_top">
                             <span>转化指标:</span>
                             <ul>
-                                <li ng-repeat="item in Todytransform" ng-class='{current:$index==todytransforms}'
-                                    ng-click='todytransform($index)'>{{item.consumption_name}}
+                                <li ng-repeat="item in Todytransform" class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                    ng-click='indicators(item,Todytransform,6)'>{{item.consumption_name}}
                                 </li>
                             </ul>
                         </div>
@@ -287,7 +287,8 @@
                         <div class="custom_select">
                             转化目标
                             <div role="group" class="btn-group">
-                                <ui-select ng-model="extendway.selected" theme="selectize" class="fl" style="width: 120px;">
+                                <ui-select ng-model="extendway.selected" theme="selectize" class="fl"
+                                           style="width: 120px;">
                                     <ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>
                                     <ui-select-choices repeat="extendway in extendways">
                                         <span ng-bind-html="extendway.name"></span>
@@ -296,9 +297,7 @@
                             </div>
                         </div>
                         <div class="custom_table">
-                            <table id="mytable" class="table table-hover">
-                            </table>
-                            <div id="pager"></div>
+                            <div ui-grid="gridOptions" class="grid" ui-grid-pagination ui-grid-selection ui-grid-exporter></div>
                         </div>
                     </div>
                 </div>
