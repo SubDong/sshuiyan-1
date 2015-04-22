@@ -37,16 +37,15 @@
                                 <span ng-bind-html="country.name"></span>
                             </ui-select-choices>
                         </ui-select>
-
-                        <ui-select ng-model="maptarget.selected" theme="selectize" class="fl btn-pv" style="width: 110px;">
+                        <ui-select ng-model="bar.selected" theme="selectize" class="fl btn-pv" ng-change="mapChange(bar.selected)" style="min-width:80px;">
                             <ui-select-match placeholder="浏览量(PV)">{{$select.selected.name}}</ui-select-match>
-                            <ui-select-choices repeat="maptarget in maptargets">
-                                <span ng-bind-html="maptarget.name"></span>
+                            <ui-select-choices repeat="bar in rootSelects">
+                                <span ng-bind-html="bar.name"></span>
                             </ui-select-choices>
                         </ui-select>
-
                     </div>
                 </div>
+                <!--{{maptarget.selected}}-->
                 <div id="gest_map" style="height:300px;"></div>
             </div>
             <div class="span2">
@@ -56,14 +55,12 @@
                     </div>
                     <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
                         <div role="group" class="btn-group">
-                            <ui-select ng-model="equipmenttarget.selected" theme="selectize" class="fl"
-                                       style="width: 110px;">
+                            <ui-select ng-model="pie.selected" theme="selectize" class="fl" style="min-width: 80px;" ng-change="equipmentChange(pie.selected)" style="min-width:80px;">
                                 <ui-select-match placeholder="浏览量(PV)">{{$select.selected.name}}</ui-select-match>
-                                <ui-select-choices repeat="equipmenttarget in equipmenttargets">
-                                    <span ng-bind-html="equipmenttarget.name"></span>
+                                <ui-select-choices repeat="pie in rootSelects">
+                                    <span ng-bind-html="pie.name"></span>
                                 </ui-select-choices>
                             </ui-select>
-
                         </div>
                     </div>
                 </div>
@@ -76,11 +73,10 @@
                     </div>
                     <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
                         <div role="group" class="btn-group">
-                            <ui-select ng-model="searchtarget.selected" theme="selectize" class="fl"
-                                       style="width: 110px;">
+                            <ui-select ng-model="grid.selected" theme="selectize" class="fl" ng-change="searchChange(grid.selected)" style="min-width: 80px;">
                                 <ui-select-match placeholder="浏览量(PV)">{{$select.selected.name}}</ui-select-match>
-                                <ui-select-choices repeat="searchtarget in searchtargets">
-                                    <span ng-bind-html="searchtarget.name"></span>
+                                <ui-select-choices repeat="grid in rootSelects">
+                                    <span ng-bind-html="grid.name"></span>
                                 </ui-select-choices>
                             </ui-select>
 

@@ -110,22 +110,6 @@ app.controller('trend_today_ctrl', function ($scope, $rootScope, $http, requestS
         $scope.continent.selected = undefined;
         $scope.souce.selected = undefined;
     };
-    $scope.extendway = {};
-    $scope.extendways = [
-        {name: '全部页面目标'},
-        {name: '公告'},
-        {name: '全部事件目标'},
-        {name: '完整下载'},
-        {name: '在线下载'},
-        {name: '时长目标'},
-        {name: '访问页数目标'},
-    ];
-    $scope.souce = {};
-    $scope.souces = [
-        {name: '全部'},
-        {name: '直接访问'},
-        {name: '搜索引擎'},
-        {name: '外部链接'},
-    ];
+
 
 });

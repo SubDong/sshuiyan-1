@@ -2,7 +2,7 @@
  * Created by yousheng on 15/3/26.
  */
 
-app.controller('indexctr', function ($scope, $rootScope, $http, requestService, messageService) {
+app.controller('indexctr', function ($scope, $rootScope, $http, requestService, messageService,areaService) {
         $scope.todayClass = true;
         $scope.dt = new Date();
         $scope.dayClass = true;
@@ -188,6 +188,23 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
 
             $scope.today();
         };
+        //下拉框
+        $scope.mapChange=function(_this){
+            $scope.charts[1].types=_this.value;
+            var chartArray=[$scope.charts[1]];
+            requestService.refresh(chartArray);
+        }
+        $scope.equipmentChange=function(_this){
+            $scope.charts[2].types=_this.value;
+            var chartArray=[$scope.charts[2]];
+            requestService.refresh(chartArray);
+        }
+        $scope.searchChange=function(_this){
+            $scope.grids[0].types=_this.value;
+            var chartArray=[$scope.grids[0]];
+            requestService.gridRefresh(chartArray);
+        }
+
         //index select
         $scope.disabled = undefined;
         $scope.enable = function () {
@@ -197,55 +214,11 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
             $scope.disabled = true;
         };
         $scope.clear = function () {
-            $scope.maptarget.selected = undefined;
             $scope.country.selected = undefined;
             $scope.continent.selected = undefined;
-            $scope.equipmenttarget.selected = undefined;
-            $scope.searchtarget.selected = undefined;
         },
-            $scope.searchtarget = {};
-        $scope.searchtargets = [
-            {name: '浏览量(PV)'},
-            {name: '访客数(UV) '},
-            {name: '新访客数'},
-            {name: 'IP数'},
-            {name: '跳出率'},
-            {name: '平均访问时长'},
-            {name: '转化次数'},
-        ];
         $scope.continent = {};
         $scope.country = {};
-        $scope.maptarget = {};
-        $scope.maptargets = [
-            {name: '浏览量(PV)'},
-            {name: '访客数(UV) '},
-            {name: '新访客数'},
-            {name: 'IP数'},
-            {name: '跳出率'},
-            {name: '平均访问时长'},
-            {name: '转化次数'},
-
-        ];
-        $scope.equipmenttarget = {};
-        $scope.equipmenttargets = [
-            {name: '浏览量(PV)'},
-            {name: '访客数(UV) '},
-            {name: '新访客数'},
-            {name: 'IP数'},
-            {name: '跳出率'},
-            {name: '平均访问时长'},
-            {name: '转化次数'},
-        ];
-        $scope.searchtarget = {};
-        $scope.searchtargets = [
-            {name: '浏览量(PV)'},
-            {name: '访客数(UV) '},
-            {name: '新访客数'},
-            {name: 'IP数'},
-            {name: '跳出率'},
-            {name: '平均访问时长'},
-            {name: '转化次数'},
-        ];
 
     }
 )

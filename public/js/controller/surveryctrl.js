@@ -1,7 +1,7 @@
 /**
  * Created by john on 2015/3/30.
  */
-app.controller('SurveyCtrl', function ($scope, $http, SEM_API_URL, PERFORMANCE_DATA) {
+app.controller('SurveyCtrl', function ($scope, $http, $rootScope,areaService, SEM_API_URL, PERFORMANCE_DATA) {
     $scope.day_offset = 0;    // 默认是今天(值为0), 值为-1代表昨天, 值为-7代表最近7天, 值为-30代表最近30天
     $scope.todayClass = true;
     $scope.reset = function () {
@@ -91,10 +91,13 @@ app.controller('SurveyCtrl', function ($scope, $http, SEM_API_URL, PERFORMANCE_D
     };
 
     $scope.disable = function () {
-        $scope.disabled = true;
+        $scope.disabled = false;
     };
     $scope.clear = function () {
         $scope.survey.selected = undefined;
+        $scope.outQuotas.selected = undefined;
+        $scope.effectQuotas.selected = undefined;
+
     };
     $scope.survey = {};
     $scope.surveys = [
@@ -102,53 +105,55 @@ app.controller('SurveyCtrl', function ($scope, $http, SEM_API_URL, PERFORMANCE_D
         {name: '搜索推广'},
         {name: '网盟推广'}
     ];
-    $scope.select.outQuota = [
+    $scope.outQuotas = {};
+    $scope.outQuota = [
         {
-            title: "消费",
+            name: "消费",
             value: "cost"
         },
         {
-            title: "展现量",
+            name: "展现量",
             value: "impression"
         },
         {
-            title: "点击量",
+            name: "点击量",
             value: "click"
         },
         {
-            title: "点击率",
+            name: "点击率",
             value: "ctr"
         },
         {
-            title: "平均点击价格",
+            name: "平均点击价格",
             value: "cpc"
         }
     ];
 
     // 效果指标 effectQuota
-    $scope.select.effectQuota = [
+    $scope.effectQuotas = {};
+    $scope.effectQuota = [
         {
-            title: "访问次数",
+            name: "访问次数",
             value: "vc"
         },
         {
-            title: "浏览量(PV)",
+            name: "浏览量(PV)",
             value: "pv"
         },
         {
-            title: "页面转化",
+            name: "页面转化",
             value: "pageConversion"
         },
         {
-            title: "跳出率",
+            name: "跳出率",
             value: "outRate"
         },
         {
-            title: "抵达率",
+            name: "抵达率",
             value: "arrivedRate"
         },
         {
-            title: "平均访问时长",
+            name: "平均访问时长",
             value: "avgTime"
         }
     ];

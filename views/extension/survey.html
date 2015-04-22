@@ -17,15 +17,19 @@
         <div class="survey_chart">
             <div class="select_top">
                 <b class="fl">投放指标：</b>
-                <select class="fl" ng-init="outQuota = select.outQuota[0]" ng-model="outQuota" ng-change="setOutQuota(outQuota)"
-                        ng-options="o.title for o in select.outQuota">
-                </select>
+                <ui-select ng-model="outQuotas.selected" theme="selectize" class="fl" style="min-width: 100px;" ng-change="setOutQuota(outQuotas.selected)">
+                    <ui-select-match placeholder="消费">{{$select.selected.name}}</ui-select-match>
+                    <ui-select-choices repeat="outQuotas in outQuota| filter: $select.search"  >
+                        <span ng-bind-html="outQuotas.name" ></span>
+                    </ui-select-choices>
+                </ui-select>
                 <b class="fl">效果指标:</b>
-                <select class="fl" ng-init="effectQuota = select.effectQuota[1]" ng-model="effectQuota"
-                        ng-change="setEffectQuota(effectQuota)"
-                        ng-options="o.title for o in select.effectQuota">
-                </select>
-
+                <ui-select ng-model="effectQuotas.selected" theme="selectize" class="fl" style="min-width: 100px;" ng-change="setOutQuota(effectQuotas.selected)">
+                    <ui-select-match placeholder="访问次数">{{$select.selected.name}}</ui-select-match>
+                    <ui-select-choices repeat="effectQuotas in effectQuota"  >
+                        <span ng-bind-html="effectQuotas.name" ></span>
+                    </ui-select-choices>
+                </ui-select>
                 <div aria-label="First group" role="group" class="btn-group fr">
                     <button class="btn btn-default disabled" type="button">时间</button>
                     <button class="btn btn-default" ng-class="{'current':todayClass}" ng-click="today()" type="button">
@@ -44,22 +48,23 @@
                     </button>
                 </div>
             </div>
-            <div id="index_charts" style="height:400px;"></div>
+                <div id="index_charts" style="height:400px;width:100%; overflow:hidden;"></div>
+
             <div class="survey_under">
                 <div class="select_top">
                 <div class="under_top">
-                    <b> 消费对比：</b>
-                    <ui-select ng-model="survey.selected" theme="selectize" class="fl" style="width: 120px;">
+                    <b> {{outQuotas.selected.name||"消费"}}对比：</b>
+                    <ui-select ng-model="surveyfirst.choosedates" theme="selectize" class="fl" style="width: 120px;">
                         <ui-select-match placeholder="请选择对比项">{{$select.selected.name}}</ui-select-match>
-                        <ui-select-choices repeat="survey in surveys">
-                            <span ng-bind-html="survey.name"></span>
+                        <ui-select-choices repeat="surveyfirst in choosedates">
+                            <span ng-bind-html="surveyfirst.name"></span>
                         </ui-select-choices>
                     </ui-select>
-                    <b> 页面转化对比：</b>
-                    <ui-select ng-model="survey.selected" theme="selectize" class="fl" style="width: 120px;">
+                    <b> {{effectQuotas.selected.name||"访问次数"}}对比：</b>
+                    <ui-select ng-model="surveysecend.selected" theme="selectize" class="fl" style="width: 120px;">
                         <ui-select-match placeholder="请选择对比项">{{$select.selected.name}}</ui-select-match>
-                        <ui-select-choices repeat="survey in surveys">
-                            <span ng-bind-html="survey.name"></span>
+                        <ui-select-choices repeat="surveysecend in choosedates">
+                            <span ng-bind-html="surveysecend.name"></span>
                         </ui-select-choices>
                     </ui-select>
                 </div>

@@ -1,7 +1,7 @@
 /**
  * Created by john on 2015/4/2.
  */
-app.controller('searchctr', function ($scope, $http) {
+app.controller('searchctr', function ($scope,areaService, $http) {
         $scope.todayClass = true;
         $scope.isCollapsed = true;
         $scope.reset = function () {
@@ -52,15 +52,6 @@ app.controller('searchctr', function ($scope, $http) {
         $scope.select = function(){
             $scope.visible =false;
         };
-        $scope.disabled = undefined;
-        $scope.enable = function() {
-            $scope.disabled = false;
-        };
-
-        $scope.disable = function() {
-            $scope.disabled = true;
-        };
-
         $scope.clear = function() {
             $scope.page.selected = undefined;
             $scope.city.selected = undefined;
@@ -76,23 +67,6 @@ app.controller('searchctr', function ($scope, $http) {
             { name: '详情页右侧按钮'},
             { name: '时长目标'},
             { name: '访问页数目标'},
-        ];
-        $scope.country = {};
-        $scope.countrys = [
-            { name: '中国'},
-            { name: '泰国'},
-
-        ];
-        $scope.city = {};
-        $scope.citys = [
-            { name: '北京'},
-            { name: '上海'},
-            { name: '成都'},
-        ];
-        $scope.continent = {};
-        $scope.continents = [
-            { name: '亚洲'},
-            { name: '美洲 '},
         ];
 
     }
