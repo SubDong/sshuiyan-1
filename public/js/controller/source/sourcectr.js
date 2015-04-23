@@ -27,26 +27,16 @@ app.controller("sourcectr", function ($scope, $rootScope, $http, requestService)
         });
         cf.renderChart(json, config);
     }
+    $scope.customFormat = function (data, config) {
+        var json = JSON.parse(eval("(" + data + ")").toString());
+        var result = chartUtils.getRf_type(json,$rootScope.start);
+        config['noFormat'] = true;
+        cf.renderChart(result, config);
+    }
     $scope.charts = [
         {
             config: {
-                legendId: "source_charts_legend",
-                legendData: ["浏览量(PV)", "访客数(UV)", "访问次数", "新访客数", "IP数", "页面转化", "订单数", "订单金额", "订单转化率"],
-                legendClickListener: $scope.onLegendClick,
-                legendAllowCheckCount: 1,
-                id: "indicators_charts",
-                chartType: "line",
-                dataKey: "key",
-                dataValue: "quota"
-            },
-            types: ["pv"],
-            dimension: ["period"],
-            interval: $rootScope.interval,
-            url: "/api/charts"
-        },
-        {
-            config: {
-                legendData: ["外部链接", "直接访问", "搜索引擎","外部链接"],
+                legendData: ["外部链接","直接访问","搜索引擎"],
                 id: "sourse_charts",
                 pieStyle: true,
                 serieName: "访问情况",
@@ -56,10 +46,27 @@ app.controller("sourcectr", function ($scope, $rootScope, $http, requestService)
             },
             types: ["pv"],
             dimension: ["rf_type"],
-            interval: $rootScope.interval,
             url: "/api/map",
             cb: $scope.pieFormat
-        }
+        },
+        {
+            config: {
+                legendId: "source_charts_legend",
+                legendData: ["浏览量(PV)", "访客数(UV)", "访问次数", "新访客数", "IP数", "页面转化", "订单数", "订单金额", "订单转化率"],
+                legendClickListener: $scope.onLegendClick,
+                legendAllowCheckCount: 1,
+                bGap: true,
+                id: "indicators_charts",
+                chartType: "bar",
+                dataKey: "key",
+                dataValue: "quota"
+            },
+            types: ["pv"],
+            dimension: ["period,rf_type"],
+            interval: $rootScope.interval,
+            url: "/api/charts",
+            cb: $scope.customFormat
+        },
     ];
     $scope.init = function () {
         $scope.charts.forEach(function (e) {
@@ -97,9 +104,9 @@ app.controller("sourcectr", function ($scope, $rootScope, $http, requestService)
     $scope.sevenDay = function () {
         $scope.reset();
         $scope.sevenDayClass = true;
-        $rootScope.start =-7;
-        $rootScope.end =-1;
-        $rootScope.interval = 7;
+        $rootScope.start = -7;
+        $rootScope.end = -1;
+        $rootScope.interval = 24;
         $scope.charts.forEach(function (e) {
             var chart = echarts.init(document.getElementById(e.config.id));
             e.config.instance = chart;
@@ -111,7 +118,7 @@ app.controller("sourcectr", function ($scope, $rootScope, $http, requestService)
         $scope.monthClass = true;
         $rootScope.start = -30;
         $rootScope.end = -1;
-        $rootScope.interval = 30;
+        $rootScope.interval = 24;
         $scope.charts.forEach(function (e) {
             var chart = echarts.init(document.getElementById(e.config.id));
             e.config.instance = chart;

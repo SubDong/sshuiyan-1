@@ -1,4 +1,5 @@
-          <div class="middle_containers">
+       <!--页面分析-入口页面-新访客分析-->
+          <div class="middle_containers" ng-controller="newvisitorsctr">
                 <div class="date_select">
                     <page></page>
                     <calendar></calendar>
@@ -30,21 +31,8 @@
                         </ul>
                     </div>
                     <div class="index_chart">
-                        <div class="chart_top">
-                            <ul>
-                                <li><label>展示曲线</label></li>
-                                <li><input type="checkbox" checked="checked" name="radio1"/> <label>浏览量(PV))</label>
-                                </li>
-                                <li><input type="checkbox" checked="checked" name="radio1"/> <label>访问次数</label></li>
-                                <li><input type="checkbox" name="radio1"/> <label>访客数(UV)</label></li>
-                                <li><input type="checkbox" name="radio1"/> <label>新访客数</label></li>
-                                <li><input type="checkbox" name="radio1"/> <label>IP数</label></li>
-                                <li><input type="checkbox" name="radio1"/> <label>贡献流量</label></li>
-                                <li><input type="checkbox" name="radio1"/> <label>转化次数</label></li>
-                                <li class="disabled">* 最多只能勾选两项</li>
-                            </ul>
-                        </div>
                         <div id="sourse_charts" style="height:400px;float:left;width:30%;"></div>
+                        <div id="indicators_charts_legend"></div>
                         <div id="indicators_charts" style="height:400px;float:right;width:70%;"></div>
                     </div>
                     <div class="table_content">

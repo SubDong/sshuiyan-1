@@ -455,7 +455,7 @@ var avgPageFn = function (result, dimension) {
 
         var avgPage = 0;
         if (uv > 0)
-            avgPage = parseInt(pv) / parseInt(uv);
+            avgPage = (parseFloat(nuv) / parseFloat(uv) * 100).toFixed(2);
 
         quotaArr.push(avgPage);
     }
@@ -645,7 +645,7 @@ var es_request = {
                 var result = response.aggregations.result.buckets;
 
                 if (getDimension().split(",").length > 1) {
-                    return result;
+                    callbackFn(result);
                 } else {
                     getQuotas().forEach(function (quota) {
                         switch (quota) {
@@ -689,9 +689,8 @@ var es_request = {
                                 break;
                         }
                     });
+                    callbackFn(data);
                 }
-
-                callbackFn(data);
             } else
                 callbackFn(data);
         });

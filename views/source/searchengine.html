@@ -1,4 +1,5 @@
-      <div class="middle_containers">
+ <!--来源分析-搜索引擎      -->
+<div class="middle_containers" ng-controller="searchenginectr">
                 <div class="date_select">
                     <calendar></calendar>
                     <dateother></dateother>
@@ -31,23 +32,9 @@
 
                     </div>
                     <div class="index_chart">
-                        <div class="chart_top">
-                            <ul>
-                                <li><label>指标：</label></li>
-                                <li><input type="checkbox" checked="checked" name="radio1"/> <label>浏览量(PV)</label>
-                                </li>
-                                <li><input type="checkbox" checked="checked" name="radio1"/> <label>访问次数</label></li>
-                                <li><input type="checkbox" name="radio1"/> <label>访客数(UV)</label></li>
-                                <li><input type="checkbox" name="radio1"/> <label>新访客数</label></li>
-                                <li><input type="checkbox" name="radio1"/> <label>IP数</label></li>
-                                <li><input type="checkbox" name="radio1"/> <label>转化次数</label></li>
-                                <li><input type="checkbox" name="radio1"/> <label>订单数</label></li>
-                                <li><input type="checkbox" name="radio1"/> <label>订单金额</label></li>
-                                <li><input type="checkbox" name="radio1"/> <label>订单转化率</label></li>
-                                <li class="disabled">* 可同时选择1项</li>
-                            </ul>
-                        </div>
+
                         <div id="sourse_charts" style="height:400px;float:left;width:30%;"></div>
+                        <div id="indicators_charts_legend"></div>
                         <div id="indicators_charts" style="height:400px;float:right;width:70%;"></div>
 
                     </div>

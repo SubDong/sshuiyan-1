@@ -27,15 +27,11 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
             ]
         };
         $scope.onLegendClickListener = function (radio, chartObj, chartConfig, checkedVal) {
-            if (checkedVal.length != 0) {
-                $scope.charts[0].types = checkedVal;
-                $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
-                var chartArray = [$scope.charts[0]];
-                requestService.refresh(chartArray);
-            } else {
-                $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
-                requestService.initChart($scope.charts[0]);
-            }
+            clear.lineChart($scope.charts[0].config,checkedVal);
+            $scope.charts[0].types = checkedVal;
+            var chartArray = [$scope.charts[0]];
+            requestService.refresh(chartArray);
+
         }
         $scope.pieFormat = function (data, config) {
             var json = JSON.parse(eval("(" + data + ")").toString());
@@ -83,7 +79,7 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
             },
             {
                 config: {
-                    legendData: ["移动","PC"],
+                    legendData: ["移动", "PC"],
                     chartType: "pie",
                     id: "environment_map",
                     serieName: "设备环境",

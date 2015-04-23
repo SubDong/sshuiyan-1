@@ -5,6 +5,7 @@ var checked = [0, 1];
 var cf = {
     renderChart: function (data, chartConfig) {
         var _self = op;
+        var _clear = clear;
         if (!chartConfig)console.error("chartConfig is required");
         var chartType = !chartConfig.chartType ? "line" : chartConfig.chartType;
         switch (chartType) {
@@ -90,7 +91,13 @@ var init = {
 var op = {
     lineChart: function (data, chartConfig) {
         if (!data.length) return;
-        var json = JSON.parse(eval('(' + data + ')').toString()), labelData = [];
+        var json, labelData = [];
+        if (chartConfig.noFormat) {
+            json = data;
+            chartConfig.legendData = labelData;
+        } else {
+            json = JSON.parse(eval('(' + data + ')').toString());
+        }
         json.forEach(function (item) {
             labelData.push(item.label);
         });
@@ -144,9 +151,11 @@ var op = {
         chartConfig.dataKey = !chartConfig.dataKey ? "key" : chartConfig.dataKey;
         chartConfig.dataValue = !chartConfig.dataValue ? "quota" : chartConfig.dataValue;
         var xData = [];
+        var select = {};
         json.forEach(function (item) {
+            select[chartUtils.convertChinese(item.label)] = true;
             var serie = {
-                name: chartUtils.convertChinese(item.label),
+                name: !chartConfig.noFormat ? chartUtils.convertChinese(item.label) : item.label,
                 type: !chartConfig.chartType ? "line" : chartConfig.chartType,
                 itemStyle: {normal: {areaStyle: {type: 'default'}}},
                 data: item[chartConfig.dataValue]
@@ -162,43 +171,26 @@ var op = {
             xData.push(item[chartConfig.dataKey]);
             option.series.push(serie);
         });
-        for (var i = 0; i < labelData.length; i++) {
-            if (labelData[i] == "uv" || labelData[i] == "pv") {
-                option.series[0]["yAxisIndex"] = 0;
-            } else {
-                var formatType = labelData[i];
-                option.series[i]["yAxisIndex"] = i;
-                option.yAxis[i]["axisLabel"] = {
-                    formatter: function (value) {
-                        return ad.formatFunc(value, formatType);
-                    }
-                };
+        if (!chartConfig.noFormat) {
+            for (var i = 0; i < labelData.length; i++) {
+                if (labelData[i] == "uv" || labelData[i] == "pv") {
+                    option.series[0]["yAxisIndex"] = 0;
+                } else {
+                    var formatType = labelData[i];
+                    option.series[i]["yAxisIndex"] = i;
+                    option.yAxis[i]["axisLabel"] = {
+                        formatter: function (value) {
+                            return ad.formatFunc(value, formatType);
+                        }
+                    };
+                }
             }
         }
         option.xAxis[0].data = xData[0];
-        //xData.push();
-        //serie.data.push(item[chartConfig.dataValue]);
-        //option.xAxis[0].data = xData;
-        //option.series.push(serie);
-
-
-        //if (data) {
-        //    if (data.data[0]) {
-        //        var json = data.data;
-        //        var xData = [];
-        //        json.forEach(function (item) {
-        //            xData.push(item[chartConfig.dataKey]);
-        //            serie.data.push(item[chartConfig.dataValue]);
-        //        });
-        //        option.xAxis[0].data = xData;
-        //        option.series.push(serie);
-        //    }
-        //}
-        //console.log(option);
+        option.legend.selected = select;
         chartObj.setOption(option);
     },
     barChart: function (data, chartConfig) {
-        chartConfig.dataKey = !chartConfig.dataKey ? "name" : chartConfig.dataKey;
         this.lineChart(data, chartConfig);
     },
     pieChart: function (data, chartConfig) {
@@ -210,6 +202,7 @@ var op = {
                 formatter: "{a} <br/>{b} : {c} ({d}%)"
             },
             legend: {
+                show: !chartConfig.legendShow ? false : chartConfig.legendShow,
                 orient: !chartConfig.ledLayout ? "vertical" : chartConfig.ledLayout,
                 x: 'left',
                 data: !chartConfig.legendData ? data.label : chartConfig.legendData
@@ -247,6 +240,22 @@ var op = {
             radius: '55%',
             center: ['50%', '60%'],
             data: []
+        };
+        if (chartConfig.status) {
+            switch (chartConfig.status) {
+                case "hu":
+                    serie = {
+                        name: !chartConfig.serieName ? "请配置图例说明" : chartConfig.serieName,
+                        type: "pie",
+                        radius: [40, 80],
+                        roseType: 'area',
+                        data: []
+                    }
+                    break;
+                default :
+                    serie = serie;
+                    break;
+            }
         }
         if (chartConfig.pieStyle == undefined) {
             serie["itemStyle"] =
@@ -282,7 +291,6 @@ var op = {
             }
         })
         option.series.push(serie);
-        console.log(option);
         chartObj.setOption(option);
     },
     mapChart: function (data, chartConfig) {
@@ -431,6 +439,25 @@ var ad = {
         }
     }
 }
+var clear = {
+    lineChart: function (chartConfig, checkedVal) {
+        if (!chartConfig.instance) return;
+        var instance = chartConfig.instance, option = instance.getOption();
+        var select = {};
+        chartConfig.legendData.forEach(function (e) {
+            select[e] = false;
+        })
+        if (checkedVal) {
+            checkedVal.forEach(function (item) {
+                select[chartUtils.convertChinese(item)] = true;
+            });
+        }
+        option.series = [];
+        option.legend.selected = select;
+        instance.setOption(option);
+        instance.restore();
+    }
+}
 var def = {
     lineDefData: function (serie, option, chartConfig) {
         var xData = [0];
@@ -444,7 +471,7 @@ var def = {
 }
 var util = {
     renderLegend: function (chartObj, c) {
-        if (c.legendData.length > 0 && c.chartType == "line") {
+        if (c.legendData.length > 0 && (c.chartType == "line" || c.chartType == "bar")) {
             if (c.legendAllowCheckCount > 1) {
                 this.makeEvent("checkBox", chartObj, c);
             } else {

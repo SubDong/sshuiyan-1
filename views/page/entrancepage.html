@@ -1,4 +1,5 @@
-<div class="middle_containers">
+<!--页面分析-入口页面-指标概述-->
+<div class="middle_containers" ng-controller="entrancepagectr">
     <div class="date_select">
         <page></page>
         <calendar></calendar>
@@ -31,8 +32,11 @@
                 <li class="date_secend"><h4>转化率 </h4><span>8%</span></li>
             </ul>
         </div>
-        <div id="sourse_charts" style="height:400px;float:left;width:30%;"></div>
-        <div id="indicators_charts" style="height:400px;float:right;width:70%;"></div>
+        <div class="index_chart">
+            <div id="sourse_charts" style="height:400px;float:left;width:30%;"></div>
+            <div id="indicators_charts_legend"></div>
+            <div id="indicators_charts" style="height:400px;float:right;width:70%;"></div>
+        </div>
         <div class="table_content" ng-controller="TabsCtrl">
             <tabset justified="true">
                 <tab heading="自定义指标">

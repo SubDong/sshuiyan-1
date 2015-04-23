@@ -1,4 +1,5 @@
-<div class="middle_containers">
+<!--访客分析-设备环境-->
+<div class="middle_containers" ng-controller="equipmentctr">
     <div class="date_select">
         <div role="group" class="btn-group fl">
             <button aria-expanded="false" data-toggle="dropdown" class="btn btn-default dropdown-toggle"
@@ -42,24 +43,8 @@
             </ul>
         </div>
         <div class="index_chart">
-            <div class="chart_top">
-                <ul>
-                    <li><label>指标：</label></li>
-                    <li><input type="checkbox" checked="checked" name="radio1"/> <label>浏览量(PV)</label></li>
-                    <li><input type="checkbox" checked="checked" name="radio1"/> <label>访问次数</label></li>
-                    <li><input type="checkbox" name="radio1"/> <label>访客数(UV)</label></li>
-                    <li><input type="checkbox" name="radio1"/> <label>新访客数</label></li>
-                    <li><input type="checkbox" name="radio1"/> <label>新访客比率</label></li>
-                    <li><input type="checkbox" name="radio1"/> <label>IP数</label></li>
-                    <li><input type="checkbox" name="radio1"/> <label>跳出率</label></li>
-                    <li><input type="checkbox" name="radio1"/> <label>平均访问时长</label></li>
-                    <li><input type="checkbox" name="radio1"/> <label>平均访问页数</label></li>
-                    <li><input type="checkbox" name="radio1"/> <label>转化次数</label></li>
-                    <li><input type="checkbox" name="radio1"/> <label>转化率</label></li>
-                    <li class="disabled">* 最多只能勾选1项</li>
-                </ul>
-            </div>
-            <div id="Equipment" style="height:400px;"></div>
+            <div id="equipment_legend"></div>
+            <div id="equipment" style="height:400px;"></div>
         </div>
         <div class="table_content" ng-controller="TabsCtrl">
             <ul role="tablist" class="nav nav-tabs" id="myTab">

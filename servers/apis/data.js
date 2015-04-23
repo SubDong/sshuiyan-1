@@ -14,10 +14,7 @@ var initial = require('../services/visitors/initialData');
 var api = express.Router();
 
 api.get('/charts', function (req, res) {
-    var query = url.parse(req.url, true).query;
-    var quotas = [];
-    var type = query['type'];
-    var dimension = query.dimension;
+    var query = url.parse(req.url, true).query, quotas = [], type = query['type'], dimension = query.dimension;
     if (type.indexOf(",") > -1)for (var i = 0; i < type.split(",").length; i++) {
         quotas.push(type.split(",")[i]);
     }
@@ -30,7 +27,6 @@ api.get('/charts', function (req, res) {
 
     var period = date.period(start, end);
     var interval = date.interval(start, end, Number(query['int']));
-
     es_request.search(req.es, indexes, 1, quotas, dimension, null, period[0], period[1], interval, function (result) {
         datautils.send(res, JSON.stringify(result));
     });
@@ -111,7 +107,7 @@ api.get('/pie', function (req, res) {
     var query = url.parse(req.url, true).query;
     var quotas = [];
     var type = query['type'];
-    var dimension=query.dimension;
+    var dimension = query.dimension;
     if (type.indexOf(",") > -1)for (var i = 0; i < type.split(",").length; i++) {
         quotas.push(type.split(",")[i]);
     }
@@ -201,19 +197,19 @@ api.get('/indextable', function (req, res) {
     var _endTime = Number(query["end"]);
     var _type = query["type"];
     var indexes = date.between(req, "visitor-");
-    initial.chartDataCommon(req.es, indexes, _type ,_lati, _indic, function (data) {
+    initial.chartDataCommon(req.es, indexes, _type, _lati, _indic, function (data) {
         data = data.aggregations.areas.buckets;
         var result = [];
 
         var coumArray = new Array();
-        data.forEach(function(item,i){
+        data.forEach(function (item, i) {
             var _obj = {};
             _obj[_lati] = item.key;
-            _indic.forEach(function(items,i){
-                if(items == "jump"){
-                    _obj[items] = (parseFloat(item["jumpTT"].value) == 0?"0%":((parseFloat(item[items].doc_count)/parseFloat(item["jumpTT"].value))* 100).toFixed(2) +"%");
-                }else{
-                    _obj[items]  = item[items].value;
+            _indic.forEach(function (items, i) {
+                if (items == "jump") {
+                    _obj[items] = (parseFloat(item["jumpTT"].value) == 0 ? "0%" : ((parseFloat(item[items].doc_count) / parseFloat(item["jumpTT"].value)) * 100).toFixed(2) + "%");
+                } else {
+                    _obj[items] = item[items].value;
                 }
 
             });
@@ -249,27 +245,27 @@ api.get('/provincemap', function (req, res) {
     } else {
         var indexes = date.between(req, "visitor-");
     }
-    initial.chartData(req.es,indexes,type,areas,property,function (data){
+    initial.chartData(req.es, indexes, type, areas, property, function (data) {
         var result = {};
         var chart_data_array = new Array();
         var data_name = new Array();
 
         var areas = data.aggregations.areas.buckets;
-        for(var i = 0 ; i < 10; i++){
-            if(areas[i] != undefined){
-                if(areas[i].key == "国外")continue;
+        for (var i = 0; i < 10; i++) {
+            if (areas[i] != undefined) {
+                if (areas[i].key == "国外")continue;
                 var chart_data = {};
-                data_name.push(areas[i].key.replace("市","").replace("省",""));
-                chart_data["name"] = areas[i].key.replace("市","").replace("省","");
+                data_name.push(areas[i].key.replace("市", "").replace("省", ""));
+                chart_data["name"] = areas[i].key.replace("市", "").replace("省", "");
                 chart_data["value"] = areas[i].data_count.value;
                 chart_data_array.push(chart_data);
             }
         }
-        if(areas.length >=10){
+        if (areas.length >= 10) {
             var chart_data = {};
             var other = 0;
-            for(var a = 10 ; a < areas.length; a++){
-                other+= areas[a].data_count.value
+            for (var a = 10; a < areas.length; a++) {
+                other += areas[a].data_count.value
             }
             data_name.push("其他");
             chart_data["name"] = "其他";
@@ -278,7 +274,7 @@ api.get('/provincemap', function (req, res) {
         }
         result["data_name"] = data_name;
         result["chart_data"] = chart_data_array;
-        datautils.send(res,result);
+        datautils.send(res, result);
     })
 });
 

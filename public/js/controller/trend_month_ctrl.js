@@ -12,6 +12,7 @@ app.controller('trend_month_ctrl', function ($scope, $rootScope, $http, requestS
         $scope.definClass = false;
     };
     $scope.onLegendClickListener = function (radio, chartObj, chartConfig, checkedVal) {
+        clear.lineChart($scope.charts[0].config, checkedVal);
         $scope.charts[0].types = checkedVal;
         var chartarray = [$scope.charts[0]];
         requestService.refresh(chartarray);
@@ -26,12 +27,12 @@ app.controller('trend_month_ctrl', function ($scope, $rootScope, $http, requestS
                 id: "moth_charts",
                 bGap: false,//首行缩进
                 chartType: "line",//图表类型
-                dataKey: "time",//传入数据的key值
-                dataValue: "value"//传入数据的value值
+                dataKey: "key",//传入数据的key值
+                dataValue: "quota"//传入数据的value值
 
             },
-            types: ["pv"],
-            quota: [],
+            types: ["pv", "uv"],
+            dimension: ["period"],
             interval: $rootScope.interval,
             url: "/api/charts"
         }];
@@ -41,37 +42,43 @@ app.controller('trend_month_ctrl', function ($scope, $rootScope, $http, requestS
         $scope.charts.forEach(function (e) {
             var chart = echarts.init(document.getElementById(e.config.id));
             e.config.instance = chart;
-            if (e.config.legendData.length > 0) {
-                util.renderLegend(chart, e.config);
-            }
+            util.renderLegend(chart, e.config);
         })
-        //requestService.initCharts($scope.charts);
+        $rootScope.start =-30;
+        $rootScope.end = -1;
+        $rootScope.interval = 30;
         requestService.refresh($scope.charts);
     }
     $scope.init();
     $scope.today = function () {
         $scope.reset();
         $scope.todayClass = true;
-        $rootScope.start = today_start().getTime();
-        $rootScope.end = today_end().getTime();
+        $rootScope.start = 0;
+        $rootScope.end = 0;
         $rootScope.interval = 24;
+        var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
+        $scope.charts[0].config.instance = chart;
         requestService.refresh($scope.charts);
     };
     $scope.yesterday = function () {
         $scope.reset();
         $scope.yesterdayClass = true;
-        $rootScope.start = yesterday_start().getTime();
-        $rootScope.end = yesterday_end().getTime();
+        $rootScope.start =-1;
+        $rootScope.end = -1;
         $rootScope.interval = 24;
+        var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
+        $scope.charts[0].config.instance = chart;
         requestService.refresh($scope.charts);
 
     };
     $scope.sevenDay = function () {
         $scope.reset();
         $scope.sevenDayClass = true;
-        $rootScope.start = lastWeek_start().getTime();
-        $rootScope.start = today_end().getTime();
+        $rootScope.start = -7
+        $rootScope.end = -1;
         $rootScope.interval = 7;
+        var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
+        $scope.charts[0].config.instance = chart;
         requestService.refresh($scope.charts);
 
 
@@ -79,9 +86,11 @@ app.controller('trend_month_ctrl', function ($scope, $rootScope, $http, requestS
     $scope.month = function () {
         $scope.reset();
         $scope.monthClass = true;
-        $rootScope.start = lastMonth_start().getTime();
-        $rootScope.end = today_end().getTime();
+        $rootScope.start =-30;
+        $rootScope.end = -1;
         $rootScope.interval = 30;
+        var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
+        $scope.charts[0].config.instance = chart;
         requestService.refresh($scope.charts);
     };
     $scope.open = function ($event) {
