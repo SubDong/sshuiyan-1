@@ -155,6 +155,46 @@ var buildRequest = function (indexes, type, quotas, dimension, filter, start, en
         }
     });
 
+    if (dimension.split(",").length > 1) {
+        var dimensionArr = dimension.split(",");
+        return {
+            "index": indexes.toString(),
+            "type": type,
+            "body": {
+                "query": buildQuery(filter),
+                "size": 0,
+                "aggs": {
+                    "result": {
+                        "date_histogram": {
+                            "field": "utime",
+                            "interval": interval / 1000 + "s",
+                            "format": "yyyy-MM-dd HH:mm:ss",
+                            //"time_zone": "+08:00",    // pre_zone, post_zone are replaced by time_zone in 1.5.0.
+                            "pre_zone": "+08:00",
+                            "post_zone": "+08:00",
+                            "order": {
+                                "_key": "asc"
+                            },
+                            "min_doc_count": 0,
+                            "extended_bounds": {
+                                "min": start,
+                                "max": end
+                            }
+                        },
+                        "aggs": {
+                            "dimension": {
+                                "terms": {
+                                    "field": dimensionArr[1]
+                                },
+                                "aggs": _aggs
+                            }
+                        }
+                    }
+                }
+            }
+        };
+    }
+
     if (dimension == "period") {
         return {
             "index": indexes.toString(),
@@ -603,48 +643,53 @@ var es_request = {
             var data = [];
             if (response != undefined) {
                 var result = response.aggregations.result.buckets;
-                getQuotas().forEach(function (quota) {
-                    switch (quota) {
-                        case "pv":
-                            data.push(pvFn(result, getDimension()));
-                            break;
-                        case "uv":
-                            data.push(uvFn(result, getDimension()));
-                            break;
-                        case "vc":
-                            data.push(vcFn(result, getDimension()));
-                            break;
-                        case "avgTime":
-                            data.push(avgTimeFn(result, getDimension()));
-                            break;
-                        case "outRate":
-                            data.push(outRateFn(result, getDimension()));
-                            break;
-                        case "arrivedRate":
-                            data.push(arrivedRateFn(result, getDimension()));
-                            break;
-                        case "avgPage":
-                            data.push(avgPageFn(result, getDimension()));
-                            break;
-                        case "pageConversion":
-                            data.push(pageConversionFn(result, getDimension()));
-                            break;
-                        case "eventConversion":
-                            data.push(eventConversionFn(result, getDimension()));
-                            break;
-                        case "ip":
-                            data.push(ipFn(result, getDimension()));
-                            break;
-                        case "nuv":
-                            data.push(nuvFn(result, getDimension()));
-                            break;
-                        case "nuvRate":
-                            data.push(nuvRateFn(result, getDimension));
-                            break;
-                        default :
-                            break;
-                    }
-                });
+
+                if (getDimension().split(",").length > 1) {
+                    return result;
+                } else {
+                    getQuotas().forEach(function (quota) {
+                        switch (quota) {
+                            case "pv":
+                                data.push(pvFn(result, getDimension()));
+                                break;
+                            case "uv":
+                                data.push(uvFn(result, getDimension()));
+                                break;
+                            case "vc":
+                                data.push(vcFn(result, getDimension()));
+                                break;
+                            case "avgTime":
+                                data.push(avgTimeFn(result, getDimension()));
+                                break;
+                            case "outRate":
+                                data.push(outRateFn(result, getDimension()));
+                                break;
+                            case "arrivedRate":
+                                data.push(arrivedRateFn(result, getDimension()));
+                                break;
+                            case "avgPage":
+                                data.push(avgPageFn(result, getDimension()));
+                                break;
+                            case "pageConversion":
+                                data.push(pageConversionFn(result, getDimension()));
+                                break;
+                            case "eventConversion":
+                                data.push(eventConversionFn(result, getDimension()));
+                                break;
+                            case "ip":
+                                data.push(ipFn(result, getDimension()));
+                                break;
+                            case "nuv":
+                                data.push(nuvFn(result, getDimension()));
+                                break;
+                            case "nuvRate":
+                                data.push(nuvRateFn(result, getDimension));
+                                break;
+                            default :
+                                break;
+                        }
+                    });
+                }
 
                 callbackFn(data);
             } else
