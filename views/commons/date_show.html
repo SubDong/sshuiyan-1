@@ -1,0 +1,11 @@
+<div class="date_show">
+    <ul>
+        <li data-ng-repeat="obj in dateShowArray" data-ng-class="myClass($index)">
+            <h4>{{obj.label | quotaFormat}}&nbsp;<span class="badge" style="font-size: 12px;cursor: help;" title="{{obj.label | quotaHelpFormat}}">?</span></h4>
+            <span>{{obj.value}}</span>
+            <br>
+            <!-- 显示对比数据 -->
+            <span style="color: #999" data-ng-if="isCompared">{{obj.value}}</span>
+        </li>
+    </ul>
+</div>

@@ -59,6 +59,7 @@ app.controller('trend_today_ctrl', function ($scope, $rootScope, $http, requestS
         var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
         $scope.charts[0].config.instance = chart;
         requestService.refresh($scope.charts);
+        $rootScope.$broadcast("ssh_dateShow_options_change", "today");
     };
     $scope.yesterday = function () {
         $scope.reset();
@@ -69,7 +70,7 @@ app.controller('trend_today_ctrl', function ($scope, $rootScope, $http, requestS
         var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
         $scope.charts[0].config.instance = chart;
         requestService.refresh($scope.charts);
-
+        $rootScope.$broadcast("ssh_dateShow_options_change", "yesterday");
     };
     $scope.sevenDay = function () {
         $scope.reset();
@@ -80,8 +81,7 @@ app.controller('trend_today_ctrl', function ($scope, $rootScope, $http, requestS
         var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
         $scope.charts[0].config.instance = chart;
         requestService.refresh($scope.charts);
-
-
+        $rootScope.$broadcast("ssh_dateShow_options_change", "seven");
     };
     $scope.month = function () {
         $scope.reset();

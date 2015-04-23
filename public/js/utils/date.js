@@ -104,3 +104,44 @@ Date.prototype.Format = function (fmt) {
             fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
     return fmt;
 };
+/**
+ * create by wms on 2015-04-22.一天内的毫秒数转时分秒
+ * @param msd
+ * @returns {number}
+ * @constructor
+ */
+function MillisecondToDate(msd) {
+    var time = parseFloat(msd) / 1000;
+    if (null!= time && ""!= time) {
+        if (time > 60 && time < 60*60) {
+            time = "00:" + myParseInt(time / 60) + ":" + myParseInt(time % 60);
+        }else if (time >= 60*60&& time < 60*60*24) {
+            time = myParseInt(time / 3600) + ":" + myParseInt(time % 3600 / 60) + ":" + myParseInt(myParseInt(time % 3600 % 60));
+        }else if (time > 0 && time <= 60) {
+            time = "00:00:" + myParseInt(time);
+        } else {
+            time = "00:00:00";
+        }
+    } else {
+        time = "00:00:00";
+    }
+    return time;
+}
+function myParseInt(time) {
+    var temp = parseInt(time);
+    return temp < 10 ? "0" + temp : temp;
+}
+/**
+ *
+ * @param dx
+ * @returns {boolean}
+ */
+Array.prototype.remove=function(dx){
+    if(isNaN(dx)||dx>this.length){return false;}
+    for(var i=0,n=0;i<this.length;i++){
+        if(this[i]!=this[dx]){
+            this[n++]=this[i]
+        }
+    }
+    this.length-=1
+}

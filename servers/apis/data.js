@@ -306,4 +306,22 @@ api.get("/vapie", function (req, res) {
             break;
     }
 });
+/**
+ * summary.by wms
+ */
+api.get("/summary", function (req, res) {
+    var query = url.parse(req.url, true).query;
+    var type = query['type'];
+    var startOffset = Number(query['start']);
+    var endOffset = Number(query['end']);
+    var indexes = date.createIndexes(startOffset, endOffset, "visitor-");
+    var quotas = query['quotas'];
+    var period = date.period(startOffset, endOffset);
+    var interval = date.interval(startOffset, endOffset);
+    // 指标数组
+    var quotasArray = quotas.split(",");
+    es_request.search(req.es, indexes, type, quotasArray, "period", null, period[0], period[1], interval, function (result) {
+        datautils.send(res, JSON.stringify(result));
+    });
+});
 module.exports = api;
