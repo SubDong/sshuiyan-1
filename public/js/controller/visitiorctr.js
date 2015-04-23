@@ -3,6 +3,12 @@
  */
 app.controller("Vistiorctr", function ($scope, $rootScope, $http, requestService) {
     $scope.todayClass = true;
+
+    $rootScope.tableTimeStart = 0;
+    $rootScope.tableTimeEnd = 0;
+    $rootScope.tableFilter = undefined;
+
+
     $scope.dateTimeStart = today_start().valueOf();
     $scope.dateTimeEnd = today_end().valueOf();
     $scope.reset = function () {
@@ -15,8 +21,8 @@ app.controller("Vistiorctr", function ($scope, $rootScope, $http, requestService
     $scope.today = function () {
         $scope.reset();
         $scope.todayClass = true;
-        $rootScope.tableTimeStart = today_start().valueOf();
-        $rootScope.tableTimeEnd = today_end().valueOf();
+        $rootScope.tableTimeStart = 0;
+        $rootScope.tableTimeEnd = 0;
 
         $scope.dateTimeStart = today_start().valueOf();
         $scope.dateTimeEnd = today_end().valueOf();
@@ -26,8 +32,8 @@ app.controller("Vistiorctr", function ($scope, $rootScope, $http, requestService
     $scope.yesterday = function () {
         $scope.reset();
         $scope.yesterdayClass = true;
-        $rootScope.tableTimeStart = yesterday_start().valueOf();
-        $rootScope.tableTimeEnd = yesterday_start().valueOf();
+        $rootScope.tableTimeStart = -1;
+        $rootScope.tableTimeEnd = -1;
 
         $scope.dateTimeStart = yesterday_start().valueOf();
         $scope.dateTimeEnd = yesterday_end().valueOf();
@@ -37,8 +43,8 @@ app.controller("Vistiorctr", function ($scope, $rootScope, $http, requestService
     $scope.sevenDay = function () {
         $scope.reset();
         $scope.sevenDayClass = true;
-        $rootScope.tableTimeStart = lastWeek_start().valueOf();
-        $rootScope.tableTimeEnd = lastWeek_start().valueOf();
+        $rootScope.tableTimeStart = -7;
+        $rootScope.tableTimeEnd = -1;
 
         $scope.dateTimeStart = lastWeek_start().valueOf();
         $scope.dateTimeEnd = lastWeek_end().valueOf();
@@ -48,8 +54,8 @@ app.controller("Vistiorctr", function ($scope, $rootScope, $http, requestService
     $scope.month = function () {
         $scope.reset();
         $scope.monthClass = true;
-        $rootScope.tableTimeStart = lastMonth_start().valueOf();
-        $rootScope.tableTimeEnd = lastMonth_start().valueOf();
+        $rootScope.tableTimeStart = -30;
+        $rootScope.tableTimeEnd = -1;
 
         $scope.dateTimeStart = lastMonth_start().valueOf();
         $scope.dateTimeEnd = lastMonth_end().valueOf();

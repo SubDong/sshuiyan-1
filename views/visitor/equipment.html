@@ -74,7 +74,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <div class="chart_top">
+                        <!--<div class="chart_top">
                             <span>转化指标:</span>
                             <ul>
                                 <li ng-repeat="item in Todytransform"
@@ -82,9 +82,9 @@
                                     ng-click='indicators(item,Todytransform,6)'>{{item.consumption_name}}
                                 </li>
                             </ul>
-                        </div>
+                        </div>-->
                         <div class="chart_top chart_noborder">
-                            <button class="btn btn-primary" type="button">确定</button>
+                            <button class="btn btn-primary" type="button"  ng-click="targetSearch()">确定</button>
                             * 最多只能勾选6项
                         </div>
 

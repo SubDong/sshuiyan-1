@@ -3,9 +3,6 @@
  */
 app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, requestService) {
     $scope.todayClass = true;
-    $rootScope.tableTimeStart = today_start().valueOf();
-    $rootScope.tableTimeEnd = today_end().valueOf();
-    $rootScope.latitude = {name: "地域", field: "region"};
 
 
     $scope.tabs = [
@@ -22,18 +19,18 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
     ];
     //
     $scope.Webbased = [
-        {consumption_name: "浏览量(PV)", name: "o6"},
-        {consumption_name: "访问次数", name: "o5"},
-        {consumption_name: "访客数(UV)", name: "o4"},
-        {consumption_name: "新访客数", name: "o3"},
-        {consumption_name: "新访客比率", name: "o2"},
-        {consumption_name: "页头访问次数", name: "o1"}
+        {consumption_name: "浏览量(PV)", name: "pv"},
+        {consumption_name: "访问次数", name: "vc"},
+        {consumption_name: "访客数(UV)", name: "uv"},
+        {consumption_name: "新访客数", name: "nuv"},
+        {consumption_name: "新访客比率", name: "nuvRate"},
+        //{consumption_name: "页头访问次数", name: "o1"}
     ];
     $scope.flow = [
-        {consumption_name: "跳出率", name: "jump"},
+        {consumption_name: "跳出率", name: "arrivedRate"},
         {consumption_name: "平均访问时长", name: "avgTime"},
         {consumption_name: "平均访问页数", name: "avgPage"},
-        {consumption_name: "抵达率", name: "dida"},
+        {consumption_name: "抵达率", name: "arrivedRate"},
     ];
     $scope.transform = [
         {consumption_name: "转化次数", name: "m1"},
@@ -65,10 +62,10 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
     ];
     $scope.TodayWeb = [
         {consumption_name: "浏览量(PV)", name: "pv"},
-        {consumption_name: "访问次数", name: "tt"},
+        {consumption_name: "访问次数", name: "vc"},
         {consumption_name: "访客数(UV)", name: "uv"},
-        {consumption_name: "新访客数", name: "ct"},
-        {consumption_name: "新访客比率", name: "ctRate"},
+        {consumption_name: "新访客数", name: "nuv"},
+        {consumption_name: "新访客比率", name: "nuvRate"},
         {consumption_name: "IP数", name: "ip"}
     ];
     $scope.Todytransform = [
@@ -76,9 +73,9 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
         {consumption_name: "转化率", name: "zhuanN"}
     ];
     $scope.Todayfloweds = [
-        {consumption_name: "跳出率", name: "q1"},
-        {consumption_name: "平均访问时长", name: "q2"},
-        {consumption_name: "平均访问页数", name: "q3"},
+        {consumption_name: "跳出率", name: "arrivedRate"},
+        {consumption_name: "平均访问时长", name: "avgTime"},
+        {consumption_name: "平均访问页数", name: "avgPage"},
     ];
     $scope.Order = [
         {consumption_name: "订单数", name: "q4"},
@@ -90,26 +87,26 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
         {consumption_name: "转化率", name: "q8"}
     ];
     $scope.Indexfloweds = [
-        {consumption_name: "贡献浏览量", name: "q9"},
-        {consumption_name: "跳出率", name: "a1"},
-        {consumption_name: "平均访问时长", name: "a2"},
-        {consumption_name: "平均访问页数", name: "a3"},
+        //{consumption_name: "贡献浏览量", name: "q9"},
+        {consumption_name: "跳出率", name: "arrivedRate"},
+        {consumption_name: "平均访问时长", name: "avgTime"},
+        {consumption_name: "平均访问页数", name: "avgPage"},
     ];
     $scope.Mapwebbase = [
-        {consumption_name: "浏览量(PV)", name: "a4"},
-        {consumption_name: "浏览量占比", name: "a5"},
-        {consumption_name: "访问次数", name: "a6"},
-        {consumption_name: "访客数(UV)", name: "a7"},
-        {consumption_name: "新访客数", name: "a8"},
-        {consumption_name: "新访客比率", name: "a9"},
-        {consumption_name: "IP数", name: "z1"}
+        {consumption_name: "浏览量(PV)", name: "pv"},
+        //{consumption_name: "浏览量占比", name: "a5"},
+        {consumption_name: "访问次数", name: "vc"},
+        {consumption_name: "访客数(UV)", name: "uv"},
+        {consumption_name: "新访客数", name: "nuv"},
+        {consumption_name: "新访客比率", name: "nuvRate"},
+        {consumption_name: "IP数", name: "ip"}
     ];
     $scope.Novisitorbase = [
-        {consumption_name: "浏览量(PV)", name: "z2"},
-        {consumption_name: "浏览量占比", name: "z3"},
-        {consumption_name: "访问次数", name: "z4"},
-        {consumption_name: "访客数(UV)", name: "z5"},
-        {consumption_name: "IP数", name: "z6"}
+        {consumption_name: "浏览量(PV)", name: "pv"},
+        //{consumption_name: "浏览量占比", name: "z3"},
+        {consumption_name: "访问次数", name: "vc"},
+        {consumption_name: "访客数(UV)", name: "uv"},
+        {consumption_name: "IP数", name: "ip"}
     ];
 
 
@@ -173,12 +170,22 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
      */
     $scope.targetSearch = function () {
         if ($rootScope.latitude == undefined) {
-            console.error("error: latitude is not defined,Please check to see if the assignment.");
+            console.error("error: latitude is not defined,Please check whether the parameter the configuration.");
             return;
         }
+        if ($rootScope.tableTimeStart == undefined) {
+            console.error("error: tableTimeStart is not defined,Please check whether the parameter the configuration.");
+            return;
+        }
+        if ($rootScope.tableTimeEnd == undefined) {
+            console.error("error: tableTimeEnd is not defined,Please check whether the parameter the configuration.");
+            return;
+        }
+
         $http({
             method: 'GET',
-            url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $scope.checkedArray + "&lati=" + $rootScope.latitude.field + "&type=1"
+            url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $scope.checkedArray + "&dimension=" + $rootScope.latitude.field
+            + "&filter" + $rootScope.tableFilter + "&type=1"
         }).success(function (data, status) {
             $scope.gridOptions.data = data;
         }).error(function (error) {

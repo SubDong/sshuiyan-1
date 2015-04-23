@@ -27,7 +27,10 @@ app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
         })
         .state('source', {
             url: "/source/source",
-            templateUrl: "../source/source.html"
+            templateUrl: "../source/source.html",
+            controller:function($rootScope){
+                $rootScope.latitude = {name: "来源类型", field: "rf_type"}
+            }
         })
         .state('searchengine', {
             url: "/source/searchengine",
@@ -71,7 +74,10 @@ app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
         })
         .state('indexoverview', {
             url: "/page/indexoverview",
-            templateUrl: "../page/indexoverview.html"
+            templateUrl: "../page/indexoverview.html",
+            controller:function($rootScope){
+                $rootScope.latitude = {name: "页面url", field: "loc"}
+            }
         })
         .state('indexoverview/1', {
             url: "/page/indexoverview/pagevalue",
@@ -91,16 +97,24 @@ app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
         })
         .state('provincemap', {
             url: "/visitor/provincemap",
-            templateUrl: "../visitor/provincemap.html"
+            templateUrl: "../visitor/provincemap.html",
+            controller:function($rootScope){
+                $rootScope.latitude = {name: "地域", field: "region"}
+            }
         })
-
         .state('equipment', {
             url: "/visitor/equipment",
-            templateUrl: "../visitor/equipment.html"
+            templateUrl: "../visitor/equipment.html",
+            controller:function($rootScope){
+                $rootScope.latitude = {name: "浏览器", field: "br"}
+            }
         })
         .state('novisitors', {
             url: "/visitor/novisitors",
-            templateUrl: "../visitor/novisitors.html"
+            templateUrl: "../visitor/novisitors.html",
+            controller:function($rootScope){
+                $rootScope.latitude = {name: "新老访客", field: "ct"}
+            }
         })
         .state('visitorfeature', {
             url: "/visitor/visitorfeature",

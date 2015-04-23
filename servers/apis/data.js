@@ -10,6 +10,7 @@ var resutil = require('../utils/responseutils');
 var datautils = require('../utils/datautils');
 var es_request = require('../services/es_request');
 var initial = require('../services/visitors/initialData');
+var map = require('../utils/map');
 
 var api = express.Router();
 
@@ -191,30 +192,51 @@ api.get('/survey', function (req, res) {
 /*********************自定义指标通用*************************/
 api.get('/indextable', function (req, res) {
     var query = url.parse(req.url, true).query;
-    var _indic = query["indic"].split(",");
-    var _lati = query["lati"];
-    var _startTime = Number(query["start"]);
-    var _endTime = Number(query["end"]);
+    var _startTime = Number(query["start"]);//开始时间
+    var _endTime = Number(query["end"]);//结束时间
+    var _indic = query["indic"].split(",");//统计指标
+    var _lati = query["dimension"];//统计纬度
     var _type = query["type"];
-    var indexes = date.between(req, "visitor-");
-    initial.chartDataCommon(req.es, indexes, _type, _lati, _indic, function (data) {
-        data = data.aggregations.areas.buckets;
+    var _filter = query["filter"];//过滤器
+    var indexes = date.createIndexes(_startTime, _endTime, "visitor-");//indexs
+
+    var period = date.period(_startTime, _endTime); //时间段
+    var interval = date.interval(_startTime, _endTime); //时间分割
+    es_request.search(req.es, indexes, _type, _indic, _lati, _filter, period[0], period[1], interval, function (data) {
         var result = [];
-
-        var coumArray = new Array();
-        data.forEach(function (item, i) {
-            var _obj = {};
-            _obj[_lati] = item.key;
-            _indic.forEach(function (items, i) {
-                if (items == "jump") {
-                    _obj[items] = (parseFloat(item["jumpTT"].value) == 0 ? "0%" : ((parseFloat(item[items].doc_count) / parseFloat(item["jumpTT"].value)) * 100).toFixed(2) + "%");
-                } else {
-                    _obj[items] = item[items].value;
+        var vidx = 0;
+        var maps = {}
+        var valueData = ["arrivedRate", "outRate", "nuvRate", "ct"]
+        data.forEach(function (info, x) {
+            for (var i = 0; i < info.key.length; i++) {
+                var region = info.key[i];
+                var obj = maps[region];
+                if (!obj) {
+                    obj = {};
+                    switch (_lati){
+                        case "ct":
+                            obj[_lati] = region == 0?"新访客":"老访客";
+                            break;
+                        case "rf_type":
+                            obj[_lati] = region == 1?"直接访问":region == 2?"搜索引擎":"外部链接";
+                            break;
+                        default :
+                            obj[_lati] = region;
+                            break;
+                    }
                 }
-
-            });
-            result.push(_obj);
+                if(info.label == "avgTime"){
+                    obj[info.label] = new Date(info.quota[i]).format("hh:mm:ss")
+                }else{
+                    obj[info.label] = info.quota[i] + (valueData.indexOf(info.label) != -1 ? "%" : "");
+                }
+                maps[region] = obj;
+            }
+            vidx++;
         });
+        for(var key in maps){
+            result.push(maps[key]);
+        }
         datautils.send(res, result);
     })
 });

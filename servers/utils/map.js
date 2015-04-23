@@ -22,7 +22,7 @@
  * ……
  *
  */
-var Map = function () {
+var map = function () {
     this.elements = new Array();
     //获取MAP元素个数
     this.size = function() {
@@ -133,4 +133,4 @@ var Map = function () {
         return arr;
     };
 }
-module.exports = Map;
+module.exports = map;

@@ -3,6 +3,12 @@
  */
 app.controller("sourcectr", function ($scope, $rootScope, $http, requestService) {
     $scope.todayClass = true;
+
+    //table 参数配置
+    $rootScope.tableTimeStart = 0;
+    $rootScope.tableTimeEnd = 0;
+    $rootScope.tableFilter = undefined;
+
     $scope.reset = function () {
         $scope.todayClass = false;
         $scope.yesterdayClass = false;
@@ -81,6 +87,10 @@ app.controller("sourcectr", function ($scope, $rootScope, $http, requestService)
     $scope.today = function () {
         $scope.reset();
         $scope.todayClass = true;
+        //table 参数配置
+        $rootScope.tableTimeStart = 0;
+        $rootScope.tableTimeEnd = 0;
+        //
         $rootScope.start = 0;
         $rootScope.end = 0;
         $rootScope.interval
@@ -93,6 +103,12 @@ app.controller("sourcectr", function ($scope, $rootScope, $http, requestService)
     $scope.yesterday = function () {
         $scope.reset();
         $scope.yesterdayClass = true;
+
+        //table 参数配置
+        $rootScope.tableTimeStart = -1;
+        $rootScope.tableTimeEnd = -1;
+        //
+
         $rootScope.start = -1;
         $rootScope.end = -1;
         $scope.charts.forEach(function (e) {
@@ -104,9 +120,15 @@ app.controller("sourcectr", function ($scope, $rootScope, $http, requestService)
     $scope.sevenDay = function () {
         $scope.reset();
         $scope.sevenDayClass = true;
+        //table 参数配置
+        $rootScope.tableTimeStart = -7;
+        $rootScope.tableTimeEnd = -1;
+        //
+
         $rootScope.start = -7;
         $rootScope.end = -1;
         $rootScope.interval = 24;
+
         $scope.charts.forEach(function (e) {
             var chart = echarts.init(document.getElementById(e.config.id));
             e.config.instance = chart;
@@ -116,6 +138,11 @@ app.controller("sourcectr", function ($scope, $rootScope, $http, requestService)
     $scope.month = function () {
         $scope.reset();
         $scope.monthClass = true;
+        //table 参数配置
+        $rootScope.tableTimeStart = -30;
+        $rootScope.tableTimeEnd = -1;
+        //
+
         $rootScope.start = -30;
         $rootScope.end = -1;
         $rootScope.interval = 24;
