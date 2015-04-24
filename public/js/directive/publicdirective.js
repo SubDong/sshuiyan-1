@@ -70,9 +70,14 @@ app.directive("sshDateShow", function ($http, $rootScope) {
         link : function(scope, element, attris, controller) {
             // 初始化参数
             scope.isCompared = true;
+            //
             scope.dateShowClassArray = ["date_first", "date_secend", "date_third", "date_four", "date_five", "date_last"];
             scope.myClass = function(index) {
                 return scope.dateShowClassArray[index];
+            };
+            // 整体样式
+            scope.myDivClass = function(length) {
+                return "dateshow" + length;
             };
             scope.setDateShowOptions = function(type) {
                 if (type === "today") {
@@ -90,16 +95,32 @@ app.directive("sshDateShow", function ($http, $rootScope) {
                 }
             };
             scope.setDateShowOptions(attris.type);
+            scope.setDateShowDimensionOption = function(dimension) {
+                if(undefined === dimension) {
+                    scope.dimension = "period";
+                    return;
+                }
+                scope.dimension = dimension;
+            };
+            scope.setDateShowDimensionOption(attris.dimension);
             // 当点击页面改变时间的时候。比如今日，昨日等
             scope.$on("ssh_dateShow_options_change", function(e, msg) {
                 scope.setDateShowOptions(msg);
+                scope.loadSummary();
+            });
+            scope.$on("ssh_dateShow_options_quotas_change", function(e, msg) {
+                console.log("--------------kitty----------------");
+                var types = angular.copy(msg);
+                scope.dateShowOptions = {
+                    types : types
+                };
                 scope.loadSummary();
             });
             scope.dateShowOptions = {
                 types : ["pv", "uv", "ip", "nuv", "outRate", "avgTime"]
             };
             scope.loadSummary = function() {
-                $http.get("/api/summary?type=1&quotas=" + scope.dateShowOptions.types + "&start=" + scope.start + "&end=" + scope.end).success(function (result) {
+                $http.get("/api/summary?type=1&dimension=" + scope.dimension + "&quotas=" + scope.dateShowOptions.types + "&start=" + scope.start + "&end=" + scope.end).success(function (result) {
                     scope.dateShowArray = [];
                     var obj = JSON.parse(eval('(' + result + ')').toString());; //由JSON字符串转换为JSON对象
                     angular.forEach(obj, function(r) {
@@ -111,7 +132,7 @@ app.directive("sshDateShow", function ($http, $rootScope) {
                             temp += Number(qo);
                             count++;
                         });
-                        if(r.label === "outRate") {
+                        if(r.label === "outRate" || r.label === "nuvRate") {
                             dateShowObject.value = (temp / count).toFixed(2) + "%";
                         } else if (r.label === "avgPage") {
                             dateShowObject.value = (temp / count).toFixed(2);

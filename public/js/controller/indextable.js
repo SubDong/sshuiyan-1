@@ -169,6 +169,7 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
      * @param type
      */
     $scope.targetSearch = function () {
+        $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $scope.checkedArray);
         if ($rootScope.latitude == undefined) {
             console.error("error: latitude is not defined,Please check whether the parameter the configuration.");
             return;
