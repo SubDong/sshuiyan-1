@@ -4,6 +4,11 @@
 app.controller('equipmentctr', function ($scope, $rootScope, $http, requestService) {
     $scope.todayClass = true;
     $scope.dt = new Date();
+    //table配置
+    $rootScope.tableTimeStart = 0;
+    $rootScope.tableTimeEnd = 0;
+    $rootScope.tableFilter = undefined;
+
     $scope.reset = function () {
         $scope.todayClass = false;
         $scope.yesterdayClass = false;
@@ -62,6 +67,10 @@ app.controller('equipmentctr', function ($scope, $rootScope, $http, requestServi
     $scope.today = function () {
         $scope.reset();
         $scope.todayClass = true;
+        //table配置
+        $rootScope.tableTimeStart = 0;
+        $rootScope.tableTimeEnd = 0;
+
         $rootScope.start = 0;
         $rootScope.end = 0;
         $rootScope.interval = 24;
@@ -72,6 +81,11 @@ app.controller('equipmentctr', function ($scope, $rootScope, $http, requestServi
     $scope.yesterday = function () {
         $scope.reset();
         $scope.yesterdayClass = true;
+
+        //table配置
+        $rootScope.tableTimeStart = 0;
+        $rootScope.tableTimeEnd = 0;
+
         $rootScope.start = -1;
         $rootScope.end = -1;
         $rootScope.interval = 24;
@@ -80,6 +94,22 @@ app.controller('equipmentctr', function ($scope, $rootScope, $http, requestServi
         requestService.refresh($scope.charts);
 
     };
+
+    $scope.sevenDay = function () {
+        $scope.reset();
+        $scope.sevenDayClass = true;
+        $rootScope.tableTimeStart = -7;
+        $rootScope.tableTimeEnd = -1;
+
+    };
+    $scope.month = function () {
+        $scope.reset();
+        $scope.monthClass = true;
+        $rootScope.tableTimeStart = -30;
+        $rootScope.tableTimeEnd = -1;
+
+    };
+
     $scope.checkopen = function ($event) {
         $scope.reset();
         $scope.definClass = true;

@@ -9,8 +9,9 @@ app.controller("Vistiorctr", function ($scope, $rootScope, $http, requestService
     $rootScope.tableFilter = undefined;
 
 
-    $scope.dateTimeStart = today_start().valueOf();
-    $scope.dateTimeEnd = today_end().valueOf();
+    $scope.dateTimeStart = 0;
+    $scope.dateTimeEnd = 0;
+
     $scope.reset = function () {
         $scope.todayClass = false;
         $scope.yesterdayClass = false;
@@ -24,10 +25,10 @@ app.controller("Vistiorctr", function ($scope, $rootScope, $http, requestService
         $rootScope.tableTimeStart = 0;
         $rootScope.tableTimeEnd = 0;
 
-        $scope.dateTimeStart = today_start().valueOf();
-        $scope.dateTimeEnd = today_end().valueOf();
-        $scope.doSearch(today_start().valueOf(), today_end().valueOf(), "1");
-        $scope.doSearchAreas(today_start().valueOf(), today_end().valueOf(), "1", $scope.mapOrPieConfig);
+        $scope.dateTimeStart = 0;
+        $scope.dateTimeEnd = 0;
+        $scope.doSearch($scope.dateTimeStart, $scope.dateTimeEnd, "1");
+        $scope.doSearchAreas($scope.dateTimeStart , $scope.dateTimeEnd, "1", $scope.mapOrPieConfig);
     };
     $scope.yesterday = function () {
         $scope.reset();
@@ -35,10 +36,10 @@ app.controller("Vistiorctr", function ($scope, $rootScope, $http, requestService
         $rootScope.tableTimeStart = -1;
         $rootScope.tableTimeEnd = -1;
 
-        $scope.dateTimeStart = yesterday_start().valueOf();
-        $scope.dateTimeEnd = yesterday_end().valueOf();
-        $scope.doSearch(yesterday_start().valueOf(), yesterday_end().valueOf(), "1");
-        $scope.doSearchAreas(yesterday_start().valueOf(), yesterday_end().valueOf(), "1", $scope.mapOrPieConfig);
+        $scope.dateTimeStart = -1;
+        $scope.dateTimeEnd = -1;
+        $scope.doSearch($scope.dateTimeStart, $scope.dateTimeEnd, "1");
+        $scope.doSearchAreas($scope.dateTimeStart, $scope.dateTimeEnd, "1", $scope.mapOrPieConfig);
     };
     $scope.sevenDay = function () {
         $scope.reset();
@@ -46,10 +47,10 @@ app.controller("Vistiorctr", function ($scope, $rootScope, $http, requestService
         $rootScope.tableTimeStart = -7;
         $rootScope.tableTimeEnd = -1;
 
-        $scope.dateTimeStart = lastWeek_start().valueOf();
-        $scope.dateTimeEnd = lastWeek_end().valueOf();
-        $scope.doSearch(lastWeek_start().valueOf(), lastWeek_end().valueOf(), "1");
-        $scope.doSearchAreas(lastWeek_start().valueOf(), lastWeek_end().valueOf(), "1", $scope.mapOrPieConfig);
+        $scope.dateTimeStart = -7;
+        $scope.dateTimeEnd = -1;
+        $scope.doSearch($scope.dateTimeStart, $scope.dateTimeEnd, "1");
+        $scope.doSearchAreas($scope.dateTimeStart, $scope.dateTimeEnd, "1", $scope.mapOrPieConfig);
     };
     $scope.month = function () {
         $scope.reset();
@@ -57,10 +58,10 @@ app.controller("Vistiorctr", function ($scope, $rootScope, $http, requestService
         $rootScope.tableTimeStart = -30;
         $rootScope.tableTimeEnd = -1;
 
-        $scope.dateTimeStart = lastMonth_start().valueOf();
-        $scope.dateTimeEnd = lastMonth_end().valueOf();
-        $scope.doSearch(lastMonth_start().valueOf(), lastMonth_end().valueOf(), "1");
-        $scope.doSearchAreas(lastMonth_start().valueOf(), lastMonth_end().valueOf(), "1", $scope.mapOrPieConfig);
+        $scope.dateTimeStart = -30;
+        $scope.dateTimeEnd = -1;
+        $scope.doSearch($scope.dateTimeStart, $scope.dateTimeEnd, "1",$scope.lat);
+        $scope.doSearchAreas($scope.dateTimeStart, $scope.dateTimeEnd, "1", $scope.mapOrPieConfig);
 
     };
     $scope.open = function ($event) {
@@ -110,6 +111,14 @@ app.controller("Vistiorctr", function ($scope, $rootScope, $http, requestService
         $scope.areas = area;
         $scope.doSearchAreas()
     };
+    $scope.lat = "region";
+    $scope.setLat = function(lat){
+        if(lat == undefined){
+            $scope.lat = "region";
+        }else{
+            $scope.lat = lat;
+        }
+    }
     /**
      * 基础数据
      * @param start
@@ -119,18 +128,21 @@ app.controller("Vistiorctr", function ($scope, $rootScope, $http, requestService
      * @param type
      */
     $scope.doSearch = function (start, end, type) {
-
+        var quotas = [];
+        quotas.push("pv");
+        quotas.push("uv");
+        quotas.push("ip");
+        quotas.push("outRate");
+        quotas.push("avgTime");
         $http({
             method: 'GET',
-            url: '/api/visitormap/?start=' + start + "&end=" + end + "&type=" + type
+            url: '/api/visitormap/?start=' + start + "&end=" + end + "&type=" + type + "&quotas="+ quotas
         }).success(function (data, status) {
-            var _data = JSON.parse(eval('(' + data + ')').toString());
-            $scope.pv = _data.pv;
-            $scope.uv = _data.uv;
-            $scope.ip = _data.ip;
-            $scope.jump = _data.jump;
-            $scope.avgTime = _data.avgTime;
-
+            $scope.pv = data.pv;
+            $scope.uv = data.uv;
+            $scope.ip = data.ip;
+            $scope.jump = data.outRate;
+            $scope.avgTime = data.avgTime;
         }).error(function (error) {
             console.log(error);
         });
@@ -208,8 +220,8 @@ app.controller("Vistiorctr", function ($scope, $rootScope, $http, requestService
     //图标数据
 
     // init
-    $scope.doSearch(today_start().valueOf(), today_end().valueOf(), "1");
-    $scope.doSearchAreas(today_start().valueOf(), today_end().valueOf(), "1", $scope.mapOrPieConfig);
+    $scope.doSearch($scope.dateTimeStart, $scope.dateTimeEnd, "1");
+    $scope.doSearchAreas($scope.dateTimeStart, $scope.dateTimeEnd, "1", $scope.mapOrPieConfig);
     $scope.mapselect= [
         {consumption_name: "浏览量(PV)"},
         {consumption_name: "访问次数"},
@@ -219,8 +231,6 @@ app.controller("Vistiorctr", function ($scope, $rootScope, $http, requestService
         {consumption_name: "IP数"}
     ];
     $scope.mapset = function (row) {
-        console.log(row);
-        alert(row)
 
 
     };

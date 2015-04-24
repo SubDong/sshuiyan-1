@@ -50,7 +50,10 @@ app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
         })
         .state('entrancepage', {
             url: "/page/entrancepage",
-            templateUrl: "../page/entrancepage.html"
+            templateUrl: "../page/entrancepage.html",
+            controller:function($rootScope){
+                $rootScope.latitude = {name: "页面url", field: "loc"}
+            }
         })
         .state('entrancepage/1', {
             url: "/page/secendpage/flowanalysis",
@@ -99,7 +102,11 @@ app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
             url: "/visitor/provincemap",
             templateUrl: "../visitor/provincemap.html",
             controller:function($rootScope){
-                $rootScope.latitude = {name: "地域", field: "region"}
+                $rootScope.latitude = {name: "地域", field: "region"};
+                /*$rootScope.checkedArray = ["pv","uv"];
+                $rootScope.gridArray = [{field: "region",name: "地域"},{field: "pv",name: "浏览量(PV)"},{field: "uv",name: "访客数(UV)"}];
+                var res = ["flow","TodayWeb"];
+                initTable(res,$rootScope.checkedArray);*/
             }
         })
         .state('equipment', {

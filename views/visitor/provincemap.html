@@ -46,17 +46,17 @@
                     <!--<li ng-repeat="item in mapselect" ng-class='{current:$index==map}'
                         ng-click='mapset($index)'>{{item.consumption_name}}
                     </li>-->
-                    <li><input type="checkbox" checked="checked" ng-click="setProperty('loc',$index, entities)"/>
+                    <li><input type="radio" name="check" checked="checked" ng-click="setProperty('loc',$index, entities)"/>
                         <label>浏览量(PV)</label></li>
-                    <li><input type="checkbox" ng-click="setProperty('tt')"/> <label>访问次数</label></li>
-                    <li><input type="checkbox" ng-click="setProperty('_ucv')"/> <label>访客数(UV)</label></li>
-                    <li><input type="checkbox" ng-click="setProperty('ct')"/> <label>新访客数</label></li>
-                    <li><input type="checkbox" ng-click="setProperty('remote')"/> <label>IP数</label></li>
-                    <li><input type="checkbox"/> <label>转化次数</label></li>
+                    <li><input type="radio" name="check" ng-click="setProperty('tt')"/> <label>访问次数</label></li>
+                    <li><input type="radio" name="check" ng-click="setProperty('_ucv')"/> <label>访客数(UV)</label></li>
+                    <li><input type="radio" name="check" ng-click="setProperty('ct')"/> <label>新访客数</label></li>
+                    <li><input type="radio" name="check" ng-click="setProperty('remote')"/> <label>IP数</label></li>
+                    <li><input type="radio" name="check"/> <label>转化次数</label></li>
                     <li class="disabled">* 最多只能勾选1项</li>
                 </ul>
             </div>
-            <div id="VistorMap_charts" style="width:98%;height:300px;"></div>
+            <div id="VistorMap_charts" style="width:98%;height:400px;"></div>
         </div>
         <div class="table_content" ng-controller="TabsCtrl">
             <tabset justified="true">
@@ -80,7 +80,7 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="chart_top">
+                    <!--<div class="chart_top">
                         <span>转化指标:</span>
                         <ul>
                             <li ng-repeat="item in Todytransform"
@@ -88,7 +88,7 @@
                                 ng-click='indicators(item,Todytransform,2)'>{{item.consumption_name}}
                             </li>
                         </ul>
-                    </div>
+                    </div>-->
                     <div class="chart_top chart_noborder">
                         <button class="btn btn-primary" type="button" ng-click="targetSearch()">确定</button>
                         * 最多只能勾选2项

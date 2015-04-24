@@ -27,7 +27,7 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
         //{consumption_name: "页头访问次数", name: "o1"}
     ];
     $scope.flow = [
-        {consumption_name: "跳出率", name: "arrivedRate"},
+        {consumption_name: "跳出率", name: "outRate"},
         {consumption_name: "平均访问时长", name: "avgTime"},
         {consumption_name: "平均访问页数", name: "avgPage"},
         {consumption_name: "抵达率", name: "arrivedRate"},
@@ -73,7 +73,7 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
         {consumption_name: "转化率", name: "zhuanN"}
     ];
     $scope.Todayfloweds = [
-        {consumption_name: "跳出率", name: "arrivedRate"},
+        {consumption_name: "跳出率", name: "outRate"},
         {consumption_name: "平均访问时长", name: "avgTime"},
         {consumption_name: "平均访问页数", name: "avgPage"},
     ];
@@ -88,7 +88,7 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
     ];
     $scope.Indexfloweds = [
         //{consumption_name: "贡献浏览量", name: "q9"},
-        {consumption_name: "跳出率", name: "arrivedRate"},
+        {consumption_name: "跳出率", name: "outRate"},
         {consumption_name: "平均访问时长", name: "avgTime"},
         {consumption_name: "平均访问页数", name: "avgPage"},
     ];
@@ -109,10 +109,12 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
         {consumption_name: "IP数", name: "ip"}
     ];
 
+    $rootScope.gridArray = new Array();
+    $rootScope.checkedArray = new Array()
+    $rootScope.indicators = function (item, entities, number) {
+        /*$rootScope.gridArray == undefined?$rootScope.gridArray = new Array():"";
+        $rootScope.checkedArray == undefined?$rootScope.checkedArray = new Array():"";*/
 
-    $scope.checkedArray = new Array();
-    $scope.gridArray = new Array();
-    $scope.indicators = function (item, entities, number) {
         $scope.gridArray.shift();
         $scope.gridObj = {};
         var a = $scope.checkedArray.indexOf(item.name);
@@ -124,8 +126,7 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
             if ($scope.checkedArray.length >= number) {
                 $scope.checkedArray.shift();
                 $scope.gridArray.shift();
-                $scope.checkedArray.push(item.name);
-
+                $scope
                 $scope.gridObj["name"] = item.consumption_name;
                 $scope.gridObj["field"] = item.name;
                 $scope.gridArray.push($scope.gridObj);
@@ -140,12 +141,23 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
             }
         }
         angular.forEach(entities, function (subscription, index) {
-            $scope.checkedArray;
             if (subscription.name == item.name) {
                 $scope.classInfo = 'current';
             }
         });
     };
+
+     /*function initTable(entities,item){
+        entities.forEach(function(key,x){
+            angular.forEach($scope[key], function (subscription, index) {
+                item.forEach(function(info,i){
+                    if (subscription.name == info) {
+                        $scope.classInfo = 'current';
+                    }
+                })
+            });
+        });
+    }*/
     // 推广概况表格配置项
     $scope.gridOptions = {
         paginationPageSizes: [25, 50, 75],
@@ -182,7 +194,6 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
             console.error("error: tableTimeEnd is not defined,Please check whether the parameter the configuration.");
             return;
         }
-
         $http({
             method: 'GET',
             url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $scope.checkedArray + "&dimension=" + $rootScope.latitude.field
@@ -194,6 +205,9 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
         });
     }
 
+    //init
+    $scope.targetSearch();
+    //
     var select = $scope.select = {};
 
     //数组对象用来给ng-options遍历
