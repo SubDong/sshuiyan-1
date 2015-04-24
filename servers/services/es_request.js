@@ -157,6 +157,30 @@ var buildRequest = function (indexes, type, quotas, dimension, filters, start, e
         }
     });
 
+    if (dimension == null) {
+        return {
+            "index": indexes.toString(),
+            "type": type,
+            "body": {
+                "query": buildQuery(filters, start, end),
+                "size": 0,
+                "aggs": {
+                    "result": {
+                        "filter": {
+                            "script": {
+                                "script": "doc['loc'].values.size() > param1",
+                                "params": {
+                                    "param1": 0
+                                }
+                            }
+                        },
+                        "aggs": _aggs
+                    }
+                }
+            }
+        };
+    }
+
     if (dimension.split(",").length > 1) {
         var dimensionArr = dimension.split(",");
         return {
