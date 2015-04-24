@@ -246,26 +246,34 @@ api.get('/indextable', function (req, res) {
 //访客地图
 api.get('/visitormap', function (req, res) {
     var query = url.parse(req.url, true).query;
-    var type = query['type'];
-    var start = Number(query['start']);
-    var end = Number(query['end']);
-    var indexes = date.between(req, "visitor-");
-    initial.visitorMapBasic(req.es, indexes, type, function (data) {
-        datautils.send(res, JSON.stringify(data));
+    var _type = query['type'];
+    var _startTime = Number(query['start']);
+    var _endTime = Number(query['end']);
+    var _quotas = query["quotas"].split(",");
+    var indexes = date.createIndexes(_startTime, _endTime, "visitor-");//indexs
+    var period = date.period(_startTime, _endTime); //时间段
+    var interval = date.interval(_startTime, _endTime); //时间分割
+
+    es_request.search(req.es, indexes, _type, _quotas, null, null, period[0], period[1], interval, function (data) {
+        var result = {};
+        data.forEach(function(item,i){
+            result[item.label] =  item.label == "outRate"?item.quota[0]+"%":item.label =="avgTime"?new Date(item.quota[0]).format("hh:mm:ss"):item.quota[0];
+        });
+        datautils.send(res, result);
     })
 });
 //访客地图 图标
 api.get('/provincemap', function (req, res) {
     var query = url.parse(req.url, true).query;
     var type = query['type'];
-    var start = Number(query['start']);
-    var end = Number(query['end']);
+    var _startTime = Number(query['start']);
+    var _endTime = Number(query['end']);
     var areas = query['areas'];
     var property = query['property'];
     if (property == "ct") {
-        var indexes = date.between(req, "access-");
+        var indexes = date.createIndexes(_startTime, _endTime, "visitor-");
     } else {
-        var indexes = date.between(req, "visitor-");
+        var indexes = date.createIndexes(_startTime, _endTime, "visitor-");
     }
     initial.chartData(req.es, indexes, type, areas, property, function (data) {
         var result = {};

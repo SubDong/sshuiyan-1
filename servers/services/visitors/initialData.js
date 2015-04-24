@@ -160,7 +160,6 @@ var initial = {
                 }
             };
         }
-
         es.search(mapRequest, function (err, response) {
             if(response != undefined){
                 callbackFn(response);
