@@ -3,18 +3,20 @@
  */
 app.controller('entrancepagectr', function ($scope, $rootScope, $http, requestService) {
     $scope.onLegendClick = function (radio, chartInstance, config, checkedVal) {
-        clear.lineChart($scope.charts[1].config, checkedVal);
-        $scope.charts[0].types = checkedVal;
-        $scope.charts[1].types = checkedVal;
+        clear.lineChart(config, checkedVal);
+        $scope.charts.forEach(function (chart) {
+            chart.config.instance = echarts.init(document.getElementById(chart.config.id));
+            chart.types = checkedVal;
+        });
         requestService.refresh($scope.charts);
     }
     $scope.pieFormat = function (data, config) {
         var json = JSON.parse(eval("(" + data + ")").toString());
         cf.renderChart(json, config);
     }
-    $scope.mainFormat = function (data, config) {
+    $scope.mainFormat = function (data, config,types) {
         var json = JSON.parse(eval("(" + data + ")").toString());
-        var result = chartUtils.getRf_type(json, $rootScope.start,"labelType");
+        var result = chartUtils.getRf_type(json, $rootScope.start, "serverLabel",types);
         config['noFormat'] = true;
         cf.renderChart(result, config);
     }
@@ -42,13 +44,14 @@ app.controller('entrancepagectr', function ($scope, $rootScope, $http, requestSe
                 legendClickListener: $scope.onLegendClick,
                 legendAllowCheckCount: 1,
                 id: "indicators_charts",
-                bGap:true,
+                bGap: true,
+                min_max:false,
                 chartType: "bar",
                 dataKey: "key",
                 dataValue: "quota"
             },
             types: ["pv"],
-            dimension: ["period,rf"],
+            dimension: ["period,loc"],
             interval: $rootScope.interval,
             url: "/api/charts",
             cb: $scope.mainFormat

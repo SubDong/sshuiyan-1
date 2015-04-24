@@ -87,12 +87,12 @@ var chartUtils = {
             if (start <= -7) {
                 time.push((e.key_as_string).toString().substr(0, 10));
             } else {
-                time.push((e.key_as_string).toString().substr(10, 12));
+                time.push(Number((e.key_as_string).toString().substring(10, 13)));
             }
         })
         return time
     },
-    getObject: function (json, key) {
+    getObject: function (json, key, types) {
         var val = [];
         json.forEach(function (e) {
             var _val = 0;
@@ -101,7 +101,10 @@ var chartUtils = {
                 buckets.forEach(function (buc) {
                     if (buc) {
                         if (buc.key == key) {
-                            _val = buc.doc_count;
+                            var aggs = chartUtils.getAggs(types.toString());
+                            if (buc[aggs + "_aggs"]) {
+                                _val = buc[aggs + "_aggs"].value;
+                            }
                         }
                     }
                 })
@@ -110,13 +113,13 @@ var chartUtils = {
         });
         return val;
     },
-    getRf_type: function (json, start, labelType) {
+    getRf_type: function (json, start, labelType, types) {
         var time = chartUtils.getObjectTime(json, start);
         var label = chartUtils.getLabel(json);
         var result = []
         label.forEach(function (label) {
             var tmp = {};
-            var val = chartUtils.getObject(json, label);
+            var val = chartUtils.getObject(json, label, types);
             if (labelType) {
                 tmp['label'] = label;
             } else {
@@ -139,9 +142,106 @@ var chartUtils = {
             }
         });
         return label.removal();
+    },
+    getAggs: function (res) {
+        switch (res) {
+            case "nuv":
+                return "new_visitor";
+            default :
+                return res;
+        }
+    },
+    arrayMerge: function (a, b) {
+        if (b.length > a.length) {
+            var t = a
+            a = b
+            b = t
+        }
+        return a.map(function (v, i) {
+            return v + (b[i] || 0)
+        })
+    },
+    getEnginePie: function (data) {
+        if (data) {
+            var result_data = [];
+            var _label = [];
+            var _data = []
+            var result = {};
+            data.forEach(function (e) {
+                _label.push(e.label);
+                var _val = 0;
+                e.quota.forEach(function (val) {
+                    if (val != 0) {
+                        _val += val;
+                    }
+                });
+                _data.push(_val);
+            });
+            result["key"] = _label;
+            result["quota"] = _data;
+            result_data.push(result);
+            return result_data;
+        }
+        return data;
+    },
+    getEngine: function (data) {
+        if (data) {
+            var final_result = [];
+            var result_baidu = {};
+            var result_360 = {};
+            var result_sdog = {};
+            var s_baidu = [];
+            var s_360 = [];
+            var s_dog = [];
+            for (var i = 0; i < 24; i++) {
+                s_baidu.push(0);
+                s_360.push(0);
+                s_dog.push(0);
+            }
+            var time = [];
+            data.forEach(function (item) {
+                if (item.label.indexOf("baidu") > -1) {
+                    s_baidu = chartUtils.arrayMerge(s_baidu, item.quota);
+                } else if (item.label.indexOf("haosou") > -1) {
+                    s_360 = chartUtils.arrayMerge(s_360, item.quota);
+                } else if (item.label.indexOf("sogou") > -1) {
+                    s_dog = chartUtils.arrayMerge(s_dog, item.quota);
+                }
+                time = item.key;
+            });
+            result_baidu["label"] = "百度";
+            result_baidu["key"] = time;
+            result_baidu["quota"] = s_baidu;
+            final_result.push(result_baidu);
+            result_360["label"] = "360";
+            result_360["key"] = time;
+            result_360["quota"] = s_360;
+            final_result.push(result_360);
+            result_sdog["label"] = "搜狗";
+            result_sdog["key"] = time;
+            result_sdog["quota"] = s_dog;
+            final_result.push(result_sdog);
+
+            return final_result;
+        }
+        return data;
+    },
+    getExternalinkPie: function (result) {
+        if (result) {
+            var regex = /(baidu)+|(sogou)+|(haosou)+/, final_result = [];
+            result.forEach(function (e) {
+                var _val = {}
+                if (!regex.test(e.label) && e.label != '-') {
+                    _val['label'] = e.label;
+                    _val['key'] = e.key;
+                    _val['quota'] = e.quota;
+                    final_result.push(_val);
+                }
+            });
+            return final_result;
+        }
+        return result
     }
-
-
 }
 Array.prototype.removal = function () {
     this.sort();
