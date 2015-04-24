@@ -4,19 +4,21 @@
  * ES查询接口
  * quotas: 指标
  * dimension: 维度
- * filter: 过滤器
+ * filters: 过滤器
  */
 
 require('../utils/dateFormat')();
 
-var buildQuery = function (filter) {
+var buildQuery = function (filters) {
 
     var mustQuery = [];
 
-    if (filter != null) {
-        mustQuery.push({
-            "terms": filter
-        })
+    if (filters != null) {
+        filters.forEach(function (filter) {
+            mustQuery.push({
+                "terms": filter
+            });
+        });
     }
 
     return {
@@ -145,7 +147,7 @@ var es_aggs = {
     "eventConversion": {}
 };
 
-var buildRequest = function (indexes, type, quotas, dimension, filter, start, end, interval) {
+var buildRequest = function (indexes, type, quotas, dimension, filters, start, end, interval) {
 
     var _aggs = {};
 
@@ -161,7 +163,7 @@ var buildRequest = function (indexes, type, quotas, dimension, filter, start, en
             "index": indexes.toString(),
             "type": type,
             "body": {
-                "query": buildQuery(filter),
+                "query": buildQuery(filters),
                 "size": 0,
                 "aggs": {
                     "result": {
@@ -200,7 +202,7 @@ var buildRequest = function (indexes, type, quotas, dimension, filter, start, en
             "index": indexes.toString(),
             "type": type,
             "body": {
-                "query": buildQuery(filter),
+                "query": buildQuery(filters),
                 "size": 0,
                 "aggs": {
                     "result": {
@@ -230,7 +232,7 @@ var buildRequest = function (indexes, type, quotas, dimension, filter, start, en
             "index": indexes.toString(),
             "type": type,
             "body": {
-                "query": buildQuery(filter, start, end),
+                "query": buildQuery(filters, start, end),
                 "size": 0,
                 "aggs": {
                     "result": {
@@ -455,7 +457,7 @@ var avgPageFn = function (result, dimension) {
 
         var avgPage = 0;
         if (uv > 0)
-            avgPage = (parseFloat(nuv) / parseFloat(uv) * 100).toFixed(2);
+            avgPage = (parseFloat(pv) / parseFloat(uv)).toFixed(2);
 
         quotaArr.push(avgPage);
     }
@@ -628,8 +630,8 @@ var es_request = {
                 callbackFn([]);
         });
     },
-    search: function (es, indexes, type, quotas, dimension, filter, start, end, interval, callbackFn) {
-        var request = buildRequest(indexes, type, quotas, dimension, filter, start, end, interval);
+    search: function (es, indexes, type, quotas, dimension, filters, start, end, interval, callbackFn) {
+        var request = buildRequest(indexes, type, quotas, dimension, filters, start, end, interval);
 
         function getQuotas() {
             return quotas;
