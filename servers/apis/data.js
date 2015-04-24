@@ -333,6 +333,7 @@ api.get("/vapie", function (req, res) {
  */
 api.get("/summary", function (req, res) {
     var query = url.parse(req.url, true).query;
+    var dimension = query['dimension'];
     var type = query['type'];
     var startOffset = Number(query['start']);
     var endOffset = Number(query['end']);
@@ -342,7 +343,7 @@ api.get("/summary", function (req, res) {
     var interval = date.interval(startOffset, endOffset);
     // 指标数组
     var quotasArray = quotas.split(",");
-    es_request.search(req.es, indexes, type, quotasArray, "period", null, period[0], period[1], interval, function (result) {
+    es_request.search(req.es, indexes, type, quotasArray, dimension, null, period[0], period[1], interval, function (result) {
         datautils.send(res, JSON.stringify(result));
     });
 });

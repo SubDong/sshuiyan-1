@@ -1,4 +1,4 @@
-<div class="date_show">
+<div class="date_show"data-ng-class="myDivClass(dateShowArray.length)">
     <ul>
         <li data-ng-repeat="obj in dateShowArray" data-ng-class="myClass($index)">
             <h4>{{obj.label | quotaFormat}}&nbsp;<span class="badge" style="font-size: 12px;cursor: help;" title="{{obj.label | quotaHelpFormat}}">?</span></h4>
