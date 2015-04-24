@@ -18,8 +18,11 @@ app.controller("sourcectr", function ($scope, $rootScope, $http, requestService)
         $scope.btnchecked = true;
     };
     $scope.onLegendClick = function (radio, chartInstance, config, checkedVal) {
-        $scope.charts[0].types = checkedVal;
-        $scope.charts[1].types = checkedVal;
+        clear.lineChart(config, checkedVal);
+        $scope.charts.forEach(function (chart) {
+            chart.config.instance = echarts.init(document.getElementById(chart.config.id));
+            chart.types = checkedVal;
+        })
         requestService.refresh($scope.charts);
     }
     $scope.pieFormat = function (data, config) {
@@ -33,16 +36,16 @@ app.controller("sourcectr", function ($scope, $rootScope, $http, requestService)
         });
         cf.renderChart(json, config);
     }
-    $scope.customFormat = function (data, config) {
+    $scope.customFormat = function (data, config,types) {
         var json = JSON.parse(eval("(" + data + ")").toString());
-        var result = chartUtils.getRf_type(json,$rootScope.start);
+        var result = chartUtils.getRf_type(json, $rootScope.start,null,types);
         config['noFormat'] = true;
         cf.renderChart(result, config);
     }
     $scope.charts = [
         {
             config: {
-                legendData: ["外部链接","直接访问","搜索引擎"],
+                legendData: ["外部链接", "搜索引擎","直接访问"],
                 id: "sourse_charts",
                 pieStyle: true,
                 serieName: "访问情况",
@@ -61,8 +64,9 @@ app.controller("sourcectr", function ($scope, $rootScope, $http, requestService)
                 legendData: ["浏览量(PV)", "访客数(UV)", "访问次数", "新访客数", "IP数", "页面转化", "订单数", "订单金额", "订单转化率"],
                 legendClickListener: $scope.onLegendClick,
                 legendAllowCheckCount: 1,
-                bGap: true,
                 id: "indicators_charts",
+                min_max:false,
+                bGap: true,
                 chartType: "bar",
                 dataKey: "key",
                 dataValue: "quota"
