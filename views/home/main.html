@@ -24,14 +24,14 @@
                     </div>
                     <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
                         <ui-select ng-model="continent.selected" theme="selectize" ng-disabled="disabled" class="fl btn-delta"
-                                   style="width: 60px;">
+                                   style="width: 80px;">
                             <ui-select-match placeholder="亚洲">{{$select.selected.name}}</ui-select-match>
                             <ui-select-choices repeat="continent in continents">
                                 <span ng-bind-html="continent.name"></span>
                             </ui-select-choices>
                         </ui-select>
                         <ui-select ng-model="country.selected" theme="selectize" ng-disabled="disabled" class="fl btn-nation"
-                                   style="width: 60px;">
+                                   style="width: 80px;">
                             <ui-select-match placeholder="中国">{{$select.selected.name}}</ui-select-match>
                             <ui-select-choices repeat="country in countrys">
                                 <span ng-bind-html="country.name"></span>
