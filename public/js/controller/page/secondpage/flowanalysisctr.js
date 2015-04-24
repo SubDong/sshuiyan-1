@@ -3,9 +3,11 @@
  */
 app.controller('flowanalysisctr', function ($scope, $rootScope, $http, requestService) {
     $scope.onLegendClick = function (radio, chartInstance, config, checkedVal) {
-        clear.lineChart($scope.charts[1].config, checkedVal);
-        $scope.charts[0].types = checkedVal;
-        $scope.charts[1].types = checkedVal;
+        clear.lineChart(config, checkedVal);
+        $scope.charts.forEach(function (chart) {
+            chart.config.instance = echarts.init(document.getElementById(chart.config.id));
+            chart.types = checkedVal;
+        });
         requestService.refresh($scope.charts);
     }
     $scope.pieFormat = function (data, config) {
@@ -20,7 +22,7 @@ app.controller('flowanalysisctr', function ($scope, $rootScope, $http, requestSe
                 pieStyle: true,
                 serieName: "访问情况",
                 chartType: "pie",
-                status:'hu',
+                status: 'hu',
                 dataKey: "key",
                 dataValue: "quota"
             },
@@ -32,7 +34,7 @@ app.controller('flowanalysisctr', function ($scope, $rootScope, $http, requestSe
         {
             config: {
                 legendId: "indicators_charts_legend",
-                legendData: [ "访客数(UV)", "访问次数", "新访客数", "IP数", "贡献浏览量", "转化次数"],
+                legendData: ["访客数(UV)", "访问次数", "新访客数", "IP数", "贡献浏览量", "转化次数"],
                 legendClickListener: $scope.onLegendClick,
                 legendAllowCheckCount: 1,
                 id: "indicators_charts",
