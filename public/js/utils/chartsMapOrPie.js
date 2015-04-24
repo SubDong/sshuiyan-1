@@ -27,7 +27,7 @@ var mixingMap = {
                     type: 'map',
                     mapType: 'china',
                     mapLocation: {
-                        x: '20%'
+                        x: '10%'
                     },
                     tooltip: {
                         trigger: 'item',
@@ -46,6 +46,7 @@ var mixingMap = {
                         formatter: "{a} <br/>{b} : {c} ({d}%)"
                     },
                     center: ['80%', '50%'],
+                    radius:["0","50%"],
                     selectedMode: false,
                     selected: true,
                     data: data.chart_data
