@@ -670,7 +670,12 @@ var es_request = {
             if (response != undefined) {
                 var result = response.aggregations.result.buckets;
 
-                if (getDimension().split(",").length > 1) {
+                if (!result) {
+                    result = [];
+                    result.push(response.aggregations.result);
+                }
+
+                if (getDimension() != null && getDimension().split(",").length > 1) {
                     callbackFn(result);
                 } else {
                     getQuotas().forEach(function (quota) {
