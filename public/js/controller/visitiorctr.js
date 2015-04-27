@@ -1,7 +1,7 @@
 /**
  * Created by john on 2015/3/31.
  */
-app.controller("Vistiorctr", function ($scope, $rootScope, $http, requestService) {
+app.controller("Vistiorctr", function ($scope, $rootScope, $http, requestService,areaService) {
     $scope.todayClass = true;
 
     $rootScope.tableTimeStart = 0;

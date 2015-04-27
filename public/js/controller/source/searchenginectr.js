@@ -1,7 +1,7 @@
 /**
  * Created by XiaoWei on 2015/4/22.
  */
-app.controller("searchenginectr", function ($scope, $rootScope, $http, requestService) {
+app.controller("searchenginectr", function ($scope, $rootScope, $http, requestService,areaService) {
     $scope.todayClass = true;
     $scope.reset = function () {
         $scope.todayClass = false;

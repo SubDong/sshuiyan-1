@@ -1,7 +1,7 @@
 /**
  * Created by XiaoWei on 2015/4/13.
  */
-app.controller("sourcectr", function ($scope, $rootScope, $http, requestService) {
+app.controller("sourcectr", function ($scope, $rootScope, $http, requestService,areaService) {
     $scope.todayClass = true;
 
     //table 参数配置
