@@ -79,33 +79,32 @@
                             <button class="btn btn-primary" type="button" ng-click="targetSearch()">确定</button>
                             * 可同时选择6项
                         </div>
-
                     </div>
-                    <div class="custom_secendtitle">
-                        <div class="custom_select">
-                            <div class="input-group fl">
-                                <input type="text" placeholder="输入URL…" class="form-control fl">
+                </tab>
+            </tabset>
+            <div class="custom_secendtitle">
+                <div class="custom_select">
+                    <div class="input-group fl">
+                        <input type="text" placeholder="输入URL…" class="form-control fl">
                                        <span class="input-group-btn fl">
                                  <button type="button" class="btn btn-default"><span aria-hidden="true"
                                                                                      class="glyphicon glyphicon-search"></span>
                                  </button>
                                    </span>
-                            </div>
-                            <b></b>
-                            转化目标
-                            <div role="group" class="btn-group">
-                                <ui-select ng-model="extendway.selected" theme="selectize" class="fl"
-                                           style="width: 120px;">
-                                    <ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>
-                                    <ui-select-choices repeat="extendway in extendways">
-                                        <span ng-bind-html="extendway.name"></span>
-                                    </ui-select-choices>
-                                </ui-select>
-                            </div>
-                        </div>
                     </div>
-                </tab>
-            </tabset>
+                    <b></b>
+                    转化目标
+                    <div role="group" class="btn-group">
+                        <ui-select ng-model="extendway.selected" theme="selectize" class="fl"
+                                   style="width: 120px;">
+                            <ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices repeat="extendway in extendways">
+                                <span ng-bind-html="extendway.name"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+            </div>
             <div class="custom_table">
                 <div ui-grid="gridOptions" class="grid" ui-grid-pagination ui-grid-selection ui-grid-exporter></div>
             </div>
