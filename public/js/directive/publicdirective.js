@@ -78,59 +78,13 @@ app.directive("sshDateShow", function ($http, $rootScope) {
         link : function(scope, element, attris, controller) {
             // 初始化参数
             scope.isCompared = true;
-            //
-            scope.dateShowClassArray = ["date_first", "date_secend", "date_third", "date_four", "date_five", "date_last"];
-            scope.myClass = function(index) {
-                return scope.dateShowClassArray[index];
-            };
-            // 整体样式
-            scope.myDivClass = function(length) {
-                return "dateshow" + length;
-            };
-            scope.setDateShowOptions = function(type) {
-                if (type === "today") {
-                    scope.start = 0;
-                    scope.end = 0;
-                } else if (type === "yesterday") {
-                    scope.start = -1;
-                    scope.end = -1;
-                } else if (type === "seven") {
-                    scope.start = -7;
-                    scope.end = -1;
-                } else if (type === "month") {
-                    scope.start = -7;
-                    scope.end = -1;
-                }
-            };
-            scope.setDateShowOptions(attris.type);
-            scope.setDateShowDimensionOption = function(dimension) {
-                if(undefined === dimension) {
-                    scope.dimension = "period";
-                    return;
-                }
-                scope.dimension = dimension;
-            };
-            scope.setDateShowDimensionOption(attris.dimension);
-            // 当点击页面改变时间的时候。比如今日，昨日等
-            scope.$on("ssh_dateShow_options_change", function(e, msg) {
-                scope.setDateShowOptions(msg);
-                scope.loadSummary();
-            });
-            scope.$on("ssh_dateShow_options_quotas_change", function(e, msg) {
-                console.log("--------------kitty----------------");
-                var types = angular.copy(msg);
-                scope.dateShowOptions = {
-                    types : types
-                };
-                scope.loadSummary();
-            });
-            scope.dateShowOptions = {
-                types : ["pv", "uv", "ip", "nuv", "outRate", "avgTime"]
-            };
+            scope.ds_start = scope.ds_end = 0;
+            scope.ds_dateShowQuotasOption = ["pv", "uv", "ip", "nuv", "outRate", "avgTime"];
+            // 读取数据
             scope.loadSummary = function() {
-                $http.get("/api/summary?type=1&dimension=" + scope.dimension + "&quotas=" + scope.dateShowOptions.types + "&start=" + scope.start + "&end=" + scope.end).success(function (result) {
+                $http.get("/api/summary?type=1&dimension=" + scope.ds_dimension + "&quotas=" + scope.ds_dateShowQuotasOption + "&start=" + scope.ds_start + "&end=" + scope.ds_end).success(function (result) {
                     scope.dateShowArray = [];
-                    var obj = JSON.parse(eval('(' + result + ')').toString());; //由JSON字符串转换为JSON对象
+                    var obj = JSON.parse(eval('(' + result + ')').toString()); //由JSON字符串转换为JSON对象
                     angular.forEach(obj, function(r) {
                         var dateShowObject = {};
                         dateShowObject.label = r.label;
@@ -141,7 +95,11 @@ app.directive("sshDateShow", function ($http, $rootScope) {
                             count++;
                         });
                         if(r.label === "outRate" || r.label === "nuvRate") {
-                            dateShowObject.value = (temp / count).toFixed(2) + "%";
+                            if(count === 0) {
+                                dateShowObject.value = "--";
+                            } else {
+                                dateShowObject.value = (temp / count).toFixed(2) + "%";
+                            }
                         } else if (r.label === "avgPage") {
                             dateShowObject.value = (temp / count).toFixed(2);
                         } else if (r.label === "avgTime") {
@@ -154,7 +112,69 @@ app.directive("sshDateShow", function ($http, $rootScope) {
                     scope.isCompared = !scope.isCompared;
                 });
             };
-            scope.loadSummary();
+            // 改变时间参数
+            scope.setDateShowTimeOption = function(type, cb) {
+                if (type === "today") {
+                    scope.ds_start = scope.ds_end = 0;
+                } else if (type === "yesterday") {
+                    scope.ds_start = scope.ds_end = -1;
+                } else if (type === "seven") {
+                    scope.ds_start = -7;
+                    scope.ds_end = -1;
+                } else if (type === "month") {
+                    scope.ds_start = -30;
+                    scope.ds_end = -1;
+                }
+                if(cb) {
+                    cb();
+                }
+            };
+            scope.setDateShowTimeOption(attris.type);
+            // 第一种方式。通过用户点击时发出的事件进行监听，此方法需要在每个controller方法内部添加代码实现
+            scope.$on("ssh_dateShow_options_change", function(e, msg) {
+                scope.setDateShowTimeOption(msg, scope.loadSummary);
+            });
+            // 第二种方式。使用$watch函数监听样式的变化
+            scope.$watch("todayClass", function(newValue, oldValue) {
+                if (true === newValue) {
+                    scope.setDateShowTimeOption("today", scope.loadSummary);
+                }
+            });
+            scope.$watch("yesterdayClass", function(newValue, oldValue) {
+                if (true === newValue) {
+                    scope.setDateShowTimeOption("yesterday", scope.loadSummary);
+                }
+            });
+            scope.$watch("sevenDayClass", function(newValue, oldValue) {
+                if (true === newValue) {
+                    scope.setDateShowTimeOption("seven", scope.loadSummary);
+                }
+            });
+            scope.$watch("monthClass", function(newValue, oldValue) {
+                if (true === newValue) {
+                    scope.setDateShowTimeOption("month", scope.loadSummary);
+                }
+            });
+            scope.$watch("definClass", function(newValue, oldValue) {
+                if (true === newValue) {
+                    scope.setDateShowTimeOption(null, scope.loadSummary);
+                }
+            });
+            // 维度dimension
+            scope.setDateShowDimensionOption = function(dimension) {
+                scope.ds_dimension = "period";
+                if(undefined != dimension) {
+                    scope.ds_dimension = dimension;
+                }
+            };
+            scope.setDateShowDimensionOption(attris.dimension);
+            // 指标
+            scope.$on("ssh_dateShow_options_quotas_change", function(e, msg) {
+                var temp = angular.copy(msg);
+                scope.ds_dateShowQuotasOption = temp;
+                scope.loadSummary();
+            });
+            //scope.loadSummary();
         }
     };
 });
