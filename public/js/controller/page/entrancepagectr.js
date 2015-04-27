@@ -10,6 +10,9 @@ app.controller('entrancepagectr', function ($scope, $rootScope, $http, requestSe
         });
         requestService.refresh($scope.charts);
     }
+    //
+    //
+    //
     $scope.pieFormat = function (data, config) {
         var json = JSON.parse(eval("(" + data + ")").toString());
         cf.renderChart(json, config);
