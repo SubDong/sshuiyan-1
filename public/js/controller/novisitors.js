@@ -1,7 +1,7 @@
 /**
  * Created by SubDong on 2015/4/23.
  */
-app.controller('novisitors', function ($scope, $rootScope, $http) {
+app.controller('novisitors', function ($scope, $rootScope, $http,areaService) {
     $scope.todayClass = true;
 
     $rootScope.tableTimeStart = 0;

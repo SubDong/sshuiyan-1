@@ -63,20 +63,6 @@
                         </div>
 
                     </div>
-                    <div class="custom_secendtitle">
-                        <div class="custom_select">
-                            转化目标
-                            <div role="group" class="btn-group">
-                                <ui-select ng-model="extendway.selected" theme="selectize" class="fl"
-                                           style="width: 120px;">
-                                    <ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>
-                                    <ui-select-choices repeat="extendway in extendways">
-                                        <span ng-bind-html="extendway.name"></span>
-                                    </ui-select-choices>
-                                </ui-select>
-                            </div>
-                        </div>
-                    </div>
                 </tab>
                 <tab heading="高级筛选" ng-controller="todayfilter">
                     <div class="custom_title">
@@ -157,22 +143,22 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="custom_secendtitle">
-                        <div class="custom_select">
-                            转化目标
-                            <div role="group" class="btn-group">
-                                <ui-select ng-model="extendway.selected" theme="selectize" class="fl"
-                                           style="width: 120px;">
-                                    <ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>
-                                    <ui-select-choices repeat="extendway in extendways">
-                                        <span ng-bind-html="extendway.name"></span>
-                                    </ui-select-choices>
-                                </ui-select>
-                            </div>
-                        </div>
-                    </div>
                 </tab>
             </tabset>
+            <div class="custom_secendtitle">
+                <div class="custom_select">
+                    转化目标
+                    <div role="group" class="btn-group">
+                        <ui-select ng-model="extendway.selected" theme="selectize" class="fl"
+                                   style="width: 120px;">
+                            <ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices repeat="extendway in extendways">
+                                <span ng-bind-html="extendway.name"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+          </div>
             <div class="custom_table">
                 <div ui-grid="gridOptions" class="grid" ui-grid-pagination ui-grid-selection ui-grid-exporter></div>
             </div>
