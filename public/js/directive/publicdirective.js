@@ -79,7 +79,8 @@ app.directive("sshDateShow", function ($http, $rootScope) {
             // 初始化参数
             scope.isCompared = true;
             scope.ds_start = scope.ds_end = 0;
-            scope.ds_dateShowQuotasOption = ["pv", "uv", "ip", "nuv", "outRate", "avgTime"];
+            scope.ds_defaultQuotasOption = ["pv", "uv", "ip", "nuv", "outRate", "avgTime"];
+            scope.ds_dateShowQuotasOption = scope.defectOptions ? (scope.defectOptions.types || scope.ds_defaultQuotasOption) : scope.ds_defaultQuotasOption;
             // 读取数据
             scope.loadSummary = function() {
                 $http.get("/api/summary?type=1&dimension=" + scope.ds_dimension + "&quotas=" + scope.ds_dateShowQuotasOption + "&start=" + scope.ds_start + "&end=" + scope.ds_end).success(function (result) {
@@ -101,7 +102,11 @@ app.directive("sshDateShow", function ($http, $rootScope) {
                                 dateShowObject.value = (temp / count).toFixed(2) + "%";
                             }
                         } else if (r.label === "avgPage") {
-                            dateShowObject.value = (temp / count).toFixed(2);
+                            if(count === 0) {
+                                dateShowObject.value = "--";
+                            } else {
+                                dateShowObject.value = (temp / count).toFixed(2);
+                            }
                         } else if (r.label === "avgTime") {
                             dateShowObject.value = MillisecondToDate(temp / count);
                         } else {
