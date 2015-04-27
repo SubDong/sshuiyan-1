@@ -1,3 +1,4 @@
+
 app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
 
     //$locationProvider.html5Mode(true);
@@ -47,6 +48,10 @@ app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
         .state('visitedpages', {
             url: "/page/visitedpages",
             templateUrl: "../page/visitedpages.html"
+        })
+        .state('offsitelinks', {
+            url: "/page/offsitelinks",
+            templateUrl: "../page/offsitelinks.html"
         })
         .state('entrancepage', {
             url: "/page/entrancepage",

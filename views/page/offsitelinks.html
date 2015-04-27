@@ -1,0 +1,94 @@
+<div class="middle_containers" ng-controller="linksctrl">
+    <div class="date_select">
+        <calendar></calendar>
+        <div class="fr">
+            <button class="btn btn-default btn-Refresh" type="button"><span aria-hidden="true"  class="glyphicon glyphicon-refresh"></span> </button>
+            <div role="group" class="btn-group">
+                <button aria-expanded="false" data-toggle="dropdown" class="btn btn-default dropdown-toggle"  type="button" id="btnGroupDrop3"> 导出 <span class="caret"></span> </button>
+                <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
+                    <li><a href="#">保存</a></li>
+                    <li><a href="#">导出</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="my_concent">
+        <div class="linkstree">
+            <div class="linkstree_middle">
+                <div class="linkstree_left_line fl"></div>
+                <div class="linkstree_middle_left fl"></div>
+                <div class="linkstree_middle_center fl">
+                    <div class="linkstree_center_top">
+                        <a href="#">{{offsitelinks.name||"http://127.0.0.1:8000/#/page/offsitelinks"}}</a><span class="caret fr" ng-click="isCollapsed = !isCollapsed"></span>
+                        <div class="link_tree_mode" collapse="isCollapsed">
+                            <div class="link_tree_row"></div>
+                            <div class="link_tree_value">
+                               <ul>
+                                   <li ng-repeat="offsitelink in offsitelinks" ng-click="weblink()">{{offsitelink.name}}</li>
+                               </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="linkstree_center_bottom">
+                        <p><span>浏览量</span><b>200</b></p>
+                        <p><span>退出率</span><b>100%</b></p>
+                        <div class="linktree_set btn-lg" >
+                            <span aria-hidden="true" class="glyphicon glyphicon-cog large"  ng-click="open()"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="linkstree_middle_right fl"></div>
+            </div>
+            <div class="linkstree_right">
+                <div class="linkstree_right_left">
+                </div>
+                <div class="linkstree_right_right">
+                    <p><b>离开网站</b></p>
+                    <p><span>退出率</span><span>100%</span></p>
+                </div>
+            </div>
+            <div class="linkstree_left fl">
+                <div class="linkstree_left_more fl">
+                  <div class="linkstree_left_list" ng-repeat="link in links " ng-mouseover="hoverIn()" ng-mouseleave="hoverOut()">
+                      <div class="linkstree_left_list_left fl"  >
+                          <a href="{{link.name}}">{{ link.name }}</a>
+                      </div>
+                      <div class="linkstree_left_list_left_right fl">
+                       </div>
+                      <div class="linkstree_left_list_left_line fl">
+                      </div>
+                      <div class="link_tree_mode" ng-show="hoverEdit">
+                          <div class="link_tree_row"></div>
+                          <div class="link_tree_value">
+                              <p><span>带来浏览量</span><span>{{ link.count}}</span></p>
+                              <p><span>占比</span><span>{{ link.ratio }}</span></p>
+                          </div>
+                      </div>
+                  </div>
+                </div>
+                <div class="link_left_zhezhaofirst">
+                </div>
+                <div class="link_left_zhezhaosecend">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/ng-template" id="myModalContent.html">
+    <div class="modal-header">
+        <h3 class="modal-title">链接设置</h3>
+    </div>
+    <div class="modal-body">
+        <p>您还能添加19个监控页：</p>
+        <ul>
+            <li ng-repeat="item in items">
+                <a ng-click="selected.item = item">{{ item }}</a>
+            </li>
+        </ul>
+        Selected: <b>{{ selected.item }}</b>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="ok()">确定</button>
+        <button class="btn btn-warning" ng-click="cancel()">取消</button>
+    </div>
+</script>
