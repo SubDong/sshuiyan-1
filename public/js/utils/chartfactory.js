@@ -98,6 +98,10 @@ var op = {
         } else {
             json = JSON.parse(eval('(' + data + ')').toString());
         }
+        if (!json[0].key.length) {
+            def.defData(chartConfig);
+            return;
+        }
         json.forEach(function (item) {
             labelData.push(item.label);
         });
@@ -152,14 +156,17 @@ var op = {
         chartConfig.dataValue = !chartConfig.dataValue ? "quota" : chartConfig.dataValue;
         var xData = [];
         var select = {};
+
         json.forEach(function (item) {
             select[chartUtils.convertChinese(item.label)] = true;
             var serie = {
                 name: !chartConfig.noFormat ? chartUtils.convertChinese(item.label) : item.label,
                 type: !chartConfig.chartType ? "line" : chartConfig.chartType,
-                itemStyle: {normal: {areaStyle: {type: 'default'}}},
                 data: item[chartConfig.dataValue]
             };
+            if (chartConfig.lineType == undefined) {
+                serie.itemStyle = {normal: {areaStyle: {type: 'default'}}}
+            }
             if (chartConfig.min_max == undefined) {
                 serie["markPoint"] = {
                     data: [
@@ -168,7 +175,7 @@ var op = {
                     ]
                 }
             }
-            xData.push(item[chartConfig.dataKey]);
+            xData.push(util.getX(item, chartConfig));
             option.series.push(serie);
         });
         if (!chartConfig.noFormat) {
@@ -459,17 +466,76 @@ var clear = {
     }
 }
 var def = {
-    lineDefData: function (serie, option, chartConfig) {
-        var xData = [0];
-        serie.data.push(0);
-        option.xAxis[0].data = xData;
-        option.series.push(serie);
-        if (chartConfig.chartType == "bar") {
-            option.legend.data = ["暂无数据"];
+    defData: function (chartConfig) {
+        var instance = chartConfig.instance;
+        var option = {
+            legend: {
+                show: false,
+                selectedMode: false,
+                orient: !chartConfig.ledLayout ? "horizontal" : chartConfig.ledLayout,
+                data: ['暂无数据']
+            },
+            tooltip: {
+                trigger: !chartConfig.tt ? "axis" : chartConfig.tt
+            },
+            calculable: true,
+            xAxis: [
+                {
+                    type: !chartConfig.xType ? "category" : chartConfig.xType,
+                    boundaryGap: !chartConfig.bGap ? false : chartConfig.bGap,
+                    data: []
+                }
+            ],
+            yAxis: [
+                {
+                    type: !chartConfig.yType ? "value" : chartConfig.yType,
+                    axisLabel: {
+                        formatter: chartConfig.axFormat
+                    }
+                },
+                {
+                    'type': !chartConfig.yType ? "value" : chartConfig.yType
+                }
+            ],
+            series: [{
+                name: '暂无数据',
+                type: !chartConfig.chartType ? "line" : chartConfig.chartType,
+                data: [0]
+            }]
         }
+        for (var i = 0; i < 24; i++) {
+            option.xAxis[0].data.push(i);
+        }
+        //serie.data.push(0);
+        //option.xAxis[0].data = xData;
+        //option.series.push(serie);
+        //if (chartConfig.chartType == "bar") {
+        //    option.legend.data = ["暂无数据"];
+        //}
+        instance.setOption(option);
     }
 }
 var util = {
+    getX: function (item, chartConfig) {
+        var _time = [];
+        var key = item[chartConfig.dataKey];
+        if (chartConfig.keyFormat) {
+            if (chartConfig.keyFormat == "hour") {
+                var _time = [];
+                key.forEach(function (time) {
+                    _time.push(Number(time.substring(10, 13)));
+                });
+            } else {
+                var _time = [];
+                key.forEach(function (time) {
+                    _time.push(time.substr(0, 10));
+                });
+            }
+        } else {
+            return key;
+        }
+        return _time;
+    },
     renderLegend: function (chartObj, c) {
         if (c.legendData.length > 0 && (c.chartType == "line" || c.chartType == "bar")) {
             if (c.legendAllowCheckCount > 1) {

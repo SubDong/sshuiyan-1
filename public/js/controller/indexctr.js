@@ -2,7 +2,7 @@
  * Created by yousheng on 15/3/26.
  */
 
-app.controller('indexctr', function ($scope, $rootScope, $http, requestService, messageService,areaService) {
+app.controller('indexctr', function ($scope, $rootScope, $http, requestService, messageService, areaService) {
         $scope.todayClass = true;
         $scope.dt = new Date();
         $scope.dayClass = true;
@@ -27,7 +27,7 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
             ]
         };
         $scope.onLegendClickListener = function (radio, chartObj, chartConfig, checkedVal) {
-            clear.lineChart($scope.charts[0].config,checkedVal);
+            clear.lineChart($scope.charts[0].config, checkedVal);
             $scope.charts[0].types = checkedVal;
             var chartArray = [$scope.charts[0]];
             requestService.refresh(chartArray);
@@ -56,6 +56,7 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
                     bGap: false,//首行缩进
                     chartType: "line",//图表类型
                     dataKey: "key",//传入数据的key值
+                    keyFormat: "hour",//x轴根据传入值生成
                     dataValue: "quota"//传入数据的value值
                 },
                 types: ["pv", "uv"],
@@ -120,8 +121,11 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
             $scope.todayClass = true;
             $rootScope.start = 0;
             $rootScope.end = 0;
-            var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
-            $scope.charts[0].config.instance = chart;
+            $scope.charts.forEach(function (e) {
+                var chart = echarts.init(document.getElementById(e.config.id));
+                e.config.instance = chart;
+                e.config.keyFormat = "hour";
+            })
             requestService.refresh($scope.charts);
             requestService.gridRefresh($scope.grids);
         };
@@ -133,6 +137,7 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
+                e.config.keyFormat = "hour";
             })
             requestService.refresh($scope.charts);
             requestService.gridRefresh($scope.grids);
@@ -146,6 +151,7 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
+                e.config.keyFormat = "day";
             })
             requestService.refresh($scope.charts);
             requestService.gridRefresh($scope.grids);
@@ -159,6 +165,7 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
+                e.config.keyFormat = "day";
             })
             requestService.refresh($scope.charts);
             requestService.gridRefresh($scope.grids);
@@ -185,19 +192,19 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
             $scope.today();
         };
         //下拉框
-        $scope.mapChange=function(_this){
-            $scope.charts[1].types=_this.value;
-            var chartArray=[$scope.charts[1]];
+        $scope.mapChange = function (_this) {
+            $scope.charts[1].types = _this.value;
+            var chartArray = [$scope.charts[1]];
             requestService.refresh(chartArray);
         }
-        $scope.equipmentChange=function(_this){
-            $scope.charts[2].types=_this.value;
-            var chartArray=[$scope.charts[2]];
+        $scope.equipmentChange = function (_this) {
+            $scope.charts[2].types = _this.value;
+            var chartArray = [$scope.charts[2]];
             requestService.refresh(chartArray);
         }
-        $scope.searchChange=function(_this){
-            $scope.grids[0].types=_this.value;
-            var chartArray=[$scope.grids[0]];
+        $scope.searchChange = function (_this) {
+            $scope.grids[0].types = _this.value;
+            var chartArray = [$scope.grids[0]];
             requestService.gridRefresh(chartArray);
         }
 
@@ -213,7 +220,7 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
             $scope.country.selected = undefined;
             $scope.continent.selected = undefined;
         },
-        $scope.continent = {};
+            $scope.continent = {};
         $scope.country = {};
 
     }

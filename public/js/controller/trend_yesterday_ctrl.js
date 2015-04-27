@@ -75,7 +75,7 @@ app.controller('Trend_yesterday_ctrl', function ($scope, $rootScope, $http, requ
         $scope.reset();
         $scope.sevenDayClass = true;
         $rootScope.start = -7
-        $rootScope.start = -1;
+        $rootScope.end = -1;
         $rootScope.interval = 7;
         var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
         $scope.charts[0].config.instance = chart;

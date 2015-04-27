@@ -1,7 +1,7 @@
 /**
  * Created by john on 2015/4/3.
  */
-app.controller('wayctrl', function ($scope, $http,requestService,messageService) {
+app.controller('wayctrl', function ($scope, $rootScope, $http, requestService, messageService) {
     $scope.todayClass = true;
     $scope.reset = function () {
         $scope.todayClass = false;
@@ -22,57 +22,61 @@ app.controller('wayctrl', function ($scope, $http,requestService,messageService)
             {name: 'ratio', displayName: "新访客比率"}
         ]
     };
-    $scope.lineChartConfig = {
-        legendData: ["点击量","消费","浏览量PV","跳出率","平均访问时长","转化次数"],//显示几种数据
-        chartId: "indicators_charts",
-        bGap: false,//首行缩进
-        chartType: "line",//图表类型
-        dataKey: "time",//传入数据的key值
-        dataValue: "value"//传入数据的value值
+    $scope.onLegendClick = function (radio, chartInstance, config, checkedVal) {
+        clear.lineChart(config, checkedVal);
+        $scope.charts.forEach(function (chart) {
+            chart.config.instance = echarts.init(document.getElementById(chart.config.id));
+            chart.types = checkedVal;
+        })
+        requestService.refresh($scope.charts);
     }
+    $scope.wayFormat = function (data, config) {
+
+    }
+    $scope.charts = [
+        {
+            config: {
+                legendId: "indicators_charts_legend",
+                legendData: ["浏览量(PV)", "访客数(UV)", "跳出率", "平均访问时长", "点击量", "消费", "转化次数"],
+                legendClickListener: $scope.onLegendClick,
+                legendAllowCheckCount: 2,
+                bGap: true,
+                min_max: false,
+                id: "indicators_charts",
+                chartType: "bar",
+                dataKey: "key",
+                dataValue: "quota"
+            },
+            types: ["pv", "outRate"],
+            dimension: ["region"],
+            interval: $rootScope.interval,
+            url: "/api/charts"
+        },
+    ];
+    $scope.init = function () {
+        var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
+        $scope.charts[0].config.instance = chart;
+        util.renderLegend(chart, $scope.charts[0].config);
+        var chartArray = [$scope.charts[0]];
+        requestService.refresh(chartArray);
+    }
+    $scope.init();
     $scope.today = function () {
         $scope.reset();
         $scope.todayClass = true;
-        $scope.dt = new Date();
-        var start = today_start(), end = today_end();
-        var option = {
-            type: "pv",
-            interval: 24
-        };
-        requestService.request(start.getTime(), end.getTime(), option,$scope.lineChartConfig);
     };
     $scope.yesterday = function () {
         $scope.reset();
         $scope.yesterdayClass = true;
-
-        var start = yesterday_start(), end = yesterday_end(), option = {
-            type: "pv",
-            chart: 'line',
-            interval: 24
-        };
-        requestService.request(start.getTime(), end.getTime(), option,$scope.lineChartConfig);
-        requestService.gridRequest({}, $scope.gridOptions, "uv");
     };
     $scope.sevenDay = function () {
         $scope.reset();
         $scope.sevenDayClass = true;
-        var start = lastWeek_start(), end = today_end(), option = {
-            type: "pv",
-            chart: 'line',
-            interval: 7
-        };
-        requestService.request(start.getTime(), end.getTime(), option,$scope.lineChartConfig);
 
     };
     $scope.month = function () {
         $scope.reset();
         $scope.monthClass = true;
-        var start = lastMonth_start(), end = today_end(), option = {
-            type: "pv",
-            chart: 'line',
-            interval: 30
-        };
-        requestService.request(start.getTime(), end.getTime(), option,$scope.lineChartConfig);
 
     };
     $scope.open = function ($event) {
@@ -93,15 +97,15 @@ app.controller('wayctrl', function ($scope, $http,requestService,messageService)
     $scope.today();
     //$scope.initMap();
     $scope.disabled = undefined;
-    $scope.enable = function() {
+    $scope.enable = function () {
         $scope.disabled = false;
     };
 
-    $scope.disable = function() {
+    $scope.disable = function () {
         $scope.disabled = true;
     };
 
-    $scope.clear = function() {
+    $scope.clear = function () {
         $scope.page.selected = undefined;
         $scope.city.selected = undefined;
         $scope.country.selected = undefined;
@@ -109,29 +113,29 @@ app.controller('wayctrl', function ($scope, $http,requestService,messageService)
     };
     $scope.page = {};
     $scope.pages = [
-        { name: '全部页面目标'},
-        { name: '全部事件目标'},
-        { name: '所有页面右上角按钮'},
-        { name: '所有页面底部400按钮'},
-        { name: '详情页右侧按钮'},
-        { name: '时长目标'},
-        { name: '访问页数目标'},
+        {name: '全部页面目标'},
+        {name: '全部事件目标'},
+        {name: '所有页面右上角按钮'},
+        {name: '所有页面底部400按钮'},
+        {name: '详情页右侧按钮'},
+        {name: '时长目标'},
+        {name: '访问页数目标'},
     ];
     $scope.country = {};
     $scope.countrys = [
-        { name: '中国'},
-        { name: '泰国'},
+        {name: '中国'},
+        {name: '泰国'},
 
     ];
     $scope.city = {};
     $scope.citys = [
-        { name: '北京'},
-        { name: '上海'},
-        { name: '成都'},
+        {name: '北京'},
+        {name: '上海'},
+        {name: '成都'},
     ];
     $scope.continent = {};
     $scope.continents = [
-        { name: '亚洲'},
-        { name: '美洲 '},
+        {name: '亚洲'},
+        {name: '美洲 '},
     ];
 })

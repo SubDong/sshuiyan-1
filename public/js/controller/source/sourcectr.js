@@ -1,7 +1,7 @@
 /**
  * Created by XiaoWei on 2015/4/13.
  */
-app.controller("sourcectr", function ($scope, $rootScope, $http, requestService,areaService) {
+app.controller("sourcectr", function ($scope, $rootScope, $http, requestService, areaService) {
     $scope.todayClass = true;
 
     //table 参数配置
@@ -36,16 +36,16 @@ app.controller("sourcectr", function ($scope, $rootScope, $http, requestService,
         });
         cf.renderChart(json, config);
     }
-    $scope.customFormat = function (data, config,types) {
+    $scope.customFormat = function (data, config, types) {
         var json = JSON.parse(eval("(" + data + ")").toString());
-        var result = chartUtils.getRf_type(json, $rootScope.start,null,types);
+        var result = chartUtils.getRf_type(json, $rootScope.start, null, types);
         config['noFormat'] = true;
         cf.renderChart(result, config);
     }
     $scope.charts = [
         {
             config: {
-                legendData: ["外部链接", "搜索引擎","直接访问"],
+                legendData: ["外部链接", "搜索引擎", "直接访问"],
                 id: "sourse_charts",
                 pieStyle: true,
                 serieName: "访问情况",
@@ -65,7 +65,7 @@ app.controller("sourcectr", function ($scope, $rootScope, $http, requestService,
                 legendClickListener: $scope.onLegendClick,
                 legendAllowCheckCount: 1,
                 id: "indicators_charts",
-                min_max:false,
+                min_max: false,
                 bGap: true,
                 chartType: "bar",
                 dataKey: "key",

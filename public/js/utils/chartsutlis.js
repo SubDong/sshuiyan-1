@@ -115,7 +115,7 @@ var chartUtils = {
     },
     getRf_type: function (json, start, labelType, types) {
         var time = chartUtils.getObjectTime(json, start);
-        var label = chartUtils.getLabel(json);
+        var label = chartUtils.getLabel(json);//去重
         var result = []
         label.forEach(function (label) {
             var tmp = {};
@@ -200,14 +200,20 @@ var chartUtils = {
             }
             var time = [];
             data.forEach(function (item) {
-                if (item.label.indexOf("baidu") > -1) {
-                    s_baidu = chartUtils.arrayMerge(s_baidu, item.quota);
-                } else if (item.label.indexOf("haosou") > -1) {
-                    s_360 = chartUtils.arrayMerge(s_360, item.quota);
-                } else if (item.label.indexOf("sogou") > -1) {
-                    s_dog = chartUtils.arrayMerge(s_dog, item.quota);
+                if (item.label) {
+                    if (item.label.indexOf("baidu") > -1) {
+                        s_baidu = chartUtils.arrayMerge(s_baidu, item.quota);
+                    } else if (item.label.indexOf("haosou") > -1) {
+                        s_360 = chartUtils.arrayMerge(s_360, item.quota);
+                    } else if (item.label.indexOf("sogou") > -1) {
+                        s_dog = chartUtils.arrayMerge(s_dog, item.quota);
+                    }
+                    time = item.key;
+                } else {
+                    for (var i = 0; i < 24; i++) {
+                        time.push(i);
+                    }
                 }
-                time = item.key;
             });
             result_baidu["label"] = "百度";
             result_baidu["key"] = time;
@@ -232,7 +238,13 @@ var chartUtils = {
             result.forEach(function (e) {
                 var _val = {}
                 if (!regex.test(e.label) && e.label != '-') {
-                    _val['label'] = e.label;
+                    var _label = e.label;
+                    if (_label) {
+                        if (_label.indexOf('?') > -1) {
+                            _label = _label.split('?')[0];
+                        }
+                    }
+                    _val['label'] = _label;
                     _val['key'] = e.key;
                     _val['quota'] = e.quota;
                     final_result.push(_val);

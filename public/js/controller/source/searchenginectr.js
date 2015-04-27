@@ -116,4 +116,18 @@ app.controller("searchenginectr", function ($scope, $rootScope, $http, requestSe
         var chartArray = [$scope.charts[1]]
         requestService.refresh(chartArray);
     };
+    $scope.month = function () {
+        $scope.reset();
+        $scope.monthClass = true;
+        //table 参数配置
+        $rootScope.tableTimeStart = -30;
+        $rootScope.tableTimeEnd = -1;
+        $rootScope.start = -30;
+        $rootScope.end = -1;
+        $rootScope.interval = 24;
+        var chart = echarts.init(document.getElementById($scope.charts[1].config.id));
+        $scope.charts[1].config.instance = chart;
+        var arrayChart = [$scope.charts[1]]
+        requestService.refresh(arrayChart);
+    };
 });

@@ -2,6 +2,15 @@
  * Created by XiaoWei on 2015/4/22.
  */
 app.controller("externallinksctr", function ($scope, $rootScope, $http, requestService) {
+    $scope.todayClass = true;
+    $scope.reset = function () {
+        $scope.todayClass = false;
+        $scope.yesterdayClass = false;
+        $scope.sevenDayClass = false;
+        $scope.monthClass = false;
+        $scope.definClass = false;
+        $scope.btnchecked = true;
+    };
 
     $scope.onLegendClick = function (radio, chartInstance, config, checkedVal) {
         clear.lineChart(config, checkedVal);
@@ -55,6 +64,7 @@ app.controller("externallinksctr", function ($scope, $rootScope, $http, requestS
                 legendClickListener: $scope.onLegendClick,
                 legendAllowCheckCount: 1,
                 min_max: false,
+                bGap: true,
                 id: "indicators_charts",
                 chartType: "bar",
                 dataKey: "key",
@@ -75,4 +85,69 @@ app.controller("externallinksctr", function ($scope, $rootScope, $http, requestS
         requestService.refresh(chartArray);
     }
     $scope.init();
+
+    $scope.today = function () {
+        $scope.reset();
+        $scope.todayClass = true;
+        //table 参数配置
+        $rootScope.tableTimeStart = 0;
+        $rootScope.tableTimeEnd = 0;
+        //
+        $rootScope.start = 0;
+        $rootScope.end = 0;
+        $rootScope.interval
+        var chart = echarts.init(document.getElementById($scope.charts[1].config.id));
+        $scope.charts[1].config.instance = chart;
+        var arrayChart = [$scope.charts[1]]
+        requestService.refresh(arrayChart);
+    }
+
+    $scope.yesterday = function () {
+        $scope.reset();
+        $scope.yesterdayClass = true;
+
+        //table 参数配置
+        $rootScope.tableTimeStart = -1;
+        $rootScope.tableTimeEnd = -1;
+        //
+
+        $rootScope.start = -1;
+        $rootScope.end = -1;
+        var chart = echarts.init(document.getElementById($scope.charts[1].config.id));
+        $scope.charts[1].config.instance = chart;
+        var arrayChart = [$scope.charts[1]]
+        requestService.refresh(arrayChart);
+    };
+
+    $scope.sevenDay = function () {
+        $scope.reset();
+        $scope.sevenDayClass = true;
+        //table 参数配置
+        $rootScope.tableTimeStart = -7;
+        $rootScope.tableTimeEnd = -1;
+        //
+        $rootScope.start = -7;
+        $rootScope.end = -1;
+        $rootScope.interval = 24;
+        var chart = echarts.init(document.getElementById($scope.charts[1].config.id));
+        $scope.charts[1].config.instance = chart;
+        var arrayChart = [$scope.charts[1]]
+        requestService.refresh(arrayChart);
+    };
+
+    $scope.month = function () {
+        $scope.reset();
+        $scope.monthClass = true;
+        //table 参数配置
+        $rootScope.tableTimeStart = -30;
+        $rootScope.tableTimeEnd = -1;
+        //
+        $rootScope.start = -30;
+        $rootScope.end = -1;
+        $rootScope.interval = 24;
+        var chart = echarts.init(document.getElementById($scope.charts[1].config.id));
+        $scope.charts[1].config.instance = chart;
+        var arrayChart = [$scope.charts[1]]
+        requestService.refresh(arrayChart);
+    };
 });
