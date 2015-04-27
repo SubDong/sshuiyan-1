@@ -56,5 +56,10 @@ app.service('areaService', ['$rootScope','$http',function ($rootScope,$http) {
         {name: '前一日'},
         {name: '上周同期 '}
     ];
+    $rootScope.export = {};
+    $rootScope.exports = [
+        {name: '保存'},
+        {name: '导出 '}
+    ];
 }]);
 
