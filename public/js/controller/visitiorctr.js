@@ -7,12 +7,14 @@ app.controller("Vistiorctr", function ($scope, $rootScope, $http, requestService
     $rootScope.tableTimeStart = 0;
     $rootScope.tableTimeEnd = 0;
     $rootScope.tableFilter = undefined;
+    $rootScope.latitude = {name: "地域", field: "region"};
+    $rootScope.dimen = "city";
 
     $scope.dateTimeStart = 0;
     $scope.dateTimeEnd = 0;
 
     $scope.$on("ssh_refresh_charts", function(e, msg) {
-        $scope.doSearch($scope.tableTimeStart, $scope.tableTimeEnd, "1",$scope.lat);
+        $rootScope.targetSearch();
         $scope.doSearchAreas($scope.tableTimeStart, $scope.tableTimeEnd, "1", $scope.mapOrPieConfig);
     });
 

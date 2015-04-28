@@ -5,9 +5,12 @@ app.controller('equipmentctr', function ($scope, $rootScope, $http, requestServi
     $scope.todayClass = true;
     $scope.dt = new Date();
     //table配置
+    //table配置
     $rootScope.tableTimeStart = 0;
     $rootScope.tableTimeEnd = 0;
-    $rootScope.tableFilter = undefined;
+    $rootScope.latitude = {name: "浏览器", field: "pm"};
+    $rootScope.dimen = "br"
+    //
 
     $scope.reset = function () {
         $scope.todayClass = false;
@@ -83,6 +86,7 @@ app.controller('equipmentctr', function ($scope, $rootScope, $http, requestServi
     }
     $scope.init();
     $scope.$on("ssh_refresh_charts", function (e, msg) {
+        $rootScope.targetSearch();
         var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
         $scope.charts[0].config.instance = chart;
         requestService.refresh($scope.charts);

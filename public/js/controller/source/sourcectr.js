@@ -7,7 +7,8 @@ app.controller("sourcectr", function ($scope, $rootScope, $http, requestService,
     //table 参数配置
     $rootScope.tableTimeStart = 0;
     $rootScope.tableTimeEnd = 0;
-    $rootScope.tableFilter = undefined;
+    $rootScope.latitude = {name: "来源类型", field: "rf_type"};
+    $rootScope.dimen = "rf_type"
 
     $scope.onLegendClick = function (radio, chartInstance, config, checkedVal) {
         clear.lineChart(config, checkedVal);
@@ -81,6 +82,7 @@ app.controller("sourcectr", function ($scope, $rootScope, $http, requestService,
     $scope.init();
 
     $scope.$on("ssh_refresh_charts", function(e, msg) {
+        $rootScope.targetSearch();
         $scope.charts.forEach(function (e) {
             var chart = echarts.init(document.getElementById(e.config.id));
             e.config.instance = chart;

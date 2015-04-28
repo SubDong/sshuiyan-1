@@ -3,6 +3,15 @@
  */
 app.controller('Trend_yesterday_ctrl', function ($scope, $rootScope, $http, requestService, areaService, messageService) {
     $scope.yesterdayClass = true;
+
+    //table配置
+    $rootScope.tableTimeStart = -1;
+    $rootScope.tableTimeEnd = -1;
+    $rootScope.latitude = {name: "日期", field: "period"};
+    $rootScope.tableFilter = undefined;
+    $rootScope.dimen = false;
+    //
+
     $scope.dt = new Date();
     $scope.onLegendClickListener = function (radio, chartObj, chartConfig, checkedVal) {
         clear.lineChart($scope.charts[0].config, checkedVal);
@@ -45,6 +54,7 @@ app.controller('Trend_yesterday_ctrl', function ($scope, $rootScope, $http, requ
     $scope.init();
 
     $scope.$on("ssh_refresh_charts", function(e, msg) {
+        $rootScope.targetSearch();
         var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
         $scope.charts[0].config.instance = chart;
         requestService.refresh($scope.charts);

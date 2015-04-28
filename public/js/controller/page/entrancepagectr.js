@@ -3,6 +3,12 @@
  */
 app.controller('entrancepagectr', function ($scope, $rootScope, $http, requestService) {
     $scope.todayClass = true;
+
+    $rootScope.tableTimeStart = 0;
+    $rootScope.tableTimeEnd = 0;
+    $rootScope.latitude = {name: "页面url", field: "loc"}
+    $rootScope.dimen = false;
+
     $scope.onLegendClick = function (radio, chartInstance, config, checkedVal) {
         clear.lineChart(config, checkedVal);
         $scope.charts.forEach(function (chart) {
@@ -75,6 +81,7 @@ app.controller('entrancepagectr', function ($scope, $rootScope, $http, requestSe
     }
     $scope.init();
     $scope.$on("ssh_refresh_charts", function(e, msg) {
+        $rootScope.targetSearch();
         var chart = echarts.init(document.getElementById($scope.charts[1].config.id));
         $scope.charts[1].config.instance = chart;
         var arrayChart = [$scope.charts[1]]
