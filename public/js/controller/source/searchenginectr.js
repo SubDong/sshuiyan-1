@@ -3,6 +3,12 @@
  */
 app.controller("searchenginectr", function ($scope, $rootScope, $http, requestService,areaService) {
     $scope.todayClass = true;
+    //table配置
+    $rootScope.tableTimeStart = 0;
+    $rootScope.tableTimeEnd = 0;
+    $rootScope.latitude = {name: "搜索引擎", field: "se"};
+    $rootScope.dimen = false;
+
     $scope.pieFormat = function (data, config) {
         var json = JSON.parse(eval("(" + data + ")").toString());
         var tmpData = [];
@@ -74,6 +80,7 @@ app.controller("searchenginectr", function ($scope, $rootScope, $http, requestSe
     }
     $scope.init();
     $scope.$on("ssh_refresh_charts", function(e, msg) {
+        $rootScope.targetSearch();
         var chart = echarts.init(document.getElementById($scope.charts[1].config.id));
         $scope.charts[1].config.instance = chart;
         var chartArray = [$scope.charts[1]];

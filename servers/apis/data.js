@@ -197,7 +197,7 @@ api.get('/indextable', function (req, res) {
     var _indic = query["indic"].split(",");//统计指标
     var _lati = query["dimension"];//统计纬度
     var _type = query["type"];
-    var _filter = query["filerInfo"] != undefined?JSON.parse(query["filerInfo"]):query["filerInfo"];//过滤器
+    var _filter = query["filerInfo"] != undefined && query["filerInfo"] != 'undefined' ?JSON.parse(query["filerInfo"]):query["filerInfo"] == 'undefined'?undefined:query["filerInfo"];//过滤器
     var indexes = date.createIndexes(_startTime, _endTime, "visitor-");//indexs
 
     var period = date.period(_startTime, _endTime); //时间段

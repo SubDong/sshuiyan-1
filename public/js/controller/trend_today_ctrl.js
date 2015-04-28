@@ -3,6 +3,15 @@
  */
 app.controller('trend_today_ctrl', function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
     $scope.todayClass = true;
+
+    //table配置
+    $rootScope.tableTimeStart = 0;
+    $rootScope.tableTimeEnd = 0;
+    $rootScope.latitude = {name: "日期", field: "period"};
+    $rootScope.tableFilter = undefined;
+    $rootScope.dimen = false;
+    //
+
     $scope.dt = new Date();
     $scope.onLegendClickListener = function (radio, chartObj, chartConfig, checkedVal) {
         clear.lineChart($scope.charts[0].config, checkedVal);
@@ -45,6 +54,7 @@ app.controller('trend_today_ctrl', function ($scope, $rootScope, $http, requestS
     $scope.init();
 
     $scope.$on("ssh_refresh_charts", function(e, msg) {
+        $rootScope.targetSearch();
         var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
         $scope.charts[0].config.instance = chart;
         requestService.refresh($scope.charts);

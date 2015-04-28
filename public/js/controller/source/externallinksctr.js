@@ -4,6 +4,14 @@
 app.controller("externallinksctr", function ($scope, $rootScope, $http, requestService) {
     $scope.todayClass = true;
 
+    //table默认信息配置
+    $rootScope.tableTimeStart = 0;
+    $rootScope.tableTimeEnd = 0;
+    $rootScope.latitude = {name: "搜索引擎", field: "rf"}
+    $rootScope.tableFilter = [{"rf_type":["3"]}];
+    $rootScope.dimen = false;
+    //
+
     $scope.onLegendClick = function (radio, chartInstance, config, checkedVal) {
         clear.lineChart(config, checkedVal);
         $scope.charts.forEach(function (chart) {
@@ -79,6 +87,7 @@ app.controller("externallinksctr", function ($scope, $rootScope, $http, requestS
     $scope.init();
 
     $scope.$on("ssh_refresh_charts", function(e, msg) {
+        $rootScope.targetSearch();
         var chart = echarts.init(document.getElementById($scope.charts[1].config.id));
         $scope.charts[1].config.instance = chart;
         var arrayChart = [$scope.charts[1]]

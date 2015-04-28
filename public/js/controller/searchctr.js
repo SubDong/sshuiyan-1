@@ -9,75 +9,14 @@ app.controller('searchctr', function ($scope, $rootScope,areaService, $http) {
         $rootScope.tableTimeEnd = 0;
         $rootScope.tableFilter = undefined;
         $rootScope.latitude = {name: "搜索引擎", field: "wd"}
+        $rootScope.dimen = false;
         //
 
-        $scope.reset = function () {
-            $scope.todayClass = false;
-            $scope.yesterdayClass = false;
-            $scope.sevenDayClass = false;
-            $scope.monthClass = false;
-            $scope.definClass = false;
-        };
-        $scope.today = function () {
-            $scope.reset();
-            $scope.todayClass = true;
-            $scope.dt = new Date();
-
-            //table配置
-            $rootScope.tableTimeStart = 0;
-            $rootScope.tableTimeEnd = 0;
+        $scope.$on("ssh_refresh_charts", function(e, msg) {
             $rootScope.targetSearch();
-            //
+        });
 
-        };
-        $scope.yesterday = function () {
-            $scope.reset();
-            $scope.yesterdayClass = true;
 
-            //table配置
-            $rootScope.tableTimeStart = -1;
-            $rootScope.tableTimeEnd = -1;
-            $rootScope.targetSearch();
-            //
-
-        };
-        $scope.sevenDay = function () {
-            $scope.reset();
-            $scope.sevenDayClass = true;
-
-            //table配置
-            $rootScope.tableTimeStart = -7;
-            $rootScope.tableTimeEnd = -1;
-            $rootScope.targetSearch();
-            //
-        };
-        $scope.month = function () {
-            $scope.reset();
-            $scope.monthClass = true;
-
-            //table配置
-            $rootScope.tableTimeStart = -30;
-            $rootScope.tableTimeEnd = -1;
-            $rootScope.targetSearch();
-            //
-
-        };
-        $scope.open = function ($event) {
-            $scope.reset();
-            $scope.definClass = true;
-            $event.preventDefault();
-            $event.stopPropagation();
-            $scope.opened = true;
-        };
-        $scope.checkopen = function ($event) {
-            $scope.reset();
-            $scope.othersdateClass = true;
-            $event.preventDefault();
-            $event.stopPropagation();
-            $scope.opens = true;
-        };
-        // initialize
-        $scope.today();
         //$scope.initMap();
         //点击显示指标
         $scope.visible =true;

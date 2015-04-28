@@ -138,8 +138,9 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
         } else {
             if ($rootScope.checkedArray.length >= number) {
                 $rootScope.checkedArray.shift();
+                $rootScope.checkedArray.push(item.name);
                 $scope.gridArray.shift();
-                $scope
+
                 $scope.gridObj["name"] = item.consumption_name;
                 $scope.gridObj["field"] = item.name;
                 $rootScope.gridArray.push($scope.gridObj);
@@ -173,12 +174,12 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
      });
      }*/
     // 推广概况表格配置项
-    if($rootScope.dimen != false){
+    if ($rootScope.dimen != false) {
         $scope.gridOptions = {
             //paginationPageSizes: [25, 50, 75],
             paginationPageSize: 25,
             expandableRowTemplate: $scope.appHtml,
-            expandableRowHeight:360,
+            expandableRowHeight: 360,
             enableColumnMenus: false,
             enablePaginationControls: false,
             enableSorting: true,
@@ -190,7 +191,7 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
                 griApiInfo(girApi);
             }
         };
-    }else{
+    } else {
         $scope.gridOptions = {
             //paginationPageSizes: [25, 50, 75],
             paginationPageSize: 25,
@@ -200,12 +201,12 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
             enableGridMenu: false,
             enableHorizontalScrollbar: 0,
             columnDefs: $scope.gridArray,
-            onRegisterApi : function (gridApi) {
+            onRegisterApi: function (gridApi) {
                 $scope.gridApi2 = gridApi;
             }
         };
     }
-    $scope.pagego = function(pagevalue){
+    $scope.pagego = function (pagevalue) {
         pagevalue.pagination.seek(Number($scope.page));
     }
 
@@ -234,7 +235,7 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
         $http({
             method: 'GET',
             url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + $rootScope.latitude.field
-            + "&filter" + $rootScope.tableFilter + "&type=1"
+            + "&filterInfo=" + $rootScope.tableFilter + "&type=1"
         }).success(function (data, status) {
             $scope.gridOptions.data = data;
         }).error(function (error) {
@@ -246,13 +247,22 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
     $scope.targetSearch();
     //
 
-//表格展开项
+    //表格展开项
     var griApiInfo = function (gridApi) {
         gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
-            console.log(row)
             var dataNumber;
             if (row.isExpanded && $rootScope.dimen != false) {
-                $rootScope.tableFilter = "[{\"" + $rootScope.latitude.field + "\":[\"" + getField(row.entity[$rootScope.latitude.field], $rootScope.latitude.field) + "\"]}]";
+                if(row.entity[$rootScope.latitude.field] != "搜索引擎"){
+                    if(row.entity[$rootScope.latitude.field] == "外部链接"){
+                        $rootScope.dimen = "rf";
+                        $rootScope.tableFilter = "[{\"rf_type\":[\"3\"]}]"
+                    }else{
+                        $rootScope.tableFilter = "[{\"" + $rootScope.latitude.field + "\":[\"" + getField(row.entity[$rootScope.latitude.field], $rootScope.latitude.field) + "\"]}]";
+                    }
+                }else{
+                    $rootScope.dimen = "se";
+                    $rootScope.tableFilter = undefined;
+                }
                 row.entity.subGridOptions = {
                     showHeader: false,
                     columnDefs: $scope.gridArray
@@ -264,16 +274,14 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
                     + "&filerInfo=" + $rootScope.tableFilter + "&type=1"
                 }).success(function (data, status) {
                     var reg = new RegExp($rootScope.dimen, "g");
-                    if(data != undefined && data.length != 0 ){
+                    if (data != undefined && data.length != 0) {
                         data = JSON.parse(JSON.stringify(data).replace(reg, $rootScope.latitude.field));
                         dataNumber = data.length;
                     }
-                    //$scope.gridOptions.expandableRowHeight = dataNumber * 30;
                     row.entity.subGridOptions.data = data
                 }).error(function (error) {
                     console.log(error);
                 });
-                //$rootScope.tableFilter = undefined;
             }
         });
     };
@@ -281,14 +289,22 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
 
     var getField = function (rr, ss) {
         switch (rr) {
-            case "新访客": return 0;
-            case "老访客": return 1;
-            case "直接访问": if(ss == "se" || ss == "rf") return "-"; else return 1;
-            case "搜索引擎": return 2;
-            case "外部链接": return 3;
-            case "计算机端": return 0;
-            case "移动端": return 1;
-            default : return rr
+            case "新访客":
+                return 0;
+            case "老访客":
+                return 1;
+            case "直接访问":
+                if (ss == "se" || ss == "rf") return "-"; else return 1;
+            case "搜索引擎":
+                return 2;
+            case "外部链接":
+                return 3;
+            case "计算机端":
+                return 0;
+            case "移动端":
+                return 1;
+            default :
+                return rr
         }
     }
     var select = $scope.select = {};

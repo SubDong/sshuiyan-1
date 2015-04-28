@@ -28,23 +28,11 @@ app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
         })
         .state('source', {
             url: "/source/source",
-            templateUrl: "../source/source.html",
-            controller:function($rootScope){
-                $rootScope.tableTimeStart = 0;
-                $rootScope.tableTimeEnd = 0;
-                $rootScope.latitude = {name: "来源类型", field: "rf_type"};
-                $rootScope.dimen = "rf"
-            }
+            templateUrl: "../source/source.html"
         })
         .state('searchengine', {
             url: "/source/searchengine",
-            templateUrl: "../source/searchengine.html",
-            controller:function($rootScope){
-                $rootScope.tableTimeStart = 0;
-                $rootScope.tableTimeEnd = 0;
-                $rootScope.latitude = {name: "搜索引擎", field: "se"};
-                $rootScope.dimen = false
-            }
+            templateUrl: "../source/searchengine.html"
         })
         .state('searchterm', {
             url: "/source/searchterm",
@@ -64,12 +52,7 @@ app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
         })
         .state('entrancepage', {
             url: "/page/entrancepage",
-            templateUrl: "../page/entrancepage.html",
-            controller:function($rootScope){
-                $rootScope.tableTimeStart = 0;
-                $rootScope.tableTimeEnd = 0;
-                $rootScope.latitude = {name: "页面url", field: "loc"}
-            }
+            templateUrl: "../page/entrancepage.html"
         })
         .state('entrancepage/1', {
             url: "/page/secendpage/flowanalysis",
@@ -93,12 +76,7 @@ app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
         })
         .state('indexoverview', {
             url: "/page/indexoverview",
-            templateUrl: "../page/indexoverview.html",
-            controller:function($rootScope){
-                $rootScope.tableTimeStart = 0;
-                $rootScope.tableTimeEnd = 0;
-                $rootScope.latitude = {name: "页面url", field: "loc"}
-            }
+            templateUrl: "../page/indexoverview.html"
         })
         .state('indexoverview/1', {
             url: "/page/indexoverview/pagevalue",
@@ -118,26 +96,13 @@ app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
         })
         .state('provincemap', {
             url: "/visitor/provincemap",
-            templateUrl: "../visitor/provincemap.html",
-            controller:function($rootScope){
-                $rootScope.tableTimeStart = 0;
-                $rootScope.tableTimeEnd = 0;
-                $rootScope.latitude = {name: "地域", field: "region"};
-                $rootScope.dimen = "city"
-                /*$rootScope.checkedArray = ["pv","uv"];
-                $rootScope.gridArray = [{field: "region",name: "地域"},{field: "pv",name: "浏览量(PV)"},{field: "uv",name: "访客数(UV)"}];
-                var res = ["flow","TodayWeb"];
-                initTable(res,$rootScope.checkedArray);*/
-            }
+            templateUrl: "../visitor/provincemap.html"
         })
         .state('equipment', {
             url: "/visitor/equipment",
             templateUrl: "../visitor/equipment.html",
             controller:function($rootScope){
-                $rootScope.tableTimeStart = 0;
-                $rootScope.tableTimeEnd = 0;
-                $rootScope.latitude = {name: "浏览器", field: "pm"};
-                $rootScope.dimen = "br"
+
             }
         })
         .state('novisitors', {
