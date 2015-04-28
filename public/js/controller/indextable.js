@@ -177,15 +177,16 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
         $scope.gridOptions = {
             //paginationPageSizes: [25, 50, 75],
             paginationPageSize: 25,
-            enablePaginationControls: false,
             expandableRowTemplate: $scope.appHtml,
             expandableRowHeight:360,
             enableColumnMenus: false,
+            enablePaginationControls: false,
             enableSorting: true,
             enableGridMenu: false,
             enableHorizontalScrollbar: 0,
             columnDefs: $scope.gridArray,
             onRegisterApi: function (girApi) {
+                $scope.gridApi2 = girApi;
                 griApiInfo(girApi);
             }
         };
@@ -193,19 +194,19 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
         $scope.gridOptions = {
             //paginationPageSizes: [25, 50, 75],
             paginationPageSize: 25,
-            enablePaginationControls: false,
             enableColumnMenus: false,
+            enablePaginationControls: false,
             enableSorting: true,
             enableGridMenu: false,
             enableHorizontalScrollbar: 0,
-            columnDefs: $scope.gridArray
+            columnDefs: $scope.gridArray,
+            onRegisterApi : function (gridApi) {
+                $scope.gridApi2 = gridApi;
+            }
         };
     }
     $scope.pagego = function(pagevalue){
         pagevalue.pagination.seek(Number($scope.page));
-    }
-    $scope.gridOptions.onRegisterApi = function (gridApi) {
-        $scope.gridApi2 = gridApi;
     }
 
     /**
