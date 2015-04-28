@@ -21,9 +21,9 @@ app.controller("searchenginectr", function ($scope, $rootScope, $http, requestSe
         var chartArray = [$scope.charts[1]]
         requestService.refresh(chartArray);
     }
-    $scope.searchengineFormat = function (data, config, types) {
+    $scope.searchengineFormat = function (data, config, e) {
         var json = JSON.parse(eval("(" + data + ")").toString());
-        var result = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", types);
+        var result = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", e.types);
         config['noFormat'] = true;
         var final_result = chartUtils.getEngine(result);
         cf.renderChart(final_result, config);
@@ -37,7 +37,7 @@ app.controller("searchenginectr", function ($scope, $rootScope, $http, requestSe
             legendData: [],
             id: "sourse_charts",
             pieStyle: true,
-            serieName: "访问情况",
+            serieName: "搜索引擎",
             chartType: "pie",
             dataKey: "key",
             dataValue: "quota"

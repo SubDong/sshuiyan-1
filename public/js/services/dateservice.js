@@ -19,11 +19,14 @@ app.service('requestService', ['$rootScope', '$http', function ($rootScope, $htt
             if (e.interval) {
                 req = req + "&int=" + e.interval;
             }
+            if (e.filter) {
+                req = req + "&filter=" + e.filter;
+            }
             $http.get(req).success(function (result) {
                 if (e.cb) {
-                    e.cb(result, e.config, e.types);
+                    e.cb(result, e.config, e);
                 } else {
-                    $rootScope.defaultcb(result, e.config, e.types);
+                    $rootScope.defaultcb(result, e.config, e);
                 }
                 e.config.instance.hideLoading();
             });

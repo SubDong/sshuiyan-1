@@ -15,12 +15,16 @@ var map = require('../utils/map');
 var api = express.Router();
 
 api.get('/charts', function (req, res) {
-    var query = url.parse(req.url, true).query, quotas = [], type = query['type'], dimension = query.dimension;
+    var query = url.parse(req.url, true).query, quotas = [], type = query['type'], dimension = query.dimension, filter = query.filter, final_filter = null;
     if (type.indexOf(",") > -1)for (var i = 0; i < type.split(",").length; i++) {
         quotas.push(type.split(",")[i]);
     }
     else
         quotas.push(type);
+    if (filter) {
+        final_filter = JSON.parse(filter);
+    }
+    console.log(final_filter);
 
     var start = Number(query['start']);//
     var end = Number(query['end']);//
@@ -28,7 +32,7 @@ api.get('/charts', function (req, res) {
 
     var period = date.period(start, end);
     var interval = date.interval(start, end, Number(query['int']));
-    es_request.search(req.es, indexes, 1, quotas, dimension, null, period[0], period[1], interval, function (result) {
+    es_request.search(req.es, indexes, 1, quotas, dimension, final_filter, period[0], period[1], interval, function (result) {
         datautils.send(res, JSON.stringify(result));
     });
 
@@ -197,7 +201,7 @@ api.get('/indextable', function (req, res) {
     var _indic = query["indic"].split(",");//统计指标
     var _lati = query["dimension"];//统计纬度
     var _type = query["type"];
-    var _filter = query["filerInfo"] != undefined?JSON.parse(query["filerInfo"]):query["filerInfo"];//过滤器
+    var _filter = query["filerInfo"] != undefined ? JSON.parse(query["filerInfo"]) : query["filerInfo"];//过滤器
     var indexes = date.createIndexes(_startTime, _endTime, "visitor-");//indexs
 
     var period = date.period(_startTime, _endTime); //时间段
@@ -206,47 +210,47 @@ api.get('/indextable', function (req, res) {
         var result = [];
         var vidx = 0;
         var maps = {}
-        var valueData = ["arrivedRate", "outRate", "nuvRate", "ct", "period","se", "pm", "rf"];
+        var valueData = ["arrivedRate", "outRate", "nuvRate", "ct", "period", "se", "pm", "rf"];
         data.forEach(function (info, x) {
             for (var i = 0; i < info.key.length; i++) {
                 var infoKey = info.key[i];
                 var obj = maps[infoKey];
                 if (!obj) {
                     obj = {};
-                    switch (_lati){
+                    switch (_lati) {
                         case "ct":
-                            obj[_lati] = infoKey == 0?"新访客":"老访客";
+                            obj[_lati] = infoKey == 0 ? "新访客" : "老访客";
                             break;
                         case "rf_type":
-                            obj[_lati] = infoKey == 1?"直接访问":infoKey == 2?"搜索引擎":"外部链接";
+                            obj[_lati] = infoKey == 1 ? "直接访问" : infoKey == 2 ? "搜索引擎" : "外部链接";
                             break;
                         case "period":
-                            obj[_lati] = infoKey.substring(infoKey.indexOf(" "),infoKey.length-3) + " - "+ infoKey.substring(infoKey.indexOf(" "),infoKey.length-5) +"59";
+                            obj[_lati] = infoKey.substring(infoKey.indexOf(" "), infoKey.length - 3) + " - " + infoKey.substring(infoKey.indexOf(" "), infoKey.length - 5) + "59";
                             break;
                         case "se":
-                            obj[_lati] = (infoKey == "-"?"直接访问":infoKey);
+                            obj[_lati] = (infoKey == "-" ? "直接访问" : infoKey);
                             break;
                         case "pm":
-                            obj[_lati] = (infoKey == 0?"计算机端":"移动端");
+                            obj[_lati] = (infoKey == 0 ? "计算机端" : "移动端");
                             break;
                         case "rf":
-                            obj[_lati] = (infoKey == "-"?"直接访问":infoKey);
+                            obj[_lati] = (infoKey == "-" ? "直接访问" : infoKey);
                             break;
                         default :
                             obj[_lati] = infoKey;
                             break;
                     }
                 }
-                if(info.label == "avgTime"){
+                if (info.label == "avgTime") {
                     obj[info.label] = new Date(info.quota[i]).format("hh:mm:ss")
-                }else{
+                } else {
                     obj[info.label] = info.quota[i] + (valueData.indexOf(info.label) != -1 ? "%" : "");
                 }
                 maps[infoKey] = obj;
             }
             vidx++;
         });
-        for(var key in maps){
+        for (var key in maps) {
             result.push(maps[key]);
         }
         datautils.send(res, result);
@@ -268,8 +272,8 @@ api.get('/visitormap', function (req, res) {
 
     es_request.search(req.es, indexes, _type, _quotas, null, null, period[0], period[1], interval, function (data) {
         var result = {};
-        data.forEach(function(item,i){
-            result[item.label] =  item.label == "outRate"?item.quota[0]+"%":item.label =="avgTime"?new Date(item.quota[0]).format("hh:mm:ss"):item.quota[0];
+        data.forEach(function (item, i) {
+            result[item.label] = item.label == "outRate" ? item.quota[0] + "%" : item.label == "avgTime" ? new Date(item.quota[0]).format("hh:mm:ss") : item.quota[0];
         });
         datautils.send(res, result);
     })

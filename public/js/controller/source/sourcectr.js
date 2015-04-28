@@ -28,9 +28,9 @@ app.controller("sourcectr", function ($scope, $rootScope, $http, requestService,
         });
         cf.renderChart(json, config);
     }
-    $scope.customFormat = function (data, config, types) {
+    $scope.customFormat = function (data, config, e) {
         var json = JSON.parse(eval("(" + data + ")").toString());
-        var result = chartUtils.getRf_type(json, $rootScope.start, null, types);
+        var result = chartUtils.getRf_type(json, $rootScope.start, null, e.types);
         config['noFormat'] = true;
         cf.renderChart(result, config);
     }

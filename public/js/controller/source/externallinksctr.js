@@ -9,7 +9,7 @@ app.controller("externallinksctr", function ($scope, $rootScope, $http, requestS
         $scope.charts.forEach(function (chart) {
             chart.config.instance = echarts.init(document.getElementById(chart.config.id));
             chart.types = checkedVal;
-        })
+        });
         requestService.refresh($scope.charts);
     }
     $scope.pieFormat = function (data, config) {
@@ -23,9 +23,9 @@ app.controller("externallinksctr", function ($scope, $rootScope, $http, requestS
         });
         cf.renderChart(json, config);
     }
-    $scope.externalinkFormat = function (data, config, types) {
+    $scope.externalinkFormat = function (data, config, e) {
         var json = JSON.parse(eval("(" + data + ")").toString());
-        var result = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", types);
+        var result = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", e.types);
         config['noFormat'] = true;//告知chart工厂无须格式化json，可以直接使用data对象
         var final_result = chartUtils.getExternalinkPie(result);
         cf.renderChart(final_result, config);
@@ -46,6 +46,7 @@ app.controller("externallinksctr", function ($scope, $rootScope, $http, requestS
             },
             types: ["pv"],
             dimension: ["rf_type"],
+            filter: '{rf_type:[2]}',
             url: "/api/map",
             cb: $scope.pieFormat
         },
@@ -73,7 +74,6 @@ app.controller("externallinksctr", function ($scope, $rootScope, $http, requestS
         var chart = echarts.init(document.getElementById($scope.charts[1].config.id));
         $scope.charts[1].config.instance = chart;
         util.renderLegend(chart, $scope.charts[1].config);
-        var chartArray = [$scope.charts[1]];
         requestService.refresh(chartArray);
     }
     $scope.init();

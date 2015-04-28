@@ -81,6 +81,32 @@ var chartUtils = {
                 return "外部链接";
         }
     },
+    getCustomDevice: function (number) {
+        //if (dimension.indexOf(",") == -1) {
+        //    switch (dimension.toString()) {
+        //        case "pm":
+        //            return this.getDevice(number);
+        //            break;
+        //        case "ja":
+        //            return this.getSupport(number);
+        //            break;
+        //        case "ck":
+        //            return this.getSupport(number);
+        //            break;
+        //        default :
+        //            return number;
+        //    }
+        //} else {
+        //    return number;
+        //}
+    },
+    getSupport: function (number) {
+        if (number == "1") {
+            return "支持";
+        } else {
+            return "不支持";
+        }
+    },
     getObjectTime: function (json, start) {
         var time = [];
         json.forEach(function (e) {
@@ -168,14 +194,17 @@ var chartUtils = {
             var _data = []
             var result = {};
             data.forEach(function (e) {
-                _label.push(e.label);
+
                 var _val = 0;
                 e.quota.forEach(function (val) {
                     if (val != 0) {
                         _val += val;
                     }
                 });
-                _data.push(_val);
+                if (_val != 0) {
+                    _data.push(_val);
+                    _label.push(e.label);
+                }
             });
             result["key"] = _label;
             result["quota"] = _data;

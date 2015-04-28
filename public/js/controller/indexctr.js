@@ -124,8 +124,8 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
-                e.config.keyFormat = "hour";
             })
+            $scope.charts[0].config.keyFormat = "hour";
             requestService.refresh($scope.charts);
             requestService.gridRefresh($scope.grids);
         };
@@ -137,8 +137,8 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
-                e.config.keyFormat = "hour";
             })
+            $scope.charts[0].config.keyFormat = "hour";
             requestService.refresh($scope.charts);
             requestService.gridRefresh($scope.grids);
         };
@@ -151,8 +151,9 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
-                e.config.keyFormat = "day";
+
             })
+            $scope.charts[0].config.keyFormat = "day";
             requestService.refresh($scope.charts);
             requestService.gridRefresh($scope.grids);
         };
@@ -165,8 +166,8 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
-                e.config.keyFormat = "day";
             })
+            $scope.charts[0].config.keyFormat = "day";
             requestService.refresh($scope.charts);
             requestService.gridRefresh($scope.grids);
         };
@@ -182,14 +183,26 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
             $scope.hourcheckClass = true;
             $scope.dayClass = false;
             $scope.timeselect = false;
+            $scope.charts.forEach(function (e) {
+                var chart = echarts.init(document.getElementById(e.config.id));
+                e.interval = 7;
+                e.config.instance = chart;
+            })
+            $scope.charts[0].config.keyFormat = "hour";
+            requestService.refresh($scope.charts);
 
         };
         $scope.daycheck = function () {
             $scope.hourcheckClass = false;
             $scope.dayClass = true;
             $scope.timeselect = true;
-
-            $scope.today();
+            $scope.charts.forEach(function (e) {
+                var chart = echarts.init(document.getElementById(e.config.id));
+                e.interval = 7;
+                e.config.instance = chart;
+            })
+            $scope.charts[0].config.keyFormat = "day";
+            requestService.refresh($scope.charts);
         };
         //下拉框
         $scope.mapChange = function (_this) {
@@ -219,8 +232,8 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
         $scope.clear = function () {
             $scope.country.selected = undefined;
             $scope.continent.selected = undefined;
-        },
-            $scope.continent = {};
+        }
+        $scope.continent = {};
         $scope.country = {};
 
     }

@@ -387,7 +387,7 @@ var avgTimeFn = function (result, dimension) {
 
         var avgTime = 0;
         if (vc > 0)
-            avgTime = Math.ceil(parseFloat(tvt) / parseFloat((vc)));
+            avgTime = Math.ceil(parseFloat(tvt) / 1000 / parseFloat((vc)));
 
         quotaArr.push(avgTime);
     }
@@ -687,7 +687,6 @@ var es_request = {
     },
     search: function (es, indexes, type, quotas, dimension, filters, start, end, interval, callbackFn) {
         var request = buildRequest(indexes, type, quotas, dimension, filters, start, end, interval);
-
         function getQuotas() {
             return quotas;
         }

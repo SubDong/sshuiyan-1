@@ -98,12 +98,17 @@ var op = {
         } else {
             json = JSON.parse(eval('(' + data + ')').toString());
         }
+        if (!json[0]) {
+            chartConfig.instance = echarts.init(document.getElementById(chartConfig.id));
+            def.defData(chartConfig);
+            return;
+        }
         if (!json[0].key.length) {
             def.defData(chartConfig);
             return;
         }
         json.forEach(function (item) {
-            labelData.push(item.label);
+            labelData.push(chartUtils.convertEnglish(item.label));
         });
         if (!chartConfig.instance)return;
         var chartObj = chartConfig.instance;
@@ -431,12 +436,16 @@ var ad = {
     },
     formatFunc: function (value, formatType) {
         switch (formatType) {
-            //case "avgTime":
-            //    var hours = parseFloat(value % 1000 * 60 * 60 * 24 / (1000 * 60 * 60)).toFixed(2);
-            //    var minutes = parseFloat(value % (1000 * 60 * 60)).toFixed(2) / parseFloat(1000 * 60).toFixed(2);
-            //    var seconds = parseFloat(value % (1000 * 60)).toFixed(2) / 1000;
-            //    return  hours + " : " + minutes + " : "
-            //        + seconds;
+            case "avgTime":
+                var days = Math.floor(value / 1440 / 60);
+                var hours = Math.floor((value - days * 1440 * 60) / 3600);
+                var minutes = Math.floor((value - days * 1440 * 60 - hours * 3600) / 60);
+                var seconds = (value - days * 1440 * 60 - hours * 3600 - minutes * 60);
+                if (days) {
+                    return days + ":" + this.getDoubleInteger(hours) + ":" + this.getDoubleInteger(minutes) + ":" + this.getDoubleInteger(seconds);
+                } else {
+                    return this.getDoubleInteger(hours) + ":" + this.getDoubleInteger(minutes) + ":" + this.getDoubleInteger(seconds);
+                }
             case "outRate":
                 return value + "%";
             case "arrivedRate":
@@ -444,6 +453,13 @@ var ad = {
             default :
                 return value;
         }
+    },
+    getDoubleInteger: function (val) {
+        val = val.toString();
+        if (val.length < 2) {
+            val = "0" + val.toString();
+        }
+        return val.toString();
     }
 }
 var clear = {
@@ -503,7 +519,13 @@ var def = {
                 data: [0]
             }]
         }
-        for (var i = 0; i < 24; i++) {
+        var timeType = 24;
+        if (chartConfig.keyFormat) {
+            if (chartConfig.keyFormat == "day") {
+                timeType = 7;
+            }
+        }
+        for (var i = 0; i < timeType; i++) {
             option.xAxis[0].data.push(i);
         }
         //serie.data.push(0);
@@ -537,11 +559,15 @@ var util = {
         return _time;
     },
     renderLegend: function (chartObj, c) {
-        if (c.legendData.length > 0 && (c.chartType == "line" || c.chartType == "bar")) {
-            if (c.legendAllowCheckCount > 1) {
-                this.makeEvent("checkBox", chartObj, c);
-            } else {
-                this.makeEvent("radio", chartObj, c);
+        if (c.legendMultiData) {
+            this.addEventMore(chartObj, c);
+        } else {
+            if (c.legendData.length > 0 && (c.chartType == "line" || c.chartType == "bar")) {
+                if (c.legendAllowCheckCount > 1) {
+                    this.makeEvent("checkBox", chartObj, c);
+                } else {
+                    this.makeEvent("radio", chartObj, c);
+                }
             }
         }
     },
@@ -561,7 +587,7 @@ var util = {
             rad.name = renderType + "_" + c.id;
             rad.value = chartUtils.convertEnglish(c.legendData[i]);
             rad.setAttribute("asc", c.legendAllowCheckCount);
-            rad.setAttribute("index", i);
+            rad.setAttribute("index", i + "");
             rad.setAttribute("chart", c.id);
             if (window.addEventListener) {
                 rad.addEventListener("click", function () {
@@ -594,6 +620,62 @@ var util = {
             legendDiv.insertBefore(lab, legendDiv.childNodes[0]);
         }
         chartDiv.insertBefore(legendDiv, chartDiv.childNodes[0]);
+    },
+    addEventMore: function (chartObj, c) {
+        var legendDiv = document.getElementById(c.legendId);
+        legendDiv.setAttribute("style", "width:100%;position:absolute;margin:0px auto;text-align:center;z-index:10;background: #ffffff;");
+        var button = document.createElement("button");
+        button.setAttribute("class", "btn btn-default fr btn-sm custom_btn");
+        button.innerHTML = "指标：";
+        var _target = false;
+        button.addEventListener("click", function () {
+            var checkBoxDiv = document.getElementById(c.legendId + "_check");
+            if (_target) {
+                checkBoxDiv.setAttribute("class", "plancheckbox collapse")
+                _target = false;
+            } else {
+                checkBoxDiv.setAttribute("class", "plancheckbox collapse in");
+                _target = true;
+            }
+        });
+        var b = document.createElement("b");
+        b.innerHTML = "浏览量(PV)、转化次数";
+        var caret = document.createElement("span");
+        caret.setAttribute("class", "caret");
+        button.appendChild(b);
+        button.appendChild(caret);
+        var checkBoxDiv = document.createElement("div");
+        checkBoxDiv.setAttribute("class", "plancheckbox collapse");
+        checkBoxDiv.setAttribute("id", c.legendId + "_check")
+        for (var i = 0; i < c.legendMultiData.length; i++) {
+            var lab = document.createElement("label");
+            var spn = document.createElement("span");
+            var rad = document.createElement("input");
+            rad.type = "checkBox";
+            rad.name = "checkBox_" + c.id;
+            rad.value = c.legendMultiData[i].ename;
+            rad.setAttribute("asc", c.legendAllowCheckCount);
+            rad.setAttribute("index", i + "");
+            rad.setAttribute("chart", c.id);
+            rad.addEventListener("click", function () {
+                util.allowItem(this);
+            }, false);
+            lab.appendChild(rad);
+            spn.innerHTML = "&nbsp;" + c.legendMultiData[i].name + "&nbsp;&nbsp;";
+            lab.appendChild(spn);
+            checkBoxDiv.appendChild(lab);
+        }
+        var submitBtn = document.createElement("button");
+        submitBtn.innerHTML = "确定";
+        submitBtn.setAttribute("class", "btn btn-default btn-xs");
+        submitBtn.addEventListener("click", function () {
+            var checkBoxDiv = document.getElementById(c.legendId + "_check");
+            _target = false;
+            checkBoxDiv.setAttribute("class", "plancheckbox collapse");
+        });
+        checkBoxDiv.appendChild(submitBtn);
+        legendDiv.appendChild(checkBoxDiv);
+        legendDiv.insertBefore(button, legendDiv.childNodes[0]);
     },
     allowItem: function (radioObj) {
         var checks = document.getElementsByName(radioObj.name);
