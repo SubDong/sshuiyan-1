@@ -3,6 +3,10 @@
  */
 app.controller("searchenginectr", function ($scope, $rootScope, $http, requestService,areaService) {
     $scope.todayClass = true;
+
+    //table配置
+    $rootScope.tableFilter = undefined;
+
     $scope.reset = function () {
         $scope.todayClass = false;
         $scope.yesterdayClass = false;
@@ -84,6 +88,13 @@ app.controller("searchenginectr", function ($scope, $rootScope, $http, requestSe
     $scope.today = function () {
         $scope.reset();
         $scope.todayClass = true;
+
+        //table配置
+        $rootScope.tableTimeStart = 0;
+        $rootScope.tableTimeEnd = 0;
+        $rootScope.targetSearch();
+        //
+
         $rootScope.start = 0;
         $rootScope.end = 0;
         $rootScope.interval
@@ -95,6 +106,13 @@ app.controller("searchenginectr", function ($scope, $rootScope, $http, requestSe
     $scope.yesterday = function () {
         $scope.reset();
         $scope.yesterdayClass = true;
+
+        //table配置
+        $rootScope.tableTimeStart = -1;
+        $rootScope.tableTimeEnd = -1;
+        $rootScope.targetSearch();
+        //
+
         $rootScope.start = -1;
         $rootScope.end = -1;
         var chart = echarts.init(document.getElementById($scope.charts[1].config.id));
@@ -107,6 +125,13 @@ app.controller("searchenginectr", function ($scope, $rootScope, $http, requestSe
     $scope.sevenDay = function () {
         $scope.reset();
         $scope.sevenDayClass = true;
+
+        //table配置
+        $rootScope.tableTimeStart = -7;
+        $rootScope.tableTimeEnd = -1;
+        $rootScope.targetSearch();
+        //
+
         $rootScope.start = -7;
         $rootScope.end = -1;
         $rootScope.interval = 24;
@@ -119,9 +144,11 @@ app.controller("searchenginectr", function ($scope, $rootScope, $http, requestSe
     $scope.month = function () {
         $scope.reset();
         $scope.monthClass = true;
-        //table 参数配置
+        //table配置
         $rootScope.tableTimeStart = -30;
         $rootScope.tableTimeEnd = -1;
+        $rootScope.targetSearch();
+        //
         $rootScope.start = -30;
         $rootScope.end = -1;
         $rootScope.interval = 24;

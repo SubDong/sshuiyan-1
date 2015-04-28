@@ -197,7 +197,7 @@ api.get('/indextable', function (req, res) {
     var _indic = query["indic"].split(",");//统计指标
     var _lati = query["dimension"];//统计纬度
     var _type = query["type"];
-    var _filter = query["filter"];//过滤器
+    var _filter = query["filerInfo"] != undefined?JSON.parse(query["filerInfo"]):query["filerInfo"];//过滤器
     var indexes = date.createIndexes(_startTime, _endTime, "visitor-");//indexs
 
     var period = date.period(_startTime, _endTime); //时间段
@@ -206,22 +206,34 @@ api.get('/indextable', function (req, res) {
         var result = [];
         var vidx = 0;
         var maps = {}
-        var valueData = ["arrivedRate", "outRate", "nuvRate", "ct"]
+        var valueData = ["arrivedRate", "outRate", "nuvRate", "ct", "period","se", "pm", "rf"];
         data.forEach(function (info, x) {
             for (var i = 0; i < info.key.length; i++) {
-                var region = info.key[i];
-                var obj = maps[region];
+                var infoKey = info.key[i];
+                var obj = maps[infoKey];
                 if (!obj) {
                     obj = {};
                     switch (_lati){
                         case "ct":
-                            obj[_lati] = region == 0?"新访客":"老访客";
+                            obj[_lati] = infoKey == 0?"新访客":"老访客";
                             break;
                         case "rf_type":
-                            obj[_lati] = region == 1?"直接访问":region == 2?"搜索引擎":"外部链接";
+                            obj[_lati] = infoKey == 1?"直接访问":infoKey == 2?"搜索引擎":"外部链接";
+                            break;
+                        case "period":
+                            obj[_lati] = infoKey.substring(infoKey.indexOf(" "),infoKey.length-3) + " - "+ infoKey.substring(infoKey.indexOf(" "),infoKey.length-5) +"59";
+                            break;
+                        case "se":
+                            obj[_lati] = (infoKey == "-"?"直接访问":infoKey);
+                            break;
+                        case "pm":
+                            obj[_lati] = (infoKey == 0?"计算机端":"移动端");
+                            break;
+                        case "rf":
+                            obj[_lati] = (infoKey == "-"?"直接访问":infoKey);
                             break;
                         default :
-                            obj[_lati] = region;
+                            obj[_lati] = infoKey;
                             break;
                     }
                 }
@@ -230,7 +242,7 @@ api.get('/indextable', function (req, res) {
                 }else{
                     obj[info.label] = info.quota[i] + (valueData.indexOf(info.label) != -1 ? "%" : "");
                 }
-                maps[region] = obj;
+                maps[infoKey] = obj;
             }
             vidx++;
         });

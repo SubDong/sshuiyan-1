@@ -3,6 +3,15 @@
  */
 app.controller('Trend_yesterday_ctrl', function ($scope, $rootScope, $http, requestService, areaService, messageService) {
     $scope.yesterdayClass = true;
+
+    //table配置
+    $rootScope.tableTimeStart = -1;
+    $rootScope.tableTimeEnd = -1;
+    $rootScope.latitude = {name: "日期", field: "period"};
+    $rootScope.tableFilter = undefined;
+    $rootScope.dimen = false;
+    //
+
     $scope.dt = new Date();
     $scope.reset = function () {
         $scope.todayClass = false;
@@ -63,6 +72,13 @@ app.controller('Trend_yesterday_ctrl', function ($scope, $rootScope, $http, requ
     $scope.yesterday = function () {
         $scope.reset();
         $scope.yesterdayClass = true;
+
+        //table配置
+        $rootScope.tableTimeStart = 0;
+        $rootScope.tableTimeEnd = 0;
+        $rootScope.targetSearch();
+        //
+
         $rootScope.start = -1;
         $rootScope.end = -1;
         $rootScope.interval = 24;
@@ -74,6 +90,13 @@ app.controller('Trend_yesterday_ctrl', function ($scope, $rootScope, $http, requ
     $scope.sevenDay = function () {
         $scope.reset();
         $scope.sevenDayClass = true;
+
+        //table配置
+        $rootScope.tableTimeStart = -7;
+        $rootScope.tableTimeEnd = -1;
+        $rootScope.targetSearch();
+        //
+
         $rootScope.start = -7
         $rootScope.end = -1;
         $rootScope.interval = 7;
@@ -86,6 +109,13 @@ app.controller('Trend_yesterday_ctrl', function ($scope, $rootScope, $http, requ
     $scope.month = function () {
         $scope.reset();
         $scope.monthClass = true;
+
+        //table配置
+        $rootScope.tableTimeStart = -30;
+        $rootScope.tableTimeEnd = -1;
+        $rootScope.targetSearch();
+        //
+
         $rootScope.start =-30;
         $rootScope.end = -1;
         $rootScope.interval = 30;

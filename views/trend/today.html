@@ -1,11 +1,26 @@
-<div class="middle_containers">
+<div class="middle_containers" ng-controller="trend_today_ctrl">
     <div class="date_select">
-        <div ng-controller="trend_today_ctrl">
             <calendar></calendar>
             <datecontrast></datecontrast>
             <dateweek></dateweek>
         </div>
        <refresh></refresh>
+        <div class="fr">
+            <button class="btn btn-default btn-Refresh" type="button"><span aria-hidden="true"
+                                                                            class="glyphicon glyphicon-refresh"></span>
+            </button>
+            <div role="group" class="btn-group">
+                <button aria-expanded="false" data-toggle="dropdown" class="btn btn-default dropdown-toggle"
+                        type="button" id="btnGroupDrop3">
+                    导出
+                    <span class="caret"></span>
+                </button>
+                <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
+                    <li><a href="#">保存</a></li>
+                    <li><a href="#">导出</a></li>
+                </ul>
+            </div>
+        </div>
     </div>
     <div class="my_concent">
         <ssh-date-show type="today"></ssh-date-show>
@@ -148,7 +163,7 @@
                 </div>
             </div>
             <div class="custom_table">
-                <div ui-grid="gridOptions" class="grid" ui-grid-pagination ui-grid-selection ui-grid-exporter></div>
+                <div ui-grid="gridOptions" class="grid" style="height:400px;" ui-grid-pagination ui-grid-selection ui-grid-exporter></div>
             </div>
         </div>
     </div>

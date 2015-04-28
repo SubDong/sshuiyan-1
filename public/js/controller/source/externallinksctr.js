@@ -11,6 +11,13 @@ app.controller("externallinksctr", function ($scope, $rootScope, $http, requestS
         $scope.definClass = false;
         $scope.btnchecked = true;
     };
+    //table默认信息配置
+    $rootScope.tableTimeStart = 0;
+    $rootScope.tableTimeEnd = 0;
+    $rootScope.latitude = {name: "搜索引擎", field: "rf"}
+    $rootScope.tableFilter = [{"rf_type":["3"]}];
+    $rootScope.dimen = false;
+    //
 
     $scope.onLegendClick = function (radio, chartInstance, config, checkedVal) {
         clear.lineChart(config, checkedVal);

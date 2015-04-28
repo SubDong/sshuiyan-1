@@ -3,6 +3,13 @@
  */
 app.controller('Trend_realtime_ctrl', function ($scope, $rootScope, $http, requestService, messageService, $log) {
     $scope.visitorCount = 0;
+    //table配置
+    $rootScope.tableTimeStart = 0;
+    $rootScope.tableTimeEnd = 0;
+    $rootScope.latitude = {name: "地域", field: "region"};
+    $rootScope.checkedArray = "SS"
+    $rootScope.dimen = true;
+    //
     $scope.gridOptions = {
         enableColumnMenus: false,
         expandableRowTemplate: '../trend/trendtree.html',
