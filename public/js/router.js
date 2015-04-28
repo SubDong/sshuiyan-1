@@ -30,12 +30,21 @@ app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
             url: "/source/source",
             templateUrl: "../source/source.html",
             controller:function($rootScope){
-                $rootScope.latitude = {name: "来源类型", field: "rf_type"}
+                $rootScope.tableTimeStart = 0;
+                $rootScope.tableTimeEnd = 0;
+                $rootScope.latitude = {name: "来源类型", field: "rf_type"};
+                $rootScope.dimen = "rf"
             }
         })
         .state('searchengine', {
             url: "/source/searchengine",
-            templateUrl: "../source/searchengine.html"
+            templateUrl: "../source/searchengine.html",
+            controller:function($rootScope){
+                $rootScope.tableTimeStart = 0;
+                $rootScope.tableTimeEnd = 0;
+                $rootScope.latitude = {name: "搜索引擎", field: "se"};
+                $rootScope.dimen = false
+            }
         })
         .state('searchterm', {
             url: "/source/searchterm",
@@ -57,6 +66,8 @@ app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
             url: "/page/entrancepage",
             templateUrl: "../page/entrancepage.html",
             controller:function($rootScope){
+                $rootScope.tableTimeStart = 0;
+                $rootScope.tableTimeEnd = 0;
                 $rootScope.latitude = {name: "页面url", field: "loc"}
             }
         })
@@ -84,6 +95,8 @@ app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
             url: "/page/indexoverview",
             templateUrl: "../page/indexoverview.html",
             controller:function($rootScope){
+                $rootScope.tableTimeStart = 0;
+                $rootScope.tableTimeEnd = 0;
                 $rootScope.latitude = {name: "页面url", field: "loc"}
             }
         })
@@ -107,7 +120,10 @@ app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
             url: "/visitor/provincemap",
             templateUrl: "../visitor/provincemap.html",
             controller:function($rootScope){
+                $rootScope.tableTimeStart = 0;
+                $rootScope.tableTimeEnd = 0;
                 $rootScope.latitude = {name: "地域", field: "region"};
+                $rootScope.dimen = "city"
                 /*$rootScope.checkedArray = ["pv","uv"];
                 $rootScope.gridArray = [{field: "region",name: "地域"},{field: "pv",name: "浏览量(PV)"},{field: "uv",name: "访客数(UV)"}];
                 var res = ["flow","TodayWeb"];
@@ -118,14 +134,20 @@ app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
             url: "/visitor/equipment",
             templateUrl: "../visitor/equipment.html",
             controller:function($rootScope){
-                $rootScope.latitude = {name: "浏览器", field: "br"}
+                $rootScope.tableTimeStart = 0;
+                $rootScope.tableTimeEnd = 0;
+                $rootScope.latitude = {name: "浏览器", field: "pm"};
+                $rootScope.dimen = "br"
             }
         })
         .state('novisitors', {
             url: "/visitor/novisitors",
             templateUrl: "../visitor/novisitors.html",
             controller:function($rootScope){
-                $rootScope.latitude = {name: "新老访客", field: "ct"}
+                $rootScope.tableTimeStart = 0;
+                $rootScope.tableTimeEnd = 0;
+                $rootScope.latitude = {name: "新老访客", field: "ct"};
+                $rootScope.dimen = false
             }
         })
         .state('visitorfeature', {

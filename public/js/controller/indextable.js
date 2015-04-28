@@ -110,34 +110,48 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
     ];
 
     $rootScope.gridArray = new Array();
-    $rootScope.checkedArray = new Array()
+    if (typeof($rootScope.checkedArray) != undefined && $rootScope.checkedArray == "SS") {
+        $rootScope.tableTimeStart = 0;
+        $rootScope.tableTimeEnd = 0;
+        $scope.appHtml = '../trend/trendtree.html';
+        $rootScope.checkedArray = ["loc", "pv", "uv", "outRate"]
+        $rootScope.gridArray = [{name: '地域', field: "region"}, {name: '浏览量(PV)', field: "pv"}, {
+            name: '访客数(UV)',
+            field: "uv"
+        }, {name: '浏览量(PV)', field: "pv"}, {name: "跳出率", field: "outRate"}]
+    } else {
+        $rootScope.checkedArray = new Array();
+        $scope.appHtml = '<div ui-grid="row.entity.subGridOptions" ui-grid-auto-resize style="height: {{gridHeight}}"></div>'
+    }
+
     $rootScope.indicators = function (item, entities, number) {
         /*$rootScope.gridArray == undefined?$rootScope.gridArray = new Array():"";
-        $rootScope.checkedArray == undefined?$rootScope.checkedArray = new Array():"";*/
+         $rootScope.checkedArray == undefined?$rootScope.checkedArray = new Array():"";*/
 
         $scope.gridArray.shift();
         $scope.gridObj = {};
-        var a = $scope.checkedArray.indexOf(item.name);
+        var a = $rootScope.checkedArray.indexOf(item.name);
         if (a != -1) {
-            $scope.checkedArray.splice(a, 1);
+            $rootScope.checkedArray.splice(a, 1);
             $scope.gridArray.splice(a, 1);
             $scope.gridArray.unshift($rootScope.latitude);
         } else {
-            if ($scope.checkedArray.length >= number) {
-                $scope.checkedArray.shift();
+            if ($rootScope.checkedArray.length >= number) {
+                $rootScope.checkedArray.shift();
                 $scope.gridArray.shift();
                 $scope
                 $scope.gridObj["name"] = item.consumption_name;
                 $scope.gridObj["field"] = item.name;
-                $scope.gridArray.push($scope.gridObj);
-                $scope.gridArray.unshift($rootScope.latitude);
+                $rootScope.gridArray.push($scope.gridObj);
+                $rootScope.gridArray.unshift($rootScope.latitude);
             } else {
-                $scope.checkedArray.push(item.name);
+                $rootScope.checkedArray.push(item.name);
 
                 $scope.gridObj["name"] = item.consumption_name;
                 $scope.gridObj["field"] = item.name;
-                $scope.gridArray.push($scope.gridObj);
-                $scope.gridArray.unshift($rootScope.latitude);
+                $scope.gridObj["field"].visible = false;
+                $rootScope.gridArray.push($scope.gridObj);
+                $rootScope.gridArray.unshift($rootScope.latitude);
             }
         }
         angular.forEach(entities, function (subscription, index) {
@@ -147,30 +161,52 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
         });
     };
 
-     /*function initTable(entities,item){
-        entities.forEach(function(key,x){
-            angular.forEach($scope[key], function (subscription, index) {
-                item.forEach(function(info,i){
-                    if (subscription.name == info) {
-                        $scope.classInfo = 'current';
-                    }
-                })
-            });
-        });
-    }*/
+    /*function initTable(entities,item){
+     entities.forEach(function(key,x){
+     angular.forEach($scope[key], function (subscription, index) {
+     item.forEach(function(info,i){
+     if (subscription.name == info) {
+     $scope.classInfo = 'current';
+     }
+     })
+     });
+     });
+     }*/
     // 推广概况表格配置项
-    $scope.gridOptions = {
-        paginationPageSizes: [25, 50, 75],
-        paginationPageSize: 25,
-        enableColumnMenus: false,
-        enableSorting: true,
-        enableScrollbars: false,
-        enableGridMenu: false,
-        enableHorizontalScrollbar: 0,
-        enableVerticalScrollbar: 0,
-        columnDefs: $scope.gridArray
-    };
-
+    if($rootScope.dimen != false){
+        $scope.gridOptions = {
+            //paginationPageSizes: [25, 50, 75],
+            paginationPageSize: 25,
+            enablePaginationControls: false,
+            expandableRowTemplate: $scope.appHtml,
+            expandableRowHeight:360,
+            enableColumnMenus: false,
+            enableSorting: true,
+            enableGridMenu: false,
+            enableHorizontalScrollbar: 0,
+            columnDefs: $scope.gridArray,
+            onRegisterApi: function (girApi) {
+                griApiInfo(girApi);
+            }
+        };
+    }else{
+        $scope.gridOptions = {
+            //paginationPageSizes: [25, 50, 75],
+            paginationPageSize: 25,
+            enablePaginationControls: false,
+            enableColumnMenus: false,
+            enableSorting: true,
+            enableGridMenu: false,
+            enableHorizontalScrollbar: 0,
+            columnDefs: $scope.gridArray
+        };
+    }
+    $scope.pagego = function(pagevalue){
+        pagevalue.pagination.seek(Number($scope.page));
+    }
+    $scope.gridOptions.onRegisterApi = function (gridApi) {
+        $scope.gridApi2 = gridApi;
+    }
 
     /**
      *
@@ -180,8 +216,8 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
      * @param lati   查询纬度
      * @param type
      */
-    $scope.targetSearch = function () {
-        $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $scope.checkedArray);
+    $rootScope.targetSearch = function () {
+        $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
         if ($rootScope.latitude == undefined) {
             console.error("error: latitude is not defined,Please check whether the parameter the configuration.");
             return;
@@ -196,7 +232,7 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
         }
         $http({
             method: 'GET',
-            url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $scope.checkedArray + "&dimension=" + $rootScope.latitude.field
+            url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + $rootScope.latitude.field
             + "&filter" + $rootScope.tableFilter + "&type=1"
         }).success(function (data, status) {
             $scope.gridOptions.data = data;
@@ -208,6 +244,52 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
     //init
     $scope.targetSearch();
     //
+
+//表格展开项
+    var griApiInfo = function (gridApi) {
+        gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
+            console.log(row)
+            var dataNumber;
+            if (row.isExpanded && $rootScope.dimen != false) {
+                $rootScope.tableFilter = "[{\"" + $rootScope.latitude.field + "\":[\"" + getField(row.entity[$rootScope.latitude.field], $rootScope.latitude.field) + "\"]}]";
+                row.entity.subGridOptions = {
+                    showHeader: false,
+                    columnDefs: $scope.gridArray
+                };
+                $http({
+                    method: 'GET',
+                    async: false,
+                    url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + $rootScope.dimen
+                    + "&filerInfo=" + $rootScope.tableFilter + "&type=1"
+                }).success(function (data, status) {
+                    var reg = new RegExp($rootScope.dimen, "g");
+                    if(data != undefined && data.length != 0 ){
+                        data = JSON.parse(JSON.stringify(data).replace(reg, $rootScope.latitude.field));
+                        dataNumber = data.length;
+                    }
+                    //$scope.gridOptions.expandableRowHeight = dataNumber * 30;
+                    row.entity.subGridOptions.data = data
+                }).error(function (error) {
+                    console.log(error);
+                });
+                //$rootScope.tableFilter = undefined;
+            }
+        });
+    };
+
+
+    var getField = function (rr, ss) {
+        switch (rr) {
+            case "新访客": return 0;
+            case "老访客": return 1;
+            case "直接访问": if(ss == "se" || ss == "rf") return "-"; else return 1;
+            case "搜索引擎": return 2;
+            case "外部链接": return 3;
+            case "计算机端": return 0;
+            case "移动端": return 1;
+            default : return rr
+        }
+    }
     var select = $scope.select = {};
 
     //数组对象用来给ng-options遍历

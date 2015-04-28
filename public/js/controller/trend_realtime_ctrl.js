@@ -3,29 +3,13 @@
  */
 app.controller('Trend_realtime_ctrl', function ($scope, $rootScope, $http, requestService, messageService, $log) {
     $scope.visitorCount = 0;
-    $scope.gridOptions = {
-        enableColumnMenus: false,
-        expandableRowTemplate: '../trend/trendtree.html',
-        expandableRowHeight: 360,
-        enableScrollbars: false,
-        enableGridMenu: false,
-        enableSorting: true,
-        enableHorizontalScrollbar: 0,
-        enableVerticalScrollbar: 0
-    }
-    $scope.gridOptions.columnDefs = [
-        {name: 'name', displayName: "地域"},
-        {name: 'time', displayName: "访问时间"},
-        {name: 'name', displayName: "来源"},
-        {name: 'ip', displayName: "访问IP"},
-        {name: 'times', displayName: "访问时长"},
-        {name: 'page', displayName: "访问页数"}
-    ];
-    //效果演示数据
-    $http.get('https://cdn.rawgit.com/angular-ui/ui-grid.info/gh-pages/data/500_complex.json')
-        .success(function (data) {
-            $scope.gridOptions.data = data;
-        });
+//table配置
+    $rootScope.tableTimeStart = 0;
+    $rootScope.tableTimeEnd = 0;
+    $rootScope.latitude = {name: "地域", field: "region"};
+    $rootScope.checkedArray = "SS"
+    $rootScope.dimen = true;
+    //
     $scope.onLegendClickListener = function (radio, chartObj, chartConfig, checkedVal) {
         clear.lineChart($scope.charts[0].config, checkedVal);
         $scope.charts[0].types = checkedVal;

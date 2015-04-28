@@ -1,10 +1,8 @@
 <div class="middle_containers" ng-controller="Trend_yesterday_ctrl">
     <div class="date_select">
-        <div>
             <calendar></calendar>
             <dateother></dateother>
             <dateweek></dateweek>
-        </div>
         <refresh></refresh>
     </div>
     <div class="my_concent">
@@ -147,7 +145,8 @@
                 </div>
             </div>
             <div class="custom_table">
-                <div ui-grid="gridOptions" class="grid" ui-grid-pagination ui-grid-selection ui-grid-exporter></div>
+                <div ui-grid="gridOptions" class="grid" style="height:400px;" ui-grid-pagination ui-grid-selection ui-grid-exporter></div>
+                <gridpage></gridpage>
             </div>
         </div>
     </div>

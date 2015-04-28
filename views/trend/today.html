@@ -1,11 +1,10 @@
-<div class="middle_containers">
+<div class="middle_containers" ng-controller="trend_today_ctrl">
     <div class="date_select">
-        <div ng-controller="trend_today_ctrl">
             <calendar></calendar>
             <datecontrast></datecontrast>
             <dateweek></dateweek>
-        </div>
-       <refresh></refresh>
+        <refresh></refresh>
+
     </div>
     <div class="my_concent">
         <ssh-date-show type="today"></ssh-date-show>
@@ -148,7 +147,8 @@
                 </div>
             </div>
             <div class="custom_table">
-                <div ui-grid="gridOptions" class="grid" ui-grid-pagination ui-grid-selection ui-grid-exporter></div>
+                <div ui-grid="gridOptions" class="grid" style="height:400px;" ui-grid-pagination ui-grid-selection ui-grid-exporter></div>
+                <gridpage></gridpage>
             </div>
         </div>
     </div>

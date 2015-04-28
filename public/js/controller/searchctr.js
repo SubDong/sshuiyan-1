@@ -1,9 +1,16 @@
 /**
  * Created by john on 2015/4/2.
  */
-app.controller('searchctr', function ($scope,areaService, $http) {
+app.controller('searchctr', function ($scope, $rootScope,areaService, $http) {
         $scope.todayClass = true;
-        $scope.isCollapsed = true;
+
+        //table默认信息配置
+        $rootScope.tableTimeStart = 0;
+        $rootScope.tableTimeEnd = 0;
+        $rootScope.tableFilter = undefined;
+        $rootScope.latitude = {name: "搜索引擎", field: "wd"}
+        //
+
         $scope.reset = function () {
             $scope.todayClass = false;
             $scope.yesterdayClass = false;
@@ -15,19 +22,44 @@ app.controller('searchctr', function ($scope,areaService, $http) {
             $scope.reset();
             $scope.todayClass = true;
             $scope.dt = new Date();
+
+            //table配置
+            $rootScope.tableTimeStart = 0;
+            $rootScope.tableTimeEnd = 0;
+            $rootScope.targetSearch();
+            //
+
         };
         $scope.yesterday = function () {
             $scope.reset();
             $scope.yesterdayClass = true;
 
+            //table配置
+            $rootScope.tableTimeStart = -1;
+            $rootScope.tableTimeEnd = -1;
+            $rootScope.targetSearch();
+            //
+
         };
         $scope.sevenDay = function () {
             $scope.reset();
             $scope.sevenDayClass = true;
+
+            //table配置
+            $rootScope.tableTimeStart = -7;
+            $rootScope.tableTimeEnd = -1;
+            $rootScope.targetSearch();
+            //
         };
         $scope.month = function () {
             $scope.reset();
             $scope.monthClass = true;
+
+            //table配置
+            $rootScope.tableTimeStart = -30;
+            $rootScope.tableTimeEnd = -1;
+            $rootScope.targetSearch();
+            //
 
         };
         $scope.open = function ($event) {

@@ -11,7 +11,6 @@
                 <div class="Visitor_text">
                     <h4>30分钟内</h4>
                     <h5>当前在线人数</h5>
-
                     <h1>{{visitorCount}}</h1>
                 </div>
             </div>
@@ -20,7 +19,7 @@
                 <div id="realtime_charts" style="height:300px;"></div>
             </div>
         </div>
-        <div class="table_content">
+        <div class="table_content" ng-controller="TabsCtrl">
             <ul role="tablist" class="nav nav-tabs" id="myTab">
 
                 <li role="presentation" class="active"><a aria-controls="profile" data-toggle="tab"
@@ -110,7 +109,8 @@
                         </div>
                     </div>
                     <div class="custom_table">
-                        <div ui-grid="gridOptions" class="grid" ui-grid-pagination ui-grid-selection ui-grid-exporter></div>
+                        <div ui-grid="gridOptions" class="grid" style="height:400px;" ui-grid-pagination ui-grid-selection ui-grid-exporter ui-grid-expandable></div>
+                        <gridpage></gridpage>
                     </div>
                 </div>
             </div>
