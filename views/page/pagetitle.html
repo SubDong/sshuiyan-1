@@ -1,4 +1,4 @@
-<div class="middle_containers">
+<div class="middle_containers" ng-controller="pagetitlectr">
     <style type="text/css">
         .tab-content {
             border-top: 1px solid #e3e3e3;
@@ -37,12 +37,9 @@
 
             </ul>
             <div class="tab-content" id="myTabContent">
-                <div aria-labelledby="home-tab" id="home" class="tab-pane fade active in" role="tabpanel">
-                    <div class="custom_table">
-                        <table id="pagetitle_table" class="table table-hover">
-                        </table>
-                        <div id="pager2"></div>
-                    </div>
+                <div class="custom_table">
+                    <div ui-grid="gridOptions" class="grid" ui-grid-pagination ui-grid-selection ui-grid-exporter></div>
+                    <gridpage></gridpage>
                 </div>
             </div>
         </div>

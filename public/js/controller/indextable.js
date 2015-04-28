@@ -175,6 +175,9 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
     // 推广概况表格配置项
     if($rootScope.dimen != false){
         $scope.gridOptions = {
+            //paginationPageSizes: [25, 50, 75],
+            paginationPageSize: 25,
+            enablePaginationControls: false,
             expandableRowTemplate: $scope.appHtml,
             expandableRowHeight:360,
             enableColumnMenus: false,
@@ -188,6 +191,9 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
         };
     }else{
         $scope.gridOptions = {
+            //paginationPageSizes: [25, 50, 75],
+            paginationPageSize: 25,
+            enablePaginationControls: false,
             enableColumnMenus: false,
             enableSorting: true,
             enableGridMenu: false,
@@ -195,7 +201,12 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
             columnDefs: $scope.gridArray
         };
     }
-
+    $scope.pagego = function(pagevalue){
+        pagevalue.pagination.seek(Number($scope.page));
+    }
+    $scope.gridOptions.onRegisterApi = function (gridApi) {
+        $scope.gridApi2 = gridApi;
+    }
 
     /**
      *
