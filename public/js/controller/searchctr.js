@@ -11,9 +11,6 @@ app.controller('searchctr', function ($scope, $rootScope, requestService, areaSe
         $rootScope.latitude = {name: "搜索引擎", field: "wd"}
         $rootScope.dimen = false;
         //
-
-        <<<<<<<
-        HEAD
         $scope.reset = function () {
             $scope.todayClass = false;
             $scope.yesterdayClass = false;
