@@ -222,35 +222,66 @@ var buildRequest = function (indexes, type, quotas, dimension, filters, start, e
     }
 
     if (dimension == "period") {
-        return {
-            "index": indexes.toString(),
-            "type": type,
-            "body": {
-                "query": buildQuery(filters),
-                "size": 0,
-                "aggs": {
-                    "result": {
-                        "date_histogram": {
-                            "field": "utime",
-                            "interval": interval / 1000 + "s",
-                            "format": "yyyy-MM-dd HH:mm:ss",
-                            //"time_zone": "+08:00",    // pre_zone, post_zone are replaced by time_zone in 1.5.0.
-                            "pre_zone": "+08:00",
-                            "post_zone": "+08:00",
-                            "order": {
-                                "_key": "asc"
+        if (interval == 1)
+            return {
+                "index": indexes.toString(),
+                "type": type,
+                "body": {
+                    "query": buildQuery(filters),
+                    "size": 0,
+                    "aggs": {
+                        "result": {
+                            "date_histogram": {
+                                "field": "utime",
+                                "interval": interval + "h",
+                                "format": "HH",
+                                //"time_zone": "+08:00",    // pre_zone, post_zone are replaced by time_zone in 1.5.0.
+                                "pre_zone": "+08:00",
+                                "post_zone": "+08:00",
+                                "order": {
+                                    "_key": "asc"
+                                },
+                                "min_doc_count": 0,
+                                "extended_bounds": {
+                                    "min": start,
+                                    "max": end
+                                }
                             },
-                            "min_doc_count": 0,
-                            "extended_bounds": {
-                                "min": start,
-                                "max": end
-                            }
-                        },
-                        "aggs": _aggs
+                            "aggs": _aggs
+                        }
                     }
                 }
-            }
-        };
+            };
+        else
+            return {
+                "index": indexes.toString(),
+                "type": type,
+                "body": {
+                    "query": buildQuery(filters),
+                    "size": 0,
+                    "aggs": {
+                        "result": {
+                            "date_histogram": {
+                                "field": "utime",
+                                "interval": interval / 1000 + "s",
+                                "format": "yyyy-MM-dd HH:mm:ss",
+                                //"time_zone": "+08:00",    // pre_zone, post_zone are replaced by time_zone in 1.5.0.
+                                "pre_zone": "+08:00",
+                                "post_zone": "+08:00",
+                                "order": {
+                                    "_key": "asc"
+                                },
+                                "min_doc_count": 0,
+                                "extended_bounds": {
+                                    "min": start,
+                                    "max": end
+                                }
+                            },
+                            "aggs": _aggs
+                        }
+                    }
+                }
+            };
     } else {
         return {
             "index": indexes.toString(),
