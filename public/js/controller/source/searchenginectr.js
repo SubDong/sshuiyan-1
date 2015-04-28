@@ -3,14 +3,6 @@
  */
 app.controller("searchenginectr", function ($scope, $rootScope, $http, requestService,areaService) {
     $scope.todayClass = true;
-    $scope.reset = function () {
-        $scope.todayClass = false;
-        $scope.yesterdayClass = false;
-        $scope.sevenDayClass = false;
-        $scope.monthClass = false;
-        $scope.definClass = false;
-        $scope.btnchecked = true;
-    };
     $scope.pieFormat = function (data, config) {
         var json = JSON.parse(eval("(" + data + ")").toString());
         var tmpData = [];
@@ -77,57 +69,14 @@ app.controller("searchenginectr", function ($scope, $rootScope, $http, requestSe
         var chart = echarts.init(document.getElementById($scope.charts[1].config.id));
         $scope.charts[1].config.instance = chart;
         util.renderLegend(chart, $scope.charts[1].config);
-        var chartArray = [$scope.charts[1]]
+        var chartArray = [$scope.charts[1]];
         requestService.refresh(chartArray);
     }
     $scope.init();
-    $scope.today = function () {
-        $scope.reset();
-        $scope.todayClass = true;
-        $rootScope.start = 0;
-        $rootScope.end = 0;
-        $rootScope.interval
+    $scope.$on("ssh_refresh_charts", function(e, msg) {
         var chart = echarts.init(document.getElementById($scope.charts[1].config.id));
         $scope.charts[1].config.instance = chart;
-        var chartArray = [$scope.charts[1]]
+        var chartArray = [$scope.charts[1]];
         requestService.refresh(chartArray);
-    }
-    $scope.yesterday = function () {
-        $scope.reset();
-        $scope.yesterdayClass = true;
-        $rootScope.start = -1;
-        $rootScope.end = -1;
-        var chart = echarts.init(document.getElementById($scope.charts[1].config.id));
-        $scope.charts[1].config.instance = chart;
-        var chartArray = [$scope.charts[1]]
-        requestService.refresh(chartArray);
-    };
-
-
-    $scope.sevenDay = function () {
-        $scope.reset();
-        $scope.sevenDayClass = true;
-        $rootScope.start = -7;
-        $rootScope.end = -1;
-        $rootScope.interval = 24;
-        var chart = echarts.init(document.getElementById($scope.charts[1].config.id));
-        $scope.charts[1].config.instance = chart;
-        $scope.charts[1].config.bGap = true;
-        var chartArray = [$scope.charts[1]]
-        requestService.refresh(chartArray);
-    };
-    $scope.month = function () {
-        $scope.reset();
-        $scope.monthClass = true;
-        //table 参数配置
-        $rootScope.tableTimeStart = -30;
-        $rootScope.tableTimeEnd = -1;
-        $rootScope.start = -30;
-        $rootScope.end = -1;
-        $rootScope.interval = 24;
-        var chart = echarts.init(document.getElementById($scope.charts[1].config.id));
-        $scope.charts[1].config.instance = chart;
-        var arrayChart = [$scope.charts[1]]
-        requestService.refresh(arrayChart);
-    };
+    });
 });

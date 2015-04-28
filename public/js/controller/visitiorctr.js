@@ -8,77 +8,13 @@ app.controller("Vistiorctr", function ($scope, $rootScope, $http, requestService
     $rootScope.tableTimeEnd = 0;
     $rootScope.tableFilter = undefined;
 
-
     $scope.dateTimeStart = 0;
     $scope.dateTimeEnd = 0;
 
-    $scope.reset = function () {
-        $scope.todayClass = false;
-        $scope.yesterdayClass = false;
-        $scope.sevenDayClass = false;
-        $scope.monthClass = false;
-        $scope.definClass = false;
-    };
-    $scope.today = function () {
-        $scope.reset();
-        $scope.todayClass = true;
-        $rootScope.tableTimeStart = 0;
-        $rootScope.tableTimeEnd = 0;
-
-        $scope.dateTimeStart = 0;
-        $scope.dateTimeEnd = 0;
-        $scope.doSearch($scope.dateTimeStart, $scope.dateTimeEnd, "1");
-        $scope.doSearchAreas($scope.dateTimeStart , $scope.dateTimeEnd, "1", $scope.mapOrPieConfig);
-    };
-    $scope.yesterday = function () {
-        $scope.reset();
-        $scope.yesterdayClass = true;
-        $rootScope.tableTimeStart = -1;
-        $rootScope.tableTimeEnd = -1;
-
-        $scope.dateTimeStart = -1;
-        $scope.dateTimeEnd = -1;
-        $scope.doSearch($scope.dateTimeStart, $scope.dateTimeEnd, "1");
-        $scope.doSearchAreas($scope.dateTimeStart, $scope.dateTimeEnd, "1", $scope.mapOrPieConfig);
-    };
-    $scope.sevenDay = function () {
-        $scope.reset();
-        $scope.sevenDayClass = true;
-        $rootScope.tableTimeStart = -7;
-        $rootScope.tableTimeEnd = -1;
-
-        $scope.dateTimeStart = -7;
-        $scope.dateTimeEnd = -1;
-        $scope.doSearch($scope.dateTimeStart, $scope.dateTimeEnd, "1");
-        $scope.doSearchAreas($scope.dateTimeStart, $scope.dateTimeEnd, "1", $scope.mapOrPieConfig);
-    };
-    $scope.month = function () {
-        $scope.reset();
-        $scope.monthClass = true;
-        $rootScope.tableTimeStart = -30;
-        $rootScope.tableTimeEnd = -1;
-
-        $scope.dateTimeStart = -30;
-        $scope.dateTimeEnd = -1;
-        $scope.doSearch($scope.dateTimeStart, $scope.dateTimeEnd, "1",$scope.lat);
-        $scope.doSearchAreas($scope.dateTimeStart, $scope.dateTimeEnd, "1", $scope.mapOrPieConfig);
-
-    };
-    $scope.open = function ($event) {
-        $scope.reset();
-        $scope.definClass = true;
-        $event.preventDefault();
-        $event.stopPropagation();
-        $scope.opened = true;
-    };
-    $scope.checkopen = function ($event) {
-        $scope.reset();
-        $scope.othersdateClass = true;
-        $event.preventDefault();
-        $event.stopPropagation();
-        $scope.opens = true;
-    };
-
+    $scope.$on("ssh_refresh_charts", function(e, msg) {
+        $scope.doSearch($scope.tableTimeStart, $scope.tableTimeEnd, "1",$scope.lat);
+        $scope.doSearchAreas($scope.tableTimeStart, $scope.tableTimeEnd, "1", $scope.mapOrPieConfig);
+    });
 
     $scope.gridOptions = {
         enableScrollbars: false,

@@ -4,13 +4,6 @@
 app.controller('trend_today_ctrl', function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
     $scope.todayClass = true;
     $scope.dt = new Date();
-    $scope.reset = function () {
-        $scope.todayClass = false;
-        $scope.yesterdayClass = false;
-        $scope.sevenDayClass = false;
-        $scope.monthClass = false;
-        $scope.definClass = false;
-    };
     $scope.onLegendClickListener = function (radio, chartObj, chartConfig, checkedVal) {
         clear.lineChart($scope.charts[0].config, checkedVal);
         $scope.charts[0].types = checkedVal;
@@ -50,64 +43,12 @@ app.controller('trend_today_ctrl', function ($scope, $rootScope, $http, requestS
         requestService.refresh($scope.charts);
     }
     $scope.init();
-    $scope.today = function () {
-        $scope.reset();
-        $scope.todayClass = true;
-        $rootScope.start = 0;
-        $rootScope.end = 0;
-        $rootScope.interval = 24;
-        var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
-        $scope.charts[0].config.instance = chart;
-        requestService.refresh($scope.charts);
-        $rootScope.$broadcast("ssh_dateShow_options_change", "today");
-    };
-    $scope.yesterday = function () {
-        $scope.reset();
-        $scope.yesterdayClass = true;
-        $rootScope.start = -1;
-        $rootScope.end = -1;
-        $rootScope.interval = 24;
-        var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
-        $scope.charts[0].config.instance = chart;
-        requestService.refresh($scope.charts);
-        $rootScope.$broadcast("ssh_dateShow_options_change", "yesterday");
-    };
-    $scope.sevenDay = function () {
-        $scope.reset();
-        $scope.sevenDayClass = true;
-        $rootScope.start = -7;
-        $rootScope.end =-1;
-        $rootScope.interval = 7;
-        var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
-        $scope.charts[0].config.instance = chart;
-        requestService.refresh($scope.charts);
-        $rootScope.$broadcast("ssh_dateShow_options_change", "seven");
-    };
-    $scope.month = function () {
-        $scope.reset();
-        $scope.monthClass = true;
-        $rootScope.start =-30;
-        $rootScope.end = -1;
-        $rootScope.interval = 30;
-        var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
-        $scope.charts[0].config.instance = chart;
-        requestService.refresh($scope.charts);
-    };
-    $scope.open = function ($event) {
-        $scope.reset();
-        $scope.definClass = true;
-        $event.preventDefault();
-        $event.stopPropagation();
-        $scope.opened = true;
-    };
-    $scope.checkopen = function ($event) {
-        $scope.reset();
-        $scope.definClass = true;
-        $event.preventDefault();
-        $event.stopPropagation();
-        $scope.opens = true;
-    };
 
+    $scope.$on("ssh_refresh_charts", function(e, msg) {
+        var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
+        $scope.charts[0].config.instance = chart;
+        requestService.refresh($scope.charts);
+    });
 
     // initialize
     /*    $scope.today();*/

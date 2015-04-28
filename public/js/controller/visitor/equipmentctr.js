@@ -9,13 +9,6 @@ app.controller('equipmentctr', function ($scope, $rootScope, $http, requestServi
     $rootScope.tableTimeEnd = 0;
     $rootScope.tableFilter = undefined;
 
-    $scope.reset = function () {
-        $scope.todayClass = false;
-        $scope.yesterdayClass = false;
-        $scope.sevenDayClass = false;
-        $scope.monthClass = false;
-        $scope.definClass = false;
-    };
     $scope.onLegendClick = function (radio, chartInstance, config, checkedVal) {
         clear.lineChart($scope.charts[0].config, checkedVal);
         $scope.charts[0].types = checkedVal;
@@ -63,59 +56,9 @@ app.controller('equipmentctr', function ($scope, $rootScope, $http, requestServi
         requestService.refresh($scope.charts);
     }
     $scope.init();
-
-    $scope.today = function () {
-        $scope.reset();
-        $scope.todayClass = true;
-        //table配置
-        $rootScope.tableTimeStart = 0;
-        $rootScope.tableTimeEnd = 0;
-
-        $rootScope.start = 0;
-        $rootScope.end = 0;
-        $rootScope.interval = 24;
+    $scope.$on("ssh_refresh_charts", function(e, msg) {
         var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
         $scope.charts[0].config.instance = chart;
         requestService.refresh($scope.charts);
-    };
-    $scope.yesterday = function () {
-        $scope.reset();
-        $scope.yesterdayClass = true;
-
-        //table配置
-        $rootScope.tableTimeStart = 0;
-        $rootScope.tableTimeEnd = 0;
-
-        $rootScope.start = -1;
-        $rootScope.end = -1;
-        $rootScope.interval = 24;
-        var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
-        $scope.charts[0].config.instance = chart;
-        requestService.refresh($scope.charts);
-
-    };
-
-    $scope.sevenDay = function () {
-        $scope.reset();
-        $scope.sevenDayClass = true;
-        $rootScope.tableTimeStart = -7;
-        $rootScope.tableTimeEnd = -1;
-
-    };
-    $scope.month = function () {
-        $scope.reset();
-        $scope.monthClass = true;
-        $rootScope.tableTimeStart = -30;
-        $rootScope.tableTimeEnd = -1;
-
-    };
-
-    $scope.checkopen = function ($event) {
-        $scope.reset();
-        $scope.definClass = true;
-        $event.preventDefault();
-        $event.stopPropagation();
-        $scope.opens = true;
-    };
-
+    });
 });

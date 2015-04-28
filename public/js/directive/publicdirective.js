@@ -1,12 +1,78 @@
 /**
  * Created by john on 2015/4/1.
  */
-app.directive("calendar", function () {
+app.directive("calendar", function ($rootScope, requestService) {
     var option = {
         restrict: "EA",
         template: "<div  role=\"group\" class=\"btn-group fl\"><button class=\"btn btn-default\" type=\"button\" ng-click=\"today()\" ng-class=\"{'current':todayClass}\">今天</button><button class=\"btn btn-default\" type=\"button\" ng-click=\"yesterday()\" ng-class=\"{'current':yesterdayClass}\">昨天</button><button class=\"btn btn-default\" type=\"button\" ng-click=\"sevenDay()\" ng-class=\"{'current':sevenDayClass}\">最近7天</button><button class=\"btn btn-default\" type=\"button\" ng-click=\"month()\" ng-class=\"{'current':monthClass}\">最近30天</button><button type=\"button\" class=\"btn btn-default\" datepicker-popup=\"{{format}}\" ng-model=\"dt\" is-open=\"opened\" date-disabled=\"disabled(date, mode)\" current-text=\"今天\" clear-text=\"清空\" close-text=\"关闭\" ng-click=\"open($event)\" ng-class=\"{'current':definClass}\">{{dt | date: 'yyyy-MM-dd' }}<i class=\"glyphicon glyphicon-calendar\"></i></button><span class=\"dateshow fl\"></span></div>",
         replace: true,
-        transclude: true
+        transclude: true,
+        link : function(scope, element, attris, controller) {
+            scope.reset = function () {
+                scope.todayClass = false; scope.yesterdayClass = false; scope.sevenDayClass = false;
+                scope.monthClass = false; scope.definClass = false;scope.btnchecked = true;
+            };
+            scope.reloadByCalendar = function(type) {
+                console.info("info: now user click the " + type + " button");
+                $rootScope.$broadcast("ssh_refresh_charts");
+                $rootScope.$broadcast("ssh_dateShow_options_time_change", type);
+            };
+            scope.today = function() {
+                scope.reset();
+                scope.todayClass = true;
+                // table 参数配置
+                $rootScope.tableTimeStart = 0;
+                $rootScope.tableTimeEnd = 0;
+                $rootScope.start = 0;;
+                $rootScope.end = 0
+                $rootScope.interval = 24;
+                scope.reloadByCalendar("today");
+            };
+            scope.yesterday = function() {
+                scope.reset();
+                scope.yesterdayClass = true;
+                $rootScope.tableTimeStart = -1;
+                $rootScope.tableTimeEnd = -1;
+                $rootScope.start = -1;
+                $rootScope.end = -1;
+                $rootScope.interval = 24;
+                scope.reloadByCalendar("yesterday");
+            };
+            scope.sevenDay = function() {
+                scope.reset();
+                scope.sevenDayClass = true;
+                $rootScope.tableTimeStart = -7;
+                $rootScope.tableTimeEnd = -1;
+                $rootScope.start = -7;
+                $rootScope.end = -1;
+                $rootScope.interval = 7;
+                scope.reloadByCalendar("seven");
+            };
+            scope.month = function() {
+                scope.reset();
+                scope.monthClass = true;
+                $rootScope.tableTimeStart = -30;
+                $rootScope.tableTimeEnd = -1;
+                $rootScope.start = -30;
+                $rootScope.end = -1;
+                $rootScope.interval = 30;
+                scope.reloadByCalendar("month");
+            };
+            scope.open = function($event) {
+                scope.reset();
+                scope.definClass = true;
+                $event.preventDefault();
+                $event.stopPropagation();
+                scope.opened = true;
+            };
+            scope.checkopen = function($event) {
+                scope.reset();
+                scope.definClass = true;
+                $event.preventDefault();
+                $event.stopPropagation();
+                scope.opens = true;
+            };
+        }
     };
     return option;
 });
@@ -136,34 +202,8 @@ app.directive("sshDateShow", function ($http, $rootScope) {
             };
             scope.setDateShowTimeOption(attris.type);
             // 第一种方式。通过用户点击时发出的事件进行监听，此方法需要在每个controller方法内部添加代码实现
-            scope.$on("ssh_dateShow_options_change", function(e, msg) {
+            scope.$on("ssh_dateShow_options_time_change", function(e, msg) {
                 scope.setDateShowTimeOption(msg, scope.loadSummary);
-            });
-            // 第二种方式。使用$watch函数监听样式的变化
-            scope.$watch("todayClass", function(newValue, oldValue) {
-                if (true === newValue) {
-                    scope.setDateShowTimeOption("today", scope.loadSummary);
-                }
-            });
-            scope.$watch("yesterdayClass", function(newValue, oldValue) {
-                if (true === newValue) {
-                    scope.setDateShowTimeOption("yesterday", scope.loadSummary);
-                }
-            });
-            scope.$watch("sevenDayClass", function(newValue, oldValue) {
-                if (true === newValue) {
-                    scope.setDateShowTimeOption("seven", scope.loadSummary);
-                }
-            });
-            scope.$watch("monthClass", function(newValue, oldValue) {
-                if (true === newValue) {
-                    scope.setDateShowTimeOption("month", scope.loadSummary);
-                }
-            });
-            scope.$watch("definClass", function(newValue, oldValue) {
-                if (true === newValue) {
-                    scope.setDateShowTimeOption(null, scope.loadSummary);
-                }
             });
             // 维度dimension
             scope.setDateShowDimensionOption = function(dimension) {
@@ -179,7 +219,7 @@ app.directive("sshDateShow", function ($http, $rootScope) {
                 scope.ds_dateShowQuotasOption = temp;
                 scope.loadSummary();
             });
-            //scope.loadSummary();
+            scope.loadSummary();
         }
     };
 });
