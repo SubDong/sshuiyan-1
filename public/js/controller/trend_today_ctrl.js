@@ -30,6 +30,7 @@ app.controller('trend_today_ctrl', function ($scope, $rootScope, $http, requestS
                 bGap: false,//首行缩进
                 chartType: "line",//图表类型
                 dataKey: "key",//传入数据的key值
+                keyFormat:'hour',
                 dataValue: "quota"//传入数据的value值
 
             },

@@ -548,18 +548,18 @@ var util = {
             if (chartConfig.keyFormat == "day") {
                 var _time = [];
                 key.forEach(function (time) {
-                    _time.push(time.substr(0, 10));
+                    _time.push(time.toString().substr(0, 10));
                 });
             } else {
                 var _time = [];
                 key.forEach(function (time) {
-                    _time.push(Number(time.substring(10, 13)));
+                    _time.push(Number(time.toString().substring(10, 13)));
                 });
             }
         } else {
             var _time = [];
             key.forEach(function (time) {
-                _time.push(Number(time.substring(10, 13)));
+                _time.push(Number(time.toString().substring(10, 13)));
             });
             return _time;
         }
