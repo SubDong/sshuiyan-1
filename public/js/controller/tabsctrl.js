@@ -123,6 +123,8 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
         $rootScope.checkedArray = new Array();
         $scope.appHtml = '<div ui-grid="row.entity.subGridOptions" ui-grid-auto-resize style="height: {{gridHeight}}"></div>'
     }
+    //table_nextbtn
+    $scope.tableButtonHtml="<button ng-click='test()' class='table_btn'></button>"
 
     $rootScope.indicators = function (item, entities, number) {
         /*$rootScope.gridArray == undefined?$rootScope.gridArray = new Array():"";
@@ -146,7 +148,7 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
                 $scope.gridArray.shift();
 
                 $scope.gridObjButton["name"] = " ";
-                $scope.gridObjButton["cellTemplate"] = "<div><button ng-click='test()'>clickTest</button></div>";
+                $scope.gridObjButton["cellTemplate"] = $scope.tableButtonHtml;
 
                 $scope.gridObj["name"] = item.consumption_name;
                 $scope.gridObj["field"] = item.name;
@@ -158,7 +160,7 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
                 $rootScope.checkedArray.push(item.name);
 
                 $scope.gridObjButton["name"] = " ";
-                $scope.gridObjButton["cellTemplate"] = "<div><button ng-click='test()'>clickTest</button></div>";
+                $scope.gridObjButton["cellTemplate"] = $scope.tableButtonHtml;
 
                 $scope.gridObj["name"] = item.consumption_name;
                 $scope.gridObj["field"] = item.name;
@@ -178,7 +180,11 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
         $compile( element.contents() )( $scope);
     };
 /*$scope.test = function(){
-    alert(1);
+ <div class="table_win">
+ <ul>
+ <li></li>
+ </ul>
+ </div>
 }*/
 
     /*function initTable(entities,item){

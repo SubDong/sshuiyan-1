@@ -8,6 +8,7 @@ app.directive("calendar", function ($rootScope, requestService) {
         replace: true,
         transclude: true,
         link : function(scope, element, attris, controller) {
+            Custom.initCheckInfo();
             scope.reset = function () {
                 scope.todayClass = false; scope.yesterdayClass = false; scope.sevenDayClass = false;
                 scope.monthClass = false; scope.definClass = false;scope.btnchecked = true;
@@ -16,6 +17,7 @@ app.directive("calendar", function ($rootScope, requestService) {
                 console.info("info: now user click the " + type + " button");
                 $rootScope.$broadcast("ssh_refresh_charts");
                 $rootScope.$broadcast("ssh_dateShow_options_time_change", type);
+
             };
             scope.today = function() {
                 scope.reset();
