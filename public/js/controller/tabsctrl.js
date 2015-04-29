@@ -218,8 +218,10 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
      * @param lati   查询纬度
      * @param type
      */
-    $rootScope.targetSearch = function () {
-        $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
+    $rootScope.targetSearch = function (isClicked) {
+        if(isClicked) {
+            $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
+        }
         if ($rootScope.latitude == undefined) {
             console.error("error: latitude is not defined,Please check whether the parameter the configuration.");
             return;

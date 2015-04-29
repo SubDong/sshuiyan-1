@@ -227,7 +227,9 @@ app.directive("sshDateShow", function ($http, $rootScope) {
             // 指标
             scope.$on("ssh_dateShow_options_quotas_change", function(e, msg) {
                 var temp = angular.copy(msg);
-                scope.ds_dateShowQuotasOption = temp;
+                if(temp.length > 0) {
+                    scope.ds_dateShowQuotasOption = temp;
+                }
                 scope.loadSummary();
             });
             scope.loadSummary();
