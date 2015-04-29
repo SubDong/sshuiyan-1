@@ -23,9 +23,9 @@ app.controller('analysistransformationctr', function ($scope, $rootScope, $http,
         var json = JSON.parse(eval("(" + data + ")").toString());
         cf.renderChart(json, config);
     }
-    $scope.analysisFormat = function (data, config, types) {
+    $scope.analysisFormat = function (data, config, e) {
         var json = JSON.parse(eval("(" + data + ")").toString());
-        var result = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", types);
+        var result = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", e.types);
         var final_result = chartUtils.getExternalinkPie(result);//获取barchart的数据
         config['noFormat'] = true;
         cf.renderChart(result, config);
@@ -58,6 +58,7 @@ app.controller('analysistransformationctr', function ($scope, $rootScope, $http,
                 id: "indicators_charts",
                 min_max: false,
                 bGap: true,
+                keyFormat:'none',
                 chartType: "bar",
                 dataKey: "key",
                 dataValue: "quota"

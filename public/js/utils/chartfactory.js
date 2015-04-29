@@ -542,19 +542,26 @@ var util = {
         var _time = [];
         var key = item[chartConfig.dataKey];
         if (chartConfig.keyFormat) {
-            if (chartConfig.keyFormat == "hour") {
-                var _time = [];
-                key.forEach(function (time) {
-                    _time.push(Number(time.substring(10, 13)));
-                });
-            } else {
+            if (chartConfig.keyFormat == "none") {
+                return key;
+            }
+            if (chartConfig.keyFormat == "day") {
                 var _time = [];
                 key.forEach(function (time) {
                     _time.push(time.substr(0, 10));
                 });
+            } else {
+                var _time = [];
+                key.forEach(function (time) {
+                    _time.push(Number(time.substring(10, 13)));
+                });
             }
         } else {
-            return key;
+            var _time = [];
+            key.forEach(function (time) {
+                _time.push(Number(time.substring(10, 13)));
+            });
+            return _time;
         }
         return _time;
     },
@@ -589,30 +596,17 @@ var util = {
             rad.setAttribute("asc", c.legendAllowCheckCount);
             rad.setAttribute("index", i + "");
             rad.setAttribute("chart", c.id);
+            rad.setAttribute("class", "styled");
             if (window.addEventListener) {
                 rad.addEventListener("click", function () {
-                    util.allowItem(this);
+                    if (renderType == "checkBox") {
+                        util.allowItem(this);
+                    }
                     var checkVal = util.legStr(this);
                     if (c.legendClickListener) {
                         c.legendClickListener(this, chartObj, c, checkVal);
                     }
                 }, false);
-            } else if (window.attachEvent) {
-                rad.attachEvent("onclick", function () {
-                    util.allowItem(this);
-                    var checkVal = util.legStr(this);
-                    if (c.legendClickListener) {
-                        c.legendClickListener(this, chartObj, c, checkVal);
-                    }
-                });
-            } else {
-                rad.onclick = function () {
-                    util.allowItem(this);
-                    var checkVal = util.legStr(this);
-                    if (c.legendClickListener) {
-                        c.legendClickListener(this, chartObj, c, checkVal);
-                    }
-                };
             }
             lab.appendChild(rad);
             spn.innerHTML = "&nbsp;" + c.legendData[i] + "&nbsp;&nbsp;";
@@ -657,9 +651,10 @@ var util = {
             rad.setAttribute("asc", c.legendAllowCheckCount);
             rad.setAttribute("index", i + "");
             rad.setAttribute("chart", c.id);
+            rad.setAttribute("class", "styled");
             rad.addEventListener("click", function () {
                 util.allowItem(this);
-            }, false);
+            });
             lab.appendChild(rad);
             spn.innerHTML = "&nbsp;" + c.legendMultiData[i].name + "&nbsp;&nbsp;";
             lab.appendChild(spn);

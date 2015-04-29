@@ -30,20 +30,19 @@ app.controller('searchctr', function ($scope, $rootScope, requestService, areaSe
                     bGap: false,//首行缩进
                     chartType: "line",//图表类型
                     dataKey: "key",//传入数据的key值
-                    keyFormat: "hour",//x轴根据传入值生成
                     dataValue: "quota"//传入数据的value值
                 },
                 types: ["pv", "uv"],
                 dimension: ["period"],
                 interval: $rootScope.interval,
                 url: "/api/charts"
-            },
+            }
         ];
         $scope.init = function () {
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
-                util.renderLegend(chart, e.config);
+                //util.renderLegend(chart, e.config);
             })
             requestService.refresh($scope.charts);
         }

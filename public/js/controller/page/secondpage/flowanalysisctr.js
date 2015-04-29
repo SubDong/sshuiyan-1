@@ -23,9 +23,9 @@ app.controller('flowanalysisctr', function ($scope, $rootScope, $http, requestSe
         var json = JSON.parse(eval("(" + data + ")").toString());
         cf.renderChart(json, config);
     }
-    $scope.flowanalyFomrmat = function (data, config, types) {
+    $scope.flowanalyFomrmat = function (data, config, e) {
         var json = JSON.parse(eval("(" + data + ")").toString());
-        var result = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", types);
+        var result = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", e.types);
         var final_result = chartUtils.getExternalinkPie(result);//获取barchart的数据
         config['noFormat'] = true;
         cf.renderChart(result, config);
@@ -59,6 +59,7 @@ app.controller('flowanalysisctr', function ($scope, $rootScope, $http, requestSe
                 min_max: false,
                 bGap: true,
                 chartType: "bar",
+                keyFormat:'none',
                 dataKey: "key",
                 dataValue: "quota"
             },

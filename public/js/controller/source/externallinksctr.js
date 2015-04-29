@@ -8,7 +8,7 @@ app.controller("externallinksctr", function ($scope, $rootScope, $http, requestS
     $rootScope.tableTimeStart = 0;
     $rootScope.tableTimeEnd = 0;
     $rootScope.latitude = {name: "搜索引擎", field: "rf"}
-    $rootScope.tableFilter = [{"rf_type":["3"]}];
+    $rootScope.tableFilter = [{"rf_type": ["3"]}];
     $rootScope.dimen = false;
     //
 
@@ -35,9 +35,10 @@ app.controller("externallinksctr", function ($scope, $rootScope, $http, requestS
         var json = JSON.parse(eval("(" + data + ")").toString());
         var result = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", e.types);
         config['noFormat'] = true;//告知chart工厂无须格式化json，可以直接使用data对象
-        var final_result = chartUtils.getExternalinkPie(result);
-        cf.renderChart(final_result, config);
-        var pieData = chartUtils.getEnginePie(final_result);
+        //var final_result = chartUtils.getExternalinkPie(result);
+        cf.renderChart(result, config);
+        //渲染pie图
+        var pieData = chartUtils.getEnginePie(result);
         $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
         cf.renderChart(pieData, $scope.charts[0].config);
     }
@@ -69,6 +70,7 @@ app.controller("externallinksctr", function ($scope, $rootScope, $http, requestS
                 id: "indicators_charts",
                 chartType: "bar",
                 dataKey: "key",
+                keyFormat: "none",
                 dataValue: "quota"
             },
             types: ["pv"],
@@ -82,15 +84,16 @@ app.controller("externallinksctr", function ($scope, $rootScope, $http, requestS
         var chart = echarts.init(document.getElementById($scope.charts[1].config.id));
         $scope.charts[1].config.instance = chart;
         util.renderLegend(chart, $scope.charts[1].config);
-        requestService.refresh(chartArray);
+        var arrayChart = [$scope.charts[1]];
+        requestService.refresh(arrayChart);
     }
     $scope.init();
 
-    $scope.$on("ssh_refresh_charts", function(e, msg) {
+    $scope.$on("ssh_refresh_charts", function (e, msg) {
         $rootScope.targetSearch();
         var chart = echarts.init(document.getElementById($scope.charts[1].config.id));
         $scope.charts[1].config.instance = chart;
-        var arrayChart = [$scope.charts[1]]
+        var arrayChart = [$scope.charts[1]];
         requestService.refresh(arrayChart);
     });
 });

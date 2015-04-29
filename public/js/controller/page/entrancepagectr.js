@@ -24,9 +24,9 @@ app.controller('entrancepagectr', function ($scope, $rootScope, $http, requestSe
         var json = JSON.parse(eval("(" + data + ")").toString());
         cf.renderChart(json, config);
     }
-    $scope.mainFormat = function (data, config, types) {
+    $scope.mainFormat = function (data, config, e) {
         var json = JSON.parse(eval("(" + data + ")").toString());
-        var result = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", types);
+        var result = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", e.types);
         var final_result = chartUtils.getExternalinkPie(result);//获取barchart的数据
         config['noFormat'] = true;
         cf.renderChart(result, config);
@@ -61,6 +61,7 @@ app.controller('entrancepagectr', function ($scope, $rootScope, $http, requestSe
                 bGap: true,
                 min_max: false,
                 chartType: "bar",
+                keyFormat:'none',
                 dataKey: "key",
                 dataValue: "quota"
             },
@@ -80,7 +81,7 @@ app.controller('entrancepagectr', function ($scope, $rootScope, $http, requestSe
         requestService.refresh(chartArray);
     }
     $scope.init();
-    $scope.$on("ssh_refresh_charts", function(e, msg) {
+    $scope.$on("ssh_refresh_charts", function (e, msg) {
         $rootScope.targetSearch();
         var chart = echarts.init(document.getElementById($scope.charts[1].config.id));
         $scope.charts[1].config.instance = chart;

@@ -1,7 +1,7 @@
 /**
  * Created by XiaoWei on 2015/4/22.
  */
-app.controller("searchenginectr", function ($scope, $rootScope, $http, requestService,areaService) {
+app.controller("searchenginectr", function ($scope, $rootScope, $http, requestService, areaService) {
     $scope.todayClass = true;
     //table配置
     $rootScope.tableTimeStart = 0;
@@ -11,31 +11,24 @@ app.controller("searchenginectr", function ($scope, $rootScope, $http, requestSe
 
     $scope.pieFormat = function (data, config) {
         var json = JSON.parse(eval("(" + data + ")").toString());
-        var tmpData = [];
-        json.forEach(function (e) {
-            e.key.forEach(function (item) {
-                tmpData.push(chartUtils.getLinked(item));
-            });
-            e.key = tmpData;
-        });
         cf.renderChart(json, config);
     }
     $scope.onLegendClick = function (radio, chartInstance, config, checkedVal) {
         clear.lineChart(config, checkedVal);
-        $scope.charts[1].config.instance = echarts.init(document.getElementById($scope.charts[1].config.id));
-        $scope.charts[1].types = checkedVal;
-        var chartArray = [$scope.charts[1]]
-        requestService.refresh(chartArray);
+        $scope.charts.forEach(function (chart) {
+            chart.config.instance = echarts.init(document.getElementById(chart.config.id));
+            chart.types = checkedVal;
+        });
+        requestService.refresh($scope.charts);
     }
     $scope.searchengineFormat = function (data, config, e) {
         var json = JSON.parse(eval("(" + data + ")").toString());
-        var result = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", e.types);
+        var result_json = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", e.types);
         config['noFormat'] = true;
-        var final_result = chartUtils.getEngine(result);
-        cf.renderChart(final_result, config);
-        var pieData = chartUtils.getEnginePie(final_result);
-        $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
-        cf.renderChart(pieData, $scope.charts[0].config);
+        cf.renderChart(result_json, config);
+        //var pieData = chartUtils.getEnginePie(final_result);
+        //$scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
+        //cf.renderChart(pieData, $scope.charts[0].config);
 
     }
     $scope.charts = [{
@@ -49,41 +42,45 @@ app.controller("searchenginectr", function ($scope, $rootScope, $http, requestSe
             dataValue: "quota"
         },
         types: ["pv"],
-        dimension: ["rf_type"],
+        dimension: ["se"],
+        filter: "[{\"rf_type\":[\"2\"]}]",
         url: "/api/map",
         cb: $scope.pieFormat
-    }, {
-        config: {
-            legendId: "indicators_charts_legend",
-            legendData: ["浏览量(PV)", "访客数(UV)", "访问次数", "新访客数", "IP数", "页面转化", "订单数", "订单金额", "订单转化率"],
-            legendClickListener: $scope.onLegendClick,
-            legendAllowCheckCount: 1,
-            min_max: false,
-            bGap: false,
-            id: "indicators_charts",
-            chartType: "bar",
-            dataKey: "key",
-            dataValue: "quota"
-        },
-        types: ["pv"],
-        dimension: ["period,rf"],
-        interval: $rootScope.interval,
-        url: "/api/charts",
-        cb: $scope.searchengineFormat
-    }]
+    },
+        {
+            config: {
+                legendId: "indicators_charts_legend",
+                legendData: ["浏览量(PV)", "访客数(UV)", "访问次数", "新访客数", "IP数", "页面转化", "订单数", "订单金额", "订单转化率"],
+                legendClickListener: $scope.onLegendClick,
+                legendAllowCheckCount: 1,
+                min_max: false,
+                bGap: false,
+                id: "indicators_charts",
+                chartType: "bar",
+                keyFormat: "none",//设置不需要chart工厂处理x轴数据
+                dataKey: "key",
+                dataValue: "quota"
+            },
+            types: ["pv"],
+            dimension: ["period,se"],
+            filter: "[{\"rf_type\":[\"2\"]}]",
+            interval: $rootScope.interval,
+            url: "/api/charts",
+            cb: $scope.searchengineFormat
+        }]
     $scope.init = function () {
-        var chart = echarts.init(document.getElementById($scope.charts[1].config.id));
-        $scope.charts[1].config.instance = chart;
-        util.renderLegend(chart, $scope.charts[1].config);
-        var chartArray = [$scope.charts[1]];
-        requestService.refresh(chartArray);
+        $scope.charts.forEach(function (chart) {
+            chart.config.instance = echarts.init(document.getElementById(chart.config.id));
+            util.renderLegend(chart, chart.config);
+        });
+        requestService.refresh($scope.charts);
     }
     $scope.init();
-    $scope.$on("ssh_refresh_charts", function(e, msg) {
+    $scope.$on("ssh_refresh_charts", function (e, msg) {
         $rootScope.targetSearch();
-        var chart = echarts.init(document.getElementById($scope.charts[1].config.id));
-        $scope.charts[1].config.instance = chart;
-        var chartArray = [$scope.charts[1]];
-        requestService.refresh(chartArray);
+        $scope.charts.forEach(function (chart) {
+            chart.config.instance = echarts.init(document.getElementById(chart.config.id));
+        });
+        requestService.refresh($scope.charts);
     });
 });

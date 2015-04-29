@@ -7,30 +7,35 @@ app.directive("calendar", function ($rootScope, requestService) {
         template: "<div  role=\"group\" class=\"btn-group fl\"><button class=\"btn btn-default\" type=\"button\" ng-click=\"today()\" ng-class=\"{'current':todayClass}\">今天</button><button class=\"btn btn-default\" type=\"button\" ng-click=\"yesterday()\" ng-class=\"{'current':yesterdayClass}\">昨天</button><button class=\"btn btn-default\" type=\"button\" ng-click=\"sevenDay()\" ng-class=\"{'current':sevenDayClass}\">最近7天</button><button class=\"btn btn-default\" type=\"button\" ng-click=\"month()\" ng-class=\"{'current':monthClass}\">最近30天</button><button type=\"button\" class=\"btn btn-default\" datepicker-popup=\"{{format}}\" ng-model=\"dt\" is-open=\"opened\" date-disabled=\"disabled(date, mode)\" current-text=\"今天\" clear-text=\"清空\" close-text=\"关闭\" ng-click=\"open($event)\" ng-class=\"{'current':definClass}\">{{dt | date: 'yyyy-MM-dd' }}<i class=\"glyphicon glyphicon-calendar\"></i></button><span class=\"dateshow fl\"></span></div>",
         replace: true,
         transclude: true,
-        link : function(scope, element, attris, controller) {
+        link: function (scope, element, attris, controller) {
             Custom.initCheckInfo();
             scope.reset = function () {
-                scope.todayClass = false; scope.yesterdayClass = false; scope.sevenDayClass = false;
-                scope.monthClass = false; scope.definClass = false;scope.btnchecked = true;
+                scope.todayClass = false;
+                scope.yesterdayClass = false;
+                scope.sevenDayClass = false;
+                scope.monthClass = false;
+                scope.definClass = false;
+                scope.btnchecked = true;
             };
-            scope.reloadByCalendar = function(type) {
+            scope.reloadByCalendar = function (type) {
                 console.info("info: now user click the " + type + " button");
                 $rootScope.$broadcast("ssh_refresh_charts");
                 $rootScope.$broadcast("ssh_dateShow_options_time_change", type);
 
             };
-            scope.today = function() {
+            scope.today = function () {
                 scope.reset();
                 scope.todayClass = true;
                 // table 参数配置
                 $rootScope.tableTimeStart = 0;
                 $rootScope.tableTimeEnd = 0;
-                $rootScope.start = 0;;
+                $rootScope.keyFormat = "hour";
+                $rootScope.start = 0;
                 $rootScope.end = 0
                 $rootScope.interval = 24;
                 scope.reloadByCalendar("today");
             };
-            scope.yesterday = function() {
+            scope.yesterday = function () {
                 scope.reset();
                 scope.yesterdayClass = true;
                 $rootScope.tableTimeStart = -1;
@@ -40,7 +45,7 @@ app.directive("calendar", function ($rootScope, requestService) {
                 $rootScope.interval = 24;
                 scope.reloadByCalendar("yesterday");
             };
-            scope.sevenDay = function() {
+            scope.sevenDay = function () {
                 scope.reset();
                 scope.sevenDayClass = true;
                 $rootScope.tableTimeStart = -7;
@@ -50,7 +55,7 @@ app.directive("calendar", function ($rootScope, requestService) {
                 $rootScope.interval = 7;
                 scope.reloadByCalendar("seven");
             };
-            scope.month = function() {
+            scope.month = function () {
                 scope.reset();
                 scope.monthClass = true;
                 $rootScope.tableTimeStart = -30;
@@ -60,14 +65,14 @@ app.directive("calendar", function ($rootScope, requestService) {
                 $rootScope.interval = 30;
                 scope.reloadByCalendar("month");
             };
-            scope.open = function($event) {
+            scope.open = function ($event) {
                 scope.reset();
                 scope.definClass = true;
                 $event.preventDefault();
                 $event.stopPropagation();
                 scope.opened = true;
             };
-            scope.checkopen = function($event) {
+            scope.checkopen = function ($event) {
                 scope.reset();
                 scope.definClass = true;
                 $event.preventDefault();
@@ -111,15 +116,15 @@ app.directive("refresh", function () {
     return option;
 });
 /*
-app.directive("views", function () {
-    var option = {
-        restrict: "EA",
-        template: "<select ng-model=\"selected\" ng-options=\"m.id as m.when for m in view\" > <option value=\"\">浏览量</option></select>",
-        transclude: true
-    };
-    return option;
-});
-*/
+ app.directive("views", function () {
+ var option = {
+ restrict: "EA",
+ template: "<select ng-model=\"selected\" ng-options=\"m.id as m.when for m in view\" > <option value=\"\">浏览量</option></select>",
+ transclude: true
+ };
+ return option;
+ });
+ */
 app.directive("page", function () {
     var option = {
         restrict: "EA",
@@ -152,36 +157,36 @@ app.directive("gridpage", function () {
  */
 app.directive("sshDateShow", function ($http, $rootScope) {
     return {
-        restrict : 'E',
-        templateUrl : '../commons/date_show.html',
-        link : function(scope, element, attris, controller) {
+        restrict: 'E',
+        templateUrl: '../commons/date_show.html',
+        link: function (scope, element, attris, controller) {
             // 初始化参数
             scope.isCompared = true;
             scope.ds_start = scope.ds_end = 0;
             scope.ds_defaultQuotasOption = ["pv", "uv", "ip", "nuv", "outRate", "avgTime"];
             scope.ds_dateShowQuotasOption = scope.defectOptions ? (scope.defectOptions.types || scope.ds_defaultQuotasOption) : scope.ds_defaultQuotasOption;
             // 读取数据
-            scope.loadSummary = function() {
+            scope.loadSummary = function () {
                 $http.get("/api/summary?type=1&dimension=" + scope.ds_dimension + "&quotas=" + scope.ds_dateShowQuotasOption + "&start=" + scope.ds_start + "&end=" + scope.ds_end).success(function (result) {
                     scope.dateShowArray = [];
                     var obj = JSON.parse(eval('(' + result + ')').toString()); //由JSON字符串转换为JSON对象
-                    angular.forEach(obj, function(r) {
+                    angular.forEach(obj, function (r) {
                         var dateShowObject = {};
                         dateShowObject.label = r.label;
                         var temp = 0;
                         var count = 0;
-                        angular.forEach(r.quota,function(qo) {
+                        angular.forEach(r.quota, function (qo) {
                             temp += Number(qo);
                             count++;
                         });
-                        if(r.label === "outRate" || r.label === "nuvRate") {
-                            if(count === 0) {
+                        if (r.label === "outRate" || r.label === "nuvRate") {
+                            if (count === 0) {
                                 dateShowObject.value = "--";
                             } else {
                                 dateShowObject.value = (temp / count).toFixed(2) + "%";
                             }
                         } else if (r.label === "avgPage") {
-                            if(count === 0) {
+                            if (count === 0) {
                                 dateShowObject.value = "--";
                             } else {
                                 dateShowObject.value = (temp / count).toFixed(2);
@@ -197,7 +202,7 @@ app.directive("sshDateShow", function ($http, $rootScope) {
                 });
             };
             // 改变时间参数
-            scope.setDateShowTimeOption = function(type, cb) {
+            scope.setDateShowTimeOption = function (type, cb) {
                 if (type === "today") {
                     scope.ds_start = scope.ds_end = 0;
                 } else if (type === "yesterday") {
@@ -209,27 +214,27 @@ app.directive("sshDateShow", function ($http, $rootScope) {
                     scope.ds_start = -30;
                     scope.ds_end = -1;
                 }
-                if(cb) {
+                if (cb) {
                     cb();
                 }
             };
             scope.setDateShowTimeOption(attris.type);
             // 第一种方式。通过用户点击时发出的事件进行监听，此方法需要在每个controller方法内部添加代码实现
-            scope.$on("ssh_dateShow_options_time_change", function(e, msg) {
+            scope.$on("ssh_dateShow_options_time_change", function (e, msg) {
                 scope.setDateShowTimeOption(msg, scope.loadSummary);
             });
             // 维度dimension
-            scope.setDateShowDimensionOption = function(dimension) {
+            scope.setDateShowDimensionOption = function (dimension) {
                 scope.ds_dimension = "period";
-                if(undefined != dimension) {
+                if (undefined != dimension) {
                     scope.ds_dimension = dimension;
                 }
             };
             scope.setDateShowDimensionOption(attris.dimension);
             // 指标
-            scope.$on("ssh_dateShow_options_quotas_change", function(e, msg) {
+            scope.$on("ssh_dateShow_options_quotas_change", function (e, msg) {
                 var temp = angular.copy(msg);
-                if(temp.length > 0) {
+                if (temp.length > 0) {
                     scope.ds_dateShowQuotasOption = temp;
                 }
                 scope.loadSummary();
@@ -241,7 +246,7 @@ app.directive("sshDateShow", function ($http, $rootScope) {
 /**
  * 指标过滤器
  */
-app.filter("quotaFormat", function() {
+app.filter("quotaFormat", function () {
     var quotaObject = {};
     quotaObject.pv = "浏览量(PV)";
     quotaObject.uv = "访客数(UV)";
@@ -255,7 +260,7 @@ app.filter("quotaFormat", function() {
     quotaObject.eventConversion = "事件转化";
     quotaObject.avgTime = "平均访问时长";
     quotaObject.avgPage = "平均访问页数";
-    return function(key) {
+    return function (key) {
         if (quotaObject[key]) {
             return quotaObject[key];
         }
@@ -265,7 +270,7 @@ app.filter("quotaFormat", function() {
 /**
  * 指标帮助字符过滤器
  */
-app.filter("quotaHelpFormat", function() {
+app.filter("quotaHelpFormat", function () {
     var quotaObject = {};
     quotaObject.pv = "即通常说的Page View(PV)，用户每打开一个网站页面就被记录1次。用户多次打开同一页面，浏览量值累计。";
     quotaObject.uv = "一天之内您网站的独立访客数(以Cookie为依据)，一天内同一访客多次访问您网站只计算1个访客。";
@@ -279,7 +284,7 @@ app.filter("quotaHelpFormat", function() {
     quotaObject.eventConversion = "事件转化";
     quotaObject.avgTime = "访客在一次访问中，平均打开网站的时长。即每次访问中，打开第一个页面到关闭最后一个页面的平均值，打开一个页面时计算打开关闭的时间差。";
     quotaObject.avgPage = "平均每次访问浏览的页面数量，平均访问页数=浏览量/访问次数。";
-    return function(key) {
+    return function (key) {
         if (quotaObject[key]) {
             return quotaObject[key];
         }

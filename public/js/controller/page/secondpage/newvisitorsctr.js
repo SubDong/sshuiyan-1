@@ -23,9 +23,9 @@ app.controller("newvisitorsctr", function ($scope, $rootScope, $http, requestSer
         var json = JSON.parse(eval("(" + data + ")").toString());
         cf.renderChart(json, config);
     }
-    $scope.newVisitorFormat = function (data, config, types) {
+    $scope.newVisitorFormat = function (data, config, e) {
         var json = JSON.parse(eval("(" + data + ")").toString());
-        var result = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", types);
+        var result = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", e.types);
         var final_result = chartUtils.getExternalinkPie(result);//获取barchart的数据
         config['noFormat'] = true;
         cf.renderChart(result, config);
@@ -59,6 +59,7 @@ app.controller("newvisitorsctr", function ($scope, $rootScope, $http, requestSer
                 chartType: "bar",
                 min_max:false,
                 bGarp:true,
+                keyFormat:'none',
                 dataKey: "key",
                 dataValue: "quota"
             },

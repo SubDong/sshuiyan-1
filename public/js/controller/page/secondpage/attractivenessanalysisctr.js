@@ -23,9 +23,9 @@ app.controller('attractivenessanalysisctr', function ($scope, $rootScope, reques
         var json = JSON.parse(eval("(" + data + ")").toString());
         cf.renderChart(json, config);
     }
-    $scope.attractiveFormat = function (data, config, types) {
+    $scope.attractiveFormat = function (data, config, e) {
         var json = JSON.parse(eval("(" + data + ")").toString());
-        var result = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", types);
+        var result = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", e.types);
         var final_result = chartUtils.getExternalinkPie(result);//获取barchart的数据
         config['noFormat'] = true;
         cf.renderChart(result, config);
@@ -59,6 +59,7 @@ app.controller('attractivenessanalysisctr', function ($scope, $rootScope, reques
                 min_max: false,
                 bGap: true,
                 chartType: "bar",
+                keyFormat:'none',
                 dataKey: "key",
                 dataValue: "quota"
             },

@@ -61,6 +61,7 @@ app.controller("sourcectr", function ($scope, $rootScope, $http, requestService,
                 min_max: false,
                 bGap: true,
                 chartType: "bar",
+                keyFormat: "none",
                 dataKey: "key",
                 dataValue: "quota"
             },
@@ -81,7 +82,7 @@ app.controller("sourcectr", function ($scope, $rootScope, $http, requestService,
     }
     $scope.init();
 
-    $scope.$on("ssh_refresh_charts", function(e, msg) {
+    $scope.$on("ssh_refresh_charts", function (e, msg) {
         $rootScope.targetSearch();
         $scope.charts.forEach(function (e) {
             var chart = echarts.init(document.getElementById(e.config.id));

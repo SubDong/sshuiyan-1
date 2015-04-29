@@ -81,24 +81,32 @@ var chartUtils = {
                 return "外部链接";
         }
     },
-    getCustomDevice: function (number) {
-        //if (dimension.indexOf(",") == -1) {
-        //    switch (dimension.toString()) {
-        //        case "pm":
-        //            return this.getDevice(number);
-        //            break;
-        //        case "ja":
-        //            return this.getSupport(number);
-        //            break;
-        //        case "ck":
-        //            return this.getSupport(number);
-        //            break;
-        //        default :
-        //            return number;
-        //    }
-        //} else {
-        //    return number;
-        //}
+    getLanguage: function (str) {
+        switch (str) {
+            case "zh-CN":
+                return "简体中文";
+                break;
+            default :
+                return "其他";
+        }
+    },
+    getCustomDevice: function (val, dimension) {
+        switch (dimension.toString()) {
+            case "pm":
+                return this.getDevice(val);
+                break;
+            case "ja":
+                return this.getSupport(val);
+                break;
+            case "ck":
+                return this.getSupport(val);
+                break;
+            case "lg":
+                return this.getLanguage(val);
+                break;
+            default :
+                return val;
+        }
     },
     getSupport: function (number) {
         if (number == "1") {
@@ -165,6 +173,8 @@ var chartUtils = {
                 buckets.forEach(function (item) {
                     label.push(item.key);
                 });
+            } else {
+                label.push("暂无数据");
             }
         });
         return label.removal();
@@ -213,53 +223,41 @@ var chartUtils = {
         }
         return data;
     },
-    getEngine: function (data) {
-        if (data) {
-            var final_result = [];
-            var result_baidu = {};
-            var result_360 = {};
-            var result_sdog = {};
-            var s_baidu = [];
-            var s_360 = [];
-            var s_dog = [];
-            for (var i = 0; i < 24; i++) {
-                s_baidu.push(0);
-                s_360.push(0);
-                s_dog.push(0);
-            }
+    getByHourByDayData: function (data) {
+        var json = JSON.parse(eval("(" + data + ")").toString());
+        var final_result = [];
+        json.forEach(function (data) {
+            var tmp = {};
+            var label = [];
+            var key = [];
+            var quota = [];
+            label.push(data.label);
             var time = [];
-            data.forEach(function (item) {
-                if (item.label) {
-                    if (item.label.indexOf("baidu") > -1) {
-                        s_baidu = chartUtils.arrayMerge(s_baidu, item.quota);
-                    } else if (item.label.indexOf("haosou") > -1) {
-                        s_360 = chartUtils.arrayMerge(s_360, item.quota);
-                    } else if (item.label.indexOf("sogou") > -1) {
-                        s_dog = chartUtils.arrayMerge(s_dog, item.quota);
-                    }
-                    time = item.key;
-                } else {
-                    for (var i = 0; i < 24; i++) {
-                        time.push(i);
+            for (var i = 0; i < data.key.length; i++) {
+                for (var j = 0; j < 24; j++) {
+                    if (i == j) {
+                        time.push(j);
                     }
                 }
-            });
-            result_baidu["label"] = "百度";
-            result_baidu["key"] = time;
-            result_baidu["quota"] = s_baidu;
-            final_result.push(result_baidu);
-            result_360["label"] = "360";
-            result_360["key"] = time;
-            result_360["quota"] = s_360;
-            final_result.push(result_360);
-            result_sdog["label"] = "搜狗";
-            result_sdog["key"] = time;
-            result_sdog["quota"] = s_dog;
-            final_result.push(result_sdog);
-
-            return final_result;
-        }
-        return data;
+            }
+            var length = data.quota.length / 24;
+            var final_tmp = [];
+            for (var i = 0; i < 24; i++) {
+                final_tmp.push(0);
+            }
+            for (var i = 0; i < length; i++) {
+                var _tmp = [];
+                for (var j = i * 24; j < (i + 1) * 24; j++) {
+                    _tmp.push(data.quota[j]);
+                }
+                final_tmp = chartUtils.arrayMerge(final_tmp, _tmp);
+            }
+            tmp["label"] = chartUtils.convertChinese(data.label);
+            tmp["key"] = time;
+            tmp["quota"] = final_tmp;
+            final_result.push(tmp);
+        });
+        return final_result;
     },
     getExternalinkPie: function (result) {
         if (result) {

@@ -41,7 +41,11 @@ app.controller('equipmentctr', function ($scope, $rootScope, $http, requestServi
                 _value.push(0);
             }
             for (var i = 0; i < e.key.length; i++) {
-                tmpData.push(e.key[i]);
+                if ($scope.equipment.selected)
+                    tmpData.push(chartUtils.getCustomDevice(e.key[i], $scope.equipment.selected.value));
+                else
+                    tmpData.push(e.key[i]);
+
                 _value.push(e.quota[i]);
             }
             for (var i = 12; i < 24; i++) {
@@ -50,7 +54,7 @@ app.controller('equipmentctr', function ($scope, $rootScope, $http, requestServi
             }
             e.key = tmpData;
             e.quota = _value;
-            e.label = e.label;
+            e.label = chartUtils.convertChinese(e.label);
         });
         config["noFormat"] = "noFormat";
         cf.renderChart(json, config);
@@ -67,6 +71,7 @@ app.controller('equipmentctr', function ($scope, $rootScope, $http, requestServi
                 id: "equipment",
                 chartType: "bar",
                 dataKey: "key",
+                keyFormat:'none',
                 dataValue: "quota"
             },
             types: ["uv"],

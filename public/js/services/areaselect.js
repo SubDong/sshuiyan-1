@@ -62,14 +62,14 @@ app.service('areaService', ['$rootScope', '$http', function ($rootScope, $http) 
     ];
     $rootScope.equipment = {};
     $rootScope.equipments = [
+        {name: '网络供应商', value: 'isp'},
         {name: '设备环境', value: 'pm'},
         {name: '分辨率', value: 'sr'},
         {name: '屏幕颜色', value: 'sc'},
         {name: 'falsh版本', value: 'fl'},
         {name: '是否支持java', value: 'ja'},
         {name: '语言环境', value: 'lg'},
-        {name: '是否支持cookie', value: 'ck'},
-        {name: '网络供应商', value: 'isp'}
+        {name: '是否支持cookie', value: 'ck'}
     ];
     $rootScope.lagerMulti = [
         {name: '展现量', ename: 'pv'},

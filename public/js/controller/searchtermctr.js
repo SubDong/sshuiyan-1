@@ -17,36 +17,6 @@ app.controller('searchtermctr', function ($scope, $rootScope, requestService, ar
             $scope.monthClass = false;
             $scope.definClass = false;
         };
-        $scope.charts = [
-            {
-                config: {
-                    legendId: "indicators_charts_legend",
-                    legendData: ["浏览量(PV)", "访客数(UV)", "跳出率", "抵达率", "平均访问时长", "页面转化"],//显示几种数据
-                    legendMultiData: $rootScope.lagerMulti,
-                    legendAllowCheckCount: 2,
-                    legendClickListener: $scope.onLegendClickListener,
-                    id: "indicators_charts",
-                    bGap: false,//首行缩进
-                    chartType: "line",//图表类型
-                    dataKey: "key",//传入数据的key值
-                    keyFormat: "hour",//x轴根据传入值生成
-                    dataValue: "quota"//传入数据的value值
-                },
-                types: ["pv", "uv"],
-                dimension: ["period"],
-                interval: $rootScope.interval,
-                url: "/api/charts"
-            },
-        ];
-        $scope.init = function () {
-            $scope.charts.forEach(function (e) {
-                var chart = echarts.init(document.getElementById(e.config.id));
-                e.config.instance = chart;
-                util.renderLegend(chart, e.config);
-            })
-            requestService.refresh($scope.charts);
-        }
-        $scope.init();
 
         $scope.$on("ssh_refresh_charts", function (e, msg) {
             $rootScope.targetSearch();

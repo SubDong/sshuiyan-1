@@ -15,23 +15,25 @@ var map = require('../utils/map');
 var api = express.Router();
 
 api.get('/charts', function (req, res) {
-    var query = url.parse(req.url, true).query, quotas = [], type = query['type'], dimension = query.dimension, filter = query.filter, final_filter = null;
+    var query = url.parse(req.url, true).query, quotas = [], type = query['type'], dimension = query.dimension, filter = query.filter == undefined ? null : JSON.parse(query.filter);
     if (type.indexOf(",") > -1)for (var i = 0; i < type.split(",").length; i++) {
         quotas.push(type.split(",")[i]);
     }
     else
         quotas.push(type);
-    if (filter) {
-        final_filter = JSON.parse(filter);
-    }
-
     var start = Number(query['start']);//
     var end = Number(query['end']);//
     var indexes = date.createIndexes(start, end, "visitor-");
 
     var period = date.period(start, end);
-    var interval = date.interval(start, end, Number(query['int']));
-    es_request.search(req.es, indexes, 1, quotas, dimension, final_filter, period[0], period[1], interval, function (result) {
+    var interval = 1;
+    if (Number(query['int']) == 1) {
+        interval = 1;
+    } else {
+        interval = date.interval(start, end, Number(query['int']));
+    }
+
+    es_request.search(req.es, indexes, 1, quotas, dimension, filter, period[0], period[1], interval, function (result) {
         datautils.send(res, JSON.stringify(result));
     });
 
@@ -86,10 +88,8 @@ api.get('/charts', function (req, res) {
     //});
 });
 api.get('/map', function (req, res) {
-    var query = url.parse(req.url, true).query;
-    var quotas = [];
-    var type = query['type'];
-    var dimension = query.dimension;
+    var query = url.parse(req.url, true).query, quotas = [], type = query['type'], dimension = query.dimension;
+    var filter = query.filter == undefined ? null : JSON.parse(query.filter);
     if (type.indexOf(",") > -1)for (var i = 0; i < type.split(",").length; i++) {
         quotas.push(type.split(",")[i]);
     }
@@ -102,8 +102,7 @@ api.get('/map', function (req, res) {
 
     var period = date.period(start, end);
     var interval = date.interval(start, end, Number(query['int']));
-
-    es_request.search(req.es, indexes, 1, quotas, dimension, null, period[0], period[1], interval, function (result) {
+    es_request.search(req.es, indexes, 1, quotas, dimension, filter, period[0], period[1], interval, function (result) {
         datautils.send(res, JSON.stringify(result));
     });
 });
@@ -201,7 +200,7 @@ api.get('/indextable', function (req, res) {
     var _lati = query["dimension"];//统计纬度
     var _type = query["type"];
 
-    var _filter = query["filerInfo"] != undefined && query["filerInfo"] != 'undefined' ?JSON.parse(query["filerInfo"]):query["filerInfo"] == 'undefined'?undefined:query["filerInfo"];//过滤器
+    var _filter = query["filerInfo"] != undefined && query["filerInfo"] != 'undefined' ? JSON.parse(query["filerInfo"]) : query["filerInfo"] == 'undefined' ? undefined : query["filerInfo"];//过滤器
     var indexes = date.createIndexes(_startTime, _endTime, "visitor-");//indexs
 
     var period = date.period(_startTime, _endTime); //时间段

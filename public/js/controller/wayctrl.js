@@ -45,6 +45,7 @@ app.controller('wayctrl', function ($scope, $rootScope, $http, requestService, m
                 id: "indicators_charts",
                 chartType: "bar",
                 dataKey: "key",
+                keyFormat:'none',
                 dataValue: "quota"
             },
             types: ["pv", "outRate"],
