@@ -252,14 +252,14 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
         gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
             var dataNumber;
             if (row.isExpanded && $rootScope.dimen != false) {
-                if(row.entity[$rootScope.latitude.field] != "搜索引擎"){
-                    if(row.entity[$rootScope.latitude.field] == "外部链接"){
+                if (row.entity[$rootScope.latitude.field] != "搜索引擎") {
+                    if (row.entity[$rootScope.latitude.field] == "外部链接") {
                         $rootScope.dimen = "rf";
                         $rootScope.tableFilter = "[{\"rf_type\":[\"3\"]}]"
-                    }else{
+                    } else {
                         $rootScope.tableFilter = "[{\"" + $rootScope.latitude.field + "\":[\"" + getField(row.entity[$rootScope.latitude.field], $rootScope.latitude.field) + "\"]}]";
                     }
-                }else{
+                } else {
                     $rootScope.dimen = "se";
                     $rootScope.tableFilter = undefined;
                 }

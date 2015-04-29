@@ -1,7 +1,7 @@
 /**
  * Created by john on 2015/3/31.
  */
-app.controller("Vistiorctr", function ($scope, $rootScope, $http, requestService,areaService) {
+app.controller("provincemapctr", function ($scope, $rootScope, $http, requestService, areaService) {
     $scope.todayClass = true;
 
     $rootScope.tableTimeStart = 0;
@@ -13,7 +13,7 @@ app.controller("Vistiorctr", function ($scope, $rootScope, $http, requestService
     $scope.dateTimeStart = 0;
     $scope.dateTimeEnd = 0;
 
-    $scope.$on("ssh_refresh_charts", function(e, msg) {
+    $scope.$on("ssh_refresh_charts", function (e, msg) {
         $rootScope.targetSearch();
         $scope.doSearchAreas($scope.tableTimeStart, $scope.tableTimeEnd, "1", $scope.mapOrPieConfig);
     });
@@ -40,7 +40,7 @@ app.controller("Vistiorctr", function ($scope, $rootScope, $http, requestService
     $scope.areas = "region";
     $scope.property = "loc";
 
-    $scope.setProperty = function (property,position,entities) {
+    $scope.setProperty = function (property, position, entities) {
         $scope.property = property;
         $scope.doSearchAreas($scope.dateTimeStart, $scope.dateTimeEnd, "1", $scope.mapOrPieConfig);
     }
@@ -50,10 +50,10 @@ app.controller("Vistiorctr", function ($scope, $rootScope, $http, requestService
         $scope.doSearchAreas()
     };
     $scope.lat = "region";
-    $scope.setLat = function(lat){
-        if(lat == undefined){
+    $scope.setLat = function (lat) {
+        if (lat == undefined) {
             $scope.lat = "region";
-        }else{
+        } else {
             $scope.lat = lat;
         }
     }
@@ -74,7 +74,7 @@ app.controller("Vistiorctr", function ($scope, $rootScope, $http, requestService
         quotas.push("avgTime");
         $http({
             method: 'GET',
-            url: '/api/visitormap/?start=' + start + "&end=" + end + "&type=" + type + "&quotas="+ quotas
+            url: '/api/visitormap/?start=' + start + "&end=" + end + "&type=" + type + "&quotas=" + quotas
         }).success(function (data, status) {
             $scope.pv = data.pv;
             $scope.uv = data.uv;
@@ -141,7 +141,7 @@ app.controller("Vistiorctr", function ($scope, $rootScope, $http, requestService
                     title_name = "访客数(UV)";
                     break;
                 case "ct":
-                title_name = "新访客数";
+                    title_name = "新访客数";
                     break;
                 case "remote":
                     title_name = "IP数";
@@ -160,7 +160,7 @@ app.controller("Vistiorctr", function ($scope, $rootScope, $http, requestService
     // init
     $scope.doSearch($scope.dateTimeStart, $scope.dateTimeEnd, "1");
     $scope.doSearchAreas($scope.dateTimeStart, $scope.dateTimeEnd, "1", $scope.mapOrPieConfig);
-    $scope.mapselect= [
+    $scope.mapselect = [
         {consumption_name: "浏览量(PV)"},
         {consumption_name: "访问次数"},
         {consumption_name: "访客数(UV)"},
