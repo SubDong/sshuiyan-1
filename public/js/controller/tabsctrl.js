@@ -124,12 +124,8 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
         $scope.appHtml = '<div ui-grid="row.entity.subGridOptions" ui-grid-auto-resize style="height: {{gridHeight}}"></div>'
     }
     //table_nextbtn
-    $scope.tableButtonHtml="<button ng-click='test()' class='table_btn'></button>"
 
     $rootScope.indicators = function (item, entities, number) {
-        /*$rootScope.gridArray == undefined?$rootScope.gridArray = new Array():"";
-         $rootScope.checkedArray == undefined?$rootScope.checkedArray = new Array():"";*/
-
         $scope.gridArray.shift();
         $scope.gridArray.shift();
         $scope.gridObj = {};
@@ -148,7 +144,7 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
                 $scope.gridArray.shift();
 
                 $scope.gridObjButton["name"] = " ";
-                $scope.gridObjButton["cellTemplate"] = $scope.tableButtonHtml;
+                $scope.gridObjButton["cellTemplate"] = "<button onclick='getMyButton()' class='table_nextbtn'></button>";
 
                 $scope.gridObj["name"] = item.consumption_name;
                 $scope.gridObj["field"] = item.name;
@@ -160,7 +156,7 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
                 $rootScope.checkedArray.push(item.name);
 
                 $scope.gridObjButton["name"] = " ";
-                $scope.gridObjButton["cellTemplate"] = $scope.tableButtonHtml;
+                $scope.gridObjButton["cellTemplate"] = "<div class='table_box'><button onclick='getMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul><li><a href=''>hfdslhfsfhdss</a></li><li><a href=''>hfdslhfsfhdss</a></li></ul></div></div>";
 
                 $scope.gridObj["name"] = item.consumption_name;
                 $scope.gridObj["field"] = item.name;
@@ -174,18 +170,13 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
                 $scope.classInfo = 'current';
             }
         });
-
-
-        // compile
-        $compile( element.contents() )( $scope);
     };
-/*$scope.test = function(){
- <div class="table_win">
- <ul>
- <li></li>
- </ul>
- </div>
-}*/
+
+/*<div class="table_win">
+    <ul>
+    <li></li>
+    </ul>
+    </div>*/
 
     /*function initTable(entities,item){
      entities.forEach(function(key,x){
@@ -347,3 +338,24 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
     }
     ];
 });
+var s = 0;
+function getMyButton(item){
+    item.nextSibling.style.display = "block";
+    s=0
+    //angular.element(document.getElementsByClassName("table_content")).scope().$apply("test("+item+")");
+}
+document.onclick = function(){
+    var a = document.getElementsByClassName("table_win");
+    if(a.length != 0){
+        if(s>0){
+            for(var i = 0 ; i < a.length ; i++){
+                if(document.getElementsByClassName("table_win")[i].style.display == "block"){
+                    document.getElementsByClassName("table_win")[i].style.display = "none"
+                    s = 0
+                }
+            }
+        }
+        s++;
+    }
+    //document.getElementsByClassName("table_box").style.display
+}

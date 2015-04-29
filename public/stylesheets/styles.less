@@ -1387,6 +1387,7 @@ nav, .navbar-default {
 
 .ui-grid-cell {
   border: none;
+  overflow: inherit;
 }
 
 .ui-select-container {
@@ -1991,6 +1992,7 @@ nav, .navbar-default {
   clear: left;
   float: left;
   box-shadow: none;
+  margin-top:-2px;
 }
 .radio {
   background: url(../img/radio.png) no-repeat;
@@ -2001,6 +2003,7 @@ nav, .navbar-default {
   height: 16px;
   background: url(../img/table_btn.png) no-repeat;
   border: none;
+  margin-top: 5px;
 }
 
 .table_nextbtn {
@@ -2008,20 +2011,26 @@ nav, .navbar-default {
   height: 16px;
   background: url(../img/table_nextbtn.png) no-repeat;
   border: none;
+  margin-top: 5px;
 
 }
-
+.table_box{
+  position: relative;
+}
 .table_win {
+  position:absolute;
+  display: none;
+  left:18px;
+  z-index: 11;
   padding: 10px;
   border: 1px solid #a5a5a5;
-  background: url(../img/table_win_bg.png) no-repeat;
+  background: url(../img/table_win_bg.png) repeat;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   border-radius: 5px;
   ul {
     li {
       margin-bottom: 10px;
-      list-style-type: square;
       a {
         color: #b9e2f7;
         position: relative;
