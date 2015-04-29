@@ -75,7 +75,7 @@
                         <div role="group" class="btn-group">
                             <ui-select ng-model="grid.selected" theme="selectize" class="fl" ng-change="searchChange(grid.selected)" style="min-width: 80px;">
                                 <ui-select-match placeholder="浏览量(PV)">{{$select.selected.name}}</ui-select-match>
-                                <ui-select-choices repeat="grid in rootSelects">
+                                <ui-select-choices repeat="grid in rootSelects" class="fzp20">
                                     <span ng-bind-html="grid.name"></span>
                                 </ui-select-choices>
                             </ui-select>

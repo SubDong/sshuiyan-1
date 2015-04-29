@@ -337,14 +337,15 @@ nav, .navbar-default {
   display: @block;
   .fl;
   margin-right: 5px;
+  line-height: 24px;
   /*  height: 24px;
-    line-height: 22px;*/
+    */
 
 }
 
 .my_concent {
   background: #ffffff;
-  padding: 30px 1% 0 1%;
+  padding: 14px 1% 0 1%;
   .dateshow2 {
     ul li {
       width: 18.8%
@@ -704,11 +705,14 @@ nav, .navbar-default {
 .custom_secendtitle {
   background: #f6f5f5;
   border-top: 2px solid #fcfcfc;
-
   .custom_select {
     padding: 0px 15px;
     min-height: 36px;
-    .input-group {
+
+    .btn-group{
+      margin: 4px 0 0px 5px;
+    }
+    .input-group{
       line-height: 26px;
       height: 26px;
       font-size: 12px;
@@ -738,7 +742,7 @@ nav, .navbar-default {
     label {
       display: inline-block;
       max-width: 100%;
-      margin-bottom: 5px;
+      margin: 0 10px 5px 0;
       font-weight: normal;
     }
     b {
@@ -755,7 +759,7 @@ nav, .navbar-default {
         width: 140px;
         .fl;
       }
-      margin-top: 8px;
+      margin-top: 4px;
       margin-right: 10px;
 
     }
@@ -1047,11 +1051,11 @@ nav, .navbar-default {
 }
 
 .select_top {
-  padding: 0px 0 5px 0;
+  padding: 5px 0 5px 0 ;
   background: #f6f5f5;
-  min-height: 40px;
-  .btn-group {
-    .btn-default {
+  min-height: 36px;
+  .btn-group{
+    .btn-default{
       padding: 0 12px;
       height: 26px;
       font-size: 12px;
@@ -1090,7 +1094,13 @@ nav, .navbar-default {
     background: #ffffff;
     padding: 0 10px;
   }
-
+  .ui-grid-header-viewport{
+    .sortable{
+      .ui-grid-cell-contents{
+        background: #fff !important;
+      }
+    }
+  }
 }
 
 .survey_under {
@@ -1311,7 +1321,7 @@ nav, .navbar-default {
   }
   .trend_left {
     .fl;
-    width: 280px;
+    width: 300px;
     overflow: hidden
 
   }
@@ -1349,7 +1359,7 @@ nav, .navbar-default {
   }
   .trend_text {
     height: 100px;
-    width: 180px;
+    width: 197px;
     .fl;
     padding: 15px;
     border-right: 1px solid #eeeeee;
@@ -1409,7 +1419,7 @@ nav, .navbar-default {
 .btn-group {
   .ui-select-container {
     .selectize-input {
-      padding: 6px 7px;
+      padding: 3px 7px;
     }
     line-height: inherit;
     .selectize-input {
@@ -1438,8 +1448,12 @@ nav, .navbar-default {
     height: 30px;
   }
   .ui-grid-cell-contents {
-    padding: 0 20px;
-    background: #fff;
+    padding: 0 10px;
+    background: #eee;
+    border-left:1px solid #fff;
+    span{
+      text-shadow: 1px 1px 1px #FFF;
+    }
   }
 }
 
@@ -1504,11 +1518,12 @@ nav, .navbar-default {
 }
 
 .selectize-input {
-  padding: 5px;
-  box-shadow: none !important;
-  background: #ffffff;
-  border: 1px solid #e6e4e5 !important;
-  background-image: none;
+
+  padding: 3px 7px;
+  box-shadow:none !important;
+  background:#ffffff;
+  border:1px solid #e6e4e5 !important;
+  background-image:none;
   background-repeat: repeat-x;
   font-size: 12px;
 
@@ -1579,15 +1594,25 @@ nav, .navbar-default {
 }
 
 .span3 {
-  .ui-grid-coluiGrid-004 {
-    .ui-grid-cell-contents {
-      text-align: right;
-      padding-right: 0px;
+  .ui-grid-coluiGrid-004{
+
+    text-align: right;
+    padding-right: 0px;
+  }
+  .ui-grid-header-cell {
+    .ui-grid-header-canvas{
+      .ui-grid-cell-contents{
+        border: none !important;
+        background: #fff !important;
+        padding-left: 0px !important;
+      }
     }
     .ng-scope {
-      padding-right: 10px;
+     .ui-grid-cell-contents{
+       border: none !important;
+       background: #fff !important;
+     }
     }
-
   }
 }
 
@@ -1865,8 +1890,9 @@ nav, .navbar-default {
   color: #777;
 }
 
-.btn-success {
-  margin-top: 10px;
+
+.btn-success{
+  margin-top:10px;
 }
 
 .page {
@@ -1891,10 +1917,11 @@ nav, .navbar-default {
   button {
     height: 26px;
     margin-top: 0px;
-    background: #31b0d5;
+    background: #01adef;
     color: #fff;
     font-size: 12px;
     padding: 0 12px;
+    border-radius: 3px;
 
   }
   button:hover {
@@ -1905,6 +1932,7 @@ nav, .navbar-default {
     outline: none;
     color: #fff;
   }
+
   .custom_btn {
     b {
       color: #2fabe9;
@@ -1918,4 +1946,25 @@ nav, .navbar-default {
     }
   }
 
+
+  input[type=checkbox], input[type=radio] {
+    padding: 0;
+    margin: 4px 5px 0px 0;
+    line-height: normal;
+    box-sizing: border-box;
+    display: inline-block;
+  }
+  .ui-grid-coluiGrid-00J, .ui-grid-coluiGrid-025, .ui-grid-coluiGrid-009, .ui-grid-coluiGrid-008 {
+    border-right: none !important;
+
+  }
+}
+.ui-grid-top-panel{
+  background:#eee;
+  border-top: 1px solid #fff;
+}
+#myTabContent{
+  .ui-grid-cell-contents {
+      padding: 0px 10px;
+  }
 }
