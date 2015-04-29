@@ -129,11 +129,15 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
          $rootScope.checkedArray == undefined?$rootScope.checkedArray = new Array():"";*/
 
         $scope.gridArray.shift();
+        $scope.gridArray.shift();
         $scope.gridObj = {};
+        $scope.gridObjButton = {};
         var a = $rootScope.checkedArray.indexOf(item.name);
         if (a != -1) {
             $rootScope.checkedArray.splice(a, 1);
             $scope.gridArray.splice(a, 1);
+            $scope.gridArray.splice(a, 1);
+            $rootScope.gridArray.unshift($scope.gridObjButton);
             $scope.gridArray.unshift($rootScope.latitude);
         } else {
             if ($rootScope.checkedArray.length >= number) {
@@ -141,17 +145,25 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
                 $rootScope.checkedArray.push(item.name);
                 $scope.gridArray.shift();
 
+                $scope.gridObjButton["name"] = " ";
+                $scope.gridObjButton["cellTemplate"] = "<div><button ng-click='test()'>clickTest</button></div>";
+
                 $scope.gridObj["name"] = item.consumption_name;
                 $scope.gridObj["field"] = item.name;
+
                 $rootScope.gridArray.push($scope.gridObj);
+                $rootScope.gridArray.unshift($scope.gridObjButton);
                 $rootScope.gridArray.unshift($rootScope.latitude);
             } else {
                 $rootScope.checkedArray.push(item.name);
 
+                $scope.gridObjButton["name"] = " ";
+                $scope.gridObjButton["cellTemplate"] = "<div><button ng-click='test()'>clickTest</button></div>";
+
                 $scope.gridObj["name"] = item.consumption_name;
                 $scope.gridObj["field"] = item.name;
-                $scope.gridObj["field"].visible = false;
                 $rootScope.gridArray.push($scope.gridObj);
+                $rootScope.gridArray.unshift($scope.gridObjButton);
                 $rootScope.gridArray.unshift($rootScope.latitude);
             }
         }
@@ -160,7 +172,14 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
                 $scope.classInfo = 'current';
             }
         });
+
+
+        // compile
+        $compile( element.contents() )( $scope);
     };
+/*$scope.test = function(){
+    alert(1);
+}*/
 
     /*function initTable(entities,item){
      entities.forEach(function(key,x){
@@ -206,6 +225,7 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
             }
         };
     }
+    console.log($scope.gridArray);
     $scope.pagego = function (pagevalue) {
         pagevalue.pagination.seek(Number($scope.page));
     }
@@ -254,17 +274,9 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
         gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
             var dataNumber;
             if (row.isExpanded && $rootScope.dimen != false) {
-                if (row.entity[$rootScope.latitude.field] != "搜索引擎") {
-                    if (row.entity[$rootScope.latitude.field] == "外部链接") {
-                        $rootScope.dimen = "rf";
-                        $rootScope.tableFilter = "[{\"rf_type\":[\"3\"]}]"
-                    } else {
-                        $rootScope.tableFilter = "[{\"" + $rootScope.latitude.field + "\":[\"" + getField(row.entity[$rootScope.latitude.field], $rootScope.latitude.field) + "\"]}]";
-                    }
-                } else {
-                    $rootScope.dimen = "se";
-                    $rootScope.tableFilter = undefined;
-                }
+                if(row.entity[$rootScope.latitude.field] == "搜索引擎" && $rootScope.latitude.field == "rf_type")$rootScope.dimen = "se";
+                if(row.entity[$rootScope.latitude.field] == "外部链接" && $rootScope.latitude.field == "rf_type")$rootScope.dimen = "rf";
+                $rootScope.tableFilter = "[{\"" + $rootScope.latitude.field + "\":[\"" + getField(row.entity[$rootScope.latitude.field], $rootScope.latitude.field) + "\"]}]";
                 row.entity.subGridOptions = {
                     showHeader: false,
                     columnDefs: $scope.gridArray
