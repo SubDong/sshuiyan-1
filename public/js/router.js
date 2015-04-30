@@ -100,26 +100,16 @@ app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
         })
         .state('equipment', {
             url: "/visitor/equipment",
-            templateUrl: "../visitor/equipment.html",
-            controller:function($rootScope){
-
-            }
+            templateUrl: "../visitor/equipment.html"
         })
         .state('novisitors', {
             url: "/visitor/novisitors",
-            templateUrl: "../visitor/novisitors.html",
-            controller:function($rootScope){
-                $rootScope.tableTimeStart = 0;
-                $rootScope.tableTimeEnd = 0;
-                $rootScope.latitude = {name: "新老访客", field: "ct"};
-                $rootScope.dimen = false
-            }
+            templateUrl: "../visitor/novisitors.html"
         })
         .state('visitorfeature', {
             url: "/visitor/visitorfeature",
             templateUrl: "../visitor/visitorfeature.html"
         })
-
         .state('survey', {
             url: "/extension/survey",
             templateUrl: "../extension/survey.html"

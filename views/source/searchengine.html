@@ -1,140 +1,149 @@
- <!--来源分析-搜索引擎      -->
+<!--来源分析-搜索引擎      -->
 <div class="middle_containers" ng-controller="searchenginectr">
-                <div class="date_select">
-                    <calendar></calendar>
-                    <dateother></dateother>
-                    <refresh></refresh>
-                </div>
-                <div class="my_concent">
-                    <ssh-date-show type="today" dimension="rf_type"></ssh-date-show>
-                    <div class="index_chart">
+    <div class="date_select">
+        <calendar></calendar>
+        <dateother></dateother>
+        <refresh></refresh>
+    </div>
+    <div class="my_concent">
+        <ssh-date-show type="today" dimension="rf_type"></ssh-date-show>
+        <div class="index_chart">
 
-                        <div id="sourse_charts" style="height:400px;float:left;width:30%;"></div>
-                        <div id="indicators_charts_legend"></div>
-                        <div id="indicators_charts" style="height:400px;float:right;width:70%;"></div>
+            <div id="sourse_charts" style="height:400px;float:left;width:30%;"></div>
+            <div id="indicators_charts_legend"></div>
+            <div id="indicators_charts" style="height:400px;float:right;width:70%;"></div>
+
+        </div>
+        <div class="table_content" ng-controller="TabsCtrl">
+            <tabset justified="true">
+                <tab heading="自定义指标">
+                    <div class="custom_title">
+                        <div class="chart_tops chart_default">
+                            <ul>
+                                <li><a href="#">系统默认指标 </a></li>
+                                <li><a href="#"> 订单默认指标</a></li>
+                            </ul>
+                        </div>
+                        <div class="chart_top">
+                            <span>网站基础指标 :</span>
+                            <ul>
+                                <li ng-repeat="item in TodayWeb"
+                                    class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                    ng-click='indicators(item,TodayWeb,6)'>{{item.consumption_name}}
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="chart_top">
+                            <span>流量质量指标:</span>
+                            <ul>
+                                <li ng-repeat="item in Todayfloweds"
+                                    class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                    ng-click='indicators(item,Todayfloweds,6)'>{{item.consumption_name}}
+                                </li>
+                            </ul>
+                        </div>
+                        <!--<div class="chart_top">
+                            <span>转化指标:</span>
+                            <ul>
+                                <li ng-repeat="item in Todytransform"
+                                    class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                    ng-click='indicators(item,Todytransform,6)'>{{item.consumption_name}}
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="chart_top">
+                            <span>订单转化指标:</span>
+                            <ul>
+                                <li ng-repeat="item in Order" class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                    ng-click='indicators(item,Order,6)'>{{item.consumption_name}}
+                                </li>
+                            </ul>
+                        </div>-->
+                        <div class="chart_top chart_noborder">
+                            <button class="btn btn-primary" type="button" ng-click="targetSearch(true)">确定</button>
+                            * 可同时选择6项
+                        </div>
 
                     </div>
-                    <div class="table_content" ng-controller="TabsCtrl">
-                        <tabset justified="true">
-                            <tab heading="自定义指标">
-                                <div class="custom_title">
-                                    <div class="chart_tops chart_default">
-                                        <ul>
-                                            <li><a href="#">系统默认指标 </a></li>
-                                            <li><a href="#"> 订单默认指标</a></li>
-                                        </ul>
-                                    </div>
-                                    <div class="chart_top">
-                                        <span>网站基础指标 :</span>
-                                        <ul>
-                                            <li ng-repeat="item in TodayWeb" class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
-                                                ng-click='indicators(item,TodayWeb,6)'>{{item.consumption_name}}
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="chart_top">
-                                        <span>流量质量指标:</span>
-                                        <ul>
-                                            <li ng-repeat="item in Todayfloweds" class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
-                                                ng-click='indicators(item,Todayfloweds,6)'>{{item.consumption_name}}
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <!--<div class="chart_top">
-                                        <span>转化指标:</span>
-                                        <ul>
-                                            <li ng-repeat="item in Todytransform"
-                                                class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
-                                                ng-click='indicators(item,Todytransform,6)'>{{item.consumption_name}}
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="chart_top">
-                                        <span>订单转化指标:</span>
-                                        <ul>
-                                            <li ng-repeat="item in Order" class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
-                                                ng-click='indicators(item,Order,6)'>{{item.consumption_name}}
-                                            </li>
-                                        </ul>
-                                    </div>-->
-                                    <div class="chart_top chart_noborder">
-                                        <button class="btn btn-primary" type="button" ng-click="targetSearch(true)">确定</button>
-                                        * 可同时选择6项
-                                    </div>
-
-                                </div>
-                            </tab>
-                            <tab heading="高级筛选">
-                                <div class="custom_title">
-                                    <div class="chart_top2">
-                                        <ul>
-                                            <li><span>设备过滤:</span></li>
-                                            <li><input type="radio" checked="checked" name="radio1"/>
-                                                <label>全部</label></li>
-                                            <li><input type="radio" name="radio1"/> <label>计算机</label></li>
-                                            <li><input type="radio" name="radio1"/> <label>移动设备</label></li>
-                                        </ul>
-                                    </div>
-                                    <div class="chart_top2">
-                                        <ul>
-                                            <li><span>地域过滤:</span></li>
-                                            <li>
-                                                <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
-                                                    <div role="group" class="btn-group">
-                                                        <ui-select ng-model="continent.selected" theme="selectize" ng-disabled="disabled" class="fl"
-                                                                   style="width: 80px;">
-                                                            <ui-select-match placeholder="大洲">{{$select.selected.name}}</ui-select-match>
-                                                            <ui-select-choices repeat="continent in continents">
-                                                                <span ng-bind-html="continent.name"></span>
-                                                            </ui-select-choices>
-                                                        </ui-select>
-                                                    </div>
-                                                    <div role="group" class="btn-group">
-                                                        <ui-select ng-model="country.selected" theme="selectize" ng-disabled="disabled" class="fl"
-                                                                   style="width: 80px;">
-                                                            <ui-select-match placeholder="国家">{{$select.selected.name}}</ui-select-match>
-                                                            <ui-select-choices repeat="country in countrys">
-                                                                <span ng-bind-html="country.name"></span>
-                                                            </ui-select-choices>
-                                                        </ui-select>
-                                                    </div>
-                                                    <div role="group" class="btn-group">
-                                                        <ui-select ng-model="city.selected" theme="selectize" class="fl" style="width: 80px;">
-                                                            <ui-select-match placeholder="城市">{{$select.selected.name}}</ui-select-match>
-                                                            <ui-select-choices repeat="city in citys">
-                                                                <span ng-bind-html="city.name"></span>
-                                                            </ui-select-choices>
-                                                        </ui-select>
-                                                    </div>
-
-                                                </div>
-                                            </li>
-                                            <li><a href="#">北京</a></li>
-                                            <li><a href="#">上海</a></li>
-                                            <li><a href="#">广州</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </tab>
-                        </tabset>
-                        <div class="custom_secendtitle">
-                            <div class="custom_select">
-                                转化目标
-                                <div role="group" class="btn-group">
-                                    <ui-select ng-model="extendway.selected" theme="selectize" class="fl" style="width: 120px;">
-                                        <ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>
-                                        <ui-select-choices repeat="extendway in extendways">
-                                            <span ng-bind-html="extendway.name"></span>
-                                        </ui-select-choices>
-                                    </ui-select>
-                                </div>
-                            </div>
+                </tab>
+                <tab heading="高级筛选">
+                    <div class="custom_title">
+                        <div class="chart_top2">
+                            <ul>
+                                <li><span>设备过滤:</span></li>
+                                <li><input type="radio" checked="checked" name="radio1"/>
+                                    <label>全部</label></li>
+                                <li><input type="radio" name="radio1"/> <label>计算机</label></li>
+                                <li><input type="radio" name="radio1"/> <label>移动设备</label></li>
+                            </ul>
                         </div>
-                        <div class="custom_table">
-                            <div ui-grid="gridOptions" class="grid" style="height:400px;" ui-grid-pagination ui-grid-selection ui-grid-exporter></div>
-                            <gridpage></gridpage>
+                        <div class="chart_top2">
+                            <ul>
+                                <li><span>地域过滤:</span></li>
+                                <li>
+                                    <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
+                                        <div role="group" class="btn-group">
+                                            <ui-select ng-model="continent.selected" theme="selectize"
+                                                       ng-disabled="disabled" class="fl"
+                                                       style="width: 80px;">
+                                                <ui-select-match placeholder="大洲">{{$select.selected.name}}
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="continent in continents">
+                                                    <span ng-bind-html="continent.name"></span>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                        <div role="group" class="btn-group">
+                                            <ui-select ng-model="country.selected" theme="selectize"
+                                                       ng-disabled="disabled" class="fl"
+                                                       style="width: 80px;">
+                                                <ui-select-match placeholder="国家">{{$select.selected.name}}
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="country in countrys">
+                                                    <span ng-bind-html="country.name"></span>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                        <div role="group" class="btn-group">
+                                            <ui-select ng-model="city.selected" theme="selectize" class="fl"
+                                                       style="width: 80px;">
+                                                <ui-select-match placeholder="城市">{{$select.selected.name}}
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="city in citys">
+                                                    <span ng-bind-html="city.name"></span>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
 
+                                    </div>
+                                </li>
+                                <li><a href="#">北京</a></li>
+                                <li><a href="#">上海</a></li>
+                                <li><a href="#">广州</a></li>
+                            </ul>
                         </div>
+                    </div>
+                </tab>
+            </tabset>
+            <div class="custom_secendtitle">
+                <div class="custom_select">
+                    转化目标
+                    <div role="group" class="btn-group">
+                        <ui-select ng-model="extendway.selected" theme="selectize" class="fl" style="width: 120px;">
+                            <ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices repeat="extendway in extendways">
+                                <span ng-bind-html="extendway.name"></span>
+                            </ui-select-choices>
+                        </ui-select>
                     </div>
                 </div>
             </div>
+            <div class="custom_table">
+                <div ui-grid="gridOptions" class="grid" style="height:400px;" ui-grid-pagination ui-grid-selection
+                     ui-grid-exporter></div>
+                <gridpage></gridpage>
+
+            </div>
+        </div>
+    </div>
+</div>

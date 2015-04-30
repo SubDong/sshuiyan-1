@@ -3,12 +3,21 @@
  */
 app.controller('Trend_realtime_ctrl', function ($scope, $rootScope, $http, requestService, messageService, $log) {
     $scope.visitorCount = 0;
-//table配置
+    //table配置
     $rootScope.tableTimeStart = 0;
     $rootScope.tableTimeEnd = 0;
-    $rootScope.latitude = {name: "地域", field: "region"};
     $rootScope.checkedArray = "SS"
-    $rootScope.dimen = true;
+    $rootScope.tableSwitch = {
+        latitude:{name: "地域", field: "region"},
+        tableFilter:undefined,
+        dimen:true,
+        // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
+        number:0,
+        //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
+        coding:false
+        //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
+    };
+
     //
     $scope.onLegendClickListener = function (radio, chartObj, chartConfig, checkedVal) {
         clear.lineChart($scope.charts[0].config, checkedVal);

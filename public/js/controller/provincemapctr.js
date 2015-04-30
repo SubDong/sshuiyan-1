@@ -4,11 +4,18 @@
 app.controller("provincemapctr", function ($scope, $rootScope, $http, requestService, areaService) {
     $scope.todayClass = true;
 
-    $rootScope.tableTimeStart = 0;
-    $rootScope.tableTimeEnd = 0;
-    $rootScope.tableFilter = undefined;
-    $rootScope.latitude = {name: "地域", field: "region"};
-    $rootScope.dimen = "city";
+    $rootScope.tableTimeStart = 0;//开始时间
+    $rootScope.tableTimeEnd = 0;//结束时间
+    $rootScope.tableSwitch = {
+        latitude:{name: "地域", field: "region"},
+        tableFilter:undefined,
+        dimen:"city",
+        // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
+        number:1,
+        //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
+        coding:false
+        //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
+    };
 
     $scope.dateTimeStart = 0;
     $scope.dateTimeEnd = 0;

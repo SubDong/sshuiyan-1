@@ -5,11 +5,18 @@ app.controller('equipmentctr', function ($scope, $rootScope, $http, requestServi
     $scope.todayClass = true;
     $scope.dt = new Date();
     //table配置
-    //table配置
     $rootScope.tableTimeStart = 0;
     $rootScope.tableTimeEnd = 0;
-    $rootScope.latitude = {name: "浏览器", field: "pm"};
-    $rootScope.dimen = "br"
+    $rootScope.tableSwitch = {
+        latitude:{name: "网络供应商", field: "isp"},
+        tableFilter:undefined,
+        dimen:"region",
+        // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
+        number:0,
+        //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
+        coding:false
+        //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
+    };
     //
 
     $scope.reset = function () {
@@ -20,8 +27,14 @@ app.controller('equipmentctr', function ($scope, $rootScope, $http, requestServi
         $scope.definClass = false;
     };
     $scope.equipmentChange = function (val) {
-        $scope.charts[0].dimension = val.value;
+        $scope.charts[0].dimension = val.field;
         requestService.refresh($scope.charts);
+
+        $rootScope.tableSwitch.latitude = val;
+        val.field == "ips"?$rootScope.tableSwitch.dimen = "region":val.field == "pm"?$rootScope.tableSwitch.dimen = "br":$rootScope.tableSwitch.dimen =false
+        $rootScope.indicators(null,null,null,"refresh");
+        $rootScope.targetSearch();
+
 
     }
     $scope.onLegendClick = function (radio, chartInstance, config, checkedVal) {
@@ -42,7 +55,7 @@ app.controller('equipmentctr', function ($scope, $rootScope, $http, requestServi
             }
             for (var i = 0; i < e.key.length; i++) {
                 if ($scope.equipment.selected)
-                    tmpData.push(chartUtils.getCustomDevice(e.key[i], $scope.equipment.selected.value));
+                    tmpData.push(chartUtils.getCustomDevice(e.key[i], $scope.equipment.selected.field));
                 else
                     tmpData.push(e.key[i]);
 

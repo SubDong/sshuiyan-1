@@ -123,46 +123,60 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
         $rootScope.checkedArray = new Array();
         $scope.appHtml = '<div ui-grid="row.entity.subGridOptions" ui-grid-auto-resize style="height: {{gridHeight}}"></div>'
     }
-    //table_nextbtn
+    //table Button 配置 table_nextbtn
+    if ($rootScope.tableSwitch.number == 1) {
+        $scope.gridBtnDivObj = "<div class='table_box'><a href='http://www.best-ad.cn' class='table_btn'></a></div>";
+    } else if ($rootScope.tableSwitch.number == 2) {
+        $scope.gridBtnDivObj = "<div class='table_box'><button onclick='getMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul>"+$rootScope.tableSwitch.coding+"</ul></div></div>";
+    }
 
-    $rootScope.indicators = function (item, entities, number) {
+    $rootScope.indicators = function (item, entities, number,refresh) {
         $scope.gridArray.shift();
-        $scope.gridArray.shift();
+        if(refresh == "refresh"){
+            $scope.gridArray.unshift($rootScope.tableSwitch.latitude);
+            return
+        }
+        $rootScope.tableSwitch.number != 0 ? $scope.gridArray.shift() : ""
         $scope.gridObj = {};
         $scope.gridObjButton = {};
         var a = $rootScope.checkedArray.indexOf(item.name);
         if (a != -1) {
             $rootScope.checkedArray.splice(a, 1);
             $scope.gridArray.splice(a, 1);
-            $scope.gridArray.splice(a, 1);
+            $rootScope.tableSwitch.number != 0 ? $scope.gridArray.splice(a, 1) : "";
             $rootScope.gridArray.unshift($scope.gridObjButton);
-            $scope.gridArray.unshift($rootScope.latitude);
+            $scope.gridArray.unshift($rootScope.tableSwitch.latitude);
         } else {
             if ($rootScope.checkedArray.length >= number) {
                 $rootScope.checkedArray.shift();
                 $rootScope.checkedArray.push(item.name);
                 $scope.gridArray.shift();
 
-                $scope.gridObjButton["name"] = " ";
-                $scope.gridObjButton["cellTemplate"] = "<button onclick='getMyButton()' class='table_nextbtn'></button>";
-
                 $scope.gridObj["name"] = item.consumption_name;
                 $scope.gridObj["field"] = item.name;
 
                 $rootScope.gridArray.push($scope.gridObj);
-                $rootScope.gridArray.unshift($scope.gridObjButton);
-                $rootScope.gridArray.unshift($rootScope.latitude);
+
+                if ($rootScope.tableSwitch.number != 0) {
+                    $scope.gridObjButton["name"] = " ";
+                    $scope.gridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
+                    $rootScope.gridArray.unshift($scope.gridObjButton);
+                }
+
+                $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude);
             } else {
                 $rootScope.checkedArray.push(item.name);
 
-                $scope.gridObjButton["name"] = " ";
-                $scope.gridObjButton["cellTemplate"] = "<div class='table_box'><button onclick='getMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul><li><a href=''>hfdslhfsfhdss</a></li><li><a href=''>hfdslhfsfhdss</a></li></ul></div></div>";
-
                 $scope.gridObj["name"] = item.consumption_name;
                 $scope.gridObj["field"] = item.name;
                 $rootScope.gridArray.push($scope.gridObj);
-                $rootScope.gridArray.unshift($scope.gridObjButton);
-                $rootScope.gridArray.unshift($rootScope.latitude);
+
+                if ($rootScope.tableSwitch.number != 0) {
+                    $scope.gridObjButton["name"] = " ";
+                    $scope.gridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
+                    $rootScope.gridArray.unshift($scope.gridObjButton);
+                }
+                $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude);
             }
         }
         angular.forEach(entities, function (subscription, index) {
@@ -172,11 +186,11 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
         });
     };
 
-/*<div class="table_win">
-    <ul>
-    <li></li>
-    </ul>
-    </div>*/
+    /*<div class="table_win">
+     <ul>
+     <li></li>
+     </ul>
+     </div>*/
 
     /*function initTable(entities,item){
      entities.forEach(function(key,x){
@@ -190,7 +204,7 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
      });
      }*/
     // 推广概况表格配置项
-    if ($rootScope.dimen != false) {
+    if ($rootScope.tableSwitch.dimen != false) {
         $scope.gridOptions = {
             //paginationPageSizes: [25, 50, 75],
             paginationPageSize: 25,
@@ -222,7 +236,6 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
             }
         };
     }
-    console.log($scope.gridArray);
     $scope.pagego = function (pagevalue) {
         pagevalue.pagination.seek(Number($scope.page));
     }
@@ -236,10 +249,10 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
      * @param type
      */
     $rootScope.targetSearch = function (isClicked) {
-        if(isClicked) {
+        if (isClicked) {
             $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
         }
-        if ($rootScope.latitude == undefined) {
+        if ($rootScope.tableSwitch.latitude == undefined) {
             console.error("error: latitude is not defined,Please check whether the parameter the configuration.");
             return;
         }
@@ -253,8 +266,8 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
         }
         $http({
             method: 'GET',
-            url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + $rootScope.latitude.field
-            + "&filterInfo=" + $rootScope.tableFilter + "&type=1"
+            url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + $rootScope.tableSwitch.latitude.field
+            + "&filterInfo=" + $rootScope.tableSwitch.tableFilter + "&type=1"
         }).success(function (data, status) {
             $scope.gridOptions.data = data;
         }).error(function (error) {
@@ -270,10 +283,10 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
     var griApiInfo = function (gridApi) {
         gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
             var dataNumber;
-            if (row.isExpanded && $rootScope.dimen != false) {
-                if(row.entity[$rootScope.latitude.field] == "搜索引擎" && $rootScope.latitude.field == "rf_type")$rootScope.dimen = "se";
-                if(row.entity[$rootScope.latitude.field] == "外部链接" && $rootScope.latitude.field == "rf_type")$rootScope.dimen = "rf";
-                $rootScope.tableFilter = "[{\"" + $rootScope.latitude.field + "\":[\"" + getField(row.entity[$rootScope.latitude.field], $rootScope.latitude.field) + "\"]}]";
+            if (row.isExpanded && $rootScope.tableSwitch.dimen != false) {
+                if (row.entity[$rootScope.tableSwitch.latitude.field] == "搜索引擎" && $rootScope.tableSwitch.latitude.field == "rf_type")$rootScope.tableSwitch.dimen = "se";
+                if (row.entity[$rootScope.tableSwitch.latitude.field] == "外部链接" && $rootScope.tableSwitch.latitude.field == "rf_type")$rootScope.tableSwitch.dimen = "rf";
+                $rootScope.tableSwitch.tableFilter = "[{\"" + $rootScope.tableSwitch.latitude.field + "\":[\"" + getField(row.entity[$rootScope.tableSwitch.latitude.field], $rootScope.tableSwitch.latitude.field) + "\"]}]";
                 row.entity.subGridOptions = {
                     showHeader: false,
                     columnDefs: $scope.gridArray
@@ -281,12 +294,12 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
                 $http({
                     method: 'GET',
                     async: false,
-                    url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + $rootScope.dimen
-                    + "&filerInfo=" + $rootScope.tableFilter + "&type=1"
+                    url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + $rootScope.tableSwitch.dimen
+                    + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&type=1"
                 }).success(function (data, status) {
-                    var reg = new RegExp($rootScope.dimen, "g");
+                    var reg = new RegExp($rootScope.tableSwitch.dimen, "g");
                     if (data != undefined && data.length != 0) {
-                        data = JSON.parse(JSON.stringify(data).replace(reg, $rootScope.latitude.field));
+                        data = JSON.parse(JSON.stringify(data).replace(reg, $rootScope.tableSwitch.latitude.field));
                         dataNumber = data.length;
                     }
                     row.entity.subGridOptions.data = data
@@ -339,17 +352,17 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
     ];
 });
 var s = 0;
-function getMyButton(item){
+function getMyButton(item) {
     item.nextSibling.style.display = "block";
-    s=0
+    s = 0
     //angular.element(document.getElementsByClassName("table_content")).scope().$apply("test("+item+")");
 }
-document.onclick = function(){
+document.onclick = function () {
     var a = document.getElementsByClassName("table_win");
-    if(a.length != 0){
-        if(s>0){
-            for(var i = 0 ; i < a.length ; i++){
-                if(document.getElementsByClassName("table_win")[i].style.display == "block"){
+    if (a.length != 0) {
+        if (s > 0) {
+            for (var i = 0; i < a.length; i++) {
+                if (document.getElementsByClassName("table_win")[i].style.display == "block") {
                     document.getElementsByClassName("table_win")[i].style.display = "none"
                     s = 0
                 }
