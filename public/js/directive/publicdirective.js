@@ -145,7 +145,7 @@ app.directive("indexoverview", function () {
 app.directive("gridpage", function () {
     var option = {
         restrict: "EA",
-        template: "<div class=\"page\"><a ng-click=\"gridApi2.pagination.previousPage()\">上一页</a> <button type=\"button\" class=\"btn\"> 第{{ gridApi2.pagination.getPage() }}页</button> <span> 共计{{ gridApi2.pagination.getTotalPages() }}</span> <a ng-click=\"gridApi2.pagination.nextPage()\">下一页 </a> <input type=\"text\" ng-model=\"page\" value=\"\"> <button type=\"button\" class=\"btn\" ng-click=\"pagego(gridApi2)\">跳转</button> </div>",
+        template: "<div class=\"page\"><a ng-click=\"gridApi2.pagination.previousPage()\">上一页</a> <button type=\"button\" class=\"btn\"> {{ gridApi2.pagination.getPage() }}</button><a ng-click=\"gridApi2.pagination.nextPage()\">下一页 </a> <input type=\"text\" ng-model=\"page\" value=\"\"><span> /{{ gridApi2.pagination.getTotalPages() }}</span> <button type=\"button\" class=\"btn\" ng-click=\"pagego(gridApi2)\">跳转</button> </div>",
         transclude: true
     };
     return option;
