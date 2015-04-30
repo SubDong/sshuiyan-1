@@ -158,30 +158,50 @@ var buildRequest = function (indexes, type, quotas, dimension, filters, start, e
     });
 
     if (dimension == null) {
-        return {
-            "index": indexes.toString(),
-            "type": type,
-            "body": {
-                "query": buildQuery(filters, start, end),
-                "size": 0,
-                "aggs": {
-                    "result": {
-                        "filter": {
-                            "script": {
-                                "script": "doc['loc'].values.size() > param1",
-                                "params": {
-                                    "param1": 0
+        if (interval == 0)  // 此时统计三十分钟以内的数据
+            return {
+                "index": indexes.toString(),
+                "type": type,
+                "body": {
+                    "query": buildQuery(filters),
+                    "size": 0,
+                    "aggs": {
+                        "result": {
+                            "filter": {
+                                "range": {
+                                    "utime": {"gte": start, "lte": end}
                                 }
-                            }
-                        },
-                        "aggs": _aggs
+                            },
+                            "aggs": _aggs
+                        }
                     }
                 }
-            }
-        };
+            };
+        else
+            return {
+                "index": indexes.toString(),
+                "type": type,
+                "body": {
+                    "query": buildQuery(filters),
+                    "size": 0,
+                    "aggs": {
+                        "result": {
+                            "filter": {
+                                "script": {
+                                    "script": "doc['loc'].values.size() > param1",
+                                    "params": {
+                                        "param1": 0
+                                    }
+                                }
+                            },
+                            "aggs": _aggs
+                        }
+                    }
+                }
+            };
     }
 
-    if (dimension.split(",").length > 1) {
+    if (dimension.split(",").length > 1) {  // 多维度统计
         var dimensionArr = dimension.split(",");
         return {
             "index": indexes.toString(),
@@ -222,7 +242,7 @@ var buildRequest = function (indexes, type, quotas, dimension, filters, start, e
     }
 
     if (dimension == "period") {
-        if (interval == 1)
+        if (interval == 1)  // 按小时统计数据
             return {
                 "index": indexes.toString(),
                 "type": type,
@@ -287,7 +307,7 @@ var buildRequest = function (indexes, type, quotas, dimension, filters, start, e
             "index": indexes.toString(),
             "type": type,
             "body": {
-                "query": buildQuery(filters, start, end),
+                "query": buildQuery(filters),
                 "size": 0,
                 "aggs": {
                     "result": {
@@ -687,6 +707,7 @@ var es_request = {
     },
     search: function (es, indexes, type, quotas, dimension, filters, start, end, interval, callbackFn) {
         var request = buildRequest(indexes, type, quotas, dimension, filters, start, end, interval);
+
         function getQuotas() {
             return quotas;
         }
