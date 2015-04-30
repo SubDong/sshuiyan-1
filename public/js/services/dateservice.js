@@ -7,7 +7,6 @@ app.service('requestService', ['$rootScope', '$http', function ($rootScope, $htt
     }
     $rootScope.start = 0;
     $rootScope.end = 0;
-    $rootScope.interval = 24;
     this.refresh = function (charts) {
         charts.forEach(function (chart) {
             chart.config.instance.showLoading({

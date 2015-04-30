@@ -36,56 +36,23 @@ api.get('/charts', function (req, res) {
     es_request.search(req.es, indexes, 1, quotas, dimension, filter, period[0], period[1], interval, function (result) {
         datautils.send(res, JSON.stringify(result));
     });
+});
+api.get('/halfhour', function (req, res) {
+    var query = url.parse(req.url, true).query, quotas = [], type = query['type'];
+    var start = Number(query['start']);//
+    var end = Number(query['end']);//
+    var indexes = date.createIndexes(start, end, "visitor-");
+    if (type.indexOf(",") > -1)for (var i = 0; i < type.split(",").length; i++) {
+        quotas.push(type.split(",")[i]);
+    }
+    else {
+        quotas.push(type);
+    }
+    var period = date.period(start, end);
 
-    //querytypes.forEach(function (qtype) {
-    //    switch (qtype) {
-    //        case "uv":
-    //            line.uv(req.es, start, end, interval, uvindexs, 1, qtype, "tt", function (body) {
-    //                datautils.send(res, body);
-    //            });
-    //            break;
-    //        case "pv":
-    //            line.pv(req.es, start, end, interval, pvindexs, 1, qtype, "loc", function (body) {
-    //                datautils.send(res, body);
-    //                //datautils.lineData(res, body, qtype);
-    //            });
-    //            break;
-    //        case "ip":
-    //            break;
-    //        case "avgVisitTime"://平均访问时间
-    //            line.calAvgVisitTime(req.es, start, end, interval, uvindexs, 1, qtype, "utime", function (result) {
-    //                datautils.send(res, result);
-    //                //console.log(JSON.stringify(result));
-    //            });
-    //            break;
-    //        case "outRate"://跳出率
-    //            line.calJumpRate(req.es, start, end, interval, uvindexs, 1, qtype, function (result) {
-    //                datautils.send(res, result);
-    //            });
-    //            break;
-    //        case "city":
-    //            break;
-    //        case "arrRate"://抵达率
-    //            line.convertRate(req.es, start, end, interval, pvindexs, 1, qtype, "http://sem.best-ad.cn/index", function (result) {
-    //                datautils.send(res, result);
-    //            });
-    //            break;
-    //        case "arrCount"://访问次数
-    //            line.arrCount(req.es, start, end, interval, pvindexs, 1, qtype, function (result) {
-    //                datautils.send(res, result);
-    //            });
-    //            break;
-    //        case "convertRate"://页面转化
-    //            line.convertRate(req.es, start, end, interval, pvindexs, 1, qtype, "http://sem.best-ad.cn/login,http://sem.best-ad.cn/home", function (result) {
-    //                datautils.send(res, result);
-    //            });
-    //            break;
-    //        case "province":
-    //            break;
-    //        default :
-    //            break;
-    //    }
-    //});
+    es_request.search(req.es, indexes, 1, quotas, null, null, period[0]-1800000, period[1], 0, function (result) {
+        datautils.send(res, JSON.stringify(result));
+    });
 });
 api.get('/map', function (req, res) {
     var query = url.parse(req.url, true).query, quotas = [], type = query['type'], dimension = query.dimension;

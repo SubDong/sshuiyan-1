@@ -13,6 +13,7 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
             $scope.sevenDayClass = false;
             $scope.monthClass = false;
             $scope.definClass = false;
+            $scope.hourcheckClass = false;
         };
         $scope.gridOptions = {
             enableColumnMenus: false,
@@ -81,6 +82,7 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
                     bGap: true,
                     chartType: "bar",
                     dataKey: "key",
+                    keyFormat: 'none',
                     dataValue: "quota"
                 },
                 types: ["pv"],
@@ -113,7 +115,9 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
             }
         ]
         $scope.init = function () {
-
+            $rootScope.start = 0;
+            $rootScope.end = 0;
+            $rootScope.interval = undefined;
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
@@ -128,11 +132,12 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
         $scope.$on("ssh_refresh_charts", function (e, msg) {
             $scope.charts.forEach(function (chart) {
                 chart.config.instance = echarts.init(document.getElementById(chart.config.id));
-                //chart.config.keyFormat = $rootScope.keyFormat;
-                if ($rootScope.start <= -7) {
-                    chart.config.keyFormat = "day";
-                }
             });
+            if ($rootScope.start <= -7) {
+                $scope.charts[0].config.keyFormat = "day";
+            } else {
+                $scope.charts[0].config.keyFormat = "hour";
+            }
             requestService.refresh($scope.charts);
             requestService.gridRefresh($scope.grids);
         });
@@ -154,6 +159,11 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
                 e.config.instance = chart;
                 e.interval = 1;
             });
+            if ($rootScope.start <= -7) {
+                $scope.charts[0].config.keyFormat = "day";
+            } else {
+                $scope.charts[0].config.keyFormat = "hour";
+            }
             requestService.refresh($scope.charts);
 
         };
@@ -164,9 +174,14 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
-                e.interval = 24;
+                e.interval = undefined;
                 e.config.noFormat = undefined;
             });
+            if ($rootScope.start <= -7) {
+                $scope.charts[0].config.keyFormat = "day";
+            } else {
+                $scope.charts[0].config.keyFormat = "hour";
+            }
             requestService.refresh($scope.charts);
         };
         //下拉框

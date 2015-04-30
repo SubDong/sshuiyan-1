@@ -14,11 +14,10 @@ app.controller("externallinksctr", function ($scope, $rootScope, $http, requestS
 
     $scope.onLegendClick = function (radio, chartInstance, config, checkedVal) {
         clear.lineChart(config, checkedVal);
-        $scope.charts.forEach(function (chart) {
-            chart.config.instance = echarts.init(document.getElementById(chart.config.id));
-            chart.types = checkedVal;
-        });
-        requestService.refresh($scope.charts);
+        $scope.charts[1].config.instance = echarts.init(document.getElementById($scope.charts[1].config.id));
+        $scope.charts[1].types = checkedVal;
+        var chartArray=[$scope.charts[1]]
+        requestService.refresh(chartArray);
     }
     $scope.pieFormat = function (data, config) {
         var json = JSON.parse(eval("(" + data + ")").toString());
@@ -81,6 +80,9 @@ app.controller("externallinksctr", function ($scope, $rootScope, $http, requestS
         },
     ];
     $scope.init = function () {
+        $rootScope.start = 0;
+        $rootScope.end = 0;
+        $rootScope.interval = undefined;
         var chart = echarts.init(document.getElementById($scope.charts[1].config.id));
         $scope.charts[1].config.instance = chart;
         util.renderLegend(chart, $scope.charts[1].config);

@@ -3,7 +3,15 @@
  */
 app.controller('trend_month_ctrl', function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
     $scope.monthClass = true;
-
+    $scope.dayClass = true;
+    $scope.reset = function () {
+        $scope.todayClass = false;
+        $scope.yesterdayClass = false;
+        $scope.sevenDayClass = false;
+        $scope.monthClass = false;
+        $scope.definClass = false;
+        $scope.hourcheckClass = false;
+    };
     //table配置
     $rootScope.tableTimeStart = -30;
     $rootScope.tableTimeEnd = -1;
@@ -19,6 +27,16 @@ app.controller('trend_month_ctrl', function ($scope, $rootScope, $http, requestS
         var chartarray = [$scope.charts[0]];
         requestService.refresh(chartarray);
     }
+    $scope.monthFormat = function (data, config, e) {
+        if (e.interval == 1) {
+            var final_result = chartUtils.getByHourByDayData(data);
+            config["noFormat"] = "noFormat";
+            config["keyFormat"] = "none";
+            cf.renderChart(final_result, config);
+        } else {
+            cf.renderChart(data, config);
+        }
+    }
     $scope.charts = [
         {
             config: {
@@ -27,6 +45,7 @@ app.controller('trend_month_ctrl', function ($scope, $rootScope, $http, requestS
                 legendClickListener: $scope.onLegendClickListener,
                 legendData: ["浏览量(PV)", "访客数(UV)", "访问次数", "新访客数", "新访客比率", "IP数", "跳出率", "平均访问时长", "平均访问页数", "转化次数", "转化率"],//显示几种数据
                 id: "moth_charts",
+                min_max:false,
                 bGap: false,//首行缩进
                 chartType: "line",//图表类型
                 dataKey: "key",//传入数据的key值
@@ -36,32 +55,76 @@ app.controller('trend_month_ctrl', function ($scope, $rootScope, $http, requestS
             types: ["pv", "uv"],
             dimension: ["period"],
             interval: $rootScope.interval,
-            url: "/api/charts"
+            url: "/api/charts",
+            cb: $scope.monthFormat
         }];
 
     $scope.init = function () {
-
+        $rootScope.start = -30;
+        $rootScope.end = -1;
+        $rootScope.interval = undefined;
         $scope.charts.forEach(function (e) {
             var chart = echarts.init(document.getElementById(e.config.id));
             e.config.instance = chart;
+            if ($rootScope.start <= -7) {
+                e.config.keyFormat = "day";
+            } else {
+                e.config.keyFormat = "hour";
+            }
             util.renderLegend(chart, e.config);
         })
-        $rootScope.start =-30;
-        $rootScope.end = -1;
-        $rootScope.interval = 30;
         requestService.refresh($scope.charts);
     }
     $scope.init();
 
-    $scope.$on("ssh_refresh_charts", function(e, msg) {
+    $scope.$on("ssh_refresh_charts", function (e, msg) {
         $rootScope.targetSearch();
-        var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
-        $scope.charts[0].config.instance = chart;
+        $scope.charts.forEach(function (chart) {
+            chart.config.instance = echarts.init(document.getElementById(chart.config.id));
+            if ($rootScope.start <= -7) {
+                chart.config.keyFormat = "day";
+            } else {
+                chart.config.keyFormat = "hour";
+            }
+        });
         requestService.refresh($scope.charts);
     });
-    // initialize
-    /*    $scope.today();*/
-    //$scope.initMap();
+
+    $scope.hourcheck = function () {
+        $scope.dayClass = false;
+        $scope.hourcheckClass = true;
+        $scope.timeselect = false;
+        $scope.charts.forEach(function (e) {
+            var chart = echarts.init(document.getElementById(e.config.id));
+            e.config.instance = chart;
+            e.interval = 1;
+            if ($rootScope.start <= -7) {
+                e.config.keyFormat = "day";
+            } else {
+                e.config.keyFormat = "hour";
+            }
+        });
+        requestService.refresh($scope.charts);
+
+    };
+    $scope.daycheck = function () {
+        $scope.hourcheckClass = false;
+        $scope.dayClass = true;
+        $scope.timeselect = true;
+        $scope.charts.forEach(function (e) {
+            var chart = echarts.init(document.getElementById(e.config.id));
+            e.config.instance = chart;
+            e.interval = undefined;
+            e.config.noFormat = undefined;
+            if ($rootScope.start <= -7) {
+                e.config.keyFormat = "day";
+            } else {
+                e.config.keyFormat = "hour";
+            }
+        });
+        requestService.refresh($scope.charts);
+    };
+
     $scope.clear = function () {
         $scope.extendway.selected = undefined;
         $scope.city.selected = undefined;

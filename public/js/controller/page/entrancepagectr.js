@@ -61,7 +61,7 @@ app.controller('entrancepagectr', function ($scope, $rootScope, $http, requestSe
                 bGap: true,
                 min_max: false,
                 chartType: "bar",
-                keyFormat:'none',
+                keyFormat: 'none',
                 dataKey: "key",
                 dataValue: "quota"
             },
@@ -73,6 +73,9 @@ app.controller('entrancepagectr', function ($scope, $rootScope, $http, requestSe
         }
     ]
     $scope.init = function () {
+        $rootScope.start = 0;
+        $rootScope.end = 0;
+        $rootScope.interval = undefined;
         var char = $scope.charts[1];
         var chart = echarts.init(document.getElementById(char.config.id));
         char.config.instance = chart;

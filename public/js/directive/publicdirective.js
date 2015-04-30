@@ -32,7 +32,6 @@ app.directive("calendar", function ($rootScope, requestService) {
                 $rootScope.keyFormat = "hour";
                 $rootScope.start = 0;
                 $rootScope.end = 0
-                $rootScope.interval = 24;
                 scope.reloadByCalendar("today");
             };
             scope.yesterday = function () {
@@ -42,7 +41,6 @@ app.directive("calendar", function ($rootScope, requestService) {
                 $rootScope.tableTimeEnd = -1;
                 $rootScope.start = -1;
                 $rootScope.end = -1;
-                $rootScope.interval = 24;
                 scope.reloadByCalendar("yesterday");
             };
             scope.sevenDay = function () {
@@ -52,7 +50,6 @@ app.directive("calendar", function ($rootScope, requestService) {
                 $rootScope.tableTimeEnd = -1;
                 $rootScope.start = -7;
                 $rootScope.end = -1;
-                $rootScope.interval = 7;
                 scope.reloadByCalendar("seven");
             };
             scope.month = function () {
@@ -62,7 +59,6 @@ app.directive("calendar", function ($rootScope, requestService) {
                 $rootScope.tableTimeEnd = -1;
                 $rootScope.start = -30;
                 $rootScope.end = -1;
-                $rootScope.interval = 30;
                 scope.reloadByCalendar("month");
             };
             scope.open = function ($event) {
@@ -102,7 +98,7 @@ app.directive("dateother", function () {
 app.directive("dateweek", function () {
     var option = {
         restrict: "EA",
-        template: " <div aria-label=\"First group\" role=\"group\" class=\"btn-group fl\"><button class=\"btn btn-default\" type=\"button\">按时</button><button class=\"btn btn-default current\" type=\"button\">按日</button><button class=\"btn btn-default\" type=\"button\">按周</button><button class=\"btn btn-default\" type=\"button\">按月</button></div>",
+        template: " <div aria-label=\"First group\" role=\"group\" class=\"btn-group fl\"><button class=\"btn btn-default\" ng-class=\"{'current':hourcheckClass}\" ng-click=\"hourcheck()\" type=\"button\">按时</button><button class=\"btn btn-default current\" ng-click=\"daycheck()\" ng-class=\"{'current':dayClass}\" type=\"button\">按日</button><button class=\"btn btn-default\" type=\"button\">按周</button><button class=\"btn btn-default\" type=\"button\">按月</button></div>",
         transclude: true
     };
     return option;

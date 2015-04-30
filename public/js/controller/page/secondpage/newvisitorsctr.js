@@ -57,9 +57,9 @@ app.controller("newvisitorsctr", function ($scope, $rootScope, $http, requestSer
                 legendAllowCheckCount: 1,
                 id: "indicators_charts",
                 chartType: "bar",
-                min_max:false,
-                bGarp:true,
-                keyFormat:'none',
+                min_max: false,
+                bGarp: true,
+                keyFormat: 'none',
                 dataKey: "key",
                 dataValue: "quota"
             },
@@ -71,6 +71,9 @@ app.controller("newvisitorsctr", function ($scope, $rootScope, $http, requestSer
         }
     ]
     $scope.init = function () {
+        $rootScope.start = 0;
+        $rootScope.end = 0;
+        $rootScope.interval = undefined;
         $scope.charts.forEach(function (e) {
             var chart = echarts.init(document.getElementById(e.config.id));
             e.config.instance = chart;
@@ -80,63 +83,10 @@ app.controller("newvisitorsctr", function ($scope, $rootScope, $http, requestSer
     }
     $scope.init();
 
-    $scope.today = function () {
-        $scope.reset();
-        $scope.todayClass = true;
-        //table 参数配置
-        $rootScope.tableTimeStart = 0;
-        $rootScope.tableTimeEnd = 0;
-        //
-        $rootScope.start = 0;
-        $rootScope.end = 0;
-        $rootScope.interval
+    $scope.$on("ssh_refresh_charts", function (e, msg) {
         var chart = echarts.init(document.getElementById($scope.charts[1].config.id));
         $scope.charts[1].config.instance = chart;
         var arrayChart = [$scope.charts[1]]
         requestService.refresh(arrayChart);
-    }
-
-    $scope.yesterday = function () {
-        $scope.reset();
-        $scope.yesterdayClass = true;
-        //table 参数配置
-        $rootScope.tableTimeStart = -1;
-        $rootScope.tableTimeEnd = -1;
-        $rootScope.start = -1;
-        $rootScope.end = -1;
-        var chart = echarts.init(document.getElementById($scope.charts[1].config.id));
-        $scope.charts[1].config.instance = chart;
-        var arrayChart = [$scope.charts[1]]
-        requestService.refresh(arrayChart);
-    };
-
-    $scope.sevenDay = function () {
-        $scope.reset();
-        $scope.sevenDayClass = true;
-        //table 参数配置
-        $rootScope.tableTimeStart = -7;
-        $rootScope.tableTimeEnd = -1;
-        $rootScope.start = -7;
-        $rootScope.end = -1;
-        $rootScope.interval = 24;
-        var chart = echarts.init(document.getElementById($scope.charts[1].config.id));
-        $scope.charts[1].config.instance = chart;
-        var arrayChart = [$scope.charts[1]]
-        requestService.refresh(arrayChart);
-    };
-
-    $scope.month = function () {
-        $scope.reset();
-        $scope.monthClass = true;
-        //table 参数配置
-        $rootScope.tableTimeStart = -30;
-        $rootScope.tableTimeEnd = -1;
-        $rootScope.start = -30;
-        $rootScope.end = -1;
-        $rootScope.interval = 24;
-        var chart = echarts.init(document.getElementById($scope.charts[1].config.id));
-        $scope.charts[1].config.instance = chart;
-        var arrayChart = [$scope.charts[1]]
-        requestService.refresh(arrayChart);
-    };
+    });
 });

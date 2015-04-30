@@ -73,6 +73,9 @@ app.controller("sourcectr", function ($scope, $rootScope, $http, requestService,
         },
     ];
     $scope.init = function () {
+        $rootScope.start = 0;
+        $rootScope.end = 0;
+        $rootScope.interval = undefined;
         $scope.charts.forEach(function (e) {
             var chart = echarts.init(document.getElementById(e.config.id));
             e.config.instance = chart;

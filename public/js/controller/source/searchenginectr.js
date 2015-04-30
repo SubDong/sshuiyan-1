@@ -69,6 +69,9 @@ app.controller("searchenginectr", function ($scope, $rootScope, $http, requestSe
             cb: $scope.searchengineFormat
         }]
     $scope.init = function () {
+        $rootScope.start = 0;
+        $rootScope.end = 0;
+        $rootScope.interval = undefined;
         $scope.charts.forEach(function (chart) {
             chart.config.instance = echarts.init(document.getElementById(chart.config.id));
             util.renderLegend(chart, chart.config);

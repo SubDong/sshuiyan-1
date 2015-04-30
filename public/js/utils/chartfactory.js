@@ -674,11 +674,11 @@ var util = {
     },
     allowItem: function (radioObj) {
         var checks = document.getElementsByName(radioObj.name);
-        var row = parseInt(radioObj.getAttribute("index"))
-        var a = checked.indexOf(row);
-        var allowSelectedCount = parseInt(radioObj.getAttribute("asc"));
-        if (a != -1) {
-            checked.splice(a, 1);
+        var row = parseInt(radioObj.getAttribute("index"))//获取选中下标
+        var a = checked.indexOf(row);//获取当前下标在legend数组的位置
+        var allowSelectedCount = parseInt(radioObj.getAttribute("asc"));//获取该legend组允许选中的个数
+        if (a != -1) {//如果当前选中的位置存在
+            checked.splice(a, 1);//
         } else {
             if (checked.length >= allowSelectedCount) {
                 checked.shift();
