@@ -791,6 +791,117 @@ var es_request = {
             } else
                 callbackFn(data);
         });
+    },
+    realTimeSearch: function (es, index, type, callbackFn) {
+        var request = {
+            "index": index,
+            "type": type,
+            "body": {
+                "query": {
+                    "match_all": {}
+                }
+            }
+        };
+    },
+    top5visit: function (es, indexes, type, ct, callbackFn) {
+        var request = {
+            "index": indexes.toString(),
+            "type": type,
+            "body": {
+                "query": {
+                    "bool": {
+                        "must": {
+                            "term": {
+                                "ct": ct
+                            }
+                        }
+                    }
+                },
+                "size": 0,
+                "aggs": {
+                    "direct_result": {
+                        "filter": {
+                            "script": {
+                                "script": "doc['rf_type'].value == param1",
+                                "params": {
+                                    "param1": 1
+                                }
+                            }
+                        },
+                        "aggs": {
+                            "direct_aggs": {
+                                "value_count": {
+                                    "field": "rf"
+                                }
+                            }
+                        }
+                    },
+                    "se_result": {
+                        "filter": {
+                            "script": {
+                                "script": "doc['rf_type'].value == 2"
+                            }
+                        },
+                        "aggs": {
+                            "se_aggs": {
+                                "terms": {
+                                    "field": "se"
+                                }
+                            }
+                        }
+                    },
+                    "other_result": {
+                        "filter": {
+                            "script": {
+                                "script": "doc['rf_type'].value == 3"
+                            }
+                        },
+                        "aggs": {
+                            "chain_aggs": {
+                                "terms": {
+                                    "field": "rf"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        es.search(request, function (error, response) {
+            if (response != undefined) {
+                var aggs_results = response.aggregations;
+                var results = [];
+                var directObj = {};
+                directObj["key"] = "直接访问";
+                directObj["count"] = aggs_results.direct_result.direct_aggs.value;
+
+                results.push(directObj);
+                aggs_results.se_result.se_aggs.buckets.forEach(function (item, index) {
+                    var obj = {};
+                    obj["key"] = item.key;
+                    obj["count"] = item.doc_count;
+                    results.push(obj);
+                });
+
+                aggs_results.other_result.chain_aggs.buckets.forEach(function (item, index) {
+                    var obj = {};
+                    obj["key"] = item.key;
+                    obj["count"] = item.doc_count;
+                    results.push(obj);
+                });
+
+                results.sort(function (o1, o2) {
+                    return o2["count"] - o1["count"]
+                });
+
+                if (results.length > 5)
+                    callbackFn(results.slice(0, 5));
+                else
+                    callbackFn(results);
+
+            }
+        });
     }
 };
 
