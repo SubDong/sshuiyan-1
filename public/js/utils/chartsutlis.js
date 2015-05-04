@@ -151,6 +151,7 @@ var chartUtils = {
         var time = chartUtils.getObjectTime(json, start);
         var label = chartUtils.getLabel(json);//去重
         var result = []
+
         label.forEach(function (label) {
             var tmp = {};
             var val = chartUtils.getObject(json, label, types);
@@ -248,7 +249,7 @@ var chartUtils = {
             for (var i = 0; i < length; i++) {
                 var _tmp = [];
                 for (var j = i * 24; j < (i + 1) * 24; j++) {
-                    _tmp.push(data.quota[j]);
+                    _tmp.push(Number(data.quota[j]));
                 }
                 final_tmp = chartUtils.arrayMerge(final_tmp, _tmp);
             }

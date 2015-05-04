@@ -43,6 +43,7 @@ app.controller("sourcectr", function ($scope, $rootScope, $http, requestService,
         var json = JSON.parse(eval("(" + data + ")").toString());
         var result = chartUtils.getRf_type(json, $rootScope.start, null, e.types);
         config['noFormat'] = true;
+        config['twoYz'] = "none";
         cf.renderChart(result, config);
     }
     $scope.charts = [

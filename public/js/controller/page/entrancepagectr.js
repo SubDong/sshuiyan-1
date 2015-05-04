@@ -37,6 +37,7 @@ app.controller('entrancepagectr', function ($scope, $rootScope, $http, requestSe
         var result = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", e.types);
         var final_result = chartUtils.getExternalinkPie(result);//获取barchart的数据
         config['noFormat'] = true;
+        config['twoYz'] = "none"
         cf.renderChart(result, config);
         var pieData = chartUtils.getEnginePie(final_result);
         $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));

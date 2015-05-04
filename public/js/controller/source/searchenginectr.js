@@ -34,6 +34,7 @@ app.controller("searchenginectr", function ($scope, $rootScope, $http, requestSe
         var json = JSON.parse(eval("(" + data + ")").toString());
         var result_json = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", e.types);
         config['noFormat'] = true;
+        config['twoYz'] = "none"
         cf.renderChart(result_json, config);
         //var pieData = chartUtils.getEnginePie(final_result);
         //$scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));

@@ -41,7 +41,7 @@ api.get('/halfhour', function (req, res) {
     var query = url.parse(req.url, true).query, quotas = [], type = query['type'];
     var start = Number(query['start']);//
     var end = Number(query['end']);//
-    var indexes = date.createIndexes(start, end, "visitor-");
+    var indexes = date.createIndexes(start, end, "access-");
     if (type.indexOf(",") > -1)for (var i = 0; i < type.split(",").length; i++) {
         quotas.push(type.split(",")[i]);
     }

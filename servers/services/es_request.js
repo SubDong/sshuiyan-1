@@ -734,10 +734,10 @@ var es_request = {
                     result = [];
                     result.push(response.aggregations.result);
                 }
-
                 if (dimension == null && interval == 0) {
                     callbackFn(result);
-                } else {
+                    return;
+                }else {
                     if (dimension != null && dimension.split(",").length > 1) {
                         callbackFn(result);
                     } else {

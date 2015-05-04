@@ -8,13 +8,13 @@ app.controller('Trend_realtime_ctrl', function ($scope, $rootScope, $http, reque
     $rootScope.tableTimeEnd = 0;
     $rootScope.checkedArray = "SS"
     $rootScope.tableSwitch = {
-        latitude:{name: "地域", field: "region"},
-        tableFilter:undefined,
-        dimen:true,
+        latitude: {name: "地域", field: "region"},
+        tableFilter: undefined,
+        dimen: true,
         // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
-        number:0,
+        number: 0,
         //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
-        coding:false
+        coding: false
         //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
     };
 
@@ -23,12 +23,48 @@ app.controller('Trend_realtime_ctrl', function ($scope, $rootScope, $http, reque
         clear.lineChart($scope.charts[0].config, checkedVal);
         $scope.charts.forEach(function (chart) {
             chart.types = checkedVal;
+            chart.config.instance = echarts.init(document.getElementById(chart.config.id))
         })
         requestService.refresh($scope.charts);
     }
     $scope.realTimeFormat = function (data, config, e) {
         var json = JSON.parse(eval("(" + data + ")").toString());
-        console.log(json);
+        var result = json[0].result;
+        var final_result = [];
+        e.types.forEach(function (qtype) {
+            switch (qtype) {
+                case "pv":
+                    var _key = [];
+                    var _quota = [];
+                    result.buckets.forEach(function (e) {
+                        _key.push(e.key_as_string.substring(11, 16));
+                        _quota.push(e.pv_aggs.value);
+                    });
+                    final_result.push({label: chartUtils.convertChinese('pv'), key: _key, quota: _quota})
+                    break;
+                case "uv":
+                    var _key = [];
+                    var _quota = [];
+                    result.buckets.forEach(function (e) {
+                        _key.push(e.key_as_string.substring(11, 16));
+                        _quota.push(e.uv_aggs.value);
+                    });
+                    final_result.push({label: chartUtils.convertChinese('uv'), key: _key, quota: _quota})
+                    break;
+                case "ip":
+                    var _key = [];
+                    var _quota = [];
+                    result.buckets.forEach(function (e) {
+                        _key.push(e.key_as_string.substring(11, 16));
+                        _quota.push(e.ip_aggs.value);
+                    });
+                    final_result.push({label: chartUtils.convertChinese('ip'), key: _key, quota: _quota})
+                    break;
+            }
+        });
+        config["noFormat"] = "noFormat";
+        config["twoYz"]="twoYz";
+        cf.renderChart(final_result, config);
     }
     $scope.charts = [
         {
@@ -42,6 +78,7 @@ app.controller('Trend_realtime_ctrl', function ($scope, $rootScope, $http, reque
                 min_max: false,
                 bGap: false,//首行缩进
                 chartType: "line",//图表类型
+                keyFormat: 'none',
                 dataKey: "key",//传入数据的key值
                 dataValue: "quota"//传入数据的value值
             },
@@ -65,7 +102,16 @@ app.controller('Trend_realtime_ctrl', function ($scope, $rootScope, $http, reque
         requestService.refresh($scope.charts);
     }
     $scope.init();
-
+    $scope.initPerson = function () {
+        $http.get("/api/halfhour?type=uv&start=0&end=0").success(function (data) {
+            var json = JSON.parse(eval("(" + data + ")").toString());
+            var result = json[0].result;
+            result.buckets.forEach(function (e) {
+                $scope.visitorCount += e.uv_aggs.value;
+            });
+        });
+    }
+    $scope.initPerson();
     /*    $scope.search = function (keyword, time, ip) {
      requestService.gridRequest($scope.startTime, $scope.endTime, $scope.gridOptions, "uv");
      };*/

@@ -8,13 +8,13 @@ app.controller('equipmentctr', function ($scope, $rootScope, $http, requestServi
     $rootScope.tableTimeStart = 0;
     $rootScope.tableTimeEnd = 0;
     $rootScope.tableSwitch = {
-        latitude:{name: "网络供应商", field: "isp"},
-        tableFilter:undefined,
-        dimen:"region",
+        latitude: {name: "网络供应商", field: "isp"},
+        tableFilter: undefined,
+        dimen: "region",
         // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
-        number:0,
+        number: 0,
         //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
-        coding:false
+        coding: false
         //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
     };
     //
@@ -31,8 +31,8 @@ app.controller('equipmentctr', function ($scope, $rootScope, $http, requestServi
         requestService.refresh($scope.charts);
 
         $rootScope.tableSwitch.latitude = val;
-        val.field == "ips"?$rootScope.tableSwitch.dimen = "region":val.field == "pm"?$rootScope.tableSwitch.dimen = "br":$rootScope.tableSwitch.dimen =false
-        $rootScope.indicators(null,null,null,"refresh");
+        val.field == "ips" ? $rootScope.tableSwitch.dimen = "region" : val.field == "pm" ? $rootScope.tableSwitch.dimen = "br" : $rootScope.tableSwitch.dimen = false
+        $rootScope.indicators(null, null, null, "refresh");
         $rootScope.targetSearch();
 
 
@@ -70,6 +70,7 @@ app.controller('equipmentctr', function ($scope, $rootScope, $http, requestServi
             e.label = chartUtils.convertChinese(e.label);
         });
         config["noFormat"] = "noFormat";
+        config['twoYz'] = "none"
         cf.renderChart(json, config);
     }
     $scope.charts = [
@@ -84,7 +85,7 @@ app.controller('equipmentctr', function ($scope, $rootScope, $http, requestServi
                 id: "equipment",
                 chartType: "bar",
                 dataKey: "key",
-                keyFormat:'none',
+                keyFormat: 'none',
                 dataValue: "quota"
             },
             types: ["uv"],
@@ -110,34 +111,6 @@ app.controller('equipmentctr', function ($scope, $rootScope, $http, requestServi
         requestService.refresh($scope.charts);
     });
 
-    $scope.sevenDay = function () {
-        $scope.reset();
-        $scope.sevenDayClass = true;
-        $rootScope.tableTimeStart = -7;
-        $rootScope.tableTimeEnd = -1;
-
-        $rootScope.start = -7;
-        $rootScope.end = -1;
-        $rootScope.interval = 24;
-        var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
-        $scope.charts[0].config.instance = chart;
-        requestService.refresh($scope.charts);
-
-    };
-    $scope.month = function () {
-        $scope.reset();
-        $scope.monthClass = true;
-        $rootScope.tableTimeStart = -30;
-        $rootScope.tableTimeEnd = -1;
-
-        $rootScope.start = -30;
-        $rootScope.end = -1;
-        $rootScope.interval = 24;
-        var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
-        $scope.charts[0].config.instance = chart;
-        requestService.refresh($scope.charts);
-
-    };
 
     $scope.checkopen = function ($event) {
         $scope.reset();

@@ -108,7 +108,7 @@ var op = {
             return;
         }
         json.forEach(function (item) {
-            labelData.push(chartUtils.convertEnglish(item.label));
+            labelData.push(item.label);
         });
         if (!chartConfig.instance)return;
         var chartObj = chartConfig.instance;
@@ -183,7 +183,7 @@ var op = {
             xData.push(util.getX(item, chartConfig));
             option.series.push(serie);
         });
-        if (!chartConfig.noFormat) {
+        if (!chartConfig.twoYz) {
             for (var i = 0; i < labelData.length; i++) {
                 if (labelData[i] == "uv" || labelData[i] == "pv") {
                     option.series[0]["yAxisIndex"] = 0;
@@ -441,17 +441,29 @@ var ad = {
                 var hours = Math.floor((value - days * 1440 * 60) / 3600);
                 var minutes = Math.floor((value - days * 1440 * 60 - hours * 3600) / 60);
                 var seconds = (value - days * 1440 * 60 - hours * 3600 - minutes * 60);
-                if (days) {
-                    return days + ":" + this.getDoubleInteger(hours) + ":" + this.getDoubleInteger(minutes) + ":" + this.getDoubleInteger(seconds);
-                } else {
-                    return this.getDoubleInteger(hours) + ":" + this.getDoubleInteger(minutes) + ":" + this.getDoubleInteger(seconds);
-                }
+                return this.getDoubleInteger(hours) + ":" + this.getDoubleInteger(minutes) + ":" + this.getDoubleInteger(seconds);
+                break;
             case "outRate":
                 return value + "%";
+                break;
             case "arrivedRate":
                 return value + "%";
+                break;
+            case "平均访问时长":
+                var days = Math.floor(value / 1440 / 60);
+                var hours = Math.floor((value - days * 1440 * 60) / 3600);
+                var minutes = Math.floor((value - days * 1440 * 60 - hours * 3600) / 60);
+                var seconds = (value - days * 1440 * 60 - hours * 3600 - minutes * 60);
+                return this.getDoubleInteger(hours) + ":" + this.getDoubleInteger(minutes) + ":" + this.getDoubleInteger(seconds);
+            case "跳出率":
+                return value + "%";
+                break;
+            case "抵达率":
+                return value + "%";
+                break;
             default :
                 return value;
+                break;
         }
     },
     getDoubleInteger: function (val) {

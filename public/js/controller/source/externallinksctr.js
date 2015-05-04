@@ -43,6 +43,7 @@ app.controller("externallinksctr", function ($scope, $rootScope, $http, requestS
         var json = JSON.parse(eval("(" + data + ")").toString());
         var result = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", e.types);
         config['noFormat'] = true;//告知chart工厂无须格式化json，可以直接使用data对象
+        config['twoYz'] = "none"
         //var final_result = chartUtils.getExternalinkPie(result);
         cf.renderChart(result, config);
         //渲染pie图

@@ -29,6 +29,7 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
         };
         $scope.onLegendClickListener = function (radio, chartObj, chartConfig, checkedVal) {
             clear.lineChart($scope.charts[0].config, checkedVal);
+            $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
             $scope.charts[0].types = checkedVal;
             var chartArray = [$scope.charts[0]];
             requestService.refresh(chartArray);
@@ -64,6 +65,7 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
                     legendClickListener: $scope.onLegendClickListener,
                     id: "index_charts",
                     bGap: false,//首行缩进
+                    min_max: false,
                     chartType: "line",//图表类型
                     dataKey: "key",//传入数据的key值
                     dataValue: "quota"//传入数据的value值
