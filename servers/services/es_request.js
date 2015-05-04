@@ -177,8 +177,8 @@ var buildRequest = function (indexes, type, quotas, dimension, filters, start, e
                                     "date_histogram": {
                                         "field": "utime",
                                         "interval": "1m",
-                                        "pre_zone": "+8:00",
-                                        "post_zone": "+8:00",
+                                        "pre_zone": "+08:00",
+                                        "post_zone": "+08:00",
                                         "order": {
                                             "_key": "asc"
                                         },
@@ -725,14 +725,6 @@ var es_request = {
     search: function (es, indexes, type, quotas, dimension, filters, start, end, interval, callbackFn) {
         var request = buildRequest(indexes, type, quotas, dimension, filters, start, end, interval);
 
-        function getQuotas() {
-            return quotas;
-        }
-
-        function getDimension() {
-            return dimension;
-        }
-
         es.search(request, function (error, response) {
             var data = [];
             if (response != undefined) {
@@ -742,67 +734,124 @@ var es_request = {
                     result = [];
                     result.push(response.aggregations.result);
                 }
-                if (getDimension() != null && getDimension().split(",").length > 1) {
+
+                if (dimension == null && interval == 0) {
                     callbackFn(result);
                 } else {
-                    getQuotas().forEach(function (quota) {
-                        switch (quota) {
-                            case "pv":
-                                data.push(pvFn(result, getDimension()));
-                                break;
-                            case "uv":
-                                data.push(uvFn(result, getDimension()));
-                                break;
-                            case "vc":
-                                data.push(vcFn(result, getDimension()));
-                                break;
-                            case "avgTime":
-                                data.push(avgTimeFn(result, getDimension()));
-                                break;
-                            case "outRate":
-                                data.push(outRateFn(result, getDimension()));
-                                break;
-                            case "arrivedRate":
-                                data.push(arrivedRateFn(result, getDimension()));
-                                break;
-                            case "avgPage":
-                                data.push(avgPageFn(result, getDimension()));
-                                break;
-                            case "pageConversion":
-                                data.push(pageConversionFn(result, getDimension()));
-                                break;
-                            case "eventConversion":
-                                data.push(eventConversionFn(result, getDimension()));
-                                break;
-                            case "ip":
-                                data.push(ipFn(result, getDimension()));
-                                break;
-                            case "nuv":
-                                data.push(nuvFn(result, getDimension()));
-                                break;
-                            case "nuvRate":
-                                data.push(nuvRateFn(result, getDimension));
-                                break;
-                            default :
-                                break;
-                        }
-                    });
-                    callbackFn(data);
+                    if (dimension != null && dimension.split(",").length > 1) {
+                        callbackFn(result);
+                    } else {
+                        quotas.forEach(function (quota) {
+                            switch (quota) {
+                                case "pv":
+                                    data.push(pvFn(result, dimension));
+                                    break;
+                                case "uv":
+                                    data.push(uvFn(result, dimension));
+                                    break;
+                                case "vc":
+                                    data.push(vcFn(result, dimension));
+                                    break;
+                                case "avgTime":
+                                    data.push(avgTimeFn(result, dimension));
+                                    break;
+                                case "outRate":
+                                    data.push(outRateFn(result, dimension));
+                                    break;
+                                case "arrivedRate":
+                                    data.push(arrivedRateFn(result, dimension));
+                                    break;
+                                case "avgPage":
+                                    data.push(avgPageFn(result, dimension));
+                                    break;
+                                case "pageConversion":
+                                    data.push(pageConversionFn(result, dimension));
+                                    break;
+                                case "eventConversion":
+                                    data.push(eventConversionFn(result, dimension));
+                                    break;
+                                case "ip":
+                                    data.push(ipFn(result, dimension));
+                                    break;
+                                case "nuv":
+                                    data.push(nuvFn(result, dimension));
+                                    break;
+                                case "nuvRate":
+                                    data.push(nuvRateFn(result, getDimension));
+                                    break;
+                                default :
+                                    break;
+                            }
+                        });
+                        callbackFn(data);
+                    }
                 }
             } else
                 callbackFn(data);
         });
     },
-    realTimeSearch: function (es, index, type, callbackFn) {
+    // 获取近30分钟的访问数据
+    realTimeSearch: function (es, index, type, filters, callbackFn) {
+        var endTime = new Date().getTime();
+        var startTime = endTime - 1800000;
+
+        var mustQuery = [{
+            "range": {
+                "utime": {
+                    "from": startTime, "to": endTime
+                }
+            }
+        }];
+
+        if (filters != null) {
+            filters.forEach(function (filter) {
+                mustQuery.push({
+                    "terms": filter
+                });
+            });
+        }
+
         var request = {
             "index": index,
             "type": type,
             "body": {
                 "query": {
-                    "match_all": {}
-                }
+                    "bool": {
+                        "must": mustQuery
+                    }
+                },
+                "size": 100000
             }
         };
+
+        es.search(request, function (error, response) {
+            if (response != undefined) {
+                var hits = response.hits.hits;
+                hits.forEach(function (item) {
+                    var locArr = item._source.loc;
+                    var utimeArr = item._source.utime;
+                    var record = [];
+
+                    for (var i = 0, l = utimeArr.length - 1; i <= l; i++) {
+                        var obj = {};
+                        if (i == l) {
+                            obj["loc"] = locArr[i];
+                            obj["vtime"] = "-";
+                            record.push(obj);
+                        } else {
+                            obj["loc"] = locArr[i];
+                            obj["vtime"] = new Date(utimeArr[i + 1] - utimeArr[i]).format("hh:mm:ss");
+                            record.push(obj);
+                        }
+                    }
+
+                    item["record"] = record;
+                });
+
+                callbackFn(hits);
+            } else
+                callbackFn([]);
+        });
     },
     top5visit: function (es, indexes, type, ct, callbackFn) {
         var request = {
