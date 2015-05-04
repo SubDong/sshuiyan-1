@@ -336,4 +336,18 @@ api.get("/summary", function (req, res) {
         datautils.send(res, JSON.stringify(result));
     });
 });
+/**
+ * 访问来源网站TOP5.by wms
+ */
+api.get("/fwlywz", function (req, res) {
+    var query = url.parse(req.url, true).query;
+    var type = query['type'];
+    var ct = query['ct'];
+    var startOffset = Number(query['start']);
+    var endOffset = Number(query['end']);
+    var indexes = date.createIndexes(startOffset, endOffset, "access-");
+    es_request.top5visit(req.es, indexes, type, ct, function (result) {//es, indexes, type, ct, callbackFn
+        datautils.send(res, result);
+    });
+});
 module.exports = api;

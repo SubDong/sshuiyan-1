@@ -28,18 +28,24 @@ app.controller('novisitors', function ($scope, $rootScope, $http) {
         $rootScope.targetSearch();
         $scope.newVisitor = angular.copy($scope.defaultObject);
         $scope.oldVisitor = angular.copy($scope.defaultObject);
+        $scope.newVisitorFwlywzTop5 = [];
+        $scope.oldVisitorFwlywzTop5 = [];
         $scope.newVisitorFwrkyTop5 = [];
         $scope.oldVisitorFwrkyTop5 = [];
         $scope.loadBaseData();
+        $scope.loadFwlywzData();
         $scope.loadFwrkyData();
     });
 
     $scope.initPage = function() {
         $scope.newVisitor = angular.copy($scope.defaultObject);
         $scope.oldVisitor = angular.copy($scope.defaultObject);
+        $scope.newVisitorFwlywzTop5 = [];
+        $scope.oldVisitorFwlywzTop5 = [];
         $scope.newVisitorFwrkyTop5 = [];
         $scope.oldVisitorFwrkyTop5 = [];
         $scope.loadBaseData();
+        $scope.loadFwlywzData();
         $scope.loadFwrkyData();
     };
     // 读取基础数据
@@ -49,6 +55,7 @@ app.controller('novisitors', function ($scope, $rootScope, $http) {
             method: 'GET',
             url: '/api/indextable/?type=1&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=pv,uv,outRate,avgTime,avgPage&dimension=ct'
         }).success(function(data, status) {
+            console.log(data);
             angular.forEach(data, function(e) {
                 if("新访客" === e.ct) {
                     $scope.newVisitor = e;
@@ -75,7 +82,23 @@ app.controller('novisitors', function ($scope, $rootScope, $http) {
     };
     // 访问来源网站TOP5
     $scope.loadFwlywzData = function() {
-
+        $http({
+            method: 'GET',
+            url: '/api/fwlywz/?type=1&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=pv&ct=0'
+        }).success(function(data, status) {
+            console.log(data);
+            $scope.newVisitorFwlywzTop5 = data;
+        }).error(function(error) {
+            console.log(error);
+        });
+        $http({
+            method: 'GET',
+            url: '/api/fwlywz/?type=1&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=pv&ct=1'
+        }).success(function(data, status) {
+            $scope.oldVisitorFwlywzTop5 = data;
+        }).error(function(error) {
+            console.log(error);
+        });
     };
     // 访问入口页TOP5
     $scope.loadFwrkyData = function() {
@@ -83,11 +106,7 @@ app.controller('novisitors', function ($scope, $rootScope, $http) {
             method: 'GET',
             url: '/api/indextable/?type=1&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=vc&dimension=loc&filerInfo=[{"ct": ["0"]}]'
         }).success(function(data, status) {
-            if(data && data.length > 5) {
-                $scope.newVisitorFwrkyTop5 = data.slice(0, 5);
-            } else {
-                $scope.newVisitorFwrkyTop5 = data;
-            }
+            $scope.newVisitorFwrkyTop5 = data ? ((data.length > 5) ? data.slice(0, 5) : data) : [];
         }).error(function(error) {
             console.log(error);
         });
@@ -95,11 +114,7 @@ app.controller('novisitors', function ($scope, $rootScope, $http) {
             method: 'GET',
             url: '/api/indextable/?type=1&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=vc&dimension=loc&filerInfo=[{"ct": ["1"]}]'
         }).success(function(data, status) {
-            if(data && data.length > 5) {
-                $scope.oldVisitorFwrkyTop5 = data.slice(0, 5);
-            } else {
-                $scope.oldVisitorFwrkyTop5 = data;
-            }
+            $scope.oldVisitorFwrkyTop5 = data ? ((data.length > 5) ? data.slice(0, 5) : data) : [];
         }).error(function(error) {
             console.log(error);
         });

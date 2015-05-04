@@ -31,7 +31,7 @@
                             <li><span>平均访问页数:</span><a>{{newVisitor.avgPage}}</a></li>
                         </ul>
                     </div>
-                    <div class="newvisitor_table">
+                    <div class="newvisitor_table" style="min-height: 233px;">
                         <h4>访问来源网站TOP5</h4>
                         <table class="table table-hover">
                             <thead>
@@ -42,36 +42,13 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>www.baidu.com</td>
-                                <td>1,141</td>
-
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>www.baidu.com</td>
-                                <td>1,141</td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>www.baidu.com</td>
-                                <td>1,141</td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>www.baidu.com</td>
-                                <td>1,141</td>
-
-                            </tr>
-                            <tr>
-                                <td>5</td>
-                                <td>www.baidu.com</td>
-                                <td>1,141</td>
+                            <tr data-ng-repeat="top5 in newVisitorFwlywzTop5">
+                                <td>{{$index + 1}}</td>
+                                <td style="text-align: left">{{top5.key}}</td>
+                                <td data-ng-bind="top5.count"></td>
                             </tr>
                             </tbody>
                         </table>
-
                     </div>
                     <div class="newvisitor_table" style="min-height: 233px;">
                         <h4>访问入口页TOP5</h4>
@@ -112,7 +89,7 @@
                         <li><span>平均访问页数:</span><a>{{oldVisitor.avgPage}}</a></li>
                     </ul>
                 </div>
-                <div class="newvisitor_table">
+                <div class="newvisitor_table" style="min-height: 233px;">
                     <h4>访问来源网站TOP5</h4>
                     <table class="table table-hover">
                         <thead>
@@ -123,36 +100,13 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>www.baidu.com</td>
-                            <td>1,141</td>
-
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>www.baidu.com</td>
-                            <td>1,141</td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>www.baidu.com</td>
-                            <td>1,141</td>
-                        </tr>
-                        <tr>
-                            <td>4</td>
-                            <td>www.baidu.com</td>
-                            <td>1,141</td>
-
-                        </tr>
-                        <tr>
-                            <td>5</td>
-                            <td>www.baidu.com</td>
-                            <td>1,141</td>
+                        <tr data-ng-repeat="top5 in oldVisitorFwlywzTop5">
+                            <td>{{$index + 1}}</td>
+                            <td style="text-align: left">{{top5.key}}</td>
+                            <td data-ng-bind="top5.count"></td>
                         </tr>
                         </tbody>
                     </table>
-
                 </div>
                 <div class="newvisitor_table" style="min-height: 233px;">
                     <h4>访问入口页TOP5</h4>
