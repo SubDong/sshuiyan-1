@@ -109,18 +109,19 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
         {consumption_name: "IP数", name: "ip"}
     ];
 
-    $rootScope.gridArray = new Array();
     if (typeof($rootScope.checkedArray) != undefined && $rootScope.checkedArray == "SS") {
         $rootScope.tableTimeStart = 0;
         $rootScope.tableTimeEnd = 0;
         $scope.appHtml = '../trend/trendtree.html';
         $rootScope.checkedArray = ["loc", "pv", "uv", "outRate"]
-        $rootScope.gridArray = [{name: '地域', field: "region"}, {name: '浏览量(PV)', field: "pv"}, {
-            name: '访客数(UV)',
-            field: "uv"
-        }, {name: '浏览量(PV)', field: "pv"}, {name: "跳出率", field: "outRate"}]
+        $rootScope.gridArray = [{name: '地域', field: "region"},
+            {name: '浏览量(PV)', field: "pv"},
+            {name: '访客数(UV)',field: "uv"},
+            {name: '浏览量(PV)', field: "pv"},
+            {name: "跳出率", field: "outRate"}]
     } else {
-        $rootScope.checkedArray = new Array();
+        if($rootScope.tableSwitch.arrayClear)$rootScope.checkedArray = new Array();
+        if($rootScope.tableSwitch.arrayClear)$rootScope.gridArray = new Array();
         $scope.appHtml = '<div ui-grid="row.entity.subGridOptions" ui-grid-auto-resize style="height: {{gridHeight}}"></div>'
     }
     //table Button 配置 table_nextbtn
@@ -240,6 +241,34 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
         pagevalue.pagination.seek(Number($scope.page));
     }
 
+    //地图分类
+    $scope.setDimen = function(a){
+        $rootScope.tableSwitch.dimen = a;
+        $scope.targetSearch();
+    }
+    //设置来源终端
+    $scope.setTerminal = function(a){
+        if(a == 0) $rootScope.tableSwitch.tableFilter = undefined;
+        if(a == 1) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[0]}]";
+        if(a == 2) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[1]}]";
+        $scope.targetSearch("visi");
+    };
+    //设置来源过滤
+    $scope.setSource = function(a){
+        if(a == 0) $rootScope.tableSwitch.tableFilter = undefined;
+        if(a == 1) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[1]}]";
+        if(a == 2) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[2]}]";
+        if(a == 3) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[3]}]";
+        $scope.targetSearch("visi");
+    };
+    //设置访客来源
+    $scope.setVisitors = function(a){
+        if(a == 0) $rootScope.tableSwitch.tableFilter = undefined;
+        if(a == 1) $rootScope.tableSwitch.tableFilter = "[{\"ct\":[0]}]";
+        if(a == 2) $rootScope.tableSwitch.tableFilter = "[{\"ct\":[1]}]";
+        $scope.targetSearch("visi");
+    };
+
     /**
      *
      * @param start 开始时间
@@ -264,10 +293,11 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
             console.error("error: tableTimeEnd is not defined,Please check whether the parameter the configuration.");
             return;
         }
+        if($rootScope.tableSwitch.arrayClear && isClicked != "visi")$rootScope.tableSwitch.tableFilter = undefined;
         $http({
             method: 'GET',
             url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + $rootScope.tableSwitch.latitude.field
-            + "&filterInfo=" + $rootScope.tableSwitch.tableFilter + "&type=1"
+            + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&type=1"
         }).success(function (data, status) {
             $scope.gridOptions.data = data;
         }).error(function (error) {

@@ -35,10 +35,10 @@ app.service('areaService', ['$rootScope', '$http', function ($rootScope, $http) 
 
     $rootScope.souce = {};
     $rootScope.souces = [
-        {name: '全部'},
-        {name: '直接访问'},
-        {name: '搜索引擎'},
-        {name: '外部链接'},
+        {name: '全部', value:0},
+        {name: '直接访问' ,value:1},
+        {name: '搜索引擎', value:2},
+        {name: '外部链接', value:3},
     ];
     $rootScope.rootSelect = {};
     $rootScope.rootSelects = [

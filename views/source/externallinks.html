@@ -70,10 +70,10 @@
                         <div class="chart_top2">
                             <ul>
                                 <li><span>设备过滤:</span></li>
-                                <li><input type="radio" checked="checked" name="radio1"/>
+                                <li><input type="radio" checked="checked" name="radio0" ng-click="setTerminal(0)"/>
                                     <label>全部</label></li>
-                                <li><input type="radio" name="radio1"/> <label>计算机</label></li>
-                                <li><input type="radio" name="radio1"/> <label>移动设备</label></li>
+                                <li><input type="radio" name="radio0" ng-click="setTerminal(1)"/> <label>计算机</label></li>
+                                <li><input type="radio" name="radio0" ng-click="setTerminal(2)"/> <label>移动设备</label></li>
                             </ul>
                         </div>
                         <div class="chart_top2">
@@ -92,10 +92,10 @@
             <div class="custom_secendtitle">
                 <div class="custom_select">
                     <div class="input_group fl">
-                        <input type="radio" checked="checked" name="radio1"/>
-                        <label>按域名</label>
-                        <input type="radio" checked="checked" name="radio1"/>
+                        <input type="radio" checked="checked" name="radio2"/>
                         <label>按URL</label>
+                        <input type="radio" name="radio2"/>
+                        <label>按域名</label>
                     </div>
                     <div class="input-group fl">
                         <input type="text" class="form-control fl" placeholder="输入域名…">

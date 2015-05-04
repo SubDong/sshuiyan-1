@@ -11,6 +11,23 @@ app.controller('flowanalysisctr', function ($scope, $rootScope, $http, requestSe
         $scope.definClass = false;
         $scope.btnchecked = true;
     };
+
+    //table配置
+    $rootScope.tableTimeStart = 0;
+    $rootScope.tableTimeEnd = 0;
+    $rootScope.tableSwitch = {
+        latitude:{name: "页面url", field: "loc"},
+        tableFilter:undefined,
+        dimen:false,
+        // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
+        number:0,
+        //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
+        coding:"<li><a href='http://www.best-ad.cn' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li>",
+        arrayClear: false
+    };
+    //
+
+
     $scope.onLegendClick = function (radio, chartInstance, config, checkedVal) {
         clear.lineChart(config, checkedVal);
         $scope.charts.forEach(function (chart) {

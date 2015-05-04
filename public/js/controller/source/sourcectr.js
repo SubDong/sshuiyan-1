@@ -14,8 +14,9 @@ app.controller("sourcectr", function ($scope, $rootScope, $http, requestService,
         // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
         number:2,
         //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
-        coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
+        coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>",
         //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
+        arrayClear: true //是否清空指标array
     };
 
 

@@ -81,11 +81,11 @@
                                 <li>
                                     <div role="group" class="btn-group">
                                         <ui-select ng-model="souce.selected" theme="selectize" class="fl"
-                                                   style="width: 90px;">
+                                                   style="width: 90px;" ng-change="setSource(souce.selected.value)">
                                             <ui-select-match placeholder="全部">{{$select.selected.name}}
                                             </ui-select-match>
                                             <ui-select-choices repeat="souce in souces">
-                                                <span ng-bind-html="souce.name"></span>
+                                                <span ng-bind-html="souce.name" ></span>
                                             </ui-select-choices>
                                         </ui-select>
                                     </div>
@@ -96,9 +96,10 @@
                         </div>
                         <div class="chart_top2">
                             <ul>
-                                <li><input type="radio" checked="checked" name="radio1"/>
-                                    <label>按地级市</label></li>
-                                <li><input type="radio" name="radio1"/> <label>按网络设备商</label></li>
+                                <li><span>访客过滤 :</span></li>
+                                <li><input type="radio" ng-click="setVisitors(0)" checked="checked" name="radio0" /><label>全部</label></li>
+                                <li><input type="radio" ng-click="setVisitors(1)" name="radio0" /><label>新访客</label></li>
+                                <li><input type="radio" ng-click="setVisitors(2)" name="radio0" /><label>老访客</label></li>
                             </ul>
                         </div>
                     </div>
@@ -106,9 +107,9 @@
             </tabset>
             <div class="custom_secendtitle">
                 <div class="custom_select">
-                    <input type="radio" checked="checked" name="radio1"/>
+                    <input type="radio" checked="checked" name="radio1" ng-click="setDimen('city')"/>
                     <label>按地级市</label>
-                    <input type="radio" checked="checked" name="radio1"/>
+                    <input type="radio" name="radio1" ng-click="setDimen('isp')"/>
                     <label>按网络设备商</label>
                     <b></b>转化目标
                     <div role="group" class="btn-group">
