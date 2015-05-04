@@ -1,4 +1,4 @@
-<div class="middle_containers" ng-controller="novisitors">
+<div class="middle_containers" ng-controller="novisitors" data-ng-init="initPage()">
     <div class="date_select">
         <div role="group" class="btn-group fl">
             <button aria-expanded="false" data-toggle="dropdown" class="btn btn-default dropdown-toggle"
@@ -16,22 +16,20 @@
             <div class="newvisitor fl">
                 <div class="nesvisitor_top">
                     <p>新访客</p>
-
                     <div class="nesvisitor_img">
                         <div>
                             <span><img src="../img/new_people.png"></span>
-                            <span>100</span>
+                            <span>{{newVisitor.percent}}</span>
                         </div>
                     </div>
                     <div class="nesvisitor_text">
                         <ul>
-                            <li><span>浏览量:</span><a>21</a></li>
-                            <li><span>访客数:</span><a>22</a></li>
-                            <li><span>跳出率:</span><a>22%</a></li>
-                            <li><span>平均访问时长:</span><a>00:00：12</a></li>
-                            <li><span>平均访问页数:</span><a>12</a></li>
+                            <li><span>浏览量:</span><a>{{newVisitor.pv}}</a></li>
+                            <li><span>访客数:</span><a>{{newVisitor.uv}}</a></li>
+                            <li><span>跳出率:</span><a>{{newVisitor.outRate}}</a></li>
+                            <li><span>平均访问时长:</span><a>{{newVisitor.avgTime}}</a></li>
+                            <li><span>平均访问页数:</span><a>{{newVisitor.avgPage}}</a></li>
                         </ul>
-
                     </div>
                     <div class="newvisitor_table">
                         <h4>访问来源网站TOP5</h4>
@@ -75,68 +73,44 @@
                         </table>
 
                     </div>
-                    <div class="newvisitor_table">
+                    <div class="newvisitor_table" style="min-height: 233px;">
                         <h4>访问入口页TOP5</h4>
                         <table class="table table-hover">
                             <thead>
                             <tr>
-                                <th>排名</th>
-                                <th>来源网站</th>
-                                <th>浏览量(PV)</th>
+                                <th width="84px">排名</th>
+                                <th style="text-align: left">入口页链接</th>
+                                <th>访问次数</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>www.baidu.com</td>
-                                <td>1,141</td>
-
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>www.baidu.com</td>
-                                <td>1,141</td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>www.baidu.com</td>
-                                <td>1,141</td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>www.baidu.com</td>
-                                <td>1,141</td>
-
-                            </tr>
-                            <tr>
-                                <td>5</td>
-                                <td>www.baidu.com</td>
-                                <td>1,141</td>
+                            <tr data-ng-repeat="top5 in newVisitorFwrkyTop5">
+                                <td>{{$index + 1}}</td>
+                                <td style="text-align: left"><a href="{{top5.loc}}" target="_blank">{{top5.loc}}</a></td>
+                                <td data-ng-bind="top5.vc"></td>
                             </tr>
                             </tbody>
                         </table>
-
                     </div>
                 </div>
             </div>
+
             <div class="oldvisitior fl">
                 <p>老访客</p>
-
                 <div class="nesvisitor_img">
                     <div>
                         <span><img src="../img/old_people.png"></span>
-                        <span>100</span>
+                        <span>{{oldVisitor.percent}}</span>
                     </div>
                 </div>
                 <div class="nesvisitor_text">
                     <ul>
-                        <li><span>浏览量:</span><a>21</a></li>
-                        <li><span>访客数:</span><a>22</a></li>
-                        <li><span>跳出率:</span><a>22%</a></li>
-                        <li><span>平均访问时长:</span><a>00:00：12</a></li>
-                        <li><span>平均访问页数:</span><a>12</a></li>
+                        <li><span>浏览量:</span><a>{{oldVisitor.pv}}</a></li>
+                        <li><span>访客数:</span><a>{{oldVisitor.uv}}</a></li>
+                        <li><span>跳出率:</span><a>{{oldVisitor.outRate}}</a></li>
+                        <li><span>平均访问时长:</span><a>{{oldVisitor.avgTime}}</a></li>
+                        <li><span>平均访问页数:</span><a>{{oldVisitor.avgPage}}</a></li>
                     </ul>
-
                 </div>
                 <div class="newvisitor_table">
                     <h4>访问来源网站TOP5</h4>
@@ -180,47 +154,24 @@
                     </table>
 
                 </div>
-                <div class="newvisitor_table">
+                <div class="newvisitor_table" style="min-height: 233px;">
                     <h4>访问入口页TOP5</h4>
                     <table class="table table-hover">
                         <thead>
                         <tr>
-                            <th>排名</th>
-                            <th>来源网站</th>
-                            <th>浏览量(PV)</th>
+                            <th width="84px">排名</th>
+                            <th style="text-align: left">入口页链接</th>
+                            <th>访问次数</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>www.baidu.com</td>
-                            <td>1,141</td>
-
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>www.baidu.com</td>
-                            <td>1,141</td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>www.baidu.com</td>
-                            <td>1,141</td>
-                        </tr>
-                        <tr>
-                            <td>4</td>
-                            <td>www.baidu.com</td>
-                            <td>1,141</td>
-
-                        </tr>
-                        <tr>
-                            <td>5</td>
-                            <td>www.baidu.com</td>
-                            <td>1,141</td>
+                        <tr data-ng-repeat="top5 in oldVisitorFwrkyTop5 | orderBy:pv">
+                            <td>{{$index + 1}}</td>
+                            <td style="text-align: left"><a href="{{top5.loc}}" target="_blank">{{top5.loc}}</a></td>
+                            <td data-ng-bind="top5.vc"></td>
                         </tr>
                         </tbody>
                     </table>
-
                 </div>
             </div>
         </div>
