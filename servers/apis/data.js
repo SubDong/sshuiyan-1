@@ -48,9 +48,8 @@ api.get('/halfhour', function (req, res) {
     else {
         quotas.push(type);
     }
-    var period = date.period(start, end);
 
-    es_request.search(req.es, indexes, 1, quotas, null, null, period[0]-1800000, period[1], 0, function (result) {
+    es_request.search(req.es, indexes, 1, quotas, null, null, new Date().getTime() - 1800000, new Date().getTime(), 0, function (result) {
         datautils.send(res, JSON.stringify(result));
     });
 });

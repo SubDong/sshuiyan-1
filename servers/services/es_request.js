@@ -176,11 +176,16 @@ var buildRequest = function (indexes, type, quotas, dimension, filters, start, e
                                 "result": {
                                     "date_histogram": {
                                         "field": "utime",
-                                        "interval": "1s",
+                                        "interval": "1m",
                                         "pre_zone": "+8:00",
                                         "post_zone": "+8:00",
                                         "order": {
                                             "_key": "asc"
+                                        },
+                                        "min_doc_count": 0,
+                                        "extended_bounds": {
+                                            "min": start,
+                                            "max": end
                                         }
                                     }, "aggs": _aggs
                                 }
@@ -737,56 +742,52 @@ var es_request = {
                     result = [];
                     result.push(response.aggregations.result);
                 }
-                if (getDimension() == null && interval == 0) {
+                if (getDimension() != null && getDimension().split(",").length > 1) {
                     callbackFn(result);
                 } else {
-                    if (getDimension() != null && getDimension().split(",").length > 1) {
-                        callbackFn(result);
-                    } else {
-                        getQuotas().forEach(function (quota) {
-                            switch (quota) {
-                                case "pv":
-                                    data.push(pvFn(result, getDimension()));
-                                    break;
-                                case "uv":
-                                    data.push(uvFn(result, getDimension()));
-                                    break;
-                                case "vc":
-                                    data.push(vcFn(result, getDimension()));
-                                    break;
-                                case "avgTime":
-                                    data.push(avgTimeFn(result, getDimension()));
-                                    break;
-                                case "outRate":
-                                    data.push(outRateFn(result, getDimension()));
-                                    break;
-                                case "arrivedRate":
-                                    data.push(arrivedRateFn(result, getDimension()));
-                                    break;
-                                case "avgPage":
-                                    data.push(avgPageFn(result, getDimension()));
-                                    break;
-                                case "pageConversion":
-                                    data.push(pageConversionFn(result, getDimension()));
-                                    break;
-                                case "eventConversion":
-                                    data.push(eventConversionFn(result, getDimension()));
-                                    break;
-                                case "ip":
-                                    data.push(ipFn(result, getDimension()));
-                                    break;
-                                case "nuv":
-                                    data.push(nuvFn(result, getDimension()));
-                                    break;
-                                case "nuvRate":
-                                    data.push(nuvRateFn(result, getDimension));
-                                    break;
-                                default :
-                                    break;
-                            }
-                        });
-                        callbackFn(data);
-                    }
+                    getQuotas().forEach(function (quota) {
+                        switch (quota) {
+                            case "pv":
+                                data.push(pvFn(result, getDimension()));
+                                break;
+                            case "uv":
+                                data.push(uvFn(result, getDimension()));
+                                break;
+                            case "vc":
+                                data.push(vcFn(result, getDimension()));
+                                break;
+                            case "avgTime":
+                                data.push(avgTimeFn(result, getDimension()));
+                                break;
+                            case "outRate":
+                                data.push(outRateFn(result, getDimension()));
+                                break;
+                            case "arrivedRate":
+                                data.push(arrivedRateFn(result, getDimension()));
+                                break;
+                            case "avgPage":
+                                data.push(avgPageFn(result, getDimension()));
+                                break;
+                            case "pageConversion":
+                                data.push(pageConversionFn(result, getDimension()));
+                                break;
+                            case "eventConversion":
+                                data.push(eventConversionFn(result, getDimension()));
+                                break;
+                            case "ip":
+                                data.push(ipFn(result, getDimension()));
+                                break;
+                            case "nuv":
+                                data.push(nuvFn(result, getDimension()));
+                                break;
+                            case "nuvRate":
+                                data.push(nuvRateFn(result, getDimension));
+                                break;
+                            default :
+                                break;
+                        }
+                    });
+                    callbackFn(data);
                 }
             } else
                 callbackFn(data);

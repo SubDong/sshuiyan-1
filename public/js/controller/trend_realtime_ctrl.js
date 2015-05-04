@@ -27,14 +27,8 @@ app.controller('Trend_realtime_ctrl', function ($scope, $rootScope, $http, reque
         requestService.refresh($scope.charts);
     }
     $scope.realTimeFormat = function (data, config, e) {
-        if (e.interval == 1) {
-            var final_result = chartUtils.getByHourByDayData(data);
-            config["noFormat"] = "noFormat";
-            config["keyFormat"] = "none";
-            cf.renderChart(final_result, config);
-        } else {
-            cf.renderChart(data, config);
-        }
+        var json = JSON.parse(eval("(" + data + ")").toString());
+        console.log(json);
     }
     $scope.charts = [
         {
@@ -45,7 +39,7 @@ app.controller('Trend_realtime_ctrl', function ($scope, $rootScope, $http, reque
                 legendClickListener: $scope.onLegendClickListener,
                 //显示几种数据
                 id: "realtime_charts",
-                min_max:false,
+                min_max: false,
                 bGap: false,//首行缩进
                 chartType: "line",//图表类型
                 dataKey: "key",//传入数据的key值
@@ -54,7 +48,7 @@ app.controller('Trend_realtime_ctrl', function ($scope, $rootScope, $http, reque
             types: ["pv", "uv"],
             dimension: ["period"],
             interval: $rootScope.interval,
-            url: "/api/charts",
+            url: "/api/halfhour",
             cb: $scope.realTimeFormat
         }];
 
