@@ -9,8 +9,7 @@
 
 require('../utils/dateFormat')();
 
-var buildQuery = function (filters) {
-
+var buildMustQuery = function (filters) {
     var mustQuery = [];
 
     if (filters != null) {
@@ -21,9 +20,13 @@ var buildQuery = function (filters) {
         });
     }
 
+    return mustQuery;
+};
+
+var buildQuery = function (filters) {
     return {
         "bool": {
-            "must": mustQuery
+            "must": buildMustQuery(filters)
         }
     }
 };
@@ -722,8 +725,103 @@ var es_request = {
                 callbackFn([]);
         });
     },
-    search: function (es, indexes, type, quotas, dimension, filters, start, end, interval, callbackFn) {
-        var request = buildRequest(indexes, type, quotas, dimension, filters, start, end, interval);
+    search: function (es, indexes, type, quotas, dimension, topN, filters, start, end, interval, callbackFn) {
+        var request = null;
+        var _aggs = null;
+
+        switch (topN + "") {
+            case "-1":  // circle topN, 适用于单一指标
+                var mustQuery = buildMustQuery(filters);
+                mustQuery.push({
+                    "range": {
+                        "utime": {
+                            "from": start, "to": end
+                        }
+                    }
+                });
+
+                for (var key in es_aggs[quotas[0]]) {
+                    _aggs = {
+                        "top_hit": es_aggs[quotas[0]][key]
+                    };
+                }
+
+                request = {
+                    "index": index,
+                    "type": type,
+                    "body": {
+                        "query": {
+                            "bool": {
+                                "must": mustQuery
+                            }
+                        },
+                        "size": 0,
+                        "aggs": {
+                            "result": {
+                                "terms": {
+                                    "field": dimension,
+                                    "order": {
+                                        "top_hit": "desc"
+                                    },
+                                    "size": topN
+                                },
+                                "aggs": _aggs
+                            }
+                        }
+                    }
+                };
+                break;
+            case "-2":  // period topN, 适用于单一指标, 结果由调用者处理
+                for (var _key in es_aggs[quotas[0]]) {
+                    _aggs = {
+                        "top_hit": es_aggs[quotas[0]][_key]
+                    };
+                }
+
+                request = {
+                    "index": index,
+                    "type": type,
+                    "body": {
+                        "query": buildQuery(filters),
+                        "size": 0,
+                        "aggs": {
+                            "result": {
+                                "date_histogram": {
+                                    "field": "utime",
+                                    "interval": interval / 1000 + "s",
+                                    "format": "yyyy-MM-dd HH:mm:ss",
+                                    "pre_zone": "+08:00",
+                                    "post_zone": "+08:00",
+                                    "order": {
+                                        "_key": "asc"
+                                    },
+                                    "min_doc_count": 0,
+                                    "extended_bounds": {
+                                        "min": start,
+                                        "max": end
+                                    }
+                                },
+                                "aggs": {
+                                    "dimension": {
+                                        "terms": {
+                                            "field": dimension.split(",")[1],
+                                            "order": {
+                                                "top_hit": "desc"
+                                            },
+                                            "size": topN
+                                        },
+                                        "aggs": _aggs
+                                    }
+                                }
+                            }
+                        }
+                    }
+                };
+                break;
+            default :
+                request = buildRequest(indexes, type, quotas, dimension, filters, start, end, interval);
+                break;
+        }
 
         es.search(request, function (error, response) {
             var data = [];
@@ -734,10 +832,10 @@ var es_request = {
                     result = [];
                     result.push(response.aggregations.result);
                 }
+
                 if (dimension == null && interval == 0) {
                     callbackFn(result);
-                    return;
-                }else {
+                } else {
                     if (dimension != null && dimension.split(",").length > 1) {
                         callbackFn(result);
                     } else {
@@ -777,7 +875,7 @@ var es_request = {
                                     data.push(nuvFn(result, dimension));
                                     break;
                                 case "nuvRate":
-                                    data.push(nuvRateFn(result, getDimension));
+                                    data.push(nuvRateFn(result, dimension));
                                     break;
                                 default :
                                     break;
@@ -853,7 +951,7 @@ var es_request = {
                 callbackFn([]);
         });
     },
-    top5visit: function (es, indexes, type, ct, callbackFn) {
+    top5visit: function (es, indexes, type, ct, callbackFn) {   // index => access-*
         var request = {
             "index": indexes.toString(),
             "type": type,
@@ -909,7 +1007,7 @@ var es_request = {
                         "aggs": {
                             "chain_aggs": {
                                 "terms": {
-                                    "field": "rf"
+                                    "field": "dm"
                                 }
                             }
                         }
