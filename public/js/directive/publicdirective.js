@@ -287,3 +287,83 @@ app.filter("quotaHelpFormat", function () {
         return "错误的指标KEY";
     };
 });
+/**
+ * Create by wms on 2015-05-05.新老访客信息
+ */
+app.directive("sshNoVisitor", function($http, $rootScope) {
+    return {
+        restrict: 'E',
+        templateUrl: '../commons/no_visitor.html',
+        scope : true,
+        link: function (scope, element, attris, controller) {
+            scope._type = attris.myScope;
+            scope._ctValue = attris.myScope === "nv" ? "0" : "1";
+            scope._ctText = attris.myScope === "nv" ? "新访客" : "老访客";
+            scope.defaultObject = {
+                percent : "0.00%",
+                pv : 0,
+                uv : 0,
+                outRate : 0,
+                avgTime : "--",
+                avgPage : 0
+            };
+            scope._visitor = angular.copy(scope.defaultObject);
+            // 读取基础数据
+            scope.loadBaseData = function() {
+                scope.sumPv = 0;
+                $http({
+                    method: 'GET',
+                    url: '/api/indextable/?type=1&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=pv,uv,outRate,avgTime,avgPage&dimension=ct'
+                }).success(function(data, status) {
+                    angular.forEach(data, function(e) {
+                        if(e.ct === scope._ctText) {
+                            scope._visitor = e;
+                        }
+                        scope.sumPv += parseInt(e.pv);
+                    });
+                    if(scope.sumPv == 0) {
+                        scope._visitor.percent = "0.00%";
+                    } else if(scope._visitor.pv == 0) {
+                        scope._visitor.percent = "100%";
+                    } else {
+                        scope._visitor.percent = (scope._visitor.pv * 100 / scope.sumPv).toFixed(2) + "%";
+                    }
+                }).error(function(error) {
+                    console.log(error);
+                });
+            };
+            scope.loadBaseData();
+            scope.loadFwlywzData = function () {
+                $http({
+                    method: 'GET',
+                    url: '/api/fwlywz/?type=1&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=pv&ct=' + scope._ctValue
+                }).success(function (data, status) {
+                    scope.fwlywzTop5 = data;
+                }).error(function (error) {
+                    console.log(error);
+                });
+            };
+            scope.loadFwlywzData();
+            // 访问入口页TOP5
+            scope.loadFwrkyData = function () {
+                $http({
+                    method: 'GET',
+                    url: '/api/indextable/?type=1&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=vc&dimension=loc&filerInfo=[{"ct": ["'+ scope._ctValue +'"]}]'
+                }).success(function (data, status) {
+                    scope.fwrkyTop5 = data ? ((data.length > 5) ? data.slice(0, 5) : data) : [];
+                }).error(function (error) {
+                    console.log(error);
+                });
+            };
+            scope.loadFwrkyData();
+            scope.$on("ssh_refresh_charts", function(e, msg) {
+                scope._visitor = angular.copy(scope.defaultObject);
+                scope.fwlywzTop5 = [];
+                scope.fwrkyTop5 = [];
+                scope.loadBaseData();
+                scope.loadFwlywzData();
+                scope.loadFwrkyData();
+            });
+        }
+    }
+});
