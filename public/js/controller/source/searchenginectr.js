@@ -65,7 +65,7 @@ app.controller("searchenginectr", function ($scope, $rootScope, $http, requestSe
                 legendClickListener: $scope.onLegendClick,
                 legendAllowCheckCount: 1,
                 min_max: false,
-                bGap: false,
+                bGap: true,
                 id: "indicators_charts",
                 chartType: "bar",
                 keyFormat: "none",//设置不需要chart工厂处理x轴数据

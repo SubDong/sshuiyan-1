@@ -90,7 +90,10 @@ var init = {
 }
 var op = {
     lineChart: function (data, chartConfig) {
-        if (!data.length) return;
+        if (!data.length) {
+            def.defData(chartConfig);
+            return;
+        }
         var json, labelData = [];
         if (chartConfig.noFormat) {
             json = data;
@@ -190,11 +193,7 @@ var op = {
                 } else {
                     var formatType = labelData[i];
                     option.series[i]["yAxisIndex"] = i;
-                    option.yAxis[i]["axisLabel"] = {
-                        formatter: function (value) {
-                            return ad.formatFunc(value, formatType);
-                        }
-                    };
+                    ad.renderFormat(option, i, formatType);
                 }
             }
         }
@@ -443,26 +442,68 @@ var ad = {
                 var seconds = (value - days * 1440 * 60 - hours * 3600 - minutes * 60);
                 return this.getDoubleInteger(hours) + ":" + this.getDoubleInteger(minutes) + ":" + this.getDoubleInteger(seconds);
                 break;
-            case "outRate":
-                return value + "%";
-                break;
-            case "arrivedRate":
-                return value + "%";
-                break;
             case "平均访问时长":
                 var days = Math.floor(value / 1440 / 60);
                 var hours = Math.floor((value - days * 1440 * 60) / 3600);
                 var minutes = Math.floor((value - days * 1440 * 60 - hours * 3600) / 60);
                 var seconds = (value - days * 1440 * 60 - hours * 3600 - minutes * 60);
                 return this.getDoubleInteger(hours) + ":" + this.getDoubleInteger(minutes) + ":" + this.getDoubleInteger(seconds);
-            case "跳出率":
-                return value + "%";
-                break;
-            case "抵达率":
-                return value + "%";
                 break;
             default :
                 return value;
+                break;
+        }
+    },
+    renderFormat: function (option, index, matchType) {
+        switch (matchType) {
+            case "avgTime":
+                option.yAxis[index]["axisLabel"] = {
+                    formatter: function (value) {
+                        return ad.formatFunc(value, "avgTime");
+                    }
+                };
+                break;
+            case "outRate":
+                option.yAxis[index]["axisLabel"] = {
+                    formatter: function (value) {
+                        return value + "%";
+                    }
+                };
+                break;
+            case "arrivedRate":
+                option.yAxis[index]["axisLabel"] = {
+                    formatter: function (value) {
+                        return value + "%";
+                    }
+                };
+                break;
+            case "平均访问时长":
+                option.yAxis[index]["axisLabel"] = {
+                    formatter: function (value) {
+                        return ad.formatFunc(value, "平均访问时长");
+                    }
+                };
+                break;
+            case "跳出率":
+                option.yAxis[index]["axisLabel"] = {
+                    formatter: function (value) {
+                        return value + "%";
+                    }
+                };
+                break;
+            case "抵达率":
+                option.yAxis[index]["axisLabel"] = {
+                    formatter: function (value) {
+                        return value + "%";
+                    }
+                };
+                break;
+            default :
+                option.yAxis[index]["axisLabel"] = {
+                    formatter: function (value) {
+                        return value;
+                    }
+                };
                 break;
         }
     },

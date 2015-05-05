@@ -15,7 +15,11 @@ var map = require('../utils/map');
 var api = express.Router();
 
 api.get('/charts', function (req, res) {
-    var query = url.parse(req.url, true).query, quotas = [], type = query['type'], dimension = query.dimension, filter = query.filter == undefined ? null : JSON.parse(query.filter);
+    var query = url.parse(req.url, true).query, quotas = [], type = query['type'], dimension = query.dimension, filter=null;
+    var filter_f = query.filter;
+    if (filter_f) {
+        filter = JSON.parse(filter_f);
+    }
     if (type.indexOf(",") > -1)for (var i = 0; i < type.split(",").length; i++) {
         quotas.push(type.split(",")[i]);
     }

@@ -150,19 +150,20 @@ var chartUtils = {
     getRf_type: function (json, start, labelType, types) {
         var time = chartUtils.getObjectTime(json, start);
         var label = chartUtils.getLabel(json);//去重
-        var result = []
-
+        var result = [];
         label.forEach(function (label) {
-            var tmp = {};
-            var val = chartUtils.getObject(json, label, types);
-            if (labelType) {
-                tmp['label'] = label;
-            } else {
-                tmp['label'] = chartUtils.getLinked(label);
+            if (label) {
+                var tmp = {};
+                var val = chartUtils.getObject(json, label, types);
+                if (labelType) {
+                    tmp['label'] = label;
+                } else {
+                    tmp['label'] = chartUtils.getLinked(label);
+                }
+                tmp['key'] = time;
+                tmp['quota'] = val;
+                result.push(tmp);
             }
-            tmp['key'] = time;
-            tmp['quota'] = val;
-            result.push(tmp);
         });
         return result;
     },
@@ -198,7 +199,7 @@ var chartUtils = {
             return v + (b[i] || 0)
         })
     },
-    getEnginePie: function (data) {
+    getEnginePie: function (data, split) {
         if (data) {
             var result_data = [];
             var _label = [];
@@ -214,7 +215,11 @@ var chartUtils = {
                 });
                 if (_val != 0) {
                     _data.push(_val);
-                    _label.push(e.label);
+                    if (split) {
+                        _label.push(e.label.split(split)[0]);
+                    } else {
+                        _label.push(e.label);
+                    }
                 }
             });
             result["key"] = _label;
