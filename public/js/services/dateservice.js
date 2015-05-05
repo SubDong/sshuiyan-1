@@ -21,6 +21,9 @@ app.service('requestService', ['$rootScope', '$http', function ($rootScope, $htt
             if (e.filter) {
                 req = req + "&filter=" + e.filter;
             }
+            if(e.topN){
+                req+="&topN="+ e.topN;
+            }
             $http.get(req).success(function (result) {
                 if (e.cb) {
                     e.cb(result, e.config, e);

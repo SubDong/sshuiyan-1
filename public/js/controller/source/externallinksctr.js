@@ -65,6 +65,7 @@ app.controller("externallinksctr", function ($scope, $rootScope, $http, requestS
             types: ["pv"],
             dimension: ["dm"],
             filter: '[{\"rf_type\":[3]}]',
+            topN: [-2, 5],
             url: "/api/map",
             cb: $scope.pieFormat
         },

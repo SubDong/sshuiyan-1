@@ -7,13 +7,13 @@ app.controller('entrancepagectr', function ($scope, $rootScope, $http, requestSe
     $rootScope.tableTimeStart = 0;
     $rootScope.tableTimeEnd = 0;
     $rootScope.tableSwitch = {
-        latitude:{name: "页面url", field: "loc"},
-        tableFilter:undefined,
-        dimen:false,
+        latitude: {name: "页面url", field: "loc"},
+        tableFilter: undefined,
+        dimen: false,
         // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
-        number:2,
+        number: 2,
         //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
-        coding:"<li><a href='http://www.best-ad.cn' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li>",
+        coding: "<li><a href='http://www.best-ad.cn' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li>",
         arrayClear: true
     };
 
@@ -34,7 +34,14 @@ app.controller('entrancepagectr', function ($scope, $rootScope, $http, requestSe
     }
     $scope.mainFormat = function (data, config, e) {
         var json = JSON.parse(eval("(" + data + ")").toString());
+        //json.forEach(function (e) {
+        //    //e.dimension.buckets.forEach(function (b) {
+        //    //    console.log(b);
+        //    //})
+        //    console.log(e);
+        //})
         var result = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", e.types);
+        //console.log(result);
         var final_result = chartUtils.getExternalinkPie(result);//获取barchart的数据
         config['noFormat'] = true;
         config['twoYz'] = "none"

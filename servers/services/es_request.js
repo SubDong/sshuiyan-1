@@ -747,7 +747,7 @@ var es_request = {
                 }
 
                 request = {
-                    "index": index,
+                    "index": indexes,
                     "type": type,
                     "body": {
                         "query": {
@@ -779,7 +779,7 @@ var es_request = {
                 }
 
                 request = {
-                    "index": index,
+                    "index": indexes,
                     "type": type,
                     "body": {
                         "query": buildQuery(filters),

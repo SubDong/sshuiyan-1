@@ -15,8 +15,14 @@ var map = require('../utils/map');
 var api = express.Router();
 
 api.get('/charts', function (req, res) {
-    var query = url.parse(req.url, true).query, quotas = [], type = query['type'], dimension = query.dimension, filter=null;
+    var query = url.parse(req.url, true).query, quotas = [], type = query['type'], dimension = query.dimension, filter = null, topN = [];
     var filter_f = query.filter;
+    var topN_f = query.topN == undefined ? null : query.topN
+    if (topN_f) {
+        topN = topN_f.split(",");
+    } else {
+        topN.push(0);
+    }
     if (filter_f) {
         filter = JSON.parse(filter_f);
     }
@@ -37,15 +43,21 @@ api.get('/charts', function (req, res) {
         interval = date.interval(start, end, Number(query['int']));
     }
 
-    es_request.search(req.es, indexes, 1, quotas, dimension, filter, period[0], period[1], interval, function (result) {
+    es_request.search(req.es, indexes, 1, quotas, dimension, topN, filter, period[0], period[1], interval, function (result) {
         datautils.send(res, JSON.stringify(result));
     });
 });
 api.get('/halfhour', function (req, res) {
-    var query = url.parse(req.url, true).query, quotas = [], type = query['type'];
+    var query = url.parse(req.url, true).query, quotas = [], type = query['type'], topN=[];
     var start = Number(query['start']);//
     var end = Number(query['end']);//
     var indexes = date.createIndexes(start, end, "access-");
+    var topN_f = query.topN == undefined ? null : query.topN
+    if (topN_f) {
+        topN = topN_f.split(",");
+    } else {
+        topN.push(0);
+    }
     if (type.indexOf(",") > -1)for (var i = 0; i < type.split(",").length; i++) {
         quotas.push(type.split(",")[i]);
     }
@@ -53,12 +65,18 @@ api.get('/halfhour', function (req, res) {
         quotas.push(type);
     }
 
-    es_request.search(req.es, indexes, 1, quotas, null, null, new Date().getTime() - 1800000, new Date().getTime(), 0, function (result) {
+    es_request.search(req.es, indexes, 1, quotas, null, topN, null, new Date().getTime() - 1800000, new Date().getTime(), 0, function (result) {
         datautils.send(res, JSON.stringify(result));
     });
 });
 api.get('/map', function (req, res) {
-    var query = url.parse(req.url, true).query, quotas = [], type = query['type'], dimension = query.dimension;
+    var query = url.parse(req.url, true).query, quotas = [], type = query['type'], dimension = query.dimension, topN = [];
+    var topN_f = query.topN == undefined ? null : query.topN
+    if (topN_f) {
+        topN = topN_f.split(",");
+    } else {
+        topN.push(0)
+    }
     var filter = query.filter == undefined ? null : JSON.parse(query.filter);
     if (type.indexOf(",") > -1)for (var i = 0; i < type.split(",").length; i++) {
         quotas.push(type.split(",")[i]);
@@ -72,7 +90,7 @@ api.get('/map', function (req, res) {
 
     var period = date.period(start, end);
     var interval = date.interval(start, end, Number(query['int']));
-    es_request.search(req.es, indexes, 1, quotas, dimension, filter, period[0], period[1], interval, function (result) {
+    es_request.search(req.es, indexes, 1, quotas, dimension, topN, filter, period[0], period[1], interval, function (result) {
         datautils.send(res, JSON.stringify(result));
     });
 });
@@ -81,6 +99,13 @@ api.get('/pie', function (req, res) {
     var quotas = [];
     var type = query['type'];
     var dimension = query.dimension;
+    var topN = [];
+    var topN_f = query.topN == undefined ? null : query.topN
+    if (topN_f) {
+        topN = topN_f.split(",");
+    } else {
+        topN.push(0)
+    }
     if (type.indexOf(",") > -1)for (var i = 0; i < type.split(",").length; i++) {
         quotas.push(type.split(",")[i]);
     }
@@ -94,7 +119,7 @@ api.get('/pie', function (req, res) {
     var period = date.period(start, end);
     var interval = date.interval(start, end, Number(query['int']));
 
-    es_request.search(req.es, indexes, 1, quotas, dimension, null, period[0], period[1], interval, function (result) {
+    es_request.search(req.es, indexes, 1, quotas, dimension, topN, null, period[0], period[1], interval, function (result) {
         datautils.send(res, JSON.stringify(result));
     });
 

@@ -87,7 +87,7 @@ app.controller('equipmentctr', function ($scope, $rootScope, $http, requestServi
                 keyFormat: 'none',
                 dataValue: "quota"
             },
-            types: ["uv"],
+            types: ["uv","vc"],
             dimension: ["isp"],
             interval: $rootScope.interval,
             url: "/api/charts",
