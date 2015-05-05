@@ -729,7 +729,7 @@ var es_request = {
         var request = null;
         var _aggs = null;
 
-        switch (topN + "") {
+        switch (topN[0]) {
             case "-1":  // circle topN, 适用于单一指标
                 var mustQuery = buildMustQuery(filters);
                 mustQuery.push({
@@ -763,7 +763,7 @@ var es_request = {
                                     "order": {
                                         "top_hit": "desc"
                                     },
-                                    "size": topN
+                                    "size": topN[1]
                                 },
                                 "aggs": _aggs
                             }
@@ -808,7 +808,7 @@ var es_request = {
                                             "order": {
                                                 "top_hit": "desc"
                                             },
-                                            "size": topN
+                                            "size": topN[1]
                                         },
                                         "aggs": _aggs
                                     }
