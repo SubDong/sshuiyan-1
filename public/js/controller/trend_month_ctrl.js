@@ -17,7 +17,7 @@ app.controller('trend_month_ctrl', function ($scope, $rootScope, $http, requestS
     $rootScope.tableTimeEnd = -1;
     $rootScope.tableSwitch = {
         latitude:{name: "日期", field: "period"},
-        tableFilter:undefined,
+        tableFilter:null,
         dimen:false,
         // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
         number:0,

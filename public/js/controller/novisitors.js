@@ -7,7 +7,7 @@ app.controller('novisitors', function ($scope, $rootScope, $http) {
     $rootScope.tableTimeEnd = 0;
     $rootScope.tableSwitch = {
         latitude:{name: "新老访客", field: "ct"},
-        tableFilter:undefined,
+        tableFilter:null,
         dimen:false,
         // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
         number:1,

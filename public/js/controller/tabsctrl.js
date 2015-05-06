@@ -110,15 +110,32 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
     ];
 
     if (typeof($rootScope.checkedArray) != undefined && $rootScope.checkedArray == "SS") {
-        $rootScope.tableTimeStart = 0;
-        $rootScope.tableTimeEnd = 0;
-        $scope.appHtml = '../trend/trendtree.html';
-        $rootScope.checkedArray = ["loc", "pv", "uv", "outRate"]
-        $rootScope.gridArray = [{name: '地域', field: "region"},
-            {name: '浏览量(PV)', field: "pv"},
-            {name: '访客数(UV)',field: "uv"},
-            {name: '浏览量(PV)', field: "pv"},
-            {name: "跳出率", field: "outRate"}]
+        $scope.appHtml = "<div class='trendbox'><div class='trend_top'><div class='trend_left'><div class='left_top'><div class='trend_img'><img src='../images/windows.png'> "+
+        "</div><div class='trend_text'><ul><li>操作系统：<span>Win 7</span></li><li>网络服务商：<span>电信</span></li><li>屏幕分辨率：<span>1920x1080</span></li><li>屏幕颜色:<span>32-bit</span></li>"+
+        "</ul></div></div><div class='left_under'><div class='trend_img'><img src='../images/google.png'></div><div class='trend_text'><ul><li>浏览器：<span>Google Chrome</span></li>"+
+        "<li>Flash版本：<span>11.6</span></li><li>是否支持Cookie：<span>支持</span></li><li>是否支持JAVA:<span>支持</span></li></ul></div></div></div><div class='trend_right'><ul><li>访问类型：<span>新访客</span></li>"+
+        "<li>当天访问频次：<span>1</span></li><li>上一次访问时间：<span>首次访问</span></li><li>本次来路:<span><a href='#'>百度(搜索词:百度广告联盟)</a></span></li><li>入口页面：<span><a href='#'>http://editor.baidu.com</a></span></li>"+
+        "<li>最后停留在:<span><a href='#'>http://editor.baidu.com/union.html</a></span></li></ul></div></div><div class='trendunder'><b>访问路径：</b><ul><li>打开时间</li>"+
+        "<li><span>13:02:34</span></li><li><span>13:02:34</span></li><li><span>13:02:34</span></li></ul><ul><li>停留时长</li><li><span>10'</span></li><li><span>10'</span></li>"+
+        "<li><span>10'</span></li></ul><ul><li>页面地址</li><li><span><a href='#'>http://editor.baidu.com</a></span></li><li><span><a href='#'>http://editor.baidu.com</a></span></li>"+
+        "<li><span><a href='#'>http://editor.baidu.com</a></span></li></ul></div></div>";
+
+        $rootScope.gridArray = [{name: '地域', field: "city"},
+            {name: '访问时间', field: "utime"},
+            {name: '来源',field: "source", cellTemplate:"<a href='{{grid.appScope.getDataUrlInfo(grid, row,1)}}' style='color:#0965b8;line-height:30px;'>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</a>"},
+            {name: '访客标识码', field: "vid"},
+            {name: "访问ip", field: "ip"},
+            {name: "访问时长", field: "utimeAll"},
+            {name: "访问页数", field: "pageNumber"}];
+        $http({
+            method: 'GET',
+            url: '/api/realTimeAccess/?filerInfo=' + $rootScope.tableSwitch.tableFilter + "&type=1"
+        }).success(function (data, status) {
+            $scope.gridOptions.data = data;
+            $rootScope.checkedArray = "";
+        }).error(function (error) {
+            console.log(error);
+        });
     } else {
         if($rootScope.tableSwitch.arrayClear)$rootScope.checkedArray = new Array();
         if($rootScope.tableSwitch.arrayClear)$rootScope.gridArray = new Array();
@@ -251,7 +268,8 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
         if(a == 0) $rootScope.tableSwitch.tableFilter = undefined;
         if(a == 1) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[0]}]";
         if(a == 2) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[1]}]";
-        $scope.targetSearch("visi");
+        $scope.isJudge = false;
+        $scope.targetSearch();
     };
     //设置来源过滤
     $scope.setSource = function(a){
@@ -259,14 +277,16 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
         if(a == 1) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[1]}]";
         if(a == 2) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[2]}]";
         if(a == 3) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[3]}]";
-        $scope.targetSearch("visi");
+        $scope.isJudge = false;
+        $scope.targetSearch();
     };
     //设置访客来源
     $scope.setVisitors = function(a){
         if(a == 0) $rootScope.tableSwitch.tableFilter = undefined;
         if(a == 1) $rootScope.tableSwitch.tableFilter = "[{\"ct\":[0]}]";
         if(a == 2) $rootScope.tableSwitch.tableFilter = "[{\"ct\":[1]}]";
-        $scope.targetSearch("visi");
+        $scope.isJudge = false;
+        $scope.targetSearch();
     };
 
     /**
@@ -293,7 +313,8 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
             console.error("error: tableTimeEnd is not defined,Please check whether the parameter the configuration.");
             return;
         }
-        if($rootScope.tableSwitch.arrayClear && isClicked != "visi")$rootScope.tableSwitch.tableFilter = undefined;
+        if($rootScope.tableSwitch.isJudge == undefined)$scope.isJudge = true;
+        if($rootScope.tableSwitch.isJudge)$rootScope.tableSwitch.tableFilter = undefined;
         $http({
             method: 'GET',
             url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + $rootScope.tableSwitch.latitude.field
@@ -306,7 +327,7 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
     }
 
     //init
-    $scope.targetSearch();
+    //$scope.targetSearch();
     //
 
     //表格展开项
@@ -339,6 +360,15 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
             }
         });
     };
+    //得到数据中的url
+    $scope.getDataUrlInfo = function(grid,row,number){
+        var a = row.entity.source.split(",");
+        if(number == 1){
+            return a[0];
+        }else if(number == 2){
+            return a[1];
+        }
+    }
 
 
     var getField = function (rr, ss) {

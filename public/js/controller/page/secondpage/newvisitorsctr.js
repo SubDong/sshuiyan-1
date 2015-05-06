@@ -17,7 +17,7 @@ app.controller("newvisitorsctr", function ($scope, $rootScope, $http, requestSer
     $rootScope.tableTimeEnd = 0;
     $rootScope.tableSwitch = {
         latitude: {name: "页面url", field: "loc"},
-        tableFilter: [{"ct": [0]}],
+        tableFilter: "[{\"ct\": [0]}]",
         dimen: false,
         // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
         number: 2,

@@ -8,7 +8,7 @@ app.controller("provincemapctr", function ($scope, $rootScope, $http, requestSer
     $rootScope.tableTimeEnd = 0;//结束时间
     $rootScope.tableSwitch = {
         latitude:{name: "地域", field: "region"},
-        tableFilter:undefined,
+        tableFilter:null,
         dimen:"city",
         // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
         number:1,

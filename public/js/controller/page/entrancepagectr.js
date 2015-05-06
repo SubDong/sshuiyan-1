@@ -7,9 +7,9 @@ app.controller('entrancepagectr', function ($scope, $rootScope, $http, requestSe
     $rootScope.tableTimeStart = 0;
     $rootScope.tableTimeEnd = 0;
     $rootScope.tableSwitch = {
-        latitude: {name: "页面url", field: "loc"},
-        tableFilter: undefined,
-        dimen: false,
+        latitude:{name: "页面url", field: "loc"},
+        tableFilter:null,
+        dimen:false,
         // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
         number: 2,
         //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
