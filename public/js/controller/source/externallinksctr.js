@@ -45,11 +45,26 @@ app.controller("externallinksctr", function ($scope, $rootScope, $http, requestS
         var result = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", e.types);
         config['noFormat'] = true;//告知chart工厂无须格式化json，可以直接使用data对象
         config['twoYz'] = "none";
+        console.log(result);
         cf.renderChart(result, config);
         //渲染pie图
         var pieData = chartUtils.getEnginePie(result, "?");
         $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
         cf.renderChart(pieData, $scope.charts[0].config);
+    }
+    $scope.topNFormat = function (data, config, e) {
+        var json = JSON.parse(eval("(" + data + ")").toString());
+        var _key = [];
+        json.forEach(function (e) {
+            e.dimension.buckets.forEach(function (buck) {
+                if (buck) {
+
+                }
+                //console.log(e.key_as_string + ">>" + buck.value_count);
+            });
+            _key.push(e.key_as_string);
+        });
+        console.log(_key);
     }
     $scope.charts = [
         {

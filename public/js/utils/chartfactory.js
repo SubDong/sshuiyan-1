@@ -638,7 +638,7 @@ var util = {
         legendDiv.setAttribute("style", "width:100%;position:absolute;margin:0px auto;text-align:center;z-index:10;background: #ffffff;");
         for (var i = c.legendData.length - 1; i > -1; i--) {
             var lab = document.createElement("label");
-            var spn = document.createElement("span");
+            var spn = document.createElement("b");
             var rad = document.createElement("input");
             rad.type = renderType;
             if (c.legendData[i] == "浏览量(PV)" || c.legendData[i] == "访客数(UV)") {
@@ -734,16 +734,20 @@ var util = {
             checked.splice(a, 1);//
         } else {
             if (checked.length >= allowSelectedCount) {
-                checked.shift();
+                var _shift = checked.shift();
+                checks[_shift].previousSibling.style.backgroundPosition = "0 0";
                 checked.push(row);
             } else {
                 checked.push(row);
             }
         }
+        //console.log(checks);
+
         for (var j = 0; j < checks.length; j++) {
             checks[j].checked = false;
         }
         for (var i = 0; i < checked.length; i++) {
+            checks[checked[i]].previousSibling.style.backgroundPosition="0px -50px";
             checks[checked[i]].checked = true;
         }
         return checked;
