@@ -195,12 +195,12 @@ api.get('/indextable', function (req, res) {
     var _lati = query["dimension"];//统计纬度
     var _type = query["type"];
 
-    var _filter = query["filerInfo"] != undefined && query["filerInfo"] != 'undefined' ? JSON.parse(query["filerInfo"]) : query["filerInfo"] == 'undefined' ? undefined : query["filerInfo"];//过滤器
+    var _filter = query["filerInfo"] != null && query["filerInfo"] != 'null' ? JSON.parse(query["filerInfo"]) : query["filerInfo"] == 'null' ? null : query["filerInfo"];//过滤器
     var indexes = date.createIndexes(_startTime, _endTime, "visitor-");//indexs
 
     var period = date.period(_startTime, _endTime); //时间段
     var interval = date.interval(_startTime, _endTime); //时间分割
-    es_request.search(req.es, indexes, _type, _indic, _lati, _filter, period[0], period[1], interval, function (data) {
+    es_request.search(req.es, indexes, _type, _indic, _lati, [0], _filter, period[0], period[1], interval, function (data) {
         var result = [];
         var vidx = 0;
         var maps = {}
@@ -250,7 +250,31 @@ api.get('/indextable', function (req, res) {
         datautils.send(res, result);
     })
 });
-
+/**
+ * 实时访问
+ */
+api.get('/realTimeAccess', function (req, res) {
+    var query = url.parse(req.url, true).query;
+    var _type = query["type"];
+    var _filters = query["filerInfo"] != null && query["filerInfo"] != 'null' ? JSON.parse(query["filerInfo"]) : query["filerInfo"] == 'null' ? null : query["filerInfo"];//过滤器;
+    var indexes = date.createIndexes(0, 0, "visitor-");
+    es_request.realTimeSearch(req.es, indexes, _type, _filters, function(data){
+        var resultArray = new Array();
+        data.forEach(function(item,i){
+            var result = {};
+            result["city"] = item._source.city == "-"?"国外":item._source.city;
+            var newDate =  new Date(item._source.utime[0]).toString();
+            result["utime"] = newDate.substring(newDate.indexOf(":")-3, newDate.indexOf("G")-1);
+            result["source"] = item._source.rf+","+(item._source.se != "-"?item._source.se:item._source.rf);
+            result["vid"] = item._source.vid;
+            result["ip"] = item._source.remote;
+            result["utimeAll"] = new Date(item._source.utime[item._source.utime.length-1] - item._source.utime[0]).format("hh:mm:ss");
+            result["pageNumber"] = item._source.loc.length
+            resultArray.push(result)
+        });
+        datautils.send(res, resultArray);
+    });
+});
 
 /**************************************************************/
 //访客地图
@@ -264,7 +288,7 @@ api.get('/visitormap', function (req, res) {
     var period = date.period(_startTime, _endTime); //时间段
     var interval = date.interval(_startTime, _endTime); //时间分割
 
-    es_request.search(req.es, indexes, _type, _quotas, null, null, period[0], period[1], interval, function (data) {
+    es_request.search(req.es, indexes, _type, _quotas, null, [0], null, period[0], period[1], interval, function (data) {
         var result = {};
         data.forEach(function (item, i) {
             result[item.label] = item.label == "outRate" ? item.quota[0] + "%" : item.label == "avgTime" ? new Date(item.quota[0]).format("hh:mm:ss") : item.quota[0];
@@ -361,7 +385,7 @@ api.get("/summary", function (req, res) {
     var interval = date.interval(startOffset, endOffset);
     // 指标数组
     var quotasArray = quotas.split(",");
-    es_request.search(req.es, indexes, type, quotasArray, dimension, null, period[0], period[1], interval, function (result) {
+    es_request.search(req.es, indexes, type, quotasArray, dimension, [0], null, period[0], period[1], interval, function (result) {
         datautils.send(res, JSON.stringify(result));
     });
 });

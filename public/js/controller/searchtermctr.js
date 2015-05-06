@@ -8,7 +8,7 @@ app.controller('searchtermctr', function ($scope, $rootScope, requestService, ar
         $rootScope.tableTimeEnd = 0;
         $rootScope.tableSwitch = {
             latitude:{name: "搜索词", field: "kw"},
-            tableFilter:undefined,
+            tableFilter:null,
             dimen:false,
             // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
             number:2,

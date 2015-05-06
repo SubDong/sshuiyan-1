@@ -9,7 +9,7 @@ app.controller("sourcectr", function ($scope, $rootScope, $http, requestService,
     $rootScope.tableTimeEnd = 0;
     $rootScope.tableSwitch = {
         latitude:{name: "来源类型", field: "rf_type"},
-        tableFilter:undefined,
+        tableFilter:null,
         dimen:"rf_type",
         // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
         number:2,

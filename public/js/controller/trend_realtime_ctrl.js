@@ -6,10 +6,10 @@ app.controller('Trend_realtime_ctrl', function ($scope, $rootScope, $http, reque
     //table配置
     $rootScope.tableTimeStart = 0;
     $rootScope.tableTimeEnd = 0;
-    $rootScope.checkedArray = "SS"
+    $rootScope.checkedArray = 'SS';
     $rootScope.tableSwitch = {
         latitude: {name: "地域", field: "region"},
-        tableFilter: undefined,
+        tableFilter: null,
         dimen: true,
         // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
         number: 0,

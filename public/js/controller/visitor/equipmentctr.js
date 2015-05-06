@@ -9,7 +9,7 @@ app.controller('equipmentctr', function ($scope, $rootScope, $http, requestServi
     $rootScope.tableTimeEnd = 0;
     $rootScope.tableSwitch = {
         latitude: {name: "网络供应商", field: "isp"},
-        tableFilter: undefined,
+        tableFilter: null,
         dimen: "region",
         // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
         number: 0,
