@@ -124,7 +124,15 @@ var op = {
                 data: !chartConfig.legendData ? labelData : chartConfig.legendData
             },
             tooltip: {
-                trigger: !chartConfig.tt ? "axis" : chartConfig.tt
+                trigger: !chartConfig.tt ? "axis" : chartConfig.tt,
+                formatter: function (params, ticket, callback) {
+                    var res = params[0].name + '<br/>';
+                    for (var i = 0, l = params.length; i < l; i++) {
+                        var formatType = labelData[i];
+                        res += params[i].seriesName + ' : ' + ad.formatFunc(params[i].value, formatType) + '<br/>';
+                    }
+                    return res;
+                }
             },
             calculable: true,
             xAxis: [
@@ -449,6 +457,18 @@ var ad = {
                 var seconds = (value - days * 1440 * 60 - hours * 3600 - minutes * 60);
                 return this.getDoubleInteger(hours) + ":" + this.getDoubleInteger(minutes) + ":" + this.getDoubleInteger(seconds);
                 break;
+            case "outRate":
+                return value + "%";
+                break;
+            case "arrivedRate":
+                return value + "%";
+                break;
+            case "跳出率":
+                return value + "%";
+                break;
+            case "抵达率":
+                return value + "%";
+                break;
             default :
                 return value;
                 break;
@@ -747,7 +767,7 @@ var util = {
             checks[j].checked = false;
         }
         for (var i = 0; i < checked.length; i++) {
-            checks[checked[i]].previousSibling.style.backgroundPosition="0px -50px";
+            checks[checked[i]].previousSibling.style.backgroundPosition = "0px -50px";
             checks[checked[i]].checked = true;
         }
         return checked;

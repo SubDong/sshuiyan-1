@@ -7,9 +7,9 @@ app.controller('entrancepagectr', function ($scope, $rootScope, $http, requestSe
     $rootScope.tableTimeStart = 0;
     $rootScope.tableTimeEnd = 0;
     $rootScope.tableSwitch = {
-        latitude:{name: "页面url", field: "loc"},
-        tableFilter:null,
-        dimen:false,
+        latitude: {name: "页面url", field: "loc"},
+        tableFilter: null,
+        dimen: false,
         // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
         number: 2,
         //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
@@ -34,14 +34,7 @@ app.controller('entrancepagectr', function ($scope, $rootScope, $http, requestSe
     }
     $scope.mainFormat = function (data, config, e) {
         var json = JSON.parse(eval("(" + data + ")").toString());
-        //json.forEach(function (e) {
-        //    //e.dimension.buckets.forEach(function (b) {
-        //    //    console.log(b);
-        //    //})
-        //    console.log(e);
-        //})
         var result = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", e.types);
-        //console.log(result);
         var final_result = chartUtils.getExternalinkPie(result);//获取barchart的数据
         config['noFormat'] = true;
         config['twoYz'] = "none"
@@ -50,14 +43,47 @@ app.controller('entrancepagectr', function ($scope, $rootScope, $http, requestSe
         $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
         cf.renderChart(pieData, $scope.charts[0].config);
     }
+    $scope.topNFormat = function (data, config) {
+        var json = JSON.parse(eval("(" + data + ")").toString());
+        var _label = [];
+        json.forEach(function (e) {
+            e.dimension.buckets.forEach(function (item) {
+                _label.push(item.key);
+            });
+        });
 
+        _label.removal();
+        var data = {};
+        var label = [];
+        _label.forEach(function (e) {
+
+            var key = [];
+            json.forEach(function (item) {
+                var quota = [];
+                item.dimension.buckets.forEach(function (k) {
+                    if (k.key == e) {
+                        quota.push(k.top_hit.value);
+                    } else {
+                        quota.push(0);
+                    }
+                });
+                console.log(quota);
+                key.push(item.key_as_string);
+            });
+            label.push(e);
+
+        });
+        data["label"] = label;
+        console.log(data);
+
+    }
     $scope.charts = [
         {
             config: {
                 legendData: [],
                 id: "sourse_charts",
                 pieStyle: true,
-                serieName: "访问情况",
+                serieName: "入口页面",
                 chartType: "pie",
                 dataKey: "key",
                 dataValue: "quota"

@@ -254,7 +254,21 @@ var chartUtils = {
             for (var i = 0; i < length; i++) {
                 var _tmp = [];
                 for (var j = i * 24; j < (i + 1) * 24; j++) {
-                    _tmp.push(Number(data.quota[j]));
+                    switch (data.label) {
+                        case "avgTime":
+                            _tmp.push(parseInt(data.quota[j] / length));
+                            break;
+                        case "outRate":
+                            _tmp.push(parseInt(data.quota[j] / length));
+                            break;
+                        case "outRate":
+                            _tmp.push(parseInt(data.quota[j] / length));
+                            break;
+                        default :
+                            _tmp.push(parseInt(data.quota[j]));
+                            break;
+                    }
+
                 }
                 final_tmp = chartUtils.arrayMerge(final_tmp, _tmp);
             }

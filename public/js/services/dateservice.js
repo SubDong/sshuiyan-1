@@ -21,8 +21,8 @@ app.service('requestService', ['$rootScope', '$http', function ($rootScope, $htt
             if (e.filter) {
                 req = req + "&filter=" + e.filter;
             }
-            if(e.topN){
-                req+="&topN="+ e.topN;
+            if (e.topN) {
+                req += "&topN=" + e.topN;
             }
             $http.get(req).success(function (result) {
                 if (e.cb) {
@@ -43,18 +43,15 @@ app.service('requestService', ['$rootScope', '$http', function ($rootScope, $htt
                     for (var i = 0; i < item["key"].length; i++) {
                         var _val = {};
                         if (item["key"][i] != "-" && item["key"][i] != "") {
+                            var formatType = grid.types.toString();
                             _val["name"] = item["key"][i];
-                            _val["value"] = item["quota"][i];
+                            _val["value"] = ad.formatFunc(parseInt(item["quota"][i]), formatType);
                             grid.config.gridOptions.data.push(_val);
                         }
                     }
-
                 })
-
             });
         })
-
-
     }
 
 }]);

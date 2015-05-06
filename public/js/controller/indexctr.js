@@ -96,7 +96,7 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
                     legendData: ["移动", "PC"],
                     chartType: "pie",
                     id: "environment_map",
-                    serieName: "设备环境",
+                    serieName: "所占比例",
                     dataKey: "key",
                     dataValue: "quota"
                 },
@@ -189,6 +189,7 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
         //下拉框
         $scope.mapChange = function (_this) {
             $scope.charts[1].types = _this.value;
+            $scope.charts[1].config.instance = echarts.init(document.getElementById($scope.charts[1].config.id));
             var chartArray = [$scope.charts[1]];
             requestService.refresh(chartArray);
         }
@@ -199,6 +200,7 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
         }
         $scope.searchChange = function (_this) {
             $scope.grids[0].types = _this.value;
+            $scope.gridOptions.columnDefs[1].displayName = _this.name;
             var chartArray = [$scope.grids[0]];
             requestService.gridRefresh(chartArray);
         }

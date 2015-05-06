@@ -40,7 +40,7 @@ app.controller('attractivenessanalysisctr', function ($scope, $rootScope, reques
                 legendData: [],
                 id: "sourse_charts",
                 pieStyle: true,
-                serieName: "访问情况",
+                serieName: "入口页面",
                 chartType: "pie",
                 dataKey: "key",
                 dataValue: "quota"
