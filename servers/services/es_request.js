@@ -918,6 +918,7 @@ var es_request = {
                         "must": mustQuery
                     }
                 },
+                "sort": {"utime": {"order": "asc"}},
                 "size": 100000
             }
         };
@@ -946,7 +947,56 @@ var es_request = {
                     item["record"] = record;
                 });
 
-                callbackFn(hits);
+                if (hits.length === 1) {
+                    // 计算上一次的访问时间
+                    es.search({
+                        "index": index,
+                        "type": type,
+                        "body": {
+                            "query": {
+                                "bool": {
+                                    "must": buildMustQuery([
+                                        {"vid": [hits[0]._source.vid]}
+                                    ])
+                                }
+                            },
+                            "size": 0,
+                            "aggs": {
+                                "result": {
+                                    "terms": {
+                                        "script": "doc['utime'].value",
+                                        "order": {
+                                            "_term": "desc"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }, function (error, response) {
+                        if (response != undefined) {
+                            var resultArr = response.aggregations.result.buckets;
+                            if (resultArr.length == 1)
+                                hits[0]["last"] = "首次访问";
+                            else {
+                                var curr = hits[0]._source.utime[0];
+                                for (var i = 0, l = resultArr.length; i < l; i++) {
+                                    if (curr == resultArr[i].key) {
+                                        if (i + 1 == l)
+                                            hits[0]["last"] = "首次访问";
+                                        else
+                                            hits[0]["last"] = resultArr[i + 1].key;
+
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                        callbackFn(hits);
+                    });
+                } else {
+                    callbackFn(hits);
+                }
             } else
                 callbackFn([]);
         });
