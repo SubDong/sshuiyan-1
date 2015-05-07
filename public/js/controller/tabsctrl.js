@@ -218,22 +218,24 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, re
             }
         };
     } else {
-        $scope.gridOptions = {
-            //paginationPageSizes: [25, 50, 75],
-            paginationPageSize: 25,
-            expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
-            expandableRowHeight: 360,
-            enableColumnMenus: false,
-            enablePaginationControls: false,
-            enableSorting: true,
-            enableGridMenu: false,
-            enableHorizontalScrollbar: 0,
-            columnDefs: $scope.gridArray,
-            onRegisterApi: function (gridApi) {
-                $scope.gridApi2 = gridApi;
-                griApiInfo(gridApi);
-            }
-        };
+            $scope.gridOptions = {
+                //paginationPageSizes: [25, 50, 75],
+                paginationPageSize: 25,
+                expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
+                expandableRowHeight: 360,
+                enableColumnMenus: false,
+                enablePaginationControls: false,
+                enableSorting: true,
+                enableGridMenu: false,
+                enableHorizontalScrollbar: 0,
+                columnDefs: $scope.gridArray,
+                onRegisterApi: function (gridApi) {
+                    $scope.gridApi2 = gridApi;
+                    if($rootScope.tableSwitch.dimen){
+                        griApiInfo(gridApi);
+                    }
+                }
+            };
     }
     $scope.pagego = function (pagevalue) {
         pagevalue.pagination.seek(Number($scope.page));
