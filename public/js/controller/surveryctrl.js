@@ -535,6 +535,14 @@ app.controller('SurveyCtrl', function ($scope, $http, $rootScope,areaService, SE
             {name: '转化次数'}
         ]
     };
+    //日历
+    this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
+    this.type = 'range';
+    /*      this.identity = angular.identity;*/
+
+    this.removeFromSelected = function (dt) {
+        this.selectedDates.splice(this.selectedDates.indexOf(dt), 1);
+    }
 });
 
 

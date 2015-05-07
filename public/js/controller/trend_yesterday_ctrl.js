@@ -173,4 +173,12 @@ app.controller('todayfilter', function ($scope, $http, requestService, messageSe
         requestService.request(option, $scope.lineChartConfig);
 
     };
+    //日历
+    this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
+    this.type = 'range';
+    /*      this.identity = angular.identity;*/
+
+    this.removeFromSelected = function (dt) {
+        this.selectedDates.splice(this.selectedDates.indexOf(dt), 1);
+    }
 })

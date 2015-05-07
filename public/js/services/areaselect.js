@@ -13,9 +13,40 @@ app.service('areaService', ['$rootScope', '$http', function ($rootScope, $http) 
     ];
     $rootScope.city = {};
     $rootScope.citys = [
+        {name: '全部'},
         {name: '北京'},
         {name: '上海'},
-        {name: '成都'},
+        {name: '天津'},
+        {name: '重庆'},
+        {name: '河北'},
+        {name: '山西'},
+        {name: '内蒙古'},
+        {name: '辽宁'},
+        {name: '吉林'},
+        {name: '黑龙江'},
+        {name: '江苏'},
+        {name: '浙江'},
+        {name: '安徽'},
+        {name: '福建'},
+        {name: '江西'},
+        {name: '山东'},
+        {name: '河南'},
+        {name: '湖北'},
+        {name: '湖南'},
+        {name: '广东'},
+        {name: '广西'},
+        {name: '海南'},
+        {name: '四川'},
+        {name: '贵州'},
+        {name: '云南'},
+        {name: '西藏'},
+        {name: '陕西'},
+        {name: '甘肃'},
+        {name: '青海'},
+        {name: '宁夏'},
+        {name: '新疆'},
+        {name: '港澳台'},
+
     ];
     $rootScope.continent = {};
     $rootScope.continents = [
@@ -35,10 +66,10 @@ app.service('areaService', ['$rootScope', '$http', function ($rootScope, $http) 
 
     $rootScope.souce = {};
     $rootScope.souces = [
-        {name: '全部', value:0},
-        {name: '直接访问' ,value:1},
-        {name: '搜索引擎', value:2},
-        {name: '外部链接', value:3},
+        {name: '全部', value: 0},
+        {name: '直接访问', value: 1},
+        {name: '搜索引擎', value: 2},
+        {name: '外部链接', value: 3},
     ];
     $rootScope.rootSelect = {};
     $rootScope.rootSelects = [

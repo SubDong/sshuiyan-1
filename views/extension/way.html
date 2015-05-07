@@ -1,4 +1,4 @@
-<div class="middle_containers" ng-controller="wayctrl">
+<div class="middle_containers" ng-controller="wayctrl as app">
     <div class="date_select">
         <b>推广方式</b>
         <calendar></calendar>
@@ -101,38 +101,15 @@
                                 <li>
                                     <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
                                         <div role="group" class="btn-group">
-                                            <ui-select ng-model="continent.selected" theme="selectize"
-                                                       ng-disabled="disabled" class="fl"
-                                                       style="width:80px;">
-                                                <ui-select-match placeholder="大洲">{{$select.selected.name}}
-                                                </ui-select-match>
-                                                <ui-select-choices repeat="continent in continents">
-                                                    <span ng-bind-html="continent.name"></span>
-                                                </ui-select-choices>
-                                            </ui-select>
-                                        </div>
-                                        <div role="group" class="btn-group">
-                                            <ui-select ng-model="country.selected" theme="selectize"
-                                                       ng-disabled="disabled" class="fl"
-                                                       style="width:80px;">
-                                                <ui-select-match placeholder="国家">{{$select.selected.name}}
-                                                </ui-select-match>
-                                                <ui-select-choices repeat="country in countrys">
-                                                    <span ng-bind-html="country.name"></span>
-                                                </ui-select-choices>
-                                            </ui-select>
-                                        </div>
-                                        <div role="group" class="btn-group">
                                             <ui-select ng-model="city.selected" theme="selectize" class="fl"
                                                        style="width: 80px;">
-                                                <ui-select-match placeholder="城市">{{$select.selected.name}}
+                                                <ui-select-match placeholder="全部">{{$select.selected.name}}
                                                 </ui-select-match>
                                                 <ui-select-choices repeat="city in citys">
                                                     <span ng-bind-html="city.name"></span>
                                                 </ui-select-choices>
                                             </ui-select>
                                         </div>
-
                                     </div>
                                 </li>
                                 <li><a href="#">北京</a></li>

@@ -55,4 +55,22 @@ app.service('requestService', ['$rootScope', '$http', function ($rootScope, $htt
     }
 
 }]);
+/*
+app.directive('iframeheight', [function(){
+    return {
+        restrict: 'A',
+        link: function( $rootScope, element, attrs){
+            element.on('load', function(){
+                */
+/* Set the dimensions here,
+                 I think that you were trying to do something like this: *//*
+
+                var iFrameHeight = element[0].contentWindow.document.body.scrollHeight + 'px';
+                var iFrameWidth = '100%';
+                element.css('width', iFrameWidth);
+                element.css('height', iFrameHeight);
+            })
+        }
+    }}])
+*/
 

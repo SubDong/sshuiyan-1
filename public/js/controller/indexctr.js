@@ -4,7 +4,6 @@
 
 app.controller('indexctr', function ($scope, $rootScope, $http, requestService, messageService, areaService) {
         $scope.todayClass = true;
-        $scope.dt = new Date();
         $scope.dayClass = true;
         $scope.timeselect = true;
         $scope.reset = function () {
@@ -148,7 +147,7 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
             $event.preventDefault();
             $event.stopPropagation();
             $scope.opened = true;
-            $scope.reset();
+            /*  $scope.reset();*/
             $scope.definClass = true;
         };
 
@@ -219,6 +218,14 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
         }
         $scope.continent = {};
         $scope.country = {};
+
+        this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
+        this.type = 'range';
+        /*      this.identity = angular.identity;*/
+
+        this.removeFromSelected = function (dt) {
+            this.selectedDates.splice(this.selectedDates.indexOf(dt), 1);
+        }
 
     }
 )

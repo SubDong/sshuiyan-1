@@ -4,7 +4,12 @@
 app.directive("calendar", function ($rootScope, requestService) {
     var option = {
         restrict: "EA",
-        template: "<div  role=\"group\" class=\"btn-group fl\"><button class=\"btn btn-default\" type=\"button\" ng-click=\"today()\" ng-class=\"{'current':todayClass}\">今天</button><button class=\"btn btn-default\" type=\"button\" ng-click=\"yesterday()\" ng-class=\"{'current':yesterdayClass}\">昨天</button><button class=\"btn btn-default\" type=\"button\" ng-click=\"sevenDay()\" ng-class=\"{'current':sevenDayClass}\">最近7天</button><button class=\"btn btn-default\" type=\"button\" ng-click=\"month()\" ng-class=\"{'current':monthClass}\">最近30天</button><button type=\"button\" class=\"btn btn-default\" datepicker-popup=\"{{format}}\" ng-model=\"dt\" is-open=\"opened\" date-disabled=\"disabled(date, mode)\" current-text=\"今天\" clear-text=\"清空\" close-text=\"关闭\" ng-click=\"open($event)\" ng-class=\"{'current':definClass}\">{{dt | date: 'yyyy-MM-dd' }}<i class=\"glyphicon glyphicon-calendar\"></i></button><span class=\"dateshow fl\"></span></div>",
+        template: "<div  role=\"group\" class=\"btn-group fl\"><button class=\"btn btn-default\" type=\"button\" ng-click=\"today()\" ng-class=\"{'current':todayClass}\">今天</button>" +
+        "<button class=\"btn btn-default\" type=\"button\" ng-click=\"yesterday()\" ng-class=\"{'current':yesterdayClass}\">昨天</button>" +
+        "<button class=\"btn btn-default\" type=\"button\" ng-click=\"sevenDay()\" ng-class=\"{'current':sevenDayClass}\">最近7天</button>" +
+        "<button class=\"btn btn-default\" type=\"button\" ng-click=\"month()\" ng-class=\"{'current':monthClass}\">最近30天</button>" +
+        "<button type=\"button\" class=\"btn btn-default\" datepicker-popup=\"{{format}}\"  btn-radio=\"range\" multi-select=\'app.selectedDates\' select-range=\'{{app.type==\"range\"}}\' ng-model=\'app.activeDate\' is-open=\"opened\" date-disabled=\"disabled(date, mode)\"current-text=\"今天\" clear-text=\"清空\" close-text=\"关闭\" ng-click=\"open($event)\" ng-class=\"{'current':definClass}\">{{(app.selectedDates | orderBy)[0] | date:'yyyy-MM-dd'}}" +
+        "<span ng-if='app.selectedDates.length > 1'>至 {{(app.selectedDates | orderBy : '-')[0] | date:'yyyy-MM-dd'}} </span><i class=\"glyphicon glyphicon-calendar\"></i></button><span class=\"dateshow fl\"></span></div>",
         replace: true,
         transclude: true,
         link: function (scope, element, attris, controller) {
@@ -290,45 +295,45 @@ app.filter("quotaHelpFormat", function () {
 /**
  * Create by wms on 2015-05-05.新老访客信息
  */
-app.directive("sshNoVisitor", function($http, $rootScope) {
+app.directive("sshNoVisitor", function ($http, $rootScope) {
     return {
         restrict: 'E',
         templateUrl: '../commons/no_visitor.html',
-        scope : true,
+        scope: true,
         link: function (scope, element, attris, controller) {
             scope._type = attris.myScope;
             scope._ctValue = attris.myScope === "nv" ? "0" : "1";
             scope._ctText = attris.myScope === "nv" ? "新访客" : "老访客";
             scope.defaultObject = {
-                percent : "0.00%",
-                pv : 0,
-                uv : 0,
-                outRate : 0,
-                avgTime : "--",
-                avgPage : 0
+                percent: "0.00%",
+                pv: 0,
+                uv: 0,
+                outRate: 0,
+                avgTime: "--",
+                avgPage: 0
             };
             scope._visitor = angular.copy(scope.defaultObject);
             // 读取基础数据
-            scope.loadBaseData = function() {
+            scope.loadBaseData = function () {
                 scope.sumPv = 0;
                 $http({
                     method: 'GET',
                     url: '/api/indextable/?type=1&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=pv,uv,outRate,avgTime,avgPage&dimension=ct'
-                }).success(function(data, status) {
-                    angular.forEach(data, function(e) {
-                        if(e.ct === scope._ctText) {
+                }).success(function (data, status) {
+                    angular.forEach(data, function (e) {
+                        if (e.ct === scope._ctText) {
                             scope._visitor = e;
                         }
                         scope.sumPv += parseInt(e.pv);
                     });
-                    if(scope.sumPv == 0) {
+                    if (scope.sumPv == 0) {
                         scope._visitor.percent = "0.00%";
-                    } else if(scope._visitor.pv == 0) {
+                    } else if (scope._visitor.pv == 0) {
                         scope._visitor.percent = "100%";
                     } else {
                         scope._visitor.percent = (scope._visitor.pv * 100 / scope.sumPv).toFixed(2) + "%";
                     }
-                }).error(function(error) {
+                }).error(function (error) {
                     console.log(error);
                 });
             };
@@ -348,7 +353,7 @@ app.directive("sshNoVisitor", function($http, $rootScope) {
             scope.loadFwrkyData = function () {
                 $http({
                     method: 'GET',
-                    url: '/api/indextable/?type=1&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=vc&dimension=loc&filerInfo=[{"ct": ["'+ scope._ctValue +'"]}]'
+                    url: '/api/indextable/?type=1&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=vc&dimension=loc&filerInfo=[{"ct": ["' + scope._ctValue + '"]}]'
                 }).success(function (data, status) {
                     scope.fwrkyTop5 = data ? ((data.length > 5) ? data.slice(0, 5) : data) : [];
                 }).error(function (error) {
@@ -356,7 +361,7 @@ app.directive("sshNoVisitor", function($http, $rootScope) {
                 });
             };
             scope.loadFwrkyData();
-            scope.$on("ssh_refresh_charts", function(e, msg) {
+            scope.$on("ssh_refresh_charts", function (e, msg) {
                 scope._visitor = angular.copy(scope.defaultObject);
                 scope.fwlywzTop5 = [];
                 scope.fwrkyTop5 = [];
