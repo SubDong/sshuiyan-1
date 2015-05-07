@@ -260,6 +260,7 @@ api.get('/realTimeAccess', function (req, res) {
     var indexes = date.createIndexes(0, 0, "visitor-");
     es_request.realTimeSearch(req.es, indexes, _type, _filters, function (data) {
         var resultArray = new Array();
+        data = data.reverse();
         data.forEach(function (item, i) {
             var result = {};
             result["city"] = item._source.city == "-" ? "国外" : item._source.city;
@@ -289,47 +290,36 @@ api.get('/realTimeHtml', function (req, res) {
                 var utimeHtml = "";
                 var vtimeHtml = "";
                 var urlHtml = "";
-                var dateTime = new Date(item._source.utime[0]).toString();
-                var dateTimeInfo = dateTime.substring(dateTime.indexOf(":") - 3, dateTime.indexOf("G") - 1)
-                item._source.utime.forEach(function(utime,i){
+                item._source.utime.forEach(function (utime, i) {
                     var newDate = new Date(utime).toString();
-                    utimeHtml = utimeHtml +"<li><span>"+newDate.substring(newDate.indexOf(":") - 3, newDate.indexOf("G") - 1);+"</span></li>"
+                    utimeHtml = utimeHtml + "<li><span>" + newDate.substring(newDate.indexOf(":") - 3, newDate.indexOf("G") - 1);
+                    +"</span></li>"
                 });
-                item.record.forEach(function(vtime,i){
-                    vtimeHtml = vtimeHtml +"<li><span>"+vtime.vtime+"</span></li>"
-                    urlHtml = urlHtml +"<li><span><a href='"+vtime.loc+"' target='_blank'>"+vtime.loc+"</a></span></li>"
+                item.record.forEach(function (vtime, i) {
+                    vtimeHtml = vtimeHtml + "<li><span>" + vtime.vtime + "</span></li>"
+                    urlHtml = urlHtml + "<li><span><a href='" + vtime.loc + "' target='_blank'>" + vtime.loc + "</a></span></li>"
                 });
                 var result = "<div class='trendbox'>" +
                     "<div class='trend_top'><div class='trend_left'><div class='left_top'><div class='trend_img'><img src='../images/windows.png'></div><div class='trend_text'>" +
                     "<ul><li>操作系统：<span>" + item._source.os + "</span></li><li>网络服务商：<span>" + item._source.isp + "</span></li><li>屏幕分辨率：<span>" + item._source.sr + "</span></li>" +
                     "<li>屏幕颜色:<span>" + item._source.sc + "</span></li></ul></div></div><div class='left_under'><div class='trend_img'><img src='../images/google.png'></div><div class='trend_text'>" +
                     "<ul><li>浏览器：<span>" + item._source.br + "</span></li><li>Flash版本：<span>" + item._source.fl + "</span></li><li>是否支持Cookie：<span>" + (item._source.ck == '1' ? " 支持" : " 不支持" ) + "</span></li>" +
-                    "<li>是否支持JAVA:<span>" + (item._source.ja == "0" ? " 支持" : " 不支持") + "</span></li></ul></div></div></div><div class='trend_right'><ul><li>访问类型：<span>" + (item._source.ct == 0 ? " 新访客" : " 老访客") + "</span></li>" +
-                    "<li>当天访问频次：<span>" + datainfo[0].quota[0] + "</span></li><li>上一次访问时间：<span>"+(item._source.utime[0] == "-"?"首次访问":dateTimeInfo)+"</span></li><li>本次来路:<span>" + (item._source.se=="-"?" 直接访问":"<a href='" + item._source.rf + "'>"+item._source.se + "( 搜索词:" + item._source.kw+")</a>") + "</span></li>" +
-                    "<li>入口页面：<span><a href='" + item._source.loc[0] + "'>" + item._source.loc[0] + "</a></span></li><li>最后停留在:<span><a href='" + item._source.loc[item._source.loc.length - 1] + "'>" + item._source.loc[item._source.loc.length - 1] + "</a></span></li></ul>" +
+                    "<li>是否支持JAVA:<span>" + (item._source.ja == "0" ? " 支持" : " 不支持") + "</span></li></ul></div></div></div><div class='trend_right'>" +
+                    "<ul><li>访问类型：<span>" + (item._source.ct == 0 ? " 新访客" : " 老访客") + "</span></li>" +
+                    "<li>当天访问频次：<span>" + datainfo[0].quota[0] + "</span></li>" +
+                    "<li>上一次访问时间：<span>" + (item.last != "首次访问"?new Date(parseInt(item.last)).LocalFormat("yyyy-MM-dd hh:mm:ss") : item.last) + "</span></li>" +
+                    "<li>本次来路:<span>" + (item._source.se == "-" ? " 直接访问" : "<a href='" + item._source.rf + "' target='_blank'>" + item._source.se + "( 搜索词:" + item._source.kw + ")</a>") + "</span></li>" +
+                    "<li>入口页面：<span><a href='" + item._source.loc[0] + "' target='_blank'>" + item._source.loc[0] + "</a></span></li>" +
+                    "<li>最后停留在:<span><a href='" + item._source.loc[item._source.loc.length - 1] + "' target='_blank'>" + item._source.loc[item._source.loc.length - 1] + "</a></span></li></ul>" +
                     "</div></div><div class='trendunder'><b>访问路径：</b>" +
-                    "<ul><li>打开时间</li>"+utimeHtml+"</ul>" +
-                    "<ul><li>停留时长</li>"+vtimeHtml+"</ul>" +
-                    "<ul><li>页面地址</li>"+urlHtml+"</ul></div></div>";
+                    "<ul><li>打开时间</li>" + utimeHtml + "</ul>" +
+                    "<ul><li>停留时长</li>" + vtimeHtml + "</ul>" +
+                    "<ul><li>页面地址</li>" + urlHtml + "</ul></div></div>";
                 var returnData = {"htmlData": result};
 
                 datautils.send(res, returnData);
-            })
-            /*var s = fwpc[0];
-             result = "<div class='trendbox'>" +
-             "<div class='trend_top'><div class='trend_left'><div class='left_top'><div class='trend_img'><img src='../images/windows.png'></div><div class='trend_text'>" +
-             "<ul><li>操作系统：<span>"+item._source.os+"</span></li><li>网络服务商：<span>"+item._source.isp+"</span></li><li>屏幕分辨率：<span>"+item._source.sr+"</span></li>" +
-             "<li>屏幕颜色:<span>"+item._source.sc+"</span></li></ul></div></div><div class='left_under'><div class='trend_img'><img src='../images/google.png'></div><div class='trend_text'>" +
-             "<ul><li>浏览器：<span>"+item._source.br+"</span></li><li>Flash版本：<span>"+item._source.fl+"</span></li><li>是否支持Cookie：<span>"+item._source.ck=='1'?"支持":"不支持"+"</span></li>" +
-             "<li>是否支持JAVA:<span>"+item._source.ja=="0"?"支持":"不支持"+"</span></li></ul></div></div></div><div class='trend_right'><ul><li>访问类型：<span>"+item._source.ct == 0?"新访客":"老访客"+"</span></li>"+
-             "<li>当天访问频次：<span>1</span></li><li>上一次访问时间：<span>首次访问</span></li><li>本次来路:<span><a href='"+item._source.rf+"'>"+item._source.es+"(搜索词:"+item._source.kw+")</a></span></li>" +
-             "<li>入口页面：<span><a href='"+item._source.loc[0]+"'>"+item._source.loc[0]+"</a></span></li><li>最后停留在:<span><a href='"+item._source.loc[item._source.loc.length-1]+"'>"+item._source.loc[item._source.loc.length-1]+"</a></span></li></ul>" +
-             "</div></div><div class='trendunder'><b>访问路径：</b><ul><li>打开时间</li>"+
-             "<li><span>13:02:34</span></li><li><span>13:02:34</span></li><li><span>13:02:34</span></li></ul><ul><li>停留时长</li><li><span>10'</span></li><li><span>10'</span></li>"+
-             "<li><span>10'</span></li></ul><ul><li>页面地址</li><li><span><a href='#'>http://editor.baidu.com</a></span></li><li><span><a href='#'>http://editor.baidu.com</a></span></li>"+
-             "<li><span><a href='#'>http://editor.baidu.com</a></span></li></ul></div></div>";*/
-        })
-        //datautils.send(res, result);
+            });
+        });
     });
 });
 

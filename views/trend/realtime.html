@@ -11,6 +11,7 @@
                 <div class="Visitor_text">
                     <h4>30分钟内</h4>
                     <h5>在线人数</h5>
+
                     <h1>{{visitorCount}}</h1>
                 </div>
             </div>
@@ -37,7 +38,7 @@
                                 <li>
                                     <div role="group" class="btn-group">
                                         <ui-select ng-model="souce.selected" theme="selectize" class="fl"
-                                                   style="width: 90px;">
+                                                   style="width: 90px;" ng-change="setSource(souce.selected.value)">
                                             <ui-select-match placeholder="全部">{{$select.selected.name}}
                                             </ui-select-match>
                                             <ui-select-choices repeat="souce in souces">
@@ -53,26 +54,26 @@
                         <div class="chart_top2">
                             <ul>
                                 <li><span>设备过滤:</span></li>
-                                <li><input type="radio" checked="checked" name="radio1"/>
+                                <li><input type="radio" checked="checked" ng-click="setTerminal(0)" name="radio0"/>
                                     <label>全部</label></li>
-                                <li><input type="radio" name="radio1"/> <label>计算机</label></li>
-                                <li><input type="radio" name="radio1"/> <label>移动设备</label></li>
+                                <li><input type="radio" name="radio0" ng-click="setTerminal(1)"/><label>计算机</label></li>
+                                <li><input type="radio" name="radio0" ng-click="setTerminal(2)"/><label>移动设备</label></li>
                             </ul>
                         </div>
                         <div class="chart_top2">
                             <ul>
                                 <li><span>地域过滤:</span></li>
                                 <li>
-                                        <div role="group" class="btn-group">
-                                            <ui-select ng-model="city.selected" theme="selectize" class="fl btn-pv"
-                                                       style="width: 100px;">
-                                                <ui-select-match placeholder="全部">{{$select.selected.name}}
-                                                </ui-select-match>
-                                                <ui-select-choices repeat="city in citys">
-                                                    <span ng-bind-html="city.name"></span>
-                                                </ui-select-choices>
-                                            </ui-select>
-                                        </div>
+                                    <div role="group" class="btn-group">
+                                        <ui-select ng-model="city.selected" theme="selectize" class="fl btn-pv"
+                                                   style="width: 100px;">
+                                            <ui-select-match placeholder="全部">{{$select.selected.name}}
+                                            </ui-select-match>
+                                            <ui-select-choices repeat="city in citys">
+                                                <span ng-bind-html="city.name"></span>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
                                 </li>
                                 <li><a href="#">北京</a></li>
                                 <li><a href="#">上海</a></li>
@@ -97,7 +98,8 @@
                         </div>
                     </div>
                     <div class="custom_table">
-                        <div ui-grid="gridOptions" class="grid" style="height:600px;" ui-grid-pagination ui-grid-selection ui-grid-exporter ui-grid-expandable></div>
+                        <div ui-grid="gridOptions" class="grid" style="height:600px;" ui-grid-pagination
+                             ui-grid-selection ui-grid-exporter ui-grid-expandable></div>
                         <gridpage></gridpage>
                     </div>
                 </div>

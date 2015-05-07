@@ -1,7 +1,7 @@
 /**
  * Created by john on 2015/3/30.
  */
-app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http,$q, requestService) {
+app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, requestService) {
     $scope.todayClass = true;
 
 
@@ -108,7 +108,17 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http,$q, req
         {consumption_name: "访客数(UV)", name: "uv"},
         {consumption_name: "IP数", name: "ip"}
     ];
-
+    var getHtmlTableData = function () {
+        $http({
+            method: 'GET',
+            url: '/api/realTimeAccess/?filerInfo=' + $rootScope.tableSwitch.tableFilter + "&type=1"
+        }).success(function (data, status) {
+            $scope.gridOptions.data = data;
+            $rootScope.checkedArray = "";
+        }).error(function (error) {
+            console.log(error);
+        });
+    };
     if (typeof($rootScope.checkedArray) != undefined && $rootScope.checkedArray == "SS") {
         $scope.tableJu = "html";
         $rootScope.gridArray = [{name: '地域', field: "city"},
@@ -122,15 +132,7 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http,$q, req
             {name: "访问 Ip", field: "ip"},
             {name: "访问时长", field: "utimeAll"},
             {name: "访问页数", field: "pageNumber"}];
-        $http({
-            method: 'GET',
-            url: '/api/realTimeAccess/?filerInfo=' + $rootScope.tableSwitch.tableFilter + "&type=1"
-        }).success(function (data, status) {
-            $scope.gridOptions.data = data;
-            $rootScope.checkedArray = "";
-        }).error(function (error) {
-            console.log(error);
-        });
+        getHtmlTableData();
     } else {
         if ($rootScope.tableSwitch.arrayClear)$rootScope.checkedArray = new Array();
         if ($rootScope.tableSwitch.arrayClear)$rootScope.gridArray = new Array();
@@ -197,24 +199,6 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http,$q, req
             }
         });
     };
-
-    /*<div class="table_win">
-     <ul>
-     <li></li>
-     </ul>
-     </div>*/
-
-    /*function initTable(entities,item){
-     entities.forEach(function(key,x){
-     angular.forEach($scope[key], function (subscription, index) {
-     item.forEach(function(info,i){
-     if (subscription.name == info) {
-     $scope.classInfo = 'current';
-     }
-     })
-     });
-     });
-     }*/
     // 推广概况表格配置项
     if (typeof($rootScope.checkedArray) != undefined && $scope.tableJu == "html") {
         $scope.gridOptions = {
@@ -229,6 +213,7 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http,$q, req
             enableHorizontalScrollbar: 0,
             columnDefs: $scope.gridArray,
             onRegisterApi: function (girApi) {
+                $scope.gridApi2 = girApi;
                 griApihtml(girApi);
             }
         };
@@ -261,24 +246,32 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http,$q, req
     }
     //设置来源终端
     $scope.setTerminal = function (a) {
-        if (a == 0) $rootScope.tableSwitch.tableFilter = undefined;
+        if (a == 0) $rootScope.tableSwitch.tableFilter = null;
         if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[0]}]";
         if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[1]}]";
         $scope.isJudge = false;
-        $scope.targetSearch();
+        if($scope.tableJu == "html"){
+            getHtmlTableData()
+        }else{
+            $scope.targetSearch();
+        }
     };
     //设置来源过滤
     $scope.setSource = function (a) {
-        if (a == 0) $rootScope.tableSwitch.tableFilter = undefined;
+        if (a == 0) $rootScope.tableSwitch.tableFilter = null;
         if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[1]}]";
         if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[2]}]";
         if (a == 3) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[3]}]";
         $scope.isJudge = false;
-        $scope.targetSearch();
+        if($scope.tableJu == "html"){
+            getHtmlTableData()
+        }else{
+            $scope.targetSearch();
+        }
     };
     //设置访客来源
     $scope.setVisitors = function (a) {
-        if (a == 0) $rootScope.tableSwitch.tableFilter = undefined;
+        if (a == 0) $rootScope.tableSwitch.tableFilter = null;
         if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"ct\":[0]}]";
         if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"ct\":[1]}]";
         $scope.isJudge = false;
@@ -362,13 +355,12 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http,$q, req
 
         gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
             var filter = "[{\"tt\":[\"" + row.entity.tt + "\"]}]";
-            console.log(row);
             var htmlData = new Array();
             row.entity.subGridOptions = {
                 showHeader: false,
+                enableHorizontalScrollbar: 0,
                 columnDefs: htmlData
             };
-
             $http({
                 method: 'GET',
                 url: '/api/realTimeHtml/?filerInfo=' + filter + "&type=1"
@@ -378,7 +370,7 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http,$q, req
                 res["field"] = "info";
                 res["cellTemplate"] = datas.htmlData;
                 htmlData.push(res);
-                row.entity.subGridOptions.data = [{"info":" "}];
+                row.entity.subGridOptions.data = [{"info": " "}];
             }).error(function (error) {
                 console.log(error);
             });
@@ -399,8 +391,7 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http,$q, req
             }
             return a[1];
         }
-    }
-
+    };
 
     var getField = function (rr, ss) {
         switch (rr) {
@@ -438,7 +429,6 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http,$q, req
 
     }, {
         title: "访问页数目标"
-
     }
     ];
 });
@@ -446,7 +436,6 @@ var s = 0;
 function getMyButton(item) {
     item.nextSibling.style.display = "block";
     s = 0
-    //angular.element(document.getElementsByClassName("table_content")).scope().$apply("test("+item+")");
 }
 document.onclick = function () {
     var a = document.getElementsByClassName("table_win");
@@ -461,5 +450,4 @@ document.onclick = function () {
         }
         s++;
     }
-    //document.getElementsByClassName("table_box").style.display
-}
+};

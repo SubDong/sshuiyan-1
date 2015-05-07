@@ -1,7 +1,7 @@
 /**
  * Created by baizz on 2015-4-3.
  */
-app.controller('Trend_realtime_ctrl', function ($scope, $rootScope, $http, requestService, messageService, $log) {
+app.controller('Trend_realtime_ctrl', function ($scope, $rootScope, $http, requestService, messageService, $log,areaService) {
     $scope.visitorCount = 0;
     //table配置
     $rootScope.tableTimeStart = 0;
@@ -137,23 +137,5 @@ app.controller('Trend_realtime_ctrl', function ($scope, $rootScope, $http, reque
         $scope.country.selected = undefined;
         $scope.souce.selected = undefined;
     };
-
-    $scope.country = {};
-    $scope.countrys = [
-        {name: '中国'},
-    ];
-    $scope.souce = {};
-    $scope.souces = [
-        {name: '全部'},
-        {name: '直接访问'},
-        {name: '搜索引擎'},
-        {name: '外部链接'},
-    ];
-    $scope.city = {};
-    $scope.citys = [
-        {name: '北京'},
-        {name: '上海'},
-        {name: '广州'},
-    ];
 
 });
