@@ -76,6 +76,13 @@ app.controller('urlspeedctr', function ($scope, $rootScope, requestService, area
             {name: '时长目标'},
             {name: '访问页数目标'},
         ];
+        //日历
+        this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
+        this.type = 'range';
+        /*      this.identity = angular.identity;*/
 
+        this.removeFromSelected = function (dt) {
+            this.selectedDates.splice(this.selectedDates.indexOf(dt), 1);
+        }
     }
 )

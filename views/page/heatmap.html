@@ -1,0 +1,92 @@
+<!--页面分析-入口页面-指标概述-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <style>
+        body, html, h2 {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        body {
+            font-family: sans-serif;
+        }
+
+        body * {
+            font-weight: 200;
+        }
+
+        #heatmap {
+            position: absolute;
+            float: left;
+            height: 99%;
+            width: 99%;
+            background: #000;
+            filter: alpha(Opacity=80);
+            -moz-opacity: 0.5;
+            opacity: 0.5;
+            overflow: hidden;
+            z-index: 100;
+        }
+
+        .iframebox {
+            position: relative;
+            height: 100%;
+            width: 100%;
+        }
+
+        #iframe {
+            position: absolute;
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+    <script type="text/javascript" src="../js/heatmap/heatmap.js"></script>
+</head>
+<body style="margin:0px;padding:0px; width:100%;overflow:hidden" onload="parent.setsize(document.body.scrollHeight);">
+<div class="iframebox">
+    <div id="heatmap">
+    </div>
+    <iframe id="iframe" src="http://www.best-ad.cn/" frameborder="0" style="overflow:hidden;width:100%" height="100%"
+            width="100%">
+    </iframe>
+</div>
+<script type="text/javascript">
+    window.onload = function () {
+
+        var xx = h337.create({"element": document.getElementById("heatmap"), "radius": 25, "visible": true});
+        var el = {
+            max: 90, data: [
+                {x: 1600, y: 60, count: 1000},
+                {x: 1250, y: 60, count: 60},
+                {x: 100, y: 80, count: 90},
+                {x: 111, y: 110, count: 60},
+                {x: 201, y: 150, count: 90},
+                {x: 311, y: 110, count: 60},
+                {x: 121, y: 510, count: 70},
+                {x: 511, y: 110, count: 60},
+                {x: 211, y: 110, count: 50},
+                {x: 191, y: 110, count: 20},
+                {x: 511, y: 110, count: 40}
+            ]
+        };
+        xx.store.setDataSet(el);
+
+        document.getElementById("iframe").style.height = document.getElementById("heatmap").height + "px";
+        document.getElementById("heatmap").style.width = document.getElementById("iframe").offsetWidth + "px" - 10;
+        /*        xx.get("canvas").onclick = function(ev){
+         var pos = h337.util.mousePosition(ev);
+         xx.store.addDataPoint(pos[0],pos[1]);
+         };*/
+        /*    document.getElementById("gen").onclick = function(){
+         xx.store.generateRandomDataSet(100);
+         };*/
+    };
+
+</script>
+</body>
+</html>
+
+

@@ -108,4 +108,12 @@ app.controller('flowanalysisctr', function ($scope, $rootScope, $http, requestSe
         var arrayChart = [$scope.charts[1]]
         requestService.refresh(arrayChart);
     });
+    //日历
+    this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
+    this.type = 'range';
+    /*      this.identity = angular.identity;*/
+
+    this.removeFromSelected = function (dt) {
+        this.selectedDates.splice(this.selectedDates.indexOf(dt), 1);
+    }
 });

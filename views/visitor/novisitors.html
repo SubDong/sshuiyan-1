@@ -1,11 +1,14 @@
-<div class="middle_containers" ng-controller="novisitors" data-ng-init="initPage()">
+<div class="middle_containers" ng-controller="novisitors as app" data-ng-init="initPage()">
     <div class="date_select">
         <div role="group" class="btn-group fl">
-            <button aria-expanded="false" data-toggle="dropdown" class="btn btn-default dropdown-toggle"
-                    type="button" id="btnGroupDrop7">
-                客户端属性：浏览器
-                <span class="caret"></span>
-            </button>
+           <span class="fl"> 客户端属性：</span>
+            <ui-select ng-model="equipment.selected" theme="selectize" ng-disabled="disabled" class="fl btn-delta" ng-change="equipmentChange(equipment.selected)"
+                       style="width: 160px;">
+                <ui-select-match placeholder="浏览器">{{$select.selected.name}}</ui-select-match>
+                <ui-select-choices repeat="equipment in equipments">
+                    <span ng-bind-html="equipment.name"></span>
+                </ui-select-choices>
+            </ui-select>
         </div>
         <calendar></calendar>
         <dateother></dateother>
