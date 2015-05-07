@@ -1,7 +1,7 @@
 /**
  * Created by john on 2015/3/30.
  */
-app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, requestService) {
+app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http,$q, requestService) {
     $scope.todayClass = true;
 
 
@@ -110,21 +110,16 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
     ];
 
     if (typeof($rootScope.checkedArray) != undefined && $rootScope.checkedArray == "SS") {
-        $scope.appHtml = "<div class='trendbox'><div class='trend_top'><div class='trend_left'><div class='left_top'><div class='trend_img'><img src='../images/windows.png'> "+
-        "</div><div class='trend_text'><ul><li>操作系统：<span>Win 7</span></li><li>网络服务商：<span>电信</span></li><li>屏幕分辨率：<span>1920x1080</span></li><li>屏幕颜色:<span>32-bit</span></li>"+
-        "</ul></div></div><div class='left_under'><div class='trend_img'><img src='../images/google.png'></div><div class='trend_text'><ul><li>浏览器：<span>Google Chrome</span></li>"+
-        "<li>Flash版本：<span>11.6</span></li><li>是否支持Cookie：<span>支持</span></li><li>是否支持JAVA:<span>支持</span></li></ul></div></div></div><div class='trend_right'><ul><li>访问类型：<span>新访客</span></li>"+
-        "<li>当天访问频次：<span>1</span></li><li>上一次访问时间：<span>首次访问</span></li><li>本次来路:<span><a href='#'>百度(搜索词:百度广告联盟)</a></span></li><li>入口页面：<span><a href='#'>http://editor.baidu.com</a></span></li>"+
-        "<li>最后停留在:<span><a href='#'>http://editor.baidu.com/union.html</a></span></li></ul></div></div><div class='trendunder'><b>访问路径：</b><ul><li>打开时间</li>"+
-        "<li><span>13:02:34</span></li><li><span>13:02:34</span></li><li><span>13:02:34</span></li></ul><ul><li>停留时长</li><li><span>10'</span></li><li><span>10'</span></li>"+
-        "<li><span>10'</span></li></ul><ul><li>页面地址</li><li><span><a href='#'>http://editor.baidu.com</a></span></li><li><span><a href='#'>http://editor.baidu.com</a></span></li>"+
-        "<li><span><a href='#'>http://editor.baidu.com</a></span></li></ul></div></div>";
-
+        $scope.tableJu = "html";
         $rootScope.gridArray = [{name: '地域', field: "city"},
             {name: '访问时间', field: "utime"},
-            {name: '来源',field: "source", cellTemplate:"<a href='{{grid.appScope.getDataUrlInfo(grid, row,1)}}' style='color:#0965b8;line-height:30px;'>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</a>"},
-            {name: '访客标识码', field: "vid"},
-            {name: "访问ip", field: "ip"},
+            {
+                name: '来源',
+                field: "source",
+                cellTemplate: "<a href='{{grid.appScope.getDataUrlInfo(grid, row,1)}}' style='color:#0965b8;line-height:30px;'>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</a>"
+            },
+            {name: '访客标识码', field: "tt"},
+            {name: "访问 Ip", field: "ip"},
             {name: "访问时长", field: "utimeAll"},
             {name: "访问页数", field: "pageNumber"}];
         $http({
@@ -137,20 +132,19 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
             console.log(error);
         });
     } else {
-        if($rootScope.tableSwitch.arrayClear)$rootScope.checkedArray = new Array();
-        if($rootScope.tableSwitch.arrayClear)$rootScope.gridArray = new Array();
-        $scope.appHtml = '<div ui-grid="row.entity.subGridOptions" ui-grid-auto-resize style="height: {{gridHeight}}"></div>'
+        if ($rootScope.tableSwitch.arrayClear)$rootScope.checkedArray = new Array();
+        if ($rootScope.tableSwitch.arrayClear)$rootScope.gridArray = new Array();
     }
     //table Button 配置 table_nextbtn
     if ($rootScope.tableSwitch.number == 1) {
         $scope.gridBtnDivObj = "<div class='table_box'><a href='http://www.best-ad.cn' class='table_btn'></a></div>";
     } else if ($rootScope.tableSwitch.number == 2) {
-        $scope.gridBtnDivObj = "<div class='table_box'><button onclick='getMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul>"+$rootScope.tableSwitch.coding+"</ul></div></div>";
+        $scope.gridBtnDivObj = "<div class='table_box'><button onclick='getMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul>" + $rootScope.tableSwitch.coding + "</ul></div></div>";
     }
 
-    $rootScope.indicators = function (item, entities, number,refresh) {
+    $rootScope.indicators = function (item, entities, number, refresh) {
         $scope.gridArray.shift();
-        if(refresh == "refresh"){
+        if (refresh == "refresh") {
             $scope.gridArray.unshift($rootScope.tableSwitch.latitude);
             return
         }
@@ -222,11 +216,11 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
      });
      }*/
     // 推广概况表格配置项
-    if ($rootScope.tableSwitch.dimen != false) {
+    if (typeof($rootScope.checkedArray) != undefined && $scope.tableJu == "html") {
         $scope.gridOptions = {
             //paginationPageSizes: [25, 50, 75],
             paginationPageSize: 25,
-            expandableRowTemplate: $scope.appHtml,
+            expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
             expandableRowHeight: 360,
             enableColumnMenus: false,
             enablePaginationControls: false,
@@ -235,14 +229,15 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
             enableHorizontalScrollbar: 0,
             columnDefs: $scope.gridArray,
             onRegisterApi: function (girApi) {
-                $scope.gridApi2 = girApi;
-                griApiInfo(girApi);
+                griApihtml(girApi);
             }
         };
     } else {
         $scope.gridOptions = {
             //paginationPageSizes: [25, 50, 75],
             paginationPageSize: 25,
+            expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
+            expandableRowHeight: 360,
             enableColumnMenus: false,
             enablePaginationControls: false,
             enableSorting: true,
@@ -251,6 +246,7 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
             columnDefs: $scope.gridArray,
             onRegisterApi: function (gridApi) {
                 $scope.gridApi2 = gridApi;
+                griApiInfo(gridApi);
             }
         };
     }
@@ -259,32 +255,32 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
     }
 
     //地图分类
-    $scope.setDimen = function(a){
+    $scope.setDimen = function (a) {
         $rootScope.tableSwitch.dimen = a;
         $scope.targetSearch();
     }
     //设置来源终端
-    $scope.setTerminal = function(a){
-        if(a == 0) $rootScope.tableSwitch.tableFilter = undefined;
-        if(a == 1) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[0]}]";
-        if(a == 2) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[1]}]";
+    $scope.setTerminal = function (a) {
+        if (a == 0) $rootScope.tableSwitch.tableFilter = undefined;
+        if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[0]}]";
+        if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[1]}]";
         $scope.isJudge = false;
         $scope.targetSearch();
     };
     //设置来源过滤
-    $scope.setSource = function(a){
-        if(a == 0) $rootScope.tableSwitch.tableFilter = undefined;
-        if(a == 1) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[1]}]";
-        if(a == 2) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[2]}]";
-        if(a == 3) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[3]}]";
+    $scope.setSource = function (a) {
+        if (a == 0) $rootScope.tableSwitch.tableFilter = undefined;
+        if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[1]}]";
+        if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[2]}]";
+        if (a == 3) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[3]}]";
         $scope.isJudge = false;
         $scope.targetSearch();
     };
     //设置访客来源
-    $scope.setVisitors = function(a){
-        if(a == 0) $rootScope.tableSwitch.tableFilter = undefined;
-        if(a == 1) $rootScope.tableSwitch.tableFilter = "[{\"ct\":[0]}]";
-        if(a == 2) $rootScope.tableSwitch.tableFilter = "[{\"ct\":[1]}]";
+    $scope.setVisitors = function (a) {
+        if (a == 0) $rootScope.tableSwitch.tableFilter = undefined;
+        if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"ct\":[0]}]";
+        if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"ct\":[1]}]";
         $scope.isJudge = false;
         $scope.targetSearch();
     };
@@ -313,8 +309,8 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
             console.error("error: tableTimeEnd is not defined,Please check whether the parameter the configuration.");
             return;
         }
-        if($rootScope.tableSwitch.isJudge == undefined)$scope.isJudge = true;
-        if($rootScope.tableSwitch.isJudge)$rootScope.tableSwitch.tableFilter = undefined;
+        if ($rootScope.tableSwitch.isJudge == undefined)$scope.isJudge = true;
+        if ($rootScope.tableSwitch.isJudge)$rootScope.tableSwitch.tableFilter = undefined;
         $http({
             method: 'GET',
             url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + $rootScope.tableSwitch.latitude.field
@@ -330,7 +326,7 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
     //$scope.targetSearch();
     //
 
-    //表格展开项
+    //表格数据展开项
     var griApiInfo = function (gridApi) {
         gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
             var dataNumber;
@@ -360,12 +356,47 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, reques
             }
         });
     };
+
+    //表格HTML展开项
+    var griApihtml = function (gridApi) {
+
+        gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
+            var filter = "[{\"tt\":[\"" + row.entity.tt + "\"]}]";
+            console.log(row);
+            var htmlData = new Array();
+            row.entity.subGridOptions = {
+                showHeader: false,
+                columnDefs: htmlData
+            };
+
+            $http({
+                method: 'GET',
+                url: '/api/realTimeHtml/?filerInfo=' + filter + "&type=1"
+            }).success(function (datas, status) {
+                var res = {};
+                res["name"] = "test";
+                res["field"] = "info";
+                res["cellTemplate"] = datas.htmlData;
+                htmlData.push(res);
+                row.entity.subGridOptions.data = [{"info":" "}];
+            }).error(function (error) {
+                console.log(error);
+            });
+        });
+    };
+
     //得到数据中的url
-    $scope.getDataUrlInfo = function(grid,row,number){
+    $scope.getDataUrlInfo = function (grid, row, number) {
         var a = row.entity.source.split(",");
-        if(number == 1){
+        if (number == 1) {
+            if (a[0] == "-") {
+                a[0] = "javascript:void(0)"
+            }
             return a[0];
-        }else if(number == 2){
+        } else if (number == 2) {
+            if (a[0] == "-") {
+                a[1] = "直接访问";
+            }
             return a[1];
         }
     }
