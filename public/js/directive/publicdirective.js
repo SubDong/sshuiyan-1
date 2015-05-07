@@ -162,7 +162,7 @@ app.directive("sshDateShow", function ($http, $rootScope) {
         templateUrl: '../commons/date_show.html',
         link: function (scope, element, attris, controller) {
             // 初始化参数
-            scope.isCompared = true;
+            scope.isCompared = false;
             scope.ds_start = scope.ds_end = 0;
             scope.ds_defaultQuotasOption = ["pv", "uv", "ip", "nuv", "outRate", "avgTime"];
             scope.ds_dateShowQuotasOption = scope.defectOptions ? (scope.defectOptions.types || scope.ds_defaultQuotasOption) : scope.ds_defaultQuotasOption;
@@ -199,7 +199,6 @@ app.directive("sshDateShow", function ($http, $rootScope) {
                         }
                         scope.dateShowArray.push(dateShowObject);
                     });
-                    scope.isCompared = !scope.isCompared;
                 });
             };
             // 改变时间参数
