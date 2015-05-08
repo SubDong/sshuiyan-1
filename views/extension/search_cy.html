@@ -1,11 +1,11 @@
-<div class="middle_containers"  ng-controller="searchctr as app">
+<div class="middle_containers"  ng-controller="searchCyCtr as app">
     <div class="date_select">
         <b>搜索推广</b>
         <div aria-label="First group" role="group" class="btn-group fl">
-            <a class="btn btn-default current" data-ng-href="#extension/search" type="button" >计划</a>
+            <a class="btn btn-default" data-ng-href="#extension/search" type="button" >计划</a>
             <a class="btn btn-default" data-ng-href="#extension/search_dy" type="button">单元</a>
             <a class="btn btn-default" data-ng-href="#extension/search_gjc" type="button">关键词</a>
-            <a class="btn btn-default" data-ng-href="#extension/search_cy" type="button"> 创意</a>
+            <a class="btn btn-default current" data-ng-href="#extension/search_cy" type="button"> 创意</a>
             <a class="btn btn-default" data-ng-href="#extension/search_ssc" type="button">搜索词</a>
             <a class="btn btn-default" data-ng-href="#extension/search_tg_url" type="button">推广URL </a>
         </div>
@@ -15,7 +15,19 @@
         </div>
     </div>
     <div class="my_concent">
-        <ssh-date-show type="today" dimension="br"></ssh-date-show>
+        <div class="date_show">
+            <div class="date_show">
+                <ul>
+                    <li class="date_first"><h4>点击量</h4><span>34</span></li>
+                    <li class="date_third"><h4>消费</h4><span>34</span></li>
+                    <li class="date_first"><h4>浏览量(PV)</h4><span>2,574</span></li>
+                    <li class="date_last"><h4>跳出率 </h4><span>90</span></li>
+                    <li class="date_last"><h4>平均访问时长 </h4><span>90</span></li>
+                    <li class="date_first"><h4>转化次数</h4><span>00:02:34</span></li>
+                </ul>
+
+            </div>
+        </div>
         <div class="index_chart">
             <div id="indicators_charts_legend"></div>
             <div id="indicators_charts" style="height:400px;"></div>

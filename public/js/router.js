@@ -122,6 +122,28 @@ app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
             url: "/extension/search",
             templateUrl: "../extension/search.html"
         })
+        .state('search_dy', {
+            url: "/extension/search_dy",
+            templateUrl: "../extension/search_dy.html",
+            controller: "searchDyCtr"
+        })
+        .state('search_gjc', {
+            url: "/extension/search_gjc",
+            templateUrl: "../extension/search_gjc.html"
+        })
+        .state('search_cy', {
+            url: "/extension/search_cy",
+            templateUrl: "../extension/search_cy.html"
+        })
+        .state('search_ssc', {
+            url: "/extension/search_ssc",
+            templateUrl: "../extension/search_ssc.html"
+        })
+        .state('search_tg_url', {
+            url: "/extension/search_tg_url",
+            templateUrl: "../extension/search_tg_url.html",
+            controller: ""
+        })
         .state('way', {
             url: "/extension/way",
             templateUrl: "../extension/way.html"
