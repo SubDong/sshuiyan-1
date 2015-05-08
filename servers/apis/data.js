@@ -232,14 +232,12 @@ api.get('/realTimeAccess', function (req, res) {
     var indexes = date.createIndexes(0, 0, "visitor-");
     es_request.realTimeSearch(req.es, indexes, _type, _filters, function (data) {
         var resultArray = new Array();
-        data = data.reverse();
         data.forEach(function (item, i) {
             var result = {};
             result["city"] = item._source.city == "-" ? "国外" : item._source.city;
             var newDate = new Date(item._source.utime[0]).toString();
             result["utime"] = newDate.substring(newDate.indexOf(":") - 3, newDate.indexOf("G") - 1);
             result["source"] = item._source.rf + "," + (item._source.se != "-" ? item._source.se : item._source.rf);
-            result["tt"] = item._source.tt;
             result["vid"] = item._source.vid;
             result["ip"] = item._source.remote;
             result["utimeAll"] = new Date(item._source.utime[item._source.utime.length - 1] - item._source.utime[0]).format("hh:mm:ss");
@@ -295,7 +293,6 @@ api.get('/realTimeHtml', function (req, res) {
         });
     });
 });
-
 
 /**************************************************************/
 //访客地图

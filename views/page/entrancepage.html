@@ -25,7 +25,7 @@
                         <div class="chart_top">
                             <span>网站基础指标 :</span>
                             <ul>
-                                <li ng-repeat="item in TodayWeb"
+                                <li ng-repeat="item in TodayWeb" data-sshy-default defvalue="{{item.name}}"
                                     class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
                                     ng-click='indicators(item,TodayWeb,6)'>{{item.consumption_name}}
                                 </li>
@@ -34,7 +34,7 @@
                         <div class="chart_top">
                             <span>流量质量指标:</span>
                             <ul>
-                                <li ng-repeat="item in Indexfloweds"
+                                <li ng-repeat="item in Indexfloweds" data-sshy-default defvalue="{{item.name}}"
                                     class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
                                     ng-click='indicators(item,Indexfloweds,6)'>{{item.consumption_name}}
                                 </li>

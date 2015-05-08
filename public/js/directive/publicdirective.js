@@ -165,7 +165,7 @@ app.directive("sshDateShow", function ($http, $rootScope) {
             scope.isCompared = false;
             scope.ds_start = scope.ds_end = 0;
             scope.ds_defaultQuotasOption = ["pv", "uv", "ip", "nuv", "outRate", "avgTime"];
-            scope.ds_dateShowQuotasOption = scope.defectOptions ? (scope.defectOptions.types || scope.ds_defaultQuotasOption) : scope.ds_defaultQuotasOption;
+            scope.ds_dateShowQuotasOption = scope.checkedArray ? scope.checkedArray : scope.ds_defaultQuotasOption;
             // 读取数据
             scope.loadSummary = function () {
                 $http.get("/api/summary?type=1&dimension=" + scope.ds_dimension + "&quotas=" + scope.ds_dateShowQuotasOption + "&start=" + scope.ds_start + "&end=" + scope.ds_end).success(function (result) {
@@ -368,6 +368,19 @@ app.directive("sshNoVisitor", function ($http, $rootScope) {
                 scope.loadFwlywzData();
                 scope.loadFwrkyData();
             });
+        }
+    }
+});
+
+app.directive("sshyDefault", function () {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attris, controller) {
+            scope.checkedArray.forEach(function (item, i) {
+                if (item == attris.defvalue) {
+                    scope.classInfo = 'current';
+                }
+            })
         }
     }
 });

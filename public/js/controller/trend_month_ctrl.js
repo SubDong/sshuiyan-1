@@ -15,16 +15,30 @@ app.controller('trend_month_ctrl', function ($scope, $rootScope, $http, requestS
     //table配置
     $rootScope.tableTimeStart = -30;
     $rootScope.tableTimeEnd = -1;
+    //配置默认指标
+    $rootScope.checkedArray = ["pv", "uv", "ip", "outRate", "avgTime"];
+    $rootScope.gridArray = [
+        {name: "日期", field: "period"},
+        {
+            name: " ",
+            cellTemplate: "<div class='table_box'><button onclick='getMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul><li><a href='http://www.best-ad.cn' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li></ul></div></div>"
+        },
+        {name: "浏览量(PV)", field: "pv"},
+        {name: "访客数(UV)", field: "uv"},
+        {name: "IP数", field: "ip"},
+        {name: "跳出率", field: "outRate"},
+        {name: "平均访问时长", field: "avgTime"}
+    ];
     $rootScope.tableSwitch = {
-        latitude:{name: "日期", field: "period"},
-        tableFilter:null,
-        dimen:false,
+        latitude: {name: "日期", field: "period"},
+        tableFilter: null,
+        dimen: false,
         // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
-        number:0,
+        number: 0,
         //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
-        coding:false,
+        coding: false,
         //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
-        arrayClear: true //是否清空指标array
+        arrayClear: false //是否清空指标array
     };
     //
 
@@ -54,7 +68,7 @@ app.controller('trend_month_ctrl', function ($scope, $rootScope, $http, requestS
                 legendData: ["浏览量(PV)", "访客数(UV)", "访问次数", "新访客数", "新访客比率", "IP数", "跳出率", "平均访问时长", "平均访问页数", "转化次数", "转化率"],//显示几种数据
                 legendDefaultChecked: [0, 1],
                 id: "moth_charts",
-                min_max:false,
+                min_max: false,
                 bGap: false,//首行缩进
                 chartType: "line",//图表类型
                 dataKey: "key",//传入数据的key值

@@ -5,17 +5,29 @@ app.controller("provincemapctr", function ($scope, $rootScope, $http, requestSer
     $scope.todayClass = true;
 
     $rootScope.tableTimeStart = 0;//开始时间
-    $rootScope.tableTimeEnd = 0;//结束时间
+    $rootScope.tableTimeEnd = 0;//结束时间、
+    //配置默认指标
+    $rootScope.checkedArray = ["pv", "uv", "outRate"]
+    $rootScope.gridArray = [
+        {name: "地域", field: "region"},
+        {
+            name: " ",
+            cellTemplate: "<div class='table_box'><a href='http://www.best-ad.cn' class='table_btn'></a></div>"
+        },
+        {name: "浏览量(PV)", field: "pv"},
+        {name: "访客数(UV)", field: "uv"},
+        {name: "跳出率", field: "outRate"}
+    ];
     $rootScope.tableSwitch = {
-        latitude:{name: "地域", field: "region"},
-        tableFilter:null,
-        dimen:"city",
+        latitude: {name: "地域", field: "region"},
+        tableFilter: null,
+        dimen: "city",
         // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
-        number:1,
+        number: 1,
         //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
-        coding:false,
+        coding: false,
         //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
-        arrayClear: true //是否清空指标array
+        arrayClear: false //是否清空指标array
     };
 
     $scope.dateTimeStart = 0;

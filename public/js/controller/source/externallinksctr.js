@@ -7,6 +7,18 @@ app.controller("externallinksctr", function ($scope, $rootScope, $http, requestS
     //table默认信息配置
     $rootScope.tableTimeStart = 0;
     $rootScope.tableTimeEnd = 0;
+    //配置默认指标
+    $rootScope.checkedArray = ["uv", "nuv", "nuvRate"];
+    $rootScope.gridArray = [
+        {name: "外部连接", field: "rf"},
+        {
+            name: " ",
+            cellTemplate: "<div class='table_box'><button onclick='getMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul><li><a href='http://www.best-ad.cn' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li></ul></div></div>"
+        },
+        {name: "访客数(UV)", field: "uv"},
+        {name: "新访客数", field: "nuv"},
+        {name: "新老访客比率", field: "nuvRate"},
+    ];
     $rootScope.tableSwitch = {
         latitude: {name: "外部连接", field: "rf"},
         tableFilter: "[{\"rf_type\": [\"3\"]}]",
@@ -16,7 +28,7 @@ app.controller("externallinksctr", function ($scope, $rootScope, $http, requestS
         //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
         coding: "<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>",
         //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
-        arrayClear: true, //是否清空指标array
+        arrayClear: false, //是否清空指标array
         isJudge: false //是否清空filter 默认为清空
     };
 

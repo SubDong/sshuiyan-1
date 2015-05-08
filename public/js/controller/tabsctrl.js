@@ -139,15 +139,15 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, re
     }
     //table Button 配置 table_nextbtn
     if ($rootScope.tableSwitch.number == 1) {
-        $scope.gridBtnDivObj = "<div class='table_box'><a href='http://www.best-ad.cn' class='table_btn'></a></div>";
+        $scope.gridBtnDivObj = "<div class='table_box'><a href='javascript:;' ng-click='grid.appScope.getHistoricalTrend(this)' class='table_btn test'></a></div>";
     } else if ($rootScope.tableSwitch.number == 2) {
         $scope.gridBtnDivObj = "<div class='table_box'><button onclick='getMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul>" + $rootScope.tableSwitch.coding + "</ul></div></div>";
     }
 
     $rootScope.indicators = function (item, entities, number, refresh) {
-        $scope.gridArray.shift();
+        $rootScope.gridArray.shift();
         if (refresh == "refresh") {
-            $scope.gridArray.unshift($rootScope.tableSwitch.latitude);
+            $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude);
             return
         }
         $rootScope.tableSwitch.number != 0 ? $scope.gridArray.shift() : ""
@@ -156,15 +156,19 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, re
         var a = $rootScope.checkedArray.indexOf(item.name);
         if (a != -1) {
             $rootScope.checkedArray.splice(a, 1);
-            $scope.gridArray.splice(a, 1);
-            $rootScope.tableSwitch.number != 0 ? $scope.gridArray.splice(a, 1) : "";
-            $rootScope.gridArray.unshift($scope.gridObjButton);
-            $scope.gridArray.unshift($rootScope.tableSwitch.latitude);
+            $rootScope.gridArray.splice(a, 1);
+
+            if ($rootScope.tableSwitch.number != 0) {
+                $scope.gridObjButton["name"] = " ";
+                $scope.gridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
+                $rootScope.gridArray.unshift($scope.gridObjButton);
+            }
+            $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude);
         } else {
             if ($rootScope.checkedArray.length >= number) {
                 $rootScope.checkedArray.shift();
                 $rootScope.checkedArray.push(item.name);
-                $scope.gridArray.shift();
+                $rootScope.gridArray.shift();
 
                 $scope.gridObj["name"] = item.consumption_name;
                 $scope.gridObj["field"] = item.name;
@@ -218,25 +222,26 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, re
             }
         };
     } else {
-            $scope.gridOptions = {
-                //paginationPageSizes: [25, 50, 75],
-                paginationPageSize: 25,
-                expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
-                expandableRowHeight: 360,
-                enableColumnMenus: false,
-                enablePaginationControls: false,
-                enableSorting: true,
-                enableGridMenu: false,
-                enableHorizontalScrollbar: 0,
-                columnDefs: $scope.gridArray,
-                onRegisterApi: function (gridApi) {
-                    $scope.gridApi2 = gridApi;
-                    if($rootScope.tableSwitch.dimen){
-                        griApiInfo(gridApi);
-                    }
+        $scope.gridOptions = {
+            //paginationPageSizes: [25, 50, 75],
+            paginationPageSize: 25,
+            expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
+            expandableRowHeight: 360,
+            enableColumnMenus: false,
+            enablePaginationControls: false,
+            enableSorting: true,
+            enableGridMenu: false,
+            enableHorizontalScrollbar: 0,
+            columnDefs: $scope.gridArray,
+            onRegisterApi: function (gridApi) {
+                $scope.gridApi2 = gridApi;
+                if ($rootScope.tableSwitch.dimen) {
+                    griApiInfo(gridApi);
                 }
-            };
+            }
+        };
     }
+
     $scope.pagego = function (pagevalue) {
         pagevalue.pagination.seek(Number($scope.page));
     }
@@ -248,32 +253,24 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, re
     }
     //设置来源终端
     $scope.setTerminal = function (a) {
-        if (a == 0) $rootScope.tableSwitch.tableFilter = null;
+        if (a == 0) $rootScope.tableSwitch.tableFilter = undefined;
         if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[0]}]";
         if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[1]}]";
         $scope.isJudge = false;
-        if($scope.tableJu == "html"){
-            getHtmlTableData()
-        }else{
-            $scope.targetSearch();
-        }
+        $scope.targetSearch();
     };
     //设置来源过滤
     $scope.setSource = function (a) {
-        if (a == 0) $rootScope.tableSwitch.tableFilter = null;
+        if (a == 0) $rootScope.tableSwitch.tableFilter = undefined;
         if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[1]}]";
         if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[2]}]";
         if (a == 3) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[3]}]";
         $scope.isJudge = false;
-        if($scope.tableJu == "html"){
-            getHtmlTableData()
-        }else{
-            $scope.targetSearch();
-        }
+        $scope.targetSearch();
     };
     //设置访客来源
     $scope.setVisitors = function (a) {
-        if (a == 0) $rootScope.tableSwitch.tableFilter = null;
+        if (a == 0) $rootScope.tableSwitch.tableFilter = undefined;
         if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"ct\":[0]}]";
         if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"ct\":[1]}]";
         $scope.isJudge = false;
@@ -316,10 +313,9 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, re
             console.log(error);
         });
     }
-
     //init
-    //$scope.targetSearch();
-    //
+    $scope.targetSearch();
+
 
     //表格数据展开项
     var griApiInfo = function (gridApi) {
@@ -351,6 +347,15 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, re
             }
         });
     };
+    //得到数据中的url
+    $scope.getDataUrlInfo = function (grid, row, number) {
+        var a = row.entity.source.split(",");
+        if (number == 1) {
+            return a[0];
+        } else if (number == 2) {
+            return a[1];
+        }
+    }
 
     //表格HTML展开项
     var griApihtml = function (gridApi) {
@@ -378,6 +383,43 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, re
             });
         });
     };
+
+    /**
+     *  table 历史趋势
+     * @param start 开始时间
+     * @param end   结束时间
+     * @param indic   查询指标
+     * @param lati   查询纬度
+     * @param type
+     */
+    $scope.getHistoricalTrend = function (a) {
+        //console.log(a);
+        /*if ($rootScope.tableSwitch.isJudge == undefined)$scope.isJudge = true;
+        if ($rootScope.tableSwitch.isJudge)$rootScope.tableSwitch.tableFilter = undefined;
+
+        $scope.month = function () {
+            $scope.reset();
+            $scope.monthClass = true;
+            $rootScope.tableTimeStart = -30;
+            $rootScope.tableTimeEnd = -1;
+            $rootScope.start = -30;
+            $rootScope.end = -1;
+            $scope.reloadByCalendar("month");
+        };
+        $rootScope.tableSwitch.latitude.name = "日期";
+        $rootScope.tableSwitch.latitude.field = "period";
+        console.log(this);
+        $http({
+            method: 'GET',
+            url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + $rootScope.tableSwitch.latitude.field
+            + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&type=1"
+        }).success(function (data, status) {
+            $scope.gridOptions.data = data;
+        }).error(function (error) {
+            console.log(error);
+        });*/
+    }
+
 
     //得到数据中的url
     $scope.getDataUrlInfo = function (grid, row, number) {
@@ -434,22 +476,31 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, re
     }
     ];
 });
+
+
+/**********************隐藏table中按钮的弹出层*******************************/
 var s = 0;
 function getMyButton(item) {
+    var a = document.getElementsByClassName("table_win");
+    theDisplay(a);
     item.nextSibling.style.display = "block";
     s = 0
+}
+function theDisplay(a) {
+    for (var i = 0; i < a.length; i++) {
+        if (document.getElementsByClassName("table_win")[i].style.display == "block") {
+            document.getElementsByClassName("table_win")[i].style.display = "none";
+        }
+    }
 }
 document.onclick = function () {
     var a = document.getElementsByClassName("table_win");
     if (a.length != 0) {
         if (s > 0) {
-            for (var i = 0; i < a.length; i++) {
-                if (document.getElementsByClassName("table_win")[i].style.display == "block") {
-                    document.getElementsByClassName("table_win")[i].style.display = "none"
-                    s = 0
-                }
-            }
+            theDisplay(a);
+            s = 0
         }
-        s++;
+        s++
     }
 };
+/*******************************************************************/

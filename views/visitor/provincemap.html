@@ -42,7 +42,7 @@
                     <div class="chart_top">
                         <span>网站基础指标 :</span>
                         <ul>
-                            <li ng-repeat="item in TodayWeb"
+                            <li ng-repeat="item in TodayWeb" data-sshy-default defvalue="{{item.name}}"
                                 class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
                                 ng-click='indicators(item,TodayWeb,6)'>{{item.consumption_name}}
                             </li>
@@ -51,7 +51,7 @@
                     <div class="chart_top">
                         <span>流量质量指标:</span>
                         <ul>
-                            <li ng-repeat="item in flow"
+                            <li ng-repeat="item in flow" data-sshy-default defvalue="{{item.name}}"
                                 class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
                                 ng-click='indicators(item,flow,6)'>{{item.consumption_name}}
                             </li>
@@ -68,7 +68,7 @@
                     </div>-->
                     <div class="chart_top chart_noborder">
                         <button class="btn btn-primary" type="button" ng-click="targetSearch(true)">确定</button>
-                        * 最多只能勾选2项
+                        * 最多只能勾选6项
                     </div>
 
                 </div>
