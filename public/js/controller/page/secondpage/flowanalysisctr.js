@@ -16,13 +16,13 @@ app.controller('flowanalysisctr', function ($scope, $rootScope, $http, requestSe
     $rootScope.tableTimeStart = 0;
     $rootScope.tableTimeEnd = 0;
     $rootScope.tableSwitch = {
-        latitude:{name: "页面url", field: "loc"},
-        tableFilter:null,
-        dimen:false,
+        latitude: {name: "页面url", field: "loc"},
+        tableFilter: null,
+        dimen: false,
         // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
-        number:0,
+        number: 0,
         //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
-        coding:"<li><a href='http://www.best-ad.cn' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li>",
+        coding: "<li><a href='http://www.best-ad.cn' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li>",
         arrayClear: false
     };
     //
@@ -43,10 +43,13 @@ app.controller('flowanalysisctr', function ($scope, $rootScope, $http, requestSe
     $scope.flowanalyFomrmat = function (data, config, e) {
         var json = JSON.parse(eval("(" + data + ")").toString());
         var result = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", e.types);
-        var final_result = chartUtils.getExternalinkPie(result);//获取barchart的数据
         config['noFormat'] = true;
-        config['twoYz'] = "none"
+        config['twoYz'] = "none";
+        if (result.length > 5) {
+            result = result.slice(result.length - 5);
+        }
         cf.renderChart(result, config);
+        var final_result = chartUtils.getExternalinkPie(result);//获取barchart的数据
         var pieData = chartUtils.getEnginePie(final_result);
         $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
         cf.renderChart(pieData, $scope.charts[0].config);

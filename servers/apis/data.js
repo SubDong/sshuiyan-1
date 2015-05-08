@@ -2,10 +2,6 @@ var express = require('express');
 var url = require('url');
 var date = require('../utils/date');
 var dateFormat = require('../utils/dateFormat')();
-var pie = require('../services/pie');
-var line = require('../services/line');
-var bar = require('../services/bar');
-var grid = require('../services/grid');
 var resutil = require('../utils/responseutils');
 var datautils = require('../utils/datautils');
 var es_request = require('../services/es_request');
@@ -15,6 +11,7 @@ var map = require('../utils/map');
 var api = express.Router();
 
 api.get('/charts', function (req, res) {
+
     var query = url.parse(req.url, true).query, quotas = [], type = query['type'], dimension = query.dimension, filter = null, topN = [];
     var filter_f = query.filter;
     var topN_f = query.topN == undefined ? null : query.topN
@@ -123,31 +120,6 @@ api.get('/pie', function (req, res) {
         datautils.send(res, JSON.stringify(result));
     });
 
-});
-api.get('/grid', function (req, res) {
-    var query = url.parse(req.url, true).query;
-    var type = query['type'], start = Number(query['start']), end = Number(query['end']);
-
-    switch (type) {
-        case "pv":
-            var indexs = date.between(req, "access-");
-            grid.default(req.es, indexs, 1, "kw", function (body) {
-                datautils.send(res, body);
-            });
-            break;
-        case "uv":
-            var indexs = date.between(req, "visitor-");
-            grid.default(req.es, indexs, 1, "kw", function (body) {
-                datautils.send(res, body);
-            });
-            break;
-        default :
-            var indexs = date.between(req, "access-");
-            grid.default(req.es, indexs, 1, "kw", function (body) {
-                datautils.send(res, body);
-            });
-            break;
-    }
 });
 
 // ================================= baizz ================================
@@ -268,6 +240,7 @@ api.get('/realTimeAccess', function (req, res) {
             result["utime"] = newDate.substring(newDate.indexOf(":") - 3, newDate.indexOf("G") - 1);
             result["source"] = item._source.rf + "," + (item._source.se != "-" ? item._source.se : item._source.rf);
             result["tt"] = item._source.tt;
+            result["vid"] = item._source.vid;
             result["ip"] = item._source.remote;
             result["utimeAll"] = new Date(item._source.utime[item._source.utime.length - 1] - item._source.utime[0]).format("hh:mm:ss");
             result["pageNumber"] = item._source.loc.length
@@ -307,7 +280,7 @@ api.get('/realTimeHtml', function (req, res) {
                     "<li>是否支持JAVA:<span>" + (item._source.ja == "0" ? " 支持" : " 不支持") + "</span></li></ul></div></div></div><div class='trend_right'>" +
                     "<ul><li>访问类型：<span>" + (item._source.ct == 0 ? " 新访客" : " 老访客") + "</span></li>" +
                     "<li>当天访问频次：<span>" + datainfo[0].quota[0] + "</span></li>" +
-                    "<li>上一次访问时间：<span>" + (item.last != "首次访问"?new Date(parseInt(item.last)).LocalFormat("yyyy-MM-dd hh:mm:ss") : item.last) + "</span></li>" +
+                    "<li>上一次访问时间：<span>" + (item.last != "首次访问" ? new Date(parseInt(item.last)).LocalFormat("yyyy-MM-dd hh:mm:ss") : item.last) + "</span></li>" +
                     "<li>本次来路:<span>" + (item._source.se == "-" ? " 直接访问" : "<a href='" + item._source.rf + "' target='_blank'>" + item._source.se + "( 搜索词:" + item._source.kw + ")</a>") + "</span></li>" +
                     "<li>入口页面：<span><a href='" + item._source.loc[0] + "' target='_blank'>" + item._source.loc[0] + "</a></span></li>" +
                     "<li>最后停留在:<span><a href='" + item._source.loc[item._source.loc.length - 1] + "' target='_blank'>" + item._source.loc[item._source.loc.length - 1] + "</a></span></li></ul>" +
@@ -390,34 +363,6 @@ api.get('/provincemap', function (req, res) {
     })
 });
 
-// ================================XiaoWei=====================================
-api.get("/vapie", function (req, res) {
-    var query = url.parse(req.url, true).query;
-    var type = query['type'];
-    var start = Number(query['start']);
-    var end = Number(query['end']);
-    switch (type) {
-        case "pv":
-            var indexs = date.between(req, "access-");
-            pie.comeForm(req.es, start, end, indexs, 1, function (body) {
-                datautils.send(res, body);
-            });
-            break;
-        case "uv":
-            var indexs = date.between(req, "access-");
-            pie.uv(req.es, start, end, indexs, 1, function (body) {
-                datautils.send(res, body);
-            });
-            break;
-        case "arrCount":
-            var indexs = date.between(req, "visitor-");
-            pie.comeForm(req.es, start, end, indexs, 1, function (body) {
-                datautils.send(res, body);
-            });
-        case "convertRate":
-            break;
-    }
-});
 /**
  * summary.by wms
  */

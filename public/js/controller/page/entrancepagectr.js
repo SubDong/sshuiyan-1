@@ -35,47 +35,31 @@ app.controller('entrancepagectr', function ($scope, $rootScope, $http, requestSe
     $scope.mainFormat = function (data, config, e) {
         var json = JSON.parse(eval("(" + data + ")").toString());
         var result = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", e.types);
-        var final_result = chartUtils.getExternalinkPie(result);//获取barchart的数据
         config['noFormat'] = true;
-        config['twoYz'] = "none"
+        config['twoYz'] = "none";
+
+        /*===============TopN开始=============*/
+        //if (result.length > 5) {
+        //    var top = [];
+        //    var _index = [];
+        //    result.forEach(function (e, i) {
+        //        var value = 0;
+        //        e.quota.forEach(function (item) {
+        //            value += item;
+        //        });
+        //        top.push(value);
+        //        _index.push(i);
+        //    });
+        //}
+        /*=================TopN结束==================*/
+        if (result.length > 5) {
+            result = result.slice(result.length - 5);
+        }
         cf.renderChart(result, config);
+        var final_result = chartUtils.getExternalinkPie(result);//获取barchart的数据
         var pieData = chartUtils.getEnginePie(final_result);
         $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
         cf.renderChart(pieData, $scope.charts[0].config);
-    }
-    $scope.topNFormat = function (data, config) {
-        var json = JSON.parse(eval("(" + data + ")").toString());
-        var _label = [];
-        json.forEach(function (e) {
-            e.dimension.buckets.forEach(function (item) {
-                _label.push(item.key);
-            });
-        });
-
-        _label.removal();
-        var data = {};
-        var label = [];
-        _label.forEach(function (e) {
-
-            var key = [];
-            json.forEach(function (item) {
-                var quota = [];
-                item.dimension.buckets.forEach(function (k) {
-                    if (k.key == e) {
-                        quota.push(k.top_hit.value);
-                    } else {
-                        quota.push(0);
-                    }
-                });
-                console.log(quota);
-                key.push(item.key_as_string);
-            });
-            label.push(e);
-
-        });
-        data["label"] = label;
-        console.log(data);
-
     }
     $scope.charts = [
         {

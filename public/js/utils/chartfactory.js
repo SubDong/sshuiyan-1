@@ -656,7 +656,7 @@ var util = {
         var legendDiv = document.createElement("div");
         legendDiv.id = renderType + "_" + c.id;
         legendDiv.setAttribute("style", "width:100%;position:absolute;margin:0px auto;text-align:center;z-index:10;background: #ffffff;");
-        for (var i = c.legendData.length - 1; i > -1; i--) {
+        for (var i = 0; i < c.legendData.length; i++) {
             var lab = document.createElement("label");
             var spn = document.createElement("b");
             var rad = document.createElement("input");
@@ -679,14 +679,14 @@ var util = {
                     if (c.legendClickListener) {
                         c.legendClickListener(this, chartObj, c, checkVal);
                     }
-                }, false);
+                });
             }
             lab.appendChild(rad);
             spn.innerHTML = "&nbsp;" + c.legendData[i] + "&nbsp;&nbsp;";
             lab.appendChild(spn);
-            legendDiv.insertBefore(lab, legendDiv.childNodes[0]);
+            legendDiv.appendChild(lab);
         }
-        chartDiv.insertBefore(legendDiv, chartDiv.childNodes[0]);
+        chartDiv.appendChild(legendDiv);
     },
     addEventMore: function (chartObj, c) {
         var legendDiv = document.getElementById(c.legendId);
@@ -743,10 +743,10 @@ var util = {
         });
         checkBoxDiv.appendChild(submitBtn);
         legendDiv.appendChild(checkBoxDiv);
-        legendDiv.insertBefore(button, legendDiv.childNodes[0]);
+        legendDiv.appendChild(button);
     },
     allowItem: function (radioObj) {
-        var checks = document.getElementsByName(radioObj.name);
+        var checks = $("input[name='" + radioObj.name + "']");
         var row = parseInt(radioObj.getAttribute("index"))//获取选中下标
         var a = checked.indexOf(row);//获取当前下标在legend数组的位置
         var allowSelectedCount = parseInt(radioObj.getAttribute("asc"));//获取该legend组允许选中的个数
@@ -755,21 +755,20 @@ var util = {
         } else {
             if (checked.length >= allowSelectedCount) {
                 var _shift = checked.shift();
-                checks[_shift].previousSibling.style.backgroundPosition = "0 0";
+                $(checks[_shift]).prev("span").css("background-position", "0px 0px");
                 checked.push(row);
             } else {
                 checked.push(row);
             }
         }
         //console.log(checks);
-
-        for (var j = 0; j < checks.length; j++) {
-            checks[j].checked = false;
-        }
-        for (var i = 0; i < checked.length; i++) {
-            checks[checked[i]].previousSibling.style.backgroundPosition = "0px -50px";
-            checks[checked[i]].checked = true;
-        }
+        checks.each(function (i, o) {
+            $(o).prop("checked", false);
+        });
+        checked.forEach(function (c) {
+            $(checks[c]).prev("span").css("background-position", "0px -50px");
+            $(checks[c]).prop("checked", true);
+        });
         return checked;
     },
     legStr: function (radio) {

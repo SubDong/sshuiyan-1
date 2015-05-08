@@ -26,10 +26,13 @@ app.controller('analysistransformationctr', function ($scope, $rootScope, $http,
     $scope.analysisFormat = function (data, config, e) {
         var json = JSON.parse(eval("(" + data + ")").toString());
         var result = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", e.types);
-        var final_result = chartUtils.getExternalinkPie(result);//获取barchart的数据
         config['noFormat'] = true;
-        config['twoYz'] = "none"
+        config['twoYz'] = "none";
+        if (result.length > 5) {
+            result = result.slice(result.length - 5);
+        }
         cf.renderChart(result, config);
+        var final_result = chartUtils.getExternalinkPie(result);//获取barchart的数据
         var pieData = chartUtils.getEnginePie(final_result);
         $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
         cf.renderChart(pieData, $scope.charts[0].config);

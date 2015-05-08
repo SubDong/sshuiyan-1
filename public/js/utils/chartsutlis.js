@@ -279,7 +279,7 @@ var chartUtils = {
         });
         return final_result;
     },
-    getExternalinkPie: function (result) {
+    getExternalinkPie: function (result, split) {
         if (result) {
             var regex = /(baidu)+|(sogou)+|(haosou)+/, final_result = [];
             result.forEach(function (e) {
@@ -287,8 +287,10 @@ var chartUtils = {
                 if (!regex.test(e.label) && e.label != '-') {
                     var _label = e.label;
                     if (_label) {
-                        if (_label.indexOf('?') > -1) {
-                            _label = _label.split('?')[0];
+                        if (split) {
+                            if (_label.indexOf(split) > -1) {
+                                _label = _label.split(split)[0];
+                            }
                         }
                     }
                     _val['label'] = _label;
