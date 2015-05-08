@@ -658,34 +658,34 @@ var util = {
                 checked.push(checkedItem);
             });
         }
-        var chartDiv = document.getElementById(c.legendId);
-        var legendDiv = document.createElement("div");
-        legendDiv.id = renderType + "_" + c.id;
-        legendDiv.setAttribute("style", "width:100%;position:absolute;margin:0px auto;text-align:center;z-index:10;background: #ffffff;");
+        var chartDiv = $("#" + c.legendId);
+        var legendDiv = $("<div></div>");
+        legendDiv.attr("id", renderType + "_" + c.id);
+        legendDiv.attr("style", "width:100%;position:absolute;margin:0px auto;text-align:center;z-index:10;background: #ffffff;");
         for (var i = 0; i < c.legendData.length; i++) {
-            var lab = document.createElement("label");
-            var spn = document.createElement("b");
-            var rad = document.createElement("input");
-            rad.type = renderType;
+            var lab = $("<label></label>");
+            var spn = $("<b></b>");
+            var rad = $("<input/>");
+            rad.attr("type", renderType);
             if (renderType == "checkBox") {
                 checked.forEach(function (def) {
                     if (def == i) {
-                        rad.setAttribute("checked", "checked");
+                        rad.prop("checked", true);
                     }
                 });
             } else {
                 if (i == 0) {
-                    rad.setAttribute("checked", "checked");
+                    rad.prop("checked", true);
                 }
             }
-            rad.name = renderType + "_" + c.id;
-            rad.value = chartUtils.convertEnglish(c.legendData[i]);
-            rad.setAttribute("asc", c.legendAllowCheckCount);
-            rad.setAttribute("index", i + "");
-            rad.setAttribute("chart", c.id);
-            rad.setAttribute("class", "styled");
+            rad.attr("name", renderType + "_" + c.id);
+            rad.attr("value", chartUtils.convertEnglish(c.legendData[i]));
+            rad.attr("asc", c.legendAllowCheckCount);
+            rad.attr("index", i + "");
+            rad.attr("chart", c.id);
+            rad.attr("class", "styled");
             if (window.addEventListener) {
-                rad.addEventListener("click", function () {
+                rad.bind("click", function () {
                     if (renderType == "checkBox") {
                         util.allowItem(this);
                     }
@@ -695,12 +695,12 @@ var util = {
                     }
                 });
             }
-            lab.appendChild(rad);
-            spn.innerHTML = "&nbsp;" + c.legendData[i] + "&nbsp;&nbsp;";
-            lab.appendChild(spn);
-            legendDiv.appendChild(lab);
+            lab.append(rad);
+            spn.html("&nbsp;" + c.legendData[i] + "&nbsp;&nbsp;");
+            lab.append(spn);
+            legendDiv.append(lab);
         }
-        chartDiv.appendChild(legendDiv);
+        chartDiv.append(legendDiv);
     },
     addEventMore: function (chartObj, c) {
         var legendDiv = document.getElementById(c.legendId);

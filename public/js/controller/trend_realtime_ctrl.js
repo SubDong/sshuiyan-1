@@ -74,6 +74,7 @@ app.controller('Trend_realtime_ctrl', function ($scope, $rootScope, $http, reque
                 legendId: "realtime_charts_legend",
                 legendAllowCheckCount: 2,
                 legendClickListener: $scope.onLegendClickListener,
+                legendDefaultChecked: [0, 1],
                 //显示几种数据
                 id: "realtime_charts",
                 min_max: false,
