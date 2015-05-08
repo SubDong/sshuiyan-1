@@ -7,12 +7,8 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
         $scope.dayClass = true;
         $scope.timeselect = true;
         $scope.reset = function () {
-            $scope.todayClass = false;
-            $scope.yesterdayClass = false;
-            $scope.sevenDayClass = false;
-            $scope.monthClass = false;
             $scope.definClass = false;
-            $scope.hourcheckClass = false;
+            $scope.weekcheckClass = false;
         };
         $scope.gridOptions = {
             enableColumnMenus: false,
@@ -125,7 +121,6 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
                 e.config.instance = chart;
                 util.renderLegend(chart, e.config);
             })
-            //requestService.initCharts($scope.charts);
             requestService.refresh($scope.charts);
             requestService.gridRefresh($scope.grids);
         }
@@ -143,15 +138,6 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
             requestService.refresh($scope.charts);
             requestService.gridRefresh($scope.grids);
         });
-
-        $scope.open = function ($event) {
-            $event.preventDefault();
-            $event.stopPropagation();
-            $scope.opened = true;
-            /*  $scope.reset();*/
-            $scope.definClass = true;
-        };
-
         $scope.hourcheck = function () {
             $scope.hourcheckClass = true;
             $scope.dayClass = false;
@@ -186,6 +172,12 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
             }
             requestService.refresh($scope.charts);
         };
+        $scope.weekcheck = function () {
+            $scope.weekcheckClass = true;
+            requestService.refresh($scope.charts);
+
+        };
+
         //下拉框
         $scope.mapChange = function (_this) {
             $scope.charts[1].types = _this.value;
@@ -220,13 +212,39 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
         $scope.continent = {};
         $scope.country = {};
 
-        this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
-        this.type = 'range';
-        /*      this.identity = angular.identity;*/
+        //
+        $scope.dateClosed = function () {
+            $rootScope.start = $scope.startOffset;
+            $rootScope.end = $scope.endOffset;
+            $scope.charts.forEach(function (e) {
+                var chart = echarts.init(document.getElementById(e.config.id));
+                e.config.instance = chart;
+            })
+            if ($rootScope.start <= -1) {
+                $scope.charts[0].config.keyFormat = "day";
+            } else {
+                $scope.charts[0].config.keyFormat = "hour";
+            }
+            requestService.refresh($scope.charts);
+            requestService.gridRefresh($scope.grids);
+        };
+        //
 
-        this.removeFromSelected = function (dt) {
-            this.selectedDates.splice(this.selectedDates.indexOf(dt), 1);
-        }
+        this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
+        //this.type = 'range';
+        /*      this.identity = angular.identity;*/
+        //$scope.$broadcast("update", "msg");
+        $scope.$on("update", function (e, datas) {
+            // 选择时间段后接收的事件
+            datas.sort();
+            //console.log(datas);
+            var startTime = datas[0];
+            var endTime = datas[datas.length - 1];
+            $scope.startOffset = (startTime - today_start()) / 86400000;
+            $scope.endOffset = (endTime - today_start()) / 86400000;
+            //console.log("startOffset=" + startOffset + ", " + "endOffset=" + endOffset);
+
+        });
 
     }
 )

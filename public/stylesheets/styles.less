@@ -107,6 +107,7 @@ nav, .navbar-default {
   width: 100%;
   background: #f0f0f0;
   min-height: 40px;
+
   .btn-group {
     .dropdown-toggle {
       padding: 0 10px !important;
@@ -546,11 +547,24 @@ nav, .navbar-default {
     width: 48%;
     margin-right: 2%;
   }
-  ul {
+}
+.dateshow1{
+  ul li {
+  width:100%;
+  margin-right: 2%;
+}
+}
+.dateshow4{
+  ul li{
+    width:23.7%;
 
   }
 }
-
+.dateshow5{
+  ul li{
+    width:18.8%;
+  }
+}
 .table_content {
   .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
     background-color: #eeeeee;
@@ -866,6 +880,7 @@ nav, .navbar-default {
 
 .index_chart {
   position: relative;
+  width:100%;
   overflow: hidden;
   margin-bottom: 20px;
 }
@@ -2086,3 +2101,67 @@ nav, .navbar-default {
     }
   }
 }
+.pin_chart{
+  width:40%;
+  height:400px;
+  float:left;
+}
+.line_chart{
+  width:60%;
+  float:right;
+  height:400px;
+}
+.pin_charts{
+  width:50%;
+  height:400px;
+  float:left;
+}
+.line_charts{
+  width:50%;
+  float:right;
+  height:400px;
+}
+
+@media screen and (min-width: 1023px) and (max-width: 1180px){
+  .pin_chart{
+    width:60%;
+  ;
+  }
+  .line_chart{
+    width:40%;
+  }
+  .pin_charts{
+    width:65%;
+  }
+  .line_charts{
+    width:35%;
+  }
+}
+.trend_img{
+  span{
+    width:58px;
+    height:58px;
+  }
+  .windows{
+    background: url(../images/windows.png) no-repeat;
+  }
+  .mac{
+    background:url(../img/mac.png) no-repeat;
+  }
+  .linux{
+    background:url(../img/linux.png) no-repeat;
+
+  }
+  .google{
+    background:url(../images/google.png) no-repeat;
+  }
+  .firefox{
+    background:url(../img/Firefox.png) no-repeat;
+  }
+  .ie{
+    background:url(../img/ie.png) no-repeat;
+
+  }
+
+}
+

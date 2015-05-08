@@ -8,12 +8,16 @@ app.directive("calendar", function ($rootScope, requestService) {
         "<button class=\"btn btn-default\" type=\"button\" ng-click=\"yesterday()\" ng-class=\"{'current':yesterdayClass}\">昨天</button>" +
         "<button class=\"btn btn-default\" type=\"button\" ng-click=\"sevenDay()\" ng-class=\"{'current':sevenDayClass}\">最近7天</button>" +
         "<button class=\"btn btn-default\" type=\"button\" ng-click=\"month()\" ng-class=\"{'current':monthClass}\">最近30天</button>" +
-        "<button type=\"button\" class=\"btn btn-default\" datepicker-popup=\"{{format}}\"  btn-radio=\"range\" multi-select=\'app.selectedDates\' select-range=\'{{app.type==\"range\"}}\' ng-model=\'app.activeDate\' is-open=\"opened\" date-disabled=\"disabled(date, mode)\"current-text=\"今天\" clear-text=\"清空\" close-text=\"关闭\" ng-click=\"open($event)\" ng-class=\"{'current':definClass}\">{{(app.selectedDates | orderBy)[0] | date:'yyyy-MM-dd'}}" +
-        "<span ng-if='app.selectedDates.length > 1'>至 {{(app.selectedDates | orderBy : '-')[0] | date:'yyyy-MM-dd'}} </span><i class=\"glyphicon glyphicon-calendar\"></i></button><span class=\"dateshow fl\"></span></div>",
+        "<button type=\"button\" class=\"btn btn-default \" isactive=\"false\"datepicker-popup=\"{{format}}\" close-on-date-selection=\"false\" on-close=\"dateClosed()\" btn-radio=\"range\" on-close=\"dateClose()\" multi-select=\'app.selectedDates\' max-date=\"maxDate\" select-range=\'true\' ng-model=\'app.activeDate\' is-open=\"opened\" date-disabled=\"disabled(date, mode)\"current-text=\"今天\" clear-text=\"清空\" close-text=\"确认\" ng-click=\"open($event)\" ng-class=\"{'current':definClass}\">{{(app.selectedDates | orderBy)[0] | date:'yyyy-MM-dd'}}" +
+        "<span ng-if='app.selectedDates.length > 1'>至 {{(app.selectedDates | orderBy : '-')[0] | date:'yyyy-MM-dd'}} </span><i class=\"glyphicon glyphicon-calendar\"></i></button></div>",
         replace: true,
         transclude: true,
         link: function (scope, element, attris, controller) {
             Custom.initCheckInfo();
+            scope.$watch("opened", function() {
+           /*    console.log();*/
+            });
+            scope.maxDate = new Date();
             scope.reset = function () {
                 scope.todayClass = false;
                 scope.yesterdayClass = false;
@@ -21,6 +25,7 @@ app.directive("calendar", function ($rootScope, requestService) {
                 scope.monthClass = false;
                 scope.definClass = false;
                 scope.btnchecked = true;
+                scope.weekcheckClass = false;
             };
             scope.reloadByCalendar = function (type) {
                 console.info("info: now user click the " + type + " button");
@@ -72,14 +77,16 @@ app.directive("calendar", function ($rootScope, requestService) {
                 $event.preventDefault();
                 $event.stopPropagation();
                 scope.opened = true;
+                scope.isDisabled =false;
             };
             scope.checkopen = function ($event) {
                 scope.reset();
-                scope.definClass = true;
+                scope.definClass = false;
                 $event.preventDefault();
                 $event.stopPropagation();
                 scope.opens = true;
             };
+
         }
     };
     return option;
@@ -370,6 +377,7 @@ app.directive("sshNoVisitor", function ($http, $rootScope) {
             });
         }
     }
+
 });
 
 app.directive("sshyDefault", function () {
@@ -438,4 +446,5 @@ app.directive('sshExpander',function($location){
             scope.sshPath = "#" + $location.path().substring(1);
         }
     };
+
 });

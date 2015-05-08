@@ -238,7 +238,7 @@ angular.module('ui.bootstrap.bindHtml', [])
 angular.module('ui.bootstrap.buttons', [])
 
     .constant('buttonConfig', {
-        activeClass: 'active',
+        activeClass: 'class',
         toggleEvent: 'click'
     })
 

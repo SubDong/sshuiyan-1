@@ -245,7 +245,7 @@ app.controller('SurveyCtrl', function ($scope, $http, $rootScope,areaService, SE
             });
 
         }).error(function (error) {
-            alert(error);
+          console.log(error);
         });
     };
 
@@ -386,7 +386,7 @@ app.controller('SurveyCtrl', function ($scope, $http, $rootScope,areaService, SE
 
             $scope.map.put(endDate, obj);
         }).error(function (error) {
-            alert(error);
+            console.log(error);
         });
     };
 
