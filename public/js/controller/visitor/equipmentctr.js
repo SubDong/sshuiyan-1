@@ -9,11 +9,12 @@ app.controller('equipmentctr', function ($scope, $rootScope, $http, requestServi
     $rootScope.tableTimeEnd = 0;
     //配置默认指标
     $rootScope.checkedArray = ["pv", "uv", "ip", "outRate", "avgTime"];
+    //ng-click='grid.appScope.getHistoricalTrend(this)'
     $rootScope.gridArray = [
         {name: "网络供应商", field: "isp"},
         {
             name: " ",
-            cellTemplate: "<div class='table_box'><a href='javascript:;' ng-click='grid.appScope.getHistoricalTrend(this)' class='table_btn'></a></div>"
+            cellTemplate: "<div class='table_box'><a href='javascript:;' class='table_btn'></a></div>"
         },
         {name: "浏览量(PV)", field: "pv"},
         {name: "访客数(UV)", field: "uv"},
