@@ -62,6 +62,7 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
                     legendData: ["浏览量(PV)", "访客数(UV)", "跳出率", "抵达率", "平均访问时长", "页面转化"],//显示几种数据
                     legendAllowCheckCount: 2,
                     legendClickListener: $scope.onLegendClickListener,
+                    legendDefaultChecked: [0, 1],
                     id: "index_charts",
                     bGap: false,//首行缩进
                     min_max: false,

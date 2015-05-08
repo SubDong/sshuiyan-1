@@ -652,6 +652,12 @@ var util = {
         }
     },
     makeEvent: function (renderType, chartObj, c) {
+        if (c.legendDefaultChecked) {
+            checked = [];
+            c.legendDefaultChecked.forEach(function (checkedItem) {
+                checked.push(checkedItem);
+            });
+        }
         var chartDiv = document.getElementById(c.legendId);
         var legendDiv = document.createElement("div");
         legendDiv.id = renderType + "_" + c.id;
@@ -661,8 +667,16 @@ var util = {
             var spn = document.createElement("b");
             var rad = document.createElement("input");
             rad.type = renderType;
-            if (c.legendData[i] == "浏览量(PV)" || c.legendData[i] == "访客数(UV)") {
-                rad.setAttribute("checked", "checked");
+            if (renderType == "checkBox") {
+                checked.forEach(function (def) {
+                    if (def == i) {
+                        rad.setAttribute("checked", "checked");
+                    }
+                });
+            } else {
+                if (i == 0) {
+                    rad.setAttribute("checked", "checked");
+                }
             }
             rad.name = renderType + "_" + c.id;
             rad.value = chartUtils.convertEnglish(c.legendData[i]);
@@ -763,6 +777,7 @@ var util = {
         }
         //console.log(checks);
         checks.each(function (i, o) {
+            $(o).prev("span").css("background-position", "0px 0px");
             $(o).prop("checked", false);
         });
         checked.forEach(function (c) {
