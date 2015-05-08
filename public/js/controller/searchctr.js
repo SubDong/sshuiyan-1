@@ -38,6 +38,14 @@ app.controller('searchctr', function ($scope, $rootScope, requestService, areaSe
             $scope.monthClass = false;
             $scope.definClass = false;
         };
+        $scope.onLegendClickListener = function (radio, chartInstance, config, checkedVal) {
+            clear.lineChart(config, checkedVal);
+            $scope.charts.forEach(function (chart) {
+                chart.config.instance = echarts.init(document.getElementById(chart.config.id));
+                chart.types = checkedVal;
+            })
+            requestService.refresh($scope.charts);
+        }
         $scope.charts = [
             {
                 config: {
@@ -46,6 +54,8 @@ app.controller('searchctr', function ($scope, $rootScope, requestService, areaSe
                     legendMultiData: $rootScope.lagerMulti,
                     legendAllowCheckCount: 2,
                     legendClickListener: $scope.onLegendClickListener,
+                    legendDefaultChecked: [5, 7],
+                    min_max: false,
                     id: "indicators_charts",
                     bGap: false,//首行缩进
                     chartType: "line",//图表类型
@@ -62,7 +72,7 @@ app.controller('searchctr', function ($scope, $rootScope, requestService, areaSe
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
-                //util.renderLegend(chart, e.config);
+                util.renderLegend(chart, e.config);
             })
             requestService.refresh($scope.charts);
         }

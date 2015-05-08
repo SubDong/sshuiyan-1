@@ -155,6 +155,9 @@ var op = {
             ],
             series: []
         };
+        if (chartConfig.chartType == "line") {
+            option["color"] = ['#ff7f50', '#87cefa']
+        }
         chartConfig.toolShow = !chartConfig.toolShow ? false : true;
         if (chartConfig.toolShow) {
             option["toolbox"] = {
@@ -659,12 +662,13 @@ var util = {
             });
         }
         var chartDiv = $("#" + c.legendId);
-        var legendDiv = $("<div></div>");
+        var legendDiv = $("<div/>");
         legendDiv.attr("id", renderType + "_" + c.id);
         legendDiv.attr("style", "width:100%;position:absolute;margin:0px auto;text-align:center;z-index:10;background: #ffffff;");
+        //var colorY = [-77, -51];
         for (var i = 0; i < c.legendData.length; i++) {
-            var lab = $("<label></label>");
-            var spn = $("<b></b>");
+            var lab = $("<label/>");
+            var spn = $("<b/>");
             var rad = $("<input/>");
             rad.attr("type", renderType);
             if (renderType == "checkBox") {
@@ -703,61 +707,89 @@ var util = {
         chartDiv.append(legendDiv);
     },
     addEventMore: function (chartObj, c) {
-        var legendDiv = document.getElementById(c.legendId);
-        legendDiv.setAttribute("style", "width:100%;position:absolute;margin:0px auto;text-align:center;z-index:10;background: #ffffff;");
-        var button = document.createElement("button");
-        button.setAttribute("class", "btn btn-default fr btn-sm custom_btn");
-        button.innerHTML = "指标：";
+        if (c.legendDefaultChecked) {
+            checked = [];
+            c.legendDefaultChecked.forEach(function (checkedItem) {
+                checked.push(checkedItem);
+            });
+        }
+        var legendDiv = $("#" + c.legendId);
+        legendDiv.attr("style", "width:100%;position:absolute;margin:0px auto;text-align:center;z-index:10;background: #ffffff;");
+        var button = $("<button/>");
+        button.attr({
+            type: "button",
+            class: "btn btn-default fr btn-sm custom_btn",
+            value: "指标："
+        })
         var _target = false;
-        button.addEventListener("click", function () {
-            var checkBoxDiv = document.getElementById(c.legendId + "_check");
+        button.bind("click", function () {
+            var checkBoxDiv = $("#" + c.legendId + "_check");
             if (_target) {
-                checkBoxDiv.setAttribute("class", "plancheckbox collapse")
+                checkBoxDiv.attr("class", "plancheckbox collapse")
                 _target = false;
             } else {
-                checkBoxDiv.setAttribute("class", "plancheckbox collapse in");
+                checkBoxDiv.attr("class", "plancheckbox collapse in");
                 _target = true;
             }
         });
-        var b = document.createElement("b");
-        b.innerHTML = "浏览量(PV)、转化次数";
-        var caret = document.createElement("span");
-        caret.setAttribute("class", "caret");
-        button.appendChild(b);
-        button.appendChild(caret);
-        var checkBoxDiv = document.createElement("div");
-        checkBoxDiv.setAttribute("class", "plancheckbox collapse");
-        checkBoxDiv.setAttribute("id", c.legendId + "_check")
+        var b = $("<b/>");
+        b.html("请选择指标");
+        var caret = $("<span/>");
+        caret.attr("class", "caret");
+        button.append(b);
+        button.append(caret);
+        var checkBoxDiv = $("<div/>");
+        checkBoxDiv.attr("class", "plancheckbox collapse");
+        checkBoxDiv.attr("id", c.legendId + "_check")
         for (var i = 0; i < c.legendMultiData.length; i++) {
-            var lab = document.createElement("label");
-            var spn = document.createElement("span");
-            var rad = document.createElement("input");
-            rad.type = "checkBox";
-            rad.name = "checkBox_" + c.id;
-            rad.value = c.legendMultiData[i].ename;
-            rad.setAttribute("asc", c.legendAllowCheckCount);
-            rad.setAttribute("index", i + "");
-            rad.setAttribute("chart", c.id);
-            rad.setAttribute("class", "styled");
-            rad.addEventListener("click", function () {
+            var lab = $("<label/>");
+            var spn = $("<span/>");
+            var rad = $("<input/>");
+            rad.attr({
+                type: "checkBox",
+                name: "checkBox_" + c.id,
+                value: c.legendMultiData[i].ename,
+                asc: c.legendAllowCheckCount,
+                index: i + "",
+                chart: c.id,
+                class: "styled"
+            });
+            checked.forEach(function (def) {
+                if (def == i) {
+                    rad.prop("checked", true);
+                }
+            });
+            rad.bind("click", function () {
                 util.allowItem(this);
             });
-            lab.appendChild(rad);
-            spn.innerHTML = "&nbsp;" + c.legendMultiData[i].name + "&nbsp;&nbsp;";
-            lab.appendChild(spn);
-            checkBoxDiv.appendChild(lab);
+            lab.append(rad);
+            spn.html("&nbsp;" + c.legendMultiData[i].name + "&nbsp;&nbsp;");
+            lab.append(spn);
+            checkBoxDiv.append(lab);
         }
-        var submitBtn = document.createElement("button");
-        submitBtn.innerHTML = "确定";
-        submitBtn.setAttribute("class", "btn btn-default btn-xs");
-        submitBtn.addEventListener("click", function () {
-            var checkBoxDiv = document.getElementById(c.legendId + "_check");
+        var submitBtn = $("<button/>");
+        submitBtn.html("确定");
+        submitBtn.attr("class", "btn btn-primary btn-xs");
+        submitBtn.bind("click", function () {
+            var checkBoxDiv = $("#" + c.legendId + "_check");
             _target = false;
-            checkBoxDiv.setAttribute("class", "plancheckbox collapse");
+            checkBoxDiv.attr("class", "plancheckbox collapse");
+            var checkVal = [], checkText = [];
+            var multiChecks = $("input[name='checkBox_" + c.id + "']");
+            for (var i = 0; i < multiChecks.length; i++) {
+                if (multiChecks[i].checked == true) {
+                    checkVal.push(multiChecks[i].value);
+                    checkText.push($(multiChecks[i]).next("span").html());
+                }
+            }
+            button.html("<b>" + checkText.toString() + "</b>");
+            if (c.legendClickListener) {
+                c.legendClickListener(multiChecks, chartObj, c, checkVal);
+            }
         });
-        checkBoxDiv.appendChild(submitBtn);
-        legendDiv.appendChild(checkBoxDiv);
-        legendDiv.appendChild(button);
+        checkBoxDiv.append(submitBtn);
+        legendDiv.append(checkBoxDiv);
+        legendDiv.prepend(button);
     },
     allowItem: function (radioObj) {
         var checks = $("input[name='" + radioObj.name + "']");
@@ -780,8 +812,13 @@ var util = {
             $(o).prev("span").css("background-position", "0px 0px");
             $(o).prop("checked", false);
         });
-        checked.forEach(function (c) {
-            $(checks[c]).prev("span").css("background-position", "0px -50px");
+        checked.forEach(function (c, i) {
+            switch (i) {
+                case 0:
+                    $(checks[c]).prev("span").attr("style", "background-position:0px -77px");
+                case 1:
+                    $(checks[c]).prev("span").attr("style", "background-position:0px -51px");
+            }
             $(checks[c]).prop("checked", true);
         });
         return checked;
