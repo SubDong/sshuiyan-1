@@ -5,13 +5,13 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var es = require('./servers/utils/es');
+var session = require('express-session')
 
 var root = require('./routes/index');
 
 var api = require('./servers/apis/data');
 
 var app = express();
-
 
 
 //app.use(express.static('public'))
@@ -23,6 +23,15 @@ app.engine("html", require('ejs').renderFile);
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
+
+app.use(session({
+    genid: function (req) {
+        return "iid";  // use UUIDs for session IDs
+    },
+    resave: false,
+    saveUninitialized: false,
+    secret: 'keyboard cat'
+}));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));

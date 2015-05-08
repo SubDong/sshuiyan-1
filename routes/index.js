@@ -4,6 +4,10 @@ var router = express.Router();
 
 /* 所有html页面的router */
 router.get('/*.html', function (req, res, next) {
+    var session = req.session
+    if (session) {
+        console.log(session.id);
+    }
 
     var url = req.url.substring(1);
     if (!url)

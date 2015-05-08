@@ -8,16 +8,16 @@ app.controller("externallinksctr", function ($scope, $rootScope, $http, requestS
     $rootScope.tableTimeStart = 0;
     $rootScope.tableTimeEnd = 0;
     $rootScope.tableSwitch = {
-        latitude:{name: "外部连接", field: "rf"},
-        tableFilter:"[{\"rf_type\": [\"3\"]}]",
-        dimen:false,
+        latitude: {name: "外部连接", field: "rf"},
+        tableFilter: "[{\"rf_type\": [\"3\"]}]",
+        dimen: false,
         // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
         number: 2,
         //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
         coding: "<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>",
         //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
         arrayClear: true, //是否清空指标array
-        isJudge : false //是否清空filter 默认为清空
+        isJudge: false //是否清空filter 默认为清空
     };
 
 
@@ -46,7 +46,6 @@ app.controller("externallinksctr", function ($scope, $rootScope, $http, requestS
         var result = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", e.types);
         config['noFormat'] = true;//告知chart工厂无须格式化json，可以直接使用data对象
         config['twoYz'] = "none";
-        console.log(result);
         cf.renderChart(result, config);
         //渲染pie图
         var pieData = chartUtils.getEnginePie(result, "?");
@@ -59,13 +58,11 @@ app.controller("externallinksctr", function ($scope, $rootScope, $http, requestS
         json.forEach(function (e) {
             e.dimension.buckets.forEach(function (buck) {
                 if (buck) {
-
                 }
                 //console.log(e.key_as_string + ">>" + buck.value_count);
             });
             _key.push(e.key_as_string);
         });
-        console.log(_key);
     }
     $scope.charts = [
         {

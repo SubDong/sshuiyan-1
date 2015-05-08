@@ -2,10 +2,6 @@ var express = require('express');
 var url = require('url');
 var date = require('../utils/date');
 var dateFormat = require('../utils/dateFormat')();
-var pie = require('../services/pie');
-var line = require('../services/line');
-var bar = require('../services/bar');
-var grid = require('../services/grid');
 var resutil = require('../utils/responseutils');
 var datautils = require('../utils/datautils');
 var es_request = require('../services/es_request');
@@ -15,6 +11,7 @@ var map = require('../utils/map');
 var api = express.Router();
 
 api.get('/charts', function (req, res) {
+
     var query = url.parse(req.url, true).query, quotas = [], type = query['type'], dimension = query.dimension, filter = null, topN = [];
     var filter_f = query.filter;
     var topN_f = query.topN == undefined ? null : query.topN
@@ -48,7 +45,7 @@ api.get('/charts', function (req, res) {
     });
 });
 api.get('/halfhour', function (req, res) {
-    var query = url.parse(req.url, true).query, quotas = [], type = query['type'], topN=[];
+    var query = url.parse(req.url, true).query, quotas = [], type = query['type'], topN = [];
     var start = Number(query['start']);//
     var end = Number(query['end']);//
     var indexes = date.createIndexes(start, end, "access-");
@@ -123,31 +120,6 @@ api.get('/pie', function (req, res) {
         datautils.send(res, JSON.stringify(result));
     });
 
-});
-api.get('/grid', function (req, res) {
-    var query = url.parse(req.url, true).query;
-    var type = query['type'], start = Number(query['start']), end = Number(query['end']);
-
-    switch (type) {
-        case "pv":
-            var indexs = date.between(req, "access-");
-            grid.default(req.es, indexs, 1, "kw", function (body) {
-                datautils.send(res, body);
-            });
-            break;
-        case "uv":
-            var indexs = date.between(req, "visitor-");
-            grid.default(req.es, indexs, 1, "kw", function (body) {
-                datautils.send(res, body);
-            });
-            break;
-        default :
-            var indexs = date.between(req, "access-");
-            grid.default(req.es, indexs, 1, "kw", function (body) {
-                datautils.send(res, body);
-            });
-            break;
-    }
 });
 
 // ================================= baizz ================================
@@ -258,17 +230,17 @@ api.get('/realTimeAccess', function (req, res) {
     var _type = query["type"];
     var _filters = query["filerInfo"] != null && query["filerInfo"] != 'null' ? JSON.parse(query["filerInfo"]) : query["filerInfo"] == 'null' ? null : query["filerInfo"];//过滤器;
     var indexes = date.createIndexes(0, 0, "visitor-");
-    es_request.realTimeSearch(req.es, indexes, _type, _filters, function(data){
+    es_request.realTimeSearch(req.es, indexes, _type, _filters, function (data) {
         var resultArray = new Array();
-        data.forEach(function(item,i){
+        data.forEach(function (item, i) {
             var result = {};
-            result["city"] = item._source.city == "-"?"国外":item._source.city;
-            var newDate =  new Date(item._source.utime[0]).toString();
-            result["utime"] = newDate.substring(newDate.indexOf(":")-3, newDate.indexOf("G")-1);
-            result["source"] = item._source.rf+","+(item._source.se != "-"?item._source.se:item._source.rf);
+            result["city"] = item._source.city == "-" ? "国外" : item._source.city;
+            var newDate = new Date(item._source.utime[0]).toString();
+            result["utime"] = newDate.substring(newDate.indexOf(":") - 3, newDate.indexOf("G") - 1);
+            result["source"] = item._source.rf + "," + (item._source.se != "-" ? item._source.se : item._source.rf);
             result["vid"] = item._source.vid;
             result["ip"] = item._source.remote;
-            result["utimeAll"] = new Date(item._source.utime[item._source.utime.length-1] - item._source.utime[0]).format("hh:mm:ss");
+            result["utimeAll"] = new Date(item._source.utime[item._source.utime.length - 1] - item._source.utime[0]).format("hh:mm:ss");
             result["pageNumber"] = item._source.loc.length
             resultArray.push(result)
         });
@@ -342,34 +314,6 @@ api.get('/provincemap', function (req, res) {
     })
 });
 
-// ================================XiaoWei=====================================
-api.get("/vapie", function (req, res) {
-    var query = url.parse(req.url, true).query;
-    var type = query['type'];
-    var start = Number(query['start']);
-    var end = Number(query['end']);
-    switch (type) {
-        case "pv":
-            var indexs = date.between(req, "access-");
-            pie.comeForm(req.es, start, end, indexs, 1, function (body) {
-                datautils.send(res, body);
-            });
-            break;
-        case "uv":
-            var indexs = date.between(req, "access-");
-            pie.uv(req.es, start, end, indexs, 1, function (body) {
-                datautils.send(res, body);
-            });
-            break;
-        case "arrCount":
-            var indexs = date.between(req, "visitor-");
-            pie.comeForm(req.es, start, end, indexs, 1, function (body) {
-                datautils.send(res, body);
-            });
-        case "convertRate":
-            break;
-    }
-});
 /**
  * summary.by wms
  */
