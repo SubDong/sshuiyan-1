@@ -23,6 +23,20 @@ app.controller('trend_today_ctrl', function ($scope, $rootScope, $http, requestS
     //table配置
     $rootScope.tableTimeStart = 0;
     $rootScope.tableTimeEnd = 0;
+    //配置默认指标
+    $rootScope.checkedArray = ["pv", "uv", "ip","outRate","avgTime"];
+    $rootScope.gridArray = [
+        {name: "日期", field: "period"},
+        {
+            name: " ",
+            cellTemplate: "<div class='table_box'><button onclick='getMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul><li><a href='http://www.best-ad.cn' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li></ul></div></div>"
+        },
+        {name: "浏览量(PV)", field: "pv"},
+        {name: "访客数(UV)", field: "uv"},
+        {name: "IP数", field: "ip"},
+        {name: "跳出率", field: "outRate"},
+        {name: "平均访问时长", field: "avgTime"}
+    ];
     $rootScope.tableSwitch = {
         latitude:{name: "日期", field: "period"},
         tableFilter:null,
@@ -32,7 +46,7 @@ app.controller('trend_today_ctrl', function ($scope, $rootScope, $http, requestS
         //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
         coding:false,
         //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
-        arrayClear: true //是否清空指标array
+        arrayClear: false //是否清空指标array
     };
     //
 

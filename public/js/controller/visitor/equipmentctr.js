@@ -7,6 +7,21 @@ app.controller('equipmentctr', function ($scope, $rootScope, $http, requestServi
     //table配置
     $rootScope.tableTimeStart = 0;
     $rootScope.tableTimeEnd = 0;
+    //配置默认指标
+    $rootScope.checkedArray = ["pv", "uv", "ip", "outRate", "avgTime"];
+    //ng-click='grid.appScope.getHistoricalTrend(this)'
+    $rootScope.gridArray = [
+        {name: "网络供应商", field: "isp"},
+        {
+            name: " ",
+            cellTemplate: "<div class='table_box'><a href='javascript:;' class='table_btn'></a></div>"
+        },
+        {name: "浏览量(PV)", field: "pv"},
+        {name: "访客数(UV)", field: "uv"},
+        {name: "IP数", field: "ip"},
+        {name: "跳出率", field: "outRate"},
+        {name: "平均访问时长", field: "avgTime"}
+    ];
     $rootScope.tableSwitch = {
         latitude: {name: "网络供应商", field: "isp"},
         tableFilter: null,
@@ -16,7 +31,7 @@ app.controller('equipmentctr', function ($scope, $rootScope, $http, requestServi
         //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
         coding: false,
         //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
-        arrayClear: true //是否清空指标array
+        arrayClear: false //是否清空指标array
     };
     //
 
@@ -87,7 +102,7 @@ app.controller('equipmentctr', function ($scope, $rootScope, $http, requestServi
                 keyFormat: 'none',
                 dataValue: "quota"
             },
-            types: ["uv","vc"],
+            types: ["uv", "vc"],
             dimension: ["isp"],
             interval: $rootScope.interval,
             url: "/api/charts",

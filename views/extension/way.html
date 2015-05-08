@@ -22,31 +22,31 @@
                         <div class="chart_top">
                             <span>消费指标 :</span>
                             <ul>
-                                <li ng-repeat="item in target"
+                                <li ng-repeat="item in target" data-sshy-default defvalue="{{item.name}}"
                                     class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
-                                    ng-click='indicators(item.name,target,6)'>{{item.consumption_name}}
+                                    ng-click='indicators(item,target,6)'>{{item.consumption_name}}
                                 </li>
                             </ul>
                         </div>
                         <div class="chart_top">
                             <span>网站基础指标 :</span>
                             <ul>
-                                <li ng-repeat="item in Webbased"
+                                <li ng-repeat="item in Webbased" data-sshy-default defvalue="{{item.name}}"
                                     class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
-                                    ng-click='indicators(item.name,Webbased,6)'>{{item.consumption_name}}
+                                    ng-click='indicators(item,Webbased,6)'>{{item.consumption_name}}
                                 </li>
                             </ul>
                         </div>
                         <div class="chart_top">
                             <span>流量质量指标:</span>
                             <ul>
-                                <li ng-repeat="item in flow"
+                                <li ng-repeat="item in flow" data-sshy-default defvalue="{{item.name}}"
                                     class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
-                                    ng-click='indicators(item.name,flow,6)'>{{item.consumption_name}}
+                                    ng-click='indicators(item,flow,6)'>{{item.consumption_name}}
                                 </li>
                             </ul>
                         </div>
-                        <div class="chart_top">
+                        <!--<div class="chart_top">
                             <span>转化指标:</span>
                             <ul>
                                 <li ng-repeat="item in transform"
@@ -72,9 +72,9 @@
                                     ng-click='indicators(item.name,recall,6)'>{{item.consumption_name}}
                                 </li>
                             </ul>
-                        </div>
+                        </div>-->
                         <div class="chart_top chart_noborder">
-                            <button class="btn btn-primary" type="button">确定</button>
+                            <button class="btn btn-primary" type="button" ng-click="targetSearch(true)">确定</button>
                             * 可同时选择6项
                         </div>
                     </div>
@@ -136,7 +136,8 @@
                 </tab>
             </tabset>
             <div class="custom_table">
-                <div ui-grid="gridOptions" class="grid" ui-grid-pagination ui-grid-selection ui-grid-exporter></div>
+                <div ui-grid="gridOptions" class="grid" style="min-height:400px;" ui-grid-pagination
+                     ui-grid-selection ui-grid-exporter ui-grid-expandable></div>
                 <gridpage></gridpage>
             </div>
         </div>

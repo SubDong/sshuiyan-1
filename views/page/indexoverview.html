@@ -1,3 +1,4 @@
+.
 <div class="middle_containers" ng-controller="indexoverview as app">
     <div class="date_select">
         <indexoverview></indexoverview>
@@ -19,7 +20,7 @@
                         <div class="chart_top">
                             <span>网站基础指标 :</span>
                             <ul>
-                                <li ng-repeat="item in TodayWeb"
+                                <li ng-repeat="item in TodayWeb" data-sshy-default defvalue="{{item.name}}"
                                     class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
                                     ng-click='indicators(item,TodayWeb,6)'>{{item.consumption_name}}
                                 </li>
@@ -28,7 +29,7 @@
                         <div class="chart_top">
                             <span>流量质量指标:</span>
                             <ul>
-                                <li ng-repeat="item in Indexfloweds"
+                                <li ng-repeat="item in Indexfloweds" data-sshy-default defvalue="{{item.name}}"
                                     class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
                                     ng-click='indicators(item,Indexfloweds,6)'>{{item.consumption_name}}
                                 </li>
@@ -61,7 +62,7 @@
                                             <ui-select-match placeholder="全部">{{$select.selected.name}}
                                             </ui-select-match>
                                             <ui-select-choices repeat="souce in souces">
-                                                <span ng-bind-html="souce.name" ></span>
+                                                <span ng-bind-html="souce.name"></span>
                                             </ui-select-choices>
                                         </ui-select>
                                     </div>
@@ -73,9 +74,10 @@
                         <div class="chart_top2">
                             <ul>
                                 <li><span>访客过滤 :</span></li>
-                                <li><input type="radio" ng-click="setVisitors(0)" checked="checked" name="radio0" /><label>全部</label></li>
-                                <li><input type="radio" ng-click="setVisitors(1)" name="radio0" /><label>新访客</label></li>
-                                <li><input type="radio" ng-click="setVisitors(2)" name="radio0" /><label>老访客</label></li>
+                                <li><input type="radio" ng-click="setVisitors(0)" checked="checked"
+                                           name="radio0"/><label>全部</label></li>
+                                <li><input type="radio" ng-click="setVisitors(1)" name="radio0"/><label>新访客</label></li>
+                                <li><input type="radio" ng-click="setVisitors(2)" name="radio0"/><label>老访客</label></li>
                             </ul>
                         </div>
                     </div>
@@ -94,7 +96,8 @@
                 </div>
             </div>
             <div class="custom_table">
-                <div ui-grid="gridOptions" class="grid" style="height:400px;" ui-grid-pagination ui-grid-selection ui-grid-exporter></div>
+                <div ui-grid="gridOptions" class="grid" style="height:400px;" ui-grid-pagination ui-grid-selection
+                     ui-grid-exporter></div>
                 <gridpage></gridpage>
             </div>
         </div>

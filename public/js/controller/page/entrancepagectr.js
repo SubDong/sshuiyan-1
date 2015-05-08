@@ -6,6 +6,18 @@ app.controller('entrancepagectr', function ($scope, $rootScope, $http, requestSe
 
     $rootScope.tableTimeStart = 0;
     $rootScope.tableTimeEnd = 0;
+    //配置默认指标
+    $rootScope.checkedArray = ["pv", "uv", "avgTime"];
+    $rootScope.gridArray = [
+        {name: "页面url", field: "loc"},
+        {
+            name: " ",
+            cellTemplate: "<div class='table_box'><button onclick='getMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul><li><a href='http://www.best-ad.cn' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li></ul></div></div>"
+        },
+        {name: "浏览量(PV)", field: "pv"},
+        {name: "访客数(UV)", field: "uv"},
+        {name: "平均访问时长", field: "avgTime"}
+    ];
     $rootScope.tableSwitch = {
         latitude: {name: "页面url", field: "loc"},
         tableFilter: null,
@@ -14,7 +26,7 @@ app.controller('entrancepagectr', function ($scope, $rootScope, $http, requestSe
         number: 2,
         //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
         coding: "<li><a href='http://www.best-ad.cn' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li>",
-        arrayClear: true
+        arrayClear: false
     };
 
     $scope.onLegendClick = function (radio, chartInstance, config, checkedVal) {

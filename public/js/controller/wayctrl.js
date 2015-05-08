@@ -3,6 +3,34 @@
  */
 app.controller('wayctrl', function ($scope, $rootScope, $http, requestService, messageService) {
     $scope.todayClass = true;
+
+    $rootScope.tableTimeStart = 0;//开始时间
+    $rootScope.tableTimeEnd = 0;//结束时间、
+    //配置默认指标
+    $rootScope.checkedArray = ["pv", "vc", "avgPage", "arrivedRate"]
+    $rootScope.gridArray = [
+        {name: "地域", field: "region"},
+        {
+            name: " ",
+            cellTemplate: "<div class='table_box'><a href='http://www.best-ad.cn' class='table_btn'></a></div>"
+        },
+        {name: "浏览量(PV)", field: "pv"},
+        {name: "访客数(UV)", field: "vc"},
+        {name: "平均访问页数", field: "avgPage"},
+        {name: "抵达率", field: "arrivedRate"}
+    ];
+    $rootScope.tableSwitch = {
+        latitude: {name: "地域", field: "region"},
+        tableFilter: null,
+        dimen: "city",
+        // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
+        number: 1,
+        //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
+        coding: false,
+        //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
+        arrayClear: false //是否清空指标array
+    };
+
     $scope.reset = function () {
         $scope.todayClass = false;
         $scope.yesterdayClass = false;
@@ -10,18 +38,7 @@ app.controller('wayctrl', function ($scope, $rootScope, $http, requestService, m
         $scope.monthClass = false;
         $scope.definClass = false;
     };
-    $scope.gridOptions = {
-        enableScrollbars: false,
-        enableGridMenu: true,
-        enableHorizontalScrollbar: 0,
-        enableVerticalScrollbar: 0,
-        columnDefs: [
-            {name: 'date', displayName: "日期"},
-            {name: 'number', displayName: "访问次数"},
-            {name: 'uv', displayName: "uv"},
-            {name: 'ratio', displayName: "新访客比率"}
-        ]
-    };
+
     $scope.onLegendClick = function (radio, chartInstance, config, checkedVal) {
         clear.lineChart(config, checkedVal);
         $scope.charts.forEach(function (chart) {

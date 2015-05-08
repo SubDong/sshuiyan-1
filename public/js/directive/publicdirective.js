@@ -165,7 +165,7 @@ app.directive("sshDateShow", function ($http, $rootScope) {
             scope.isCompared = false;
             scope.ds_start = scope.ds_end = 0;
             scope.ds_defaultQuotasOption = ["pv", "uv", "ip", "nuv", "outRate", "avgTime"];
-            scope.ds_dateShowQuotasOption = scope.defectOptions ? (scope.defectOptions.types || scope.ds_defaultQuotasOption) : scope.ds_defaultQuotasOption;
+            scope.ds_dateShowQuotasOption = scope.checkedArray ? scope.checkedArray : scope.ds_defaultQuotasOption;
             // 读取数据
             scope.loadSummary = function () {
                 $http.get("/api/summary?type=1&dimension=" + scope.ds_dimension + "&quotas=" + scope.ds_dateShowQuotasOption + "&start=" + scope.ds_start + "&end=" + scope.ds_end).success(function (result) {
@@ -370,4 +370,72 @@ app.directive("sshNoVisitor", function ($http, $rootScope) {
             });
         }
     }
+});
+
+app.directive("sshyDefault", function () {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attris, controller) {
+            scope.checkedArray.forEach(function (item, i) {
+                if (item == attris.defvalue) {
+                    scope.classInfo = 'current';
+                }
+            })
+        }
+    }
+});
+
+/**
+ * 手风琴。
+ */
+app.directive('sshAccordion',function(){
+    return {
+        restrict : 'E',
+        template : '<div ng-transclude></div>',
+        replace : true,
+        transclude : true,
+        controller :function() {
+            var expanders = [];
+            this.gotOpended = function(selectedExpander){
+                angular.forEach(expanders,function(e) {
+                    if(selectedExpander != e){
+                        e.showText = false;
+                    }
+                });
+            }
+            this.addExpander = function(e) {
+                expanders.push(e);
+            }
+        }
+    }
+});
+app.directive('sshExpander',function($location){
+    return {
+        restrict : 'E',
+        templateUrl : '../commons/expanderTemp.html',
+        replace : true,
+        transclude : true,
+        require : '^?sshAccordion',
+        scope : {
+            title : '=etitle',
+            icon : '=eicon',
+            child : '=echildren',
+            sref : '=esref',
+            type : '=etype'
+        },
+        link : function(scope,element,attris,accordionController) {
+            scope.showText = false;
+            accordionController.addExpander(scope);
+            scope.toggleText = function() {
+                scope.showText = ! scope.showText;
+                accordionController.gotOpended(scope);
+            }
+            console.log(scope);
+            console.log($location.path());
+            if($location.path().indexOf(scope.sref) != -1) {
+                scope.showText = true;
+            }
+            scope.sshPath = "#" + $location.path().substring(1);
+        }
+    };
 });

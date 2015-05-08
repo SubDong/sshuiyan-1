@@ -27,7 +27,7 @@
                         <div class="chart_top">
                             <span>网站基础指标 :</span>
                             <ul>
-                                <li ng-repeat="item in TodayWeb"
+                                <li ng-repeat="item in TodayWeb" data-sshy-default defvalue="{{item.name}}"
                                     class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
                                     ng-click='indicators(item,TodayWeb,6)'>{{item.consumption_name}}
                                 </li>
@@ -36,7 +36,7 @@
                         <div class="chart_top">
                             <span>流量质量指标:</span>
                             <ul>
-                                <li ng-repeat="item in Todayfloweds"
+                                <li ng-repeat="item in Todayfloweds" data-sshy-default defvalue="{{item.name}}"
                                     class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
                                     ng-click='indicators(item,Todayfloweds,6)'>{{item.consumption_name}}
                                 </li>
@@ -74,7 +74,8 @@
                                 <li><input type="radio" checked="checked" name="radio1" ng-click="setTerminal(0)"/>
                                     <label>全部</label></li>
                                 <li><input type="radio" name="radio1" ng-click="setTerminal(1)"/><label>计算机</label></li>
-                                <li><input type="radio" name="radio1" ng-click="setTerminal(2)"/><label>移动设备</label></li>
+                                <li><input type="radio" name="radio1" ng-click="setTerminal(2)"/><label>移动设备</label>
+                                </li>
                             </ul>
                         </div>
                         <div class="chart_top2">

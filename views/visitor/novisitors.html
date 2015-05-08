@@ -1,8 +1,9 @@
 <div class="middle_containers" ng-controller="novisitors as app" data-ng-init="initPage()">
     <div class="date_select">
         <div role="group" class="btn-group fl">
-           <span class="fl"> 客户端属性：</span>
-            <ui-select ng-model="equipment.selected" theme="selectize" ng-disabled="disabled" class="fl btn-delta" ng-change="equipmentChange(equipment.selected)"
+            <span class="fl"> 客户端属性：</span>
+            <ui-select ng-model="equipment.selected" theme="selectize" ng-disabled="disabled" class="fl btn-delta"
+                       ng-change="equipmentChange(equipment.selected)"
                        style="width: 160px;">
                 <ui-select-match placeholder="浏览器">{{$select.selected.name}}</ui-select-match>
                 <ui-select-choices repeat="equipment in equipments">
@@ -32,7 +33,8 @@
                         <div class="chart_top">
                             <span>网站基础指标 :</span>
                             <ul>
-                                <li ng-repeat="item in Novisitorbase" class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                <li ng-repeat="item in Novisitorbase" data-sshy-default defvalue="{{item.name}}"
+                                    class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
                                     ng-click='indicators(item,Novisitorbase,6)'>{{item.consumption_name}}
                                 </li>
                             </ul>
@@ -40,21 +42,22 @@
                         <div class="chart_top">
                             <span>流量质量指标:</span>
                             <ul>
-                                <li ng-repeat="item in Todayfloweds" class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                <li ng-repeat="item in Todayfloweds" data-sshy-default defvalue="{{item.name}}"
+                                    class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
                                     ng-click='indicators(item,Todayfloweds,6)'>{{item.consumption_name}}
                                 </li>
                             </ul>
                         </div>
-                       <!-- <div class="chart_top">
-                            <span>转化指标:</span>
-                            <ul>
-                                <li ng-repeat="item in Todytransform" class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
-                                    ng-click='indicators(item,Todytransform,6)'>{{item.consumption_name}}
-                                </li>
-                            </ul>
-                        </div>-->
+                        <!-- <div class="chart_top">
+                             <span>转化指标:</span>
+                             <ul>
+                                 <li ng-repeat="item in Todytransform" class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                     ng-click='indicators(item,Todytransform,6)'>{{item.consumption_name}}
+                                 </li>
+                             </ul>
+                         </div>-->
                         <div class="chart_top chart_noborder">
-                            <button class="btn btn-primary" type="button"  ng-click="targetSearch(true)">确定</button>
+                            <button class="btn btn-primary" type="button" ng-click="targetSearch(true)">确定</button>
                             * 最多只能勾选6项
                         </div>
 
@@ -73,7 +76,8 @@
                             </div>
                         </div>
                         <div class="custom_table">
-                            <div ui-grid="gridOptions" class="grid" style="height:400px;" ui-grid-pagination ui-grid-selection ui-grid-exporter></div>
+                            <div ui-grid="gridOptions" class="grid" style="height:400px;" ui-grid-pagination
+                                 ui-grid-selection ui-grid-exporter></div>
                             <gridpage></gridpage>
                         </div>
                     </div>
