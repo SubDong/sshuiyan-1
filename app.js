@@ -1,17 +1,16 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var es = require('./servers/utils/es');
-var session = require('express-session')
-
-var root = require('./routes/index');
-
-var api = require('./servers/apis/data');
-
-var app = express();
+var express = require('express'),
+    path = require('path'),
+    favicon = require('serve-favicon'),
+    logger = require('morgan'),
+    cookieParser = require('cookie-parser'),
+    bodyParser = require('body-parser'),
+    es = require('./servers/utils/es'),
+    session = require('express-session'),
+    cluster = require('cluster'),
+    numCPUs = require('os').cpus().length,
+    root = require('./routes/index'),
+    api = require('./servers/apis/data'),
+    app = express();
 
 
 //app.use(express.static('public'))
@@ -21,9 +20,6 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.engine("html", require('ejs').renderFile);
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(__dirname + '/public/favicon.ico'));
-
 app.use(session({
     genid: function (req) {
         return "iid";  // use UUIDs for session IDs
@@ -32,6 +28,7 @@ app.use(session({
     saveUninitialized: false,
     secret: 'keyboard cat'
 }));
+
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
@@ -81,5 +78,22 @@ app.use(function (err, req, res, next) {
     });
 });
 
-app.listen(8000)
+if (cluster.isMaster) {
+// Fork workers.
+    for (var i = 0; i < numCPUs; i++) {
+        cluster.fork();
+    }
+
+    cluster.on('exit', function (worker, code, signal) {
+        console.log('worker ' + worker.process.pid + ' died');
+        cluster.fork().on('online', function(){
+            console.log('new worker online.');
+        });
+    });
+
+} else {
+    app.listen(8000)
+}
+
+
 module.exports = app;
