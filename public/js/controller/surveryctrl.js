@@ -1,7 +1,7 @@
 /**
  * Created by john on 2015/3/30.
  */
-app.controller('SurveyCtrl', function ($scope, $http, $rootScope,areaService, SEM_API_URL, PERFORMANCE_DATA) {
+app.controller('SurveyCtrl', function ($scope, $http, $rootScope, areaService, SEM_API_URL) {
     $scope.day_offset = 0;    // 默认是今天(值为0), 值为-1代表昨天, 值为-7代表最近7天, 值为-30代表最近30天
     $scope.todayClass = true;
     $scope.reset = function () {
@@ -64,7 +64,7 @@ app.controller('SurveyCtrl', function ($scope, $http, $rootScope,areaService, SE
             {name: '消费', field: 'cost'},
             {name: '展现量', field: 'impression'},
             {name: '点击量', field: 'click'},
-            {name: '访问次数', field: 'uv'},
+            {name: '访问次数', field: 'vc'},
             {name: '页面转化', field: 'page_conv'},
             {name: '事件转化', field: 'event_conv'},
             {name: '跳出率', field: 'outRate'},
@@ -194,9 +194,9 @@ app.controller('SurveyCtrl', function ($scope, $http, $rootScope,areaService, SE
     $scope.refreshData = function () {
         $scope.calDatePeriod();
 
-        $scope.doSearchByEffectQuota("1");
+        //$scope.doSearchByEffectQuota("1");
 
-        $scope.getSemQuotaRealTimeData("baidu-bjjiehun2123585", "account", $scope.startDate_, $scope.endDate_, 0, 7, PERFORMANCE_DATA);
+        //$scope.getSemQuotaRealTimeData("baidu-bjjiehun2123585", "account", $scope.startDate_, $scope.endDate_, 0, 7, PERFORMANCE_DATA);
 
         var timeInterval = setInterval(function () {
             if ($scope.effectDataArray.length > 0 && $scope.semDataArray.length > 0) {
@@ -245,7 +245,7 @@ app.controller('SurveyCtrl', function ($scope, $http, $rootScope,areaService, SE
             });
 
         }).error(function (error) {
-          console.log(error);
+            console.log(error);
         });
     };
 
@@ -355,55 +355,47 @@ app.controller('SurveyCtrl', function ($scope, $http, $rootScope,areaService, SE
         chart.setOption(option, true);
     };
 
-    $scope.map = new Map();
+    $scope.surveyData1 = [];
 
     $scope.surveyData = [];
 
     // 推广概况获取
-    $scope.doSearch = function (startDate, endDate, type, category) {
+    $scope.doSearch = function (startDate, endDate, type) {
         $http({
             method: 'GET',
-            url: '/api/survey/?start=' + startDate + "&end=" + endDate + "&type=" + type + "&c=" + category + "&qtype=0"
+            url: '/api/survey/1?start=' + startDate + "&end=" + endDate + "&type=" + type
         }).success(function (data, status) {
-            var _data = JSON.parse(eval('(' + data + ')').toString());
+            $scope.surveyData1 = [];
             var obj = {};
-            obj["uv"] = _data.uv;
-            obj["outRate"] = _data.outRate;
-            obj["avgTime"] = _data.avgTime;
-            obj["page_conv"] = _data.page_conv;
-            obj["event_conv"] = _data.event_conv;
+            data.forEach(function (item) {
+                obj[item.label] = item.quota[0];
+            });
+            obj["page_conv"] = 0;
+            obj["outRate"] = obj["outRate"] + "%";
+            obj["event_conv"] = 0;
 
-            switch (_data.category) {
-                case "t":
-                    obj["category"] = "今天";
-                    break;
-                case "y":
-                    obj["category"] = "昨日";
-                    break;
-                default :
-                    break;
-            }
+            $scope.surveyData1.push(obj);
 
-            $scope.map.put(endDate, obj);
+            $scope.getAccountSemRealTimeData("jiehun", "baidu-bjjiehun2123585", "account", -1, -1, 0);
         }).error(function (error) {
             console.log(error);
         });
     };
 
     // 帐户实时数据报告
-    $scope.getAccountSemRealTimeData = function (bun, type, startDate, endDate, device, unitOfTime, performanceData) {
-        var url = SEM_API_URL + "?bun=" + bun + "&type=" + type + "&start=" + startDate + "&end=" + endDate + "&device=" + device + "&uot=" + unitOfTime + "&pd=" + performanceData;
-
+    $scope.getAccountSemRealTimeData = function (user, baiduAccount, type, startOffset, endOffset, device) {
+        var url = SEM_API_URL + user + "/" + baiduAccount + "/" + type + "?startOffset=" + startOffset + "&endOffset=" + endOffset + "&device=" + device;
         $http({
             method: 'GET',
             url: url
         }).success(function (data, status) {
-            var obj = $scope.map.get(endDate);
-            obj["cost"] = data[0].kPIs[0];
-            obj["impression"] = data[0].kPIs[1];
-            obj["click"] = data[0].kPIs[2];
-            $scope.map.put(endDate, obj);
-            $scope.gridOptions.data = $scope.map.values();
+            var obj = $scope.surveyData1[0];
+            obj["category"] = "昨日";
+            obj["cost"] = data[0].cost;
+            obj["impression"] = data[0].impression;
+            obj["click"] = data[0].click;
+
+            $scope.gridOptions.data = [obj];
         });
     };
 
@@ -467,13 +459,12 @@ app.controller('SurveyCtrl', function ($scope, $http, $rootScope,areaService, SE
 
         //var performanceData = "cost,impression,click,ctr,cpc";
         //var now = new Date().valueOf();
-        $scope.doSearch(0, 0, trackId, "t");
-        $scope.getAccountSemRealTimeData("baidu-bjjiehun2123585", "account", 0, 0, 0, 5, PERFORMANCE_DATA);
-        $scope.doSearch(-1, -1, trackId, "y");
-        $scope.getAccountSemRealTimeData("baidu-bjjiehun2123585", "account", -1, -1, 0, 5, PERFORMANCE_DATA);
+        //$scope.doSearch(0, 0, trackId, "t");
+        //$scope.getAccountSemRealTimeData("baidu-bjjiehun2123585", "account", 0, 0, 0, 5, PERFORMANCE_DATA);
+        $scope.doSearch(-1, -1, trackId);
 
-        $scope.doSearchByEffectQuota("1");
-        $scope.getSemQuotaRealTimeData("baidu-bjjiehun2123585", "account", $scope.startDate_, $scope.endDate_, 0, 7, PERFORMANCE_DATA);
+        //$scope.doSearchByEffectQuota("1");
+        //$scope.getSemQuotaRealTimeData("baidu-bjjiehun2123585", "account", $scope.startDate_, $scope.endDate_, 0, 7, PERFORMANCE_DATA);
 
         var timeInterval = setInterval(function () {
             if ($scope.effectDataArray.length > 0 && $scope.semDataArray.length > 0) {

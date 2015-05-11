@@ -124,32 +124,28 @@ api.get('/pie', function (req, res) {
 
 // ================================= baizz ================================
 // 推广概况
-api.get('/survey', function (req, res) {
+api.get('/survey/1', function (req, res) {
     var query = url.parse(req.url, true).query;
 
     var type = query['type'];
-    var qtype = query['qtype'];
     var startOffset = Number(query['start']);
     var endOffset = Number(query['end']);
     var indexes = date.createIndexes(startOffset, endOffset, "visitor-");
 
     // 指标数组
-    var quotas = [];
-    quotas.push(qtype);
+    var quotas = ["vc", "page_conv", "outRate", "avgTime", "event_conv"];
 
+    es_request.search(req.es, indexes, type, quotas, null, [0], null, null, null, null, function (result) {
+        datautils.send(res, result);
+    });
+    /* {
+     var period = date.period(startOffset, endOffset);
+     var interval = date.interval(startOffset, endOffset);
 
-    if (qtype == 0) {
-        es_request.survey(req.es, query['c'], type, indexes[0], function (result) {
-            datautils.send(res, JSON.stringify(result));
-        });
-    } else {
-        var period = date.period(startOffset, endOffset);
-        var interval = date.interval(startOffset, endOffset);
-
-        es_request.search(req.es, indexes, type, quotas, "period", null, period[0], period[1], interval, function (result) {
-            datautils.send(res, JSON.stringify(result));
-        });
-    }
+     es_request.search(req.es, indexes, type, quotas, "period", [0], null, period[0], period[1], interval, function (result) {
+     datautils.send(res, JSON.stringify(result));
+     });
+     }*/
 
 });
 // 推广方式
