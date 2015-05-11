@@ -160,15 +160,16 @@ api.get('/indextable', function (req, res) {
     var _startTime = Number(query["start"]);//开始时间
     var _endTime = Number(query["end"]);//结束时间
     var _indic = query["indic"].split(",");//统计指标
-    var _lati = query["dimension"];//统计纬度
+    var _lati = query["dimension"] == "null"?null:query["dimension"];//统计纬度
     var _type = query["type"];
+    var _promotion = query["promotion"];
 
     var _filter = query["filerInfo"] != null && query["filerInfo"] != 'null' ? JSON.parse(query["filerInfo"]) : query["filerInfo"] == 'null' ? null : query["filerInfo"];//过滤器
     var indexes = date.createIndexes(_startTime, _endTime, "visitor-");//indexs
 
     var period = date.period(_startTime, _endTime); //时间段
-    var interval = date.interval(_startTime, _endTime); //时间分割
-    es_request.search(req.es, indexes, _type, _indic, _lati, [0], _filter, period[0], period[1], interval, function (data) {
+    var interval = _promotion=="undefined"?date.interval(_startTime, _endTime):null; //时间分割
+    es_request.search(req.es, indexes, _type, _indic, _lati, [0], _filter, _promotion=="undefined"?period[0]:null, _promotion=="undefined"?period[1]:null, interval, function (data) {
         var result = [];
         var vidx = 0;
         var maps = {}

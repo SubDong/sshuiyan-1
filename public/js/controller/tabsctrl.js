@@ -1,7 +1,7 @@
 /**
  * Created by john on 2015/3/30.
  */
-app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, requestService) {
+app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, requestService,SEM_API_URL) {
     $scope.todayClass = true;
 
 
@@ -289,7 +289,7 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, re
         if (isClicked) {
             $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
         }
-        if ($rootScope.tableSwitch.latitude == undefined) {
+        if ($rootScope.tableSwitch.latitude != null && $rootScope.tableSwitch.latitude == undefined) {
             console.error("error: latitude is not defined,Please check whether the parameter the configuration.");
             return;
         }
@@ -305,10 +305,43 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, re
         if ($rootScope.tableSwitch.isJudge)$rootScope.tableSwitch.tableFilter = undefined;
         $http({
             method: 'GET',
-            url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + $rootScope.tableSwitch.latitude.field
-            + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&type=1"
+            url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.latitude == null?$rootScope.tableSwitch.latitude:$rootScope.tableSwitch.latitude.field)
+            + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion="+$rootScope.tableSwitch.promotionSearch+"&type=1"
         }).success(function (data, status) {
-            $scope.gridOptions.data = data;
+            if($rootScope.tableSwitch.promotionSearch != undefined && $rootScope.tableSwitch.promotionSearch){
+                //app.constant('SEM_API_URL','http://182.92.227.79:9080/jiehun/baidu-bjjiehun2123585/account/?startOffset='+ $rootScope.tableTimeStart+"&endOffset="+$rootScope.tableTimeEnd+"&device=0")
+                var url = SEM_API_URL+'jiehun/baidu-bjjiehun2123585/account/?startOffset='+$rootScope.tableTimeStart+"&endOffset="+$rootScope.tableTimeEnd+"&device=-1"
+                $http({
+                    method: 'GET',
+                    url: url
+                }).success(function(dataSEM,status){
+                    var dataArray = []
+                    var dataObj = {};
+                    if(dataSEM.length == 1){
+                        $rootScope.checkedArray.forEach(function(item,i){
+                            dataSEM.forEach(function(sem,i){
+                                if(dataObj[item] == undefined) {
+                                    dataObj[item] = sem[item]
+                                }
+                            });
+                            data.forEach(function(es,i){
+                                if(dataObj[item] == undefined){
+                                    dataObj[item] = es[item]
+                                }
+                            })
+                        });
+                        dataArray.push(dataObj);
+                    }else{
+
+                    }
+                    console.log(dataArray);
+                    $scope.gridOptions.data = dataArray;
+                });
+            }else{
+                $scope.gridOptions.data = data;
+            }
+
+
         }).error(function (error) {
             console.log(error);
         });
