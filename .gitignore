@@ -30,6 +30,4 @@ node_modules
 
 # Users Environment Variables
 .lock-wscript
-.css
-
-public/stylesheets/styles.min.css
+*.css
