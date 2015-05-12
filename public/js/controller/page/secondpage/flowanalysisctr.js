@@ -16,7 +16,7 @@ app.controller('flowanalysisctr', function ($scope, $rootScope, $http, requestSe
     $rootScope.tableTimeStart = 0;
     $rootScope.tableTimeEnd = 0;
     $rootScope.tableSwitch = {
-        latitude: {name: "页面url", field: "loc"},
+        latitude: {name: "页面url", displayName: "页面url", field: "loc"},
         tableFilter: null,
         dimen: false,
         // 0 不需要btn ，1 无展开项btn ，2 有展开项btn

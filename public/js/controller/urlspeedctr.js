@@ -8,7 +8,7 @@ app.controller('urlspeedctr', function ($scope, $rootScope, requestService, area
         $rootScope.tableTimeStart = 0;
         $rootScope.tableTimeEnd = 0;
         $rootScope.tableFilter = null;
-        $rootScope.latitude = {name: "搜索引擎", field: "wd"}
+        $rootScope.latitude = {name: "搜索引擎", displayName: "搜索引擎", field: "wd"}
         $rootScope.dimen = false;
         //
         $scope.reset = function () {

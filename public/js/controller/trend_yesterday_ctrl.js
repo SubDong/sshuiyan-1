@@ -19,19 +19,19 @@ app.controller('Trend_yesterday_ctrl', function ($scope, $rootScope, $http, requ
     //配置默认指标
     $rootScope.checkedArray = ["pv", "uv", "ip", "outRate", "avgTime"];
     $rootScope.gridArray = [
-        {name: "日期", field: "period"},
+        {name: "日期", displayName: "日期", field: "period"},
         {
             name: " ",
             cellTemplate: "<div class='table_box'><button onclick='getMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul><li><a href='http://www.best-ad.cn' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li></ul></div></div>"
         },
-        {name: "浏览量(PV)", field: "pv"},
-        {name: "访客数(UV)", field: "uv"},
-        {name: "IP数", field: "ip"},
-        {name: "跳出率", field: "outRate"},
-        {name: "平均访问时长", field: "avgTime"}
+        {name: "浏览量(PV)", displayName: "浏览量(PV)", field: "pv"},
+        {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},
+        {name: "IP数", displayName: "IP数", field: "ip"},
+        {name: "跳出率", displayName: "跳出率", field: "outRate"},
+        {name: "平均访问时长", displayName: "平均访问时长", field: "avgTime"}
     ];
     $rootScope.tableSwitch = {
-        latitude: {name: "日期", field: "period"},
+        latitude: {name: "日期", displayName: "日期", field: "period"},
         tableFilter: null,
         dimen: false,
         // 0 不需要btn ，1 无展开项btn ，2 有展开项btn

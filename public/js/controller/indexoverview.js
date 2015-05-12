@@ -8,17 +8,17 @@ app.controller('indexoverview', function ($scope, $rootScope, $http, requestServ
     //配置默认指标
     $rootScope.checkedArray = ["pv", "uv", "avgTime"];
     $rootScope.gridArray = [
-        {name: "页面url", field: "loc"},
+        {name: "页面url", displayName: "页面url", field: "loc"},
         {
             name: " ",
             cellTemplate: "<div class='table_box'><a href='http://www.best-ad.cn' class='table_btn'></a></div>"
         },
-        {name: "访问次数", field: "pv"},
-        {name: "访客数(UV)", field: "uv"},
-        {name: "平均访问时长", field: "avgTime"}
+        {name: "访问次数", displayName: "访问次数", field: "pv"},
+        {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},
+        {name: "平均访问时长", displayName: "平均访问时长", field: "avgTime"}
     ];
     $rootScope.tableSwitch = {
-        latitude: {name: "页面url", field: "loc"},
+        latitude: {name: "页面url", displayName: "页面url", field: "loc"},
         tableFilter: null,
         dimen: false,
         // 0 不需要btn ，1 无展开项btn ，2 有展开项btn

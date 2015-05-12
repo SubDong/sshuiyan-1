@@ -8,20 +8,20 @@ app.controller('novisitors', function ($scope, $rootScope, $http) {
     //配置默认指标
     $rootScope.checkedArray = ["vc", "uv", "outRate", "avgTime", "avgPage"];
     $rootScope.gridArray = [
-        {name: "网络供应商", field: "ct"},
+        {name: "网络供应商", displayName: "网络供应商", field: "ct"},
         {
             name: " ",
             cellTemplate: "<div class='table_box'><a href='http://www.best-ad.cn' class='table_btn'></a></div>"
         },
-        {name: "访问次数", field: "vc"},
-        {name: "访客数(UV)", field: "uv"},
-        {name: "跳出率", field: "outRate"},
-        {name: "平均访问时长", field: "avgTime"},
-        {name: "平均访问页数", field: "avgPage"}
+        {name: "访问次数", displayName: "访问次数", field: "vc"},
+        {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},
+        {name: "跳出率", displayName: "跳出率", field: "outRate"},
+        {name: "平均访问时长", displayName: "平均访问时长", field: "avgTime"},
+        {name: "平均访问页数", displayName: "平均访问页数", field: "avgPage"}
     ];
 
     $rootScope.tableSwitch = {
-        latitude: {name: "新老访客", field: "ct"},
+        latitude: {name: "新老访客", displayName: "新老访客", field: "ct"},
         tableFilter: null,
         dimen: false,
         // 0 不需要btn ，1 无展开项btn ，2 有展开项btn

@@ -170,12 +170,14 @@ api.get('/survey/1', function (req, res) {
 /*********************自定义指标通用*************************/
 api.get('/indextable', function (req, res) {
     var query = url.parse(req.url, true).query;
+    var _promotion = query["promotion"];
     var _startTime = Number(query["start"]);//开始时间
     var _endTime = Number(query["end"]);//结束时间
     var _indic = query["indic"].split(",");//统计指标
     var _lati = query["dimension"] == "null" ? null : query["dimension"];//统计纬度
     var _type = query["type"];
-    var _promotion = query["promotion"];
+    var _formartInfo = query["formartInfo"];
+
 
     var _filter = query["filerInfo"] != null && query["filerInfo"] != 'null' ? JSON.parse(query["filerInfo"]) : query["filerInfo"] == 'null' ? null : query["filerInfo"];//过滤器
     var indexes = date.createIndexes(_startTime, _endTime, "visitor-");//indexs
@@ -201,7 +203,11 @@ api.get('/indextable', function (req, res) {
                             obj[_lati] = infoKey == 1 ? "直接访问" : infoKey == 2 ? "搜索引擎" : "外部链接";
                             break;
                         case "period":
-                            obj[_lati] = infoKey.substring(infoKey.indexOf(" "), infoKey.length - 3) + " - " + infoKey.substring(infoKey.indexOf(" "), infoKey.length - 5) + "59";
+                            if(_formartInfo == "day"){
+                                obj[_lati] = infoKey.substring(0, 10);
+                            }else{
+                                obj[_lati] = infoKey.substring(infoKey.indexOf(" "), infoKey.length - 3) + " - " + infoKey.substring(infoKey.indexOf(" "), infoKey.length - 5) + "59";
+                            }
                             break;
                         case "se":
                             obj[_lati] = (infoKey == "-" ? "直接访问" : infoKey);
@@ -227,7 +233,9 @@ api.get('/indextable', function (req, res) {
             vidx++;
         });
         for (var key in maps) {
-            result.push(maps[key]);
+            if(key != null){
+                result.push(maps[key]);
+            }
         }
         datautils.send(res, result);
     })
@@ -248,7 +256,7 @@ api.get('/realTimeAccess', function (req, res) {
             var newDate = new Date(item._source.utime[0]).toString();
             result["utime"] = newDate.substring(newDate.indexOf(":") - 3, newDate.indexOf("G") - 1);
             result["source"] = item._source.rf + "," + (item._source.se != "-" ? item._source.se : item._source.rf);
-            result["vid"] = item._source.vid;
+            result["tt"] = item._source.tt;
             result["ip"] = item._source.remote;
             result["utimeAll"] = new Date(item._source.utime[item._source.utime.length - 1] - item._source.utime[0]).format("hh:mm:ss");
             result["pageNumber"] = item._source.loc.length
@@ -280,8 +288,14 @@ api.get('/realTimeHtml', function (req, res) {
                     vtimeHtml = vtimeHtml + "<li><span>" + vtime.vtime + "</span></li>"
                     urlHtml = urlHtml + "<li><span><a href='" + vtime.loc + "' target='_blank'>" + vtime.loc + "</a></span></li>"
                 });
+                var classInfo;
+                item._source.os.indexOf("Windows") != -1?classInfo = "windows":"";
+                item._source.os.indexOf("Windows") != -1?classInfo = "mac":"";
+                item._source.os.indexOf("Windows") != -1?classInfo = "liunx":"";
+
+
                 var result = "<div class='trendbox'>" +
-                    "<div class='trend_top'><div class='trend_left'><div class='left_top'><div class='trend_img'><img src='../images/windows.png'></div><div class='trend_text'>" +
+                    "<div class='trend_top'><div class='trend_left'><div class='left_top'><div class='trend_img'><img class="+classInfo+"></div><div class='trend_text'>" +
                     "<ul><li>操作系统：<span>" + item._source.os + "</span></li><li>网络服务商：<span>" + item._source.isp + "</span></li><li>屏幕分辨率：<span>" + item._source.sr + "</span></li>" +
                     "<li>屏幕颜色:<span>" + item._source.sc + "</span></li></ul></div></div><div class='left_under'><div class='trend_img'><img src='../images/google.png'></div><div class='trend_text'>" +
                     "<ul><li>浏览器：<span>" + item._source.br + "</span></li><li>Flash版本：<span>" + item._source.fl + "</span></li><li>是否支持Cookie：<span>" + (item._source.ck == '1' ? " 支持" : " 不支持" ) + "</span></li>" +

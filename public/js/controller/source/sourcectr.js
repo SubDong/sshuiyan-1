@@ -1,7 +1,7 @@
 /**
  * Created by XiaoWei on 2015/4/13.
  */
-app.controller("sourcectr", function ($scope, $rootScope, $http, requestService, areaService,  messageService, uiGridConstants) {
+app.controller("sourcectr", function ($scope, $rootScope, $http, requestService, areaService, messageService, uiGridConstants) {
     $scope.todayClass = true;
 
     //table 参数配置
@@ -10,17 +10,17 @@ app.controller("sourcectr", function ($scope, $rootScope, $http, requestService,
     //配置默认指标
     $rootScope.checkedArray = ["vc", "nuvRate", "ip"];
     $rootScope.gridArray = [
-        {name: "来源类型", field: "rf_type"},
+        {name: "来源类型", displayName: "来源类型", field: "rf_type"},
         {
             name: " ",
             cellTemplate: "<div class='table_box'><button onclick='getMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul><li><a href='http://www.best-ad.cn' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li></ul></div></div>"
         },
-        {name: "访问次数", field: "vc"},
-        {name: "新老访客比率", field: "nuvRate"},
-        {name: "IP数", field: "ip"}
+        {name: "访问次数", displayName: "访问次数", field: "vc"},
+        {name: "新老访客比率", displayName: "新老访客比率", field: "nuvRate"},
+        {name: "IP数", displayName: "IP数", field: "ip"}
     ];
     $rootScope.tableSwitch = {
-        latitude: {name: "来源类型", field: "rf_type"},
+        latitude: {name: "来源类型", displayName: "来源类型", field: "rf_type"},
         tableFilter: null,
         dimen: "rf_type",
         // 0 不需要btn ，1 无展开项btn ，2 有展开项btn

@@ -11,19 +11,19 @@ app.controller('equipmentctr', function ($scope, $rootScope, $http, requestServi
     $rootScope.checkedArray = ["pv", "uv", "ip", "outRate", "avgTime"];
     //ng-click='grid.appScope.getHistoricalTrend(this)'
     $rootScope.gridArray = [
-        {name: "网络供应商", field: "isp"},
+        {name: "网络供应商", displayName: "网络供应商", field: "isp"},
         {
             name: " ",
             cellTemplate: "<div class='table_box'><a href='javascript:;' class='table_btn'></a></div>"
         },
-        {name: "浏览量(PV)", field: "pv"},
-        {name: "访客数(UV)", field: "uv"},
-        {name: "IP数", field: "ip"},
-        {name: "跳出率", field: "outRate"},
-        {name: "平均访问时长", field: "avgTime"}
+        {name: "浏览量(PV)", displayName: "浏览量(PV)", field: "pv"},
+        {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},
+        {name: "IP数", displayName: "IP数", field: "ip"},
+        {name: "跳出率", displayName: "跳出率", field: "outRate"},
+        {name: "平均访问时长", displayName: "平均访问时长", field: "avgTime"}
     ];
     $rootScope.tableSwitch = {
-        latitude: {name: "网络供应商", field: "isp"},
+        latitude: {name: "网络供应商", displayName: "网络供应商", field: "isp"},
         tableFilter: null,
         dimen: "region",
         // 0 不需要btn ，1 无展开项btn ，2 有展开项btn

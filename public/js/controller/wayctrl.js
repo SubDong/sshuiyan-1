@@ -6,22 +6,22 @@ app.controller('wayctrl', function ($scope, $rootScope, $http, requestService, m
     $rootScope.tableTimeStart = 0;//开始时间
     $rootScope.tableTimeEnd = 0;//结束时间、
     //配置默认指标
-    $rootScope.checkedArray = ["accountName","click","cost","cpc","pv", "vc", "avgPage"];
+    $rootScope.checkedArray = ["click", "cost", "cpc", "pv", "vc", "avgPage"];
     $rootScope.gridArray = [
-        {name: "推广方式", field: "accountName"},
+        {name: "推广方式", displayName: "推广方式", field: "accountName"},
         {
             name: " ",
             cellTemplate: "<div class='table_box'><a href='http://www.best-ad.cn' class='table_btn'></a></div>"
         },
-        {name: "点击", field: "click"},
-        {name: "消费", field: "cost"},
-        {name: "平均点击价格", field: "cpc"},
-        {name: "浏览量(PV)", field: "pv"},
-        {name: "访客数(UV)", field: "vc"},
-        {name: "平均访问页数", field: "avgPage"}
+        {name: "点击", displayName: "点击", field: "click"},
+        {name: "消费", displayName: "消费", field: "cost"},
+        {name: "平均点击价格", displayName: "平均点击价格", field: "cpc"},
+        {name: "浏览量(PV)", displayName: "浏览量(PV)", field: "pv"},
+        {name: "访客数(UV)", displayName: "访客数(UV)", field: "vc"},
+        {name: "平均访问页数", displayName: "平均访问页数", field: "avgPage"}
     ];
     $rootScope.tableSwitch = {
-        latitude: null,
+        latitude: {name: "推广方式", displayName: "推广方式", field: "accountName"},
         tableFilter: null,
         dimen: false,
         // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
@@ -30,7 +30,7 @@ app.controller('wayctrl', function ($scope, $rootScope, $http, requestService, m
         coding: false,
         //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
         arrayClear: false, //是否清空指标array
-        promotionSearch:true  //是否开始推广中sem数据
+        promotionSearch: true //是否开始推广中sem数据
     };
 
     $scope.reset = function () {

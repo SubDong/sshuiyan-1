@@ -8,7 +8,7 @@ app.controller('alliancectr', function ($scope, $rootScope, $http, requestServic
         $rootScope.tableTimeStart = 0;
         $rootScope.tableTimeEnd = 0;
         $rootScope.tableFilter = null;
-        $rootScope.latitude = {name: "搜索引擎", field: "wd"}
+        $rootScope.latitude = {name: "搜索引擎", displayName: "搜索引擎", field: "wd"}
         //
         $scope.reset = function () {
             $scope.todayClass = false;
@@ -79,11 +79,11 @@ app.controller('alliancectr', function ($scope, $rootScope, $http, requestServic
         $scope.today();
         //$scope.initMap();
         //点击显示指标
-        $scope.visible =true;
-        $scope.select = function(){
-            $scope.visible =false;
+        $scope.visible = true;
+        $scope.select = function () {
+            $scope.visible = false;
         };
-        $scope.clear = function() {
+        $scope.clear = function () {
             $scope.page.selected = undefined;
             $scope.city.selected = undefined;
             $scope.country.selected = undefined;
@@ -91,13 +91,13 @@ app.controller('alliancectr', function ($scope, $rootScope, $http, requestServic
         };
         $scope.page = {};
         $scope.pages = [
-            { name: '全部页面目标'},
-            { name: '全部事件目标'},
-            { name: '所有页面右上角按钮'},
-            { name: '所有页面底部400按钮'},
-            { name: '详情页右侧按钮'},
-            { name: '时长目标'},
-            { name: '访问页数目标'},
+            {name: '全部页面目标'},
+            {name: '全部事件目标'},
+            {name: '所有页面右上角按钮'},
+            {name: '所有页面底部400按钮'},
+            {name: '详情页右侧按钮'},
+            {name: '时长目标'},
+            {name: '访问页数目标'},
         ];
         //日历
         this.selectedDates = [new Date().setHours(0, 0, 0, 0)];

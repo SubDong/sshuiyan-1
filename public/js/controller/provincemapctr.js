@@ -7,19 +7,19 @@ app.controller("provincemapctr", function ($scope, $rootScope, $http, requestSer
     $rootScope.tableTimeStart = 0;//开始时间
     $rootScope.tableTimeEnd = 0;//结束时间、
     //配置默认指标
-    $rootScope.checkedArray = ["pv", "uv", "outRate"]
+    $rootScope.checkedArray = ["pv", "uv", "outRate"];
     $rootScope.gridArray = [
-        {name: "地域", field: "region"},
+        {name: "地域", displayName: "地域", field: "region"},
         {
             name: " ",
             cellTemplate: "<div class='table_box'><a href='http://www.best-ad.cn' class='table_btn'></a></div>"
         },
-        {name: "浏览量(PV)", field: "pv"},
-        {name: "访客数(UV)", field: "uv"},
-        {name: "跳出率", field: "outRate"}
+        {name: "浏览量(PV)", displayName: "浏览量(PV)", field: "pv"},
+        {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},
+        {name: "跳出率", displayName: "跳出率", field: "outRate"}
     ];
     $rootScope.tableSwitch = {
-        latitude: {name: "地域", field: "region"},
+        latitude: {name: "地域", displayName: "地域", field: "region"},
         tableFilter: null,
         dimen: "city",
         // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
@@ -35,7 +35,7 @@ app.controller("provincemapctr", function ($scope, $rootScope, $http, requestSer
 
     $scope.$on("ssh_refresh_charts", function (e, msg) {
         $rootScope.targetSearch();
-        $scope.doSearchAreas($scope.tableTimeStart, $scope.tableTimeEnd, "1", $scope.mapOrPieConfig);
+        $scope.doSearchAreas($scope.tableTimeStart, $scope.tableTimeEnd, "2", $scope.mapOrPieConfig);
     });
 
     $scope.gridOptions = {
@@ -62,7 +62,7 @@ app.controller("provincemapctr", function ($scope, $rootScope, $http, requestSer
 
     $scope.setProperty = function (property, position, entities) {
         $scope.property = property;
-        $scope.doSearchAreas($scope.dateTimeStart, $scope.dateTimeEnd, "1", $scope.mapOrPieConfig);
+        $scope.doSearchAreas($scope.dateTimeStart, $scope.dateTimeEnd, "2", $scope.mapOrPieConfig);
     }
 
     $scope.setArea = function (area) {
@@ -178,8 +178,8 @@ app.controller("provincemapctr", function ($scope, $rootScope, $http, requestSer
     //图标数据
 
     // init
-    $scope.doSearch($scope.dateTimeStart, $scope.dateTimeEnd, "1");
-    $scope.doSearchAreas($scope.dateTimeStart, $scope.dateTimeEnd, "1", $scope.mapOrPieConfig);
+    $scope.doSearch($scope.dateTimeStart, $scope.dateTimeEnd, "2");
+    $scope.doSearchAreas($scope.dateTimeStart, $scope.dateTimeEnd, "2", $scope.mapOrPieConfig);
     $scope.mapselect = [
         {consumption_name: "浏览量(PV)"},
         {consumption_name: "访问次数"},

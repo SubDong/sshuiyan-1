@@ -7,20 +7,27 @@ app.controller('searchctr', function ($scope, $rootScope, requestService, areaSe
         $rootScope.tableTimeStart = 0;//开始时间
         $rootScope.tableTimeEnd = 0;//结束时间、
         //配置默认指标
-        $rootScope.checkedArray = ["pv", "vc", "avgPage", "arrivedRate"]
+        $rootScope.checkedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
+        var newVar = {
+            name: "状态",
+            displayName: "状态",
+            cellTemplate: "<div class='table_box'><a href='http://www.best-ad.cn' class='table_btn'></a></div>"
+        };
         $rootScope.gridArray = [
-            {name: "地域", field: "region"},
+            {name: "地域", displayName: "地域", field: "region"},
             {
                 name: " ",
                 cellTemplate: "<div class='table_box'><a href='http://www.best-ad.cn' class='table_btn'></a></div>"
             },
-            {name: "浏览量(PV)", field: "pv"},
-            {name: "访客数(UV)", field: "vc"},
-            {name: "平均访问页数", field: "avgPage"},
-            {name: "抵达率", field: "arrivedRate"}
+            {name: "展现", displayName: "展现", field: "impression"},
+            {name: "消费", displayName: "消费", field: "cost"},
+            {name: "平均点击价格", displayName: "平均点击价格", field: "cpc"},
+            {name: "跳出率", displayName: "跳出率", field: "outRate"},
+            {name: "平均访问时长", displayName: "平均访问时长", field: "avgTime"},
+            {name: "新房客比率", displayName: "新房客比率", field: "nuvRate"}
         ];
         $rootScope.tableSwitch = {
-            latitude: {name: "地域", field: "region"},
+            latitude: {name: "关键词", displayName: "关键词", field: "kw"},
             tableFilter: null,
             dimen: "city",
             // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
@@ -28,7 +35,11 @@ app.controller('searchctr', function ($scope, $rootScope, requestService, areaSe
             //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
             coding: false,
             //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
-            arrayClear: false //是否清空指标array
+            arrayClear: false, //是否清空指标array
+            promotionSearch: {
+                turnOn: true, //是否开始推广中sem数据
+                SEMData: "keyword" //查询类型
+            }
         };
 
 

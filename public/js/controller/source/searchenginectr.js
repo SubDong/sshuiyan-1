@@ -9,19 +9,19 @@ app.controller("searchenginectr", function ($scope, $rootScope, $http, requestSe
     //配置默认指标
     $rootScope.checkedArray = ["vc", "uv", "nuvRate", "ip", "avgPage"];
     $rootScope.gridArray = [
-        {name: "搜索引擎", field: "se"},
+        {name: "搜索引擎", displayName: "搜索引擎", field: "se"},
         {
             name: " ",
             cellTemplate: "<div class='table_box'><button onclick='getMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul><li><a href='http://www.best-ad.cn' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li></ul></div></div>"
         },
-        {name: "访问次数", field: "vc"},
-        {name: "访客数(UV)", field: "uv"},
-        {name: "新老访客比率", field: "nuvRate"},
-        {name: "平均访问页数", field: "avgPage"},
-        {name: "IP数", field: "ip"}
+        {name: "访问次数", displayName: "访问次数", field: "vc"},
+        {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},
+        {name: "新老访客比率", displayName: "新老访客比率", field: "nuvRate"},
+        {name: "平均访问页数", displayName: "平均访问页数", field: "avgPage"},
+        {name: "IP数", displayName: "IP数", field: "ip"}
     ];
     $rootScope.tableSwitch = {
-        latitude: {name: "搜索引擎", field: "se"},
+        latitude: {name: "搜索引擎", displayName: "浏览量(PV)", field: "se"},
         tableFilter: "[{\"rf_type\": [\"2\"]}]",
         dimen: false,
         // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
