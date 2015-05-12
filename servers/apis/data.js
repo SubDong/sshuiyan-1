@@ -161,6 +161,43 @@ api.get('/survey/1', function (req, res) {
      }*/
 
 });
+
+// device query
+api.get('/survey/2', function (req, res) {
+    var query = url.parse(req.url, true).query;
+
+    var type = query['type'];
+    var startOffset = Number(query['start']);
+    var endOffset = Number(query['end']);
+    var indexes = date.createIndexes(startOffset, endOffset, "visitor-");
+    var filters = JSON.parse(query['filter']);
+
+    // 指标数组
+    var quotas = ["vc"];
+
+    es_request.search(req.es, indexes, type, quotas, null, [0], filters, null, null, null, function (result) {
+        datautils.send(res, result);
+    });
+
+});
+
+// region query
+api.get('/survey/3', function (req, res) {
+    var query = url.parse(req.url, true).query;
+
+    var type = query['type'];
+    var startOffset = Number(query['start']);
+    var endOffset = Number(query['end']);
+    var indexes = date.createIndexes(startOffset, endOffset, "visitor-");
+
+    // 指标数组
+    var quotas = ["vc"];
+
+    es_request.search(req.es, indexes, type, quotas, "region", [0], null, null, null, null, function (result) {
+        datautils.send(res, result);
+    });
+
+});
 // 推广方式
 
 // 搜索推广

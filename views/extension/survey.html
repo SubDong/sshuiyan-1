@@ -13,21 +13,23 @@
                 </ui-select>
             </div>
         </div>
-            <div ui-grid="gridOptions" class="grid" ui-grid-pinning></div>
+        <div ui-grid="gridOptions" class="grid" ui-grid-pinning></div>
         <div class="survey_chart">
             <div class="select_top">
                 <b class="fl">投放指标：</b>
-                <ui-select ng-model="outQuotas.selected" theme="selectize" class="fl" style="min-width: 100px;" ng-change="setOutQuota(outQuotas.selected)">
+                <ui-select ng-model="outQuotas.selected" theme="selectize" class="fl" style="min-width: 100px;"
+                           ng-change="setOutQuota(outQuotas.selected)">
                     <ui-select-match placeholder="消费">{{$select.selected.name}}</ui-select-match>
-                    <ui-select-choices repeat="outQuotas in outQuota| filter: $select.search"  >
-                        <span ng-bind-html="outQuotas.name" ></span>
+                    <ui-select-choices repeat="outQuotas in outQuota| filter: $select.search">
+                        <span ng-bind-html="outQuotas.name"></span>
                     </ui-select-choices>
                 </ui-select>
                 <b class="fl">效果指标:</b>
-                <ui-select ng-model="effectQuotas.selected" theme="selectize" class="fl" style="min-width: 100px;" ng-change="setOutQuota(effectQuotas.selected)">
+                <ui-select ng-model="effectQuotas.selected" theme="selectize" class="fl" style="min-width: 100px;"
+                           ng-change="setOutQuota(effectQuotas.selected)">
                     <ui-select-match placeholder="访问次数">{{$select.selected.name}}</ui-select-match>
-                    <ui-select-choices repeat="effectQuotas in effectQuota"  >
-                        <span ng-bind-html="effectQuotas.name" ></span>
+                    <ui-select-choices repeat="effectQuotas in effectQuota">
+                        <span ng-bind-html="effectQuotas.name"></span>
                     </ui-select-choices>
                 </ui-select>
                 <div aria-label="First group" role="group" class="btn-group fr">
@@ -45,43 +47,44 @@
                     </button>
                 </div>
             </div>
-                <div id="index_charts" style="height:400px;width:100%; overflow:hidden;"></div>
+            <div id="index_charts" style="height:400px;width:100%; overflow:hidden;"></div>
 
             <div class="survey_under">
                 <div class="select_top">
-                <div class="under_top">
-                    <b> {{outQuotas.selected.name||"消费"}}对比：</b>
-                    <ui-select ng-model="surveyfirst.choosedates" theme="selectize" class="fl" style="width: 120px;">
-                        <ui-select-match placeholder="请选择对比项">{{$select.selected.name}}</ui-select-match>
-                        <ui-select-choices repeat="surveyfirst in choosedates">
-                            <span ng-bind-html="surveyfirst.name"></span>
-                        </ui-select-choices>
-                    </ui-select>
-                    <b> {{effectQuotas.selected.name||"访问次数"}}对比：</b>
-                    <ui-select ng-model="surveysecend.selected" theme="selectize" class="fl" style="width: 120px;">
-                        <ui-select-match placeholder="请选择对比项">{{$select.selected.name}}</ui-select-match>
-                        <ui-select-choices repeat="surveysecend in choosedates">
-                            <span ng-bind-html="surveysecend.name"></span>
-                        </ui-select-choices>
-                    </ui-select>
-                </div>
+                    <div class="under_top">
+                        <b> {{outQuotas.selected.name||"消费"}}对比：</b>
+                        <ui-select ng-model="surveyfirst.choosedates" theme="selectize" class="fl"
+                                   style="width: 120px;">
+                            <ui-select-match placeholder="请选择对比项">{{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices repeat="surveyfirst in choosedates">
+                                <span ng-bind-html="surveyfirst.name"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                        <b> {{effectQuotas.selected.name||"访问次数"}}对比：</b>
+                        <ui-select ng-model="surveysecend.selected" theme="selectize" class="fl" style="width: 120px;">
+                            <ui-select-match placeholder="请选择对比项">{{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices repeat="surveysecend in choosedates">
+                                <span ng-bind-html="surveysecend.name"></span>
+                            </ui-select-choices>
+                        </ui-select>
                     </div>
+                </div>
                 <div class="under_concent">
                     <div class="row">
                         <div class="col-xs-6" style="padding-right:0;">
-                            <div class="uconcentctrl" ng-controller="UconcentCtrl">
-                                <div ui-grid="gridOptions" class="grid" ui-grid-pinning></div>
+                            <div class="uconcentctrl">
+                                <div ui-grid="gridOptions1" class="grid" ui-grid-pinning></div>
                             </div>
-                            <div class="uconcentctrl" ng-controller="EconcentCtrl">
-                                <div ui-grid="gridOptions" class="grid" ui-grid-pinning></div>
+                            <div class="uconcentctrl">
+                                <div ui-grid="gridOptions3" class="grid" ui-grid-pinning></div>
                             </div>
                         </div>
                         <div class="col-xs-6">
-                            <div class="uconcentctrl" ng-controller="UconcentCtrl">
-                                <div ui-grid="gridOptions" class="grid" ui-grid-pinning></div>
+                            <div class="uconcentctrl">
+                                <div ui-grid="gridOptions2" class="grid" ui-grid-pinning></div>
                             </div>
-                            <div class="uconcentctrl" ng-controller="EconcentCtrl">
-                                <div ui-grid="gridOptions" class="grid" ui-grid-pinning></div>
+                            <div class="uconcentctrl">
+                                <div ui-grid="gridOptions4" class="grid" ui-grid-pinning></div>
                             </div>
                         </div>
                     </div>
