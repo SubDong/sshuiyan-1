@@ -1,72 +1,7 @@
 <div class="menu">
 <div ng-controller="menuctr">
-    <accordion close-others="oneAtATime"  >
-        <div class="panel panel-default ng-isolate-scope current" ng-click="selectMenu('menuFirst')" ng-class="{'current':currentMenu == 'menuFirst'}">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                 <a ui-sref="index" class="ng-scope"> <span class="glyphicon glyphicon-th-large ng-scope" aria-hidden="true"></span>  网站概览</a>
-                </h4>
-            </div>
-        </div>
-        <accordion-group heading="" ng-class="{'current':currentMenu == 'menuone'}" ng-click="selectMenu('menuone')">
-            <accordion-heading>
-            <!--    <span  class="baidu_icon"></span>--><span aria-hidden="true" class="glyphicon glyphicon-asterisk"></span>百度推广
-            </accordion-heading>
-            <ul>
-                <li><a ui-sref="survey" ui-sref-active="active">推广概况</a></li>
-                <li><a ui-sref="way" ui-sref-active="active">推广方式</a></li>
-                <li><a ui-sref="search" ui-sref-active="active">搜索推广</a></li>
-                <li><a ui-sref="alliance" ui-sref-active="active">网盟推广</a></li>
-                <li><a ui-sref="urlspeed" ui-sref-active="active">推广URL速度</a></li>
-            </ul>
-        </accordion-group>
-        <accordion-group heading="" ng-class="{'current':currentMenu == 'menuSecend'}" ng-click="selectMenu('menuSecend')">
-            <accordion-heading>
-                <span class="glyphicon glyphicon-stats" aria-hidden="true"></span>趋向分析
-            </accordion-heading>
-            <ul>
-                <li><a ui-sref="realtime" ui-sref-active="active">实时访客</a></li>
-                <li><a ui-sref="today" ui-sref-active="active">今日统计</a></li>
-                <li><a ui-sref="yesterday" ui-sref-active="active">昨日统计</a></li>
-                <li><a ui-sref="month" ui-sref-active="active">最近30天</a></li>
-            </ul>
-        </accordion-group>
-        <accordion-group  heading="" ng-class="{'current':currentMenu == 'menuThird'}" ng-click="selectMenu('menuThird')">
-            <accordion-heading>
-                <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>来源分析
-            </accordion-heading>
-            <ul>
-                <li><a ui-sref="source" ui-sref-active="active">全部来源</a></li>
-                <li><a ui-sref="searchengine" ui-sref-active="active">搜索引擎</a></li>
-                <li><a ui-sref="searchterm" ui-sref-active="active">搜索词</a></li>
-                <li><a ui-sref="externallinks" ui-sref-active="active">外部链接</a></li>
-            </ul>
-        </accordion-group>
-        <accordion-group heading="" ng-class="{'current':currentMenu == 'menuFour'}" ng-click="selectMenu('menuFour')">
-            <accordion-heading>
-                <span class="glyphicon glyphicon-blackboard" aria-hidden="true"></span>页面分析
-            </accordion-heading>
-            <ul>
-                <li><a ui-sref="indexoverview" ui-sref-active="active">受访页面</a></li>
-                <li><a ui-sref="entrancepage" ui-sref-active="active">入口页面</a></li>
-                <li><a ui-sref="pagetitle" ui-sref-active="active">页面标题</a></li>
-                <li><a ui-sref="offsitelinks"  ui-sref-active="active">离站链接</a></li>
-            </ul>
-        </accordion-group>
-        <accordion-group heading=""  ng-class="{'current':currentMenu == 'menuFive'}" ng-click="selectMenu('menuFive')">
-            <accordion-heading>
-                <span class="glyphicon glyphicon-signal" aria-hidden="true"></span>访客分析
-            </accordion-heading>
-            <ul>
-                <li><a ui-sref="provincemap" ui-sref-active="active">访客地图</a></li>
-                <li><a ui-sref="equipment" ui-sref-active="active">设备环境</a></li>
-                <li><a ui-sref="novisitors" ui-sref-active="active">新老访客</a></li>
-                <li><a ui-sref="visitorfeature" ui-sref-active="active">访客特征</a></li>
-            </ul>
-        </accordion-group>
-    </accordion>
-<!--    <ssh-accordion>
-        <ssh-expander ng-repeat="expander in expanders" etitle="expander.title" etype="expander.stype" esref="expander.sref" eicon="expander.icon" echildren="expander.child"></ssh-expander>
-    </ssh-accordion>-->
+    <ssh-accordion>
+        <ssh-expander ng-repeat="expander in expanders"  ng-class='{current:$index==selectedRow}' ng-click='selectRestaurant($index)' class=""  etitle="expander.title" etype="expander.stype" esref="expander.sref" eicon="expander.icon" echildren="expander.child" ></ssh-expander>
+    </ssh-accordion>
 </div>
 </div>

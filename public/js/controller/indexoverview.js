@@ -1,9 +1,8 @@
 /**
  * Created by SubDong on 2015/4/23.
  */
-app.controller('indexoverview', function ($scope, $rootScope, $http) {
+app.controller('indexoverview', function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
     $scope.todayClass = true;
-
     $rootScope.tableTimeStart = 0;
     $rootScope.tableTimeEnd = 0;
     //配置默认指标
@@ -34,11 +33,25 @@ app.controller('indexoverview', function ($scope, $rootScope, $http) {
         $rootScope.targetSearch();
     });
     //日历
+    $scope.dateClosed = function () {
+        $rootScope.targetSearch();
+        $rootScope.tableTimeStart = $scope.startOffset;
+        $rootScope.tableTimeEnd = $scope.endOffset;
+        $scope.$broadcast("ssh_dateShow_options_time_change");
+    };
+    //
     this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
-    this.type = 'range';
+    //this.type = 'range';
     /*      this.identity = angular.identity;*/
-
-    this.removeFromSelected = function (dt) {
-        this.selectedDates.splice(this.selectedDates.indexOf(dt), 1);
-    }
+    //$scope.$broadcast("update", "msg");
+    $scope.$on("update", function (e, datas) {
+        // 选择时间段后接收的事件
+        datas.sort();
+        //console.log(datas);
+        var startTime = datas[0];
+        var endTime = datas[datas.length - 1];
+        $scope.startOffset = (startTime - today_start()) / 86400000;
+        $scope.endOffset = (endTime - today_start()) / 86400000;
+        //console.log("startOffset=" + startOffset + ", " + "endOffset=" + endOffset);
+    });
 });

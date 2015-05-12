@@ -19,7 +19,7 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
             enableVerticalScrollbar: 0,
             columnDefs: [
                 {name: 'name', displayName: "关键词"},
-                {name: 'value', displayName: "浏览量"}
+                {name: 'value', displayName: "浏览量(PV)"}
             ]
         };
         $scope.onLegendClickListener = function (radio, chartObj, chartConfig, checkedVal) {

@@ -220,6 +220,9 @@ app.directive("sshDateShow", function ($http, $rootScope) {
                 } else if (type === "month") {
                     scope.ds_start = -30;
                     scope.ds_end = -1;
+                } else {
+                    scope.ds_start = $rootScope.tableTimeStart;
+                    scope.ds_end = $rootScope.tableTimeEnd;
                 }
                 if (cb) {
                     cb();
@@ -438,12 +441,15 @@ app.directive('sshExpander',function($location){
                 scope.showText = ! scope.showText;
                 accordionController.gotOpended(scope);
             }
-            console.log(scope);
-            console.log($location.path());
             if($location.path().indexOf(scope.sref) != -1) {
                 scope.showText = true;
+
             }
             scope.sshPath = "#" + $location.path().substring(1);
+            scope.$on("$locationChangeSuccess", function(e, n, o) {
+                scope.sshPath = "#" + $location.path().substring(1);
+            });
+
         }
     };
 

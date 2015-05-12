@@ -1,7 +1,7 @@
 /**
  * Created by john on 2015/4/2.
  */
-app.controller('searchtermctr', function ($scope, $rootScope, requestService, areaService, $http) {
+app.controller('searchtermctr', function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
         $scope.todayClass = true;
         //table默认信息配置
         $rootScope.tableTimeStart = 0;
@@ -52,6 +52,28 @@ app.controller('searchtermctr', function ($scope, $rootScope, requestService, ar
             {name: '时长目标'},
             {name: '访问页数目标'},
         ];
+        //日历
+        $scope.dateClosed = function () {
+            $rootScope.targetSearch();
+            $rootScope.tableTimeStart = $scope.startOffset;
+            $rootScope.tableTimeEnd = $scope.endOffset;
+            $scope.$broadcast("ssh_dateShow_options_time_change");
+        };
+        //
 
+        this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
+        //this.type = 'range';
+        /*      this.identity = angular.identity;*/
+        //$scope.$broadcast("update", "msg");
+        $scope.$on("update", function (e, datas) {
+            // 选择时间段后接收的事件
+            datas.sort();
+            //console.log(datas);
+            var startTime = datas[0];
+            var endTime = datas[datas.length - 1];
+            $scope.startOffset = (startTime - today_start()) / 86400000;
+            $scope.endOffset = (endTime - today_start()) / 86400000;
+            //console.log("startOffset=" + startOffset + ", " + "endOffset=" + endOffset);
+        });
     }
 )
