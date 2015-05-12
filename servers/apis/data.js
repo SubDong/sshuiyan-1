@@ -148,6 +148,43 @@ api.get('/survey/1', function (req, res) {
      }*/
 
 });
+
+// device query
+api.get('/survey/2', function (req, res) {
+    var query = url.parse(req.url, true).query;
+
+    var type = query['type'];
+    var startOffset = Number(query['start']);
+    var endOffset = Number(query['end']);
+    var indexes = date.createIndexes(startOffset, endOffset, "visitor-");
+    var filters = JSON.parse(query['filter']);
+
+    // 指标数组
+    var quotas = ["vc"];
+
+    es_request.search(req.es, indexes, type, quotas, null, [0], filters, null, null, null, function (result) {
+        datautils.send(res, result);
+    });
+
+});
+
+// region query
+api.get('/survey/3', function (req, res) {
+    var query = url.parse(req.url, true).query;
+
+    var type = query['type'];
+    var startOffset = Number(query['start']);
+    var endOffset = Number(query['end']);
+    var indexes = date.createIndexes(startOffset, endOffset, "visitor-");
+
+    // 指标数组
+    var quotas = ["vc"];
+
+    es_request.search(req.es, indexes, type, quotas, "region", [0], null, null, null, null, function (result) {
+        datautils.send(res, result);
+    });
+
+});
 // 推广方式
 
 // 搜索推广
@@ -160,7 +197,7 @@ api.get('/indextable', function (req, res) {
     var _startTime = Number(query["start"]);//开始时间
     var _endTime = Number(query["end"]);//结束时间
     var _indic = query["indic"].split(",");//统计指标
-    var _lati = query["dimension"] == "null"?null:query["dimension"];//统计纬度
+    var _lati = query["dimension"] == "null" ? null : query["dimension"];//统计纬度
     var _type = query["type"];
     var _promotion = query["promotion"];
 
@@ -168,8 +205,8 @@ api.get('/indextable', function (req, res) {
     var indexes = date.createIndexes(_startTime, _endTime, "visitor-");//indexs
 
     var period = date.period(_startTime, _endTime); //时间段
-    var interval = _promotion=="undefined"?date.interval(_startTime, _endTime):null; //时间分割
-    es_request.search(req.es, indexes, _type, _indic, _lati, [0], _filter, _promotion=="undefined"?period[0]:null, _promotion=="undefined"?period[1]:null, interval, function (data) {
+    var interval = _promotion == "undefined" ? date.interval(_startTime, _endTime) : null; //时间分割
+    es_request.search(req.es, indexes, _type, _indic, _lati, [0], _filter, _promotion == "undefined" ? period[0] : null, _promotion == "undefined" ? period[1] : null, interval, function (data) {
         var result = [];
         var vidx = 0;
         var maps = {}
