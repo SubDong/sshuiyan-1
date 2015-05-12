@@ -78,21 +78,23 @@ app.use(function (err, req, res, next) {
     });
 });
 
-if (cluster.isMaster) {
+if (process.argv.slice(3) == 'cluster') {
+    if (cluster.isMaster) {
 // Fork workers.
-    for (var i = 0; i < numCPUs; i++) {
-        cluster.fork();
-    }
+        for (var i = 0; i < numCPUs; i++) {
+            cluster.fork();
+        }
 
-    cluster.on('exit', function (worker, code, signal) {
-        console.log('worker ' + worker.process.pid + ' died');
-        cluster.fork().on('online', function(){
-            console.log('new worker online.');
+        cluster.on('exit', function (worker, code, signal) {
+            console.log('worker ' + worker.process.pid + ' died');
+            cluster.fork().on('online', function () {
+                console.log('new worker online.');
+            });
         });
-    });
 
+    }
 } else {
-    app.listen(8000)
+    app.listen(8000);
 }
 
 
