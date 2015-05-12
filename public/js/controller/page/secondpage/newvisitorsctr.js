@@ -1,7 +1,7 @@
 /**
  * Created by XiaoWei on 2015/4/22.
  */
-app.controller("newvisitorsctr", function ($scope, $rootScope, $http, requestService) {
+app.controller("newvisitorsctr", function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
     $scope.todayClass = true;
     $scope.reset = function () {
         $scope.todayClass = false;
@@ -111,11 +111,38 @@ app.controller("newvisitorsctr", function ($scope, $rootScope, $http, requestSer
         requestService.refresh(arrayChart);
     });
     //日历
-    this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
-    this.type = 'range';
-    /*      this.identity = angular.identity;*/
+    $scope.dateClosed = function () {
+        $rootScope.start = $scope.startOffset;
+        $rootScope.end = $scope.endOffset;
+        $scope.charts.forEach(function (e) {
+            var chart = echarts.init(document.getElementById(e.config.id));
+            e.config.instance = chart;
+        })
+        if ($rootScope.start <= -1) {
+            $scope.charts[0].config.keyFormat = "day";
+        } else {
+            $scope.charts[0].config.keyFormat = "hour";
+        }
+        requestService.refresh($scope.charts);
+        $rootScope.targetSearch();
+        $rootScope.tableTimeStart = $scope.startOffset;
+        $rootScope.tableTimeEnd = $scope.endOffset;
+        $scope.$broadcast("ssh_dateShow_options_time_change");
+    };
+    //
 
-    this.removeFromSelected = function (dt) {
-        this.selectedDates.splice(this.selectedDates.indexOf(dt), 1);
-    }
+    this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
+    //this.type = 'range';
+    /*      this.identity = angular.identity;*/
+    //$scope.$broadcast("update", "msg");
+    $scope.$on("update", function (e, datas) {
+        // 选择时间段后接收的事件
+        datas.sort();
+        //console.log(datas);
+        var startTime = datas[0];
+        var endTime = datas[datas.length - 1];
+        $scope.startOffset = (startTime - today_start()) / 86400000;
+        $scope.endOffset = (endTime - today_start()) / 86400000;
+        //console.log("startOffset=" + startOffset + ", " + "endOffset=" + endOffset);
+    });
 });

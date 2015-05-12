@@ -2,8 +2,7 @@
  * Created by john on 2015/4/3.
  */
 app.controller('wayctrl', function ($scope, $rootScope, $http, requestService, messageService, SEM_API_URL) {
-    $scope.todayClass = true;
-
+    $scope.visible = true;
     $rootScope.tableTimeStart = 0;//开始时间
     $rootScope.tableTimeEnd = 0;//结束时间、
     //配置默认指标
@@ -124,7 +123,7 @@ app.controller('wayctrl', function ($scope, $rootScope, $http, requestService, m
         $scope.opens = true;
     };
     // initialize
-    $scope.today();
+    $scope.yesterday();
     //$scope.initMap();
     $scope.disabled = undefined;
     $scope.enable = function () {

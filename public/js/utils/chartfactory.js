@@ -705,7 +705,7 @@ var util = {
             legendDiv.append(lab);
         }
         if (renderType == "checkBox") {
-            legendDiv.append("<span>*最多只能勾选两项</span>");
+            legendDiv.append("<span>*最多只能勾选2项</span>");
         }
         else {
             legendDiv.append("<span>*可同时选择1项</span>");

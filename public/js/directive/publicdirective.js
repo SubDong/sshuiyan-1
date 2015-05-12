@@ -4,7 +4,7 @@
 app.directive("calendar", function ($rootScope, requestService) {
     var option = {
         restrict: "EA",
-        template: "<div  role=\"group\" class=\"btn-group fl\"><button class=\"btn btn-default\" type=\"button\" ng-click=\"today()\" ng-class=\"{'current':todayClass}\">今天</button>" +
+        template: "<div  role=\"group\" class=\"btn-group fl\"><button class=\"btn btn-default\" type=\"button\" ng-click=\"today()\" ng-hide=\"visible\" ng-class=\"{'current':todayClass}\">今天</button>" +
         "<button class=\"btn btn-default\" type=\"button\" ng-click=\"yesterday()\" ng-class=\"{'current':yesterdayClass}\">昨天</button>" +
         "<button class=\"btn btn-default\" type=\"button\" ng-click=\"sevenDay()\" ng-class=\"{'current':sevenDayClass}\">最近7天</button>" +
         "<button class=\"btn btn-default\" type=\"button\" ng-click=\"month()\" ng-class=\"{'current':monthClass}\">最近30天</button>" +
@@ -31,7 +31,6 @@ app.directive("calendar", function ($rootScope, requestService) {
                 console.info("info: now user click the " + type + " button");
                 $rootScope.$broadcast("ssh_refresh_charts");
                 $rootScope.$broadcast("ssh_dateShow_options_time_change", type);
-
             };
             scope.today = function () {
                 scope.reset();

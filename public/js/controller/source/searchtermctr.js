@@ -3,6 +3,7 @@
  */
 app.controller('searchtermctr', function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
         $scope.todayClass = true;
+        $scope.visible = false;
         //table默认信息配置
         $rootScope.tableTimeStart = 0;
         $rootScope.tableTimeEnd = 0;
@@ -60,7 +61,6 @@ app.controller('searchtermctr', function ($scope, $rootScope, $http, requestServ
             $scope.$broadcast("ssh_dateShow_options_time_change");
         };
         //
-
         this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
         //this.type = 'range';
         /*      this.identity = angular.identity;*/

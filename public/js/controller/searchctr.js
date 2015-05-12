@@ -2,8 +2,8 @@
  * Created by john on 2015/4/2.
  */
 app.controller('searchctr', function ($scope, $rootScope, requestService, areaService, $http, SEM_API_URL) {
-        $scope.todayClass = true;
-
+        $scope.visible = true;
+        $scope.yesterdayClass = true;
         $rootScope.tableTimeStart = 0;//开始时间
         $rootScope.tableTimeEnd = 0;//结束时间、
         //配置默认指标
@@ -31,13 +31,7 @@ app.controller('searchctr', function ($scope, $rootScope, requestService, areaSe
             arrayClear: false //是否清空指标array
         };
 
-        $scope.reset = function () {
-            $scope.todayClass = false;
-            $scope.yesterdayClass = false;
-            $scope.sevenDayClass = false;
-            $scope.monthClass = false;
-            $scope.definClass = false;
-        };
+
         $scope.onLegendClickListener = function (radio, chartInstance, config, checkedVal) {
             clear.lineChart(config, checkedVal);
             $scope.charts.forEach(function (chart) {
@@ -106,13 +100,40 @@ app.controller('searchctr', function ($scope, $rootScope, requestService, areaSe
             {name: '访问页数目标'},
         ];
         //日历
-        this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
-        this.type = 'range';
-        /*      this.identity = angular.identity;*/
+        $scope.dateClosed = function () {
+            $rootScope.start = $scope.startOffset;
+            $rootScope.end = $scope.endOffset;
+            $scope.charts.forEach(function (e) {
+                var chart = echarts.init(document.getElementById(e.config.id));
+                e.config.instance = chart;
+            })
+            if ($rootScope.start <= -1) {
+                $scope.charts[0].config.keyFormat = "day";
+            } else {
+                $scope.charts[0].config.keyFormat = "hour";
+            }
+            requestService.refresh($scope.charts);
+            $rootScope.targetSearch();
+            $rootScope.tableTimeStart = $scope.startOffset;
+            $rootScope.tableTimeEnd = $scope.endOffset;
+            $scope.$broadcast("ssh_dateShow_options_time_change");
+        };
+        //
 
-        this.removeFromSelected = function (dt) {
-            this.selectedDates.splice(this.selectedDates.indexOf(dt), 1);
-        }
+        this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
+        //this.type = 'range';
+        /*      this.identity = angular.identity;*/
+        //$scope.$broadcast("update", "msg");
+        $scope.$on("update", function (e, datas) {
+            // 选择时间段后接收的事件
+            datas.sort();
+            //console.log(datas);
+            var startTime = datas[0];
+            var endTime = datas[datas.length - 1];
+            $scope.startOffset = (startTime - today_start()) / 86400000;
+            $scope.endOffset = (endTime - today_start()) / 86400000;
+            //console.log("startOffset=" + startOffset + ", " + "endOffset=" + endOffset);
+        });
     }
 )
 /**
@@ -328,7 +349,40 @@ app.controller('searchCyCtr', function ($scope, $rootScope, requestService, area
             {name: '访问页数目标'},
         ];
         //日历
+        $scope.dateClosed = function () {
+            $rootScope.start = $scope.startOffset;
+            $rootScope.end = $scope.endOffset;
+            $scope.charts.forEach(function (e) {
+                var chart = echarts.init(document.getElementById(e.config.id));
+                e.config.instance = chart;
+            })
+            if ($rootScope.start <= -1) {
+                $scope.charts[0].config.keyFormat = "day";
+            } else {
+                $scope.charts[0].config.keyFormat = "hour";
+            }
+            requestService.refresh($scope.charts);
+            $rootScope.targetSearch();
+            $rootScope.tableTimeStart = $scope.startOffset;
+            $rootScope.tableTimeEnd = $scope.endOffset;
+            $scope.$broadcast("ssh_dateShow_options_time_change");
+        };
+        //
+
         this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
+        //this.type = 'range';
+        /*      this.identity = angular.identity;*/
+        //$scope.$broadcast("update", "msg");
+        $scope.$on("update", function (e, datas) {
+            // 选择时间段后接收的事件
+            datas.sort();
+            //console.log(datas);
+            var startTime = datas[0];
+            var endTime = datas[datas.length - 1];
+            $scope.startOffset = (startTime - today_start()) / 86400000;
+            $scope.endOffset = (endTime - today_start()) / 86400000;
+            //console.log("startOffset=" + startOffset + ", " + "endOffset=" + endOffset);
+        });
     }
 )
 /**
@@ -400,7 +454,40 @@ app.controller('searchSscCtr', function ($scope, $rootScope, requestService, are
             {name: '访问页数目标'},
         ];
         //日历
+        $scope.dateClosed = function () {
+            $rootScope.start = $scope.startOffset;
+            $rootScope.end = $scope.endOffset;
+            $scope.charts.forEach(function (e) {
+                var chart = echarts.init(document.getElementById(e.config.id));
+                e.config.instance = chart;
+            })
+            if ($rootScope.start <= -1) {
+                $scope.charts[0].config.keyFormat = "day";
+            } else {
+                $scope.charts[0].config.keyFormat = "hour";
+            }
+            requestService.refresh($scope.charts);
+            $rootScope.targetSearch();
+            $rootScope.tableTimeStart = $scope.startOffset;
+            $rootScope.tableTimeEnd = $scope.endOffset;
+            $scope.$broadcast("ssh_dateShow_options_time_change");
+        };
+        //
+
         this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
+        //this.type = 'range';
+        /*      this.identity = angular.identity;*/
+        //$scope.$broadcast("update", "msg");
+        $scope.$on("update", function (e, datas) {
+            // 选择时间段后接收的事件
+            datas.sort();
+            //console.log(datas);
+            var startTime = datas[0];
+            var endTime = datas[datas.length - 1];
+            $scope.startOffset = (startTime - today_start()) / 86400000;
+            $scope.endOffset = (endTime - today_start()) / 86400000;
+            //console.log("startOffset=" + startOffset + ", " + "endOffset=" + endOffset);
+        });
     }
 )
 /**
@@ -472,6 +559,39 @@ app.controller('searchTgCtr', function ($scope, $rootScope, requestService, area
             {name: '访问页数目标'},
         ];
         //日历
+        $scope.dateClosed = function () {
+            $rootScope.start = $scope.startOffset;
+            $rootScope.end = $scope.endOffset;
+            $scope.charts.forEach(function (e) {
+                var chart = echarts.init(document.getElementById(e.config.id));
+                e.config.instance = chart;
+            })
+            if ($rootScope.start <= -1) {
+                $scope.charts[0].config.keyFormat = "day";
+            } else {
+                $scope.charts[0].config.keyFormat = "hour";
+            }
+            requestService.refresh($scope.charts);
+            $rootScope.targetSearch();
+            $rootScope.tableTimeStart = $scope.startOffset;
+            $rootScope.tableTimeEnd = $scope.endOffset;
+            $scope.$broadcast("ssh_dateShow_options_time_change");
+        };
+        //
+
         this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
+        //this.type = 'range';
+        /*      this.identity = angular.identity;*/
+        //$scope.$broadcast("update", "msg");
+        $scope.$on("update", function (e, datas) {
+            // 选择时间段后接收的事件
+            datas.sort();
+            //console.log(datas);
+            var startTime = datas[0];
+            var endTime = datas[datas.length - 1];
+            $scope.startOffset = (startTime - today_start()) / 86400000;
+            $scope.endOffset = (endTime - today_start()) / 86400000;
+            //console.log("startOffset=" + startOffset + ", " + "endOffset=" + endOffset);
+        });
     }
 )
