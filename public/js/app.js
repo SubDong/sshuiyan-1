@@ -4,3 +4,7 @@ var app = angular.module('mainapp', ['ui.router', 'ui.grid', 'ui.grid.autoResize
 
 // inject constant
 app.constant('SEM_API_URL', 'http://182.92.227.79:9080/');
+
+app.run(function($rootScope) {
+    $rootScope.ssh_es_type = 2;
+});
