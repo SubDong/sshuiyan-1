@@ -46,6 +46,7 @@ app.controller('Trend_yesterday_ctrl', function ($scope, $rootScope, $http, requ
     $scope.dt = new Date();
     $scope.onLegendClickListener = function (radio, chartObj, chartConfig, checkedVal) {
         clear.lineChart($scope.charts[0].config, checkedVal);
+        $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
         $scope.charts[0].types = checkedVal;
         var chartarray = [$scope.charts[0]];
         requestService.refresh(chartarray);

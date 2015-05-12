@@ -53,6 +53,7 @@ app.controller('trend_today_ctrl', function ($scope, $rootScope, $http, requestS
     $scope.dt = new Date();
     $scope.onLegendClickListener = function (radio, chartObj, chartConfig, checkedVal) {
         clear.lineChart($scope.charts[0].config, checkedVal);
+        $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
         $scope.charts[0].types = checkedVal;
         var chartarray = [$scope.charts[0]];
         requestService.refresh(chartarray);
@@ -100,6 +101,8 @@ app.controller('trend_today_ctrl', function ($scope, $rootScope, $http, requestS
             e.config.instance = chart;
             if ($rootScope.start <= -7) {
                 e.config.keyFormat = "day";
+            } else {
+                e.config.keyFormat = "hour";
             }
             util.renderLegend(chart, e.config);
         })

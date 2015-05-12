@@ -45,6 +45,7 @@ app.controller('trend_month_ctrl', function ($scope, $rootScope, $http, requestS
     $scope.dt = new Date();
     $scope.onLegendClickListener = function (radio, chartObj, chartConfig, checkedVal) {
         clear.lineChart($scope.charts[0].config, checkedVal);
+        $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
         $scope.charts[0].types = checkedVal;
         var chartarray = [$scope.charts[0]];
         requestService.refresh(chartarray);
@@ -63,9 +64,9 @@ app.controller('trend_month_ctrl', function ($scope, $rootScope, $http, requestS
         {
             config: {
                 legendId: "moth_charts_legend",
+                legendData: ["浏览量(PV)", "访客数(UV)", "访问次数", "新访客数", "新访客比率", "IP数", "跳出率", "平均访问时长", "平均访问页数", "转化次数", "转化率"],//显示几种数据
                 legendAllowCheckCount: 2,
                 legendClickListener: $scope.onLegendClickListener,
-                legendData: ["浏览量(PV)", "访客数(UV)", "访问次数", "新访客数", "新访客比率", "IP数", "跳出率", "平均访问时长", "平均访问页数", "转化次数", "转化率"],//显示几种数据
                 legendDefaultChecked: [0, 1],
                 id: "moth_charts",
                 min_max: false,
