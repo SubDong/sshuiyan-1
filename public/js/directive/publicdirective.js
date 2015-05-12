@@ -177,7 +177,7 @@ app.directive("sshDateShow", function ($http, $rootScope, SEM_API_URL) {
             scope.ds_dateShowQuotasOption = scope.checkedArray ? scope.checkedArray : scope.ds_defaultQuotasOption;
             // 读取ES数据
             scope.loadSummary = function () {
-                $http.get("/api/summary?type=1&dimension=" + scope.ds_dimension + "&quotas=" + scope.ds_dateShowQuotasOption + "&start=" + scope.ds_start + "&end=" + scope.ds_end).success(function (result) {
+                $http.get("/api/summary?type="+$rootScope.ssh_es_type+"&dimension=" + scope.ds_dimension + "&quotas=" + scope.ds_dateShowQuotasOption + "&start=" + scope.ds_start + "&end=" + scope.ds_end).success(function (result) {
                     var obj = JSON.parse(eval('(' + result + ')').toString()); //由JSON字符串转换为JSON对象
                     angular.forEach(obj, function (r) {
                         var dateShowObject = {};
@@ -447,7 +447,7 @@ app.directive("sshNoVisitor", function ($http, $rootScope) {
                 scope.sumPv = 0;
                 $http({
                     method: 'GET',
-                    url: '/api/indextable/?type=1&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=pv,uv,outRate,avgTime,avgPage&dimension=ct'
+                    url: '/api/indextable/?type='+$rootScope.ssh_es_type+'&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=pv,uv,outRate,avgTime,avgPage&dimension=ct'
                 }).success(function (data, status) {
                     angular.forEach(data, function (e) {
                         if (e.ct === scope._ctText) {
@@ -470,7 +470,7 @@ app.directive("sshNoVisitor", function ($http, $rootScope) {
             scope.loadFwlywzData = function () {
                 $http({
                     method: 'GET',
-                    url: '/api/fwlywz/?type=1&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=pv&ct=' + scope._ctValue
+                    url: '/api/fwlywz/?type='+$rootScope.ssh_es_type+'&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=pv&ct=' + scope._ctValue
                 }).success(function (data, status) {
                     scope.fwlywzTop5 = data;
                 }).error(function (error) {
@@ -482,7 +482,7 @@ app.directive("sshNoVisitor", function ($http, $rootScope) {
             scope.loadFwrkyData = function () {
                 $http({
                     method: 'GET',
-                    url: '/api/indextable/?type=1&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=vc&dimension=loc&filerInfo=[{"ct": ["' + scope._ctValue + '"]}]'
+                    url: '/api/indextable/?type='+$rootScope.ssh_es_type+'&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=vc&dimension=loc&filerInfo=[{"ct": ["' + scope._ctValue + '"]}]'
                 }).success(function (data, status) {
                     scope.fwrkyTop5 = data ? ((data.length > 5) ? data.slice(0, 5) : data) : [];
                 }).error(function (error) {
@@ -563,13 +563,22 @@ app.directive('sshExpander',function($location){
             }
             if($location.path().indexOf(scope.sref) != -1) {
                 scope.showText = true;
-
             }
-            scope.sshPath = "#" + $location.path().substring(1);
             scope.$on("$locationChangeSuccess", function(e, n, o) {
-                scope.sshPath = "#" + $location.path().substring(1);
+                scope.getSshPath();
             });
-
+            // 获取参数path
+            scope.getSshPath = function() {
+                var temp_path = $location.path();
+                var _index = temp_path.indexOf("_");
+                if(_index != -1) {
+                    scope.sshPath = "#" + temp_path.substring(1, _index);
+                } else {
+                    scope.sshPath = "#" + temp_path.substring(1);
+                }
+                console.log(scope.sshPath);
+            };
+            scope.getSshPath();
         }
     };
 
