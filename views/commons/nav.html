@@ -14,7 +14,7 @@
             <li><a href="#"  ui-sref="index"><span aria-hidden="true" class="glyphicon glyphicon-home"></span>网站概览</a></a></li>
             <li class="dropdown" ng-controller="ngSelect">
                 <span class="fl website">网站：</span>
-                <ui-select ng-model="userselect.selected" theme="selectize" class="fl" style="min-width: 140px;">
+                <ui-select ng-model="userselect.selected" theme="selectize" class="fl" style="min-width: 140px;" ng-change="changeUrl(userselect.selected)">
                     <ui-select-match placeholder="www.best-ad.cn">{{$select.selected.name}}</ui-select-match>
                     <ui-select-choices repeat="userselect in userselects">
                         <span ng-bind-html="userselect.name"></span>

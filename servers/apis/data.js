@@ -12,7 +12,7 @@ var api = express.Router();
 
 api.get('/charts', function (req, res) {
 
-    var query = url.parse(req.url, true).query, quotas = [], type = query['type'], dimension = query.dimension, filter = null, topN = [];
+    var query = url.parse(req.url, true).query, quotas = [], type = query['type'], dimension = query.dimension, filter = null, topN = [], userType = query.userType;
     var filter_f = query.filter;
     var topN_f = query.topN == undefined ? null : query.topN
     if (topN_f) {
@@ -39,13 +39,16 @@ api.get('/charts', function (req, res) {
     } else {
         interval = date.interval(start, end, Number(query['int']));
     }
+    if (!userType) {
+        userType = 1;
+    }
 
-    es_request.search(req.es, indexes, 1, quotas, dimension, topN, filter, period[0], period[1], interval, function (result) {
+    es_request.search(req.es, indexes, userType, quotas, dimension, topN, filter, period[0], period[1], interval, function (result) {
         datautils.send(res, JSON.stringify(result));
     });
 });
 api.get('/halfhour', function (req, res) {
-    var query = url.parse(req.url, true).query, quotas = [], type = query['type'], topN = [];
+    var query = url.parse(req.url, true).query, quotas = [], type = query['type'], topN = [], userType = query.userType;
     var start = Number(query['start']);//
     var end = Number(query['end']);//
     var indexes = date.createIndexes(start, end, "access-");
@@ -61,13 +64,16 @@ api.get('/halfhour', function (req, res) {
     else {
         quotas.push(type);
     }
+    if (!userType) {
+        userType = 1;
+    }
 
-    es_request.search(req.es, indexes, 1, quotas, null, topN, null, new Date().getTime() - 1800000, new Date().getTime(), 0, function (result) {
+    es_request.search(req.es, indexes, userType, quotas, null, topN, null, new Date().getTime() - 1800000, new Date().getTime(), 0, function (result) {
         datautils.send(res, JSON.stringify(result));
     });
 });
 api.get('/map', function (req, res) {
-    var query = url.parse(req.url, true).query, quotas = [], type = query['type'], dimension = query.dimension, topN = [];
+    var query = url.parse(req.url, true).query, quotas = [], type = query['type'], dimension = query.dimension, topN = [], userType = query.userType;
     var topN_f = query.topN == undefined ? null : query.topN
     if (topN_f) {
         topN = topN_f.split(",");
@@ -78,16 +84,19 @@ api.get('/map', function (req, res) {
     if (type.indexOf(",") > -1)for (var i = 0; i < type.split(",").length; i++) {
         quotas.push(type.split(",")[i]);
     }
-    else
+    else {
         quotas.push(type);
-
+    }
+    if (!userType) {
+        userType = 1;
+    }
     var start = Number(query['start']);//0
     var end = Number(query['end']);
     var indexes = date.createIndexes(start, end, "visitor-");
 
     var period = date.period(start, end);
     var interval = date.interval(start, end, Number(query['int']));
-    es_request.search(req.es, indexes, 1, quotas, dimension, topN, filter, period[0], period[1], interval, function (result) {
+    es_request.search(req.es, indexes, userType, quotas, dimension, topN, filter, period[0], period[1], interval, function (result) {
         datautils.send(res, JSON.stringify(result));
     });
 });
@@ -97,7 +106,8 @@ api.get('/pie', function (req, res) {
     var type = query['type'];
     var dimension = query.dimension;
     var topN = [];
-    var topN_f = query.topN == undefined ? null : query.topN
+    var topN_f = query.topN == undefined ? null : query.topN;
+    var userType = query.userType;
     if (topN_f) {
         topN = topN_f.split(",");
     } else {
@@ -106,9 +116,12 @@ api.get('/pie', function (req, res) {
     if (type.indexOf(",") > -1)for (var i = 0; i < type.split(",").length; i++) {
         quotas.push(type.split(",")[i]);
     }
-    else
+    else {
         quotas.push(type);
-
+    }
+    if (!userType) {
+        userType = 1;
+    }
     var start = Number(query['start']);
     var end = Number(query['end']);
     var indexes = date.createIndexes(start, end, "visitor-");
@@ -116,7 +129,7 @@ api.get('/pie', function (req, res) {
     var period = date.period(start, end);
     var interval = date.interval(start, end, Number(query['int']));
 
-    es_request.search(req.es, indexes, 1, quotas, dimension, topN, null, period[0], period[1], interval, function (result) {
+    es_request.search(req.es, indexes, userType, quotas, dimension, topN, null, period[0], period[1], interval, function (result) {
         datautils.send(res, JSON.stringify(result));
     });
 
@@ -160,7 +173,7 @@ api.get('/indextable', function (req, res) {
     var _startTime = Number(query["start"]);//开始时间
     var _endTime = Number(query["end"]);//结束时间
     var _indic = query["indic"].split(",");//统计指标
-    var _lati = query["dimension"] == "null"?null:query["dimension"];//统计纬度
+    var _lati = query["dimension"] == "null" ? null : query["dimension"];//统计纬度
     var _type = query["type"];
     var _promotion = query["promotion"];
 
@@ -168,8 +181,8 @@ api.get('/indextable', function (req, res) {
     var indexes = date.createIndexes(_startTime, _endTime, "visitor-");//indexs
 
     var period = date.period(_startTime, _endTime); //时间段
-    var interval = _promotion=="undefined"?date.interval(_startTime, _endTime):null; //时间分割
-    es_request.search(req.es, indexes, _type, _indic, _lati, [0], _filter, _promotion=="undefined"?period[0]:null, _promotion=="undefined"?period[1]:null, interval, function (data) {
+    var interval = _promotion == "undefined" ? date.interval(_startTime, _endTime) : null; //时间分割
+    es_request.search(req.es, indexes, _type, _indic, _lati, [0], _filter, _promotion == "undefined" ? period[0] : null, _promotion == "undefined" ? period[1] : null, interval, function (data) {
         var result = [];
         var vidx = 0;
         var maps = {}

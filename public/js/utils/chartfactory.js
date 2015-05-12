@@ -821,7 +821,6 @@ var util = {
             $(o).prop("checked", false);
         });
         checked.forEach(function (c, i) {
-            console.log(i);
             switch (i) {
                 case 0:
                     $(checks[c]).prev("span").css("background-position", "0px -77px");

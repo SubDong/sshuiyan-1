@@ -227,6 +227,7 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
             }
             requestService.refresh($scope.charts);
             requestService.gridRefresh($scope.grids);
+
         };
         //
 

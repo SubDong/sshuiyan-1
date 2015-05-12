@@ -1,7 +1,7 @@
 /**
  * Created by baizz on 2015-4-3.
  */
-app.controller('Trend_realtime_ctrl', function ($scope, $rootScope, $http, requestService, messageService, $log,areaService) {
+app.controller('Trend_realtime_ctrl', function ($scope, $rootScope, $http, requestService, messageService, $log, areaService) {
     $scope.visitorCount = 0;
     //table配置
     $rootScope.tableTimeStart = 0;
@@ -106,7 +106,7 @@ app.controller('Trend_realtime_ctrl', function ($scope, $rootScope, $http, reque
     }
     $scope.init();
     $scope.initPerson = function () {
-        $http.get("/api/halfhour?type=uv&start=0&end=0").success(function (data) {
+        $http.get("/api/halfhour?type=uv&start=0&end=0?userType=" + $rootScope.userType).success(function (data) {
             var json = JSON.parse(eval("(" + data + ")").toString());
             var result = json[0].result;
             result.buckets.forEach(function (e) {

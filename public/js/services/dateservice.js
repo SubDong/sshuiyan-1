@@ -5,6 +5,7 @@ app.service('requestService', ['$rootScope', '$http', function ($rootScope, $htt
     $rootScope.defaultcb = function (data, chartconfig) {
         cf.renderChart(data, chartconfig);
     }
+    $rootScope.userType = 2;
     $rootScope.start = 0;
     $rootScope.end = 0;
     this.refresh = function (charts) {
@@ -14,7 +15,7 @@ app.service('requestService', ['$rootScope', '$http', function ($rootScope, $htt
             });
         });
         charts.forEach(function (e) {
-            var req = e.url + "?type=" + e.types + "&dimension=" + e.dimension + "&start=" + $rootScope.start + "&end=" + $rootScope.end;
+            var req = e.url + "?type=" + e.types + "&dimension=" + e.dimension + "&start=" + $rootScope.start + "&end=" + $rootScope.end + "&userType=" + $rootScope.userType;
             if (e.interval) {
                 req = req + "&int=" + e.interval;
             }
@@ -36,7 +37,7 @@ app.service('requestService', ['$rootScope', '$http', function ($rootScope, $htt
     }
     this.gridRefresh = function (grids) {
         grids.forEach(function (grid) {
-            $http.get(grid.url + "?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + grid.types + "&dimension=" + grid.dimension).success(function (data) {
+            $http.get(grid.url + "?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + grid.types + "&dimension=" + grid.dimension + "&userType=" + $rootScope.userType).success(function (data) {
                 var json = JSON.parse((eval("(" + data + ")").toString()));
                 grid.config.gridOptions.data = [];
                 json.forEach(function (item) {
@@ -56,21 +57,21 @@ app.service('requestService', ['$rootScope', '$http', function ($rootScope, $htt
 
 }]);
 /*
-app.directive('iframeheight', [function(){
-    return {
-        restrict: 'A',
-        link: function( $rootScope, element, attrs){
-            element.on('load', function(){
-                */
+ app.directive('iframeheight', [function(){
+ return {
+ restrict: 'A',
+ link: function( $rootScope, element, attrs){
+ element.on('load', function(){
+ */
 /* Set the dimensions here,
-                 I think that you were trying to do something like this: *//*
+ I think that you were trying to do something like this: *//*
 
-                var iFrameHeight = element[0].contentWindow.document.body.scrollHeight + 'px';
-                var iFrameWidth = '100%';
-                element.css('width', iFrameWidth);
-                element.css('height', iFrameHeight);
-            })
-        }
-    }}])
-*/
+ var iFrameHeight = element[0].contentWindow.document.body.scrollHeight + 'px';
+ var iFrameWidth = '100%';
+ element.css('width', iFrameWidth);
+ element.css('height', iFrameHeight);
+ })
+ }
+ }}])
+ */
 

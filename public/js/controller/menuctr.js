@@ -149,19 +149,19 @@ app.controller('menuctr', function ($scope, $location) {
     ];
 });
 /*********nav-select*********/
-app.controller('ngSelect', function ($scope) {
+app.controller('ngSelect', function ($scope, $rootScope) {
     $scope.clear = function () {
         $scope.userselect.selected = undefined;
 
     };
     $scope.userselect = {};
     $scope.userselects = [
-        {name: 'www.perfect.com'},
-        {name: 'www.perfect.com'},
-        {name: 'www.perfect.com'},
-        {name: 'www.perfect.com'},
-        {name: 'www.perfect.com'}
+        {name: 'www.best-ad.cn', type: 1},
+        {name: 'www.perfect-cn.cn', type: 2},
     ];
+    $scope.changeUrl = function (select) {
+        $rootScope.userType = select.type;
+    }
 })
 
 
