@@ -163,20 +163,21 @@ app.directive("gridpage", function () {
 /**
  * Create by wms on 2015-04-22.合计信息显示
  */
-app.directive("sshDateShow", function ($http, $rootScope) {
+app.directive("sshDateShow", function ($http, $rootScope, SEM_API_URL) {
     return {
         restrict: 'E',
         templateUrl: '../commons/date_show.html',
         link: function (scope, element, attris, controller) {
             // 初始化参数
             scope.isCompared = false;
+            scope.dateShowArray = [];
+            scope.ssh_seo_type = attris.semType;
             scope.ds_start = scope.ds_end = 0;
             scope.ds_defaultQuotasOption = ["pv", "uv", "ip", "nuv", "outRate", "avgTime"];
             scope.ds_dateShowQuotasOption = scope.checkedArray ? scope.checkedArray : scope.ds_defaultQuotasOption;
-            // 读取数据
+            // 读取ES数据
             scope.loadSummary = function () {
                 $http.get("/api/summary?type=1&dimension=" + scope.ds_dimension + "&quotas=" + scope.ds_dateShowQuotasOption + "&start=" + scope.ds_start + "&end=" + scope.ds_end).success(function (result) {
-                    scope.dateShowArray = [];
                     var obj = JSON.parse(eval('(' + result + ')').toString()); //由JSON字符串转换为JSON对象
                     angular.forEach(obj, function (r) {
                         var dateShowObject = {};
@@ -187,7 +188,7 @@ app.directive("sshDateShow", function ($http, $rootScope) {
                             temp += Number(qo);
                             count++;
                         });
-                        if (r.label === "outRate" || r.label === "nuvRate") {
+                        if (r.label === "outRate" || r.label === "nuvRate" || r.label === "arrivedRate") {
                             if (count === 0) {
                                 dateShowObject.value = "--";
                             } else {
@@ -208,6 +209,106 @@ app.directive("sshDateShow", function ($http, $rootScope) {
                     });
                 });
             };
+            // 读取SEO数据
+            scope.loadSEOSummary = function() {
+                // 先判断是否存在SEO指标
+                var seoQuotas = [];
+                var costObj, impressionObj, clickObj, ctrObj, cpcObj, cpmObj, conversionObj;
+                angular.forEach(scope.ds_dateShowQuotasOption, function(e) {
+                    switch(e) {
+                        case "cost":
+                            costObj = {"label" : e, "value" : 0};
+                            seoQuotas.push(e);
+                            break;
+                        case "impression":
+                            impressionObj = {"label" : e, "value" : 0};
+                            seoQuotas.push(e);
+                            break;
+                        case "click":
+                            clickObj = {"label" : e, "value" : 0};
+                            seoQuotas.push(e);
+                            break;
+                        case "ctr":
+                            ctrObj = {"label" : e, "value" : 0};
+                            seoQuotas.push(e);
+                            break;
+                        case "cpc":
+                            cpcObj = {"label" : e, "value" : 0};
+                            seoQuotas.push(e);
+                            break;
+                        case "cpm":
+                            cpmObj = {"label" : e, "value" : 0};
+                            seoQuotas.push(e);
+                            break;
+                        case "conversion":
+                            conversionObj = {"label" : e, "value" : 0};
+                            seoQuotas.push(e);
+                            break;
+                    }
+                });
+                if(seoQuotas.length > 0) {
+                    var stringQuotas = seoQuotas.toString().replace(/,/g ,"-") + "-";
+                    $http.get(SEM_API_URL + "jiehun/baidu-bjjiehun2123585/" + scope.ssh_seo_type + "/" + stringQuotas + "?startOffset=" + scope.ds_start + "&endOffset=" + scope.ds_end).success(function (result) {
+                        var count = 0;
+                        angular.forEach(result, function (r) {
+                            count++;
+                            if(costObj) {
+                                costObj.value += Number(r.cost);
+                            }
+                            if(impressionObj) {
+                                impressionObj.value += Number(r.impression);
+                            }
+                            if(clickObj) {
+                                clickObj.value += Number(r.click);
+                            }
+                            if(ctrObj) {
+                                ctrObj.value += Number(r.ctr);
+                            }
+                            if(cpcObj) {
+                                cpcObj.value += Number(r.cpc);
+                            }
+                            if(cpmObj) {
+                                cpmObj.value += Number(r.cpm);
+                            }
+                            if(conversionObj) {
+                                conversionObj.value += Number(r.conversion);
+                            }
+                        });
+                        if(costObj) {
+                            costObj.value = costObj.value.toFixed(2);
+                            scope.dateShowArray.push(costObj);
+                        }
+                        if(impressionObj) {
+                            impressionObj.value = impressionObj.value.toFixed(2);
+                            scope.dateShowArray.push(impressionObj);
+                        }
+                        if(clickObj) {
+                            clickObj.value = clickObj.value.toFixed(2);
+                            scope.dateShowArray.push(clickObj);
+                        }
+                        if(ctrObj) {
+                            ctrObj.value = ctrObj.value.toFixed(2);
+                            scope.dateShowArray.push(ctrObj);
+                        }
+                        if(cpcObj) {//平均点击价格
+                            if (count == 0) {
+                                cpcObj.value = "--";
+                            } else {
+                                cpcObj.value = (cpcObj.value / count).toFixed(2);
+                            }
+                            scope.dateShowArray.push(cpcObj);
+                        }
+                        if(cpmObj) {
+                            cpmObj.value = cpmObj.value.toFixed(2);
+                            scope.dateShowArray.push(cpmObj);
+                        }
+                        if(conversionObj) {
+                            conversionObj.value = conversionObj.value.toFixed(2);
+                            scope.dateShowArray.push(conversionObj);
+                        }
+                    });
+                }
+            };
             // 改变时间参数
             scope.setDateShowTimeOption = function (type, cb) {
                 if (type === "today") {
@@ -225,7 +326,9 @@ app.directive("sshDateShow", function ($http, $rootScope) {
                     scope.ds_end = $rootScope.tableTimeEnd;
                 }
                 if (cb) {
+                    scope.dateShowArray = [];
                     cb();
+                    scope.loadSEOSummary();
                 }
             };
             scope.setDateShowTimeOption(attris.type);
@@ -247,9 +350,12 @@ app.directive("sshDateShow", function ($http, $rootScope) {
                 if (temp.length > 0) {
                     scope.ds_dateShowQuotasOption = temp;
                 }
+                scope.dateShowArray = [];
                 scope.loadSummary();
+                scope.loadSEOSummary();
             });
             scope.loadSummary();
+            scope.loadSEOSummary();
         }
     };
 });
@@ -270,6 +376,13 @@ app.filter("quotaFormat", function () {
     quotaObject.eventConversion = "事件转化";
     quotaObject.avgTime = "平均访问时长";
     quotaObject.avgPage = "平均访问页数";
+    quotaObject.cost = "消费";
+    quotaObject.impression = "展现";
+    quotaObject.click = "点击量";
+    quotaObject.ctr = "点击率";
+    quotaObject.cpc = "平均点击价格";
+    quotaObject.cpm = "千次展现消费";
+    quotaObject.conversion = "转化";
     return function (key) {
         if (quotaObject[key]) {
             return quotaObject[key];
@@ -294,6 +407,13 @@ app.filter("quotaHelpFormat", function () {
     quotaObject.eventConversion = "事件转化";
     quotaObject.avgTime = "访客在一次访问中，平均打开网站的时长。即每次访问中，打开第一个页面到关闭最后一个页面的平均值，打开一个页面时计算打开关闭的时间差。";
     quotaObject.avgPage = "平均每次访问浏览的页面数量，平均访问页数=浏览量/访问次数。";
+    quotaObject.cost = "消费";
+    quotaObject.impression = "展现";
+    quotaObject.click = "点击量";
+    quotaObject.ctr = "点击率";
+    quotaObject.cpc = "平均点击价格";
+    quotaObject.cpm = "千次展现消费";
+    quotaObject.conversion = "转化";
     return function (key) {
         if (quotaObject[key]) {
             return quotaObject[key];
