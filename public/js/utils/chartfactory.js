@@ -704,6 +704,12 @@ var util = {
             lab.append(spn);
             legendDiv.append(lab);
         }
+        if (renderType == "checkBox") {
+            legendDiv.append("<span>*最多只能勾选两项</span>");
+        }
+        else {
+            legendDiv.append("<span>*可同时选择1项</span>");
+        }
         chartDiv.append(legendDiv);
     },
     addEventMore: function (chartObj, c) {
@@ -788,8 +794,10 @@ var util = {
             }
         });
         checkBoxDiv.append(submitBtn);
+        checkBoxDiv.append("<span>*可同时选择2项</span>");
         legendDiv.append(checkBoxDiv);
         legendDiv.prepend(button);
+
     },
     allowItem: function (radioObj) {
         var checks = $("input[name='" + radioObj.name + "']");

@@ -3,28 +3,28 @@
  */
 app.controller('trend_today_ctrl', function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
     $scope.todayClass = true;
-    $scope.dayClass=true;
+    $scope.dayClass = true;
     $scope.reset = function () {
         $scope.todayClass = false;
         $scope.yesterdayClass = false;
         $scope.sevenDayClass = false;
         $scope.monthClass = false;
         $scope.definClass = false;
-        $scope.hourcheckClass=false;
+        $scope.hourcheckClass = false;
     };
-/*    $scope.hourcheck= function(){
-        $scope.dayClass=false;
-        $scope.hourcheckClass=true;
-    }
-    $scope.daycheck= function(){
-        $scope.dayClass=true;
-        $scope.hourcheckClass=false;
-    }*/
+    /*    $scope.hourcheck= function(){
+     $scope.dayClass=false;
+     $scope.hourcheckClass=true;
+     }
+     $scope.daycheck= function(){
+     $scope.dayClass=true;
+     $scope.hourcheckClass=false;
+     }*/
     //table配置
     $rootScope.tableTimeStart = 0;
     $rootScope.tableTimeEnd = 0;
     //配置默认指标
-    $rootScope.checkedArray = ["pv", "uv", "ip","outRate","avgTime"];
+    $rootScope.checkedArray = ["pv", "uv", "ip", "outRate", "avgTime"];
     $rootScope.gridArray = [
         {name: "日期", field: "period"},
         {
@@ -38,13 +38,13 @@ app.controller('trend_today_ctrl', function ($scope, $rootScope, $http, requestS
         {name: "平均访问时长", field: "avgTime"}
     ];
     $rootScope.tableSwitch = {
-        latitude:{name: "日期", field: "period"},
-        tableFilter:null,
-        dimen:false,
+        latitude: {name: "日期", field: "period"},
+        tableFilter: null,
+        dimen: false,
         // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
-        number:0,
+        number: 0,
         //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
-        coding:false,
+        coding: false,
         //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
         arrayClear: false //是否清空指标array
     };
@@ -76,7 +76,7 @@ app.controller('trend_today_ctrl', function ($scope, $rootScope, $http, requestS
                 legendData: ["浏览量(PV)", "访客数(UV)", "访问次数", "新访客数", "新访客比率", "IP数", "跳出率", "平均访问时长", "平均访问页数", "转化次数", "转化率"],//显示几种数据
                 legendDefaultChecked: [0, 1],
                 id: "today_charts",
-                min_max:false,
+                min_max: false,
                 bGap: false,//首行缩进
                 chartType: "line",//图表类型
                 dataKey: "key",//传入数据的key值
@@ -119,6 +119,7 @@ app.controller('trend_today_ctrl', function ($scope, $rootScope, $http, requestS
             }
         });
         requestService.refresh($scope.charts);
+
     });
 
     $scope.hourcheck = function () {
@@ -164,11 +165,38 @@ app.controller('trend_today_ctrl', function ($scope, $rootScope, $http, requestS
         $scope.souce.selected = undefined;
     };
 //日历
-    this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
-    this.type = 'range';
-    /*      this.identity = angular.identity;*/
+    $scope.dateClosed = function () {
+        $rootScope.start = $scope.startOffset;
+        $rootScope.end = $scope.endOffset;
+        $scope.charts.forEach(function (e) {
+            var chart = echarts.init(document.getElementById(e.config.id));
+            e.config.instance = chart;
+        })
+        if ($rootScope.start <= -1) {
+            $scope.charts[0].config.keyFormat = "day";
+        } else {
+            $scope.charts[0].config.keyFormat = "hour";
+        }
+        requestService.refresh($scope.charts);
+        $rootScope.targetSearch();
+        $rootScope.tableTimeStart = $scope.startOffset;
+        $rootScope.tableTimeEnd = $scope.endOffset;
+        $scope.$broadcast("ssh_dateShow_options_time_change");
+    };
+    //
 
-    this.removeFromSelected = function (dt) {
-        this.selectedDates.splice(this.selectedDates.indexOf(dt), 1);
-    }
+    this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
+    //this.type = 'range';
+    /*      this.identity = angular.identity;*/
+    //$scope.$broadcast("update", "msg");
+    $scope.$on("update", function (e, datas) {
+        // 选择时间段后接收的事件
+        datas.sort();
+        //console.log(datas);
+        var startTime = datas[0];
+        var endTime = datas[datas.length - 1];
+        $scope.startOffset = (startTime - today_start()) / 86400000;
+        $scope.endOffset = (endTime - today_start()) / 86400000;
+        //console.log("startOffset=" + startOffset + ", " + "endOffset=" + endOffset);
+    });
 });

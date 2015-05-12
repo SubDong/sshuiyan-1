@@ -1,6 +1,6 @@
-<div>
-    <div ng-click="toggleText()">
-        <h4>
+<div class="menu_list" >
+    <div ng-click="toggleText()"   >
+        <h4 class="panel-heading">
             <a data-ng-href="{{sref}}" data-ng-if="type == 0" class="accordion-toggle">
                 <span aria-hidden="true" ng-class="icon"></span>
                 <span>{{title}}</span>
@@ -13,7 +13,7 @@
     </div>
     <div ng-show="showText">
         <ul>
-            <li data-ng-class="{'current':sshPath == re.sref}" data-ng-repeat="re in child"><a data-ng-href="{{re.sref}}">{{re.text}}</a></li>
+            <li data-ng-class="{'active':sshPath == re.sref}" data-ng-repeat="re in child"><a data-ng-href="{{re.sref}}">{{re.text}}</a></li>
         </ul>
     </div>
 </div>

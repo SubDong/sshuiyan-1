@@ -1,16 +1,23 @@
 <div class="middle_containers" ng-controller="trend_today_ctrl as app">
     <div class="date_select">
             <calendar></calendar>
-            <datecontrast></datecontrast>
+            <dateother></dateother>
             <dateweek></dateweek>
-        <refresh></refresh>
-
+             <refresh></refresh>
     </div>
     <div class="my_concent">
         <ssh-date-show type="today"></ssh-date-show>
         <div class="index_chart">
             <div id="today_charts_legend" style="position:relative;"></div>
             <div id="today_charts" style="height:400px;"></div>
+        </div>
+        <div class="time_select" >
+            <div aria-label="First group" role="group" class="btn-group ">
+                <button class="btn btn-default" type="button" ng-click="hourcheck()"ng-class="{'current':hourcheckClass}">前一日
+                </button>
+                <button class="btn btn-default" type="button" ng-click="daycheck()" ng-class="{'current':dayClass}">上周同期
+                </button>
+            </div>
         </div>
         <div class="table_content" ng-controller="TabsCtrl">
             <tabset justified="true">
@@ -78,10 +85,13 @@
                         <div class="chart_top2">
                             <ul>
                                 <li><span>设备过滤:</span></li>
-                                <li><input type="radio" checked="checked" name="radio1"/>
-                                    <label>全部</label></li>
-                                <li><input type="radio" name="radio1"/> <label>计算机</label></li>
-                                <li><input type="radio" name="radio1"/> <label>移动设备</label></li>
+                                <li><lable>
+                                    <input type="radio" checked="checked" name="radio1"  class="styled"/>
+                                    <b>全部</b>
+                                </lable>
+                                   </li>
+                                <li><input type="radio" name="radio1" class="styled"/> <label>计算机</label></li>
+                                <li><input type="radio" name="radio1"  class="styled"/> <label>移动设备</label></li>
                             </ul>
                         </div>
                         <div class="chart_top2">

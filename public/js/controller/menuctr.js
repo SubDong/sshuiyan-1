@@ -3,8 +3,24 @@
  */
 
 /*console.log('init menu.')*/
-app.controller('menuctr', function ($scope) {
+app.controller('menuctr', function ($scope, $location) {
     $scope.oneAtATime = true;
+    $scope.array = ["index", "extension", "trend", "source", "page", "visitor"];
+    $scope.selectRestaurant = function (row) {
+        $scope.selectedRow = row;
+    };
+    var menu = $location.path();
+    $scope.menuClass = function (menu, hrefs, i) {
+        if ("" === menu) {
+            return 0;
+        }
+        if (menu.indexOf(hrefs[i]) != -1 || i > hrefs.length) {
+            return i;
+        }
+        return $scope.menuClass(menu, hrefs, i + 1);
+    }
+
+    $scope.selectedRow = $scope.menuClass(menu, $scope.array, 0);
 
     $scope.groups = [
         {
@@ -31,102 +47,103 @@ app.controller('menuctr', function ($scope) {
 
     $scope.expanders = [
         {
-            title : '网站概览',
+            title: '网站概览',
             icon: 'glyphicon glyphicon-th-large',
-            stype : 0,
-            sref : '#index'
-        },{
+            stype: 0,
+            sref: '#index',
+            current: 'current'
+        }, {
             title: '百度推广',
             icon: 'glyphicon glyphicon-asterisk',
-            stype : 1,
-            sref : 'extension',
-            child : [{
-                text : '推广概况',
-                sref : '#extension/survey'
-            },{
-                text : '推广方式',
-                sref : '#extension/way'
-            },{
-                text : '搜索推广',
-                sref : '#extension/search'
-            },{
-                text : '网盟推广',
-                sref : '#extension/alliance'
-            },{
-                text : '推广URL速度',
-                sref : '#extension/urlspeed'
+            stype: 1,
+            sref: 'extension',
+            child: [{
+                text: '推广概况',
+                sref: '#extension/survey'
+            }, {
+                text: '推广方式',
+                sref: '#extension/way'
+            }, {
+                text: '搜索推广',
+                sref: '#extension/search'
+            }, {
+                text: '网盟推广',
+                sref: '#extension/alliance'
+            }, {
+                text: '推广URL速度',
+                sref: '#extension/urlspeed'
             }]
-        },{
+        }, {
             title: '趋向分析',
             icon: 'glyphicon glyphicon-stats',
-            stype : 1,
-            sref : 'trend',
-            child : [{
-                text : '实时访客',
-                sref : '#trend/realtime'
-            },{
-                text : '今日统计',
-                sref : '#trend/today'
-            },{
-                text : '昨日统计',
-                sref : '#trend/yesterday'
-            },{
-                text : '最近30天',
-                sref : '#trend/month'
+            stype: 1,
+            sref: 'trend',
+            child: [{
+                text: '实时访客',
+                sref: '#trend/realtime'
+            }, {
+                text: '今日统计',
+                sref: '#trend/today'
+            }, {
+                text: '昨日统计',
+                sref: '#trend/yesterday'
+            }, {
+                text: '最近30天',
+                sref: '#trend/month'
             }]
-        },{
+        }, {
             title: '来源分析',
             icon: 'glyphicon glyphicon-globe',
-            stype : 1,
-            sref : 'source',
-            child : [{
-                text : '全部来源',
-                sref : '#source/source'
-            },{
-                text : '搜索引擎',
-                sref : '#source/searchengine'
-            },{
-                text : '搜索词',
-                sref : '#source/searchterm'
-            },{
-                text : '外部链接',
-                sref : '#source/externallinks'
+            stype: 1,
+            sref: 'source',
+            child: [{
+                text: '全部来源',
+                sref: '#source/source'
+            }, {
+                text: '搜索引擎',
+                sref: '#source/searchengine'
+            }, {
+                text: '搜索词',
+                sref: '#source/searchterm'
+            }, {
+                text: '外部链接',
+                sref: '#source/externallinks'
             }]
-        },{
+        }, {
             title: '页面分析',
             icon: 'glyphicon glyphicon-blackboard',
-            stype : 1,
-            sref : 'page',
-            child : [{
-                text : '受访页面',
-                sref : '#page/indexoverview'
-            },{
-                text : '入口页面',
-                sref : '#page/entrancepage'
-            },{
-                text : '页面标题',
-                sref : '#page/pagetitle'
-            },{
-                text : '离站链接',
-                sref : '#page/offsitelinks'
+            stype: 1,
+            sref: 'page',
+            child: [{
+                text: '受访页面',
+                sref: '#page/indexoverview'
+            }, {
+                text: '入口页面',
+                sref: '#page/entrancepage'
+            }, {
+                text: '页面标题',
+                sref: '#page/pagetitle'
+            }, {
+                text: '离站链接',
+                sref: '#page/offsitelinks'
             }]
-        },{
+        }, {
             title: '访客分析',
             icon: 'glyphicon glyphicon-signal',
-            stype : 1,
-            sref : 'visitor',
-            child : [{
-                text : '访客地图',
-                sref : '#visitor/provincemap'
-            },{
-                text : '设备环境',
-                sref : '#visitor/equipment'
-            },{
-                text : '新老访客',
-                sref : '#visitor/novisitors'
-            },{
-                text : '访客特征',
-                sref : '#visitor/visitorfeature'
+            stype: 1,
+            sref: 'visitor',
+            child: [{
+                text: '访客地图',
+                sref: '#visitor/provincemap'
+            }, {
+                text: '设备环境',
+                sref: '#visitor/equipment'
+            }, {
+                text: '新老访客',
+                sref: '#visitor/novisitors'
+            }, {
+                text: '访客特征',
+                sref: '#visitor/visitorfeature'
             }]
         }
     ];
