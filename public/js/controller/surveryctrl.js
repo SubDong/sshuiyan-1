@@ -15,26 +15,22 @@ app.controller('SurveyCtrl', function ($scope, $http, $q, $rootScope, areaServic
         $scope.reset();
         $scope.todayClass = true;
         $scope.day_offset = 0;
-        $scope.refreshData();
 
     };
     $scope.yesterday = function () {
         $scope.reset();
         $scope.yesterdayClass = true;
         $scope.day_offset = -1;
-        $scope.refreshData();
     };
     $scope.sevenDay = function () {
         $scope.reset();
         $scope.sevenDayClass = true;
         $scope.day_offset = -7;
-        $scope.refreshData();
     };
     $scope.month = function () {
         $scope.reset();
         $scope.monthClass = true;
         $scope.day_offset = -30;
-        $scope.refreshData();
     };
     $scope.open = function ($event) {
         $scope.reset();
@@ -158,206 +154,7 @@ app.controller('SurveyCtrl', function ($scope, $http, $q, $rootScope, areaServic
         }
     ];
 
-    // 默认投放指标
-    $scope.outQuota_ = "cost";
-    // 默认效果指标
-    $scope.effectQuota_ = "pv";
-
-    $scope.startDate_ = 0;
-    $scope.endDate_ = 0;
-
-    // 根据$scope.day_offset计算startDate和endDate
-    $scope.calDatePeriod = function () {
-        switch ($scope.day_offset) {
-            case 0:
-                $scope.startDate_ = 0;
-                $scope.endDate_ = 0;
-                break;
-            case -1:
-                $scope.startDate_ = -1;
-                $scope.endDate_ = -1;
-                break;
-            case -7:
-                $scope.startDate_ = -7;
-                $scope.endDate_ = -1;
-                break;
-            case -30:
-                $scope.startDate_ = -30;
-                $scope.endDate_ = -1;
-                break;
-            default :
-                break;
-        }
-    };
-
-    // 更改指标或日期时刷新数据
-    $scope.refreshData = function () {
-        $scope.calDatePeriod();
-
-        //$scope.doSearchByEffectQuota("1");
-
-        //$scope.getSemQuotaRealTimeData("baidu-bjjiehun2123585", "account", $scope.startDate_, $scope.endDate_, 0, 7, PERFORMANCE_DATA);
-
-        var timeInterval = setInterval(function () {
-            if ($scope.effectDataArray.length > 0 && $scope.semDataArray.length > 0) {
-                $scope.loadLineData();
-                clearInterval(timeInterval);
-            }
-        }, 500);
-    };
-
-    // 触发投放指标的事件
-    $scope.setOutQuota = function (outQuota) {
-        $scope.outQuota_ = outQuota.value;
-        $scope.refreshData();
-    };
-
-    // 触发效果指标的事件
-    $scope.setEffectQuota = function (effectQuota) {
-        $scope.effectQuota_ = effectQuota.value;
-        $scope.refreshData();
-    };
-
-    // 通过效果指标获取搜索结果
-    $scope.doSearchByEffectQuota = function (type) {
-        var interval = 24;
-        if ($scope.day_offset == -7 || $scope.day_offset == -30)
-            interval = -$scope.day_offset;
-        $http({
-            method: 'GET',
-            url: "/api/survey/?start=" + $scope.startDate_ + "&end=" + $scope.endDate_ + "&type=" + type + "&int=" + interval + "&qtype=" + $scope.effectQuota_
-        }).success(function (data, status) {
-            data = JSON.parse(eval('(' + data + ')').toString());
-
-            $scope.effectDataArray.length = 0;
-            $scope.timePeriod.length = 0;
-
-            data.forEach(function (result) {
-                result.quota.forEach(function (item) {
-                    $scope.effectDataArray.push(item);
-                });
-            });
-
-            data.forEach(function (result) {
-                result.key.forEach(function (item) {
-                    $scope.timePeriod.push(item);
-                });
-            });
-
-        }).error(function (error) {
-            console.log(error);
-        });
-    };
-
-    // 线型图的时间段
-    $scope.timePeriod = [];
-
-    // 加载线型图数据
-    $scope.loadLineData = function () {
-        var chart = echarts.init(document.getElementById("index_charts"));
-        //chart.showLoading({
-        //    text: "正在努力的读取数据中..."
-        //});
-        var option = {
-            tooltip: {
-                trigger: 'axis'
-            },
-            calculable: true,
-            legend: {
-                data: [
-                    $scope.quotaMap.get($scope.outQuota_),
-                    $scope.quotaMap.get($scope.effectQuota_)
-                ],
-                selectedMode: false
-            },
-            xAxis: [
-                {
-                    //type: 'category',
-                    boundaryGap: false,
-                    data: $scope.timePeriod
-                }
-            ],
-            yAxis: [
-                {
-                    //name : '降水量',
-                    axisLabel: {
-                        formatter: function (value) {
-                            switch ($scope.outQuota_) {
-                                case 'cost':
-                                    return value + '元';
-                                    break;
-                                case 'impression':
-                                    return value + '次';
-                                    break;
-                                case 'click':
-                                    return value + '次';
-                                    break;
-                                case 'ctr':
-                                    return value + '%';
-                                    break;
-                                case 'cpc':
-                                    return value + '元';
-                                    break;
-                                default :
-                                    break;
-                            }
-                        }
-                    }
-                },
-                {
-                    //type: 'value',
-                    //name: '温度',
-                    axisLabel: {
-                        formatter: function (value) {
-                            switch ($scope.effectQuota_) {
-                                case "pv":
-                                    return value + '次';
-                                    break;
-                                case "vc":
-                                    return value + '次';
-                                    break;
-                                case "avgTime":
-                                    return parseFloat(value) / 1000 + "秒";
-                                    break;
-                                case "outRate":
-                                    return value + '%';
-                                    break;
-                                case "arrivedRate":
-                                    return value + '%';
-                                    break;
-                                case "pageConversion":
-                                    return value + '次';
-                                    break;
-                                case "eventConversion":
-                                    return value + '次';
-                                    break;
-                            }
-                        }
-                    }
-                }
-            ],
-            series: [
-                {
-                    name: $scope.quotaMap.get($scope.outQuota_),
-                    type: 'line',
-                    data: $scope.semDataArray,
-                    itemStyle: {normal: {areaStyle: {type: 'default'}}}
-                },
-                {
-                    name: $scope.quotaMap.get($scope.effectQuota_),
-                    type: 'line',
-                    yAxisIndex: 1,
-                    data: $scope.effectDataArray,
-                    itemStyle: {normal: {areaStyle: {type: 'default'}}}
-                }
-            ]
-        };
-        chart.setOption(option, true);
-    };
-
     $scope.surveyData1 = [];
-
-    $scope.surveyData = [];
 
     // 推广概况获取
     $scope.doSearch = function (startDate, endDate, type) {
@@ -376,14 +173,14 @@ app.controller('SurveyCtrl', function ($scope, $http, $q, $rootScope, areaServic
 
             $scope.surveyData1.push(obj);
 
-            $scope.getAccountSemRealTimeData("jiehun", "baidu-bjjiehun2123585", "account", -1, -1, 0);
+            $scope.getSemAccountData("jiehun", "baidu-bjjiehun2123585", "account", -1, -1, 0);
         }).error(function (error) {
             console.log(error);
         });
     };
 
     // 帐户实时数据报告
-    $scope.getAccountSemRealTimeData = function (user, baiduAccount, type, startOffset, endOffset, device) {
+    $scope.getSemAccountData = function (user, baiduAccount, type, startOffset, endOffset, device) {
         var url = SEM_API_URL + user + "/" + baiduAccount + "/" + type + "?startOffset=" + startOffset + "&endOffset=" + endOffset + "&device=" + device;
         $http({
             method: 'GET',
@@ -396,47 +193,6 @@ app.controller('SurveyCtrl', function ($scope, $http, $q, $rootScope, areaServic
             obj["click"] = data[0].click;
 
             $scope.gridOptions.data = [obj];
-        });
-    };
-
-    $scope.semDataArray = [];   // 投放指标数据
-    $scope.effectDataArray = [];    // 效果指标数据
-
-    // 根据投放指标获取相应的SEM实时数据报告
-    $scope.getSemQuotaRealTimeData = function (bun, type, startDate, endDate, device, unitOfTime, performanceData) {
-        var url = SEM_API_URL + "?bun=" + bun + "&type=" + type + "&start=" + startDate + "&end=" + endDate + "&device=" + device + "&uot=" + unitOfTime + "&pd=" + performanceData;
-
-        $http({
-            method: 'GET',
-            url: url
-        }).success(function (data, status) {
-            var index = 0;
-
-            switch ($scope.outQuota_) {
-                case "cost":
-                    index = 0;
-                    break;
-                case "impression":
-                    index = 1;
-                    break;
-                case "click":
-                    index = 2;
-                    break;
-                case "ctr":
-                    index = 3;
-                    break;
-                case "cpc":
-                    index = 4;
-                    break;
-                default :
-                    break;
-            }
-
-            $scope.semDataArray.length = 0;
-            data.forEach(function (item, i) {
-                $scope.semDataArray.push(item.kPIs[index]);
-            });
-
         });
     };
 
@@ -622,7 +378,6 @@ app.controller('SurveyCtrl', function ($scope, $http, $q, $rootScope, areaServic
             });
             return tmp;
         }).then(function (tmpResult) {
-            console.log(JSON.stringify(tmpResult));
             tmpResult[0].forEach(function (item) {
                 var esRegionArr = tmpResult[1][0].key;
                 var regionName = item.regionName;
@@ -664,30 +419,14 @@ app.controller('SurveyCtrl', function ($scope, $http, $q, $rootScope, areaServic
         $scope.quotaMap.put("ctr", "点击率");
         $scope.quotaMap.put("cpc", "平均点击价格");
 
-        //var performanceData = "cost,impression,click,ctr,cpc";
-        //var now = new Date().valueOf();
-        //$scope.doSearch(0, 0, trackId, "t");
-        //$scope.getAccountSemRealTimeData("baidu-bjjiehun2123585", "account", 0, 0, 0, 5, PERFORMANCE_DATA);
         $scope.doSearch(-1, -1, trackId);
-        $scope.loadGridOptions1Data("jiehun", "baidu-bjjiehun2123585", "account", -1, -1, -1, 1);
-        $scope.loadGridOptions2Data("jiehun", "baidu-bjjiehun2123585", "account", -1, -1, -1, 1);
-        $scope.loadGridOptions3Data("jiehun", "baidu-bjjiehun2123585", "account", -1, -1, 1);
-        $scope.loadGridOptions4Data("jiehun", "baidu-bjjiehun2123585", "region", -1, -1, -1, 1);
-
-        //$scope.doSearchByEffectQuota("1");
-        //$scope.getSemQuotaRealTimeData("baidu-bjjiehun2123585", "account", $scope.startDate_, $scope.endDate_, 0, 7, PERFORMANCE_DATA);
-
-        var timeInterval = setInterval(function () {
-            if ($scope.effectDataArray.length > 0 && $scope.semDataArray.length > 0) {
-                $scope.loadLineData();
-                clearInterval(timeInterval);
-            }
-        }, 500);
-
+        $scope.loadGridOptions1Data("jiehun", "baidu-bjjiehun2123585", "account", -1, -1, -1, trackId);
+        $scope.loadGridOptions2Data("jiehun", "baidu-bjjiehun2123585", "account", -1, -1, -1, trackId);
+        $scope.loadGridOptions3Data("jiehun", "baidu-bjjiehun2123585", "account", -1, -1, trackId);
+        $scope.loadGridOptions4Data("jiehun", "baidu-bjjiehun2123585", "region", -1, -1, -1, trackId);
     };
 
-
     // initialize
-    $scope.init("1");
+    $scope.init("2");
 
 });
