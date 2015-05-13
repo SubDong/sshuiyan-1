@@ -258,15 +258,31 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, re
     }
     //设置来源终端
     $scope.setTerminal = function (a) {
-        if (a == 0) $rootScope.tableSwitch.tableFilter = undefined;
+        if (a == 0) $rootScope.tableSwitch.tableFilter = null;
         if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[0]}]";
         if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[1]}]";
         $scope.isJudge = false;
         $scope.targetSearch();
     };
+    //设置（外部链接）设备过滤
+    $scope.setExLinkTerminal = function (a) {
+        if (a == 0) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[3]}]";
+        if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[0]},{\"rf_type\":[3]}]";
+        if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[1]},{\"rf_type\":[3]}]";
+        $scope.isJudge = false;
+        $scope.targetSearch();
+    };
+    //设置（搜索引擎）设备过滤
+    $scope.setSearchEngineTerminal = function (a) {
+        if (a == 0) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[2]}]";
+        if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[0]},{\"rf_type\":[2]}]";
+        if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[1]},{\"rf_type\":[2]}]";
+        $scope.isJudge = false;
+        $scope.targetSearch();
+    };
     //设置来源过滤
     $scope.setSource = function (a) {
-        if (a == 0) $rootScope.tableSwitch.tableFilter = undefined;
+        if (a == 0) $rootScope.tableSwitch.tableFilter = null;
         if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[1]}]";
         if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[2]}]";
         if (a == 3) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[3]}]";
@@ -275,7 +291,7 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, re
     };
     //设置访客来源
     $scope.setVisitors = function (a) {
-        if (a == 0) $rootScope.tableSwitch.tableFilter = undefined;
+        if (a == 0) $rootScope.tableSwitch.tableFilter = null;
         if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"ct\":[0]}]";
         if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"ct\":[1]}]";
         $scope.isJudge = false;
@@ -289,7 +305,7 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, re
         if("全部" == area) {
             $rootScope.tableSwitch.tableFilter = null;
         } else {
-            $rootScope.tableSwitch.tableFilter = "[{\"area\":[\"" + area + "\"]}]";
+            $rootScope.tableSwitch.tableFilter = "[{\"region\":[\"" + area + "\"]}]";
         }
         $scope.isJudge = false;
         $scope.targetSearch();
