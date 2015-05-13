@@ -575,7 +575,6 @@ app.directive('sshExpander',function($location){
                 } else {
                     scope.sshPath = "#" + temp_path.substring(1);
                 }
-                console.log(scope.sshPath);
             };
             scope.getSshPath();
         }

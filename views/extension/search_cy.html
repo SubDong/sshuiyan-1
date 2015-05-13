@@ -15,7 +15,7 @@
         </div>
     </div>
     <div class="my_concent">
-        <ssh-date-show type="today" dimension="br" sem-type="creative"></ssh-date-show>
+        <ssh-date-show type="yesterday" dimension="br" sem-type="creative"></ssh-date-show>
         <div class="index_chart">
             <div id="indicators_charts_legend"></div>
             <div id="indicators_charts" style="height:400px;"></div>
@@ -93,7 +93,7 @@
                                 <li>
                                     <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
                                         <div role="group" class="btn-group">
-                                            <ui-select ng-model="city.selected" theme="selectize" class="fl btn-pv" style="width: 80px;">
+                                            <ui-select ng-model="city.selected" theme="selectize" class="fl btn-pv" data-ng-change="setAreaFilter(city.selected.name)" style="width: 80px;">
                                                 <ui-select-match placeholder="全部">{{$select.selected.name}}</ui-select-match>
                                                 <ui-select-choices repeat="city in citys">
                                                     <span ng-bind-html="city.name"></span>
@@ -103,9 +103,9 @@
 
                                     </div>
                                 </li>
-                                <li><a href="#">北京</a></li>
-                                <li><a href="#">上海</a></li>
-                                <li><a href="#">广州</a></li>
+                                <li><a href="javascript:void(0)" data-ng-click="setAreaFilter('北京')">北京</a></li>
+                                <li><a href="javascript:void(0)" data-ng-click="setAreaFilter('上海')">上海</a></li>
+                                <li><a href="javascript:void(0)" data-ng-click="setAreaFilter('广州')">广州</a></li>
                             </ul>
                         </div>
                     </div>

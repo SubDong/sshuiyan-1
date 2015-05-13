@@ -65,7 +65,7 @@
                                 <li><span>地域过滤:</span></li>
                                 <li>
                                     <div role="group" class="btn-group">
-                                        <ui-select ng-model="city.selected" theme="selectize" class="fl btn-pv"
+                                        <ui-select ng-model="city.selected" theme="selectize" class="fl btn-pv" data-ng-change="setAreaFilter(city.selected.name)"
                                                    style="width: 100px;">
                                             <ui-select-match placeholder="全部">{{$select.selected.name}}
                                             </ui-select-match>
@@ -75,9 +75,9 @@
                                         </ui-select>
                                     </div>
                                 </li>
-                                <li><a href="#">北京</a></li>
-                                <li><a href="#">上海</a></li>
-                                <li><a href="#">广州</a></li>
+                                <li><a href="javascript:void(0)" data-ng-click="setAreaFilter('北京')">北京</a></li>
+                                <li><a href="javascript:void(0)" data-ng-click="setAreaFilter('上海')">上海</a></li>
+                                <li><a href="javascript:void(0)" data-ng-click="setAreaFilter('广州')">广州</a></li>
                             </ul>
                         </div>
                     </div>

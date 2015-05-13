@@ -281,7 +281,19 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, re
         $scope.isJudge = false;
         $scope.targetSearch();
     };
-
+    //设置地域过滤
+    $scope.setAreaFilter = function(area) {
+        if(!$rootScope.tableSwitch) {
+            return;
+        }
+        if("全部" == area) {
+            $rootScope.tableSwitch.tableFilter = null;
+        } else {
+            $rootScope.tableSwitch.tableFilter = "[{\"area\":[\"" + area + "\"]}]";
+        }
+        $scope.isJudge = false;
+        $scope.targetSearch();
+    };
     /**
      *
      * @param start 开始时间

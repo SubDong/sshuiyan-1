@@ -151,7 +151,7 @@ app.controller('searchctr', function ($scope, $rootScope, requestService, areaSe
  * 搜索推广。单元
  */
 app.controller('searchDyCtr', function ($scope, $rootScope, requestService, areaService, $http) {
-        $scope.todayClass = true;
+        $scope.yesterdayClass = true;
 
         //table默认信息配置
         $rootScope.tableTimeStart = 0;
@@ -223,7 +223,7 @@ app.controller('searchDyCtr', function ($scope, $rootScope, requestService, area
  * 搜索推广。关键词
  */
 app.controller('searchGjcCtr', function ($scope, $rootScope, requestService, areaService, $http) {
-        $scope.todayClass = true;
+        $scope.yesterdayClass = true;
 
         //table默认信息配置
         $rootScope.tableTimeStart = 0;
@@ -295,7 +295,7 @@ app.controller('searchGjcCtr', function ($scope, $rootScope, requestService, are
  * 搜索推广。创意
  */
 app.controller('searchCyCtr', function ($scope, $rootScope, requestService, areaService, $http) {
-        $scope.todayClass = true;
+        $scope.yesterdayClass = true;
 
         //table默认信息配置
         $rootScope.tableTimeStart = 0;
@@ -400,7 +400,7 @@ app.controller('searchCyCtr', function ($scope, $rootScope, requestService, area
  * 搜索推广。搜索词
  */
 app.controller('searchSscCtr', function ($scope, $rootScope, requestService, areaService, $http) {
-        $scope.todayClass = true;
+        $scope.yesterdayClass = true;
 
         //table默认信息配置
         $rootScope.tableTimeStart = 0;
@@ -505,7 +505,7 @@ app.controller('searchSscCtr', function ($scope, $rootScope, requestService, are
  * 搜索推广。推广URL
  */
 app.controller('searchTgCtr', function ($scope, $rootScope, requestService, areaService, $http) {
-        $scope.todayClass = true;
+        $scope.yesterdayClass = true;
 
         //table默认信息配置
         $rootScope.tableTimeStart = 0;
