@@ -240,6 +240,7 @@ app.directive("sshDateShow", function ($http, $rootScope, SEM_API_URL) {
                 // 先判断是否存在SEO指标
                 var seoQuotas = [];
                 var costObj, impressionObj, clickObj, ctrObj, cpcObj, cpmObj, conversionObj;
+                // 根据用户所选择的指标，判断是否具有SEO指标，如果存在SEO指标则构建该指标的对象并且存储该指标
                 angular.forEach(scope.ds_dateShowQuotasOption, function (e) {
                     switch (e) {
                         case "cost":
@@ -272,65 +273,50 @@ app.directive("sshDateShow", function ($http, $rootScope, SEM_API_URL) {
                             break;
                     }
                 });
+                // 存在SEO指标，进行查询
                 if (seoQuotas.length > 0) {
                     var stringQuotas = seoQuotas.toString().replace(/,/g, "-") + "-";
                     $http.get(SEM_API_URL + "jiehun/baidu-bjjiehun2123585/" + scope.ssh_seo_type + "/" + stringQuotas + "?startOffset=" + scope.ds_start + "&endOffset=" + scope.ds_end).success(function (result) {
+                        // 对指标的值求和
+                        function sumValue(obj, value) {
+                            if (obj) {
+                                obj.value += Number(value);
+                            }
+                        }
+
                         var count = 0;
                         angular.forEach(result, function (r) {
                             count++;
-                            if (costObj) {
-                                costObj.value += Number(r.cost);
-                            }
-                            if (impressionObj) {
-                                impressionObj.value += Number(r.impression);
-                            }
-                            if (clickObj) {
-                                clickObj.value += Number(r.click);
-                            }
-                            if (ctrObj) {
-                                ctrObj.value += Number(r.ctr);
-                            }
-                            if (cpcObj) {
-                                cpcObj.value += Number(r.cpc);
-                            }
-                            if (cpmObj) {
-                                cpmObj.value += Number(r.cpm);
-                            }
-                            if (conversionObj) {
-                                conversionObj.value += Number(r.conversion);
-                            }
+                            sumValue(costObj, r.cost);
+                            sumValue(impressionObj, r.impression);
+                            sumValue(clickObj, r.click);
+                            sumValue(ctrObj, r.ctr);
+                            sumValue(cpcObj, r.cpc);
+                            sumValue(cpmObj, r.cpm);
+                            sumValue(conversionObj, r.conversion);
                         });
-                        if (costObj) {
-                            costObj.value = costObj.value.toFixed(2);
-                            scope.dateShowArray.push(costObj);
-                        }
-                        if (impressionObj) {
-                            impressionObj.value = impressionObj.value.toFixed(2);
-                            scope.dateShowArray.push(impressionObj);
-                        }
-                        if (clickObj) {
-                            clickObj.value = clickObj.value.toFixed(2);
-                            scope.dateShowArray.push(clickObj);
-                        }
-                        if (ctrObj) {
-                            ctrObj.value = ctrObj.value.toFixed(2);
-                            scope.dateShowArray.push(ctrObj);
-                        }
-                        if (cpcObj) {//平均点击价格
-                            if (count == 0) {
-                                cpcObj.value = "--";
-                            } else {
-                                cpcObj.value = (cpcObj.value / count).toFixed(2);
+                        // 根据不同SEO指标的算法，进行指标对象值的计算
+                        calculateValue(costObj, "2");
+                        calculateValue(impressionObj, "2");
+                        calculateValue(clickObj, "1");
+                        calculateValue(ctrObj, "2");
+                        calculateValue(cpcObj, "3");
+                        calculateValue(cpmObj, "2");
+                        calculateValue(conversionObj, "2");
+                        function calculateValue(obj, type) {
+                            if (!obj) {
+                                return;
                             }
-                            scope.dateShowArray.push(cpcObj);
-                        }
-                        if (cpmObj) {
-                            cpmObj.value = cpmObj.value.toFixed(2);
-                            scope.dateShowArray.push(cpmObj);
-                        }
-                        if (conversionObj) {
-                            conversionObj.value = conversionObj.value.toFixed(2);
-                            scope.dateShowArray.push(conversionObj);
+                            if (type == "1") {// 直接获取值
+                                obj.value = obj.value.toFixed(2);
+                            }
+                            if (type == "2") {// 保留2位小数
+                                obj.value = obj.value.toFixed(2);
+                            }
+                            if (type == "3") {// 计算平均值
+                                obj.value = count == 0 ? "--" : (cpcObj.value / count).toFixed(2);
+                            }
+                            scope.dateShowArray.push(obj);
                         }
                     });
                 }
@@ -553,6 +539,7 @@ app.directive('sshAccordion', function () {
         transclude: true,
         controller: function () {
             var expanders = [];
+            // 收起控件组里面的其余控件
             this.gotOpended = function (selectedExpander) {
                 angular.forEach(expanders, function (e) {
                     if (selectedExpander != e) {
@@ -566,6 +553,9 @@ app.directive('sshAccordion', function () {
         }
     }
 });
+/**
+ * 手风琴内部组件。
+ */
 app.directive('sshExpander', function ($location) {
     return {
         restrict: 'E',
@@ -581,8 +571,11 @@ app.directive('sshExpander', function ($location) {
             type: '=etype'
         },
         link: function (scope, element, attris, accordionController) {
+            // 用于展开和收起导航条
             scope.showText = false;
+            // 加入展开项到accordion控件组
             accordionController.addExpander(scope);
+            // 展开或收起操作
             scope.toggleText = function () {
                 scope.showText = !scope.showText;
                 accordionController.gotOpended(scope);
@@ -590,12 +583,14 @@ app.directive('sshExpander', function ($location) {
             if ($location.path().indexOf(scope.sref) != -1) {
                 scope.showText = true;
             }
+            // 路径改变成功，重新获取当前的页面路径
             scope.$on("$locationChangeSuccess", function (e, n, o) {
                 scope.getSshPath();
             });
             // 获取参数path
             scope.getSshPath = function () {
                 var temp_path = $location.path();
+                // 百度推广-搜索推广，URL含有下划线。判断时需要取下划线之前的内容
                 var _index = temp_path.indexOf("_");
                 if (_index != -1) {
                     scope.sshPath = "#" + temp_path.substring(1, _index);
