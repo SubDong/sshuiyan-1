@@ -5,7 +5,8 @@
 /*console.log('init menu.')*/
 app.controller('menuctr', function ($scope, $location) {
     $scope.oneAtATime = true;
-    $scope.array = ["index", "extension", "trend", "source", "page", "visitor","value"];
+    // 项目导航模块。用于页面刷新时，当前选中模块index的获取
+    $scope.array = ["index", "extension", "trend", "source", "page", "visitor", "value"];
     $scope.selectRestaurant = function (row) {
         $scope.selectedRow = row;
     };

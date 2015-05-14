@@ -310,6 +310,20 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, re
         $scope.isJudge = false;
         $scope.targetSearch();
     };
+    //设置（搜索引擎）地域过滤
+    $scope.setSearchEngineAreaFilter = function(area) {
+        if(!$rootScope.tableSwitch) {
+            return;
+        }
+        if("全部" == area) {
+            $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[2]}]";;
+        } else {
+            $rootScope.tableSwitch.tableFilter = "[{\"region\":[\"" + area + "\"]},{\"rf_type\":[2]}]";
+        }
+        $scope.isJudge = false;
+        $scope.targetSearch();
+    };
+
     /**
      *
      * @param start 开始时间
