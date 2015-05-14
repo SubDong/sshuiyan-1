@@ -125,7 +125,6 @@ app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
         .state('search_dy', {
             url: "/extension/search_dy",
             templateUrl: "../extension/search_dy.html",
-            controller: "searchDyCtr"
         })
         .state('search_gjc', {
             url: "/extension/search_gjc",
@@ -141,8 +140,7 @@ app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
         })
         .state('search_tg_url', {
             url: "/extension/search_tg_url",
-            templateUrl: "../extension/search_tg_url.html",
-            controller: ""
+            templateUrl: "../extension/search_tg_url.html"
         })
         .state('way', {
             url: "/extension/way",
