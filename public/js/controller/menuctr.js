@@ -5,7 +5,7 @@
 /*console.log('init menu.')*/
 app.controller('menuctr', function ($scope, $location) {
     $scope.oneAtATime = true;
-    $scope.array = ["index", "extension", "trend", "source", "page", "visitor"];
+    $scope.array = ["index", "extension", "trend", "source", "page", "visitor","value"];
     $scope.selectRestaurant = function (row) {
         $scope.selectedRow = row;
     };
