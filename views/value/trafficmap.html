@@ -4,56 +4,58 @@
         <refresh></refresh>
     </div>
     <div class="my_concent">
-        <div class="linkstree">
+        <div class="linkstree exchangetree">
             <div class="linkstree_middle">
-                <div class="linkstree_left_line fl"></div>
-                <div class="linkstree_middle_left fl"></div>
-                <div class="linkstree_middle_center fl">
-                    <div class="linkstree_center_top">
-                        <a href="#">{{offsitelinks.name||"http://127.0.0.1:8000/#/page/offsitelinks"}}</a><span class="caret fr" ng-click="isCollapsed = !isCollapsed"></span>
-                        <div class="link_tree_mode" collapse="isCollapsed">
-                            <div class="link_tree_row"></div>
-                            <div class="link_tree_value">
-                                <ul>
-                                    <li ng-repeat="offsitelink in offsitelinks" ng-click="weblink()">{{offsitelink.name}}</li>
-                                </ul>
+                <div class="exchangetree_middle_top">
+                    焦点频道
+                </div>
+                <div class="exchangetree_middle">
+                    <div class="linkstree_left_line fl"></div>
+                    <div class="linkstree_middle_left fl"></div>
+                    <div class="linkstree_middle_center fl">
+                        <div class="linkstree_center_top">
+                            <a href="#">{{offsitelinks.name||"www.dyxunlei.com"}}</a><span class="caret fr" ng-click="isCollapsed = !isCollapsed"></span>
+                            <div class="link_tree_mode" collapse="isCollapsed">
+                                <div class="link_tree_row"></div>
+                                <div class="link_tree_value">
+                                    <ul>
+                                        <li ng-repeat="offsitelink in offsitelinks" ng-click="weblink()">{{offsitelink.name}}</li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="linkstree_center_bottom">
-                        <p><span>浏览量</span><b>200</b></p>
-                        <p><span>退出率</span><b>100%</b></p>
-                        <div class="linktree_set btn-lg" >
-                            <span aria-hidden="true" class="glyphicon glyphicon-cog large"  ng-click="open()"></span>
+                        <div class="linkstree_center_bottom">
+                            <p><span>进入次数 :</span><b>200</b></p>
+                            <p><span>PV:</span><b>100%</b></p>
+                            <p><span>UV: </span><b>100%</b></p>
                         </div>
                     </div>
+                    <div class="linkstree_middle_right fl"></div>
                 </div>
-                <div class="linkstree_middle_right fl"></div>
+                <div class="exchangetree_middle_bottom">
+                    展示焦点频道TOP5的来源和去向，点击图标    可将该频道作为焦点频道
+                </div>
             </div>
             <div class="linkstree_right">
                 <div class="linkstree_right_left">
                 </div>
                 <div class="linkstree_right_right">
                     <p><b>离开网站</b></p>
-                    <p><span>退出率</span><span>100%</span></p>
+                    <p><span>输出PV:</span><span>100%</span></p>
+                    <p><span>输出UV::</span><span>100%</span></p>
                 </div>
             </div>
             <div class="linkstree_left fl">
                 <div class="linkstree_left_more fl">
-                    <div class="linkstree_left_list" ng-repeat="link in links " ng-mouseover="hoverIn()" ng-mouseleave="hoverOut()">
+                    <div class="linkstree_left_list" ng-repeat="link in links ">
                         <div class="linkstree_left_list_left fl"  >
-                            <a href="{{link.name}}">{{ link.name }}</a>
+                            <p>{{ link.name }}</p>
+                            <p><span>进入次数：</span><span>{{ link.count}}</span></p>
+                            <p><span>带来UV：</span><span>{{ link.ratio }}</span></p>
                         </div>
                         <div class="linkstree_left_list_left_right fl">
                         </div>
                         <div class="linkstree_left_list_left_line fl">
-                        </div>
-                        <div class="link_tree_mode" ng-show="hoverEdit">
-                            <div class="link_tree_row"></div>
-                            <div class="link_tree_value">
-                                <p><span>带来浏览量</span><span>{{ link.count}}</span></p>
-                                <p><span>占比</span><span>{{ link.ratio }}</span></p>
-                            </div>
                         </div>
                     </div>
                 </div>
