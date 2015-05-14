@@ -156,5 +156,12 @@ app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
             url: "/extension/alliance",
             templateUrl: "../extension/alliance.html"
         })
-
+        .state('exchange', {
+            url: "/value/exchange",
+            templateUrl: "../value/exchange.html"
+        })
+        .state('trafficmap', {
+            url: "/value/trafficmap",
+            templateUrl: "../value/trafficmap.html"
+        })
 });

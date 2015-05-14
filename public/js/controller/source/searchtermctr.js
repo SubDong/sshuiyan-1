@@ -36,7 +36,6 @@ app.controller('searchtermctr', function ($scope, $rootScope, $http, requestServ
             $rootScope.targetSearch();
         });
 
-
         //$scope.initMap();
         //点击显示指标
         $scope.visible = true;
