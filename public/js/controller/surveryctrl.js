@@ -3,7 +3,7 @@
  */
 app.controller('SurveyCtrl', function ($scope, $http, $q, $rootScope, areaService, SEM_API_URL) {
     $scope.day_offset = 0;    // 默认是今天(值为0), 值为-1代表昨天, 值为-7代表最近7天, 值为-30代表最近30天
-    $scope.todayClass = true;
+    $scope.yesterdayClass = true;
     $scope.reset = function () {
         $scope.todayClass = false;
         $scope.yesterdayClass = false;
@@ -11,26 +11,32 @@ app.controller('SurveyCtrl', function ($scope, $http, $q, $rootScope, areaServic
         $scope.monthClass = false;
         $scope.definClass = false;
     };
-    $scope.today = function () {
-        $scope.reset();
-        $scope.todayClass = true;
-        $scope.day_offset = 0;
-
-    };
+    $scope.selectedQuota = ["cost", "vc"];
+    $scope.start = -1;
+    $scope.end = -1;
     $scope.yesterday = function () {
         $scope.reset();
         $scope.yesterdayClass = true;
         $scope.day_offset = -1;
+        $scope.start = -1;
+        $scope.end = -1;
+        $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $scope.start, $scope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
     };
     $scope.sevenDay = function () {
         $scope.reset();
         $scope.sevenDayClass = true;
         $scope.day_offset = -7;
+        $scope.start = -7;
+        $scope.end = -1;
+        $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $scope.start, $scope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
     };
     $scope.month = function () {
         $scope.reset();
         $scope.monthClass = true;
         $scope.day_offset = -30;
+        $scope.start = -30;
+        $scope.end = -1;
+        $scope.initGrid($rootScope.user,$rootScope.baiduAccount, "account", $scope.start, $scope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
     };
     $scope.open = function ($event) {
         $scope.reset();
@@ -153,6 +159,169 @@ app.controller('SurveyCtrl', function ($scope, $http, $q, $rootScope, areaServic
             value: "avgTime"
         }
     ];
+
+    // 默认投放指标
+    $scope.outQuota_ = "cost";
+    // 默认效果指标
+    $scope.effectQuota_ = "pv";
+
+    $scope.startDate_ = 0;
+    $scope.endDate_ = 0;
+
+    // 根据$scope.day_offset计算startDate和endDate
+    $scope.calDatePeriod = function () {
+        switch ($scope.day_offset) {
+            case 0:
+                $scope.startDate_ = 0;
+                $scope.endDate_ = 0;
+                break;
+            case -1:
+                $scope.startDate_ = -1;
+                $scope.endDate_ = -1;
+                break;
+            case -7:
+                $scope.startDate_ = -7;
+                $scope.endDate_ = -1;
+                break;
+            case -30:
+                $scope.startDate_ = -30;
+                $scope.endDate_ = -1;
+                break;
+            default :
+                break;
+        }
+    };
+
+    // 更改指标或日期时刷新数据
+    $scope.refreshData = function () {
+        $scope.calDatePeriod();
+
+        //$scope.doSearchByEffectQuota("1");
+
+        //$scope.getSemQuotaRealTimeData("baidu-bjjiehun2123585", "account", $scope.startDate_, $scope.endDate_, 0, 7, PERFORMANCE_DATA);
+
+        var timeInterval = setInterval(function () {
+            if ($scope.effectDataArray.length > 0 && $scope.semDataArray.length > 0) {
+                $scope.loadLineData();
+                clearInterval(timeInterval);
+            }
+        }, 500);
+    };
+    $scope.charts = [
+        {
+            config: {
+                legendId: "index_charts_legend",
+                //legendData: ["浏览量(PV)", "访客数(UV)", "跳出率", "抵达率", "平均访问时长", "页面转化"],//显示几种数据
+                //legendAllowCheckCount: 2,
+                //legendClickListener: $scope.onLegendClickListener,
+                //legendDefaultChecked: [0, 1],
+                id: "index_charts",
+                bGap: false,//首行缩进
+                min_max: false,
+                chartType: "line",//图表类型
+                keyFormat: 'none',
+                noFormat: true,
+                dataKey: "key",//传入数据的key值
+                dataValue: "quota"//传入数据的value值
+            }
+        }
+    ]
+    $scope.initGrid = function (user, baiduAccount, type, startOffset, endOffset, quota, estype) {
+        var semRegionRequest = $http.get(SEM_API_URL + user + "/" + baiduAccount + "/" + type + "/" + quota + "-?startOffset=" + startOffset + "&endOffset=" + endOffset);
+        var huiyanRequest = $http.get("/api/charts?start=" + startOffset + "&end=" + endOffset + "&dimension=period&userType=2&type=" + estype);
+        $q.all([semRegionRequest, huiyanRequest]).then(function (final_result) {
+            var chart_result = [];
+            if (startOffset == -1 && endOffset == -1) {
+                var tmp = [];
+                var _semData = {};
+                tmp.push(final_result[0].data[0][quota]);
+                _semData["label"] = chartUtils.convertChinese(quota);
+                _semData["quota"] = tmp;
+                _semData["key"] = [final_result[0].data[0].date];
+                chart_result.push(_semData);
+                var esJson = JSON.parse(eval("(" + final_result[1].data + ")").toString());
+                var totalCount = 0;
+                var _esData = {};
+                esJson[0].quota.forEach(function (e) {
+                    totalCount += Number(e);
+                });
+                if (estype == "outRate") {
+                    totalCount = parseFloat(totalCount / esJson[0].quota.length).toFixed(2);
+                }
+                _esData["label"] = chartUtils.convertChinese(estype);
+                _esData["quota"] = [totalCount];
+                _esData["key"] = [final_result[0].data[0].date];
+                chart_result.push(_esData);
+                $scope.charts[0].config.chartType = "bar";
+                $scope.charts[0].config.bGap = true;
+                $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
+                chartUtils.addStep(chart_result, 24);//填充空白
+                cf.renderChart(chart_result, $scope.charts[0].config);
+            } else {
+                var esJson = JSON.parse(eval("(" + final_result[1].data + ")").toString());
+                chartUtils.formatDate(esJson);//格式化日期
+                chartUtils.addSemData(esJson, final_result[0], quota);
+                $scope.charts[0].config.chartType = "line";
+                $scope.charts[0].config.bGap = false;//首行缩进
+                $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
+                cf.renderChart(esJson, $scope.charts[0].config);
+            }
+        });
+    }
+    $scope.yesterday();
+
+    // 触发投放指标的事件
+    $scope.setOutQuota = function (outQuota) {
+        $scope.outQuota_ = outQuota.value;
+        $scope.selectedQuota[0] = outQuota.value;
+        $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $scope.start, $scope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
+        //console.log(outQuota.value);
+        //$scope.refreshData();
+        //$scope.init("jiehun", "baidu-bjjiehun2123585", "account", -1, -1, -1, 1);
+    };
+
+    // 触发效果指标的事件
+    $scope.setEffectQuota = function (effectQuota) {
+        $scope.effectQuota_ = effectQuota.value;
+        $scope.selectedQuota[1] = effectQuota.value
+        $scope.initGrid($rootScope.user,$rootScope.baiduAccount, $scope.start, $scope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
+        //$scope.refreshData();
+    };
+
+    // 通过效果指标获取搜索结果
+    $scope.doSearchByEffectQuota = function (type) {
+        var interval = 24;
+        if ($scope.day_offset == -7 || $scope.day_offset == -30)
+            interval = -$scope.day_offset;
+        $http({
+            method: 'GET',
+            url: "/api/survey/?start=" + $scope.startDate_ + "&end=" + $scope.endDate_ + "&type=" + type + "&int=" + interval + "&qtype=" + $scope.effectQuota_
+        }).success(function (data, status) {
+            data = JSON.parse(eval('(' + data + ')').toString());
+
+            $scope.effectDataArray.length = 0;
+            $scope.timePeriod.length = 0;
+
+            data.forEach(function (result) {
+                result.quota.forEach(function (item) {
+                    $scope.effectDataArray.push(item);
+                });
+            });
+
+            data.forEach(function (result) {
+                result.key.forEach(function (item) {
+                    $scope.timePeriod.push(item);
+                });
+            });
+
+        }).error(function (error) {
+            console.log(error);
+        });
+    };
+
+    // 线型图的时间段
+    $scope.timePeriod = [];
+
 
     $scope.surveyData1 = [];
 
@@ -404,8 +573,6 @@ app.controller('SurveyCtrl', function ($scope, $http, $q, $rootScope, areaServic
 
     // 初始化操作
     $scope.init = function (trackId) {
-        $scope.today();
-
         $scope.quotaMap = new Map();
         $scope.quotaMap.put("pv", "浏览量(PV)");
         $scope.quotaMap.put("vc", "访问次数");

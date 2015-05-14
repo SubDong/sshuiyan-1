@@ -155,6 +155,11 @@ var op = {
             ],
             series: []
         };
+        if (chartConfig.auotHidex) {
+            option.xAxis[0]["axisLabel"] = {
+                interval: 0
+            }
+        }
         if (chartConfig.chartType == "line") {
             option["color"] = ['#ff7f50', '#87cefa']
         }
@@ -213,6 +218,7 @@ var op = {
         chartObj.setOption(option);
     },
     barChart: function (data, chartConfig) {
+        chartConfig.interval = 0;
         this.lineChart(data, chartConfig);
     },
     pieChart: function (data, chartConfig) {
@@ -619,7 +625,19 @@ var util = {
         var key = item[chartConfig.dataKey];
         if (chartConfig.keyFormat) {
             if (chartConfig.keyFormat == "none") {
-                return key;
+                if (chartConfig.hideChar) {
+                    var xAxis = [];
+                    key.forEach(function (k) {
+                        if (k.length > chartConfig.hideChar) {
+                            xAxis.push(k.substring(0, chartConfig.hideChar) + "...");
+                        } else {
+                            xAxis.push(k);
+                        }
+                    });
+                    return xAxis;
+                } else {
+                    return key;
+                }
             }
             if (chartConfig.keyFormat == "day") {
                 var _time = [];

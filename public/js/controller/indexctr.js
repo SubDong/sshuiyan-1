@@ -78,6 +78,7 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
                     id: "gest_map",
                     bGap: true,
                     chartType: "bar",
+                    auotHidex: true,
                     dataKey: "key",
                     keyFormat: 'none',
                     dataValue: "quota"

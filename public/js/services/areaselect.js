@@ -103,11 +103,11 @@ app.service('areaService', ['$rootScope', '$http', function ($rootScope, $http) 
         {name: '是否支持cookie', field: 'ck'}
     ];
     $rootScope.lagerMulti = [
-        {name: '展现量', ename: 'pv'},
-        {name: '点击量', ename: 'pv'},
-        {name: '消费', ename: 'pv'},
-        {name: '点击率', ename: 'pv'},
-        {name: '平均点击价格', ename: 'pv'},
+        {name: '展现量', ename: 'impression'},
+        {name: '点击量', ename: 'click'},
+        {name: '消费', ename: 'cost'},
+        {name: '点击率', ename: 'ctr'},
+        {name: '平均点击价格', ename: 'cpc'},
         {name: '浏览量(PV)', ename: 'pv'},
         {name: '访问次数', ename: 'vc'},
         {name: '访客数(UV)', ename: 'uv'},

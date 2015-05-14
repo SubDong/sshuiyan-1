@@ -5,6 +5,8 @@ app.service('requestService', ['$rootScope', '$http', function ($rootScope, $htt
     $rootScope.defaultcb = function (data, chartconfig) {
         cf.renderChart(data, chartconfig);
     }
+    $rootScope.user="jiehun";
+    $rootScope.baiduAccount="baidu-bjjiehun2123585";
     $rootScope.userType = 2;
     $rootScope.start = 0;
     $rootScope.end = 0;

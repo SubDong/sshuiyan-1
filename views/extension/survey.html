@@ -23,7 +23,7 @@
                 </ui-select>
                 <b class="fl">效果指标:</b>
                 <ui-select ng-model="effectQuotas.selected" theme="selectize" class="fl" style="min-width: 100px;"
-                           ng-change="setOutQuota(effectQuotas.selected)">
+                           ng-change="setEffectQuota(effectQuotas.selected)">
                     <ui-select-match placeholder="访问次数">{{$select.selected.name}}</ui-select-match>
                     <ui-select-choices repeat="effectQuotas in effectQuota">
                         <span ng-bind-html="effectQuotas.name"></span>

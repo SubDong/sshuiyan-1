@@ -123,8 +123,7 @@ app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
             templateUrl: "../extension/search.html"
         })
         .state('search_dy', {
-            url: "/extension/search_dy",
-            templateUrl: "../extension/search_dy.html",
+            url: "/extension/search_dy"
         })
         .state('search_gjc', {
             url: "/extension/search_gjc",

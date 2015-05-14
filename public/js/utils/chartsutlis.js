@@ -25,7 +25,16 @@ var chartUtils = {
                 return "nuv";
             case "新访客比率":
                 return "nuvRate";
-                break
+            case "消费":
+                return "cost";
+            case "点击量":
+                return "click";
+            case "点击率":
+                return "ctr";
+            case "展现量":
+                return "impression";
+            case "平均点击价格":
+                return "cpc";
             default :
                 return "pv";
         }
@@ -52,6 +61,16 @@ var chartUtils = {
                 return "新访客数";
             case "nuvRate":
                 return "新访客比率";
+            case "cost":
+                return "消费";
+            case "click":
+                return "点击量";
+            case "ctr":
+                return "点击率";
+            case "impression":
+                return "展现量";
+            case "cpc":
+                return "平均点击价格";
             default :
                 return "浏览量(PV)";
         }
@@ -302,6 +321,87 @@ var chartUtils = {
             return final_result;
         }
         return result
+    },
+    by: function (name) {
+        return function (o, p) {
+            var a, b;
+            if (typeof o === "object" && typeof p === "object" && o && p) {
+                a = o[name];
+                b = p[name];
+                if (a === b) {
+                    return 0;
+                }
+                if (typeof a === typeof b) {
+                    return a < b ? 1 : -1;
+                }
+                return typeof a < typeof b ? 1 : -1;
+            }
+            else {
+                throw ("error");
+            }
+        }
+    },
+    addStep: function (json, number) {
+        json.forEach(function (e) {
+            var _key = [];
+            var _value = []
+            for (var i = 0; i < number / 2; i++) {
+                _key.push("");
+                _value.push(0);
+            }
+            for (var i = 0; i < e.key.length; i++) {
+                _key.push(e.key[i]);
+                _value.push(e.quota[i]);
+            }
+            for (var i = number / 2; i < number; i++) {
+                _key.push("");
+                _value.push(0);
+            }
+            e.key = _key;
+            e.quota = _value;
+        });
+    },
+    formatDate: function (esJson) {
+        esJson.forEach(function (a) {
+            var formatKey = [];
+            a.key.forEach(function (e) {
+                formatKey.push(e.substring(0, 10));
+            });
+            a.key = formatKey;
+            a.label = chartUtils.convertChinese(a.label);
+        });
+    },
+    addSemData: function (esJson, semJson, semType) {
+        var _tmp = {};
+        var _label = [];
+        var _value = [];
+        esJson[0].key.forEach(function (esItem, index) {
+            //if (esItem == final_result[0].data[index].date) {
+            _value.push(semJson.data[index][semType]);
+            //}
+            //console.log(final_result[0].data[index].date+">>"+final_result[0].data[index][semType]);
+        });
+        _tmp["label"] = chartUtils.convertChinese(semType);
+        _tmp["key"] = esJson[0].key;
+        _tmp["quota"] = _value;
+        esJson.push(_tmp);
+    },
+    getSemBaseData: function (quotas, final_result,semName) {
+        var total_result = [];
+        quotas.forEach(function (quota) {
+            var _key = [];
+            var _value = [];
+            var _tmp = {};
+            final_result[0].data.forEach(function (e) {
+                _key.push(e[semName]);
+                _value.push(e[quota]);
+            });
+            _tmp["label"] = chartUtils.convertChinese(quota);
+            _tmp["key"] = _key;
+            _tmp["quota"] = _value;
+            total_result.push(_tmp);
+        });
+        return total_result;
     }
 }
 Array.prototype.removal = function () {

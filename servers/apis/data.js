@@ -124,7 +124,7 @@ api.get('/pie', function (req, res) {
     }
     var start = Number(query['start']);
     var end = Number(query['end']);
-    var indexes = date.createIndexes(start, end, "visitor-");
+    var indexes = date.createIndexes(start, end, "access-");
 
     var period = date.period(start, end);
     var interval = date.interval(start, end, Number(query['int']));
