@@ -14,9 +14,11 @@ app.directive("calendar", function ($rootScope, requestService) {
         transclude: true,
         link: function (scope, element, attris, controller) {
             Custom.initCheckInfo();
-            scope.$watch("opened", function() {
-           /*    console.log();*/
+            scope.$watch("opened", function () {
+                /*    console.log();*/
             });
+            scope.weekselected = true;
+            scope.mothselected = true;
             scope.maxDate = new Date();
             scope.reset = function () {
                 scope.todayClass = false;
@@ -26,6 +28,7 @@ app.directive("calendar", function ($rootScope, requestService) {
                 scope.definClass = false;
                 scope.btnchecked = true;
                 scope.weekcheckClass = false;
+                scope.mothcheckClass = false;
             };
             scope.reloadByCalendar = function (type) {
                 console.info("info: now user click the " + type + " button");
@@ -33,6 +36,10 @@ app.directive("calendar", function ($rootScope, requestService) {
                 $rootScope.$broadcast("ssh_dateShow_options_time_change", type);
             };
             scope.today = function () {
+                scope.hourselect = false;
+                scope.dayselect = false;
+                scope.weekselected = true;
+                scope.mothselected = true;
                 scope.reset();
                 scope.todayClass = true;
                 // table 参数配置
@@ -44,6 +51,10 @@ app.directive("calendar", function ($rootScope, requestService) {
                 scope.reloadByCalendar("today");
             };
             scope.yesterday = function () {
+                scope.hourselect = false;
+                scope.dayselect = false;
+                scope.weekselected = true;
+                scope.mothselected = true;
                 scope.reset();
                 scope.yesterdayClass = true;
                 $rootScope.tableTimeStart = -1;
@@ -51,8 +62,14 @@ app.directive("calendar", function ($rootScope, requestService) {
                 $rootScope.start = -1;
                 $rootScope.end = -1;
                 scope.reloadByCalendar("yesterday");
+
+
             };
             scope.sevenDay = function () {
+                scope.hourselect = false;
+                scope.dayselect = false;
+                scope.weekselected = true;
+                scope.mothselected = true;
                 scope.reset();
                 scope.sevenDayClass = true;
                 $rootScope.tableTimeStart = -7;
@@ -62,6 +79,10 @@ app.directive("calendar", function ($rootScope, requestService) {
                 scope.reloadByCalendar("seven");
             };
             scope.month = function () {
+                scope.hourselect = false;
+                scope.dayselect = false;
+                scope.weekselected = false;
+                scope.mothselected = true;
                 scope.reset();
                 scope.monthClass = true;
                 $rootScope.tableTimeStart = -30;
@@ -69,6 +90,10 @@ app.directive("calendar", function ($rootScope, requestService) {
                 $rootScope.start = -30;
                 $rootScope.end = -1;
                 scope.reloadByCalendar("month");
+                scope.hourselect = false;
+                scope.dayselect = false;
+                scope.weekselected = false;
+                scope.mothselected = true;
             };
             scope.open = function ($event) {
                 scope.reset();
@@ -76,7 +101,7 @@ app.directive("calendar", function ($rootScope, requestService) {
                 $event.preventDefault();
                 $event.stopPropagation();
                 scope.opened = true;
-                scope.isDisabled =false;
+                scope.isDisabled = false;
             };
             scope.checkopen = function ($event) {
                 scope.reset();
@@ -109,7 +134,9 @@ app.directive("dateother", function () {
 app.directive("dateweek", function () {
     var option = {
         restrict: "EA",
-        template: " <div aria-label=\"First group\" role=\"group\" class=\"btn-group fl\"><button class=\"btn btn-default\" ng-class=\"{'current':hourcheckClass}\" ng-click=\"hourcheck()\" type=\"button\">按时</button><button class=\"btn btn-default current\" ng-click=\"daycheck()\" ng-class=\"{'current':dayClass}\" type=\"button\">按日</button><button class=\"btn btn-default\" type=\"button\">按周</button><button class=\"btn btn-default\" type=\"button\">按月</button></div>",
+        template: " <div aria-label=\"First group\" role=\"group\" class=\"btn-group fl\"><button class=\"btn btn-default\" ng-class=\"{'current':hourcheckClass,'disabled':hourselect}\" ng-click=\"hourcheck()\" type=\"button\">按时</button><button class=\"btn btn-default current\" ng-click=\"daycheck()\" ng-class=\"{'current':dayClass,'disabled':dayselect}\" type=\"button\">按日</button>" +
+        "<button class=\"btn btn-default\" ng-click=\"weekcheck()\" ng-class=\"{'current':weekcheckClass,'disabled':weekselected}\"type=\"button\">按周</button>" +
+        "<button class=\"btn btn-default\" ng-click=\"mothcheck()\" ng-class=\"{'current':mothcheckClass,'disabled':mothselected}\"type=\"button\">按月</button></div>",
         transclude: true
     };
     return option;
@@ -176,7 +203,7 @@ app.directive("sshDateShow", function ($http, $rootScope, SEM_API_URL) {
             scope.ds_dateShowQuotasOption = scope.checkedArray ? scope.checkedArray : scope.ds_defaultQuotasOption;
             // 读取ES数据
             scope.loadSummary = function () {
-                $http.get("/api/summary?type="+$rootScope.ssh_es_type+"&dimension=" + scope.ds_dimension + "&quotas=" + scope.ds_dateShowQuotasOption + "&start=" + scope.ds_start + "&end=" + scope.ds_end).success(function (result) {
+                $http.get("/api/summary?type=" + $rootScope.ssh_es_type + "&dimension=" + scope.ds_dimension + "&quotas=" + scope.ds_dateShowQuotasOption + "&start=" + scope.ds_start + "&end=" + scope.ds_end).success(function (result) {
                     var obj = JSON.parse(eval('(' + result + ')').toString()); //由JSON字符串转换为JSON对象
                     angular.forEach(obj, function (r) {
                         var dateShowObject = {};
@@ -209,87 +236,87 @@ app.directive("sshDateShow", function ($http, $rootScope, SEM_API_URL) {
                 });
             };
             // 读取SEO数据
-            scope.loadSEOSummary = function() {
+            scope.loadSEOSummary = function () {
                 // 先判断是否存在SEO指标
                 var seoQuotas = [];
                 var costObj, impressionObj, clickObj, ctrObj, cpcObj, cpmObj, conversionObj;
-                angular.forEach(scope.ds_dateShowQuotasOption, function(e) {
-                    switch(e) {
+                angular.forEach(scope.ds_dateShowQuotasOption, function (e) {
+                    switch (e) {
                         case "cost":
-                            costObj = {"label" : e, "value" : 0};
+                            costObj = {"label": e, "value": 0};
                             seoQuotas.push(e);
                             break;
                         case "impression":
-                            impressionObj = {"label" : e, "value" : 0};
+                            impressionObj = {"label": e, "value": 0};
                             seoQuotas.push(e);
                             break;
                         case "click":
-                            clickObj = {"label" : e, "value" : 0};
+                            clickObj = {"label": e, "value": 0};
                             seoQuotas.push(e);
                             break;
                         case "ctr":
-                            ctrObj = {"label" : e, "value" : 0};
+                            ctrObj = {"label": e, "value": 0};
                             seoQuotas.push(e);
                             break;
                         case "cpc":
-                            cpcObj = {"label" : e, "value" : 0};
+                            cpcObj = {"label": e, "value": 0};
                             seoQuotas.push(e);
                             break;
                         case "cpm":
-                            cpmObj = {"label" : e, "value" : 0};
+                            cpmObj = {"label": e, "value": 0};
                             seoQuotas.push(e);
                             break;
                         case "conversion":
-                            conversionObj = {"label" : e, "value" : 0};
+                            conversionObj = {"label": e, "value": 0};
                             seoQuotas.push(e);
                             break;
                     }
                 });
-                if(seoQuotas.length > 0) {
-                    var stringQuotas = seoQuotas.toString().replace(/,/g ,"-") + "-";
+                if (seoQuotas.length > 0) {
+                    var stringQuotas = seoQuotas.toString().replace(/,/g, "-") + "-";
                     $http.get(SEM_API_URL + "jiehun/baidu-bjjiehun2123585/" + scope.ssh_seo_type + "/" + stringQuotas + "?startOffset=" + scope.ds_start + "&endOffset=" + scope.ds_end).success(function (result) {
                         var count = 0;
                         angular.forEach(result, function (r) {
                             count++;
-                            if(costObj) {
+                            if (costObj) {
                                 costObj.value += Number(r.cost);
                             }
-                            if(impressionObj) {
+                            if (impressionObj) {
                                 impressionObj.value += Number(r.impression);
                             }
-                            if(clickObj) {
+                            if (clickObj) {
                                 clickObj.value += Number(r.click);
                             }
-                            if(ctrObj) {
+                            if (ctrObj) {
                                 ctrObj.value += Number(r.ctr);
                             }
-                            if(cpcObj) {
+                            if (cpcObj) {
                                 cpcObj.value += Number(r.cpc);
                             }
-                            if(cpmObj) {
+                            if (cpmObj) {
                                 cpmObj.value += Number(r.cpm);
                             }
-                            if(conversionObj) {
+                            if (conversionObj) {
                                 conversionObj.value += Number(r.conversion);
                             }
                         });
-                        if(costObj) {
+                        if (costObj) {
                             costObj.value = costObj.value.toFixed(2);
                             scope.dateShowArray.push(costObj);
                         }
-                        if(impressionObj) {
+                        if (impressionObj) {
                             impressionObj.value = impressionObj.value.toFixed(2);
                             scope.dateShowArray.push(impressionObj);
                         }
-                        if(clickObj) {
+                        if (clickObj) {
                             clickObj.value = clickObj.value.toFixed(2);
                             scope.dateShowArray.push(clickObj);
                         }
-                        if(ctrObj) {
+                        if (ctrObj) {
                             ctrObj.value = ctrObj.value.toFixed(2);
                             scope.dateShowArray.push(ctrObj);
                         }
-                        if(cpcObj) {//平均点击价格
+                        if (cpcObj) {//平均点击价格
                             if (count == 0) {
                                 cpcObj.value = "--";
                             } else {
@@ -297,11 +324,11 @@ app.directive("sshDateShow", function ($http, $rootScope, SEM_API_URL) {
                             }
                             scope.dateShowArray.push(cpcObj);
                         }
-                        if(cpmObj) {
+                        if (cpmObj) {
                             cpmObj.value = cpmObj.value.toFixed(2);
                             scope.dateShowArray.push(cpmObj);
                         }
-                        if(conversionObj) {
+                        if (conversionObj) {
                             conversionObj.value = conversionObj.value.toFixed(2);
                             scope.dateShowArray.push(conversionObj);
                         }
@@ -446,7 +473,7 @@ app.directive("sshNoVisitor", function ($http, $rootScope) {
                 scope.sumPv = 0;
                 $http({
                     method: 'GET',
-                    url: '/api/indextable/?type='+$rootScope.ssh_es_type+'&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=pv,uv,outRate,avgTime,avgPage&dimension=ct'
+                    url: '/api/indextable/?type=' + $rootScope.ssh_es_type + '&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=pv,uv,outRate,avgTime,avgPage&dimension=ct'
                 }).success(function (data, status) {
                     angular.forEach(data, function (e) {
                         if (e.ct === scope._ctText) {
@@ -469,7 +496,7 @@ app.directive("sshNoVisitor", function ($http, $rootScope) {
             scope.loadFwlywzData = function () {
                 $http({
                     method: 'GET',
-                    url: '/api/fwlywz/?type='+$rootScope.ssh_es_type+'&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=pv&ct=' + scope._ctValue
+                    url: '/api/fwlywz/?type=' + $rootScope.ssh_es_type + '&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=pv&ct=' + scope._ctValue
                 }).success(function (data, status) {
                     scope.fwlywzTop5 = data;
                 }).error(function (error) {
@@ -481,7 +508,7 @@ app.directive("sshNoVisitor", function ($http, $rootScope) {
             scope.loadFwrkyData = function () {
                 $http({
                     method: 'GET',
-                    url: '/api/indextable/?type='+$rootScope.ssh_es_type+'&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=vc&dimension=loc&filerInfo=[{"ct": ["' + scope._ctValue + '"]}]'
+                    url: '/api/indextable/?type=' + $rootScope.ssh_es_type + '&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=vc&dimension=loc&filerInfo=[{"ct": ["' + scope._ctValue + '"]}]'
                 }).success(function (data, status) {
                     scope.fwrkyTop5 = data ? ((data.length > 5) ? data.slice(0, 5) : data) : [];
                 }).error(function (error) {
@@ -518,59 +545,59 @@ app.directive("sshyDefault", function () {
 /**
  * 手风琴。
  */
-app.directive('sshAccordion',function(){
+app.directive('sshAccordion', function () {
     return {
-        restrict : 'E',
-        template : '<div ng-transclude></div>',
-        replace : true,
-        transclude : true,
-        controller :function() {
+        restrict: 'E',
+        template: '<div ng-transclude></div>',
+        replace: true,
+        transclude: true,
+        controller: function () {
             var expanders = [];
-            this.gotOpended = function(selectedExpander){
-                angular.forEach(expanders,function(e) {
-                    if(selectedExpander != e){
+            this.gotOpended = function (selectedExpander) {
+                angular.forEach(expanders, function (e) {
+                    if (selectedExpander != e) {
                         e.showText = false;
                     }
                 });
             }
-            this.addExpander = function(e) {
+            this.addExpander = function (e) {
                 expanders.push(e);
             }
         }
     }
 });
-app.directive('sshExpander',function($location){
+app.directive('sshExpander', function ($location) {
     return {
-        restrict : 'E',
-        templateUrl : '../commons/expanderTemp.html',
-        replace : true,
-        transclude : true,
-        require : '^?sshAccordion',
-        scope : {
-            title : '=etitle',
-            icon : '=eicon',
-            child : '=echildren',
-            sref : '=esref',
-            type : '=etype'
+        restrict: 'E',
+        templateUrl: '../commons/expanderTemp.html',
+        replace: true,
+        transclude: true,
+        require: '^?sshAccordion',
+        scope: {
+            title: '=etitle',
+            icon: '=eicon',
+            child: '=echildren',
+            sref: '=esref',
+            type: '=etype'
         },
-        link : function(scope,element,attris,accordionController) {
+        link: function (scope, element, attris, accordionController) {
             scope.showText = false;
             accordionController.addExpander(scope);
-            scope.toggleText = function() {
-                scope.showText = ! scope.showText;
+            scope.toggleText = function () {
+                scope.showText = !scope.showText;
                 accordionController.gotOpended(scope);
             }
-            if($location.path().indexOf(scope.sref) != -1) {
+            if ($location.path().indexOf(scope.sref) != -1) {
                 scope.showText = true;
             }
-            scope.$on("$locationChangeSuccess", function(e, n, o) {
+            scope.$on("$locationChangeSuccess", function (e, n, o) {
                 scope.getSshPath();
             });
             // 获取参数path
-            scope.getSshPath = function() {
+            scope.getSshPath = function () {
                 var temp_path = $location.path();
                 var _index = temp_path.indexOf("_");
-                if(_index != -1) {
+                if (_index != -1) {
                     scope.sshPath = "#" + temp_path.substring(1, _index);
                 } else {
                     scope.sshPath = "#" + temp_path.substring(1);

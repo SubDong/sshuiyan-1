@@ -8,7 +8,6 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
         $scope.timeselect = true;
         $scope.reset = function () {
             $scope.definClass = false;
-            $scope.weekcheckClass = false;
         };
         $scope.gridOptions = {
             enableColumnMenus: false,
