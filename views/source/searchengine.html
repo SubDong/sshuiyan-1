@@ -84,7 +84,7 @@
                                 <li>
                                     <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
                                         <div role="group" class="btn-group">
-                                            <ui-select ng-model="city.selected" theme="selectize" class="fl" data-ng-change="setAreaFilter(city.selected.name)"
+                                            <ui-select ng-model="city.selected" theme="selectize" class="fl" data-ng-change="setSearchEngineAreaFilter(city.selected.name)"
                                                        style="width: 80px;">
                                                 <ui-select-match placeholder="全部">{{$select.selected.name}}
                                                 </ui-select-match>
@@ -95,27 +95,27 @@
                                         </div>
                                     </div>
                                 </li>
-                                <li><a href="javascript:void(0)" data-ng-click="setAreaFilter('北京')">北京</a></li>
-                                <li><a href="javascript:void(0)" data-ng-click="setAreaFilter('上海')">上海</a></li>
-                                <li><a href="javascript:void(0)" data-ng-click="setAreaFilter('广州')">广州</a></li>
+                                <li><a href="javascript:void(0)" data-ng-click="setSearchEngineAreaFilter('北京')">北京</a></li>
+                                <li><a href="javascript:void(0)" data-ng-click="setSearchEngineAreaFilter('上海')">上海</a></li>
+                                <li><a href="javascript:void(0)" data-ng-click="setSearchEngineAreaFilter('广州')">广州</a></li>
                             </ul>
                         </div>
                     </div>
                 </tab>
             </tabset>
-            <div class="custom_secendtitle">
-                <div class="custom_select">
-                    转化目标
-                    <div role="group" class="btn-group">
-                        <ui-select ng-model="extendway.selected" theme="selectize" class="fl" style="width: 120px;">
-                            <ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>
-                            <ui-select-choices repeat="extendway in extendways">
-                                <span ng-bind-html="extendway.name"></span>
-                            </ui-select-choices>
-                        </ui-select>
-                    </div>
-                </div>
-            </div>
+            <!--<div class="custom_secendtitle">-->
+                <!--<div class="custom_select">-->
+                    <!--转化目标-->
+                    <!--<div role="group" class="btn-group">-->
+                        <!--<ui-select ng-model="extendway.selected" theme="selectize" class="fl" style="width: 120px;">-->
+                            <!--<ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>-->
+                            <!--<ui-select-choices repeat="extendway in extendways">-->
+                                <!--<span ng-bind-html="extendway.name"></span>-->
+                            <!--</ui-select-choices>-->
+                        <!--</ui-select>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
             <div class="custom_table">
                 <div ui-grid="gridOptions" class="grid" style="height:400px;" ui-grid-pagination ui-grid-selection
                      ui-grid-exporter></div>
