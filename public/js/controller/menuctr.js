@@ -145,6 +145,18 @@ app.controller('menuctr', function ($scope, $location) {
                 text: '访客特征',
                 sref: '#visitor/visitorfeature'
             }]
+        }, {
+            title: '价值透析',
+            icon: 'glyphicon glyphicon-yen',
+            stype: 1,
+            sref: 'value',
+            child: [{
+                text: '流量地图',
+                sref: '#value/exchange'
+            }, {
+                text: '频道流转',
+                sref: '#value/trafficmap'
+            }]
         }
     ];
 });

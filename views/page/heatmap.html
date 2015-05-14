@@ -74,8 +74,8 @@
         };
         xx.store.setDataSet(el);
 
-        document.getElementById("iframe").style.height = document.getElementById("heatmap").height + "px";
-        document.getElementById("heatmap").style.width = document.getElementById("iframe").offsetWidth + "px" - 10;
+        document.getElementById("heatmap").style.height = document.getElementById("iframe").scrollHeight + "px";
+        document.getElementById("heatmap").style.width = document.getElementById("iframe").scrollWidth + "px" - 10;
         /*        xx.get("canvas").onclick = function(ev){
          var pos = h337.util.mousePosition(ev);
          xx.store.addDataPoint(pos[0],pos[1]);
