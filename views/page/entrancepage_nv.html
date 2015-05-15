@@ -1,16 +1,23 @@
-<!--页面分析-入口页面-流浪分析-->
-<div class="middle_containers" ng-controller="flowanalysisctr as app">
+       <!--页面分析-入口页面-新访客分析-->
+          <div class="middle_containers" ng-controller="newvisitorsctr as app">
                 <div class="date_select">
-                    <page></page>
+                    <div aria-label="First group" role="group" class="btn-group fl">
+                        <a class="fl btn btn-default" data-ng-href="#page/entrancepage"> 指标概览</a>
+                        <a class="fl btn btn-default" data-ng-href="#page/entrancepage_fa"> 流量分析</a>
+                        <a class="fl btn btn-default current" data-ng-href="#page/entrancepage_nv"> 新访客分析</a>
+                        <a class="fl btn btn-default" data-ng-href="#page/entrancepage_as">吸引力分析</a>
+                        <a class="fl btn btn-default" data-ng-href="#page/entrancepage_af">转化分析</a>
+                    </div>
                     <calendar></calendar>
                     <dateother></dateother>
                     <refresh></refresh>
                 </div>
                 <div class="my_concent">
-                    <div class="date_show dateshow3">
+                    <div class="date_show dateshow_width">
                         <ul>
                             <li class="date_third"><h4>访问次数</h4><span>34</span></li>
-                            <li class="date_last"><h4>访客数(UV)</h4><span>100%</span></li>
+                            <li class="date_four"><h4>访客数(UV)</h4><span>100%</span></li>
+                            <li class="date_five"><h4>新访客比率</h4><span>100%</span></li>
                             <li class="date_last"><h4>贡献浏览量 </h4><span>2,574</span></li>
                         </ul>
                     </div>

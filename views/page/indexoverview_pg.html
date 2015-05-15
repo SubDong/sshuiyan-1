@@ -1,0 +1,76 @@
+<div class="middle_containers" ng-controller="visitepagesctr as app">
+    <div class="date_select">
+        <div aria-label="First group " role="group" class="btn-group fl">
+            <a class="btn btn-default " data-ng-href="#page/indexoverview" type="button">指标概览</a>
+            <a class="btn btn-default" data-ng-href="#page/indexoverview_pv" type="button">页面价值分析</a>
+            <a class="btn btn-default current" data-ng-href="#page/indexoverview_pg" type="button">入口页分析</a>
+            <a class="btn btn-default" data-ng-href="#page/indexoverview_ep" type="button">退出页分析</a>
+        </div>
+        <calendar></calendar>
+        <dateother></dateother>
+        <refresh></refresh>
+    </div>
+    <div class="my_concent">
+        <div class="date_show dateshow3">
+            <ul>
+                <li class="date_first"><h4>浏览量(PV)</h4><span>34</span></li>
+                <li class="date_third"><h4>访客数(UV) </h4><span>100%</span></li>
+                <li class="date_last"><h4>入口页次数</h4><span>2,574</span></li>
+            </ul>
+        </div>
+        <div class="index_chart">
+
+        </div>
+        <div class="table_content">
+            <ul role="tablist" class="nav nav-tabs" id="myTab">
+                <li class="active" role="presentation"><a aria-expanded="true" aria-controls="home"
+                                                          data-toggle="tab" role="tab" id="home-tab"
+                                                          href="#home">高级筛选</a></li>
+
+
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <div aria-labelledby="home-tab" id="home" class="tab-pane fade active in" role="tabpanel">
+                    <div class="custom_title">
+                        <div class="chart_top2">
+                            <ul>
+                                <li><span>来源过滤 :</span></li>
+                                <li>
+                                    <div role="group" class="btn-group">
+                                        <ui-select ng-model="souce.selected" theme="selectize" class="fl"
+                                                   style="width: 90px;">
+                                            <ui-select-match placeholder="全部">{{$select.selected.name}}
+                                            </ui-select-match>
+                                            <ui-select-choices repeat="souce in souces">
+                                                <span ng-bind-html="souce.name"></span>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                </li>
+                                <li><a href="#">百度</a></li>
+                                <li><a href="#">Google</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="custom_secendtitle">
+                        <div class="custom_select">
+                            <div class="input-group fl">
+                                <input type="text" placeholder="输入URL…" class="form-control fl">
+                                       <span class="input-group-btn fl">
+                                 <button type="button" class="btn btn-default"><span aria-hidden="true"
+                                                                                     class="glyphicon glyphicon-search"></span>
+                                 </button>
+                                   </span>
+                            </div>
+                        </div>
+                        <div class="custom_table">
+                            <div ui-grid="gridOptions" class="grid" ui-grid-pagination ui-grid-selection
+                                 ui-grid-exporter></div>
+                            <gridpage></gridpage>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

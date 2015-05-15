@@ -1,7 +1,11 @@
-.
 <div class="middle_containers" ng-controller="indexoverview as app">
     <div class="date_select">
-        <indexoverview></indexoverview>
+        <div aria-label="First group " role="group" class="btn-group fl">
+            <a class="btn btn-default current" data-ng-href="#page/indexoverview" type="button">指标概览</a>
+            <a class="btn btn-default" data-ng-href="#page/indexoverview_pv" type="button">页面价值分析</a>
+            <a class="btn btn-default" data-ng-href="#page/indexoverview_pg" type="button">入口页分析</a>
+            <a class="btn btn-default" data-ng-href="#page/indexoverview_ep" type="button">退出页分析</a>
+        </div>
         <calendar></calendar>
         <dateother></dateother>
         <refresh></refresh>

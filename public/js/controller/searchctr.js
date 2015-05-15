@@ -24,7 +24,7 @@ app.controller('searchctr', function ($scope, $rootScope, $q, requestService, ar
             {name: "平均点击价格", displayName: "平均点击价格", field: "cpc"},
             {name: "跳出率", displayName: "跳出率", field: "outRate"},
             {name: "平均访问时长", displayName: "平均访问时长", field: "avgTime"},
-            {name: "新房客比率", displayName: "新房客比率", field: "nuvRate"}
+            {name: "新访客比率", displayName: "新访客比率", field: "nuvRate"}
         ];
         $rootScope.tableSwitch = {
             latitude: {name: "关键词", displayName: "关键词", field: "kw"},

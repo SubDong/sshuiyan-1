@@ -17,7 +17,7 @@ body {
 a:link,
 a:visited,
 a:hover,
-a:active
+a:active,
 a:focus {
   outline: none;
   text-decoration: none;
@@ -105,14 +105,14 @@ nav, .navbar-default {
   width: 100%;
   background: #f0f0f0;
   min-height: 40px;
-
+  .disabled{
+    cursor: not-allowed;
+  }
   .btn-group {
     .dropdown-toggle {
       padding: 0 10px !important;
     }
-    .disabled{
-      cursor: not-allowed;
-    }
+
     .btn {
       font-size: 12px;
       line-height: 26px;

@@ -1,7 +1,13 @@
        <!--页面分析-入口页面-转化分析-->
 <div class="middle_containers" ng-controller="analysistransformationctr as app">
                 <div class="date_select">
-                    <page></page>
+                    <div aria-label="First group" role="group" class="btn-group fl">
+                        <a class="fl btn btn-default" data-ng-href="#page/entrancepage"> 指标概览</a>
+                        <a class="fl btn btn-default" data-ng-href="#page/entrancepage_fa"> 流量分析</a>
+                        <a class="fl btn btn-default" data-ng-href="#page/entrancepage_nv"> 新访客分析</a>
+                        <a class="fl btn btn-default " data-ng-href="#page/entrancepage_as">吸引力分析</a>
+                        <a class="fl btn btn-default current" data-ng-href="#page/entrancepage_af">转化分析</a>
+                    </div>
                     <calendar></calendar>
                     <dateother></dateother>
                     <refresh></refresh>

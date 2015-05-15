@@ -42,7 +42,7 @@ app.controller('indexoverview', function ($scope, $rootScope, $http, requestServ
     //
     this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
     //this.type = 'range';
-    /*      this.identity = angular.identity;*/
+          this.identity = angular.identity;
     //$scope.$broadcast("update", "msg");
     $scope.$on("update", function (e, datas) {
         // 选择时间段后接收的事件

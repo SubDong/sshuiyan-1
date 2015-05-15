@@ -43,12 +43,12 @@ app.controller("provincemapctr", function ($scope, $rootScope, $http, requestSer
         enableHorizontalScrollbar: 0,
         enableVerticalScrollbar: 0,
         columnDefs: [
-            {name: '地域'},
-            {name: '访问时间'},
-            {name: '来源'},
-            {name: '访问IP'},
-            {name: '访问时长'},
-            {name: '访问页数'},
+            {name: '地域',displayName: "地域"},
+            {name: '访问时间',displayName: "访问时间"},
+            {name: '来源',displayName: "来源"},
+            {name: '访问IP',displayName: "访问IP"},
+            {name: '访问时长',displayName: "访问时长"},
+            {name: '访问页数',displayName: "访问页数"},
         ]
     };
 

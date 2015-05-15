@@ -19,7 +19,6 @@ app.controller('novisitors', function ($scope, $rootScope, $http) {
         {name: "平均访问时长", displayName: "平均访问时长", field: "avgTime"},
         {name: "平均访问页数", displayName: "平均访问页数", field: "avgPage"}
     ];
-
     $rootScope.tableSwitch = {
         latitude: {name: "新老访客", displayName: "新老访客", field: "ct"},
         tableFilter: null,

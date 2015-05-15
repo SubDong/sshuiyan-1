@@ -32,7 +32,6 @@ app.controller('wayctrl', function ($scope, $rootScope, $http, requestService, m
         arrayClear: false, //是否清空指标array
         promotionSearch: true //是否开始推广中sem数据
     };
-
     $scope.reset = function () {
         $scope.todayClass = false;
         $scope.yesterdayClass = false;
