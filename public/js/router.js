@@ -1,4 +1,3 @@
-
 app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
 
     //$locationProvider.html5Mode(true);
@@ -74,10 +73,10 @@ app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
             url: "/page/pagetitle",
             templateUrl: "../page/pagetitle.html"
         })
-  /*      .state('heatmap', {
-            url: "/page/heatmap",
-            templateUrl: "../page/heatmap.html"
-        })*/
+        /*      .state('heatmap', {
+         url: "/page/heatmap",
+         templateUrl: "../page/heatmap.html"
+         })*/
         .state('indexoverview', {
             url: "/page/indexoverview",
             templateUrl: "../page/indexoverview.html"
@@ -161,5 +160,9 @@ app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
         .state('trafficmap', {
             url: "/value/trafficmap",
             templateUrl: "../value/trafficmap.html"
+        })
+        .state('history', {
+            url: "/historytrend/history",
+            templateUrl: "../historytrend/history.html"
         })
 });

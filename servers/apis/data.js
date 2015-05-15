@@ -220,12 +220,12 @@ api.get('/indextable', function (req, res) {
     var indexes = date.createIndexes(_startTime, _endTime, "visitor-");//indexs
 
     var period = date.period(_startTime, _endTime); //时间段
-    var interval = _promotion == "undefined" ? date.interval(_startTime, _endTime) : null; //时间分割
-    es_request.search(req.es, indexes, _type, _indic, _lati, [0], _filter, _promotion == "undefined" ? period[0] : null, _promotion == "undefined" ? period[1] : null, interval, function (data) {
+    var interval = _promotion == "undefined" || _promotion == undefined ? date.interval(_startTime, _endTime) : null; //时间分割
+    es_request.search(req.es, indexes, _type, _indic, _lati, [0], _filter, _promotion == "undefined" || _promotion == undefined ? period[0] : null, _promotion == "undefined" || _promotion == undefined ? period[1] : null, interval, function (data) {
         var result = [];
         var vidx = 0;
         var maps = {}
-        var valueData = ["arrivedRate", "outRate", "nuvRate", "ct", "period", "se", "pm", "rf"];
+        var valueData = ["arrivedRate", "outRate", "nuvRate", "ct", "period", "se", "pm", "rf", "ja", "ck"];
         data.forEach(function (info, x) {
             for (var i = 0; i < info.key.length; i++) {
                 var infoKey = info.key[i];
@@ -240,9 +240,9 @@ api.get('/indextable', function (req, res) {
                             obj[_lati] = infoKey == 1 ? "直接访问" : infoKey == 2 ? "搜索引擎" : "外部链接";
                             break;
                         case "period":
-                            if(_formartInfo == "day"){
+                            if (_formartInfo == "day") {
                                 obj[_lati] = infoKey.substring(0, 10);
-                            }else{
+                            } else {
                                 obj[_lati] = infoKey.substring(infoKey.indexOf(" "), infoKey.length - 3) + " - " + infoKey.substring(infoKey.indexOf(" "), infoKey.length - 5) + "59";
                             }
                             break;
@@ -254,6 +254,12 @@ api.get('/indextable', function (req, res) {
                             break;
                         case "rf":
                             obj[_lati] = (infoKey == "-" ? "直接访问" : infoKey);
+                            break;
+                        case "ja":
+                            obj[_lati] = (infoKey == "1" ? "支持" : "不支持");
+                            break;
+                        case "ck":
+                            obj[_lati] = (infoKey == "1" ? "支持" : "不支持");
                             break;
                         default :
                             obj[_lati] = infoKey;
@@ -270,7 +276,7 @@ api.get('/indextable', function (req, res) {
             vidx++;
         });
         for (var key in maps) {
-            if(key != null){
+            if (key != null) {
                 result.push(maps[key]);
             }
         }
@@ -288,16 +294,18 @@ api.get('/realTimeAccess', function (req, res) {
     es_request.realTimeSearch(req.es, indexes, _type, _filters, function (data) {
         var resultArray = new Array();
         data.forEach(function (item, i) {
-            var result = {};
-            result["city"] = item._source.city == "-" ? "国外" : item._source.city;
-            var newDate = new Date(item._source.utime[0]).toString();
-            result["utime"] = newDate.substring(newDate.indexOf(":") - 3, newDate.indexOf("G") - 1);
-            result["source"] = item._source.rf + "," + (item._source.se != "-" ? item._source.se : item._source.rf);
-            result["tt"] = item._source.tt;
-            result["ip"] = item._source.remote;
-            result["utimeAll"] = new Date(item._source.utime[item._source.utime.length - 1] - item._source.utime[0]).format("hh:mm:ss");
-            result["pageNumber"] = item._source.loc.length
-            resultArray.push(result)
+            if(item._source.city != "-"){
+                var result = {};
+                result["city"] = item._source.city == "-" ? "国外" : item._source.city;
+                var newDate = new Date(item._source.utime[0]).toString();
+                result["utime"] = newDate.substring(newDate.indexOf(":") - 3, newDate.indexOf("G") - 1);
+                result["source"] = item._source.rf + "," + (item._source.se != "-" ? item._source.se : item._source.rf);
+                result["tt"] = item._source.tt;
+                result["ip"] = item._source.remote;
+                result["utimeAll"] = new Date(item._source.utime[item._source.utime.length - 1] - item._source.utime[0]).format("hh:mm:ss");
+                result["pageNumber"] = item._source.loc.length
+                resultArray.push(result)
+            }
         });
         datautils.send(res, resultArray);
     });
@@ -326,13 +334,13 @@ api.get('/realTimeHtml', function (req, res) {
                     urlHtml = urlHtml + "<li><span><a href='" + vtime.loc + "' target='_blank'>" + vtime.loc + "</a></span></li>"
                 });
                 var classInfo;
-                item._source.os.indexOf("Windows") != -1?classInfo = "windows":"";
-                item._source.os.indexOf("Windows") != -1?classInfo = "mac":"";
-                item._source.os.indexOf("Windows") != -1?classInfo = "liunx":"";
+                item._source.os.indexOf("Windows") != -1 ? classInfo = "windows" : "";
+                item._source.os.indexOf("Windows") != -1 ? classInfo = "mac" : "";
+                item._source.os.indexOf("Windows") != -1 ? classInfo = "liunx" : "";
 
 
                 var result = "<div class='trendbox'>" +
-                    "<div class='trend_top'><div class='trend_left'><div class='left_top'><div class='trend_img'><img class="+classInfo+"></div><div class='trend_text'>" +
+                    "<div class='trend_top'><div class='trend_left'><div class='left_top'><div class='trend_img'><img class=" + classInfo + "></div><div class='trend_text'>" +
                     "<ul><li>操作系统：<span>" + item._source.os + "</span></li><li>网络服务商：<span>" + item._source.isp + "</span></li><li>屏幕分辨率：<span>" + item._source.sr + "</span></li>" +
                     "<li>屏幕颜色:<span>" + item._source.sc + "</span></li></ul></div></div><div class='left_under'><div class='trend_img'><img src='../images/google.png'></div><div class='trend_text'>" +
                     "<ul><li>浏览器：<span>" + item._source.br + "</span></li><li>Flash版本：<span>" + item._source.fl + "</span></li><li>是否支持Cookie：<span>" + (item._source.ck == '1' ? " 支持" : " 不支持" ) + "</span></li>" +

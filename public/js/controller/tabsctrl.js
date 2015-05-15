@@ -115,7 +115,6 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, re
             method: 'GET',
             url: '/api/realTimeAccess/?filerInfo=' + $rootScope.tableSwitch.tableFilter + "&type=" + esType
         }).success(function (data, status) {
-            console.log(data)
             $scope.gridOptions.data = data;
         }).error(function (error) {
             console.log(error);
@@ -123,26 +122,27 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, re
     };
     if (typeof($rootScope.checkedArray) != undefined && $rootScope.checkedArray == "SS") {
         $scope.tableJu = "html";
-        $rootScope.gridArray = [{name: '地域',displayName: "地域", field: "city"},
-            {name: '访问时间',displayName: "访问时间", field: "utime"},
+        $rootScope.gridArray = [{name: '地域', displayName: "地域", field: "city"},
+            {name: '访问时间', displayName: "访问时间", field: "utime"},
             {
                 name: '来源',
                 displayName: "来源",
                 field: "source",
                 cellTemplate: "<a href='{{grid.appScope.getDataUrlInfo(grid, row,1)}}' style='color:#0965b8;line-height:30px;'>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</a>"
             },
-            {name: '访客标识码',displayName: "访客标识码", field: "tt"},
-            {name: "访问IP",displayName: "访问IP", field: "ip"},
-            {name: "访问时长",displayName: "访问时长", field: "utimeAll"},
-            {name: "访问页数",displayName: "访问页数", field: "pageNumber"}];
+            {name: '访客标识码', displayName: "访客标识码", field: "tt"},
+            {name: "访问IP", displayName: "访问IP", field: "ip"},
+            {name: "访问时长", displayName: "访问时长", field: "utimeAll"},
+            {name: "访问页数", displayName: "访问页数", field: "pageNumber"}];
         getHtmlTableData();
     } else {
         if ($rootScope.tableSwitch.arrayClear)$rootScope.checkedArray = new Array();
         if ($rootScope.tableSwitch.arrayClear)$rootScope.gridArray = new Array();
     }
+
     //table Button 配置 table_nextbtn
     if ($rootScope.tableSwitch.number == 1) {
-        $scope.gridBtnDivObj = "<div class='table_box'><a href='javascript:;' ng-click='grid.appScope.getHistoricalTrend(this)' class='table_btn test'></a></div>";
+        $scope.gridBtnDivObj = "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn test'></a></div>";
     } else if ($rootScope.tableSwitch.number == 2) {
         $scope.gridBtnDivObj = "<div class='table_box'><button onclick='getMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul>" + $rootScope.tableSwitch.coding + "</ul></div></div>";
     }
@@ -298,11 +298,11 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, re
         $scope.targetSearch();
     };
     //设置地域过滤
-    $scope.setAreaFilter = function(area) {
-        if(!$rootScope.tableSwitch) {
+    $scope.setAreaFilter = function (area) {
+        if (!$rootScope.tableSwitch) {
             return;
         }
-        if("全部" == area) {
+        if ("全部" == area) {
             $rootScope.tableSwitch.tableFilter = null;
         } else {
             $rootScope.tableSwitch.tableFilter = "[{\"region\":[\"" + area + "\"]}]";
@@ -311,12 +311,13 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, re
         $scope.targetSearch();
     };
     //设置（搜索引擎）地域过滤
-    $scope.setSearchEngineAreaFilter = function(area) {
-        if(!$rootScope.tableSwitch) {
+    $scope.setSearchEngineAreaFilter = function (area) {
+        if (!$rootScope.tableSwitch) {
             return;
         }
-        if("全部" == area) {
-            $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[2]}]";;
+        if ("全部" == area) {
+            $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[2]}]";
+            ;
         } else {
             $rootScope.tableSwitch.tableFilter = "[{\"region\":[\"" + area + "\"]},{\"rf_type\":[2]}]";
         }
@@ -353,7 +354,7 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, re
         $http({
             method: 'GET',
             url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field)
-            + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo="+$rootScope.tableFormat+"&type=" + esType
+            + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
         }).success(function (data, status) {
             if ($rootScope.tableSwitch.promotionSearch != undefined && $rootScope.tableSwitch.promotionSearch) {
                 var url = SEM_API_URL + user + "/" + baiduAccount + "/account/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1"
@@ -390,16 +391,20 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, re
             } else {
                 $scope.gridOptions.data = data;
             }
-
-
         }).error(function (error) {
             console.log(error);
         });
     }
     //init
-    if($scope.tableJu != 'html'){
+    if ($scope.tableJu != 'html' && $rootScope.historyJu != "NO") {
         $scope.targetSearch();
     }
+    $scope.$on("history", function (e, msg) {
+        $scope.gridOptions.data = msg;
+        $scope.pagego = function (pagevalue) {
+            pagevalue.pagination.seek(Number($scope.page));
+        }
+    });
 
 
     //表格数据展开项
@@ -434,13 +439,15 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, re
     };
     //得到数据中的url
     $scope.getDataUrlInfo = function (grid, row, number) {
+        console.log(grid);
         var a = row.entity.source.split(",");
         if (number == 1) {
             return a[0];
         } else if (number == 2) {
-            return a[1];
+            var url = a[1].length > 1 ? a[1].substring(0, 1) + "..." : a[1]
+            return url;
         }
-    }
+    };
 
     //表格HTML展开项
     var griApihtml = function (gridApi) {
@@ -477,32 +484,14 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, re
      * @param lati   查询纬度
      * @param type
      */
-    $scope.getHistoricalTrend = function (a) {
-        //console.log(a);
-        /*if ($rootScope.tableSwitch.isJudge == undefined)$scope.isJudge = true;
-         if ($rootScope.tableSwitch.isJudge)$rootScope.tableSwitch.tableFilter = undefined;
+    $scope.getHistoricalTrend = function (a, b) {
+        if ($rootScope.tableSwitch.isJudge == undefined)$scope.isJudge = true;
+        if ($rootScope.tableSwitch.isJudge)$rootScope.tableSwitch.tableFilter = undefined;
 
-         $scope.month = function () {
-         $scope.reset();
-         $scope.monthClass = true;
-         $rootScope.tableTimeStart = -30;
-         $rootScope.tableTimeEnd = -1;
-         $rootScope.start = -30;
-         $rootScope.end = -1;
-         $scope.reloadByCalendar("month");
-         };
-         $rootScope.tableSwitch.latitude.name = "日期";
-         $rootScope.tableSwitch.latitude.field = "period";
-         console.log(this);
-         $http({
-         method: 'GET',
-         url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + $rootScope.tableSwitch.latitude.field
-         + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&type="+esType
-         }).success(function (data, status) {
-         $scope.gridOptions.data = data;
-         }).error(function (error) {
-         console.log(error);
-         });*/
+        var a = b.$parent.$parent.row.entity[$rootScope.tableSwitch.latitude.field];
+        $rootScope.tableSwitch.tableFilter = "[{\"" + $rootScope.tableSwitch.latitude.field + "\":[\"" + getField(a, $rootScope.tableSwitch.latitude.field) + "\"]}]";
+
+
     }
 
 

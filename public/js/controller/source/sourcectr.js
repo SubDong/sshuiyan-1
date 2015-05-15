@@ -13,7 +13,7 @@ app.controller("sourcectr", function ($scope, $rootScope, $http, requestService,
         {name: "来源类型", displayName: "来源类型", field: "rf_type"},
         {
             name: " ",
-            cellTemplate: "<div class='table_box'><button onclick='getMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul><li><a href='http://www.best-ad.cn' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li></ul></div></div>"
+            cellTemplate: "<div class='table_box'><button onclick='getMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul><li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li></ul></div></div>"
         },
         {name: "访问次数", displayName: "访问次数", field: "vc"},
         {name: "新老访客比率", displayName: "新老访客比率", field: "nuvRate"},

@@ -11,7 +11,7 @@ app.controller('novisitors', function ($scope, $rootScope, $http) {
         {name: "网络供应商", displayName: "网络供应商", field: "ct"},
         {
             name: " ",
-            cellTemplate: "<div class='table_box'><a href='http://www.best-ad.cn' class='table_btn'></a></div>"
+            cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
         },
         {name: "访问次数", displayName: "访问次数", field: "vc"},
         {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},

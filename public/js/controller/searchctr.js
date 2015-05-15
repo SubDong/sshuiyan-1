@@ -11,13 +11,13 @@ app.controller('searchctr', function ($scope, $rootScope, $q, requestService, ar
         var newVar = {
             name: "状态",
             displayName: "状态",
-            cellTemplate: "<div class='table_box'><a href='http://www.best-ad.cn' class='table_btn'></a></div>"
+            cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
         };
         $rootScope.gridArray = [
             {name: "地域", displayName: "地域", field: "region"},
             {
                 name: " ",
-                cellTemplate: "<div class='table_box'><a href='http://www.best-ad.cn' class='table_btn'></a></div>"
+                cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
             },
             {name: "展现", displayName: "展现", field: "impression"},
             {name: "消费", displayName: "消费", field: "cost"},

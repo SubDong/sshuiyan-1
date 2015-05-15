@@ -500,6 +500,18 @@ app.directive("sshyDefault", function () {
         }
     }
 });
+app.directive("searchDefault", function () {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attris, controller) {
+            scope.searchCheckedArray.forEach(function (item, i) {
+                if (item == attris.defvalue) {
+                    scope.classInfo = 'current';
+                }
+            })
+        }
+    }
+});
 
 /**
  * 手风琴。

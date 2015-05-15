@@ -4,13 +4,40 @@
 app.controller('search_gjc_ctr', function ($scope, $rootScope, $q, requestService, areaService, $http, SEM_API_URL) {
     $scope.yesterdayClass = true;
 
-    //table默认信息配置
-    $rootScope.tableTimeStart = 0;
-    $rootScope.tableTimeEnd = 0;
-    $rootScope.tableFilter = null;
-    $rootScope.latitude = {name: "搜索引擎", field: "wd"}
-    $rootScope.dimen = false;
-    //
+    $scope.yesterdayClass = true;
+    $rootScope.tableTimeStart = -1;//开始时间
+    $rootScope.tableTimeEnd = -1;//结束时间、
+    //配置默认指标
+    $rootScope.searchCheckedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
+    $rootScope.searchGridArray = [
+        {name: "关键词", displayName: "关键词", field: "region"},
+        {
+            name: "状态",
+            displayName: "状态",
+            cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
+        },
+        {name: "展现", displayName: "展现", field: "impression"},
+        {name: "消费", displayName: "消费", field: "cost"},
+        {name: "平均点击价格", displayName: "平均点击价格", field: "cpc"},
+        {name: "跳出率", displayName: "跳出率", field: "outRate"},
+        {name: "平均访问时长", displayName: "平均访问时长", field: "avgTime"},
+        {name: "新房客比率", displayName: "新房客比率", field: "nuvRate"}
+    ];
+    $rootScope.tableSwitch = {
+        latitude: {name: "关键词", displayName: "关键词", field: "kw"},
+        tableFilter: null,
+        dimen: "city",
+        // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
+        number: 1,
+        //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
+        coding: false,
+        //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
+        arrayClear: false, //是否清空指标array
+        promotionSearch: {
+            turnOn: true, //是否开始推广中sem数据
+            SEMData: "keyword" //查询类型
+        }
+    };
 
     $scope.selectedQuota = ["click", "impression"];
     $scope.onLegendClickListener = function (radio, chartInstance, config, checkedVal) {

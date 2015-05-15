@@ -19,7 +19,7 @@
             <div id="indicators_charts_legend"></div>
             <div id="indicators_charts" style="height:400px;"></div>
         </div>
-        <div class="table_content" ng-controller="TabsCtrl">
+        <div class="table_content" ng-controller="SearchPromotion">
             <tabset justified="true">
                 <tab heading="自定义指标">
                     <div class="custom_title">
@@ -33,27 +33,27 @@
                         <div class="chart_top">
                             <span>消费指标 :</span>
                             <ul>
-                                <li ng-repeat="item in target" data-sshy-default defvalue="{{item.name}}"
-                                    class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
-                                    ng-click='indicators(item,target,6)'>{{item.consumption_name}}
+                                <li ng-repeat="item in target" data-search-default defvalue="{{item.name}}"
+                                    class="{{searchCheckedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                    ng-click='searchIndicators(item,target,6)'>{{item.consumption_name}}
                                 </li>
                             </ul>
                         </div>
                         <div class="chart_top">
                             <span>网站基础指标 :</span>
                             <ul>
-                                <li ng-repeat="item in Webbased" data-sshy-default defvalue="{{item.name}}"
-                                    class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
-                                    ng-click='indicators(item,Webbased,6)'>{{item.consumption_name}}
+                                <li ng-repeat="item in Webbased" data-search-default defvalue="{{item.name}}"
+                                    class="{{searchCheckedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                    ng-click='searchIndicators(item,Webbased,6)'>{{item.consumption_name}}
                                 </li>
                             </ul>
                         </div>
                         <div class="chart_top">
                             <span>流量质量指标:</span>
                             <ul>
-                                <li ng-repeat="item in flow" data-sshy-default defvalue="{{item.name}}"
-                                    class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
-                                    ng-click='indicators(item,flow,6)'>{{item.consumption_name}}
+                                <li ng-repeat="item in flow" data-search-default defvalue="{{item.name}}"
+                                    class="{{searchCheckedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                    ng-click='searchIndicators(item,flow,6)'>{{item.consumption_name}}
                                 </li>
                             </ul>
                         </div>
@@ -82,7 +82,8 @@
                                 </ul>
                         </div>-->
                         <div class="chart_top chart_noborder">
-                            <button class="btn btn-primary" type="button" ng-click="targetSearch(true)">确定</button>
+                            <button class="btn btn-primary" type="button" ng-click="targetSearchSpread(true)">确定
+                            </button>
                             * 可同时选择6项
                         </div>
 
@@ -96,7 +97,8 @@
                                 <li>
                                     <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
                                         <div role="group" class="btn-group">
-                                            <ui-select ng-model="city.selected" theme="selectize" class="fl btn-pv" data-ng-change="setAreaFilter(city.selected.name)"
+                                            <ui-select ng-model="city.selected" theme="selectize" class="fl btn-pv"
+                                                       data-ng-change="setAreaFilter(city.selected.name)"
                                                        style="width: 80px;">
                                                 <ui-select-match placeholder="全部">{{$select.selected.name}}
                                                 </ui-select-match>
@@ -135,7 +137,7 @@
                 </div>-->
                 <div class="custom_table">
                     <div ui-grid="gridOptions" class="grid" style="min-height:400px;" ui-grid-pagination
-                         ui-grid-selection ui-grid-exporter ui-grid-expandable></div>
+                         ui-grid-selection ui-grid-exporter></div>
                     <gridpage></gridpage>
                 </div>
             </div>

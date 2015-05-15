@@ -11,7 +11,7 @@ app.controller('wayctrl', function ($scope, $rootScope, $http, requestService, m
         {name: "推广方式", displayName: "推广方式", field: "accountName"},
         {
             name: " ",
-            cellTemplate: "<div class='table_box'><a href='http://www.best-ad.cn' class='table_btn'></a></div>"
+            cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
         },
         {name: "点击", displayName: "点击", field: "click"},
         {name: "消费", displayName: "消费", field: "cost"},
