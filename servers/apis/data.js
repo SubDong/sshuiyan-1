@@ -146,7 +146,7 @@ api.get('/survey/1', function (req, res) {
     var indexes = date.createIndexes(startOffset, endOffset, "visitor-");
 
     // 指标数组
-    var quotas = ["vc", "page_conv", "outRate", "avgTime", "event_conv"];
+    var quotas = ["pv", "vc", "pageConversion", "outRate", "avgTime", "eventConversion", "arrivedRate"];
 
     es_request.search(req.es, indexes, type, quotas, null, [0], null, null, null, null, function (result) {
         datautils.send(res, result);
@@ -173,7 +173,7 @@ api.get('/survey/2', function (req, res) {
     var filters = JSON.parse(query['filter']);
 
     // 指标数组
-    var quotas = ["vc"];
+    var quotas = ["pv", "vc", "pageConversion", "outRate", "avgTime", "arrivedRate"];
 
     es_request.search(req.es, indexes, type, quotas, null, [0], filters, null, null, null, function (result) {
         datautils.send(res, result);
@@ -191,7 +191,7 @@ api.get('/survey/3', function (req, res) {
     var indexes = date.createIndexes(startOffset, endOffset, "visitor-");
 
     // 指标数组
-    var quotas = ["vc"];
+    var quotas = ["pv", "vc", "pageConversion", "outRate", "avgTime", "arrivedRate"];
 
     es_request.search(req.es, indexes, type, quotas, "region", [0], null, null, null, null, function (result) {
         datautils.send(res, result);
