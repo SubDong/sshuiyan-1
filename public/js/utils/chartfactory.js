@@ -757,7 +757,7 @@ var util = {
             }
         });
         var b = $("<b/>");
-        b.html("请选择指标");
+        b.html("<b>请选择指标</b>");
         var caret = $("<span/>");
         caret.attr("class", "caret");
         button.append(b);
@@ -772,7 +772,7 @@ var util = {
             rad.attr({
                 type: "checkBox",
                 name: "checkBox_" + c.id,
-                value: c.legendMultiData[i].ename,
+                value: c.legendMultiData[i].name,
                 asc: c.legendAllowCheckCount,
                 index: i + "",
                 chart: c.id,
@@ -787,7 +787,7 @@ var util = {
                 util.allowItem(this);
             });
             lab.append(rad);
-            spn.html("&nbsp;" + c.legendMultiData[i].name + "&nbsp;&nbsp;");
+            spn.html("&nbsp;" + c.legendMultiData[i].label + "&nbsp;&nbsp;");
             lab.append(spn);
             checkBoxDiv.append(lab);
         }
@@ -806,7 +806,13 @@ var util = {
                     checkText.push($(multiChecks[i]).next("span").html());
                 }
             }
-            button.html("<b>" + checkText.toString() + "</b>");
+            if (checkText.length) {
+                button.html("<b>" + checkText.toString() + "</b>");
+            }else{
+                button.empty();
+                button.append(b);
+                button.append(caret);
+            }
             if (c.legendClickListener) {
                 c.legendClickListener(multiChecks, chartObj, c, checkVal);
             }
@@ -833,7 +839,6 @@ var util = {
                 checked.push(row);
             }
         }
-        //console.log(checks);
         checks.each(function (i, o) {
             $(o).prev("span").css("background-position", "0px 0px");
             $(o).prop("checked", false);

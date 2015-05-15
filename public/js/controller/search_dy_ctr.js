@@ -12,7 +12,7 @@ app.controller('search_dy_ctr', function ($scope, $rootScope, $q, requestService
     //
     $scope.selectedQuota = ["click", "impression"];
     $scope.onLegendClickListener = function (radio, chartInstance, config, checkedVal) {
-        console.log(checkedVal);
+        $scope.init($rootScope.user, $rootScope.baiduAccount, "adgroup", checkedVal, $rootScope.start, $rootScope.end);
     }
     $scope.charts = [
         {
@@ -22,7 +22,7 @@ app.controller('search_dy_ctr', function ($scope, $rootScope, $q, requestService
                 legendMultiData: $rootScope.lagerMulti,
                 legendAllowCheckCount: 2,
                 legendClickListener: $scope.onLegendClickListener,
-                legendDefaultChecked: [5, 7],
+                legendDefaultChecked: [0, 1],
                 min_max: false,
                 bGap: true,
                 id: "indicators_charts",
@@ -37,22 +37,30 @@ app.controller('search_dy_ctr', function ($scope, $rootScope, $q, requestService
     $scope.init = function (user, baiduAccount, semType, quotas, start, end, renderLegend) {
         $rootScope.start = -1;
         $rootScope.end = -1;
-        var semRequest = $http.get(SEM_API_URL + user + "/" + baiduAccount + "/" + semType + "/" + quotas[0] + "-" + quotas[1] + "-?startOffset=" + start + "&endOffset=" + end);
-        $q.all([semRequest]).then(function (final_result) {
-            final_result[0].data.sort(chartUtils.by(quotas[0]));
-            final_result[0].data = final_result[0].data.slice(0, 20);
-            var total_result = chartUtils.getSemBaseData(quotas, final_result,"adgroupName");
-            var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
-            chart.showLoading({
-                text: "正在努力的读取数据中..."
-            });
-            $scope.charts[0].config.instance = chart;
-            if (renderLegend) {
-                util.renderLegend(chart, $scope.charts[0].config);
+        if (quotas.length) {
+            var semRequest = "";
+            if (quotas.length == 1) {
+                semRequest = $http.get(SEM_API_URL + user + "/" + baiduAccount + "/" + semType + "/" + quotas[0] + "-?startOffset=" + start + "&endOffset=" + end);
+            } else {
+                semRequest = $http.get(SEM_API_URL + user + "/" + baiduAccount + "/" + semType + "/" + quotas[0] + "-" + quotas[1] + "-?startOffset=" + start + "&endOffset=" + end)
             }
-            cf.renderChart(total_result, $scope.charts[0].config);
-            chart.hideLoading();
-        });
+            $q.all([semRequest]).then(function (final_result) {
+                final_result[0].data.sort(chartUtils.by(quotas[0]));
+                final_result[0].data = final_result[0].data.slice(0, 20);
+                var total_result = chartUtils.getSemBaseData(quotas, final_result, "adgroupName");
+                var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
+                chart.showLoading({
+                    text: "正在努力的读取数据中..."
+                });
+                $scope.charts[0].config.instance = chart;
+                if (renderLegend) {
+                    util.renderLegend(chart, $scope.charts[0].config);
+                    Custom.initCheckInfo();
+                }
+                cf.renderChart(total_result, $scope.charts[0].config);
+                chart.hideLoading();
+            });
+        }
     }
     $scope.init($rootScope.user, $rootScope.baiduAccount, "adgroup", $scope.selectedQuota, -1, -1, true);
 

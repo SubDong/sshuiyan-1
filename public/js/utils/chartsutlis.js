@@ -17,6 +17,8 @@ var chartUtils = {
                 break;
             case "页面转化":
                 return "pageConversion";
+            case "转化":
+                return "conversion";
             case "IP数":
                 return "ip";
             case "访问次数":
@@ -53,6 +55,8 @@ var chartUtils = {
                 break;
             case "pageConversion":
                 return "页面转化";
+            case "conversion":
+                return "转化";
             case "ip":
                 return "IP数";
             case "vc":
