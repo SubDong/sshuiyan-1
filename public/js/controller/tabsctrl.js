@@ -401,9 +401,6 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, re
     }
     $scope.$on("history", function (e, msg) {
         $scope.gridOptions.data = msg;
-        $scope.pagego = function (pagevalue) {
-            pagevalue.pagination.seek(Number($scope.page));
-        }
     });
 
 
@@ -484,7 +481,7 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, re
      * @param lati   查询纬度
      * @param type
      */
-    $scope.getHistoricalTrend = function (a, b) {
+    $scope.getHistoricalTrend = function (b) {
         if ($rootScope.tableSwitch.isJudge == undefined)$scope.isJudge = true;
         if ($rootScope.tableSwitch.isJudge)$rootScope.tableSwitch.tableFilter = undefined;
 

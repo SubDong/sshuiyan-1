@@ -3,7 +3,6 @@
  */
 app.controller('history', function ($scope, $window, $rootScope, requestService, areaService, $http, SEM_API_URL) {
     $scope.monthClass = true;
-    $scope.$on("history", fun);
     var esType = "2";
 
     $rootScope.tableTimeStart = -30;
