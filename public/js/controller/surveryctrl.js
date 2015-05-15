@@ -20,6 +20,7 @@ app.controller('SurveyCtrl', function ($scope, $http, $q, $rootScope, areaServic
         $scope.day_offset = -1;
         $scope.start = -1;
         $scope.end = -1;
+        //$scope.reloadGrid();
         $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $scope.start, $scope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
     };
     $scope.sevenDay = function () {
@@ -28,6 +29,7 @@ app.controller('SurveyCtrl', function ($scope, $http, $q, $rootScope, areaServic
         $scope.day_offset = -7;
         $scope.start = -7;
         $scope.end = -1;
+        //$scope.reloadGrid();
         $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $scope.start, $scope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
     };
     $scope.month = function () {
@@ -36,7 +38,8 @@ app.controller('SurveyCtrl', function ($scope, $http, $q, $rootScope, areaServic
         $scope.day_offset = -30;
         $scope.start = -30;
         $scope.end = -1;
-        $scope.initGrid($rootScope.user,$rootScope.baiduAccount, "account", $scope.start, $scope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
+        //$scope.reloadGrid();
+        $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $scope.start, $scope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
     };
     $scope.open = function ($event) {
         $scope.reset();
@@ -163,7 +166,7 @@ app.controller('SurveyCtrl', function ($scope, $http, $q, $rootScope, areaServic
     // 默认投放指标
     $scope.outQuota_ = "cost";
     // 默认效果指标
-    $scope.effectQuota_ = "pv";
+    $scope.effectQuota_ = "vc";
 
     $scope.startDate_ = 0;
     $scope.endDate_ = 0;
@@ -267,14 +270,15 @@ app.controller('SurveyCtrl', function ($scope, $http, $q, $rootScope, areaServic
                 cf.renderChart(esJson, $scope.charts[0].config);
             }
         });
-    }
+    };
     $scope.yesterday();
 
     // 触发投放指标的事件
     $scope.setOutQuota = function (outQuota) {
         $scope.outQuota_ = outQuota.value;
         $scope.selectedQuota[0] = outQuota.value;
-        $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $scope.start, $scope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
+        $scope.reloadGrid();
+        //$scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $scope.start, $scope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
         //console.log(outQuota.value);
         //$scope.refreshData();
         //$scope.init("jiehun", "baidu-bjjiehun2123585", "account", -1, -1, -1, 1);
@@ -283,8 +287,9 @@ app.controller('SurveyCtrl', function ($scope, $http, $q, $rootScope, areaServic
     // 触发效果指标的事件
     $scope.setEffectQuota = function (effectQuota) {
         $scope.effectQuota_ = effectQuota.value;
-        $scope.selectedQuota[1] = effectQuota.value
-        $scope.initGrid($rootScope.user,$rootScope.baiduAccount, $scope.start, $scope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
+        $scope.selectedQuota[1] = effectQuota.value;
+        $scope.reloadGrid();
+        //$scope.initGrid($rootScope.user, $rootScope.baiduAccount, $scope.start, $scope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
         //$scope.refreshData();
     };
 
@@ -383,10 +388,79 @@ app.controller('SurveyCtrl', function ($scope, $http, $q, $rootScope, areaServic
     };
 
     // =============== 推广概况底部表格数据展示 ===============
+
+    $scope.reloadGrid = function () {
+        $scope.columns1.splice($scope.columns1.length - 1, 1);
+        $scope.columns1.splice($scope.columns1.length - 1, 1);
+        $scope.columns2.splice($scope.columns2.length - 1, 1);
+        $scope.columns2.splice($scope.columns2.length - 1, 1);
+        $scope.columns3.splice($scope.columns3.length - 1, 1);
+        $scope.columns3.splice($scope.columns3.length - 1, 1);
+        $scope.columns4.splice($scope.columns4.length - 1, 1);
+        $scope.columns4.splice($scope.columns4.length - 1, 1);
+
+        $scope.columns1.push({
+            name: $scope.quotaMap.get($scope.outQuota_),
+            displayName: $scope.quotaMap.get($scope.outQuota_),
+            field: $scope.outQuota_
+        });
+        $scope.columns1.push({
+            name: $scope.quotaMap.get($scope.effectQuota_),
+            displayName: $scope.quotaMap.get($scope.effectQuota_),
+            field: $scope.effectQuota_
+        });
+
+        $scope.columns2.push({
+            name: $scope.quotaMap.get($scope.outQuota_),
+            displayName: $scope.quotaMap.get($scope.outQuota_),
+            field: $scope.outQuota_
+        });
+        $scope.columns2.push({
+            name: $scope.quotaMap.get($scope.effectQuota_),
+            displayName: $scope.quotaMap.get($scope.effectQuota_),
+            field: $scope.effectQuota_
+        });
+
+        $scope.columns3.push({
+            name: $scope.quotaMap.get($scope.outQuota_),
+            displayName: $scope.quotaMap.get($scope.outQuota_),
+            field: $scope.outQuota_
+        });
+        $scope.columns3.push({
+            name: $scope.quotaMap.get($scope.effectQuota_),
+            displayName: $scope.quotaMap.get($scope.effectQuota_),
+            field: $scope.effectQuota_
+        });
+
+        $scope.columns4.push({
+            name: $scope.quotaMap.get($scope.outQuota_),
+            displayName: $scope.quotaMap.get($scope.outQuota_),
+            field: $scope.outQuota_
+        });
+        $scope.columns4.push({
+            name: $scope.quotaMap.get($scope.effectQuota_),
+            displayName: $scope.quotaMap.get($scope.effectQuota_),
+            field: $scope.effectQuota_
+        });
+
+        // refresh grid data
+        // TODO replace trackId
+        $scope.loadGridOptions1Data("jiehun", "baidu-bjjiehun2123585", "account", $scope.start, $scope.end, -1, 2);
+        $scope.loadGridOptions2Data("jiehun", "baidu-bjjiehun2123585", "account", $scope.start, $scope.end, -1, 2);
+        $scope.loadGridOptions3Data("jiehun", "baidu-bjjiehun2123585", "account", $scope.start, $scope.end, 2);
+        $scope.loadGridOptions4Data("jiehun", "baidu-bjjiehun2123585", "region", $scope.start, $scope.end, -1, 2);
+    };
+
     $scope.gridOptions1Data = [];
     $scope.gridOptions2Data = [];
     $scope.gridOptions3Data = [];
     $scope.gridOptions4Data = [];
+
+    $scope.columns1 = [
+        {name: '全部推广方式 - 推广账户', field: "accountName"},
+        {name: '消费', field: "cost"},
+        {name: '访问次数', field: "vc"}
+    ];
 
     $scope.gridOptions1 = {
         enableColumnMenus: false,
@@ -395,11 +469,7 @@ app.controller('SurveyCtrl', function ($scope, $http, $q, $rootScope, areaServic
         enableGridMenu: false,
         enableHorizontalScrollbar: 0,
         enableVerticalScrollbar: 0,
-        columnDefs: [
-            {name: '全部推广方式 - 推广账户', field: "accountName"},
-            {name: '消费', field: "cost"},
-            {name: '访问次数', field: "vc"}
-        ]
+        columnDefs: $scope.columns1
 
     };
 
@@ -411,7 +481,8 @@ app.controller('SurveyCtrl', function ($scope, $http, $q, $rootScope, areaServic
         }).success(function (data, status) {
             var _obj = {};
             _obj["accountName"] = data[0].accountName;
-            _obj["cost"] = data[0].cost;
+            _obj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? data[0][$scope.outQuota_] + "%" : data[0][$scope.outQuota_];
+            $scope.gridOptions1Data = [];
             $scope.gridOptions1Data.push(_obj);
 
             $http({
@@ -423,7 +494,7 @@ app.controller('SurveyCtrl', function ($scope, $http, $q, $rootScope, areaServic
                     obj[item.label] = item.quota[0];
                 });
 
-                $scope.gridOptions1Data[0]["vc"] = obj["vc"];
+                $scope.gridOptions1Data[0][$scope.effectQuota_] = ($scope.effectQuota_ == "outRate" || $scope.effectQuota_ == "arrivedRate") ? obj[$scope.effectQuota_] + "%" : obj[$scope.effectQuota_];
                 $scope.gridOptions1.data = $scope.gridOptions1Data;
             }).error(function (error) {
                 console.log(error);
@@ -432,6 +503,12 @@ app.controller('SurveyCtrl', function ($scope, $http, $q, $rootScope, areaServic
         });
     };
 
+    $scope.columns2 = [
+        {name: '全部推广方式 - 推广方式', field: "way"},
+        {name: '消费', field: "cost"},
+        {name: '访问次数', field: "vc"}
+    ];
+
     $scope.gridOptions2 = {
         enableColumnMenus: false,
         enableSorting: false,
@@ -439,11 +516,7 @@ app.controller('SurveyCtrl', function ($scope, $http, $q, $rootScope, areaServic
         enableGridMenu: false,
         enableHorizontalScrollbar: 0,
         enableVerticalScrollbar: 0,
-        columnDefs: [
-            {name: '全部推广方式 - 推广方式', field: "way"},
-            {name: '消费', field: "cost"},
-            {name: '访问次数', field: "vc"}
-        ]
+        columnDefs: $scope.columns2
 
     };
 
@@ -455,7 +528,8 @@ app.controller('SurveyCtrl', function ($scope, $http, $q, $rootScope, areaServic
         }).success(function (data, status) {
             var _obj = {};
             _obj["way"] = "搜索推广(" + data[0].accountName + ")";
-            _obj["cost"] = data[0].cost;
+            _obj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? data[0][$scope.outQuota_] + "%" : data[0][$scope.outQuota_];
+            $scope.gridOptions2Data = [];
             $scope.gridOptions2Data.push(_obj);
 
             $http({
@@ -467,7 +541,7 @@ app.controller('SurveyCtrl', function ($scope, $http, $q, $rootScope, areaServic
                     obj[item.label] = item.quota[0];
                 });
 
-                $scope.gridOptions2Data[0]["vc"] = obj["vc"];
+                $scope.gridOptions2Data[0][$scope.effectQuota_] = ($scope.effectQuota_ == "outRate" || $scope.effectQuota_ == "arrivedRate") ? obj[$scope.effectQuota_] + "%" : obj[$scope.effectQuota_];
                 $scope.gridOptions2.data = $scope.gridOptions2Data;
             }).error(function (error) {
                 console.log(error);
@@ -476,6 +550,12 @@ app.controller('SurveyCtrl', function ($scope, $http, $q, $rootScope, areaServic
         });
     };
 
+    $scope.columns3 = [
+        {name: '全部推广方式 - 设备', field: "device"},
+        {name: '消费', field: "cost"},
+        {name: '访问次数', field: "vc"}
+    ];
+
     $scope.gridOptions3 = {
         enableColumnMenus: false,
         enableSorting: false,
@@ -483,11 +563,7 @@ app.controller('SurveyCtrl', function ($scope, $http, $q, $rootScope, areaServic
         enableGridMenu: false,
         enableHorizontalScrollbar: 0,
         enableVerticalScrollbar: 0,
-        columnDefs: [
-            {name: '全部推广方式 - 设备', field: "device"},
-            {name: '消费', field: "cost"},
-            {name: '访问次数', field: "vc"}
-        ]
+        columnDefs: $scope.columns3
 
     };
 
@@ -506,20 +582,31 @@ app.controller('SurveyCtrl', function ($scope, $http, $q, $rootScope, areaServic
         }).then(function (tmpResult) {
             var pcObj = {};
             pcObj["device"] = "计算机";
-            pcObj["cost"] = tmpResult[0][0].cost;
-            pcObj["vc"] = tmpResult[2][0].quota[0];
+            pcObj[$scope.outQuota_] = tmpResult[0][0][$scope.outQuota_];
+            pcObj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? pcObj[$scope.outQuota_] + "%" : pcObj[$scope.outQuota_];
+            pcObj[$scope.effectQuota_] = tmpResult[2][0].quota[0];
+            pcObj[$scope.effectQuota_] = ($scope.effectQuota_ == "outRate" || $scope.effectQuota_ == "arrivedRate") ? pcObj[$scope.effectQuota_] + "%" : pcObj[$scope.effectQuota_];
+            $scope.gridOptions3Data = [];
             $scope.gridOptions3Data.push(pcObj);
 
 
             var mobileObj = {};
             mobileObj["device"] = "移动设备";
-            mobileObj["cost"] = tmpResult[1][0].cost;
-            mobileObj["vc"] = tmpResult[3][0].quota[0];
+            mobileObj[$scope.outQuota_] = tmpResult[1][0][$scope.outQuota_];
+            mobileObj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? mobileObj[$scope.outQuota_] + "%" : mobileObj[$scope.outQuota_];
+            mobileObj[$scope.effectQuota_] = tmpResult[3][0].quota[0];
+            mobileObj[$scope.effectQuota_] = ($scope.effectQuota_ == "outRate" || $scope.effectQuota_ == "arrivedRate") ? mobileObj[$scope.effectQuota_] + "%" : mobileObj[$scope.effectQuota_];
             $scope.gridOptions3Data.push(mobileObj);
             $scope.gridOptions3.data = $scope.gridOptions3Data;
 
         });
     };
+
+    $scope.columns4 = [
+        {name: '全部推广方式 - 地域', field: "region"},
+        {name: '消费', field: "cost"},
+        {name: '访问次数', field: "vc"}
+    ];
 
     $scope.gridOptions4 = {
         enableColumnMenus: false,
@@ -528,11 +615,7 @@ app.controller('SurveyCtrl', function ($scope, $http, $q, $rootScope, areaServic
         enableGridMenu: false,
         enableHorizontalScrollbar: 0,
         enableVerticalScrollbar: 0,
-        columnDefs: [
-            {name: '全部推广方式 - 地域', field: "region"},
-            {name: '消费', field: "cost"},
-            {name: '访问次数', field: "vc"}
-        ]
+        columnDefs: $scope.columns4
 
     };
 
@@ -547,6 +630,7 @@ app.controller('SurveyCtrl', function ($scope, $http, $q, $rootScope, areaServic
             });
             return tmp;
         }).then(function (tmpResult) {
+            $scope.gridOptions4Data = [];
             tmpResult[0].forEach(function (item) {
                 var esRegionArr = tmpResult[1][0].key;
                 var regionName = item.regionName;
@@ -555,8 +639,9 @@ app.controller('SurveyCtrl', function ($scope, $http, $q, $rootScope, areaServic
                         if (esRegionArr[i].replace("市", "") == regionName) {
                             var obj = {};
                             obj["region"] = regionName;
-                            obj["cost"] = item.cost;
-                            obj["vc"] = tmpResult[1][0].quota[i];
+                            obj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? item[$scope.outQuota_] + "%" : item[$scope.outQuota_];
+                            obj[$scope.effectQuota_] = tmpResult[1][0].quota[i];
+                            obj[$scope.effectQuota_] = ($scope.effectQuota_ == "outRate" || $scope.effectQuota_ == "arrivedRate") ? obj[$scope.effectQuota_] + "%" : obj[$scope.effectQuota_];
                             $scope.gridOptions4Data.push(obj);
                         }
                     }

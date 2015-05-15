@@ -146,7 +146,7 @@ api.get('/survey/1', function (req, res) {
     var indexes = date.createIndexes(startOffset, endOffset, "visitor-");
 
     // 指标数组
-    var quotas = ["vc", "page_conv", "outRate", "avgTime", "event_conv"];
+    var quotas = ["pv", "vc", "pageConversion", "outRate", "avgTime", "eventConversion", "arrivedRate"];
 
     es_request.search(req.es, indexes, type, quotas, null, [0], null, null, null, null, function (result) {
         datautils.send(res, result);
@@ -173,7 +173,7 @@ api.get('/survey/2', function (req, res) {
     var filters = JSON.parse(query['filter']);
 
     // 指标数组
-    var quotas = ["vc"];
+    var quotas = ["pv", "vc", "pageConversion", "outRate", "avgTime", "arrivedRate"];
 
     es_request.search(req.es, indexes, type, quotas, null, [0], filters, null, null, null, function (result) {
         datautils.send(res, result);
@@ -191,7 +191,7 @@ api.get('/survey/3', function (req, res) {
     var indexes = date.createIndexes(startOffset, endOffset, "visitor-");
 
     // 指标数组
-    var quotas = ["vc"];
+    var quotas = ["pv", "vc", "pageConversion", "outRate", "avgTime", "arrivedRate"];
 
     es_request.search(req.es, indexes, type, quotas, "region", [0], null, null, null, null, function (result) {
         datautils.send(res, result);
@@ -240,9 +240,9 @@ api.get('/indextable', function (req, res) {
                             obj[_lati] = infoKey == 1 ? "直接访问" : infoKey == 2 ? "搜索引擎" : "外部链接";
                             break;
                         case "period":
-                            if(_formartInfo == "day"){
+                            if (_formartInfo == "day") {
                                 obj[_lati] = infoKey.substring(0, 10);
-                            }else{
+                            } else {
                                 obj[_lati] = infoKey.substring(infoKey.indexOf(" "), infoKey.length - 3) + " - " + infoKey.substring(infoKey.indexOf(" "), infoKey.length - 5) + "59";
                             }
                             break;
@@ -270,7 +270,7 @@ api.get('/indextable', function (req, res) {
             vidx++;
         });
         for (var key in maps) {
-            if(key != null){
+            if (key != null) {
                 result.push(maps[key]);
             }
         }
@@ -326,13 +326,13 @@ api.get('/realTimeHtml', function (req, res) {
                     urlHtml = urlHtml + "<li><span><a href='" + vtime.loc + "' target='_blank'>" + vtime.loc + "</a></span></li>"
                 });
                 var classInfo;
-                item._source.os.indexOf("Windows") != -1?classInfo = "windows":"";
-                item._source.os.indexOf("Windows") != -1?classInfo = "mac":"";
-                item._source.os.indexOf("Windows") != -1?classInfo = "liunx":"";
+                item._source.os.indexOf("Windows") != -1 ? classInfo = "windows" : "";
+                item._source.os.indexOf("Windows") != -1 ? classInfo = "mac" : "";
+                item._source.os.indexOf("Windows") != -1 ? classInfo = "liunx" : "";
 
 
                 var result = "<div class='trendbox'>" +
-                    "<div class='trend_top'><div class='trend_left'><div class='left_top'><div class='trend_img'><img class="+classInfo+"></div><div class='trend_text'>" +
+                    "<div class='trend_top'><div class='trend_left'><div class='left_top'><div class='trend_img'><img class=" + classInfo + "></div><div class='trend_text'>" +
                     "<ul><li>操作系统：<span>" + item._source.os + "</span></li><li>网络服务商：<span>" + item._source.isp + "</span></li><li>屏幕分辨率：<span>" + item._source.sr + "</span></li>" +
                     "<li>屏幕颜色:<span>" + item._source.sc + "</span></li></ul></div></div><div class='left_under'><div class='trend_img'><img src='../images/google.png'></div><div class='trend_text'>" +
                     "<ul><li>浏览器：<span>" + item._source.br + "</span></li><li>Flash版本：<span>" + item._source.fl + "</span></li><li>是否支持Cookie：<span>" + (item._source.ck == '1' ? " 支持" : " 不支持" ) + "</span></li>" +
