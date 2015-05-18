@@ -55,7 +55,8 @@
                 <div class="select_top">
                     <div class="under_top">
                         <b> {{outQuotas.selected.name||"消费"}}对比：</b>
-                        <ui-select ng-model="surveyfirst.choosedates" theme="selectize" class="fl"
+                        <ui-select ng-model="surveyfirst.selected" theme="selectize" class="fl"
+                                   ng-change="semCompareTo(surveyfirst.selected)"
                                    style="width: 120px;">
                             <ui-select-match placeholder="请选择对比项">{{$select.selected.name}}</ui-select-match>
                             <ui-select-choices repeat="surveyfirst in choosedates">
@@ -63,7 +64,8 @@
                             </ui-select-choices>
                         </ui-select>
                         <b> {{effectQuotas.selected.name||"访问次数"}}对比：</b>
-                        <ui-select ng-model="surveysecend.selected" theme="selectize" class="fl" style="width: 120px;">
+                        <ui-select ng-model="surveysecend.selected" theme="selectize" class="fl" style="width: 120px;"
+                                   ng-change="esCompareTo(surveysecend.selected)">
                             <ui-select-match placeholder="请选择对比项">{{$select.selected.name}}</ui-select-match>
                             <ui-select-choices repeat="surveysecend in choosedates">
                                 <span ng-bind-html="surveysecend.name"></span>

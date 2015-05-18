@@ -83,8 +83,8 @@ app.service('areaService', ['$rootScope', '$http', function ($rootScope, $http) 
     ];
     $rootScope.choosedate = {};
     $rootScope.choosedates = [
-        {name: '前一日'},
-        {name: '上周同期 '}
+        {name: '前一日',value:-2},
+        {name: '上周同期 ',value:-7}
     ];
     $rootScope.export = {};
     $rootScope.exports = [
