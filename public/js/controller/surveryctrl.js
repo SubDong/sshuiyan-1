@@ -1,7 +1,7 @@
 /**
  * Created by john on 2015/3/30.
  */
-app.controller('SurveyCtrl', function ($scope, $http, $q, $rootScope, areaService, SEM_API_URL) {
+app.controller('SurveyCtrl', function ($scope, $http, $q, $rootScope, areaService, SEM_API_URL, requestService) {
     $scope.day_offset = 0;    // 默认是今天(值为0), 值为-1代表昨天, 值为-7代表最近7天, 值为-30代表最近30天
     $scope.yesterdayClass = true;
     $scope.reset = function () {
@@ -15,6 +15,7 @@ app.controller('SurveyCtrl', function ($scope, $http, $q, $rootScope, areaServic
     $scope.start = -1;
     $scope.end = -1;
     $scope.yesterday = function () {
+        $(".under_top").show();
         $scope.reset();
         $scope.yesterdayClass = true;
         $scope.day_offset = -1;
@@ -24,6 +25,7 @@ app.controller('SurveyCtrl', function ($scope, $http, $q, $rootScope, areaServic
         $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $scope.start, $scope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
     };
     $scope.sevenDay = function () {
+        $(".under_top").hide();
         $scope.reset();
         $scope.sevenDayClass = true;
         $scope.day_offset = -7;
@@ -33,6 +35,7 @@ app.controller('SurveyCtrl', function ($scope, $http, $q, $rootScope, areaServic
         $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $scope.start, $scope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
     };
     $scope.month = function () {
+        $(".under_top").hide();
         $scope.reset();
         $scope.monthClass = true;
         $scope.day_offset = -30;
@@ -278,7 +281,7 @@ app.controller('SurveyCtrl', function ($scope, $http, $q, $rootScope, areaServic
         $scope.outQuota_ = outQuota.value;
         $scope.selectedQuota[0] = outQuota.value;
         $scope.reloadGrid();
-        //$scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $scope.start, $scope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
+        $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $scope.start, $scope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
         //console.log(outQuota.value);
         //$scope.refreshData();
         //$scope.init("jiehun", "baidu-bjjiehun2123585", "account", -1, -1, -1, 1);
@@ -288,10 +291,49 @@ app.controller('SurveyCtrl', function ($scope, $http, $q, $rootScope, areaServic
     $scope.setEffectQuota = function (effectQuota) {
         $scope.effectQuota_ = effectQuota.value;
         $scope.selectedQuota[1] = effectQuota.value;
-        $scope.reloadGrid();
-        //$scope.initGrid($rootScope.user, $rootScope.baiduAccount, $scope.start, $scope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
+        //$scope.reloadGrid();
+        $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $scope.start, $scope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
         //$scope.refreshData();
     };
+
+    $scope.semCompareTo = function (semSelected) {
+        var semRegionRequest = $http.get(SEM_API_URL + $rootScope.user + "/" + $rootScope.baiduAccount + "/account/" + $scope.selectedQuota[0] + "-?startOffset=" + semSelected.value + "&endOffset=" + semSelected.value).success
+        (function (res) {
+            var c = $scope.charts[0].config.instance;
+            c.addData([
+                [
+                    0,
+                    res[0][$scope.selectedQuota[0]],
+                    true,
+                    false
+                ]
+            ]);
+        });
+    }
+
+    $scope.esCompareTo = function (esSelected) {
+        var huiyanRequest = $http.get("/api/charts?start=" + esSelected.value + "&end=" + esSelected.value + "&dimension=period&userType=2&type=" + $scope.selectedQuota[1]).success
+        (function (res) {
+            var json = JSON.parse(eval("(" + res + ")").toString());
+            if (json.length) {
+                var date = json[0].key[0].substring(0, 10);
+                var count = 0;
+                json[0].quota.forEach(function (item) {
+                    count += item;
+                });
+                var c = $scope.charts[0].config.instance;
+                c.addData([
+                    [
+                        1,
+                        count,
+                        true,
+                        false,
+                        date
+                    ]
+                ]);
+            }
+        });
+    }
 
     // 通过效果指标获取搜索结果
     $scope.doSearchByEffectQuota = function (type) {

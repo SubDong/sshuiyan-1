@@ -161,9 +161,9 @@ var op = {
                 interval: 0
             }
         }
-        if (chartConfig.chartType == "line") {
-            option["color"] = ['#ff7f50', '#87cefa']
-        }
+        //if (chartConfig.chartType == "line") {
+        //    option["color"] = ['#ff7f50', '#87cefa']
+        //}
         chartConfig.toolShow = !chartConfig.toolShow ? false : true;
         if (chartConfig.toolShow) {
             option["toolbox"] = {
@@ -217,6 +217,7 @@ var op = {
         }
         option.xAxis[0].data = xData[0];
         option.legend.selected = select;
+        console.log(option);
         chartObj.setOption(option);
     },
     barChart: function (data, chartConfig) {

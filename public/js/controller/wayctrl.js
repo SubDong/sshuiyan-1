@@ -65,6 +65,7 @@ app.controller('wayctrl', function ($scope, $rootScope, $http, requestService, m
                 legendData: ["浏览量(PV)", "访客数(UV)", "跳出率", "平均访问时长", "点击量", "消费", "转化次数"],
                 legendClickListener: $scope.onLegendClick,
                 legendAllowCheckCount: 2,
+                legendDefaultChecked: [0, 1],
                 bGap: true,
                 min_max: false,
                 id: "indicators_charts",
