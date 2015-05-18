@@ -14,7 +14,7 @@ app.controller('equipmentctr', function ($scope, $rootScope, $http, requestServi
         {name: "网络供应商", displayName: "网络供应商", field: "isp"},
         {
             name: " ",
-            cellTemplate: "<div class='table_box'><a href='javascript:;' class='table_btn'></a></div>"
+            cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
         },
         {name: "浏览量(PV)", displayName: "浏览量(PV)", field: "pv"},
         {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},

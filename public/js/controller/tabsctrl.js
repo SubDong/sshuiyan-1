@@ -301,7 +301,7 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, re
     $scope.setWebSite = function (a) {
         if (a == 1) {
             $rootScope.tableSwitch.tableFilter = null;
-            $rootScope.tableSwitch.latitude = {name: "来源网站", displayName: "来源网站", field: "se"};
+            $rootScope.tableSwitch.latitude = {name: "来源网站", displayName: "来源网站", field: "dm"};
             $scope.webSite = 1;
             $rootScope.gridArray.shift()
             $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude)
@@ -317,6 +317,7 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, re
     };
     //设置地域过滤
     $scope.setAreaFilter = function (area) {
+        alert(area)
         if (!$rootScope.tableSwitch) {
             return;
         }
@@ -326,7 +327,11 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, re
             $rootScope.tableSwitch.tableFilter = "[{\"region\":[\"" + area + "\"]}]";
         }
         $scope.isJudge = false;
-        $scope.targetSearch();
+        if($scope.tableJu == "html"){
+            getHtmlTableData();
+        }else{
+            $scope.targetSearch();
+        }
     };
     //设置（搜索引擎）地域过滤
     $scope.setSearchEngineAreaFilter = function (area) {
@@ -421,7 +426,7 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, re
                             if (!obj) {
                                 obj = {};
                                 var dataString = (infoKey.toString().length >= 2 ? "" : "0")
-                                obj["period"] = dataString + infoKey + ":00 - "+dataString + infoKey + ":59";
+                                obj["period"] = dataString + infoKey + ":00 - " + dataString + infoKey + ":59";
                                 maps[infoKey] = obj;
                             }
                             obj[chartUtils.convertEnglish(info.label)] = info.quota[i]
@@ -457,6 +462,7 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, re
                 if (row.entity[$rootScope.tableSwitch.latitude.field] == "搜索引擎" && $rootScope.tableSwitch.latitude.field == "rf_type")$rootScope.tableSwitch.dimen = "se";
                 if (row.entity[$rootScope.tableSwitch.latitude.field] == "外部链接" && $rootScope.tableSwitch.latitude.field == "rf_type")$rootScope.tableSwitch.dimen = "rf";
                 if ($scope.webSite == 1)$rootScope.tableSwitch.dimen = "rf";
+                var returnFilter = $rootScope.tableSwitch.tableFilter;
                 $rootScope.tableSwitch.tableFilter = "[{\"" + $rootScope.tableSwitch.latitude.field + "\":[\"" + getField(row.entity[$rootScope.tableSwitch.latitude.field], $rootScope.tableSwitch.latitude.field) + "\"]}]";
                 row.entity.subGridOptions = {
                     showHeader: false,
@@ -474,6 +480,7 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, re
                         dataNumber = data.length;
                     }
                     row.entity.subGridOptions.data = data
+                    $rootScope.tableSwitch.tableFilter = returnFilter;
                 }).error(function (error) {
                     console.log(error);
                 });
@@ -533,7 +540,6 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, re
 
         var a = b.$parent.$parent.row.entity[$rootScope.tableSwitch.latitude.field];
         $rootScope.tableSwitch.tableFilter = "[{\"" + $rootScope.tableSwitch.latitude.field + "\":[\"" + getField(a, $rootScope.tableSwitch.latitude.field) + "\"]}]";
-
 
     }
 
