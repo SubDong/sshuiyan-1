@@ -7,6 +7,7 @@ app.controller('alliancectr', function ($scope, $rootScope, $http, requestServic
         $scope.dt = new Date();
         $rootScope.tableTimeStart = 0;
         $rootScope.tableTimeEnd = 0;
+        $rootScope.tableFormat = null;
         $rootScope.tableFilter = null;
         $rootScope.latitude = {name: "搜索引擎", displayName: "搜索引擎", field: "wd"}
         //

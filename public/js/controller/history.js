@@ -6,6 +6,7 @@ app.controller('history', function ($scope, $window, $rootScope, requestService,
     var esType = "2";
 
     $rootScope.tableTimeStart = -30;
+    $rootScope.tableFormat = null;
     $rootScope.tableTimeEnd = -1;
     $rootScope.gridArray[0] = {name: "日期", displayName: "日期", field: "period"};
     $rootScope.gridArray.splice(1, 1);

@@ -15,6 +15,7 @@ app.controller('trend_month_ctrl', function ($scope, $rootScope, $http, requestS
     //table配置
     $rootScope.tableTimeStart = -30;
     $rootScope.tableTimeEnd = -1;
+    $rootScope.tableFormat = "day";
     //配置默认指标
     $rootScope.checkedArray = ["pv", "uv", "ip", "outRate", "avgTime"];
     $rootScope.gridArray = [
@@ -112,6 +113,12 @@ app.controller('trend_month_ctrl', function ($scope, $rootScope, $http, requestS
             }
         });
         requestService.refresh($scope.charts);
+        if ($rootScope.start <= -7) {
+            $rootScope.tableFormat = "day";
+        } else {
+            $rootScope.tableFormat = "hour";
+        }
+        $rootScope.targetSearch();
     });
 
     $scope.hourcheck = function () {
@@ -128,13 +135,10 @@ app.controller('trend_month_ctrl', function ($scope, $rootScope, $http, requestS
                 e.config.keyFormat = "hour";
             }
         });
-        if ($rootScope.start <= -7) {
-            $rootScope.tableFormat = "day";
-        } else {
-            $rootScope.tableFormat = "hour";
-        }
-        requestService.refresh($scope.charts);
 
+        $rootScope.tableFormat = "hour";
+        $rootScope.targetSearch();
+        requestService.refresh($scope.charts);
     };
     $scope.daycheck = function () {
         $scope.hourcheckClass = false;
@@ -151,11 +155,7 @@ app.controller('trend_month_ctrl', function ($scope, $rootScope, $http, requestS
                 e.config.keyFormat = "hour";
             }
         });
-        if ($rootScope.start <= -7) {
-            $rootScope.tableFormat = "day";
-        } else {
-            $rootScope.tableFormat = "hour";
-        }
+        $rootScope.tableFormat = "day";
         $rootScope.targetSearch();
         requestService.refresh($scope.charts);
     };

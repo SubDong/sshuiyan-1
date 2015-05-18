@@ -6,6 +6,7 @@ app.controller('searchctr', function ($scope, $rootScope, $q, requestService, ar
         $scope.yesterdayClass = true;
         $rootScope.tableTimeStart = 0;//开始时间
         $rootScope.tableTimeEnd = 0;//结束时间、
+        $rootScope.tableFormat = null;
         //配置默认指标
         $rootScope.checkedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
         var newVar = {

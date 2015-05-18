@@ -297,6 +297,24 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, re
         $scope.isJudge = false;
         $scope.targetSearch();
     };
+    //设置来源网站
+    $scope.setWebSite = function (a) {
+        if (a == 1) {
+            $rootScope.tableSwitch.tableFilter = null;
+            $rootScope.tableSwitch.latitude = {name: "来源网站", displayName: "来源网站", field: "se"};
+            $scope.webSite = 1;
+            $rootScope.gridArray.shift()
+            $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude)
+        }
+        if (a == 0) {
+            $rootScope.tableSwitch.tableFilter = null;
+            $rootScope.tableSwitch.latitude = {name: "来源类型", displayName: "来源类型", field: "rf_type"};
+            $rootScope.gridArray.shift()
+            $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude)
+        }
+        $scope.isJudge = false;
+        $scope.targetSearch();
+    };
     //设置地域过滤
     $scope.setAreaFilter = function (area) {
         if (!$rootScope.tableSwitch) {
@@ -389,7 +407,34 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, re
                     $scope.gridOptions.data = dataArray;
                 });
             } else {
-                $scope.gridOptions.data = data;
+                if ($rootScope.tableFormat != "hour") {
+                    $scope.gridOptions.data = data;
+                } else {
+                    var result = [];
+                    var vaNumber = 0;
+                    var maps = {}
+                    var newData = chartUtils.getByHourByDayData(data);
+                    newData.forEach(function (info, x) {
+                        for (var i = 0; i < info.key.length; i++) {
+                            var infoKey = info.key[i];
+                            var obj = maps[infoKey];
+                            if (!obj) {
+                                obj = {};
+                                var dataString = (infoKey.toString().length >= 2 ? "" : "0")
+                                obj["period"] = dataString + infoKey + ":00 - "+dataString + infoKey + ":59";
+                                maps[infoKey] = obj;
+                            }
+                            obj[chartUtils.convertEnglish(info.label)] = info.quota[i]
+                            maps[infoKey] = obj;
+                        }
+                    });
+                    for (var key in maps) {
+                        if (key != null) {
+                            result.push(maps[key]);
+                        }
+                    }
+                    $scope.gridOptions.data = result;
+                }
             }
         }).error(function (error) {
             console.log(error);
@@ -411,6 +456,7 @@ app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, re
             if (row.isExpanded && $rootScope.tableSwitch.dimen != false) {
                 if (row.entity[$rootScope.tableSwitch.latitude.field] == "搜索引擎" && $rootScope.tableSwitch.latitude.field == "rf_type")$rootScope.tableSwitch.dimen = "se";
                 if (row.entity[$rootScope.tableSwitch.latitude.field] == "外部链接" && $rootScope.tableSwitch.latitude.field == "rf_type")$rootScope.tableSwitch.dimen = "rf";
+                if ($scope.webSite == 1)$rootScope.tableSwitch.dimen = "rf";
                 $rootScope.tableSwitch.tableFilter = "[{\"" + $rootScope.tableSwitch.latitude.field + "\":[\"" + getField(row.entity[$rootScope.tableSwitch.latitude.field], $rootScope.tableSwitch.latitude.field) + "\"]}]";
                 row.entity.subGridOptions = {
                     showHeader: false,

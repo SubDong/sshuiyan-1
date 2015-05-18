@@ -7,6 +7,7 @@ app.controller("sourcectr", function ($scope, $rootScope, $http, requestService,
     //table 参数配置
     $rootScope.tableTimeStart = 0;
     $rootScope.tableTimeEnd = 0;
+    $rootScope.tableFormat = null;
     //配置默认指标
     $rootScope.checkedArray = ["vc", "nuvRate", "ip"];
     $rootScope.gridArray = [

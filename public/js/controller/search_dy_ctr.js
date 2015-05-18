@@ -3,9 +3,9 @@
  */
 app.controller('search_dy_ctr', function ($scope, $rootScope, $q, requestService, areaService, $http, SEM_API_URL) {
     $scope.yesterdayClass = true;
-    $scope.yesterdayClass = true;
     $rootScope.tableTimeStart = -1;//开始时间
     $rootScope.tableTimeEnd = -1;//结束时间、
+    $rootScope.tableFormat = null;
     //配置默认指标
     $rootScope.searchCheckedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
     $rootScope.searchGridArray = [

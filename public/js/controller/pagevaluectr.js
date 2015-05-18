@@ -5,6 +5,7 @@ app.controller('pagevaluectr', function ($scope, $rootScope, $http, requestServi
     $scope.todayClass = true;
     $rootScope.tableTimeStart = 0;
     $rootScope.tableTimeEnd = 0;
+    $rootScope.tableFormat = null;
     //配置默认指标
     $rootScope.checkedArray = ["pv", "uv", "avgTime"];
     $rootScope.gridArray = [

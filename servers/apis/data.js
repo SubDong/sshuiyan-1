@@ -215,72 +215,76 @@ api.get('/indextable', function (req, res) {
     var _type = query["type"];
     var _formartInfo = query["formartInfo"];
 
-
     var _filter = query["filerInfo"] != null && query["filerInfo"] != 'null' ? JSON.parse(query["filerInfo"]) : query["filerInfo"] == 'null' ? null : query["filerInfo"];//过滤器
     var indexes = date.createIndexes(_startTime, _endTime, "visitor-");//indexs
 
     var period = date.period(_startTime, _endTime); //时间段
     var interval = _promotion == "undefined" || _promotion == undefined ? date.interval(_startTime, _endTime) : null; //时间分割
-    es_request.search(req.es, indexes, _type, _indic, _lati, [0], _filter, _promotion == "undefined" || _promotion == undefined ? period[0] : null, _promotion == "undefined" || _promotion == undefined ? period[1] : null, interval, function (data) {
-        var result = [];
-        var vidx = 0;
-        var maps = {}
-        var valueData = ["arrivedRate", "outRate", "nuvRate", "ct", "period", "se", "pm", "rf", "ja", "ck"];
-        data.forEach(function (info, x) {
-            for (var i = 0; i < info.key.length; i++) {
-                var infoKey = info.key[i];
-                var obj = maps[infoKey];
-                if (!obj) {
-                    obj = {};
-                    switch (_lati) {
-                        case "ct":
-                            obj[_lati] = infoKey == 0 ? "新访客" : "老访客";
-                            break;
-                        case "rf_type":
-                            obj[_lati] = infoKey == 1 ? "直接访问" : infoKey == 2 ? "搜索引擎" : "外部链接";
-                            break;
-                        case "period":
-                            if (_formartInfo == "day") {
-                                obj[_lati] = infoKey.substring(0, 10);
-                            } else {
-                                obj[_lati] = infoKey.substring(infoKey.indexOf(" "), infoKey.length - 3) + " - " + infoKey.substring(infoKey.indexOf(" "), infoKey.length - 5) + "59";
-                            }
-                            break;
-                        case "se":
-                            obj[_lati] = (infoKey == "-" ? "直接访问" : infoKey);
-                            break;
-                        case "pm":
-                            obj[_lati] = (infoKey == 0 ? "计算机端" : "移动端");
-                            break;
-                        case "rf":
-                            obj[_lati] = (infoKey == "-" ? "直接访问" : infoKey);
-                            break;
-                        case "ja":
-                            obj[_lati] = (infoKey == "1" ? "支持" : "不支持");
-                            break;
-                        case "ck":
-                            obj[_lati] = (infoKey == "1" ? "支持" : "不支持");
-                            break;
-                        default :
-                            obj[_lati] = infoKey;
-                            break;
+    es_request.search(req.es, indexes, _type, _indic, _lati, [0], _filter, _promotion == "undefined" || _promotion == undefined ? period[0] : null, _promotion == "undefined" || _promotion == undefined ? period[1] : null, _formartInfo == "hour" ? 1 : interval, function (data) {
+        if (_formartInfo != "hour") {
+            var result = [];
+            var vidx = 0;
+            var maps = {}
+            var valueData = ["arrivedRate", "outRate", "nuvRate", "ct", "period", "se", "pm", "rf", "ja", "ck"];
+            data.forEach(function (info, x) {
+                for (var i = 0; i < info.key.length; i++) {
+                    var infoKey = info.key[i];
+                    var obj = maps[infoKey];
+                    if (!obj) {
+                        obj = {};
+                        switch (_lati) {
+                            case "ct":
+                                obj[_lati] = infoKey == 0 ? "新访客" : "老访客";
+                                break;
+                            case "rf_type":
+                                obj[_lati] = infoKey == 1 ? "直接访问" : infoKey == 2 ? "搜索引擎" : "外部链接";
+                                break;
+                            case "period":
+                                if (_formartInfo == "day") {
+                                    obj[_lati] = infoKey.substring(0, 10);
+                                } else {
+                                    obj[_lati] = infoKey.substring(infoKey.indexOf(" "), infoKey.length - 3) + " - " + infoKey.substring(infoKey.indexOf(" "), infoKey.length - 5) + "59";
+                                }
+                                break;
+                            case "se":
+                                obj[_lati] = (infoKey == "-" ? "直接访问" : infoKey);
+                                break;
+                            case "pm":
+                                obj[_lati] = (infoKey == 0 ? "计算机端" : "移动端");
+                                break;
+                            case "rf":
+                                obj[_lati] = (infoKey == "-" ? "直接访问" : infoKey);
+                                break;
+                            case "ja":
+                                obj[_lati] = (infoKey == "1" ? "支持" : "不支持");
+                                break;
+                            case "ck":
+                                obj[_lati] = (infoKey == "1" ? "支持" : "不支持");
+                                break;
+                            default :
+                                obj[_lati] = infoKey;
+                                break;
+                        }
                     }
+                    if (info.label == "avgTime") {
+                        obj[info.label] = new Date(info.quota[i]).format("hh:mm:ss")
+                    } else {
+                        obj[info.label] = info.quota[i] + (valueData.indexOf(info.label) != -1 ? "%" : "");
+                    }
+                    maps[infoKey] = obj;
                 }
-                if (info.label == "avgTime") {
-                    obj[info.label] = new Date(info.quota[i]).format("hh:mm:ss")
-                } else {
-                    obj[info.label] = info.quota[i] + (valueData.indexOf(info.label) != -1 ? "%" : "");
+                vidx++;
+            });
+            for (var key in maps) {
+                if (key != null) {
+                    result.push(maps[key]);
                 }
-                maps[infoKey] = obj;
             }
-            vidx++;
-        });
-        for (var key in maps) {
-            if (key != null) {
-                result.push(maps[key]);
-            }
+            datautils.send(res, result);
+        } else {
+            datautils.send(res, JSON.stringify(data));
         }
-        datautils.send(res, result);
+
     })
 });
 /**
@@ -294,7 +298,7 @@ api.get('/realTimeAccess', function (req, res) {
     es_request.realTimeSearch(req.es, indexes, _type, _filters, function (data) {
         var resultArray = new Array();
         data.forEach(function (item, i) {
-            if(item._source.city != "-"){
+            if (item._source.city != "-") {
                 var result = {};
                 result["city"] = item._source.city == "-" ? "国外" : item._source.city;
                 var newDate = new Date(item._source.utime[0]).toString();

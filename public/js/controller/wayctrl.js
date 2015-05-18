@@ -7,6 +7,7 @@ app.controller('wayctrl', function ($scope, $rootScope, $http, requestService, m
     $rootScope.tableTimeEnd = 0;//结束时间、
     //配置默认指标
     $rootScope.checkedArray = ["click", "cost", "cpc", "pv", "vc", "avgPage"];
+    $rootScope.tableFormat = null;
     $rootScope.gridArray = [
         {name: "推广方式", displayName: "推广方式", field: "accountName"},
         {

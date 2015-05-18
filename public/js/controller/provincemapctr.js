@@ -6,6 +6,7 @@ app.controller("provincemapctr", function ($scope, $rootScope, $http, requestSer
 
     $rootScope.tableTimeStart = 0;//开始时间
     $rootScope.tableTimeEnd = 0;//结束时间、
+    $rootScope.tableFormat = null;
     //配置默认指标
     $rootScope.checkedArray = ["pv", "uv", "outRate"];
     $rootScope.gridArray = [

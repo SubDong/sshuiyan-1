@@ -6,6 +6,7 @@ app.controller("searchenginectr", function ($scope, $rootScope, $http, requestSe
     //table配置
     $rootScope.tableTimeStart = 0;
     $rootScope.tableTimeEnd = 0;
+    $rootScope.tableFormat = null;
     //配置默认指标
     $rootScope.checkedArray = ["vc", "uv", "nuvRate", "ip", "avgPage"];
     $rootScope.gridArray = [

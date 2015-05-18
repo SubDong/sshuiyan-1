@@ -7,6 +7,7 @@ app.controller('Trend_realtime_ctrl', function ($scope, $rootScope, $http, reque
     $rootScope.tableTimeStart = 0;
     $rootScope.tableTimeEnd = 0;
     $rootScope.checkedArray = 'SS';
+    $rootScope.tableFormat = null;
     $rootScope.tableSwitch = {
         latitude: {name: "地域", displayName: "地域", field: "region"},
         tableFilter: null,

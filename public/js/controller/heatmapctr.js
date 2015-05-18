@@ -67,6 +67,7 @@ app.controller('heatmapctr', function ($scope, $rootScope, $http, requestService
     //table配置
     $rootScope.tableTimeStart = 0;
     $rootScope.tableTimeEnd = 0;
+    $rootScope.tableFormat = null;
     $rootScope.tableSwitch = {
         latitude: {name: "日期", displayName: "日期", field: "period"},
         tableFilter: undefined,

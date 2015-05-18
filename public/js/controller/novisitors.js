@@ -5,6 +5,7 @@ app.controller('novisitors', function ($scope, $rootScope, $http) {
     $scope.todayClass = true;
     $rootScope.tableTimeStart = 0;
     $rootScope.tableTimeEnd = 0;
+    $rootScope.tableFormat = null;
     //配置默认指标
     $rootScope.checkedArray = ["vc", "uv", "outRate", "avgTime", "avgPage"];
     $rootScope.gridArray = [

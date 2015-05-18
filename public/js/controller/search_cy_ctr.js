@@ -6,6 +6,7 @@ app.controller('search_cy_ctr', function ($scope, $rootScope, $q, requestService
     //table默认信息配置
     $rootScope.tableTimeStart = 0;
     $rootScope.tableTimeEnd = 0;
+    $rootScope.tableFormat = null;
     $rootScope.tableFilter = null;
     $rootScope.latitude = {name: "搜索引擎", field: "wd"}
     $rootScope.dimen = false;

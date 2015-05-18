@@ -16,6 +16,7 @@ app.controller('Trend_yesterday_ctrl', function ($scope, $rootScope, $http, requ
     //table配置
     $rootScope.tableTimeStart = -1;
     $rootScope.tableTimeEnd = -1;
+    $rootScope.tableFormat = "hour";
     //配置默认指标
     $rootScope.checkedArray = ["pv", "uv", "ip", "outRate", "avgTime"];
     $rootScope.gridArray = [
@@ -117,6 +118,12 @@ app.controller('Trend_yesterday_ctrl', function ($scope, $rootScope, $http, requ
             }
         });
         requestService.refresh($scope.charts);
+        if ($rootScope.start <= -7) {
+            $rootScope.tableFormat = "day";
+        } else {
+            $rootScope.tableFormat = "hour";
+        }
+        $rootScope.targetSearch();
     });
 
     $scope.hourcheck = function () {
@@ -133,6 +140,12 @@ app.controller('Trend_yesterday_ctrl', function ($scope, $rootScope, $http, requ
                 e.config.keyFormat = "hour";
             }
         });
+        if ($rootScope.start <= -7) {
+            $rootScope.tableFormat = "day";
+        } else {
+            $rootScope.tableFormat = "hour";
+        }
+        $rootScope.targetSearch();
         requestService.refresh($scope.charts);
 
     };
@@ -151,6 +164,12 @@ app.controller('Trend_yesterday_ctrl', function ($scope, $rootScope, $http, requ
                 e.config.keyFormat = "hour";
             }
         });
+        if ($rootScope.start <= -7) {
+            $rootScope.tableFormat = "day";
+        } else {
+            $rootScope.tableFormat = "hour";
+        }
+        $rootScope.targetSearch();
         requestService.refresh($scope.charts);
     };
 

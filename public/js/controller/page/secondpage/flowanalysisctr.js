@@ -15,6 +15,7 @@ app.controller('flowanalysisctr', function ($scope, $rootScope, $http, requestSe
     //table配置
     $rootScope.tableTimeStart = 0;
     $rootScope.tableTimeEnd = 0;
+    $rootScope.tableFormat = null;
     $rootScope.tableSwitch = {
         latitude: {name: "页面url", displayName: "页面url", field: "loc"},
         tableFilter: null,

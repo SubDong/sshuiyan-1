@@ -390,7 +390,7 @@ var chartUtils = {
         _tmp["quota"] = _value;
         esJson.push(_tmp);
     },
-    getSemBaseData: function (quotas, final_result,semName) {
+    getSemBaseData: function (quotas, final_result, semName) {
         var total_result = [];
         quotas.forEach(function (quota) {
             var _key = [];
