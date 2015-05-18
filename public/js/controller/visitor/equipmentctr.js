@@ -94,11 +94,13 @@ app.controller('equipmentctr', function ($scope, $rootScope, $http, requestServi
                 legendData: ["访客数(UV)", "访问次数", "新访客数", "IP数", "贡献浏览量", "转化次数"],
                 legendClickListener: $scope.onLegendClick,
                 legendAllowCheckCount: 2,
+                legendDefaultChecked: [0, 1],
                 min_max: false,
                 bGap: true,
                 id: "equipment",
                 chartType: "bar",
                 dataKey: "key",
+                auotHidex: true,
                 keyFormat: 'none',
                 dataValue: "quota"
             },
