@@ -147,7 +147,8 @@ var op = {
                     type: !chartConfig.yType ? "value" : chartConfig.yType,
                     axisLabel: {
                         formatter: chartConfig.axFormat
-                    }
+                    },
+                    splitLine: {show: false}
                 },
                 {
                     'type': !chartConfig.yType ? "value" : chartConfig.yType
@@ -209,6 +210,7 @@ var op = {
                 } else {
                     var formatType = labelData[i];
                     option.series[i]["yAxisIndex"] = i;
+                    option.yAxis[i]["splitLine"] = {show: false};
                     ad.renderFormat(option, i, formatType);
                 }
             }
@@ -692,6 +694,7 @@ var util = {
             if (renderType == "checkBox") {
                 checked.forEach(function (def) {
                     if (def == i) {
+                        $(rad).parents().append("<span>fuck</span>");
                         rad.prop("checked", true);
                     }
                 });
@@ -808,7 +811,7 @@ var util = {
             }
             if (checkText.length) {
                 button.html("<b>" + checkText.toString() + "</b>");
-            }else{
+            } else {
                 button.empty();
                 button.append(b);
                 button.append(caret);
