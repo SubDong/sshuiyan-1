@@ -6,6 +6,7 @@ document.write('<style type="text/css">input.styled { display: none; } select.st
 var Custom = {
     initCheckInfo: function () {
         var inputs = document.getElementsByTagName("input"), span = Array(), textnode, option, active;
+        var defaultChecked = [];
         for (a = 0; a < inputs.length; a++) {
             if ((inputs[a].type == "checkbox" || inputs[a].type == "radio") && inputs[a].className.indexOf("styled") > -1) {
                 span[a] = document.createElement("span");
@@ -20,8 +21,25 @@ var Custom = {
                         span[a].style.backgroundPosition = position;
                     }
                 }
+                if (inputs[a].type == "checkbox") {
+                    if (inputs[a].checked == true) {
+                        defaultChecked.push(inputs[a].getAttribute("index"));
+                        defaultChecked.forEach(function (e, index) {
+                            switch (index) {
+                                case 0:
+                                    position = "0 -77px";
+                                    span[a].style.backgroundPosition = position;
+                                    break;
+                                case 1:
+                                    position = "0 -" + (radioHeight * 2) + "px";
+                                    span[a].style.backgroundPosition = position;
+                                    break;
+                            }
+                        });
+                    }
+                }
                 inputs[a].parentNode.insertBefore(span[a], inputs[a]);
-                inputs[a].onchange = Custom.clear;
+                //inputs[a].onchange = Custom.clear;
                 if (!inputs[a].getAttribute("disabled")) {
                     span[a].onmousedown = Custom.pushed;
                     span[a].onmouseup = Custom.check;
@@ -53,7 +71,7 @@ var Custom = {
                 }
             }
         }
-        document.onmouseup = Custom.clear;
+        //document.onmouseup = Custom.clear;
     },
     pushed: function () {
         element = this.nextSibling;

@@ -109,6 +109,12 @@ var chartUtils = {
             case "zh-CN":
                 return "简体中文";
                 break;
+            case "zh-cn":
+                return "繁体中文";
+                break;
+            case "en-US":
+                return "英文";
+                break;
             default :
                 return "其他";
         }
