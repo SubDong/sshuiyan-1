@@ -5,8 +5,11 @@ var eshosts = process.argv.slice(2)
 var client;
 
 if (eshosts.length > 0) {
+
+    var hosts = eshosts[0].split(",")
+
     client = new elasticsearch.Client({
-        host: 'http://' + eshosts[0],
+        "hosts": hosts,
         sniffOnStart: true,
         sniffInterval: 30000,
         keepAlive: true
