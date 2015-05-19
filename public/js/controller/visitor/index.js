@@ -1,6 +1,6 @@
 /**
  * Created by weiMS on 2015/5/18.....
  */
-define(["./provincemapctr"], function () {
+define(["./provincemapctr", "./equipmentctr", "./novisitors"], function () {
 
 });

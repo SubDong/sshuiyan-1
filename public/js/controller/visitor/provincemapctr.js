@@ -1,7 +1,7 @@
 /**
  * Created by john on 2015/3/31.
  */
-define(["./module", function (ctrs) {
+define(["./module"], function (ctrs) {
 
     ctrs.controller("provincemapctr", function ($scope, $rootScope, $http) {
         $scope.todayClass = true;
@@ -206,4 +206,4 @@ define(["./module", function (ctrs) {
 
     });
 
-}]);
+});

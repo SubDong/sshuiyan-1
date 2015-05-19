@@ -4,7 +4,7 @@
 define(["./module"], function (ctrs) {
     "use strict";
 
-    ctrs.controller('Trend_yesterday_ctrl', function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
+    ctrs.controller('trend_yesterday_ctrl', function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
         $scope.yesterdayClass = true;
         $scope.dayClass = true;
         $scope.reset = function () {

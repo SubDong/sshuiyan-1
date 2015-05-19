@@ -4,7 +4,7 @@
 define(["./module"], function(ctrs) {
     "use strict";
 
-    ctrs.controller('Trend_realtime_ctrl', function ($scope, $rootScope, $http, requestService, messageService, $log, areaService) {
+    ctrs.controller('trend_realtime_ctrl', function ($scope, $rootScope, $http, requestService, messageService, $log, areaService) {
         $scope.visitorCount = 0;
         //table配置
         $rootScope.tableTimeStart = 0;
