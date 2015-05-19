@@ -1,8 +1,8 @@
 var checkboxHeight = "25";
 var radioHeight = "25";
 var selectWidth = "190";
-/* No need to change anything after this */
-document.write('<style type="text/css">input.styled { display: none; } select.styled { position: relative; width: ' + selectWidth + 'px; opacity: 0; filter: alpha(opacity=0); z-index: 5; } .disabled { opacity: 0.5; filter: alpha(opacity=50); }</style>');
+///* No need to change anything after this */
+//document.write('<style type="text/css">input.styled { display: none; } select.styled { position: relative; width: ' + selectWidth + 'px; opacity: 0; filter: alpha(opacity=0); z-index: 5; } .disabled { opacity: 0.5; filter: alpha(opacity=50); }</style>');
 var Custom = {
     initCheckInfo: function () {
         var inputs = document.getElementsByTagName("input"), span = Array(), textnode, option, active;

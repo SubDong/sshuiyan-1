@@ -217,7 +217,6 @@ var op = {
         }
         option.xAxis[0].data = xData[0];
         option.legend.selected = select;
-        console.log(option);
         chartObj.setOption(option);
     },
     barChart: function (data, chartConfig) {
