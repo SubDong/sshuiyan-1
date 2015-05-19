@@ -982,7 +982,7 @@ nav, .navbar-default {
 }
 
 .dropdown-menu {
-  min-width: 100%;
+  max-width: 100%;
 }
 
 .novisitor {
@@ -1463,7 +1463,7 @@ nav, .navbar-default {
   line-height: inherit;
   .ui-select-match {
     span {
-      padding: 0 5px;
+      padding: 0 10px;
     }
   }
 }
@@ -1547,7 +1547,7 @@ nav, .navbar-default {
 .ui-grid-row {
 
   .ng-scope {
-    margin: 0 !important;
+    margin: 0;
   }
 }
 
@@ -1968,9 +1968,7 @@ nav, .navbar-default {
 .badge {
   background: none;
   color: #fff;
-  padding: 2px !important;
-  font-size: 1px !important;
-  min-width: 17px !important;
+  font-size: 12px;
 }
 
 .btn-success {
@@ -2540,4 +2538,132 @@ select.styled {
 .disabled {
   opacity: 0.5;
   filter: alpha(opacity=50);
+}
+
+.table-condensed thead th {
+  font-size: 12px;
+
+}
+
+.daterangepicker.dropdown-menu {
+  max-width: 464px;
+}
+
+.date_select {
+  .btn-group {
+    .pull-right {
+      margin: 0;
+      font-size: 12px;
+    }
+    .form-control {
+      padding: 0 10px;
+      height: 28px;
+      border: 0px;
+      border-radius: inherit;
+    }
+    .glyphicon {
+      padding-right: 5px;
+    }
+  }
+}
+
+.daterangepicker_start_input, .daterangepicker_end_input {
+  float: left;
+  label {
+    float: left;
+  }
+  input {
+    float: left;
+  }
+
+}
+
+.starttime {
+  width: 100%;
+}
+
+.daterangepicker .ranges .input-mini {
+  height: 20px;
+  line-height: 20px;
+  font-size: 12px;
+  width: 82px;
+}
+
+.calendar_box {
+  width: 100%;
+}
+
+.daterangepicker .ranges .range_inputs > div:nth-child(2) {
+  padding-left: 0px;
+}
+
+.daterangepicker .calendar-date {
+  border: 0px;
+}
+
+.daterangepicker td.start-date.end-date {
+  border-radius: 50%;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+}
+
+.daterangepicker .calendar th, .daterangepicker .calendar td {
+  width: 26px;
+  height: 30px;
+}
+
+.daterangepicker td.active, .daterangepicker td.active:hover {
+  background-color: #01aeef;
+}
+
+.table-condensed > thead > tr > th, .table-condensed > tbody > tr > th, .table-condensed > tfoot > tr > th, .table-condensed > thead > tr > td, .table-condensed > tbody > tr > td, .table-condensed > tfoot > tr > td {
+  padding: 2px;
+}
+
+.daterangepicker .calendar th, .daterangepicker .calendar td {
+  min-width: 26px;
+  font-size: 12px;
+}
+
+.calendar_box {
+  width: 100%;
+  padding: 0 10px;
+}
+
+.daterangepicker {
+  padding: 10px 0 0 0;
+  .ranges {
+    background: #fdfdfd;
+    width: 100%;
+  }
+  .btn-primary {
+    background: #5bc0de;
+    border-color: #5bc0de;
+  }
+  .btn-sm, .btn-group-sm > .btn {
+    padding: 2px 20px;
+  }
+}
+
+.calendar_button {
+  float: left;
+  margin: 10px;
+}
+
+.range_inputs {
+  float: right;
+  margin: 10px;
+
+}
+
+.daterangepicker .daterangepicker_start_input label, .daterangepicker .daterangepicker_end_input label {
+  width: 50px;
+}
+
+.daterangepicker.opensleft .ranges, .daterangepicker.opensleft .calendar {
+  margin: 0px;
+}
+
+.daterangepicker.opensleft .ranges {
+  padding: 10px 0;
 }

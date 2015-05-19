@@ -1,10 +1,8 @@
 /**
  * Created by XiaoWei on 2015/4/22.
  */
-
 define(["./module"], function (ctrs) {
     "use strict";
-
     ctrs.controller("externallinksctr", function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
         $scope.todayClass = true;
 
@@ -22,7 +20,7 @@ define(["./module"], function (ctrs) {
             },
             {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},
             {name: "新访客数", displayName: "新访客数", field: "nuv"},
-            {name: "新老访客比率", displayName: "新老访客比率", field: "nuvRate"},
+            {name: "新访客比率", displayName: "新访客比率", field: "nuvRate"},
         ];
         $rootScope.tableSwitch = {
             latitude: {name: "外部连接", displayName: "外部连接", field: "rf"},
