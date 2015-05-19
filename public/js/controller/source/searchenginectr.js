@@ -3,7 +3,6 @@
  */
 define(["./module"], function(ctrs) {
     "use strict";
-
     ctrs.controller("searchenginectr", function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
         $scope.todayClass = true;
         //table配置
@@ -20,7 +19,7 @@ define(["./module"], function(ctrs) {
             },
             {name: "访问次数", displayName: "访问次数", field: "vc"},
             {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},
-            {name: "新老访客比率", displayName: "新老访客比率", field: "nuvRate"},
+            {name: "新访客比率", displayName: "新访客比率", field: "nuvRate"},
             {name: "平均访问页数", displayName: "平均访问页数", field: "avgPage"},
             {name: "IP数", displayName: "IP数", field: "ip"}
         ];

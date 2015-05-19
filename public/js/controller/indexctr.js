@@ -214,11 +214,10 @@ define(['./module'], function (ctrs) {
         }
         $scope.continent = {};
         $scope.country = {};
-
-        //
-        $scope.dateClosed = function () {
-            $rootScope.start = $scope.startOffset;
-            $rootScope.end = $scope.endOffset;
+        $rootScope.datepickerClick = function (start, end, label) {
+            var time = chartUtils.getTimeOffset(start, end);
+            $rootScope.start = time[0];
+            $rootScope.end = time[1];
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
@@ -231,22 +230,8 @@ define(['./module'], function (ctrs) {
             requestService.refresh($scope.charts);
             requestService.gridRefresh($scope.grids);
 
-        };
-        //
+        }
+    }])
 
-        this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
-        //this.type = 'range';
-        /*      this.identity = angular.identity;*/
-        //$scope.$broadcast("update", "msg");
-        $scope.$on("update", function (e, datas) {
-            // 选择时间段后接收的事件
-            datas.sort();
-            //console.log(datas);
-            var startTime = datas[0];
-            var endTime = datas[datas.length - 1];
-            $scope.startOffset = (startTime - today_start()) / 86400000;
-            $scope.endOffset = (endTime - today_start()) / 86400000;
-            //console.log("startOffset=" + startOffset + ", " + "endOffset=" + endOffset);
-        });
-    }]);
-});
+})
+

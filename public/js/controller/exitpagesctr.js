@@ -34,25 +34,12 @@ app.controller('exitpagesctr', function ($scope, $rootScope, $http, requestServi
         $rootScope.targetSearch();
     });
     //日历
-    $scope.dateClosed = function () {
+    $rootScope.datepickerClick = function(start,end,label){
+        var time=chartUtils.getTimeOffset(start,end);
+        $rootScope.start = time[0];
+        $rootScope.end =time[1];
         $rootScope.targetSearch();
-        $rootScope.tableTimeStart = $scope.startOffset;
-        $rootScope.tableTimeEnd = $scope.endOffset;
         $scope.$broadcast("ssh_dateShow_options_time_change");
-    };
-    //
-    this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
-    //this.type = 'range';
-    /*      this.identity = angular.identity;*/
-    //$scope.$broadcast("update", "msg");
-    $scope.$on("update", function (e, datas) {
-        // 选择时间段后接收的事件
-        datas.sort();
-        //console.log(datas);
-        var startTime = datas[0];
-        var endTime = datas[datas.length - 1];
-        $scope.startOffset = (startTime - today_start()) / 86400000;
-        $scope.endOffset = (endTime - today_start()) / 86400000;
-        //console.log("startOffset=" + startOffset + ", " + "endOffset=" + endOffset);
-    });
+    }
+
 });

@@ -40,9 +40,10 @@ require.config({
         "js002": ["angular"],
         "angularjs/ui-bootstrap.min": ["angular"],
         "angularjs/ui-bootstrap-tpls": ["angular"],
-        "angularjs/gm.datepickerMultiSelect": ["angular"],
         "angularjs/ui-grid-unstable.min": ["angular"],
-        "angularjs/checkbox": ["angular"]
+        "angularjs/checkbox": ["angular"],
+        "angularjs/moment.min": ["angular"],
+        "angularjs/daterangepicker": ["angular"]
     }
 });
 
