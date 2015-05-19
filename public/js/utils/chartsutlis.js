@@ -412,6 +412,26 @@ var chartUtils = {
             total_result.push(_tmp);
         });
         return total_result;
+    },
+    getTimeOffset: function (start, end) {
+        var d = new Date();
+        var day = d.getDate();
+        var month = d.getMonth() + 1;
+        var year = d.getFullYear();
+        var times = year + "-" + month + "-" + day;
+        var newstr_start = (start + " 00:00:00").replace(/-/g, '/');
+        var newstr_end = (end + " 00:00:00").replace(/-/g, '/');
+        var newstr_now = (times + " 00:00:00").replace(/-/g, '/');
+
+        var date_start = new Date(newstr_start);
+        var date_end = new Date(newstr_end);
+        var date_now = new Date(newstr_now);
+
+        var _finalStart = date_start.getTime().toString().substr(0, 10);
+        var _finalEnd = date_end.getTime().toString().substr(0, 10);
+        var _finalNow = date_now.getTime().toString().substr(0, 10);
+        var times = Math.round(new Date().getTime() / 1000)
+        return [(_finalStart - _finalNow) / (24 * 3600), (_finalEnd - _finalNow) / (24 * 3600)];
     }
 }
 Array.prototype.removal = function () {

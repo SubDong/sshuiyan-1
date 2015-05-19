@@ -1,7 +1,6 @@
 /**
  * Created by weims on 2015/5/15.
  */
-
 define(["../app"], function (app) {
     'use strict';
 
@@ -12,8 +11,9 @@ define(["../app"], function (app) {
             "<button class=\"btn btn-default\" type=\"button\" ng-click=\"yesterday()\" ng-class=\"{'current':yesterdayClass}\">昨天</button>" +
             "<button class=\"btn btn-default\" type=\"button\" ng-click=\"sevenDay()\" ng-class=\"{'current':sevenDayClass}\">最近7天</button>" +
             "<button class=\"btn btn-default\" type=\"button\" ng-click=\"month()\" ng-class=\"{'current':monthClass}\">最近30天</button>" +
-            "<button type=\"button\" class=\"btn btn-default \" isactive=\"false\"datepicker-popup=\"{{format}}\" close-on-date-selection=\"false\" on-close=\"dateClosed()\" btn-radio=\"range\" on-close=\"dateClose()\" multi-select=\'app.selectedDates\' max-date=\"maxDate\" select-range=\'true\' ng-model=\'app.activeDate\' is-open=\"opened\" date-disabled=\"disabled(date, mode)\"current-text=\"今天\" clear-text=\"清空\" close-text=\"确认\" ng-click=\"open($event)\" ng-class=\"{'current':definClass}\">{{(app.selectedDates | orderBy)[0] | date:'yyyy-MM-dd'}}" +
-            "<span ng-if='app.selectedDates.length > 1'>至 {{(app.selectedDates | orderBy : '-')[0] | date:'yyyy-MM-dd'}} </span><i class=\"glyphicon glyphicon-calendar\"></i></button></div>",
+            "<button id=\"reportrange\"  class=\"btn btn-default pull-right date-picker my_picker\"   max=\"max\" ng-model=\"date\"> " +
+            "<i class=\"glyphicon glyphicon-calendar fa fa-calendar\"></i><span></span></button>" +
+            "</div>",
             replace: true,
             transclude: true,
             link: function (scope, element, attris, controller) {
@@ -114,7 +114,31 @@ define(["../app"], function (app) {
                     $event.stopPropagation();
                     scope.opens = true;
                 };
-
+                var d = new Date();
+                var day = d.getDate();
+                var month = d.getMonth() + 1;
+                var year = d.getFullYear();
+                var time = year + "-" + month + "-" + day
+                $('#reportrange span').html(time);
+                $('#reportrange').daterangepicker({
+                    format: 'YYYY-MM-DD',
+                    maxDate: time,
+                    showDropdowns: true,
+                    showWeekNumbers: false,
+                    timePicker: false,
+                    timePickerIncrement: 1,
+                    timePicker12Hour: false,
+                    opens: 'left',
+                    drops: 'down',
+                    timeZone: true,
+                    buttonClasses: ['btn', 'btn-sm'],
+                    applyClass: 'btn-primary',
+                    cancelClass: 'btn-default',
+                    separator: ' to '
+                }, function (start, end, label, time) {
+                    $rootScope.datepickerClick(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
+                    $('#reportrange span').html(start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD'));
+                });
             }
         };
         return option;
@@ -130,8 +154,37 @@ define(["../app"], function (app) {
     app.directive("dateother", function () {
         var option = {
             restrict: "EA",
-            template: "<div role=\"group\" class=\"btn-group fl\"><button type=\"button\" class=\"btn btn-default\" datepicker-popup=\"{{format}}\" ng-model=\"dt\" is-open=\"opens\" date-disabled=\"disabled(date, mode)\" current-text=\"今天\" clear-text=\"清空\" close-text=\"关闭\" ng-click=\"checkopen($event)\" ng-class=\"{'current':othersdateClass}\">与其他时间段对比 <i class=\"glyphicon glyphicon-calendar\"></i></button></div>",
-            transclude: true
+            template: "<div role=\"group\" class=\"btn-group fl\"><button id=\"choicetrange\"  class=\"btn btn-default pull-right date-picker my_picker\"   max=\"max\" ng-model=\"date\"> " +
+        "<i class=\"glyphicon glyphicon-calendar fa fa-calendar\"></i>与其他时间段对比<span></span></button></div>",
+            replace: true,
+            transclude: true,
+            link: function (scope, element, attris, controller) {
+                var d = new Date();
+                var day = d.getDate();
+                var month = d.getMonth() + 1;
+                var year = d.getFullYear();
+                var time = year + "-" + month + "-" + day
+                $('#choicetrange span').html(time);
+                $('#choicetrange').daterangepicker({
+                    format: 'YYYY-MM-DD',
+                    maxDate: time,
+                    showDropdowns: true,
+                    showWeekNumbers: false,
+                    timePicker: false,
+                    timePickerIncrement: 1,
+                    timePicker12Hour: false,
+                    opens: 'left',
+                    drops: 'down',
+                    timeZone: true,
+                    buttonClasses: ['btn', 'btn-sm'],
+                    applyClass: 'btn-primary',
+                    cancelClass: 'btn-default',
+                    separator: ' to '
+                }, function (start, end, label, time) {
+                    $rootScope.datepickerClick(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
+                    $('#reportrange span').html(start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD'));
+                });
+            }
         };
         return option;
     });
@@ -179,6 +232,7 @@ define(["../app"], function (app) {
         };
         return option;
     });
+
 //grid_page
     app.directive("gridpage", function () {
         var option = {
@@ -393,7 +447,7 @@ define(["../app"], function (app) {
         quotaObject.avgTime = "平均访问时长";
         quotaObject.avgPage = "平均访问页数";
         quotaObject.cost = "消费";
-        quotaObject.impression = "展现";
+        quotaObject.impression = "展现量";
         quotaObject.click = "点击量";
         quotaObject.ctr = "点击率";
         quotaObject.cpc = "平均点击价格";
@@ -424,7 +478,7 @@ define(["../app"], function (app) {
         quotaObject.avgTime = "访客在一次访问中，平均打开网站的时长。即每次访问中，打开第一个页面到关闭最后一个页面的平均值，打开一个页面时计算打开关闭的时间差。";
         quotaObject.avgPage = "平均每次访问浏览的页面数量，平均访问页数=浏览量/访问次数。";
         quotaObject.cost = "消费";
-        quotaObject.impression = "展现";
+        quotaObject.impression = "展现量";
         quotaObject.click = "点击量";
         quotaObject.ctr = "点击率";
         quotaObject.cpc = "平均点击价格";
