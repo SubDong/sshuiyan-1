@@ -138,7 +138,6 @@ define(["./module"], function(ctrs) {
                     e.config.keyFormat = "hour";
                 }
             });
-
             $rootScope.tableFormat = "hour";
             $rootScope.targetSearch();
             requestService.refresh($scope.charts);
@@ -158,7 +157,12 @@ define(["./module"], function(ctrs) {
                     e.config.keyFormat = "hour";
                 }
             });
-            $rootScope.tableFormat = "day";
+            if ($rootScope.start <= -7) {
+                $rootScope.tableFormat = "day";
+            } else {
+                $rootScope.tableFormat = "hour";
+            }
+
             $rootScope.targetSearch();
             requestService.refresh($scope.charts);
         };

@@ -1,7 +1,7 @@
 /**
  * Created by john on 2015/4/1.
  */
-define(["./module"], function(ctrs) {
+define(["./module"], function (ctrs) {
     "use strict";
 
     ctrs.controller('trend_today_ctrl', function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
@@ -148,11 +148,7 @@ define(["./module"], function(ctrs) {
                     e.config.keyFormat = "hour";
                 }
             });
-            if ($rootScope.start <= -7) {
-                $rootScope.tableFormat = "day";
-            } else {
-                $rootScope.tableFormat = "hour";
-            }
+            $rootScope.tableFormat = "hour";
             $rootScope.targetSearch();
             requestService.refresh($scope.charts);
 
