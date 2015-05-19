@@ -1,0 +1,12 @@
+{
+  "apps": [
+    {
+      "name": "huiyan",
+      "script": "app.js",
+      "args": [
+        "http://master1:29200,http://master2:29200",
+        "cluster"
+      ]
+    }
+  ]
+}

@@ -10,8 +10,8 @@ if (eshosts.length > 0) {
 
     client = new elasticsearch.Client({
         "hosts": hosts,
-        sniffOnStart: true,
-        sniffInterval: 30000,
+        sniffOnStart: false,
+        sniffOnConnectionFault:false,
         keepAlive: true
     })
 
