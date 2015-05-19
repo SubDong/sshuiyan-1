@@ -1,7 +1,11 @@
 /**
  * Created by john on 2015/4/2.
  */
-app.controller('urlspeedctr', function ($scope, $rootScope, requestService, areaService, $http) {
+define(["./module"], function (ctrs) {
+
+    "use strict";
+
+    ctrs.controller('urlspeedctr', function ($scope, $rootScope, requestService, areaService, $http) {
         $scope.todayClass = true;
 
         //table默认信息配置
@@ -85,5 +89,7 @@ app.controller('urlspeedctr', function ($scope, $rootScope, requestService, area
         this.removeFromSelected = function (dt) {
             this.selectedDates.splice(this.selectedDates.indexOf(dt), 1);
         }
-    }
-)
+    });
+
+});
+

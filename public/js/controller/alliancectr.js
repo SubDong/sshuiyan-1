@@ -1,7 +1,11 @@
 /**
  * Created by john on 2015/4/2.
  */
-app.controller('alliancectr', function ($scope, $rootScope, $http, requestService, messageService) {
+define(["./module"], function (ctrs) {
+
+    "use strict";
+
+    ctrs.controller('alliancectr', function ($scope, $rootScope, $http, requestService, messageService) {
         $scope.todayClass = true;
         //table默认信息配置
         $scope.dt = new Date();
@@ -109,5 +113,6 @@ app.controller('alliancectr', function ($scope, $rootScope, $http, requestServic
             this.selectedDates.splice(this.selectedDates.indexOf(dt), 1);
         }
 
-    }
-)
+    });
+
+});
