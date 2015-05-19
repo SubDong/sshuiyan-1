@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="mainapp">
+<html>
 <% include commons/header.html %>
 <body>
 <div class="container-fluid" id="heatmap">
@@ -11,11 +11,6 @@
         </div>
     </div>
 </div>
-<% include commons/js.html %>
-<script type="text/ng-template" id="alertMsgDialog">
-    <div class="ngdialog-message">
-        <span ng-bind="message"></span>
-    </div>
-</script>
+<script data-main="js/main" src="../js/require-min.js"></script>
 </body>
 </html>

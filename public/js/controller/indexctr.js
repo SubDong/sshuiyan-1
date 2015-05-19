@@ -2,7 +2,10 @@
  * Created by yousheng on 15/3/26.
  */
 
-app.controller('indexctr', function ($scope, $rootScope, $http, requestService, messageService, areaService) {
+define(['./module'], function (ctrs) {
+    'use strict';
+
+    ctrs.controller("indexctr", ['$scope', '$rootScope', '$http', 'requestService', 'messageService', 'areaService', function ($scope, $rootScope, $http, requestService, messageService, areaService) {
         $scope.todayClass = true;
         $scope.dayClass = true;
         $scope.timeselect = true;
@@ -244,9 +247,6 @@ app.controller('indexctr', function ($scope, $rootScope, $http, requestService, 
             $scope.startOffset = (startTime - today_start()) / 86400000;
             $scope.endOffset = (endTime - today_start()) / 86400000;
             //console.log("startOffset=" + startOffset + ", " + "endOffset=" + endOffset);
-
         });
-
-    }
-)
-;
+    }]);
+});
