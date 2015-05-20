@@ -402,7 +402,7 @@ var chartUtils = {
             var _key = [];
             var _value = [];
             var _tmp = {};
-            final_result[0].data.forEach(function (e) {
+            final_result[0].data.forEach(function (e, i) {
                 _key.push(e[semName]);
                 _value.push(e[quota]);
             });
@@ -433,6 +433,62 @@ var chartUtils = {
         var times = Math.round(new Date().getTime() / 1000)
         return [(_finalStart - _finalNow) / (24 * 3600), (_finalEnd - _finalNow) / (24 * 3600)];
     }
+
+
+    , getQuotaType: function (quota) {
+        switch (quota) {
+            case "click":
+                return "sem";
+                break;
+            case "impression":
+                return "sem";
+                break;
+            case "cost":
+                return "sem";
+                break;
+            case "ctr":
+                return "sem";
+                break;
+            case "cpc":
+                return "sem";
+                break;
+            default:
+                return "es";
+                break;
+        }
+    },
+    qAll: function (quotas) {
+        var quotaArray = [];
+        var semQuota = [];
+        var esQuota = [];
+        quotas.forEach(function (quota) {
+            var quotaType = chartUtils.getQuotaType(quota);
+            if (quotaType == "sem") {
+                semQuota.push(quota);
+            } else {
+                esQuota.push(quota);
+            }
+        });
+        quotaArray.push(semQuota);
+        quotaArray.push(esQuota);
+
+        var requestArray = [];
+
+        var requestParams=[]
+        var semParams = "";
+        var esParams = [];
+        quotaArray[0].forEach(function (quota) {
+            semParams += quota + "-";
+        });
+        quotaArray[1].forEach(function (quota) {
+            esParams.push(quota);
+        });
+        requestParams.push(semParams);
+        requestParams.push(esParams);
+        return requestParams;
+    }
+
+
 }
 Array.prototype.removal = function () {
     this.sort();

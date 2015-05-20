@@ -226,11 +226,11 @@ define(["./module"], function (ctrs) {
                     //legendClickListener: $scope.onLegendClickListener,
                     //legendDefaultChecked: [0, 1],
                     id: "index_charts",
-                    bGap: false,//首行缩进
                     min_max: false,
                     chartType: "line",//图表类型
                     keyFormat: 'none',
                     noFormat: true,
+                    auotHidex: true,
                     dataKey: "key",//传入数据的key值
                     dataValue: "quota"//传入数据的value值
                 }
