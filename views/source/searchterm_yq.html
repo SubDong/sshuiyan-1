@@ -1,8 +1,8 @@
-<div class="middle_containers" ng-controller="searchtermctr">
+<div class="middle_containers" ng-controller="searchtermctr_yq">
     <div class="date_select">
         <div aria-label="First group" role="group" class="btn-group fl">
-            <a class="btn btn-default current" type="button" data-ng-href="#source/searchterm">按指标分类</a>
-            <a class="btn btn-default" type="button" data-ng-href="#source/searchterm_yq">按搜索引擎</a>
+            <a class="btn btn-default " type="button" data-ng-href="#source/searchterm">按指标分类</a>
+            <a class="btn btn-default current" type="button" data-ng-href="#source/searchterm_yq">按搜索引擎</a>
         </div>
         <calendar></calendar>
         <dateother></dateother>
@@ -13,57 +13,7 @@
         <div class="index_chart">
         </div>
         <div class="table_content" ng-controller="TabsCtrl">
-            <tabset justified="true">
-                <tab heading="自定义指标">
-                    <div class="custom_title">
-                        <div class="chart_tops chart_default">
-                            <ul>
-                                <li><a href="#">系统默认指标 </a></li>
-                                <li><a href="#"> 订单默认指标</a></li>
-                            </ul>
-                        </div>
-                        <div class="chart_top">
-                            <span>网站基础指标 :</span>
-                            <ul>
-                                <li ng-repeat="item in TodayWeb" data-sshy-default defvalue="{{item.name}}"
-                                    class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
-                                    ng-click='indicators(item,TodayWeb,6)'>{{item.consumption_name}}
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="chart_top">
-                            <span>流量质量指标:</span>
-                            <ul>
-                                <li ng-repeat="item in Todayfloweds" data-sshy-default defvalue="{{item.name}}"
-                                    class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
-                                    ng-click='indicators(item,Todayfloweds,6)'>{{item.consumption_name}}
-                                </li>
-                            </ul>
-                        </div>
-                        <!--<div class="chart_top">
-                            <span>转化指标:</span>
-                            <ul>
-                                <li ng-repeat="item in Todytransform"
-                                    class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
-                                    ng-click='indicators(item,Todytransform,6)'>{{item.consumption_name}}
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="chart_top">
-                            <span>订单转化指标:</span>
-                            <ul>
-                                <li ng-repeat="item in Order"
-                                    class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
-                                    ng-click='indicators(item,Order,6)'>{{item.consumption_name}}
-                                </li>
-                            </ul>
-                        </div>-->
-                        <div class="chart_top chart_noborder">
-                            <button class="btn btn-primary" type="button" ng-click="targetSearch(true)">确定</button>
-                            * 可同时选择6项
-                        </div>
-                    </div>
-                </tab>
+            <tabset>
                 <tab heading="高级筛选">
                     <div class="custom_title">
                         <div class="chart_top2">

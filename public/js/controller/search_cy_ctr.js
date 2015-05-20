@@ -1,20 +1,50 @@
 /**
  * Created by XiaoWei on 2015/5/14.
  */
-define(["./module"], function(ctrs) {
+define(["./module"], function (ctrs) {
 
     "use strict";
 
     ctrs.controller('search_cy_ctr', function ($scope, $rootScope, $q, requestService, areaService, $http, SEM_API_URL) {
         $scope.yesterdayClass = true;
-        //table默认信息配置
-        $rootScope.tableTimeStart = 0;
-        $rootScope.tableTimeEnd = 0;
+        $rootScope.tableTimeStart = -1;//开始时间
+        $rootScope.tableTimeEnd = -1;//结束时间、
         $rootScope.tableFormat = null;
-        $rootScope.tableFilter = null;
-        $rootScope.latitude = {name: "搜索引擎", field: "wd"}
-        $rootScope.dimen = false;
-        //
+        //配置默认指标
+        $rootScope.searchCheckedArray = ["impression", "cost", "cpc"]
+        $rootScope.searchGridArray = [
+            {
+                name: "创意",
+                displayName: "创意",
+                field: "description1",
+                cellTemplate: "<div class='search_table_box'><a href='http://{{grid.appScope.getDataUrlInfo(grid, row, 6)}}' target='_blank' style='color:#0965b8;line-height:30px;'>{{grid.appScope.getDataUrlInfo(grid, row,5)}}</a><span>{{grid.appScope.getDataUrlInfo(grid, row,4)}}</span><span class='search_table_color'>{{grid.appScope.getDataUrlInfo(grid, row,6)}}</span>"
+            },
+            {
+                name: "状态",
+                displayName: "状态",
+                cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
+            },
+            {name: "展现", displayName: "展现", field: "impression"},
+            {name: "消费", displayName: "消费", field: "cost"},
+            {name: "平均点击价格", displayName: "平均点击价格", field: "cpc"}
+        ];
+        $rootScope.tableSearchSwitch = {
+            latitude: {name: "创意", displayName: "创意", field: "description1"},
+            tableFilter: null,
+            dimen: false,
+            // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
+            number: 1,
+            //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
+            coding: false,
+            //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
+            arrayClear: false, //是否清空指标array
+            promotionSearch: {
+                turnOn: true, //是否开始推广中sem数据
+                SEMData: "creative" //查询类型
+            }
+        };
+
+
         $scope.selectedQuota = ["click", "impression"];
         $scope.onLegendClickListener = function (radio, chartInstance, config, checkedVal) {
             $scope.init($rootScope.user, $rootScope.baiduAccount, "creative", checkedVal, $rootScope.start, $rootScope.end);

@@ -7,8 +7,8 @@ define(["app"], function (app) {
 
     app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, requestService, SEM_API_URL) {
         $scope.todayClass = true;
-        var user = "jiehun";
-        var baiduAccount = "baidu-bjjiehun2123585";
+        var user = "perfect2015";
+        var baiduAccount = "baidu-perfect2151880";
         var esType = "2";
 
         $scope.tabs = [
@@ -378,76 +378,86 @@ define(["app"], function (app) {
             }
             if ($rootScope.tableSwitch.isJudge == undefined) $scope.isJudge = true;
             if ($rootScope.tableSwitch.isJudge) $rootScope.tableSwitch.tableFilter = undefined;
-            $http({
-                method: 'GET',
-                url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field)
-                + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
-            }).success(function (data, status) {
-                if ($rootScope.tableSwitch.promotionSearch != undefined && $rootScope.tableSwitch.promotionSearch) {
-                    var url = SEM_API_URL + user + "/" + baiduAccount + "/account/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1"
-                    $http({
-                        method: 'GET',
-                        url: url
-                    }).success(function (dataSEM, status) {
-                        var dataArray = []
-                        var dataObj = {};
-                        if (dataSEM.length == 1) {
-                            $rootScope.checkedArray.forEach(function (item, i) {
-                                if ($rootScope.tableSwitch.latitude.field == "accountName") {
-                                    dataObj["accountName"] = dataSEM[0].accountName
-                                }
-                                dataSEM.forEach(function (sem, i) {
-                                    if (dataObj[item] == undefined) {
-                                        if (item == "ctr") {
-                                            dataObj[item] = sem[item] + "%"
-                                        } else {
-                                            dataObj[item] = sem[item]
+            if($rootScope.tableSwitch.number == 4){
+                var searchUrl = SEM_API_URL + "elasticsearch/"+esType+"/?startOffset="+ $rootScope.tableTimeStart+"&endOffset="+ $rootScope.tableTimeEnd;
+                $http({
+                    method: 'GET',
+                    url: searchUrl
+                }).success(function (data, status) {
+                    $scope.gridOptions.data = data;
+                })
+            }else{
+                $http({
+                    method: 'GET',
+                    url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field)
+                    + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
+                }).success(function (data, status) {
+                    if ($rootScope.tableSwitch.promotionSearch != undefined && $rootScope.tableSwitch.promotionSearch) {
+                        var url = SEM_API_URL + user + "/" + baiduAccount + "/account/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1"
+                        $http({
+                            method: 'GET',
+                            url: url
+                        }).success(function (dataSEM, status) {
+                            var dataArray = []
+                            var dataObj = {};
+                            if (dataSEM.length == 1) {
+                                $rootScope.checkedArray.forEach(function (item, i) {
+                                    if ($rootScope.tableSwitch.latitude.field == "accountName") {
+                                        dataObj["accountName"] = dataSEM[0].accountName
+                                    }
+                                    dataSEM.forEach(function (sem, i) {
+                                        if (dataObj[item] == undefined) {
+                                            if (item == "ctr") {
+                                                dataObj[item] = sem[item] + "%"
+                                            } else {
+                                                dataObj[item] = sem[item]
+                                            }
                                         }
-                                    }
+                                    });
+                                    data.forEach(function (es, i) {
+                                        if (dataObj[item] == undefined) {
+                                            dataObj[item] = es[item]
+                                        }
+                                    })
                                 });
-                                data.forEach(function (es, i) {
-                                    if (dataObj[item] == undefined) {
-                                        dataObj[item] = es[item]
-                                    }
-                                })
-                            });
-                            dataArray.push(dataObj);
-                        }
-                        $scope.gridOptions.data = dataArray;
-                    });
-                } else {
-                    if ($rootScope.tableFormat != "hour") {
-                        $scope.gridOptions.data = data;
+                                dataArray.push(dataObj);
+                            }
+                            $scope.gridOptions.data = dataArray;
+                        });
                     } else {
-                        var result = [];
-                        var vaNumber = 0;
-                        var maps = {}
-                        var newData = chartUtils.getByHourByDayData(data);
-                        newData.forEach(function (info, x) {
-                            for (var i = 0; i < info.key.length; i++) {
-                                var infoKey = info.key[i];
-                                var obj = maps[infoKey];
-                                if (!obj) {
-                                    obj = {};
-                                    var dataString = (infoKey.toString().length >= 2 ? "" : "0")
-                                    obj["period"] = dataString + infoKey + ":00 - " + dataString + infoKey + ":59";
+                        if ($rootScope.tableFormat != "hour") {
+                            $scope.gridOptions.data = data;
+                        } else {
+                            var result = [];
+                            var vaNumber = 0;
+                            var maps = {}
+                            var newData = chartUtils.getByHourByDayData(data);
+                            newData.forEach(function (info, x) {
+                                for (var i = 0; i < info.key.length; i++) {
+                                    var infoKey = info.key[i];
+                                    var obj = maps[infoKey];
+                                    if (!obj) {
+                                        obj = {};
+                                        var dataString = (infoKey.toString().length >= 2 ? "" : "0")
+                                        obj["period"] = dataString + infoKey + ":00 - " + dataString + infoKey + ":59";
+                                        maps[infoKey] = obj;
+                                    }
+                                    obj[chartUtils.convertEnglish(info.label)] = info.quota[i]
                                     maps[infoKey] = obj;
                                 }
-                                obj[chartUtils.convertEnglish(info.label)] = info.quota[i]
-                                maps[infoKey] = obj;
+                            });
+                            for (var key in maps) {
+                                if (key != null) {
+                                    result.push(maps[key]);
+                                }
                             }
-                        });
-                        for (var key in maps) {
-                            if (key != null) {
-                                result.push(maps[key]);
-                            }
+                            $scope.gridOptions.data = result;
                         }
-                        $scope.gridOptions.data = result;
                     }
-                }
-            }).error(function (error) {
-                console.log(error);
-            });
+                }).error(function (error) {
+                    console.log(error);
+                });
+            }
         }
         //init
         if ($scope.tableJu != 'html' && $rootScope.historyJu != "NO") {
@@ -532,11 +542,6 @@ define(["app"], function (app) {
 
         /**
          *  table 历史趋势
-         * @param start 开始时间
-         * @param end   结束时间
-         * @param indic   查询指标
-         * @param lati   查询纬度
-         * @param type
          */
         $scope.getHistoricalTrend = function (b) {
             if ($rootScope.tableSwitch.isJudge == undefined)$scope.isJudge = true;

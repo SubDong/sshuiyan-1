@@ -5,7 +5,7 @@ define(["./module"], function(ctrs) {
 
     'use strict';
 
-    ctrs.controller('searchtermctr', function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
+    ctrs.controller('searchtermctr_yq', function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
             $scope.todayClass = true;
             $scope.visible = false;
             //table默认信息配置
@@ -13,28 +13,26 @@ define(["./module"], function(ctrs) {
             $rootScope.tableTimeEnd = 0;
             $rootScope.tableFormat = null;
             //配置默认指标
-            $rootScope.checkedArray = ["pv", "vc", "nuv", "ip"];
+            //$rootScope.checkedArray = ["pv", "vc", "nuv", "ip"];
             $rootScope.gridArray = [
-                {name: "搜索词", displayName: "搜索词", field: "kw"},
-                {
-                    name: " ",
-                    cellTemplate: "<div class='table_box'><button onclick='getMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul><li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li></ul></div></div>"
-                },
-                {name: "浏览量(PV)", displayName: "浏览量(PV)", field: "pv"},
-                {name: "访问次数", displayName: "访问次数", field: "vc"},
-                {name: "新访客数", displayName: "新访客数", field: "nuv"},
-                {name: "IP数", displayName: "IP数", field: "ip"}
+                {name: "搜索词", displayName: "搜索词", field: "word"},
+                {name: "总搜索次数", displayName: "总搜索次数", field: "freq"},
+                {name: "百度", displayName: "百度", field: "baidu"},
+                {name: "搜狗", displayName: "搜狗", field: "sougou"},
+                {name: "好搜", displayName: "好搜", field: "haosou"},
+                {name: "必应", displayName: "必应", field: "bing"},
+                {name: "其他", displayName: "其他", field: "other"}
             ];
             $rootScope.tableSwitch = {
-                latitude: {name: "搜索词", displayName: "搜索词", field: "kw"},
+                latitude: {name: "搜索词", displayName: "搜索词", field: "word"},
                 tableFilter: null,
                 dimen: false,
                 // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
-                number: 2,
+                number: 4,
                 //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
-                coding: "<li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>",
-                //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
-                arrayClear: false //是否清空指标array
+                coding: false,
+                //"<li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
+                arrayClear: false//是否清空指标array
             };
             //
             $scope.$on("ssh_refresh_charts", function (e, msg) {

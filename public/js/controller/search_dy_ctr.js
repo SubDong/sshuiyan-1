@@ -13,7 +13,12 @@ define(["./module"], function (ctrs) {
         //配置默认指标
         $rootScope.searchCheckedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
         $rootScope.searchGridArray = [
-            {name: "关键词", displayName: "关键词", field: "region"},
+            {
+                name: "单元",
+                displayName: "单元",
+                field: "adgroupName",
+                cellTemplate: "<a href='javascript:void(0)' style='color:#0965b8;line-height:30px;' ng-click='grid.appScope.getHistoricalTrend(this)'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}"
+            },
             {
                 name: "状态",
                 displayName: "状态",
@@ -26,8 +31,8 @@ define(["./module"], function (ctrs) {
             {name: "平均访问时长", displayName: "平均访问时长", field: "avgTime"},
             {name: "新房客比率", displayName: "新房客比率", field: "nuvRate"}
         ];
-        $rootScope.tableSwitch = {
-            latitude: {name: "关键词", displayName: "关键词", field: "kw"},
+        $rootScope.tableSearchSwitch = {
+            latitude: {name: "单元", displayName: "单元", field: "adgroupName"},
             tableFilter: null,
             dimen: false,
             // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
@@ -38,7 +43,7 @@ define(["./module"], function (ctrs) {
             arrayClear: false, //是否清空指标array
             promotionSearch: {
                 turnOn: true, //是否开始推广中sem数据
-                SEMData: "keyword" //查询类型
+                SEMData: "adgroup" //查询类型
             }
         };
         $scope.selectedQuota = ["click", "impression"];

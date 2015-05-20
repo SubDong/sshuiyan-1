@@ -7,9 +7,8 @@ define(["./module"], function (ctrs) {
 
     ctrs.controller("SearchPromotion", function ($timeout, $scope, $rootScope, $http, $q, requestService, SEM_API_URL) {
         $scope.todayClass = true;
-        var user = "jiehun";
-        var baiduAccount = "baidu-bjjiehun2123585";
-        var semAdimension = "keyword";
+        var user = "perfect2015";
+        var baiduAccount = "baidu-perfect2151880";
         var esType = "2";
 
         //sem
@@ -36,29 +35,32 @@ define(["./module"], function (ctrs) {
             {consumption_name: "抵达率", name: "arrivedRate"},
         ];
 
-        var getHtmlTableData = function () {
-            $http({
-                method: 'GET',
-                url: '/api/realTimeAccess/?filerInfo=' + $rootScope.tableSwitch.tableFilter + "&type=" + esType
-            }).success(function (data, status) {
-                console.log(data)
-                $scope.gridOptions.data = data;
-            }).error(function (error) {
-                console.log(error);
-            });
-        };
-
-        if ($scope.tableSwitch.arrayClear)$rootScope.searchCheckedArray = new Array();
-        if ($scope.tableSwitch.arrayClear)$rootScope.searchGridArray = new Array();
+        /*    var getHtmlTableData = function () {
+         $http({
+         method: 'GET',
+         url: '/api/realTimeAccess/?filerInfo=' + $rootScope.tableSearchSwitch.tableFilter + "&type=" + esType
+         }).success(function (data, status) {
+         $scope.gridOptions.data = data;
+         }).error(function (error) {
+         console.log(error);
+         });
+         };*/
+        if ($rootScope.tableSearchSwitch.number == 1) {
+            $scope.gridBtnDivObj = "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn test'></a></div>";
+        } else if ($rootScope.tableSearchSwitch.number == 2) {
+            $scope.gridBtnDivObj = "<div class='table_box'><button onclick='getMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul>" + $rootScope.tableSwitch.coding + "</ul></div></div>";
+        }
+        if ($scope.tableSearchSwitch.arrayClear)$rootScope.searchCheckedArray = new Array();
+        if ($scope.tableSearchSwitch.arrayClear)$rootScope.searchGridArray = new Array();
 
 
         $rootScope.searchIndicators = function (item, entities, number, refresh) {
             $rootScope.searchGridArray.shift();
             if (refresh == "refresh") {
-                $rootScope.searchGridArray.unshift($rootScope.tableSwitch.latitude);
+                $rootScope.searchGridArray.unshift($rootScope.tableSearchSwitch.latitude);
                 return
             }
-            $rootScope.tableSwitch.number != 0 ? $scope.searchGridArray.shift() : "";
+            $rootScope.tableSearchSwitch.number != 0 ? $scope.searchGridArray.shift() : "";
             $scope.searchGridObj = {};
             $scope.searchGridObjButton = {};
             var a = $rootScope.searchCheckedArray.indexOf(item.name);
@@ -66,12 +68,12 @@ define(["./module"], function (ctrs) {
                 $rootScope.searchCheckedArray.splice(a, 1);
                 $rootScope.searchGridArray.splice(a, 1);
 
-                if ($rootScope.tableSwitch.number != 0) {
+                if ($rootScope.tableSearchSwitch.number != 0) {
                     $scope.searchGridObjButton["name"] = " ";
                     $scope.searchGridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
                     $rootScope.searchGridArray.unshift($scope.searchGridObjButton);
                 }
-                $rootScope.searchGridArray.unshift($rootScope.tableSwitch.latitude);
+                $rootScope.searchGridArray.unshift($rootScope.tableSearchSwitch.latitude);
             } else {
                 if ($rootScope.searchCheckedArray.length >= number) {
                     $rootScope.searchCheckedArray.shift();
@@ -84,13 +86,13 @@ define(["./module"], function (ctrs) {
 
                     $rootScope.searchGridArray.push($scope.searchGridObj);
 
-                    if ($rootScope.tableSwitch.number != 0) {
+                    if ($rootScope.tableSearchSwitch.number != 0) {
                         $scope.searchGridObjButton["name"] = " ";
                         $scope.searchGridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
                         $rootScope.searchGridArray.unshift($scope.searchGridObjButton);
                     }
 
-                    $rootScope.searchGridArray.unshift($rootScope.tableSwitch.latitude);
+                    $rootScope.searchGridArray.unshift($rootScope.tableSearchSwitch.latitude);
                 } else {
                     $rootScope.searchCheckedArray.push(item.name);
 
@@ -99,12 +101,12 @@ define(["./module"], function (ctrs) {
                     $scope.searchGridObj["field"] = item.name;
                     $rootScope.searchGridArray.push($scope.searchGridObj);
 
-                    if ($rootScope.tableSwitch.number != 0) {
+                    if ($rootScope.tableSearchSwitch.number != 0) {
                         $scope.searchGridObjButton["name"] = " ";
                         $scope.searchGridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
                         $rootScope.searchGridArray.unshift($scope.searchGridObjButton);
                     }
-                    $rootScope.searchGridArray.unshift($rootScope.tableSwitch.latitude);
+                    $rootScope.searchGridArray.unshift($rootScope.tableSearchSwitch.latitude);
                 }
             }
             angular.forEach(entities, function (subscription, index) {
@@ -114,7 +116,6 @@ define(["./module"], function (ctrs) {
             });
         };
         // 推广概况表格配置项
-
         $scope.gridOptions = {
             //paginationPageSizes: [25, 50, 75],
             paginationPageSize: 25,
@@ -125,37 +126,69 @@ define(["./module"], function (ctrs) {
             enableSorting: true,
             enableGridMenu: false,
             enableHorizontalScrollbar: 0,
-            columnDefs: $scope.searchGridArray,
+            columnDefs: $rootScope.searchGridArray,
             onRegisterApi: function (gridApi) {
                 $scope.gridApi2 = gridApi;
-                if ($rootScope.tableSwitch.dimen) {
+                if ($rootScope.tableSearchSwitch.dimen) {
                     griApiInfo(gridApi);
                 }
+
             }
         };
+
+        $scope.pagego = function (pagevalue) {
+            pagevalue.pagination.seek(Number($scope.page));
+        }
 
         $rootScope.targetSearchSpread = function (isClicked) {
             if (isClicked) {
                 $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.searchCheckedArray);
             }
+            var url = SEM_API_URL + user + "/" + baiduAccount + "/" + $rootScope.tableSearchSwitch.promotionSearch.SEMData + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1" + ($scope.searchId != undefined || $scope.searchId != "undefined" ? "&" + $scope.searchId : "")
+            console.log(url)
             $http({
                 method: 'GET',
-                url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.searchCheckedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field)
-                + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
-            }).success(function (data, status) {
-                console.log(data);
-                $scope.gridOptions.data = data;
-                /*var url = SEM_API_URL + user + "/" + baiduAccount + "/"+ semAdimension+"/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1"
-                 $http({
-                 method: 'GET',
-                 url: url
-                 }).success(function (dataSEM, status) {
+                url: url
+            }).success(function (dataSEM, status) {
+                var dataArray = []
+                dataSEM.forEach(function (item, i) {
+                    var searchId = $rootScope.tableSearchSwitch.promotionSearch.SEMData;
+                    var filter = "[{\"" + getTableFilter(searchId) + "\":[\"" + item[searchId + "Id"] + "\"]}]";
+                    $http({
+                        method: 'GET',
+                        url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.searchCheckedArray + "&dimension=" + ($rootScope.tableSearchSwitch.promotionSearch ? null : $rootScope.tableSearchSwitch.latitude.field)
+                        + "&filerInfo=" + filter + "&promotion=" + $rootScope.tableSearchSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
+                    }).success(function (data, status) {
+                        var datas = {};
+                        $rootScope.searchCheckedArray.forEach(function (x, y) {
+                            datas[x] = item[x] != undefined ? item[x] : data[0][x];
+                        });
+                        var field = $rootScope.tableSearchSwitch.latitude.field;
+                        datas[field] = item[field] + getTableTitle(field, item);
+                        datas["id"] = item[searchId + "Id"];
+                        dataArray.push(datas)
+                        if ((dataSEM.length - 1) == i) {
+                            if (field == "adgroupName" || field == "keywordName") {
+                                $scope.gridOptions.rowHeight = 55;
+                            } else {
+                                if (field == "description1") {
+                                    $scope.gridOptions.rowHeight = 100;
+                                } else {
+                                    $scope.gridOptions.rowHeight = 30;
+                                }
+                            }
+                            $scope.gridOptions.columnDefs = $rootScope.searchGridArray;
+                            $scope.gridOptions.data = dataArray;
+                        }
 
-                 });*/
 
-            }).error(function (error) {
-                console.log(error);
+                    }).error(function (error) {
+                        console.log(error);
+                    });
+                });
             });
+
+
         }
 
         //init
@@ -167,16 +200,139 @@ define(["./module"], function (ctrs) {
 
             });
         };
+
+
+        $scope.getHistoricalTrend = function (b) {
+            if ($rootScope.tableSearchSwitch.latitude.field == "campaignName") {
+                $rootScope.searchCheckedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
+                $rootScope.searchGridArray = [
+                    {
+                        name: "单元",
+                        displayName: "单元",
+                        field: "adgroupName",
+                        cellTemplate: "<a href='javascript:void(0)' target='_blank' style='color:#0965b8;line-height:30px;' ng-click='grid.appScope.getHistoricalTrend(this)'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}"
+                    },
+                    {
+                        name: "状态",
+                        displayName: "状态",
+                        cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
+                    },
+                    {name: "展现", displayName: "展现", field: "impression"},
+                    {name: "消费", displayName: "消费", field: "cost"},
+                    {name: "平均点击价格", displayName: "平均点击价格", field: "cpc"},
+                    {name: "跳出率", displayName: "跳出率", field: "outRate"},
+                    {name: "平均访问时长", displayName: "平均访问时长", field: "avgTime"},
+                    {name: "新房客比率", displayName: "新房客比率", field: "nuvRate"}
+                ];
+                $rootScope.tableSearchSwitch = {
+                    latitude: {name: "单元", displayName: "单元", field: "adgroupName"},
+                    tableFilter: null,
+                    dimen: false,
+                    // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
+                    number: 1,
+                    //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
+                    coding: false,
+                    //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
+                    arrayClear: false, //是否清空指标array
+                    promotionSearch: {
+                        turnOn: true, //是否开始推广中sem数据
+                        SEMData: "adgroup" //查询类型
+                    }
+                };
+                $scope.searchId = "cid=" + b.$parent.$parent.row.entity.id;
+            } else if ($rootScope.tableSearchSwitch.latitude.field == "adgroupName") {
+                $rootScope.searchCheckedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
+                $rootScope.searchGridArray = [
+                    {
+                        name: "关键词",
+                        displayName: "关键词",
+                        field: "keywordName",
+                        cellTemplate: "<a href='http://www.baidu.com/s?wd={{grid.appScope.getDataUrlInfo(grid, row,1)}}' target='_blank' style='color:#0965b8;line-height:30px;margin-left: 10px'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}"
+                    },
+                    {
+                        name: "状态",
+                        displayName: "状态",
+                        cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
+                    },
+                    {name: "展现", displayName: "展现", field: "impression"},
+                    {name: "消费", displayName: "消费", field: "cost"},
+                    {name: "平均点击价格", displayName: "平均点击价格", field: "cpc"},
+                    {name: "跳出率", displayName: "跳出率", field: "outRate"},
+                    {name: "平均访问时长", displayName: "平均访问时长", field: "avgTime"},
+                    {name: "新房客比率", displayName: "新房客比率", field: "nuvRate"}
+                ];
+                $rootScope.tableSearchSwitch = {
+                    latitude: {name: "关键词", displayName: "关键词", field: "keywordName"},
+                    tableFilter: null,
+                    dimen: "city",
+                    // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
+                    number: 1,
+                    //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
+                    coding: false,
+                    //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
+                    arrayClear: false, //是否清空指标array
+                    promotionSearch: {
+                        turnOn: true, //是否开始推广中sem数据
+                        SEMData: "keyword" //查询类型
+                    }
+                };
+                $scope.searchId = "agid=" + b.$parent.$parent.row.entity.id;
+            }
+            $rootScope.targetSearchSpread();
+        }
+
+
         //得到数据中的url
         $scope.getDataUrlInfo = function (grid, row, number) {
-            var a = row.entity.source.split(",");
+            if (number != 3) {
+                var a = row.entity[$rootScope.tableSearchSwitch.latitude.field].split(",");
+            }else if (number > 3) {
+                var a = row.entity[$rootScope.tableSearchSwitch.latitude.field].split(",`");
+            }
             if (number == 1) {
                 return a[0];
             } else if (number == 2) {
                 return a[1];
+            } else if (number == 3) {
+                return row.entity[$rootScope.tableSearchSwitch.latitude.field];
+            } else if (number == 4) {
+                return a[0]
+            } else if (number == 5) {
+                return a[1]
+            } else if (number == 6) {
+                return a[2]
             }
+
         }
     });
+
+    //得到tableFilter key
+    var getTableFilter = function (a) {
+        switch (a) {
+            case "campaign":
+                return "cid";
+            case "adgroup":
+                return "agid";
+            case "keyword":
+                return "kwid";
+            default :
+                return "cid";
+        }
+    }
+
+    var getTableTitle = function (a, b) {
+        switch (a) {
+            case "campaignName":
+                return "";
+            case "adgroupName":
+                return ",[" + b['campaignName'] + "]";
+            case "keywordName":
+                return ",[" + b['campaignName'] + "]" + "  [" + b['adgroupName'] + "]";
+            case "description1":
+                var returnData = ",`" + (b['creativeTitle'].length > 25 ? b['creativeTitle'].substring(0, 25) + "..." : b['creativeTitle']) + ",`" + b['showUrl']
+                return returnData;
+        }
+    }
 });
 
 /**********************隐藏table中按钮的弹出层*******************************/

@@ -14,7 +14,12 @@ define(["./module"], function (ctrs) {
         //配置默认指标
         $rootScope.searchCheckedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
         $rootScope.searchGridArray = [
-            {name: "关键词", displayName: "关键词", field: "region"},
+            {
+                name: "关键词",
+                displayName: "关键词",
+                field: "keywordName",
+                cellTemplate: "<a href='http://www.baidu.com/s?wd={{grid.appScope.getDataUrlInfo(grid, row,1)}}' target='_blank' style='color:#0965b8;line-height:30px;margin-left: 10px'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}"
+            },
             {
                 name: "状态",
                 displayName: "状态",
@@ -27,8 +32,8 @@ define(["./module"], function (ctrs) {
             {name: "平均访问时长", displayName: "平均访问时长", field: "avgTime"},
             {name: "新房客比率", displayName: "新房客比率", field: "nuvRate"}
         ];
-        $rootScope.tableSwitch = {
-            latitude: {name: "关键词", displayName: "关键词", field: "kw"},
+        $rootScope.tableSearchSwitch = {
+            latitude: {name: "关键词", displayName: "关键词", field: "keywordName"},
             tableFilter: null,
             dimen: "city",
             // 0 不需要btn ，1 无展开项btn ，2 有展开项btn

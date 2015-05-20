@@ -1,25 +1,22 @@
 /**
  * Created by john on 2015/4/2.
  */
-define(["./module"], function(ctrs) {
-
-    "use strict";
-
+define(["./module"], function (ctrs) {
     ctrs.controller('searchctr', function ($scope, $rootScope, $q, requestService, areaService, $http, SEM_API_URL) {
             $scope.visible = true;
             $scope.yesterdayClass = true;
-            $rootScope.tableTimeStart = 0;//开始时间
-            $rootScope.tableTimeEnd = 0;//结束时间、
+            $rootScope.tableTimeStart = -1;//开始时间
+            $rootScope.tableTimeEnd = -1;//结束时间、
             $rootScope.tableFormat = null;
             //配置默认指标
-            $rootScope.checkedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
-            var newVar = {
-                name: "状态",
-                displayName: "状态",
-                cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
-            };
-            $rootScope.gridArray = [
-                {name: "地域", displayName: "地域", field: "region"},
+            $rootScope.searchCheckedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
+            $rootScope.searchGridArray = [
+                {
+                    name: "计划",
+                    displayName: "计划",
+                    field: "campaignName",
+                    cellTemplate: "<a href='javascript:void(0)' style='color:#0965b8;line-height:30px;margin-left: 10px' ng-click='grid.appScope.getHistoricalTrend(this)'>{{grid.appScope.getDataUrlInfo(grid, row,3)}}</a>"
+                },
                 {
                     name: " ",
                     cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
@@ -31,10 +28,10 @@ define(["./module"], function(ctrs) {
                 {name: "平均访问时长", displayName: "平均访问时长", field: "avgTime"},
                 {name: "新访客比率", displayName: "新访客比率", field: "nuvRate"}
             ];
-            $rootScope.tableSwitch = {
-                latitude: {name: "关键词", displayName: "关键词", field: "kw"},
+            $rootScope.tableSearchSwitch = {
+                latitude: {name: "计划", displayName: "计划", field: "campaignName"},
                 tableFilter: null,
-                dimen: "city",
+                dimen: false,
                 // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
                 number: 1,
                 //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
@@ -42,8 +39,8 @@ define(["./module"], function(ctrs) {
                 //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
                 arrayClear: false, //是否清空指标array
                 promotionSearch: {
-                    turnOn: true, //是否开始推广中sem数据
-                    SEMData: "keyword" //查询类型
+                    turnOn: true, //是否开启推广中sem数据
+                    SEMData: "campaign" //查询类型
                 }
             };
 
@@ -102,7 +99,7 @@ define(["./module"], function(ctrs) {
             $scope.init($rootScope.user, $rootScope.baiduAccount, "campaign", $scope.selectedQuota, -1, -1, true);
 
             $scope.$on("ssh_refresh_charts", function (e, msg) {
-                $rootScope.targetSearch();
+                $rootScope.targetSearchSpread();
                 $scope.init($rootScope.user, $rootScope.baiduAccount, "campaign", $scope.selectedQuota, $rootScope.start, $rootScope.end);
             });
 
@@ -157,26 +154,4 @@ define(["./module"], function(ctrs) {
             });
         }
     );
-
 });
-
-/**
- * 搜索推广。单元
- */
-/**
- * 搜索推广。关键词
- */
-
-/**
- * 搜索推广。创意
- */
-/**
- * 搜索推广。创意
- */
-/**
- * 搜索推广。搜索词
- */
-
-/**
- * 搜索推广。推广URL
- */

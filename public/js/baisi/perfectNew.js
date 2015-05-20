@@ -234,9 +234,9 @@ var _pct = _pct || [];
     };
     h.I = {
         u: "best-ad.cn",
-        P: "182.92.227.79",
+        P: "og.best-ad.cn",
         S: "pft.gif",
-        dk: 8088,
+        //dk: 8088,":" + _c.dk +
         protocol: "https:" == document.location.protocol ? "https:" : "http:",
         Q: "os tit br fl pm sr lg ck ja sc dt rf loc tt ct vid u api et cv v".split(" ")
     };
@@ -383,9 +383,9 @@ var _pct = _pct || [];
             },
             na: function () {
                 var a, b, d;
-                var as = decodeURIComponent(md.g.rf).replace("http://","");
-                as = (as == "-"?as:as.substring(as.indexOf(".") + 1, as.indexOf("/")));
-                var ab = md.g.loc.replace("http://","");
+                var as = decodeURIComponent(md.g.rf).replace("http://", "");
+                as = (as == "-" ? as : as.substring(as.indexOf(".") + 1, as.indexOf("/")));
+                var ab = md.g.loc.replace("http://", "");
                 ab = ab.substring(ab.indexOf(".") + 1, ab.indexOf("/"));
                 md.g.tt = a = this.getData("PFT_" + c.id);
                 var Judge = (this.getData("PFT_COOKIE_RF") == null || this.getData("PFT_COOKIE_RF") != decodeURIComponent(md.g.rf));
@@ -420,7 +420,7 @@ var _pct = _pct || [];
                 var a = document.createElement("script");
                 a.setAttribute("type", "text/javascript");
                 a.setAttribute("charset", "utf-8");
-                a.setAttribute("src", _c.protocol + "//" + _c.P + ":" + _c.dk + "/" + _c.S + "?t\=" + c.id + "\&" + this.par());
+                a.setAttribute("src", _c.protocol + "//" + _c.P + "/" + _c.S + "?t\=" + c.id + "\&" + this.par());
                 var f = document.getElementsByTagName("script")[0];
 
                 f.parentNode.insertBefore(a, f);
@@ -430,7 +430,7 @@ var _pct = _pct || [];
                 var a = document.createElement("script");
                 a.setAttribute("type", "text/javascript");
                 a.setAttribute("charset", "utf-8");
-                a.setAttribute("src", _c.protocol + "//" + _c.P + ":" + _c.dk + "/" + _c.S + "?t\=" + c.id + "tt\=" + md.g.tt + "\&rf='-'\&ping=" + Date.parse(new Date()));
+                a.setAttribute("src", _c.protocol + "//" + _c.P + "/" + _c.S + "?t\=" + c.id + "tt\=" + md.g.tt + "\&rf='-'\&ping=" + Date.parse(new Date()));
                 var f = document.getElementsByTagName("script")[0];
                 f.parentNode.insertBefore(a, f);
             },
