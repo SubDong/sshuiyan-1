@@ -61,8 +61,10 @@ define(["./module"], function(ctrs) {
                         legendAllowCheckCount: 2,
                         legendClickListener: $scope.onLegendClickListener,
                         legendDefaultChecked: [0, 1],
+                        allShowChart:4,
                         min_max: false,
                         bGap: true,
+                        auotHidex: true,
                         id: "indicators_charts",
                         chartType: "bar",//图表类型
                         keyFormat: 'none',

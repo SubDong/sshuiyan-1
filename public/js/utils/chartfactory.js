@@ -134,12 +134,18 @@ var op = {
                     return res;
                 }
             },
-            calculable: true,
             xAxis: [
                 {
                     type: !chartConfig.xType ? "category" : chartConfig.xType,
                     boundaryGap: !chartConfig.bGap ? false : chartConfig.bGap,
-                    data: []
+                    data: [],
+                    axisLabel:{
+                        rotate:30,
+                        textStyle:{
+                            color: '#0D0D0D',
+                            fontFamily:'微软雅黑'
+                        }
+                    }
                 }
             ],
             yAxis: [
@@ -158,7 +164,12 @@ var op = {
         };
         if (chartConfig.auotHidex) {
             option.xAxis[0]["axisLabel"] = {
-                interval: 0
+                interval: 0,
+                rotate:30,
+                textStyle:{
+                    color: '#0D0D0D',
+                    fontFamily:'微软雅黑'
+                }
             }
         }
         //if (chartConfig.chartType == "line") {
@@ -237,7 +248,6 @@ var op = {
                 x: 'left',
                 data: !chartConfig.legendData ? data.label : chartConfig.legendData
             },
-            calculable: true,
             series: []
         };
         chartConfig.toolShow = !chartConfig.toolShow ? false : true;
@@ -474,6 +484,12 @@ var ad = {
             case "arrivedRate":
                 return value + "%";
                 break;
+            case "ctr":
+                return value + "%";
+                break;
+            case "点击率":
+                return value + "%";
+                break;
             case "跳出率":
                 return value + "%";
                 break;
@@ -508,6 +524,13 @@ var ad = {
                     }
                 };
                 break;
+            case "ctr":
+                option.yAxis[index]["axisLabel"] = {
+                    formatter: function (value) {
+                        return value + "%";
+                    }
+                };
+                break;
             case "平均访问时长":
                 option.yAxis[index]["axisLabel"] = {
                     formatter: function (value) {
@@ -523,6 +546,13 @@ var ad = {
                 };
                 break;
             case "抵达率":
+                option.yAxis[index]["axisLabel"] = {
+                    formatter: function (value) {
+                        return value + "%";
+                    }
+                };
+                break;
+            case "点击率":
                 option.yAxis[index]["axisLabel"] = {
                     formatter: function (value) {
                         return value + "%";
@@ -627,11 +657,11 @@ var util = {
         var key = item[chartConfig.dataKey];
         if (chartConfig.keyFormat) {
             if (chartConfig.keyFormat == "none") {
-                if (chartConfig.hideChar) {
+                if (chartConfig.allShowChart) {
                     var xAxis = [];
                     key.forEach(function (k) {
-                        if (k.length > chartConfig.hideChar) {
-                            xAxis.push(k.substring(0, chartConfig.hideChar) + "...");
+                        if (k.length > chartConfig.allShowChart) {
+                            xAxis.push(k.substring(0, chartConfig.allShowChart) + "...");
                         } else {
                             xAxis.push(k);
                         }

@@ -5,7 +5,7 @@ define(["./module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.controller('wayctrl', function ($scope, $rootScope, $http, requestService, messageService, SEM_API_URL) {
+    ctrs.controller('wayctrl', function ($scope, $rootScope, $q, $http, requestService, areaService, SEM_API_URL) {
         $scope.visible = true;
         $rootScope.tableTimeStart = 0;//开始时间
         $rootScope.tableTimeEnd = 0;//结束时间、
@@ -47,20 +47,14 @@ define(["./module"], function (ctrs) {
 
         $scope.$on("ssh_refresh_charts", function (e, msg) {
             $rootScope.targetSearch();
+            $scope.init($rootScope.user, $rootScope.baiduAccount, "account", $scope.selectedQuota, $rootScope.start, $rootScope.end);
             //$scope.doSearchAreas($scope.tableTimeStart, $scope.tableTimeEnd, "1", $scope.mapOrPieConfig);
         });
 
-
+        $scope.selectedQuota = ["click", "impression"];
         $scope.onLegendClick = function (radio, chartInstance, config, checkedVal) {
-            clear.lineChart(config, checkedVal);
-            $scope.charts.forEach(function (chart) {
-                chart.config.instance = echarts.init(document.getElementById(chart.config.id));
-                chart.types = checkedVal;
-            })
-            requestService.refresh($scope.charts);
-        }
-        $scope.wayFormat = function (data, config) {
-
+            $scope.selectedQuota = checkedVal;
+            $scope.init($rootScope.user, $rootScope.baiduAccount, "account", $scope.selectedQuota, $rootScope.start, $rootScope.end);
         }
         $scope.charts = [
             {
@@ -68,64 +62,96 @@ define(["./module"], function (ctrs) {
                     legendId: "indicators_charts_legend",
                     legendData: ["浏览量(PV)", "访客数(UV)", "跳出率", "平均访问时长", "点击量", "消费", "转化次数"],
                     legendClickListener: $scope.onLegendClick,
+                    legendMultiData: $rootScope.lagerMulti,
                     legendAllowCheckCount: 2,
                     legendDefaultChecked: [0, 1],
                     bGap: true,
                     min_max: false,
                     id: "indicators_charts",
                     chartType: "bar",
+                    noFormat: true,
                     dataKey: "key",
                     keyFormat: 'none',
                     dataValue: "quota"
-                },
-                types: ["pv", "outRate"],
-                dimension: ["region"],
-                interval: $rootScope.interval,
-                url: "/api/charts"
-            },
+                }
+            }
         ];
         //*************推广*********************/
 
         //**************************************/
-        $scope.init = function () {
-            var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
-            $scope.charts[0].config.instance = chart;
-            util.renderLegend(chart, $scope.charts[0].config);
-            var chartArray = [$scope.charts[0]];
-            requestService.refresh(chartArray);
+        $scope.init = function (user, baiduAccount, semType, quotas, start, end, renderLegend) {
+            //var requestParams = chartUtils.qAll(quotas);
+            //var requestArray = [];
+            //if (requestParams[0] != "") {
+            //    var semRequest = $http.get(SEM_API_URL + user + "/" + baiduAccount + "/" + semType + "/" + requestParams[0] + "?startOffset=" + start + "&endOffset=" + end);
+            //    requestArray.push(semRequest);
+            //}
+            //if (requestParams[1].length) {
+            //    var esRequest = $http.get("/api/charts/?type=" + requestParams[1].toString() + "&dimension=period&start=" + start + "&end=" + end + "&userType=" + $rootScope.userType);
+            //    requestArray.push(esRequest);
+            //}
+            //if (requestArray.length) {
+            //    $q.all(requestArray).then(function (res) {
+            //        if (res.length > 1) {
+            //
+            //        } else {
+            //
+            //        }
+            //    });
+            //
+            //}
+
+
+            if (quotas.length) {
+                var semRequest = "";
+                if (quotas.length == 1) {
+                    semRequest = $http.get(SEM_API_URL + user + "/" + baiduAccount + "/" + semType + "/" + quotas[0] + "-?startOffset=" + start + "&endOffset=" + end);
+                } else {
+                    semRequest = $http.get(SEM_API_URL + user + "/" + baiduAccount + "/" + semType + "/" + quotas[0] + "-" + quotas[1] + "-?startOffset=" + start + "&endOffset=" + end)
+                }
+                $q.all([semRequest]).then(function (final_result) {
+                    var chart_result = [];
+                    quotas.forEach(function (quota) {
+                        var tmp = [];
+                        var _semData = {};
+                        var _val = 0;
+                        final_result[0].data.forEach(function (i) {
+                            _val += i[quota];
+                        });
+                        if (quota == "cpc") {
+                            _val = parseFloat(_val / final_result[0].data.length).toFixed(2);
+                        }else if(quota=="ctr"){
+                            _val = parseFloat(_val / final_result[0].data.length).toFixed(2);
+                        }
+                        tmp.push(_val);
+                        _semData["label"] = chartUtils.convertChinese(quota);
+                        _semData["quota"] = tmp;
+                        _semData["key"] = ["搜索推广"];
+                        chart_result.push(_semData);
+                    });
+                    chartUtils.addStep(chart_result, 24);//填充空白
+                    $scope.charts[0].config.chartType = "bar";
+                    $scope.charts[0].config.bGap = true;
+                    var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
+                    chart.showLoading({
+                        text: "正在努力的读取数据中..."
+                    });
+                    $scope.charts[0].config.instance = chart;
+                    if (renderLegend) {
+                        util.renderLegend(chart, $scope.charts[0].config);
+                        Custom.initCheckInfo();
+                    }
+                    cf.renderChart(chart_result, $scope.charts[0].config);
+                    chart.hideLoading();
+                });
+            }
         }
-        $scope.init();
-        $scope.today = function () {
-            $scope.reset();
-            $scope.todayClass = true;
-        };
         $scope.yesterday = function () {
             $scope.reset();
             $scope.yesterdayClass = true;
-        };
-        $scope.sevenDay = function () {
-            $scope.reset();
-            $scope.sevenDayClass = true;
-
-        };
-        $scope.month = function () {
-            $scope.reset();
-            $scope.monthClass = true;
-
-        };
-        $scope.open = function ($event) {
-            $scope.reset();
-            $scope.definClass = true;
-            $event.preventDefault();
-            $event.stopPropagation();
-            $scope.opened = true;
-        };
-        $scope.checkopen = function ($event) {
-            $scope.reset();
-            $scope.definClass = true;
-            $event.preventDefault();
-            $event.stopPropagation();
-            $scope.opens = true;
+            $rootScope.start = -1;
+            $rootScope.end = -1;
+            $scope.init($rootScope.user, $rootScope.baiduAccount, "account", $scope.selectedQuota, $rootScope.start, $rootScope.end, true);
         };
         // initialize
         $scope.yesterday();
