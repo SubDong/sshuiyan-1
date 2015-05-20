@@ -224,7 +224,7 @@ define(["app"], function (app) {
                 enableSorting: true,
                 enableGridMenu: false,
                 enableHorizontalScrollbar: 0,
-                columnDefs: $scope.gridArray,
+                columnDefs: $rootScope.gridArray,
                 onRegisterApi: function (girApi) {
                     $scope.gridApi2 = girApi;
                     griApihtml(girApi);
@@ -241,7 +241,7 @@ define(["app"], function (app) {
                 enableSorting: true,
                 enableGridMenu: false,
                 enableHorizontalScrollbar: 0,
-                columnDefs: $scope.gridArray,
+                columnDefs: $rootScope.gridArray,
                 onRegisterApi: function (gridApi) {
                     $scope.gridApi2 = gridApi;
                     if ($rootScope.tableSwitch.dimen) {
@@ -361,6 +361,7 @@ define(["app"], function (app) {
          * @param type
          */
         $rootScope.targetSearch = function (isClicked) {
+            $scope.gridOptions.columnDefs = $rootScope.gridArray;
             if (isClicked) {
                 $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
             }

@@ -331,6 +331,19 @@ var buildRequest = function (indexes, type, quotas, dimension, filters, start, e
                 }
             };
     } else {
+        var dimensionScript = "";
+        if (dimension.split(":").length > 1) {
+            var _arr = dimension.split(":");
+
+            for (var i = 0, l = _arr.length; i < l; i++) {
+                if (i === l - 1)
+                    dimensionScript += ("doc[\'" + _arr[i] + "\'].value");
+                else
+                    dimensionScript += ("doc[\'" + _arr[i] + "\'].value+\'," + "\'+");
+            }
+        } else
+            dimensionScript = ("doc[\'" + dimension + "\'].value");
+
         return {
             "index": indexes.toString(),
             "type": type,
@@ -340,7 +353,8 @@ var buildRequest = function (indexes, type, quotas, dimension, filters, start, e
                 "aggs": {
                     "result": {
                         "terms": {
-                            "field": dimension//,
+                            "script": dimensionScript
+                            //"field": dimension,
                             //"order": {
                             //    "_key": "asc"
                             //}

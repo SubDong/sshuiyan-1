@@ -1,11 +1,11 @@
 /**
  * Created by SubDong on 2015/4/23.
  */
-define(["./module"], function (ctrs) {
+define(["./module"], function(ctrs) {
 
     "use strict";
 
-    ctrs.controller('pagevaluectr', function ($scope, $rootScope, $http) {
+    ctrs.controller('visitepagesctr', function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
         $scope.todayClass = true;
         $rootScope.tableTimeStart = 0;
         $rootScope.tableTimeEnd = 0;
@@ -19,7 +19,7 @@ define(["./module"], function (ctrs) {
                 cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
             },
             {name: "访问次数", field: "pv"},
-            {name: "访客数(UV)", displayName: '访客数(UV)', disfield: "uv"},
+            {name: "访客数(UV)",displayName: '访客数(UV)', disfield: "uv"},
             {name: "平均访问时长", field: "avgTime"}
         ];
         $rootScope.tableSwitch = {
