@@ -1,4 +1,4 @@
-<div class="middle_containers" ng-controller="pagevaluectr as app">
+<div class="middle_containers" ng-controller="pagevaluectr">
     <div class="date_select">
         <div aria-label="First group " role="group" class="btn-group fl">
             <a class="btn btn-default" data-ng-href="#page/indexoverview" type="button">指标概览</a>
@@ -11,14 +11,7 @@
         <refresh></refresh>
     </div>
     <div class="my_concent">
-        <div class="date_show dateshow2 dateshow_width ">
-            <ul>
-                <li class="date_first"><h4>浏览量(PV)</h4><span>34</span></li>
-                <li class="date_third"><h4>访客数(UV) </h4><span>100%</span></li>
-                <li class="date_four"><h4> 贡献下游浏览量</h4><span>2,574</span></li>
-                <li class="date_four"><h4>平均停留时长</h4><span>2,574</span></li>
-            </ul>
-        </div>
+        <ssh-date-show type="today" dimension="loc"></ssh-date-show>
         <div class="index_chart">
 
         </div>

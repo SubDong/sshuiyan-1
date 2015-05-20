@@ -155,7 +155,7 @@ define(["../app"], function (app) {
         var option = {
             restrict: "EA",
             template: "<div role=\"group\" class=\"btn-group fl\"><button id=\"choicetrange\"  class=\"btn btn-default pull-right date-picker my_picker\"   max=\"max\" ng-model=\"date\"> " +
-        "<i class=\"glyphicon glyphicon-calendar fa fa-calendar\"></i>与其他时间段对比<span></span></button></div>",
+            "<i class=\"glyphicon glyphicon-calendar fa fa-calendar\"></i>与其他时间段对比<span></span></button></div>",
             replace: true,
             transclude: true,
             link: function (scope, element, attris, controller) {
@@ -577,11 +577,21 @@ define(["../app"], function (app) {
         return {
             restrict: 'A',
             link: function (scope, element, attris, controller) {
-                scope.checkedArray.forEach(function (item, i) {
-                    if (item == attris.defvalue) {
-                        scope.classInfo = 'current';
-                    }
-                })
+                scope.defaultCheck = function () {
+                    scope.checkedArray.forEach(function (item, i) {
+                        if (item == attris.defvalue) {
+                            scope.classInfo = 'current';
+                        }
+                    });
+                };
+
+                scope.defaultCheck();
+
+                scope.$watch(function () {
+                    return scope.checkedArray;
+                }, function () {
+                    scope.defaultCheck();
+                });
             }
         }
     });
@@ -673,5 +683,24 @@ define(["../app"], function (app) {
             }
         };
 
+    });
+
+    /**
+     * 系统默认指标。
+     */
+    app.directive('sshDefaultQuota', function ($rootScope, DefaultQuotaService) {
+        "use strict";
+        return {
+            restrict: 'EA',
+            link: function (scope, element, attris, controller) {
+                var dq = attris.sshDefaultQuota;
+                // 点击时。改变指标数组
+                element[0].onclick = function () {
+                    DefaultQuotaService.changeQuotaByType(dq);
+                    scope.$apply(function () {
+                    });
+                };
+            }
+        };
     });
 });

@@ -1,7 +1,7 @@
-<div class="middle_containers"  ng-controller="search_cy_ctr">
+<div class="middle_containers" ng-controller="search_cy_ctr">
     <div class="date_select">
         <div aria-label="First group" role="group" class="btn-group fl">
-            <a class="btn btn-default" data-ng-href="#extension/search" type="button" >计划</a>
+            <a class="btn btn-default" data-ng-href="#extension/search" type="button">计划</a>
             <a class="btn btn-default" data-ng-href="#extension/search_dy" type="button">单元</a>
             <a class="btn btn-default" data-ng-href="#extension/search_gjc" type="button">关键词</a>
             <a class="btn btn-default current" data-ng-href="#extension/search_cy" type="button"> 创意</a>
@@ -24,13 +24,14 @@
                 <tab heading="自定义指标">
                     <div class="custom_title">
                         <p class="chart_top_title">
+
                         <div class="chart_top chart_default">
                             <ul>
-                                <li><a href="#">系统默认指标</a></li>
+                                <li><a href="javascript:void(0)" data-ssh-default-quota="extension_search">系统默认指标</a></li>
                             </ul>
                         </div>
                         <div class="chart_top">
-                                <span>消费指标 :</span>
+                            <span>消费指标 :</span>
                             <ul>
                                 <li ng-repeat="item in target" data-search-default defvalue="{{item.name}}"
                                     class="{{searchCheckedArray.indexOf(item.name) != -1?classInfo:0}}"
@@ -79,7 +80,8 @@
                                 </ul>
                         </div>-->
                         <div class="chart_top chart_noborder">
-                            <button class="btn btn-primary" type="button" ng-click="targetSearchSpread(true)">确定</button>
+                            <button class="btn btn-primary" type="button" ng-click="targetSearchSpread(true)">确定
+                            </button>
                             * 可同时选择6项
                         </div>
 
@@ -93,8 +95,11 @@
                                 <li>
                                     <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
                                         <div role="group" class="btn-group">
-                                            <ui-select ng-model="city.selected" theme="selectize" class="fl btn-pv" data-ng-change="setAreaFilter(city.selected.name)" style="width: 80px;">
-                                                <ui-select-match placeholder="全部">{{$select.selected.name}}</ui-select-match>
+                                            <ui-select ng-model="city.selected" theme="selectize" class="fl btn-pv"
+                                                       data-ng-change="setAreaFilter(city.selected.name)"
+                                                       style="width: 80px;">
+                                                <ui-select-match placeholder="全部">{{$select.selected.name}}
+                                                </ui-select-match>
                                                 <ui-select-choices repeat="city in citys">
                                                     <span ng-bind-html="city.name"></span>
                                                 </ui-select-choices>
@@ -130,7 +135,8 @@
                     </div>
                 </div>-->
                 <div class="custom_table">
-                    <div ui-grid="gridOptions" class="grid" style="min-height:400px;" ui-grid-pagination ui-grid-selection ui-grid-exporter></div>
+                    <div ui-grid="gridOptions" class="grid" style="min-height:400px;" ui-grid-pagination
+                         ui-grid-selection ui-grid-exporter></div>
                     <gridpage></gridpage>
                 </div>
             </div>
