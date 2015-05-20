@@ -5,6 +5,7 @@ var dateFormat = require('../utils/dateFormat')();
 var resutil = require('../utils/responseutils');
 var datautils = require('../utils/datautils');
 var es_request = require('../services/es_request');
+var access_request = require('../services/access_request');
 var initial = require('../services/visitors/initialData');
 var map = require('../utils/map');
 
@@ -14,7 +15,7 @@ api.get('/charts', function (req, res) {
 
     var query = url.parse(req.url, true).query, quotas = [], type = query['type'], dimension = query.dimension, filter = null, topN = [], userType = query.userType;
     var filter_f = query.filter;
-    var topN_f = query.topN == undefined ? null : query.topN
+    var topN_f = query.topN == undefined ? null : query.topN;
     if (topN_f) {
         topN = topN_f.split(",");
     } else {
@@ -37,15 +38,17 @@ api.get('/charts', function (req, res) {
     if (Number(query['int'])) {
         if (Number(query['int']) == 1) {
             interval = 1;
-        }else{
-            interval=Number(query['int']);
+        } else if (Number(query['int']) == -1) {
+            interval = 86400000;
+        } else {
+            interval = Number(query['int']);
         }
     }
     else {
-        if((end-start)==0){
-            interval=3600000;
-        }else{
-            interval=86400000;
+        if ((end - start) == 0) {
+            interval = 3600000;
+        } else {
+            interval = 86400000;
         }
         //interval = date.interval(start, end, Number(query['int']));
     }

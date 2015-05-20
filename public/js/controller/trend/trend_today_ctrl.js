@@ -6,7 +6,15 @@ define(["./module"], function (ctrs) {
 
     ctrs.controller('trend_today_ctrl', function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
         $scope.todayClass = true;
-        $scope.dayClass = true;
+        $scope.hourcheckClass = true;
+        $scope.reset = function () {
+            $scope.todayClass = false;
+            $scope.yesterdayClass = false;
+            $scope.sevenDayClass = false;
+            $scope.monthClass = false;
+            $scope.definClass = false;
+            $scope.hourcheckClass = false;
+        };
         /*    $scope.hourcheck= function(){
          $scope.dayClass=false;
          $scope.hourcheckClass=true;
@@ -51,13 +59,33 @@ define(["./module"], function (ctrs) {
             requestService.refresh(chartarray);
         }
         $scope.todayFormat = function (data, config, e) {
-            if (e.interval == 1) {
+            if ($rootScope.interval == 1) {
                 var final_result = chartUtils.getByHourByDayData(data);
                 config["noFormat"] = "noFormat";
                 config["keyFormat"] = "none";
+                config["chartType"] = "line";//图表类型
                 cf.renderChart(final_result, config);
             } else {
-                cf.renderChart(data, config);
+                var json = JSON.parse(eval("(" + data + ")").toString());
+                if (json.length) {
+                    if (json[0].key.length == 1) {
+                        config["noFormat"] = "noFormat";
+                        config["keyFormat"] = "day";
+                        config["chartType"] = "bar";//图表类型
+                        chartUtils.addStep(json, 24);
+                        cf.renderChart(json, config);
+                    } else {
+                        config["noFormat"] = undefined;
+                        config["chartType"] = "line";//图表类型
+                        config["keyFormat"] = "day";
+                        cf.renderChart(data, config);
+                    }
+                } else {
+                    config["noFormat"] = undefined;
+                    config["chartType"] = "line";//图表类型
+                    config["keyFormat"] = "day";
+                    cf.renderChart(data, config);
+                }
             }
         }
         $scope.charts = [
@@ -75,7 +103,6 @@ define(["./module"], function (ctrs) {
                     dataKey: "key",//传入数据的key值
                     keyFormat: 'hour',
                     dataValue: "quota"//传入数据的value值
-
                 },
                 types: ["pv", "uv"],
                 dimension: ["period"],
@@ -87,15 +114,10 @@ define(["./module"], function (ctrs) {
         $scope.init = function () {
             $rootScope.start = 0;
             $rootScope.end = 0;
-            $rootScope.interval = undefined;
+            $rootScope.interval = 1;
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
-                if ($rootScope.start <= -7) {
-                    e.config.keyFormat = "day";
-                } else {
-                    e.config.keyFormat = "hour";
-                }
                 util.renderLegend(chart, e.config);
             })
             requestService.refresh($scope.charts);
@@ -126,12 +148,12 @@ define(["./module"], function (ctrs) {
             $scope.hourcheckClass = true;
             $scope.dayClass = false;
             $scope.timeselect = false;
+            $rootScope.interval = 1;
             $scope.weekcheckClass = false;
             $scope.mothcheckClass = false;
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
-                e.interval = 1;
                 if ($rootScope.start <= -7) {
                     e.config.keyFormat = "day";
                 } else {
@@ -150,10 +172,10 @@ define(["./module"], function (ctrs) {
             $scope.mothselected = true;
             $scope.hourcheckClass = false;
             $scope.timeselect = true;
+            $rootScope.interval = -1;
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
-                e.interval = undefined;
                 e.config.noFormat = undefined;
                 if ($rootScope.start <= -7) {
                     e.config.keyFormat = "day";
@@ -183,10 +205,10 @@ define(["./module"], function (ctrs) {
             $scope.hourcheckClass = false;
             $scope.mothcheckClass = false;
             $scope.dayClass = false;
+            $rootScope.interval=604800000;
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
-                e.interval = 604800000;
                 e.config.noFormat = undefined;
             });
             $scope.charts[0].config.keyFormat = "week";
@@ -201,10 +223,10 @@ define(["./module"], function (ctrs) {
             $scope.mothcheckClass = true;
             $scope.dayClass = false;
             $scope.mothselected = false;
+            $rootScope.interval=2592000000;
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
-                e.interval = 2592000000;
                 e.config.noFormat = undefined;
             });
             $scope.charts[0].config.keyFormat = "month";
@@ -212,7 +234,7 @@ define(["./module"], function (ctrs) {
             $scope.dayClass = false;
             $scope.mothcheckClass = false;
         };
-   //日历
+        //日历
         $rootScope.datepickerClick = function (start, end, label) {
             var time = chartUtils.getTimeOffset(start, end);
             var offest = time[1] - time[0];

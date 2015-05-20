@@ -12,6 +12,7 @@ define(["../app"], function (app) {
         $rootScope.userType = 2;
         $rootScope.start = 0;
         $rootScope.end = 0;
+        $rootScope.interval = 1;
         this.refresh = function (charts) {
             charts.forEach(function (chart) {
                 chart.config.instance.showLoading({
@@ -20,8 +21,8 @@ define(["../app"], function (app) {
             });
             charts.forEach(function (e) {
                 var req = e.url + "?type=" + e.types + "&dimension=" + e.dimension + "&start=" + $rootScope.start + "&end=" + $rootScope.end + "&userType=" + $rootScope.userType;
-                if (e.interval) {
-                    req = req + "&int=" + e.interval;
+                if ($rootScope.interval) {
+                    req = req + "&int=" + $rootScope.interval;
                 }
                 if (e.filter) {
                     req = req + "&filter=" + e.filter;

@@ -1,11 +1,11 @@
 /**
  * Created by SubDong on 2015/4/23.
  */
-define(["./module"], function(ctrs) {
+define(["./module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.controller('indexoverview', function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
+    ctrs.controller('indexoverview', function ($scope, $rootScope) {
         $scope.todayClass = true;
         $rootScope.tableTimeStart = 0;
         $rootScope.tableTimeEnd = 0;

@@ -191,7 +191,9 @@ define(["../app"], function (app) {
     app.directive("dateweek", function () {
         var option = {
             restrict: "EA",
-            template: " <div aria-label=\"First group\" role=\"group\" class=\"btn-group fl\"><button class=\"btn btn-default\" ng-class=\"{'current':hourcheckClass,'disabled':hourselect}\" ng-click=\"hourcheck()\" type=\"button\">按时</button><button class=\"btn btn-default current\" ng-click=\"daycheck()\" ng-class=\"{'current':dayClass,'disabled':dayselect}\" type=\"button\">按日</button>" +
+            template: " <div aria-label=\"First group\" role=\"group\" class=\"btn-group fl\">" +
+            "<button class=\"btn btn-default current\"  ng-click=\"hourcheck()\" ng-class=\"{'current':hourcheckClass,'disabled':hourselect}\" type=\"button\">按时</button>" +
+            "<button class=\"btn btn-default \" ng-click=\"daycheck()\" ng-class=\"{'current':dayClass,'disabled':dayselect}\" type=\"button\">按日</button>" +
             "<button class=\"btn btn-default\" ng-click=\"weekcheck()\" ng-class=\"{'current':weekcheckClass,'disabled':weekselected}\"type=\"button\">按周</button>" +
             "<button class=\"btn btn-default\" ng-click=\"mothcheck()\" ng-class=\"{'current':mothcheckClass,'disabled':mothselected}\"type=\"button\">按月</button></div>",
             replace: true,
@@ -454,6 +456,7 @@ define(["../app"], function (app) {
         quotaObject.cpc = "平均点击价格";
         quotaObject.cpm = "千次展现消费";
         quotaObject.conversion = "转化";
+        quotaObject.entrance = "作为访问会话的入口页面（也称着陆页面）的次数。";
         return function (key) {
             if (quotaObject[key]) {
                 return quotaObject[key];
@@ -485,6 +488,7 @@ define(["../app"], function (app) {
         quotaObject.cpc = "平均点击价格";
         quotaObject.cpm = "千次展现消费";
         quotaObject.conversion = "转化";
+        quotaObject.entrance = "作为访问会话的入口页面（也称着陆页面）的次数。";
         return function (key) {
             if (quotaObject[key]) {
                 return quotaObject[key];

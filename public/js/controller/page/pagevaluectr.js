@@ -5,22 +5,21 @@ define(["./module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.controller('pagevaluectr', function ($scope, $rootScope, $http) {
+    ctrs.controller('pagevaluectr', function ($scope, $rootScope) {
         $scope.todayClass = true;
         $rootScope.tableTimeStart = 0;
         $rootScope.tableTimeEnd = 0;
         $rootScope.tableFormat = null;
         //配置默认指标
-        $rootScope.checkedArray = ["pv", "uv", "avgTime"];
+        $rootScope.checkedArray = ["pv", "uv"];
         $rootScope.gridArray = [
-            {name: "页面url", field: "loc"},
+            {name: "页面url", displayName: "页面url", field: "loc"},
             {
                 name: " ",
                 cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
             },
-            {name: "访问次数", field: "pv"},
-            {name: "访客数(UV)", displayName: '访客数(UV)', disfield: "uv"},
-            {name: "平均访问时长", field: "avgTime"}
+            {name: "浏览量(PV)", displayName: '浏览量(PV)', field: "pv"},
+            {name: "访客数(UV)", displayName: '访客数(UV)', field: "uv"}
         ];
         $rootScope.tableSwitch = {
             latitude: {name: "页面url", field: "loc"},
