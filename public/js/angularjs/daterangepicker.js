@@ -49,8 +49,6 @@
             '</div>' +
             '<div class="calendar second right"></div></div>' +
             '<div class="ranges">' +
-            '<div class="calendar_button btn-group"><button class="applyBtn  btn-default" disabled="disabled"></button>&nbsp;' +
-            '<button class="cancelBtn  btn-default"></button></div>' +
             '<div class="range_inputs ">' +
             '<div class="daterangepicker_start_input">' +
             '<label for="daterangepicker_start"></label>' +
@@ -58,8 +56,10 @@
             '</div>' +
             '<div class="daterangepicker_end_input">' +
             '<input class="input-mini" type="text" name="daterangepicker_end" value="" />' +
-            '</div>'
-        '</div>' +
+            '</div>' +
+            '</div>' +
+            '<div class="calendar_button btn-group"><button class="applyBtn  btn-default" disabled="disabled"></button>&nbsp;' +
+            '<button class="cancelBtn  btn-default"></button></div>' +
         '</div>' +
         '</div>';
 

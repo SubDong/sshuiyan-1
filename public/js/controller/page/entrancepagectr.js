@@ -134,11 +134,11 @@ define(["./module"], function(ctrs) {
             var arrayChart = [$scope.charts[1]]
             requestService.refresh(arrayChart);
         });
-        //日历
-        //日历
-        $scope.dateClosed = function () {
-            $rootScope.start = $scope.startOffset;
-            $rootScope.end = $scope.endOffset;
+//日历
+        $rootScope.datepickerClick = function (start, end, label) {
+            var time = chartUtils.getTimeOffset(start, end);
+            $rootScope.start = time[0];
+            $rootScope.end = time[1];
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
@@ -150,27 +150,10 @@ define(["./module"], function(ctrs) {
             }
             requestService.refresh($scope.charts);
             $rootScope.targetSearch();
-            $rootScope.tableTimeStart = $scope.startOffset;
-            $rootScope.tableTimeEnd = $scope.endOffset;
+            $rootScope.tableTimeStart = time[0];
+            $rootScope.tableTimeEnd = time[1];
             $scope.$broadcast("ssh_dateShow_options_time_change");
-
-        };
-        //
-
-        this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
-        //this.type = 'range';
-        /*      this.identity = angular.identity;*/
-        //$scope.$broadcast("update", "msg");
-        $scope.$on("update", function (e, datas) {
-            // 选择时间段后接收的事件
-            datas.sort();
-            //console.log(datas);
-            var startTime = datas[0];
-            var endTime = datas[datas.length - 1];
-            $scope.startOffset = (startTime - today_start()) / 86400000;
-            $scope.endOffset = (endTime - today_start()) / 86400000;
-            //console.log("startOffset=" + startOffset + ", " + "endOffset=" + endOffset);
-        });
+        }
     });
 
 });

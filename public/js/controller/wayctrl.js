@@ -208,12 +208,24 @@ define(["./module"], function (ctrs) {
             {name: '美洲 '},
         ];
         //日历
-        this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
-        this.type = 'range';
-        /*      this.identity = angular.identity;*/
-
-        this.removeFromSelected = function (dt) {
-            this.selectedDates.splice(this.selectedDates.indexOf(dt), 1);
+        $rootScope.datepickerClick = function (start, end, label) {
+            var time = chartUtils.getTimeOffset(start, end);
+            $rootScope.start = time[0];
+            $rootScope.end = time[1];
+            $scope.charts.forEach(function (e) {
+                var chart = echarts.init(document.getElementById(e.config.id));
+                e.config.instance = chart;
+            })
+            if ($rootScope.start <= -1) {
+                $scope.charts[0].config.keyFormat = "day";
+            } else {
+                $scope.charts[0].config.keyFormat = "hour";
+            }
+            requestService.refresh($scope.charts);
+            $rootScope.targetSearch();
+            $rootScope.tableTimeStart = time[0];
+            $rootScope.tableTimeEnd = time[1];
+            $scope.$broadcast("ssh_dateShow_options_time_change");
         }
     });
 });

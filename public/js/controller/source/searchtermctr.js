@@ -7,7 +7,7 @@ define(["./module"], function(ctrs) {
 
     ctrs.controller('searchtermctr', function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
             $scope.todayClass = true;
-            $scope.visible = false;
+            $scope.visible = true;
             //table默认信息配置
             $rootScope.tableTimeStart = 0;
             $rootScope.tableTimeEnd = 0;
@@ -58,27 +58,13 @@ define(["./module"], function(ctrs) {
                 {name: '访问页数目标'},
             ];
             //日历
-            $scope.dateClosed = function () {
+            $rootScope.datepickerClick = function (start, end, label) {
+                var time = chartUtils.getTimeOffset(start, end);
                 $rootScope.targetSearch();
-                $rootScope.tableTimeStart = $scope.startOffset;
-                $rootScope.tableTimeEnd = $scope.endOffset;
+                $rootScope.tableTimeStart = time[0];
+                $rootScope.tableTimeEnd = time[1];
                 $scope.$broadcast("ssh_dateShow_options_time_change");
-            };
-            //
-            this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
-            //this.type = 'range';
-            /*      this.identity = angular.identity;*/
-            //$scope.$broadcast("update", "msg");
-            $scope.$on("update", function (e, datas) {
-                // 选择时间段后接收的事件
-                datas.sort();
-                //console.log(datas);
-                var startTime = datas[0];
-                var endTime = datas[datas.length - 1];
-                $scope.startOffset = (startTime - today_start()) / 86400000;
-                $scope.endOffset = (endTime - today_start()) / 86400000;
-                //console.log("startOffset=" + startOffset + ", " + "endOffset=" + endOffset);
-            });
+            }
         }
     );
 
