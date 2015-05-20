@@ -1,51 +1,56 @@
-    <!--页面分析-入口页面-吸引力分析-->
-     <div class="middle_containers" ng-controller="attractivenessanalysisctr as app">
-                <div class="date_select">
-                    <div aria-label="First group" role="group" class="btn-group fl">
-                        <a class="fl btn btn-default" data-ng-href="#page/entrancepage"> 指标概览</a>
-                        <a class="fl btn btn-default" data-ng-href="#page/entrancepage_fa"> 流量分析</a>
-                        <a class="fl btn btn-default" data-ng-href="#page/entrancepage_nv"> 新访客分析</a>
-                        <a class="fl btn btn-default current" data-ng-href="#page/entrancepage_as">吸引力分析</a>
-                        <a class="fl btn btn-default" data-ng-href="#page/entrancepage_af">转化分析</a>
-                    </div>
-                    <calendar></calendar>
-                    <dateother></dateother>
-                    <refresh></refresh>
-                </div>
-                <div class="my_concent">
-                    <ssh-date-show type="today" dimension="loc"></ssh-date-show>
-                    <div class="index_chart">
-                        <div id="indicators_charts_legend"></div>
-                        <div id="sourse_charts"  class="pin_charts"></div>
-                        <div id="indicators_charts"  class="line_charts"></div>
-                    </div>
-                    <div class="table_content">
-                        <div class="tab-content" id="myTabContent">
-                            <div aria-labelledby="profile-tab" id="profile" class="tab-pane fade active in" role="tabpanel">
-                                <div class="custom_secendtitle">
-                                    <div class="custom_select">
-                                        <div class="input-group fl">
-                                            <input type="text" placeholder="输入URL…" class="form-control fl">
+<!--页面分析-入口页面-吸引力分析-->
+<div class="middle_containers" ng-controller="attractivenessanalysisctr">
+    <div class="date_select">
+        <div aria-label="First group" role="group" class="btn-group fl">
+            <a class="fl btn btn-default" data-ng-href="#page/entrancepage"> 指标概览</a>
+            <a class="fl btn btn-default" data-ng-href="#page/entrancepage_fa"> 流量分析</a>
+            <a class="fl btn btn-default" data-ng-href="#page/entrancepage_nv"> 新访客分析</a>
+            <a class="fl btn btn-default current" data-ng-href="#page/entrancepage_as">吸引力分析</a>
+            <a class="fl btn btn-default" data-ng-href="#page/entrancepage_af">转化分析</a>
+        </div>
+        <calendar></calendar>
+        <dateother></dateother>
+        <refresh></refresh>
+    </div>
+    <div class="my_concent">
+        <ssh-date-show type="today" dimension="loc"></ssh-date-show>
+        <div class="index_chart">
+            <div id="indicators_charts_legend"></div>
+            <div id="sourse_charts" class="pin_charts"></div>
+            <div id="indicators_charts" class="line_charts"></div>
+        </div>
+        <div class="table_content" ng-controller="TabsCtrl">
+            <div class="tab-content" id="myTabContent">
+                <div aria-labelledby="profile-tab" id="profile" class="tab-pane fade active in" role="tabpanel">
+                    <div class="custom_secendtitle">
+                        <div class="custom_select">
+                            <div class="input-group fl">
+                                <input type="text" placeholder="输入URL…" class="form-control fl">
                                        <span class="input-group-btn fl">
-                                 <button type="button" class="btn btn-default"><span aria-hidden="true" class="glyphicon glyphicon-search"></span></button>
+                                 <button type="button" class="btn btn-default"><span aria-hidden="true"
+                                                                                     class="glyphicon glyphicon-search"></span>
+                                 </button>
                                    </span>
-                                        </div>转化目标
-                                        <div role="group" class="btn-group">
-                                            <ui-select ng-model="extendway.selected" theme="selectize" class="fl" style="width: 120px;">
-                                                <ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>
-                                                <ui-select-choices repeat="extendway in extendways">
-                                                    <span ng-bind-html="extendway.name"></span>
-                                                </ui-select-choices>
-                                            </ui-select>
-                                        </div>
-                                    </div>
-                                    <div class="custom_table">
-                                        <div ui-grid="gridOptions" class="grid" ui-grid-pagination ui-grid-selection ui-grid-exporter></div>
-                                        <gridpage></gridpage>
-                                    </div>
-                                </div>
                             </div>
+                            转化目标
+                            <div role="group" class="btn-group">
+                                <ui-select ng-model="extendway.selected" theme="selectize" class="fl"
+                                           style="width: 120px;">
+                                    <ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>
+                                    <ui-select-choices repeat="extendway in extendways">
+                                        <span ng-bind-html="extendway.name"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                        <div class="custom_table">
+                            <div ui-grid="gridOptions" class="grid" ui-grid-pagination ui-grid-selection
+                                 ui-grid-exporter></div>
+                            <gridpage></gridpage>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>

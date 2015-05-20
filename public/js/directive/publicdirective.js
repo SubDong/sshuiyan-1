@@ -454,6 +454,7 @@ define(["../app"], function (app) {
         quotaObject.cpc = "平均点击价格";
         quotaObject.cpm = "千次展现消费";
         quotaObject.conversion = "转化";
+        quotaObject.entrance = "作为访问会话的入口页面（也称着陆页面）的次数。";
         return function (key) {
             if (quotaObject[key]) {
                 return quotaObject[key];
@@ -485,6 +486,7 @@ define(["../app"], function (app) {
         quotaObject.cpc = "平均点击价格";
         quotaObject.cpm = "千次展现消费";
         quotaObject.conversion = "转化";
+        quotaObject.entrance = "作为访问会话的入口页面（也称着陆页面）的次数。";
         return function (key) {
             if (quotaObject[key]) {
                 return quotaObject[key];
