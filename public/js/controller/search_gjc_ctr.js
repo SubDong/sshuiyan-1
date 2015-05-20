@@ -7,35 +7,30 @@ define(["./module"], function (ctrs) {
 
     ctrs.controller('search_gjc_ctr', function ($scope, $rootScope, $q, requestService, areaService, $http, SEM_API_URL) {
         $scope.yesterdayClass = true;
-
-
-        $rootScope.fsdfsf = function() {
-            $rootScope.tableTimeStart = -1;//开始时间
-            $rootScope.tableTimeEnd = -1;//结束时间、
-            $rootScope.tableFormat = null;
-            //配置默认指标
-            $rootScope.searchCheckedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
-            $rootScope.searchGridArray = [
-                {
-                    name: "关键词",
-                    displayName: "关键词",
-                    field: "keywordName",
-                    cellTemplate: "<a href='http://www.baidu.com/s?wd={{grid.appScope.getDataUrlInfo(grid, row,1)}}' target='_blank' style='color:#0965b8;line-height:30px;margin-left: 10px'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}"
-                },
-                {
-                    name: "状态",
-                    displayName: "状态",
-                    cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
-                },
-                {name: "展现", displayName: "展现", field: "impression"},
-                {name: "消费", displayName: "消费", field: "cost"},
-                {name: "平均点击价格", displayName: "平均点击价格", field: "cpc"},
-                {name: "跳出率", displayName: "跳出率", field: "outRate"},
-                {name: "平均访问时长", displayName: "平均访问时长", field: "avgTime"},
-                {name: "新房客比率", displayName: "新房客比率", field: "nuvRate"}
-            ];
-        };
-        $rootScope.fsdfsf();
+        $rootScope.tableTimeStart = -1;//开始时间
+        $rootScope.tableTimeEnd = -1;//结束时间、
+        $rootScope.tableFormat = null;
+        //配置默认指标
+        $rootScope.searchCheckedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
+        $rootScope.searchGridArray = [
+            {
+                name: "关键词",
+                displayName: "关键词",
+                field: "keywordName",
+                cellTemplate: "<a href='http://www.baidu.com/s?wd={{grid.appScope.getDataUrlInfo(grid, row,1)}}' target='_blank' style='color:#0965b8;line-height:30px;margin-left: 10px'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}"
+            },/*
+            {
+                name: " ",
+                displayName: " ",
+                cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
+            },*/
+            {name: "展现", displayName: "展现", field: "impression"},
+            {name: "消费", displayName: "消费", field: "cost"},
+            {name: "平均点击价格", displayName: "平均点击价格", field: "cpc"},
+            {name: "跳出率", displayName: "跳出率", field: "outRate"},
+            {name: "平均访问时长", displayName: "平均访问时长", field: "avgTime"},
+            {name: "新访客比率", displayName: "新访客比率", field: "nuvRate"}
+        ];
         $rootScope.tableSearchSwitch = {
             latitude: {name: "关键词", displayName: "关键词", field: "keywordName"},
             tableFilter: null,
@@ -109,7 +104,7 @@ define(["./module"], function (ctrs) {
 
 
         $scope.$on("ssh_refresh_charts", function (e, msg) {
-            $rootScope.targetSearch();
+            $rootScope.targetSearchSpread();
             $scope.init($rootScope.user, $rootScope.baiduAccount, "keyword", $scope.selectedQuota, $rootScope.start, $rootScope.end);
         });
 

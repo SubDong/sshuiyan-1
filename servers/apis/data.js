@@ -227,6 +227,7 @@ api.get('/indextable', function (req, res) {
     var _endTime = Number(query["end"]);//结束时间
     var _indic = query["indic"].split(",");//统计指标
     var _lati = query["dimension"] == "null" ? null : query["dimension"];//统计纬度
+    if (_lati == "kwsid") _lati = "kw:cid:agid:kwid";
     var _type = query["type"];
     var _formartInfo = query["formartInfo"];
 
@@ -239,45 +240,58 @@ api.get('/indextable', function (req, res) {
         if (_formartInfo != "hour") {
             var result = [];
             var vidx = 0;
-            var maps = {}
+            var dimensionInfo;
+            var infoKey;
+            var maps = {};
             var valueData = ["arrivedRate", "outRate", "nuvRate", "ct", "period", "se", "pm", "rf", "ja", "ck"];
             data.forEach(function (info, x) {
                 for (var i = 0; i < info.key.length; i++) {
+                    if (info.key[i] != undefined && info.key[i].split(",").length > 1) {
+                        infoKey = info.key[i].split(",")[0]
+                    } else {
+                        infoKey = info.key[i]
+                    }
+                    if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null" || infoKey.length >= 30)) continue;
                     var infoKey = info.key[i];
                     var obj = maps[infoKey];
                     if (!obj) {
                         obj = {};
-                        switch (_lati) {
+                        if (_lati != null && _lati.split(":").length > 1) {
+                            dimensionInfo = _lati.split(":")[0]
+                        } else {
+                            dimensionInfo = _lati
+                        }
+                        switch (dimensionInfo) {
                             case "ct":
-                                obj[_lati] = infoKey == 0 ? "新访客" : "老访客";
+                                obj[dimensionInfo] = infoKey == 0 ? "新访客" : "老访客";
                                 break;
                             case "rf_type":
-                                obj[_lati] = infoKey == 1 ? "直接访问" : infoKey == 2 ? "搜索引擎" : "外部链接";
+                                obj[dimensionInfo] = infoKey == 1 ? "直接访问" : infoKey == 2 ? "搜索引擎" : "外部链接";
                                 break;
                             case "period":
                                 if (_formartInfo == "day") {
-                                    obj[_lati] = infoKey.substring(0, 10);
+                                    obj[dimensionInfo] = infoKey.substring(0, 10);
                                 } else {
-                                    obj[_lati] = infoKey.substring(infoKey.indexOf(" "), infoKey.length - 3) + " - " + infoKey.substring(infoKey.indexOf(" "), infoKey.length - 5) + "59";
+                                    obj[dimensionInfo] = infoKey.substring(infoKey.indexOf(" "), infoKey.length - 3) + " - " + infoKey.substring(infoKey.indexOf(" "), infoKey.length - 5) + "59";
                                 }
                                 break;
                             case "se":
-                                obj[_lati] = (infoKey == "-" ? "直接访问" : infoKey);
+                                obj[dimensionInfo] = (infoKey == "-" ? "直接访问" : infoKey);
                                 break;
                             case "pm":
-                                obj[_lati] = (infoKey == 0 ? "计算机端" : "移动端");
+                                obj[dimensionInfo] = (infoKey == 0 ? "计算机端" : "移动端");
                                 break;
                             case "rf":
-                                obj[_lati] = (infoKey == "-" ? "直接访问" : infoKey);
+                                obj[dimensionInfo] = (infoKey == "-" ? "直接访问" : infoKey);
                                 break;
                             case "ja":
-                                obj[_lati] = (infoKey == "1" ? "支持" : "不支持");
+                                obj[dimensionInfo] = (infoKey == "1" ? "支持" : "不支持");
                                 break;
                             case "ck":
-                                obj[_lati] = (infoKey == "1" ? "支持" : "不支持");
+                                obj[dimensionInfo] = (infoKey == "1" ? "支持" : "不支持");
                                 break;
                             default :
-                                obj[_lati] = infoKey;
+                                obj[dimensionInfo] = infoKey;
                                 break;
                         }
                     }

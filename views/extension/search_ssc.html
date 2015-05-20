@@ -19,7 +19,7 @@
             <div id="indicators_charts_legend"></div>
             <div id="indicators_charts" style="height:400px;"></div>
         </div>
-        <div class="table_content" ng-controller="TabsCtrl">
+        <div class="table_content" ng-controller="SearchPromotion">
             <tabset justified="true">
                 <tab heading="自定义指标">
                     <div class="custom_title">
@@ -27,66 +27,62 @@
 
                         <div class="chart_top chart_default">
                             <ul>
-                                <li><a href="javascript:void(0)" data-ssh-default-quota="extension_search">系统默认指标</a>
-                                </li>
+                                <li><a href="#">系统默认指标</a></li>
                             </ul>
                         </div>
                         <div class="chart_top">
                             <span>消费指标 :</span>
                             <ul>
-                                <li ng-repeat="item in target"
-                                    class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
-                                    ng-click='indicators(item.name,target,6)'>{{item.consumption_name}}
+                                <li ng-repeat="item in target" data-search-default defvalue="{{item.name}}"
+                                    class="{{searchCheckedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                    ng-click='searchIndicators(item,target,6)'>{{item.consumption_name}}
                                 </li>
                             </ul>
                         </div>
                         <div class="chart_top">
                             <span>网站基础指标 :</span>
                             <ul>
-                                <li ng-repeat="item in Webbased"
-                                    class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
-                                    ng-click='indicators(item.name,Webbased,6)'>{{item.consumption_name}}
+                                <li ng-repeat="item in Webbased" data-search-default defvalue="{{item.name}}"
+                                    class="{{searchCheckedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                    ng-click='searchIndicators(item,Webbased,6)'>{{item.consumption_name}}
                                 </li>
                             </ul>
                         </div>
                         <div class="chart_top">
                             <span>流量质量指标:</span>
                             <ul>
-                                <li ng-repeat="item in flow"
-                                    class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
-                                    ng-click='indicators(item.name,flow,6)'>{{item.consumption_name}}
+                                <li ng-repeat="item in flow" data-search-default defvalue="{{item.name}}"
+                                    class="{{searchCheckedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                    ng-click='searchIndicators(item,flow,6)'>{{item.consumption_name}}
                                 </li>
                             </ul>
+                        </div>
+                        <!--<div class="chart_top">
+                                <span>转化指标:</span>
+                                <ul>
+                                    <li ng-repeat="item in transform" class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                        ng-click='indicators(item.name,transform,6)'>{{item.consumption_name}}
+                                    </li>
+                                </ul>
                         </div>
                         <div class="chart_top">
-                            <span>转化指标:</span>
-                            <ul>
-                                <li ng-repeat="item in transform"
-                                    class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
-                                    ng-click='indicators(item.name,transform,6)'>{{item.consumption_name}}
-                                </li>
-                            </ul>
+                                <span>移动搜索页指标:</span>
+                                <ul>
+                                    <li ng-repeat="item in mobile" class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                        ng-click='indicators(item.name,mobile,6)'>{{item.consumption_name}}
+                                    </li>
+                                </ul>
                         </div>
                         <div class="chart_top">
-                            <span>移动搜索页指标:</span>
-                            <ul>
-                                <li ng-repeat="item in mobile"
-                                    class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
-                                    ng-click='indicators(item.name,mobile,6)'>{{item.consumption_name}}
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="chart_top">
-                            <span>离线宝回呼指标:</span>
-                            <ul>
-                                <li ng-repeat="item in  recall"
-                                    class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
-                                    ng-click='indicators(item.name,recall,6)'>{{item.consumption_name}}
-                                </li>
-                            </ul>
-                        </div>
+                                <span>离线宝回呼指标:</span>
+                                <ul>
+                                    <li ng-repeat="item in  recall" class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                        ng-click='indicators(item.name,recall,6)'>{{item.consumption_name}}
+                                    </li>
+                                </ul>
+                        </div>-->
                         <div class="chart_top chart_noborder">
-                            <button class="btn btn-primary" type="button">确定</button>
+                            <button class="btn btn-primary" type="button" ng-click="targetSearchSSC(true)">确定</button>
                             * 可同时选择6项
                         </div>
 
@@ -133,12 +129,16 @@
                         </ui-select>
                     </div>
                 </div>
-                <div class="custom_table">
+                <!--<div class="custom_table">
                     <div class="uconcentctrl" ng-controller="SearchCtrl">
-                        <div ui-grid="gridOptions" class="grid" style="height:400px;" ui-grid-selection
-                             ui-grid-exporter></div>
+                        <div ui-grid="gridOptions" class="grid" style="height:400px;"  ui-grid-selection ui-grid-exporter></div>
                         <gridpage></gridpage>
                     </div>
+                </div>-->
+                <div class="custom_table">
+                    <div ui-grid="gridOptions" class="grid" style="min-height:400px;" ui-grid-pagination
+                         ui-grid-selection ui-grid-exporter></div>
+                    <gridpage></gridpage>
                 </div>
             </div>
         </div>

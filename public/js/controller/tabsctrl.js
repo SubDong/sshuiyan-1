@@ -201,6 +201,7 @@ define(["app"], function (app) {
                     if ($rootScope.tableSwitch.number != 0) {
                         $scope.gridObjButton["name"] = " ";
                         $scope.gridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
+                        console.log($scope.gridBtnDivObj)
                         $rootScope.gridArray.unshift($scope.gridObjButton);
                     }
                     $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude);

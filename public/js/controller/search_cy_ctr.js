@@ -19,11 +19,6 @@ define(["./module"], function (ctrs) {
                 field: "description1",
                 cellTemplate: "<div class='search_table_box'><a href='http://{{grid.appScope.getDataUrlInfo(grid, row, 6)}}' target='_blank' style='color:#0965b8;line-height:30px;'>{{grid.appScope.getDataUrlInfo(grid, row,5)}}</a><span>{{grid.appScope.getDataUrlInfo(grid, row,4)}}</span><span class='search_table_color'>{{grid.appScope.getDataUrlInfo(grid, row,6)}}</span>"
             },
-            {
-                name: "状态",
-                displayName: "状态",
-                cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
-            },
             {name: "展现", displayName: "展现", field: "impression"},
             {name: "消费", displayName: "消费", field: "cost"},
             {name: "平均点击价格", displayName: "平均点击价格", field: "cpc"}
@@ -33,7 +28,7 @@ define(["./module"], function (ctrs) {
             tableFilter: null,
             dimen: false,
             // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
-            number: 1,
+            number: 0,
             //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
             coding: false,
             //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
@@ -103,7 +98,7 @@ define(["./module"], function (ctrs) {
 
 
         $scope.$on("ssh_refresh_charts", function (e, msg) {
-            $rootScope.targetSearch();
+            $rootScope.targetSearchSpread();
             $scope.init($rootScope.user, $rootScope.baiduAccount, "creative", $scope.selectedQuota, $rootScope.start, $rootScope.end);
         });
 

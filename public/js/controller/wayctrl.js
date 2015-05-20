@@ -10,7 +10,7 @@ define(["./module"], function (ctrs) {
         $rootScope.tableTimeStart = 0;//开始时间
         $rootScope.tableTimeEnd = 0;//结束时间、
         //配置默认指标
-        $rootScope.checkedArray = ["click", "cost", "cpc", "pv", "vc", "avgPage"];
+        $rootScope.checkedArray = ["click", "cost", "cpc", "pv", "uv", "avgPage"];
         $rootScope.tableFormat = null;
         $rootScope.gridArray = [
             {name: "推广方式", displayName: "推广方式", field: "accountName"},
@@ -22,7 +22,7 @@ define(["./module"], function (ctrs) {
             {name: "消费", displayName: "消费", field: "cost"},
             {name: "平均点击价格", displayName: "平均点击价格", field: "cpc"},
             {name: "浏览量(PV)", displayName: "浏览量(PV)", field: "pv"},
-            {name: "访客数(UV)", displayName: "访客数(UV)", field: "vc"},
+            {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},
             {name: "平均访问页数", displayName: "平均访问页数", field: "avgPage"}
         ];
         $rootScope.tableSwitch = {
@@ -46,7 +46,7 @@ define(["./module"], function (ctrs) {
         };
 
         $scope.$on("ssh_refresh_charts", function (e, msg) {
-            $rootScope.targetSearch();
+            $rootScope.targetSearch(true);
             $scope.init($rootScope.user, $rootScope.baiduAccount, "account", $scope.selectedQuota, $rootScope.start, $rootScope.end);
             //$scope.doSearchAreas($scope.tableTimeStart, $scope.tableTimeEnd, "1", $scope.mapOrPieConfig);
         });

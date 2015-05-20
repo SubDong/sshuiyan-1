@@ -119,8 +119,8 @@ define(["./module"], function (ctrs) {
         $scope.gridOptions = {
             //paginationPageSizes: [25, 50, 75],
             paginationPageSize: 25,
-            expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
-            expandableRowHeight: 360,
+            expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions' style='height:150px;'></div>",
+            expandableRowHeight: 150,
             enableColumnMenus: false,
             enablePaginationControls: false,
             enableSorting: true,
@@ -145,7 +145,6 @@ define(["./module"], function (ctrs) {
                 $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.searchCheckedArray);
             }
             var url = SEM_API_URL + user + "/" + baiduAccount + "/" + $rootScope.tableSearchSwitch.promotionSearch.SEMData + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1" + ($scope.searchId != undefined || $scope.searchId != "undefined" ? "&" + $scope.searchId : "")
-            console.log(url)
             $http({
                 method: 'GET',
                 url: url
@@ -174,30 +173,93 @@ define(["./module"], function (ctrs) {
                                 if (field == "description1") {
                                     $scope.gridOptions.rowHeight = 100;
                                 } else {
-                                    $scope.gridOptions.rowHeight = 30;
+                                    $scope.gridOptions.rowHeight = 32;
                                 }
                             }
                             $scope.gridOptions.columnDefs = $rootScope.searchGridArray;
                             $scope.gridOptions.data = dataArray;
                         }
-
-
                     }).error(function (error) {
                         console.log(error);
                     });
                 });
             });
+        };
 
+        //搜索词
+        $rootScope.targetSearchSSC = function (isClicked) {
+            if (isClicked) $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.searchCheckedArray);
+            $http({
+                method: 'GET',
+                url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.searchCheckedArray + "&dimension=kwsid"
+                + "&filerInfo=" + $rootScope.tableSearchSwitch.tableFilter + "&promotion=undefined&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
+            }).success(function (data, status) {
+                var dataArray = [];
+                data.forEach(function (item, i) {
+                    var variousId = item.kw.split(",");
+                    item.kw = variousId[0];
+                    var url = SEM_API_URL + user + "/" + baiduAccount + "/" + $rootScope.tableSearchSwitch.promotionSearch.SEMData + "/" + variousId[3] + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1"
+                    $http({
+                        method: 'GET',
+                        url: url
+                    }).success(function (dataSEM, status) {
+                        var datas = {};
+                        if (variousId[3] == 0) {
+                            $rootScope.searchCheckedArray.forEach(function (x, y) {
+                                datas[x] = (item[x] != undefined ? item[x] : 0);
+                                var field = $rootScope.tableSearchSwitch.latitude.field
+                                datas[field] = item[field] + ",";
+                            })
+                        } else {
+                            $rootScope.searchCheckedArray.forEach(function (x, y) {
+                                datas[x] = (item[x] != undefined ? item[x] : dataSEM[0][x]);
+                            })
+                            var field = $rootScope.tableSearchSwitch.latitude.field
+                            datas[field] = item[field] + getTableTitle(field, dataSEM[0]);
+                        }
+                        dataArray.push(datas);
+                        $scope.gridOptions.rowHeight = 55;
+                        $scope.gridOptions.data = dataArray;
+                    });
+                });
+            });
+        };
 
-        }
 
         //init
-        $rootScope.targetSearchSpread()
+        if ($rootScope.tableSearchSwitch.promotionSearch.turnOn == "ssc") {
+            $rootScope.targetSearchSSC(true);
+        } else {
+            $rootScope.targetSearchSpread(true);
+        }
+
 
         //表格数据展开项
         var griApiInfo = function (gridApi) {
             gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
 
+                var filter = "[{\"kwid\":[\"" + row.entity.id + "\"]}]";
+                row.entity.subGridOptions = {
+                    enableColumnMenus: false,
+                    enablePaginationControls: false,
+                    enableHorizontalScrollbar: 0,
+                    enableVerticalScrollbar : 0,
+                    columnDefs: [{name:"kw",displayName:"触发关键词搜索词",field:"kw"}]
+                };
+                $http({
+                    method: 'GET',
+                    url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.searchCheckedArray + "&dimension=kw"
+                    + "&filerInfo=" + filter + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
+                }).success(function (data, status) {
+
+                        var dataArray = [];
+                    if(data[0] != undefined){
+                        dataArray.push({kw:data[0].kw})
+                    }else{
+                        dataArray.push({kw:"无"})
+                    }
+                    row.entity.subGridOptions.data = dataArray;
+                })
             });
         };
 
@@ -284,17 +346,19 @@ define(["./module"], function (ctrs) {
 
         //得到数据中的url
         $scope.getDataUrlInfo = function (grid, row, number) {
-            if (number != 3) {
+            if (number < 3) {
                 var a = row.entity[$rootScope.tableSearchSwitch.latitude.field].split(",");
-            }else if (number > 3) {
+            } else if (number > 3) {
                 var a = row.entity[$rootScope.tableSearchSwitch.latitude.field].split(",`");
+            } else {
+                var a = row.entity[$rootScope.tableSearchSwitch.latitude.field]
             }
             if (number == 1) {
                 return a[0];
             } else if (number == 2) {
                 return a[1];
             } else if (number == 3) {
-                return row.entity[$rootScope.tableSearchSwitch.latitude.field];
+                return a;
             } else if (number == 4) {
                 return a[0]
             } else if (number == 5) {
@@ -327,6 +391,8 @@ define(["./module"], function (ctrs) {
             case "adgroupName":
                 return ",[" + b['campaignName'] + "]";
             case "keywordName":
+                return ",[" + b['campaignName'] + "]" + "  [" + b['adgroupName'] + "]";
+            case "kw":
                 return ",[" + b['campaignName'] + "]" + "  [" + b['adgroupName'] + "]";
             case "description1":
                 var returnData = ",`" + (b['creativeTitle'].length > 25 ? b['creativeTitle'].substring(0, 25) + "..." : b['creativeTitle']) + ",`" + b['showUrl']
