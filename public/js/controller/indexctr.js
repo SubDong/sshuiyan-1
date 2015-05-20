@@ -180,11 +180,11 @@ define(['./module'], function (ctrs) {
 
         };
         $scope.daycheck = function () {
-            $scope.hourcheckClass = false;
             $scope.dayClass = true;
             $scope.weekcheckClass = false;
             $scope.mothcheckClass = false;
             $scope.mothselected = true;
+            $scope.hourcheckClass = false;
             $scope.timeselect = true;
             $rootScope.interval = -1;
             $scope.charts.forEach(function (e) {
@@ -229,9 +229,9 @@ define(['./module'], function (ctrs) {
                 e.config.noFormat = undefined;
             });
             $scope.charts[0].config.keyFormat = "month";
-
             requestService.refresh($scope.charts);
-
+            $scope.dayClass = false;
+            $scope.mothcheckClass = false;
         };
 
         //下拉框

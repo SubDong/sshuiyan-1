@@ -15,6 +15,7 @@ define(["./module"], function (ctrs) {
             $scope.definClass = false;
             $scope.hourcheckClass = false;
         };
+        $scope.dateshows = false;
         //table配置
         $rootScope.tableTimeStart = -30;
         $rootScope.tableTimeEnd = -1;
@@ -140,10 +141,12 @@ define(["./module"], function (ctrs) {
         });
 
         $scope.hourcheck = function () {
-            $scope.dayClass = false;
             $scope.hourcheckClass = true;
+            $scope.dayClass = false;
             $scope.timeselect = false;
             $rootScope.interval = 1;
+            $scope.weekcheckClass = false;
+            $scope.mothcheckClass = false;
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
@@ -156,6 +159,21 @@ define(["./module"], function (ctrs) {
             $rootScope.tableFormat = "hour";
             $rootScope.targetSearch();
             requestService.refresh($scope.charts);
+        };
+        $scope.weekcheck = function () {
+            $scope.weekcheckClass = true;
+            $scope.hourcheckClass = false;
+            $scope.mothcheckClass = false;
+            $scope.dayClass = false;
+            $rootScope.interval=604800000;
+            $scope.charts.forEach(function (e) {
+                var chart = echarts.init(document.getElementById(e.config.id));
+                e.config.instance = chart;
+                e.config.noFormat = undefined;
+            });
+            $scope.charts[0].config.keyFormat = "week";
+            requestService.refresh($scope.charts);
+
         };
         $scope.daycheck = function () {
             $scope.hourcheckClass = false;
@@ -181,7 +199,24 @@ define(["./module"], function (ctrs) {
             $rootScope.targetSearch();
             requestService.refresh($scope.charts);
         };
-
+        //2592000000 month
+        $scope.mothcheck = function () {
+            $scope.weekcheckClass = false;
+            $scope.hourcheckClass = false;
+            $scope.mothcheckClass = true;
+            $scope.dayClass = false;
+            $scope.mothselected = false;
+            $rootScope.interval = 2592000000;
+            $scope.charts.forEach(function (e) {
+                var chart = echarts.init(document.getElementById(e.config.id));
+                e.config.instance = chart;
+                e.config.noFormat = undefined;
+            });
+            $scope.charts[0].config.keyFormat = "month";
+            requestService.refresh($scope.charts);
+            $scope.dayClass = false;
+            $scope.mothcheckClass = false;
+        };
         $scope.clear = function () {
             $scope.extendway.selected = undefined;
             $scope.city.selected = undefined;
@@ -207,9 +242,23 @@ define(["./module"], function (ctrs) {
             {name: '外部链接'},
         ];
         //日历
-        $scope.dateClosed = function () {
-            $rootScope.start = $scope.startOffset;
-            $rootScope.end = $scope.endOffset;
+        $rootScope.datepickerClick = function (start, end, label) {
+            var time = chartUtils.getTimeOffset(start, end);
+            var offest = time[1] - time[0];
+            $scope.reset();
+            if (offest >= 31) {
+                $scope.mothselected = false;
+                $scope.weekselected = false;
+            } else {
+                if (offest >= 7) {
+                    $scope.weekselected = false;
+                } else {
+                    $scope.weekselected = true;
+                }
+                $scope.mothselected = true;
+            }
+            $rootScope.start = time[0];
+            $rootScope.end = time[1];
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
@@ -221,26 +270,12 @@ define(["./module"], function (ctrs) {
             }
             requestService.refresh($scope.charts);
             $rootScope.targetSearch();
-            $rootScope.tableTimeStart = $scope.startOffset;
-            $rootScope.tableTimeEnd = $scope.endOffset;
+            $rootScope.tableTimeStart = time[0];
+            $rootScope.tableTimeEnd = time[1];
             $scope.$broadcast("ssh_dateShow_options_time_change");
-        };
-        //
 
-        this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
-        //this.type = 'range';
-        /*      this.identity = angular.identity;*/
-        //$scope.$broadcast("update", "msg");
-        $scope.$on("update", function (e, datas) {
-            // 选择时间段后接收的事件
-            datas.sort();
-            //console.log(datas);
-            var startTime = datas[0];
-            var endTime = datas[datas.length - 1];
-            $scope.startOffset = (startTime - today_start()) / 86400000;
-            $scope.endOffset = (endTime - today_start()) / 86400000;
-            //console.log("startOffset=" + startOffset + ", " + "endOffset=" + endOffset);
-        });
+        }
+
     });
 
 });

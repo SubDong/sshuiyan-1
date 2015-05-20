@@ -1,4 +1,4 @@
-<div class="middle_containers" ng-controller="exitpagesctr as app">
+<div class="middle_containers" ng-controller="exitpagesctr">
     <div class="date_select">
         <div aria-label="First group " role="group" class="btn-group fl">
             <a class="btn btn-default " data-ng-href="#page/indexoverview" type="button">指标概览</a>
@@ -15,7 +15,7 @@
         <div class="index_chart">
 
         </div>
-        <div class="table_content">
+        <div class="table_content" ng-controller="TabsCtrl">
             <ul role="tablist" class="nav nav-tabs" id="myTab">
                 <li class="active" role="presentation"><a aria-expanded="true" aria-controls="home"
                                                           data-toggle="tab" role="tab" id="home-tab"

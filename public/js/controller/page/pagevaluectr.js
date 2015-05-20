@@ -5,22 +5,21 @@ define(["./module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.controller('pagevaluectr', function ($scope, $rootScope, $http) {
+    ctrs.controller('pagevaluectr', function ($scope, $rootScope) {
         $scope.todayClass = true;
         $rootScope.tableTimeStart = 0;
         $rootScope.tableTimeEnd = 0;
         $rootScope.tableFormat = null;
         //配置默认指标
-        $rootScope.checkedArray = ["pv", "uv", "avgTime"];
+        $rootScope.checkedArray = ["pv", "uv"];
         $rootScope.gridArray = [
-            {name: "页面url", field: "loc"},
+            {name: "页面url", displayName: "页面url", field: "loc"},
             {
                 name: " ",
                 cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
             },
-            {name: "访问次数", field: "pv"},
-            {name: "访客数(UV)", displayName: '访客数(UV)', disfield: "uv"},
-            {name: "平均访问时长", field: "avgTime"}
+            {name: "浏览量(PV)", displayName: '浏览量(PV)', field: "pv"},
+            {name: "访客数(UV)", displayName: '访客数(UV)', field: "uv"}
         ];
         $rootScope.tableSwitch = {
             latitude: {name: "页面url", field: "loc"},
@@ -38,27 +37,13 @@ define(["./module"], function (ctrs) {
             $rootScope.targetSearch();
         });
         //日历
-        $scope.dateClosed = function () {
+        $rootScope.datepickerClick = function (start, end, label) {
+            var time = chartUtils.getTimeOffset(start, end);
             $rootScope.targetSearch();
-            $rootScope.tableTimeStart = $scope.startOffset;
-            $rootScope.tableTimeEnd = $scope.endOffset;
+            $rootScope.tableTimeStart = time[0];
+            $rootScope.tableTimeEnd = time[1];
             $scope.$broadcast("ssh_dateShow_options_time_change");
-        };
-        //
-        this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
-        //this.type = 'range';
-        /*      this.identity = angular.identity;*/
-        //$scope.$broadcast("update", "msg");
-        $scope.$on("update", function (e, datas) {
-            // 选择时间段后接收的事件
-            datas.sort();
-            //console.log(datas);
-            var startTime = datas[0];
-            var endTime = datas[datas.length - 1];
-            $scope.startOffset = (startTime - today_start()) / 86400000;
-            $scope.endOffset = (endTime - today_start()) / 86400000;
-            //console.log("startOffset=" + startOffset + ", " + "endOffset=" + endOffset);
-        });
+        }
     });
 
 });

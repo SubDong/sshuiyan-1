@@ -11,7 +11,7 @@ define(["../app"], function (app) {
             "<button class=\"btn btn-default\" type=\"button\" ng-click=\"yesterday()\" ng-class=\"{'current':yesterdayClass}\">昨天</button>" +
             "<button class=\"btn btn-default\" type=\"button\" ng-click=\"sevenDay()\" ng-class=\"{'current':sevenDayClass}\">最近7天</button>" +
             "<button class=\"btn btn-default\" type=\"button\" ng-click=\"month()\" ng-class=\"{'current':monthClass}\">最近30天</button>" +
-            "<button id=\"reportrange\"  class=\"btn btn-default pull-right date-picker my_picker\"   max=\"max\" ng-model=\"date\"> " +
+            "<button id=\"reportrange\"  class=\"btn btn-default pull-right date-picker my_picker\" ng-click=\'timeclick()\' ng-class=\"{'current':timeClass}\" max=\"max\" ng-model=\"date\"> " +
             "<i class=\"glyphicon glyphicon-calendar fa fa-calendar\"></i><span></span></button>" +
             "</div>",
             replace: true,
@@ -33,6 +33,7 @@ define(["../app"], function (app) {
                     scope.btnchecked = true;
                     scope.weekcheckClass = false;
                     scope.mothcheckClass = false;
+                    scope.timeClass = false;
                 };
                 scope.reloadByCalendar = function (type) {
                     console.info("info: now user click the " + type + " button");
@@ -53,6 +54,7 @@ define(["../app"], function (app) {
                     $rootScope.start = 0;
                     $rootScope.end = 0
                     scope.reloadByCalendar("today");
+                    $('#reportrange span').html(GetDateStr(0));
                 };
                 scope.yesterday = function () {
                     scope.hourselect = false;
@@ -66,8 +68,7 @@ define(["../app"], function (app) {
                     $rootScope.start = -1;
                     $rootScope.end = -1;
                     scope.reloadByCalendar("yesterday");
-
-
+                    $('#reportrange span').html(GetDateStr(-1));
                 };
                 scope.sevenDay = function () {
                     scope.hourselect = false;
@@ -81,6 +82,7 @@ define(["../app"], function (app) {
                     $rootScope.start = -7;
                     $rootScope.end = -1;
                     scope.reloadByCalendar("seven");
+                    $('#reportrange span').html(GetDateStr(-6) + "至" + GetDateStr(0));
                 };
                 scope.month = function () {
                     scope.hourselect = false;
@@ -94,7 +96,12 @@ define(["../app"], function (app) {
                     $rootScope.start = -30;
                     $rootScope.end = -1;
                     scope.reloadByCalendar("month");
+                    $('#reportrange span').html(GetDateStr(-29) + "至" + GetDateStr(0));
                 };
+                scope.timeclick = function () {
+                    scope.reset();
+                    scope.timeClass = true;
+                }
                 scope.open = function ($event) {
                     scope.reset();
                     scope.definClass = true;
@@ -110,19 +117,22 @@ define(["../app"], function (app) {
                     $event.stopPropagation();
                     scope.opens = true;
                 };
-                var d = new Date();
-                var day = d.getDate();
-                var month = d.getMonth() + 1;
-                var year = d.getFullYear();
-                var time = year + "-" + month + "-" + day
-                $('#reportrange span').html(time);
+                function GetDateStr(AddDayCount) {
+                    var dd = new Date();
+                    dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
+                    var y = dd.getFullYear();
+                    var m = dd.getMonth() + 1;//获取当前月份的日期
+                    var d = dd.getDate();
+                    return y + "-" + m + "-" + d;
+                }
+                $('#reportrange span').html(GetDateStr(0));
                 $('#reportrange').daterangepicker({
                     format: 'YYYY-MM-DD',
-                    maxDate: time,
+                    maxDate: GetDateStr(0),
                     showDropdowns: true,
                     showWeekNumbers: false,
                     timePicker: false,
-                    timePickerIncrement: 1,
+                    //timePickerIncrement: 1,
                     timePicker12Hour: false,
                     opens: 'left',
                     drops: 'down',
@@ -131,8 +141,7 @@ define(["../app"], function (app) {
                     applyClass: 'btn-primary',
                     cancelClass: 'btn-default',
                     separator: ' to '
-                }, function (start, end, label, time) {
-
+                }, function (start, end, label) {
                     $rootScope.datepickerClick(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
                     $('#reportrange span').html(start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD'));
                 });
@@ -140,31 +149,26 @@ define(["../app"], function (app) {
         };
         return option;
     });
-    app.directive("datecontrast", function () {
-        var option = {
-            restrict: "EA",
-            template: "<div role=\"group\" class=\"btn-group fl\"><button type=\"button\" class=\"btn btn-default\" datepicker-popup=\"{{format}}\" ng-model=\"dt\" is-open=\"opens\" date-disabled=\"disabled(date, mode)\" current-text=\"今天\" clear-text=\"清空\" close-text=\"关闭\" ng-click=\"checkopen($event)\" ng-class=\"{'current':othersdateClass}\">与其他时间段对比 <i class=\"glyphicon glyphicon-calendar\"></i></button> <button class=\"btn btn-default\" type=\"button\">前一日</button> <button class=\"btn btn-default\" type=\"button\">上周同期</button></div>",
-            transclude: true
-        };
-        return option;
-    });
     app.directive("dateother", function () {
         var option = {
             restrict: "EA",
-            template: "<div role=\"group\" class=\"btn-group fl\"><button id=\"choicetrange\"  class=\"btn btn-default pull-right date-picker my_picker\"   max=\"max\" ng-model=\"date\"> " +
-            "<i class=\"glyphicon glyphicon-calendar fa fa-calendar\"></i>与其他时间段对比<span></span></button></div>",
+            template: "<div role=\"group\" class=\"btn-group fl\"><button id=\"choicetrange\"  class=\"btn btn-default pull-right date-picker my_picker fl\"   max=\"max\" ng-model=\"date\"> " +
+            "<i class=\"glyphicon glyphicon-calendar fa fa-calendar\"></i>与其他时间段对比<span></span></button><button class=\"btn btn-default\" type=\"button\" ng-hide=\"dateshows\" >前一日</button> <button class=\"btn btn-default\" type=\"button\"  ng-hide=\"dateshows\" >上周同期</button></div>",
             replace: true,
             transclude: true,
             link: function (scope, element, attris, controller) {
-                var d = new Date();
-                var day = d.getDate();
-                var month = d.getMonth() + 1;
-                var year = d.getFullYear();
-                var time = year + "-" + month + "-" + day
-                $('#choicetrange span').html(time);
+                function GetDateStr(AddDayCount) {
+                    var dd = new Date();
+                    dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
+                    var y = dd.getFullYear();
+                    var m = dd.getMonth() + 1;//获取当前月份的日期
+                    var d = dd.getDate();
+                    return y + "-" + m + "-" + d;
+                }
+                scope.dateshows = true;
                 $('#choicetrange').daterangepicker({
                     format: 'YYYY-MM-DD',
-                    maxDate: time,
+                    maxDate: GetDateStr(0),
                     showDropdowns: true,
                     showWeekNumbers: false,
                     timePicker: false,
@@ -178,8 +182,7 @@ define(["../app"], function (app) {
                     cancelClass: 'btn-default',
                     separator: ' to '
                 }, function (start, end, label, time) {
-                    $rootScope.datepickerClick(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
-                    $('#reportrange span').html(start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD'));
+                    $('#choicetrange span').html(start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD'));
                 });
             }
         };
@@ -193,6 +196,7 @@ define(["../app"], function (app) {
             "<button class=\"btn btn-default \" ng-click=\"daycheck()\" ng-class=\"{'current':dayClass,'disabled':dayselect}\" type=\"button\">按日</button>" +
             "<button class=\"btn btn-default\" ng-click=\"weekcheck()\" ng-class=\"{'current':weekcheckClass,'disabled':weekselected}\"type=\"button\">按周</button>" +
             "<button class=\"btn btn-default\" ng-click=\"mothcheck()\" ng-class=\"{'current':mothcheckClass,'disabled':mothselected}\"type=\"button\">按月</button></div>",
+            replace: true,
             transclude: true
         };
         return option;
@@ -452,6 +456,7 @@ define(["../app"], function (app) {
         quotaObject.cpc = "平均点击价格";
         quotaObject.cpm = "千次展现消费";
         quotaObject.conversion = "转化";
+        quotaObject.entrance = "作为访问会话的入口页面（也称着陆页面）的次数。";
         return function (key) {
             if (quotaObject[key]) {
                 return quotaObject[key];
@@ -483,6 +488,7 @@ define(["../app"], function (app) {
         quotaObject.cpc = "平均点击价格";
         quotaObject.cpm = "千次展现消费";
         quotaObject.conversion = "转化";
+        quotaObject.entrance = "作为访问会话的入口页面（也称着陆页面）的次数。";
         return function (key) {
             if (quotaObject[key]) {
                 return quotaObject[key];
