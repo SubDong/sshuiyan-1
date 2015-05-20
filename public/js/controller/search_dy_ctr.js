@@ -79,7 +79,7 @@ define(["./module"], function (ctrs) {
                 $q.all([semRequest]).then(function (final_result) {
                     final_result[0].data.sort(chartUtils.by(quotas[0]));
                     final_result[0].data = final_result[0].data.slice(0, 20);
-                    var total_result = chartUtils.getSemBaseData(quotas, final_result, "adgroupId");
+                    var total_result = chartUtils.getSemBaseData(quotas, final_result, "adgroupName");
                     var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
                     chart.showLoading({
                         text: "正在努力的读取数据中..."
