@@ -5,6 +5,7 @@ var dateFormat = require('../utils/dateFormat')();
 var resutil = require('../utils/responseutils');
 var datautils = require('../utils/datautils');
 var es_request = require('../services/es_request');
+var access_request = require('../services/access_request');
 var initial = require('../services/visitors/initialData');
 var map = require('../utils/map');
 
@@ -14,7 +15,7 @@ api.get('/charts', function (req, res) {
 
     var query = url.parse(req.url, true).query, quotas = [], type = query['type'], dimension = query.dimension, filter = null, topN = [], userType = query.userType;
     var filter_f = query.filter;
-    var topN_f = query.topN == undefined ? null : query.topN
+    var topN_f = query.topN == undefined ? null : query.topN;
     if (topN_f) {
         topN = topN_f.split(",");
     } else {
