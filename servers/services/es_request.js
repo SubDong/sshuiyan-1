@@ -40,6 +40,14 @@ var es_aggs = {
             }
         }
     },
+    // 贡献浏览量
+    "contribution": {
+        "cpv_aggs": {
+            "value_count": {
+                "field": "entrance"
+            }
+        }
+    },
     // 访客数
     "uv": {
         "uv_aggs": {
@@ -363,6 +371,28 @@ var pvFn = function (result, dimension) {
 
     return {
         "label": "pv",
+        "key": keyArr,
+        "quota": quotaArr
+    };
+};
+
+var contributionFn = function (result, dimension) {
+    var keyArr = [];
+    var quotaArr = [];
+
+    for (var i = 0, l = result.length; i < l; i++) {
+        var cpv = result[i].cpv_aggs.value;
+        if (dimension == "period") {
+            var dateStr = result[i].key_as_string + "";
+            Array.prototype.push.call(keyArr, dateStr);
+        } else
+            Array.prototype.push.call(keyArr, result[i].key);
+
+        Array.prototype.push.call(quotaArr, cpv);
+    }
+
+    return {
+        "label": "contribution",
         "key": keyArr,
         "quota": quotaArr
     };
@@ -715,7 +745,7 @@ var es_request = {
 
         es.search(request, function (error, response) {
             var data = [];
-            if (response != undefined) {
+            if (response != undefined && response.aggregations != undefined && response.aggregations.result != undefined) {
                 var result = response.aggregations.result.buckets;
 
                 if (!result) {
@@ -733,6 +763,9 @@ var es_request = {
                             switch (quota) {
                                 case "pv":
                                     data.push(pvFn(result, dimension));
+                                    break;
+                                case "contribution":
+                                    data.push(contributionFn(result, dimension));
                                     break;
                                 case "uv":
                                     data.push(uvFn(result, dimension));
@@ -814,7 +847,7 @@ var es_request = {
         };
 
         es.search(request, function (error, response) {
-            if (response != undefined) {
+            if (response != undefined && response.hits != undefined) {
                 var hits = response.hits.hits;
                 hits.forEach(function (item) {
                     var locArr = item._source.loc;
@@ -863,7 +896,7 @@ var es_request = {
                             }
                         }
                     }, function (error, response) {
-                        if (response != undefined) {
+                        if (response != undefined && response.aggregations != undefined) {
                             var resultArr = response.aggregations.result.buckets;
                             if (resultArr.length == 1)
                                 hits[0]["last"] = "首次访问";
@@ -957,7 +990,7 @@ var es_request = {
         };
 
         es.search(request, function (error, response) {
-            if (response != undefined) {
+            if (response != undefined && response.aggregations != undefined) {
                 var aggs_results = response.aggregations;
                 var results = [];
                 var directObj = {};
