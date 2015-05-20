@@ -1,14 +1,10 @@
-var express = require('express');
+var express = require('express'),
+    auth = require('./auth');
 // var controller = require('controllers')
 var router = express.Router();
 
 /* 所有html页面的router */
 router.get('/*.html', function (req, res, next) {
-    var session = req.session
-    if (session) {
-        console.log(session.id);
-    }
-
     var url = req.url.substring(1);
     if (!url)
         url = "index";

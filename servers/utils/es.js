@@ -1,29 +1,22 @@
 var elasticsearch = require('elasticsearch')
 //var pro = require('process')
 
-var eshosts = process.argv.slice(2)
-var client;
+var es_module = {
+    init: function (config) {
+        var client;
 
-if (eshosts.length > 0) {
+        var hosts = config.hosts;
 
-    var hosts = eshosts[0].split(",")
+        client = new elasticsearch.Client({
+            "hosts": hosts,
+            sniffOnStart: false,
+            sniffOnConnectionFault: false,
+            keepAlive: true
+        })
 
-    client = new elasticsearch.Client({
-        "hosts": hosts,
-        sniffOnStart: false,
-        sniffOnConnectionFault:false,
-        keepAlive: true
-    })
-
-} else {
-    client = new elasticsearch.Client({
-        host: '182.92.227.79:19200',
-        sniffOnStart: true,
-        sniffInterval: 30000,
-        keepAlive: true
-    })
+        return client;
+    }
 }
 
 
-
-module.exports = client
+module.exports = es_module

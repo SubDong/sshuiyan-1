@@ -1,0 +1,10 @@
+{
+  "es": {
+    "host": "http://master1:29200,http://master2:29200"
+  },
+  "redis": {
+    "host": "master1",
+    "port": 6379,
+    "password": "3edcvfr4"
+  }
+}

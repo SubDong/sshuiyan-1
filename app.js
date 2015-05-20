@@ -10,8 +10,21 @@ var express = require('express'),
     numCPUs = require('os').cpus().length,
     root = require('./routes/index'),
     api = require('./servers/apis/data'),
-    app = express();
+    app = express(),
+    uuid = require('node-uuid'),
+    auth = require('./routes/auth'),
+    token = require('./routes/token'),
+    redis_module = require("./servers/utils/redis");
 
+var env = process.argv.splice(2);
+if (env === undefined || env) {
+    env = "dev";
+}
+var config = require("./config_" + env + ".json");
+
+var es_client = es.init(config.es);
+
+var redis_client = redis_module.init(config.redis);
 
 //app.use(express.static('public'))
 app.use(favicon(__dirname + '/public/img/favicon.ico'))
@@ -22,7 +35,7 @@ app.engine("html", require('ejs').renderFile);
 
 app.use(session({
     genid: function (req) {
-        return "iid";  // use UUIDs for session IDs
+        return uuid.v4();// use UUIDs for session IDs
     },
     resave: false,
     saveUninitialized: false,
@@ -37,18 +50,23 @@ app.use(require('less-middleware')(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(function (req, res, next) {
-    req.es = es;
-    req.accountid = 1426501156
+    req.es = es_client;
+    req.redisclient = redis_client;
+    req.accountid = req.session.accountid
     next();
 })
 
+
+app.use(auth.auth)
+
 app.use('/', root);
-//app.use('/users', users);
 
 app.use('/api', api);
 
+app.use('/token', token);
+
 // catch 404 and forward to error handler
-app.use(function (req, res, next) {
+app.use(function (err, req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
     next(err);
@@ -85,14 +103,14 @@ if (process.argv.slice(3) == 'cluster') {
             cluster.fork();
         }
 
-        cluster.on('exit', function (worker, code, signal) {
-            console.log('worker ' + worker.process.pid + ' died');
-            cluster.fork().on('online', function () {
-                console.log('new worker online.');
-            });
-        });
+        //cluster.on('exit', function (worker, code, signal) {
+        //    console.log('worker ' + worker.process.pid + ' died');
+        //    cluster.fork().on('online', function () {
+        //        console.log('new worker online.');
+        //    });
+        //});
 
-    }else{
+    } else {
         app.listen(8000);
     }
 } else {
