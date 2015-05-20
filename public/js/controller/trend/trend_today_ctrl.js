@@ -6,7 +6,7 @@ define(["./module"], function (ctrs) {
 
     ctrs.controller('trend_today_ctrl', function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
         $scope.todayClass = true;
-        $scope.dayClass = true;
+        $scope.hourcheckClass = true;
         $scope.reset = function () {
             $scope.todayClass = false;
             $scope.yesterdayClass = false;
@@ -63,13 +63,33 @@ define(["./module"], function (ctrs) {
             requestService.refresh(chartarray);
         }
         $scope.todayFormat = function (data, config, e) {
-            if (e.interval == 1) {
+            if ($rootScope.interval == 1) {
                 var final_result = chartUtils.getByHourByDayData(data);
                 config["noFormat"] = "noFormat";
                 config["keyFormat"] = "none";
+                config["chartType"] = "line";//图表类型
                 cf.renderChart(final_result, config);
             } else {
-                cf.renderChart(data, config);
+                var json = JSON.parse(eval("(" + data + ")").toString());
+                if (json.length) {
+                    if (json[0].key.length == 1) {
+                        config["noFormat"] = "noFormat";
+                        config["keyFormat"] = "day";
+                        config["chartType"] = "bar";//图表类型
+                        chartUtils.addStep(json, 24);
+                        cf.renderChart(json, config);
+                    } else {
+                        config["noFormat"] = undefined;
+                        config["chartType"] = "line";//图表类型
+                        config["keyFormat"] = "day";
+                        cf.renderChart(data, config);
+                    }
+                } else {
+                    config["noFormat"] = undefined;
+                    config["chartType"] = "line";//图表类型
+                    config["keyFormat"] = "day";
+                    cf.renderChart(data, config);
+                }
             }
         }
         $scope.charts = [
@@ -87,7 +107,6 @@ define(["./module"], function (ctrs) {
                     dataKey: "key",//传入数据的key值
                     keyFormat: 'hour',
                     dataValue: "quota"//传入数据的value值
-
                 },
                 types: ["pv", "uv"],
                 dimension: ["period"],
@@ -99,15 +118,10 @@ define(["./module"], function (ctrs) {
         $scope.init = function () {
             $rootScope.start = 0;
             $rootScope.end = 0;
-            $rootScope.interval = undefined;
+            $rootScope.interval = 1;
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
-                if ($rootScope.start <= -7) {
-                    e.config.keyFormat = "day";
-                } else {
-                    e.config.keyFormat = "hour";
-                }
                 util.renderLegend(chart, e.config);
             })
             requestService.refresh($scope.charts);
@@ -138,10 +152,10 @@ define(["./module"], function (ctrs) {
             $scope.dayClass = false;
             $scope.hourcheckClass = true;
             $scope.timeselect = false;
+            $rootScope.interval = 1;
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
-                e.interval = 1;
                 if ($rootScope.start <= -7) {
                     e.config.keyFormat = "day";
                 } else {
@@ -157,10 +171,10 @@ define(["./module"], function (ctrs) {
             $scope.hourcheckClass = false;
             $scope.dayClass = true;
             $scope.timeselect = true;
+            $rootScope.interval = -1;
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
-                e.interval = undefined;
                 e.config.noFormat = undefined;
                 if ($rootScope.start <= -7) {
                     e.config.keyFormat = "day";

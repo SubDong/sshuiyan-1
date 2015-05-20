@@ -37,15 +37,17 @@ api.get('/charts', function (req, res) {
     if (Number(query['int'])) {
         if (Number(query['int']) == 1) {
             interval = 1;
-        }else{
-            interval=Number(query['int']);
+        } else if (Number(query['int']) == -1) {
+            interval = 86400000;
+        } else {
+            interval = Number(query['int']);
         }
     }
     else {
-        if((end-start)==0){
-            interval=3600000;
-        }else{
-            interval=86400000;
+        if ((end - start) == 0) {
+            interval = 3600000;
+        } else {
+            interval = 86400000;
         }
         //interval = date.interval(start, end, Number(query['int']));
     }
