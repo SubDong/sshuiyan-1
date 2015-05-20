@@ -92,6 +92,8 @@ if (process.argv.slice(3) == 'cluster') {
             });
         });
 
+    }else{
+        app.listen(8000);
     }
 } else {
     app.listen(8000);
