@@ -34,13 +34,28 @@ api.get('/charts', function (req, res) {
 
     var period = date.period(start, end);
     var interval = 1;
-    if (Number(query['int']) == 1) {
-        interval = 1;
-    } else {
-        interval = date.interval(start, end, Number(query['int']));
+    if (Number(query['int'])) {
+        if (Number(query['int']) == 1) {
+            interval = 1;
+        }else{
+            interval=Number(query['int']);
+        }
     }
+    else {
+        if((end-start)==0){
+            interval=3600000;
+        }else{
+            interval=86400000;
+        }
+        //interval = date.interval(start, end, Number(query['int']));
+    }
+
     if (!userType) {
         userType = 1;
+    }
+    if (dimension == "one") {
+        interval = null;
+        dimension = null;
     }
 
     es_request.search(req.es, indexes, userType, quotas, dimension, topN, filter, period[0], period[1], interval, function (result) {

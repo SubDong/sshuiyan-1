@@ -145,6 +145,8 @@ define(['./module'], function (ctrs) {
             $scope.hourcheckClass = true;
             $scope.dayClass = false;
             $scope.timeselect = false;
+            $scope.weekcheckClass = false;
+            $scope.mothcheckClass = false;
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
@@ -161,6 +163,9 @@ define(['./module'], function (ctrs) {
         $scope.daycheck = function () {
             $scope.hourcheckClass = false;
             $scope.dayClass = true;
+            $scope.weekcheckClass = false;
+            $scope.mothcheckClass = false;
+            $scope.mothselected = true;
             $scope.timeselect = true;
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
@@ -177,6 +182,35 @@ define(['./module'], function (ctrs) {
         };
         $scope.weekcheck = function () {
             $scope.weekcheckClass = true;
+            $scope.hourcheckClass = false;
+            $scope.mothcheckClass = false;
+            $scope.dayClass = false;
+            $scope.charts.forEach(function (e) {
+                var chart = echarts.init(document.getElementById(e.config.id));
+                e.config.instance = chart;
+                e.interval = 604800000;
+                e.config.noFormat = undefined;
+            });
+            $scope.charts[0].config.keyFormat = "week";
+            requestService.refresh($scope.charts);
+
+        };
+        //604800000 week
+        //2592000000 month
+        $scope.mothcheck = function () {
+            $scope.weekcheckClass = false;
+            $scope.hourcheckClass = false;
+            $scope.mothcheckClass = true;
+            $scope.dayClass = false;
+            $scope.mothselected = false;
+            $scope.charts.forEach(function (e) {
+                var chart = echarts.init(document.getElementById(e.config.id));
+                e.config.instance = chart;
+                e.interval = 2592000000;
+                e.config.noFormat = undefined;
+            });
+            $scope.charts[0].config.keyFormat = "month";
+
             requestService.refresh($scope.charts);
 
         };
@@ -216,6 +250,19 @@ define(['./module'], function (ctrs) {
         $scope.country = {};
         $rootScope.datepickerClick = function (start, end, label) {
             var time = chartUtils.getTimeOffset(start, end);
+            var offest = time[1] - time[0];
+            $scope.reset();
+            if (offest >= 31) {
+                $scope.mothselected = false;
+                $scope.weekselected = false;
+            } else {
+                if (offest >= 7) {
+                    $scope.weekselected = false;
+                } else {
+                    $scope.weekselected = true;
+                }
+                $scope.mothselected = true;
+            }
             $rootScope.start = time[0];
             $rootScope.end = time[1];
             $scope.charts.forEach(function (e) {

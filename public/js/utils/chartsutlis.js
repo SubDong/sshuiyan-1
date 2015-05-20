@@ -17,26 +17,40 @@ var chartUtils = {
                 break;
             case "页面转化":
                 return "pageConversion";
+                break;
             case "转化":
                 return "conversion";
+                break;
             case "IP数":
                 return "ip";
+                break;
             case "访问次数":
                 return "vc";
+                break;
             case "新访客数":
                 return "nuv";
+                break;
             case "新访客比率":
                 return "nuvRate";
+                break;
             case "消费":
                 return "cost";
+                break;
             case "点击量":
                 return "click";
+                break;
             case "点击率":
                 return "ctr";
+                break;
             case "展现量":
                 return "impression";
+                break;
             case "平均点击价格":
                 return "cpc";
+                break;
+            case "平均访问页数":
+                return "avgPage";
+                break;
             default :
                 return "pv";
         }
@@ -75,6 +89,9 @@ var chartUtils = {
                 return "展现量";
             case "cpc":
                 return "平均点击价格";
+            case "avgPage":
+                return "平均访问页数";
+                break;
             default :
                 return "浏览量(PV)";
         }
@@ -432,10 +449,8 @@ var chartUtils = {
         var _finalNow = date_now.getTime().toString().substr(0, 10);
         var times = Math.round(new Date().getTime() / 1000)
         return [(_finalStart - _finalNow) / (24 * 3600), (_finalEnd - _finalNow) / (24 * 3600)];
-    }
-
-
-    , getQuotaType: function (quota) {
+    },
+    getQuotaType: function (quota) {
         switch (quota) {
             case "click":
                 return "sem";
@@ -471,10 +486,7 @@ var chartUtils = {
         });
         quotaArray.push(semQuota);
         quotaArray.push(esQuota);
-
-        var requestArray = [];
-
-        var requestParams=[]
+        var requestParams = []
         var semParams = "";
         var esParams = [];
         quotaArray[0].forEach(function (quota) {
@@ -486,6 +498,94 @@ var chartUtils = {
         requestParams.push(semParams);
         requestParams.push(esParams);
         return requestParams;
+    },
+    getSearchTypeResult: function (quotas, res) {
+        var final_result = [];
+        if (res.length > 1) {
+            quotas.forEach(function (i, o) {
+                var _tmp = {};
+                if (o == 0) {
+                    var semCount = 0;
+                    res[o].data.forEach(function (j) {
+                        semCount += j[i];
+                    });
+                    if (i == "ctr" || i == "cpc") {
+                        semCount = parseFloat(semCount / res[o].data.length).toFixed(2);
+                    }
+                    _tmp["label"] = chartUtils.convertChinese(i);
+                    _tmp["quota"] = [semCount];
+                    _tmp["key"] = ["搜索推广"];
+                    final_result.push(_tmp);
+                } else {
+                    var esJson = JSON.parse(eval("(" + res[o].data + ")").toString());
+                    if (esJson[0]) {
+                        var esCount = 0;
+                        esJson[0].quota.forEach(function (j) {
+                            if (i == "outRate" || i == "nuvRate" || i == "avgPage") {
+                                esCount += parseFloat(j);
+                            } else {
+                                esCount += j;
+                            }
+                        });
+                        _tmp["label"] = chartUtils.convertChinese(i);
+                        _tmp["quota"] = [esCount];
+                        _tmp["key"] = ["搜索推广"];
+                        final_result.push(_tmp);
+                    } else {
+                        _tmp["label"] = chartUtils.convertChinese(i);
+                        _tmp["quota"] = [0];
+                        _tmp["key"] = ["搜索推广"];
+                        final_result.push(_tmp);
+                    }
+                }
+            });
+        } else {
+            if (res[0].data.indexOf("label") > -1) {
+                var esJson = JSON.parse(eval("(" + res[0].data + ")").toString());
+                if (esJson.length) {
+                    quotas.forEach(function (quota, i) {
+                        var esCount = 0;
+                        var _tmp = {};
+                        if (esJson[i]) {
+                            esJson[i].quota.forEach(function (k) {
+                                if (quota == "outRate" || quota == "nuvRate" || quota == "avgPage") {
+                                    esCount += parseFloat(k);
+                                } else {
+                                    esCount += k;
+                                }
+                            });
+                            _tmp["label"] = chartUtils.convertChinese(quota)
+                            _tmp["quota"] = [esCount];
+                            _tmp["key"] = ["搜索推广"];
+                            final_result.push(_tmp);
+                        } else {
+                            _tmp["label"] = chartUtils.convertChinese(quota)
+                            _tmp["quota"] = [0];
+                            _tmp["key"] = ["搜索推广"];
+                            final_result.push(_tmp);
+                        }
+                    });
+                }
+            } else {
+                if (res.length) {
+                    quotas.forEach(function (quota, o) {
+                        var _tmp = {};
+                        var semCount = 0;
+                        res[0].data.forEach(function (i) {
+                            semCount += i[quota];
+                        });
+                        if (quota == "ctr" || quota == "cpc") {
+                            semCount = parseFloat(semCount / res[0].data.length).toFixed(2);
+                        }
+                        _tmp["label"] = chartUtils.convertChinese(quota);
+                        _tmp["key"] = ["搜索推广"];
+                        _tmp["quota"] = [semCount];
+                        final_result.push(_tmp);
+                    });
+                }
+            }
+        }
+        return final_result;
     }
 
 

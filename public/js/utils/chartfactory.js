@@ -5,7 +5,6 @@ var checked = [0, 1];
 var cf = {
     renderChart: function (data, chartConfig) {
         var _self = op;
-        var _clear = clear;
         if (!chartConfig)console.error("chartConfig is required");
         var chartType = !chartConfig.chartType ? "line" : chartConfig.chartType;
         switch (chartType) {
@@ -139,11 +138,11 @@ var op = {
                     type: !chartConfig.xType ? "category" : chartConfig.xType,
                     boundaryGap: !chartConfig.bGap ? false : chartConfig.bGap,
                     data: [],
-                    axisLabel:{
-                        rotate:30,
-                        textStyle:{
+                    axisLabel: {
+                        rotate: 30,
+                        textStyle: {
                             color: '#0D0D0D',
-                            fontFamily:'微软雅黑'
+                            fontFamily: '微软雅黑'
                         }
                     }
                 }
@@ -165,10 +164,10 @@ var op = {
         if (chartConfig.auotHidex) {
             option.xAxis[0]["axisLabel"] = {
                 interval: 0,
-                rotate:30,
-                textStyle:{
+                rotate: 30,
+                textStyle: {
                     color: '#0D0D0D',
-                    fontFamily:'微软雅黑'
+                    fontFamily: '微软雅黑'
                 }
             }
         }
@@ -481,6 +480,9 @@ var ad = {
             case "outRate":
                 return value + "%";
                 break;
+            case "nuvRate":
+                return value + "%";
+                break;
             case "arrivedRate":
                 return value + "%";
                 break;
@@ -488,6 +490,9 @@ var ad = {
                 return value + "%";
                 break;
             case "点击率":
+                return value + "%";
+                break;
+            case "新访客比率":
                 return value + "%";
                 break;
             case "跳出率":
@@ -517,6 +522,13 @@ var ad = {
                     }
                 };
                 break;
+            case "nuvRate":
+                option.yAxis[index]["axisLabel"] = {
+                    formatter: function (value) {
+                        return value + "%";
+                    }
+                };
+                break;
             case "arrivedRate":
                 option.yAxis[index]["axisLabel"] = {
                     formatter: function (value) {
@@ -539,6 +551,13 @@ var ad = {
                 };
                 break;
             case "跳出率":
+                option.yAxis[index]["axisLabel"] = {
+                    formatter: function (value) {
+                        return value + "%";
+                    }
+                };
+                break;
+            case "新访客比率":
                 option.yAxis[index]["axisLabel"] = {
                     formatter: function (value) {
                         return value + "%";
@@ -675,6 +694,14 @@ var util = {
                 var _time = [];
                 key.forEach(function (time) {
                     _time.push(time.toString().substr(0, 10));
+                });
+            } else if (chartConfig.keyFormat == "week") {
+                key.forEach(function (time) {
+                    _time.push(util.getYearWeekState(time.toString().substr(0, 10)));
+                });
+            } else if (chartConfig.keyFormat == "month") {
+                key.forEach(function (time) {
+                    _time.push(time.toString().substr(0, 7));
                 });
             } else {
                 var _time = [];
@@ -898,5 +925,21 @@ var util = {
             }
         }
         return checkedVal;
+    },
+    getYearWeekState: function (dateStr) {
+        var dateArray = dateStr.split("-");
+        var a = dateArray[0];
+        var b = dateArray[1];
+        var c = dateArray[2];
+        /*
+         date1是当前日期
+         date2是当年第一天
+         d是当前日期是今年第多少天
+         用d + 当前年的第一天的周差距的和在除以7就是本年第几周
+         */
+        var date1 = new Date(a, parseInt(b) - 1, c), date2 = new Date(a, 0, 1),
+            d = Math.round((date1.valueOf() - date2.valueOf()) / 86400000);
+        return a.substr(2, 4) + "年第：" + (Math.ceil((d + ((date2.getDay() + 1) - 1)) / 7) + 1)+
+        "周";
     }
 }

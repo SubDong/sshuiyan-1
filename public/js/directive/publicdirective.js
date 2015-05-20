@@ -94,10 +94,6 @@ define(["../app"], function (app) {
                     $rootScope.start = -30;
                     $rootScope.end = -1;
                     scope.reloadByCalendar("month");
-                    scope.hourselect = false;
-                    scope.dayselect = false;
-                    scope.weekselected = false;
-                    scope.mothselected = true;
                 };
                 scope.open = function ($event) {
                     scope.reset();
@@ -136,6 +132,7 @@ define(["../app"], function (app) {
                     cancelClass: 'btn-default',
                     separator: ' to '
                 }, function (start, end, label, time) {
+
                     $rootScope.datepickerClick(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
                     $('#reportrange span').html(start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD'));
                 });
