@@ -1,0 +1,79 @@
+<div class="middle_containers" ng-controller="indexctr">
+    <div class="date_select">
+        <calendar></calendar>
+        <dateweek></dateweek>
+        sfhajfhkdsjfhfhglgwldkgdsgf
+    </div>
+    <div class="my_concent">
+        <div class="index_chart">
+            <div id="index_charts_legend" style="position:relative;"></div>
+            <div class="index_chart">
+                <div id="index_charts" style="height:400px;">
+                </div>
+            </div>
+        </div>
+
+        <div class="row-fluid">
+            <div class="span1">
+                <div class="under_title">
+                    <div class="under_top_title"><span aria-hidden="true" class="glyphicon glyphicon-globe"></span>访客地图
+                    </div>
+                    <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
+                        <ui-select ng-model="bar.selected" theme="selectize" class="fl "
+                                   ng-change="mapChange(bar.selected)" style="min-width:80px;">
+                            <ui-select-match placeholder="浏览量(PV)">{{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices repeat="bar in rootSelects">
+                                <span ng-bind-html="bar.name"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+                <!--{{maptarget.selected}}-->
+                <div id="gest_map" style="height:300px;"></div>
+            </div>
+            <div class="span2">
+                <div class="under_title">
+                    <div class="under_top_title"><span aria-hidden="true"
+                                                       class="glyphicon glyphicon-asterisk"></span>设备环境
+                    </div>
+                    <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
+                        <div role="group" class="btn-group">
+                            <ui-select ng-model="pie.selected" theme="selectize" class="fl" style="min-width: 80px;"
+                                       ng-change="equipmentChange(pie.selected)" style="min-width:80px;">
+                                <ui-select-match placeholder="浏览量(PV)">{{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="pie in rootSelects">
+                                    <span ng-bind-html="pie.name"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                </div>
+                <div id="environment_map" style="height:300px;"></div>
+            </div>
+            <div class="span3 indextable">
+                <div class="under_title">
+                    <div class="under_top_title"><span aria-hidden="true"
+                                                       class="glyphicon glyphicon-search"></span>搜索词
+                    </div>
+                    <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
+                        <div role="group" class="btn-group">
+                            <ui-select ng-model="grid.selected" theme="selectize" class="fl"
+                                       ng-change="searchChange(grid.selected)" style="min-width: 80px;">
+                                <ui-select-match placeholder="浏览量(PV)">{{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="grid in rootSelects" class="fzp20">
+                                    <span ng-bind-html="grid.name"></span>
+                                </ui-select-choices>
+                            </ui-select>
+
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="ui-grid" ui-grid="gridOptions" ui-grid-pinning id="searchWordGrid">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

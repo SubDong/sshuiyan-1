@@ -5,11 +5,16 @@ var router = express.Router();
 
 /* 所有html页面的router */
 router.get('/*.html', function (req, res, next) {
-    var url = req.url.substring(1);
-    if (!url)
-        url = "index";
+    if(req.url!="/conf.html"){
+        var url = req.url.substring(1);
+        if (!url)
+            url = "index";
 
-    res.render((url.indexOf(".html")) > -1 ? url : url + ".html", {});
+        res.render((url.indexOf(".html")) > -1 ? url : url + ".html", {});
+    }else{
+        res.render( "configindex.html", {});
+    }
+
 });
 
 router.get("/", function (req, res, next) {

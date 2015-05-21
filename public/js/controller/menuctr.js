@@ -167,15 +167,19 @@ define(["./module"], function (ctrs) {
     /*********nav-select*********/
     ctrs.controller('ngSelect', function ($scope, $cookieStore, $window, $rootScope) {
         $scope.clear = function () {
-            $scope.userselect.selected = undefined;
+            $scope.siteselect.selected = undefined;
         };
-        $scope.userselect = {};
 
-        $scope.username = $cookieStore.get('uname');
+
+        var username = $cookieStore.get('uname');
+        console.log(username);
+        var users=[];
+        username.forEach(function(i){
+            users.push({name: i.name,id: i.id});
+        });
+
 
         var usites = $cookieStore.get('usites');
-
-
         var sites = [];
         usites.forEach(function (item, i) {
             sites.push({
@@ -184,8 +188,12 @@ define(["./module"], function (ctrs) {
             })
         })
         $scope.default = sites[0].name;
+        $scope.userDefault=users[0].name;
 
-        $scope.userselects = sites;
+        $scope.userSelect={};
+        $scope.userSelectes=users;
+        $scope.siteselect = {};
+        $scope.siteselects = sites;
 
         $scope.changeUrl = function (select) {
             $rootScope.userType = select.type;

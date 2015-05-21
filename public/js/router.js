@@ -159,6 +159,14 @@ define(["angular", "app"], function (ng, app) {
                 url: "/extension/urlspeed",
                 templateUrl: "../extension/urlspeed.html"
             })
+            .state('urlspeed_m', {
+                url: "/extension/urlspeed_m",
+                templateUrl: "../extension/urlspeed_m.html"
+            })
+            .state('urlspeed_w', {
+                url: "/extension/urlspeed_w",
+                templateUrl: "../extension/urlspeed_w.html"
+            })
             .state('alliance', {
                 url: "/extension/alliance",
                 templateUrl: "../extension/alliance.html"
@@ -174,6 +182,12 @@ define(["angular", "app"], function (ng, app) {
             .state('history', {
                 url: "/historytrend/history",
                 templateUrl: "../historytrend/history.html"
+            })
+        $urlRouterProvider.when('', '/configindex');
+        $stateProvider
+            .state('configindex', {
+                url: '/configindex',
+                templateUrl: '../weblist/main.html'
             })
     });
 

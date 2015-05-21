@@ -1,4 +1,4 @@
-<nav class="navbar navbar-default" role="navigation">
+<nav class="navbar navbar-default" role="navigation" ng-controller="ngSelect">
     <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse"
                 data-target="#example-navbar-collapse">
@@ -9,20 +9,29 @@
         </button>
         <a class="logo" href="#"><img src="../img/logo.jpg"></a>
     </div>
-    <div class="collapse navbar-collapse top_menu" id="example-navbar-collapse" ng-controller="ngSelect">
+    <div class="collapse navbar-collapse top_menu" id="example-navbar-collapse" >
         <ul class="nav navbar-nav">
             <li><a href="#"  ui-sref="index"><span aria-hidden="true" class="glyphicon glyphicon-home"></span>网站概览</a></a></li>
-            <li class="dropdown">
+            <li class="dropdown" >
                 <span class="fl website">网站：</span>
-                <ui-select ng-model="userselect.selected" theme="selectize" class="fl" style="min-width: 140px;" ng-change="changeUrl(userselect.selected)">
+                <ui-select ng-model="siteselect.selected" theme="selectize" class="fl" ng-change="changeUrl(siteselect.selected)">
                     <ui-select-match placeholder="{{ default }}"><span data-ng-bind="$select.selected.name"></span></ui-select-match>
-                    <ui-select-choices repeat="userselect in userselects">
-                        <span ng-bind-html="userselect.name"></span>
+                    <ui-select-choices repeat="siteselect in siteselects">
+                        <span ng-bind-html="siteselect.name"></span>
                     </ui-select-choices>
                 </ui-select>
-                <a href="#" class="fl">管理设置</a>
+                <a href="conf.html" class="fl">管理设置</a>
             </li>
-            <li><a href="#"> <span aria-hidden="true" class="glyphicon glyphicon-user"></span><span ng-bind="username"></span></a></li>
+            <li>
+                <span aria-hidden="true" class="glyphicon glyphicon-user fl"></span>
+                <ui-select ng-model="userSelect.selected" theme="selectize" class="fl"  ng-change="changeUrl(userSelect.selected)">
+                    <ui-select-match placeholder="{{ userDefault }}"><span data-ng-bind="$select.selected.name"></span></ui-select-match>
+                    <ui-select-choices repeat="userSelect in userSelectes">
+                        <span ng-bind-html="userSelect.name"></span>
+                    </ui-select-choices>
+                </ui-select>
+                </span>
+            </li>
             <li><a href="#"><span aria-hidden="true" class="glyphicon glyphicon-share"></span>退出</a></li>
         </ul>
     </div>

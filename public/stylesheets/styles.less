@@ -172,11 +172,13 @@ nav, .navbar-default {
   /*padding:0 1em;*/
   color: #525252;
   font-size: 12px;
+  padding:0 20px;
+  height:62px;
+  vertical-align: middle;
   .ui-select-container {
     padding: 20px 0;
   }
   .website {
-    padding: 20px 0 20px 20px;
   }
 }
 
@@ -187,7 +189,7 @@ nav, .navbar-default {
 .top_menu ul li a {
   color: #525252;
   display: block;
-  padding: 20px;
+  //padding: 20px;
 }
 
 .top_menu ul li a:hover {
@@ -201,7 +203,17 @@ nav, .navbar-default {
   }
 
 }
-
+.navbar-nav > li > a{
+  cursor: pointer;
+}
+.navbar-nav > li > a,.navbar-nav > li > span{
+  padding:0px;
+  display:block;
+  float:left;
+  height:60px;
+  line-height:60px;
+  vertical-align:middle ;
+}
 .navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
   background: #f9f9f9;
   color: #01aeef;
@@ -2545,7 +2557,7 @@ select.styled {
 }
 
 .daterangepicker.dropdown-menu {
-  max-width: 464px;
+  width: 500px;
 }
 
 .date_select {
@@ -2590,8 +2602,14 @@ select.styled {
 
 .calendar_box {
   width: 100%;
+  overflow:hidden;
 }
-
+.daterangepicker.show-calendar .left{
+  float:left;
+}
+.daterangepicker.show-calendar .right{
+  float:right;
+}
 .daterangepicker .ranges .range_inputs > div:nth-child(2) {
   padding-left: 0px;
 }
@@ -2607,7 +2625,7 @@ select.styled {
 }
 
 .daterangepicker .calendar th, .daterangepicker .calendar td {
-  width: 26px;
+  width: 20px;
   height: 30px;
 }
 
@@ -2616,14 +2634,13 @@ select.styled {
 }
 
 .table-condensed > thead > tr > th, .table-condensed > tbody > tr > th, .table-condensed > tfoot > tr > th, .table-condensed > thead > tr > td, .table-condensed > tbody > tr > td, .table-condensed > tfoot > tr > td {
-  padding: 2px;
+  padding: 3px;
 }
 
 .daterangepicker .calendar th, .daterangepicker .calendar td {
-  min-width: 26px;
+  min-width: 10px;
   font-size: 12px;
 }
-
 .calendar_box {
   width: 100%;
   padding: 0 10px;
@@ -2658,13 +2675,12 @@ select.styled {
 .daterangepicker .daterangepicker_start_input label, .daterangepicker .daterangepicker_end_input label {
   width: 50px;
 }
-
-.daterangepicker.opensleft .ranges, .daterangepicker.opensleft .calendar {
-  margin: 0px;
-}
+.daterangepicker.opensleft .ranges{
+  margin:0px;
+ }
 
 .daterangepicker.opensleft .ranges {
-  padding: 10px 0;
+  padding: 10px 20px;
 }
 .search_table_box{
   margin: 10px;
@@ -2699,4 +2715,11 @@ select.styled {
 }
 .tooltip.in{
   opacity: 1;
+}
+.nav {
+  .user {
+    .selectize-input input, .selectize-input .ng-scope{
+      color:#777;
+    }
+  }
 }
