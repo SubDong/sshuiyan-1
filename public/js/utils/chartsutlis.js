@@ -586,6 +586,18 @@ var chartUtils = {
             }
         }
         return final_result;
+    },
+    getXType: function (config, interval, start) {
+        switch (interval) {
+            case 604800000:
+                config["keyFormat"] = "week";
+                break;
+            case 2592000000:
+                config["keyFormat"] = "month";
+                break;
+            default :
+                config["keyFormat"] = "day";
+        }
     }
 
 

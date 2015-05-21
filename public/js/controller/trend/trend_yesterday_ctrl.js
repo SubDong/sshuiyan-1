@@ -63,20 +63,20 @@ define(["./module"], function (ctrs) {
                 if (json.length) {
                     if (json[0].key.length == 1) {
                         config["noFormat"] = "noFormat";
-                        config["keyFormat"] = "day";
+                        chartUtils.getXType(config, $rootScope.interval);
                         config["chartType"] = "bar";//图表类型
                         chartUtils.addStep(json, 24);
                         cf.renderChart(json, config);
                     } else {
                         config["noFormat"] = undefined;
                         config["chartType"] = "line";//图表类型
-                        config["keyFormat"] = "day";
+                        chartUtils.getXType(config, $rootScope.interval);
                         cf.renderChart(data, config);
                     }
                 } else {
                     config["noFormat"] = undefined;
                     config["chartType"] = "line";//图表类型
-                    config["keyFormat"] = "day";
+                    chartUtils.getXType(config, $rootScope.interval);
                     cf.renderChart(data, config);
                 }
             }
@@ -121,12 +121,6 @@ define(["./module"], function (ctrs) {
             $rootScope.targetSearch();
             $scope.charts.forEach(function (chart) {
                 chart.config.instance = echarts.init(document.getElementById(chart.config.id));
-                //chart.config.keyFormat = $rootScope.keyFormat;
-                if ($rootScope.start <= -7) {
-                    chart.config.keyFormat = "day";
-                } else {
-                    chart.config.keyFormat = "hour";
-                }
             });
             requestService.refresh($scope.charts);
             if ($rootScope.start <= -7) {
@@ -138,18 +132,15 @@ define(["./module"], function (ctrs) {
         });
 
         $scope.hourcheck = function () {
-            $scope.dayClass = false;
             $scope.hourcheckClass = true;
+            $scope.dayClass = false;
             $scope.timeselect = false;
+            $scope.weekcheckClass = false;
+            $scope.mothcheckClass = false;
             $rootScope.interval = 1;
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
-                if ($rootScope.start <= -7) {
-                    e.config.keyFormat = "day";
-                } else {
-                    e.config.keyFormat = "hour";
-                }
             });
             $rootScope.tableFormat = "hour";
             $rootScope.targetSearch();
@@ -157,19 +148,17 @@ define(["./module"], function (ctrs) {
 
         };
         $scope.daycheck = function () {
-            $scope.hourcheckClass = false;
             $scope.dayClass = true;
+            $scope.weekcheckClass = false;
+            $scope.mothcheckClass = false;
+            $scope.mothselected = true;
+            $scope.hourcheckClass = false;
             $scope.timeselect = true;
             $rootScope.interval = -1;
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
                 e.config.noFormat = undefined;
-                if ($rootScope.start <= -7) {
-                    e.config.keyFormat = "day";
-                } else {
-                    e.config.keyFormat = "hour";
-                }
             });
             if ($rootScope.start <= -7) {
                 $rootScope.tableFormat = "day";
@@ -236,12 +225,7 @@ define(["./module"], function (ctrs) {
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
-            })
-            if ($rootScope.start <= -1) {
-                $scope.charts[0].config.keyFormat = "day";
-            } else {
-                $scope.charts[0].config.keyFormat = "hour";
-            }
+            });
             requestService.refresh($scope.charts);
         }
 

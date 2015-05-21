@@ -54,20 +54,20 @@ define(['./module'], function (ctrs) {
                 if (json.length) {
                     if (json[0].key.length == 1) {
                         config["noFormat"] = "noFormat";
-                        config["keyFormat"] = "day";
+                        chartUtils.getXType(config, $rootScope.interval,$rootScope.start);
                         config["chartType"] = "bar";//图表类型
                         chartUtils.addStep(json, 24);
                         cf.renderChart(json, config);
                     } else {
                         config["noFormat"] = undefined;
                         config["chartType"] = "line";//图表类型
-                        config["keyFormat"] = "day";
+                        chartUtils.getXType(config, $rootScope.interval,$rootScope.start);
                         cf.renderChart(data, config);
                     }
                 } else {
                     config["noFormat"] = undefined;
                     config["chartType"] = "line";//图表类型
-                    config["keyFormat"] = "day";
+                    chartUtils.getXType(config, $rootScope.interval,$rootScope.start);
                     cf.renderChart(data, config);
                 }
             }
@@ -152,11 +152,6 @@ define(['./module'], function (ctrs) {
             $scope.charts.forEach(function (chart) {
                 chart.config.instance = echarts.init(document.getElementById(chart.config.id));
             });
-            if ($rootScope.start <= -7) {
-                $scope.charts[0].config.keyFormat = "day";
-            } else {
-                $scope.charts[0].config.keyFormat = "hour";
-            }
             requestService.refresh($scope.charts);
             requestService.gridRefresh($scope.grids);
         });
@@ -171,11 +166,6 @@ define(['./module'], function (ctrs) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
             });
-            if ($rootScope.start <= -7) {
-                $scope.charts[0].config.keyFormat = "day";
-            } else {
-                $scope.charts[0].config.keyFormat = "hour";
-            }
             requestService.refresh($scope.charts);
 
         };
@@ -192,11 +182,6 @@ define(['./module'], function (ctrs) {
                 e.config.instance = chart;
                 e.config.noFormat = undefined;
             });
-            if ($rootScope.start <= -7) {
-                $scope.charts[0].config.keyFormat = "day";
-            } else {
-                $scope.charts[0].config.keyFormat = "hour";
-            }
             requestService.refresh($scope.charts);
         };
         $scope.weekcheck = function () {
@@ -287,12 +272,7 @@ define(['./module'], function (ctrs) {
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
-            })
-            if ($rootScope.start <= -1) {
-                $scope.charts[0].config.keyFormat = "day";
-            } else {
-                $scope.charts[0].config.keyFormat = "hour";
-            }
+            });
             requestService.refresh($scope.charts);
             requestService.gridRefresh($scope.grids);
 
