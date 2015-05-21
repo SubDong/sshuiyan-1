@@ -2,7 +2,7 @@ var _pct = _pct || [];
 (function () {
     var h = {}, md = {}, c = {
         id: "2",
-        version: "1.0.5"
+        version: "1.0.10"
     };
 
     md.achieve = {};
@@ -72,6 +72,9 @@ var _pct = _pct || [];
     };
     md.cookie.set = function (a, b) {
         document.cookie = a + "=" + escape(b) + ";domain=" + md.getDomain() + "; path=/";
+    };
+    md.cookie.setNull = function (a, b) {
+        document.cookie = a + "=" + escape(b) + "; path=/";
     };
     md.cookie.get = function (a) {
         var arr, reg = new RegExp("(^| )" + a + "=([^;]*)(;|$)");
@@ -393,6 +396,10 @@ var _pct = _pct || [];
                     this.setData("PFT_" + c.id);
                     cookie.set("PFT_COOKIE_RF", decodeURIComponent(md.g.rf));
                     md.g.tt = this.getData("PFT_" + c.id);
+                    if (md.g.tt == null || md.g.tt == "") {
+                        md.cookie.setNull("PFT_" + c.id, u.createUUID());
+                        md.g.tt = this.getData("PFT_" + c.id);
+                    }
                 }
                 var cookie_pos = document.cookie.indexOf("vid");
                 if (cookie_pos == -1) {
@@ -401,6 +408,10 @@ var _pct = _pct || [];
                     document.cookie = "vid=" + u.createUUID() + ";expires=" + date.toGMTString() + ";domain=" + md.getDomain() + "; path=/";
                 }
                 md.g.vid = this.getData("vid");
+                if (md.g.vid == null || md.g.vid == "") {
+                    document.cookie = "vid=" + u.createUUID() + ";expires=" + date.toGMTString() + "; path=/";
+                    md.g.vid = this.getData("vid");
+                }
             },
             par: function () {
                 var a = "", b = h.I.Q, _c = md.g;
@@ -422,7 +433,6 @@ var _pct = _pct || [];
                 a.setAttribute("charset", "utf-8");
                 a.setAttribute("src", _c.protocol + "//" + _c.P + "/" + _c.S + "?t\=" + c.id + "\&" + this.par());
                 var f = document.getElementsByTagName("script")[0];
-
                 f.parentNode.insertBefore(a, f);
             },
             hbInfo: function () {

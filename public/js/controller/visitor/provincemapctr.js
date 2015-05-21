@@ -200,9 +200,21 @@ define(["./module"], function (ctrs) {
         this.type = 'range';
         /*      this.identity = angular.identity;*/
 
-        this.removeFromSelected = function (dt) {
-            this.selectedDates.splice(this.selectedDates.indexOf(dt), 1);
-        };
+        //日历
+        $rootScope.datepickerClick = function (start, end, label) {
+            var time = chartUtils.getTimeOffset(start, end);
+            $rootScope.tableTimeStart = time[0];
+            $rootScope.tableTimeEnd = time[1];
+            $rootScope.targetSearch();
+            $scope.doSearchAreas($rootScope.tableTimeStart, $rootScope.tableTimeEnd, "2", $scope.mapOrPieConfig);
+            $scope.$broadcast("ssh_dateShow_options_time_change");
+        }
+
+        //数据对比
+        $rootScope.datepickerClickTow = function(start, end, label){
+            var time = chartUtils.getTimeOffset(start, end);
+            console.log(time);
+        }
 
     });
 

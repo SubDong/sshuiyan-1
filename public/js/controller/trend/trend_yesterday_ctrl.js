@@ -230,6 +230,10 @@ define(["./module"], function (ctrs) {
                 e.config.instance = chart;
             });
             requestService.refresh($scope.charts);
+            $rootScope.tableTimeStart = time[0];
+            $rootScope.tableTimeEnd = time[1];
+            $rootScope.targetSearch();
+            $scope.$broadcast("ssh_dateShow_options_time_change");
         }
 
     });

@@ -149,7 +149,7 @@ define(["../app"], function (app) {
         };
         return option;
     });
-    app.directive("dateother", function () {
+    app.directive("dateother", function ($rootScope) {
         var option = {
             restrict: "EA",
             template: "<div role=\"group\" class=\"btn-group fl\"><button id=\"choicetrange\"  class=\"btn btn-default pull-right date-picker my_picker fl\"   max=\"max\" ng-model=\"date\"> " +
@@ -182,6 +182,7 @@ define(["../app"], function (app) {
                     cancelClass: 'btn-default',
                     separator: ' to '
                 }, function (start, end, label, time) {
+                    $rootScope.datepickerClickTow(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
                     $('#choicetrange span').html(start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD'));
                 });
             }

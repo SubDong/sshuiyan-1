@@ -5,11 +5,11 @@ define(["./module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.controller("SearchPromotion", function ($timeout, $scope, $rootScope, $http, $q, requestService, SEM_API_URL) {
+    ctrs.controller("SearchPromotion", function ($timeout, $scope, $rootScope, $http, $q, requestService, SEM_API_URL, $cookieStore) {
         $scope.todayClass = true;
-        var user = "perfect2015";
-        var baiduAccount = "baidu-perfect2151880";
-        var esType = "2";
+        var user = $cookieStore.get("uname");
+        var baiduAccount = $rootScope.default;
+        var esType = $rootScope.defaultType;
 
         //sem
         $scope.target = [
@@ -140,6 +140,18 @@ define(["./module"], function (ctrs) {
             pagevalue.pagination.seek(Number($scope.page));
         }
 
+        //设置来源终端
+        $scope.setTerminal = function (a) {
+            if (a == 0) $scope.es_filter = null;
+            if (a == 1) $scope.es_filter = "[{\"pm\":[0]}]";
+            $scope.device = 0;
+            if (a == 2) $scope.es_filter = "[{\"pm\":[1]}]";
+            $scope.device = 1;
+            $scope.isJudge = false;
+            $scope.targetSearch();
+        };
+
+
         $rootScope.targetSearchSpread = function (isClicked) {
             if (isClicked) {
                 $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.searchCheckedArray);
@@ -149,7 +161,7 @@ define(["./module"], function (ctrs) {
                 method: 'GET',
                 url: url
             }).success(function (dataSEM, status) {
-                var dataArray = []
+                var dataArray = [];
                 dataSEM.forEach(function (item, i) {
                     var searchId = $rootScope.tableSearchSwitch.promotionSearch.SEMData;
                     var filter = "[{\"" + getTableFilter(searchId) + "\":[\"" + item[searchId + "Id"] + "\"]}]";
@@ -267,6 +279,7 @@ define(["./module"], function (ctrs) {
                 }).success(function (data, status) {
 
                     var dataArray = [];
+                    console.log(data[0])
                     if (data[0] != undefined) {
                         dataArray.push({kw: data[0].kw})
                     } else {

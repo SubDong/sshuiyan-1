@@ -5,11 +5,11 @@ define(["app"], function (app) {
 
     "use strict";
 
-    app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, requestService, SEM_API_URL) {
+    app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, requestService, SEM_API_URL, $cookieStore) {
         $scope.todayClass = true;
-        var user = "perfect2015";
-        var baiduAccount = "baidu-perfect2151880";
-        var esType = "2";
+        var user = $cookieStore.get("uname");
+        var baiduAccount = $rootScope.default;
+        var esType = $rootScope.defaultType;
 
         $scope.tabs = [
             {title: 'Dynamic Title 1', content: 'Dynamic content 1'},
@@ -150,7 +150,6 @@ define(["app"], function (app) {
         } else if ($rootScope.tableSwitch.number == 2) {
             $scope.gridBtnDivObj = "<div class='table_box'><button onclick='getMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul>" + $rootScope.tableSwitch.coding + "</ul></div></div>";
         }
-
         $rootScope.indicators = function (item, entities, number, refresh) {
             $rootScope.gridArray.shift();
             if (refresh == "refresh") {
@@ -201,7 +200,6 @@ define(["app"], function (app) {
                     if ($rootScope.tableSwitch.number != 0) {
                         $scope.gridObjButton["name"] = " ";
                         $scope.gridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
-                        console.log($scope.gridBtnDivObj)
                         $rootScope.gridArray.unshift($scope.gridObjButton);
                     }
                     $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude);
@@ -216,7 +214,6 @@ define(["app"], function (app) {
         // 推广概况表格配置项
         if (typeof($rootScope.checkedArray) != undefined && $scope.tableJu == "html") {
             $scope.gridOptions = {
-                //paginationPageSizes: [25, 50, 75],
                 paginationPageSize: 25,
                 expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
                 expandableRowHeight: 360,
@@ -233,7 +230,6 @@ define(["app"], function (app) {
             };
         } else {
             $scope.gridOptions = {
-                //paginationPageSizes: [25, 50, 75],
                 paginationPageSize: 25,
                 expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
                 expandableRowHeight: 360,
@@ -322,7 +318,6 @@ define(["app"], function (app) {
         };
         //设置地域过滤
         $scope.setAreaFilter = function (area) {
-            alert(area)
             if (!$rootScope.tableSwitch) {
                 return;
             }
