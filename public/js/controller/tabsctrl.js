@@ -380,15 +380,15 @@ define(["app"], function (app) {
             }
             if ($rootScope.tableSwitch.isJudge == undefined) $scope.isJudge = true;
             if ($rootScope.tableSwitch.isJudge) $rootScope.tableSwitch.tableFilter = undefined;
-            if($rootScope.tableSwitch.number == 4){
-                var searchUrl = SEM_API_URL + "elasticsearch/"+esType+"/?startOffset="+ $rootScope.tableTimeStart+"&endOffset="+ $rootScope.tableTimeEnd;
+            if ($rootScope.tableSwitch.number == 4) {
+                var searchUrl = SEM_API_URL + "elasticsearch/" + esType + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd;
                 $http({
                     method: 'GET',
                     url: searchUrl
                 }).success(function (data, status) {
                     $scope.gridOptions.data = data;
                 })
-            }else{
+            } else {
                 $http({
                     method: 'GET',
                     url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field)
@@ -428,7 +428,14 @@ define(["app"], function (app) {
                         });
                     } else {
                         if ($rootScope.tableFormat != "hour") {
-                            $scope.gridOptions.data = data;
+                            if ($rootScope.tableFormat == "week") {
+                                data.forEach(function (item, i) {
+                                    item.period = util.getYearWeekState(item.period);
+                                });
+                                $scope.gridOptions.data = data;
+                            } else {
+                                $scope.gridOptions.data = data;
+                            }
                         } else {
                             var result = [];
                             var vaNumber = 0;
