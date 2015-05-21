@@ -153,31 +153,45 @@ define(["./module"], function (ctrs) {
                 dataSEM.forEach(function (item, i) {
                     var searchId = $rootScope.tableSearchSwitch.promotionSearch.SEMData;
                     var filter = "[{\"" + getTableFilter(searchId) + "\":[\"" + item[searchId + "Id"] + "\"]}]";
+                    var fieldQuery = $rootScope.tableSearchSwitch.latitude.field;
                     $http({
                         method: 'GET',
-                        url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.searchCheckedArray + "&dimension=" + ($rootScope.tableSearchSwitch.promotionSearch ? null : $rootScope.tableSearchSwitch.latitude.field)
+                        url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.searchCheckedArray + "&dimension=" + ($rootScope.tableSearchSwitch.promotionSearch ? ($rootScope.tableSearchSwitch.number == 5 ? fieldQuery : null) : fieldQuery )
                         + "&filerInfo=" + filter + "&promotion=" + $rootScope.tableSearchSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
                     }).success(function (data, status) {
                         var datas = {};
-                        $rootScope.searchCheckedArray.forEach(function (x, y) {
-                            datas[x] = item[x] != undefined ? item[x] : data[0][x];
-                        });
-                        var field = $rootScope.tableSearchSwitch.latitude.field;
-                        datas[field] = item[field] + getTableTitle(field, item);
-                        datas["id"] = item[searchId + "Id"];
-                        dataArray.push(datas)
-                        if ((dataSEM.length - 1) == i) {
-                            if (field == "adgroupName" || field == "keywordName") {
-                                $scope.gridOptions.rowHeight = 55;
-                            } else {
-                                if (field == "description1") {
-                                    $scope.gridOptions.rowHeight = 100;
-                                } else {
-                                    $scope.gridOptions.rowHeight = 32;
+                        if ($rootScope.tableSearchSwitch.number == 5) {
+                            data.forEach(function (item, i) {
+                                $rootScope.searchCheckedArray.forEach(function (x, y) {
+                                    datas[x] = item[x] != undefined ? item[x] : data[0][x];
+                                });
+                                datas[fieldQuery] = item[fieldQuery] + getTableTitle(fieldQuery, item);
+                                dataArray.push(datas)
+                                if ((dataSEM.length - 1) == i) {
+                                    $scope.gridOptions.data = dataArray;
                                 }
+                            })
+                        } else {
+                            $rootScope.searchCheckedArray.forEach(function (x, y) {
+                                datas[x] = item[x] != undefined ? item[x] : data[0][x];
+                            });
+                            var field = $rootScope.tableSearchSwitch.latitude.field;
+                            datas[field] = item[field] + getTableTitle(field, item);
+                            datas["id"] = item[searchId + "Id"];
+                            dataArray.push(datas)
+                            if ((dataSEM.length - 1) == i) {
+                                if (field == "adgroupName" || field == "keywordName") {
+                                    $scope.gridOptions.rowHeight = 55;
+                                } else {
+                                    if (field == "description1") {
+                                        $scope.gridOptions.rowHeight = 100;
+                                    } else {
+                                        $scope.gridOptions.rowHeight = 32;
+                                    }
+                                }
+                                $scope.gridOptions.columnDefs = $rootScope.searchGridArray;
+                                $scope.gridOptions.data = dataArray;
                             }
-                            $scope.gridOptions.columnDefs = $rootScope.searchGridArray;
-                            $scope.gridOptions.data = dataArray;
                         }
                     }).error(function (error) {
                         console.log(error);
@@ -243,8 +257,8 @@ define(["./module"], function (ctrs) {
                     enableColumnMenus: false,
                     enablePaginationControls: false,
                     enableHorizontalScrollbar: 0,
-                    enableVerticalScrollbar : 0,
-                    columnDefs: [{name:"kw",displayName:"触发关键词搜索词",field:"kw"}]
+                    enableVerticalScrollbar: 0,
+                    columnDefs: [{name: "kw", displayName: "触发关键词搜索词", field: "kw"}]
                 };
                 $http({
                     method: 'GET',
@@ -252,11 +266,11 @@ define(["./module"], function (ctrs) {
                     + "&filerInfo=" + filter + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
                 }).success(function (data, status) {
 
-                        var dataArray = [];
-                    if(data[0] != undefined){
-                        dataArray.push({kw:data[0].kw})
-                    }else{
-                        dataArray.push({kw:"无"})
+                    var dataArray = [];
+                    if (data[0] != undefined) {
+                        dataArray.push({kw: data[0].kw})
+                    } else {
+                        dataArray.push({kw: "无"})
                     }
                     row.entity.subGridOptions.data = dataArray;
                 })

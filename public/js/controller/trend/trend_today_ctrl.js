@@ -125,7 +125,6 @@ define(["./module"], function (ctrs) {
         $scope.init();
 
         $scope.$on("ssh_refresh_charts", function (e, msg) {
-            $rootScope.targetSearchSpread();
             $scope.charts.forEach(function (chart) {
                 chart.config.instance = echarts.init(document.getElementById(chart.config.id));
             });
@@ -195,6 +194,8 @@ define(["./module"], function (ctrs) {
                 e.config.instance = chart;
                 e.config.noFormat = undefined;
             });
+            $rootScope.tableFormat = "week";
+            $rootScope.targetSearch();
             $scope.charts[0].config.keyFormat = "week";
             requestService.refresh($scope.charts);
 
@@ -213,6 +214,8 @@ define(["./module"], function (ctrs) {
                 e.config.instance = chart;
                 e.config.noFormat = undefined;
             });
+            $rootScope.tableFormat = "month";
+            $rootScope.targetSearch();
             $scope.charts[0].config.keyFormat = "month";
             requestService.refresh($scope.charts);
             $scope.dayClass = false;
@@ -241,9 +244,9 @@ define(["./module"], function (ctrs) {
                 e.config.instance = chart;
             })
             requestService.refresh($scope.charts);
-            $rootScope.targetSearch();
             $rootScope.tableTimeStart = time[0];
             $rootScope.tableTimeEnd = time[1];
+            $rootScope.targetSearch();
             $scope.$broadcast("ssh_dateShow_options_time_change");
 
         }

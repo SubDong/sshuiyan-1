@@ -239,7 +239,8 @@ api.get('/indextable', function (req, res) {
 
     var period = date.period(_startTime, _endTime); //时间段
     var interval = _promotion == "undefined" || _promotion == undefined ? date.interval(_startTime, _endTime) : null; //时间分割
-    es_request.search(req.es, indexes, _type, _indic, _lati, [0], _filter, _promotion == "undefined" || _promotion == undefined ? period[0] : null, _promotion == "undefined" || _promotion == undefined ? period[1] : null, _formartInfo == "hour" ? 1 : interval, function (data) {
+    var formartInterval = _formartInfo == "hour" ? 1 : _formartInfo == "week" ? 604800000 : _formartInfo == "month" ? 2592000000 : interval;
+    es_request.search(req.es, indexes, _type, _indic, _lati, [0], _filter, _promotion == "undefined" || _promotion == undefined ? period[0] : null, _promotion == "undefined" || _promotion == undefined ? period[1] : null, formartInterval, function (data) {
         if (_formartInfo != "hour") {
             var result = [];
             var vidx = 0;
@@ -274,6 +275,10 @@ api.get('/indextable', function (req, res) {
                             case "period":
                                 if (_formartInfo == "day") {
                                     obj[dimensionInfo] = infoKey.substring(0, 10);
+                                } else if (_formartInfo == "week") {
+                                    obj[dimensionInfo] = infoKey.substring(0, 10);
+                                } else if (_formartInfo == "month") {
+                                    obj[dimensionInfo] = infoKey.substring(0, 7);
                                 } else {
                                     obj[dimensionInfo] = infoKey.substring(infoKey.indexOf(" "), infoKey.length - 3) + " - " + infoKey.substring(infoKey.indexOf(" "), infoKey.length - 5) + "59";
                                 }
