@@ -49,16 +49,54 @@ app.use(cookieParser());
 app.use(require('less-middleware')(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(function (req, res, next) {
-    req.es = es_client;
-    req.redisclient = redis_client;
-    req.accountid = req.session.accountid
-    next();
-})
+
+// 非测试环境加入认证
+if (env != 'dev') {
+    app.use(auth.auth)
+}
+
+// 登陆信息
+if (env == 'dev') {
+    // 测试环境
+    app.use(function (req, res, next) {
+        req.es = es_client;
+        req.redisclient = redis_client;
+        req.accountid = req.session.accountid
+        res.cookie('uname', "\"perfect\"");
+        var usites = [{
+            site_name: "www.best-ad.cn",
+            site_id: 1
+        }, {
+            site_name: "www.perfect-cn.cn",
+            site_id: 2
+        }]
+
+        res.cookie('usites', JSON.stringify(usites));
+        next();
+    })
+} else {
+    // 非测试环境
+    app.use(function (req, res, next) {
+        req.es = es_client;
+        req.redisclient = redis_client;
+        req.accountid = req.session.accountid
 
 
-app.use(auth.auth)
+        if (!!req.session.user) {
+            res.cookie('uname', "\"" + req.session.user.userName + "\"");
+            var usites = []
+            req.session.user.baiduAccounts.forEach(function (item, i) {
+                var obj = {};
+                obj['site_name'] = item.baiduUserName;
+                obj['site_id'] = item.id;
 
+                usites.push(obj);
+            })
+            res.cookie('usites', JSON.stringify(usites));
+        }
+        next();
+    })
+}
 app.use('/', root);
 
 app.use('/api', api);

@@ -7,6 +7,9 @@ require.config({
         "angular": [
             'http://cdn.bootcss.com/angular.js/1.3.15/angular.min'
         ],
+        "angular-cookies": [
+            'http://cdn.bootcss.com/angular.js/1.3.15/angular-cookies.min'
+        ],
         "js001": [
             "http://cdn.bootcss.com/jquery/1.11.3/jquery.min"
         ],
@@ -32,6 +35,11 @@ require.config({
     shim: {
         "angular": {
             exports: "angular"
+        },
+
+        'angular-cookies': {
+            deps: ['angular'],
+            exports: "angular-cookies"
         },
         // 确保angular在ui-select之前载入
         'js003': ['angular'],

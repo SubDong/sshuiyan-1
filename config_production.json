@@ -1,6 +1,13 @@
 {
   "es": {
-    "host": "http://master1:29200,http://master2:29200"
+    "hosts": [
+      "http://master1:29200",
+      "http://master2:29200"
+    ],
+    "sniffOnStart": false,
+    "sniffOnConnectionFault": false,
+    "keepAlive": true,
+    "log": "debug"
   },
   "redis": {
     "host": "master1",

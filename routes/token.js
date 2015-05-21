@@ -20,7 +20,7 @@ function tokener(req, res, next) {
         }else{
             var userinfo = JSON.parse(redis_res);
             req.session.user= userinfo;
-            if(userinfo.baiduAccount.length > 0) {
+            if(userinfo.baiduAccounts.length > 0) {
                 req.session.currentBaiduUser = userinfo.baiduAccounts[0];
                 req.session.accountid = userinfo.baiduAccounts[0].id
                 req.session.accountname = userinfo.baiduAccounts[0].baiduUserName

@@ -165,15 +165,28 @@ define(["./module"], function (ctrs) {
     });
 
     /*********nav-select*********/
-    ctrs.controller('ngSelect', function ($scope, $rootScope) {
+    ctrs.controller('ngSelect', function ($scope, $cookieStore, $window, $rootScope) {
         $scope.clear = function () {
             $scope.userselect.selected = undefined;
         };
         $scope.userselect = {};
-        $scope.userselects = [
-            {name: 'www.best-ad.cn', type: 1},
-            {name: 'www.perfect-cn.cn', type: 2},
-        ];
+
+        $scope.username = $cookieStore.get('uname');
+
+        var usites = $cookieStore.get('usites');
+
+
+        var sites = [];
+        usites.forEach(function (item, i) {
+            sites.push({
+                name:item.site_name,
+                id: item.site_id
+            })
+        })
+        $scope.default = sites[0].name;
+
+        $scope.userselects = sites;
+
         $scope.changeUrl = function (select) {
             $rootScope.userType = select.type;
         }
