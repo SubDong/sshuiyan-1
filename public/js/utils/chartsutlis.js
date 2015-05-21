@@ -599,9 +599,8 @@ var chartUtils = {
                 config["keyFormat"] = "day";
         }
     }
-
-
 }
+
 Array.prototype.removal = function () {
     this.sort();
     var re = [this[0]];

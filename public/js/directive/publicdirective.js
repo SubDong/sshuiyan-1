@@ -92,9 +92,9 @@ define(["../app"], function (app) {
                     scope.reset();
                     scope.monthClass = true;
                     $rootScope.tableTimeStart = -30;
-                    $rootScope.tableTimeEnd = -1;
+                    $rootScope.tableTimeEnd = 0;
                     $rootScope.start = -30;
-                    $rootScope.end = -1;
+                    $rootScope.end = 0;
                     scope.reloadByCalendar("month");
                     $('#reportrange span').html(GetDateStr(-29) + "至" + GetDateStr(0));
                 };
