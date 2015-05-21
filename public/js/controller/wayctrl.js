@@ -10,7 +10,7 @@ define(["./module"], function (ctrs) {
         $rootScope.tableTimeStart = 0;//开始时间
         $rootScope.tableTimeEnd = 0;//结束时间、
         //配置默认指标
-        $rootScope.checkedArray = ["click", "cost", "cpc", "pv", "vc", "avgPage"];
+        $rootScope.checkedArray = ["click", "cost", "cpc", "pv", "uv", "avgPage"];
         $rootScope.tableFormat = null;
         $rootScope.gridArray = [
             {name: "推广方式", displayName: "推广方式", field: "accountName"},
@@ -22,7 +22,7 @@ define(["./module"], function (ctrs) {
             {name: "消费", displayName: "消费", field: "cost"},
             {name: "平均点击价格", displayName: "平均点击价格", field: "cpc"},
             {name: "浏览量(PV)", displayName: "浏览量(PV)", field: "pv"},
-            {name: "访客数(UV)", displayName: "访客数(UV)", field: "vc"},
+            {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},
             {name: "平均访问页数", displayName: "平均访问页数", field: "avgPage"}
         ];
         $rootScope.tableSwitch = {
@@ -46,7 +46,7 @@ define(["./module"], function (ctrs) {
         };
 
         $scope.$on("ssh_refresh_charts", function (e, msg) {
-            $rootScope.targetSearch();
+            $rootScope.targetSearch(true);
             $scope.init($rootScope.user, $rootScope.baiduAccount, "account", $scope.selectedQuota, $rootScope.start, $rootScope.end);
             //$scope.doSearchAreas($scope.tableTimeStart, $scope.tableTimeEnd, "1", $scope.mapOrPieConfig);
         });
@@ -80,56 +80,20 @@ define(["./module"], function (ctrs) {
 
         //**************************************/
         $scope.init = function (user, baiduAccount, semType, quotas, start, end, renderLegend) {
-            //var requestParams = chartUtils.qAll(quotas);
-            //var requestArray = [];
-            //if (requestParams[0] != "") {
-            //    var semRequest = $http.get(SEM_API_URL + user + "/" + baiduAccount + "/" + semType + "/" + requestParams[0] + "?startOffset=" + start + "&endOffset=" + end);
-            //    requestArray.push(semRequest);
-            //}
-            //if (requestParams[1].length) {
-            //    var esRequest = $http.get("/api/charts/?type=" + requestParams[1].toString() + "&dimension=period&start=" + start + "&end=" + end + "&userType=" + $rootScope.userType);
-            //    requestArray.push(esRequest);
-            //}
-            //if (requestArray.length) {
-            //    $q.all(requestArray).then(function (res) {
-            //        if (res.length > 1) {
-            //
-            //        } else {
-            //
-            //        }
-            //    });
-            //
-            //}
-
-
-            if (quotas.length) {
-                var semRequest = "";
-                if (quotas.length == 1) {
-                    semRequest = $http.get(SEM_API_URL + user + "/" + baiduAccount + "/" + semType + "/" + quotas[0] + "-?startOffset=" + start + "&endOffset=" + end);
-                } else {
-                    semRequest = $http.get(SEM_API_URL + user + "/" + baiduAccount + "/" + semType + "/" + quotas[0] + "-" + quotas[1] + "-?startOffset=" + start + "&endOffset=" + end)
-                }
-                $q.all([semRequest]).then(function (final_result) {
-                    var chart_result = [];
-                    quotas.forEach(function (quota) {
-                        var tmp = [];
-                        var _semData = {};
-                        var _val = 0;
-                        final_result[0].data.forEach(function (i) {
-                            _val += i[quota];
-                        });
-                        if (quota == "cpc") {
-                            _val = parseFloat(_val / final_result[0].data.length).toFixed(2);
-                        }else if(quota=="ctr"){
-                            _val = parseFloat(_val / final_result[0].data.length).toFixed(2);
-                        }
-                        tmp.push(_val);
-                        _semData["label"] = chartUtils.convertChinese(quota);
-                        _semData["quota"] = tmp;
-                        _semData["key"] = ["搜索推广"];
-                        chart_result.push(_semData);
-                    });
-                    chartUtils.addStep(chart_result, 24);//填充空白
+            var requestParams = chartUtils.qAll(quotas);
+            var requestArray = [];
+            if (requestParams[0] != "") {
+                var semRequest = $http.get(SEM_API_URL + user + "/" + baiduAccount + "/" + semType + "/" + requestParams[0] + "?startOffset=" + start + "&endOffset=" + end);
+                requestArray.push(semRequest);
+            }
+            if (requestParams[1].length) {
+                var esRequest = $http.get("/api/charts/?type=" + requestParams[1].toString() + "&dimension=one&start=" + start + "&end=" + end + "&userType=" + $rootScope.userType);
+                requestArray.push(esRequest);
+            }
+            if (requestArray.length) {
+                $q.all(requestArray).then(function (res) {
+                    var final_result = chartUtils.getSearchTypeResult(quotas, res);
+                    chartUtils.addStep(final_result, 24);//填充空白
                     $scope.charts[0].config.chartType = "bar";
                     $scope.charts[0].config.bGap = true;
                     var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
@@ -141,10 +105,55 @@ define(["./module"], function (ctrs) {
                         util.renderLegend(chart, $scope.charts[0].config);
                         Custom.initCheckInfo();
                     }
-                    cf.renderChart(chart_result, $scope.charts[0].config);
+                    cf.renderChart(final_result, $scope.charts[0].config);
                     chart.hideLoading();
                 });
             }
+
+
+            //if (quotas.length) {
+            //    var semRequest = "";
+            //    if (quotas.length == 1) {
+            //        semRequest = $http.get(SEM_API_URL + user + "/" + baiduAccount + "/" + semType + "/" + quotas[0] + "-?startOffset=" + start + "&endOffset=" + end);
+            //    } else {
+            //        semRequest = $http.get(SEM_API_URL + user + "/" + baiduAccount + "/" + semType + "/" + quotas[0] + "-" + quotas[1] + "-?startOffset=" + start + "&endOffset=" + end)
+            //    }
+            //    $q.all([semRequest]).then(function (final_result) {
+            //        var chart_result = [];
+            //        quotas.forEach(function (quota) {
+            //            var tmp = [];
+            //            var _semData = {};
+            //            var _val = 0;
+            //            final_result[0].data.forEach(function (i) {
+            //                _val += i[quota];
+            //            });
+            //            if (quota == "cpc") {
+            //                _val = parseFloat(_val / final_result[0].data.length).toFixed(2);
+            //            }else if(quota=="ctr"){
+            //                _val = parseFloat(_val / final_result[0].data.length).toFixed(2);
+            //            }
+            //            tmp.push(_val);
+            //            _semData["label"] = chartUtils.convertChinese(quota);
+            //            _semData["quota"] = tmp;
+            //            _semData["key"] = ["搜索推广"];
+            //            chart_result.push(_semData);
+            //        });
+            //        chartUtils.addStep(chart_result, 24);//填充空白
+            //        $scope.charts[0].config.chartType = "bar";
+            //        $scope.charts[0].config.bGap = true;
+            //var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
+            //chart.showLoading({
+            //    text: "正在努力的读取数据中..."
+            //});
+            //$scope.charts[0].config.instance = chart;
+            //if (renderLegend) {
+            //    util.renderLegend(chart, $scope.charts[0].config);
+            //Custom.initCheckInfo();
+            //}
+            //        cf.renderChart(chart_result, $scope.charts[0].config);
+            //chart.hideLoading();
+            //    });
+            //}
         }
         $scope.yesterday = function () {
             $scope.reset();
@@ -199,12 +208,24 @@ define(["./module"], function (ctrs) {
             {name: '美洲 '},
         ];
         //日历
-        this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
-        this.type = 'range';
-        /*      this.identity = angular.identity;*/
-
-        this.removeFromSelected = function (dt) {
-            this.selectedDates.splice(this.selectedDates.indexOf(dt), 1);
+        $rootScope.datepickerClick = function (start, end, label) {
+            var time = chartUtils.getTimeOffset(start, end);
+            $rootScope.start = time[0];
+            $rootScope.end = time[1];
+            $scope.charts.forEach(function (e) {
+                var chart = echarts.init(document.getElementById(e.config.id));
+                e.config.instance = chart;
+            })
+            if ($rootScope.start <= -1) {
+                $scope.charts[0].config.keyFormat = "day";
+            } else {
+                $scope.charts[0].config.keyFormat = "hour";
+            }
+            requestService.refresh($scope.charts);
+            $rootScope.targetSearch();
+            $rootScope.tableTimeStart = time[0];
+            $rootScope.tableTimeEnd = time[1];
+            $scope.$broadcast("ssh_dateShow_options_time_change");
         }
     });
 });

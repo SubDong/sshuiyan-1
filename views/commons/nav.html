@@ -15,7 +15,7 @@
             <li class="dropdown">
                 <span class="fl website">网站：</span>
                 <ui-select ng-model="userselect.selected" theme="selectize" class="fl" style="min-width: 140px;" ng-change="changeUrl(userselect.selected)">
-                    <ui-select-match placeholder="{{ default }}">{{$select.selected.name}}</ui-select-match>
+                    <ui-select-match placeholder="{{ default }}"><span data-ng-bind="$select.selected.name"></span></ui-select-match>
                     <ui-select-choices repeat="userselect in userselects">
                         <span ng-bind-html="userselect.name"></span>
                     </ui-select-choices>

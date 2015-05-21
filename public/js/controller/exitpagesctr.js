@@ -34,12 +34,11 @@ app.controller('exitpagesctr', function ($scope, $rootScope, $http, requestServi
         $rootScope.targetSearch();
     });
     //日历
-    $rootScope.datepickerClick = function(start,end,label){
-        var time=chartUtils.getTimeOffset(start,end);
-        $rootScope.start = time[0];
-        $rootScope.end =time[1];
+    $rootScope.datepickerClick = function (start, end, label) {
+        var time = chartUtils.getTimeOffset(start, end);
         $rootScope.targetSearch();
+        $rootScope.tableTimeStart = time[0];
+        $rootScope.tableTimeEnd = time[1];
         $scope.$broadcast("ssh_dateShow_options_time_change");
     }
-
 });

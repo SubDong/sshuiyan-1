@@ -201,6 +201,7 @@ define(["app"], function (app) {
                     if ($rootScope.tableSwitch.number != 0) {
                         $scope.gridObjButton["name"] = " ";
                         $scope.gridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
+                        console.log($scope.gridBtnDivObj)
                         $rootScope.gridArray.unshift($scope.gridObjButton);
                     }
                     $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude);
@@ -224,7 +225,7 @@ define(["app"], function (app) {
                 enableSorting: true,
                 enableGridMenu: false,
                 enableHorizontalScrollbar: 0,
-                columnDefs: $scope.gridArray,
+                columnDefs: $rootScope.gridArray,
                 onRegisterApi: function (girApi) {
                     $scope.gridApi2 = girApi;
                     griApihtml(girApi);
@@ -241,7 +242,7 @@ define(["app"], function (app) {
                 enableSorting: true,
                 enableGridMenu: false,
                 enableHorizontalScrollbar: 0,
-                columnDefs: $scope.gridArray,
+                columnDefs: $rootScope.gridArray,
                 onRegisterApi: function (gridApi) {
                     $scope.gridApi2 = gridApi;
                     if ($rootScope.tableSwitch.dimen) {
@@ -361,6 +362,7 @@ define(["app"], function (app) {
          * @param type
          */
         $rootScope.targetSearch = function (isClicked) {
+            $scope.gridOptions.columnDefs = $rootScope.gridArray;
             if (isClicked) {
                 $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
             }
@@ -378,15 +380,15 @@ define(["app"], function (app) {
             }
             if ($rootScope.tableSwitch.isJudge == undefined) $scope.isJudge = true;
             if ($rootScope.tableSwitch.isJudge) $rootScope.tableSwitch.tableFilter = undefined;
-            if($rootScope.tableSwitch.number == 4){
-                var searchUrl = SEM_API_URL + "elasticsearch/"+esType+"/?startOffset="+ $rootScope.tableTimeStart+"&endOffset="+ $rootScope.tableTimeEnd;
+            if ($rootScope.tableSwitch.number == 4) {
+                var searchUrl = SEM_API_URL + "elasticsearch/" + esType + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd;
                 $http({
                     method: 'GET',
                     url: searchUrl
                 }).success(function (data, status) {
                     $scope.gridOptions.data = data;
                 })
-            }else{
+            } else {
                 $http({
                     method: 'GET',
                     url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field)
@@ -426,7 +428,14 @@ define(["app"], function (app) {
                         });
                     } else {
                         if ($rootScope.tableFormat != "hour") {
-                            $scope.gridOptions.data = data;
+                            if ($rootScope.tableFormat == "week") {
+                                data.forEach(function (item, i) {
+                                    item.period = util.getYearWeekState(item.period);
+                                });
+                                $scope.gridOptions.data = data;
+                            } else {
+                                $scope.gridOptions.data = data;
+                            }
                         } else {
                             var result = [];
                             var vaNumber = 0;

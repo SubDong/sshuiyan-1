@@ -5,25 +5,24 @@ define(["./module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.controller('indexoverview', function ($scope, $rootScope) {
+    ctrs.controller('exitpagesctr', function ($scope, $rootScope, $http) {
         $scope.todayClass = true;
         $rootScope.tableTimeStart = 0;
         $rootScope.tableTimeEnd = 0;
         $rootScope.tableFormat = null;
         //配置默认指标
-        $rootScope.checkedArray = ["vc", "uv", "avgTime"];
+        $rootScope.checkedArray = ["pv", "uv"];
         $rootScope.gridArray = [
-            {name: "页面url", displayName: "页面url", field: "loc"},
+            {name: "页面url", field: "loc"},
             {
                 name: " ",
                 cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
             },
-            {name: "访问次数", displayName: "访问次数", field: "vc"},
-            {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},
-            {name: "平均访问时长", displayName: "平均访问时长", field: "avgTime"}
+            {name: "浏览量(PV)", displayName: "浏览量(PV)", field: "pv"},
+            {name: "访客数(UV)", displayName: '访客数(UV)', field: "uv"}
         ];
         $rootScope.tableSwitch = {
-            latitude: {name: "页面url", displayName: "页面url", field: "loc"},
+            latitude: {name: "页面url", field: "loc"},
             tableFilter: null,
             dimen: false,
             // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
@@ -40,11 +39,12 @@ define(["./module"], function (ctrs) {
         //日历
         $rootScope.datepickerClick = function (start, end, label) {
             var time = chartUtils.getTimeOffset(start, end);
+            $rootScope.start = time[0];
+            $rootScope.end = time[1];
             $rootScope.targetSearch();
-            $rootScope.tableTimeStart = time[0];
-            $rootScope.tableTimeEnd = time[1];
             $scope.$broadcast("ssh_dateShow_options_time_change");
-        }
+        };
+
     });
 
 });

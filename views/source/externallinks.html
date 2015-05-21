@@ -1,5 +1,5 @@
 <!--来源分析-外部链接-->
-<div class="middle_containers" ng-controller="externallinksctr as app">
+<div class="middle_containers" ng-controller="externallinksctr">
     <div class="date_select">
         <calendar></calendar>
         <dateother></dateother>
@@ -10,7 +10,7 @@
         <div class="index_chart">
             <div id="indicators_charts_legend"></div>
             <div id="sourse_charts" class="pin_chart"></div>
-            <div id="indicators_charts" class="line_chart" ></div>
+            <div id="indicators_charts" class="line_chart"></div>
 
         </div>
         <div class="table_content" ng-controller="TabsCtrl">
@@ -19,7 +19,7 @@
                     <div class="custom_title">
                         <div class="chart_top chart_default">
                             <ul>
-                                <li><a href="#">系统默认指标 </a></li>
+                                <li><a href="javascript:void(0)" data-ssh-default-quota="source_externallinks">系统默认指标</a></li>
                                 <li><a href="#"> 订单默认指标</a></li>
                             </ul>
                         </div>
@@ -70,11 +70,14 @@
                         <div class="chart_top2">
                             <ul>
                                 <li><span>设备过滤:</span></li>
-                                <li><input type="radio" checked="checked" name="radio0" ng-click="setExLinkTerminal(0)"/>
+                                <li><input type="radio" checked="checked" name="radio0"
+                                           ng-click="setExLinkTerminal(0)"/>
                                     <label>全部</label></li>
-                                <li><input type="radio" name="radio0" ng-click="setExLinkTerminal(1)"/> <label>计算机</label>
+                                <li><input type="radio" name="radio0" ng-click="setExLinkTerminal(1)"/>
+                                    <label>计算机</label>
                                 </li>
-                                <li><input type="radio" name="radio0" ng-click="setExLinkTerminal(2)"/> <label>移动设备</label>
+                                <li><input type="radio" name="radio0" ng-click="setExLinkTerminal(2)"/>
+                                    <label>移动设备</label>
                                 </li>
                             </ul>
                         </div>
@@ -109,13 +112,13 @@
                     </div>
                     <!--<b></b>转化目标-->
                     <!--<div role="group" class="btn-group">-->
-                        <!--<ui-select ng-model="extendway.selected" theme="selectize" class="fl"-->
-                                   <!--style="width: 120px;">-->
-                            <!--<ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>-->
-                            <!--<ui-select-choices repeat="extendway in extendways">-->
-                                <!--<span ng-bind-html="extendway.name"></span>-->
-                            <!--</ui-select-choices>-->
-                        <!--</ui-select>-->
+                    <!--<ui-select ng-model="extendway.selected" theme="selectize" class="fl"-->
+                    <!--style="width: 120px;">-->
+                    <!--<ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>-->
+                    <!--<ui-select-choices repeat="extendway in extendways">-->
+                    <!--<span ng-bind-html="extendway.name"></span>-->
+                    <!--</ui-select-choices>-->
+                    <!--</ui-select>-->
                     <!--</div>-->
                 </div>
             </div>

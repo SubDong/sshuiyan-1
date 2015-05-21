@@ -1,7 +1,7 @@
 <div class="date_show" data-ng-class="{'dateshow0': dateShowArray.length == 0, 'dateshow1': dateShowArray.length == 1, 'datelatshow': dateShowArray.length == 2, 'dateshow3': dateShowArray.length == 3, 'dateshow4': dateShowArray.length == 4, 'dateshow5': dateShowArray.length == 5}">
     <ul>
         <li data-ng-repeat="obj in dateShowArray" data-ng-class="{'date_first': $index == 0, 'date_secend': $index == 1, 'date_third': $index == 2, 'date_four': $index == 3, 'date_five': $index == 4, 'date_last': $index == 5}">
-            <h4>{{obj.label | quotaFormat}}&nbsp;<span class="badge" style="font-size: 12px;cursor: help;" title="{{obj.label | quotaHelpFormat}}">?</span></h4>
+            <h4>{{obj.label | quotaFormat}}&nbsp;<span class="badge"  tooltip-placement="bottom"  tooltip="{{obj.label | quotaHelpFormat}}"style="font-size: 12px;cursor: pointer;">?</span></h4>
             <span>{{obj.value}}</span>
             <br>
             <!-- 显示对比数据 -->

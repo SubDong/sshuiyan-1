@@ -1,7 +1,7 @@
 <div class="middle_containers">
     <div class="date_select" ng-controller="trend_month_ctrl">
         <calendar></calendar>
-        <datecontrast></datecontrast>
+        <dateother></dateother>
         <dateweek></dateweek>
         <refresh></refresh>
     </div>
@@ -15,6 +15,12 @@
             <tabset justified="true">
                 <tab heading="自定义指标" ng-controller="todaydefine">
                     <div class="custom_title">
+                        <div class="chart_top chart_default">
+                            <ul>
+                                <li><a href="javascript:void(0)" data-ssh-default-quota="trend_month">系统默认指标</a>
+                                </li>
+                            </ul>
+                        </div>
                         <div class="chart_top">
                             <span>网站基础指标 :</span>
                             <ul>
@@ -79,8 +85,10 @@
                                 <li><span>设备过滤:</span></li>
                                 <li><input type="radio" checked="checked" ng-click="setTerminal(0)" name="radio1"/>
                                     <label>全部</label></li>
-                                <li><input type="radio" ng-click="setTerminal(1)" name="radio1"/> <label>计算机</label></li>
-                                <li><input type="radio" ng-click="setTerminal(2)" name="radio1"/> <label>移动设备</label></li>
+                                <li><input type="radio" ng-click="setTerminal(1)" name="radio1"/> <label>计算机</label>
+                                </li>
+                                <li><input type="radio" ng-click="setTerminal(2)" name="radio1"/> <label>移动设备</label>
+                                </li>
                             </ul>
                         </div>
                         <div class="chart_top2">
@@ -89,7 +97,8 @@
                                 <li>
                                     <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
                                         <div role="group" class="btn-group">
-                                            <ui-select ng-model="city.selected" theme="selectize" class="fl btn-pv" data-ng-change="setAreaFilter(city.selected.name)"
+                                            <ui-select ng-model="city.selected" theme="selectize" class="fl btn-pv"
+                                                       data-ng-change="setAreaFilter(city.selected.name)"
                                                        style="width: 120px;">
                                                 <ui-select-match placeholder="全部">{{$select.selected.name}}
                                                 </ui-select-match>
@@ -109,18 +118,18 @@
                 </tab>
             </tabset>
             <!--<div class="custom_secendtitle">-->
-                <!--<div class="custom_select">-->
-                    <!--转化目标-->
-                    <!--<div role="group" class="btn-group">-->
-                        <!--<ui-select ng-model="extendway.selected" theme="selectize" class="fl"-->
-                                   <!--style="width: 120px;">-->
-                            <!--<ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>-->
-                            <!--<ui-select-choices repeat="extendway in extendways">-->
-                                <!--<span ng-bind-html="extendway.name"></span>-->
-                            <!--</ui-select-choices>-->
-                        <!--</ui-select>-->
-                    <!--</div>-->
-                <!--</div>-->
+            <!--<div class="custom_select">-->
+            <!--转化目标-->
+            <!--<div role="group" class="btn-group">-->
+            <!--<ui-select ng-model="extendway.selected" theme="selectize" class="fl"-->
+            <!--style="width: 120px;">-->
+            <!--<ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>-->
+            <!--<ui-select-choices repeat="extendway in extendways">-->
+            <!--<span ng-bind-html="extendway.name"></span>-->
+            <!--</ui-select-choices>-->
+            <!--</ui-select>-->
+            <!--</div>-->
+            <!--</div>-->
             <!--</div>-->
             <div class="custom_table">
                 <div ui-grid="gridOptions" class="grid" style="min-height:400px;" ui-grid-pagination ui-grid-selection

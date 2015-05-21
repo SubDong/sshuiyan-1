@@ -8,14 +8,45 @@ define(["./module"], function (ctrs) {
     ctrs.controller('search_ssc_ctr', function ($scope, $rootScope, requestService, areaService, $http) {
         $scope.yesterdayClass = true;
 
-        //table默认信息配置
-        $rootScope.tableTimeStart = 0;
-        $rootScope.tableTimeEnd = 0;
+        $rootScope.tableTimeStart = -1;//开始时间
+        $rootScope.tableTimeEnd = -1;//结束时间、
         $rootScope.tableFormat = null;
-        $rootScope.tableFilter = null;
-        $rootScope.latitude = {name: "搜索引擎", field: "wd"}
-        $rootScope.dimen = false;
-        //
+        //配置默认指标
+        $rootScope.searchCheckedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
+        $rootScope.searchGridArray = [
+            {
+                name: "触发关键词的搜索词",
+                displayName: "触发关键词的搜索词",
+                field: "kw",
+                cellTemplate: "<a href='http://www.baidu.com/s?wd={{grid.appScope.getDataUrlInfo(grid, row,1)}}' style='color:#0965b8;line-height:30px;' target='_blank'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}"
+            },/*
+            {
+                name: " ",
+                displayName: " ",
+                cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
+            },*/
+            {name: "展现", displayName: "展现", field: "impression"},
+            {name: "消费", displayName: "消费", field: "cost"},
+            {name: "平均点击价格", displayName: "平均点击价格", field: "cpc"},
+            {name: "跳出率", displayName: "跳出率", field: "outRate"},
+            {name: "平均访问时长", displayName: "平均访问时长", field: "avgTime"},
+            {name: "新访客比率", displayName: "新访客比率", field: "nuvRate"}
+        ];
+        $rootScope.tableSearchSwitch = {
+            latitude: {name: "触发关键词的搜索词", displayName: "触发关键词的搜索词", field: "kw"},
+            tableFilter: null,
+            dimen: false,
+            // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
+            number: 1,
+            //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
+            coding: false,
+            //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
+            arrayClear: false, //是否清空指标array
+            promotionSearch: {
+                turnOn: "ssc", //是否开始推广中sem数据
+                SEMData: "keyword" //查询类型
+            }
+        };
         $scope.charts = [
             {
                 config: {
@@ -47,7 +78,7 @@ define(["./module"], function (ctrs) {
         $scope.init();
 
         $scope.$on("ssh_refresh_charts", function (e, msg) {
-            $rootScope.targetSearch();
+            $rootScope.targetSearchSSC();
         });
 
         //点击显示指标
