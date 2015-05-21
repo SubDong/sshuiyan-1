@@ -238,7 +238,7 @@ define(["./module"], function (ctrs) {
                         dataValue: "quota"//传入数据的value值
                     }
                 }
-            ]
+            ];
             $scope.initGrid = function (user, baiduAccount, type, startOffset, endOffset, quota, estype) {
                 var semRegionRequest = $http.get(SEM_API_URL + user + "/" + baiduAccount + "/" + type + "/" + quota + "-?startOffset=" + startOffset + "&endOffset=" + endOffset);
                 var huiyanRequest = $http.get("/api/charts?start=" + startOffset + "&end=" + endOffset + "&dimension=period&userType=2&type=" + estype);
@@ -300,7 +300,7 @@ define(["./module"], function (ctrs) {
                 $scope.compareArray = [];
                 $scope.effectQuota_ = effectQuota.value;
                 $scope.selectedQuota[1] = effectQuota.value;
-                //$scope.reloadGrid();
+                $scope.reloadGrid();
                 $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $scope.start, $scope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
                 //$scope.refreshData();
             };
