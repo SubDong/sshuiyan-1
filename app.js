@@ -14,7 +14,9 @@ var express = require('express'),
     uuid = require('node-uuid'),
     auth = require('./routes/auth'),
     token = require('./routes/token'),
-    redis_module = require("./servers/utils/redis");
+    redis_module = require("./servers/utils/redis"),
+    RedisStore = require('connect-redis')(session);
+
 
 var env = process.argv.splice(2);
 if (env === undefined || env) {
@@ -33,14 +35,32 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.engine("html", require('ejs').renderFile);
 
-app.use(session({
-    genid: function (req) {
-        return uuid.v4();// use UUIDs for session IDs
-    },
-    resave: false,
-    saveUninitialized: false,
-    secret: 'keyboard cat'
-}));
+if (env == 'dev') {
+    app.use(session({
+        genid: function (req) {
+            return uuid.v4();// use UUIDs for session IDs
+        },
+        resave: false,
+        saveUninitialized: false,
+        secret: 'keyboard cat'
+    }));
+} else {
+    app.use(session({
+        genid: function (req) {
+            return uuid.v4();// use UUIDs for session IDs
+        },
+        store: new RedisStore({
+            host: config.redis.host,
+            port: config.redis.port,
+            pass: config.redis.options.auth_pass,
+            unref: false,
+            db: 10
+        }),
+        resave: false,
+        saveUninitialized: false,
+        secret: 'keyboard cat'
+    }));
+}
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
