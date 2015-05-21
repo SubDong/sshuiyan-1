@@ -237,6 +237,8 @@ api.get('/indextable', function (req, res) {
     var _filter = query["filerInfo"] != null && query["filerInfo"] != 'null' ? JSON.parse(query["filerInfo"]) : query["filerInfo"] == 'null' ? null : query["filerInfo"];//过滤器
     var indexes = date.createIndexes(_startTime, _endTime, "visitor-");//indexs
 
+    var popFlag = query["popup"];
+
     var period = date.period(_startTime, _endTime); //时间段
     var interval = _promotion == "undefined" || _promotion == undefined ? date.interval(_startTime, _endTime) : null; //时间分割
     var formartInterval = _formartInfo == "hour" ? 1 : _formartInfo == "week" ? 604800000 : _formartInfo == "month" ? 2592000000 : interval;
@@ -255,7 +257,9 @@ api.get('/indextable', function (req, res) {
                     } else {
                         infoKey = info.key[i]
                     }
-                    if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null" || infoKey.length >= 30)) continue;
+                    if (popFlag != 1) {
+                        if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null" || infoKey.length >= 30)) continue;
+                    }
                     var infoKey = info.key[i];
                     var obj = maps[infoKey];
                     if (!obj) {

@@ -1,11 +1,11 @@
 /**
  * Created by john on 2015/4/2.
  */
-define(["./module"], function(ctrs) {
+define(["./module"], function (ctrs) {
 
     'use strict';
 
-    ctrs.controller('searchtermctr', function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
+    ctrs.controller('searchtermctr', function ($scope, $rootScope, $http, requestService, popupService, areaService, uiGridConstants) {
             $scope.todayClass = true;
             $scope.visible = true;
             //table默认信息配置
@@ -18,13 +18,25 @@ define(["./module"], function(ctrs) {
                 {name: "搜索词", displayName: "搜索词", field: "kw"},
                 {
                     name: " ",
-                    cellTemplate: "<div class='table_box'><button onclick='getMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul><li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li></ul></div></div>"
+                    cellTemplate: "<div class='table_box'>" +
+                    "<button onclick='getMyButton(this)' class='table_nextbtn'></button>" +
+                    "<div class='table_win'>" +
+                    "<ul>" +
+                    "<li><a>查看相关热门搜索词</a></li>" +
+                    "<li><a ng-click='grid.appScope.showSearchUrl()'>查看搜索来路URL</a></li>" +
+                    "<li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li>" +
+                    "</ul>" +
+                    "</div>" +
+                    "</div>"
                 },
                 {name: "浏览量(PV)", displayName: "浏览量(PV)", field: "pv"},
                 {name: "访问次数", displayName: "访问次数", field: "vc"},
                 {name: "新访客数", displayName: "新访客数", field: "nuv"},
                 {name: "IP数", displayName: "IP数", field: "ip"}
             ];
+            $scope.showSearchUrl = function () {
+                popupService.showSourceData('普菲特');
+            };
             $rootScope.tableSwitch = {
                 latitude: {name: "搜索词", displayName: "搜索词", field: "kw"},
                 tableFilter: null,
@@ -32,7 +44,9 @@ define(["./module"], function(ctrs) {
                 // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
                 number: 2,
                 //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
-                coding: "<li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>",
+                coding: "<li><a>查看相关热门搜索词</a></li>" +
+                "<li><a ng-click='grid.appScope.showSearchUrl()'>查看搜索来路URL</a></li>" +
+                "<li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent'>查看历史趋势</a></li>",
                 //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
                 arrayClear: false //是否清空指标array
             };

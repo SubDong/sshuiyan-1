@@ -179,11 +179,12 @@ define(["./module"], function (ctrs) {
         var sites = [];
         usites.forEach(function (item, i) {
             sites.push({
-                name:item.site_name,
+                name: item.site_name,
                 id: item.site_id
             })
-        })
-        $scope.default = sites[0].name;
+        });
+        $rootScope.default = sites[0].name;     // default site
+        $rootScope.defaultType = sites[0].id;   // default site trackId
 
         $scope.userselects = sites;
 
