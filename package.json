@@ -19,7 +19,7 @@
     "express-session": "^1.11.1",
     "connect-redis": "^2.3.0",
     "node-uuid": "^1.4.0",
-    "redis": "*"
+    "redis": "^0.12.1"
   },
   "devDependencies": {
     "grunt": "~0.4.5",
