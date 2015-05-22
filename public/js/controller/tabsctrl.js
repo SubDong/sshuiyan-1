@@ -340,9 +340,50 @@ define(["app"], function (app) {
             }
             if ("全部" == area) {
                 $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[2]}]";
-                ;
             } else {
                 $rootScope.tableSwitch.tableFilter = "[{\"region\":[\"" + area + "\"]},{\"rf_type\":[2]}]";
+            }
+            $scope.isJudge = false;
+            $scope.targetSearch();
+        };
+
+        // 搜索词过滤
+        $scope.setGjcFilter = function (gjcText) {
+            if (!$rootScope.tableSwitch) {
+                return;
+            }
+            if(undefined == gjcText || "" == gjcText) {
+                $rootScope.tableSwitch.tableFilter = null;
+            } else {
+                $rootScope.tableSwitch.tableFilter = "[{\"kw\":[\"" + gjcText + "\"]}]";
+            }
+            $scope.isJudge = false;
+            $scope.targetSearch();
+        };
+
+        // 输入URL过滤
+        $scope.searchURLFilter = function(urlText) {
+            if (!$rootScope.tableSwitch) {
+                return;
+            }
+            if(undefined == urlText || "" == urlText) {
+                $rootScope.tableSwitch.tableFilter = null;
+            } else {
+                $rootScope.tableSwitch.tableFilter = "[{\"loc\":[\"" + urlText + "\"]}]";
+            }
+            $scope.isJudge = false;
+            $scope.targetSearch();
+        };
+
+        // 外部链接搜索
+        $scope.searchURLFilterBySourceEl = function(urlText) {
+            if (!$rootScope.tableSwitch) {
+                return;
+            }
+            if(undefined == urlText || "" == urlText) {
+                $rootScope.tableSwitch.tableFilter = "[{\"rf_type\": [\"3\"]}]";
+            } else {
+                $rootScope.tableSwitch.tableFilter = "[{\"rf_type\": [\"3\"]}, {\"rf\":[\"" + urlText + "\"]}]";
             }
             $scope.isJudge = false;
             $scope.targetSearch();
@@ -357,6 +398,7 @@ define(["app"], function (app) {
          * @param type
          */
         $rootScope.targetSearch = function (isClicked) {
+            console.log($rootScope.tableSwitch.tableFilter);
             $scope.gridOptions.columnDefs = $rootScope.gridArray;
             if (isClicked) {
                 $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);

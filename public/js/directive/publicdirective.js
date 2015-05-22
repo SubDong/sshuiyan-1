@@ -290,7 +290,7 @@ define(["../app"], function (app) {
                 // 获取数据
                 scope.loadDataShow = function () {
                     scope.dateShowArray = [];
-                    var esRequest = $http.get("/api/summary?type=" + $rootScope.ssh_es_type + "&dimension=" + scope.ds_dimension + "&quotas=" + scope.ds_dateShowQuotasOption + "&start=" + scope.ds_start + "&end=" + scope.ds_end);
+                    var esRequest = $http.get("/api/summary?type=" + $rootScope.defaultType + "&dimension=" + scope.ds_dimension + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&quotas=" + scope.ds_dateShowQuotasOption + "&start=" + scope.ds_start + "&end=" + scope.ds_end);
                     var seoQuotas = scope.getSEOQuotas();
                     if (seoQuotas.length > 0) {
                         var stringQuotas = seoQuotas.toString().replace(/,/g, "-") + "-";

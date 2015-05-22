@@ -487,9 +487,10 @@ api.get("/summary", function (req, res) {
     var quotas = query['quotas'];
     var period = date.period(startOffset, endOffset);
     var interval = date.interval(startOffset, endOffset);
+    var _filter = query["filerInfo"] != null && query["filerInfo"] != 'null' ? JSON.parse(query["filerInfo"]) : query["filerInfo"] == 'null' ? null : query["filerInfo"];//过滤器
     // 指标数组
     var quotasArray = quotas.split(",");
-    es_request.search(req.es, indexes, type, quotasArray, dimension, [0], null, period[0], period[1], interval, function (result) {
+    es_request.search(req.es, indexes, type, quotasArray, dimension, [0], _filter, period[0], period[1], interval, function (result) {
         datautils.send(res, JSON.stringify(result));
     });
 });
