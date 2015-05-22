@@ -9,7 +9,7 @@ define(["./module"], function (ctrs) {
             $rootScope.tableTimeEnd = -1;//结束时间、
             $rootScope.tableFormat = null;
             //配置默认指标
-            $rootScope.searchCheckedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
+            $rootScope.checkedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
             $rootScope.searchGridArray = [
                 {
                     name: "计划",

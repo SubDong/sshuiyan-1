@@ -125,6 +125,7 @@ define(["../app"], function (app) {
                     var d = dd.getDate();
                     return y + "-" + m + "-" + d;
                 }
+
                 $('#reportrange span').html(GetDateStr(0));
                 $('#reportrange').daterangepicker({
                     format: 'YYYY-MM-DD',
@@ -165,6 +166,7 @@ define(["../app"], function (app) {
                     var d = dd.getDate();
                     return y + "-" + m + "-" + d;
                 }
+
                 scope.dateshows = true;
                 $('#choicetrange').daterangepicker({
                     format: 'YYYY-MM-DD',
@@ -251,7 +253,7 @@ define(["../app"], function (app) {
     /**
      * Create by wms on 2015-04-22.合计信息显示
      */
-    app.directive("sshDateShow", function ($http, $rootScope, SEM_API_URL) {
+    app.directive("sshDateShow", function ($http, $rootScope, $q, SEM_API_URL) {
         return {
             restrict: 'E',
             templateUrl: '../commons/date_show.html',
@@ -263,125 +265,149 @@ define(["../app"], function (app) {
                 scope.ds_start = scope.ds_end = 0;
                 scope.ds_defaultQuotasOption = ["pv", "uv", "ip", "nuv", "outRate", "avgTime"];
                 scope.ds_dateShowQuotasOption = scope.checkedArray ? scope.checkedArray : scope.ds_defaultQuotasOption;
-                // 读取ES数据
-                scope.loadSummary = function () {
-                    $http.get("/api/summary?type=" + $rootScope.ssh_es_type + "&dimension=" + scope.ds_dimension + "&quotas=" + scope.ds_dateShowQuotasOption + "&start=" + scope.ds_start + "&end=" + scope.ds_end).success(function (result) {
-                        var obj = JSON.parse(eval('(' + result + ')').toString()); //由JSON字符串转换为JSON对象
-                        angular.forEach(obj, function (r) {
-                            var dateShowObject = {};
-                            dateShowObject.label = r.label;
-                            var temp = 0;
-                            var count = 0;
-                            angular.forEach(r.quota, function (qo) {
-                                temp += Number(qo);
-                                count++;
-                            });
-                            if (r.label === "outRate" || r.label === "nuvRate" || r.label === "arrivedRate") {
-                                if (count === 0) {
-                                    dateShowObject.value = "--";
-                                } else {
-                                    dateShowObject.value = (temp / count).toFixed(2) + "%";
-                                }
-                            } else if (r.label === "avgPage") {
-                                if (count === 0) {
-                                    dateShowObject.value = "--";
-                                } else {
-                                    dateShowObject.value = (temp / count).toFixed(2);
-                                }
-                            } else if (r.label === "avgTime") {
-                                dateShowObject.value = MillisecondToDate(temp / count);
-                            } else {
-                                dateShowObject.value = temp;
-                            }
-                            scope.dateShowArray.push(dateShowObject);
-                        });
+                // 获取数据
+                scope.loadDataShow = function () {
+                    scope.dateShowArray = [];
+                    var esRequest = $http.get("/api/summary?type=" + $rootScope.ssh_es_type + "&dimension=" + scope.ds_dimension + "&quotas=" + scope.ds_dateShowQuotasOption + "&start=" + scope.ds_start + "&end=" + scope.ds_end);
+                    var seoQuotas = scope.getSEOQuotas();
+                    if (seoQuotas.length > 0) {
+                        var stringQuotas = seoQuotas.toString().replace(/,/g, "-") + "-";
+                        var seoRequest = $http.get(SEM_API_URL + "jiehun/baidu-bjjiehun2123585/" + scope.ssh_seo_type + "/" + stringQuotas + "?startOffset=" + scope.ds_start + "&endOffset=" + scope.ds_end);
+                    }
+                    $q.all([esRequest, seoRequest]).then(function (final_result) {
+                        scope.pushESData(final_result[0].data);
+                        if (final_result[1] != undefined) {
+                            scope.pushSEOData(final_result[1].data);
+                        }
                     });
                 };
-                // 读取SEO数据
-                scope.loadSEOSummary = function () {
-                    // 先判断是否存在SEO指标
+                scope.getSEOQuotas = function () {
                     var seoQuotas = [];
-                    var costObj, impressionObj, clickObj, ctrObj, cpcObj, cpmObj, conversionObj;
                     // 根据用户所选择的指标，判断是否具有SEO指标，如果存在SEO指标则构建该指标的对象并且存储该指标
                     angular.forEach(scope.ds_dateShowQuotasOption, function (e) {
                         switch (e) {
                             case "cost":
-                                costObj = {"label": e, "value": 0};
+                            case "impression":
+                            case "click":
+                            case "ctr":
+                            case "cpc":
+                            case "cpm":
+                            case "conversion":
                                 seoQuotas.push(e);
+                        }
+                    });
+                    return seoQuotas;
+                };
+                scope.pushESData = function (result) {
+                    var obj = JSON.parse(eval('(' + result + ')').toString()); //由JSON字符串转换为JSON对象
+                    angular.forEach(obj, function (r) {
+                        var dateShowObject = {};
+                        dateShowObject.label = r.label;
+                        var temp = 0;
+                        var count = 0;
+                        angular.forEach(r.quota, function (qo) {
+                            temp += Number(qo);
+                            count++;
+                        });
+                        if (r.label === "outRate" || r.label === "nuvRate" || r.label === "arrivedRate") {
+                            if (count === 0) {
+                                dateShowObject.value = "--";
+                            } else {
+                                dateShowObject.value = (temp / count).toFixed(2) + "%";
+                            }
+                        } else if (r.label === "avgPage") {
+                            if (count === 0) {
+                                dateShowObject.value = "--";
+                            } else {
+                                dateShowObject.value = (temp / count).toFixed(2);
+                            }
+                        } else if (r.label === "avgTime") {
+                            dateShowObject.value = MillisecondToDate(temp / count);
+                        } else {
+                            dateShowObject.value = temp;
+                        }
+                        scope.correctAndPushArray(dateShowObject);
+                    });
+                };
+                scope.pushSEOData = function (result) {
+                    var costObj, impressionObj, clickObj, ctrObj, cpcObj, cpmObj, conversionObj;
+                    angular.forEach(scope.ds_dateShowQuotasOption, function (e) {
+                        switch (e) {
+                            case "cost":
+                                costObj = {"label": e, "value": 0};
                                 break;
                             case "impression":
                                 impressionObj = {"label": e, "value": 0};
-                                seoQuotas.push(e);
                                 break;
                             case "click":
                                 clickObj = {"label": e, "value": 0};
-                                seoQuotas.push(e);
                                 break;
                             case "ctr":
                                 ctrObj = {"label": e, "value": 0};
-                                seoQuotas.push(e);
                                 break;
                             case "cpc":
                                 cpcObj = {"label": e, "value": 0};
-                                seoQuotas.push(e);
                                 break;
                             case "cpm":
                                 cpmObj = {"label": e, "value": 0};
-                                seoQuotas.push(e);
                                 break;
                             case "conversion":
                                 conversionObj = {"label": e, "value": 0};
-                                seoQuotas.push(e);
                                 break;
                         }
                     });
-                    // 存在SEO指标，进行查询
-                    if (seoQuotas.length > 0) {
-                        var stringQuotas = seoQuotas.toString().replace(/,/g, "-") + "-";
-                        $http.get(SEM_API_URL + "jiehun/baidu-bjjiehun2123585/" + scope.ssh_seo_type + "/" + stringQuotas + "?startOffset=" + scope.ds_start + "&endOffset=" + scope.ds_end).success(function (result) {
-                            // 对指标的值求和
-                            function sumValue(obj, value) {
-                                if (obj) {
-                                    obj.value += Number(value);
-                                }
-                            }
-
-                            var count = 0;
-                            angular.forEach(result, function (r) {
-                                count++;
-                                sumValue(costObj, r.cost);
-                                sumValue(impressionObj, r.impression);
-                                sumValue(clickObj, r.click);
-                                sumValue(ctrObj, r.ctr);
-                                sumValue(cpcObj, r.cpc);
-                                sumValue(cpmObj, r.cpm);
-                                sumValue(conversionObj, r.conversion);
-                            });
-                            // 根据不同SEO指标的算法，进行指标对象值的计算
-                            calculateValue(costObj, "2");
-                            calculateValue(impressionObj, "2");
-                            calculateValue(clickObj, "1");
-                            calculateValue(ctrObj, "2");
-                            calculateValue(cpcObj, "3");
-                            calculateValue(cpmObj, "2");
-                            calculateValue(conversionObj, "2");
-                            function calculateValue(obj, type) {
-                                if (!obj) {
-                                    return;
-                                }
-                                if (type == "1") {// 直接获取值
-                                    obj.value = obj.value.toFixed(2);
-                                }
-                                if (type == "2") {// 保留2位小数
-                                    obj.value = obj.value.toFixed(2);
-                                }
-                                if (type == "3") {// 计算平均值
-                                    obj.value = count == 0 ? "--" : (cpcObj.value / count).toFixed(2);
-                                }
-                                scope.dateShowArray.push(obj);
-                            }
-                        });
+                    // 对指标的值求和
+                    function sumValue(obj, value) {
+                        if (obj) {
+                            obj.value += Number(value);
+                        }
                     }
+
+                    function calculateValue(obj, type) {
+                        if (!obj) {
+                            return;
+                        }
+                        if (type == "1") {// 直接获取值
+                            obj.value = obj.value.toFixed(2);
+                        }
+                        if (type == "2") {// 保留2位小数
+                            obj.value = obj.value.toFixed(2);
+                        }
+                        if (type == "3") {// 计算平均值
+                            obj.value = count == 0 ? "--" : (cpcObj.value / count).toFixed(2);
+                        }
+                        scope.correctAndPushArray(obj);
+                    }
+
+                    var count = 0;
+                    angular.forEach(result, function (r) {
+                        count++;
+                        sumValue(costObj, r.cost);
+                        sumValue(impressionObj, r.impression);
+                        sumValue(clickObj, r.click);
+                        sumValue(ctrObj, r.ctr);
+                        sumValue(cpcObj, r.cpc);
+                        sumValue(cpmObj, r.cpm);
+                        sumValue(conversionObj, r.conversion);
+                    });
+                    // 根据不同SEO指标的算法，进行指标对象值的计算
+                    calculateValue(costObj, "2");
+                    calculateValue(impressionObj, "2");
+                    calculateValue(clickObj, "1");
+                    calculateValue(ctrObj, "2");
+                    calculateValue(cpcObj, "3");
+                    calculateValue(cpmObj, "2");
+                    calculateValue(conversionObj, "2");
+                };
+                // 特殊处理，保证指标显示顺序
+                scope.correctAndPushArray = function (obj) {
+                    var index = 0;
+                    angular.forEach(scope.ds_dateShowQuotasOption, function (ds_r) {
+                        if (ds_r == obj.label) {
+                            scope.dateShowArray[index] = obj;
+                        }
+                        index++;
+                    });
                 };
                 // 改变时间参数
                 scope.setDateShowTimeOption = function (type, cb) {
@@ -400,15 +426,13 @@ define(["../app"], function (app) {
                         scope.ds_end = $rootScope.tableTimeEnd;
                     }
                     if (cb) {
-                        scope.dateShowArray = [];
-                        cb();
-                        scope.loadSEOSummary();
+                        scope.loadDataShow();
                     }
                 };
                 scope.setDateShowTimeOption(attris.type);
                 // 第一种方式。通过用户点击时发出的事件进行监听，此方法需要在每个controller方法内部添加代码实现
                 scope.$on("ssh_dateShow_options_time_change", function (e, msg) {
-                    scope.setDateShowTimeOption(msg, scope.loadSummary);
+                    scope.setDateShowTimeOption(msg, scope.loadDataShow);
                 });
                 // 维度dimension
                 scope.setDateShowDimensionOption = function (dimension) {
@@ -425,11 +449,9 @@ define(["../app"], function (app) {
                         scope.ds_dateShowQuotasOption = temp;
                     }
                     scope.dateShowArray = [];
-                    scope.loadSummary();
-                    scope.loadSEOSummary();
+                    scope.loadDataShow();
                 });
-                scope.loadSummary();
-                scope.loadSEOSummary();
+                scope.loadDataShow();
             }
         };
     });
@@ -608,7 +630,7 @@ define(["../app"], function (app) {
         return {
             restrict: 'A',
             link: function (scope, element, attris, controller) {
-                scope.searchCheckedArray.forEach(function (item, i) {
+                scope.checkedArray.forEach(function (item, i) {
                     if (item == attris.defvalue) {
                         scope.classInfo = 'current';
                     }
