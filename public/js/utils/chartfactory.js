@@ -139,30 +139,55 @@ var op = {
 
                     }
                     return res;
+                },
+                axisPointer: {
+                    type: 'line',
+                    lineStyle: {
+                        color: '#01AFEF',
+                        width: 1,
+                        type: 'solid'
+                    }
                 }
             },
+
             xAxis: [
                 {
                     type: !chartConfig.xType ? "category" : chartConfig.xType,
                     boundaryGap: !chartConfig.bGap ? false : chartConfig.bGap,
+                    axisLine: {    // 轴线
+                        lineStyle: {
+                            color: '#01AFEF',
+                            type: 'solid',
+                            width: 1
+                        }
+                    },
+                    splitLine: {
+                        lineStyle: {
+                            color: '#F0F0F0',
+                            type: 'solid',
+                            width: 1
+                        }
+                    },
                     data: []
-                    //,
-                    //axisLabel: {
-                    //    rotate: 30,
-                    //    textStyle: {
-                    //        color: '#0D0D0D',
-                    //        fontFamily: '微软雅黑'
-                    //    }
-                    //}
                 }
             ],
             yAxis: [
                 {
                     type: !chartConfig.yType ? "value" : chartConfig.yType,
-                    axisLabel: {
-                        formatter: chartConfig.axFormat
+                    splitLine: {
+                        lineStyle: {
+                            color: '#F0F0F0',
+                            type: 'solid',
+                            width: 1
+                        }
                     },
-                    splitLine: {show: false}
+                    axisLine: {
+                        lineStyle: {
+                            color: '#01AFEF',
+                            type: 'solid',
+                            width: 1
+                        }
+                    }
                 },
                 {
                     'type': !chartConfig.yType ? "value" : chartConfig.yType
@@ -215,7 +240,17 @@ var op = {
                 data: item[chartConfig.dataValue]
             };
             if (chartConfig.lineType == undefined) {
-                serie.itemStyle = {normal: {areaStyle: {type: 'default'}}}
+                serie.itemStyle = {
+                    normal: {
+                        areaStyle: {
+                            type: 'default'
+                        },
+                        lineStyle: {
+                            width: 1
+                        }
+                    }
+
+                }
             }
             if (chartConfig.min_max == undefined) {
                 serie["markPoint"] = {
@@ -230,12 +265,26 @@ var op = {
         });
         if (!chartConfig.twoYz) {
             for (var i = 0; i < labelData.length; i++) {
-                if (labelData[i] == "uv" || labelData[i] == "pv") {
+                if (labelData[i] == "uv" || labelData[i] == "pv" || labelData[i] == "访客数(UV)" || labelData[i] == "浏览量(PV)") {
                     option.series[0]["yAxisIndex"] = 0;
                 } else {
                     var formatType = labelData[i];
                     option.series[i]["yAxisIndex"] = i;
-                    option.yAxis[i]["splitLine"] = {show: false};
+                    option.yAxis[i]["axisLine"] = {
+                        lineStyle: {
+                            color: '#01AFEF',
+                            type: 'solid',
+                            width: 1
+                        }
+                    };
+                    //option.yAxis[i]["position"] = "left";
+                    option.yAxis[i]["splitLine"] = {
+                        lineStyle: {
+                            color: '#F0F0F0',
+                            type: 'solid',
+                            width: 1
+                        }
+                    }
                     if (chartConfig.compare) {
                         var baseSerieName = formatType.split(":");
                         ad.renderFormat(option, i, baseSerieName[1]);
@@ -263,8 +312,14 @@ var op = {
                 trigger: !chartConfig.tt ? "item" : chartConfig.tt,
                 formatter: "{a} <br/>{b} : {c} ({d}%)"
             },
+            color: [
+                '#87cefa', '#ff7f50', '#da70d6', '#32cd32', '#6495ed',
+                '#ff69b4', '#ba55d3', '#cd5c5c', '#ffa500', '#40e0d0',
+                '#1e90ff', '#ff6347', '#7b68ee', '#00fa9a', '#ffd700',
+                '#6b8e23', '#ff00ff', '#3cb371', '#b8860b', '#30e0e0'
+            ],
             legend: {
-                show: !chartConfig.legendShow ? false : chartConfig.legendShow,
+                show: chartConfig.legendShow ? chartConfig.legendShow : false,
                 orient: !chartConfig.ledLayout ? "vertical" : chartConfig.ledLayout,
                 x: 'left',
                 data: !chartConfig.legendData ? data.label : chartConfig.legendData

@@ -105,6 +105,7 @@ define(['./module'], function (ctrs) {
                     dataKey: "key",
                     keyFormat: 'none',
                     dataValue: "quota"
+
                 },
                 types: ["pv"],
                 dimension: ["region"],
@@ -117,7 +118,8 @@ define(['./module'], function (ctrs) {
                     id: "environment_map",
                     serieName: "所占比例",
                     dataKey: "key",
-                    dataValue: "quota"
+                    dataValue: "quota",
+                    legendShow:true
                 },
                 types: ["pv"],
                 dimension: ["pm"],
