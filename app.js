@@ -82,7 +82,7 @@ if (env == 'dev') {
         req.es = es_client;
         req.redisclient = redis_client;
         req.accountid = req.session.accountid
-        res.cookie('uname', JSON.stringify([{name:'perfect',id:'aaa123'},{name:'jiehun',id:'aaa321'}]));
+        res.cookie('uname', JSON.stringify('perfect'));
         var usites = [{
             site_name: "www.best-ad.cn",
             site_id: 1

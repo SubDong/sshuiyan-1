@@ -165,18 +165,13 @@ define(["./module"], function (ctrs) {
     });
 
     /*********nav-select*********/
-    ctrs.controller('ngSelect', function ($scope, $cookieStore, $window, $rootScope) {
+    ctrs.controller('ngSelect', function ($scope, $location, $cookieStore, $window, $rootScope) {
         $scope.clear = function () {
             $scope.siteselect.selected = undefined;
         };
 
 
-        var username = $cookieStore.get('uname');
-        var users = [];
-        username.forEach(function (i) {
-            users.push({name: i.name, id: i.id});
-        });
-
+        $scope.userName = $cookieStore.get('uname');
 
         var usites = $cookieStore.get('usites');
         var sites = [];
@@ -187,16 +182,13 @@ define(["./module"], function (ctrs) {
             })
         });
         $rootScope.default = sites[0].name;     // default site
-        $rootScope.defaultUser = users[0].name;
         $rootScope.defaultType = sites[0].id;   // default site trackId
 
-        $scope.userSelect = {};
-        $scope.userSelectes = users;
         $scope.siteselect = {};
         $scope.siteselects = sites;
 
         $scope.changeUrl = function (select) {
-            $rootScope.userType = select.type;
+            $rootScope.userType = select.id;
         }
     })
 });
