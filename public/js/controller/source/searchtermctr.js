@@ -23,7 +23,7 @@ define(["./module"], function (ctrs) {
                     "<div class='table_win'>" +
                     "<ul>" +
                     "<li><a>查看相关热门搜索词</a></li>" +
-                    "<li><a ng-click='grid.appScope.showSearchUrl()'>查看搜索来路URL</a></li>" +
+                    "<li><a ng-click='grid.appScope.showSearchUrl(row)'>查看搜索来路URL</a></li>" +
                     "<li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li>" +
                     "</ul>" +
                     "</div>" +
@@ -34,8 +34,8 @@ define(["./module"], function (ctrs) {
                 {name: "新访客数", displayName: "新访客数", field: "nuv"},
                 {name: "IP数", displayName: "IP数", field: "ip"}
             ];
-            $scope.showSearchUrl = function () {
-                popupService.showSourceData('普菲特');
+            $scope.showSearchUrl = function (row) {
+                popupService.showSourceData(row.entity.kw);
             };
             $rootScope.tableSwitch = {
                 latitude: {name: "搜索词", displayName: "搜索词", field: "kw"},
