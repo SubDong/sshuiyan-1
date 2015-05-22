@@ -9,7 +9,7 @@
         <refresh></refresh>
     </div>
     <div class="my_concent">
-        <ssh-date-show type="today" dimension="rf_type"></ssh-date-show>
+        <ssh-date-show type="today" dimension="kw"></ssh-date-show>
         <div class="index_chart">
         </div>
         <div class="table_content" ng-controller="TabsCtrl">
@@ -53,9 +53,9 @@
             <div class="custom_secendtitle">
                 <div class="custom_select">
                     <div class="input-group fl">
-                        <input type="text" placeholder="关键词/搜索词…" class="form-control fl">
+                        <input type="text" placeholder="关键词/搜索词…" data-ng-model="searchGjcText" class="form-control fl">
                                        <span class="input-group-btn fl">
-                                 <button type="button" class="btn btn-default"><span aria-hidden="true"
+                                 <button type="button" class="btn btn-default" data-ng-click="setGjcFilter(searchGjcText)"><span aria-hidden="true"
                                                                                      class="glyphicon glyphicon-search"></span>
                                  </button>
                                    </span>

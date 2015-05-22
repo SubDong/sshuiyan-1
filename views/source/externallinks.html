@@ -6,7 +6,7 @@
         <refresh></refresh>
     </div>
     <div class="my_concent">
-        <ssh-date-show type="today" dimension="rf_type"></ssh-date-show>
+        <ssh-date-show type="today" dimension="rf"></ssh-date-show>
         <div class="index_chart">
             <div id="indicators_charts_legend"></div>
             <div id="sourse_charts" class="pin_chart"></div>
@@ -60,7 +60,7 @@
                             </ul>
                         </div>-->
                         <div class="chart_top chart_noborder">
-                            <button class="btn btn-primary" type="button" ng-click="targetSearch()">确定</button>
+                            <button class="btn btn-primary" type="button" ng-click="targetSearch(true)">确定</button>
                             * 可同时选择6项
                         </div>
                     </div>
@@ -103,9 +103,9 @@
                         <label>按域名</label>
                     </div>
                     <div class="input-group fl">
-                        <input type="text" class="form-control fl" placeholder="输入域名…">
+                        <input type="text" class="form-control fl" placeholder="输入域名…" data-ng-model="searchURLText">
                                        <span class="input-group-btn fl">
-                                 <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"
+                                 <button class="btn btn-default" type="button" data-ng-click="searchURLFilterBySourceEl(searchURLText)"><span class="glyphicon glyphicon-search"
                                                                                      aria-hidden="true"></span>
                                  </button>
                                    </span>
