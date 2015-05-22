@@ -358,6 +358,7 @@ define(["app"], function (app) {
          */
         $rootScope.targetSearch = function (isClicked) {
             $scope.gridOptions.columnDefs = $rootScope.gridArray;
+            $scope.gridOptions.rowHeight = 32;
             if (isClicked) {
                 $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
             }
@@ -462,7 +463,7 @@ define(["app"], function (app) {
                     console.log(error);
                 });
             }
-        }
+        };
         //init
         if ($scope.tableJu != 'html' && $rootScope.historyJu != "NO") {
             $scope.targetSearch();
@@ -473,12 +474,149 @@ define(["app"], function (app) {
 
 
         //数据对比
-        $rootScope.datepickerClickTow = function(start, end, label){
+        $rootScope.datepickerClickTow = function (start, end, label) {
+            $rootScope.gridArray.forEach(function (item, i) {
+                var a = item["field"];
+                if (item["cellTemplate"] == undefined) {
+                    item["cellTemplate"] = "<ul class='contrastlist'><li>{{grid.appScope.getContrastInfo(grid, row,1,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,2,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,3,'" + a + "')}}</li></ul>"
+                }
+                if (a == undefined) {
+                    item["cellTemplate"] = ""
+                }
+            });
+            $scope.gridOptions.rowHeight = 75;
             var time = chartUtils.getTimeOffset(start, end);
-            console.log(time);
-        }
+            var startTime = time[0];
+            var endTime = time[0] + ($rootScope.tableTimeEnd - $rootScope.tableTimeStart);
 
+            $scope.targetDataContrast(null, null, function (item) {
+                var target = ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field);
+                var dataArray = [];
+                var is = 0;
+                $scope.targetDataContrast(startTime, endTime, function (contrast) {
+                    item.forEach(function (a, b) {
+                        var dataObj = {};
+                        for (var i = 0; i < contrast.length; i++) {
+                            if (a[target] == contrast[i][target]) {
+                                $rootScope.checkedArray.forEach(function (tt, aa) {
+                                    var bili = ((parseInt(a[tt].replace("%")) - parseInt((contrast[i][tt]).replace("%"))) / parseInt((contrast[i][tt]).replace("%")) * 100).toFixed(2);
+                                    dataObj[tt] = (isNaN(bili) ? 0 : bili) + "%";
+                                    a[tt] = a[tt] + "," + contrast[i][tt] + "," + dataObj[tt]
+                                });
+                                a[target] = a[target] + "," + contrast[i][target] + "," + "变化率"
+                                dataArray.push(a);
+                                is = 0;
+                                break;
+                            } else {
+                                is = 1
+                            }
+                        }
+                        if (is == 1) {
+                            $rootScope.checkedArray.forEach(function (tt, aa) {
+                                dataObj[tt] = "--"
+                                a[tt] = a[tt] + "," + "--" + "," + "--"
+                            });
+                            a[target] = a[target] + "," + a[target] + "," + "变化率"
+                            dataArray.push(a);
+                        }
+                    })
+                });
+                console.log(JSON.stringify(dataArray));
+                $scope.gridOptions.data = dataArray;
+            })
+        };
 
+        $scope.targetDataContrast = function (startInfoTime, endInfoTime, cabk) {
+            $scope.gridOptions.columnDefs = $rootScope.gridArray;
+            if ($rootScope.tableSwitch.isJudge == undefined) $scope.isJudge = true;
+            if ($rootScope.tableSwitch.isJudge) $rootScope.tableSwitch.tableFilter = undefined;
+            if ($rootScope.tableSwitch.number == 4) {
+                var searchUrl = SEM_API_URL + "elasticsearch/" + esType + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd;
+                $http({
+                    method: 'GET',
+                    url: searchUrl
+                }).success(function (data, status) {
+                    cabk(data);
+                })
+            } else {
+                $http({
+                    method: 'GET',
+                    url: '/api/indextable/?start=' + (startInfoTime == null ? $rootScope.tableTimeStart : startInfoTime) + "&end=" + (endInfoTime == null ? $rootScope.tableTimeEnd : endInfoTime) + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field)
+                    + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=day&type=" + esType
+                }).success(function (data, status) {
+                    if ($rootScope.tableSwitch.promotionSearch != undefined && $rootScope.tableSwitch.promotionSearch) {
+                        var url = SEM_API_URL + user + "/" + baiduAccount + "/account/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1"
+                        $http({
+                            method: 'GET',
+                            url: url
+                        }).success(function (dataSEM, status) {
+                            var dataArray = []
+                            var dataObj = {};
+                            if (dataSEM.length == 1) {
+                                $rootScope.checkedArray.forEach(function (item, i) {
+                                    if ($rootScope.tableSwitch.latitude.field == "accountName") {
+                                        dataObj["accountName"] = dataSEM[0].accountName
+                                    }
+                                    dataSEM.forEach(function (sem, i) {
+                                        if (dataObj[item] == undefined) {
+                                            if (item == "ctr") {
+                                                dataObj[item] = sem[item] + "%"
+                                            } else {
+                                                dataObj[item] = sem[item]
+                                            }
+                                        }
+                                    });
+                                    data.forEach(function (es, i) {
+                                        if (dataObj[item] == undefined) {
+                                            dataObj[item] = es[item]
+                                        }
+                                    })
+                                });
+                                dataArray.push(dataObj);
+                            }
+                            cabk(dataArray);
+                        });
+                    } else {
+                        if ($rootScope.tableFormat != "hour") {
+                            if ($rootScope.tableFormat == "week") {
+                                data.forEach(function (item, i) {
+                                    item.period = util.getYearWeekState(item.period);
+                                });
+                                cabk(data);
+                            } else {
+                                cabk(data);
+                            }
+                        } else {
+                            var result = [];
+                            var maps = {}
+                            var newData = chartUtils.getByHourByDayData(data);
+                            newData.forEach(function (info, x) {
+                                for (var i = 0; i < info.key.length; i++) {
+                                    var infoKey = info.key[i];
+                                    var obj = maps[infoKey];
+                                    if (!obj) {
+                                        obj = {};
+                                        var dataString = (infoKey.toString().length >= 2 ? "" : "0");
+                                        obj["period"] = dataString + infoKey + ":00 - " + dataString + infoKey + ":59";
+                                        maps[infoKey] = obj;
+                                    }
+                                    obj[chartUtils.convertEnglish(info.label)] = info.quota[i];
+                                    maps[infoKey] = obj;
+                                }
+                            });
+                            for (var key in maps) {
+                                if (key != null) {
+                                    result.push(maps[key]);
+                                }
+                            }
+                            cabk(result);
+                        }
+                    }
+                }).error(function (error) {
+                    console.log(error);
+                });
+            }
+        };
 
         //表格数据展开项
         var griApiInfo = function (gridApi) {
@@ -522,6 +660,20 @@ define(["app"], function (app) {
             } else if (number == 2) {
                 var url = a[1].length > 1 ? a[1].substring(0, 1) + "..." : a[1]
                 return url;
+            }
+        };
+
+        //得到数据中的url
+        $scope.getContrastInfo = function (grid, row, number, fieldData) {
+            if (fieldData != undefined || fieldData != "undefined") {
+                var a = row.entity[fieldData].split(",");
+                if (number == 1) {
+                    return a[0];
+                } else if (number == 2) {
+                    return a[1];
+                } else if (number == 3) {
+                    return a[2];
+                }
             }
         };
 

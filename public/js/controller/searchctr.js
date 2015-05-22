@@ -22,7 +22,7 @@ define(["./module"], function (ctrs) {
                     displayName: " ",
                     cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
                 },*/
-                {name: "展现", displayName: "展现", field: "impression"},
+                {name: "展现", displayName: "展现", field: "impression",cellTemplate:"<div></div>"},
                 {name: "消费", displayName: "消费", field: "cost"},
                 {name: "平均点击价格", displayName: "平均点击价格", field: "cpc"},
                 {name: "跳出率", displayName: "跳出率", field: "outRate"},

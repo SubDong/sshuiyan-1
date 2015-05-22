@@ -7,8 +7,8 @@ define(["./module"], function (ctrs) {
 
     ctrs.controller('wayctrl', function ($scope, $rootScope, $q, $http, requestService, areaService, SEM_API_URL) {
         $scope.visible = true;
-        $rootScope.tableTimeStart = 0;//开始时间
-        $rootScope.tableTimeEnd = 0;//结束时间、
+        $rootScope.tableTimeStart = -1;//开始时间
+        $rootScope.tableTimeEnd = -1;//结束时间、
         //配置默认指标
         $rootScope.checkedArray = ["click", "cost", "cpc", "pv", "uv", "avgPage"];
         $rootScope.tableFormat = null;

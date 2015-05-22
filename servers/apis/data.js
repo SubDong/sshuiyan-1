@@ -241,7 +241,7 @@ api.get('/indextable', function (req, res) {
 
     var period = date.period(_startTime, _endTime); //时间段
     var interval = _promotion == "undefined" || _promotion == undefined ? date.interval(_startTime, _endTime) : null; //时间分割
-    var formartInterval = _formartInfo == "hour" ? 1 : _formartInfo == "week" ? 604800000 : _formartInfo == "month" ? 2592000000 : interval;
+    var formartInterval = (_formartInfo == "hour" ? 1 : _formartInfo == "week" ? 604800000 : _formartInfo == "month" ? 2592000000 : _formartInfo == "day" ? 86400000 : interval);
     es_request.search(req.es, indexes, _type, _indic, _lati, [0], _filter, _promotion == "undefined" || _promotion == undefined ? period[0] : null, _promotion == "undefined" || _promotion == undefined ? period[1] : null, formartInterval, function (data) {
         if (_formartInfo != "hour") {
             var result = [];
