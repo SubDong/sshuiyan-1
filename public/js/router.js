@@ -183,10 +183,10 @@ define(["angular", "app"], function (ng, app) {
                 url: "/historytrend/history",
                 templateUrl: "../historytrend/history.html"
             })
-        $urlRouterProvider.when('', '/configindex');
+        $urlRouterProvider.when('', '/conf');
         $stateProvider
-            .state('configindex', {
-                url: '/configindex',
+            .state('conf', {
+                url: '/conf',
                 templateUrl: '../weblist/main.html'
             })
     });
