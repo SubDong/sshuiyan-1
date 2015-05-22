@@ -9,7 +9,7 @@
         <refresh></refresh>
     </div>
     <div class="my_concent">
-        <ssh-date-show type="today" dimension="kw"></ssh-date-show>
+        <ssh-s-e-date-show type="today"></ssh-s-e-date-show>
         <div class="index_chart">
         </div>
         <div class="table_content" ng-controller="TabsCtrl">
@@ -21,8 +21,10 @@
                                 <li><span>设备过滤:</span></li>
                                 <li><input type="radio" checked="checked" name="radio1" ng-click="setTerminal(0)"/>
                                     <label>全部</label></li>
-                                <li><input type="radio" name="radio1" ng-click="setTerminal(1)"/> <label>计算机</label></li>
-                                <li><input type="radio" name="radio1" ng-click="setTerminal(2)"/> <label>移动设备</label></li>
+                                <li><input type="radio" name="radio1" ng-click="setTerminal(1)"/> <label>计算机</label>
+                                </li>
+                                <li><input type="radio" name="radio1" ng-click="setTerminal(2)"/> <label>移动设备</label>
+                                </li>
                             </ul>
                         </div>
                         <div class="chart_top2">
@@ -31,7 +33,8 @@
                                 <li>
                                     <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
                                         <div role="group" class="btn-group">
-                                            <ui-select ng-model="city.selected" theme="selectize" class="fl" data-ng-change="setAreaFilter(city.selected.name)"
+                                            <ui-select ng-model="city.selected" theme="selectize" class="fl"
+                                                       data-ng-change="setAreaFilter(city.selected.name)"
                                                        style="width: 80px;">
                                                 <ui-select-match placeholder="全部">{{$select.selected.name}}
                                                 </ui-select-match>
@@ -55,20 +58,21 @@
                     <div class="input-group fl">
                         <input type="text" placeholder="关键词/搜索词…" data-ng-model="searchGjcText" class="form-control fl">
                                        <span class="input-group-btn fl">
-                                 <button type="button" class="btn btn-default" data-ng-click="setGjcFilter(searchGjcText)"><span aria-hidden="true"
-                                                                                     class="glyphicon glyphicon-search"></span>
+                                 <button type="button" class="btn btn-default"
+                                         data-ng-click="setGjcFilter(searchGjcText)"><span aria-hidden="true"
+                                                                                           class="glyphicon glyphicon-search"></span>
                                  </button>
                                    </span>
                     </div>
                     <!--<b></b>转化目标-->
                     <!--<div role="group" class="btn-group">-->
-                        <!--<ui-select ng-model="extendway.selected" theme="selectize" class="fl"-->
-                                   <!--style="width: 120px;">-->
-                            <!--<ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>-->
-                            <!--<ui-select-choices repeat="extendway in extendways">-->
-                                <!--<span ng-bind-html="extendway.name"></span>-->
-                            <!--</ui-select-choices>-->
-                        <!--</ui-select>-->
+                    <!--<ui-select ng-model="extendway.selected" theme="selectize" class="fl"-->
+                    <!--style="width: 120px;">-->
+                    <!--<ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>-->
+                    <!--<ui-select-choices repeat="extendway in extendways">-->
+                    <!--<span ng-bind-html="extendway.name"></span>-->
+                    <!--</ui-select-choices>-->
+                    <!--</ui-select>-->
                     <!--</div>-->
                 </div>
             </div>

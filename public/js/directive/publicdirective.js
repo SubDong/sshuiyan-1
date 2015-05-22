@@ -477,6 +477,88 @@ define(["../app"], function (app) {
             }
         };
     });
+
+    /**
+     * 搜索引擎dateShow
+     */
+    app.directive("sshSEDateShow", function ($http, $rootScope, $q, SEM_API_URL) {
+        return {
+            restrict: 'E',
+            templateUrl: '../commons/date_show.html',
+            scope: 'true',
+            link: function (scope, element, attris, controller) {
+                scope.dateShowArray = [];
+                scope.ds_start = scope.ds_end = 0;
+                scope.loadDataShow = function () {
+                    scope.dateShowArray = [
+                        {
+                            label: "freq",
+                            value: 0
+                        }, {
+                            label: "baidu",
+                            value: 0
+                        }, {
+                            label: "sougou",
+                            value: 0
+                        }, {
+                            label: "haosou",
+                            value: 0
+                        }, {
+                            label: "bing",
+                            value: 0
+                        }, {
+                            label: "other",
+                            value: 0
+                        }
+                    ];
+                    var semRequest = $http.get(SEM_API_URL + "elasticsearch/" + $rootScope.defaultType
+                    + "/?startOffset=" + scope.ds_start + "&endOffset=" + scope.ds_end);
+                    $q.all([semRequest]).then(function (final_result) {
+                        var count = 0;
+                        angular.forEach(final_result[0].data, function (r) {
+                            angular.forEach(scope.dateShowArray, function (q_r) {
+                                var temp = q_r.label;
+                                var value = r[temp];
+                                q_r.value += temp != "freq" ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
+                            });
+                            count++;
+                        });
+                        angular.forEach(scope.dateShowArray, function (r) {
+                            if (r.label != "freq") {
+                                r.value = (r.value / count).toFixed(2) + "%";
+                            }
+                        });
+                    });
+                };
+                // 改变时间参数
+                scope.setDateShowTimeOption = function (type, cb) {
+                    if (type === "today") {
+                        scope.ds_start = scope.ds_end = 0;
+                    } else if (type === "yesterday") {
+                        scope.ds_start = scope.ds_end = -1;
+                    } else if (type === "seven") {
+                        scope.ds_start = -7;
+                        scope.ds_end = -1;
+                    } else if (type === "month") {
+                        scope.ds_start = -30;
+                        scope.ds_end = -1;
+                    } else {
+                        scope.ds_start = $rootScope.tableTimeStart;
+                        scope.ds_end = $rootScope.tableTimeEnd;
+                    }
+                    if (cb) {
+                        scope.loadDataShow();
+                    }
+                };
+                scope.setDateShowTimeOption(attris.type);
+                scope.$on("ssh_dateShow_options_time_change", function (e, msg) {
+                    scope.setDateShowTimeOption(msg, scope.loadDataShow);
+                });
+                scope.loadDataShow();
+            }
+        }
+    });
+
     /**
      * 指标过滤器
      */
@@ -503,6 +585,12 @@ define(["../app"], function (app) {
         quotaObject.conversion = "转化";
         quotaObject.entrance = "入口页次数";
         quotaObject.contribution = "贡献浏览量";
+        quotaObject.freq = "总搜索次数";
+        quotaObject.baidu = "百度";
+        quotaObject.sougou = "搜狗";
+        quotaObject.haosou = "好搜";
+        quotaObject.bing = "必应";
+        quotaObject.other = "其他";
         return function (key) {
             if (quotaObject[key]) {
                 return quotaObject[key];
@@ -536,6 +624,12 @@ define(["../app"], function (app) {
         quotaObject.conversion = "转化";
         quotaObject.entrance = "作为访问会话的入口页面（也称着陆页面）的次数。";
         quotaObject.contribution = "贡献浏览量";
+        quotaObject.freq = "访客点击搜索结果到达您网站的次数。";
+        quotaObject.baidu = "来自搜索引擎百度的搜索次数占比";
+        quotaObject.sougou = "来自搜索引擎搜狗的搜索次数占比";
+        quotaObject.haosou = "来自搜索引擎好搜的搜索次数占比";
+        quotaObject.bing = "来自搜索引擎必应的搜索次数占比";
+        quotaObject.other = "来自其他搜索引擎的搜索次数占比";
         return function (key) {
             if (quotaObject[key]) {
                 return quotaObject[key];
