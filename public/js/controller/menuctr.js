@@ -172,7 +172,6 @@ define(["./module"], function (ctrs) {
 
 
         var username = $cookieStore.get('uname');
-        console.log(username);
         var users = [];
         username.forEach(function (i) {
             users.push({name: i.name, id: i.id});
@@ -188,7 +187,7 @@ define(["./module"], function (ctrs) {
             })
         });
         $rootScope.default = sites[0].name;     // default site
-        $rootScope.defaultType = sites[0].id;   // default site trackId
+        $rootScope.defaultUser = users[0].name;   // default site trackId
 
         $scope.userSelect = {};
         $scope.userSelectes = users;

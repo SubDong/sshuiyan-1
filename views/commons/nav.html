@@ -25,7 +25,7 @@
             <li>
                 <span aria-hidden="true" class="glyphicon glyphicon-user fl"></span>
                 <ui-select ng-model="userSelect.selected" theme="selectize" class="fl"  ng-change="changeUrl(userSelect.selected)">
-                    <ui-select-match placeholder="{{ userDefault }}"><span data-ng-bind="$select.selected.name"></span></ui-select-match>
+                    <ui-select-match placeholder="{{ defaultUser }}"><span data-ng-bind="$select.selected.name"></span></ui-select-match>
                     <ui-select-choices repeat="userSelect in userSelectes">
                         <span ng-bind-html="userSelect.name"></span>
                     </ui-select-choices>

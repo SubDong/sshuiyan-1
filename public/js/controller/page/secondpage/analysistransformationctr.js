@@ -11,14 +11,15 @@ define(["./../module"], function (ctrs) {
         $rootScope.tableTimeEnd = 0;
         $rootScope.tableFormat = null;
         //配置默认指标
-        $rootScope.checkedArray = ["vc"];
+        $rootScope.checkedArray = ["vc", "contribution"];
         $rootScope.gridArray = [
             {name: "页面url", displayName: "页面url", field: "loc"},
             {
                 name: " ",
                 cellTemplate: "<div class='table_box'><button onclick='getMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul><li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li></ul></div></div>"
             },
-            {name: "访问次数", field: "vc"}
+            {name: "访问次数", field: "vc"},
+            {name: "贡献浏览量", field: "contribution"}
         ];
         $rootScope.tableSwitch = {
             latitude: {name: "页面url", displayName: "页面url", field: "loc"},

@@ -5,7 +5,7 @@ define(["./module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.controller('novisitors', function ($scope, $rootScope, $http) {
+    ctrs.controller('novisitors', function ($scope, $rootScope, $http,areaService) {
         $scope.todayClass = true;
         $rootScope.tableTimeStart = 0;
         $rootScope.tableTimeEnd = 0;
@@ -38,12 +38,20 @@ define(["./module"], function (ctrs) {
         $scope.$on("ssh_refresh_charts", function (e, msg) {
             $rootScope.targetSearch();
         });
+
+        $scope.equipmentChange = function (val) {
+            $rootScope.tableSwitch.latitude = val;
+            val.field == "ips" ? $rootScope.tableSwitch.dimen = "region" : val.field == "pm" ? $rootScope.tableSwitch.dimen = "br" : $rootScope.tableSwitch.dimen = false
+            $rootScope.indicators(null, null, null, "refresh");
+            $rootScope.targetSearch();
+        }
+
         //日历
         $rootScope.datepickerClick = function (start, end, label) {
             var time = chartUtils.getTimeOffset(start, end);
-            $rootScope.targetSearch();
             $rootScope.tableTimeStart = time[0];
             $rootScope.tableTimeEnd = time[1];
+            $rootScope.targetSearch();
         }
     });
 

@@ -248,13 +248,12 @@ define(["./module"], function (ctrs) {
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
-            })
+            });
             requestService.refresh($scope.charts);
-            $rootScope.targetSearch();
             $rootScope.tableTimeStart = time[0];
             $rootScope.tableTimeEnd = time[1];
+            $rootScope.targetSearch();
             $scope.$broadcast("ssh_dateShow_options_time_change");
-
         }
 
     });

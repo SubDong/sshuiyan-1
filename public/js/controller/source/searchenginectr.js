@@ -130,9 +130,9 @@ define(["./module"], function(ctrs) {
                 $scope.charts[0].config.keyFormat = "hour";
             }
             requestService.refresh($scope.charts);
-            $rootScope.targetSearch();
             $rootScope.tableTimeStart = time[0];
             $rootScope.tableTimeEnd = time[1];
+            $rootScope.targetSearch();
             $scope.$broadcast("ssh_dateShow_options_time_change");
         }
     });
