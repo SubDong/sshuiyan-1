@@ -210,12 +210,6 @@ define(["./module"], function (ctrs) {
             $scope.$broadcast("ssh_dateShow_options_time_change");
         }
 
-        //数据对比
-        $rootScope.datepickerClickTow = function(start, end, label){
-            var time = chartUtils.getTimeOffset(start, end);
-            console.log(time);
-        }
-
     });
 
 });

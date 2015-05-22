@@ -187,7 +187,8 @@ define(["./module"], function (ctrs) {
             })
         });
         $rootScope.default = sites[0].name;     // default site
-        $rootScope.defaultUser = users[0].name;   // default site trackId
+        $rootScope.defaultUser = users[0].name;
+        $rootScope.defaultType = sites[0].id;   // default site trackId
 
         $scope.userSelect = {};
         $scope.userSelectes = users;

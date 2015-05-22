@@ -472,6 +472,14 @@ define(["app"], function (app) {
         });
 
 
+        //数据对比
+        $rootScope.datepickerClickTow = function(start, end, label){
+            var time = chartUtils.getTimeOffset(start, end);
+            console.log(time);
+        }
+
+
+
         //表格数据展开项
         var griApiInfo = function (gridApi) {
             gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {

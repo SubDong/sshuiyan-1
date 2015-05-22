@@ -258,7 +258,7 @@ api.get('/indextable', function (req, res) {
                         infoKey = info.key[i]
                     }
                     if (popFlag != 1) {
-                        if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null" || infoKey.length >= 30)) continue;
+                        if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null" || infoKey == "国外" || infoKey.length >= 30)) continue;
                     }
                     var infoKey = info.key[i];
                     var obj = maps[infoKey];
