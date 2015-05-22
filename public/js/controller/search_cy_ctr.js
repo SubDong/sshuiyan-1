@@ -60,6 +60,7 @@ define(["./module"], function (ctrs) {
                     keyFormat: 'none',
                     noFormat: true,
                     auotHidex: true,
+                    qingXie: true,
                     allShowChart:6,
                     dataKey: "key",//传入数据的key值
                     dataValue: "quota"//传入数据的value值

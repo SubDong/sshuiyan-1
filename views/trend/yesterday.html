@@ -4,7 +4,7 @@
         <dateother></dateother>
         <dateweek></dateweek>
         <refresh></refresh>
-     </div>
+    </div>
     <div class="my_concent">
         <ssh-date-show type="yesterday"></ssh-date-show>
         <div class="index_chart">
@@ -12,12 +12,7 @@
             <div id="yesterday_charts" style="height:400px;"></div>
         </div>
         <div class="time_select">
-            <div aria-label="First group" role="group" class="btn-group ">
-                <button class="btn btn-default" type="button" ng-click="hourcheck()"
-                        ng-class="{'current':hourcheckClass}">前一日
-                </button>
-                <button class="btn btn-default" type="button" ng-click="daycheck()" ng-class="{'current':dayClass}">上周同期
-                </button>
+            <compare></compare>
             </div>
         </div>
         <div class="table_content" ng-controller="TabsCtrl">

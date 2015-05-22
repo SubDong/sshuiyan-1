@@ -66,6 +66,7 @@ define(["./module"], function (ctrs) {
                         chartUtils.getXType(config, $rootScope.interval);
                         config["chartType"] = "bar";//图表类型
                         chartUtils.addStep(json, 24);
+                        chartUtils.noFormatConvertLabel(json);
                         cf.renderChart(json, config);
                     } else {
                         config["noFormat"] = undefined;

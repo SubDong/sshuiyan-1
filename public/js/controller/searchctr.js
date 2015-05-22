@@ -16,12 +16,12 @@ define(["./module"], function (ctrs) {
                     displayName: "计划",
                     field: "campaignName",
                     cellTemplate: "<a href='javascript:void(0)' style='color:#0965b8;line-height:30px;margin-left: 10px' ng-click='grid.appScope.getHistoricalTrend(this)'>{{grid.appScope.getDataUrlInfo(grid, row,3)}}</a>"
-                },/*
-                {
-                    name: " ",
-                    displayName: " ",
-                    cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
-                },*/
+                }, /*
+                 {
+                 name: " ",
+                 displayName: " ",
+                 cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
+                 },*/
                 {name: "展现", displayName: "展现", field: "impression"},
                 {name: "消费", displayName: "消费", field: "cost"},
                 {name: "平均点击价格", displayName: "平均点击价格", field: "cpc"},
@@ -59,10 +59,11 @@ define(["./module"], function (ctrs) {
                         legendAllowCheckCount: 2,
                         legendClickListener: $scope.onLegendClickListener,
                         legendDefaultChecked: [0, 1],
-                        allShowChart:4,
+                        allShowChart: 4,
                         min_max: false,
                         bGap: true,
                         auotHidex: true,
+                        qingXie: true,
                         id: "indicators_charts",
                         chartType: "bar",//图表类型
                         keyFormat: 'none',

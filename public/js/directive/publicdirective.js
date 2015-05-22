@@ -34,6 +34,11 @@ define(["../app"], function (app) {
                     scope.weekcheckClass = false;
                     scope.mothcheckClass = false;
                     scope.timeClass = false;
+                    scope.lastDaySelect = false;
+                    scope.lastWeekSelect = false;
+                    scope.compareLastDayClass = false;
+                    scope.compareLastWeekClass = false;
+                    scope.clearCompareSelect = false;
                 };
                 scope.reloadByCalendar = function (type) {
                     console.info("info: now user click the " + type + " button");
@@ -46,6 +51,9 @@ define(["../app"], function (app) {
                     scope.weekselected = true;
                     scope.mothselected = true;
                     scope.reset();
+                    scope.lastDaySelect = true;
+                    scope.lastWeekSelect = true;
+                    scope.clearCompareSelect = true;
                     scope.todayClass = true;
                     // table 参数配置
                     $rootScope.tableTimeStart = 0;
@@ -62,6 +70,9 @@ define(["../app"], function (app) {
                     scope.weekselected = true;
                     scope.mothselected = true;
                     scope.reset();
+                    scope.lastDaySelect = true;
+                    scope.lastWeekSelect = true;
+                    scope.clearCompareSelect = true;
                     scope.yesterdayClass = true;
                     $rootScope.tableTimeStart = -1;
                     $rootScope.tableTimeEnd = -1;
@@ -82,7 +93,7 @@ define(["../app"], function (app) {
                     $rootScope.start = -7;
                     $rootScope.end = -1;
                     scope.reloadByCalendar("seven");
-                    $('#reportrange span').html(GetDateStr(-6) + "至" + GetDateStr(0));
+                    $('#reportrange span').html(GetDateStr(-7) + "至" + GetDateStr(0));
                 };
                 scope.month = function () {
                     scope.hourselect = false;
@@ -96,7 +107,7 @@ define(["../app"], function (app) {
                     $rootScope.start = -30;
                     $rootScope.end = 0;
                     scope.reloadByCalendar("month");
-                    $('#reportrange span').html(GetDateStr(-29) + "至" + GetDateStr(0));
+                    $('#reportrange span').html(GetDateStr(-30) + "至" + GetDateStr(0));
                 };
                 scope.timeclick = function () {
                     scope.reset();
@@ -211,6 +222,17 @@ define(["../app"], function (app) {
             transclude: true
         }
         return option;
+    });
+    app.directive("compare", function () {
+        return {
+            restrict: "EA",
+            template: "<div aria-label=\"First group\" role=\"group\" class=\"btn-group \">" +
+            "<button class=\"btn btn-default\" type=\"button\" ng-click=\"compareLastDay()\" ng-class=\"{'current':compareLastDayClass,'disabled':!lastDaySelect}\">前一日</button>" +
+            "<button class=\"btn btn-default\" type=\"button\" ng-click=\"compareLastWeek()\" ng-class=\"{'current':compareLastWeekClass,'disabled':!lastWeekSelect}\">上周同期</button>" +
+            "<button class=\"btn btn-default\" type=\"button\" ng-click=\"restCompare()\" ng-class=\"{'disabled':!clearCompareSelect}\">取消对比</button>" +
+            "</div>",
+            transclude: true
+        }
     });
     /*
      app.directive("views", function () {

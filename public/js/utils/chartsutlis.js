@@ -388,6 +388,11 @@ var chartUtils = {
             e.quota = _value;
         });
     },
+    noFormatConvertLabel: function (json) {
+        json.forEach(function (i, o) {
+            i.label = chartUtils.convertChinese(i.label);
+        });
+    },
     formatDate: function (esJson) {
         esJson.forEach(function (a) {
             var formatKey = [];
@@ -598,6 +603,28 @@ var chartUtils = {
             default :
                 config["keyFormat"] = "day";
         }
+    },
+    compareTo: function (res, compareStr) {
+        var final_result = [];
+        res.forEach(function (item, o) {
+            var json = JSON.parse(eval("(" + item.data + ")").toString());
+            if (o == 0) {
+                json[0].label = compareStr[0] + ":" + json[0].label;
+            } else {
+                json[0].label = compareStr[1] + ":" + json[0].label;
+            }
+            final_result.push(json[0]);
+        });
+        return final_result;
+    },
+    getDateStampCount: function (AddDayCount) {
+        var dd = new Date();
+        dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
+        var startStr = dd.getFullYear() + "-" + (dd.getMonth() + 1) + "-" + dd.getDate();
+        return startStr;
+    },
+    getDateStamp: function (count) {
+        return [chartUtils.getDateStampCount(count), chartUtils.getDateStampCount(count - 1)];
     }
 }
 
