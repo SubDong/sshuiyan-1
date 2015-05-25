@@ -12,7 +12,7 @@ define(["./module"], function (ctrs) {
         $rootScope.tableTimeEnd = -1;//结束时间、
         $rootScope.tableFormat = null;
         //配置默认指标
-        $rootScope.searchCheckedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
+        $rootScope.checkedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
         $rootScope.searchGridArray = [
             {
                 name: "触发关键词的搜索词",
@@ -32,12 +32,12 @@ define(["./module"], function (ctrs) {
             {name: "平均访问时长", displayName: "平均访问时长", field: "avgTime"},
             {name: "新访客比率", displayName: "新访客比率", field: "nuvRate"}
         ];
-        $rootScope.tableSearchSwitch = {
+        $rootScope.tableSwitch = {
             latitude: {name: "触发关键词的搜索词", displayName: "触发关键词的搜索词", field: "kw"},
             tableFilter: null,
             dimen: false,
             // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
-            number: 1,
+            number: 0,
             //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
             coding: false,
             //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"

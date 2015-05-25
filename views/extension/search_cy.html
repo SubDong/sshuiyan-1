@@ -27,14 +27,14 @@
 
                         <div class="chart_top chart_default">
                             <ul>
-                                <li><a href="javascript:void(0)" data-ssh-default-quota="extension_search">系统默认指标</a></li>
+                                <li><a href="javascript:void(0)" data-ssh-default-quota="search_cy">系统默认指标</a></li>
                             </ul>
                         </div>
                         <div class="chart_top">
                             <span>消费指标 :</span>
                             <ul>
                                 <li ng-repeat="item in target" data-search-default defvalue="{{item.name}}"
-                                    class="{{searchCheckedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                    class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
                                     ng-click='searchIndicators(item,target,6)'>{{item.consumption_name}}
                                 </li>
                             </ul>

@@ -266,6 +266,110 @@ define(["../app"], function (app) {
                         {name: "平均访问时长", displayName: "平均访问时长", field: "avgTime"}
                     ];
                 }
+                case "search_campaign" :
+                {
+                    $rootScope.checkedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
+                    $rootScope.searchGridArray = [
+                        {
+                            name: "计划",
+                            displayName: "计划",
+                            field: "campaignName",
+                            cellTemplate: "<a href='javascript:void(0)' style='color:#0965b8;line-height:30px;margin-left: 10px' ng-click='grid.appScope.getHistoricalTrend(this)'>{{grid.appScope.getDataUrlInfo(grid, row,3)}}</a>"
+                        },
+                        {name: "展现", displayName: "展现", field: "impression"},
+                        {name: "消费", displayName: "消费", field: "cost"},
+                        {name: "平均点击价格", displayName: "平均点击价格", field: "cpc"},
+                        {name: "跳出率", displayName: "跳出率", field: "outRate"},
+                        {name: "平均访问时长", displayName: "平均访问时长", field: "avgTime"},
+                        {name: "新访客比率", displayName: "新访客比率", field: "nuvRate"}
+                    ];
+                }
+                case "search_dy" :
+                {
+                    $rootScope.checkedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
+                    $rootScope.searchGridArray = [
+                        {
+                            name: "单元",
+                            displayName: "单元",
+                            field: "adgroupName",
+                            cellTemplate: "<a href='javascript:void(0)' style='color:#0965b8;line-height:30px;' ng-click='grid.appScope.getHistoricalTrend(this)'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}"
+                        },
+                        {name: "展现", displayName: "展现", field: "impression"},
+                        {name: "消费", displayName: "消费", field: "cost"},
+                        {name: "平均点击价格", displayName: "平均点击价格", field: "cpc"},
+                        {name: "跳出率", displayName: "跳出率", field: "outRate"},
+                        {name: "平均访问时长", displayName: "平均访问时长", field: "avgTime"},
+                        {name: "新访客比率", displayName: "新访客比率", field: "nuvRate"}
+                    ];
+                }
+                case "search_gjc" :
+                {
+                    $rootScope.checkedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
+                    $rootScope.searchGridArray = [
+                        {
+                            name: "关键词",
+                            displayName: "关键词",
+                            field: "keywordName",
+                            cellTemplate: "<a href='http://www.baidu.com/s?wd={{grid.appScope.getDataUrlInfo(grid, row,1)}}' target='_blank' style='color:#0965b8;line-height:30px;margin-left: 10px'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}"
+                        },
+                        {name: "展现", displayName: "展现", field: "impression"},
+                        {name: "消费", displayName: "消费", field: "cost"},
+                        {name: "平均点击价格", displayName: "平均点击价格", field: "cpc"},
+                        {name: "跳出率", displayName: "跳出率", field: "outRate"},
+                        {name: "平均访问时长", displayName: "平均访问时长", field: "avgTime"},
+                        {name: "新访客比率", displayName: "新访客比率", field: "nuvRate"}
+                    ];
+                }
+                case "search_cy" :
+                {
+                    $rootScope.checkedArray = ["impression", "cost", "cpc"]
+                    $rootScope.searchGridArray = [
+                        {
+                            name: "创意",
+                            displayName: "创意",
+                            field: "description1",
+                            cellTemplate: "<div class='search_table_box'><a href='http://{{grid.appScope.getDataUrlInfo(grid, row, 6)}}' target='_blank' style='color:#0965b8;line-height:30px;'>{{grid.appScope.getDataUrlInfo(grid, row,5)}}</a><span>{{grid.appScope.getDataUrlInfo(grid, row,4)}}</span><span class='search_table_color'>{{grid.appScope.getDataUrlInfo(grid, row,6)}}</span>"
+                        },
+                        {name: "展现", displayName: "展现", field: "impression"},
+                        {name: "消费", displayName: "消费", field: "cost"},
+                        {name: "平均点击价格", displayName: "平均点击价格", field: "cpc"}
+                    ];
+                }
+                case "search_ssc" :
+                {
+                    $rootScope.checkedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
+                    $rootScope.searchGridArray = [
+                        {
+                            name: "触发关键词的搜索词",
+                            displayName: "触发关键词的搜索词",
+                            field: "kw",
+                            cellTemplate: "<a href='http://www.baidu.com/s?wd={{grid.appScope.getDataUrlInfo(grid, row,1)}}' style='color:#0965b8;line-height:30px;' target='_blank'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}"
+                        },
+                        {name: "展现", displayName: "展现", field: "impression"},
+                        {name: "消费", displayName: "消费", field: "cost"},
+                        {name: "平均点击价格", displayName: "平均点击价格", field: "cpc"},
+                        {name: "跳出率", displayName: "跳出率", field: "outRate"},
+                        {name: "平均访问时长", displayName: "平均访问时长", field: "avgTime"},
+                        {name: "新访客比率", displayName: "新访客比率", field: "nuvRate"}
+                    ];
+                }
+                case "search_tgUrl" :
+                {
+                    $rootScope.checkedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
+                    $rootScope.searchGridArray = [
+                        {
+                            name: "关键词对应的URL",
+                            displayName: "关键词对应的URL",
+                            field: "des_url"
+                        },
+                        {name: "展现", displayName: "展现", field: "impression"},
+                        {name: "消费", displayName: "消费", field: "cost"},
+                        {name: "平均点击价格", displayName: "平均点击价格", field: "cpc"},
+                        {name: "跳出率", displayName: "跳出率", field: "outRate"},
+                        {name: "平均访问时长", displayName: "平均访问时长", field: "avgTime"},
+                        {name: "新访客比率", displayName: "新访客比率", field: "nuvRate"}
+                    ];
+                }
             }
         }
 
