@@ -165,7 +165,7 @@ define(["../app"], function (app) {
         var option = {
             restrict: "EA",
             template: "<div role=\"group\" class=\"btn-group fl\"><button id=\"choicetrange\"  class=\"btn btn-default pull-right date-picker my_picker fl\"   max=\"max\" ng-model=\"date\"> " +
-            "<i class=\"glyphicon glyphicon-calendar fa fa-calendar\"></i>与其他时间段对比<span></span></button><button class=\"btn btn-default\" type=\"button\" ng-hide=\"dateshows\" >前一日</button> <button class=\"btn btn-default\" type=\"button\"  ng-hide=\"dateshows\" >上周同期</button></div>",
+            "<i class=\"glyphicon glyphicon-calendar fa fa-calendar\"></i><span>与其他时间段对比</span></button><button class=\"btn btn-default\" type=\"button\" ng-hide=\"dateshows\" >前一日</button> <button class=\"btn btn-default\" type=\"button\"  ng-hide=\"dateshows\" >上周同期</button></div>",
             replace: true,
             transclude: true,
             link: function (scope, element, attris, controller) {
@@ -194,7 +194,7 @@ define(["../app"], function (app) {
                     applyClass: 'btn-primary',
                     cancelClass: 'btn-default',
                     separator: ' to '
-                }, function (start, end, label, time) {
+                }, function (start, end, label) {
                     $rootScope.datepickerClickTow(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
                     $('#choicetrange span').html(start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD'));
                 });
