@@ -7,9 +7,9 @@ define(["app"], function (app) {
 
     app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, requestService, SEM_API_URL, $cookieStore) {
         $scope.todayClass = true;
-        var user = $cookieStore.get("uname");
-        var baiduAccount = $rootScope.default;
-        var esType = $rootScope.defaultType;
+        var user = "perfect2015"/*$cookieStore.get("uname")*/;
+        var baiduAccount ="baidu-perfect2151880" /*$rootScope.default*/;
+        var esType ="2" /*$rootScope.defaultType*/;
 
         $scope.tabs = [
             {title: 'Dynamic Title 1', content: 'Dynamic content 1'},
@@ -247,7 +247,7 @@ define(["app"], function (app) {
                 }
             };
         }
-
+        $scope.page = "";
         $scope.pagego = function (pagevalue) {
             pagevalue.pagination.seek(Number($scope.page));
         }
@@ -304,13 +304,13 @@ define(["app"], function (app) {
                 $rootScope.tableSwitch.tableFilter = null;
                 $rootScope.tableSwitch.latitude = {name: "来源网站", displayName: "来源网站", field: "dm"};
                 $scope.webSite = 1;
-                $rootScope.gridArray.shift()
+                $rootScope.gridArray.shift();
                 $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude)
             }
             if (a == 0) {
                 $rootScope.tableSwitch.tableFilter = null;
                 $rootScope.tableSwitch.latitude = {name: "来源类型", displayName: "来源类型", field: "rf_type"};
-                $rootScope.gridArray.shift()
+                $rootScope.gridArray.shift();
                 $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude)
             }
             $scope.isJudge = false;

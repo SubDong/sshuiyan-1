@@ -818,7 +818,11 @@ define(["../app"], function (app) {
                 scope.getSshPath = function () {
                     var temp_path = $location.path();
                     // 百度推广-搜索推广，URL含有下划线。判断时需要取下划线之前的内容
-                    var _index = temp_path.indexOf("_");
+                    var _index = temp_path.indexOf("/history");
+                    if (_index != -1) {
+                        temp_path = temp_path.substring(0, _index);
+                    }
+                    _index = temp_path.indexOf("_");
                     if (_index != -1) {
                         scope.sshPath = "#" + temp_path.substring(1, _index);
                     } else {

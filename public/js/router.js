@@ -180,7 +180,35 @@ define(["angular", "app"], function (ng, app) {
                 templateUrl: "../value/trafficmap.html"
             })
             .state('history', {
-                url: "/historytrend/history",
+                url: "/source/source/history",
+                templateUrl: "../historytrend/history.html"
+            })
+            .state('history1', {
+                url: "/visitor/provincemap/history",
+                templateUrl: "../historytrend/history.html"
+            })
+            .state('history2', {
+                url: "/visitor/novisitors/history",
+                templateUrl: "../historytrend/history.html"
+            })
+            .state('history3', {
+                url: "/page/indexoverview/history",
+                templateUrl: "../historytrend/history.html"
+            })
+            .state('history4', {
+                url: "/page/entrancepage/history",
+                templateUrl: "../historytrend/history.html"
+            })
+            .state('history5', {
+                url: "/source/searchengine/history",
+                templateUrl: "../historytrend/history.html"
+            })
+            .state('history6', {
+                url: "/source/searchterm/history",
+                templateUrl: "../historytrend/history.html"
+            })
+            .state('history7', {
+                url: "/source/externallinks/history",
                 templateUrl: "../historytrend/history.html"
             })
         $urlRouterProvider.when('', '/conf');
