@@ -2097,7 +2097,7 @@ nav, .navbar-default {
   height: 25px;
   padding: 0 5px 0 0;
   background: url(../img/checkbox.png) no-repeat;
-  display: block;
+  display: inline-block;
   clear: left;
   float: left;
   box-shadow: none;
@@ -2535,10 +2535,11 @@ nav, .navbar-default {
       display: inline-block;
       span {
         display: inline-block;
+        float:left;
         width: 12px;
         height: 12px;
         border-radius: 2px;
-        margin: 5px 5px 0 5px;
+        margin: 3px 5px 0 5px;
       }
       .color_first {
         background: #ff7f50;
@@ -3215,6 +3216,7 @@ select.styled {
       span {
         font-weight: normal;
         color: #727272;
+
       }
 
     }
@@ -3233,5 +3235,37 @@ select.styled {
   span{
     color: #fff;
 
+  }
+}
+.ui-grid-header-viewport .ui-grid-cell-contents span{
+  padding-left:10px;
+}
+.uconcentctrl{
+  .ui-grid-row:nth-child(2n) .ui-grid-cell{
+    background: none;
+  }
+  .ui-grid-row:nth-child(2n+1) .ui-grid-cell{
+    background: none;
+    border:none;
+  }
+  .ui-grid-render-container-body .ui-grid-header-viewport{
+    border-bottom: 1px solid #e6e5e5;
+  }
+}
+.ui_text{
+  text-align: right;
+}
+.tab-content{
+  .checkbox, .radio{
+    margin:0px;
+  }
+
+
+}
+.custom_select{
+  ul
+  li{
+    float:left;
+    margin-right:10px;
   }
 }

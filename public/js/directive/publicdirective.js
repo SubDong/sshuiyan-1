@@ -24,6 +24,7 @@ define(["../app"], function (app) {
                 scope.weekselected = true;
                 scope.mothselected = true;
                 scope.maxDate = new Date();
+                scope.datechoice = true;
                 scope.reset = function () {
                     scope.todayClass = false;
                     scope.yesterdayClass = false;
@@ -39,6 +40,7 @@ define(["../app"], function (app) {
                     scope.compareLastDayClass = false;
                     scope.compareLastWeekClass = false;
                     scope.clearCompareSelect = false;
+
                 };
                 scope.reloadByCalendar = function (type) {
                     console.info("info: now user click the " + type + " button");
