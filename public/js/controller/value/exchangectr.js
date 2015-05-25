@@ -10,7 +10,6 @@ define(["./module"], function (ctrs) {
             $scope.itemClicked = function ($index) {
                 $scope.selectedIndex = $index;
             };
-
             $scope.exchanges = [{
                 "id": 1,
                 "name": "beat-ad.cn",
@@ -22,8 +21,12 @@ define(["./module"], function (ctrs) {
                 "pv": 4544,
                 "uv": 213
             }];
+            $scope.times=[{
+
+            }]
             $scope.isCollapsed = false;
             $scope.treeclose = true;
+
         }
     );
 

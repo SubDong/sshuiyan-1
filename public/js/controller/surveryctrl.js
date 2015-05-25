@@ -8,6 +8,7 @@ define(["./module"], function (ctrs) {
     ctrs.controller('SurveyCtrl', function ($scope, $http, $q, $rootScope, areaService, SEM_API_URL, requestService) {
             $scope.day_offset = 0;    // 默认是今天(值为0), 值为-1代表昨天, 值为-7代表最近7天, 值为-30代表最近30天
             $scope.yesterdayClass = true;
+            $scope.datechoice = false;
             $scope.reset = function () {
                 $scope.todayClass = false;
                 $scope.yesterdayClass = false;

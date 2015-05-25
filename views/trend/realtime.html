@@ -11,7 +11,6 @@
                 <div class="Visitor_text">
                     <h4>30分钟内</h4>
                     <h5>在线人数</h5>
-
                     <h1>{{visitorCount}}</h1>
                 </div>
             </div>
@@ -37,7 +36,7 @@
                                 <li><span>来源过滤 :</span></li>
                                 <li>
                                     <div role="group" class="btn-group">
-                                        <ui-select ng-model="souce.selected" theme="selectize" class="fl"
+                                        <ui-select ng-model="souce.selected" theme="select2" reset-search-input="false" class="fl"
                                                    style="width: 90px;" ng-change="setSource(souce.selected.value)">
                                             <ui-select-match placeholder="全部">{{$select.selected.name}}
                                             </ui-select-match>

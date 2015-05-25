@@ -2,7 +2,7 @@
     <div class="my_concent">
         <div>
             <div class="select_top">
-                <ui-select ng-model="survey.selected" theme="selectize" class="fl" style="width: 120px;">
+                <ui-select ng-model="survey.selected"  theme="select2" reset-search-input="false"  class="fl" style="width: 120px;">
                     <ui-select-match placeholder="全部推广方式">{{$select.selected.name}}</ui-select-match>
                     <ui-select-choices repeat="survey in surveys">
                         <span ng-bind-html="survey.name"></span>
@@ -12,9 +12,9 @@
         </div>
         <div ui-grid="gridOptions" class="grid" ui-grid-pinning></div>
         <div class="survey_chart">
-            <div class="select_top">
+            <div class="select_top select_timechoice">
                 <b class="fl">投放指标：</b>
-                <ui-select ng-model="outQuotas.selected" theme="selectize" class="fl" style="min-width: 100px;"
+                <ui-select ng-model="outQuotas.selected"  theme="select2" reset-search-input="false" class="fl" style="min-width: 100px;"
                            ng-change="setOutQuota(outQuotas.selected)">
                     <ui-select-match placeholder="消费">{{$select.selected.name}}</ui-select-match>
                     <ui-select-choices repeat="outQuotas in outQuota| filter: $select.search">
@@ -22,27 +22,14 @@
                     </ui-select-choices>
                 </ui-select>
                 <b class="fl">效果指标:</b>
-                <ui-select ng-model="effectQuotas.selected" theme="selectize" class="fl" style="min-width: 100px;"
+                <ui-select ng-model="effectQuotas.selected" theme="select2" reset-search-input="false" class="fl" style="min-width: 100px;"
                            ng-change="setEffectQuota(effectQuotas.selected)">
                     <ui-select-match placeholder="访问次数">{{$select.selected.name}}</ui-select-match>
                     <ui-select-choices repeat="effectQuotas in effectQuota">
                         <span ng-bind-html="effectQuotas.name"></span>
                     </ui-select-choices>
                 </ui-select>
-                <div aria-label="First group" role="group" class="btn-group fr">
-                    <button class="btn btn-default disabled" type="button">时间</button>
-                    <button class="btn btn-default" ng-class="{'current':yesterdayClass}" ng-click="yesterday()"
-                            type="button">
-                        昨天
-                    </button>
-                    <button class="btn btn-default" ng-class="{'current':sevenDayClass}" ng-click="sevenDay()"
-                            type="button">
-                        最近7天
-                    </button>
-                    <button class="btn btn-default" ng-class="{'current':monthClass}" ng-click="month()" type="button">
-                        最近30天
-                    </button>
-                </div>
+                 <calendar></calendar>
             </div>
             <div class="chart_color">
                 <ul>
@@ -55,16 +42,16 @@
                 <div class="select_top">
                     <div class="under_top">
                         <b> {{outQuotas.selected.name||"消费"}}对比：</b>
-                        <ui-select ng-model="surveyfirst.selected" theme="selectize" class="fl"
+                        <ui-select ng-model="surveyfirst.selected"  theme="select2" reset-search-input="false"  class="fl"
                                    ng-change="semCompareTo(surveyfirst.selected)"
-                                   style="width: 120px;">
-                            <ui-select-match placeholder="请选择对比项" class="placehold-color">{{$select.selected.name}}</ui-select-match>
+                                   style="width: 110px;">
+                            <ui-select-match placeholder="请选择对比项">{{$select.selected.name}}</ui-select-match>
                             <ui-select-choices repeat="surveyfirst in choosedates">
                                 <span ng-bind-html="surveyfirst.name"></span>
                             </ui-select-choices>
                         </ui-select>
                         <b> {{effectQuotas.selected.name||"访问次数"}}对比：</b>
-                        <ui-select ng-model="surveysecend.selected" theme="selectize" class="fl" style="width: 120px;"
+                        <ui-select ng-model="surveysecend.selected"  theme="select2" reset-search-input="false"  class="fl" style="width: 110px;"
                                    ng-change="esCompareTo(surveysecend.selected)">
                             <ui-select-match placeholder="请选择对比项" class="placehold-color">{{$select.selected.name}}</ui-select-match>
                             <ui-select-choices repeat="surveysecend in choosedates">
