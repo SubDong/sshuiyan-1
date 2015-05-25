@@ -11,7 +11,7 @@ define(["./module"], function (ctrs) {
         $rootScope.tableTimeEnd = -1;//结束时间、
         $rootScope.tableFormat = null;
         //配置默认指标
-        $rootScope.searchCheckedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
+        $rootScope.checkedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
         $rootScope.searchGridArray = [
             {
                 name: "关键词",
@@ -31,7 +31,7 @@ define(["./module"], function (ctrs) {
             {name: "平均访问时长", displayName: "平均访问时长", field: "avgTime"},
             {name: "新访客比率", displayName: "新访客比率", field: "nuvRate"}
         ];
-        $rootScope.tableSearchSwitch = {
+        $rootScope.tableSwitch = {
             latitude: {name: "关键词", displayName: "关键词", field: "keywordName"},
             tableFilter: null,
             dimen: "city",

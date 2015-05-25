@@ -17,7 +17,7 @@ define(["./module"], function (ctrs) {
             if ("" === menu) {
                 return 0;
             }
-            if (menu.indexOf(hrefs[i]) != -1 || i > hrefs.length) {
+            if ((menu.indexOf(hrefs[i]) != -1 & menu.indexOf(hrefs[i]) < 3) || i > hrefs.length) {
                 return i;
             }
             return $scope.menuClass(menu, hrefs, i + 1);

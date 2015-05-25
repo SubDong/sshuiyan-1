@@ -11,7 +11,7 @@ define(["./module"], function (ctrs) {
         $rootScope.tableTimeEnd = -1;//结束时间、
         $rootScope.tableFormat = null;
         //配置默认指标
-        $rootScope.searchCheckedArray = ["impression", "cost", "cpc"]
+        $rootScope.checkedArray = ["impression", "cost", "cpc"]
         $rootScope.searchGridArray = [
             {
                 name: "创意",
@@ -23,7 +23,7 @@ define(["./module"], function (ctrs) {
             {name: "消费", displayName: "消费", field: "cost"},
             {name: "平均点击价格", displayName: "平均点击价格", field: "cpc"}
         ];
-        $rootScope.tableSearchSwitch = {
+        $rootScope.tableSwitch = {
             latitude: {name: "创意", displayName: "创意", field: "description1"},
             tableFilter: null,
             dimen: false,
