@@ -1,8 +1,7 @@
 <div class="menu">
 <div ng-controller="menuctr">
     <ssh-accordion>
-        <ssh-expander ng-repeat="expander in expanders"  ng-class='{current:$index==selectedRow}' ng-click='selectRestaurant($index)' class=""  etitle="expander.title" etype="expander.stype" esref="expander.sref" eicon="expander.icon" echildren="expander.child" ></ssh-expander>
+        <ssh-expander ng-repeat="adminmenu in adminmenus"  ng-class='{current:$index==selectedRow}' ng-click='selectRestaurant($index)' class=""  etitle="adminmenu.title" etype="adminmenu.stype" esref="adminmenu.sref" eicon="adminmenu.icon" echildren="adminmenu.child" ></ssh-expander>
     </ssh-accordion>
-    hfdjfgsdfgdsgf
 </div>
 </div>
