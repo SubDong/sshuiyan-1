@@ -56,12 +56,16 @@ define(["./module"], function (ctrs) {
         $scope.dt = new Date();
         $scope.onLegendClickListener = function (radio, chartObj, chartConfig, checkedVal) {
             if ($scope.charts[0].config.compare) {
-                var time = $rootScope.start==1?-7:0;
+                var time = $rootScope.start;
+                if ($scope.compareType == 2) {
+                    time = $rootScope.start - 7;
+                }
                 $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
                 var todayData = $http.get("api/charts?type=" + checkedVal + "&dimension=period&start=" + time + "&end=" + time + "&userType=" + $rootScope.userType + "&int=" + $rootScope.interval);
                 var lastDayData = $http.get("api/charts?type=" + checkedVal + "&dimension=period&start=" + (time - 1) + "&end=" + ( time - 1) + "&userType=" + $rootScope.userType + "&int=" + $rootScope.interval);
                 $q.all([todayData, lastDayData]).then(function (res) {
                     var dateStamp = chartUtils.getDateStamp(time);
+                    console.log(dateStamp);
                     var final_result = chartUtils.compareTo(res, dateStamp);
                     $scope.charts[0].config.noFormat = "none";
                     $scope.charts[0].config.compare = true;
@@ -345,7 +349,7 @@ define(["./module"], function (ctrs) {
             var todayData = $http.get("api/charts?type=" + chartUtils.convertEnglish($scope.charts[0].config.legendData[0]) + "&dimension=period&start=" + ($rootScope.start - 7) + "&end=" + ($rootScope.end - 7) + "&userType=" + $rootScope.userType + "&int=" + $rootScope.interval);
             var lastDayData = $http.get("api/charts?type=" + chartUtils.convertEnglish($scope.charts[0].config.legendData[0]) + "&dimension=period&start=" + ($rootScope.start - 8) + "&end=" + ( $rootScope.end - 8) + "&userType=" + $rootScope.userType + "&int=" + $rootScope.interval);
             $q.all([todayData, lastDayData]).then(function (res) {
-                var dateStamp = chartUtils.getDateStamp($rootScope.start - 8);
+                var dateStamp = chartUtils.getDateStamp($rootScope.start - 7);
                 var final_result = chartUtils.compareTo(res, dateStamp);
                 $scope.charts[0].config.noFormat = "none";
                 $scope.charts[0].config.compare = true;
