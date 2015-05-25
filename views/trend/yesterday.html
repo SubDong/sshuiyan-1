@@ -66,7 +66,7 @@
                                 <li><span>来源过滤 :</span></li>
                                 <li>
                                     <div role="group" class="btn-group">
-                                        <ui-select ng-model="souce.selected" theme="selectize" class="fl"
+                                        <ui-select ng-model="souce.selected" theme="select2" reset-search-input="false"  class="fl"
                                                    style="width: 90px;">
                                             <ui-select-match placeholder="全部">{{$select.selected.name}}
                                             </ui-select-match>
@@ -101,7 +101,7 @@
                                 <li>
                                     <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
                                         <div role="group" class="btn-group">
-                                            <ui-select ng-model="city.selected" theme="selectize" class="fl btn-pv"
+                                            <ui-select ng-model="city.selected" theme="select2" reset-search-input="false"  class="fl btn-pv"
                                                        data-ng-change="setAreaFilter(city.selected.name)"
                                                        style="width: 120px;">
                                                 <ui-select-match placeholder="全部">{{$select.selected.name}}
@@ -125,7 +125,7 @@
             <!--<div class="custom_select">-->
             <!--转化目标-->
             <!--<div role="group" class="btn-group">-->
-            <!--<ui-select ng-model="extendway.selected" theme="selectize" class="fl"-->
+            <!--<ui-select ng-model="extendway.selected" theme="select2" reset-search-input="false"  class="fl"-->
             <!--style="width: 120px;">-->
             <!--<ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>-->
             <!--<ui-select-choices repeat="extendway in extendways">-->

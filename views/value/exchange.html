@@ -1,31 +1,14 @@
-<div class="middle_containers" ng-controller="exchangectr as app">
+<div class="middle_containers" ng-controller="exchangectr">
     <div class="date_select">
         <div class="btn-group fl" role="group" aria-label="First group">
-            <button type="button" class="btn btn-default disabled">时间</button>
-            <button type="button" ng-click="yesterday()" ng-class="{'current':yesterdayClass}" class="btn btn-default">
-                昨天
-            </button>
-            <button type="button" ng-click="sevenDay()" ng-class="{'current':sevenDayClass}" class="btn btn-default">
-                前天
-            </button>
-            <button type="button" class="btn btn-default">
-                5月10日
-            </button>
-            <button type="button" class="btn btn-default">
-                5月9日
-            </button>
-            <button type="button" class="btn btn-default">
-                5月8日
-            </button>
-            <button type="button" class="btn btn-default">
-                5月7日
-            </button>
-            <button type="button" class="btn btn-default">
-                5月6日
-            </button>
-            <button type="button" class="btn btn-default">
-                5月5日
-            </button>
+            <button type="button"  class="btn btn-default"  ng-repeat="time in times "  ng-class="{ 'current': $index == selectedIndex }"   ng-click="timechange($index)">昨天</button>
+            <button type="button" ng-click="beforeyesterday()" ng-class="{'current':beforeyesterdayClass}" class="btn btn-default">前天</button>
+            <button type="button" ng-click="dayone()" ng-class="{'current':dayoneClass}"class="btn btn-default">5月10日</button>
+            <button type="button" ng-click="daytwo()" ng-class="{'current':daytwoClass}" class="btn btn-default">5月9日</button>
+            <button type="button" ng-click="daythree()" ng-class="{'current':dayoneClass}" class="btn btn-default">5月8日</button>
+            <button type="button" ng-click="dayfour()" ng-class="{'current':dayoneClass}" class="btn btn-default">5月7日</button>
+            <button type="button" ng-click="dayfive()" ng-class="{'current':dayoneClass}" class="btn btn-default">5月6日</button>
+            <button type="button" ng-click="daysix()" ng-class="{'current':dayoneClass}" class="btn btn-default">5月5日</button>
         </div>
         <refresh></refresh>
     </div>

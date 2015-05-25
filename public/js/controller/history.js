@@ -3,13 +3,21 @@
  */
 define(['./module'], function (ctrs) {
     'use strict';
-    ctrs.controller('history', function ($scope, $window, $rootScope, requestService, areaService, $http, SEM_API_URL) {
+    ctrs.controller('history', function ($scope, $window, $location, $rootScope, requestService, areaService, $http, SEM_API_URL) {
+        if($rootScope.gridArray == undefined || $rootScope.tableSwitch == undefined){
+            var temp_path = $location.path();
+            var _index = temp_path.indexOf("/history");
+            console.log(_index);
+            $location.path(temp_path.substring(0, _index));
+        }
+
         $scope.monthClass = true;
         var esType = "2";
 
         $rootScope.tableTimeStart = -30;
         $rootScope.tableTimeEnd = -1;
         $rootScope.tableFormat = null;
+
         $rootScope.gridArray[0] = {name: "日期", displayName: "日期", field: "period"};
         $rootScope.gridArray.splice(1, 1);
         $rootScope.tableSwitch.dimen = false;

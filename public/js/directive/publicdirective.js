@@ -11,7 +11,7 @@ define(["../app"], function (app) {
             "<button class=\"btn btn-default\" type=\"button\" ng-click=\"yesterday()\" ng-class=\"{'current':yesterdayClass}\">昨天</button>" +
             "<button class=\"btn btn-default\" type=\"button\" ng-click=\"sevenDay()\" ng-class=\"{'current':sevenDayClass}\">最近7天</button>" +
             "<button class=\"btn btn-default\" type=\"button\" ng-click=\"month()\" ng-class=\"{'current':monthClass}\">最近30天</button>" +
-            "<button id=\"reportrange\"  class=\"btn btn-default pull-right date-picker my_picker\" ng-click=\'timeclick()\' ng-class=\"{'current':timeClass}\" max=\"max\" ng-model=\"date\"> " +
+            "<button id=\"reportrange\"  class=\"btn btn-default pull-right date-picker my_picker\" ng-click=\'timeclick()\' ng-show=\"datechoice\" ng-class=\"{'current':timeClass}\" max=\"max\" ng-model=\"date\"> " +
             "<i class=\"glyphicon glyphicon-calendar fa fa-calendar\"></i><span></span></button>" +
             "</div>",
             replace: true,
@@ -218,7 +218,7 @@ define(["../app"], function (app) {
     app.directive("refresh", function () {
         var option = {
             restrict: "EA",
-            template: "<div class=\"right_refresh fr\"><button class=\"btn btn-default btn-Refresh fl\" type=\"button\"><span aria-hidden=\"true\" class=\"glyphicon glyphicon-refresh\"></span></button><ui-select ng-model=\"export.selected\" theme=\"selectize\" class=\"fl\"style=\"width: 65px;\"> <ui-select-match placeholder=\"导出\">{{$select.selected.name}} </ui-select-match> <ui-select-choices repeat=\"export in exports\"> <span ng-bind-html=\"export.name\"></span></ui-select-choices></ui-select></div>",
+            template: "<div class=\"right_refresh fr\"><button class=\"btn btn-default btn-Refresh fl\" type=\"button\"><span aria-hidden=\"true\" class=\"glyphicon glyphicon-refresh\"></span></button><ui-select ng-model=\"export.selected\" theme=\"selectize\" ng-show=\"menu_select\" class=\"fl\"style=\"width: 65px;\"> <ui-select-match placeholder=\"导出\">{{$select.selected.name}} </ui-select-match> <ui-select-choices repeat=\"export in exports\"> <span ng-bind-html=\"export.name\"></span></ui-select-choices></ui-select></div>",
             transclude: true
         }
         return option;
@@ -818,7 +818,11 @@ define(["../app"], function (app) {
                 scope.getSshPath = function () {
                     var temp_path = $location.path();
                     // 百度推广-搜索推广，URL含有下划线。判断时需要取下划线之前的内容
-                    var _index = temp_path.indexOf("_");
+                    var _index = temp_path.indexOf("/history");
+                    if (_index != -1) {
+                        temp_path = temp_path.substring(0, _index);
+                    }
+                    _index = temp_path.indexOf("_");
                     if (_index != -1) {
                         scope.sshPath = "#" + temp_path.substring(1, _index);
                     } else {

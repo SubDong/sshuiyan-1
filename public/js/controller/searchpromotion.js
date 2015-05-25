@@ -7,9 +7,9 @@ define(["./module"], function (ctrs) {
 
     ctrs.controller("SearchPromotion", function ($timeout, $scope, $rootScope, $http, $q, requestService, SEM_API_URL, $cookieStore) {
         $scope.todayClass = true;
-        var user = $cookieStore.get("uname");
-        var baiduAccount = $rootScope.default;
-        var esType = $rootScope.defaultType;
+        var user = "perfect2015"/*$cookieStore.get("uname")*/;
+        var baiduAccount ="baidu-perfect2151880" /*$rootScope.default*/;
+        var esType ="2" /*$rootScope.defaultType*/;
 
         //sem
         $scope.target = [
@@ -38,29 +38,29 @@ define(["./module"], function (ctrs) {
         /*    var getHtmlTableData = function () {
          $http({
          method: 'GET',
-         url: '/api/realTimeAccess/?filerInfo=' + $rootScope.tableSearchSwitch.tableFilter + "&type=" + esType
+         url: '/api/realTimeAccess/?filerInfo=' + $rootScope.tableSwitch.tableFilter + "&type=" + esType
          }).success(function (data, status) {
          $scope.gridOptions.data = data;
          }).error(function (error) {
          console.log(error);
          });
          };*/
-        if ($rootScope.tableSearchSwitch.number == 1) {
+        if ($rootScope.tableSwitch.number == 1) {
             $scope.gridBtnDivObj = "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn test'></a></div>";
-        } else if ($rootScope.tableSearchSwitch.number == 2) {
+        } else if ($rootScope.tableSwitch.number == 2) {
             $scope.gridBtnDivObj = "<div class='table_box'><button onclick='getMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul>" + $rootScope.tableSwitch.coding + "</ul></div></div>";
         }
-        if ($scope.tableSearchSwitch.arrayClear)$rootScope.checkedArray = new Array();
-        if ($scope.tableSearchSwitch.arrayClear)$rootScope.searchGridArray = new Array();
+        if ($scope.tableSwitch.arrayClear)$rootScope.checkedArray = new Array();
+        if ($scope.tableSwitch.arrayClear)$rootScope.searchGridArray = new Array();
 
 
         $rootScope.searchIndicators = function (item, entities, number, refresh) {
             $rootScope.searchGridArray.shift();
             if (refresh == "refresh") {
-                $rootScope.searchGridArray.unshift($rootScope.tableSearchSwitch.latitude);
+                $rootScope.searchGridArray.unshift($rootScope.tableSwitch.latitude);
                 return
             }
-            $rootScope.tableSearchSwitch.number != 0 ? $scope.searchGridArray.shift() : "";
+            $rootScope.tableSwitch.number != 0 ? $scope.searchGridArray.shift() : "";
             $scope.searchGridObj = {};
             $scope.searchGridObjButton = {};
             var a = $rootScope.checkedArray.indexOf(item.name);
@@ -68,12 +68,12 @@ define(["./module"], function (ctrs) {
                 $rootScope.checkedArray.splice(a, 1);
                 $rootScope.searchGridArray.splice(a, 1);
 
-                if ($rootScope.tableSearchSwitch.number != 0) {
+                if ($rootScope.tableSwitch.number != 0) {
                     $scope.searchGridObjButton["name"] = " ";
                     $scope.searchGridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
                     $rootScope.searchGridArray.unshift($scope.searchGridObjButton);
                 }
-                $rootScope.searchGridArray.unshift($rootScope.tableSearchSwitch.latitude);
+                $rootScope.searchGridArray.unshift($rootScope.tableSwitch.latitude);
             } else {
                 if ($rootScope.checkedArray.length >= number) {
                     $rootScope.checkedArray.shift();
@@ -86,13 +86,13 @@ define(["./module"], function (ctrs) {
 
                     $rootScope.searchGridArray.push($scope.searchGridObj);
 
-                    if ($rootScope.tableSearchSwitch.number != 0) {
+                    if ($rootScope.tableSwitch.number != 0) {
                         $scope.searchGridObjButton["name"] = " ";
                         $scope.searchGridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
                         $rootScope.searchGridArray.unshift($scope.searchGridObjButton);
                     }
 
-                    $rootScope.searchGridArray.unshift($rootScope.tableSearchSwitch.latitude);
+                    $rootScope.searchGridArray.unshift($rootScope.tableSwitch.latitude);
                 } else {
                     $rootScope.checkedArray.push(item.name);
 
@@ -101,12 +101,12 @@ define(["./module"], function (ctrs) {
                     $scope.searchGridObj["field"] = item.name;
                     $rootScope.searchGridArray.push($scope.searchGridObj);
 
-                    if ($rootScope.tableSearchSwitch.number != 0) {
+                    if ($rootScope.tableSwitch.number != 0) {
                         $scope.searchGridObjButton["name"] = " ";
                         $scope.searchGridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
                         $rootScope.searchGridArray.unshift($scope.searchGridObjButton);
                     }
-                    $rootScope.searchGridArray.unshift($rootScope.tableSearchSwitch.latitude);
+                    $rootScope.searchGridArray.unshift($rootScope.tableSwitch.latitude);
                 }
             }
             angular.forEach(entities, function (subscription, index) {
@@ -129,7 +129,7 @@ define(["./module"], function (ctrs) {
             columnDefs: $rootScope.searchGridArray,
             onRegisterApi: function (gridApi) {
                 $scope.gridApi2 = gridApi;
-                if ($rootScope.tableSearchSwitch.dimen) {
+                if ($rootScope.tableSwitch.dimen) {
                     griApiInfo(gridApi);
                 }
 
@@ -156,23 +156,23 @@ define(["./module"], function (ctrs) {
             if (isClicked) {
                 $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
             }
-            var url = SEM_API_URL + user + "/" + baiduAccount + "/" + $rootScope.tableSearchSwitch.promotionSearch.SEMData + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1" + ($scope.searchId != undefined || $scope.searchId != "undefined" ? "&" + $scope.searchId : "")
+            var url = SEM_API_URL + user + "/" + baiduAccount + "/" + $rootScope.tableSwitch.promotionSearch.SEMData + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1" + ($scope.searchId != undefined || $scope.searchId != "undefined" ? "&" + $scope.searchId : "")
             $http({
                 method: 'GET',
                 url: url
             }).success(function (dataSEM, status) {
                 var dataArray = [];
                 dataSEM.forEach(function (item, i) {
-                    var searchId = $rootScope.tableSearchSwitch.promotionSearch.SEMData;
+                    var searchId = $rootScope.tableSwitch.promotionSearch.SEMData;
                     var filter = "[{\"" + getTableFilter(searchId) + "\":[\"" + item[searchId + "Id"] + "\"]}]";
-                    var fieldQuery = $rootScope.tableSearchSwitch.latitude.field;
+                    var fieldQuery = $rootScope.tableSwitch.latitude.field;
                     $http({
                         method: 'GET',
-                        url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSearchSwitch.promotionSearch ? ($rootScope.tableSearchSwitch.number == 5 ? fieldQuery : null) : fieldQuery )
-                        + "&filerInfo=" + filter + "&promotion=" + $rootScope.tableSearchSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
+                        url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? ($rootScope.tableSwitch.number == 5 ? fieldQuery : null) : fieldQuery )
+                        + "&filerInfo=" + filter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
                     }).success(function (data, status) {
                         var datas = {};
-                        if ($rootScope.tableSearchSwitch.number == 5) {
+                        if ($rootScope.tableSwitch.number == 5) {
                             data.forEach(function (item, i) {
                                 $rootScope.checkedArray.forEach(function (x, y) {
                                     datas[x] = item[x] != undefined ? item[x] : data[0][x];
@@ -187,7 +187,7 @@ define(["./module"], function (ctrs) {
                             $rootScope.checkedArray.forEach(function (x, y) {
                                 datas[x] = item[x] != undefined ? item[x] : data[0][x];
                             });
-                            var field = $rootScope.tableSearchSwitch.latitude.field;
+                            var field = $rootScope.tableSwitch.latitude.field;
                             datas[field] = item[field] + getTableTitle(field, item);
                             datas["id"] = item[searchId + "Id"];
                             dataArray.push(datas)
@@ -218,13 +218,13 @@ define(["./module"], function (ctrs) {
             $http({
                 method: 'GET',
                 url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=kwsid"
-                + "&filerInfo=" + $rootScope.tableSearchSwitch.tableFilter + "&promotion=undefined&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
+                + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=undefined&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
             }).success(function (data, status) {
                 var dataArray = [];
                 data.forEach(function (item, i) {
                     var variousId = item.kw.split(",");
                     item.kw = variousId[0];
-                    var url = SEM_API_URL + user + "/" + baiduAccount + "/" + $rootScope.tableSearchSwitch.promotionSearch.SEMData + "/" + variousId[3] + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1"
+                    var url = SEM_API_URL + user + "/" + baiduAccount + "/" + $rootScope.tableSwitch.promotionSearch.SEMData + "/" + variousId[3] + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1"
                     $http({
                         method: 'GET',
                         url: url
@@ -233,14 +233,14 @@ define(["./module"], function (ctrs) {
                         if (variousId[3] == 0) {
                             $rootScope.checkedArray.forEach(function (x, y) {
                                 datas[x] = (item[x] != undefined ? item[x] : 0);
-                                var field = $rootScope.tableSearchSwitch.latitude.field
+                                var field = $rootScope.tableSwitch.latitude.field
                                 datas[field] = item[field] + ",";
                             })
                         } else {
                             $rootScope.checkedArray.forEach(function (x, y) {
                                 datas[x] = (item[x] != undefined ? item[x] : dataSEM[0][x]);
                             })
-                            var field = $rootScope.tableSearchSwitch.latitude.field
+                            var field = $rootScope.tableSwitch.latitude.field
                             datas[field] = item[field] + getTableTitle(field, dataSEM[0]);
                         }
                         dataArray.push(datas);
@@ -253,7 +253,7 @@ define(["./module"], function (ctrs) {
 
 
         //init
-        if ($rootScope.tableSearchSwitch.promotionSearch.turnOn == "ssc") {
+        if ($rootScope.tableSwitch.promotionSearch.turnOn == "ssc") {
             $rootScope.targetSearchSSC(true);
         } else {
             $rootScope.targetSearchSpread(true);
@@ -292,7 +292,7 @@ define(["./module"], function (ctrs) {
 
 
         $scope.getHistoricalTrend = function (b) {
-            if ($rootScope.tableSearchSwitch.latitude.field == "campaignName") {
+            if ($rootScope.tableSwitch.latitude.field == "campaignName") {
                 $rootScope.checkedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
                 $rootScope.searchGridArray = [
                     {
@@ -313,7 +313,7 @@ define(["./module"], function (ctrs) {
                     {name: "平均访问时长", displayName: "平均访问时长", field: "avgTime"},
                     {name: "新房客比率", displayName: "新房客比率", field: "nuvRate"}
                 ];
-                $rootScope.tableSearchSwitch = {
+                $rootScope.tableSwitch = {
                     latitude: {name: "单元", displayName: "单元", field: "adgroupName"},
                     tableFilter: null,
                     dimen: false,
@@ -329,7 +329,7 @@ define(["./module"], function (ctrs) {
                     }
                 };
                 $scope.searchId = "cid=" + b.$parent.$parent.row.entity.id;
-            } else if ($rootScope.tableSearchSwitch.latitude.field == "adgroupName") {
+            } else if ($rootScope.tableSwitch.latitude.field == "adgroupName") {
                 $rootScope.checkedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
                 $rootScope.searchGridArray = [
                     {
@@ -350,7 +350,7 @@ define(["./module"], function (ctrs) {
                     {name: "平均访问时长", displayName: "平均访问时长", field: "avgTime"},
                     {name: "新房客比率", displayName: "新房客比率", field: "nuvRate"}
                 ];
-                $rootScope.tableSearchSwitch = {
+                $rootScope.tableSwitch = {
                     latitude: {name: "关键词", displayName: "关键词", field: "keywordName"},
                     tableFilter: null,
                     dimen: "city",
@@ -374,11 +374,11 @@ define(["./module"], function (ctrs) {
         //得到数据中的url
         $scope.getDataUrlInfo = function (grid, row, number) {
             if (number < 3) {
-                var a = row.entity[$rootScope.tableSearchSwitch.latitude.field].split(",");
+                var a = row.entity[$rootScope.tableSwitch.latitude.field].split(",");
             } else if (number > 3) {
-                var a = row.entity[$rootScope.tableSearchSwitch.latitude.field].split(",`");
+                var a = row.entity[$rootScope.tableSwitch.latitude.field].split(",`");
             } else {
-                var a = row.entity[$rootScope.tableSearchSwitch.latitude.field]
+                var a = row.entity[$rootScope.tableSwitch.latitude.field]
             }
             if (number == 1) {
                 return a[0];

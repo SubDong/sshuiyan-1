@@ -11,7 +11,6 @@
                 <div class="Visitor_text">
                     <h4>30分钟内</h4>
                     <h5>在线人数</h5>
-
                     <h1>{{visitorCount}}</h1>
                 </div>
             </div>
@@ -37,7 +36,7 @@
                                 <li><span>来源过滤 :</span></li>
                                 <li>
                                     <div role="group" class="btn-group">
-                                        <ui-select ng-model="souce.selected" theme="selectize" class="fl"
+                                        <ui-select ng-model="souce.selected" theme="select2" reset-search-input="false" class="fl"
                                                    style="width: 90px;" ng-change="setSource(souce.selected.value)">
                                             <ui-select-match placeholder="全部">{{$select.selected.name}}
                                             </ui-select-match>
@@ -60,7 +59,31 @@
                                 <li><input type="radio" name="radio0" ng-click="setTerminal(2)"/><label>移动设备</label></li>
                             </ul>
                         </div>
+                        <div class="chart_top2">
+                            <ul>
+                                <li><span>地域过滤:</span></li>
+                                <li>
+                                    <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
+                                        <div role="group" class="btn-group">
+                                            <ui-select ng-model="city.selected" theme="select2" reset-search-input="false" class="fl"
+                                                       data-ng-change="setAreaFilter(city.selected.name)"
+                                                       style="width: 80px;">
+                                                <ui-select-match placeholder="全部">{{$select.selected.name}}
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="city in citys">
+                                                    <span ng-bind-html="city.name"></span>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li><a href="javascript:void(0)" data-ng-click="setAreaFilter('北京')">北京</a></li>
+                                <li><a href="javascript:void(0)" data-ng-click="setAreaFilter('上海')">上海</a></li>
+                                <li><a href="javascript:void(0)" data-ng-click="setAreaFilter('广州')">广州</a></li>
+                            </ul>
+                        </div>
                     </div>
+
                     <div class="custom_secendtitle">
                         <div class="custom_select ">
                             <ul class="visitor_table_select">
