@@ -63,7 +63,7 @@ define(["./module"], function (ctrs) {
             json.forEach(function (e) {
                 var tmpData = [];
                 var _value = []
-                for (var i = 1; i < 12; i++) {
+                for (var i = 1; i < 9; i++) {
                     tmpData.push("");
                     _value.push(0);
                 }
@@ -75,7 +75,7 @@ define(["./module"], function (ctrs) {
 
                     _value.push(e.quota[i]);
                 }
-                for (var i = 12; i < 24; i++) {
+                for (var i = 9; i < 18; i++) {
                     tmpData.push("");
                     _value.push(0);
                 }
@@ -101,6 +101,7 @@ define(["./module"], function (ctrs) {
                     chartType: "bar",
                     dataKey: "key",
                     auotHidex: true,
+                    qingXie:true,
                     keyFormat: 'none',
                     dataValue: "quota"
                 },

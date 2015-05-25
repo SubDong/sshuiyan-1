@@ -149,7 +149,9 @@ var op = {
                     }
                 }
             },
-
+            grid: {
+                borderColor: '#F0F0F0'
+            },
             xAxis: [
                 {
                     type: !chartConfig.xType ? "category" : chartConfig.xType,
@@ -181,6 +183,7 @@ var op = {
                             width: 1
                         }
                     },
+                    splitNumber: 5,
                     axisLine: {
                         lineStyle: {
                             color: '#01AFEF',
@@ -231,7 +234,12 @@ var op = {
         chartConfig.dataValue = !chartConfig.dataValue ? "quota" : chartConfig.dataValue;
         var xData = [];
         var select = {};
-
+        if (chartConfig.chartType == "bar" && chartConfig.autoInput) {
+            if (json[0].key.length < Number(chartConfig.autoInput)) {
+                var inputCount = chartConfig.autoInput - json[0].key.length;
+                chartUtils.addStep(json, inputCount);
+            }
+        }
         json.forEach(function (item) {
             select[chartUtils.convertChinese(item.label)] = true;
             var serie = {
@@ -277,7 +285,7 @@ var op = {
                             width: 1
                         }
                     };
-                    //option.yAxis[i]["position"] = "left";
+                    option.yAxis[i]["splitNumber"] = 5;
                     option.yAxis[i]["splitLine"] = {
                         lineStyle: {
                             color: '#F0F0F0',
@@ -1035,10 +1043,40 @@ var util = {
              */
             var date1 = new Date(a, parseInt(b) - 1, c), date2 = new Date(a, 0, 1),
                 d = Math.round((date1.valueOf() - date2.valueOf()) / 86400000);
-            return a.substr(2, 4) + "年第" + Math.ceil((d + ((date2.getDay() + 1) - 1)) / 7) +
-                "周";
+            //console.log( util.getWeekStartDate(date1)+ ":::" + util.getWeekEndDate(date1));
+            //console.log(date1.Format("yyyy-MM-dd"));
+            return util.getWeekStartDate(date1) + "-" + util.getWeekEndDate(date1);
+            //return a.substr(2, 4) + "年第" + Math.ceil((d + ((date2.getDay() + 1) - 1)) / 7) +
+            //    "周";
         } else {
             return "";
         }
+    },
+    //获得本周的开端日期
+    getWeekStartDate: function (date) {
+        var year = date.getYear();
+        year += (year < 2000) ? 1900 : 0; //
+        var weekStartDate = new Date(year, date.getMonth(), date.getDate() - date.getDay()+1);
+        return util.formatDate(weekStartDate);
+    },
+    getWeekEndDate: function (date) {
+        var year = date.getYear();
+        year += (year < 2000) ? 1900 : 0; //
+        var weekEndDate = new Date(year, date.getMonth(), date.getDate() + (7 - date.getDay()));
+        return util.formatDate(weekEndDate);
+    },
+    formatDate: function (date) {
+        var myyear = date.getFullYear();
+        var mymonth = date.getMonth() + 1;
+        var myweekday = date.getDate();
+
+        if (mymonth < 10) {
+            mymonth = "0" + mymonth;
+        }
+        if (myweekday < 10) {
+            myweekday = "0" + myweekday;
+        }
+        return (myyear + "/" + mymonth + "/" + myweekday);
     }
+
 }
