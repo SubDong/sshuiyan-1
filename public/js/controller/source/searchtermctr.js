@@ -21,7 +21,7 @@ define(["./module"], function (ctrs) {
                     cellTemplate: "<div class='table_box'>" +
                     "<button onclick='getMyButton(this)' class='table_nextbtn'></button>" +
                     "<div class='table_win'>" +
-                    "<ul>" +
+                    "<ul style='color: #45b1ec'>" +
                     "<li><a>查看相关热门搜索词</a></li>" +
                     "<li><a ng-click='grid.appScope.showSearchUrl(row)'>查看搜索来路URL</a></li>" +
                     "<li><a ui-sref='history6' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li>" +

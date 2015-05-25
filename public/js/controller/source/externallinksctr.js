@@ -16,7 +16,7 @@ define(["./module"], function (ctrs) {
             {name: "外部连接", displayName: "外部连接", field: "rf"},
             {
                 name: " ",
-                cellTemplate: "<div class='table_box'><button onclick='getMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul><li><a ui-sref='history7' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='javascript:void(0)'>查看来源分布</a></li></ul></div></div>"
+                cellTemplate: "<div class='table_box'><button onclick='getMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history7' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='javascript:void(0)'>查看来源分布</a></li></ul></div></div>"
             },
             {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},
             {name: "新访客数", displayName: "新访客数", field: "nuv"},
