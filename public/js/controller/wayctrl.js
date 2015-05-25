@@ -60,9 +60,9 @@ define(["./module"], function (ctrs) {
             {
                 config: {
                     legendId: "indicators_charts_legend",
-                    legendData: ["浏览量(PV)", "访客数(UV)", "跳出率", "平均访问时长", "点击量", "消费", "转化次数"],
+                    legendData: ["点击量", "展现量", "消费", "点击率", "平均点击价格", "浏览量(PV)", "访问次数", "访客数(UV)", "新访客数", "新访客比率", "跳出率", "平均访问时长", "抵达率"],
                     legendClickListener: $scope.onLegendClick,
-                    legendMultiData: $rootScope.lagerMulti,
+                    //legendMultiData: $rootScope.lagerMulti,
                     legendAllowCheckCount: 2,
                     legendDefaultChecked: [0, 1],
                     bGap: true,
@@ -80,6 +80,11 @@ define(["./module"], function (ctrs) {
 
         //**************************************/
         $scope.init = function (user, baiduAccount, semType, quotas, start, end, renderLegend) {
+            var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
+            $scope.charts[0].config.instance = chart;
+            chart.showLoading({
+                text: "正在努力的读取数据中..."
+            });
             var requestParams = chartUtils.qAll(quotas);
             var requestArray = [];
             if (requestParams[0] != "") {
@@ -90,70 +95,19 @@ define(["./module"], function (ctrs) {
                 var esRequest = $http.get("/api/charts/?type=" + requestParams[1].toString() + "&dimension=one&start=" + start + "&end=" + end + "&userType=" + $rootScope.userType);
                 requestArray.push(esRequest);
             }
-            if (requestArray.length) {
-                $q.all(requestArray).then(function (res) {
-                    var final_result = chartUtils.getSearchTypeResult(quotas, res);
-                    chartUtils.addStep(final_result, 24);//填充空白
-                    $scope.charts[0].config.chartType = "bar";
-                    $scope.charts[0].config.bGap = true;
-                    var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
-                    chart.showLoading({
-                        text: "正在努力的读取数据中..."
-                    });
-                    $scope.charts[0].config.instance = chart;
-                    if (renderLegend) {
-                        util.renderLegend(chart, $scope.charts[0].config);
-                        Custom.initCheckInfo();
-                    }
-                    cf.renderChart(final_result, $scope.charts[0].config);
-                    chart.hideLoading();
-                });
-            }
+            $q.all(requestArray).then(function (res) {
+                var final_result = chartUtils.getSearchTypeResult(quotas, res);
+                chartUtils.addStep(final_result, 24);//填充空白
+                $scope.charts[0].config.chartType = "bar";
+                $scope.charts[0].config.bGap = true;
+                if (renderLegend) {
+                    util.renderLegend(chart, $scope.charts[0].config);
+                    Custom.initCheckInfo();
+                }
+                cf.renderChart(final_result, $scope.charts[0].config);
+                chart.hideLoading();
+            });
 
-
-            //if (quotas.length) {
-            //    var semRequest = "";
-            //    if (quotas.length == 1) {
-            //        semRequest = $http.get(SEM_API_URL + user + "/" + baiduAccount + "/" + semType + "/" + quotas[0] + "-?startOffset=" + start + "&endOffset=" + end);
-            //    } else {
-            //        semRequest = $http.get(SEM_API_URL + user + "/" + baiduAccount + "/" + semType + "/" + quotas[0] + "-" + quotas[1] + "-?startOffset=" + start + "&endOffset=" + end)
-            //    }
-            //    $q.all([semRequest]).then(function (final_result) {
-            //        var chart_result = [];
-            //        quotas.forEach(function (quota) {
-            //            var tmp = [];
-            //            var _semData = {};
-            //            var _val = 0;
-            //            final_result[0].data.forEach(function (i) {
-            //                _val += i[quota];
-            //            });
-            //            if (quota == "cpc") {
-            //                _val = parseFloat(_val / final_result[0].data.length).toFixed(2);
-            //            }else if(quota=="ctr"){
-            //                _val = parseFloat(_val / final_result[0].data.length).toFixed(2);
-            //            }
-            //            tmp.push(_val);
-            //            _semData["label"] = chartUtils.convertChinese(quota);
-            //            _semData["quota"] = tmp;
-            //            _semData["key"] = ["搜索推广"];
-            //            chart_result.push(_semData);
-            //        });
-            //        chartUtils.addStep(chart_result, 24);//填充空白
-            //        $scope.charts[0].config.chartType = "bar";
-            //        $scope.charts[0].config.bGap = true;
-            //var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
-            //chart.showLoading({
-            //    text: "正在努力的读取数据中..."
-            //});
-            //$scope.charts[0].config.instance = chart;
-            //if (renderLegend) {
-            //    util.renderLegend(chart, $scope.charts[0].config);
-            //Custom.initCheckInfo();
-            //}
-            //        cf.renderChart(chart_result, $scope.charts[0].config);
-            //chart.hideLoading();
-            //    });
-            //}
         }
         $scope.yesterday = function () {
             $scope.reset();

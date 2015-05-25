@@ -279,7 +279,6 @@ define(["./module"], function (ctrs) {
                 }).success(function (data, status) {
 
                     var dataArray = [];
-                    console.log(data[0])
                     if (data[0] != undefined) {
                         dataArray.push({kw: data[0].kw})
                     } else {

@@ -60,7 +60,7 @@ api.get('/charts', function (req, res) {
         interval = null;
         dimension = null;
     }
-
+    console.log(period[0] + ">><<<<<<<" + period[1]);
     es_request.search(req.es, indexes, userType, quotas, dimension, topN, filter, period[0], period[1], interval, function (result) {
         datautils.send(res, JSON.stringify(result));
     });

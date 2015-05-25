@@ -27,7 +27,7 @@
 
                         <div class="chart_top chart_default">
                             <ul>
-                                <li><a href="javascript:void(0)" data-ssh-default-quota="extension_search">系统默认指标</a>
+                                <li><a href="javascript:void(0)" data-ssh-default-quota="search_tgUrl">系统默认指标</a>
                                 </li>
                             </ul>
                         </div>
@@ -35,7 +35,7 @@
                             <span>消费指标 :</span>
                             <ul>
                                 <li ng-repeat="item in target" data-search-default defvalue="{{item.name}}"
-                                    class="{{searchCheckedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                    class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
                                     ng-click='searchIndicators(item,target,6)'>{{item.consumption_name}}
                                 </li>
                             </ul>
@@ -44,7 +44,7 @@
                             <span>网站基础指标 :</span>
                             <ul>
                                 <li ng-repeat="item in Webbased" data-search-default defvalue="{{item.name}}"
-                                    class="{{searchCheckedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                    class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
                                     ng-click='searchIndicators(item,Webbased,6)'>{{item.consumption_name}}
                                 </li>
                             </ul>
@@ -53,7 +53,7 @@
                             <span>流量质量指标:</span>
                             <ul>
                                 <li ng-repeat="item in flow" data-search-default defvalue="{{item.name}}"
-                                    class="{{searchCheckedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                    class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
                                     ng-click='searchIndicators(item,flow,6)'>{{item.consumption_name}}
                                 </li>
                             </ul>
@@ -86,7 +86,7 @@
                             </ul>
                         </div>-->
                         <div class="chart_top chart_noborder">
-                            <button class="btn btn-primary" type="button">确定</button>
+                            <button class="btn btn-primary" type="button" ng-click="targetSearchSpread(true)">确定</button>
                             * 可同时选择6项
                         </div>
 

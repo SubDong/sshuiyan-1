@@ -368,14 +368,22 @@ var chartUtils = {
             }
         }
     },
-    addStep: function (json, number) {
+    addStep: function (json, number, place) {
         json.forEach(function (e) {
             var _key = [];
-            var _value = []
-            for (var i = 0; i < number / 2; i++) {
-                _key.push("");
-                _value.push(0);
+            var _value = [];
+            if (place) {
+                switch (place) {
+                    case "left":
+                        break;
+                }
+            } else {
+                for (var i = 0; i < number / 2; i++) {
+                    _key.push("");
+                    _value.push(0);
+                }
             }
+
             for (var i = 0; i < e.key.length; i++) {
                 _key.push(e.key[i]);
                 _value.push(e.quota[i]);
@@ -384,6 +392,7 @@ var chartUtils = {
                 _key.push("");
                 _value.push(0);
             }
+
             e.key = _key;
             e.quota = _value;
         });

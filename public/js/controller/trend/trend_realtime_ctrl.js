@@ -1,7 +1,7 @@
 /**
  * Created by baizz on 2015-4-3.
  */
-define(["./module"], function(ctrs) {
+define(["./module"], function (ctrs) {
     "use strict";
 
     ctrs.controller('trend_realtime_ctrl', function ($scope, $rootScope, $http, requestService, messageService, $log, areaService) {
@@ -70,6 +70,16 @@ define(["./module"], function(ctrs) {
             config["noFormat"] = "noFormat";
             config["twoYz"] = "twoYz";
             cf.renderChart(final_result, config);
+            console.log(final_result);
+            var realCount = 0;
+            final_result.forEach(function (item) {
+                if (item.label == "访客数(UV)") {
+                    item.quota.forEach(function (i) {
+                        realCount += i;
+                    });
+                }
+            });
+            $scope.visitorCount += realCount;
         }
         $scope.charts = [
             {
@@ -109,16 +119,16 @@ define(["./module"], function(ctrs) {
             Custom.initCheckInfo();
         }
         $scope.init();
-        $scope.initPerson = function () {
-            $http.get("/api/halfhour?type=uv&start=0&end=0?userType=" + $rootScope.userType).success(function (data) {
-                var json = JSON.parse(eval("(" + data + ")").toString());
-                var result = json[0].result;
-                result.buckets.forEach(function (e) {
-                    $scope.visitorCount += e.uv_aggs.value;
-                });
-            });
-        }
-        $scope.initPerson();
+        //$scope.initPerson = function () {
+        //    $http.get("/api/halfhour?type=uv&start=0&end=0?userType=" + $rootScope.userType).success(function (data) {
+        //        var json = JSON.parse(eval("(" + data + ")").toString());
+        //        var result = json[0].result;
+        //        result.buckets.forEach(function (e) {
+        //            $scope.visitorCount += e.uv_aggs.value;
+        //        });
+        //    });
+        //}
+        //$scope.initPerson();
         /*    $scope.search = function (keyword, time, ip) {
          requestService.gridRequest($scope.startTime, $scope.endTime, $scope.gridOptions, "uv");
          };*/

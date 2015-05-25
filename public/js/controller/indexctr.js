@@ -104,6 +104,7 @@ define(['./module'], function (ctrs) {
                     chartType: "bar",
                     auotHidex: true,
                     dataKey: "key",
+                    autoInput:10,
                     keyFormat: 'none',
                     dataValue: "quota"
 
