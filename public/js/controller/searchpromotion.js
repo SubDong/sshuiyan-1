@@ -135,7 +135,7 @@ define(["./module"], function (ctrs) {
 
             }
         };
-
+        $scope.page="";
         $scope.pagego = function (pagevalue) {
             pagevalue.pagination.seek(Number($scope.page));
         }

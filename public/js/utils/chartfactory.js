@@ -89,6 +89,7 @@ var init = {
 }
 var op = {
     lineChart: function (data, chartConfig) {
+        var _legendTmp = [];
         if (!data.length) {
             def.defData(chartConfig);
             return;
@@ -96,6 +97,7 @@ var op = {
         var json, labelData = [];
         if (chartConfig.noFormat) {
             json = data;
+            _legendTmp = chartConfig.legendData;
             chartConfig.legendData = labelData;
         } else {
             json = JSON.parse(eval('(' + data + ')').toString());
@@ -128,32 +130,64 @@ var op = {
                     var res = params[0].name + '<br/>';
                     for (var i = 0, l = params.length; i < l; i++) {
                         var formatType = labelData[i];
-                        res += params[i].seriesName + ' : ' + ad.formatFunc(params[i].value, formatType) + '<br/>';
+                        if (chartConfig.compare) {
+                            var baseSerieName = params[i].seriesName.split(":");
+                            res += baseSerieName[0] + chartUtils.convertChinese(baseSerieName[1]) + ' : ' + ad.formatFunc(params[i].value, baseSerieName[1]) + '<br/>';
+                        } else {
+                            res += params[i].seriesName + ' : ' + ad.formatFunc(params[i].value, formatType) + '<br/>';
+                        }
+
                     }
                     return res;
+                },
+                axisPointer: {
+                    type: 'line',
+                    lineStyle: {
+                        color: '#01AFEF',
+                        width: 1,
+                        type: 'solid'
+                    }
                 }
             },
+
             xAxis: [
                 {
                     type: !chartConfig.xType ? "category" : chartConfig.xType,
                     boundaryGap: !chartConfig.bGap ? false : chartConfig.bGap,
-                    data: [],
-                    axisLabel: {
-                        rotate: 30,
-                        textStyle: {
-                            color: '#0D0D0D',
-                            fontFamily: '微软雅黑'
+                    axisLine: {    // 轴线
+                        lineStyle: {
+                            color: '#01AFEF',
+                            type: 'solid',
+                            width: 1
                         }
-                    }
+                    },
+                    splitLine: {
+                        lineStyle: {
+                            color: '#F0F0F0',
+                            type: 'solid',
+                            width: 1
+                        }
+                    },
+                    data: []
                 }
             ],
             yAxis: [
                 {
                     type: !chartConfig.yType ? "value" : chartConfig.yType,
-                    axisLabel: {
-                        formatter: chartConfig.axFormat
+                    splitLine: {
+                        lineStyle: {
+                            color: '#F0F0F0',
+                            type: 'solid',
+                            width: 1
+                        }
                     },
-                    splitLine: {show: false}
+                    axisLine: {
+                        lineStyle: {
+                            color: '#01AFEF',
+                            type: 'solid',
+                            width: 1
+                        }
+                    }
                 },
                 {
                     'type': !chartConfig.yType ? "value" : chartConfig.yType
@@ -163,6 +197,11 @@ var op = {
         };
         if (chartConfig.auotHidex) {
             option.xAxis[0]["axisLabel"] = {
+                interval: 0
+            }
+        }
+        if (chartConfig.qingXie) {
+            option.xAxis[0]["axisLabel"] = {
                 interval: 0,
                 rotate: 30,
                 textStyle: {
@@ -170,6 +209,7 @@ var op = {
                     fontFamily: '微软雅黑'
                 }
             }
+
         }
         //if (chartConfig.chartType == "line") {
         //    option["color"] = ['#ff7f50', '#87cefa']
@@ -200,7 +240,17 @@ var op = {
                 data: item[chartConfig.dataValue]
             };
             if (chartConfig.lineType == undefined) {
-                serie.itemStyle = {normal: {areaStyle: {type: 'default'}}}
+                serie.itemStyle = {
+                    normal: {
+                        areaStyle: {
+                            type: 'default'
+                        },
+                        lineStyle: {
+                            width: 1
+                        }
+                    }
+
+                }
             }
             if (chartConfig.min_max == undefined) {
                 serie["markPoint"] = {
@@ -215,19 +265,40 @@ var op = {
         });
         if (!chartConfig.twoYz) {
             for (var i = 0; i < labelData.length; i++) {
-                if (labelData[i] == "uv" || labelData[i] == "pv") {
+                if (labelData[i] == "uv" || labelData[i] == "pv" || labelData[i] == "访客数(UV)" || labelData[i] == "浏览量(PV)") {
                     option.series[0]["yAxisIndex"] = 0;
                 } else {
                     var formatType = labelData[i];
                     option.series[i]["yAxisIndex"] = i;
-                    option.yAxis[i]["splitLine"] = {show: false};
-                    ad.renderFormat(option, i, formatType);
+                    option.yAxis[i]["axisLine"] = {
+                        lineStyle: {
+                            color: '#01AFEF',
+                            type: 'solid',
+                            width: 1
+                        }
+                    };
+                    //option.yAxis[i]["position"] = "left";
+                    option.yAxis[i]["splitLine"] = {
+                        lineStyle: {
+                            color: '#F0F0F0',
+                            type: 'solid',
+                            width: 1
+                        }
+                    }
+                    if (chartConfig.compare) {
+                        var baseSerieName = formatType.split(":");
+                        ad.renderFormat(option, i, baseSerieName[1]);
+                    } else {
+                        ad.renderFormat(option, i, formatType);
+                    }
+
                 }
             }
         }
         option.xAxis[0].data = xData[0];
         option.legend.selected = select;
         chartObj.setOption(option);
+        chartConfig.legendData = _legendTmp;
     },
     barChart: function (data, chartConfig) {
         chartConfig.interval = 0;
@@ -241,8 +312,14 @@ var op = {
                 trigger: !chartConfig.tt ? "item" : chartConfig.tt,
                 formatter: "{a} <br/>{b} : {c} ({d}%)"
             },
+            color: [
+                '#87cefa', '#ff7f50', '#da70d6', '#32cd32', '#6495ed',
+                '#ff69b4', '#ba55d3', '#cd5c5c', '#ffa500', '#40e0d0',
+                '#1e90ff', '#ff6347', '#7b68ee', '#00fa9a', '#ffd700',
+                '#6b8e23', '#ff00ff', '#3cb371', '#b8860b', '#30e0e0'
+            ],
             legend: {
-                show: !chartConfig.legendShow ? false : chartConfig.legendShow,
+                show: chartConfig.legendShow ? chartConfig.legendShow : false,
                 orient: !chartConfig.ledLayout ? "vertical" : chartConfig.ledLayout,
                 x: 'left',
                 data: !chartConfig.legendData ? data.label : chartConfig.legendData
@@ -739,6 +816,7 @@ var util = {
             });
         }
         var chartDiv = $("#" + c.legendId);
+        chartDiv.empty();
         var legendDiv = $("<div/>");
         legendDiv.attr("id", renderType + "_" + c.id);
         legendDiv.attr("style", "width:100%;position:absolute;margin:0px auto;text-align:center;z-index:10;background: #ffffff;");
@@ -770,6 +848,8 @@ var util = {
                 rad.bind("click", function () {
                     if (renderType == "checkBox") {
                         util.allowItem(this);
+                    } else {
+                        util.radioBtn(this);
                     }
                     var checkVal = util.legStr(this);
                     if (c.legendClickListener) {
@@ -916,15 +996,30 @@ var util = {
         });
         return checked;
     },
+    radioBtn: function (radioObj) {
+        var checks = $("input[name='" + radioObj.name + "']");
+        checks.each(function (i, o) {
+            $(o).prev("span").css("background-position", "0px 0px");
+            $(o).prop("checked", false);
+        });
+        $(radioObj).prev("span").css("background-position", "0px -51px");
+
+    },
     legStr: function (radio) {
         var checkedVal = [];
-        var radios = document.getElementsByName(radio.getAttribute("name"));
-        for (var i = 0; i < radios.length; i++) {
-            if (radios[i].checked == true) {
-                checkedVal.push(radios[i].value);
+        var type = radio.getAttribute("type");
+        if (type == "checkBox") {
+            var radios = document.getElementsByName(radio.getAttribute("name"));
+            for (var i = 0; i < radios.length; i++) {
+                if (radios[i].checked == true) {
+                    checkedVal.push(radios[i].value);
+                }
             }
+            return checkedVal;
+        } else {
+            return [radio.value];
         }
-        return checkedVal;
+
     },
     getYearWeekState: function (dateStr) {
         if (dateStr != "") {
@@ -940,9 +1035,9 @@ var util = {
              */
             var date1 = new Date(a, parseInt(b) - 1, c), date2 = new Date(a, 0, 1),
                 d = Math.round((date1.valueOf() - date2.valueOf()) / 86400000);
-            return a.substr(2, 4) + "年第：" + (Math.ceil((d + ((date2.getDay() + 1) - 1)) / 7) + 1) +
+            return a.substr(2, 4) + "年第" + Math.ceil((d + ((date2.getDay() + 1) - 1)) / 7) +
                 "周";
-        }else{
+        } else {
             return "";
         }
     }

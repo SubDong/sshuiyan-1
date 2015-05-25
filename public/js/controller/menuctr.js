@@ -162,6 +162,58 @@ define(["./module"], function (ctrs) {
                 }]
             }
         ];
+        $scope.adminmenus=[
+            {
+                title:'网站列表',
+                icon:'glyphicon glyphicon-list',
+                stype:0,
+                sref:'#conf',
+                current: 'current'
+            },
+            {
+                title:'网站统计设置',
+                icon:'glyphicon glyphicon-align-left',
+                stype:1,
+                sref:'webcountsite',
+                child:[{
+                    text: ' 统计规则设置',
+                    sref:'#conf/webcountsite/countrules'
+                }, {
+                    text: '子目录管理',
+                    sref: '#conf/webcountsite/childlist'
+                }, {
+                    text: '页面转化目标',
+                    sref: '#conf/webcountsite/pagechange'
+                },{
+                    text: '事件转化目标',
+                    sref: '#conf/webcountsite/eventchange'
+                },{
+                    text: '时长转化目标',
+                    sref: '#conf/webcountsite/timechange'
+                },{
+                    text: '指定广告跟踪',
+                    sref: '#conf/webcountsite/adtrack'
+                }]
+            },
+            {
+                title:'系统管理设置',
+                icon:'glyphicon glyphicon-user',
+                stype:1,
+                sref:'',
+                child:[{
+                    text: ' 权限账户管理',
+                    sref:'#conf/admin/root'
+                }, {
+                    text: '统计图标设置',
+                    sref: '#conf/admin/counticon'
+                }, {
+                    text: '报告发送设置',
+                    sref: '#conf/admin/reportsite'
+
+                }]
+            }
+        ];
+
     });
 
     /*********nav-select*********/

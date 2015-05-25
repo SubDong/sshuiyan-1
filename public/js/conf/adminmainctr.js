@@ -1,48 +1,64 @@
 /**
- * Created by yousheng on 15/3/26.
+ * Created by john on 2015/4/1.
  */
+define(["./module"], function (ctrs) {
+    "use strict";
 
-define(['./module'], function (ctrs) {
-    'use strict';
-
-    ctrs.controller("indexctr", ['$scope', '$rootScope', '$http', 'requestService', 'messageService', 'areaService', function ($scope, $rootScope, $http, requestService, messageService, areaService) {
+    ctrs.controller('adminmainctr', function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
         $scope.todayClass = true;
         $scope.hourcheckClass = true;
         $scope.reset = function () {
+            $scope.todayClass = false;
+            $scope.yesterdayClass = false;
+            $scope.sevenDayClass = false;
+            $scope.monthClass = false;
             $scope.definClass = false;
+            $scope.hourcheckClass = false;
         };
-        $scope.gridOptions = {
-            enableColumnMenus: false,
-            enableSorting: true,
-            enableScrollbars: false,
-            enableGridMenu: false,
-            enableHorizontalScrollbar: 0,
-            enableVerticalScrollbar: 0,
-            columnDefs: [
-                {name: 'name', displayName: "关键词"},
-                {name: 'value', displayName: "浏览量(PV)"}
-            ]
+        /*    $scope.hourcheck= function(){
+         $scope.dayClass=false;
+         $scope.hourcheckClass=true;
+         }
+         $scope.daycheck= function(){
+         $scope.dayClass=true;
+         $scope.hourcheckClass=false;
+         }*/
+        //table配置
+        $rootScope.tableTimeStart = 0;
+        $rootScope.tableTimeEnd = 0;
+        $rootScope.tableFormat = "hour";
+        //配置默认指标
+        $rootScope.checkedArray = ["pv", "uv", "ip", "outRate", "avgTime"];
+        $rootScope.gridArray = [
+            {name: "日期", displayName: "日期", field: "period"},
+            {name: "浏览量(PV)", displayName: "浏览量(PV)", field: "pv"},
+            {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},
+            {name: "IP数", displayName: "IP数", field: "ip"},
+            {name: "跳出率", displayName: "跳出率", field: "outRate"},
+            {name: "平均访问时长", displayName: "平均访问时长", field: "avgTime"}
+        ];
+        $rootScope.tableSwitch = {
+            latitude: {name: "日期", displayName: "日期", field: "period"},
+            tableFilter: null,
+            dimen: false,
+            // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
+            number: 0,
+            //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
+            coding: false,
+            //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
+            arrayClear: false //是否清空指标array
         };
+        //
+
+        $scope.dt = new Date();
         $scope.onLegendClickListener = function (radio, chartObj, chartConfig, checkedVal) {
             clear.lineChart($scope.charts[0].config, checkedVal);
             $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
             $scope.charts[0].types = checkedVal;
-            var chartArray = [$scope.charts[0]];
-            requestService.refresh(chartArray);
-
+            var chartarray = [$scope.charts[0]];
+            requestService.refresh(chartarray);
         }
-        $scope.pieFormat = function (data, config) {
-            var json = JSON.parse(eval("(" + data + ")").toString());
-            var tmpData = [];
-            json.forEach(function (e) {
-                e.key.forEach(function (item) {
-                    tmpData.push(chartUtils.getDevice(item));
-                });
-                e.key = tmpData;
-            });
-            cf.renderChart(json, config);
-        }
-        $scope.indexLineFormat = function (data, config, e) {
+        $scope.todayFormat = function (data, config, e) {
             if ($rootScope.interval == 1) {
                 var final_result = chartUtils.getByHourByDayData(data);
                 config["noFormat"] = "noFormat";
@@ -54,21 +70,20 @@ define(['./module'], function (ctrs) {
                 if (json.length) {
                     if (json[0].key.length == 1) {
                         config["noFormat"] = "noFormat";
-                        chartUtils.getXType(config, $rootScope.interval, $rootScope.start);
+                        chartUtils.getXType(config, $rootScope.interval);
                         config["chartType"] = "bar";//图表类型
                         chartUtils.addStep(json, 24);
-                        chartUtils.noFormatConvertLabel(json);
                         cf.renderChart(json, config);
                     } else {
                         config["noFormat"] = undefined;
                         config["chartType"] = "line";//图表类型
-                        chartUtils.getXType(config, $rootScope.interval, $rootScope.start);
+                        chartUtils.getXType(config, $rootScope.interval);
                         cf.renderChart(data, config);
                     }
                 } else {
                     config["noFormat"] = undefined;
                     config["chartType"] = "line";//图表类型
-                    chartUtils.getXType(config, $rootScope.interval, $rootScope.start);
+                    chartUtils.getXType(config, $rootScope.interval);
                     cf.renderChart(data, config);
                 }
             }
@@ -76,67 +91,26 @@ define(['./module'], function (ctrs) {
         $scope.charts = [
             {
                 config: {
-                    legendId: "index_charts_legend",
-                    legendData: ["浏览量(PV)", "访客数(UV)", "跳出率", "抵达率", "平均访问时长", "页面转化"],//显示几种数据
+                    legendId: "today_charts_legend",
                     legendAllowCheckCount: 2,
                     legendClickListener: $scope.onLegendClickListener,
+                    legendData: ["浏览量(PV)", "访客数(UV)", "访问次数", "新访客数", "新访客比率", "IP数", "跳出率", "平均访问时长", "平均访问页数", "转化次数", "转化率"],//显示几种数据
                     legendDefaultChecked: [0, 1],
-                    id: "index_charts",
-                    bGap: false,//首行缩进
+                    id: "today_charts",
                     min_max: false,
+                    bGap: false,//首行缩进
                     chartType: "line",//图表类型
                     dataKey: "key",//传入数据的key值
+                    keyFormat: 'hour',
                     dataValue: "quota"//传入数据的value值
                 },
                 types: ["pv", "uv"],
                 dimension: ["period"],
                 interval: $rootScope.interval,
                 url: "/api/charts",
-                cb: $scope.indexLineFormat
-            },
-            {
-                config: {
-                    min_max: false,//是否显示最大，最小值
-                    legendData: [],
-                    id: "gest_map",
-                    bGap: true,
-                    chartType: "bar",
-                    auotHidex: true,
-                    dataKey: "key",
-                    keyFormat: 'none',
-                    dataValue: "quota"
+                cb: $scope.todayFormat
+            }];
 
-                },
-                types: ["pv"],
-                dimension: ["region"],
-                url: "/api/map"
-            },
-            {
-                config: {
-                    legendData: ["移动", "PC"],
-                    chartType: "pie",
-                    id: "environment_map",
-                    serieName: "所占比例",
-                    dataKey: "key",
-                    dataValue: "quota",
-                    legendShow:true
-                },
-                types: ["pv"],
-                dimension: ["pm"],
-                url: "/api/pie",
-                cb: $scope.pieFormat
-            }
-        ];
-        $scope.grids = [
-            {
-                config: {
-                    gridOptions: $scope.gridOptions
-                },
-                types: ["pv"],
-                dimension: ["kw"],
-                url: "/api/pie"
-            }
-        ]
         $scope.init = function () {
             $rootScope.start = 0;
             $rootScope.end = 0;
@@ -147,7 +121,6 @@ define(['./module'], function (ctrs) {
                 util.renderLegend(chart, e.config);
             })
             requestService.refresh($scope.charts);
-            requestService.gridRefresh($scope.grids);
         }
         $scope.init();
 
@@ -156,19 +129,27 @@ define(['./module'], function (ctrs) {
                 chart.config.instance = echarts.init(document.getElementById(chart.config.id));
             });
             requestService.refresh($scope.charts);
-            requestService.gridRefresh($scope.grids);
+            if ($rootScope.start <= -7) {
+                $rootScope.tableFormat = "day";
+            } else {
+                $rootScope.tableFormat = "hour";
+            }
+            $rootScope.targetSearch();
         });
+
         $scope.hourcheck = function () {
             $scope.hourcheckClass = true;
             $scope.dayClass = false;
             $scope.timeselect = false;
+            $rootScope.interval = 1;
             $scope.weekcheckClass = false;
             $scope.mothcheckClass = false;
-            $rootScope.interval = 1;
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
             });
+            $rootScope.tableFormat = "hour";
+            $rootScope.targetSearch();
             requestService.refresh($scope.charts);
 
         };
@@ -185,24 +166,41 @@ define(['./module'], function (ctrs) {
                 e.config.instance = chart;
                 e.config.noFormat = undefined;
             });
+            if ($rootScope.start <= -7) {
+                $rootScope.tableFormat = "day";
+            } else {
+                $rootScope.tableFormat = "hour";
+            }
+            $rootScope.targetSearch();
             requestService.refresh($scope.charts);
         };
+
+        $scope.clear = function () {
+            $scope.extendway.selected = undefined;
+            $scope.city.selected = undefined;
+            $scope.country.selected = undefined;
+            $scope.continent.selected = undefined;
+            $scope.souce.selected = undefined;
+        };
+        //604800000 week
         $scope.weekcheck = function () {
             $scope.weekcheckClass = true;
             $scope.hourcheckClass = false;
             $scope.mothcheckClass = false;
             $scope.dayClass = false;
-            $rootScope.interval = 604800000;
+            $rootScope.interval=604800000;
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
                 e.config.noFormat = undefined;
             });
+            $rootScope.tableFormat = "week";
+            $rootScope.targetSearch();
             $scope.charts[0].config.keyFormat = "week";
             requestService.refresh($scope.charts);
 
         };
-        //604800000 week
+
         //2592000000 month
         $scope.mothcheck = function () {
             $scope.weekcheckClass = false;
@@ -210,51 +208,20 @@ define(['./module'], function (ctrs) {
             $scope.mothcheckClass = true;
             $scope.dayClass = false;
             $scope.mothselected = false;
-            $rootScope.interval = 2592000000;
+            $rootScope.interval=2592000000;
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
                 e.config.noFormat = undefined;
             });
+            $rootScope.tableFormat = "month";
+            $rootScope.targetSearch();
             $scope.charts[0].config.keyFormat = "month";
             requestService.refresh($scope.charts);
             $scope.dayClass = false;
             $scope.mothcheckClass = false;
         };
-
-        //下拉框
-        $scope.mapChange = function (_this) {
-            $scope.charts[1].types = _this.value;
-            $scope.charts[1].config.instance = echarts.init(document.getElementById($scope.charts[1].config.id));
-            var chartArray = [$scope.charts[1]];
-            requestService.refresh(chartArray);
-        }
-        $scope.equipmentChange = function (_this) {
-            $scope.charts[2].types = _this.value;
-            var chartArray = [$scope.charts[2]];
-            requestService.refresh(chartArray);
-        }
-        $scope.searchChange = function (_this) {
-            $scope.grids[0].types = _this.value;
-            $scope.gridOptions.columnDefs[1].displayName = _this.name;
-            var chartArray = [$scope.grids[0]];
-            requestService.gridRefresh(chartArray);
-        }
-
-        //index select
-        $scope.disabled = undefined;
-        $scope.enable = function () {
-            $scope.disabled = false;
-        };
-        $scope.disable = function () {
-            $scope.disabled = true;
-        };
-        $scope.clear = function () {
-            $scope.country.selected = undefined;
-            $scope.continent.selected = undefined;
-        }
-        $scope.continent = {};
-        $scope.country = {};
+        //日历
         $rootScope.datepickerClick = function (start, end, label) {
             var time = chartUtils.getTimeOffset(start, end);
             var offest = time[1] - time[0];
@@ -275,12 +242,14 @@ define(['./module'], function (ctrs) {
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
-            });
+            })
             requestService.refresh($scope.charts);
-            requestService.gridRefresh($scope.grids);
+            $rootScope.tableTimeStart = time[0];
+            $rootScope.tableTimeEnd = time[1];
+            $rootScope.targetSearch();
+            $scope.$broadcast("ssh_dateShow_options_time_change");
 
         }
-    }])
-
-})
-
+        //
+    });
+});

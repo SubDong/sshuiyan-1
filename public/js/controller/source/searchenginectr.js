@@ -10,7 +10,7 @@ define(["./module"], function(ctrs) {
         $rootScope.tableTimeEnd = 0;
         $rootScope.tableFormat = null;
         //配置默认指标
-        $rootScope.checkedArray = ["vc", "uv", "nuvRate", "ip", "avgPage"];
+        $rootScope.checkedArray = ["vc", "uv", "nuvRate", "avgPage", "ip"];
         $rootScope.gridArray = [
             {name: "搜索引擎", displayName: "搜索引擎", field: "se"},
             {
@@ -24,7 +24,7 @@ define(["./module"], function(ctrs) {
             {name: "IP数", displayName: "IP数", field: "ip"}
         ];
         $rootScope.tableSwitch = {
-            latitude: {name: "搜索引擎", displayName: "浏览量(PV)", field: "se"},
+            latitude: {name: "搜索引擎", displayName: "搜索引擎", field: "se"},
             tableFilter: "[{\"rf_type\": [\"2\"]}]",
             dimen: false,
             // 0 不需要btn ，1 无展开项btn ，2 有展开项btn

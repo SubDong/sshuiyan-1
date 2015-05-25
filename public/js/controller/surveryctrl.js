@@ -234,6 +234,7 @@ define(["./module"], function (ctrs) {
                         keyFormat: 'none',
                         noFormat: true,
                         auotHidex: true,
+                        qingXie: false,
                         dataKey: "key",//传入数据的key值
                         dataValue: "quota"//传入数据的value值
                     }
@@ -329,13 +330,13 @@ define(["./module"], function (ctrs) {
                             var count = 0;
                             json[0].quota.forEach(function (item) {
                                 console.log($scope.selectedQuota[1]);
-                                if ($scope.selectedQuota[1] == "outRate"||$scope.selectedQuota[1]=="arrivedRate") {
+                                if ($scope.selectedQuota[1] == "outRate" || $scope.selectedQuota[1] == "arrivedRate") {
                                     count += parseFloat(item);
                                 } else {
                                     count += item;
                                 }
                             });
-                            if ($scope.selectedQuota[1] == "outRate"||$scope.selectedQuota[1]=="arrivedRate") {
+                            if ($scope.selectedQuota[1] == "outRate" || $scope.selectedQuota[1] == "arrivedRate") {
                                 count = parseFloat(count / json[0].quota.length).toFixed(2);
                             }
                             var c = $scope.charts[0].config.instance;

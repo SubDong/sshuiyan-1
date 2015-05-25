@@ -66,6 +66,7 @@ define(["./module"], function (ctrs) {
                         chartUtils.getXType(config, $rootScope.interval);
                         config["chartType"] = "bar";//图表类型
                         chartUtils.addStep(json, 24);
+                        chartUtils.noFormatConvertLabel(json);
                         cf.renderChart(json, config);
                     } else {
                         config["noFormat"] = undefined;
@@ -254,6 +255,31 @@ define(["./module"], function (ctrs) {
             $rootScope.tableTimeEnd = time[1];
             $rootScope.targetSearch();
             $scope.$broadcast("ssh_dateShow_options_time_change");
+        }
+
+        $scope.compareLastDay = function () {
+            $scope.compareType = 1;
+            $scope.compareLastDayClass = true;
+            $scope.compareLastWeekClass = false;
+            $scope.charts.forEach(function (e) {
+                var chart = echarts.init(document.getElementById(e.config.id));
+                e.config.instance = chart;
+                e.config.legendAllowCheckCount = 1;
+                e.config.legendDefaultChecked = undefined;
+                e.types = [chartUtils.convertEnglish(e.config.legendData[0])];
+                util.renderLegend(chart, e.config);
+            });
+            Custom.initCheckInfo();
+            var todayData = $http.get("api/charts?type=" + chartUtils.convertEnglish($scope.charts[0].config.legendData[0]) + "&dimension=period&start=" + $rootScope.start + "&end=" + $rootScope.end + "&userType=" + $rootScope.userType + "&int=" + $rootScope.interval);
+            var lastDayData = $http.get("api/charts?type=" + chartUtils.convertEnglish($scope.charts[0].config.legendData[0]) + "&dimension=period&start=" + ($rootScope.start - 1) + "&end=" + ( $rootScope.end - 1) + "&userType=" + $rootScope.userType + "&int=" + $rootScope.interval);
+            $q.all([todayData, lastDayData]).then(function (res) {
+                var dateStamp = chartUtils.getDateStamp($rootScope.start);
+                var final_result = chartUtils.compareTo(res, dateStamp);
+                $scope.charts[0].config.noFormat = "none";
+                $scope.charts[0].config.compare = true;
+                cf.renderChart(final_result, $scope.charts[0].config);
+            });
+
         }
 
     });
