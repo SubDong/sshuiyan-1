@@ -28,9 +28,9 @@ define(["./module"], function (ctrs) {
         $rootScope.tableTimeEnd = 0;
         $rootScope.tableFormat = "hour";
         //配置默认指标
-        $rootScope.checkedArray = ["pv", "uv", "ip", "outRate", "avgTime"];
+        $rootScope.checkArray = ["pv", "uv", "ip", "outRate", "avgTime"];
         $rootScope.gridArray = [
-            {name: "日期", displayName: "日期", field: "period"},
+            {name: "日期", Name: "日期", field: "period"},
             {name: "浏览量(PV)", displayName: "浏览量(PV)", field: "pv"},
             {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},
             {name: "IP数", displayName: "IP数", field: "ip"},
