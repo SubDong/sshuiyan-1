@@ -162,21 +162,68 @@ define(["./module"], function (ctrs) {
                 }]
             }
         ];
+        $scope.adminmenus=[
+            {
+                title:'网站列表',
+                icon:'glyphicon glyphicon-list',
+                stype:0,
+                sref:'#conf',
+                current: 'current'
+            },
+            {
+                title:'网站统计设置',
+                icon:'glyphicon glyphicon-align-left',
+                stype:1,
+                sref:'webcountsite',
+                child:[{
+                    text: ' 统计规则设置',
+                    sref:'#conf/webcountsite/countrules'
+                }, {
+                    text: '子目录管理',
+                    sref: '#conf/webcountsite/childlist'
+                }, {
+                    text: '页面转化目标',
+                    sref: '#conf/webcountsite/pagechange'
+                },{
+                    text: '事件转化目标',
+                    sref: '#conf/webcountsite/eventchange'
+                },{
+                    text: '时长转化目标',
+                    sref: '#conf/webcountsite/timechange'
+                },{
+                    text: '指定广告跟踪',
+                    sref: '#conf/webcountsite/adtrack'
+                }]
+            },
+            {
+                title:'系统管理设置',
+                icon:'glyphicon glyphicon-user',
+                stype:1,
+                sref:'',
+                child:[{
+                    text: ' 权限账户管理',
+                    sref:'#conf/admin/root'
+                }, {
+                    text: '统计图标设置',
+                    sref: '#conf/admin/counticon'
+                }, {
+                    text: '报告发送设置',
+                    sref: '#conf/admin/reportsite'
+
+                }]
+            }
+        ];
+
     });
 
     /*********nav-select*********/
-    ctrs.controller('ngSelect', function ($scope, $cookieStore, $window, $rootScope) {
+    ctrs.controller('ngSelect', function ($scope, $location, $cookieStore, $window, $rootScope) {
         $scope.clear = function () {
             $scope.siteselect.selected = undefined;
         };
 
 
-        var username = $cookieStore.get('uname');
-        var users = [];
-        username.forEach(function (i) {
-            users.push({name: i.name, id: i.id});
-        });
-
+        $scope.userName = $cookieStore.get('uname');
 
         var usites = $cookieStore.get('usites');
         var sites = [];
@@ -187,16 +234,13 @@ define(["./module"], function (ctrs) {
             })
         });
         $rootScope.default = sites[0].name;     // default site
-        $rootScope.defaultUser = users[0].name;
         $rootScope.defaultType = sites[0].id;   // default site trackId
 
-        $scope.userSelect = {};
-        $scope.userSelectes = users;
         $scope.siteselect = {};
         $scope.siteselects = sites;
 
         $scope.changeUrl = function (select) {
-            $rootScope.userType = select.type;
+            $rootScope.userType = select.id;
         }
     })
 });

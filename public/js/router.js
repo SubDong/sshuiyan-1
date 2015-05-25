@@ -215,7 +215,43 @@ define(["angular", "app"], function (ng, app) {
         $stateProvider
             .state('conf', {
                 url: '/conf',
-                templateUrl: '../weblist/main.html'
+                templateUrl: '../conf/weblist/main.html'
+            })
+            .state('rule', {
+                url: '/conf/webcountsite/countrules',
+                templateUrl: '../conf/webcountsite/countrules.html'
+            })
+            .state('childlist', {
+                url: '/conf/webcountsite/childlist',
+                templateUrl: '../conf/webcountsite/childlist.html'
+            })
+            .state('pagechange', {
+                url: '/conf/webcountsite/pagechange',
+                templateUrl: '../conf/webcountsite/pagechange.html'
+            })
+            .state('eventchange', {
+                url: '/conf/webcountsite/eventchange',
+                templateUrl: '../conf/webcountsite/eventchange.html'
+            })
+            .state('timechange', {
+                url: '/conf/webcountsite/timechange',
+                templateUrl: '../conf/webcountsite/timechange.html'
+            })
+            .state('adtrack', {
+                url: '/conf/webcountsite/adtrack',
+                templateUrl: '../conf/webcountsite/adtrack.html'
+            })
+            .state('root', {
+                url: '/conf/admin/root',
+                templateUrl: '../conf/admin/root.html'
+            })
+            .state('counticon', {
+                url: '/conf/admin/counticon',
+                templateUrl: '../conf/admin/counticon.html'
+            })
+            .state('reportsite', {
+                url: '/conf/admin/reportsite',
+                templateUrl: '../conf/admin/reportsite.html'
             })
     });
 
