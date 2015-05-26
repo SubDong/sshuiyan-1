@@ -2,7 +2,7 @@
      data-ng-class="{'dateshow0': dateShowArray.length == 0, 'dateshow1': dateShowArray.length == 1, 'datelatshow': dateShowArray.length == 2, 'dateshow3': dateShowArray.length == 3, 'dateshow4': dateShowArray.length == 4, 'dateshow5': dateShowArray.length == 5}">
     <ul>
         <li data-ng-repeat="obj in dateShowArray"
-            data-ng-class="{'date_secend2': obj.label == 'baidu', 'date_four2': obj.label == 'sougou', 'date_first': $index == 0, 'date_secend': $index == 1, 'date_third': $index == 2, 'date_four': $index == 3, 'date_five': $index == 4, 'date_last': $index == 5}">
+            data-ng-class="{'date_secend2': obj.label == 'baidu', 'date_four2': obj.label == 'sougou', 'date_six2': obj.label == 'bing', 'date_seven2': obj.label == 'other', 'date_first': $index == 0, 'date_secend': $index == 1, 'date_third': $index == 2, 'date_four': $index == 3, 'date_five': $index == 4, 'date_last': $index == 5}">
             <h4>{{obj.label | quotaFormat}}&nbsp;<span class="badge" tooltip-placement="bottom"
                                                        tooltip="{{obj.label | quotaHelpFormat}}"
                                                        style="font-size: 12px;cursor: pointer;">?</span></h4>
@@ -10,7 +10,6 @@
             <br>
             <!-- 显示对比数据 -->
             <span style="color: #999" data-ng-if="isCompared">{{obj.cValue || ""}}</span>
-            <br>
         </li>
     </ul>
 </div>

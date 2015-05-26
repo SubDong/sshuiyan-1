@@ -552,6 +552,7 @@ define(["../app"], function (app) {
             templateUrl: '../commons/date_show.html',
             scope: 'true',
             link: function (scope, element, attris, controller) {
+                scope.isCompared = false;
                 scope.dateShowArray = [];
                 scope.ds_start = scope.ds_end = 0;
                 scope.loadDataShow = function () {
@@ -589,14 +590,39 @@ define(["../app"], function (app) {
                             count++;
                         });
                         angular.forEach(scope.dateShowArray, function (r) {
-                            if (r.label != "freq") {
-                                r.value = (r.value / count).toFixed(2) + "%";
+                            if (count == 0) {
+                                r.cValue = (r.label == "freq") ? "0" : "0.00%";
+                            } else {
+                                r.cValue = (r.label == "freq") ? r.cValue : ((r.cValue / count).toFixed(2) + "%")
+                            }
+                        });
+                    });
+                };
+                scope.loadCompareDataShow = function (startTime, endTime) {
+                    var semRequest = $http.get(SEM_API_URL + "elasticsearch/" + $rootScope.defaultType
+                    + "/?startOffset=" + (0 - startTime) + "&endOffset=" + endTime);
+                    $q.all([semRequest]).then(function (final_result) {
+                        var count = 0;
+                        angular.forEach(final_result[0].data, function (r) {
+                            angular.forEach(scope.dateShowArray, function (q_r) {
+                                var temp = q_r.label;
+                                var value = r[temp];
+                                q_r.cValue += temp != "freq" ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
+                            });
+                            count++;
+                        });
+                        angular.forEach(scope.dateShowArray, function (r) {
+                            if (count == 0) {
+                                r.cValue = (r.label == "freq") ? "0" : "0.00%";
+                            } else {
+                                r.cValue = (r.label == "freq") ? r.cValue : ((r.cValue / count).toFixed(2) + "%")
                             }
                         });
                     });
                 };
                 // 改变时间参数
                 scope.setDateShowTimeOption = function (type, cb) {
+                    scope.isCompared = false;
                     if (type === "today") {
                         scope.ds_start = scope.ds_end = 0;
                     } else if (type === "yesterday") {
@@ -612,7 +638,7 @@ define(["../app"], function (app) {
                         scope.ds_end = $rootScope.tableTimeEnd;
                     }
                     if (cb) {
-                        scope.loadDataShow();
+                        cb();
                     }
                 };
                 scope.setDateShowTimeOption(attris.type);
@@ -620,6 +646,12 @@ define(["../app"], function (app) {
                     scope.setDateShowTimeOption(msg, scope.loadDataShow);
                 });
                 scope.loadDataShow();
+
+                // 对比
+                scope.$on("ssh_load_compare_datashow", function (e, startTime, endTime) {
+                    scope.isCompared = true;
+                    scope.loadCompareDataShow(startTime, endTime);
+                });
             }
         }
     });
