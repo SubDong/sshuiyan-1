@@ -15,9 +15,14 @@
 
         </div>
         <div class="table_content" ng-controller="TabsCtrl">
-            <tabset justified="true">
-                <tab heading="自定义指标">
-                    <div class="custom_title">
+            <ul ng-init="tab = 1" class="nav nav-tabs nav-justified">
+                <li class="ng-isolate-scope"  ng-class="{active:tab===1}" ng-click="tab = 1">
+                    <a class="ng-binding">自定义指标</a></li>
+                <li class="ng-isolate-scope" ng-class="{active:tab===2}" ng-click="tab = 2">
+                    <a class="ng-binding">高级筛选</a></li>
+            </ul>
+            <div class="tabs_content">
+                    <div class="custom_title" ng-show="tab === 1">
                         <div class="chart_tops chart_default">
                             <ul>
                                 <li><a href="javascript:void(0)" data-ssh-default-quota="source_searchengine">系统默认指标</a></li>
@@ -65,19 +70,17 @@
                         </div>
 
                     </div>
-                </tab>
-                <tab heading="高级筛选">
-                    <div class="custom_title">
+                    <div class="custom_title"  ng-show="tab === 2">
                         <div class="chart_top2">
                             <ul>
                                 <li><span>设备过滤:</span></li>
                                 <li><input type="radio" checked="checked" name="radio1"
-                                           ng-click="setSearchEngineTerminal(0)"/>
+                                           ng-click="setSearchEngineTerminal(0)" class="styled" />
                                     <label>全部</label></li>
                                 <li><input type="radio" name="radio1"
-                                           ng-click="setSearchEngineTerminal(1)"/><label>计算机</label></li>
+                                           ng-click="setSearchEngineTerminal(1)" class="styled"/><label>计算机</label></li>
                                 <li><input type="radio" name="radio1"
-                                           ng-click="setSearchEngineTerminal(2)"/><label>移动设备</label>
+                                           ng-click="setSearchEngineTerminal(2)" class="styled"/><label>移动设备</label>
                                 </li>
                             </ul>
                         </div>
@@ -108,8 +111,7 @@
                             </ul>
                         </div>
                     </div>
-                </tab>
-            </tabset>
+           </div>
             <!--<div class="custom_secendtitle">-->
             <!--<div class="custom_select">-->
             <!--转化目标-->

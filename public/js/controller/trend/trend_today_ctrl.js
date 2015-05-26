@@ -375,6 +375,8 @@ define(["./module"], function (ctrs) {
             requestService.refresh($scope.charts);
             Custom.initCheckInfo();
         }
-        //
+         $scope.myradio= function(){
+             Custom.initCheckInfo();
+         }
     });
 });

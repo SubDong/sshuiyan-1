@@ -54,8 +54,8 @@ define(["./module"], function (ctrs) {
                 {
                     config: {
                         legendId: "indicators_charts_legend",
-                        legendData: ["浏览量(PV)", "访客数(UV)", "跳出率", "抵达率", "平均访问时长", "页面转化"],//显示几种数据
-                        legendMultiData: $rootScope.lagerMulti,
+                        legendData: ["点击量", "展现量", "消费", "点击率", "平均点击价格", "浏览量(PV)","访问次数","访客数(UV)","新访客数","新访客比率","跳出率",'平均访问时长',"平均访问页数","抵达率"],//显示几种数据
+                        //legendMultiData: $rootScope.lagerMulti,
                         legendAllowCheckCount: 2,
                         legendClickListener: $scope.onLegendClickListener,
                         legendDefaultChecked: [0, 1],
