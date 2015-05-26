@@ -10,40 +10,19 @@
         </div>
         <!--网站上半部分列表-->
         <div class="web_list_up" >
-            <div class="custom_table">
-                <div class="custom_table">
-                    <div ui-grid="gridOptions" class="grid" style="height:400px;" ui-grid-pagination ui-grid-selection ui-grid-exporter></div>
-                    <gridpage></gridpage>
+                <div class="table_content" ng-controller="TabsCtrl">
+                    <div class="custom_table">
+                        <div ui-grid="gridOptions" class="grid" style="min-height:400px;" ui-grid-pagination ui-grid-selection
+                             ui-grid-exporter ui-grid-expandable></div>
+                     </div>
                 </div>
-            </div>
         </div>
         <!--网站中部左右部分-->
         <div class="web_list_mid">
             <!--网站中部左部分-->
             <div class="mid_left">
                 <div class="mid_left_code">
-                    var express = require('express');
-                    // var controller = require('controllers')
-                    var router = express.Router();
-                    var url = req.url.substring(1);
-                    if (!url)
-                    url = "index";
-                    /* 所有html页面的router */
-                    router.get('/*.html', function (req, res, next) {
-                    var session = req.session
-                    if (session) {
-                    console.log(session.id);
-                    }
-                    url = "index";
-                    /* 所有html页面的router */
-                    router.get('/*.html', function (req, res, next) {
-                    var session = req.session
-                    if (session) {
-                    console.log(session.id);
-                    var url = req.url.substring(1);
-                    if (!url)
-                    url = "index";邓子豪(     Now。)
-
+               邓子豪
                 </div>
             </div>
             <!--网站中部右部分-->
@@ -54,12 +33,11 @@
                     <li>建议在header.htm类似的页头模板页面中安装，以达到一处安装，全站皆有的效果；</li>
                     <li>如需在JS文件中调用统计分析代码，请直接去掉以下代码首尾的<script type="text/javascript">与</script>后，放入JS文件中即可；</li>
                     <li> 如果代码安装正确，一般20分钟 后,可以查看网站分析数据；</li>
-                    </ol>
+                </ul>
             </div>
         </div>
         <!--网站底部列表-->
         <div class="web_list_down">
-            <img src="../images/table2.png" alt=""/>
             <button class="btn btn-default">+&nbsp;新增网站</button>
         </div>
     </div>
