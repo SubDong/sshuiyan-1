@@ -136,7 +136,11 @@ var op = {
                             var baseSerieName = params[i].seriesName.split(":");
                             res += baseSerieName[0] + chartUtils.convertChinese(baseSerieName[1]) + ' : ' + ad.formatFunc(params[i].value, baseSerieName[1]) + '<br/>';
                         } else {
-                            res += params[i].seriesName + ' : ' + ad.formatFunc(params[i].value, formatType) + '<br/>';
+                            if (chartConfig.toolTip == undefined) {
+                                res += params[i].seriesName + ' : ' + ad.formatFunc(params[i].value, formatType) + '<br/>';
+                            }else{
+                                res += params[i].seriesName + ' : ' + params[i].value + '<br/>';
+                            }
                         }
 
                     }
@@ -236,18 +240,20 @@ var op = {
         chartConfig.dataValue = !chartConfig.dataValue ? "quota" : chartConfig.dataValue;
         var xData = [];
         var select = {};
-        if (chartConfig.chartType == "bar" && chartConfig.autoInput) {
-            if (json[0].key.length < Number(chartConfig.autoInput)) {
-                var inputCount = chartConfig.autoInput - json[0].key.length;
-                chartUtils.addStep(json, inputCount);
-            }
-        }
+        //if (chartConfig.chartType == "bar" && chartConfig.autoInput) {
+        //    if (json[0].key.length < Number(chartConfig.autoInput)) {
+        //        var inputCount = chartConfig.autoInput - json[0].key.length;
+        //        chartUtils.addStep(json, inputCount);
+        //    }
+        //}
         json.forEach(function (item) {
             select[chartUtils.convertChinese(item.label)] = true;
             var serie = {
                 name: !chartConfig.noFormat ? chartUtils.convertChinese(item.label) : item.label,
                 type: !chartConfig.chartType ? "line" : chartConfig.chartType,
-                data: item[chartConfig.dataValue]
+                data: item[chartConfig.dataValue],
+                barMaxWidth:25,
+                barGap:"10%"
             };
             if (chartConfig.lineType == undefined) {
                 serie.itemStyle = {

@@ -66,21 +66,12 @@ define(["./module"], function (ctrs) {
                 json.forEach(function (e) {
                     var tmpData = [];
                     var _value = []
-                    for (var i = 1; i < 9; i++) {
-                        tmpData.push("");
-                        _value.push(0);
-                    }
                     for (var i = 0; i < e.key.length; i++) {
                         if ($scope.equipment.selected)
                             tmpData.push(chartUtils.getCustomDevice(e.key[i], $scope.equipment.selected.field));
                         else
                             tmpData.push(e.key[i]);
-
                         _value.push(e.quota[i]);
-                    }
-                    for (var i = 9; i < 18; i++) {
-                        tmpData.push("");
-                        _value.push(0);
                     }
                     e.key = tmpData;
                     e.quota = _value;

@@ -126,6 +126,7 @@ define(["./module"], function (ctrs) {
                     jupName = param.name;
                     for (var p = 0, len = mapSeries.data.length; p < len; p++) {
                         var name = mapSeries.data[p].name;
+
                         if (mapSeries.data[p].name == param.name) {
                             data.push({
                                 name: name,

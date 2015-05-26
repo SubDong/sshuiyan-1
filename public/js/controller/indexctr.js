@@ -57,18 +57,20 @@ define(['./module'], function (ctrs) {
                         config["noFormat"] = "noFormat";
                         chartUtils.getXType(config, $rootScope.interval, $rootScope.start);
                         config["chartType"] = "bar";//图表类型
-                        chartUtils.addStep(json, 24);
+                        config["bGap"] = true;//图表类型
                         chartUtils.noFormatConvertLabel(json);
                         cf.renderChart(json, config);
                     } else {
                         config["noFormat"] = undefined;
                         config["chartType"] = "line";//图表类型
+                        config["bGap"] = false;//图表类型
                         chartUtils.getXType(config, $rootScope.interval, $rootScope.start);
                         cf.renderChart(data, config);
                     }
                 } else {
                     config["noFormat"] = undefined;
                     config["chartType"] = "line";//图表类型
+                    config["bGap"] = false;//图表类型
                     chartUtils.getXType(config, $rootScope.interval, $rootScope.start);
                     cf.renderChart(data, config);
                 }
