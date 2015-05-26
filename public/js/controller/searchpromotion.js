@@ -56,6 +56,7 @@ define(["./module"], function (ctrs) {
 
         $rootScope.searchIndicators = function (item, entities, number, refresh) {
             $rootScope.searchGridArray.shift();
+            $rootScope.searchGridArray.shift();
             if (refresh == "refresh") {
                 $rootScope.searchGridArray.unshift($rootScope.tableSwitch.latitude);
                 return
@@ -93,6 +94,12 @@ define(["./module"], function (ctrs) {
                     }
 
                     $rootScope.searchGridArray.unshift($rootScope.tableSwitch.latitude);
+                    $scope.gridObjButton = {};
+                    $scope.gridObjButton["name"] = "xl";
+                    $scope.gridObjButton["displayName"] = "序列号";
+                    $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
+                    $scope.gridObjButton["maxWidth"] = 70;
+                    $rootScope.gridArray.unshift($scope.gridObjButton);
                 } else {
                     $rootScope.checkedArray.push(item.name);
 
@@ -107,6 +114,12 @@ define(["./module"], function (ctrs) {
                         $rootScope.searchGridArray.unshift($scope.searchGridObjButton);
                     }
                     $rootScope.searchGridArray.unshift($rootScope.tableSwitch.latitude);
+                    $scope.gridObjButton = {};
+                    $scope.gridObjButton["name"] = "xl";
+                    $scope.gridObjButton["displayName"] = "序列号";
+                    $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
+                    $scope.gridObjButton["maxWidth"] = 70;
+                    $rootScope.gridArray.unshift($scope.gridObjButton);
                 }
             }
             angular.forEach(entities, function (subscription, index) {
@@ -395,6 +408,10 @@ define(["./module"], function (ctrs) {
             }
 
         }
+        //得到序列号
+        $scope.getIndex = function (b) {
+            return b.$parent.$parent.rowRenderIndex + 1
+        };
     });
 
     //得到tableFilter key
@@ -427,33 +444,3 @@ define(["./module"], function (ctrs) {
         }
     }
 });
-
-/**********************隐藏table中按钮的弹出层*******************************/
-/*var s = 0;
-function getMyButton(item) {
-    var a = document.getElementsByClassName("table_win");
-    theDisplay(a);
-    item.nextSibling.style.display = "block";
-    s = 0
-}
-function hiddenMyButton(item) {
-    item.nextSibling.style.display = "none";
-}
-function theDisplay(a) {
-    for (var i = 0; i < a.length; i++) {
-        if (document.getElementsByClassName("table_win")[i].style.display == "block") {
-            document.getElementsByClassName("table_win")[i].style.display = "none";
-        }
-    }
-}
-document.onclick = function () {
-    var a = document.getElementsByClassName("table_win");
-    if (a.length != 0) {
-        if (s > 0) {
-            theDisplay(a);
-            s = 0
-        }
-        s++
-    }
-};*/
-/*******************************************************************/

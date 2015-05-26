@@ -9,6 +9,7 @@ app.controller('exitpagesctr', function ($scope, $rootScope, $http, requestServi
     //配置默认指标
     $rootScope.checkedArray = ["pv", "uv", "avgTime"];
     $rootScope.gridArray = [
+        {name: "xl", displayName: "序列号", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:70},
         {name: "页面url", field: "loc"},
         {
             name: " ",

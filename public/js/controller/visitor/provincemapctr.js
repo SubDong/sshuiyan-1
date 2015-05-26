@@ -12,6 +12,7 @@ define(["./module"], function (ctrs) {
         //配置默认指标
         $rootScope.checkedArray = ["pv", "uv", "outRate"];
         $rootScope.gridArray = [
+            {name: "a", displayName: "序列号", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:70},
             {name: "地域", displayName: "地域", field: "region"},
             {
                 name: " ",

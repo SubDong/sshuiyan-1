@@ -152,6 +152,7 @@ define(["app"], function (app) {
         }
         $rootScope.indicators = function (item, entities, number, refresh) {
             $rootScope.gridArray.shift();
+            $rootScope.gridArray.shift();
             if (refresh == "refresh") {
                 $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude);
                 return
@@ -189,6 +190,12 @@ define(["app"], function (app) {
                     }
 
                     $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude);
+                    $scope.gridObjButton = {};
+                    $scope.gridObjButton["name"] = "xl";
+                    $scope.gridObjButton["displayName"] = "序列号";
+                    $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
+                    $scope.gridObjButton["maxWidth"] = 70;
+                    $rootScope.gridArray.unshift($scope.gridObjButton);
                 } else {
                     $rootScope.checkedArray.push(item.name);
 
@@ -203,6 +210,12 @@ define(["app"], function (app) {
                         $rootScope.gridArray.unshift($scope.gridObjButton);
                     }
                     $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude);
+                    $scope.gridObjButton = {};
+                    $scope.gridObjButton["name"] = "xl";
+                    $scope.gridObjButton["displayName"] = "序列号";
+                    $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
+                    $scope.gridObjButton["maxWidth"] = 70;
+                    $rootScope.gridArray.unshift($scope.gridObjButton);
                 }
             }
             angular.forEach(entities, function (subscription, index) {
@@ -699,7 +712,7 @@ define(["app"], function (app) {
             });
         };
         //得到数据中的url
-        $scope.getDataUrlInfo = function (grid, row, number) {
+        $scope.getDataUrlInfoa = function (grid, row, number) {
             var a = row.entity.source.split(",");
             if (number == 1) {
                 return a[0];
@@ -714,7 +727,6 @@ define(["app"], function (app) {
             if (fieldData != undefined || fieldData != "undefined") {
                 var a = row.entity[fieldData].split(",");
                 if (number == 0) {
-                    alert(a[0])
                     return a[0];
                 } else if (number == 1) {
                     return a[1];
@@ -782,6 +794,10 @@ define(["app"], function (app) {
                 }
                 return a[1];
             }
+        };
+        //得到序列号
+        $scope.getIndex = function (b) {
+            return b.$parent.$parent.rowRenderIndex + 1
         };
 
         var getField = function (rr, ss) {

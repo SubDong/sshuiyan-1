@@ -13,6 +13,7 @@ define(["./module"], function (ctrs) {
         $rootScope.checkedArray = ["click", "cost", "cpc", "pv", "uv", "avgPage"];
         $rootScope.tableFormat = null;
         $rootScope.gridArray = [
+            {name: "xl", displayName: "序列号", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:70},
             {name: "推广方式", displayName: "推广方式", field: "accountName"},
             {
                 name: " ",

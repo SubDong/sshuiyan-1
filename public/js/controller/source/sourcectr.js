@@ -15,6 +15,7 @@ define(["./module"], function(ctrls) {
         //配置默认指标
         $rootScope.checkedArray = ["vc", "nuvRate", "ip"];
         $rootScope.gridArray = [
+            {name: "xl", displayName: "序列号", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:70},
             {name: "来源类型", displayName: "来源类型", field: "rf_type"},
             {
                 name: " ",

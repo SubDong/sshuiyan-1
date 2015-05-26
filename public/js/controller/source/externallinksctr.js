@@ -13,6 +13,7 @@ define(["./module"], function (ctrs) {
         //配置默认指标
         $rootScope.checkedArray = ["uv", "nuv", "nuvRate"];
         $rootScope.gridArray = [
+            {name: "xl", displayName: "序列号", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:70},
             {name: "外部连接", displayName: "外部连接", field: "rf"},
             {
                 name: " ",
