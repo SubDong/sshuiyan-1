@@ -19,7 +19,7 @@ define(["./module"], function (ctrs) {
                 {
                     name: " ",
                     cellTemplate: "<div class='table_box'>" +
-                    "<button onmousemove='getMyButton(this)' onmouseout='hiddenMyButton(this)' class='table_nextbtn'></button>" +
+                    "<button onmousemove='getMyButton(this)' class='table_btn'></button>" +
                     "<div class='table_win'>" +
                     "<ul style='color: #45b1ec'>" +
                     "<li><a>查看相关热门搜索词</a></li>" +

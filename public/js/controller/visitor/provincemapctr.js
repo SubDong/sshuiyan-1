@@ -15,7 +15,7 @@ define(["./module"], function (ctrs) {
             {name: "地域", displayName: "地域", field: "region"},
             {
                 name: " ",
-                cellTemplate: "<div class='table_box'><a ui-sref='history1' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
+                cellTemplate: "<div class='table_box'><a ui-sref='history1' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn'></a></div>"
             },
             {name: "浏览量(PV)", displayName: "浏览量(PV)", field: "pv"},
             {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},
@@ -148,6 +148,7 @@ define(["./module"], function (ctrs) {
                     chart.setOption(option, true);
                 }
             });
+
             $http({
                 method: 'GET',
                 url: '/api/provincemap/?start=' + start + "&end=" + end + "&type=" + type + "&areas=" + $scope.areas + "&property=" + $scope.property

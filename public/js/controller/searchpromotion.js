@@ -46,9 +46,9 @@ define(["./module"], function (ctrs) {
          });
          };*/
         if ($rootScope.tableSwitch.number == 1) {
-            $scope.gridBtnDivObj = "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn test'></a></div>";
+            $scope.gridBtnDivObj = "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn test'></a></div>";
         } else if ($rootScope.tableSwitch.number == 2) {
-            $scope.gridBtnDivObj = "<div class='table_box'><button onmousemove='getMyButton(this)' onmouseout='hiddenMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul style='color: #45b1ec'>" + $rootScope.tableSwitch.coding + "</ul></div></div>";
+            $scope.gridBtnDivObj = "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'>" + $rootScope.tableSwitch.coding + "</ul></div></div>";
         }
         if ($scope.tableSwitch.arrayClear)$rootScope.checkedArray = new Array();
         if ($scope.tableSwitch.arrayClear)$rootScope.searchGridArray = new Array();
@@ -429,7 +429,7 @@ define(["./module"], function (ctrs) {
 });
 
 /**********************隐藏table中按钮的弹出层*******************************/
-var s = 0;
+/*var s = 0;
 function getMyButton(item) {
     var a = document.getElementsByClassName("table_win");
     theDisplay(a);
@@ -455,5 +455,5 @@ document.onclick = function () {
         }
         s++
     }
-};
+};*/
 /*******************************************************************/

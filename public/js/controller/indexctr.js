@@ -21,10 +21,7 @@ define(['./module'], function (ctrs) {
             enableVerticalScrollbar: 0,
             columnDefs: [
                 {name: 'name', displayName: "关键词"},
-                {name: 'value', displayName: "浏览量(PV)",
-                    headerCellClass: 'ui_text',
-                    cellClass:'ui_text'
-                }
+                {name: 'value', displayName: "浏览量(PV)"}
             ]
         };
         $scope.onLegendClickListener = function (radio, chartObj, chartConfig, checkedVal) {

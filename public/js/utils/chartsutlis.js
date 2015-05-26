@@ -464,6 +464,17 @@ var chartUtils = {
         var times = Math.round(new Date().getTime() / 1000)
         return [(_finalStart - _finalNow) / (24 * 3600), (_finalEnd - _finalNow) / (24 * 3600)];
     },
+    getSetOffTime: function (start, end) {
+        var d = new Date();
+        var timeSet = d.getTime();
+        var startTime = start * 86400000;
+        var endTime = end * 86400000;
+        var date1 = timeSet + startTime;
+        var date2 = timeSet + endTime;
+        var a = new Date(date1).Format("yyyy-MM-dd");
+        var b = new Date(date2).Format("yyyy-MM-dd");
+        return [a, b];
+    },
     getQuotaType: function (quota) {
         switch (quota) {
             case "click":
