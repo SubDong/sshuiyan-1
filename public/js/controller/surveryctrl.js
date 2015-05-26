@@ -359,7 +359,7 @@ define(["./module"], function (ctrs) {
                             var date = json[0].key[0].substring(0, 10);
                             var count = 0;
                             json[0].quota.forEach(function (item) {
-                                console.log($scope.selectedQuota[1]);
+                                //console.log($scope.selectedQuota[1]);
                                 if ($scope.selectedQuota[1] == "outRate" || $scope.selectedQuota[1] == "arrivedRate") {
                                     count += parseFloat(item);
                                 } else {

@@ -54,7 +54,11 @@ define(["./module"], function (ctrs) {
         $scope.selectedQuota = ["click", "impression"];
         $scope.onLegendClick = function (radio, chartInstance, config, checkedVal) {
             $scope.selectedQuota = checkedVal;
-            $scope.init($rootScope.user, $rootScope.baiduAccount, "account", $scope.selectedQuota, $rootScope.start, $rootScope.end);
+            if (checkedVal.length) {
+                $scope.init($rootScope.user, $rootScope.baiduAccount, "account", $scope.selectedQuota, $rootScope.start, $rootScope.end);
+            } else {
+                def.defData($scope.charts[0].config);
+            }
         }
         $scope.charts = [
             {
@@ -179,7 +183,7 @@ define(["./module"], function (ctrs) {
             } else {
                 $scope.charts[0].config.keyFormat = "hour";
             }
-            requestService.refresh($scope.charts);
+            $scope.init($rootScope.user, $rootScope.baiduAccount, "account", $scope.selectedQuota, $rootScope.start, $rootScope.end);
             $rootScope.targetSearch();
             $rootScope.tableTimeStart = time[0];
             $rootScope.tableTimeEnd = time[1];

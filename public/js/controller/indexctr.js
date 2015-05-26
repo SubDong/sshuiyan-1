@@ -104,7 +104,7 @@ define(['./module'], function (ctrs) {
                     chartType: "bar",
                     auotHidex: true,
                     dataKey: "key",
-                    autoInput: 20,
+                    autoInput: 10,
                     keyFormat: 'none',
                     dataValue: "quota"
 
@@ -283,7 +283,6 @@ define(['./module'], function (ctrs) {
             });
             requestService.refresh($scope.charts);
             requestService.gridRefresh($scope.grids);
-
         }
     }])
 

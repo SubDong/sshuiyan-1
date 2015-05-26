@@ -18,12 +18,12 @@ define(["./module"], function (ctrs) {
                 displayName: "单元",
                 field: "adgroupName",
                 cellTemplate: "<a href='javascript:void(0)' style='color:#0965b8;line-height:30px;' ng-click='grid.appScope.getHistoricalTrend(this)'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}"
-            },/*
-            {
-                name: " ",
-                displayName: " ",
-                cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
-            },*/
+            }, /*
+             {
+             name: " ",
+             displayName: " ",
+             cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
+             },*/
             {name: "展现", displayName: "展现", field: "impression"},
             {name: "消费", displayName: "消费", field: "cost"},
             {name: "平均点击价格", displayName: "平均点击价格", field: "cpc"},
@@ -54,8 +54,8 @@ define(["./module"], function (ctrs) {
             {
                 config: {
                     legendId: "indicators_charts_legend",
-                    legendData: ["浏览量(PV)", "访客数(UV)", "跳出率", "抵达率", "平均访问时长", "页面转化"],//显示几种数据
-                    legendMultiData: $rootScope.lagerMulti,
+                    legendData: ["点击量", "展现量", "消费", "点击率", "平均点击价格", "浏览量(PV)", "访问次数", "访客数(UV)", "新访客数", "新访客比率", "跳出率", '平均访问时长', "平均访问页数", "抵达率"],//显示几种数据
+                    //legendMultiData: $rootScope.lagerMulti,
                     legendAllowCheckCount: 2,
                     legendClickListener: $scope.onLegendClickListener,
                     legendDefaultChecked: [0, 1],
@@ -74,8 +74,6 @@ define(["./module"], function (ctrs) {
             }
         ];
         $scope.init = function (user, baiduAccount, semType, quotas, start, end, renderLegend) {
-            $rootScope.start = -1;
-            $rootScope.end = -1;
             if (quotas.length) {
                 var semRequest = "";
                 if (quotas.length == 1) {
@@ -101,7 +99,14 @@ define(["./module"], function (ctrs) {
                 });
             }
         }
-        $scope.init($rootScope.user, $rootScope.baiduAccount, "adgroup", $scope.selectedQuota, -1, -1, true);
+
+        $scope.initGrid = function (user, baiduAccount, semType, quotas, start, end, renderLegend) {
+            $rootScope.start = -1;
+            $rootScope.end = -1;
+            $scope.init(user, baiduAccount, semType, quotas, start, end, renderLegend);
+        }
+        $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "adgroup", $scope.selectedQuota, -1, -1, true);
+
 
 
         $scope.$on("ssh_refresh_charts", function (e, msg) {

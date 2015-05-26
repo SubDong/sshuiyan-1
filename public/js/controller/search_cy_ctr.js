@@ -48,8 +48,8 @@ define(["./module"], function (ctrs) {
             {
                 config: {
                     legendId: "indicators_charts_legend",
-                    legendData: ["浏览量(PV)", "访客数(UV)", "跳出率", "抵达率", "平均访问时长", "页面转化"],//显示几种数据
-                    legendMultiData: $rootScope.lagerMulti,
+                    legendData: ["点击量", "展现量", "消费", "点击率", "平均点击价格", "浏览量(PV)", "访问次数", "访客数(UV)", "新访客数", "新访客比率", "跳出率", '平均访问时长', "平均访问页数", "抵达率"],//显示几种数据
+                    //legendMultiData: $rootScope.lagerMulti,
                     legendAllowCheckCount: 2,
                     legendClickListener: $scope.onLegendClickListener,
                     legendDefaultChecked: [0, 1],
@@ -62,15 +62,13 @@ define(["./module"], function (ctrs) {
                     noFormat: true,
                     auotHidex: true,
                     qingXie: true,
-                    allShowChart:6,
+                    allShowChart: 6,
                     dataKey: "key",//传入数据的key值
                     dataValue: "quota"//传入数据的value值
                 }
             }
         ];
         $scope.init = function (user, baiduAccount, semType, quotas, start, end, renderLegend) {
-            $rootScope.start = -1;
-            $rootScope.end = -1;
             if (quotas.length) {
                 var semRequest = "";
                 if (quotas.length == 1) {
@@ -96,7 +94,13 @@ define(["./module"], function (ctrs) {
                 });
             }
         }
-        $scope.init($rootScope.user, $rootScope.baiduAccount, "creative", $scope.selectedQuota, -1, -1, true);
+        $scope.initGrid = function (user, baiduAccount, semType, quotas, start, end, renderLegend) {
+            $rootScope.start = -1;
+            $rootScope.end = -1;
+            $scope.init(user, baiduAccount, semType, quotas, start, end, renderLegend);
+        }
+
+        $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "creative", $scope.selectedQuota, -1, -1, true);
 
 
         $scope.$on("ssh_refresh_charts", function (e, msg) {

@@ -408,7 +408,7 @@ var chartUtils = {
     addSemData: function (esJson, semJson, semType) {
         var _tmp = {};
         var _value = [];
-        console.log(semJson.data.length);
+        //console.log(semJson.data.length);
         if (semJson.data.length > 0) {
             esJson[0].key.forEach(function (esItem, index) {
                 _value.push(semJson.data[index][semType]);
@@ -528,8 +528,7 @@ var chartUtils = {
         requestParams.push(semParams);
         requestParams.push(esParams);
         return requestParams;
-    }
-    ,
+    },
     getSearchTypeResult: function (quotas, res) {
         var final_result = [];
         if (res.length > 1) {

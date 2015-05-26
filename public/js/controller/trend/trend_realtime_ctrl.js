@@ -70,7 +70,7 @@ define(["./module"], function (ctrs) {
             config["noFormat"] = "noFormat";
             config["twoYz"] = "twoYz";
             cf.renderChart(final_result, config);
-            console.log(final_result);
+            //console.log(final_result);
             var realCount = 0;
             final_result.forEach(function (item) {
                 if (item.label == "访客数(UV)") {

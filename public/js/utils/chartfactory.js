@@ -709,84 +709,84 @@ var clear = {
 }
 var def = {
     defData: function (chartConfig) {
-        //var instance = chartConfig.instance;
-        //var option = {
-        //    legend: {
-        //        show: false,
-        //        selectedMode: false,
-        //        orient: !chartConfig.ledLayout ? "horizontal" : chartConfig.ledLayout,
-        //        data: ['暂无数据']
-        //    },
-        //    tooltip: {
-        //        trigger: !chartConfig.tt ? "axis" : chartConfig.tt
-        //    },
-        //    xAxis: [
-        //        {
-        //            type: !chartConfig.xType ? "category" : chartConfig.xType,
-        //            boundaryGap: !chartConfig.bGap ? false : chartConfig.bGap,
-        //            data: []
-        //        }
-        //    ],
-        //    yAxis: [
-        //        {
-        //            type: !chartConfig.yType ? "value" : chartConfig.yType,
-        //            axisLabel: {
-        //                formatter: chartConfig.axFormat
-        //            }
-        //        },
-        //        {
-        //            'type': !chartConfig.yType ? "value" : chartConfig.yType
-        //        }
-        //    ],
-        //    series: [{
-        //        name: '暂无数据',
-        //        type: !chartConfig.chartType ? "line" : chartConfig.chartType,
-        //        data: []
-        //    }]
+        var instance = chartConfig.instance;
+        var option = {
+            legend: {
+                show: false,
+                selectedMode: false,
+                orient: !chartConfig.ledLayout ? "horizontal" : chartConfig.ledLayout,
+                data: ['暂无数据']
+            },
+            tooltip: {
+                trigger: !chartConfig.tt ? "axis" : chartConfig.tt
+            },
+            xAxis: [
+                {
+                    type: !chartConfig.xType ? "category" : chartConfig.xType,
+                    boundaryGap: !chartConfig.bGap ? false : chartConfig.bGap,
+                    data: []
+                }
+            ],
+            yAxis: [
+                {
+                    type: !chartConfig.yType ? "value" : chartConfig.yType,
+                    axisLabel: {
+                        formatter: chartConfig.axFormat
+                    }
+                },
+                {
+                    'type': !chartConfig.yType ? "value" : chartConfig.yType
+                }
+            ],
+            series: [{
+                name: '暂无数据',
+                type: !chartConfig.chartType ? "line" : chartConfig.chartType,
+                data: []
+            }]
+        }
+        var timeType = 24;
+        if (chartConfig.keyFormat) {
+            if (chartConfig.keyFormat == "day") {
+                timeType = 7;
+            }
+        }
+        for (var i = 0; i < timeType; i++) {
+            option.xAxis[0].data.push('');
+        }
+        //serie.data.push(0);
+        //option.xAxis[0].data = xData;
+        //option.series.push(serie);
+        //if (chartConfig.chartType == "bar") {
+        //    option.legend.data = ["暂无数据"];
         //}
-        //var timeType = 24;
-        //if (chartConfig.keyFormat) {
-        //    if (chartConfig.keyFormat == "day") {
-        //        timeType = 7;
-        //    }
-        //}
-        ////for (var i = 0; i < timeType; i++) {
-        ////    option.xAxis[0].data.push('');
-        ////}
-        ////serie.data.push(0);
-        ////option.xAxis[0].data = xData;
-        ////option.series.push(serie);
-        ////if (chartConfig.chartType == "bar") {
-        ////    option.legend.data = ["暂无数据"];
-        ////}
-        //instance.setOption(option);
+        instance.setOption(option);
         util.chartEmpty(chartConfig);
     },
     mapDef: function (chartConfig) {
-        util.chartEmpty(chartConfig);
-        ////var instance = chartConfig.instance;
-        //var option = {
-        //    tooltip: {
-        //        trigger: 'item',
-        //        formatter: "{a} <br/>{b} : {c} ({d}%)"
-        //    },
-        //    legend: {
-        //        orient: 'vertical',
-        //        x: 'left',
-        //        data: ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎']
-        //    },
-        //    series: [
-        //        {
-        //            name: '暂无数据',
-        //            type: 'pie',
-        //            radius: '55%',
-        //            center: ['50%', '60%'],
-        //            data: []
-        //        }
-        //    ]
-        //};
-        //charObj.setOption(option);
+        var charObj = chartConfig.instance;
+        var option = {
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+            legend: {
+                orient: 'vertical',
+                x: 'left',
+                data: ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎']
+            },
+            series: [
+                {
+                    name: '暂无数据',
+                    type: 'pie',
+                    radius: '55%',
+                    center: ['50%', '60%'],
+                    data: []
+                }
+            ]
+        };
+        charObj.setOption(option);
         //console.log(option);
+        util.chartEmpty(chartConfig);
     }
 }
 var util = {
