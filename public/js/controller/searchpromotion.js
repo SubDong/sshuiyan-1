@@ -10,6 +10,7 @@ define(["./module"], function (ctrs) {
         var user = "perfect2015"/*$cookieStore.get("uname")*/;
         var baiduAccount ="baidu-perfect2151880" /*$rootScope.default*/;
         var esType ="2" /*$rootScope.defaultType*/;
+
         //sem
         $scope.target = [
             {consumption_name: "展现量", name: "impression"},
@@ -113,7 +114,7 @@ define(["./module"], function (ctrs) {
                     $scope.classInfo = 'current';
                 }
             });
-            $rootScope.$broadcast("ssh_reload_datashow");
+            // $rootScope.$broadcast("ssh_reload_datashow");
         };
         // 推广概况表格配置项
         $scope.gridOptions = {
@@ -135,7 +136,7 @@ define(["./module"], function (ctrs) {
 
             }
         };
-        $scope.page="";
+        $scope.page = "";
         $scope.pagego = function (pagevalue) {
             pagevalue.pagination.seek(Number($scope.page));
         }
