@@ -172,7 +172,7 @@ define(["./module"], function (ctrs) {
             },
             {
                 title:'网站统计设置',
-                icon:'glyphicon glyphicon-align-left',
+                icon:'glyphicon glyphicon-cog',
                 stype:1,
                 sref:'webcountsite',
                 child:[{

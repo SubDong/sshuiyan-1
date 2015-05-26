@@ -4,7 +4,7 @@
 define(["./module"], function (ctrs) {
     "use strict";
 
-    ctrs.controller('adminmainctr', function ($scope, $q, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
+    ctrs.controller('root', function ($scope, $q, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
         $scope.todayClass = true;
         $scope.hourcheckClass = true;
         $scope.lastDaySelect = true;
@@ -33,31 +33,12 @@ define(["./module"], function (ctrs) {
         //配置默认指标
         $rootScope.checkArray = ["", "", ""];
         $rootScope.gridArray = [
-            {name: "网站域名", Name: "网站域名",displayNames:"网站域名", field: ""},
-            {name: "网站名称", Name: "网站名称", displayNames:"网站名称", field: ""},
-            {name: "首页代码状态", Name: "首页代码状态", displayNames:"首页代码状态",field: ""},
-            {
-                name: " 1",
-                cellTemplate: "<div class='table_box'><button onclick='getMyButton(this)' class='table_nextbtn '></button><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li></ul></div></div>"
-            },
-            {
-                name: "2 ",
-                cellTemplate: "<div class='table_box'><button onclick='getMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li></ul></div></div>"
-            },
-            {
-                name: "3 ",
-                cellTemplate: "<div class='table_box'><button onclick='getMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li></ul></div></div>"
-            },
-            {
-                name: "4 ",
-                cellTemplate: "<div class='table_box'><button onclick='getMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li></ul></div></div>"
-            },
-            {
-                name: "5 ",
-                cellTemplate: "<div class='table_box'><button onclick='getMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li></ul></div></div>"
-            }
+            {name: "姓名", Name: "姓名", field: ""},
+            {name: "用户名", Name: "用户名", field: ""},
+            {name: "邮箱", Name: "邮箱", field: ""},
+            {name: "状态", Name: "状态", field: ""},
+            {name: "权限", Name: "权限", field: ""}
         ];
-
         $rootScope.tableSwitch = {
             latitude: {name: "网站域名", displayName: "网站域名", field: ""},
             tableFilter: null,
