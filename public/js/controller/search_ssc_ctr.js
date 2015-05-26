@@ -14,7 +14,7 @@ define(["./module"], function (ctrs) {
         //配置默认指标
         $rootScope.checkedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
         $rootScope.searchGridArray = [
-            {name: "xl", displayName: "序列号", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:70},
+            {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
             {
                 name: "触发关键词的搜索词",
                 displayName: "触发关键词的搜索词",

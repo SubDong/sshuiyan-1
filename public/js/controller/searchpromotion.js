@@ -96,9 +96,9 @@ define(["./module"], function (ctrs) {
                     $rootScope.searchGridArray.unshift($rootScope.tableSwitch.latitude);
                     $scope.gridObjButton = {};
                     $scope.gridObjButton["name"] = "xl";
-                    $scope.gridObjButton["displayName"] = "序列号";
+                    $scope.gridObjButton["displayName"] = "";
                     $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
-                    $scope.gridObjButton["maxWidth"] = 70;
+                    $scope.gridObjButton["maxWidth"] = 10;
                     $rootScope.gridArray.unshift($scope.gridObjButton);
                 } else {
                     $rootScope.checkedArray.push(item.name);
@@ -116,9 +116,9 @@ define(["./module"], function (ctrs) {
                     $rootScope.searchGridArray.unshift($rootScope.tableSwitch.latitude);
                     $scope.gridObjButton = {};
                     $scope.gridObjButton["name"] = "xl";
-                    $scope.gridObjButton["displayName"] = "序列号";
+                    $scope.gridObjButton["displayName"] = "";
                     $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
-                    $scope.gridObjButton["maxWidth"] = 70;
+                    $scope.gridObjButton["maxWidth"] = 10;
                     $rootScope.gridArray.unshift($scope.gridObjButton);
                 }
             }

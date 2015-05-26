@@ -126,13 +126,20 @@ define(["app"], function (app) {
         };
         if (typeof($rootScope.checkedArray) != undefined && $rootScope.checkedArray == "SS") {
             $scope.tableJu = "html";
-            $rootScope.gridArray = [{name: '地域', displayName: "地域", field: "city"},
+            $rootScope.gridArray = [
+                {
+                    name: "xl",
+                    displayName: "",
+                    cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
+                    maxWidth: 10
+                },
+                {name: '地域', displayName: "地域", field: "city"},
                 {name: '访问时间', displayName: "访问时间", field: "utime"},
                 {
                     name: '来源',
                     displayName: "来源",
                     field: "source",
-                    cellTemplate: "<a href='{{grid.appScope.getDataUrlInfo(grid, row,1)}}' style='color:#0965b8;line-height:30px;'>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</a>"
+                    cellTemplate: "<a href='{{grid.appScope.getDataUrlInfo(grid, row,1)}}' style='color:#0965b8;line-height:30px; display:block; padding:0 10px;'>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</a>"
                 },
                 {name: '访客标识码', displayName: "访客标识码", field: "tt"},
                 {name: "访问IP", displayName: "访问IP", field: "ip"},
@@ -192,9 +199,9 @@ define(["app"], function (app) {
                     $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude);
                     $scope.gridObjButton = {};
                     $scope.gridObjButton["name"] = "xl";
-                    $scope.gridObjButton["displayName"] = "序列号";
+                    $scope.gridObjButton["displayName"] = "";
                     $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
-                    $scope.gridObjButton["maxWidth"] = 70;
+                    $scope.gridObjButton["maxWidth"] = 10;
                     $rootScope.gridArray.unshift($scope.gridObjButton);
                 } else {
                     $rootScope.checkedArray.push(item.name);
@@ -212,9 +219,9 @@ define(["app"], function (app) {
                     $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude);
                     $scope.gridObjButton = {};
                     $scope.gridObjButton["name"] = "xl";
-                    $scope.gridObjButton["displayName"] = "序列号";
+                    $scope.gridObjButton["displayName"] = "";
                     $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
-                    $scope.gridObjButton["maxWidth"] = 70;
+                    $scope.gridObjButton["maxWidth"] = 10;
                     $rootScope.gridArray.unshift($scope.gridObjButton);
                 }
             }

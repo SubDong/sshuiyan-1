@@ -13,7 +13,7 @@ define(["./module"], function (ctrs) {
         //配置默认指标
         $rootScope.checkedArray = ["vc", "uv", "outRate", "avgTime", "avgPage"];
         $rootScope.gridArray = [
-            {name: "xl", displayName: "序列号", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:70},
+            {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
             {name: "网络供应商", displayName: "网络供应商", field: "ct"},
             {
                 name: " ",
