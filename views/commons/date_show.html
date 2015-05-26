@@ -9,7 +9,8 @@
             <span>{{obj.value}}</span>
             <br>
             <!-- 显示对比数据 -->
-            <span style="color: #999" data-ng-if="isCompared">{{obj.value}}</span>
+            <span style="color: #999" data-ng-if="isCompared">{{obj.cValue || ""}}</span>
+            <br>
         </li>
     </ul>
 </div>

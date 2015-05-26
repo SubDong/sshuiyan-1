@@ -531,7 +531,7 @@ define(["app"], function (app) {
             var time = chartUtils.getTimeOffset(start, end);
             var startTime = time[0];
             var endTime = time[0] + ($rootScope.tableTimeEnd - $rootScope.tableTimeStart);
-
+            $rootScope.$broadcast("ssh_load_compare_datashow", startTime, endTime);
             $scope.targetDataContrast(null, null, function (item) {
                 var target = ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field);
                 var dataArray = [];
