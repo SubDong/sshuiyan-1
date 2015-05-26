@@ -1,7 +1,7 @@
 /**
  * Created by XiaoWei on 2015/4/13.
  */
-define(["./module"], function(ctrls) {
+define(["./module"], function (ctrls) {
 
     'use strict';
 
@@ -88,7 +88,8 @@ define(["./module"], function(ctrls) {
                     id: "indicators_charts",
                     min_max: false,
                     bGap: true,
-                    chartType: "bar",
+                    chartType: "line",
+                    lineType: false,
                     keyFormat: "none",
                     dataKey: "key",
                     dataValue: "quota"

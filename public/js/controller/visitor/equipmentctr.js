@@ -44,6 +44,7 @@ define(["./module"], function (ctrs) {
         };
         $scope.equipmentChange = function (val) {
             $scope.charts[0].dimension = val.field;
+            $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
             requestService.refresh($scope.charts);
 
             $rootScope.tableSwitch.latitude = val;
@@ -59,30 +60,32 @@ define(["./module"], function (ctrs) {
         }
         $scope.pieFormat = function (data, config) {
             var json = JSON.parse(eval("(" + data + ")").toString());
+            var count = util.existData(json);
+            if (count) {
+                json.forEach(function (e) {
+                    var tmpData = [];
+                    var _value = []
+                    for (var i = 1; i < 9; i++) {
+                        tmpData.push("");
+                        _value.push(0);
+                    }
+                    for (var i = 0; i < e.key.length; i++) {
+                        if ($scope.equipment.selected)
+                            tmpData.push(chartUtils.getCustomDevice(e.key[i], $scope.equipment.selected.field));
+                        else
+                            tmpData.push(e.key[i]);
 
-            json.forEach(function (e) {
-                var tmpData = [];
-                var _value = []
-                for (var i = 1; i < 9; i++) {
-                    tmpData.push("");
-                    _value.push(0);
-                }
-                for (var i = 0; i < e.key.length; i++) {
-                    if ($scope.equipment.selected)
-                        tmpData.push(chartUtils.getCustomDevice(e.key[i], $scope.equipment.selected.field));
-                    else
-                        tmpData.push(e.key[i]);
-
-                    _value.push(e.quota[i]);
-                }
-                for (var i = 9; i < 18; i++) {
-                    tmpData.push("");
-                    _value.push(0);
-                }
-                e.key = tmpData;
-                e.quota = _value;
-                e.label = chartUtils.convertChinese(e.label);
-            });
+                        _value.push(e.quota[i]);
+                    }
+                    for (var i = 9; i < 18; i++) {
+                        tmpData.push("");
+                        _value.push(0);
+                    }
+                    e.key = tmpData;
+                    e.quota = _value;
+                    e.label = chartUtils.convertChinese(e.label);
+                });
+            }
             config["noFormat"] = "noFormat";
             config['twoYz'] = "none"
             cf.renderChart(json, config);
@@ -101,7 +104,7 @@ define(["./module"], function (ctrs) {
                     chartType: "bar",
                     dataKey: "key",
                     auotHidex: true,
-                    qingXie:true,
+                    qingXie: true,
                     keyFormat: 'none',
                     dataValue: "quota"
                 },
@@ -113,8 +116,8 @@ define(["./module"], function (ctrs) {
             }
         ]
         $scope.init = function () {
-            $rootScope.start=0;
-            $rootScope.end=0;
+            $rootScope.start = 0;
+            $rootScope.end = 0;
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;

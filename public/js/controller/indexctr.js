@@ -104,7 +104,7 @@ define(['./module'], function (ctrs) {
                     chartType: "bar",
                     auotHidex: true,
                     dataKey: "key",
-                    autoInput:10,
+                    autoInput: 20,
                     keyFormat: 'none',
                     dataValue: "quota"
 
@@ -121,7 +121,7 @@ define(['./module'], function (ctrs) {
                     serieName: "所占比例",
                     dataKey: "key",
                     dataValue: "quota",
-                    legendShow:true
+                    legendShow: true
                 },
                 types: ["pv"],
                 dimension: ["pm"],
@@ -154,6 +154,9 @@ define(['./module'], function (ctrs) {
         $scope.init();
 
         $scope.$on("ssh_refresh_charts", function (e, msg) {
+            if ($rootScope.start > -7 && $scope.charts[0].config.keyFormat == "week") {
+                $rootScope.interval = -1;
+            }
             $scope.charts.forEach(function (chart) {
                 chart.config.instance = echarts.init(document.getElementById(chart.config.id));
             });

@@ -65,7 +65,6 @@ define(["./module"], function (ctrs) {
                 var lastDayData = $http.get("api/charts?type=" + checkedVal + "&dimension=period&start=" + (time - 1) + "&end=" + ( time - 1) + "&userType=" + $rootScope.userType + "&int=" + $rootScope.interval);
                 $q.all([todayData, lastDayData]).then(function (res) {
                     var dateStamp = chartUtils.getDateStamp(time);
-                    console.log(dateStamp);
                     var final_result = chartUtils.compareTo(res, dateStamp);
                     $scope.charts[0].config.noFormat = "none";
                     $scope.charts[0].config.compare = true;
@@ -159,6 +158,9 @@ define(["./module"], function (ctrs) {
                     $scope.restCompare();
                 }
                 return;
+            }
+            if ($rootScope.start > -7 && $scope.charts[0].config.keyFormat == "week") {
+                $rootScope.interval = -1;
             }
             if ($rootScope.interval == -1) {
                 $scope.lastDaySelect = false;

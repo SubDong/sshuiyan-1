@@ -55,6 +55,7 @@ define(["./module"], function (ctrs) {
                     legendDefaultChecked: [0, 1],
                     min_max: false,
                     bGap: true,
+                    autoInput: 20,
                     id: "indicators_charts",
                     chartType: "bar",//图表类型
                     keyFormat: 'none',

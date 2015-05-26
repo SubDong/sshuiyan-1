@@ -97,15 +97,19 @@ define(["./module"], function (ctrs) {
             }
             $q.all(requestArray).then(function (res) {
                 var final_result = chartUtils.getSearchTypeResult(quotas, res);
-                chartUtils.addStep(final_result, 24);//填充空白
-                $scope.charts[0].config.chartType = "bar";
-                $scope.charts[0].config.bGap = true;
+                var count = util.existData(final_result);
+                if (count) {
+                    chartUtils.addStep(final_result, 24);//填充空白
+                    $scope.charts[0].config.chartType = "bar";
+                    $scope.charts[0].config.bGap = true;
+                    cf.renderChart(final_result, $scope.charts[0].config);
+                } else {
+                    def.defData($scope.charts[0].config);
+                }
                 if (renderLegend) {
                     util.renderLegend(chart, $scope.charts[0].config);
                     Custom.initCheckInfo();
                 }
-                cf.renderChart(final_result, $scope.charts[0].config);
-                chart.hideLoading();
             });
 
         }

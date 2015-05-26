@@ -10,7 +10,6 @@ define(["./module"], function (ctrs) {
         var user = "perfect2015"/*$cookieStore.get("uname")*/;
         var baiduAccount ="baidu-perfect2151880" /*$rootScope.default*/;
         var esType ="2" /*$rootScope.defaultType*/;
-
         //sem
         $scope.target = [
             {consumption_name: "展现量", name: "impression"},

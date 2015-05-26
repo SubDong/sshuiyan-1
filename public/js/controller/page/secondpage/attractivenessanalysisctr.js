@@ -40,7 +40,7 @@ define(["./../module"], function (ctrs) {
                 chart.config.instance = echarts.init(document.getElementById(chart.config.id));
                 chart.types = checkedVal;
             });
-            requestService.refresh($scope.charts);
+            requestService.refresh([$scope.charts[1]]);
         }
         $scope.pieFormat = function (data, config) {
             var json = JSON.parse(eval("(" + data + ")").toString());
@@ -85,7 +85,8 @@ define(["./../module"], function (ctrs) {
                     id: "indicators_charts",
                     min_max: false,
                     bGap: true,
-                    chartType: "bar",
+                    chartType: "line",
+                    lineType: false,
                     keyFormat: 'none',
                     dataKey: "key",
                     dataValue: "quota"
@@ -106,7 +107,7 @@ define(["./../module"], function (ctrs) {
                 e.config.instance = chart;
                 util.renderLegend(chart, e.config);
             })
-            requestService.refresh($scope.charts);
+            requestService.refresh([$scope.charts[1]]);
         }
         $scope.init();
 

@@ -66,6 +66,7 @@ define(["./module"], function (ctrs) {
                     chartType: "bar",//图表类型
                     keyFormat: 'none',
                     noFormat: true,
+                    autoInput: 20,
                     auotHidex: true,
                     qingXie: true,
                     dataKey: "key",//传入数据的key值

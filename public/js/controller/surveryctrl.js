@@ -17,8 +17,15 @@ define(["./module"], function (ctrs) {
                 $scope.definClass = false;
             };
             $scope.selectedQuota = ["cost", "vc"];
-            $scope.start = -1;
-            $scope.end = -1;
+            $scope.$on("ssh_refresh_charts", function (e, msg) {
+                $scope.compareArray = [];
+                if ($rootScope.start > -7) {
+                    $(".under_top").show();
+                } else {
+                    $(".under_top").hide();
+                }
+                $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $rootScope.start, $rootScope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
+            });
             $scope.yesterday = function () {
                 $(".under_top").show();
                 $scope.reset();
@@ -30,28 +37,28 @@ define(["./module"], function (ctrs) {
                 //$scope.reloadGrid();
                 $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $scope.start, $scope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
             };
-            $scope.sevenDay = function () {
-                $(".under_top").hide();
-                $scope.reset();
-                $scope.sevenDayClass = true;
-                $scope.day_offset = -7;
-                $scope.start = -7;
-                $scope.end = -1;
-                $scope.compareArray = [];
-                //$scope.reloadGrid();
-                $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $scope.start, $scope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
-            };
-            $scope.month = function () {
-                $(".under_top").hide();
-                $scope.reset();
-                $scope.monthClass = true;
-                $scope.day_offset = -30;
-                $scope.start = -30;
-                $scope.end = -1;
-                $scope.compareArray = [];
-                //$scope.reloadGrid();
-                $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $scope.start, $scope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
-            };
+            //$scope.sevenDay = function () {
+            //    $(".under_top").hide();
+            //    $scope.reset();
+            //    $scope.sevenDayClass = true;
+            //    $scope.day_offset = -7;
+            //    $scope.start = -7;
+            //    $scope.end = -1;
+            //    $scope.compareArray = [];
+            //    //$scope.reloadGrid();
+            //    $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $scope.start, $scope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
+            //};
+            //$scope.month = function () {
+            //    $(".under_top").hide();
+            //    $scope.reset();
+            //    $scope.monthClass = true;
+            //    $scope.day_offset = -30;
+            //    $scope.start = -30;
+            //    $scope.end = -1;
+            //    $scope.compareArray = [];
+            //    //$scope.reloadGrid();
+            //    $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $scope.start, $scope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
+            //};
             $scope.open = function ($event) {
                 $scope.reset();
                 $scope.definClass = true;
@@ -242,19 +249,36 @@ define(["./module"], function (ctrs) {
                 }
             ];
             $scope.initGrid = function (user, baiduAccount, type, startOffset, endOffset, quota, estype) {
-                var semRegionRequest = $http.get(SEM_API_URL + user + "/" + baiduAccount + "/" + type + "/" + quota + "-?startOffset=" + startOffset + "&endOffset=" + endOffset);
+                var semRegionRequest = $http.get(SEM_API_URL + user + "/" + baiduAccount + "/" + type + "/?startOffset=" + startOffset + "&endOffset=" + endOffset);
                 var huiyanRequest = $http.get("/api/charts?start=" + startOffset + "&end=" + endOffset + "&dimension=period&userType=2&type=" + estype);
                 $q.all([semRegionRequest, huiyanRequest]).then(function (final_result) {
                     var chart_result = [];
                     if (startOffset == -1 && endOffset == -1) {
                         var tmp = [];
                         var _semData = {};
-                        tmp.push(final_result[0].data[0][quota]);
-                        _semData["label"] = chartUtils.convertChinese(quota);
-                        _semData["quota"] = tmp;
-                        _semData["key"] = [final_result[0].data[0].date];
-                        chart_result.push(_semData);
                         var esJson = JSON.parse(eval("(" + final_result[1].data + ")").toString());
+                        var esDate = esJson[0].key[0];
+                        if (final_result[0].data.length) {
+                            tmp.push(final_result[0].data[0][quota]);
+                            _semData["label"] = chartUtils.convertChinese(quota);
+                            _semData["quota"] = tmp;
+                            _semData["key"] = [final_result[0].data[0].date];
+                            chart_result.push(_semData);
+                        } else {
+                            if (esDate) {
+                                chart_result.push({
+                                    label: chartUtils.convertChinese(quota),
+                                    quota: [0],
+                                    key: [esDate.substring(0, 10)]
+                                });
+                            } else {
+                                chart_result.push({
+                                    label: chartUtils.convertChinese(quota),
+                                    quota: [0],
+                                    key: ['']
+                                });
+                            }
+                        }
                         var totalCount = 0;
                         var _esData = {};
                         esJson[0].quota.forEach(function (e) {
@@ -265,7 +289,11 @@ define(["./module"], function (ctrs) {
                         }
                         _esData["label"] = chartUtils.convertChinese(estype);
                         _esData["quota"] = [totalCount];
-                        _esData["key"] = [final_result[0].data[0].date];
+                        if (esDate) {
+                            _esData["key"] = [esDate.substring(0, 10)];
+                        } else {
+                            _esData["key"] = [''];
+                        }
                         chart_result.push(_esData);
                         $scope.charts[0].config.chartType = "bar";
                         $scope.charts[0].config.bGap = true;
@@ -281,6 +309,7 @@ define(["./module"], function (ctrs) {
                         $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
                         cf.renderChart(esJson, $scope.charts[0].config);
                     }
+
                 });
             };
             $scope.yesterday();
@@ -291,7 +320,7 @@ define(["./module"], function (ctrs) {
                 $scope.outQuota_ = outQuota.value;
                 $scope.selectedQuota[0] = outQuota.value;
                 $scope.reloadGrid();
-                $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $scope.start, $scope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
+                $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $rootScope.start, $rootScope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
                 //console.log(outQuota.value);
                 //$scope.refreshData();
                 //$scope.init("jiehun", "baidu-bjjiehun2123585", "account", -1, -1, -1, 1);
@@ -303,7 +332,7 @@ define(["./module"], function (ctrs) {
                 $scope.effectQuota_ = effectQuota.value;
                 $scope.selectedQuota[1] = effectQuota.value;
                 $scope.reloadGrid();
-                $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $scope.start, $scope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
+                $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $rootScope.start, $rootScope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
                 //$scope.refreshData();
             };
             $scope.compareArray = [];

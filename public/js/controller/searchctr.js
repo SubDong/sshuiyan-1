@@ -62,6 +62,7 @@ define(["./module"], function (ctrs) {
                         allShowChart:4,
                         min_max: false,
                         bGap: true,
+                        autoInput: 20,
                         auotHidex: true,
                         id: "indicators_charts",
                         chartType: "bar",//图表类型
