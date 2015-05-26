@@ -15,9 +15,14 @@
             <compare></compare>
         </div>
         <div class="table_content" ng-controller="TabsCtrl">
-            <tabset justified="true">
-                <tab heading="自定义指标">
-                    <div class="custom_title">
+            <ul ng-init="tab = 1" class="nav nav-tabs nav-justified">
+                <li class="ng-isolate-scope"  ng-class="{active:tab===1}" ng-click="tab = 1">
+                    <a class="ng-binding">自定义指标</a></li>
+                <li class="ng-isolate-scope" ng-class="{active:tab===2}" ng-click="tab = 2">
+                    <a class="ng-binding">高级筛选</a></li>
+            </ul>
+            <div class="tabs_content">
+                    <div class="custom_title" ng-show="tab === 1">
                         <div class="chart_top chart_default">
                             <ul>
                                 <li><a href="javascript:void(0)" data-ssh-default-quota="trend_today">系统默认指标</a>
@@ -55,11 +60,8 @@
                             <button class="btn btn-primary" type="button" ng-click="targetSearch(true)">确定</button>
                             * 最多只能勾选6项
                         </div>
-
                     </div>
-                </tab>
-                <tab heading="高级筛选">
-                    <div class="custom_title">
+                    <div class="custom_title" ng-show="tab === 2">
                         <div class="chart_top2">
                             <ul>
                                 <li><span>来源过滤 :</span></li>
@@ -87,14 +89,14 @@
                             <ul>
                                 <li><span>设备过滤:</span></li>
                                 <li>
+                                    <input type="radio" checked="checked" ng-click="setTerminal(0)" name="radio1" class="styled"/>
                                     <lable>
-                                        <input type="radio" checked="checked" ng-click="setTerminal(0)" name="radio1"/>
-                                        <b>全部</b>
+                                        全部
                                     </lable>
                                 </li>
-                                <li><input type="radio" ng-click="setTerminal(1)" name="radio1"/> <label>计算机</label>
+                                <li><input type="radio" ng-click="setTerminal(1)" name="radio1"  class="styled"/> <label>计算机</label>
                                 </li>
-                                <li><input type="radio" ng-click="setTerminal(2)" name="radio1"/> <label>移动设备</label>
+                                <li><input type="radio" ng-click="setTerminal(2)" name="radio1"  class="styled"/> <label>移动设备</label>
                                 </li>
                             </ul>
                         </div>
@@ -120,10 +122,10 @@
                                 <li><a href="javascript:void(0)" data-ng-click="setAreaFilter('广州')">广州</a></li>
                             </ul>
                         </div>
-                    </div>
+                   </div>
 
-                </tab>
-            </tabset>
+                </div>
+
             <!--<div class="custom_secendtitle">-->
                 <!--<div class="custom_select">-->
                     <!--转化目标-->

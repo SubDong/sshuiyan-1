@@ -8,8 +8,8 @@ define(["app"], function (app) {
     app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, requestService, SEM_API_URL, $cookieStore) {
         $scope.todayClass = true;
         var user = "perfect2015"/*$cookieStore.get("uname")*/;
-        var baiduAccount ="baidu-perfect2151880" /*$rootScope.default*/;
-        var esType ="2" /*$rootScope.defaultType*/;
+        var baiduAccount = "baidu-perfect2151880" /*$rootScope.default*/;
+        var esType = "2" /*$rootScope.defaultType*/;
 
         $scope.tabs = [
             {title: 'Dynamic Title 1', content: 'Dynamic content 1'},
@@ -210,7 +210,7 @@ define(["app"], function (app) {
                     $scope.classInfo = 'current';
                 }
             });
-            $rootScope.$broadcast("ssh_reload_datashow");
+            //$rootScope.$broadcast("ssh_reload_datashow");
         };
         // 推广概况表格配置项
         if (typeof($rootScope.checkedArray) != undefined && $scope.tableJu == "html") {
@@ -353,7 +353,7 @@ define(["app"], function (app) {
             if (!$rootScope.tableSwitch) {
                 return;
             }
-            if(undefined == gjcText || "" == gjcText) {
+            if (undefined == gjcText || "" == gjcText) {
                 $rootScope.tableSwitch.tableFilter = null;
             } else {
                 $rootScope.tableSwitch.tableFilter = "[{\"kw\":[\"" + gjcText + "\"]}]";
@@ -363,11 +363,11 @@ define(["app"], function (app) {
         };
 
         // 输入URL过滤
-        $scope.searchURLFilter = function(urlText) {
+        $scope.searchURLFilter = function (urlText) {
             if (!$rootScope.tableSwitch) {
                 return;
             }
-            if(undefined == urlText || "" == urlText) {
+            if (undefined == urlText || "" == urlText) {
                 $rootScope.tableSwitch.tableFilter = null;
             } else {
                 $rootScope.tableSwitch.tableFilter = "[{\"loc\":[\"" + urlText + "\"]}]";
@@ -377,11 +377,11 @@ define(["app"], function (app) {
         };
 
         // 外部链接搜索
-        $scope.searchURLFilterBySourceEl = function(urlText) {
+        $scope.searchURLFilterBySourceEl = function (urlText) {
             if (!$rootScope.tableSwitch) {
                 return;
             }
-            if(undefined == urlText || "" == urlText) {
+            if (undefined == urlText || "" == urlText) {
                 $rootScope.tableSwitch.tableFilter = "[{\"rf_type\": [\"3\"]}]";
             } else {
                 $rootScope.tableSwitch.tableFilter = "[{\"rf_type\": [\"3\"]}, {\"rf\":[\"" + urlText + "\"]}]";

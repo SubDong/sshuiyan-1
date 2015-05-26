@@ -23,40 +23,7 @@ define(["./module"], function (ctrs) {
             $scope.monthClass = false;
             $scope.definClass = false;
         };
-        $scope.charts = [
-            {
-                config: {
-                    legendId: "indicators_charts_legend",
-                    legendData: ["浏览量(PV)", "访客数(UV)", "跳出率", "抵达率", "平均访问时长", "页面转化"],//显示几种数据
-                    legendMultiData: $rootScope.lagerMulti,
-                    legendAllowCheckCount: 2,
-                    legendClickListener: $scope.onLegendClickListener,
-                    id: "indicators_charts",
-                    bGap: false,//首行缩进
-                    chartType: "line",//图表类型
-                    dataKey: "key",//传入数据的key值
-                    keyFormat: "hour",//x轴根据传入值生成
-                    dataValue: "quota"//传入数据的value值
-                },
-                types: ["pv", "uv"],
-                dimension: ["period"],
-                interval: $rootScope.interval,
-                url: "/api/charts"
-            },
-        ];
-        $scope.init = function () {
-            $scope.charts.forEach(function (e) {
-                var chart = echarts.init(document.getElementById(e.config.id));
-                e.config.instance = chart;
-                util.renderLegend(chart, e.config);
-            })
-            requestService.refresh($scope.charts);
-        }
-        $scope.init();
-
-        $scope.$on("ssh_refresh_charts", function (e, msg) {
-            $rootScope.targetSearch();
-        });
+      // $scope.init();
 
 
         //$scope.initMap();
@@ -82,9 +49,24 @@ define(["./module"], function (ctrs) {
             {name: '访问页数目标'},
         ];
         //日历
-        this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
-        this.type = 'range';
-        /*      this.identity = angular.identity;*/
+        $rootScope.datepickerClick = function (start, end, label) {
+            var time = chartUtils.getTimeOffset(start, end);
+            var offest = time[1] - time[0];
+            $scope.reset();
+            if (offest >= 31) {
+                $scope.mothselected = false;
+                $scope.weekselected = false;
+            } else {
+                if (offest >= 7) {
+                    $scope.weekselected = false;
+                } else {
+                    $scope.weekselected = true;
+                }
+                $scope.mothselected = true;
+            }
+            requestService.gridRefresh($scope.grids);
+
+        }
 
         this.removeFromSelected = function (dt) {
             this.selectedDates.splice(this.selectedDates.indexOf(dt), 1);
