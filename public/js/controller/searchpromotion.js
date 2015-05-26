@@ -114,6 +114,7 @@ define(["./module"], function (ctrs) {
                     $scope.classInfo = 'current';
                 }
             });
+            $rootScope.$broadcast("ssh_reload_datashow");
         };
         // 推广概况表格配置项
         $scope.gridOptions = {

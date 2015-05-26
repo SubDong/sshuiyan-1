@@ -285,13 +285,14 @@ define(["../app"], function (app) {
                 // 初始化参数
                 scope.isCompared = false;
                 scope.dateShowArray = [];
+                scope.dateShowArray_base = [];
                 scope.ssh_seo_type = attris.semType;
                 scope.ds_start = scope.ds_end = 0;
                 scope.ds_defaultQuotasOption = ["pv", "uv", "ip", "nuv", "outRate", "avgTime"];
                 scope.ds_dateShowQuotasOption = scope.checkedArray ? scope.checkedArray : scope.ds_defaultQuotasOption;
                 // 获取数据
                 scope.loadDataShow = function () {
-                    scope.dateShowArray = [];
+                    scope.dateShowArray = scope.dateShowArray_base = [];
                     var esRequest = $http.get("/api/summary?type=" + $rootScope.defaultType + "&dimension=" + scope.ds_dimension + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&quotas=" + scope.ds_dateShowQuotasOption + "&start=" + scope.ds_start + "&end=" + scope.ds_end);
                     var seoQuotas = scope.getSEOQuotas();
                     if (seoQuotas.length > 0) {
@@ -429,6 +430,7 @@ define(["../app"], function (app) {
                     angular.forEach(scope.ds_dateShowQuotasOption, function (ds_r) {
                         if (ds_r == obj.label) {
                             scope.dateShowArray[index] = obj;
+                            scope.dateShowArray_base[index] = obj;
                         }
                         index++;
                     });
@@ -450,7 +452,7 @@ define(["../app"], function (app) {
                         scope.ds_end = $rootScope.tableTimeEnd;
                     }
                     if (cb) {
-                        scope.loadDataShow();
+                        cb();
                     }
                 };
                 scope.setDateShowTimeOption(attris.type);
@@ -472,10 +474,27 @@ define(["../app"], function (app) {
                     if (temp.length > 0) {
                         scope.ds_dateShowQuotasOption = temp;
                     }
-                    scope.dateShowArray = [];
+                    scope.dateShowArray = scope.dateShowArray_base = [];
                     scope.loadDataShow();
                 });
                 scope.loadDataShow();
+                // 用于动态效果
+                scope.$on("ssh_reload_datashow", function () {
+                    var tempArray = [];
+                    angular.forEach(scope.checkedArray, function (ca_r) {
+                        tempArray.push({"label": ca_r, "value": ""});
+                    });
+
+                    angular.forEach(tempArray, function (ta_r) {
+                        angular.forEach(scope.dateShowArray_base, function (ab_r) {
+                            if (ta_r.label == ab_r.label) {
+                                ta_r.value = ab_r.value;
+                            }
+                        });
+                    });
+
+                    scope.dateShowArray = angular.copy(tempArray);
+                });
             }
         };
     });
