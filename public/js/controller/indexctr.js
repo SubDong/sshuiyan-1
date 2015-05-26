@@ -8,7 +8,7 @@ define(['./module'], function (ctrs) {
     ctrs.controller("indexctr", ['$scope', '$rootScope', '$http', 'requestService', 'messageService', 'areaService', function ($scope, $rootScope, $http, requestService, messageService, areaService) {
         $scope.todayClass = true;
         $scope.hourcheckClass = true;
-        $scope.menu_select = false;
+        $scope.menu_select = true;
         $scope.reset = function () {
             $scope.definClass = false;
         };
