@@ -127,7 +127,7 @@ define(["./module"], function (ctrs) {
                     $scope.classInfo = 'current';
                 }
             });
-            $rootScope.$broadcast("ssh_reload_datashow");
+            // $rootScope.$broadcast("ssh_reload_datashow");
         };
         // 推广概况表格配置项
         $scope.gridOptions = {
@@ -149,7 +149,7 @@ define(["./module"], function (ctrs) {
 
             }
         };
-        $scope.page="";
+        $scope.page = "";
         $scope.pagego = function (pagevalue) {
             pagevalue.pagination.seek(Number($scope.page));
         }

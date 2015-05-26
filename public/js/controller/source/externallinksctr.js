@@ -107,7 +107,8 @@ define(["./module"], function (ctrs) {
                     min_max: false,
                     bGap: true,
                     id: "indicators_charts",
-                    chartType: "bar",
+                    chartType: "line",
+                    lineType:false,
                     dataKey: "key",
                     keyFormat: "none",
                     dataValue: "quota"

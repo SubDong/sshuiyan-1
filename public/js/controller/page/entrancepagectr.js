@@ -1,7 +1,7 @@
 /**
  * Created by XiaoWei on 2015/4/22.
  */
-define(["./module"], function(ctrs) {
+define(["./module"], function (ctrs) {
 
     "use strict";
 
@@ -41,7 +41,8 @@ define(["./module"], function(ctrs) {
                 chart.config.instance = echarts.init(document.getElementById(chart.config.id));
                 chart.types = checkedVal;
             });
-            requestService.refresh($scope.charts);
+            var chartArray = [$scope.charts[1]];
+            requestService.refresh(chartArray);
         }
         //
         //
@@ -104,7 +105,8 @@ define(["./module"], function(ctrs) {
                     id: "indicators_charts",
                     bGap: true,
                     min_max: false,
-                    chartType: "bar",
+                    chartType: "line",
+                    lineType: false,
                     keyFormat: 'none',
                     dataKey: "key",
                     dataValue: "quota"
@@ -120,11 +122,10 @@ define(["./module"], function(ctrs) {
             $rootScope.start = 0;
             $rootScope.end = 0;
             $rootScope.interval = undefined;
-            var char = $scope.charts[1];
-            var chart = echarts.init(document.getElementById(char.config.id));
-            char.config.instance = chart;
-            util.renderLegend(chart, char.config);
-            var chartArray = [char];
+            var chart = echarts.init(document.getElementById($scope.charts[1].config.id));
+            $scope.charts[1].config.instance = chart;
+            util.renderLegend(chart, $scope.charts[1].config);
+            var chartArray = [$scope.charts[1]];
             requestService.refresh(chartArray);
         }
         $scope.init();

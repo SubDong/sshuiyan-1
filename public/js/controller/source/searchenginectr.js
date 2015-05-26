@@ -86,8 +86,9 @@ define(["./module"], function(ctrs) {
                     min_max: false,
                     bGap: true,
                     id: "indicators_charts",
-                    chartType: "bar",
                     keyFormat: "none",//设置不需要chart工厂处理x轴数据
+                    chartType: "line",
+                    lineType:false,
                     dataKey: "key",
                     dataValue: "quota"
                 },

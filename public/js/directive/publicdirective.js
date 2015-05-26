@@ -290,9 +290,17 @@ define(["../app"], function (app) {
                 scope.ds_start = scope.ds_end = 0;
                 scope.ds_defaultQuotasOption = ["pv", "uv", "ip", "nuv", "outRate", "avgTime"];
                 scope.ds_dateShowQuotasOption = scope.checkedArray ? scope.checkedArray : scope.ds_defaultQuotasOption;
+                scope.setDefaultShowArray = function () {
+                    var tempArray = [];
+                    angular.forEach(scope.ds_dateShowQuotasOption, function (q_r) {
+                        tempArray.push({"label": q_r, "value": "", "cValue": ""});
+                    });
+                    scope.dateShowArray = angular.copy(tempArray);
+                };
                 // 获取数据
                 scope.loadDataShow = function () {
-                    scope.dateShowArray = scope.dateShowArray_base = [];
+                    scope.setDefaultShowArray();
+                    //scope.dateShowArray = scope.dateShowArray_base = [];
                     var esRequest = $http.get("/api/summary?type=" + $rootScope.defaultType + "&dimension=" + scope.ds_dimension + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&quotas=" + scope.ds_dateShowQuotasOption + "&start=" + scope.ds_start + "&end=" + scope.ds_end);
                     var seoQuotas = scope.getSEOQuotas();
                     if (seoQuotas.length > 0) {
@@ -314,7 +322,7 @@ define(["../app"], function (app) {
                         var seoRequest = $http.get(SEM_API_URL + "jiehun/baidu-bjjiehun2123585/" + scope.ssh_seo_type + "/" + stringQuotas + "?startOffset=" + startTime + "&endOffset=" + endTime);
                     }
                     $q.all([esRequest, seoRequest]).then(function (final_result) {
-                        console.log(final_result);
+                        // 初始化对比数据
                         scope.pushESData(final_result[0].data, true);
                         if (final_result[1] != undefined) {
                             scope.pushSEOData(final_result[1].data, true);
@@ -426,7 +434,6 @@ define(["../app"], function (app) {
                         } else {
                             scope.correctAndPushArray(obj);
                         }
-
                     }
 
                     var count = 0;
@@ -513,7 +520,7 @@ define(["../app"], function (app) {
                     if (temp.length > 0) {
                         scope.ds_dateShowQuotasOption = temp;
                     }
-                    scope.dateShowArray = scope.dateShowArray_base = [];
+                    //scope.dateShowArray = scope.dateShowArray_base = [];
                     scope.loadDataShow();
                 });
                 scope.loadDataShow();
@@ -592,7 +599,7 @@ define(["../app"], function (app) {
                         });
                         angular.forEach(scope.dateShowArray, function (r) {
                             if (count == 0) {
-                                r.cValue = (r.label == "freq") ? "0" : "0.00%";
+                                r.cValue = (r.label == "freq") ? 0 : "0.00%";
                             } else {
                                 r.cValue = (r.label == "freq") ? r.cValue : ((r.cValue / count).toFixed(2) + "%")
                             }
@@ -603,6 +610,10 @@ define(["../app"], function (app) {
                     var semRequest = $http.get(SEM_API_URL + "elasticsearch/" + $rootScope.defaultType
                     + "/?startOffset=" + (0 - startTime) + "&endOffset=" + endTime);
                     $q.all([semRequest]).then(function (final_result) {
+                        // 初始化对比数据
+                        angular.forEach(scope.dateShowArray, function (q_r) {
+                            q_r.cValue = 0;
+                        });
                         var count = 0;
                         angular.forEach(final_result[0].data, function (r) {
                             angular.forEach(scope.dateShowArray, function (q_r) {

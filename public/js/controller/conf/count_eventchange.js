@@ -33,10 +33,10 @@ define(["./module"], function (ctrs) {
         //配置默认指标
         $rootScope.checkArray = ["", "", ""];
         $rootScope.gridArray = [
-            {name: "事件目标事件名称", Name: "事件目标事件名称", field: ""},
-            {name: "事件元素ID", Name: "事件元素ID", field: ""},
-            {name: "事件作用或目录", Name: "事件作用或目录", field: ""},
-            {name: "记录方式", Name: "记录方式", field: ""}
+            {name: "事件目标事件名称", displayName: "事件目标事件名称", field: ""},
+            {name: "事件元素ID", displayName: "事件元素ID", field: ""},
+            {name: "事件作用或目录", displayName: "事件作用或目录", field: ""},
+            {name: "记录方式", displayName: "记录方式", field: ""}
         ];
         $rootScope.tableSwitch = {
             latitude: {name: "网站域名", displayName: "网站域名", field: ""},

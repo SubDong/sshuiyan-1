@@ -11,12 +11,12 @@ define(["./module"], function (ctrs) {
         $scope.lastWeekSelect = true;
         $scope.clearCompareSelect = true;
         $scope.reset = function () {
-            $scope.todayClass = false;
-            $scope.yesterdayClass = false;
-            $scope.sevenDayClass = false;
-            $scope.monthClass = false;
-            $scope.definClass = false;
-            $scope.hourcheckClass = false;
+        $scope.todayClass = false;
+        $scope.yesterdayClass = false;
+        $scope.sevenDayClass = false;s
+        $scope.monthClass = false;
+        $scope.definClass = false;
+        $scope.hourcheckClass = false;
         };
         /*    $scope.hourcheck= function(){
          $scope.dayClass=false;
@@ -33,9 +33,10 @@ define(["./module"], function (ctrs) {
         //配置默认指标
         $rootScope.checkArray = ["", "", ""];
         $rootScope.gridArray = [
-            {name: "网站域名", Name: "网站域名",displayNames:"网站域名", field: ""},
-            {name: "网站名称", Name: "网站名称", displayNames:"网站名称", field: ""},
-            {name: "首页代码状态", Name: "首页代码状态", displayNames:"首页代码状态",field: ""},
+            {name: "网站域名", displayName:"网站域名", field: ""},
+            {name: "网站名称",  displayName:"网站名称", field: ""},
+            {name: "首页代码状态", displayName:"首页代码状态",field: "",
+            },
             {
                 name: " 1",
                 cellTemplate: "<div class='table_box'><button onclick='getMyButton(this)' class='table_nextbtn '></button><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li></ul></div></div>"

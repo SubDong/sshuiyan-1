@@ -152,6 +152,9 @@ define(["./module"], function (ctrs) {
                 }
                 return;
             }
+            if ($rootScope.start > -7 && $scope.charts[0].config.keyFormat == "week") {
+                $rootScope.interval = -1;
+            }
             if ($rootScope.interval == -1) {
                 $scope.lastDaySelect = false;
                 $scope.lastWeekSelect = false;
