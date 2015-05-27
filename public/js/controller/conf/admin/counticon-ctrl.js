@@ -1,5 +1,11 @@
 /**
  * Created by icepros on 2015/5/26.
  */
-/* Í³¼ÆÍ¼±êÉèÖÃ¿ØÖÆÆ÷ */
-define(["../module"]);
+/* ç»Ÿè®¡å›¾æ ‡è®¾ç½®æŽ§åˆ¶å™¨ä¸­æ–‡ */
+define(["../module"], function (ctrs) {
+    "use strict";
+
+    ctrs.controller('reportSiteCtrl', function ($scope, $q, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
+
+    });
+});
