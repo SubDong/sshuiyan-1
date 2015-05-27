@@ -23,7 +23,12 @@ define(["./module"], function (ctrs) {
         //配置默认指标
         $rootScope.checkedArray = ["pv", "uv", "ip", "outRate", "avgTime"];
         $rootScope.gridArray = [
-            {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
+            {
+                name: "xl",
+                displayName: "",
+                cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
+                maxWidth: 10
+            },
             {name: "日期", displayName: "日期", field: "period"},
             {name: "浏览量(PV)", displayName: "浏览量(PV)", field: "pv"},
             {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},
@@ -66,18 +71,20 @@ define(["./module"], function (ctrs) {
                         config["noFormat"] = "noFormat";
                         chartUtils.getXType(config, $rootScope.interval);
                         config["chartType"] = "bar";//图表类型
-                        chartUtils.addStep(json, 24);
+                        config["bGap"] = true;//图表类型
                         chartUtils.noFormatConvertLabel(json);
                         cf.renderChart(json, config);
                     } else {
                         config["noFormat"] = undefined;
                         config["chartType"] = "line";//图表类型
+                        config["bGap"] = false;//图表类型
                         chartUtils.getXType(config, $rootScope.interval);
                         cf.renderChart(data, config);
                     }
                 } else {
                     config["noFormat"] = undefined;
                     config["chartType"] = "line";//图表类型
+                    config["bGap"] = false;//图表类型
                     chartUtils.getXType(config, $rootScope.interval);
                     cf.renderChart(data, config);
                 }
@@ -141,6 +148,7 @@ define(["./module"], function (ctrs) {
             $rootScope.interval = 1;
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
+                e.config.bGap = false;//图表类型
                 e.config.instance = chart;
             });
             $rootScope.tableFormat = "hour";

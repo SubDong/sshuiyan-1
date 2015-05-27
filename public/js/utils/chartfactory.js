@@ -138,7 +138,7 @@ var op = {
                         } else {
                             if (chartConfig.toolTip == undefined) {
                                 res += params[i].seriesName + ' : ' + ad.formatFunc(params[i].value, formatType) + '<br/>';
-                            }else{
+                            } else {
                                 res += params[i].seriesName + ' : ' + params[i].value + '<br/>';
                             }
                         }
@@ -252,8 +252,8 @@ var op = {
                 name: !chartConfig.noFormat ? chartUtils.convertChinese(item.label) : item.label,
                 type: !chartConfig.chartType ? "line" : chartConfig.chartType,
                 data: item[chartConfig.dataValue],
-                barMaxWidth:25,
-                barGap:"10%"
+                barMaxWidth: 25,
+                barGap: "10%"
             };
             if (chartConfig.lineType == undefined) {
                 serie.itemStyle = {
@@ -265,7 +265,14 @@ var op = {
                             width: 1
                         }
                     }
-
+                }
+            } else {
+                serie.itemStyle = {
+                    normal: {
+                        lineStyle: {
+                            width: 1
+                        }
+                    }
                 }
             }
             if (chartConfig.min_max == undefined) {
@@ -323,8 +330,13 @@ var op = {
     pieChart: function (data, chartConfig) {
         if (!chartConfig.instance)return;
         var chartObj = chartConfig.instance;
-        if (data[0].key.length == 0) {
-            //chartObj = echarts.init(document.getElementById(chartConfig.id));
+        if (data[0]) {
+            if (data[0].key.length == 0) {
+                //chartObj = echarts.init(document.getElementById(chartConfig.id));
+                def.mapDef(chartConfig);
+                return;
+            }
+        } else {
             def.mapDef(chartConfig);
             return;
         }

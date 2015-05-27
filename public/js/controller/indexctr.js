@@ -56,20 +56,17 @@ define(['./module'], function (ctrs) {
                     if (json[0].key.length == 1) {
                         config["noFormat"] = "noFormat";
                         chartUtils.getXType(config, $rootScope.interval, $rootScope.start);
-                        config["chartType"] = "bar";//图表类型
                         config["bGap"] = true;//图表类型
                         chartUtils.noFormatConvertLabel(json);
                         cf.renderChart(json, config);
                     } else {
                         config["noFormat"] = undefined;
-                        config["chartType"] = "line";//图表类型
                         config["bGap"] = false;//图表类型
                         chartUtils.getXType(config, $rootScope.interval, $rootScope.start);
                         cf.renderChart(data, config);
                     }
                 } else {
                     config["noFormat"] = undefined;
-                    config["chartType"] = "line";//图表类型
                     config["bGap"] = false;//图表类型
                     chartUtils.getXType(config, $rootScope.interval, $rootScope.start);
                     cf.renderChart(data, config);
@@ -175,6 +172,7 @@ define(['./module'], function (ctrs) {
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
+                e.config.bGap = false;//图表类型
             });
             requestService.refresh($scope.charts);
 

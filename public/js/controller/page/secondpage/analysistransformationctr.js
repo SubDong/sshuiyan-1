@@ -82,7 +82,7 @@ define(["./../module"], function (ctrs) {
                     legendAllowCheckCount: 1,
                     id: "indicators_charts",
                     min_max: false,
-                    bGap: true,
+                    bGap: false,
                     keyFormat: 'none',
                     chartType: "line",
                     lineType: false,

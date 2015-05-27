@@ -164,7 +164,7 @@ var chartUtils = {
     getObjectTime: function (json, start) {
         var time = [];
         json.forEach(function (e) {
-            if (start <= -7) {
+            if (start <= -6) {
                 time.push((e.key_as_string).toString().substr(0, 10));
             } else {
                 time.push(Number((e.key_as_string).toString().substring(10, 13)));

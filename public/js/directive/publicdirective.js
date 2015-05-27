@@ -7,7 +7,7 @@ define(["../app"], function (app) {
     app.directive("calendar", function ($rootScope, requestService) {
         var option = {
             restrict: "EA",
-            template: "<div  role=\"group\" class=\"btn-group fl\"><button class=\"btn btn-default\" type=\"button\" ng-click=\"today()\" ng-hide=\"visible\" ng-class=\"{'current':todayClass}\">今天</button>" +
+            template: "<div  role=\"group\" class=\"btn-group fl\"><button class=\"btn btn-default\" type=\"button\" ng-click=\"today()\" ng-hide=\"visible\" ng-class=\"{'current':todayClass,'disabled':todaySelect}\">今天</button>" +
             "<button class=\"btn btn-default\" type=\"button\" ng-click=\"yesterday()\" ng-class=\"{'current':yesterdayClass}\">昨天</button>" +
             "<button class=\"btn btn-default\" type=\"button\" ng-click=\"sevenDay()\" ng-class=\"{'current':sevenDayClass}\">最近7天</button>" +
             "<button class=\"btn btn-default\" type=\"button\" ng-click=\"month()\" ng-class=\"{'current':monthClass}\">最近30天</button>" +
@@ -89,12 +89,12 @@ define(["../app"], function (app) {
                     scope.mothselected = true;
                     scope.reset();
                     scope.sevenDayClass = true;
-                    $rootScope.tableTimeStart = -7;
-                    $rootScope.tableTimeEnd = -1;
-                    $rootScope.start = -7;
-                    $rootScope.end = -1;
+                    $rootScope.tableTimeStart = -6;
+                    $rootScope.tableTimeEnd = 0;
+                    $rootScope.start = -6;
+                    $rootScope.end = 0;
                     scope.reloadByCalendar("seven");
-                    $('#reportrange span').html(GetDateStr(-7) + "至" + GetDateStr(0));
+                    $('#reportrange span').html(GetDateStr(-6) + "至" + GetDateStr(0));
                 };
                 scope.month = function () {
                     scope.hourselect = false;
@@ -103,12 +103,12 @@ define(["../app"], function (app) {
                     scope.mothselected = true;
                     scope.reset();
                     scope.monthClass = true;
-                    $rootScope.tableTimeStart = -30;
+                    $rootScope.tableTimeStart = -29;
                     $rootScope.tableTimeEnd = 0;
-                    $rootScope.start = -30;
+                    $rootScope.start = -29;
                     $rootScope.end = 0;
                     scope.reloadByCalendar("month");
-                    $('#reportrange span').html(GetDateStr(-30) + "至" + GetDateStr(0));
+                    $('#reportrange span').html(GetDateStr(-29) + "至" + GetDateStr(0));
                 };
                 scope.timeclick = function () {
                     scope.reset();
