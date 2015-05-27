@@ -6,10 +6,11 @@
             <h4>{{obj.label | quotaFormat}}&nbsp;<span class="badge" tooltip-placement="bottom"
                                                        tooltip="{{obj.label | quotaHelpFormat}}"
                                                        style="font-size: 12px;cursor: pointer;">?</span></h4>
-            <span>{{obj.value}}</span>
+            <span>{{obj.value | quotaDataFormat:obj.label:obj.count}}</span>
             <br>
             <!-- 显示对比数据 -->
-            <span style="color: #999" data-ng-if="isCompared">{{obj.cValue || ""}}</span>
+            <span style="color: #999"
+                  data-ng-if="isCompared">{{obj.cValue | quotaDataFormat:obj.label:obj.count}}</span>
         </li>
     </ul>
 </div>
