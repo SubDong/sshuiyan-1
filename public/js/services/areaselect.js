@@ -91,8 +91,8 @@ define(["../app"], function (app) {
         ];
         $rootScope.export = {};
         $rootScope.exports = [
-            {name: '保存'},
-            {name: '导出 '}
+            {name: '导出CSV',value:'csv'},
+            {name: '保存PDF ',value:'pdf'}
         ];
         $rootScope.equipment = {};
         $rootScope.equipments = [
