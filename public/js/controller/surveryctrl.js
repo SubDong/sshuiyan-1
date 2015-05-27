@@ -8,6 +8,7 @@ define(["./module"], function (ctrs) {
     ctrs.controller('SurveyCtrl', function ($scope, $http, $q, $rootScope, areaService, SEM_API_URL, requestService) {
             $scope.day_offset = 0;    // 默认是今天(值为0), 值为-1代表昨天, 值为-7代表最近7天, 值为-30代表最近30天
             $scope.yesterdayClass = true;
+            $scope.todaySelect = true;
             $scope.datechoice = true;
             $scope.reset = function () {
                 $scope.todayClass = false;
@@ -18,11 +19,15 @@ define(["./module"], function (ctrs) {
             };
             $scope.selectedQuota = ["cost", "vc"];
             $scope.$on("ssh_refresh_charts", function (e, msg) {
+                $scope.charts[0].config.qingXie = undefined;
                 $scope.compareArray = [];
                 if ($rootScope.start > -7) {
                     $(".under_top").show();
                 } else {
                     $(".under_top").hide();
+                }
+                if ($rootScope.start == -30) {
+                    $scope.charts[0].config.qingXie = true
                 }
                 $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $rootScope.start, $rootScope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
             });
@@ -31,11 +36,11 @@ define(["./module"], function (ctrs) {
                 $scope.reset();
                 $scope.yesterdayClass = true;
                 $scope.day_offset = -1;
-                $scope.start = -1;
-                $scope.end = -1;
+                $rootScope.start = -1;
+                $rootScope.end = -1;
                 $scope.compareArray = [];
                 //$scope.reloadGrid();
-                $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $scope.start, $scope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
+                $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $rootScope.start, $rootScope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
             };
             //$scope.sevenDay = function () {
             //    $(".under_top").hide();

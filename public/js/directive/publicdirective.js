@@ -7,7 +7,7 @@ define(["../app"], function (app) {
     app.directive("calendar", function ($rootScope, requestService) {
         var option = {
             restrict: "EA",
-            template: "<div  role=\"group\" class=\"btn-group fl\"><button class=\"btn btn-default\" type=\"button\" ng-click=\"today()\" ng-hide=\"visible\" ng-class=\"{'current':todayClass}\">今天</button>" +
+            template: "<div  role=\"group\" class=\"btn-group fl\"><button class=\"btn btn-default\" type=\"button\" ng-click=\"today()\" ng-hide=\"visible\" ng-class=\"{'current':todayClass,'disabled':todaySelect}\">今天</button>" +
             "<button class=\"btn btn-default\" type=\"button\" ng-click=\"yesterday()\" ng-class=\"{'current':yesterdayClass}\">昨天</button>" +
             "<button class=\"btn btn-default\" type=\"button\" ng-click=\"sevenDay()\" ng-class=\"{'current':sevenDayClass}\">最近7天</button>" +
             "<button class=\"btn btn-default\" type=\"button\" ng-click=\"month()\" ng-class=\"{'current':monthClass}\">最近30天</button>" +
@@ -89,12 +89,12 @@ define(["../app"], function (app) {
                     scope.mothselected = true;
                     scope.reset();
                     scope.sevenDayClass = true;
-                    $rootScope.tableTimeStart = -7;
-                    $rootScope.tableTimeEnd = -1;
-                    $rootScope.start = -7;
-                    $rootScope.end = -1;
+                    $rootScope.tableTimeStart = -6;
+                    $rootScope.tableTimeEnd = 0;
+                    $rootScope.start = -6;
+                    $rootScope.end = 0;
                     scope.reloadByCalendar("seven");
-                    $('#reportrange span').html(GetDateStr(-7) + "至" + GetDateStr(0));
+                    $('#reportrange span').html(GetDateStr(-6) + "至" + GetDateStr(0));
                 };
                 scope.month = function () {
                     scope.hourselect = false;
@@ -103,12 +103,12 @@ define(["../app"], function (app) {
                     scope.mothselected = true;
                     scope.reset();
                     scope.monthClass = true;
-                    $rootScope.tableTimeStart = -30;
+                    $rootScope.tableTimeStart = -29;
                     $rootScope.tableTimeEnd = 0;
-                    $rootScope.start = -30;
+                    $rootScope.start = -29;
                     $rootScope.end = 0;
                     scope.reloadByCalendar("month");
-                    $('#reportrange span').html(GetDateStr(-30) + "至" + GetDateStr(0));
+                    $('#reportrange span').html(GetDateStr(-29) + "至" + GetDateStr(0));
                 };
                 scope.timeclick = function () {
                     scope.reset();
@@ -285,10 +285,11 @@ define(["../app"], function (app) {
                 // 初始化参数
                 scope.isCompared = false;
                 scope.dateShowArray = [];
-                scope.dateShowArray_base = [];
+                //scope.dateShowArray_base = [];
                 scope.ssh_seo_type = attris.semType;
-                scope.ds_start = scope.ds_end = 0;
+                //scope.ds_start = scope.ds_end = 0;
                 scope.ds_defaultQuotasOption = ["pv", "uv", "ip", "nuv", "outRate", "avgTime"];
+                scope.ds_keyData = [];
                 scope.ds_dateShowQuotasOption = scope.checkedArray ? scope.checkedArray : scope.ds_defaultQuotasOption;
                 scope.setDefaultShowArray = function () {
                     var tempArray = [];
@@ -297,15 +298,25 @@ define(["../app"], function (app) {
                     });
                     scope.dateShowArray = angular.copy(tempArray);
                 };
+                // 数组方法
+                scope.inArray = function (array, e) {
+                    var flag = false;
+                    array.forEach(function (a_r) {
+                        if (a_r == e || scope.ds_dimension == "period") {
+                            flag = true;
+                        }
+                    });
+                    return flag;
+                };
                 // 获取数据
                 scope.loadDataShow = function () {
                     scope.setDefaultShowArray();
                     //scope.dateShowArray = scope.dateShowArray_base = [];
-                    var esRequest = $http.get("/api/summary?type=" + $rootScope.defaultType + "&dimension=" + scope.ds_dimension + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&quotas=" + scope.ds_dateShowQuotasOption + "&start=" + scope.ds_start + "&end=" + scope.ds_end);
+                    var esRequest = $http.get("/api/summary?type=" + $rootScope.userType + "&dimension=" + scope.ds_dimension + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&quotas=" + scope.ds_dateShowQuotasOption + "&start=" + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd);
                     var seoQuotas = scope.getSEOQuotas();
                     if (seoQuotas.length > 0) {
                         var stringQuotas = seoQuotas.toString().replace(/,/g, "-") + "-";
-                        var seoRequest = $http.get(SEM_API_URL + "jiehun/baidu-bjjiehun2123585/" + scope.ssh_seo_type + "/" + stringQuotas + "?startOffset=" + scope.ds_start + "&endOffset=" + scope.ds_end);
+                        var seoRequest = $http.get(SEM_API_URL + $rootScope.user + "/" + $rootScope.baiduAccount + "/" + scope.ssh_seo_type + "/" + stringQuotas + "?startOffset=" + scope.ds_start + "&endOffset=" + scope.ds_end);
                     }
                     $q.all([esRequest, seoRequest]).then(function (final_result) {
                         scope.pushESData(final_result[0].data);
@@ -315,11 +326,11 @@ define(["../app"], function (app) {
                     });
                 };
                 scope.loadCompareDataShow = function (startTime, endTime) {
-                    var esRequest = $http.get("/api/summary?type=" + $rootScope.defaultType + "&dimension=" + scope.ds_dimension + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&quotas=" + scope.ds_dateShowQuotasOption + "&start=" + startTime + "&end=" + endTime);
+                    var esRequest = $http.get("/api/summary?type=" + $rootScope.userType + "&dimension=" + scope.ds_dimension + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&quotas=" + scope.ds_dateShowQuotasOption + "&start=" + startTime + "&end=" + endTime);
                     var seoQuotas = scope.getSEOQuotas();
                     if (seoQuotas.length > 0) {
                         var stringQuotas = seoQuotas.toString().replace(/,/g, "-") + "-";
-                        var seoRequest = $http.get(SEM_API_URL + "jiehun/baidu-bjjiehun2123585/" + scope.ssh_seo_type + "/" + stringQuotas + "?startOffset=" + startTime + "&endOffset=" + endTime);
+                        var seoRequest = $http.get(SEM_API_URL + $rootScope.user + "/" + $rootScope.baiduAccount + "/" + scope.ssh_seo_type + "/" + stringQuotas + "?startOffset=" + startTime + "&endOffset=" + endTime);
                     }
                     $q.all([esRequest, seoRequest]).then(function (final_result) {
                         // 初始化对比数据
@@ -348,33 +359,31 @@ define(["../app"], function (app) {
                 };
                 scope.pushESData = function (result, flag) {
                     var obj = JSON.parse(eval('(' + result + ')').toString()); //由JSON字符串转换为JSON对象
+                    if (obj && !flag) {
+                        scope.ds_keyData = angular.copy(obj[0]["key"]);
+                    }
                     angular.forEach(obj, function (r) {
                         var dateShowObject = {};
                         dateShowObject.label = r.label;
                         var temp = 0;
                         var count = 0;
-                        angular.forEach(r.quota, function (qo) {
-                            temp += Number(qo);
-                            count++;
+                        angular.forEach(r.quota, function (qo, _i) {
+                            var infoKey = r.key[_i];
+                            if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null" || infoKey == "国外" || infoKey.length >= 30)) {
+                                return false;
+                            }
+                            if (flag) {
+                                if (scope.inArray(scope.ds_keyData, infoKey)) {// 对比的时候处理原始数据中不存在的对比数据参数
+                                    temp += Number(qo);
+                                    count++;
+                                }
+                            } else {
+                                temp += Number(qo);
+                                count++;
+                            }
                         });
-                        if (r.label === "outRate" || r.label === "nuvRate" || r.label === "arrivedRate") {
-                            if (count === 0) {
-                                dateShowObject.value = "--";
-                            } else {
-                                dateShowObject.value = (temp / count).toFixed(2) + "%";
-                            }
-                        } else if (r.label === "avgPage") {
-                            if (count === 0) {
-                                dateShowObject.value = "--";
-                            } else {
-                                dateShowObject.value = (temp / count).toFixed(2);
-                            }
-                        } else if (r.label === "avgTime") {
-                            dateShowObject.value = MillisecondToDate(temp / count);
-                        } else {
-                            dateShowObject.value = temp;
-                        }
-
+                        dateShowObject.value = temp;
+                        dateShowObject.count = count;
                         if (flag) {
                             scope.pushCompareArray(dateShowObject);
                         } else {
@@ -416,19 +425,11 @@ define(["../app"], function (app) {
                         }
                     }
 
-                    function calculateValue(obj, type) {
+                    function calculateValue(obj, type, count) {
                         if (!obj) {
                             return;
                         }
-                        if (type == "1") {// 直接获取值
-                            obj.value = obj.value.toFixed(2);
-                        }
-                        if (type == "2") {// 保留2位小数
-                            obj.value = obj.value.toFixed(2);
-                        }
-                        if (type == "3") {// 计算平均值
-                            obj.value = count == 0 ? "--" : (cpcObj.value / count).toFixed(2);
-                        }
+                        obj.count = count;
                         if (flag) {
                             scope.pushCompareArray(obj);
                         } else {
@@ -448,13 +449,13 @@ define(["../app"], function (app) {
                         sumValue(conversionObj, r.conversion);
                     });
                     // 根据不同SEO指标的算法，进行指标对象值的计算
-                    calculateValue(costObj, "2");
-                    calculateValue(impressionObj, "2");
-                    calculateValue(clickObj, "1");
-                    calculateValue(ctrObj, "2");
-                    calculateValue(cpcObj, "3");
-                    calculateValue(cpmObj, "2");
-                    calculateValue(conversionObj, "2");
+                    calculateValue(costObj, "2", count);
+                    calculateValue(impressionObj, "2", count);
+                    calculateValue(clickObj, "1", count);
+                    calculateValue(ctrObj, "2", count);
+                    calculateValue(cpcObj, "3", count);
+                    calculateValue(cpmObj, "2", count);
+                    calculateValue(conversionObj, "2", count);
                 };
                 // 特殊处理，保证指标显示顺序
                 scope.correctAndPushArray = function (obj) {
@@ -462,7 +463,7 @@ define(["../app"], function (app) {
                     angular.forEach(scope.ds_dateShowQuotasOption, function (ds_r) {
                         if (ds_r == obj.label) {
                             scope.dateShowArray[index] = obj;
-                            scope.dateShowArray_base[index] = obj;
+                            //scope.dateShowArray_base[index] = obj;
                         }
                         index++;
                     });
@@ -474,29 +475,15 @@ define(["../app"], function (app) {
                             ds_r.cValue = obj.value;
                         }
                     });
-                    angular.forEach(scope.dateShowArray_base, function (dsb_r) {
-                        if (dsb_r.label == obj.label) {
-                            dsb_r.cValue = obj.value;
-                        }
-                    });
+                    //angular.forEach(scope.dateShowArray_base, function (dsb_r) {
+                    //    if (dsb_r.label == obj.label) {
+                    //        dsb_r.cValue = obj.value;
+                    //    }
+                    //});
                 };
                 // 改变时间参数
                 scope.setDateShowTimeOption = function (type, cb) {
                     scope.isCompared = false;
-                    if (type === "today") {
-                        scope.ds_start = scope.ds_end = 0;
-                    } else if (type === "yesterday") {
-                        scope.ds_start = scope.ds_end = -1;
-                    } else if (type === "seven") {
-                        scope.ds_start = -7;
-                        scope.ds_end = -1;
-                    } else if (type === "month") {
-                        scope.ds_start = -30;
-                        scope.ds_end = -1;
-                    } else {
-                        scope.ds_start = $rootScope.tableTimeStart;
-                        scope.ds_end = $rootScope.tableTimeEnd;
-                    }
                     if (cb) {
                         cb();
                     }
@@ -520,28 +507,29 @@ define(["../app"], function (app) {
                     if (temp.length > 0) {
                         scope.ds_dateShowQuotasOption = temp;
                     }
+                    scope.isCompared = false;
                     //scope.dateShowArray = scope.dateShowArray_base = [];
                     scope.loadDataShow();
                 });
                 scope.loadDataShow();
-                // 用于动态效果
-                scope.$on("ssh_reload_datashow", function () {
-                    var tempArray = [];
-                    angular.forEach(scope.checkedArray, function (ca_r) {
-                        tempArray.push({"label": ca_r, "value": "", "cValue": ""});
-                    });
-
-                    angular.forEach(tempArray, function (ta_r) {
-                        angular.forEach(scope.dateShowArray_base, function (ab_r) {
-                            if (ta_r.label == ab_r.label) {
-                                ta_r.value = ab_r.value;
-                                ta_r.cValue = ab_r.cValue;
-                            }
-                        });
-                    });
-
-                    scope.dateShowArray = angular.copy(tempArray);
-                });
+                //// 用于动态效果
+                //scope.$on("ssh_reload_datashow", function () {
+                //    var tempArray = [];
+                //    angular.forEach(scope.checkedArray, function (ca_r) {
+                //        tempArray.push({"label": ca_r, "value": "", "cValue": ""});
+                //    });
+                //
+                //    angular.forEach(tempArray, function (ta_r) {
+                //        angular.forEach(scope.dateShowArray_base, function (ab_r) {
+                //            if (ta_r.label == ab_r.label) {
+                //                ta_r.value = ab_r.value;
+                //                ta_r.cValue = ab_r.cValue;
+                //            }
+                //        });
+                //    });
+                //
+                //    scope.dateShowArray = angular.copy(tempArray);
+                //});
                 // 对比
                 scope.$on("ssh_load_compare_datashow", function (e, startTime, endTime) {
                     scope.isCompared = true;
@@ -562,93 +550,67 @@ define(["../app"], function (app) {
             link: function (scope, element, attris, controller) {
                 scope.isCompared = false;
                 scope.dateShowArray = [];
-                scope.ds_start = scope.ds_end = 0;
+                scope.defaultDataShowArray = [{
+                    label: "freq",
+                    value: 0,
+                    count: 0
+                }, {
+                    label: "baidu",
+                    value: 0,
+                    count: 0
+                }, {
+                    label: "sougou",
+                    value: 0,
+                    count: 0
+                }, {
+                    label: "haosou",
+                    value: 0,
+                    count: 0
+                }, {
+                    label: "bing",
+                    value: 0,
+                    count: 0
+                }, {
+                    label: "other",
+                    value: 0,
+                    count: 0
+                }];
                 scope.loadDataShow = function () {
-                    scope.dateShowArray = [
-                        {
-                            label: "freq",
-                            value: 0
-                        }, {
-                            label: "baidu",
-                            value: 0
-                        }, {
-                            label: "sougou",
-                            value: 0
-                        }, {
-                            label: "haosou",
-                            value: 0
-                        }, {
-                            label: "bing",
-                            value: 0
-                        }, {
-                            label: "other",
-                            value: 0
-                        }
-                    ];
-                    var semRequest = $http.get(SEM_API_URL + "elasticsearch/" + $rootScope.defaultType
-                    + "/?startOffset=" + scope.ds_start + "&endOffset=" + scope.ds_end);
+                    scope.dateShowArray = angular.copy(scope.defaultDataShowArray);
+                    var semRequest = $http.get(SEM_API_URL + "elasticsearch/" + $rootScope.userType
+                    + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd);
                     $q.all([semRequest]).then(function (final_result) {
-                        var count = 0;
                         angular.forEach(final_result[0].data, function (r) {
                             angular.forEach(scope.dateShowArray, function (q_r) {
                                 var temp = q_r.label;
                                 var value = r[temp];
                                 q_r.value += temp != "freq" ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
+                                q_r.count = final_result[0].data.length;
                             });
-                            count++;
-                        });
-                        angular.forEach(scope.dateShowArray, function (r) {
-                            if (count == 0) {
-                                r.cValue = (r.label == "freq") ? 0 : "0.00%";
-                            } else {
-                                r.cValue = (r.label == "freq") ? r.cValue : ((r.cValue / count).toFixed(2) + "%")
-                            }
                         });
                     });
                 };
                 scope.loadCompareDataShow = function (startTime, endTime) {
-                    var semRequest = $http.get(SEM_API_URL + "elasticsearch/" + $rootScope.defaultType
-                    + "/?startOffset=" + (0 - startTime) + "&endOffset=" + endTime);
+                    var semRequest = $http.get(SEM_API_URL + "elasticsearch/" + $rootScope.userType
+                    + "/?startOffset=" + startTime + "&endOffset=" + endTime);
                     $q.all([semRequest]).then(function (final_result) {
                         // 初始化对比数据
                         angular.forEach(scope.dateShowArray, function (q_r) {
                             q_r.cValue = 0;
                         });
-                        var count = 0;
                         angular.forEach(final_result[0].data, function (r) {
                             angular.forEach(scope.dateShowArray, function (q_r) {
                                 var temp = q_r.label;
                                 var value = r[temp];
                                 q_r.cValue += temp != "freq" ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
+                                q_r.count = final_result[0].data.length;
                             });
-                            count++;
-                        });
-                        angular.forEach(scope.dateShowArray, function (r) {
-                            if (count == 0) {
-                                r.cValue = (r.label == "freq") ? "0" : "0.00%";
-                            } else {
-                                r.cValue = (r.label == "freq") ? r.cValue : ((r.cValue / count).toFixed(2) + "%")
-                            }
                         });
                     });
                 };
                 // 改变时间参数
                 scope.setDateShowTimeOption = function (type, cb) {
                     scope.isCompared = false;
-                    if (type === "today") {
-                        scope.ds_start = scope.ds_end = 0;
-                    } else if (type === "yesterday") {
-                        scope.ds_start = scope.ds_end = -1;
-                    } else if (type === "seven") {
-                        scope.ds_start = -7;
-                        scope.ds_end = -1;
-                    } else if (type === "month") {
-                        scope.ds_start = -30;
-                        scope.ds_end = -1;
-                    } else {
-                        scope.ds_start = $rootScope.tableTimeStart;
-                        scope.ds_end = $rootScope.tableTimeEnd;
-                    }
                     if (cb) {
                         cb();
                     }
@@ -701,12 +663,10 @@ define(["../app"], function (app) {
         quotaObject.bing = "必应";
         quotaObject.other = "其他";
         return function (key) {
-            if (quotaObject[key]) {
-                return quotaObject[key];
-            }
-            return "错误的指标KEY";
+            return quotaObject[key] || "未定义的指标KEY";
         };
     });
+
     /**
      * 指标帮助字符过滤器
      */
@@ -740,10 +700,53 @@ define(["../app"], function (app) {
         quotaObject.bing = "来自搜索引擎必应的搜索次数占比";
         quotaObject.other = "来自其他搜索引擎的搜索次数占比";
         return function (key) {
-            if (quotaObject[key]) {
-                return quotaObject[key];
+            return quotaObject[key] || "未定义的指标KEY";
+        };
+    });
+
+    /**
+     * 指标显示数据计算器
+     */
+    app.filter("quotaDataFormat", function () {
+        return function (value, label, count) {
+            switch (label) {
+                case "outRate":
+                case "nuvRate":
+                case "arrivedRate":
+                case "baidu":
+                case "sougou":
+                case "haosou":
+                case "bing":
+                case "other":
+                {
+                    return count ? (value / count).toFixed(2) + "%" : "--";
+                }
+                case "avgTime":
+                {
+                    return MillisecondToDate(value / count);
+                }
+                case "freq":
+                {
+                    return count ? value : "0";
+                }
+                case "cost":
+                case "impression":
+                case "ctr":
+                case "cpm":
+                case "conversion":
+                {
+                    return count ? value.toFixed(2) : "0";
+                }
+                case "avgPage":
+                case "cpc":
+                {
+                    return count ? (value / count).toFixed(2) : "0.00";
+                }
+                default :
+                {
+                    return value ? value + "" : "0";
+                }
             }
-            return "错误的指标KEY";
         };
     });
     /**
@@ -780,6 +783,10 @@ define(["../app"], function (app) {
                             }
                             scope.sumPv += parseInt(e.pv);
                         });
+                        if (!scope._visitor.ct) {
+                            scope._visitor = angular.copy(scope.defaultObject);
+                            return;
+                        }
                         if (scope.sumPv == 0) {
                             scope._visitor.percent = "0.00%";
                         } else if (scope._visitor.pv == 0) {

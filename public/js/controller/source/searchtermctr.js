@@ -6,7 +6,7 @@ define(["./module"], function (ctrs) {
     'use strict';
 
     ctrs.controller('searchtermctr', function ($scope, $rootScope, $http, requestService, popupService, areaService, uiGridConstants) {
-            $scope.todayClass = true;
+            $scope.yesterdayClass = true;
             $scope.visible = true;
             //table默认信息配置
             $rootScope.tableTimeStart = 0;

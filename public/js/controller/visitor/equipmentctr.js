@@ -15,7 +15,12 @@ define(["./module"], function (ctrs) {
         $rootScope.checkedArray = ["pv", "uv", "ip", "outRate", "avgTime"];
         //ng-click='grid.appScope.getHistoricalTrend(this)'
         $rootScope.gridArray = [
-            {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
+            {
+                name: "xl",
+                displayName: "",
+                cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
+                maxWidth: 10
+            },
             {name: "网络供应商", displayName: "网络供应商", field: "isp"},
             {name: "浏览量(PV)", displayName: "浏览量(PV)", field: "pv"},
             {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},
@@ -70,8 +75,9 @@ define(["./module"], function (ctrs) {
                         if ($scope.equipment.selected)
                             tmpData.push(chartUtils.getCustomDevice(e.key[i], $scope.equipment.selected.field));
                         else
-                            tmpData.push(e.key[i]);
+                            tmpData.push(e.key[i]=="-"?"未知":e.key[i]);
                         _value.push(e.quota[i]);
+
                     }
                     e.key = tmpData;
                     e.quota = _value;
@@ -96,7 +102,6 @@ define(["./module"], function (ctrs) {
                     chartType: "bar",
                     dataKey: "key",
                     auotHidex: true,
-                    qingXie: true,
                     keyFormat: 'none',
                     dataValue: "quota"
                 },

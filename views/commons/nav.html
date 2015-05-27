@@ -25,11 +25,11 @@
                         <a data-ng-href="#index"><span ng-bind-html="siteselect.name"></span></a>
                     </ui-select-choices>
                 </ui-select>
-                <a href="conf.html#/conf" class="fl">管理设置</a>
+                <a href="conf.html#/conf/main.html" class="fl">管理设置</a>
             </li>
             <li>
                 <span aria-hidden="true" class="glyphicon glyphicon-user fl"></span>
-                <span>{{userName}}</span>
+                <span data-ng-bind="userName"></span>
             </li>
             <li><a href="#"><span aria-hidden="true" class="glyphicon glyphicon-share"></span>退出</a></li>
         </ul>

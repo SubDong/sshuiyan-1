@@ -103,7 +103,7 @@ define(["./module"], function (ctrs) {
                     legendClickListener: $scope.onLegendClick,
                     legendAllowCheckCount: 1,
                     id: "indicators_charts",
-                    bGap: true,
+                    bGap: false,
                     min_max: false,
                     chartType: "line",
                     lineType: false,

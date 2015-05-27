@@ -6,7 +6,7 @@ define(["./module"], function(ctrs) {
     'use strict';
 
     ctrs.controller('searchtermctr_yq', function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
-            $scope.todayClass = true;
+            $scope.yesterdayClass = true;
             $scope.visible = false;
             //table默认信息配置
             $rootScope.tableTimeStart = 0;

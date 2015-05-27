@@ -85,7 +85,7 @@ define(["./../module"], function (ctrs) {
                     chartType: "line",
                     lineType: false,
                     min_max: false,
-                    bGarp: true,
+                    bGap: false,
                     keyFormat: 'none',
                     dataKey: "key",
                     dataValue: "quota"

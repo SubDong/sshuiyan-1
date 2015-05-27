@@ -15,18 +15,41 @@
                     <!--<li ng-repeat="item in mapselect" ng-class='{current:$index==map}'
                         ng-click='mapset($index)'>{{item.consumption_name}}
                     </li>-->
-                    <li><input type="radio" name="check" checked="checked" class="styled"
-                               ng-click="setProperty('loc',$index, entities)"/>
-                        <label>浏览量(PV)</label></li>
-                    <li><input type="radio" name="check" ng-click="setProperty('tt')" class="styled"/>
-                        <label>访问次数</label></li>
-                    <li><input type="radio" name="check" ng-click="setProperty('_ucv')" class="styled"/>
-                        <label>访客数(UV)</label></li>
-                    <li><input type="radio" name="check" ng-click="setProperty('ct')" class="styled"/>
-                        <label>新访客数</label></li>
-                    <li><input type="radio" name="check" ng-click="setProperty('remote')" class="styled"/>
-                        <label>IP数</label></li>
-                    <li><input type="radio" name="check" class="styled"/> <label>转化次数</label></li>
+                    <li>
+                        <label>
+                            <input type="radio" name="check" checked="checked" class="styled"
+                                   ng-click="setProperty('loc',$index, entities)"/>
+                            <b>浏览量(PV)</b>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="radio" name="check" ng-click="setProperty('tt')" class="styled"/>
+                            <b> 访问次数</b>
+                        </label>
+                    </li>
+                    <li>
+                        <label><input type="radio" name="check" ng-click="setProperty('_ucv')" class="styled"/>
+                            <b> 访客数(UV)</b>
+                        </label>
+                    </li>
+                    <li>
+                        <label><input type="radio" name="check" ng-click="setProperty('ct')" class="styled"/>
+                            <b> 新访客数</b>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="radio" name="check" ng-click="setProperty('remote')" class="styled"/>
+                            <b> IP数</b>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="radio" name="check" class="styled"/>
+                            <b>转化次数</b>
+                        </label>
+                    </li>
                     <li class="disabled">* 最多只能勾选1项</li>
                 </ul>
             </div>

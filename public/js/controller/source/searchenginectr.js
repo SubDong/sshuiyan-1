@@ -84,7 +84,7 @@ define(["./module"], function(ctrs) {
                     legendClickListener: $scope.onLegendClick,
                     legendAllowCheckCount: 1,
                     min_max: false,
-                    bGap: true,
+                    bGap: false,
                     id: "indicators_charts",
                     keyFormat: "none",//设置不需要chart工厂处理x轴数据
                     chartType: "line",
