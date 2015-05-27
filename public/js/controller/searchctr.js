@@ -16,7 +16,7 @@ define(["./module"], function (ctrs) {
                     name: "计划",
                     displayName: "计划",
                     field: "campaignName",
-                    cellTemplate: "<a href='javascript:void(0)' style='color:#0965b8;line-height:30px;margin-left: 10px' ng-click='grid.appScope.getHistoricalTrend(this)'>{{grid.appScope.getDataUrlInfo(grid, row,3)}}</a>"
+                    cellTemplate: "<div><a href='javascript:void(0)' style='color:#0965b8;line-height:30px;margin-left: 10px' ng-click='grid.appScope.getHistoricalTrend(this)'>{{grid.appScope.getDataUrlInfo(grid, row,3)}}</a></div>"
                 }, /*
                  {
                  name: " ",

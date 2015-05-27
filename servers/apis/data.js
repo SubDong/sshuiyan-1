@@ -262,6 +262,7 @@ api.get('/indextable', function (req, res) {
                     if (!obj) {
                         obj = {};
                         if (_lati != null && _lati.split(":").length > 1) {
+                            angular
                             dimensionInfo = _lati.split(":")[0]
                         } else {
                             dimensionInfo = _lati

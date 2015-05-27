@@ -13,7 +13,7 @@ app.controller('visitepagesctr', function ($scope, $rootScope, $http, requestSer
         {name: "页面url", field: "loc"},
         {
             name: " ",
-            cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn'></a></div>"
+            cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn' title='查看历史趋势'></a></div>"
         },
         {name: "访问次数", field: "pv"},
         {name: "访客数(UV)",displayName: '访客数(UV)', disfield: "uv"},

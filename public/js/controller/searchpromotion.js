@@ -7,9 +7,9 @@ define(["./module"], function (ctrs) {
 
     ctrs.controller("SearchPromotion", function ($timeout, $scope, $rootScope, $http, $q, requestService, SEM_API_URL, $cookieStore) {
         $scope.todayClass = true;
-        var user = "perfect2015"/*$cookieStore.get("uname")*/;
-        var baiduAccount ="baidu-perfect2151880" /*$rootScope.default*/;
-        var esType ="2" /*$rootScope.defaultType*/;
+        var user = $rootScope.user
+        var baiduAccount = $rootScope.baiduAccount;
+        var esType = $rootScope.userType;
 
         //sem
         $scope.target = [
@@ -35,18 +35,8 @@ define(["./module"], function (ctrs) {
             {consumption_name: "抵达率", name: "arrivedRate"},
         ];
 
-        /*    var getHtmlTableData = function () {
-         $http({
-         method: 'GET',
-         url: '/api/realTimeAccess/?filerInfo=' + $rootScope.tableSwitch.tableFilter + "&type=" + esType
-         }).success(function (data, status) {
-         $scope.gridOptions.data = data;
-         }).error(function (error) {
-         console.log(error);
-         });
-         };*/
         if ($rootScope.tableSwitch.number == 1) {
-            $scope.gridBtnDivObj = "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn test'></a></div>";
+            $scope.gridBtnDivObj = "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn test'  title='查看历史趋势'></a></div>";
         } else if ($rootScope.tableSwitch.number == 2) {
             $scope.gridBtnDivObj = "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'>" + $rootScope.tableSwitch.coding + "</ul></div></div>";
         }
@@ -99,7 +89,7 @@ define(["./module"], function (ctrs) {
                     $scope.gridObjButton["displayName"] = "";
                     $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
                     $scope.gridObjButton["maxWidth"] = 10;
-                    $rootScope.gridArray.unshift($scope.gridObjButton);
+                    $rootScope.searchGridArray.unshift($scope.gridObjButton);
                 } else {
                     $rootScope.checkedArray.push(item.name);
 
@@ -119,7 +109,7 @@ define(["./module"], function (ctrs) {
                     $scope.gridObjButton["displayName"] = "";
                     $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
                     $scope.gridObjButton["maxWidth"] = 10;
-                    $rootScope.gridArray.unshift($scope.gridObjButton);
+                    $rootScope.searchGridArray.unshift($scope.gridObjButton);
                 }
             }
             angular.forEach(entities, function (subscription, index) {
@@ -131,7 +121,6 @@ define(["./module"], function (ctrs) {
         };
         // 推广概况表格配置项
         $scope.gridOptions = {
-            //paginationPageSizes: [25, 50, 75],
             paginationPageSize: 25,
             expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions' style='height:150px;'></div>",
             expandableRowHeight: 150,
@@ -140,7 +129,6 @@ define(["./module"], function (ctrs) {
             enableSorting: true,
             enableGridMenu: false,
             enableHorizontalScrollbar: 0,
-            columnDefs: $rootScope.searchGridArray,
             onRegisterApi: function (gridApi) {
                 $scope.gridApi2 = gridApi;
                 if ($rootScope.tableSwitch.dimen) {
@@ -167,6 +155,8 @@ define(["./module"], function (ctrs) {
 
 
         $rootScope.targetSearchSpread = function (isClicked) {
+            $scope.gridOpArray = angular.copy($rootScope.searchGridArray);
+            $scope.gridOptions.columnDefs = $scope.gridOpArray;
             if (isClicked) {
                 $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
             }
@@ -215,7 +205,7 @@ define(["./module"], function (ctrs) {
                                         $scope.gridOptions.rowHeight = 32;
                                     }
                                 }
-                                $scope.gridOptions.columnDefs = $rootScope.searchGridArray;
+                                $scope.gridOptions.columnDefs = $scope.gridOpArray;
                                 $scope.gridOptions.data = dataArray;
                             }
                         }
@@ -228,6 +218,8 @@ define(["./module"], function (ctrs) {
 
         //搜索词
         $rootScope.targetSearchSSC = function (isClicked) {
+            $scope.gridOpArray = angular.copy($rootScope.searchGridArray);
+            $scope.gridOptions.columnDefs = $scope.gridOpArray;
             if (isClicked) $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
             $http({
                 method: 'GET',
@@ -308,6 +300,7 @@ define(["./module"], function (ctrs) {
             if ($rootScope.tableSwitch.latitude.field == "campaignName") {
                 $rootScope.checkedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
                 $rootScope.searchGridArray = [
+                    {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
                     {
                         name: "单元",
                         displayName: "单元",
@@ -345,6 +338,7 @@ define(["./module"], function (ctrs) {
             } else if ($rootScope.tableSwitch.latitude.field == "adgroupName") {
                 $rootScope.checkedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
                 $rootScope.searchGridArray = [
+                    {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
                     {
                         name: "关键词",
                         displayName: "关键词",
@@ -386,16 +380,18 @@ define(["./module"], function (ctrs) {
 
         //得到数据中的url
         $scope.getDataUrlInfo = function (grid, row, number) {
+            var data = row.entity[$rootScope.tableSwitch.latitude.field]+"";
             if (number < 3) {
-                var a = row.entity[$rootScope.tableSwitch.latitude.field].split(",");
+                var a = data.split(",");
             } else if (number > 3) {
-                var a = row.entity[$rootScope.tableSwitch.latitude.field].split(",`");
+                var a = data.split(",`");
             } else {
-                var a = row.entity[$rootScope.tableSwitch.latitude.field]
+                var a = data
             }
             if (number == 1) {
                 return a[0];
             } else if (number == 2) {
+                console.log(a[1]);
                 return a[1];
             } else if (number == 3) {
                 return a;

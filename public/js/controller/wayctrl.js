@@ -17,7 +17,7 @@ define(["./module"], function (ctrs) {
             {name: "推广方式", displayName: "推广方式", field: "accountName"},
             {
                 name: " ",
-                cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn'></a></div>"
+                cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn' title='查看历史趋势'></a></div>"
             },
             {name: "点击量", displayName: "点击量", field: "click"},
             {name: "消费", displayName: "消费", field: "cost"},

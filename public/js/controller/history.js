@@ -12,7 +12,7 @@ define(['./module'], function (ctrs) {
         }
 
         $scope.monthClass = true;
-        var esType = "2";
+        var esType = $rootScope.userType;
 
         $rootScope.tableTimeStart = -30;
         $rootScope.tableTimeEnd = -1;

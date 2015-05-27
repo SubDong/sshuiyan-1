@@ -18,7 +18,7 @@ define(["./module"], function (ctrs) {
                 name: "单元",
                 displayName: "单元",
                 field: "adgroupName",
-                cellTemplate: "<a href='javascript:void(0)' style='color:#0965b8;line-height:30px;' ng-click='grid.appScope.getHistoricalTrend(this)'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}"
+                cellTemplate: "<div><a href='javascript:void(0)' style='color:#0965b8;line-height:30px;' ng-click='grid.appScope.getHistoricalTrend(this)'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</div>"
             }, /*
              {
              name: " ",

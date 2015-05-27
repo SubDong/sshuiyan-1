@@ -7,9 +7,9 @@ define(["app"], function (app) {
 
     app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, requestService, SEM_API_URL, $cookieStore) {
         $scope.todayClass = true;
-        var user = "perfect2015"/*$cookieStore.get("uname")*/;
-        var baiduAccount = "baidu-perfect2151880" /*$rootScope.default*/;
-        var esType = "2" /*$rootScope.defaultType*/;
+        var user = $rootScope.user
+        var baiduAccount = $rootScope.baiduAccount;
+        var esType = $rootScope.userType;
 
         $scope.tabs = [
             {title: 'Dynamic Title 1', content: 'Dynamic content 1'},
@@ -119,6 +119,8 @@ define(["app"], function (app) {
                 method: 'GET',
                 url: '/api/realTimeAccess/?filerInfo=' + $rootScope.tableSwitch.tableFilter + "&type=" + esType
             }).success(function (data, status) {
+                $scope.gridOpArray = angular.copy($rootScope.gridArray);
+                $scope.gridOptions.columnDefs = $scope.gridOpArray;
                 $scope.gridOptions.data = data;
             }).error(function (error) {
                 console.log(error);
@@ -153,7 +155,7 @@ define(["app"], function (app) {
 
         //table Button 配置 table_nextbtn
         if ($rootScope.tableSwitch.number == 1) {
-            $scope.gridBtnDivObj = "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn test'></a></div>";
+            $scope.gridBtnDivObj = "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn test'  title='查看历史趋势'></a></div>";
         } else if ($rootScope.tableSwitch.number == 2) {
             $scope.gridBtnDivObj = "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'>" + $rootScope.tableSwitch.coding + "</ul></div></div>";
         }
