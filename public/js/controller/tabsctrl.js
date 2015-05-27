@@ -243,7 +243,7 @@ define(["app"], function (app) {
                 enableSorting: true,
                 enableGridMenu: false,
                 enableHorizontalScrollbar: 0,
-                columnDefs: $rootScope.gridArray,
+                columnDefs: $scope.gridOpArray,
                 onRegisterApi: function (girApi) {
                     $scope.gridApi2 = girApi;
                     griApihtml(girApi);
@@ -259,7 +259,7 @@ define(["app"], function (app) {
                 enableSorting: true,
                 enableGridMenu: false,
                 enableHorizontalScrollbar: 0,
-                columnDefs: $rootScope.gridArray,
+                columnDefs: $scope.gridOpArray,
                 onRegisterApi: function (gridApi) {
                     $scope.gridApi2 = gridApi;
                     if ($rootScope.tableSwitch.dimen) {
@@ -419,7 +419,8 @@ define(["app"], function (app) {
          * @param type
          */
         $rootScope.targetSearch = function (isClicked) {
-            $scope.gridOptions.columnDefs = $rootScope.gridArray;
+            $scope.gridOpArray = angular.copy($rootScope.gridArray);
+            $scope.gridOptions.columnDefs = $scope.gridOpArray;
             $scope.gridOptions.rowHeight = 32;
             if (isClicked) {
                 $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
@@ -531,6 +532,8 @@ define(["app"], function (app) {
             $scope.targetSearch();
         }
         $scope.$on("history", function (e, msg) {
+            $scope.gridOpArray = angular.copy($rootScope.gridArray);
+            $scope.gridOptions.columnDefs = $scope.gridOpArray;
             $scope.gridOptions.data = msg;
         });
 
@@ -591,7 +594,8 @@ define(["app"], function (app) {
         };
         //数据对比实现方法
         $scope.targetDataContrast = function (startInfoTime, endInfoTime, cabk) {
-            $scope.gridOptions.columnDefs = $rootScope.gridArray;
+            $scope.gridOpArray = angular.copy($rootScope.gridArray);
+            $scope.gridOptions.columnDefs = $scope.gridOpArray;
             if ($rootScope.tableSwitch.isJudge == undefined) $scope.isJudge = true;
             if ($rootScope.tableSwitch.isJudge) $rootScope.tableSwitch.tableFilter = undefined;
             if ($rootScope.tableSwitch.number == 4) {

@@ -597,11 +597,12 @@ define(["../app"], function (app) {
                             });
                             count++;
                         });
+                        console.log(scope.dateShowArray);
                         angular.forEach(scope.dateShowArray, function (r) {
                             if (count == 0) {
-                                r.cValue = (r.label == "freq") ? 0 : "0.00%";
+                                r.value = (r.label == "freq") ? 0 : "0.00%";
                             } else {
-                                r.cValue = (r.label == "freq") ? r.cValue : ((r.cValue / count).toFixed(2) + "%")
+                                r.value = (r.label == "freq") ? r.value : ((r.value / count).toFixed(2) + "%")
                             }
                         });
                     });
@@ -774,12 +775,17 @@ define(["../app"], function (app) {
                         method: 'GET',
                         url: '/api/indextable/?type=' + $rootScope.ssh_es_type + '&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=pv,uv,outRate,avgTime,avgPage&dimension=ct'
                     }).success(function (data, status) {
+                        console.log(data);
                         angular.forEach(data, function (e) {
                             if (e.ct === scope._ctText) {
                                 scope._visitor = e;
                             }
                             scope.sumPv += parseInt(e.pv);
                         });
+                        if (!scope._visitor.ct) {
+                            scope._visitor = angular.copy(scope.defaultObject);
+                            return;
+                        }
                         if (scope.sumPv == 0) {
                             scope._visitor.percent = "0.00%";
                         } else if (scope._visitor.pv == 0) {

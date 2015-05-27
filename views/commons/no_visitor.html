@@ -1,6 +1,7 @@
 <div class="fl" data-ng-class="{'newvisitor': _type == 'nv', 'oldvisitior': _type == 'ov'}">
     <div class="nesvisitor_top">
         <p>{{_ctText}}</p>
+
         <div class="nesvisitor_img">
             <div>
                 <span data-ng-if="_type == 'nv'"><img src="../img/new_people.png"></span>
@@ -33,6 +34,9 @@
                     <td style="text-align: left">{{top5.key}}</td>
                     <td data-ng-bind="top5.count"></td>
                 </tr>
+                <tr data-ng-if="fwlywzTop5.length == 0">
+                    <td colspan="3">暂无数据</td>
+                </tr>
                 </tbody>
             </table>
         </div>
@@ -51,6 +55,9 @@
                     <td>{{$index + 1}}</td>
                     <td style="text-align: left"><a href="{{top5.loc}}" target="_blank">{{top5.loc}}</a></td>
                     <td data-ng-bind="top5.vc"></td>
+                </tr>
+                <tr data-ng-if="fwrkyTop5.length == 0">
+                    <td colspan="3">暂无数据</td>
                 </tr>
                 </tbody>
             </table>
