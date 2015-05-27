@@ -1,7 +1,7 @@
 /**
  * Created by XiaoWei on 2015/4/13.
  */
-define(["./module"], function(ctrls) {
+define(["./module"], function (ctrls) {
 
     'use strict';
 
@@ -15,10 +15,11 @@ define(["./module"], function(ctrls) {
         //配置默认指标
         $rootScope.checkedArray = ["vc", "nuvRate", "ip"];
         $rootScope.gridArray = [
+            {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
             {name: "来源类型", displayName: "来源类型", field: "rf_type"},
             {
                 name: " ",
-                cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' onmouseout='hiddenMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li></ul></div></div>"
+                cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li></ul></div></div>"
             },
             {name: "访问次数", displayName: "访问次数", field: "vc"},
             {name: "新访客比率", displayName: "新访客比率", field: "nuvRate"},
@@ -88,7 +89,8 @@ define(["./module"], function(ctrls) {
                     id: "indicators_charts",
                     min_max: false,
                     bGap: true,
-                    chartType: "bar",
+                    chartType: "line",
+                    lineType: false,
                     keyFormat: "none",
                     dataKey: "key",
                     dataValue: "quota"

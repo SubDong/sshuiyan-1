@@ -39,7 +39,7 @@ define(["./../module"], function (ctrs) {
                 chart.config.instance = echarts.init(document.getElementById(chart.config.id));
                 chart.types = checkedVal;
             });
-            requestService.refresh($scope.charts);
+            requestService.refresh([$scope.charts[1]]);
         }
         $scope.pieFormat = function (data, config) {
             var json = JSON.parse(eval("(" + data + ")").toString());
@@ -82,7 +82,8 @@ define(["./../module"], function (ctrs) {
                     legendClickListener: $scope.onLegendClick,
                     legendAllowCheckCount: 1,
                     id: "indicators_charts",
-                    chartType: "bar",
+                    chartType: "line",
+                    lineType: false,
                     min_max: false,
                     bGarp: true,
                     keyFormat: 'none',

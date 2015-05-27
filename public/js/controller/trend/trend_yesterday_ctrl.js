@@ -26,6 +26,7 @@ define(["./module"], function (ctrs) {
         //配置默认指标
         $rootScope.checkedArray = ["pv", "uv", "ip", "outRate", "avgTime"];
         $rootScope.gridArray = [
+            {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth: 10},
             {name: "日期", displayName: "日期", field: "period"},
             {name: "浏览量(PV)", displayName: "浏览量(PV)", field: "pv"},
             {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},
@@ -150,6 +151,9 @@ define(["./module"], function (ctrs) {
                     $scope.restCompare();
                 }
                 return;
+            }
+            if ($rootScope.start > -7 && $scope.charts[0].config.keyFormat == "week") {
+                $rootScope.interval = -1;
             }
             if ($rootScope.interval == -1) {
                 $scope.lastDaySelect = false;

@@ -34,7 +34,15 @@ var mixingMap = {
                         formatter: "{a} <br/>{b} : {c}"
                     },
                     itemStyle:{
-                        emphasis:{label:{show:true}}
+                        emphasis:{label:{show:true}},
+                        normal: {
+                            borderWidth:1,
+                            borderColor:'#fff',
+                            color: '#E6E6E6',
+                            label: {
+                                show: false
+                            }
+                        }
                     },
                     data:data.chart_data
                 },

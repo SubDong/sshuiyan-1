@@ -368,34 +368,27 @@ var chartUtils = {
             }
         }
     },
-    addStep: function (json, number, place) {
-        json.forEach(function (e) {
-            var _key = [];
-            var _value = [];
-            if (place) {
-                switch (place) {
-                    case "left":
-                        break;
-                }
-            } else {
-                for (var i = 0; i < number / 2; i++) {
-                    _key.push("");
-                    _value.push(0);
-                }
-            }
+    addStep: function (json, number) {
+        //json.forEach(function (e) {
+        //    //var _key = [];
+        //    //var _value = [];
+        //    //for (var i = 0; i < number / 2; i++) {
+        //    //    _key.push("");
+        //    //    _value.push(0);
+        //    //}
+        //    //for (var i = 0; i < e.key.length; i++) {
+        //    //    _key.push(e.key[i]);
+        //    //    _value.push(e.quota[i]);
+        //    //}
+        //    //for (var i = number / 2; i < number; i++) {
+        //    //    _key.push("");
+        //    //    _value.push(0);
+        //    //}
+        //
+        //    e.key = _key;
+        //    e.quota = _value;
+        //});
 
-            for (var i = 0; i < e.key.length; i++) {
-                _key.push(e.key[i]);
-                _value.push(e.quota[i]);
-            }
-            for (var i = number / 2; i < number; i++) {
-                _key.push("");
-                _value.push(0);
-            }
-
-            e.key = _key;
-            e.quota = _value;
-        });
     },
     noFormatConvertLabel: function (json) {
         json.forEach(function (i, o) {
@@ -414,18 +407,28 @@ var chartUtils = {
     },
     addSemData: function (esJson, semJson, semType) {
         var _tmp = {};
-        var _label = [];
         var _value = [];
-        esJson[0].key.forEach(function (esItem, index) {
-            //if (esItem == final_result[0].data[index].date) {
-            _value.push(semJson.data[index][semType]);
-            //}
-            //console.log(final_result[0].data[index].date+">>"+final_result[0].data[index][semType]);
-        });
-        _tmp["label"] = chartUtils.convertChinese(semType);
-        _tmp["key"] = esJson[0].key;
-        _tmp["quota"] = _value;
-        esJson.push(_tmp);
+        //console.log(semJson.data.length);
+        if (semJson.data.length > 0) {
+            esJson[0].key.forEach(function (esItem, index) {
+                _value.push(semJson.data[index][semType]);
+            });
+            _tmp["label"] = chartUtils.convertChinese(semType);
+            _tmp["key"] = esJson[0].key;
+            _tmp["quota"] = _value;
+            esJson.push(_tmp);
+        }
+        else {
+            var key = [];
+            esJson[0].key.forEach(function (esItem, index) {
+                _value.push(0);
+                key.push(esItem.substring(0, 10));
+            });
+            _tmp["label"] = chartUtils.convertChinese(semType);
+            _tmp["key"] = key;
+            _tmp["quota"] = _value;
+            esJson.push(_tmp);
+        }
     },
     getSemBaseData: function (quotas, final_result, semName) {
         var total_result = [];
@@ -443,7 +446,8 @@ var chartUtils = {
             total_result.push(_tmp);
         });
         return total_result;
-    },
+    }
+    ,
     getTimeOffset: function (start, end) {
         var d = new Date();
         var day = d.getDate();
@@ -463,6 +467,17 @@ var chartUtils = {
         var _finalNow = date_now.getTime().toString().substr(0, 10);
         var times = Math.round(new Date().getTime() / 1000)
         return [(_finalStart - _finalNow) / (24 * 3600), (_finalEnd - _finalNow) / (24 * 3600)];
+    },
+    getSetOffTime: function (start, end) {
+        var d = new Date();
+        var timeSet = d.getTime();
+        var startTime = start * 86400000;
+        var endTime = end * 86400000;
+        var date1 = timeSet + startTime;
+        var date2 = timeSet + endTime;
+        var a = new Date(date1).Format("yyyy-MM-dd");
+        var b = new Date(date2).Format("yyyy-MM-dd");
+        return [a, b];
     },
     getQuotaType: function (quota) {
         switch (quota) {
@@ -485,7 +500,8 @@ var chartUtils = {
                 return "es";
                 break;
         }
-    },
+    }
+    ,
     qAll: function (quotas) {
         var quotaArray = [];
         var semQuota = [];
@@ -600,7 +616,8 @@ var chartUtils = {
             }
         }
         return final_result;
-    },
+    }
+    ,
     getXType: function (config, interval, start) {
         switch (interval) {
             case 604800000:
@@ -612,7 +629,8 @@ var chartUtils = {
             default :
                 config["keyFormat"] = "day";
         }
-    },
+    }
+    ,
     compareTo: function (res, compareStr) {
         var final_result = [];
         res.forEach(function (item, o) {

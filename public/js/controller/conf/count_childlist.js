@@ -33,9 +33,9 @@ define(["./module"], function (ctrs) {
         //配置默认指标
         $rootScope.checkArray = ["", "", ""];
         $rootScope.gridArray = [
-            {name: "子目录名称", Name: "子目录名称", field: ""},
-            {name: "包含的页面或目录", Name: "包含的页面或目录", field: ""},
-            {name: "创建时间 ", Name: "创建时间", field: ""}
+            {name: "子目录名称", displayName: "子目录名称", field: ""},
+            {name: "包含的页面或目录", displayName: "包含的页面或目录", field: ""},
+            {name: "创建时间 ", displayName: "创建时间", field: ""}
         ];
         $rootScope.tableSwitch = {
             latitude: {name: "网站域名", displayName: "网站域名", field: ""},

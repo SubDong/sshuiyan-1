@@ -13,10 +13,11 @@ define(["./module"], function (ctrs) {
         //配置默认指标
         $rootScope.checkedArray = ["uv", "nuv", "nuvRate"];
         $rootScope.gridArray = [
+            {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
             {name: "外部连接", displayName: "外部连接", field: "rf"},
             {
                 name: " ",
-                cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' onmouseout='hiddenMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history7' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='javascript:void(0)'>查看来源分布</a></li></ul></div></div>"
+                cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history7' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='javascript:void(0)'>查看来源分布</a></li></ul></div></div>"
             },
             {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},
             {name: "新访客数", displayName: "新访客数", field: "nuv"},
@@ -106,7 +107,8 @@ define(["./module"], function (ctrs) {
                     min_max: false,
                     bGap: true,
                     id: "indicators_charts",
-                    chartType: "bar",
+                    chartType: "line",
+                    lineType:false,
                     dataKey: "key",
                     keyFormat: "none",
                     dataValue: "quota"

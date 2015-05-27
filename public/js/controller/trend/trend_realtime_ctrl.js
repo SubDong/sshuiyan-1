@@ -12,9 +12,9 @@ define(["./module"], function (ctrs) {
         $rootScope.checkedArray = 'SS';
         $rootScope.tableFormat = null;
         $rootScope.tableSwitch = {
+            dimen: true,
             latitude: {name: "地域", displayName: "地域", field: "region"},
             tableFilter: null,
-            dimen: true,
             // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
             number: 0,
             //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
@@ -70,7 +70,7 @@ define(["./module"], function (ctrs) {
             config["noFormat"] = "noFormat";
             config["twoYz"] = "twoYz";
             cf.renderChart(final_result, config);
-            console.log(final_result);
+            //console.log(final_result);
             var realCount = 0;
             final_result.forEach(function (item) {
                 if (item.label == "访客数(UV)") {

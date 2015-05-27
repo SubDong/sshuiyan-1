@@ -14,10 +14,11 @@ define(["./../module"], function (ctrs) {
         //配置默认指标
         $rootScope.checkedArray = ["outRate", "avgTime", "avgPage"];
         $rootScope.gridArray = [
+            {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
             {name: "页面url", displayName: "页面url", field: "loc"},
             {
                 name: " ",
-                cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' onmouseout='hiddenMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li></ul></div></div>"
+                cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li></ul></div></div>"
             },
             {name: "浏览量(PV)", displayName: "浏览量(PV)", field: "outRate"},
             {name: "平均访问时长", field: "avgTime"},
@@ -30,7 +31,7 @@ define(["./../module"], function (ctrs) {
             // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
             number: 2,
             //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
-            coding: "<li><a href='http://www.best-ad.cn' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li>",
+            coding: "<li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li>",
             arrayClear: false
         };
 
@@ -40,7 +41,7 @@ define(["./../module"], function (ctrs) {
                 chart.config.instance = echarts.init(document.getElementById(chart.config.id));
                 chart.types = checkedVal;
             });
-            requestService.refresh($scope.charts);
+            requestService.refresh([$scope.charts[1]]);
         }
         $scope.pieFormat = function (data, config) {
             var json = JSON.parse(eval("(" + data + ")").toString());
@@ -85,7 +86,8 @@ define(["./../module"], function (ctrs) {
                     id: "indicators_charts",
                     min_max: false,
                     bGap: true,
-                    chartType: "bar",
+                    chartType: "line",
+                    lineType: false,
                     keyFormat: 'none',
                     dataKey: "key",
                     dataValue: "quota"
@@ -106,7 +108,7 @@ define(["./../module"], function (ctrs) {
                 e.config.instance = chart;
                 util.renderLegend(chart, e.config);
             })
-            requestService.refresh($scope.charts);
+            requestService.refresh([$scope.charts[1]]);
         }
         $scope.init();
 

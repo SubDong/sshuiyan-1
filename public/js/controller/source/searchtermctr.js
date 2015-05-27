@@ -15,11 +15,12 @@ define(["./module"], function (ctrs) {
             //配置默认指标
             $rootScope.checkedArray = ["pv", "vc", "nuv", "ip"];
             $rootScope.gridArray = [
+                {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
                 {name: "搜索词", displayName: "搜索词", field: "kw"},
                 {
                     name: " ",
                     cellTemplate: "<div class='table_box'>" +
-                    "<button onmousemove='getMyButton(this)' onmouseout='hiddenMyButton(this)' class='table_nextbtn'></button>" +
+                    "<button onmousemove='getMyButton(this)' class='table_btn'></button>" +
                     "<div class='table_win'>" +
                     "<ul style='color: #45b1ec'>" +
                     "<li><a>查看相关热门搜索词</a></li>" +

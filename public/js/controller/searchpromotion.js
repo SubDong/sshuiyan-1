@@ -46,15 +46,16 @@ define(["./module"], function (ctrs) {
          });
          };*/
         if ($rootScope.tableSwitch.number == 1) {
-            $scope.gridBtnDivObj = "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn test'></a></div>";
+            $scope.gridBtnDivObj = "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn test'></a></div>";
         } else if ($rootScope.tableSwitch.number == 2) {
-            $scope.gridBtnDivObj = "<div class='table_box'><button onmousemove='getMyButton(this)' onmouseout='hiddenMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul style='color: #45b1ec'>" + $rootScope.tableSwitch.coding + "</ul></div></div>";
+            $scope.gridBtnDivObj = "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'>" + $rootScope.tableSwitch.coding + "</ul></div></div>";
         }
         if ($scope.tableSwitch.arrayClear)$rootScope.checkedArray = new Array();
         if ($scope.tableSwitch.arrayClear)$rootScope.searchGridArray = new Array();
 
 
         $rootScope.searchIndicators = function (item, entities, number, refresh) {
+            $rootScope.searchGridArray.shift();
             $rootScope.searchGridArray.shift();
             if (refresh == "refresh") {
                 $rootScope.searchGridArray.unshift($rootScope.tableSwitch.latitude);
@@ -93,6 +94,12 @@ define(["./module"], function (ctrs) {
                     }
 
                     $rootScope.searchGridArray.unshift($rootScope.tableSwitch.latitude);
+                    $scope.gridObjButton = {};
+                    $scope.gridObjButton["name"] = "xl";
+                    $scope.gridObjButton["displayName"] = "";
+                    $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
+                    $scope.gridObjButton["maxWidth"] = 10;
+                    $rootScope.gridArray.unshift($scope.gridObjButton);
                 } else {
                     $rootScope.checkedArray.push(item.name);
 
@@ -107,6 +114,12 @@ define(["./module"], function (ctrs) {
                         $rootScope.searchGridArray.unshift($scope.searchGridObjButton);
                     }
                     $rootScope.searchGridArray.unshift($rootScope.tableSwitch.latitude);
+                    $scope.gridObjButton = {};
+                    $scope.gridObjButton["name"] = "xl";
+                    $scope.gridObjButton["displayName"] = "";
+                    $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
+                    $scope.gridObjButton["maxWidth"] = 10;
+                    $rootScope.gridArray.unshift($scope.gridObjButton);
                 }
             }
             angular.forEach(entities, function (subscription, index) {
@@ -114,7 +127,7 @@ define(["./module"], function (ctrs) {
                     $scope.classInfo = 'current';
                 }
             });
-            $rootScope.$broadcast("ssh_reload_datashow");
+            // $rootScope.$broadcast("ssh_reload_datashow");
         };
         // 推广概况表格配置项
         $scope.gridOptions = {
@@ -136,7 +149,7 @@ define(["./module"], function (ctrs) {
 
             }
         };
-        $scope.page="";
+        $scope.page = "";
         $scope.pagego = function (pagevalue) {
             pagevalue.pagination.seek(Number($scope.page));
         }
@@ -395,6 +408,10 @@ define(["./module"], function (ctrs) {
             }
 
         }
+        //得到序列号
+        $scope.getIndex = function (b) {
+            return b.$parent.$parent.rowRenderIndex + 1
+        };
     });
 
     //得到tableFilter key
@@ -427,33 +444,3 @@ define(["./module"], function (ctrs) {
         }
     }
 });
-
-/**********************隐藏table中按钮的弹出层*******************************/
-var s = 0;
-function getMyButton(item) {
-    var a = document.getElementsByClassName("table_win");
-    theDisplay(a);
-    item.nextSibling.style.display = "block";
-    s = 0
-}
-function hiddenMyButton(item) {
-    item.nextSibling.style.display = "none";
-}
-function theDisplay(a) {
-    for (var i = 0; i < a.length; i++) {
-        if (document.getElementsByClassName("table_win")[i].style.display == "block") {
-            document.getElementsByClassName("table_win")[i].style.display = "none";
-        }
-    }
-}
-document.onclick = function () {
-    var a = document.getElementsByClassName("table_win");
-    if (a.length != 0) {
-        if (s > 0) {
-            theDisplay(a);
-            s = 0
-        }
-        s++
-    }
-};
-/*******************************************************************/

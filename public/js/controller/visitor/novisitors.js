@@ -13,10 +13,11 @@ define(["./module"], function (ctrs) {
         //配置默认指标
         $rootScope.checkedArray = ["vc", "uv", "outRate", "avgTime", "avgPage"];
         $rootScope.gridArray = [
+            {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
             {name: "网络供应商", displayName: "网络供应商", field: "ct"},
             {
                 name: " ",
-                cellTemplate: "<div class='table_box'><a ui-sref='history2' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
+                cellTemplate: "<div class='table_box'><a ui-sref='history2' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn'></a></div>"
             },
             {name: "访问次数", displayName: "访问次数", field: "vc"},
             {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},

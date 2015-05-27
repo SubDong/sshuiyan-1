@@ -126,13 +126,20 @@ define(["app"], function (app) {
         };
         if (typeof($rootScope.checkedArray) != undefined && $rootScope.checkedArray == "SS") {
             $scope.tableJu = "html";
-            $rootScope.gridArray = [{name: '地域', displayName: "地域", field: "city"},
+            $rootScope.gridArray = [
+                {
+                    name: "xl",
+                    displayName: "",
+                    cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
+                    maxWidth: 10
+                },
+                {name: '地域', displayName: "地域", field: "city"},
                 {name: '访问时间', displayName: "访问时间", field: "utime"},
                 {
                     name: '来源',
                     displayName: "来源",
                     field: "source",
-                    cellTemplate: "<a href='{{grid.appScope.getDataUrlInfo(grid, row,1)}}' style='color:#0965b8;line-height:30px;'>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</a>"
+                    cellTemplate: "<a href='{{grid.appScope.getDataUrlInfo(grid, row,1)}}' style='color:#0965b8;line-height:30px; display:block; padding:0 10px;'>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</a>"
                 },
                 {name: '访客标识码', displayName: "访客标识码", field: "tt"},
                 {name: "访问IP", displayName: "访问IP", field: "ip"},
@@ -146,11 +153,12 @@ define(["app"], function (app) {
 
         //table Button 配置 table_nextbtn
         if ($rootScope.tableSwitch.number == 1) {
-            $scope.gridBtnDivObj = "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn test'></a></div>";
+            $scope.gridBtnDivObj = "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn test'></a></div>";
         } else if ($rootScope.tableSwitch.number == 2) {
-            $scope.gridBtnDivObj = "<div class='table_box'><button onmousemove='getMyButton(this)' onmouseout='hiddenMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul style='color: #45b1ec'>" + $rootScope.tableSwitch.coding + "</ul></div></div>";
+            $scope.gridBtnDivObj = "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'>" + $rootScope.tableSwitch.coding + "</ul></div></div>";
         }
         $rootScope.indicators = function (item, entities, number, refresh) {
+            $rootScope.gridArray.shift();
             $rootScope.gridArray.shift();
             if (refresh == "refresh") {
                 $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude);
@@ -189,6 +197,12 @@ define(["app"], function (app) {
                     }
 
                     $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude);
+                    $scope.gridObjButton = {};
+                    $scope.gridObjButton["name"] = "xl";
+                    $scope.gridObjButton["displayName"] = "";
+                    $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
+                    $scope.gridObjButton["maxWidth"] = 10;
+                    $rootScope.gridArray.unshift($scope.gridObjButton);
                 } else {
                     $rootScope.checkedArray.push(item.name);
 
@@ -203,6 +217,12 @@ define(["app"], function (app) {
                         $rootScope.gridArray.unshift($scope.gridObjButton);
                     }
                     $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude);
+                    $scope.gridObjButton = {};
+                    $scope.gridObjButton["name"] = "xl";
+                    $scope.gridObjButton["displayName"] = "";
+                    $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
+                    $scope.gridObjButton["maxWidth"] = 10;
+                    $rootScope.gridArray.unshift($scope.gridObjButton);
                 }
             }
             angular.forEach(entities, function (subscription, index) {
@@ -399,7 +419,6 @@ define(["app"], function (app) {
          * @param type
          */
         $rootScope.targetSearch = function (isClicked) {
-            console.log($rootScope.tableSwitch.tableFilter);
             $scope.gridOptions.columnDefs = $rootScope.gridArray;
             $scope.gridOptions.rowHeight = 32;
             if (isClicked) {
@@ -518,20 +537,22 @@ define(["app"], function (app) {
 
         //数据对比
         $rootScope.datepickerClickTow = function (start, end, label) {
+            var gridArrayOld = angular.copy($rootScope.gridArray);
             $rootScope.gridArray.forEach(function (item, i) {
                 var a = item["field"];
                 if (item["cellTemplate"] == undefined) {
-                    item["cellTemplate"] = "<ul class='contrastlist'><li>{{grid.appScope.getContrastInfo(grid, row,1,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,2,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,3,'" + a + "')}}</li></ul>"
-                }
-                if (a == undefined) {
-                    item["cellTemplate"] = ""
+                    item["cellTemplate"] = "<ul class='contrastlist'><li>{{grid.appScope.getContrastInfo(grid, row,0,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,1,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,2,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,3,'" + a + "')}}</li></ul>"
                 }
             });
-            $scope.gridOptions.rowHeight = 75;
+            $scope.gridOptions.rowHeight = 95;
             var time = chartUtils.getTimeOffset(start, end);
             var startTime = time[0];
             var endTime = time[0] + ($rootScope.tableTimeEnd - $rootScope.tableTimeStart);
+
             $rootScope.$broadcast("ssh_load_compare_datashow", startTime, endTime);
+
+            var dateTime1 = chartUtils.getSetOffTime($rootScope.tableTimeStart, $rootScope.tableTimeEnd);
+            var dateTime2 = chartUtils.getSetOffTime(startTime, endTime);
             $scope.targetDataContrast(null, null, function (item) {
                 var target = ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field);
                 var dataArray = [];
@@ -544,9 +565,9 @@ define(["app"], function (app) {
                                 $rootScope.checkedArray.forEach(function (tt, aa) {
                                     var bili = ((parseInt(a[tt].replace("%")) - parseInt((contrast[i][tt]).replace("%"))) / parseInt((contrast[i][tt]).replace("%")) * 100).toFixed(2);
                                     dataObj[tt] = (isNaN(bili) ? 0 : bili) + "%";
-                                    a[tt] = a[tt] + "," + contrast[i][tt] + "," + dataObj[tt]
+                                    a[tt] = "　" + "," + a[tt] + "," + contrast[i][tt] + "," + dataObj[tt]
                                 });
-                                a[target] = a[target] + "," + contrast[i][target] + "," + "变化率"
+                                a[target] = a[target] + "," + ($rootScope.startString != undefined ? $rootScope.startString : dateTime1[0] + " 至 " + dateTime1[1]) + "," + (dateTime2[0] + " 至 " + dateTime2[1]) + "," + "变化率"
                                 dataArray.push(a);
                                 is = 0;
                                 break;
@@ -557,18 +578,18 @@ define(["app"], function (app) {
                         if (is == 1) {
                             $rootScope.checkedArray.forEach(function (tt, aa) {
                                 dataObj[tt] = "--"
-                                a[tt] = a[tt] + "," + "--" + "," + "--"
+                                a[tt] = "　" + "," + a[tt] + "," + "--" + "," + "--"
                             });
-                            a[target] = a[target] + "," + a[target] + "," + "变化率"
+                            a[target] = a[target] + "," + ($rootScope.startString != undefined ? $rootScope.startString : dateTime1[0] + " 至 " + dateTime1[1]) + "," + (dateTime2[0] + " 至 " + dateTime2[1]) + "," + "变化率"
                             dataArray.push(a);
                         }
                     })
                 });
-                console.log(JSON.stringify(dataArray));
                 $scope.gridOptions.data = dataArray;
+                $rootScope.gridArray = gridArrayOld;
             })
         };
-
+        //数据对比实现方法
         $scope.targetDataContrast = function (startInfoTime, endInfoTime, cabk) {
             $scope.gridOptions.columnDefs = $rootScope.gridArray;
             if ($rootScope.tableSwitch.isJudge == undefined) $scope.isJudge = true;
@@ -669,11 +690,14 @@ define(["app"], function (app) {
                     if (row.entity[$rootScope.tableSwitch.latitude.field] == "搜索引擎" && $rootScope.tableSwitch.latitude.field == "rf_type")$rootScope.tableSwitch.dimen = "se";
                     if (row.entity[$rootScope.tableSwitch.latitude.field] == "外部链接" && $rootScope.tableSwitch.latitude.field == "rf_type")$rootScope.tableSwitch.dimen = "rf";
                     if ($scope.webSite == 1)$rootScope.tableSwitch.dimen = "rf";
-                    var returnFilter = $rootScope.tableSwitch.tableFilter;
-                    $rootScope.tableSwitch.tableFilter = "[{\"" + $rootScope.tableSwitch.latitude.field + "\":[\"" + getField(row.entity[$rootScope.tableSwitch.latitude.field], $rootScope.tableSwitch.latitude.field) + "\"]}]";
+                    var returnFilter = angular.copy($rootScope.tableSwitch.tableFilter);
+                    var entity = row.entity[$rootScope.tableSwitch.latitude.field];
+                    var newEntity = row.entity[$rootScope.tableSwitch.latitude.field].split(",");
+                    newEntity.length > 0 ? entity = newEntity[0] : "";
+                    $rootScope.tableSwitch.tableFilter = "[{\"" + $rootScope.tableSwitch.latitude.field + "\":[\"" + getField(entity, $rootScope.tableSwitch.latitude.field) + "\"]}]";
                     row.entity.subGridOptions = {
                         showHeader: false,
-                        columnDefs: $scope.gridArray
+                        columnDefs: $rootScope.gridArray
                     };
                     $http({
                         method: 'GET',
@@ -686,7 +710,7 @@ define(["app"], function (app) {
                             data = JSON.parse(JSON.stringify(data).replace(reg, $rootScope.tableSwitch.latitude.field));
                             dataNumber = data.length;
                         }
-                        row.entity.subGridOptions.data = data
+                        row.entity.subGridOptions.data = data;
                         $rootScope.tableSwitch.tableFilter = returnFilter;
                     }).error(function (error) {
                         console.log(error);
@@ -695,8 +719,7 @@ define(["app"], function (app) {
             });
         };
         //得到数据中的url
-        $scope.getDataUrlInfo = function (grid, row, number) {
-            console.log(grid);
+        $scope.getDataUrlInfoa = function (grid, row, number) {
             var a = row.entity.source.split(",");
             if (number == 1) {
                 return a[0];
@@ -706,16 +729,18 @@ define(["app"], function (app) {
             }
         };
 
-        //得到数据中的url
+        //数据对比分割数据
         $scope.getContrastInfo = function (grid, row, number, fieldData) {
             if (fieldData != undefined || fieldData != "undefined") {
                 var a = row.entity[fieldData].split(",");
-                if (number == 1) {
+                if (number == 0) {
                     return a[0];
-                } else if (number == 2) {
+                } else if (number == 1) {
                     return a[1];
-                } else if (number == 3) {
+                } else if (number == 2) {
                     return a[2];
+                } else if (number == 3) {
+                    return a[3];
                 }
             }
         };
@@ -755,6 +780,8 @@ define(["app"], function (app) {
             if ($rootScope.tableSwitch.isJudge)$rootScope.tableSwitch.tableFilter = undefined;
 
             var a = b.$parent.$parent.row.entity[$rootScope.tableSwitch.latitude.field];
+            var s = a.split(",");
+            s.length > 0 ? a = s[0] : "";
             $rootScope.tableSwitch.tableFilter = "[{\"" + $rootScope.tableSwitch.latitude.field + "\":[\"" + getField(a, $rootScope.tableSwitch.latitude.field) + "\"]}]";
 
         }
@@ -774,6 +801,10 @@ define(["app"], function (app) {
                 }
                 return a[1];
             }
+        };
+        //得到序列号
+        $scope.getIndex = function (b) {
+            return b.$parent.$parent.rowRenderIndex + 1
         };
 
         var getField = function (rr, ss) {
@@ -818,12 +849,12 @@ define(["app"], function (app) {
 });
 
 /**********************隐藏table中按钮的弹出层*******************************/
-var s = 0;
+var s = 1;
 function getMyButton(item) {
     var a = document.getElementsByClassName("table_win");
     theDisplay(a);
     item.nextSibling.style.display = "block";
-    s = 0
+    s = 1
 }
 function hiddenMyButton(item) {
     item.nextSibling.style.display = "none";
@@ -840,7 +871,7 @@ document.onclick = function () {
     if (a.length != 0) {
         if (s > 0) {
             theDisplay(a);
-            s = 0
+            s = 1
         }
         s++
     }

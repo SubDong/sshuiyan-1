@@ -13,10 +13,11 @@ define(["./module"], function (ctrs) {
         $rootScope.checkedArray = ["click", "cost", "cpc", "pv", "uv", "avgPage"];
         $rootScope.tableFormat = null;
         $rootScope.gridArray = [
+            {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
             {name: "推广方式", displayName: "推广方式", field: "accountName"},
             {
                 name: " ",
-                cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
+                cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn'></a></div>"
             },
             {name: "点击", displayName: "点击", field: "click"},
             {name: "消费", displayName: "消费", field: "cost"},
@@ -54,7 +55,11 @@ define(["./module"], function (ctrs) {
         $scope.selectedQuota = ["click", "impression"];
         $scope.onLegendClick = function (radio, chartInstance, config, checkedVal) {
             $scope.selectedQuota = checkedVal;
-            $scope.init($rootScope.user, $rootScope.baiduAccount, "account", $scope.selectedQuota, $rootScope.start, $rootScope.end);
+            if (checkedVal.length) {
+                $scope.init($rootScope.user, $rootScope.baiduAccount, "account", $scope.selectedQuota, $rootScope.start, $rootScope.end);
+            } else {
+                def.defData($scope.charts[0].config);
+            }
         }
         $scope.charts = [
             {
@@ -97,15 +102,19 @@ define(["./module"], function (ctrs) {
             }
             $q.all(requestArray).then(function (res) {
                 var final_result = chartUtils.getSearchTypeResult(quotas, res);
-                chartUtils.addStep(final_result, 24);//填充空白
-                $scope.charts[0].config.chartType = "bar";
-                $scope.charts[0].config.bGap = true;
+                var count = util.existData(final_result);
+                if (count) {
+                    chartUtils.addStep(final_result, 24);//填充空白
+                    $scope.charts[0].config.chartType = "bar";
+                    $scope.charts[0].config.bGap = true;
+                    cf.renderChart(final_result, $scope.charts[0].config);
+                } else {
+                    def.defData($scope.charts[0].config);
+                }
                 if (renderLegend) {
                     util.renderLegend(chart, $scope.charts[0].config);
                     Custom.initCheckInfo();
                 }
-                cf.renderChart(final_result, $scope.charts[0].config);
-                chart.hideLoading();
             });
 
         }
@@ -175,7 +184,7 @@ define(["./module"], function (ctrs) {
             } else {
                 $scope.charts[0].config.keyFormat = "hour";
             }
-            requestService.refresh($scope.charts);
+            $scope.init($rootScope.user, $rootScope.baiduAccount, "account", $scope.selectedQuota, $rootScope.start, $rootScope.end);
             $rootScope.targetSearch();
             $rootScope.tableTimeStart = time[0];
             $rootScope.tableTimeEnd = time[1];
