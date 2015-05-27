@@ -19,7 +19,7 @@ define(["./module"], function (ctrs) {
                 name: " ",
                 cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn'></a></div>"
             },
-            {name: "点击", displayName: "点击", field: "click"},
+            {name: "点击量", displayName: "点击量", field: "click"},
             {name: "消费", displayName: "消费", field: "cost"},
             {name: "平均点击价格", displayName: "平均点击价格", field: "cpc"},
             {name: "浏览量(PV)", displayName: "浏览量(PV)", field: "pv"},
