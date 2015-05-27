@@ -32,6 +32,7 @@ define(["./module"], function (ctrs) {
             })
             requestService.refresh($scope.charts);
         }
+
         $scope.realTimeFormat = function (data, config, e) {
             var json = JSON.parse(eval("(" + data + ")").toString());
             var result = json[0].result;

@@ -247,7 +247,7 @@ define(["app"], function (app) {
                 enableHorizontalScrollbar: 0,
                 columnDefs: $scope.gridOpArray,
                 onRegisterApi: function (girApi) {
-                    $scope.gridApi2 = girApi;
+                    $rootScope.gridApi2 = girApi;
                     griApihtml(girApi);
                 }
             };
@@ -263,7 +263,7 @@ define(["app"], function (app) {
                 enableHorizontalScrollbar: 0,
                 columnDefs: $scope.gridOpArray,
                 onRegisterApi: function (gridApi) {
-                    $scope.gridApi2 = gridApi;
+                    $rootScope.gridApi2 = gridApi;
                     if ($rootScope.tableSwitch.dimen) {
                         griApiInfo(gridApi);
                     }
