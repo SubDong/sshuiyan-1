@@ -287,8 +287,8 @@ var op = {
             if (chartConfig.keyFormat == "week") {
                 if (chartConfig.time) {
                     var hasChange = [];
-
-                    console.log(x[0] + ">>>" + x[x.length - 1]);
+                    x[0] = chartConfig.time[0].split("-")[0] + "-" + x[0].split("-")[1];
+                    x[x.length - 1] = x[x.length - 1].split("-")[0] + "-" + chartConfig.time[1].split("-")[0];
                 }
             }
             xData.push(x);

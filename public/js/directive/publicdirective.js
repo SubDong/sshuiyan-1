@@ -109,6 +109,7 @@ define(["../app"], function (app) {
                     $rootScope.end = 0;
                     scope.reloadByCalendar("month");
                     $('#reportrange span').html(GetDateStr(-29) + "至" + GetDateStr(0));
+                    scope.wtimes = [GetDateStr(-29), GetDateStr(0)];
                 };
                 scope.timeclick = function () {
                     scope.reset();
@@ -156,6 +157,7 @@ define(["../app"], function (app) {
                     cancelClass: 'btn-default',
                     separator: ' to '
                 }, function (start, end, label) {
+                    scope.wtimes = [start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD')];
                     $rootScope.datepickerClick(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
                     $rootScope.startString = (start.format('YYYY-MM-DD') + ' 至 ' + end.format('YYYY-MM-DD'))
                     $('#reportrange span').html(start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD'));
@@ -228,11 +230,11 @@ define(["../app"], function (app) {
             link: function (scope) {
                 //导出功能
                 scope.fileSave = function (obj) {
-                    if(obj.value=="csv"){
-                        scope.gridApi2.exporter.csvExport( "all", "visible", angular.element() );
+                    if (obj.value == "csv") {
+                        scope.gridApi2.exporter.csvExport("all", "visible", angular.element());
                     }
-                    else{
-                        scope.gridApi2.exporter.pdfExport( "all", "visible" );
+                    else {
+                        scope.gridApi2.exporter.pdfExport("all", "visible");
                     }
                 }
             }

@@ -21,7 +21,7 @@ define(['./module'], function (ctrs) {
             enableVerticalScrollbar: 0,
             columnDefs: [
                 {name: 'name', displayName: "关键词"},
-                {name: 'value', displayName: "浏览量(PV)",cellClass: 'ui_text', headerClass: 'ui_text'}
+                {name: 'value', displayName: "浏览量(PV)", cellClass: 'ui_text', headerClass: 'ui_text'}
             ]
         };
         $scope.onLegendClickListener = function (radio, chartObj, chartConfig, checkedVal) {
@@ -158,6 +158,7 @@ define(['./module'], function (ctrs) {
             }
             $scope.charts.forEach(function (chart) {
                 chart.config.instance = echarts.init(document.getElementById(chart.config.id));
+                chart.config.time = chartUtils.getWeekTime($rootScope.start, $rootScope.end);
             });
             requestService.refresh($scope.charts);
             requestService.gridRefresh($scope.grids);
@@ -202,6 +203,7 @@ define(['./module'], function (ctrs) {
                 e.config.instance = chart;
                 e.config.noFormat = undefined;
             });
+            $scope.charts[0].config.time = chartUtils.getWeekTime($rootScope.start, $rootScope.end);
             $scope.charts[0].config.keyFormat = "week";
             requestService.refresh($scope.charts);
 
@@ -276,6 +278,7 @@ define(['./module'], function (ctrs) {
             }
             $rootScope.start = time[0];
             $rootScope.end = time[1];
+            $rootScope.interval = -1;
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
