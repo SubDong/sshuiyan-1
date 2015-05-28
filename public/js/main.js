@@ -30,6 +30,9 @@ require.config({
         ],
         "js007": [
             "http://cdn.bootcss.com/echarts/2.2.1/echarts-all"
+        ],
+        "js008": [
+            "http://ui-grid.info/docs/grunt-scripts/vfs_fonts"
         ]
     },
     shim: {
@@ -48,9 +51,9 @@ require.config({
         "js002": ["angular"],
         "angularjs/ui-bootstrap.min": ["angular"],
         "angularjs/ui-bootstrap-tpls": ["angular"],
+     /*   "angularjs/vfs_fonts": ["angular"],*/
         "angularjs/csv": ["angular"],
         "angularjs/pdfmake": ["angular"],
-        "angularjs/vfs_fonts": ["angular"],
         "angularjs/ui-grid-unstable.min": ["angular"],
         "angularjs/checkbox": ["angular"],
         "angularjs/moment.min": ["angular"],

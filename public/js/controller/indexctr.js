@@ -20,9 +20,15 @@ define(['./module'], function (ctrs) {
             enableHorizontalScrollbar: 0,
             enableVerticalScrollbar: 0,
             columnDefs: [
-                {name: 'name', displayName: "关键词"},
-                {name: 'value', displayName: "浏览量(PV)", cellClass: 'ui_text', headerClass: 'ui_text'}
-            ]
+
+                {name: 'name', displayName: "搜索词"},
+                {name: 'value', displayName: "浏览量(PV)", headerCellClass: 'ui_text', cellClass: 'ui_text'}
+            ],
+            onRegisterApi:function (gridApi) {
+                console.log(gridApi);
+                $rootScope.gridApi = gridApi;
+            }
+
         };
         $scope.onLegendClickListener = function (radio, chartObj, chartConfig, checkedVal) {
             clear.lineChart($scope.charts[0].config, checkedVal);
@@ -294,8 +300,9 @@ define(['./module'], function (ctrs) {
             var d = dd.getDate();
             return y + "-" + m + "-" + d;
         }
+
         //刷新
-        $scope.page_refresh = function(){
+        $scope.page_refresh = function () {
             $rootScope.start = 0;
             $rootScope.end = 0;
             $rootScope.tableTimeStart = 0;
@@ -307,13 +314,22 @@ define(['./module'], function (ctrs) {
             //图表
             requestService.refresh($scope.charts);
             //首页表格
-           requestService.gridRefresh($scope.grids);
+            requestService.gridRefresh($scope.grids);
             $scope.reloadByCalendar("today");
             $('#reportrange span').html(GetDateStr(0));
             //classcurrent
             $scope.reset();
             $scope.todayClass = true;
         };
+        /*       $scope.fileSave = function (obj) {
+         if(obj.value=="csv"){
+         $scope.gridApi.exporter.csvExport( "all", "visible", angular.element() );
+         }
+         else{
+         $scope.gridApi.exporter.pdfExport( "all", "visible", angular.element() );
+         }
+         }*/
+
     }])
 })
 
