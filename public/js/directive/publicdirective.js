@@ -113,6 +113,7 @@ define(["../app"], function (app) {
                 scope.timeclick = function () {
                     scope.reset();
                     scope.timeClass = true;
+                    $('#reportrange span').html(GetDateStr(0))
                 }
                 scope.open = function ($event) {
                     scope.reset();
