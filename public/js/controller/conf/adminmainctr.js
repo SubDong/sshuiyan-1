@@ -33,8 +33,8 @@ define(["./module"], function (ctrs) {
             {name: "x2", displayName: "",cellTemplate: "<div class='table_admin'>查看网站概览</div>", maxWidth:100 },
             {name: "x3", displayName: "",cellTemplate: "<div class='table_admin'><span class='glyphicon glyphicon-cog'></span>设置</div>", maxWidth:80  },
             {name: "x4", displayName: "",cellTemplate: "<div class='table_admin'>暂停</div>", maxWidth:80 },
+            {name: 'edit', displayName: 'Edit', cellTemplate: '<button id="editBtn" type="button" class="btn-small" ng-click="grid.appScope.edit(row.entity)" >Edit</button> '},
             {name: "x5", displayName: "",cellTemplate: "<div class='table_admin'>删除</div>", maxWidth:80 }
-
         ];
 
         $rootScope.tableSwitch = {

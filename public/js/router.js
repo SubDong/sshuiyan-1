@@ -214,7 +214,7 @@ define(["angular", "app"], function (ng, app) {
         $urlRouterProvider.when('', '/conf');
         $stateProvider
             .state('conf', {
-                url: '/conf',
+                url: '/conf/main.html',
                 templateUrl: '../conf/weblist/main.html'
             })
             .state('rule', {

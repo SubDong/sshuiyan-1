@@ -153,7 +153,24 @@ define(["./module"], function (ctrs) {
             $scope.country.selected = undefined;
             $scope.souce.selected = undefined;
         };
-
+        //刷新
+            $scope.page_refresh = function(){
+                $rootScope.start = 0;
+                $rootScope.end = 0;
+                $rootScope.tableTimeStart = 0;
+                $rootScope.tableTimeEnd = 0;
+                $scope.charts.forEach(function (e) {
+                    var chart = echarts.init(document.getElementById(e.config.id));
+                    e.config.instance = chart;
+                });
+                //图表
+                requestService.refresh($scope.charts);
+                //其他页面表格
+                $rootScope.targetSearch(true);
+                //classcurrent
+//                $scope.reset();
+//                $scope.todayClass = true;
+            };
     });
 
 });

@@ -128,7 +128,7 @@ define(["./module"], function (ctrs) {
             {name: '所有页面底部400按钮'},
             {name: '详情页右侧按钮'},
             {name: '时长目标'},
-            {name: '访问页数目标'},
+            {name: '访问页数目标'}
         ];
         //日历
         $scope.dateClosed = function () {
@@ -165,6 +165,33 @@ define(["./module"], function (ctrs) {
             $scope.endOffset = (endTime - today_start()) / 86400000;
             //console.log("startOffset=" + startOffset + ", " + "endOffset=" + endOffset);
         });
+        function GetDateStr(AddDayCount) {
+            var dd = new Date();
+            dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
+            var y = dd.getFullYear();
+            var m = dd.getMonth() + 1;//获取当前月份的日期
+            var d = dd.getDate();
+            return y + "-" + m + "-" + d;
+        }
+        //刷新
+        $scope.page_refresh = function(){
+            $rootScope.start = -1;
+            $rootScope.end = -1;
+            $rootScope.tableTimeStart = -1;//开始时间
+            $rootScope.tableTimeEnd = -1;//结束时间、
+            $rootScope.tableFormat = null;
+            $rootScope.targetSearchSpread();
+            $scope.init($rootScope.user, $rootScope.baiduAccount, "creative", $scope.selectedQuota, $rootScope.start, $rootScope.end);
+            //图表
+            requestService.refresh($scope.charts);
+            $scope.reloadByCalendar("yesterday");
+            $('#reportrange span').html(GetDateStr(-1));
+            //其他页面表格
+            //classcurrent
+            $scope.$broadcast("ssh_dateShow_options_time_change");
+            $scope.reset();
+            $scope.yesterdayClass = true;
+        };
     });
 
 });

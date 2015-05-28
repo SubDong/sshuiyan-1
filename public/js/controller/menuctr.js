@@ -167,7 +167,7 @@ define(["./module"], function (ctrs) {
                 title: '网站列表',
                 icon: 'glyphicon glyphicon-list',
                 stype: 0,
-                sref: '#conf/mian.html',
+                sref: '#conf/main.html',
                 current: 'current'
             },
             {
