@@ -74,7 +74,7 @@ define(['./module'], function (ctrs) {
             }
         ];
         $scope.init = function (data, quotas) {
-
+            console.log(data);
             $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
             if ($rootScope.tableTimeStart > -7) {
                 $scope.charts[0].config.noFormat = undefined;

@@ -283,7 +283,15 @@ var op = {
                     ]
                 }
             }
-            xData.push(util.getX(item, chartConfig));
+            var x = util.getX(item, chartConfig);
+            if (chartConfig.keyFormat == "week") {
+                if (chartConfig.time) {
+                    var hasChange = [];
+
+                    console.log(x[0] + ">>>" + x[x.length - 1]);
+                }
+            }
+            xData.push(x);
             option.series.push(serie);
         });
         if (!chartConfig.twoYz) {
@@ -1098,6 +1106,7 @@ var util = {
             //console.log( util.getWeekStartDate(date1)+ ":::" + util.getWeekEndDate(date1));
             //console.log(date1.Format("yyyy-MM-dd"));
             return util.getWeekStartDate(date1) + "-" + util.getWeekEndDate(date1);
+            //return dateStr;
             //return a.substr(2, 4) + "年第" + Math.ceil((d + ((date2.getDay() + 1) - 1)) / 7) +
             //    "周";
         } else {

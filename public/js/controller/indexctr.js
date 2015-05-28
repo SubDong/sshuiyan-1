@@ -172,8 +172,8 @@ define(['./module'], function (ctrs) {
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
-                e.config.bGap = false;//图表类型
             });
+            $scope.charts[0].config.bGap = false;//图表类型
             requestService.refresh($scope.charts);
 
         };
@@ -185,11 +185,10 @@ define(['./module'], function (ctrs) {
             $scope.hourcheckClass = false;
             $scope.timeselect = true;
             $rootScope.interval = -1;
-            $scope.charts.forEach(function (e) {
-                var chart = echarts.init(document.getElementById(e.config.id));
-                e.config.instance = chart;
-                e.config.noFormat = undefined;
-            });
+            var e = $scope.charts[0];
+            var chart = echarts.init(document.getElementById(e.config.id));
+            e.config.instance = chart;
+            e.config.noFormat = undefined;
             requestService.refresh($scope.charts);
         };
         $scope.weekcheck = function () {

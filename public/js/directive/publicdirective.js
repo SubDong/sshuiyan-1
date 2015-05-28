@@ -197,6 +197,7 @@ define(["../app"], function (app) {
                     cancelClass: 'btn-default',
                     separator: ' to '
                 }, function (start, end, label) {
+                    scope.compareDatePicker(start, end);
                     $rootScope.datepickerClickTow(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
                     $('#choicetrange span').html(start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD'));
                 });
