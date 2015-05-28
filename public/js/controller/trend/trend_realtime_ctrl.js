@@ -71,17 +71,14 @@ define(["./module"], function (ctrs) {
             config["noFormat"] = "noFormat";
             config["twoYz"] = "twoYz";
             cf.renderChart(final_result, config);
-            //console.log(final_result);
-            var realCount = 0;
-            final_result.forEach(function (item) {
-                if (item.label == "访客数(UV)") {
-                    item.quota.forEach(function (i) {
-                        realCount += i;
-                    });
-                }
-            });
-            $scope.visitorCount += realCount;
+            $scope.initPeron();
         }
+        $scope.initPeron = function () {
+            $http.get("/api/realTimeAccess/?filerInfo=null&type=" + $rootScope.userType).success(function (data) {
+                $scope.visitorCount = data.length;
+            });
+        }
+        $scope.initPeron();
         $scope.charts = [
             {
                 config: {
@@ -120,16 +117,6 @@ define(["./module"], function (ctrs) {
             Custom.initCheckInfo();
         }
         $scope.init();
-        //$scope.initPerson = function () {
-        //    $http.get("/api/halfhour?type=uv&start=0&end=0?userType=" + $rootScope.userType).success(function (data) {
-        //        var json = JSON.parse(eval("(" + data + ")").toString());
-        //        var result = json[0].result;
-        //        result.buckets.forEach(function (e) {
-        //            $scope.visitorCount += e.uv_aggs.value;
-        //        });
-        //    });
-        //}
-        //$scope.initPerson();
         /*    $scope.search = function (keyword, time, ip) {
          requestService.gridRequest($scope.startTime, $scope.endTime, $scope.gridOptions, "uv");
          };*/

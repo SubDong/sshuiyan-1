@@ -369,25 +369,25 @@ var chartUtils = {
         }
     },
     addStep: function (json, number) {
-        //json.forEach(function (e) {
-        //    //var _key = [];
-        //    //var _value = [];
-        //    //for (var i = 0; i < number / 2; i++) {
-        //    //    _key.push("");
-        //    //    _value.push(0);
-        //    //}
-        //    //for (var i = 0; i < e.key.length; i++) {
-        //    //    _key.push(e.key[i]);
-        //    //    _value.push(e.quota[i]);
-        //    //}
-        //    //for (var i = number / 2; i < number; i++) {
-        //    //    _key.push("");
-        //    //    _value.push(0);
-        //    //}
-        //
-        //    e.key = _key;
-        //    e.quota = _value;
-        //});
+        json.forEach(function (e) {
+            var _key = [];
+            var _value = [];
+            for (var i = 0; i < number / 2; i++) {
+                _key.push("");
+                _value.push(0);
+            }
+            for (var i = 0; i < e.key.length; i++) {
+                _key.push(e.key[i]);
+                _value.push(e.quota[i]);
+            }
+            for (var i = number / 2; i < number; i++) {
+                _key.push("");
+                _value.push(0);
+            }
+
+            e.key = _key;
+            e.quota = _value;
+        });
 
     },
     noFormatConvertLabel: function (json) {

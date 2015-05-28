@@ -19,14 +19,15 @@ define(["./module"], function (ctrs) {
             };
             $scope.selectedQuota = ["cost", "vc"];
             $scope.$on("ssh_refresh_charts", function (e, msg) {
+                $scope.refreshGrid($rootScope.userType);
                 $scope.charts[0].config.qingXie = undefined;
                 $scope.compareArray = [];
-                if ($rootScope.start > -7) {
+                if ($rootScope.start > -6) {
                     $(".under_top").show();
                 } else {
                     $(".under_top").hide();
                 }
-                if ($rootScope.start == -30) {
+                if ($rootScope.start == -29) {
                     $scope.charts[0].config.qingXie = true
                 }
                 $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $rootScope.start, $rootScope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
@@ -224,7 +225,7 @@ define(["./module"], function (ctrs) {
 
                 //$scope.doSearchByEffectQuota("1");
 
-                //$scope.getSemQuotaRealTimeData("baidu-bjjiehun2123585", "account", $scope.startDate_, $scope.endDate_, 0, 7, PERFORMANCE_DATA);
+                //$scope.getSemQuotaRealTimeData($rootScope.baiduAccount, "account", $scope.startDate_, $scope.endDate_, 0, 7, PERFORMANCE_DATA);
 
                 var timeInterval = setInterval(function () {
                     if ($scope.effectDataArray.length > 0 && $scope.semDataArray.length > 0) {
@@ -328,7 +329,7 @@ define(["./module"], function (ctrs) {
                 $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $rootScope.start, $rootScope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
                 //console.log(outQuota.value);
                 //$scope.refreshData();
-                //$scope.init("jiehun", "baidu-bjjiehun2123585", "account", -1, -1, -1, 1);
+                //$scope.init($rootScope.user, $rootScope.baiduAccount, "account", -1, -1, -1, 1);
             };
 
             // 触发效果指标的事件
@@ -437,7 +438,7 @@ define(["./module"], function (ctrs) {
 
                     $scope.surveyData1.push(obj);
 
-                    $scope.getSemAccountData("jiehun", "baidu-bjjiehun2123585", "account", -1, -1, 0);
+                    $scope.getSemAccountData($rootScope.user, $rootScope.baiduAccount, "account", -1, -1, 0);
                 }).error(function (error) {
                     console.log(error);
                 });
@@ -535,10 +536,10 @@ define(["./module"], function (ctrs) {
 
                 // refresh grid data
                 // TODO replace trackId
-                $scope.loadGridOptions1Data("jiehun", "baidu-bjjiehun2123585", "account", $scope.start, $scope.end, -1, 2);
-                $scope.loadGridOptions2Data("jiehun", "baidu-bjjiehun2123585", "account", $scope.start, $scope.end, -1, 2);
-                $scope.loadGridOptions3Data("jiehun", "baidu-bjjiehun2123585", "account", $scope.start, $scope.end, 2);
-                $scope.loadGridOptions4Data("jiehun", "baidu-bjjiehun2123585", "region", $scope.start, $scope.end, -1, 2);
+                $scope.loadGridOptions1Data($rootScope.user, $rootScope.baiduAccount, "account", $scope.start, $scope.end, -1, 2);
+                $scope.loadGridOptions2Data($rootScope.user, $rootScope.baiduAccount, "account", $scope.start, $scope.end, -1, 2);
+                $scope.loadGridOptions3Data($rootScope.user, $rootScope.baiduAccount, "account", $scope.start, $scope.end, 2);
+                $scope.loadGridOptions4Data($rootScope.user, $rootScope.baiduAccount, "region", $scope.start, $scope.end, -1, 2);
             };
 
             $scope.gridOptions1Data = [];
@@ -761,15 +762,22 @@ define(["./module"], function (ctrs) {
                 $scope.quotaMap.put("ctr", "点击率");
                 $scope.quotaMap.put("cpc", "平均点击价格");
 
-                $scope.doSearch(-1, -1, trackId);
-                $scope.loadGridOptions1Data("jiehun", "baidu-bjjiehun2123585", "account", -1, -1, -1, trackId);
-                $scope.loadGridOptions2Data("jiehun", "baidu-bjjiehun2123585", "account", -1, -1, -1, trackId);
-                $scope.loadGridOptions3Data("jiehun", "baidu-bjjiehun2123585", "account", -1, -1, trackId);
-                $scope.loadGridOptions4Data("jiehun", "baidu-bjjiehun2123585", "region", -1, -1, -1, trackId);
+                $scope.doSearch($rootScope.start, $rootScope.end, trackId);
+                $scope.loadGridOptions1Data($rootScope.user, $rootScope.baiduAccount, "account", $rootScope.start, $rootScope.end, -1, trackId);
+                $scope.loadGridOptions2Data($rootScope.user, $rootScope.baiduAccount, "account", $rootScope.start, $rootScope.end, -1, trackId);
+                $scope.loadGridOptions3Data($rootScope.user, $rootScope.baiduAccount, "account", $rootScope.start, $rootScope.end, trackId);
+                $scope.loadGridOptions4Data($rootScope.user, $rootScope.baiduAccount, "region", $rootScope.start, $rootScope.end, -1, trackId);
             };
 
+            $scope.refreshGrid = function (trackId) {
+                $scope.doSearch($rootScope.start, $rootScope.end, trackId);
+                $scope.loadGridOptions1Data($rootScope.user, $rootScope.baiduAccount, "account", $rootScope.start, $rootScope.end, -1, trackId);
+                $scope.loadGridOptions2Data($rootScope.user, $rootScope.baiduAccount, "account", $rootScope.start, $rootScope.end, -1, trackId);
+                $scope.loadGridOptions3Data($rootScope.user, $rootScope.baiduAccount, "account", $rootScope.start, $rootScope.end, trackId);
+                $scope.loadGridOptions4Data($rootScope.user, $rootScope.baiduAccount, "region", $rootScope.start, $rootScope.end, -1, trackId);
+            }
             // initialize
-            $scope.init("2");
+            $scope.init($rootScope.userType);
             console.log($scope.datechoice);
         }
     )

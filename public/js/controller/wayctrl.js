@@ -13,7 +13,12 @@ define(["./module"], function (ctrs) {
         $rootScope.checkedArray = ["click", "cost", "cpc", "pv", "uv", "avgPage"];
         $rootScope.tableFormat = null;
         $rootScope.gridArray = [
-            {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
+            {
+                name: "xl",
+                displayName: "",
+                cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
+                maxWidth: 10
+            },
             {name: "推广方式", displayName: "推广方式", field: "accountName"},
             {
                 name: " ",
@@ -104,7 +109,6 @@ define(["./module"], function (ctrs) {
                 var final_result = chartUtils.getSearchTypeResult(quotas, res);
                 var count = util.existData(final_result);
                 if (count) {
-                    chartUtils.addStep(final_result, 24);//填充空白
                     $scope.charts[0].config.chartType = "bar";
                     $scope.charts[0].config.bGap = true;
                     cf.renderChart(final_result, $scope.charts[0].config);
@@ -216,5 +220,8 @@ define(["./module"], function (ctrs) {
             $scope.reset();
             $scope.yesterdayClass = true;
         };
+        $scope.compareDatePicker = function (start, end) {
+
+        }
     });
 });
