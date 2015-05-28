@@ -174,6 +174,7 @@ define(["./module"], function (ctrs) {
                         break;
                 }
                 data["title_name"] = title_name;
+                chart.quota=title_name;
                 mixingMap.mapOrPie(data, chart);
 
             }).error(function (error) {

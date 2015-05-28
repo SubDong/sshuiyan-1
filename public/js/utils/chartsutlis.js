@@ -662,6 +662,7 @@ var chartUtils = {
     }
 }
 
+//去重
 Array.prototype.removal = function () {
     this.sort();
     var re = [this[0]];
