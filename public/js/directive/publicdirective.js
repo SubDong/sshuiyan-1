@@ -222,17 +222,33 @@ define(["../app"], function (app) {
     app.directive("refresh", function ($rootScope,requestService) {
         var option = {
             restrict: "EA",
-            template: "<div class=\"right_refresh fr\"><button class=\"btn btn-default btn-Refresh fl\" ng-click=\"page_refresh()\" type=\"button\"><span aria-hidden=\"true\" class=\"glyphicon glyphicon-refresh\"></span></button><ui-select ng-model=\"export.selected\"   ng-change='fileSave(export.selected)' theme=\"select2\" ng-hide=\"menu_select\" reset-search-input=\"false\" class=\"fl\"style=\"min-width: 65px;background-color: #fff;\"> <ui-select-match placeholder=\"保存\">{{$select.selected.name}} </ui-select-match> <ui-select-choices repeat=\"export in exports\"> <span ng-bind-html=\"export.name\"></span></ui-select-choices></ui-select></div>",
+            template: "<div class=\"right_refresh fr\"><button class=\"btn btn-default btn-Refresh fl\" ng-click=\"page_refresh()\"  type=\"button\"><span aria-hidden=\"true\" class=\"glyphicon glyphicon-refresh\"></span></button><ui-select ng-model=\"export.selected\"   ng-change='fileSave(export.selected)' theme=\"select2\" ng-hide=\"menu_select\" reset-search-input=\"false\" class=\"fl\"style=\"min-width: 90px;background-color: #fff;\"> <ui-select-match placeholder=\"保存\">{{$select.selected.name}} </ui-select-match> <ui-select-choices repeat=\"export in exportsaa\"> <span ng-bind-html=\"export.name\"></span></ui-select-choices></ui-select></div>",
             transclude: true,
             replace: true,
             link: function (scope) {
+                $rootScope.export = {name: '导出CSV',value:'csv'};
+                $rootScope.exportsaa = [
+                    {name: 'CSV',value:'csv'},
+                    {name: 'PDF（含图） ',value:'pdf'}
+                ];
                 //导出功能
                 scope.fileSave = function (obj) {
                     if(obj.value=="csv"){
-                        scope.gridApi2.exporter.csvExport( "all", "visible", angular.element() );
+                        if($rootScope.gridApi2){
+                            $rootScope.gridApi2.exporter.csvExport( "all", "visible", angular.element() )
+                        }else{
+                            console.log($rootScope.gridApi);
+                            $rootScope.gridApi.exporter.csvExport( "all", "visible", angular.element() );
+                        }
                     }
                     else{
-                        scope.gridApi2.exporter.pdfExport( "all", "visible" );
+                        if($rootScope.gridApi2){
+                            $rootScope.gridApi2.exporter.pdfExport( "all", "visible", angular.element() );
+                        }else{
+                            $rootScope.gridApi.exporter.pdfExport( "all", "visible", angular.element() );
+                        }
+                        //scope.gridApi.exporter.csvExport( "all", "visible", angular.element() );
+
                     }
                 }
             }

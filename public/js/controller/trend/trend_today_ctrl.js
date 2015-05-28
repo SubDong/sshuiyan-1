@@ -58,7 +58,6 @@ define(["./module"], function (ctrs) {
             arrayClear: false //是否清空指标array
         };
         //
-
         $scope.dt = new Date();
         $scope.onLegendClickListener = function (radio, chartObj, chartConfig, checkedVal) {
             if ($scope.charts[0].config.compare) {

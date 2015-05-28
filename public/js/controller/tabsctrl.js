@@ -245,8 +245,11 @@ define(["app"], function (app) {
                 enableSorting: true,
                 enableGridMenu: false,
                 enableHorizontalScrollbar: 0,
+                enableVerticalScrollbar: false,
+                enableScrollbars:false,
                 columnDefs: $scope.gridOpArray,
                 onRegisterApi: function (girApi) {
+                    console.log(girApi)
                     $rootScope.gridApi2 = girApi;
                     griApihtml(girApi);
                 }
@@ -254,18 +257,21 @@ define(["app"], function (app) {
         } else {
             $scope.gridOptions = {
                 paginationPageSize: 25,
-                expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
+                expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions' ></div>",
                 expandableRowHeight: 360,
                 enableColumnMenus: false,
                 enablePaginationControls: false,
                 enableSorting: true,
                 enableGridMenu: false,
                 enableHorizontalScrollbar: 0,
+                enableVerticalScrollbar: false,
+                enableScrollbars:false,
                 columnDefs: $scope.gridOpArray,
                 onRegisterApi: function (gridApi) {
-                    $rootScope.gridApi2 = gridApi;
-                    if ($rootScope.tableSwitch.dimen) {
-                        griApiInfo(gridApi);
+                    console.log(gridApi);
+                            $rootScope.gridApi2 = gridApi;
+                            if ($rootScope.tableSwitch.dimen) {
+                                griApiInfo(gridApi);
                     }
                 }
             };
