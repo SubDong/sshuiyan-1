@@ -5,36 +5,67 @@ define(['./module'], function (ctrs) {
     'use strict';
     ctrs.controller('history', function ($scope, $window, $location, $rootScope, requestService, areaService, $http, SEM_API_URL) {
         if ($rootScope.gridArray == undefined || $rootScope.tableSwitch == undefined) {
+            $rootScope.gridArray = [];
             var temp_path = $location.path();
             var _index = temp_path.indexOf("/history");
-            console.log(_index);
             $location.path(temp_path.substring(0, _index));
         }
 
         $scope.monthClass = true;
         var esType = $rootScope.userType;
 
-        $rootScope.tableTimeStart = -30;
-        $rootScope.tableTimeEnd = -1;
+        $rootScope.tableTimeStart = -29;
+        $rootScope.tableTimeEnd = -0;
         $rootScope.tableFormat = null;
+
 
         $rootScope.gridArray[0] = {name: "日期", displayName: "日期", field: "period"};
         $rootScope.gridArray.splice(1, 1);
         $rootScope.tableSwitch.dimen = false;
-        $rootScope.tableSwitch.coding = false;
 
         $rootScope.tableSwitch.latitude = {name: "日期", displayName: "日期", field: "period"};
         $rootScope.historyJu = "NO";
 
         $scope.historyInit = function () {
-            var getTime = $rootScope.tableTimeStart <= -7 ? "day" : "hour";
+            var getTime = $rootScope.tableTimeStart <= -6 ? "day" : "hour";
             if ($rootScope.tableSwitch.number == 4) {
                 var searchUrl = SEM_API_URL + "elasticsearch/" + esType + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd;
                 $http({
                     method: 'GET',
                     url: searchUrl
                 }).success(function (data, status) {
-                    $scope.$broadcast("history", data);
+                    var newDataInfo = "";
+                    if(getTime == "hour"){
+                        var result = [];
+                        var vaNumber = 0;
+                        var maps = {}
+                        var newData = chartUtils.getByHourByDayData(data);
+                        newData.forEach(function (info, x) {
+                            for (var i = 0; i < info.key.length; i++) {
+                                var infoKey = info.key[i];
+                                var obj = maps[infoKey];
+                                if (!obj) {
+                                    obj = {};
+                                    var dataString = (infoKey.toString().length >= 2 ? "" : "0")
+                                    obj["period"] = dataString + infoKey + ":00 - " + dataString + infoKey + ":59";
+                                    maps[infoKey] = obj;
+                                }
+                                obj[chartUtils.convertEnglish(info.label)] = info.quota[i]
+                                maps[infoKey] = obj;
+                            }
+                        });
+                        for (var key in maps) {
+                            if (key != null) {
+                                result.push(maps[key]);
+                            }
+                        }
+                        newDataInfo =  result;
+                    }else{
+                        newDataInfo = data;
+                    }
+
+
+                    $scope.$broadcast("history", newDataInfo);
                     $rootScope.historyJu = "";
 
                 })
@@ -45,7 +76,36 @@ define(['./module'], function (ctrs) {
                     url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + $rootScope.tableSwitch.latitude.field
                     + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&formartInfo=" + getTime + "&type=" + esType
                 }).success(function (data, status) {
-                    $scope.$broadcast("history", data);
+                    var newDataInfo1 = "";
+                    if(getTime == "hour"){
+                        var result = [];
+                        var vaNumber = 0;
+                        var maps = {}
+                        var newData = chartUtils.getByHourByDayData(data);
+                        newData.forEach(function (info, x) {
+                            for (var i = 0; i < info.key.length; i++) {
+                                var infoKey = info.key[i];
+                                var obj = maps[infoKey];
+                                if (!obj) {
+                                    obj = {};
+                                    var dataString = (infoKey.toString().length >= 2 ? "" : "0")
+                                    obj["period"] = dataString + infoKey + ":00 - " + dataString + infoKey + ":59";
+                                    maps[infoKey] = obj;
+                                }
+                                obj[chartUtils.convertEnglish(info.label)] = info.quota[i]
+                                maps[infoKey] = obj;
+                            }
+                        });
+                        for (var key in maps) {
+                            if (key != null) {
+                                result.push(maps[key]);
+                            }
+                        }
+                        newDataInfo1 =  result;
+                    }else{
+                        newDataInfo1 = data;
+                    }
+                    $scope.$broadcast("history", newDataInfo1);
                     $rootScope.historyJu = "";
                     $scope.init(data, $rootScope.checkedArray);
                 }).error(function (error) {
@@ -74,9 +134,8 @@ define(['./module'], function (ctrs) {
             }
         ];
         $scope.init = function (data, quotas) {
-            console.log(data);
             $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
-            if ($rootScope.tableTimeStart > -7) {
+            if ($rootScope.tableTimeStart > -6) {
                 $scope.charts[0].config.noFormat = undefined;
                 cf.renderChart(data, $scope.charts[0].config);
                 return;

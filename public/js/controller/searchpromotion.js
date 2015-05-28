@@ -239,8 +239,10 @@ define(["./module"], function (ctrs) {
                         if (variousId[3] == 0) {
                             $rootScope.checkedArray.forEach(function (x, y) {
                                 datas[x] = (item[x] != undefined ? item[x] : 0);
-                                var field = $rootScope.tableSwitch.latitude.field
-                                datas[field] = item[field] + ",";
+                                if (y <= dataSEM.length - 1) {
+                                    var field = $rootScope.tableSwitch.latitude.field;
+                                    datas[field] = item[field] + getTableTitle(field, dataSEM[y]);
+                                }
                             })
                         } else {
                             $rootScope.checkedArray.forEach(function (x, y) {
@@ -300,17 +302,17 @@ define(["./module"], function (ctrs) {
             if ($rootScope.tableSwitch.latitude.field == "campaignName") {
                 $rootScope.checkedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
                 $rootScope.searchGridArray = [
-                    {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
+                    {
+                        name: "xl",
+                        displayName: "",
+                        cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
+                        maxWidth: 10
+                    },
                     {
                         name: "单元",
                         displayName: "单元",
                         field: "adgroupName",
-                        cellTemplate: "<a href='javascript:void(0)' target='_blank' style='color:#0965b8;line-height:30px;' ng-click='grid.appScope.getHistoricalTrend(this)'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}"
-                    },
-                    {
-                        name: "状态",
-                        displayName: "状态",
-                        cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
+                        cellTemplate: "<div><a href='javascript:void(0)' target='_blank' style='color:#0965b8;line-height:30px;' ng-click='grid.appScope.getHistoricalTrend(this)'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</div>"
                     },
                     {name: "展现", displayName: "展现", field: "impression"},
                     {name: "消费", displayName: "消费", field: "cost"},
@@ -338,17 +340,17 @@ define(["./module"], function (ctrs) {
             } else if ($rootScope.tableSwitch.latitude.field == "adgroupName") {
                 $rootScope.checkedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
                 $rootScope.searchGridArray = [
-                    {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
+                    {
+                        name: "xl",
+                        displayName: "",
+                        cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
+                        maxWidth: 10
+                    },
                     {
                         name: "关键词",
                         displayName: "关键词",
                         field: "keywordName",
-                        cellTemplate: "<a href='http://www.baidu.com/s?wd={{grid.appScope.getDataUrlInfo(grid, row,1)}}' target='_blank' style='color:#0965b8;line-height:30px;margin-left: 10px'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}"
-                    },
-                    {
-                        name: "状态",
-                        displayName: "状态",
-                        cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
+                        cellTemplate: "<div><a href='http://www.baidu.com/s?wd={{grid.appScope.getDataUrlInfo(grid, row,1)}}' target='_blank' style='color:#0965b8;line-height:30px;margin-left: 10px'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</div>"
                     },
                     {name: "展现", displayName: "展现", field: "impression"},
                     {name: "消费", displayName: "消费", field: "cost"},
@@ -380,7 +382,7 @@ define(["./module"], function (ctrs) {
 
         //得到数据中的url
         $scope.getDataUrlInfo = function (grid, row, number) {
-            var data = row.entity[$rootScope.tableSwitch.latitude.field]+"";
+            var data = row.entity[$rootScope.tableSwitch.latitude.field] + "";
             if (number < 3) {
                 var a = data.split(",");
             } else if (number > 3) {
@@ -391,7 +393,6 @@ define(["./module"], function (ctrs) {
             if (number == 1) {
                 return a[0];
             } else if (number == 2) {
-                console.log(a[1]);
                 return a[1];
             } else if (number == 3) {
                 return a;

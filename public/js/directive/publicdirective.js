@@ -329,7 +329,7 @@ define(["../app"], function (app) {
                     var seoQuotas = scope.getSEOQuotas();
                     if (seoQuotas.length > 0) {
                         var stringQuotas = seoQuotas.toString().replace(/,/g, "-") + "-";
-                        var seoRequest = $http.get(SEM_API_URL + $rootScope.user + "/" + $rootScope.baiduAccount + "/" + scope.ssh_seo_type + "/" + stringQuotas + "?startOffset=" + scope.ds_start + "&endOffset=" + scope.ds_end);
+                        var seoRequest = $http.get(SEM_API_URL + $rootScope.user + "/" + $rootScope.baiduAccount + "/" + scope.ssh_seo_type + "/" + stringQuotas + "?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd);
                     }
                     $q.all([esRequest, seoRequest]).then(function (final_result) {
                         scope.pushESData(final_result[0].data);
@@ -372,7 +372,8 @@ define(["../app"], function (app) {
                 };
                 scope.pushESData = function (result, flag) {
                     var obj = JSON.parse(eval('(' + result + ')').toString()); //由JSON字符串转换为JSON对象
-                    if (obj && !flag) {
+                    if (!obj && !flag) {
+                        console.log(obj);
                         scope.ds_keyData = angular.copy(obj[0]["key"]);
                     }
                     angular.forEach(obj, function (r) {

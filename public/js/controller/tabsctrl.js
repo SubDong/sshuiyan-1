@@ -535,6 +535,7 @@ define(["app"], function (app) {
         }
         $scope.$on("history", function (e, msg) {
             $scope.gridOpArray = angular.copy($rootScope.gridArray);
+            $scope.gridOpArray.splice(1, 1);
             $scope.gridOptions.columnDefs = $scope.gridOpArray;
             $scope.gridOptions.data = msg;
         });
