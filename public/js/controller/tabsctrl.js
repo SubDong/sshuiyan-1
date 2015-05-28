@@ -5,7 +5,7 @@ define(["app"], function (app) {
 
     "use strict";
 
-    app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, requestService, SEM_API_URL, $cookieStore) {
+    app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, requestService, SEM_API_URL, $cookieStore, popupService) {
         $scope.todayClass = true;
         var user = $rootScope.user
         var baiduAccount = $rootScope.baiduAccount;
@@ -538,7 +538,16 @@ define(["app"], function (app) {
             $scope.gridOptions.columnDefs = $scope.gridOpArray;
             $scope.gridOptions.data = msg;
         });
-
+        // 查看入口页链接
+        $scope.showEntryPageLink = function (row, _type) {
+            if (_type == 1) {// 搜索引擎
+                popupService.showEntryPageData(row.entity.rf_type);
+            } else if (_type == 2) {
+                popupService.showEntryPageData(row.entity.se);
+            } else {
+                popupService.showEntryPageData(row.entity.rf);
+            }
+        };
 
         //数据对比
         $rootScope.datepickerClickTow = function (start, end, label) {
