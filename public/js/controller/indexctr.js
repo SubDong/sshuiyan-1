@@ -24,7 +24,7 @@ define(['./module'], function (ctrs) {
                 {name: 'name', displayName: "搜索词"},
                 {name: 'value', displayName: "浏览量(PV)", headerCellClass: 'ui_text', cellClass: 'ui_text'}
             ],
-            onRegisterApi:function (gridApi) {
+            onRegisterApi: function (gridApi) {
                 console.log(gridApi);
                 $rootScope.gridApi = gridApi;
             }
@@ -243,6 +243,7 @@ define(['./module'], function (ctrs) {
         }
         $scope.equipmentChange = function (_this) {
             $scope.charts[2].types = _this.value;
+            $scope.charts[2].config.instance = echarts.init(document.getElementById($scope.charts[2].config.id));
             var chartArray = [$scope.charts[2]];
             requestService.refresh(chartArray);
         }

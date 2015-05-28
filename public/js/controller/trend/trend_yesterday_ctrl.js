@@ -169,6 +169,7 @@ define(["./module"], function (ctrs) {
             }
             $scope.charts.forEach(function (chart) {
                 chart.config.instance = echarts.init(document.getElementById(chart.config.id));
+                chart.config.time = chartUtils.getWeekTime($rootScope.start, $rootScope.end);
             });
             requestService.refresh($scope.charts);
             if ($rootScope.start <= -7) {
@@ -287,9 +288,11 @@ define(["./module"], function (ctrs) {
             }
             $rootScope.start = time[0];
             $rootScope.end = time[1];
+            $rootScope.interval = -1;
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
-                e.config.instance = chart;
+                chart.config.time = chartUtils.getWeekTime($rootScope.start, $rootScope.end);
+                chart.config.instance = chart;
             });
             requestService.refresh($scope.charts);
             $rootScope.tableTimeStart = time[0];
@@ -374,8 +377,9 @@ define(["./module"], function (ctrs) {
             var d = dd.getDate();
             return y + "-" + m + "-" + d;
         }
+
         //刷新
-        $scope.page_refresh = function(){
+        $scope.page_refresh = function () {
             $rootScope.start = -1;
             $rootScope.end = -1;
             $rootScope.interval = 1;

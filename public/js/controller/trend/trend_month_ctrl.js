@@ -7,6 +7,7 @@ define(["./module"], function (ctrs) {
     ctrs.controller('trend_month_ctrl', function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
         $scope.monthClass = true;
         $scope.hourcheckClass = true;
+        $scope.weekselected = false;
         $scope.reset = function () {
             $scope.todayClass = false;
             $scope.yesterdayClass = false;
@@ -129,6 +130,7 @@ define(["./module"], function (ctrs) {
         $scope.$on("ssh_refresh_charts", function (e, msg) {
             $scope.charts.forEach(function (chart) {
                 chart.config.instance = echarts.init(document.getElementById(chart.config.id));
+                chart.config.time = chartUtils.getWeekTime($rootScope.start, $rootScope.end);
             });
             requestService.refresh($scope.charts);
             if ($rootScope.start <= -7) {
@@ -255,9 +257,11 @@ define(["./module"], function (ctrs) {
             }
             $rootScope.start = time[0];
             $rootScope.end = time[1];
+            $rootScope.interval = -1;
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
+                e.config.time = chartUtils.getWeekTime($rootScope.start, $rootScope.end);
             });
             requestService.refresh($scope.charts);
             $rootScope.tableTimeStart = time[0];
@@ -299,7 +303,8 @@ define(["./module"], function (ctrs) {
             var d = dd.getDate();
             return y + "-" + m + "-" + d;
         }
-        $scope.page_refresh = function(){
+
+        $scope.page_refresh = function () {
             $rootScope.start = -29;
             $rootScope.end = 0;
             $rootScope.interval = 1;
@@ -314,14 +319,13 @@ define(["./module"], function (ctrs) {
             //图表
             requestService.refresh($scope.charts);
             //其他页面表格
-           // $rootScope.targetSearch(true);
+            // $rootScope.targetSearch(true);
             $scope.$broadcast("ssh_dateShow_options_time_change");
             //classcurrent
             $scope.reset();
             $scope.monthClass = true;
             $('#reportrange span').html(GetDateStr(-29) + "至" + GetDateStr(0));
         };
-
     });
 
 });
