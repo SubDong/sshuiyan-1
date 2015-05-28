@@ -92,8 +92,8 @@ if (env == 'dev') {
             }, {
                 site_name: "www.perfect-cn.cn",
                 site_id: 2,
-                perfect_name: 'jiehun',
-                bd_name: 'baidu-bjjiehun2123585'
+                perfect_name: 'perfect2015',
+                bd_name: 'baidu-perfect2151880'
             }]
 
         res.cookie('usites', JSON.stringify(usites));
