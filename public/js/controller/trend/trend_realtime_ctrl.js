@@ -22,6 +22,13 @@ define(["./module"], function (ctrs) {
             //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
             arrayClear: false //是否清空指标array
         };
+        $scope.getTableHeight = function() {
+            var rowHeight = 30; // your row height
+            var headerHeight = 30; // your header height
+            return {
+                height: ($scope.gridData.data.length * rowHeight + headerHeight) + "px"
+            };
+        };
 
         //
         $scope.onLegendClickListener = function (radio, chartObj, chartConfig, checkedVal) {

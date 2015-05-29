@@ -237,7 +237,7 @@ define(["app"], function (app) {
         // 推广概况表格配置项
         if (typeof($rootScope.checkedArray) != undefined && $scope.tableJu == "html") {
             $scope.gridOptions = {
-                paginationPageSize: 25,
+                paginationPageSize: 20,
                 expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
                 expandableRowHeight: 360,
                 enableColumnMenus: false,
@@ -245,8 +245,8 @@ define(["app"], function (app) {
                 enableSorting: true,
                 enableGridMenu: false,
                 enableHorizontalScrollbar: 0,
-                enableVerticalScrollbar: false,
-                enableScrollbars:false,
+                //enableVerticalScrollbar: 0,
+                //enableScrollbars: false,
                 columnDefs: $scope.gridOpArray,
                 onRegisterApi: function (girApi) {
                     console.log(girApi)
@@ -256,7 +256,7 @@ define(["app"], function (app) {
             };
         } else {
             $scope.gridOptions = {
-                paginationPageSize: 25,
+                paginationPageSize:20,
                 expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions' ></div>",
                 expandableRowHeight: 360,
                 enableColumnMenus: false,
@@ -264,14 +264,14 @@ define(["app"], function (app) {
                 enableSorting: true,
                 enableGridMenu: false,
                 enableHorizontalScrollbar: 0,
-                enableVerticalScrollbar: false,
-                enableScrollbars:false,
+                //enableVerticalScrollbar: 0,
+                //enableScrollbars: false,
                 columnDefs: $scope.gridOpArray,
                 onRegisterApi: function (gridApi) {
                     console.log(gridApi);
-                            $rootScope.gridApi2 = gridApi;
-                            if ($rootScope.tableSwitch.dimen) {
-                                griApiInfo(gridApi);
+                    $rootScope.gridApi2 = gridApi;
+                    if ($rootScope.tableSwitch.dimen) {
+                        griApiInfo(gridApi);
                     }
                 }
             };

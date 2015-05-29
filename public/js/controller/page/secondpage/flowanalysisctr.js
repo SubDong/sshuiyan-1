@@ -20,6 +20,20 @@ define(["./../module"], function (ctrs) {
         $rootScope.tableTimeStart = 0;
         $rootScope.tableTimeEnd = 0;
         $rootScope.tableFormat = null;
+        //配置默认指标
+        //配置默认指标
+        $rootScope.checkedArray = ["pv", "uv", "avgTime"];
+        $rootScope.gridArray = [
+            {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
+            {name: "页面url", displayName: "页面url", field: "loc"},
+            {
+                name: " ",
+                cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history4' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li></ul></div></div>"
+            },
+            {name: "浏览量(PV)", displayName: "浏览量(PV)", field: "pv"},
+            {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},
+            {name: "平均访问时长", displayName: "平均访问时长", field: "avgTime"}
+        ];
         $rootScope.tableSwitch = {
             latitude: {name: "页面url", displayName: "页面url", field: "loc"},
             tableFilter: null,
