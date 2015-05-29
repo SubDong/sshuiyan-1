@@ -119,7 +119,7 @@ define(["./module"], function (ctrs) {
             });
             // $rootScope.$broadcast("ssh_reload_datashow");
         };
-        // 推广概况表格配置项
+        // 百度推广表格配置项
         $scope.gridOptions = {
             paginationPageSize: 25,
             expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions' style='height:150px;'></div>",
@@ -140,17 +140,24 @@ define(["./module"], function (ctrs) {
         $scope.page = "";
         $scope.pagego = function (pagevalue) {
             pagevalue.pagination.seek(Number($scope.page));
-        }
+        };
 
         //设置来源终端
-        $scope.setTerminal = function (a) {
-            if (a == 0) $scope.es_filter = null;
-            if (a == 1) $scope.es_filter = "[{\"pm\":[0]}]";
-            $scope.device = 0;
-            if (a == 2) $scope.es_filter = "[{\"pm\":[1]}]";
-            $scope.device = 1;
-            $scope.isJudge = false;
-            $scope.targetSearch();
+        $scope.device = -1;
+        $scope.setSearchTerminalData = function (a) {
+            if (a == 0) {
+                $scope.es_filter = null;
+                $scope.device = -1;
+            }
+            if (a == 1) {
+                $scope.es_filter = "[{\"pm\":[0]}]";
+                $scope.device = 0;
+            }
+            if (a == 2) {
+                $scope.es_filter = "[{\"pm\":[1]}]";
+                $scope.device = 1;
+            }
+            $scope.targetSearchSpread();
         };
 
 
@@ -160,7 +167,7 @@ define(["./module"], function (ctrs) {
             if (isClicked) {
                 $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
             }
-            var url = SEM_API_URL + user + "/" + baiduAccount + "/" + $rootScope.tableSwitch.promotionSearch.SEMData + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1" + ($scope.searchId != undefined || $scope.searchId != "undefined" ? "&" + $scope.searchId : "")
+            var url = SEM_API_URL + user + "/" + baiduAccount + "/" + $rootScope.tableSwitch.promotionSearch.SEMData + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=" + $scope.device + ($scope.searchId != undefined || $scope.searchId != "undefined" ? "&" + $scope.searchId : "")
             $http({
                 method: 'GET',
                 url: url
@@ -182,7 +189,7 @@ define(["./module"], function (ctrs) {
                                     datas[x] = item[x] != undefined ? item[x] : data[0][x];
                                 });
                                 datas[fieldQuery] = item[fieldQuery] + getTableTitle(fieldQuery, item);
-                                dataArray.push(datas)
+                                dataArray.push(datas);
                                 if ((dataSEM.length - 1) == i) {
                                     $scope.gridOptions.data = dataArray;
                                 }
@@ -194,7 +201,7 @@ define(["./module"], function (ctrs) {
                             var field = $rootScope.tableSwitch.latitude.field;
                             datas[field] = item[field] + getTableTitle(field, item);
                             datas["id"] = item[searchId + "Id"];
-                            dataArray.push(datas)
+                            dataArray.push(datas);
                             if ((dataSEM.length - 1) == i) {
                                 if (field == "adgroupName" || field == "keywordName") {
                                     $scope.gridOptions.rowHeight = 55;
@@ -247,7 +254,7 @@ define(["./module"], function (ctrs) {
                         } else {
                             $rootScope.checkedArray.forEach(function (x, y) {
                                 datas[x] = (item[x] != undefined ? item[x] : dataSEM[0][x]);
-                            })
+                            });
                             var field = $rootScope.tableSwitch.latitude.field
                             datas[field] = item[field] + getTableTitle(field, dataSEM[0]);
                         }
@@ -377,7 +384,7 @@ define(["./module"], function (ctrs) {
                 $scope.searchId = "agid=" + b.$parent.$parent.row.entity.id;
             }
             $rootScope.targetSearchSpread();
-        }
+        };
 
 
         //得到数据中的url
@@ -404,7 +411,7 @@ define(["./module"], function (ctrs) {
                 return a[2]
             }
 
-        }
+        };
         //得到序列号
         $scope.getIndex = function (b) {
             return b.$parent.$parent.rowRenderIndex + 1
@@ -423,7 +430,7 @@ define(["./module"], function (ctrs) {
             default :
                 return "cid";
         }
-    }
+    };
 
     var getTableTitle = function (a, b) {
         switch (a) {
@@ -439,5 +446,5 @@ define(["./module"], function (ctrs) {
                 var returnData = ",`" + (b['creativeTitle'].length > 25 ? b['creativeTitle'].substring(0, 25) + "..." : b['creativeTitle']) + ",`" + b['showUrl']
                 return returnData;
         }
-    }
+    };
 });

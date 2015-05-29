@@ -2,7 +2,7 @@
 <div class="middle_containers" ng-controller="equipmentctr">
     <div class="date_select">
         <div role="group" class="btn-group fl">
-
+            <span class="fl"> 客户端属性：</span>
             <ui-select ng-model="equipment.selected" theme="select2" reset-search-input="false" ng-disabled="disabled" class="fl btn-delta" ng-change="equipmentChange(equipment.selected)"
                        style="width: 160px;">
                 <ui-select-match placeholder="网络供应商">{{$select.selected.name}}</ui-select-match>

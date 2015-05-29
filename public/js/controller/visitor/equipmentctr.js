@@ -6,6 +6,8 @@ define(["./module"], function (ctrs) {
     "use strict";
 
     ctrs.controller('equipmentctr', function ($scope, $rootScope, $http, requestService, areaService) {
+        //客户端属性初始化
+        $scope.equipment.selected =  {"name":"网络供应商","field":"isp"};
         $scope.todayClass = true;
         $scope.dt = new Date();
         //table配置

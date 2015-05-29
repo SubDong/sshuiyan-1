@@ -42,7 +42,7 @@ define(["../app"], function (app) {
 
                 };
                 scope.reloadByCalendar = function (type) {
-                    console.info("info: now user click the " + type + " button");
+                    //console.info("info: now user click the " + type + " button");
                     $rootScope.$broadcast("ssh_refresh_charts");
                     $rootScope.$broadcast("ssh_dateShow_options_time_change", type);
                 };
@@ -251,7 +251,6 @@ define(["../app"], function (app) {
                         if (scope.flag) {
                             $rootScope.gridApi2.exporter.csvExport("all", "visible", angular.element())
                         } else {
-                            console.log($rootScope.gridApi);
                             $rootScope.gridApi.exporter.csvExport("all", "visible", angular.element());
                         }
                     }
@@ -403,7 +402,6 @@ define(["../app"], function (app) {
                 scope.pushESData = function (result, flag) {
                     var obj = JSON.parse(eval('(' + result + ')').toString()); //由JSON字符串转换为JSON对象
                     if (!obj && !flag) {
-                        console.log(obj);
                         scope.ds_keyData = angular.copy(obj[0]["key"]);
                     }
                     angular.forEach(obj, function (r) {
