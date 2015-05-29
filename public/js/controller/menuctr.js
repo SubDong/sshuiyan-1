@@ -167,12 +167,12 @@ define(["./module"], function (ctrs) {
                 title: '网站列表',
                 icon: 'glyphicon glyphicon-list',
                 stype: 0,
-                sref: '#conf/mian.html',
+                sref: '#conf',
                 current: 'current'
             },
             {
                 title: '网站统计设置',
-                icon: 'glyphicon glyphicon-align-left',
+                icon: 'glyphicon glyphicon-cog',
                 stype: 1,
                 sref: 'webcountsite',
                 child: [{
@@ -199,7 +199,7 @@ define(["./module"], function (ctrs) {
                 title: '系统管理设置',
                 icon: 'glyphicon glyphicon-user',
                 stype: 1,
-                sref: '',
+                sref: 'adminrootsite',
                 child: [{
                     text: ' 权限账户管理',
                     sref: '#conf/admin/root'

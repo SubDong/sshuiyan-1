@@ -75,7 +75,7 @@ define(["./module"], function (ctrs) {
                         if ($scope.equipment.selected)
                             tmpData.push(chartUtils.getCustomDevice(e.key[i], $scope.equipment.selected.field));
                         else
-                            tmpData.push(e.key[i]=="-"?"未知":e.key[i]);
+                            tmpData.push(e.key[i] == "-" ? "未知" : e.key[i]);
                         _value.push(e.quota[i]);
 
                     }
@@ -85,14 +85,13 @@ define(["./module"], function (ctrs) {
                 });
             }
             config["noFormat"] = "noFormat";
-            config['twoYz'] = "none"
             cf.renderChart(json, config);
         }
         $scope.charts = [
             {
                 config: {
                     legendId: "equipment_legend",
-                    legendData: ["访客数(UV)", "访问次数", "新访客数", "IP数", "贡献浏览量", "转化次数"],
+                    legendData: ["浏览量(PV)", "访问次数", "访客数(UV)", "新访客数", "新访客比率", "IP数", "跳出率", "平均访问时长", "平均访问页数"],
                     legendClickListener: $scope.onLegendClick,
                     legendAllowCheckCount: 2,
                     legendDefaultChecked: [0, 1],
@@ -158,5 +157,35 @@ define(["./module"], function (ctrs) {
             $rootScope.targetSearch();
             $scope.$broadcast("ssh_dateShow_options_time_change");
         }
+        function GetDateStr(AddDayCount) {
+            var dd = new Date();
+            dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
+            var y = dd.getFullYear();
+            var m = dd.getMonth() + 1;//获取当前月份的日期
+            var d = dd.getDate();
+            return y + "-" + m + "-" + d;
+        }
+
+        //刷新
+        $scope.page_refresh = function () {
+            $rootScope.start = 0;
+            $rootScope.end = 0;
+            $rootScope.tableTimeStart = 0;
+            $rootScope.tableTimeEnd = 0;
+            $scope.charts.forEach(function (e) {
+                var chart = echarts.init(document.getElementById(e.config.id));
+                e.config.instance = chart;
+            });
+            $scope.reloadByCalendar("today");
+            $('#reportrange span').html(GetDateStr(0));
+            //图表
+            requestService.refresh($scope.charts);
+            //其他页面表格
+            $rootScope.targetSearch(true);
+            $scope.$broadcast("ssh_dateShow_options_time_change");
+            //classcurrent
+            $scope.reset();
+            $scope.todayClass = true;
+        };
     });
 });

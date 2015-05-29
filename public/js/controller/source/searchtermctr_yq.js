@@ -54,7 +54,7 @@ define(["./module"], function(ctrs) {
                 {name: '所有页面底部400按钮'},
                 {name: '详情页右侧按钮'},
                 {name: '时长目标'},
-                {name: '访问页数目标'},
+                {name: '访问页数目标'}
             ];
             //日历
             $scope.dateClosed = function () {
@@ -78,6 +78,38 @@ define(["./module"], function(ctrs) {
                 $scope.endOffset = (endTime - today_start()) / 86400000;
                 //console.log("startOffset=" + startOffset + ", " + "endOffset=" + endOffset);
             });
+            function GetDateStr(AddDayCount) {
+                var dd = new Date();
+                dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
+                var y = dd.getFullYear();
+                var m = dd.getMonth() + 1;//获取当前月份的日期
+                var d = dd.getDate();
+                return y + "-" + m + "-" + d;
+            }
+        //刷新
+        $scope.page_refresh = function(){
+            $rootScope.start = -1;
+            $rootScope.end = -1;
+            $rootScope.tableTimeStart = -1;
+            $rootScope.tableTimeEnd = -1;
+//            $scope.charts.forEach(function (e) {
+//                var chart = echarts.init(document.getElementById(e.config.id));
+//                e.config.instance = chart;
+//            });
+            //图表
+//            requestService.refresh($scope.charts);
+            //首页表格
+            //requestService.gridRefresh(scope.grids);
+            //其他页面表格
+            $rootScope.targetSearch(true);
+            $scope.reloadByCalendar("yesterday");
+            $('#reportrange span').html(GetDateStr(-1));
+            $scope.$broadcast("ssh_dateShow_options_time_change");
+            //classcurrent
+            $scope.reset();
+            $scope.yesterdayClass = true;
+        };
+
         }
     );
 

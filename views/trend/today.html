@@ -1,15 +1,21 @@
 <div class="middle_containers" ng-controller="trend_today_ctrl">
-    <div class="date_select">
+    <div class="date_select" ng-click="cancelChecked()">
         <calendar></calendar>
         <dateother></dateother>
         <dateweek></dateweek>
         <refresh></refresh>
     </div>
+    <div class="chart_color" style="position: absolute;top: 278px;width: 90%" ng-show="isShowCalendar">
+        <ul>
+            <li><span class="color_first"></span><b>{{todayCalendar}}</b></li>
+            <li><span class="color_selcend"></span><b>{{dayOrWeek}}</b></li>
+        </ul>
+    </div>
     <div class="my_concent">
         <ssh-date-show type="today"></ssh-date-show>
         <div class="index_chart">
             <div id="today_charts_legend" style="position:relative;"></div>
-            <div id="today_charts" style="height:400px;"></div>
+            <div id="today_charts" style="height:400px;margin-top: 20px"></div>
         </div>
         <div class="time_select">
             <compare></compare>
@@ -141,7 +147,7 @@
                 <!--</div>-->
             <!--</div>-->
             <div class="custom_table">
-                <div ui-grid="gridOptions" class="grid" ng-style="{height: (gridOptions.data.length*30)+32+'px'}" ui-grid-pagination
+                <div ui-grid="gridOptions" class="grid" style="height:auto" ui-grid-pagination
                      ui-grid-exporter></div>
                 <gridpage></gridpage>
             </div>

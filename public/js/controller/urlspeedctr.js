@@ -89,6 +89,33 @@ define(["./module"], function (ctrs) {
         this.removeFromSelected = function (dt) {
             this.selectedDates.splice(this.selectedDates.indexOf(dt), 1);
         }
+        function GetDateStr(AddDayCount) {
+            var dd = new Date();
+            dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
+            var y = dd.getFullYear();
+            var m = dd.getMonth() + 1;//获取当前月份的日期
+            var d = dd.getDate();
+            return y + "-" + m + "-" + d;
+        }
+        //刷新
+        $scope.page_refresh = function(){
+//            $rootScope.start = -1;
+//            $rootScope.end = -1;
+//            $rootScope.tableTimeStart = -1;//开始时间
+//            $rootScope.tableTimeEnd = -1;//结束时间、
+//            $rootScope.tableFormat = null;
+//            $rootScope.targetSearchSpread();
+//            $scope.init($rootScope.user, $rootScope.baiduAccount, "creative", $scope.selectedQuota, $rootScope.start, $rootScope.end);
+            //图表
+//            requestService.refresh($scope.charts);
+            //其他页面表格
+            //classcurrent
+            $scope.reloadByCalendar("yesterday");
+            $('#reportrange span').html(GetDateStr(-1));
+            $scope.$broadcast("ssh_dateShow_options_time_change");
+            $scope.reset();
+            $scope.yesterdayClass = true;
+        };
     });
 
 });

@@ -85,7 +85,7 @@ define(["../module"], function (app) {
             });
             //$rootScope.$broadcast("ssh_reload_datashow");
         };
-        // ÍÆ¹ã¸Å¿ö±í¸ñÅäÖÃÏî
+        // ï¿½Æ¹ï¿½Å¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         if (typeof($rootScope.checkedArray) != undefined && $scope.tableJu == "html") {
             $scope.gridOptions = {
                 paginationPageSize: 25,
@@ -130,12 +130,12 @@ define(["../module"], function (app) {
             pagevalue.pagination.seek(Number($scope.page));
         };
 
-        //ÆÕÍ¨±í¸ñÕ¹¿ªÏî
+        //ï¿½ï¿½Í¨ï¿½ï¿½ï¿½Õ¹ï¿½ï¿½ï¿½ï¿½
         var adminGriApiInfo = function (gridApi) {
-            $scope.gridOptions.data = [{a:"<div class='table_admin'>aaaaaaaaaa</div>",b:"bbbbbbbbbb",c:"ccccccccc"},{a:"dddddddddd",b:"eeeeeeeee",c:"ccccccccc"}]
+//            $scope.gridOptions.data = [{a:"<div class='table_admin'>aaaaaaaaaa</div>",b:"bbbbbbbbbb",c:"ccccccccc"},{a:"dddddddddd",b:"eeeeeeeee",c:"ccccccccc"}]
         };
 
-        //¹ØÓÚHTML ±í¸ñÕ¹¿ªÏî
+        //ï¿½ï¿½ï¿½ï¿½HTML ï¿½ï¿½ï¿½Õ¹ï¿½ï¿½ï¿½ï¿½
         var adminGriApihtml = function(gridApi){
             var htmlData = [];
             gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {

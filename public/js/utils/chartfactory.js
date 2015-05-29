@@ -287,13 +287,14 @@ var op = {
             if (chartConfig.keyFormat == "week") {
                 if (chartConfig.time) {
                     var hasChange = [];
-
-                    console.log(x[0] + ">>>" + x[x.length - 1]);
+                    x[0] = chartConfig.time[0].split("-")[0] + "-" + x[0].split("-")[1];
+                    x[x.length - 1] = x[x.length - 1].split("-")[0] + "-" + chartConfig.time[1].split("-")[0];
                 }
             }
             xData.push(x);
             option.series.push(serie);
         });
+        console.log(chartConfig.twoYz);
         if (!chartConfig.twoYz) {
             for (var i = 0; i < labelData.length; i++) {
                 //if (labelData[i] == "uv" || labelData[i] == "pv" || labelData[i] == "访客数(UV)" || labelData[i] == "浏览量(PV)") {

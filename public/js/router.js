@@ -215,7 +215,8 @@ define(["angular", "app"], function (ng, app) {
         $stateProvider
             .state('conf', {
                 url: '/conf',
-                templateUrl: '../conf/weblist/main.html'
+                templateUrl: '../conf/weblist/main.html',
+                current: 'current'
             })
             .state('rule', {
                 url: '/conf/webcountsite/countrules',

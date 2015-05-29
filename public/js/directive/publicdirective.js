@@ -47,6 +47,9 @@ define(["../app"], function (app) {
                     $rootScope.$broadcast("ssh_dateShow_options_time_change", type);
                 };
                 scope.today = function () {
+                    scope.isShowCalendar = false;
+                    scope.hiddenSeven = false;
+                    scope.todayCalendar = GetDateStr(0);
                     scope.hourselect = false;
                     scope.dayselect = false;
                     scope.weekselected = true;
@@ -66,6 +69,9 @@ define(["../app"], function (app) {
                     $('#reportrange span').html(GetDateStr(0));
                 };
                 scope.yesterday = function () {
+                    scope.isShowCalendar = false;
+                    scope.hiddenSeven = false;
+                    scope.todayCalendar = GetDateStr(-1);
                     scope.hourselect = false;
                     scope.dayselect = false;
                     scope.weekselected = true;
@@ -83,6 +89,9 @@ define(["../app"], function (app) {
                     $('#reportrange span').html(GetDateStr(-1));
                 };
                 scope.sevenDay = function () {
+                    scope.isShowCalendar = false;
+                    scope.hiddenSeven = true;//今日统计和昨日统计中，点击7、30天时隐藏对比
+                    scope.todayCalendar = GetDateStr(-6);
                     scope.hourselect = false;
                     scope.dayselect = false;
                     scope.weekselected = true;
@@ -97,6 +106,8 @@ define(["../app"], function (app) {
                     $('#reportrange span').html(GetDateStr(-6) + "至" + GetDateStr(0));
                 };
                 scope.month = function () {
+                    scope.isShowCalendar = false;
+                    scope.hiddenSeven = true;
                     scope.hourselect = false;
                     scope.dayselect = false;
                     scope.weekselected = false;
@@ -111,8 +122,11 @@ define(["../app"], function (app) {
                     $('#reportrange span').html(GetDateStr(-29) + "至" + GetDateStr(0));
                 };
                 scope.timeclick = function () {
+                    scope.isShowCalendar = false;
+                    scope.hiddenSeven = true;
                     scope.reset();
                     scope.timeClass = true;
+                    $('#reportrange span').html(GetDateStr(0))
                 }
                 scope.open = function ($event) {
                     scope.reset();
@@ -197,7 +211,7 @@ define(["../app"], function (app) {
                     cancelClass: 'btn-default',
                     separator: ' to '
                 }, function (start, end, label) {
-                    scope.compareDatePicker(start, end);
+                    //scope.compareDatePicker(start, end);
                     $rootScope.datepickerClickTow(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
                     $('#choicetrange span').html(start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD'));
                 });
@@ -218,20 +232,36 @@ define(["../app"], function (app) {
         };
         return option;
     });
-    app.directive("refresh", function ($rootScope) {
+    app.directive("refresh", function ($rootScope, requestService, $location) {
         var option = {
             restrict: "EA",
-            template: "<div class=\"right_refresh fr\"><button class=\"btn btn-default btn-Refresh fl\" type=\"button\"><span aria-hidden=\"true\" class=\"glyphicon glyphicon-refresh\"></span></button><ui-select ng-model=\"export.selected\"   ng-change='fileSave(export.selected)' theme=\"select2\" ng-hide=\"menu_select\" reset-search-input=\"false\" class=\"fl\"style=\"min-width: 65px;background-color: #fff;\"> <ui-select-match placeholder=\"保存\">{{$select.selected.name}} </ui-select-match> <ui-select-choices repeat=\"export in exports\"> <span ng-bind-html=\"export.name\"></span></ui-select-choices></ui-select></div>",
+            template: "<div class=\"right_refresh fr\"><button class=\"btn btn-default btn-Refresh fl\" ng-click=\"page_refresh()\"  type=\"button\"><span aria-hidden=\"true\" class=\"glyphicon glyphicon-refresh\"></span></button><ui-select ng-model=\"export.selected\"   ng-change='fileSave(export.selected)' theme=\"select2\" ng-hide=\"menu_select\" reset-search-input=\"false\" class=\"fl\"style=\"min-width: 90px;background-color: #fff;\"> <ui-select-match placeholder=\"保存\">{{$select.selected.name}} </ui-select-match> <ui-select-choices repeat=\"export in exportsaa\"> <span ng-bind-html=\"export.name\"></span></ui-select-choices></ui-select></div>",
             transclude: true,
             replace: true,
             link: function (scope) {
+                $rootScope.export = {name: '导出CSV', value: 'csv'};
+                $rootScope.exportsaa = [
+                    {name: 'CSV', value: 'csv'},
+                    {name: 'PDF（含图） ', value: 'pdf'}
+                ];
+                scope.flag = $location.path() != "/index"
                 //导出功能
                 scope.fileSave = function (obj) {
-                    if(obj.value=="csv"){
-                        scope.gridApi2.exporter.csvExport( "all", "visible", angular.element() );
+                    if (obj.value == "csv") {
+                        if (scope.flag) {
+                            $rootScope.gridApi2.exporter.csvExport("all", "visible", angular.element())
+                        } else {
+                            console.log($rootScope.gridApi);
+                            $rootScope.gridApi.exporter.csvExport("all", "visible", angular.element());
+                        }
                     }
-                    else{
-                        scope.gridApi2.exporter.pdfExport( "all", "visible" );
+                    else {
+                        if (scope.flag) {
+                            $rootScope.gridApi2.exporter.pdfExport("all", "visible", angular.element());
+                        } else {
+                            $rootScope.gridApi.exporter.pdfExport("all", "visible", angular.element());
+                        }
+
                     }
                 }
             }
@@ -241,10 +271,10 @@ define(["../app"], function (app) {
     app.directive("compare", function () {
         return {
             restrict: "EA",
-            template: "<div aria-label=\"First group\" role=\"group\" class=\"btn-group \">" +
-            "<button class=\"btn btn-default\" type=\"button\" ng-click=\"compareLastDay()\" ng-class=\"{'current':compareLastDayClass,'disabled':!lastDaySelect}\">前一日</button>" +
-            "<button class=\"btn btn-default\" type=\"button\" ng-click=\"compareLastWeek()\" ng-class=\"{'current':compareLastWeekClass,'disabled':!lastWeekSelect}\">上周同期</button>" +
-            "<button class=\"btn btn-default\" type=\"button\" ng-click=\"restCompare()\" ng-class=\"{'disabled':!clearCompareSelect}\">取消对比</button>" +
+            template: "<div ng-hide='hiddenSeven'>" +
+            "<label>对比：</label><label><span class='checkbox specialCheckbox'></span><input class=\"select2-search\" type=\"radio\" ng-click=\"compareLastDay()\"><span>前一日</span></label>&nbsp;&nbsp;&nbsp;&nbsp;" +
+            "<label><span class='checkbox specialCheckbox'></span><input class=\"select2-search\" type=\"radio\" ng-click=\"compareLastWeek()\"><span>上周同期</span></label>" +
+//            "<input class=\"styled\" type=\"checkbox\" ng-click=\"restCompare()\">取消对比" +
             "</div>",
             transclude: true
         }

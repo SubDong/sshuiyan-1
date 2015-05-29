@@ -468,7 +468,7 @@ var chartUtils = {
         var times = Math.round(new Date().getTime() / 1000)
         return [(_finalStart - _finalNow) / (24 * 3600), (_finalEnd - _finalNow) / (24 * 3600)];
     },
-    getSetOffTime: function (start, end) {
+    getSetOffTime: function (start, end, formattype) {
         var d = new Date();
         var timeSet = d.getTime();
         var startTime = start * 86400000;
@@ -477,7 +477,14 @@ var chartUtils = {
         var date2 = timeSet + endTime;
         var a = new Date(date1).Format("yyyy-MM-dd");
         var b = new Date(date2).Format("yyyy-MM-dd");
+        if (formattype) {
+            a = new Date(date1).Format("yyyy/MM/dd");
+            b = new Date(date2).Format("yyyy/MM/dd");
+        }
         return [a, b];
+    },
+    getWeekTime: function (start, end) {
+        return chartUtils.getSetOffTime(start, end,"/");
     },
     getQuotaType: function (quota) {
         switch (quota) {
@@ -655,6 +662,7 @@ var chartUtils = {
     }
 }
 
+//去重
 Array.prototype.removal = function () {
     this.sort();
     var re = [this[0]];
