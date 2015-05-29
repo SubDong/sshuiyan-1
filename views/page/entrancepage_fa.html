@@ -1,5 +1,5 @@
 <!--页面分析-入口页面-流浪分析-->
-<div class="middle_containers" ng-controller="flowanalysisctr as app">
+<div class="middle_containers" ng-controller="flowanalysisctr">
                 <div class="date_select">
                     <div aria-label="First group" role="group" class="btn-group fl">
                         <a class="fl btn btn-default" data-ng-href="#page/entrancepage"> 指标概览</a>
@@ -45,7 +45,7 @@
                             </div>
                         </div>
                         <div class="custom_table">
-                            <div ui-grid="gridOptions" class="grid"style="height:400px;"ui-grid-pagination  ui-grid-exporter></div>
+                            <div ui-grid="gridOptions" class="grid" ui-grid-pagination  ui-grid-exporter></div>
                             <gridpage></gridpage>
                         </div>
                     </div>

@@ -6,6 +6,7 @@ define(["./module"], function (ctrs) {
     "use strict";
 
     ctrs.controller('alliancectr', function ($scope, $rootScope, $http, requestService, messageService) {
+        $scope.visibles = true;
         $scope.todayClass = true;
         //table默认信息配置
         $rootScope.tableTimeStart = 0;
