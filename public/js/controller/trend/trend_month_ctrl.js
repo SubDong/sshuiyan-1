@@ -133,7 +133,7 @@ define(["./module"], function (ctrs) {
                 chart.config.time = chartUtils.getWeekTime($rootScope.start, $rootScope.end);
             });
             requestService.refresh($scope.charts);
-            if ($rootScope.start <= -7) {
+            if ($rootScope.start <= -6) {
                 $rootScope.tableFormat = "day";
             } else {
                 $rootScope.tableFormat = "hour";

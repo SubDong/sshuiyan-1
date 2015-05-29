@@ -38,6 +38,10 @@ var Custom = {
                         });
                     }
                 }
+                var _span = $(inputs[a]).prevAll("span");
+                if(_span.length==1){
+                    return ;
+                }
                 inputs[a].parentNode.insertBefore(span[a], inputs[a]);
                 //inputs[a].onchange = Custom.clear;
                 if (!inputs[a].getAttribute("disabled")) {
