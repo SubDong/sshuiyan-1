@@ -667,14 +667,14 @@ nav, .navbar-default {
       display: block;
       float: left;
       padding: 5px 8px;
-      width: 120px;
+      width: 110px;
       color: #000;
     }
   }
   .chart_noborder {
     border-top: 1px dashed #ffffff;
     border-bottom: none;
-    padding-top: 15px;
+    padding: 10px 10px 0 10px;
     color: #aaaaaa;
   }
   .chart_top ul li {
@@ -719,7 +719,6 @@ nav, .navbar-default {
       margin: 0px 5px 0 0;
 
     }
-    margin-bottom: 10px;
     height: 30px;
     .btn-primary {
       background: #40befb;
@@ -767,10 +766,14 @@ nav, .navbar-default {
   .custom_select {
     padding: 0px 15px;
     min-height: 36px;
+
     .radio {
       margin-right: 5px;
     }
     .btn-group {
+      margin: -4px 0 0px 5px;
+    }
+    .btn-group-url{
       margin: 4px 0 0px 5px;
     }
     .input-group {
@@ -830,8 +833,14 @@ nav, .navbar-default {
     }
 
   }
+  .custom_select_way{
+    padding:10px 15px;
+  }
   .custom_height{
     min-height: 26px;
+    ul{
+      margin-bottom: 0;
+    }
   }
 }
 
@@ -3310,12 +3319,14 @@ select.styled {
   li {
     float: left;
     margin-right: 10px;
+    line-height: 26px;
+    height: 26px;
   }
   .grid_table span {
     margin-left: 20px;
   }
   .radio {
-    margin: -3px 5px 0 0;
+    margin: 2px 5px 0 0;
   }
 
 }
