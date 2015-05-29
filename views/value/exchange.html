@@ -1,7 +1,8 @@
 <div class="middle_containers" ng-controller="exchangectr">
     <div class="date_select">
         <div class="btn-group fl" role="group" aria-label="First group">
-            <button type="button"  class="btn btn-default"  ng-repeat="time in times "  ng-class="{ 'current': $index == selectedIndex }"   ng-click="timechange($index)">昨天</button>
+
+            <button type="button"  class="btn btn-default"  ng-repeat="time in times "  ng-class="{ 'current': $index == selectedIndex }"   ng-click="timechange()">昨天</button>
             <button type="button" ng-click="beforeyesterday()" ng-class="{'current':beforeyesterdayClass}" class="btn btn-default">前天</button>
             <button type="button" ng-click="dayone()" ng-class="{'current':dayoneClass}"class="btn btn-default">5月10日</button>
             <button type="button" ng-click="daytwo()" ng-class="{'current':daytwoClass}" class="btn btn-default">5月9日</button>
@@ -15,7 +16,7 @@
     <div class="my_concent">
           <div class="exchange_top">
            <ul>
-               <li ng-repeat="exchange in exchanges "  ng-class="{ 'current': $index == selectedIndex }"   ng-click="itemClicked($index)">
+               <li ng-repeat="exchange in exchanges "  ng-class="{ 'current': $index == selectedIndex }"   ng-click="itemClicked(exchange)">
                    <div class="webname">{{exchange.name}}</div>
                    <div class="web_scale">
                        <span>PV:{{exchange.pv}}</span>
@@ -36,10 +37,10 @@
                 <div class="exchange_content_top_right fl">
                     <span class="glyphicon glyphicon-triangle-left fl"></span>
                     <div class="exchange_content_top_right_concent fl">
-                        <div class="fl"><b>best-ad.cn</b></div>
+                        <div class="fl"><b>{{exchange.name}}</b></div>
                         <div class="fr">
-                            <span>PV:3434</span>
-                            <span>UV:7389</span>
+                            <span>PV:{{exchange.pv}}</span>
+                            <span>UV:{{exchange.uv}}</span>
                         </div>
                     </div>
                 </div>
@@ -56,14 +57,14 @@
                 <div class="exchange_list_level1">
                     <div class="exchange_list1 fl">
                        <div class="exchange_list1_name fl">
-                           best-ad.cn
+                           {{exchange.name}}
                        </div>
                         <div class="exchange_list1_text fr">
                             <span>
-                              PV:3434
+                              PV:{{exchange.pv}}
                             </span>
                             <span>
-                              UV:7389
+                              UV:{{exchange.uv}}
                             </span>
                         </div>
                     </div>
@@ -71,17 +72,17 @@
                     </a>
                 </div>
                 <div class="exchange_list_level2box" ng-show="showDetails" >
-                    <div class="exchange_list_level2" >
+                    <div class="exchange_list_level2" ng-repeat="exchange in exchanges_">
                         <div class="exchange_list1 fl" >
                             <div class="exchange_list1_name exchange_page fl">
-                                页面
+                                {{exchange.key}}
                             </div>
                             <div class="exchange_list1_text fr">
                             <span>
-                              PV:3434
+                              PV:{{exchange.pv}}
                             </span>
                             <span>
-                              UV:7389
+                              UV:{{exchange.uv}}
                             </span>
 
                             </div>

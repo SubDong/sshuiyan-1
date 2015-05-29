@@ -11,6 +11,21 @@ define(["./module"], function (ctrs) {
         $scope.dayClass = true;
         $scope.isCollapsed = true;
 
+        var  test  = function(){
+            $http.get("api/exchange?start=" + $scope.start + ",end=" + $scope.end + ",type=" + item.site_id).success(function (data) {
+                //console.log(data[0].pv + "   " + data[0].uv);
+                $scope.sites.push({
+                    name: item.site_name,
+                    id: item.site_id,
+                    pv: data[0].pv,
+                    uv: data[0].uv
+                });
+                $scope.exchanges = $scope.sites;
+                $scope.exchange = $scope.sites[0];
+            });
+        }
+
+
         $scope.links = [{
             "id": 1,
             "name": "直接输入网址或书签",

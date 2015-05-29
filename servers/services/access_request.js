@@ -146,7 +146,90 @@ var access_request = {
             } else
                 callbackFn(data);
         });
+    },
+    //exchangeSearch: function (es, indexs, type, callbackFn) {
+    //    var request = {
+    //        "index": indexs,
+    //        "type": type,
+    //        "body": {
+    //            "size": 0,
+    //            "aggs": {
+    //                "aggs_pv": {
+    //                    "terms": {
+    //                        "field": "_type"
+    //                    },
+    //                    "aggs": {
+    //                        "pv": {
+    //                            "sum": {
+    //                                "script": "1"
+    //                            }
+    //                        }
+    //                    }
+    //                },
+    //                "uv": {
+    //                    "cardinality": {
+    //                        "field": "tt"
+    //                    }
+    //                }
+    //            }
+    //        }
+    //    }
+    //    es.search(request, function (error, response) {
+    //        var data = [];
+    //        if (response != undefined && response.aggregations != undefined) {
+    //            var result = response.aggregations;
+    //            data.push({"pv": result.aggs_pv.buckets[0].pv.value, "uv": result.uv.value});
+    //            callbackFn(data);
+    //        } else
+    //            callbackFn(data);
+    //    });
+    //},
+    exchangeSearch: function (es, indexs, type, callbackFn) {
+        var request = {
+            index: indexs,
+            type: type,
+            body: {
+                "size": 0,
+                "aggs": {
+                    "pv_uv": {
+                        "terms": {
+                            "field": exchangeField(type)
+                        },
+                        "aggs": {
+                            "pv": {
+                                "sum": {
+                                    "script": "1"
+                                }
+                            },
+                            "uv": {
+                                "cardinality": {
+                                    "field": "tt"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        es.search(request, function (error, response) {
+            var data = [];
+            if (response != undefined && response.aggregations != undefined) {
+                var result = response.aggregations.pv_uv.buckets;
+                for (var i = 0; i < result.length; i++) {
+                    data.push({"pv": result[i].pv.value, "uv": result[i].uv.value, "key": result[i].key});
+                }
+                callbackFn(data);
+            } else
+                callbackFn(data);
+        });
     }
-};
 
+};
+var exchangeField = function (value) {
+    if (value.indexOf(",") == -1) {
+        return "loc";
+    } else {
+        return "_type";
+    }
+}
 module.exports = access_request;
