@@ -256,8 +256,9 @@ define(["./module"], function (ctrs) {
             ];
             $scope.initGrid = function (user, baiduAccount, type, startOffset, endOffset, quota, estype) {
                 var semRegionRequest = $http.get(SEM_API_URL + user + "/" + baiduAccount + "/" + type + "/?startOffset=" + startOffset + "&endOffset=" + endOffset);
-                var huiyanRequest = $http.get("/api/charts?start=" + startOffset + "&end=" + endOffset + "&dimension=period&userType=2&type=" + estype);
-                $q.all([semRegionRequest, huiyanRequest]).then(function (final_result) {
+                var esRequest = $http.get("/api/charts?start=" + startOffset + "&end=" + endOffset + "&dimension=period&userType=2&type=" + estype);
+                console.log($scope.compareSemArray);
+                $q.all([semRegionRequest, esRequest]).then(function (final_result) {
                     var chart_result = [];
                     if (startOffset == -1 && endOffset == -1) {
                         var tmp = [];
@@ -304,7 +305,8 @@ define(["./module"], function (ctrs) {
                         $scope.charts[0].config.chartType = "bar";
                         $scope.charts[0].config.bGap = true;
                         $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
-                        chartUtils.addStep(chart_result, 24);//填充空白
+                        chartUtils.addStep(chart_result,24);
+                        console.log(chart_result);
                         cf.renderChart(chart_result, $scope.charts[0].config);
                     } else {
                         var esJson = JSON.parse(eval("(" + final_result[1].data + ")").toString());
@@ -322,7 +324,6 @@ define(["./module"], function (ctrs) {
 
             // 触发投放指标的事件
             $scope.setOutQuota = function (outQuota) {
-                $scope.compareArray = [];
                 $scope.outQuota_ = outQuota.value;
                 $scope.selectedQuota[0] = outQuota.value;
                 $scope.reloadGrid();
@@ -334,17 +335,18 @@ define(["./module"], function (ctrs) {
 
             // 触发效果指标的事件
             $scope.setEffectQuota = function (effectQuota) {
-                $scope.compareArray = [];
                 $scope.effectQuota_ = effectQuota.value;
                 $scope.selectedQuota[1] = effectQuota.value;
                 $scope.reloadGrid();
                 $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $rootScope.start, $rootScope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
                 //$scope.refreshData();
             };
-            $scope.compareArray = [];
+
+
+            $scope.compareSemArray = [];
             $scope.semCompareTo = function (semSelected) {
-                if ($scope.compareArray.toString().indexOf("sem" + semSelected.name) == -1) {
-                    $scope.compareArray.push("sem" + semSelected.name);
+                if ($scope.compareSemArray.toString().indexOf(semSelected.value) == -1) {
+                    $scope.compareSemArray.push( semSelected.value);
                     $http.get(SEM_API_URL + $rootScope.user + "/" + $rootScope.baiduAccount + "/account/" + $scope.selectedQuota[0] + "-?startOffset=" + semSelected.value + "&endOffset=" + semSelected.value).success
                     (function (res) {
                         var c = $scope.charts[0].config.instance;
@@ -355,10 +357,12 @@ define(["./module"], function (ctrs) {
                 }
             }
 
+
+            $scope.compareEsArray = [];
             $scope.esCompareTo = function (esSelected) {
-                if ($scope.compareArray.toString().indexOf("es" + esSelected.name) == -1) {
-                    $scope.compareArray.push("es" + esSelected.name);
-                    $http.get("/api/charts?start=" + esSelected.value + "&end=" + esSelected.value + "&dimension=period&userType=2&type=" + $scope.selectedQuota[1]).success
+                if ($scope.compareEsArray.toString().indexOf(esSelected.value) == -1) {
+                    $scope.compareEsArray.push(esSelected.value);
+                    $http.get("/api/charts?start=" + esSelected.value + "&end=" + esSelected.value + "&dimension=period&userType="+$rootScope.userType+"&type=" + $scope.selectedQuota[1]).success
                     (function (res) {
                         var json = JSON.parse(eval("(" + res + ")").toString());
                         if (json.length) {
