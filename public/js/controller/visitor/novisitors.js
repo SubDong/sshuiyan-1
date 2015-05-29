@@ -14,7 +14,7 @@ define(["./module"], function (ctrs) {
         $rootScope.checkedArray = ["vc", "uv", "outRate", "avgTime", "avgPage"];
         $rootScope.gridArray = [
             {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
-            {name: "网络供应商", displayName: "网络供应商", field: "ct"},
+            {name: "网络供应商", displayName: "网络供应商", field: "ct", width:300},
             {
                 name: " ",
                 cellTemplate: "<div class='table_box'><a ui-sref='history2' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn'  title='查看历史趋势'></a></div>"
