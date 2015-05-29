@@ -166,7 +166,7 @@ define(["./module"], function (ctrs) {
                 }
                 return;
             }
-            if ($rootScope.start > -7 && $scope.charts[0].config.keyFormat == "week") {
+            if ($rootScope.start > -6 && $scope.charts[0].config.keyFormat == "week") {
                 $rootScope.interval = -1;
             }
             if ($rootScope.interval == -1) {
@@ -176,7 +176,7 @@ define(["./module"], function (ctrs) {
             }
             $scope.charts.forEach(function (chart) {
                 chart.config.instance = echarts.init(document.getElementById(chart.config.id));
-                chart.config.time = chartUtils.getWeekTime($rootScope.start, $rootScope.end);   
+                chart.config.time = chartUtils.getWeekTime($rootScope.start, $rootScope.end);
             });
             requestService.refresh($scope.charts);
             if ($rootScope.start <= -7) {
@@ -313,7 +313,7 @@ define(["./module"], function (ctrs) {
             $rootScope.targetSearch();
             $scope.$broadcast("ssh_dateShow_options_time_change");
         }
-        $scope.cancelChecked = function(){
+        $scope.cancelChecked = function () {
             $scope.isCancelYesterdayCompare = false;
             $scope.isCancelWeekCompare = false;
             $(".specialCheckbox")[0].style.backgroundPosition = "0 0";
@@ -324,15 +324,15 @@ define(["./module"], function (ctrs) {
         $scope.isCancelWeekCompare = false;
         $scope.isShowCalendar = false;
         $scope.compareLastDay = function () {
-            if($scope.isCancelYesterdayCompare == false){
+            if ($scope.isCancelYesterdayCompare == false) {
                 $scope.isCancelWeekCompare = false;
                 console.log($scope.todayCalendar);
-                if(!$scope.todayCalendar) {
+                if (!$scope.todayCalendar) {
                     $scope.todayCalendar = GetDateStr(0);
                 }
                 var todayCalendarArray = $scope.todayCalendar.split("-");
-                var lastDate = todayCalendarArray[2]-1;
-                $scope.dayOrWeek = todayCalendarArray[0]+"-"+todayCalendarArray[1]+"-"+lastDate;
+                var lastDate = todayCalendarArray[2] - 1;
+                $scope.dayOrWeek = todayCalendarArray[0] + "-" + todayCalendarArray[1] + "-" + lastDate;
                 $scope.isShowCalendar = true;
                 $(".specialCheckbox")[0].style.backgroundPosition = "0 -" + 50 + "px";
                 $(".specialCheckbox")[1].style.backgroundPosition = "0 0";
@@ -349,6 +349,7 @@ define(["./module"], function (ctrs) {
                     e.config.legendAllowCheckCount = 1;
                     e.config.legendDefaultChecked = undefined;
                     e.types = [chartUtils.convertEnglish(e.config.legendData[0])];
+                    e.config.chartType = "line";
                     util.renderLegend(chart, e.config);
                     Custom.initCheckInfo();
                 });
@@ -361,7 +362,7 @@ define(["./module"], function (ctrs) {
                     $scope.charts[0].config.compare = true;
                     cf.renderChart(final_result, $scope.charts[0].config);
                 });
-            }else{
+            } else {
                 $(".specialCheckbox")[0].style.backgroundPosition = "0 0";
                 $scope.isShowCalendar = false;
                 $scope.isCancelYesterdayCompare = false;
@@ -372,12 +373,12 @@ define(["./module"], function (ctrs) {
         $scope.compareType = 1;
         //上周同期
         $scope.compareLastWeek = function () {
-            if($scope.isCancelWeekCompare == false){
+            if ($scope.isCancelWeekCompare == false) {
                 $scope.isCancelWeekCompare = true;
                 $scope.isCancelYesterdayCompare = false;
                 var todayCalendarArray = $scope.todayCalendar.split("-");
-                var lastDate = todayCalendarArray[2]-7;
-                $scope.dayOrWeek = todayCalendarArray[0]+"-"+todayCalendarArray[1]+"-"+lastDate;
+                var lastDate = todayCalendarArray[2] - 7;
+                $scope.dayOrWeek = todayCalendarArray[0] + "-" + todayCalendarArray[1] + "-" + lastDate;
                 $(".specialCheckbox")[1].style.backgroundPosition = "0 -" + 75 + "px";
                 $(".specialCheckbox")[0].style.backgroundPosition = "0 0";
                 $scope.dayOrWeek = GetDateStr(-6);
@@ -393,6 +394,7 @@ define(["./module"], function (ctrs) {
                     e.config.instance = chart;
                     e.config.legendAllowCheckCount = 1;
                     e.config.legendDefaultChecked = undefined;
+                    e.config.chartType = "line";
                     e.types = [chartUtils.convertEnglish(e.config.legendData[0])];
                     util.renderLegend(chart, e.config);
                     Custom.initCheckInfo();
@@ -406,7 +408,7 @@ define(["./module"], function (ctrs) {
                     $scope.charts[0].config.compare = true;
                     cf.renderChart(final_result, $scope.charts[0].config);
                 });
-            }else{
+            } else {
                 $scope.isCancelWeekCompare = false;
                 $(".specialCheckbox")[1].style.backgroundPosition = "0 0";
                 $scope.restCompare();
@@ -426,6 +428,7 @@ define(["./module"], function (ctrs) {
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
+                e.config.chartType = "line";
                 util.renderLegend(chart, e.config);
             })
             requestService.refresh($scope.charts);
@@ -442,8 +445,9 @@ define(["./module"], function (ctrs) {
             var d = dd.getDate();
             return y + "-" + m + "-" + d;
         }
+
         //刷新
-        $scope.page_refresh = function(){
+        $scope.page_refresh = function () {
             $rootScope.start = 0;
             $rootScope.end = 0;
             $rootScope.tableTimeStart = 0;

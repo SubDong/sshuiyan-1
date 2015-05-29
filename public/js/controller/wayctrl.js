@@ -22,7 +22,7 @@ define(["./module"], function (ctrs) {
             {name: "推广方式", displayName: "推广方式", field: "accountName"},
             {
                 name: " ",
-                cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn' title='查看历史趋势'></a></div>",
+                cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn' title='查看历史趋势'></a></div>"
 
             },
             {name: "点击量", displayName: "点击量", field: "click"},
@@ -89,6 +89,7 @@ define(["./module"], function (ctrs) {
         ];
         //*************推广*********************/
 
+        $scope.compareResult = [];
         //**************************************/
         $scope.init = function (user, baiduAccount, semType, quotas, start, end, renderLegend) {
             var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
@@ -112,6 +113,9 @@ define(["./module"], function (ctrs) {
                 if (count) {
                     $scope.charts[0].config.chartType = "bar";
                     $scope.charts[0].config.bGap = true;
+                    if ($scope.compareResult.length) {
+                        console.log($scope.compareResult);
+                    }
                     cf.renderChart(final_result, $scope.charts[0].config);
                 } else {
                     def.defData($scope.charts[0].config);
@@ -203,8 +207,9 @@ define(["./module"], function (ctrs) {
             var d = dd.getDate();
             return y + "-" + m + "-" + d;
         }
+
         //刷新
-        $scope.page_refresh = function(){
+        $scope.page_refresh = function () {
             $rootScope.start = -1;
             $rootScope.end = -1;
             $scope.init($rootScope.user, $rootScope.baiduAccount, "account", $scope.selectedQuota, $rootScope.start, $rootScope.end, true);
@@ -221,8 +226,11 @@ define(["./module"], function (ctrs) {
             $scope.reset();
             $scope.yesterdayClass = true;
         };
-        $scope.compareDatePicker = function (start, end) {
+        $scope.compareType = null;
+        $rootScope.datePickerCompare = function (start, end, label) {
 
-        }
+            console.log(start + ">>>>>>>>>>>>>>>>" + end);
+        };
+
     });
 });
