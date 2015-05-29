@@ -12,7 +12,7 @@ define(["./module"], function (ctrs) {
         $rootScope.tableTimeEnd = -1;//结束时间、
         $rootScope.tableFormat = null;
         //配置默认指标
-        $rootScope.checkedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
+        $rootScope.checkedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"];
         $rootScope.searchGridArray = [
             {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
             {
@@ -21,11 +21,11 @@ define(["./module"], function (ctrs) {
                 field: "kw",
                 cellTemplate: "<div><a href='http://www.baidu.com/s?wd={{grid.appScope.getDataUrlInfo(grid, row,1)}}' style='color:#0965b8;line-height:30px;' target='_blank'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</div>"
             },/*
-            {
-                name: " ",
-                displayName: " ",
-                cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
-            },*/
+             {
+             name: " ",
+             displayName: " ",
+             cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
+             },*/
             {name: "展现", displayName: "展现", field: "impression"},
             {name: "消费", displayName: "消费", field: "cost"},
             {name: "平均点击价格", displayName: "平均点击价格", field: "cpc"},
@@ -48,27 +48,57 @@ define(["./module"], function (ctrs) {
                 SEMData: "keyword" //查询类型
             }
         };
+        $scope.onLegendClickListener=function(radio,chartObj,chartConfig,checkValue){
+            $scope.charts[0].types=checkValue;
+            $scope.charts[0].config.instance=echarts.init(document.getElementById($scope.charts[0].config.id));
+            requestService.refresh($scope.charts);
+        };
+        /**
+         * 数据展示前处理
+         * @param data
+         * @param chartConfig
+         */
+        $scope.customFormat=function(data,chartConfig){
+            var final_result=JSON.parse(eval("("+data+")").toString());
+            //删除key为"-"数据对
+            final_result.forEach(function(item,i){
+                item.key.forEach(function(k,j){
+                    if(k=="-"){
+                        item.key.remove(j);
+                        item.quota.remove(j);
+                    }
+                });
+            });
+            $scope.charts[0].config.noFormat="none";
+            cf.renderChart(final_result, chartConfig);
+        }
         $scope.charts = [
             {
                 config: {
                     legendId: "indicators_charts_legend",
                     legendData: ["浏览量(PV)", "访客数(UV)", "跳出率", "抵达率", "平均访问时长", "页面转化"],//显示几种数据
-                    legendMultiData: $rootScope.lagerMulti,
+                    //legendMultiData: $rootScope.lagerMulti,
                     legendAllowCheckCount: 2,
                     legendClickListener: $scope.onLegendClickListener,
+                    legendDefaultChecked: [0, 1],
+                    min_max:false,
                     id: "indicators_charts",
-                    bGap: false,//首行缩进
-                    chartType: "line",//图表类型
+                    bGap: true,//首行缩进
+                    chartType: "bar",//图表类型
+                    keyFormat:'none',
                     dataKey: "key",//传入数据的key值
                     dataValue: "quota"//传入数据的value值
                 },
                 types: ["pv", "uv"],
-                dimension: ["period"],
-                interval: $rootScope.interval,
-                url: "/api/charts"
+                dimension: ["kw"],
+                url: "/api/charts",
+                cb:$scope.customFormat
             }
         ];
         $scope.init = function () {
+            $rootScope.start=-1;
+            $rootScope.end=-1;
+            $rootScope.interval=undefined;
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;

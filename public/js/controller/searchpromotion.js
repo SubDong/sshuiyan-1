@@ -152,7 +152,23 @@ define(["./module"], function (ctrs) {
             $scope.isJudge = false;
             $scope.targetSearch();
         };
-
+        //设置地域过滤
+        $scope.setAreaFilter = function (area) {
+            if (!$rootScope.tableSwitch) {
+                return;
+            }
+            if ("全部" == area) {
+                $rootScope.tableSwitch.tableFilter = null;
+            } else {
+                $rootScope.tableSwitch.tableFilter = "[{\"region\":[\"" + area + "\"]}]";
+            }
+            $scope.isJudge = false;
+            if ($scope.tableJu == "html") {
+                getHtmlTableData();
+            } else {
+                $scope.targetSearch();
+            }
+        };
 
         $rootScope.targetSearchSpread = function (isClicked) {
             $scope.gridOpArray = angular.copy($rootScope.searchGridArray);
@@ -227,37 +243,47 @@ define(["./module"], function (ctrs) {
                 + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=undefined&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
             }).success(function (data, status) {
                 var dataArray = [];
-                data.forEach(function (item, i) {
-                    var variousId = item.kw.split(",");
-                    item.kw = variousId[0];
-                    var url = SEM_API_URL + user + "/" + baiduAccount + "/" + $rootScope.tableSwitch.promotionSearch.SEMData + "/" + variousId[3] + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1"
-                    $http({
-                        method: 'GET',
-                        url: url
-                    }).success(function (dataSEM, status) {
-                        var datas = {};
-                        if (variousId[3] == 0) {
-                            $rootScope.checkedArray.forEach(function (x, y) {
-                                datas[x] = (item[x] != undefined ? item[x] : 0);
-                                var field = $rootScope.tableSwitch.latitude.field
-                                datas[field] = item[field] + ",";
-                            })
-                        } else {
-                            $rootScope.checkedArray.forEach(function (x, y) {
-                                datas[x] = (item[x] != undefined ? item[x] : dataSEM[0][x]);
-                            })
-                            var field = $rootScope.tableSwitch.latitude.field
-                            datas[field] = item[field] + getTableTitle(field, dataSEM[0]);
-                        }
-                        dataArray.push(datas);
-                        $scope.gridOptions.rowHeight = 55;
-                        $scope.gridOptions.data = dataArray;
-                    });
-                });
+               if(data!=null&&data.length>0) {
+
+                   data.forEach(function (item, i) {
+                       var variousId = item.kw.split(",");
+                       item.kw = variousId[0];
+                       var url = SEM_API_URL + user + "/" + baiduAccount + "/" + $rootScope.tableSwitch.promotionSearch.SEMData + "/" + variousId[3] + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1"
+                       $http({
+                           method: 'GET',
+                           url: url
+                       }).success(function (dataSEM, status) {
+                           var datas = {};
+                           if (variousId[3] == 0) {
+                               $rootScope.checkedArray.forEach(function (x, y) {
+                                   datas[x] = (item[x] != undefined ? item[x] : 0);
+                                   var field = $rootScope.tableSwitch.latitude.field
+                                   datas[field] = item[field] + ",";
+                               })
+                           } else {
+                               $rootScope.checkedArray.forEach(function (x, y) {
+                                   datas[x] = (item[x] != undefined ? item[x] : dataSEM[0][x]);
+                               });
+                               var field = $rootScope.tableSwitch.latitude.field
+                               datas[field] = item[field] + getTableTitle(field, dataSEM[0]);
+                           }
+                           dataArray.push(datas);
+
+                       });
+                   });
+               };
+                $scope.gridOptions.rowHeight = 55;
+                $scope.gridOptions.data = dataArray;
             });
         };
 
-
+        $rootScope.targetSearch= function (isClicked) {
+            if ($rootScope.tableSwitch.promotionSearch.turnOn == "ssc") {
+                $rootScope.targetSearchSSC(true);
+            } else {
+                $rootScope.targetSearchSpread(true);
+            }
+        };
         //init
         if ($rootScope.tableSwitch.promotionSearch.turnOn == "ssc") {
             $rootScope.targetSearchSSC(true);
