@@ -75,7 +75,7 @@ define(["./module"], function (ctrs) {
                         if ($scope.equipment.selected)
                             tmpData.push(chartUtils.getCustomDevice(e.key[i], $scope.equipment.selected.field));
                         else
-                            tmpData.push(e.key[i]=="-"?"未知":e.key[i]);
+                            tmpData.push(e.key[i] == "-" ? "未知" : e.key[i]);
                         _value.push(e.quota[i]);
 
                     }
@@ -85,14 +85,13 @@ define(["./module"], function (ctrs) {
                 });
             }
             config["noFormat"] = "noFormat";
-            config['twoYz'] = "none"
             cf.renderChart(json, config);
         }
         $scope.charts = [
             {
                 config: {
                     legendId: "equipment_legend",
-                    legendData: ["访客数(UV)", "访问次数", "新访客数", "IP数", "贡献浏览量", "转化次数"],
+                    legendData: ["浏览量(PV)", "访问次数", "访客数(UV)", "新访客数", "新访客比率", "IP数", "跳出率", "平均访问时长", "平均访问页数"],
                     legendClickListener: $scope.onLegendClick,
                     legendAllowCheckCount: 2,
                     legendDefaultChecked: [0, 1],
@@ -166,8 +165,9 @@ define(["./module"], function (ctrs) {
             var d = dd.getDate();
             return y + "-" + m + "-" + d;
         }
+
         //刷新
-        $scope.page_refresh = function(){
+        $scope.page_refresh = function () {
             $rootScope.start = 0;
             $rootScope.end = 0;
             $rootScope.tableTimeStart = 0;

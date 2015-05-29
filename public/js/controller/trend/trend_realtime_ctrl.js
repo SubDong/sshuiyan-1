@@ -13,7 +13,7 @@ define(["./module"], function (ctrs) {
         $rootScope.tableFormat = null;
         $rootScope.tableSwitch = {
             dimen: true,
-            latitude: {name: "地域", displayName: "地域", field: "region"},
+            latitude: {name:"地域", displayName: "地域", field: "region"},
             tableFilter: null,
             // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
             number: 0,

@@ -294,6 +294,7 @@ var op = {
             xData.push(x);
             option.series.push(serie);
         });
+        console.log(chartConfig.twoYz);
         if (!chartConfig.twoYz) {
             for (var i = 0; i < labelData.length; i++) {
                 //if (labelData[i] == "uv" || labelData[i] == "pv" || labelData[i] == "访客数(UV)" || labelData[i] == "浏览量(PV)") {

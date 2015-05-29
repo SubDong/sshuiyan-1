@@ -667,14 +667,14 @@ nav, .navbar-default {
       display: block;
       float: left;
       padding: 5px 8px;
-      width: 120px;
+      width: 110px;
       color: #000;
     }
   }
   .chart_noborder {
     border-top: 1px dashed #ffffff;
     border-bottom: none;
-    padding-top: 15px;
+    padding: 10px 10px 0 10px;
     color: #aaaaaa;
   }
   .chart_top ul li {
@@ -719,7 +719,6 @@ nav, .navbar-default {
       margin: 0px 5px 0 0;
 
     }
-    margin-bottom: 10px;
     height: 30px;
     .btn-primary {
       background: #40befb;
@@ -767,10 +766,14 @@ nav, .navbar-default {
   .custom_select {
     padding: 0px 15px;
     min-height: 36px;
+
     .radio {
       margin-right: 5px;
     }
     .btn-group {
+      margin: -4px 0 0px 5px;
+    }
+    .btn-group-url{
       margin: 4px 0 0px 5px;
     }
     .input-group {
@@ -829,6 +832,15 @@ nav, .navbar-default {
       margin: 4px 10px 0 0;
     }
 
+  }
+  .custom_select_way{
+    padding:10px 15px;
+  }
+  .custom_height{
+    min-height: 26px;
+    ul{
+      margin-bottom: 0;
+    }
   }
 }
 
@@ -1133,7 +1145,8 @@ nav, .navbar-default {
 
 .date_select {
   .btn-Refresh {
-    padding: 3px 10px;
+    padding: 2px 10px;
+    border-radius: 2px;
   }
   .dateshow {
     width: 88px;
@@ -2179,6 +2192,9 @@ nav, .navbar-default {
         position: relative;
 
       }
+      a:hover{
+        text-decoration:underline;
+      }
     }
   }
 }
@@ -3033,56 +3049,52 @@ select.styled {
 }
 
 /*网站列表*/
-.web_list_nav {
-  position: fixed;
-  height: 45px;
-  background-color: #f0f0f0;
-  width: 100%;
-  color: #838383;
-}
 
 .web_list p {
   display: inline;
   margin-left: 20px;
   line-height: 45px;
+
+}
+.web_list_nav {
+  background-color: #eee;
+  color: #838383;
+  position: fixed;
+  width: 100%;
+  z-index: 1061;
 }
 
-.web_list_nav span {
-  padding-left: 5px;;
-  width: 80px;
-  line-height: 45px;
-  display: inline-block;
+.web_list_nav_right{
+  height: 35px;
   float: right;
+  margin: 10px 150px 0 0;
+  ul li{
+      display:block;
+      float:left;
+    margin: 8px 15px 0 0;
+  }
 }
 
-#web_list_nav_input {
-  margin-top: 8px;
-  height: 28px;
+#web_list_nav_input{
+  width: 180px;
+  display: inline-block;
+  margin-top: -8px;
+  height: 30px;
+  border-radius: 2px;
   line-height: 17px;
 }
-
-.web_list_nav input {
-  float: right;
-  display: inline;
-  margin-top: 15px;
-  max-width:  170px;
-  border-radius: 0;
-}
-
-.web_list_nav button {
-  height: 28px;
-  padding: 3px 10px;
-  background-color: #01aeef;
-  float: right;
-  margin: 8px 180px 8px 2px;
+.nav_btn{
+  margin-top: -8px;
+  height: 30px;
   border-radius: 2px;
+  line-height: 10px;
+  background-color: #2FABE7;
 }
-
-.web_list_up {
+.web_list_up{
   padding-top: 45px;
 }
-
 .web_list_up ul {
+  line-height: 100px;
   margin-left: 45px;
   height: 100px;
   font-weight: bold;
@@ -3275,7 +3287,7 @@ select.styled {
 }
 
 .ui-grid-header-viewport .ui-grid-cell-contents span {
-  padding-left: 5px;
+  padding-left: 0px;
 }
 .uconcentctrl {
   .ui-grid-row:nth-child(2n) .ui-grid-cell {
@@ -3307,12 +3319,14 @@ select.styled {
   li {
     float: left;
     margin-right: 10px;
+    line-height: 26px;
+    height: 26px;
   }
   .grid_table span {
     margin-left: 20px;
   }
   .radio {
-    margin: -3px 5px 0 0;
+    margin: 2px 5px 0 0;
   }
 
 }
@@ -3371,4 +3385,16 @@ select.styled {
   height:32px;
   line-height:32px;
   color: #2fabe7;
+}
+
+
+.visitor_table_width{
+  .ui-grid-row .ng-scope{
+    padding:0 5px;
+  }
+}
+.admin_table{
+  .ui-grid-cell-contents{
+    padding: 0;
+  }
 }
