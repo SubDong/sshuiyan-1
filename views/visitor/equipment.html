@@ -2,7 +2,7 @@
 <div class="middle_containers" ng-controller="equipmentctr">
     <div class="date_select">
         <div role="group" class="btn-group fl">
-
+            <span class="fl"> 客户端属性：</span>
             <ui-select ng-model="equipment.selected" theme="select2" reset-search-input="false" ng-disabled="disabled" class="fl btn-delta" ng-change="equipmentChange(equipment.selected)"
                        style="width: 160px;">
                 <ui-select-match placeholder="网络供应商">{{$select.selected.name}}</ui-select-match>
@@ -78,7 +78,7 @@
                             <!--</div>-->
                         <!--</div>-->
                         <div class="custom_table">
-                            <div ui-grid="gridOptions" class="grid" style="height:400px;" ui-grid-pagination  ui-grid-exporter ui-grid-expandable></div>
+                            <div ui-grid="gridOptions" class="grid" style="min-height:400px;" ui-grid-pagination  ui-grid-exporter ui-grid-expandable></div>
                             <gridpage></gridpage>
                         </div>
                     </div>

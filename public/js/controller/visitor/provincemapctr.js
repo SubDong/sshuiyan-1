@@ -3,7 +3,7 @@
  */
 define(["./module"], function (ctrs) {
 
-    ctrs.controller("provincemapctr", function ($scope, $rootScope, $http) {
+    ctrs.controller("provincemapctr", function ($scope, uiGridConstants, $rootScope, $http) {
         $scope.todayClass = true;
 
         $rootScope.tableTimeStart = 0;//开始时间
@@ -18,9 +18,9 @@ define(["./module"], function (ctrs) {
                 name: " ",
                 cellTemplate: "<div class='table_box'><a ui-sref='history1' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn' title='查看历史趋势'></a></div>"
             },
-            {name: "浏览量(PV)", displayName: "浏览量(PV)", field: "pv"},
-            {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},
-            {name: "跳出率", displayName: "跳出率", field: "outRate"}
+            {name: "浏览量(PV)", displayName: "浏览量(PV)",footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.options)}}</div>", field: "pv"},
+            {name: "访客数(UV)", displayName: "访客数(UV)",footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.options)}}</div>", field: "uv"},
+            {name: "跳出率", displayName: "跳出率", footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.options)}}</div>", field: "outRate"}
         ];
         $rootScope.tableSwitch = {
             latitude: {name: "地域", displayName: "地域", field: "region"},
