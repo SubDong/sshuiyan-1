@@ -109,7 +109,6 @@ define(["../app"], function (app) {
                     $rootScope.end = 0;
                     scope.reloadByCalendar("month");
                     $('#reportrange span').html(GetDateStr(-29) + "至" + GetDateStr(0));
-                    scope.wtimes = [GetDateStr(-29), GetDateStr(0)];
                 };
                 scope.timeclick = function () {
                     scope.reset();
@@ -157,7 +156,6 @@ define(["../app"], function (app) {
                     cancelClass: 'btn-default',
                     separator: ' to '
                 }, function (start, end, label) {
-                    scope.wtimes = [start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD')];
                     $rootScope.datepickerClick(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
                     $rootScope.startString = (start.format('YYYY-MM-DD') + ' 至 ' + end.format('YYYY-MM-DD'))
                     $('#reportrange span').html(start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD'));
@@ -221,7 +219,7 @@ define(["../app"], function (app) {
         };
         return option;
     });
-    app.directive("refresh", function ($rootScope, requestService) {
+    app.directive("refresh", function ($rootScope, requestService, $location) {
         var option = {
             restrict: "EA",
             template: "<div class=\"right_refresh fr\"><button class=\"btn btn-default btn-Refresh fl\" ng-click=\"page_refresh()\"  type=\"button\"><span aria-hidden=\"true\" class=\"glyphicon glyphicon-refresh\"></span></button><ui-select ng-model=\"export.selected\"   ng-change='fileSave(export.selected)' theme=\"select2\" ng-hide=\"menu_select\" reset-search-input=\"false\" class=\"fl\"style=\"min-width: 90px;background-color: #fff;\"> <ui-select-match placeholder=\"保存\">{{$select.selected.name}} </ui-select-match> <ui-select-choices repeat=\"export in exportsaa\"> <span ng-bind-html=\"export.name\"></span></ui-select-choices></ui-select></div>",
@@ -233,10 +231,11 @@ define(["../app"], function (app) {
                     {name: 'CSV', value: 'csv'},
                     {name: 'PDF（含图） ', value: 'pdf'}
                 ];
+                scope.flag = $location.path() != "/index"
                 //导出功能
                 scope.fileSave = function (obj) {
                     if (obj.value == "csv") {
-                        if ($rootScope.gridApi2) {
+                        if (scope.flag) {
                             $rootScope.gridApi2.exporter.csvExport("all", "visible", angular.element())
                         } else {
                             console.log($rootScope.gridApi);
@@ -244,12 +243,11 @@ define(["../app"], function (app) {
                         }
                     }
                     else {
-                        if ($rootScope.gridApi2) {
+                        if (scope.flag) {
                             $rootScope.gridApi2.exporter.pdfExport("all", "visible", angular.element());
                         } else {
                             $rootScope.gridApi.exporter.pdfExport("all", "visible", angular.element());
                         }
-                        //scope.gridApi.exporter.csvExport( "all", "visible", angular.element() );
 
                     }
                 }

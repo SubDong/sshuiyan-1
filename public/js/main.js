@@ -49,9 +49,9 @@ require.config({
         'js004': ["angular"],
         "js005": ["angular"],
         "js002": ["angular"],
+        "angularjs/vfs_fonts": ["angularjs/pdfmake", "angularjs/csv"],
         "angularjs/ui-bootstrap.min": ["angular"],
         "angularjs/ui-bootstrap-tpls": ["angular"],
-     /*   "angularjs/vfs_fonts": ["angular"],*/
         "angularjs/csv": ["angular"],
         "angularjs/pdfmake": ["angular"],
         "angularjs/ui-grid-unstable.min": ["angular"],
