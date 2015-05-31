@@ -4,9 +4,8 @@
 define(["./module"], function (ctrs) {
 
     'use strict';
+    ctrs.controller('searchtermctr', function ($scope, $rootScope) {
 
-    ctrs.controller('searchtermctr', function ($scope, $rootScope, $http, requestService, popupService, areaService, uiGridConstants) {
-            $scope.todayClass = true;
             $scope.visible = true;
             //table默认信息配置
             $rootScope.tableTimeStart = 0;
@@ -15,13 +14,14 @@ define(["./module"], function (ctrs) {
             //配置默认指标
             $rootScope.checkedArray = ["pv", "vc", "nuv", "ip"];
             $rootScope.gridArray = [
+                {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
                 {name: "搜索词", displayName: "搜索词", field: "kw"},
                 {
                     name: " ",
                     cellTemplate: "<div class='table_box'>" +
-                    "<button onclick='getMyButton(this)' class='table_nextbtn'></button>" +
+                    "<button onmousemove='getMyButton(this)' class='table_btn'></button>" +
                     "<div class='table_win'>" +
-                    "<ul>" +
+                    "<ul style='color: #45b1ec'>" +
                     "<li><a>查看相关热门搜索词</a></li>" +
                     "<li><a ng-click='grid.appScope.showSearchUrl(row)'>查看搜索来路URL</a></li>" +
                     "<li><a ui-sref='history6' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li>" +
@@ -69,7 +69,7 @@ define(["./module"], function (ctrs) {
                 {name: '所有页面底部400按钮'},
                 {name: '详情页右侧按钮'},
                 {name: '时长目标'},
-                {name: '访问页数目标'},
+                {name: '访问页数目标'}
             ];
             //日历
             $rootScope.datepickerClick = function (start, end, label) {
@@ -79,6 +79,37 @@ define(["./module"], function (ctrs) {
                 $rootScope.targetSearch();
                 $scope.$broadcast("ssh_dateShow_options_time_change");
             }
+            function GetDateStr(AddDayCount) {
+                var dd = new Date();
+                dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
+                var y = dd.getFullYear();
+                var m = dd.getMonth() + 1;//获取当前月份的日期
+                var d = dd.getDate();
+                return y + "-" + m + "-" + d;
+            }
+            //刷新
+            $scope.page_refresh = function(){
+                $rootScope.start = -1;
+                $rootScope.end = -1;
+                $rootScope.tableTimeStart = -1;
+                $rootScope.tableTimeEnd = -1;
+//                $scope.charts.forEach(function (e) {
+//                    var chart = echarts.init(document.getElementById(e.config.id));
+//                    e.config.instance = chart;
+//                });
+                //图表
+//                requestService.refresh($scope.charts);
+                //首页表格
+                //requestService.gridRefresh(scope.grids);
+                $scope.reloadByCalendar("yesterday");
+                $('#reportrange span').html(GetDateStr(-1));
+                //其他页面表格
+                $rootScope.targetSearch(true);
+                $scope.$broadcast("ssh_dateShow_options_time_change");
+                //classcurrent
+                $scope.reset();
+                $scope.yesterdayClass = true;
+            };
         }
     );
 

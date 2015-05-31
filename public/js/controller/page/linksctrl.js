@@ -47,7 +47,7 @@ define(["./module"], function (ctrs) {
             {
                 "id": 2,
                 "name": "http://127.0.0.1:8000/#/extension/survey"
-            },
+            }
         ]
         $scope.hoverIn = function () {
             this.hoverEdit = true;
@@ -141,6 +141,26 @@ define(["./module"], function (ctrs) {
         this.removeFromSelected = function (dt) {
             this.selectedDates.splice(this.selectedDates.indexOf(dt), 1);
         }
+        function GetDateStr(AddDayCount) {
+            var dd = new Date();
+            dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
+            var y = dd.getFullYear();
+            var m = dd.getMonth() + 1;//获取当前月份的日期
+            var d = dd.getDate();
+            return y + "-" + m + "-" + d;
+        }
+        //刷新
+        $scope.page_refresh = function(){
+            $rootScope.start = 0;
+            $rootScope.end = 0;
+            $rootScope.tableTimeStart = 0;
+            $rootScope.tableTimeEnd = 0;
+            $scope.reloadByCalendar("today");
+            $('#reportrange span').html(GetDateStr(0));
+            //classcurrent
+            $scope.reset();
+            $scope.todayClass = true;
+        };
     });
 
     ctrs.controller('ModalInstanceCtrl', function ($scope, $modalInstance, items) {

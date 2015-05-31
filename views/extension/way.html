@@ -2,6 +2,7 @@
     <div class="date_select">
         <calendar></calendar>
         <dateother></dateother>
+        <refresh></refresh>
     </div>
     <div class="my_concent">
         <ssh-date-show type="today" dimension="wd"></ssh-date-show>
@@ -78,7 +79,7 @@
                         </div>
                     </div>
                     <div class="custom_secendtitle">
-                        <div class="custom_select">
+                        <div class="custom_select custom_select_way">
                             转化目标
                             <div role="group" class="btn-group">
                                 <ui-select ng-model="page.selected" theme="select2" reset-search-input="false" class="fl"
@@ -119,7 +120,7 @@
                         </div>
                     </div>
                     <div class="custom_secendtitle">
-                        <div class="custom_select">
+                        <div class="custom_select custom_select_way">
                             转化目标
                             <div role="group" class="btn-group">
                                 <ui-select ng-model="page.selected" theme="select2" reset-search-input="false" class="fl"
@@ -136,7 +137,7 @@
             </tabset>
             <div class="custom_table">
                 <div ui-grid="gridOptions" class="grid" style="min-height:400px;" ui-grid-pagination
-                     ui-grid-selection ui-grid-exporter></div>
+                     ui-grid-exporter></div>
                 <gridpage></gridpage>
             </div>
         </div>

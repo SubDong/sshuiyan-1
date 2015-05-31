@@ -24,7 +24,7 @@
                         <div class="custom_secendtitle">
                             <div class="custom_select">
                                 <div class="input-group fl">
-                                    <input type="text" placeholder="输入URL…" data-ng-model="searchURLText" class="form-control fl">
+                                    <input type="text" placeholder="输入URL…" data-ng-model="searchURLText" class="form-control fl" onfocus="this.setAttribute('placeholder','')" onblur="this.setAttribute('placeholder','输入URL...')">
                                        <span class="input-group-btn fl">
                                  <button type="button" class="btn btn-default" data-ng-click="searchURLFilter(searchURLText)"><span aria-hidden="true"
                                                                                      class="glyphicon glyphicon-search"></span>
@@ -45,7 +45,7 @@
                             </div>
                         </div>
                         <div class="custom_table">
-                            <div ui-grid="gridOptions" class="grid"style="height:400px;"ui-grid-pagination ui-grid-selection ui-grid-exporter></div>
+                            <div ui-grid="gridOptions" class="grid"style="height:400px;"ui-grid-pagination  ui-grid-exporter></div>
                             <gridpage></gridpage>
                         </div>
                     </div>

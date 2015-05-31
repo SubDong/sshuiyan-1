@@ -1,7 +1,7 @@
 /**
  * Created by XiaoWei on 2015/4/22.
  */
-define(["./module"], function(ctrs) {
+define(["./module"], function (ctrs) {
 
     "use strict";
 
@@ -14,10 +14,11 @@ define(["./module"], function(ctrs) {
         //配置默认指标
         $rootScope.checkedArray = ["pv", "uv", "avgTime"];
         $rootScope.gridArray = [
+            {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
             {name: "页面url", displayName: "页面url", field: "loc"},
             {
                 name: " ",
-                cellTemplate: "<div class='table_box'><button onclick='getMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul><li><a ui-sref='history4' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li></ul></div></div>"
+                cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history4' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li></ul></div></div>"
             },
             {name: "浏览量(PV)", displayName: "浏览量(PV)", field: "pv"},
             {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},
@@ -40,7 +41,8 @@ define(["./module"], function(ctrs) {
                 chart.config.instance = echarts.init(document.getElementById(chart.config.id));
                 chart.types = checkedVal;
             });
-            requestService.refresh($scope.charts);
+            var chartArray = [$scope.charts[1]];
+            requestService.refresh(chartArray);
         }
         //
         //
@@ -101,9 +103,10 @@ define(["./module"], function(ctrs) {
                     legendClickListener: $scope.onLegendClick,
                     legendAllowCheckCount: 1,
                     id: "indicators_charts",
-                    bGap: true,
+                    bGap: false,
                     min_max: false,
-                    chartType: "bar",
+                    chartType: "line",
+                    lineType: false,
                     keyFormat: 'none',
                     dataKey: "key",
                     dataValue: "quota"
@@ -119,11 +122,10 @@ define(["./module"], function(ctrs) {
             $rootScope.start = 0;
             $rootScope.end = 0;
             $rootScope.interval = undefined;
-            var char = $scope.charts[1];
-            var chart = echarts.init(document.getElementById(char.config.id));
-            char.config.instance = chart;
-            util.renderLegend(chart, char.config);
-            var chartArray = [char];
+            var chart = echarts.init(document.getElementById($scope.charts[1].config.id));
+            $scope.charts[1].config.instance = chart;
+            util.renderLegend(chart, $scope.charts[1].config);
+            var chartArray = [$scope.charts[1]];
             requestService.refresh(chartArray);
         }
         $scope.init();
@@ -154,6 +156,35 @@ define(["./module"], function(ctrs) {
             $rootScope.targetSearch();
             $scope.$broadcast("ssh_dateShow_options_time_change");
         }
+        function GetDateStr(AddDayCount) {
+            var dd = new Date();
+            dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
+            var y = dd.getFullYear();
+            var m = dd.getMonth() + 1;//获取当前月份的日期
+            var d = dd.getDate();
+            return y + "-" + m + "-" + d;
+        }
+        //刷新
+        $scope.page_refresh = function(){
+            $rootScope.start = 0;
+            $rootScope.end = 0;
+            $rootScope.tableTimeStart = 0;
+            $rootScope.tableTimeEnd = 0;
+            $scope.charts.forEach(function (e) {
+                var chart = echarts.init(document.getElementById(e.config.id));
+                e.config.instance = chart;
+            });
+            //图表
+            requestService.refresh($scope.charts);
+            $scope.reloadByCalendar("today");
+            $('#reportrange span').html(GetDateStr(0));
+            //其他页面表格
+            $rootScope.targetSearch(true);
+            $scope.$broadcast("ssh_dateShow_options_time_change");
+            //classcurrent
+            $scope.reset();
+            $scope.todayClass = true;
+        };
     });
 
 });

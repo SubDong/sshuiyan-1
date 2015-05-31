@@ -7,6 +7,7 @@ define(["./module"], function (ctrs) {
     ctrs.controller('trend_month_ctrl', function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
         $scope.monthClass = true;
         $scope.hourcheckClass = true;
+        $scope.weekselected = false;
         $scope.reset = function () {
             $scope.todayClass = false;
             $scope.yesterdayClass = false;
@@ -23,6 +24,12 @@ define(["./module"], function (ctrs) {
         //配置默认指标
         $rootScope.checkedArray = ["pv", "uv", "ip", "outRate", "avgTime"];
         $rootScope.gridArray = [
+            {
+                name: "xl",
+                displayName: "",
+                cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
+                maxWidth: 10
+            },
             {name: "日期", displayName: "日期", field: "period"},
             {name: "浏览量(PV)", displayName: "浏览量(PV)", field: "pv"},
             {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},
@@ -65,18 +72,20 @@ define(["./module"], function (ctrs) {
                         config["noFormat"] = "noFormat";
                         chartUtils.getXType(config, $rootScope.interval);
                         config["chartType"] = "bar";//图表类型
-                        chartUtils.addStep(json, 24);
+                        config["bGap"] = true;//图表类型
                         chartUtils.noFormatConvertLabel(json);
                         cf.renderChart(json, config);
                     } else {
                         config["noFormat"] = undefined;
                         config["chartType"] = "line";//图表类型
+                        config["bGap"] = false;//图表类型
                         chartUtils.getXType(config, $rootScope.interval);
                         cf.renderChart(data, config);
                     }
                 } else {
                     config["noFormat"] = undefined;
                     config["chartType"] = "line";//图表类型
+                    config["bGap"] = false;//图表类型
                     chartUtils.getXType(config, $rootScope.interval);
                     cf.renderChart(data, config);
                 }
@@ -121,6 +130,7 @@ define(["./module"], function (ctrs) {
         $scope.$on("ssh_refresh_charts", function (e, msg) {
             $scope.charts.forEach(function (chart) {
                 chart.config.instance = echarts.init(document.getElementById(chart.config.id));
+                chart.config.time = chartUtils.getWeekTime($rootScope.start, $rootScope.end);
             });
             requestService.refresh($scope.charts);
             if ($rootScope.start <= -7) {
@@ -140,6 +150,7 @@ define(["./module"], function (ctrs) {
             $rootScope.interval = 1;
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
+                e.config.bGap = false;//图表类型
                 e.config.instance = chart;
             });
             $rootScope.tableFormat = "hour";
@@ -219,14 +230,14 @@ define(["./module"], function (ctrs) {
             {name: '完整下载'},
             {name: '在线下载'},
             {name: '时长目标'},
-            {name: '访问页数目标'},
+            {name: '访问页数目标'}
         ];
         $scope.souce = {};
         $scope.souces = [
             {name: '全部'},
             {name: '直接访问'},
             {name: '搜索引擎'},
-            {name: '外部链接'},
+            {name: '外部链接'}
         ];
         //日历
         $rootScope.datepickerClick = function (start, end, label) {
@@ -246,9 +257,11 @@ define(["./module"], function (ctrs) {
             }
             $rootScope.start = time[0];
             $rootScope.end = time[1];
+            $rootScope.interval = -1;
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
+                e.config.time = chartUtils.getWeekTime($rootScope.start, $rootScope.end);
             });
             requestService.refresh($scope.charts);
             $rootScope.tableTimeStart = time[0];
@@ -281,7 +294,38 @@ define(["./module"], function (ctrs) {
             });
 
         }
+        //刷新
+        function GetDateStr(AddDayCount) {
+            var dd = new Date();
+            dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
+            var y = dd.getFullYear();
+            var m = dd.getMonth() + 1;//获取当前月份的日期
+            var d = dd.getDate();
+            return y + "-" + m + "-" + d;
+        }
 
+        $scope.page_refresh = function () {
+            $rootScope.start = -29;
+            $rootScope.end = 0;
+            $rootScope.interval = 1;
+            $rootScope.tableTimeStart = -29;
+            $rootScope.tableTimeEnd = 0;
+            $scope.reloadByCalendar("month");
+            $scope.charts.forEach(function (e) {
+                var chart = echarts.init(document.getElementById(e.config.id));
+                e.config.instance = chart;
+                util.renderLegend(chart, e.config);
+            })
+            //图表
+            requestService.refresh($scope.charts);
+            //其他页面表格
+            // $rootScope.targetSearch(true);
+            $scope.$broadcast("ssh_dateShow_options_time_change");
+            //classcurrent
+            $scope.reset();
+            $scope.monthClass = true;
+            $('#reportrange span').html(GetDateStr(-29) + "至" + GetDateStr(0));
+        };
     });
 
 });

@@ -105,10 +105,12 @@ var op = {
         if (!json[0]) {
             chartConfig.instance = echarts.init(document.getElementById(chartConfig.id));
             def.defData(chartConfig);
+            chartConfig.legendData = _legendTmp;
             return;
         }
         if (!json[0].key.length) {
             def.defData(chartConfig);
+            chartConfig.legendData = _legendTmp;
             return;
         }
         json.forEach(function (item) {
@@ -134,7 +136,11 @@ var op = {
                             var baseSerieName = params[i].seriesName.split(":");
                             res += baseSerieName[0] + chartUtils.convertChinese(baseSerieName[1]) + ' : ' + ad.formatFunc(params[i].value, baseSerieName[1]) + '<br/>';
                         } else {
-                            res += params[i].seriesName + ' : ' + ad.formatFunc(params[i].value, formatType) + '<br/>';
+                            if (chartConfig.toolTip == undefined) {
+                                res += params[i].seriesName + ' : ' + ad.formatFunc(params[i].value, formatType) + '<br/>';
+                            } else {
+                                res += params[i].seriesName + ' : ' + params[i].value + '<br/>';
+                            }
                         }
 
                     }
@@ -234,18 +240,20 @@ var op = {
         chartConfig.dataValue = !chartConfig.dataValue ? "quota" : chartConfig.dataValue;
         var xData = [];
         var select = {};
-        if (chartConfig.chartType == "bar" && chartConfig.autoInput) {
-            if (json[0].key.length < Number(chartConfig.autoInput)) {
-                var inputCount = chartConfig.autoInput - json[0].key.length;
-                chartUtils.addStep(json, inputCount);
-            }
-        }
+        //if (chartConfig.chartType == "bar" && chartConfig.autoInput) {
+        //    if (json[0].key.length < Number(chartConfig.autoInput)) {
+        //        var inputCount = chartConfig.autoInput - json[0].key.length;
+        //        chartUtils.addStep(json, inputCount);
+        //    }
+        //}
         json.forEach(function (item) {
             select[chartUtils.convertChinese(item.label)] = true;
             var serie = {
                 name: !chartConfig.noFormat ? chartUtils.convertChinese(item.label) : item.label,
                 type: !chartConfig.chartType ? "line" : chartConfig.chartType,
-                data: item[chartConfig.dataValue]
+                data: item[chartConfig.dataValue],
+                barMaxWidth: 25,
+                barGap: "10%"
             };
             if (chartConfig.lineType == undefined) {
                 serie.itemStyle = {
@@ -257,7 +265,14 @@ var op = {
                             width: 1
                         }
                     }
-
+                }
+            } else {
+                serie.itemStyle = {
+                    normal: {
+                        lineStyle: {
+                            width: 1
+                        }
+                    }
                 }
             }
             if (chartConfig.min_max == undefined) {
@@ -268,45 +283,54 @@ var op = {
                     ]
                 }
             }
-            xData.push(util.getX(item, chartConfig));
+            var x = util.getX(item, chartConfig);
+            if (chartConfig.keyFormat == "week") {
+                if (chartConfig.time) {
+                    var hasChange = [];
+                    x[0] = chartConfig.time[0].split("-")[0] + "-" + x[0].split("-")[1];
+                    x[x.length - 1] = x[x.length - 1].split("-")[0] + "-" + chartConfig.time[1].split("-")[0];
+                }
+            }
+            xData.push(x);
             option.series.push(serie);
         });
+        console.log(chartConfig.twoYz);
         if (!chartConfig.twoYz) {
             for (var i = 0; i < labelData.length; i++) {
-                if (labelData[i] == "uv" || labelData[i] == "pv" || labelData[i] == "访客数(UV)" || labelData[i] == "浏览量(PV)") {
-                    option.series[0]["yAxisIndex"] = 0;
-                } else {
-                    var formatType = labelData[i];
-                    option.series[i]["yAxisIndex"] = i;
-                    option.yAxis[i]["axisLine"] = {
-                        lineStyle: {
-                            color: '#01AFEF',
-                            type: 'solid',
-                            width: 1
-                        }
-                    };
-                    option.yAxis[i]["splitNumber"] = 5;
-                    option.yAxis[i]["splitLine"] = {
-                        lineStyle: {
-                            color: '#F0F0F0',
-                            type: 'solid',
-                            width: 1
-                        }
+                //if (labelData[i] == "uv" || labelData[i] == "pv" || labelData[i] == "访客数(UV)" || labelData[i] == "浏览量(PV)") {
+                //    option.series[0]["yAxisIndex"] = 0;
+                //} else {
+                var formatType = labelData[i];
+                option.series[i]["yAxisIndex"] = i;
+                option.yAxis[i]["axisLine"] = {
+                    lineStyle: {
+                        color: '#01AFEF',
+                        type: 'solid',
+                        width: 1
                     }
-                    if (chartConfig.compare) {
-                        var baseSerieName = formatType.split(":");
-                        ad.renderFormat(option, i, baseSerieName[1]);
-                    } else {
-                        ad.renderFormat(option, i, formatType);
+                };
+                option.yAxis[i]["splitNumber"] = 5;
+                option.yAxis[i]["splitLine"] = {
+                    lineStyle: {
+                        color: '#F0F0F0',
+                        type: 'solid',
+                        width: 1
                     }
-
                 }
+                if (chartConfig.compare) {
+                    var baseSerieName = formatType.split(":");
+                    ad.renderFormat(option, i, baseSerieName[1]);
+                } else {
+                    ad.renderFormat(option, i, formatType);
+                }
+
             }
         }
         option.xAxis[0].data = xData[0];
         option.legend.selected = select;
         chartObj.setOption(option);
         chartConfig.legendData = _legendTmp;
+        chartConfig.instance.hideLoading();
     },
     barChart: function (data, chartConfig) {
         chartConfig.interval = 0;
@@ -314,7 +338,17 @@ var op = {
     },
     pieChart: function (data, chartConfig) {
         if (!chartConfig.instance)return;
-        var chartObj = chartConfig.instance
+        var chartObj = chartConfig.instance;
+        if (data[0]) {
+            if (data[0].key.length == 0) {
+                //chartObj = echarts.init(document.getElementById(chartConfig.id));
+                def.mapDef(chartConfig);
+                return;
+            }
+        } else {
+            def.mapDef(chartConfig);
+            return;
+        }
         var option = {
             tooltip: {
                 trigger: !chartConfig.tt ? "item" : chartConfig.tt,
@@ -416,6 +450,7 @@ var op = {
         })
         option.series.push(serie);
         chartObj.setOption(option);
+        chartConfig.instance.hideLoading();
     },
     mapChart: function (data, chartConfig) {
         if (!chartConfig.instance)return;
@@ -694,7 +729,7 @@ var clear = {
             });
         }
         option.series = [];
-        option.legend.selected = select;
+        //option.legend.selected = select;
         instance.setOption(option);
         instance.restore();
     }
@@ -712,7 +747,6 @@ var def = {
             tooltip: {
                 trigger: !chartConfig.tt ? "axis" : chartConfig.tt
             },
-            calculable: true,
             xAxis: [
                 {
                     type: !chartConfig.xType ? "category" : chartConfig.xType,
@@ -734,7 +768,7 @@ var def = {
             series: [{
                 name: '暂无数据',
                 type: !chartConfig.chartType ? "line" : chartConfig.chartType,
-                data: [0]
+                data: []
             }]
         }
         var timeType = 24;
@@ -744,7 +778,7 @@ var def = {
             }
         }
         for (var i = 0; i < timeType; i++) {
-            option.xAxis[0].data.push(i);
+            option.xAxis[0].data.push('');
         }
         //serie.data.push(0);
         //option.xAxis[0].data = xData;
@@ -753,6 +787,33 @@ var def = {
         //    option.legend.data = ["暂无数据"];
         //}
         instance.setOption(option);
+        util.chartEmpty(chartConfig);
+    },
+    mapDef: function (chartConfig) {
+        var charObj = chartConfig.instance;
+        var option = {
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+            legend: {
+                orient: 'vertical',
+                x: 'left',
+                data: ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎']
+            },
+            series: [
+                {
+                    name: '暂无数据',
+                    type: 'pie',
+                    radius: '55%',
+                    center: ['50%', '60%'],
+                    data: []
+                }
+            ]
+        };
+        charObj.setOption(option);
+        //console.log(option);
+        util.chartEmpty(chartConfig);
     }
 }
 var util = {
@@ -1046,6 +1107,7 @@ var util = {
             //console.log( util.getWeekStartDate(date1)+ ":::" + util.getWeekEndDate(date1));
             //console.log(date1.Format("yyyy-MM-dd"));
             return util.getWeekStartDate(date1) + "-" + util.getWeekEndDate(date1);
+            //return dateStr;
             //return a.substr(2, 4) + "年第" + Math.ceil((d + ((date2.getDay() + 1) - 1)) / 7) +
             //    "周";
         } else {
@@ -1056,7 +1118,7 @@ var util = {
     getWeekStartDate: function (date) {
         var year = date.getYear();
         year += (year < 2000) ? 1900 : 0; //
-        var weekStartDate = new Date(year, date.getMonth(), date.getDate() - date.getDay()+1);
+        var weekStartDate = new Date(year, date.getMonth(), date.getDate() - date.getDay() + 1);
         return util.formatDate(weekStartDate);
     },
     getWeekEndDate: function (date) {
@@ -1077,6 +1139,34 @@ var util = {
             myweekday = "0" + myweekday;
         }
         return (myyear + "/" + mymonth + "/" + myweekday);
+    },
+    chartEmpty: function (chartConfig) {
+        var _emptyDiv = $("<div/>");
+        _emptyDiv.attr({
+            style: 'width:100%;height:100%;z-index:9;background:#f0f0f0; position:relative; '
+
+        });
+        var _spn = $("<span/>");
+        _spn.attr({
+            style: ' display:block;vertical-align: middle; color:#000;text-align:center;z-index:9; position:absolute; top:45%;  left:45% '
+
+        });
+        _spn.html("暂无数据");
+        _emptyDiv.append(_spn);
+        $("#" + chartConfig.id).empty().append(_emptyDiv);
+    },
+    existData: function (final_result) {
+        var count = false;
+        if (final_result.length) {
+            final_result.forEach(function (item) {
+                item.quota.forEach(function (q) {
+                    if (q > 0) {
+                        count = true;
+                    }
+                });
+            });
+        }
+        return count;
     }
 
 }

@@ -8,11 +8,9 @@ var es_request = require('../services/es_request');
 var access_request = require('../services/access_request');
 var initial = require('../services/visitors/initialData');
 var map = require('../utils/map');
-
 var api = express.Router();
 
 api.get('/charts', function (req, res) {
-
     var query = url.parse(req.url, true).query, quotas = [], type = query['type'], dimension = query.dimension, filter = null, topN = [], userType = query.userType;
     var filter_f = query.filter;
     var topN_f = query.topN == undefined ? null : query.topN;
@@ -60,7 +58,6 @@ api.get('/charts', function (req, res) {
         interval = null;
         dimension = null;
     }
-    console.log(period[0] + ">><<<<<<<" + period[1]);
     es_request.search(req.es, indexes, userType, quotas, dimension, topN, filter, period[0], period[1], interval, function (result) {
         datautils.send(res, JSON.stringify(result));
     });

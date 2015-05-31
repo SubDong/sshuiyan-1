@@ -20,9 +20,15 @@ define(['./module'], function (ctrs) {
             enableHorizontalScrollbar: 0,
             enableVerticalScrollbar: 0,
             columnDefs: [
-                {name: 'name', displayName: "关键词"},
-                {name: 'value', displayName: "浏览量(PV)"}
-            ]
+
+                {name: 'name', displayName: "搜索词"},
+                {name: 'value', displayName: "浏览量(PV)", headerCellClass: 'ui_text', cellClass: 'ui_text'}
+            ],
+            onRegisterApi: function (gridApi) {
+                console.log(gridApi);
+                $rootScope.gridApi = gridApi;
+            }
+
         };
         $scope.onLegendClickListener = function (radio, chartObj, chartConfig, checkedVal) {
             clear.lineChart($scope.charts[0].config, checkedVal);
@@ -56,19 +62,18 @@ define(['./module'], function (ctrs) {
                     if (json[0].key.length == 1) {
                         config["noFormat"] = "noFormat";
                         chartUtils.getXType(config, $rootScope.interval, $rootScope.start);
-                        config["chartType"] = "bar";//图表类型
-                        chartUtils.addStep(json, 24);
+                        config["bGap"] = true;//图表类型
                         chartUtils.noFormatConvertLabel(json);
                         cf.renderChart(json, config);
                     } else {
                         config["noFormat"] = undefined;
-                        config["chartType"] = "line";//图表类型
+                        config["bGap"] = false;//图表类型
                         chartUtils.getXType(config, $rootScope.interval, $rootScope.start);
                         cf.renderChart(data, config);
                     }
                 } else {
                     config["noFormat"] = undefined;
-                    config["chartType"] = "line";//图表类型
+                    config["bGap"] = false;//图表类型
                     chartUtils.getXType(config, $rootScope.interval, $rootScope.start);
                     cf.renderChart(data, config);
                 }
@@ -104,7 +109,7 @@ define(['./module'], function (ctrs) {
                     chartType: "bar",
                     auotHidex: true,
                     dataKey: "key",
-                    autoInput:10,
+                    autoInput: 10,
                     keyFormat: 'none',
                     dataValue: "quota"
 
@@ -121,7 +126,7 @@ define(['./module'], function (ctrs) {
                     serieName: "所占比例",
                     dataKey: "key",
                     dataValue: "quota",
-                    legendShow:true
+                    legendShow: true
                 },
                 types: ["pv"],
                 dimension: ["pm"],
@@ -154,8 +159,12 @@ define(['./module'], function (ctrs) {
         $scope.init();
 
         $scope.$on("ssh_refresh_charts", function (e, msg) {
+            if ($rootScope.start > -7 && $scope.charts[0].config.keyFormat == "week") {
+                $rootScope.interval = -1;
+            }
             $scope.charts.forEach(function (chart) {
                 chart.config.instance = echarts.init(document.getElementById(chart.config.id));
+                chart.config.time = chartUtils.getWeekTime($rootScope.start, $rootScope.end);
             });
             requestService.refresh($scope.charts);
             requestService.gridRefresh($scope.grids);
@@ -171,6 +180,7 @@ define(['./module'], function (ctrs) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
             });
+            $scope.charts[0].config.bGap = false;//图表类型
             requestService.refresh($scope.charts);
 
         };
@@ -182,11 +192,10 @@ define(['./module'], function (ctrs) {
             $scope.hourcheckClass = false;
             $scope.timeselect = true;
             $rootScope.interval = -1;
-            $scope.charts.forEach(function (e) {
-                var chart = echarts.init(document.getElementById(e.config.id));
-                e.config.instance = chart;
-                e.config.noFormat = undefined;
-            });
+            var e = $scope.charts[0];
+            var chart = echarts.init(document.getElementById(e.config.id));
+            e.config.instance = chart;
+            e.config.noFormat = undefined;
             requestService.refresh($scope.charts);
         };
         $scope.weekcheck = function () {
@@ -200,6 +209,7 @@ define(['./module'], function (ctrs) {
                 e.config.instance = chart;
                 e.config.noFormat = undefined;
             });
+            $scope.charts[0].config.time = chartUtils.getWeekTime($rootScope.start, $rootScope.end);
             $scope.charts[0].config.keyFormat = "week";
             requestService.refresh($scope.charts);
 
@@ -233,6 +243,7 @@ define(['./module'], function (ctrs) {
         }
         $scope.equipmentChange = function (_this) {
             $scope.charts[2].types = _this.value;
+            $scope.charts[2].config.instance = echarts.init(document.getElementById($scope.charts[2].config.id));
             var chartArray = [$scope.charts[2]];
             requestService.refresh(chartArray);
         }
@@ -274,15 +285,52 @@ define(['./module'], function (ctrs) {
             }
             $rootScope.start = time[0];
             $rootScope.end = time[1];
+            $rootScope.interval = -1;
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
             });
             requestService.refresh($scope.charts);
             requestService.gridRefresh($scope.grids);
-
         }
-    }])
+        function GetDateStr(AddDayCount) {
+            var dd = new Date();
+            dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
+            var y = dd.getFullYear();
+            var m = dd.getMonth() + 1;//获取当前月份的日期
+            var d = dd.getDate();
+            return y + "-" + m + "-" + d;
+        }
 
+        //刷新
+        $scope.page_refresh = function () {
+            $rootScope.start = 0;
+            $rootScope.end = 0;
+            $rootScope.tableTimeStart = 0;
+            $rootScope.tableTimeEnd = 0;
+            $scope.charts.forEach(function (e) {
+                var chart = echarts.init(document.getElementById(e.config.id));
+                e.config.instance = chart;
+            });
+            //图表
+            requestService.refresh($scope.charts);
+            //首页表格
+            requestService.gridRefresh($scope.grids);
+            $scope.reloadByCalendar("today");
+            $('#reportrange span').html(GetDateStr(0));
+            //classcurrent
+            $scope.reset();
+            $scope.todayClass = true;
+        };
+        /*       $scope.fileSave = function (obj) {
+         if(obj.value=="csv"){
+         $scope.gridApi.exporter.csvExport( "all", "visible", angular.element() );
+         }
+         else{
+         $scope.gridApi.exporter.pdfExport( "all", "visible", angular.element() );
+         }
+         }*/
+
+    }])
 })
 

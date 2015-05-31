@@ -13,12 +13,19 @@ define(["./module"], function (ctrs) {
         $rootScope.checkedArray = ["click", "cost", "cpc", "pv", "uv", "avgPage"];
         $rootScope.tableFormat = null;
         $rootScope.gridArray = [
+            {
+                name: "xl",
+                displayName: "",
+                cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
+                maxWidth: 10
+            },
             {name: "推广方式", displayName: "推广方式", field: "accountName"},
             {
                 name: " ",
-                cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
+                cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn' title='查看历史趋势'></a></div>",
+
             },
-            {name: "点击", displayName: "点击", field: "click"},
+            {name: "点击量", displayName: "点击量", field: "click"},
             {name: "消费", displayName: "消费", field: "cost"},
             {name: "平均点击价格", displayName: "平均点击价格", field: "cpc"},
             {name: "浏览量(PV)", displayName: "浏览量(PV)", field: "pv"},
@@ -54,7 +61,11 @@ define(["./module"], function (ctrs) {
         $scope.selectedQuota = ["click", "impression"];
         $scope.onLegendClick = function (radio, chartInstance, config, checkedVal) {
             $scope.selectedQuota = checkedVal;
-            $scope.init($rootScope.user, $rootScope.baiduAccount, "account", $scope.selectedQuota, $rootScope.start, $rootScope.end);
+            if (checkedVal.length) {
+                $scope.init($rootScope.user, $rootScope.baiduAccount, "account", $scope.selectedQuota, $rootScope.start, $rootScope.end);
+            } else {
+                def.defData($scope.charts[0].config);
+            }
         }
         $scope.charts = [
             {
@@ -97,15 +108,18 @@ define(["./module"], function (ctrs) {
             }
             $q.all(requestArray).then(function (res) {
                 var final_result = chartUtils.getSearchTypeResult(quotas, res);
-                chartUtils.addStep(final_result, 24);//填充空白
-                $scope.charts[0].config.chartType = "bar";
-                $scope.charts[0].config.bGap = true;
+                var count = util.existData(final_result);
+                if (count) {
+                    $scope.charts[0].config.chartType = "bar";
+                    $scope.charts[0].config.bGap = true;
+                    cf.renderChart(final_result, $scope.charts[0].config);
+                } else {
+                    def.defData($scope.charts[0].config);
+                }
                 if (renderLegend) {
                     util.renderLegend(chart, $scope.charts[0].config);
                     Custom.initCheckInfo();
                 }
-                cf.renderChart(final_result, $scope.charts[0].config);
-                chart.hideLoading();
             });
 
         }
@@ -142,24 +156,24 @@ define(["./module"], function (ctrs) {
             {name: '所有页面底部400按钮'},
             {name: '详情页右侧按钮'},
             {name: '时长目标'},
-            {name: '访问页数目标'},
+            {name: '访问页数目标'}
         ];
         $scope.country = {};
         $scope.countrys = [
             {name: '中国'},
-            {name: '泰国'},
+            {name: '泰国'}
 
         ];
         $scope.city = {};
         $scope.citys = [
             {name: '北京'},
             {name: '上海'},
-            {name: '成都'},
+            {name: '成都'}
         ];
         $scope.continent = {};
         $scope.continents = [
             {name: '亚洲'},
-            {name: '美洲 '},
+            {name: '美洲 '}
         ];
         //日历
         $rootScope.datepickerClick = function (start, end, label) {
@@ -175,11 +189,40 @@ define(["./module"], function (ctrs) {
             } else {
                 $scope.charts[0].config.keyFormat = "hour";
             }
-            requestService.refresh($scope.charts);
+            $scope.init($rootScope.user, $rootScope.baiduAccount, "account", $scope.selectedQuota, $rootScope.start, $rootScope.end);
             $rootScope.targetSearch();
             $rootScope.tableTimeStart = time[0];
             $rootScope.tableTimeEnd = time[1];
             $scope.$broadcast("ssh_dateShow_options_time_change");
+        }
+        function GetDateStr(AddDayCount) {
+            var dd = new Date();
+            dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
+            var y = dd.getFullYear();
+            var m = dd.getMonth() + 1;//获取当前月份的日期
+            var d = dd.getDate();
+            return y + "-" + m + "-" + d;
+        }
+        //刷新
+        $scope.page_refresh = function(){
+            $rootScope.start = -1;
+            $rootScope.end = -1;
+            $scope.init($rootScope.user, $rootScope.baiduAccount, "account", $scope.selectedQuota, $rootScope.start, $rootScope.end, true);
+            $rootScope.tableTimeStart = -1;
+            $rootScope.tableTimeEnd = -1;
+            //图表
+            requestService.refresh($scope.charts);
+            $scope.reloadByCalendar("today");
+            $('#reportrange span').html(GetDateStr(0));
+            //其他页面表格
+            $rootScope.targetSearch(true);
+            $scope.$broadcast("ssh_dateShow_options_time_change");
+            //classcurrent
+            $scope.reset();
+            $scope.yesterdayClass = true;
+        };
+        $scope.compareDatePicker = function (start, end) {
+
         }
     });
 });

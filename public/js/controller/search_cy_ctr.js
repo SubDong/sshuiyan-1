@@ -13,6 +13,7 @@ define(["./module"], function (ctrs) {
         //配置默认指标
         $rootScope.checkedArray = ["impression", "cost", "cpc"]
         $rootScope.searchGridArray = [
+            {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
             {
                 name: "创意",
                 displayName: "创意",
@@ -48,28 +49,27 @@ define(["./module"], function (ctrs) {
             {
                 config: {
                     legendId: "indicators_charts_legend",
-                    legendData: ["浏览量(PV)", "访客数(UV)", "跳出率", "抵达率", "平均访问时长", "页面转化"],//显示几种数据
-                    legendMultiData: $rootScope.lagerMulti,
+                    legendData: ["点击量", "展现量", "消费", "点击率", "平均点击价格", "浏览量(PV)", "访问次数", "访客数(UV)", "新访客数", "新访客比率", "跳出率", '平均访问时长', "平均访问页数", "抵达率"],//显示几种数据
+                    //legendMultiData: $rootScope.lagerMulti,
                     legendAllowCheckCount: 2,
                     legendClickListener: $scope.onLegendClickListener,
                     legendDefaultChecked: [0, 1],
                     min_max: false,
                     bGap: true,
+                    autoInput: 20,
                     id: "indicators_charts",
                     chartType: "bar",//图表类型
                     keyFormat: 'none',
                     noFormat: true,
                     auotHidex: true,
                     qingXie: true,
-                    allShowChart:6,
+                    allShowChart: 6,
                     dataKey: "key",//传入数据的key值
                     dataValue: "quota"//传入数据的value值
                 }
             }
         ];
         $scope.init = function (user, baiduAccount, semType, quotas, start, end, renderLegend) {
-            $rootScope.start = -1;
-            $rootScope.end = -1;
             if (quotas.length) {
                 var semRequest = "";
                 if (quotas.length == 1) {
@@ -95,7 +95,13 @@ define(["./module"], function (ctrs) {
                 });
             }
         }
-        $scope.init($rootScope.user, $rootScope.baiduAccount, "creative", $scope.selectedQuota, -1, -1, true);
+        $scope.initGrid = function (user, baiduAccount, semType, quotas, start, end, renderLegend) {
+            $rootScope.start = -1;
+            $rootScope.end = -1;
+            $scope.init(user, baiduAccount, semType, quotas, start, end, renderLegend);
+        }
+
+        $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "creative", $scope.selectedQuota, -1, -1, true);
 
 
         $scope.$on("ssh_refresh_charts", function (e, msg) {
@@ -122,7 +128,7 @@ define(["./module"], function (ctrs) {
             {name: '所有页面底部400按钮'},
             {name: '详情页右侧按钮'},
             {name: '时长目标'},
-            {name: '访问页数目标'},
+            {name: '访问页数目标'}
         ];
         //日历
         $scope.dateClosed = function () {
@@ -159,6 +165,33 @@ define(["./module"], function (ctrs) {
             $scope.endOffset = (endTime - today_start()) / 86400000;
             //console.log("startOffset=" + startOffset + ", " + "endOffset=" + endOffset);
         });
+        function GetDateStr(AddDayCount) {
+            var dd = new Date();
+            dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
+            var y = dd.getFullYear();
+            var m = dd.getMonth() + 1;//获取当前月份的日期
+            var d = dd.getDate();
+            return y + "-" + m + "-" + d;
+        }
+        //刷新
+        $scope.page_refresh = function(){
+            $rootScope.start = -1;
+            $rootScope.end = -1;
+            $rootScope.tableTimeStart = -1;//开始时间
+            $rootScope.tableTimeEnd = -1;//结束时间、
+            $rootScope.tableFormat = null;
+            $rootScope.targetSearchSpread();
+            $scope.init($rootScope.user, $rootScope.baiduAccount, "creative", $scope.selectedQuota, $rootScope.start, $rootScope.end);
+            //图表
+            requestService.refresh($scope.charts);
+            $scope.reloadByCalendar("yesterday");
+            $('#reportrange span').html(GetDateStr(-1));
+            //其他页面表格
+            //classcurrent
+            $scope.$broadcast("ssh_dateShow_options_time_change");
+            $scope.reset();
+            $scope.yesterdayClass = true;
+        };
     });
 
 });

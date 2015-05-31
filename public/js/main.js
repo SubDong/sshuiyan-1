@@ -30,6 +30,9 @@ require.config({
         ],
         "js007": [
             "http://cdn.bootcss.com/echarts/2.2.1/echarts-all"
+        ],
+        "js008": [
+            "http://ui-grid.info/docs/grunt-scripts/vfs_fonts"
         ]
     },
     shim: {
@@ -46,8 +49,11 @@ require.config({
         'js004': ["angular"],
         "js005": ["angular"],
         "js002": ["angular"],
+        "angularjs/vfs_fonts": ["angularjs/pdfmake", "angularjs/csv"],
         "angularjs/ui-bootstrap.min": ["angular"],
         "angularjs/ui-bootstrap-tpls": ["angular"],
+        "angularjs/csv": ["angular"],
+        "angularjs/pdfmake": ["angular"],
         "angularjs/ui-grid-unstable.min": ["angular"],
         "angularjs/checkbox": ["angular"],
         "angularjs/moment.min": ["angular"],
@@ -55,7 +61,7 @@ require.config({
     }
 });
 
-require(["angular-bootstrap", "js007", "utils/chartfactory", "utils/chartsMapOrPie", "utils/chartsutlis", "utils/date", "utils/map"], function () {
+require(["angular-bootstrap", "js001", "utils/chartfactory", "utils/chartsMapOrPie", "utils/chartsutlis", "utils/date", "utils/map"], function () {
     "use strict";
 
 });

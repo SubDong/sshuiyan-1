@@ -10,9 +10,9 @@
         </div>
         <div>
             <calendar></calendar>
-            <dateother></dateother>
+            <refresh></refresh>
         </div>
-    </div>
+    </div> 
     <div class="my_concent">
         <ssh-date-show type="yesterday" dimension="region" sem-type="campaign"></ssh-date-show>
         <div class="index_chart">
@@ -117,11 +117,11 @@
                         <div class="chart_top2">
                             <ul>
                                 <li><span>设备过滤:</span></li>
-                                <li><input type="radio" checked="checked" ng-click="setTerminal(0)" name="radio1"/>
+                                <li><input type="radio" checked="checked" ng-click="setTerminal(0)" name="radio1" class="styled"/>
                                     <label>全部</label></li>
-                                <li><input type="radio" ng-click="setTerminal(1)" name="radio1"/> <label>计算机</label>
+                                <li><input type="radio" ng-click="setTerminal(1)" name="radio1"  class="styled"/> <label>计算机</label>
                                 </li>
-                                <li><input type="radio" ng-click="setTerminal(2)" name="radio1"/> <label>移动设备</label>
+                                <li><input type="radio" ng-click="setTerminal(2)" name="radio1"  class="styled"/> <label>移动设备</label>
                                 </li>
                             </ul>
                         </div>
@@ -129,7 +129,7 @@
                 </tab>
             </tabset>
             <div class="custom_secendtitle">
-                <div class="custom_select">
+                <div class="custom_select custom_select_way">
                     转化目标
                     <div role="group" class="btn-group">
                         <ui-select ng-model="page.selected" theme="select2" reset-search-input="false" class="fl" style="min-width: 120px;">
@@ -147,7 +147,7 @@
                     </div>
                 </div>-->
                 <div class="custom_table">
-                    <div ui-grid="gridOptions" class="grid" style="min-height:400px;" ui-grid-pagination ui-grid-selection ui-grid-exporter></div>
+                    <div ui-grid="gridOptions" class="grid" style="min-height:400px;" ui-grid-pagination  ui-grid-exporter></div>
                     <gridpage></gridpage>
                 </div>
             </div>

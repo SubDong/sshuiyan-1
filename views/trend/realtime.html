@@ -11,7 +11,7 @@
                 <div class="Visitor_text">
                     <h4>30分钟内</h4>
                     <h5>在线人数</h5>
-                    <h1>{{visitorCount}}</h1>
+                    <h1 data-ng-bind="visitorCount"></h1>
                 </div>
             </div>
             <div class="Visitor_chart">
@@ -53,10 +53,10 @@
                         <div class="chart_top2">
                             <ul>
                                 <li><span>设备过滤:</span></li>
-                                <li><input type="radio" checked="checked" ng-click="setTerminal(0)" name="radio0"/>
+                                <li><input type="radio" checked="checked" class="styled" ng-click="setTerminal(0)" name="radio0"/>
                                     <label>全部</label></li>
-                                <li><input type="radio" name="radio0" ng-click="setTerminal(1)"/><label>计算机</label></li>
-                                <li><input type="radio" name="radio0" ng-click="setTerminal(2)"/><label>移动设备</label></li>
+                                <li><input type="radio" name="radio0" class="styled" ng-click="setTerminal(1)"/><label>计算机</label></li>
+                                <li><input type="radio" name="radio0" class="styled" ng-click="setTerminal(2)"/><label>移动设备</label></li>
                             </ul>
                         </div>
                         <div class="chart_top2">
@@ -102,7 +102,7 @@
                     </div>
                     <div class="custom_table">
                         <div ui-grid="gridOptions" class="grid" style="height:600px;" ui-grid-pagination
-                             ui-grid-selection ui-grid-exporter ui-grid-expandable></div>
+                             ui-grid-exporter ui-grid-expandable></div>
                         <gridpage></gridpage>
                     </div>
                 </div>

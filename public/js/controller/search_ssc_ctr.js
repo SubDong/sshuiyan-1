@@ -14,11 +14,12 @@ define(["./module"], function (ctrs) {
         //配置默认指标
         $rootScope.checkedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
         $rootScope.searchGridArray = [
+            {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
             {
                 name: "触发关键词的搜索词",
                 displayName: "触发关键词的搜索词",
                 field: "kw",
-                cellTemplate: "<a href='http://www.baidu.com/s?wd={{grid.appScope.getDataUrlInfo(grid, row,1)}}' style='color:#0965b8;line-height:30px;' target='_blank'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}"
+                cellTemplate: "<div><a href='http://www.baidu.com/s?wd={{grid.appScope.getDataUrlInfo(grid, row,1)}}' style='color:#0965b8;line-height:30px;' target='_blank'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</div>"
             },/*
             {
                 name: " ",
@@ -100,7 +101,7 @@ define(["./module"], function (ctrs) {
             {name: '所有页面底部400按钮'},
             {name: '详情页右侧按钮'},
             {name: '时长目标'},
-            {name: '访问页数目标'},
+            {name: '访问页数目标'}
         ];
         //日历
         $scope.dateClosed = function () {
@@ -137,6 +138,33 @@ define(["./module"], function (ctrs) {
             $scope.endOffset = (endTime - today_start()) / 86400000;
             //console.log("startOffset=" + startOffset + ", " + "endOffset=" + endOffset);
         });
+        function GetDateStr(AddDayCount) {
+            var dd = new Date();
+            dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
+            var y = dd.getFullYear();
+            var m = dd.getMonth() + 1;//获取当前月份的日期
+            var d = dd.getDate();
+            return y + "-" + m + "-" + d;
+        }
+        //刷新
+        $scope.page_refresh = function(){
+            $rootScope.start = -1;
+            $rootScope.end = -1;
+            $rootScope.tableTimeStart = -1;//开始时间
+            $rootScope.tableTimeEnd = -1;//结束时间、
+            $rootScope.tableFormat = null;
+            $rootScope.targetSearchSpread();
+            $scope.init($rootScope.user, $rootScope.baiduAccount, "creative", $scope.selectedQuota, $rootScope.start, $rootScope.end);
+            //图表
+            requestService.refresh($scope.charts);
+            $scope.reloadByCalendar("yesterday");
+            $('#reportrange span').html(GetDateStr(-1));
+            //其他页面表格
+            //classcurrent
+            $scope.$broadcast("ssh_dateShow_options_time_change");
+            $scope.reset();
+            $scope.yesterdayClass = true;
+        };
     });
 
 });

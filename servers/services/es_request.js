@@ -300,7 +300,13 @@ var buildRequest = function (indexes, type, quotas, dimension, filters, start, e
                     }
                 }
             };
-        else
+        else {
+            var inter = interval / 1000 + "s";
+            if (interval == 604800000) {
+                inter = "1w";
+            } else if (interval == 2592000000) {
+                inter = "1M";
+            }
             return {
                 "index": indexes.toString(),
                 "type": type,
@@ -311,7 +317,7 @@ var buildRequest = function (indexes, type, quotas, dimension, filters, start, e
                         "result": {
                             "date_histogram": {
                                 "field": "utime",
-                                "interval": interval / 1000 + "s",
+                                "interval": inter,
                                 "format": "yyyy-MM-dd HH:mm:ss",
                                 //"time_zone": "+08:00",    // pre_zone, post_zone are replaced by time_zone in 1.5.0.
                                 "pre_zone": "+08:00",
@@ -330,6 +336,7 @@ var buildRequest = function (indexes, type, quotas, dimension, filters, start, e
                     }
                 }
             };
+        }
     } else {
         var dimensionScript = "";
         if (dimension.split(":").length > 1) {

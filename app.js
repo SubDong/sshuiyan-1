@@ -82,14 +82,19 @@ if (env == 'dev') {
         req.es = es_client;
         req.redisclient = redis_client;
         req.accountid = req.session.accountid
-        res.cookie('uname', JSON.stringify('perfect'));
-        var usites = [{
-            site_name: "www.best-ad.cn",
-            site_id: 1
-        }, {
-            site_name: "www.perfect-cn.cn",
-            site_id: 2
-        }]
+        res.cookie('uname', JSON.stringify('perfect2015'));
+        var usites = [
+            {
+                site_name: "www.best-ad.cn",
+                site_id: 1,
+                perfect_name: 'perfect2015',
+                bd_name: 'baidu-perfect2151880'
+            }, {
+                site_name: "www.perfect-cn.cn",
+                site_id: 2,
+                perfect_name: 'perfect2015',
+                bd_name: 'baidu-perfect2151880'
+            }]
 
         res.cookie('usites', JSON.stringify(usites));
         next();

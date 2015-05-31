@@ -12,9 +12,9 @@ define(["./module"], function (ctrs) {
         $rootScope.checkedArray = 'SS';
         $rootScope.tableFormat = null;
         $rootScope.tableSwitch = {
-            latitude: {name: "地域", displayName: "地域", field: "region"},
-            tableFilter: null,
             dimen: true,
+            latitude: {name:"地域", displayName: "地域", field: "region"},
+            tableFilter: null,
             // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
             number: 0,
             //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
@@ -32,6 +32,7 @@ define(["./module"], function (ctrs) {
             })
             requestService.refresh($scope.charts);
         }
+
         $scope.realTimeFormat = function (data, config, e) {
             var json = JSON.parse(eval("(" + data + ")").toString());
             var result = json[0].result;
@@ -70,17 +71,14 @@ define(["./module"], function (ctrs) {
             config["noFormat"] = "noFormat";
             config["twoYz"] = "twoYz";
             cf.renderChart(final_result, config);
-            console.log(final_result);
-            var realCount = 0;
-            final_result.forEach(function (item) {
-                if (item.label == "访客数(UV)") {
-                    item.quota.forEach(function (i) {
-                        realCount += i;
-                    });
-                }
-            });
-            $scope.visitorCount += realCount;
+            $scope.initPeron();
         }
+        $scope.initPeron = function () {
+            $http.get("/api/realTimeAccess/?filerInfo=null&type=" + $rootScope.userType).success(function (data) {
+                $scope.visitorCount = data.length;
+            });
+        }
+        $scope.initPeron();
         $scope.charts = [
             {
                 config: {
@@ -119,16 +117,6 @@ define(["./module"], function (ctrs) {
             Custom.initCheckInfo();
         }
         $scope.init();
-        //$scope.initPerson = function () {
-        //    $http.get("/api/halfhour?type=uv&start=0&end=0?userType=" + $rootScope.userType).success(function (data) {
-        //        var json = JSON.parse(eval("(" + data + ")").toString());
-        //        var result = json[0].result;
-        //        result.buckets.forEach(function (e) {
-        //            $scope.visitorCount += e.uv_aggs.value;
-        //        });
-        //    });
-        //}
-        //$scope.initPerson();
         /*    $scope.search = function (keyword, time, ip) {
          requestService.gridRequest($scope.startTime, $scope.endTime, $scope.gridOptions, "uv");
          };*/
@@ -152,7 +140,24 @@ define(["./module"], function (ctrs) {
             $scope.country.selected = undefined;
             $scope.souce.selected = undefined;
         };
-
+        //刷新
+            $scope.page_refresh = function(){
+                $rootScope.start = 0;
+                $rootScope.end = 0;
+                $rootScope.tableTimeStart = 0;
+                $rootScope.tableTimeEnd = 0;
+                $scope.charts.forEach(function (e) {
+                    var chart = echarts.init(document.getElementById(e.config.id));
+                    e.config.instance = chart;
+                });
+                //图表
+                requestService.refresh($scope.charts);
+                //其他页面表格
+                $rootScope.targetSearch(true);
+                //classcurrent
+//                $scope.reset();
+//                $scope.todayClass = true;
+            };
     });
 
 });

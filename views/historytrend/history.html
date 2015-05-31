@@ -4,30 +4,30 @@
         <b class="">历史趋势</b>
         <calendar></calendar>
         <datecontrast></datecontrast>
-        <div aria-label="First group" role="group" class="btn-group fl">
-            <button class="btn btn-default" type="button">按时</button>
-            <button class="btn btn-default current" type="button">按日</button>
-            <button class="btn btn-default" type="button">按周</button>
-            <button class="btn btn-default" type="button">按月</button>
-        </div>
+        <!--<div aria-label="First group" role="group" class="btn-group fl">-->
+            <!--<button class="btn btn-default" type="button">按时</button>-->
+            <!--<button class="btn btn-default current" type="button">按日</button>-->
+            <!--<button class="btn btn-default" type="button">按周</button>-->
+            <!--<button class="btn btn-default" type="button">按月</button>-->
+        <!--</div>-->
         <refresh></refresh>
     </div>
     <div class="my_concent">
         <ssh-date-show type="today" dimension="region"></ssh-date-show>
         <div class="index_chart">
-            <div class="chart_top">
-                <ul>
-                    <li><label>指标：</label></li>
-                    <li><input type="radio" name="check" checked="checked" ng-click="setProperty('loc',$index, entities)"/>
-                        <label>浏览量(PV)</label></li>
-                    <li><input type="radio" name="check" ng-click="setProperty('tt')"/> <label>访问次数</label></li>
-                    <li><input type="radio" name="check" ng-click="setProperty('_ucv')"/> <label>访客数(UV)</label></li>
-                    <li><input type="radio" name="check" ng-click="setProperty('ct')"/> <label>新访客数</label></li>
-                    <li><input type="radio" name="check" ng-click="setProperty('remote')"/> <label>IP数</label></li>
-                    <li><input type="radio" name="check"/> <label>转化次数</label></li>
-                    <li class="disabled">* 最多只能勾选1项</li>
-                </ul>
-            </div>
+            <!--<div class="chart_top">-->
+                <!--<ul>-->
+                    <!--<li><label>指标：</label></li>-->
+                    <!--<li><input type="radio" name="check" checked="checked" ng-click="setProperty('loc',$index, entities)"/>-->
+                        <!--<label>浏览量(PV)</label></li>-->
+                    <!--<li><input type="radio" name="check" ng-click="setProperty('tt')"/> <label>访问次数</label></li>-->
+                    <!--<li><input type="radio" name="check" ng-click="setProperty('_ucv')"/> <label>访客数(UV)</label></li>-->
+                    <!--<li><input type="radio" name="check" ng-click="setProperty('ct')"/> <label>新访客数</label></li>-->
+                    <!--<li><input type="radio" name="check" ng-click="setProperty('remote')"/> <label>IP数</label></li>-->
+                    <!--<li><input type="radio" name="check"/> <label>转化次数</label></li>-->
+                    <!--<li class="disabled">* 最多只能勾选1项</li>-->
+                <!--</ul>-->
+            <!--</div>-->
             <div id="VistorMap_charts" style="width:98%;height:400px;"></div>
         </div>
         <div class="table_content" ng-controller="TabsCtrl">
@@ -56,9 +56,9 @@
                         <div class="chart_top2">
                             <ul>
                                 <li><span>访客过滤 :</span></li>
-                                <li><input type="radio" ng-click="setVisitors(0)" checked="checked" name="radio0" /><label>全部</label></li>
-                                <li><input type="radio" ng-click="setVisitors(1)" name="radio0" /><label>新访客</label></li>
-                                <li><input type="radio" ng-click="setVisitors(2)" name="radio0" /><label>老访客</label></li>
+                                <li><input type="radio" ng-click="setVisitors(0)" checked="checked" name="radio0" class="styled"/><label>全部</label></li>
+                                <li><input type="radio" ng-click="setVisitors(1)" name="radio0" class="styled" /><label>新访客</label></li>
+                                <li><input type="radio" ng-click="setVisitors(2)" name="radio0" class="styled" /><label>老访客</label></li>
                             </ul>
                         </div>
                     </div>
@@ -78,7 +78,7 @@
                 </div>
             </div>
             <div class="custom_table">
-                <div ui-grid="gridOptions" class="grid" style="min-height:400px;" ui-grid-pagination ui-grid-selection ui-grid-exporter></div>
+                <div ui-grid="gridOptions" class="grid" style="min-height:400px;" ui-grid-pagination  ui-grid-exporter></div>
                 <gridpage></gridpage>
             </div>
         </div>

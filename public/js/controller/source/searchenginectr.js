@@ -12,10 +12,11 @@ define(["./module"], function(ctrs) {
         //配置默认指标
         $rootScope.checkedArray = ["vc", "uv", "nuvRate", "avgPage", "ip"];
         $rootScope.gridArray = [
+            {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
             {name: "搜索引擎", displayName: "搜索引擎", field: "se"},
             {
                 name: " ",
-                cellTemplate: "<div class='table_box'><button onclick='getMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul><li><a ui-sref='history5' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li></ul></div></div>"
+                cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history5' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li><li><a href='javascript:void(0)' ng-click='grid.appScope.showEntryPageLink(row, 2)'>查看入口页链接</a></li></ul></div></div>"
             },
             {name: "访问次数", displayName: "访问次数", field: "vc"},
             {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},
@@ -30,7 +31,7 @@ define(["./module"], function(ctrs) {
             // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
             number: 2,
             //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
-            coding: "<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>",
+            coding: "<li><a ui-sref='history5' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>",
             //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
             arrayClear: false, //是否清空指标array
             isJudge: false //是否清空filter 默认为清空
@@ -83,10 +84,11 @@ define(["./module"], function(ctrs) {
                     legendClickListener: $scope.onLegendClick,
                     legendAllowCheckCount: 1,
                     min_max: false,
-                    bGap: true,
+                    bGap: false,
                     id: "indicators_charts",
-                    chartType: "bar",
                     keyFormat: "none",//设置不需要chart工厂处理x轴数据
+                    chartType: "line",
+                    lineType:false,
                     dataKey: "key",
                     dataValue: "quota"
                 },
@@ -135,5 +137,36 @@ define(["./module"], function(ctrs) {
             $rootScope.targetSearch();
             $scope.$broadcast("ssh_dateShow_options_time_change");
         }
+        function GetDateStr(AddDayCount) {
+            var dd = new Date();
+            dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
+            var y = dd.getFullYear();
+            var m = dd.getMonth() + 1;//获取当前月份的日期
+            var d = dd.getDate();
+            return y + "-" + m + "-" + d;
+        }
+        //刷新
+        $scope.page_refresh = function(){
+            $rootScope.start = 0;
+            $rootScope.end = 0;
+            $rootScope.tableTimeStart = 0;
+            $rootScope.tableTimeEnd = 0;
+            $scope.charts.forEach(function (e) {
+                var chart = echarts.init(document.getElementById(e.config.id));
+                e.config.instance = chart;
+            });
+            //图表
+            requestService.refresh($scope.charts);
+            //首页表格
+            //requestService.gridRefresh(scope.grids);
+            //其他页面表格
+            $rootScope.targetSearch(true);
+            $scope.reloadByCalendar("today");
+            $('#reportrange span').html(GetDateStr(0));
+            $scope.$broadcast("ssh_dateShow_options_time_change");
+            //classcurrent
+            $scope.reset();
+            $scope.todayClass = true;
+        };
     });
 });

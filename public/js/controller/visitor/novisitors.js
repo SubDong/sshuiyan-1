@@ -13,10 +13,11 @@ define(["./module"], function (ctrs) {
         //配置默认指标
         $rootScope.checkedArray = ["vc", "uv", "outRate", "avgTime", "avgPage"];
         $rootScope.gridArray = [
+            {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
             {name: "网络供应商", displayName: "网络供应商", field: "ct"},
             {
                 name: " ",
-                cellTemplate: "<div class='table_box'><a ui-sref='history2' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
+                cellTemplate: "<div class='table_box'><a ui-sref='history2' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn'  title='查看历史趋势'></a></div>"
             },
             {name: "访问次数", displayName: "访问次数", field: "vc"},
             {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},
@@ -53,6 +54,35 @@ define(["./module"], function (ctrs) {
             $rootScope.tableTimeEnd = time[1];
             $rootScope.targetSearch();
         }
+        function GetDateStr(AddDayCount) {
+            var dd = new Date();
+            dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
+            var y = dd.getFullYear();
+            var m = dd.getMonth() + 1;//获取当前月份的日期
+            var d = dd.getDate();
+            return y + "-" + m + "-" + d;
+        }
+        //刷新
+        $scope.page_refresh = function(){
+            $rootScope.start = 0;
+            $rootScope.end = 0;
+            $rootScope.tableTimeStart = 0;
+            $rootScope.tableTimeEnd = 0;
+            $scope.reloadByCalendar("today");
+            $('#reportrange span').html(GetDateStr(0));
+//            $scope.charts.forEach(function (e) {
+//                var chart = echarts.init(document.getElementById(e.config.id));
+//                e.config.instance = chart;
+//            });
+            //图表
+//            requestService.refresh($scope.charts);
+            //其他页面表格
+            $rootScope.targetSearch(true);
+            $scope.$broadcast("ssh_dateShow_options_time_change");
+            //classcurrent
+            $scope.reset();
+            $scope.todayClass = true;
+        };
     });
 
 });

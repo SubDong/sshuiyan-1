@@ -5,10 +5,8 @@
             <a data-ng-href="#extension/urlspeed_w" class="btn btn-default  " type="button">按网络提供商</a>
             <a data-ng-href="#extension/urlspeed_m" class="btn btn-default current" type="button"> 按地域</a>
         </div>
-        <div>
             <calendar></calendar>
-            <dateother></dateother>
-        </div>
+            <refresh></refresh>
     </div>
     <div class="my_concent">
         <div class="date_show">
@@ -19,9 +17,6 @@
                 </ul>
             </div>
             </select>
-        </div>
-        <div class="index_chart">
-            <div id="indicators_charts" style="height:400px;"></div>
         </div>
         <div class="table_content" ng-controller="TabsCtrl">
             <tabset justified="true">
@@ -50,7 +45,7 @@
                 </tab>
             </tabset>
             <div class="custom_table">
-                <div class="uconcentctrl" ng-controller="SearchCtrl">
+                <div class="uconcentctrl" ng-controller="TabsCtrl">
                     <div ui-grid="gridOptions" class="grid" ui-grid-pinning></div>
                     <gridpage></gridpage>
                 </div>

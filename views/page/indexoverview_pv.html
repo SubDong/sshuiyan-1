@@ -53,16 +53,16 @@
                             <ul>
                                 <li><span>访客过滤 :</span></li>
                                 <li><input type="radio" ng-click="setVisitors(0)" checked="checked"
-                                           name="radio0"/><label>全部</label></li>
-                                <li><input type="radio" ng-click="setVisitors(1)" name="radio0"/><label>新访客</label></li>
-                                <li><input type="radio" ng-click="setVisitors(2)" name="radio0"/><label>老访客</label></li>
+                                           name="radio0" class="styled"/><label>全部</label></li>
+                                <li><input type="radio" ng-click="setVisitors(1)" name="radio0" class="styled"/><label>新访客</label></li>
+                                <li><input type="radio" ng-click="setVisitors(2)" name="radio0" class="styled"/><label>老访客</label></li>
                             </ul>
                         </div>
                     </div>
                     <div class="custom_secendtitle">
                         <div class="custom_select">
                             <div class="input-group fl">
-                                <input type="text" placeholder="输入URL…" data-ng-model="searchURLText" class="form-control fl">
+                                <input type="text" placeholder="输入URL…" data-ng-model="searchURLText" class="form-control fl" onfocus="this.setAttribute('placeholder','')" onblur="this.setAttribute('placeholder','输入URL...')">
                                        <span class="input-group-btn fl">
                                  <button type="button" class="btn btn-default" data-ng-click="searchURLFilter(searchURLText)"><span aria-hidden="true"
                                                                                      class="glyphicon glyphicon-search"></span>
@@ -71,7 +71,7 @@
                             </div>
                         </div>
                         <div class="custom_table">
-                            <div ui-grid="gridOptions" class="grid" ui-grid-pagination ui-grid-selection
+                            <div ui-grid="gridOptions" class="grid" ui-grid-pagination
                                  ui-grid-exporter></div>
                             <gridpage></gridpage>
                         </div>

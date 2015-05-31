@@ -7,7 +7,8 @@
         </div>
         <div>
             <calendar></calendar>
-            <dateother></dateother>
+            <refresh></refresh>
+
         </div>
     </div>
     <div class="my_concent">
@@ -20,15 +21,12 @@
             </div>
             </select>
         </div>
-        <div class="index_chart">
-            <div id="indicators_charts" style="height:400px;"></div>
-        </div>
         <div class="table_content" ng-controller="TabsCtrl">
             <tabset justified="true">
                 <tab heading="高级筛选">
                     <div class="custom_secendtitle">
                         <div class="custom_select">
-                            <div class="btn-group fl" role="group">
+                            <div class="btn-group-url fl" role="group">
                                 <p class="fl">计划</p>
                                 <ui-select ng-model="page.selected"theme="select2" reset-search-input="false" class="fl btn-Plan" style="min-width: 120px;">
                                     <ui-select-match placeholder="全部">{{$select.selected.name}}</ui-select-match>
@@ -38,7 +36,7 @@
                                 </ui-select>
                             </div>
                             <div class="input-group fl">
-                                <input type="text" class="form-control fl" placeholder="请输入推广URL…">
+                                <input type="text" class="form-control fl" placeholder="请输入推广URL…" onfocus="this.setAttribute('placeholder','')" onblur="this.setAttribute('placeholder','请输入推广URL...')">
                                        <span class="input-group-btn fl">
                                  <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
                                    </span>
@@ -50,7 +48,7 @@
                 </tab>
             </tabset>
             <div class="custom_table">
-                <div class="uconcentctrl" ng-controller="SearchCtrl">
+                <div class="uconcentctrl" ng-controller="TabsCtrl">
                     <div ui-grid="gridOptions" class="grid" ui-grid-pinning></div>
                     <gridpage></gridpage>
                 </div>

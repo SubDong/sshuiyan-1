@@ -12,10 +12,11 @@ define(["./module"], function (ctrs) {
         //配置默认指标
         $rootScope.checkedArray = ["pv", "uv", "outRate"];
         $rootScope.gridArray = [
+            {name: "a", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
             {name: "地域", displayName: "地域", field: "region"},
             {
                 name: " ",
-                cellTemplate: "<div class='table_box'><a ui-sref='history1' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
+                cellTemplate: "<div class='table_box'><a ui-sref='history1' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn' title='查看历史趋势'></a></div>"
             },
             {name: "浏览量(PV)", displayName: "浏览量(PV)", field: "pv"},
             {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},
@@ -51,7 +52,7 @@ define(["./module"], function (ctrs) {
                 {name: '来源', displayName: "来源"},
                 {name: '访问IP', displayName: "访问IP"},
                 {name: '访问时长', displayName: "访问时长"},
-                {name: '访问页数', displayName: "访问页数"},
+                {name: '访问页数', displayName: "访问页数"}
             ]
         };
 
@@ -125,6 +126,7 @@ define(["./module"], function (ctrs) {
                     jupName = param.name;
                     for (var p = 0, len = mapSeries.data.length; p < len; p++) {
                         var name = mapSeries.data[p].name;
+
                         if (mapSeries.data[p].name == param.name) {
                             data.push({
                                 name: name,
@@ -148,6 +150,7 @@ define(["./module"], function (ctrs) {
                     chart.setOption(option, true);
                 }
             });
+
             $http({
                 method: 'GET',
                 url: '/api/provincemap/?start=' + start + "&end=" + end + "&type=" + type + "&areas=" + $scope.areas + "&property=" + $scope.property
@@ -171,6 +174,7 @@ define(["./module"], function (ctrs) {
                         break;
                 }
                 data["title_name"] = title_name;
+                chart.quota=title_name;
                 mixingMap.mapOrPie(data, chart);
 
             }).error(function (error) {
@@ -209,7 +213,31 @@ define(["./module"], function (ctrs) {
             $scope.doSearchAreas($rootScope.tableTimeStart, $rootScope.tableTimeEnd, "2", $scope.mapOrPieConfig);
             $scope.$broadcast("ssh_dateShow_options_time_change");
         }
-
+        function GetDateStr(AddDayCount) {
+            var dd = new Date();
+            dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
+            var y = dd.getFullYear();
+            var m = dd.getMonth() + 1;//获取当前月份的日期
+            var d = dd.getDate();
+            return y + "-" + m + "-" + d;
+        }
+        //刷新
+        $scope.page_refresh = function(){
+            $rootScope.start = 0;
+            $rootScope.end = 0;
+            $rootScope.tableTimeStart = 0;
+            $rootScope.tableTimeEnd = 0;
+            $scope.doSearch($scope.dateTimeStart, $scope.dateTimeEnd, "2");
+            $scope.doSearchAreas($scope.dateTimeStart, $scope.dateTimeEnd, "2", $scope.mapOrPieConfig);
+            $scope.reloadByCalendar("today");
+            $('#reportrange span').html(GetDateStr(0));
+            //其他页面表格
+            $rootScope.targetSearch(true);
+            $scope.$broadcast("ssh_dateShow_options_time_change");
+            //classcurrent
+            $scope.reset();
+            $scope.todayClass = true;
+        };
     });
 
 });

@@ -89,11 +89,6 @@ define(["../app"], function (app) {
             {name: '前一日', value: -2},
             {name: '上周同期 ', value: -7}
         ];
-        $rootScope.export = {};
-        $rootScope.exports = [
-            {name: '保存'},
-            {name: '导出 '}
-        ];
         $rootScope.equipment = {};
         $rootScope.equipments = [
             {name: '网络供应商', field: 'isp'},

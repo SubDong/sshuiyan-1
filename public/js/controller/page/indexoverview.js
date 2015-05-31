@@ -13,10 +13,11 @@ define(["./module"], function (ctrs) {
         //配置默认指标
         $rootScope.checkedArray = ["vc", "uv", "avgTime"];
         $rootScope.gridArray = [
+            {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
             {name: "页面url", displayName: "页面url", field: "loc"},
             {
                 name: " ",
-                cellTemplate: "<div class='table_box'><a ui-sref='history3' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
+                cellTemplate: "<div class='table_box'><a ui-sref='history3' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn' title='查看历史趋势'></a></div>"
             },
             {name: "访问次数", displayName: "访问次数", field: "vc"},
             {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},
@@ -45,6 +46,37 @@ define(["./module"], function (ctrs) {
             $rootScope.targetSearch();
             $scope.$broadcast("ssh_dateShow_options_time_change");
         }
+        function GetDateStr(AddDayCount) {
+            var dd = new Date();
+            dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
+            var y = dd.getFullYear();
+            var m = dd.getMonth() + 1;//获取当前月份的日期
+            var d = dd.getDate();
+            return y + "-" + m + "-" + d;
+        }
+        //刷新
+        $scope.page_refresh = function(){
+            $rootScope.start = 0;
+            $rootScope.end = 0;
+            $rootScope.tableTimeStart = 0;
+            $rootScope.tableTimeEnd = 0;
+//            $scope.charts.forEach(function (e) {
+//                var chart = echarts.init(document.getElementById(e.config.id));
+//                e.config.instance = chart;
+//            });
+            //图表
+//            requestService.refresh($scope.charts);
+            //首页表格
+            //requestService.gridRefresh(scope.grids);
+            $scope.reloadByCalendar("today");
+            $('#reportrange span').html(GetDateStr(0));
+            //其他页面表格
+            $rootScope.targetSearch(true);
+            $scope.$broadcast("ssh_dateShow_options_time_change");
+            //classcurrent
+            $scope.reset();
+            $scope.todayClass = true;
+        };
     });
 
 });

@@ -3,65 +3,33 @@
         <!--网站导航-->
         <div class="web_list_nav">
             <p>网站列表</p>
-            <button class="btn btn-info  ">代码安装检查</button>
-            <input type="text" class="form-control "id="web_list_nav_input" placeholder="请输入网址…"/>
-            <span>其他首页</span><input type="checkbox"/>
-            <span>网站首页</span><input type="checkbox"/>
+            <div class="web_list_nav_right">
+                <ul>
+                    <li><input type="checkbox" class="styled web_list_nav_input1" /> <b>其他首页</b></li>
+                    <li><input type="checkbox" class="styled web_list_nav_input1" /> <b>网站首页</b></li>
+                    <li><input type="text" class="form-control "id="web_list_nav_input" value="请输入网址…"/></li>
+                    <li><button class="btn btn-info nav_btn ">代码安装检查</button></li>
+                </ul>
+            </div>
         </div>
         <!--网站上半部分列表-->
         <div class="web_list_up" >
-            <div class="custom_table">
+            <div class="table_content" ng-controller="admintablectr">
                 <div class="custom_table">
-                    <div ui-grid="gridOptions" class="grid" style="height:400px;" ui-grid-pagination ui-grid-selection ui-grid-exporter></div>
-                    <gridpage></gridpage>
+
+                    <div ui-grid="gridOptions" class="grid grid_table" ui-grid-edit style="min-height:400px;"ui-grid-pagination ui-grid-selection
+
+                         ui-grid-exporter ui-grid-expandable></div>
                 </div>
             </div>
         </div>
         <!--网站中部左右部分-->
-        <div class="web_list_mid">
-            <!--网站中部左部分-->
-            <div class="mid_left">
-                <div class="mid_left_code">
-                    var express = require('express');
-                    // var controller = require('controllers')
-                    var router = express.Router();
-                    var url = req.url.substring(1);
-                    if (!url)
-                    url = "index";
-                    /* 所有html页面的router */
-                    router.get('/*.html', function (req, res, next) {
-                    var session = req.session
-                    if (session) {
-                    console.log(session.id);
-                    }
-                    url = "index";
-                    /* 所有html页面的router */
-                    router.get('/*.html', function (req, res, next) {
-                    var session = req.session
-                    if (session) {
-                    console.log(session.id);
-                    var url = req.url.substring(1);
-                    if (!url)
-                    url = "index";邓子豪(     Now。)
-
-                </div>
-            </div>
-            <!--网站中部右部分-->
-            <div class="mid_right">
-                <button type="button" class="btn btn-default navbar-btn">复制代码</button>
-                <ul type="disc">
-                    <li>请将代码添加至网站全部页面的</head>标签前；</li>
-                    <li>建议在header.htm类似的页头模板页面中安装，以达到一处安装，全站皆有的效果；</li>
-                    <li>如需在JS文件中调用统计分析代码，请直接去掉以下代码首尾的<script type="text/javascript">与</script>后，放入JS文件中即可；</li>
-                    <li> 如果代码安装正确，一般20分钟 后,可以查看网站分析数据；</li>
-                    </ol>
-            </div>
-        </div>
         <!--网站底部列表-->
         <div class="web_list_down">
-            <img src="../images/table2.png" alt=""/>
             <button class="btn btn-default">+&nbsp;新增网站</button>
         </div>
     </div>
+    <input type="number"value="1"/>
 </div>
+
 

@@ -117,8 +117,9 @@ define(["../app"], function (app) {
             switch (t) {
                 case "extension_way" :
                 {
-                    $rootScope.checkedArray = ["click", "cost", "cpc", "pv", "vc", "avgPage"];
+                    $rootScope.checkedArray = ["click", "cost", "cpc", "pv", "uv", "avgPage"];
                     $rootScope.gridArray = [
+                        {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
                         {name: "推广方式", displayName: "推广方式", field: "accountName"},
                         {
                             name: " ",
@@ -128,7 +129,7 @@ define(["../app"], function (app) {
                         {name: "消费", displayName: "消费", field: "cost"},
                         {name: "平均点击价格", displayName: "平均点击价格", field: "cpc"},
                         {name: "浏览量(PV)", displayName: "浏览量(PV)", field: "pv"},
-                        {name: "访客数(UV)", displayName: "访客数(UV)", field: "vc"},
+                        {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},
                         {name: "平均访问页数", displayName: "平均访问页数", field: "avgPage"}
                     ];
                     return;
@@ -137,6 +138,7 @@ define(["../app"], function (app) {
                 {
                     $rootScope.searchCheckedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"];
                     $rootScope.searchGridArray = [
+                        {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
                         {
                             name: "计划",
                             displayName: "计划",
@@ -162,10 +164,11 @@ define(["../app"], function (app) {
                 {
                     $rootScope.checkedArray = ["pv", "uv", "ip", "outRate", "avgTime"];
                     $rootScope.gridArray = [
+                        {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
                         {name: "日期", displayName: "日期", field: "period"},
                         {
                             name: " ",
-                            cellTemplate: "<div class='table_box'><button onclick='getMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul><li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li></ul></div></div>"
+                            cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' onmouseout='hiddenMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li></ul></div></div>"
                         },
                         {name: "浏览量(PV)", displayName: "浏览量(PV)", field: "pv"},
                         {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},
@@ -179,10 +182,11 @@ define(["../app"], function (app) {
                 {
                     $rootScope.checkedArray = ["vc", "nuvRate", "ip"];
                     $rootScope.gridArray = [
+                        {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
                         {name: "来源类型", displayName: "来源类型", field: "rf_type"},
                         {
                             name: " ",
-                            cellTemplate: "<div class='table_box'><button onclick='getMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul><li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li></ul></div></div>"
+                            cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' onmouseout='hiddenMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul><li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li></ul></div></div>"
                         },
                         {name: "访问次数", displayName: "访问次数", field: "vc"},
                         {name: "新访客比率", displayName: "新访客比率", field: "nuvRate"},
@@ -194,10 +198,11 @@ define(["../app"], function (app) {
                 {
                     $rootScope.checkedArray = ["vc", "uv", "nuvRate", "ip", "avgPage"];
                     $rootScope.gridArray = [
+                        {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
                         {name: "搜索引擎", displayName: "搜索引擎", field: "se"},
                         {
                             name: " ",
-                            cellTemplate: "<div class='table_box'><button onclick='getMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul><li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li></ul></div></div>"
+                            cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' onmouseout='hiddenMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul><li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li></ul></div></div>"
                         },
                         {name: "访问次数", displayName: "访问次数", field: "vc"},
                         {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},
@@ -211,10 +216,11 @@ define(["../app"], function (app) {
                 {
                     $rootScope.checkedArray = ["pv", "vc", "nuv", "ip"];
                     $rootScope.gridArray = [
+                        {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
                         {name: "搜索词", displayName: "搜索词", field: "kw"},
                         {
                             name: " ",
-                            cellTemplate: "<div class='table_box'><button onclick='getMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul><li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li></ul></div></div>"
+                            cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' onmouseout='hiddenMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul><li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li></ul></div></div>"
                         },
                         {name: "浏览量(PV)", displayName: "浏览量(PV)", field: "pv"},
                         {name: "访问次数", displayName: "访问次数", field: "vc"},
@@ -227,10 +233,11 @@ define(["../app"], function (app) {
                 {
                     $rootScope.checkedArray = ["uv", "nuv", "nuvRate"];
                     $rootScope.gridArray = [
+                        {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
                         {name: "外部连接", displayName: "外部连接", field: "rf"},
                         {
                             name: " ",
-                            cellTemplate: "<div class='table_box'><button onclick='getMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul><li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li></ul></div></div>"
+                            cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' onmouseout='hiddenMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul><li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li></ul></div></div>"
                         },
                         {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},
                         {name: "新访客数", displayName: "新访客数", field: "nuv"},
@@ -242,6 +249,7 @@ define(["../app"], function (app) {
                 {
                     $rootScope.checkedArray = ["vc", "uv", "avgTime"];
                     $rootScope.gridArray = [
+                        {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
                         {name: "页面url", displayName: "页面url", field: "loc"},
                         {
                             name: " ",
@@ -256,10 +264,11 @@ define(["../app"], function (app) {
                 {
                     $rootScope.checkedArray = ["pv", "uv", "avgTime"];
                     $rootScope.gridArray = [
+                        {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
                         {name: "页面url", displayName: "页面url", field: "loc"},
                         {
                             name: " ",
-                            cellTemplate: "<div class='table_box'><button onclick='getMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul><li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li></ul></div></div>"
+                            cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' onmouseout='hiddenMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul><li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li></ul></div></div>"
                         },
                         {name: "浏览量(PV)", displayName: "浏览量(PV)", field: "pv"},
                         {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},
@@ -270,6 +279,7 @@ define(["../app"], function (app) {
                 {
                     $rootScope.checkedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
                     $rootScope.searchGridArray = [
+                        {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
                         {
                             name: "计划",
                             displayName: "计划",
@@ -288,6 +298,7 @@ define(["../app"], function (app) {
                 {
                     $rootScope.checkedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
                     $rootScope.searchGridArray = [
+                        {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
                         {
                             name: "单元",
                             displayName: "单元",
@@ -306,6 +317,7 @@ define(["../app"], function (app) {
                 {
                     $rootScope.checkedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
                     $rootScope.searchGridArray = [
+                        {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
                         {
                             name: "关键词",
                             displayName: "关键词",
@@ -324,6 +336,7 @@ define(["../app"], function (app) {
                 {
                     $rootScope.checkedArray = ["impression", "cost", "cpc"]
                     $rootScope.searchGridArray = [
+                        {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
                         {
                             name: "创意",
                             displayName: "创意",
@@ -339,6 +352,7 @@ define(["../app"], function (app) {
                 {
                     $rootScope.checkedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
                     $rootScope.searchGridArray = [
+                        {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
                         {
                             name: "触发关键词的搜索词",
                             displayName: "触发关键词的搜索词",
@@ -357,6 +371,7 @@ define(["../app"], function (app) {
                 {
                     $rootScope.checkedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
                     $rootScope.searchGridArray = [
+                        {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
                         {
                             name: "关键词对应的URL",
                             displayName: "关键词对应的URL",

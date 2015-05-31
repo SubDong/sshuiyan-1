@@ -1,7 +1,5 @@
 <div class="middle_containers" ng-controller="search_gjc_ctr">
     <div class="date_select">
-        <b>搜索推广</b>
-
         <div aria-label="First group" role="group" class="btn-group fl">
             <a class="btn btn-default" data-ng-href="#extension/search" type="button">计划</a>
             <a class="btn btn-default" data-ng-href="#extension/search_dy" type="button">单元</a>
@@ -12,7 +10,8 @@
         </div>
         <div>
             <calendar></calendar>
-            <dateother></dateother>
+            <refresh></refresh>
+
         </div>
     </div>
     <div class="my_concent">
@@ -122,7 +121,7 @@
                 </tab>
             </tabset>
             <div class="custom_secendtitle">
-                <div class="custom_select">
+                <div class="custom_select  custom_select_way">
                     转化目标
                     <div role="group" class="btn-group">
                         <ui-select ng-model="page.selected"theme="select2" reset-search-input="false" class="fl" style="min-width: 120px;">
@@ -141,7 +140,7 @@
                 </div>-->
                 <div class="custom_table">
                     <div ui-grid="gridOptions" class="grid" style="min-height:400px;" ui-grid-pagination
-                         ui-grid-selection ui-grid-exporter ui-grid-expandable></div>
+                     ui-grid-exporter ui-grid-expandable></div>
                     <gridpage></gridpage>
                 </div>
             </div>

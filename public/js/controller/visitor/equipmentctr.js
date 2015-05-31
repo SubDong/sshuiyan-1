@@ -15,6 +15,12 @@ define(["./module"], function (ctrs) {
         $rootScope.checkedArray = ["pv", "uv", "ip", "outRate", "avgTime"];
         //ng-click='grid.appScope.getHistoricalTrend(this)'
         $rootScope.gridArray = [
+            {
+                name: "xl",
+                displayName: "",
+                cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
+                maxWidth: 10
+            },
             {name: "网络供应商", displayName: "网络供应商", field: "isp"},
             {name: "浏览量(PV)", displayName: "浏览量(PV)", field: "pv"},
             {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},
@@ -44,6 +50,7 @@ define(["./module"], function (ctrs) {
         };
         $scope.equipmentChange = function (val) {
             $scope.charts[0].dimension = val.field;
+            $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
             requestService.refresh($scope.charts);
 
             $rootScope.tableSwitch.latitude = val;
@@ -59,39 +66,32 @@ define(["./module"], function (ctrs) {
         }
         $scope.pieFormat = function (data, config) {
             var json = JSON.parse(eval("(" + data + ")").toString());
+            var count = util.existData(json);
+            if (count) {
+                json.forEach(function (e) {
+                    var tmpData = [];
+                    var _value = []
+                    for (var i = 0; i < e.key.length; i++) {
+                        if ($scope.equipment.selected)
+                            tmpData.push(chartUtils.getCustomDevice(e.key[i], $scope.equipment.selected.field));
+                        else
+                            tmpData.push(e.key[i] == "-" ? "未知" : e.key[i]);
+                        _value.push(e.quota[i]);
 
-            json.forEach(function (e) {
-                var tmpData = [];
-                var _value = []
-                for (var i = 1; i < 9; i++) {
-                    tmpData.push("");
-                    _value.push(0);
-                }
-                for (var i = 0; i < e.key.length; i++) {
-                    if ($scope.equipment.selected)
-                        tmpData.push(chartUtils.getCustomDevice(e.key[i], $scope.equipment.selected.field));
-                    else
-                        tmpData.push(e.key[i]);
-
-                    _value.push(e.quota[i]);
-                }
-                for (var i = 9; i < 18; i++) {
-                    tmpData.push("");
-                    _value.push(0);
-                }
-                e.key = tmpData;
-                e.quota = _value;
-                e.label = chartUtils.convertChinese(e.label);
-            });
+                    }
+                    e.key = tmpData;
+                    e.quota = _value;
+                    e.label = chartUtils.convertChinese(e.label);
+                });
+            }
             config["noFormat"] = "noFormat";
-            config['twoYz'] = "none"
             cf.renderChart(json, config);
         }
         $scope.charts = [
             {
                 config: {
                     legendId: "equipment_legend",
-                    legendData: ["访客数(UV)", "访问次数", "新访客数", "IP数", "贡献浏览量", "转化次数"],
+                    legendData: ["浏览量(PV)", "访问次数", "访客数(UV)", "新访客数", "新访客比率", "IP数", "跳出率", "平均访问时长", "平均访问页数"],
                     legendClickListener: $scope.onLegendClick,
                     legendAllowCheckCount: 2,
                     legendDefaultChecked: [0, 1],
@@ -101,7 +101,6 @@ define(["./module"], function (ctrs) {
                     chartType: "bar",
                     dataKey: "key",
                     auotHidex: true,
-                    qingXie:true,
                     keyFormat: 'none',
                     dataValue: "quota"
                 },
@@ -113,8 +112,8 @@ define(["./module"], function (ctrs) {
             }
         ]
         $scope.init = function () {
-            $rootScope.start=0;
-            $rootScope.end=0;
+            $rootScope.start = 0;
+            $rootScope.end = 0;
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
@@ -158,5 +157,35 @@ define(["./module"], function (ctrs) {
             $rootScope.targetSearch();
             $scope.$broadcast("ssh_dateShow_options_time_change");
         }
+        function GetDateStr(AddDayCount) {
+            var dd = new Date();
+            dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
+            var y = dd.getFullYear();
+            var m = dd.getMonth() + 1;//获取当前月份的日期
+            var d = dd.getDate();
+            return y + "-" + m + "-" + d;
+        }
+
+        //刷新
+        $scope.page_refresh = function () {
+            $rootScope.start = 0;
+            $rootScope.end = 0;
+            $rootScope.tableTimeStart = 0;
+            $rootScope.tableTimeEnd = 0;
+            $scope.charts.forEach(function (e) {
+                var chart = echarts.init(document.getElementById(e.config.id));
+                e.config.instance = chart;
+            });
+            $scope.reloadByCalendar("today");
+            $('#reportrange span').html(GetDateStr(0));
+            //图表
+            requestService.refresh($scope.charts);
+            //其他页面表格
+            $rootScope.targetSearch(true);
+            $scope.$broadcast("ssh_dateShow_options_time_change");
+            //classcurrent
+            $scope.reset();
+            $scope.todayClass = true;
+        };
     });
 });

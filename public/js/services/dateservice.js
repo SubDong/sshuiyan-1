@@ -7,9 +7,9 @@ define(["../app"], function (app) {
         $rootScope.defaultcb = function (data, chartconfig) {
             cf.renderChart(data, chartconfig);
         }
-        $rootScope.user = "jiehun";
-        $rootScope.baiduAccount = "baidu-bjjiehun2123585";
-        $rootScope.userType = 2;
+        //$rootScope.user = "jiehun";
+        //$rootScope.baiduAccount = "baidu-bjjiehun2123585";
+        //$rootScope.userType = 2;
         $rootScope.start = 0;
         $rootScope.end = 0;
         $rootScope.interval = 1;
@@ -19,26 +19,25 @@ define(["../app"], function (app) {
                     text: "正在努力的读取数据中..."
                 });
             });
-            charts.forEach(function (e) {
-                var req = e.url + "?type=" + e.types + "&dimension=" + e.dimension + "&start=" + $rootScope.start + "&end=" + $rootScope.end + "&userType=" + $rootScope.userType;
-                if ($rootScope.interval) {
-                    req = req + "&int=" + $rootScope.interval;
-                }
-                if (e.filter) {
-                    req = req + "&filter=" + e.filter;
-                }
-                if (e.topN) {
-                    req += "&topN=" + e.topN;
-                }
-                $http.get(req).success(function (result) {
-                    if (e.cb) {
-                        e.cb(result, e.config, e);
-                    } else {
-                        $rootScope.defaultcb(result, e.config, e);
+                charts.forEach(function (e) {
+                    var req = e.url + "?type=" + e.types + "&dimension=" + e.dimension + "&start=" + $rootScope.start + "&end=" + $rootScope.end + "&userType=" + $rootScope.userType;
+                    if ($rootScope.interval) {
+                        req = req + "&int=" + $rootScope.interval;
                     }
-                    e.config.instance.hideLoading();
+                    if (e.filter) {
+                        req = req + "&filter=" + e.filter;
+                    }
+                    if (e.topN) {
+                        req += "&topN=" + e.topN;
+                    }
+                    $http.get(req).success(function (result) {
+                        if (e.cb) {
+                            e.cb(result, e.config, e);
+                        } else {
+                            $rootScope.defaultcb(result, e.config, e);
+                        }
+                    });
                 });
-            })
         }
         this.gridRefresh = function (grids) {
             grids.forEach(function (grid) {
@@ -57,6 +56,7 @@ define(["../app"], function (app) {
                         }
                     })
                 });
+
             })
         }
     }]);
