@@ -75,7 +75,7 @@
                             <li>
                                 <div role="group" class="btn-group">
                                     <ui-select ng-model="souce.selected" theme="select2" reset-search-input="false"  class="fl"
-                                               style="width: 90px;">
+                                               style="width: 90px;" ng-change="setSource(souce.selected.value)">
                                         <ui-select-match placeholder="全部">{{$select.selected.name}}
                                         </ui-select-match>
                                         <ui-select-choices repeat="souce in souces">
@@ -143,7 +143,7 @@
             <!--</div>-->
             <!--</div>-->
             <div class="custom_table">
-                <div ui-grid="gridOptions" class="grid" style="height:400px;" ui-grid-pagination
+                <div ui-grid="gridOptions" class="grid" style="height:auto;" ui-grid-pagination
                      ui-grid-exporter></div>
                 <gridpage></gridpage>
             </div>

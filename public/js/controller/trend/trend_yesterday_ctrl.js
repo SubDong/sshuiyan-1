@@ -159,7 +159,7 @@ define(["./module"], function (ctrs) {
                 }
                 return;
             }
-            if ($rootScope.start > -7 && $scope.charts[0].config.keyFormat == "week") {
+            if ($rootScope.start > -6 && $scope.charts[0].config.keyFormat == "week") {
                 $rootScope.interval = -1;
             }
             if ($rootScope.interval == -1) {
@@ -301,7 +301,6 @@ define(["./module"], function (ctrs) {
             $scope.$broadcast("ssh_dateShow_options_time_change");
         }
         $scope.cancelChecked = function(){
-            console.log(123)
             $scope.isCancelYesterdayCompare = false;
             $scope.isCancelWeekCompare = false;
             $(".specialCheckbox")[0].style.backgroundPosition = "0 0";
@@ -333,6 +332,7 @@ define(["./module"], function (ctrs) {
                     e.config.legendAllowCheckCount = 1;
                     e.config.legendDefaultChecked = undefined;
                     e.types = [chartUtils.convertEnglish(e.config.legendData[0])];
+                    e.config.chartType = "line";
                     util.renderLegend(chart, e.config);
                 });
                 Custom.initCheckInfo();
@@ -358,6 +358,9 @@ define(["./module"], function (ctrs) {
             if($scope.isCancelWeekCompare == false){
                 $scope.isCancelWeekCompare = true;
                 $scope.isCancelYesterdayCompare = false;
+                if(!$scope.todayCalendar){
+                    $scope.todayCalendar = GetDateStr(-1);
+                }
                 var todayCalendarArray = $scope.todayCalendar.split("-");
                 var lastDate = todayCalendarArray[2]-7;
                 $scope.dayOrWeek = todayCalendarArray[0]+"-"+todayCalendarArray[1]+"-"+lastDate;
@@ -374,6 +377,7 @@ define(["./module"], function (ctrs) {
                     e.config.legendAllowCheckCount = 1;
                     e.config.legendDefaultChecked = undefined;
                     e.types = [chartUtils.convertEnglish(e.config.legendData[0])];
+                    e.config.chartType = "line";
                     util.renderLegend(chart, e.config);
                 });
                 Custom.initCheckInfo();

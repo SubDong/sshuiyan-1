@@ -164,6 +164,12 @@ define(["app"], function (app) {
             $rootScope.gridArray.shift();
             if (refresh == "refresh") {
                 $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude);
+                $scope.gridObjButton = {};
+                $scope.gridObjButton["name"] = "xl";
+                $scope.gridObjButton["displayName"] = "";
+                $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
+                $scope.gridObjButton["maxWidth"] = 10;
+                $rootScope.gridArray.unshift($scope.gridObjButton);
                 return
             }
             $rootScope.tableSwitch.number != 0 ? $scope.gridArray.shift() : "";
@@ -234,44 +240,44 @@ define(["app"], function (app) {
             });
             //$rootScope.$broadcast("ssh_reload_datashow");
         };
-        // 推广概况表格配置项
+        // 通用表格配置项
         if (typeof($rootScope.checkedArray) != undefined && $scope.tableJu == "html") {
             $scope.gridOptions = {
-                paginationPageSize: 25,
+                paginationPageSize: 20,
                 expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
                 expandableRowHeight: 360,
                 enableColumnMenus: false,
+                showColumnFooter: false,
                 enablePaginationControls: false,
                 enableSorting: true,
                 enableGridMenu: false,
                 enableHorizontalScrollbar: 0,
                 enableVerticalScrollbar: false,
-                enableScrollbars:false,
+                enableScrollbars: false,
                 columnDefs: $scope.gridOpArray,
                 onRegisterApi: function (girApi) {
-                    console.log(girApi)
                     $rootScope.gridApi2 = girApi;
                     griApihtml(girApi);
                 }
             };
         } else {
             $scope.gridOptions = {
-                paginationPageSize: 25,
+                paginationPageSize: 20,
                 expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions' ></div>",
                 expandableRowHeight: 360,
                 enableColumnMenus: false,
+                showColumnFooter: false,
                 enablePaginationControls: false,
                 enableSorting: true,
                 enableGridMenu: false,
                 enableHorizontalScrollbar: 0,
                 enableVerticalScrollbar: false,
-                enableScrollbars:false,
+                enableScrollbars: false,
                 columnDefs: $scope.gridOpArray,
                 onRegisterApi: function (gridApi) {
-                    console.log(gridApi);
-                            $rootScope.gridApi2 = gridApi;
-                            if ($rootScope.tableSwitch.dimen) {
-                                griApiInfo(gridApi);
+                    $rootScope.gridApi2 = gridApi;
+                    if ($rootScope.tableSwitch.dimen) {
+                        griApiInfo(gridApi);
                     }
                 }
             };
@@ -324,7 +330,7 @@ define(["app"], function (app) {
             if (a == 0) $rootScope.tableSwitch.tableFilter = null;
             if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"ct\":[0]}]";
             if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"ct\":[1]}]";
-            $scope.isJudge = false;
+            //$scope.isJudge = false;
             $scope.targetSearch();
         };
         //设置来源网站
@@ -541,6 +547,7 @@ define(["app"], function (app) {
         }
         $scope.$on("history", function (e, msg) {
             $scope.gridOpArray = angular.copy($rootScope.gridArray);
+            $scope.gridOpArray.splice(1, 1);
             $scope.gridOptions.columnDefs = $scope.gridOpArray;
             $scope.gridOptions.data = msg;
         });
@@ -805,8 +812,21 @@ define(["app"], function (app) {
             s.length > 0 ? a = s[0] : "";
             $rootScope.tableSwitch.tableFilter = "[{\"" + $rootScope.tableSwitch.latitude.field + "\":[\"" + getField(a, $rootScope.tableSwitch.latitude.field) + "\"]}]";
 
-        }
+        };
 
+        //得到表格底部数据
+        $scope.getFooterData = function (a, option) {
+            var returnData = 0;
+            if (option.data.length > 0) {
+                option.data.forEach(function (item, i) {
+                    if (item[a.col.field] != undefined) returnData += parseFloat((item[a.col.field]).replace("%", ""));
+                });
+                if ((option.data[0][a.col.field] + "").indexOf("%") != -1) {
+                    returnData = (returnData / option.data.length).toFixed(2) + "%"
+                }
+                return returnData;
+            }
+        }
 
         //得到数据中的url
         $scope.getDataUrlInfo = function (grid, row, number) {

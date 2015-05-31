@@ -92,10 +92,10 @@ define(["../app"], function (app) {
         $rootScope.equipment = {};
         $rootScope.equipments = [
             {name: '网络供应商', field: 'isp'},
-            {name: '浏览器', field: 'pm'},
+            {name: '浏览器', field: 'br'},
             {name: '分辨率', field: 'sr'},
             {name: '屏幕颜色', field: 'sc'},
-            {name: 'falsh版本', field: 'fl'},
+            {name: 'flash版本', field: 'fl'},
             {name: '是否支持java', field: 'ja'},
             {name: '语言环境', field: 'lg'},
             {name: '是否支持cookie', field: 'ck'}

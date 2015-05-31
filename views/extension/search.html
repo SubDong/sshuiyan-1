@@ -12,7 +12,7 @@
             <calendar></calendar>
             <refresh></refresh>
         </div>
-    </div> 
+    </div>
     <div class="my_concent">
         <ssh-date-show type="yesterday" dimension="region" sem-type="campaign"></ssh-date-show>
         <div class="index_chart">
@@ -27,7 +27,8 @@
 
                         <div class="chart_top chart_default">
                             <ul>
-                                <li><a href="javascript:void(0)" data-ssh-default-quota="search_campaign">系统默认指标</a></li>
+                                <li><a href="javascript:void(0)" data-ssh-default-quota="search_campaign">系统默认指标</a>
+                                </li>
                             </ul>
                         </div>
                         <div class="chart_top">
@@ -97,7 +98,8 @@
                                 <li>
                                     <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
                                         <div role="group" class="btn-group">
-                                            <ui-select ng-model="city.selected" theme="select2" reset-search-input="false" class="fl btn-pv"
+                                            <ui-select ng-model="city.selected" theme="select2"
+                                                       reset-search-input="false" class="fl btn-pv"
                                                        data-ng-change="setAreaFilter(city.selected.name)"
                                                        style="width: 80px;">
                                                 <ui-select-match placeholder="全部">{{$select.selected.name}}
@@ -117,11 +119,14 @@
                         <div class="chart_top2">
                             <ul>
                                 <li><span>设备过滤:</span></li>
-                                <li><input type="radio" checked="checked" ng-click="setTerminal(0)" name="radio1" class="styled"/>
+                                <li><input type="radio" ng-click="setSearchTerminalData(0)" checked="checked"  name="radio1"
+                                           class="styled"/>
                                     <label>全部</label></li>
-                                <li><input type="radio" ng-click="setTerminal(1)" name="radio1"  class="styled"/> <label>计算机</label>
+                                <li><input type="radio" ng-click="setSearchTerminalData(1)" name="radio1" class="styled"/>
+                                    <label>计算机</label>
                                 </li>
-                                <li><input type="radio" ng-click="setTerminal(2)" name="radio1"  class="styled"/> <label>移动设备</label>
+                                <li><input type="radio" ng-click="setSearchTerminalData(2)" name="radio1" class="styled"/>
+                                    <label>移动设备</label>
                                 </li>
                             </ul>
                         </div>
@@ -132,7 +137,8 @@
                 <div class="custom_select custom_select_way">
                     转化目标
                     <div role="group" class="btn-group">
-                        <ui-select ng-model="page.selected" theme="select2" reset-search-input="false" class="fl" style="min-width: 120px;">
+                        <ui-select ng-model="page.selected" theme="select2" reset-search-input="false" class="fl"
+                                   style="min-width: 120px;">
                             <ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>
                             <ui-select-choices repeat="page in pages">
                                 <span ng-bind-html="page.name"></span>
@@ -140,14 +146,9 @@
                         </ui-select>
                     </div>
                 </div>
-                <!--<div class="custom_table">
-                    <div class="uconcentctrl" ng-controller="SearchCtrl">
-                        <div ui-grid="gridOptions" class="grid" style="height:400px;"  ui-grid-selection ui-grid-exporter></div>
-                        <gridpage></gridpage>
-                    </div>
-                </div>-->
                 <div class="custom_table">
-                    <div ui-grid="gridOptions" class="grid" style="min-height:400px;" ui-grid-pagination  ui-grid-exporter></div>
+                    <div ui-grid="gridOptions" class="grid" style="min-height:400px;" ui-grid-pagination
+                         ui-grid-exporter></div>
                     <gridpage></gridpage>
                 </div>
             </div>

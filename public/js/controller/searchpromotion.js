@@ -119,7 +119,7 @@ define(["./module"], function (ctrs) {
             });
             // $rootScope.$broadcast("ssh_reload_datashow");
         };
-        // 推广概况表格配置项
+        // 百度推广表格配置项
         $scope.gridOptions = {
             paginationPageSize: 25,
             expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions' style='height:150px;'></div>",
@@ -140,19 +140,42 @@ define(["./module"], function (ctrs) {
         $scope.page = "";
         $scope.pagego = function (pagevalue) {
             pagevalue.pagination.seek(Number($scope.page));
-        }
-
-        //设置来源终端
-        $scope.setTerminal = function (a) {
-            if (a == 0) $scope.es_filter = null;
-            if (a == 1) $scope.es_filter = "[{\"pm\":[0]}]";
-            $scope.device = 0;
-            if (a == 2) $scope.es_filter = "[{\"pm\":[1]}]";
-            $scope.device = 1;
-            $scope.isJudge = false;
-            $scope.targetSearch();
         };
 
+        //设置来源终端
+        $scope.device = -1;
+        $scope.setSearchTerminalData = function (a) {
+            if (a == 0) {
+                $scope.es_filter = null;
+                $scope.device = -1;
+            }
+            if (a == 1) {
+                $scope.es_filter = "[{\"pm\":[0]}]";
+                $scope.device = 0;
+            }
+            if (a == 2) {
+                $scope.es_filter = "[{\"pm\":[1]}]";
+                $scope.device = 1;
+            }
+            $scope.targetSearchSpread();
+        };
+        //设置地域过滤
+        $scope.setAreaFilter = function (area) {
+            if (!$rootScope.tableSwitch) {
+                return;
+            }
+            if ("全部" == area) {
+                $rootScope.tableSwitch.tableFilter = null;
+            } else {
+                $rootScope.tableSwitch.tableFilter = "[{\"region\":[\"" + area + "\"]}]";
+            }
+            $scope.isJudge = false;
+            if ($scope.tableJu == "html") {
+                getHtmlTableData();
+            } else {
+                $scope.targetSearch();
+            }
+        };
 
         $rootScope.targetSearchSpread = function (isClicked) {
             $scope.gridOpArray = angular.copy($rootScope.searchGridArray);
@@ -160,7 +183,7 @@ define(["./module"], function (ctrs) {
             if (isClicked) {
                 $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
             }
-            var url = SEM_API_URL + user + "/" + baiduAccount + "/" + $rootScope.tableSwitch.promotionSearch.SEMData + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1" + ($scope.searchId != undefined || $scope.searchId != "undefined" ? "&" + $scope.searchId : "")
+            var url = SEM_API_URL + user + "/" + baiduAccount + "/" + $rootScope.tableSwitch.promotionSearch.SEMData + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=" + $scope.device + ($scope.searchId != undefined || $scope.searchId != "undefined" ? "&" + $scope.searchId : "")
             $http({
                 method: 'GET',
                 url: url
@@ -182,7 +205,7 @@ define(["./module"], function (ctrs) {
                                     datas[x] = item[x] != undefined ? item[x] : data[0][x];
                                 });
                                 datas[fieldQuery] = item[fieldQuery] + getTableTitle(fieldQuery, item);
-                                dataArray.push(datas)
+                                dataArray.push(datas);
                                 if ((dataSEM.length - 1) == i) {
                                     $scope.gridOptions.data = dataArray;
                                 }
@@ -194,7 +217,7 @@ define(["./module"], function (ctrs) {
                             var field = $rootScope.tableSwitch.latitude.field;
                             datas[field] = item[field] + getTableTitle(field, item);
                             datas["id"] = item[searchId + "Id"];
-                            dataArray.push(datas)
+                            dataArray.push(datas);
                             if ((dataSEM.length - 1) == i) {
                                 if (field == "adgroupName" || field == "keywordName") {
                                     $scope.gridOptions.rowHeight = 55;
@@ -227,37 +250,48 @@ define(["./module"], function (ctrs) {
                 + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=undefined&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
             }).success(function (data, status) {
                 var dataArray = [];
-                data.forEach(function (item, i) {
-                    var variousId = item.kw.split(",");
-                    item.kw = variousId[0];
-                    var url = SEM_API_URL + user + "/" + baiduAccount + "/" + $rootScope.tableSwitch.promotionSearch.SEMData + "/" + variousId[3] + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1"
-                    $http({
-                        method: 'GET',
-                        url: url
-                    }).success(function (dataSEM, status) {
-                        var datas = {};
-                        if (variousId[3] == 0) {
-                            $rootScope.checkedArray.forEach(function (x, y) {
-                                datas[x] = (item[x] != undefined ? item[x] : 0);
-                                var field = $rootScope.tableSwitch.latitude.field
-                                datas[field] = item[field] + ",";
-                            })
-                        } else {
-                            $rootScope.checkedArray.forEach(function (x, y) {
-                                datas[x] = (item[x] != undefined ? item[x] : dataSEM[0][x]);
-                            })
-                            var field = $rootScope.tableSwitch.latitude.field
-                            datas[field] = item[field] + getTableTitle(field, dataSEM[0]);
-                        }
-                        dataArray.push(datas);
-                        $scope.gridOptions.rowHeight = 55;
-                        $scope.gridOptions.data = dataArray;
-                    });
-                });
+               if(data!=null&&data.length>0) {
+
+                   data.forEach(function (item, i) {
+                       var variousId = item.kw.split(",");
+                       item.kw = variousId[0];
+                       var url = SEM_API_URL + user + "/" + baiduAccount + "/" + $rootScope.tableSwitch.promotionSearch.SEMData + "/" + variousId[3] + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1"
+                       $http({
+                           method: 'GET',
+                           url: url
+                       }).success(function (dataSEM, status) {
+                           var datas = {};
+                           if (variousId[3] == 0) {
+                               $rootScope.checkedArray.forEach(function (x, y) {
+                                   datas[x] = (item[x] != undefined ? item[x] : 0);
+                                   var field = $rootScope.tableSwitch.latitude.field
+                                   datas[field] = item[field] + ",";
+                               })
+                           } else {
+                               $rootScope.checkedArray.forEach(function (x, y) {
+                                   datas[x] = (item[x] != undefined ? item[x] : dataSEM[0][x]);
+                               });
+                               var field = $rootScope.tableSwitch.latitude.field
+                               datas[field] = item[field] + getTableTitle(field, dataSEM[0]);
+                           }
+                           dataArray.push(datas);
+
+                       });
+                   });
+               };
+                $scope.gridOptions.rowHeight = 55;
+                $scope.gridOptions.data = dataArray;
+
             });
         };
 
-
+        $rootScope.targetSearch= function (isClicked) {
+            if ($rootScope.tableSwitch.promotionSearch.turnOn == "ssc") {
+                $rootScope.targetSearchSSC(true);
+            } else {
+                $rootScope.targetSearchSpread(true);
+            }
+        };
         //init
         if ($rootScope.tableSwitch.promotionSearch.turnOn == "ssc") {
             $rootScope.targetSearchSSC(true);
@@ -300,17 +334,17 @@ define(["./module"], function (ctrs) {
             if ($rootScope.tableSwitch.latitude.field == "campaignName") {
                 $rootScope.checkedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
                 $rootScope.searchGridArray = [
-                    {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
+                    {
+                        name: "xl",
+                        displayName: "",
+                        cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
+                        maxWidth: 10
+                    },
                     {
                         name: "单元",
                         displayName: "单元",
                         field: "adgroupName",
-                        cellTemplate: "<a href='javascript:void(0)' target='_blank' style='color:#0965b8;line-height:30px;' ng-click='grid.appScope.getHistoricalTrend(this)'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}"
-                    },
-                    {
-                        name: "状态",
-                        displayName: "状态",
-                        cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
+                        cellTemplate: "<div><a href='javascript:void(0)' target='_blank' style='color:#0965b8;line-height:30px;' ng-click='grid.appScope.getHistoricalTrend(this)'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</div>"
                     },
                     {name: "展现", displayName: "展现", field: "impression"},
                     {name: "消费", displayName: "消费", field: "cost"},
@@ -338,17 +372,17 @@ define(["./module"], function (ctrs) {
             } else if ($rootScope.tableSwitch.latitude.field == "adgroupName") {
                 $rootScope.checkedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
                 $rootScope.searchGridArray = [
-                    {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
+                    {
+                        name: "xl",
+                        displayName: "",
+                        cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
+                        maxWidth: 10
+                    },
                     {
                         name: "关键词",
                         displayName: "关键词",
                         field: "keywordName",
-                        cellTemplate: "<a href='http://www.baidu.com/s?wd={{grid.appScope.getDataUrlInfo(grid, row,1)}}' target='_blank' style='color:#0965b8;line-height:30px;margin-left: 10px'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}"
-                    },
-                    {
-                        name: "状态",
-                        displayName: "状态",
-                        cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
+                        cellTemplate: "<div><a href='http://www.baidu.com/s?wd={{grid.appScope.getDataUrlInfo(grid, row,1)}}' target='_blank' style='color:#0965b8;line-height:30px;margin-left: 10px'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</div>"
                     },
                     {name: "展现", displayName: "展现", field: "impression"},
                     {name: "消费", displayName: "消费", field: "cost"},
@@ -375,12 +409,12 @@ define(["./module"], function (ctrs) {
                 $scope.searchId = "agid=" + b.$parent.$parent.row.entity.id;
             }
             $rootScope.targetSearchSpread();
-        }
+        };
 
 
         //得到数据中的url
         $scope.getDataUrlInfo = function (grid, row, number) {
-            var data = row.entity[$rootScope.tableSwitch.latitude.field]+"";
+            var data = row.entity[$rootScope.tableSwitch.latitude.field] + "";
             if (number < 3) {
                 var a = data.split(",");
             } else if (number > 3) {
@@ -391,7 +425,6 @@ define(["./module"], function (ctrs) {
             if (number == 1) {
                 return a[0];
             } else if (number == 2) {
-                console.log(a[1]);
                 return a[1];
             } else if (number == 3) {
                 return a;
@@ -403,7 +436,7 @@ define(["./module"], function (ctrs) {
                 return a[2]
             }
 
-        }
+        };
         //得到序列号
         $scope.getIndex = function (b) {
             return b.$parent.$parent.rowRenderIndex + 1
@@ -422,7 +455,7 @@ define(["./module"], function (ctrs) {
             default :
                 return "cid";
         }
-    }
+    };
 
     var getTableTitle = function (a, b) {
         switch (a) {
@@ -438,5 +471,5 @@ define(["./module"], function (ctrs) {
                 var returnData = ",`" + (b['creativeTitle'].length > 25 ? b['creativeTitle'].substring(0, 25) + "..." : b['creativeTitle']) + ",`" + b['showUrl']
                 return returnData;
         }
-    }
+    };
 });

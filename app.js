@@ -15,7 +15,9 @@ var express = require('express'),
     auth = require('./routes/auth'),
     token = require('./routes/token'),
     redis_module = require("./servers/utils/redis"),
-    RedisStore = require('connect-redis')(session);
+    RedisStore = require('connect-redis')(session),
+    mongoose = require('./servers/utils/mongo'),
+    daos = require('./servers/db/daos');
 
 
 var env = process.argv.splice(2);
@@ -26,6 +28,7 @@ var config = require("./config_" + env + ".json");
 
 var es_client = es.init(config.es);
 
+var mongo = mongoose.init(config.mongodb)
 var redis_client = redis_module.init(config.redis);
 
 //app.use(express.static('public'))
@@ -77,8 +80,15 @@ if (env != 'dev') {
 
 // 登陆信息
 if (env == 'dev') {
+
+    //daos.save("sites_model", {id: 123123}, function (err, docs) {
+    //    if (err)
+    //        return console.error(err);
+    //    console.log(docs)
+    //})
     // 测试环境
     app.use(function (req, res, next) {
+        req.db = mongo;
         req.es = es_client;
         req.redisclient = redis_client;
         req.accountid = req.session.accountid
@@ -102,6 +112,7 @@ if (env == 'dev') {
 } else {
     // 非测试环境
     app.use(function (req, res, next) {
+        req.db = mongo;
         req.es = es_client;
         req.redisclient = redis_client;
         req.accountid = req.session.accountid
