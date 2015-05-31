@@ -37,7 +37,7 @@ define(["../app"], function (app) {
                     });
                 }]
             });
-        };
+        }
 
         // 获取指定url为来源的入口页面
         function showEntryPageData(rf) {
@@ -90,11 +90,114 @@ define(["../app"], function (app) {
                     });
                 }]
             });
-        };
+        }
+
+        /**
+         * 入口页面的来源分布
+         * @param entrance
+         */
+        function showSourceDistributionData(entrance) {
+            ngDialog.open({
+                template: '<div style="overflow: hidden"><tabset justified="true">' +
+                '<tab heading="来源类型" id="source-category" ng-click="showCategory()"></tab>' +
+                '<tab heading="来源URL" id="source-url" ng-click="showUrl()"></tab>' +
+                '</tabset></div>',
+                plain: true,
+                className: 'ngdialog-theme-default',
+                scope: $rootScope,
+                controller: ['$scope', '$http', '$compile', function ($scope, $http, $compile) {
+                    $scope.showUrl = function () {
+                        $http({
+                            method: 'GET',
+                            url: "/api/indextable/?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.defaultType + "&indic=contribution,pv&dimension=rf&popup=1" + "&filerInfo=[{\"entrance\":[\"" + entrance + "\"]}]"
+                        }).success(function (data, status) {
+                            var contentHtml = "<div class='modal-body'><table class='table'><tr><th>来源URL TOP10</th><th>来源次数</th><th>带来浏览量</th></tr>";
+                            data.forEach(function (item, i) {
+                                if (i == 10) {
+                                    return false;
+                                }
+                                var _url = item.rf;
+                                var _index = _url.indexOf('?') + 20;
+                                if (_index < _url.length) {
+                                    _url = _url.substring(0, _index) + "...";
+                                }
+                                contentHtml += "<tr><td><a href='" + item.rf + "'>" + _url + "</a></td><td>" + item.contribution + "</td><td>" + item.pv + "</td></tr>"
+                            });
+                            contentHtml += "</table></div>";
+                            var sourceUrl = angular.element(document.getElementById('source-url'));
+                            sourceUrl.find("div").remove();
+                            sourceUrl.append($compile(contentHtml)($scope));
+                        }).error(function (error) {
+                            console.log(error);
+                        });
+
+                        if (document.getElementById('source-category') != null) {
+                            angular.element(document.getElementById('source-category').getElementsByTagName("div")).css("display", "none");
+                        }
+                    };
+
+                    $scope.showCategory = function () {
+                        $http({
+                            method: 'GET',
+                            url: "/api/indextable/?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.defaultType + "&indic=contribution&dimension=rf_type&popup=1" + "&filerInfo=[{\"entrance\":[\"" + entrance + "\"]}]"
+                        }).success(function (data, status) {
+                            var contentHtml = "<div class='modal-body'><table class='table'>";
+                            var result = 0;
+                            var _direct = 0;
+                            var _search = 0;
+                            var _other = 0;
+                            data.forEach(function (item, i) {
+                                switch (item.rf_type) {
+                                    case "直接访问":
+                                        _direct = item.contribution;
+                                        result += parseFloat(_direct);
+                                        break;
+                                    case "搜索引擎":
+                                        _search = item.contribution;
+                                        result += parseFloat(_search);
+                                        break;
+                                    case "外部链接":
+                                        _other = item.contribution;
+                                        result += parseFloat(_other);
+                                        break;
+                                    default :
+                                        break;
+                                }
+
+                            });
+
+                            if (result === 0) {
+                                contentHtml += "<tr><td>外部链接</td><td>0%</td></tr>";
+                                contentHtml += "<tr><td>直接访问</td><td>0%</td></tr>";
+                                contentHtml += "<tr><td>搜索引擎</td><td>0%</td></tr>";
+                            } else {
+                                contentHtml += "<tr><td>外部链接</td><td>" + (parseFloat(_other) / parseFloat(result) * 100).toFixed(2) + "%</td></tr>";
+                                contentHtml += "<tr><td>直接访问</td><td>" + (parseFloat(_direct) / parseFloat(result) * 100).toFixed(2) + "%</td></tr>";
+                                contentHtml += "<tr><td>搜索引擎</td><td>" + (parseFloat(_search) / parseFloat(result) * 100).toFixed(2) + "%</td></tr>";
+                            }
+
+                            contentHtml += "</table></div>";
+                            var sourceCategory = angular.element(document.getElementById('source-category'));
+                            sourceCategory.find("div").remove();
+                            sourceCategory.append($compile(contentHtml)($scope));
+                        }).error(function (error) {
+                            console.log(error);
+                        });
+
+                        if (document.getElementById('source-url') != null) {
+                            angular.element(document.getElementById('source-url').getElementsByTagName("div")).css("display", "none");
+                        }
+                    };
+
+                    $scope.showCategory();
+                }]
+            });
+        }
 
         return {
             showSourceData: showSourceData,
-            showEntryPageData: showEntryPageData
+            showEntryPageData: showEntryPageData,
+            showSourceDistributionData: showSourceDistributionData
         }
 
     }]);
