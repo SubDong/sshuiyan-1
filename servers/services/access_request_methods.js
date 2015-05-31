@@ -2,18 +2,6 @@
  * Created by perfection on 15-5-26.
  */
 //
-//var getTest = {
-// search:function(es){
-//     console.log("进口")
-//     getPV(es, "access-2015-05-21", 1, 'path0', "北京市", "perfect-cn.cn", function(res){
-//         console.log(res);
-//     });
-//     getUVAndPV(es,"access-2015-05-21",1,"百度",2,"北京市",'path0',"perfect-cn.cn",function(da){
-//         console.log(da);
-//     });
-//     console.log("测试数据结束")
-// }
-//}
 function getPath(path, address) {
     switch (path) {
         case "path0":
@@ -34,7 +22,6 @@ function getPath(path, address) {
 //
 //根据时间段获取pv
 function getPV(es, indexes, type, path, region, address, callbackFn) {
-    console.log("数据测试开始")
     var request = {
         index: indexes,
         type: type,
@@ -73,11 +60,7 @@ function getPV(es, indexes, type, path, region, address, callbackFn) {
 }
 
 //一天之内您网站的独立访客数(以Cookie为依据)，一天内同一访客多次访问您网站只计算1个访客(uv)
-//获取pv
-//address为网址即paths的值
-//path为字段值 有path0，path1等等
-//其他参数参考js设定参数文档
-function getUVAndPV(es, indexes, type, se, rf_type,region,path,address, callbackFn) {
+function getUV(es, indexes, type, se, rf_type, callbackFn) {
     var request = {
         index: indexes,
         type: type,
@@ -95,14 +78,6 @@ function getUVAndPV(es, indexes, type, se, rf_type,region,path,address, callback
                             "term": {
                                 "rf_type": rf_type
                             }
-                        },
-                        {
-                            "term":{
-                                "region":region
-                            }
-                        },
-                        {
-                            "term": getPath(path, address)
                         }
                     ]
                 }
@@ -112,11 +87,6 @@ function getUVAndPV(es, indexes, type, se, rf_type,region,path,address, callback
                     "cardinality": {
                         "field": "vid"
                     }
-                },
-                "all_pv":{
-                    "value_count":{
-                        "field":path
-                    }
                 }
             }
         }
@@ -124,8 +94,8 @@ function getUVAndPV(es, indexes, type, se, rf_type,region,path,address, callback
     es.search(request, function (error, response) {
         var data = [];
         if (response != undefined && response.aggregations != undefined) {
-            var result = response.aggregations;
-            data.push({"uv":result.all_uv.value,"pv":result.all_pv.value});
+            var result = response.aggregations.all_uv.value;
+            data.push({"uv":result});
             callbackFn(data);
         } else
             callbackFn(data);
@@ -412,7 +382,7 @@ function getVC(es, indexes, type, filters, start, end, callbackFn) {
 }
 
 
-module.exports = getTest;
+
 
 
 

@@ -146,7 +146,140 @@ var access_request = {
             } else
                 callbackFn(data);
         });
-    }
-};
+    },
+    //exchangeSearch: function (es, indexs, type, callbackFn) {
+    //    var request = {
+    //        "index": indexs,
+    //        "type": type,
+    //        "body": {
+    //            "size": 0,
+    //            "aggs": {
+    //                "aggs_pv": {
+    //                    "terms": {
+    //                        "field": "_type"
+    //                    },
+    //                    "aggs": {
+    //                        "pv": {
+    //                            "sum": {
+    //                                "script": "1"
+    //                            }
+    //                        }
+    //                    }
+    //                },
+    //                "uv": {
+    //                    "cardinality": {
+    //                        "field": "tt"
+    //                    }
+    //                }
+    //            }
+    //        }
+    //    }
+    //    es.search(request, function (error, response) {
+    //        var data = [];
+    //        if (response != undefined && response.aggregations != undefined) {
+    //            var result = response.aggregations;
+    //            data.push({"pv": result.aggs_pv.buckets[0].pv.value, "uv": result.uv.value});
+    //            callbackFn(data);
+    //        } else
+    //            callbackFn(data);
+    //    });
+    //},
+    exchangeSearch: function (es, indexs, type, callbackFn) {
+        var request = {
+            index: indexs,
+            type: type,
+            body: {
+                "size": 0,
+                "aggs": {
+                    "pv_uv": {
+                        "terms": {
+                            "field": "_type"
+                        },
+                        "aggs": {
+                            "path0": {
+                                "terms": {
+                                    "field": "path0"
+                                },
+                                "aggs": {
+                                    "path1": {
+                                        "terms": {
+                                            "field": "path1"
+                                        },
+                                        "aggs": {
+                                            "path2": {
+                                                "terms": {
+                                                    "field": "path2"
+                                                },
+                                                "aggs": {
+                                                    "pv": {
+                                                        "sum": {
+                                                            "script": "1"
+                                                        }
+                                                    },
+                                                    "uv": {
+                                                        "cardinality": {
+                                                            "field": "tt"
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "pv": {
+                                                "sum": {
+                                                    "script": "1"
+                                                }
+                                            },
+                                            "uv": {
+                                                "cardinality": {
+                                                    "field": "tt"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "pv": {
+                                        "sum": {
+                                            "script": "1"
+                                        }
+                                    },
+                                    "uv": {
+                                        "cardinality": {
+                                            "field": "tt"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        es.search(request, function (error, response) {
+            var data = [];
+            var path1Data = [];
+            if (response != undefined && response.aggregations != undefined) {
+                var result = response.aggregations.pv_uv.buckets;
+                for (var i = 0; i < result.length; i++) {
+                    for(var c = 0;c<result[i].path0.buckets.length;c++){
+                        path1Data = [];
+                        for(var k = 0;k<result[i].path0.buckets[c].path1.buckets.length;k++){
+                            path1Data.push({"pv":result[i].path0.buckets[c].path1.buckets[k].pv.value,"uv":result[i].path0.buckets[c].path1.buckets[k].uv.value,"pathName":result[i].path0.buckets[c].path1.buckets[k].key});
+                        }
+                        console.log("pv:"+result[i].key);
+                        data.push({"pv": result[i].path0.buckets[c].pv.value, "uv": result[i].path0.buckets[c].pv.value, "pathName": result[i].path0.buckets[c].key,"path1":path1Data,"id":result[i].key});
+                    }
 
+                }
+                callbackFn(data);
+            } else
+                callbackFn(data);
+        });
+    }
+
+};
+var exchangeField = function (value) {
+    if (value.indexOf(",") == -1) {
+        return "loc";
+    } else {
+        return "_type";
+    }
+}
 module.exports = access_request;
