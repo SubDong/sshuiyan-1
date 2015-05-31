@@ -27,11 +27,11 @@ define(["./module"], function (ctrs) {
 
             {name: "网站名称",  displayName:"网站名称", field: "b", cellTemplate: " <span class='glyphicon glyphicon-file'></span>" ,maxWidth: ''  },
             {name: "首页代码状态",  displayName:"首页代码状态", field: "b", maxWidth:500},
-            {name: "x6", displayName: "",cellTemplate: "<div class='table_admin'>获取代码 <span class='glyphicon glyphicon-file'></span></div>" ,maxWidth:100 },
-            {name: "x2", displayName: "",cellTemplate: "<div class='table_admin'>查看网站概览</div>", maxWidth:100 },
-            {name: "x3", displayName: "",cellTemplate: "<div class='table_admin'><span class='glyphicon glyphicon-cog'></span>设置</div>", maxWidth:80  },
-            {name: "x4", displayName: "",cellTemplate: "<div class='table_admin'>暂停</div>", maxWidth:80 },
-            {name: "x5", displayName: "",cellTemplate: "<div class='table_admin'>删除</div>", maxWidth:80 }
+            {name: "x6", displayName: "",cellTemplate: "<div class='table_admin'><a href=''>获取代码</a><span class='glyphicon glyphicon-file'></span></div>" ,maxWidth:100 },
+            {name: "x2", displayName: "",cellTemplate: "<div class='table_admin'><a href=''>查看网站概览</a></div>", maxWidth:100 },
+            {name: "x3", displayName: "",cellTemplate: "<div class='table_admin'><span class='glyphicon glyphicon-cog'></span><a href=''>设置</a></div>", maxWidth:80  },
+            {name: "x4", displayName: "",cellTemplate: "<div class='table_admin'><a href=''>暂停</a></div>", maxWidth:80 },
+            {name: "x5", displayName: "",cellTemplate: "<div class='table_admin'><a href=''>删除</a></div>", maxWidth:80 }
 
         ];
 
