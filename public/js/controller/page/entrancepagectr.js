@@ -20,7 +20,12 @@ define(["./module"], function (ctrs) {
                 cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
                 maxWidth: 10
             },
-            {name: "页面url", displayName: "页面url", field: "loc"},
+            {
+                name: "页面url",
+                displayName: "页面url",
+                field: "loc",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"
+            },
             {
                 name: " ",
                 cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'>" +
@@ -29,9 +34,24 @@ define(["./module"], function (ctrs) {
                 "<li><a ng-click='grid.appScope.showSourceDistribution(row)'>查看来源分布</a></li>" +
                 "</ul></div></div>"
             },
-            {name: "浏览量(PV)", displayName: "浏览量(PV)", field: "pv"},
-            {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},
-            {name: "平均访问时长", displayName: "平均访问时长", field: "avgTime"}
+            {
+                name: "浏览量(PV)",
+                displayName: "浏览量(PV)",
+                field: "pv",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "访客数(UV)",
+                displayName: "访客数(UV)",
+                field: "uv",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "平均访问时长",
+                displayName: "平均访问时长",
+                field: "avgTime",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            }
         ];
         $rootScope.tableSwitch = {
             latitude: {name: "页面url", displayName: "页面url", field: "loc"},
@@ -40,7 +60,7 @@ define(["./module"], function (ctrs) {
             // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
             number: 2,
             //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
-            coding: "<li><a href='http://www.best-ad.cn' target='_blank'>查看历史趋势</a></li>" +
+            coding: "<li><a  ui-sref='history4' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent'>查看历史趋势</a></li>" +
             "<li><a ng-click='grid.appScope.showSourceDistribution(row)'>查看来源分布</a></li>",
             arrayClear: false
         };

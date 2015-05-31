@@ -12,15 +12,40 @@ define(["./module"], function (ctrs) {
         //配置默认指标
         $rootScope.checkedArray = ["pv", "uv", "outRate"];
         $rootScope.gridArray = [
-            {name: "a", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
-            {name: "地域", displayName: "地域", field: "region"},
+            {
+                name: "a",
+                displayName: "",
+                cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
+                maxWidth: 10
+            },
+            {
+                name: "地域",
+                displayName: "地域",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                field: "region"
+            },
             {
                 name: " ",
                 cellTemplate: "<div class='table_box'><a ui-sref='history1' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn' title='查看历史趋势'></a></div>"
             },
-            {name: "浏览量(PV)", displayName: "浏览量(PV)",footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.options)}}</div>", field: "pv"},
-            {name: "访客数(UV)", displayName: "访客数(UV)",footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.options)}}</div>", field: "uv"},
-            {name: "跳出率", displayName: "跳出率", footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.options)}}</div>", field: "outRate"}
+            {
+                name: "浏览量(PV)",
+                displayName: "浏览量(PV)",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>",
+                field: "pv"
+            },
+            {
+                name: "访客数(UV)",
+                displayName: "访客数(UV)",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>",
+                field: "uv"
+            },
+            {
+                name: "跳出率",
+                displayName: "跳出率",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>",
+                field: "outRate"
+            }
         ];
         $rootScope.tableSwitch = {
             latitude: {name: "地域", displayName: "地域", field: "region"},
@@ -174,7 +199,7 @@ define(["./module"], function (ctrs) {
                         break;
                 }
                 data["title_name"] = title_name;
-                chart.quota=title_name;
+                chart.quota = title_name;
                 mixingMap.mapOrPie(data, chart);
 
             }).error(function (error) {
@@ -221,8 +246,9 @@ define(["./module"], function (ctrs) {
             var d = dd.getDate();
             return y + "-" + m + "-" + d;
         }
+
         //刷新
-        $scope.page_refresh = function(){
+        $scope.page_refresh = function () {
             $rootScope.start = 0;
             $rootScope.end = 0;
             $rootScope.tableTimeStart = 0;

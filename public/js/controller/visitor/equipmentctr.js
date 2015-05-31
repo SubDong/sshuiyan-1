@@ -7,7 +7,7 @@ define(["./module"], function (ctrs) {
 
     ctrs.controller('equipmentctr', function ($scope, $rootScope, $http, requestService, areaService) {
         //客户端属性初始化
-        $scope.equipment.selected =  {"name":"网络供应商","field":"isp"};
+        $scope.equipment.selected = {"name": "网络供应商", "field": "isp"};
         $scope.todayClass = true;
         $scope.dt = new Date();
         //table配置
@@ -23,12 +23,42 @@ define(["./module"], function (ctrs) {
                 cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
                 maxWidth: 10
             },
-            {name: "网络供应商", displayName: "网络供应商", field: "isp"},
-            {name: "浏览量(PV)", displayName: "浏览量(PV)", field: "pv"},
-            {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},
-            {name: "IP数", displayName: "IP数", field: "ip"},
-            {name: "跳出率", displayName: "跳出率", field: "outRate"},
-            {name: "平均访问时长", displayName: "平均访问时长", field: "avgTime"}
+            {
+                name: "网络供应商",
+                displayName: "网络供应商",
+                field: "isp",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"
+            },
+            {
+                name: "浏览量(PV)",
+                displayName: "浏览量(PV)",
+                field: "pv",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "访客数(UV)",
+                displayName: "访客数(UV)",
+                field: "uv",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "IP数",
+                displayName: "IP数",
+                field: "ip",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "跳出率",
+                displayName: "跳出率",
+                field: "outRate",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "平均访问时长",
+                displayName: "平均访问时长",
+                field: "avgTime",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            }
         ];
         $rootScope.tableSwitch = {
             latitude: {name: "网络供应商", displayName: "网络供应商", field: "isp"},

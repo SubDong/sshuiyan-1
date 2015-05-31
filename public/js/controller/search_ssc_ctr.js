@@ -14,24 +14,60 @@ define(["./module"], function (ctrs) {
         //配置默认指标
         $rootScope.checkedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"];
         $rootScope.searchGridArray = [
-            {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
+            {
+                name: "xl",
+                displayName: "",
+                cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
+                maxWidth: 10
+            },
             {
                 name: "触发关键词的搜索词",
                 displayName: "触发关键词的搜索词",
                 field: "kw",
                 cellTemplate: "<div><a href='http://www.baidu.com/s?wd={{grid.appScope.getDataUrlInfo(grid, row,1)}}' style='color:#0965b8;line-height:30px;' target='_blank'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</div>"
-            },/*
+                , footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"
+            }, /*
              {
              name: " ",
              displayName: " ",
              cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
              },*/
-            {name: "展现", displayName: "展现", field: "impression"},
-            {name: "消费", displayName: "消费", field: "cost"},
-            {name: "平均点击价格", displayName: "平均点击价格", field: "cpc"},
-            {name: "跳出率", displayName: "跳出率", field: "outRate"},
-            {name: "平均访问时长", displayName: "平均访问时长", field: "avgTime"},
-            {name: "新访客比率", displayName: "新访客比率", field: "nuvRate"}
+            {
+                name: "展现",
+                displayName: "展现",
+                field: "impression",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "消费",
+                displayName: "消费",
+                field: "cost",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "平均点击价格",
+                displayName: "平均点击价格",
+                field: "cpc",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "跳出率",
+                displayName: "跳出率",
+                field: "outRate",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "平均访问时长",
+                displayName: "平均访问时长",
+                field: "avgTime",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "新访客比率",
+                displayName: "新访客比率",
+                field: "nuvRate",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            }
         ];
         $rootScope.tableSwitch = {
             latitude: {name: "触发关键词的搜索词", displayName: "触发关键词的搜索词", field: "kw"},
@@ -48,9 +84,9 @@ define(["./module"], function (ctrs) {
                 SEMData: "keyword" //查询类型
             }
         };
-        $scope.onLegendClickListener=function(radio,chartObj,chartConfig,checkValue){
-            $scope.charts[0].types=checkValue;
-            $scope.charts[0].config.instance=echarts.init(document.getElementById($scope.charts[0].config.id));
+        $scope.onLegendClickListener = function (radio, chartObj, chartConfig, checkValue) {
+            $scope.charts[0].types = checkValue;
+            $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
             requestService.refresh($scope.charts);
         };
         /**
@@ -58,19 +94,19 @@ define(["./module"], function (ctrs) {
          * @param data
          * @param chartConfig
          */
-        $scope.customFormat=function(data,chartConfig){
-            var final_result=JSON.parse(eval("("+data+")").toString());
+        $scope.customFormat = function (data, chartConfig) {
+            var final_result = JSON.parse(eval("(" + data + ")").toString());
             //删除key为"-"数据对
-            final_result.forEach(function(item,i){
-                item.key.forEach(function(k,j){
-                    if(k=="-"){
+            final_result.forEach(function (item, i) {
+                item.key.forEach(function (k, j) {
+                    if (k == "-") {
                         item.key.remove(j);
                         item.quota.remove(j);
                     }
                 });
                 item.label=chartUtils.convertChinese(item.label);
             });
-            $scope.charts[0].config.noFormat="none";
+            $scope.charts[0].config.noFormat = "none";
             cf.renderChart(final_result, chartConfig);
         }
         $scope.charts = [
@@ -82,24 +118,24 @@ define(["./module"], function (ctrs) {
                     legendAllowCheckCount: 2,
                     legendClickListener: $scope.onLegendClickListener,
                     legendDefaultChecked: [0, 1],
-                    min_max:false,
+                    min_max: false,
                     id: "indicators_charts",
                     bGap: true,//首行缩进
                     chartType: "bar",//图表类型
-                    keyFormat:'none',
+                    keyFormat: 'none',
                     dataKey: "key",//传入数据的key值
                     dataValue: "quota"//传入数据的value值
                 },
                 types: ["pv", "uv"],
                 dimension: ["kw"],
                 url: "/api/charts",
-                cb:$scope.customFormat
+                cb: $scope.customFormat
             }
         ];
         $scope.init = function () {
-            $rootScope.start=-1;
-            $rootScope.end=-1;
-            $rootScope.interval=undefined;
+            $rootScope.start = -1;
+            $rootScope.end = -1;
+            $rootScope.interval = undefined;
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
@@ -213,8 +249,9 @@ define(["./module"], function (ctrs) {
             var d = dd.getDate();
             return y + "-" + m + "-" + d;
         }
+
         //刷新
-        $scope.page_refresh = function(){
+        $scope.page_refresh = function () {
             $rootScope.start = -1;
             $rootScope.end = -1;
             $rootScope.tableTimeStart = -1;//开始时间

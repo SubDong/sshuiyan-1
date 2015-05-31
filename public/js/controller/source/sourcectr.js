@@ -21,14 +21,34 @@ define(["./module"], function (ctrls) {
                 cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
                 maxWidth: 10
             },
-            {name: "来源类型", displayName: "来源类型", field: "rf_type"},
+            {
+                name: "来源类型",
+                displayName: "来源类型",
+                field: "rf_type",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"
+            },
             {
                 name: " ",
                 cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li><li><a href='javascript:void(0)' ng-click='grid.appScope.showEntryPageLink(row, 1)'>查看入口页链接</a></li></ul></div></div>"
             },
-            {name: "访问次数", displayName: "访问次数", field: "vc"},
-            {name: "新访客比率", displayName: "新访客比率", field: "nuvRate"},
-            {name: "IP数", displayName: "IP数", field: "ip"}
+            {
+                name: "访问次数",
+                displayName: "访问次数",
+                field: "vc",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "新访客比率",
+                displayName: "新访客比率",
+                field: "nuvRate",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "IP数",
+                displayName: "IP数",
+                field: "ip",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            }
         ];
         $rootScope.tableSwitch = {
             latitude: {name: "来源类型", displayName: "来源类型", field: "rf_type"},
@@ -186,8 +206,9 @@ define(["./module"], function (ctrls) {
             var d = dd.getDate();
             return y + "-" + m + "-" + d;
         }
+
         //刷新
-        $scope.page_refresh = function(){
+        $scope.page_refresh = function () {
             $rootScope.start = 0;
             $rootScope.end = 0;
             $rootScope.tableTimeStart = 0;

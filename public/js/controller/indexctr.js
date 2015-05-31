@@ -25,7 +25,6 @@ define(['./module'], function (ctrs) {
                 {name: 'value', displayName: "浏览量(PV)", headerCellClass: 'ui_text', cellClass: 'ui_text'}
             ],
             onRegisterApi: function (gridApi) {
-                console.log(gridApi);
                 $rootScope.gridApi = gridApi;
             }
 

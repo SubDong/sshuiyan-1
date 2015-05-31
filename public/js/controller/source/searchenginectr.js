@@ -1,7 +1,7 @@
 /**
  * Created by XiaoWei on 2015/4/22.
  */
-define(["./module"], function(ctrs) {
+define(["./module"], function (ctrs) {
     "use strict";
     ctrs.controller("searchenginectr", function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
         $scope.todayClass = true;
@@ -12,17 +12,52 @@ define(["./module"], function(ctrs) {
         //配置默认指标
         $rootScope.checkedArray = ["vc", "uv", "nuvRate", "avgPage", "ip"];
         $rootScope.gridArray = [
-            {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
-            {name: "搜索引擎", displayName: "搜索引擎", field: "se"},
+            {
+                name: "xl",
+                displayName: "",
+                cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
+                maxWidth: 10
+            },
+            {
+                name: "搜索引擎",
+                displayName: "搜索引擎",
+                field: "se",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"
+            },
             {
                 name: " ",
                 cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history5' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li><li><a href='javascript:void(0)' ng-click='grid.appScope.showEntryPageLink(row, 2)'>查看入口页链接</a></li></ul></div></div>"
             },
-            {name: "访问次数", displayName: "访问次数", field: "vc"},
-            {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},
-            {name: "新访客比率", displayName: "新访客比率", field: "nuvRate"},
-            {name: "平均访问页数", displayName: "平均访问页数", field: "avgPage"},
-            {name: "IP数", displayName: "IP数", field: "ip"}
+            {
+                name: "访问次数",
+                displayName: "访问次数",
+                field: "vc",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "访客数(UV)",
+                displayName: "访客数(UV)",
+                field: "uv",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "新访客比率",
+                displayName: "新访客比率",
+                field: "nuvRate",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "平均访问页数",
+                displayName: "平均访问页数",
+                field: "avgPage",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "IP数",
+                displayName: "IP数",
+                field: "ip",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            }
         ];
         $rootScope.tableSwitch = {
             latitude: {name: "搜索引擎", displayName: "搜索引擎", field: "se"},
@@ -88,7 +123,7 @@ define(["./module"], function(ctrs) {
                     id: "indicators_charts",
                     keyFormat: "none",//设置不需要chart工厂处理x轴数据
                     chartType: "line",
-                    lineType:false,
+                    lineType: false,
                     dataKey: "key",
                     dataValue: "quota"
                 },
@@ -145,8 +180,9 @@ define(["./module"], function(ctrs) {
             var d = dd.getDate();
             return y + "-" + m + "-" + d;
         }
+
         //刷新
-        $scope.page_refresh = function(){
+        $scope.page_refresh = function () {
             $rootScope.start = 0;
             $rootScope.end = 0;
             $rootScope.tableTimeStart = 0;

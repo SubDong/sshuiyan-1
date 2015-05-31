@@ -39,12 +39,42 @@ define(["./module"], function (ctrs) {
                 cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
                 maxWidth: 10
             },
-            {name: "日期", displayName: "日期", field: "period"},
-            {name: "浏览量(PV)", displayName: "浏览量(PV)", field: "pv"},
-            {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},
-            {name: "IP数", displayName: "IP数", field: "ip"},
-            {name: "跳出率", displayName: "跳出率", field: "outRate"},
-            {name: "平均访问时长", displayName: "平均访问时长", field: "avgTime"}
+            {
+                name: "日期",
+                displayName: "日期",
+                field: "period",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"
+            },
+            {
+                name: "浏览量(PV)",
+                displayName: "浏览量(PV)",
+                field: "pv",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "访客数(UV)",
+                displayName: "访客数(UV)",
+                field: "uv",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "IP数",
+                displayName: "IP数",
+                field: "ip",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "跳出率",
+                displayName: "跳出率",
+                field: "outRate",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "平均访问时长",
+                displayName: "平均访问时长",
+                field: "avgTime",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            }
         ];
         $rootScope.tableSwitch = {
             latitude: {name: "日期", displayName: "日期", field: "period"},
@@ -461,7 +491,7 @@ define(["./module"], function (ctrs) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
             });
-         //图表
+            //图表
             requestService.refresh($scope.charts);
             $scope.reloadByCalendar("today");
             $('#reportrange span').html(GetDateStr(0));

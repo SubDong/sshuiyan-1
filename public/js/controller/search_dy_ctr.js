@@ -13,24 +13,60 @@ define(["./module"], function (ctrs) {
         //配置默认指标
         $rootScope.checkedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
         $rootScope.searchGridArray = [
-            {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
+            {
+                name: "xl",
+                displayName: "",
+                cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
+                maxWidth: 10
+            },
             {
                 name: "单元",
                 displayName: "单元",
                 field: "adgroupName",
-                cellTemplate: "<div><a href='javascript:void(0)' style='color:#0965b8;line-height:30px;' ng-click='grid.appScope.getHistoricalTrend(this)'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</div>"
+                cellTemplate: "<div><a href='javascript:void(0)' style='color:#0965b8;line-height:30px;' ng-click='grid.appScope.getHistoricalTrend(this)'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</div>",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"
             }, /*
              {
              name: " ",
              displayName: " ",
              cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
              },*/
-            {name: "展现", displayName: "展现", field: "impression"},
-            {name: "消费", displayName: "消费", field: "cost"},
-            {name: "平均点击价格", displayName: "平均点击价格", field: "cpc"},
-            {name: "跳出率", displayName: "跳出率", field: "outRate"},
-            {name: "平均访问时长", displayName: "平均访问时长", field: "avgTime"},
-            {name: "新访客比率", displayName: "新访客比率", field: "nuvRate"}
+            {
+                name: "展现",
+                displayName: "展现",
+                field: "impression",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "消费",
+                displayName: "消费",
+                field: "cost",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "平均点击价格",
+                displayName: "平均点击价格",
+                field: "cpc",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "跳出率",
+                displayName: "跳出率",
+                field: "outRate",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "平均访问时长",
+                displayName: "平均访问时长",
+                field: "avgTime",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "新访客比率",
+                displayName: "新访客比率",
+                field: "nuvRate",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            }
         ];
         $rootScope.tableSwitch = {
             latitude: {name: "单元", displayName: "单元", field: "adgroupName"},
@@ -109,7 +145,6 @@ define(["./module"], function (ctrs) {
         $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "adgroup", $scope.selectedQuota, -1, -1, true);
 
 
-
         $scope.$on("ssh_refresh_charts", function (e, msg) {
             $rootScope.targetSearchSpread()
             $scope.init($rootScope.user, $rootScope.baiduAccount, "adgroup", $scope.selectedQuota, $rootScope.start, $rootScope.end);
@@ -153,8 +188,9 @@ define(["./module"], function (ctrs) {
             var d = dd.getDate();
             return y + "-" + m + "-" + d;
         }
+
 //刷新
-        $scope.page_refresh = function(){
+        $scope.page_refresh = function () {
             $rootScope.start = -1;
             $rootScope.end = -1;
             $rootScope.tableTimeStart = -1;//开始时间
