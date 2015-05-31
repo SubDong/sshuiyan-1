@@ -83,7 +83,7 @@ define(['./module'], function (ctrs) {
             {
                 config: {
                     legendId: "index_charts_legend",
-                    legendData: ["浏览量(PV)", "访客数(UV)", "跳出率", "抵达率", "平均访问时长", "页面转化"],//显示几种数据
+                    legendData: ["浏览量(PV)", "访客数(UV)", "IP数","跳出率", "抵达率", "平均访问时长", "页面转化"],//显示几种数据
                     legendAllowCheckCount: 2,
                     legendClickListener: $scope.onLegendClickListener,
                     legendDefaultChecked: [0, 1],
