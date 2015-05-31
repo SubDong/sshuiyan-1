@@ -16,7 +16,8 @@ var express = require('express'),
     token = require('./routes/token'),
     redis_module = require("./servers/utils/redis"),
     RedisStore = require('connect-redis')(session),
-    mongoose = require('./servers/utils/mongo');
+    mongoose = require('./servers/utils/mongo'),
+    daos = require('./servers/db/daos');
 
 
 var env = process.argv.splice(2);
@@ -79,6 +80,12 @@ if (env != 'dev') {
 
 // 登陆信息
 if (env == 'dev') {
+
+    //daos.save("sites_model", {id: 123123}, function (err, docs) {
+    //    if (err)
+    //        return console.error(err);
+    //    console.log(docs)
+    //})
     // 测试环境
     app.use(function (req, res, next) {
         req.db = mongo;
