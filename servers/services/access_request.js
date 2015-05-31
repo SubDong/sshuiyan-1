@@ -193,17 +193,58 @@ var access_request = {
                 "aggs": {
                     "pv_uv": {
                         "terms": {
-                            "field": exchangeField(type)
+                            "field": "_type"
                         },
                         "aggs": {
-                            "pv": {
-                                "sum": {
-                                    "script": "1"
-                                }
-                            },
-                            "uv": {
-                                "cardinality": {
-                                    "field": "tt"
+                            "path0": {
+                                "terms": {
+                                    "field": "path0"
+                                },
+                                "aggs": {
+                                    "path1": {
+                                        "terms": {
+                                            "field": "path1"
+                                        },
+                                        "aggs": {
+                                            "path2": {
+                                                "terms": {
+                                                    "field": "path2"
+                                                },
+                                                "aggs": {
+                                                    "pv": {
+                                                        "sum": {
+                                                            "script": "1"
+                                                        }
+                                                    },
+                                                    "uv": {
+                                                        "cardinality": {
+                                                            "field": "tt"
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "pv": {
+                                                "sum": {
+                                                    "script": "1"
+                                                }
+                                            },
+                                            "uv": {
+                                                "cardinality": {
+                                                    "field": "tt"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "pv": {
+                                        "sum": {
+                                            "script": "1"
+                                        }
+                                    },
+                                    "uv": {
+                                        "cardinality": {
+                                            "field": "tt"
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -213,10 +254,19 @@ var access_request = {
         }
         es.search(request, function (error, response) {
             var data = [];
+            var path1Data = [];
             if (response != undefined && response.aggregations != undefined) {
                 var result = response.aggregations.pv_uv.buckets;
                 for (var i = 0; i < result.length; i++) {
-                    data.push({"pv": result[i].pv.value, "uv": result[i].uv.value, "key": result[i].key});
+                    for(var c = 0;c<result[i].path0.buckets.length;c++){
+                        path1Data = [];
+                        for(var k = 0;k<result[i].path0.buckets[c].path1.buckets.length;k++){
+                            path1Data.push({"pv":result[i].path0.buckets[c].path1.buckets[k].pv.value,"uv":result[i].path0.buckets[c].path1.buckets[k].uv.value,"pathName":result[i].path0.buckets[c].path1.buckets[k].key});
+                        }
+                        console.log("pv:"+result[i].key);
+                        data.push({"pv": result[i].path0.buckets[c].pv.value, "uv": result[i].path0.buckets[c].pv.value, "pathName": result[i].path0.buckets[c].key,"path1":path1Data,"id":result[i].key});
+                    }
+
                 }
                 callbackFn(data);
             } else

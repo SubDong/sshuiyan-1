@@ -509,34 +509,17 @@ api.get("/fwlywz", function (req, res) {
     });
 });
 api.get("/exchange", function (req, res) {
-    var ParameterString = req.url.split("?");
+    var ParameterString = req.url.split("?");//获取url的？号以后的字符串
     var Parameters = ParameterString[1].split(",");
     var start = Parameters[0].split("=")[1];
     var end = Parameters[1].split("=")[1];
     var type = Parameters[2].split("=")[1];
-    type = type.replace(/;/,",");
+    type = type.replace(/;/,",");//由于穿过的数据是以;分号隔开的，所以替换成逗号
     //start与end传过时间偏移量，调用creatIndexs()方法，把access-与时间拼接起来组成索引值
     var indexString = date.createIndexes(start,end,"access-");
-    console.log("url的地址："+req.url);
-    console.log("索引值："+indexString);
-    console.log(type);
     access_request.exchangeSearch(req.es, indexString, type, function(result){
         datautils.send(res, result);
     });
 
-});
-api.get("/trafficmap",function(req,res){
-    var ParameterString = req.url.split("?");
-    var Parameters = ParameterString[1].split(",");
-    var start = Parameters[0].split("=")[1];
-    var end = Parameters[1].split("=")[1];
-    var type = Parameters[2].split("=")[1];
-    //start与end传过时间偏移量，调用creatIndexs()方法，把access-与时间拼接起来组成索引值
-    var indexString = date.createIndexes(start,end,"access-");
-    console.log("url的地址："+req.url);
-    console.log("索引值："+indexString);
-    access_request.exchangeSearch(req.es, indexString, type, function(result){
-        datautils.send(res, result);
-    });
 });
 module.exports = api;

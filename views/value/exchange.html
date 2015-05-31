@@ -72,56 +72,64 @@
                     </a>
                 </div>
                 <div class="exchange_list_level2box" ng-show="showDetails" >
-                    <div class="exchange_list_level2" ng-repeat="exchange in exchanges_">
-                        <div class="exchange_list1 fl" >
-                            <div class="exchange_list1_name exchange_page fl">
-                                {{exchange.key}}
-                            </div>
-                            <div class="exchange_list1_text fr">
+                    <ul>
+                        <li ng-repeat="path in exchange.path1">
+                            <div class="exchange_list_level2" >
+                                <div class="exchange_list1 fl" >
+                                    <div class="exchange_list1_name exchange_page fl" >
+                                        {{path.pathName}}
+                                    </div>
+                                    <div class="exchange_list1_text fr">
                             <span>
-                              PV:{{exchange.pv}}
+                              PV:{{path.pv}}
                             </span>
                             <span>
-                              UV:{{exchange.uv}}
-                            </span>
-
-                            </div>
-                        </div>
-                        <a class="exchange_list1_more fl">
-                        </a>
-                    </div >
-                    <div class="exchange_list_level2" >
-                        <div class="exchange_list1 fl">
-                            <div class="exchange_list1_name fl">
-                                /package/
-                            </div>
-                            <div class="exchange_list1_text fr">
-                            <span>
-                              PV:3434
-                            </span>
-                            <span>
-                              UV:7389
-                            </span>
-                            </div>
-                        </div>
-                        <a class="exchange_list1_more fl" ng-click="showDetail = ! showDetail">
-                        </a>
-                        <div class="exchange_list_level2" ng-show="showDetail">
-                        <div class="exchange_list1 fl">
-                            <div class="exchange_list1_name fl">
-                                best-ad.cn
-                            </div>
-                            <div class="exchange_list1_text fr">
-                            <span>
-                              PV:3434
-                            </span>
-                            <span>
-                              UV:7389
+                              UV:{{path.uv}}
                             </span>
 
-                            </div>
-                        </div>
-                    </div>
+                                    </div>
+                                </div>
+
+                                <a class="exchange_list1_more fl">
+                                </a>
+                            </div >
+
+                        </li>
+
+                    </ul>
+
+                    <!--<div class="exchange_list_level2" >-->
+                        <!--<div class="exchange_list1 fl">-->
+                            <!--<div class="exchange_list1_name fl">-->
+                                <!--/package/-->
+                            <!--</div>-->
+                            <!--<div class="exchange_list1_text fr">-->
+                            <!--<span>-->
+                              <!--PV:3434-->
+                            <!--</span>-->
+                            <!--<span>-->
+                              <!--UV:7389-->
+                            <!--</span>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<a class="exchange_list1_more fl" ng-click="showDetail = ! showDetail">-->
+                        <!--</a>-->
+                        <!--<div class="exchange_list_level2" ng-show="showDetail">-->
+                        <!--<div class="exchange_list1 fl">-->
+                            <!--<div class="exchange_list1_name fl">-->
+                                <!--best-ad.cn-->
+                            <!--</div>-->
+                            <!--<div class="exchange_list1_text fr">-->
+                            <!--<span>-->
+                              <!--PV:3434-->
+                            <!--</span>-->
+                            <!--<span>-->
+                              <!--UV:7389-->
+                            <!--</span>-->
+
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
                     </div>
                 </div>
 
