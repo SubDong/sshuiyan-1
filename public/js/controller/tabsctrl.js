@@ -262,7 +262,7 @@ define(["app"], function (app) {
             };
         } else {
             $scope.gridOptions = {
-                paginationPageSize: 25,
+                paginationPageSize: 20,
                 expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions' ></div>",
                 expandableRowHeight: 360,
                 enableColumnMenus: false,
