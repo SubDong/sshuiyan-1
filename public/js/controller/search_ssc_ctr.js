@@ -68,6 +68,7 @@ define(["./module"], function (ctrs) {
                         item.quota.remove(j);
                     }
                 });
+                item.label=chartUtils.convertChinese(item.label);
             });
             $scope.charts[0].config.noFormat="none";
             cf.renderChart(final_result, chartConfig);
@@ -110,7 +111,43 @@ define(["./module"], function (ctrs) {
 
         $scope.$on("ssh_refresh_charts", function (e, msg) {
             $rootScope.targetSearchSSC();
+            $scope.charts.forEach(function (e) {
+                var chart = echarts.init(document.getElementById(e.config.id));
+                e.config.instance = chart;
+            })
+            requestService.refresh($scope.charts);
         });
+
+        /**
+         * 自定义日期刷新
+         * @param start
+         * @param end
+         */
+        $rootScope.datepickerClick=function(start,end){
+            var time = chartUtils.getTimeOffset(start, end);
+            var offest = time[1] - time[0];
+            $scope.reset();
+            if (offest >= 31) {
+                $scope.mothselected = false;
+                $scope.weekselected = false;
+            } else {
+                if (offest >= 7) {
+                    $scope.weekselected = false;
+                } else {
+                    $scope.weekselected = true;
+                }
+                $scope.mothselected = true;
+            }
+            $rootScope.start = time[0];
+            $rootScope.end = time[1];
+            $rootScope.interval = -1;
+            $rootScope.targetSearchSSC();
+            $scope.charts.forEach(function (e) {
+                var chart = echarts.init(document.getElementById(e.config.id));
+                e.config.instance = chart;
+            })
+            requestService.refresh($scope.charts);
+        }
 
         //点击显示指标
         $scope.visible = true;

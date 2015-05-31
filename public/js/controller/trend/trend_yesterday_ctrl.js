@@ -301,7 +301,6 @@ define(["./module"], function (ctrs) {
             $scope.$broadcast("ssh_dateShow_options_time_change");
         }
         $scope.cancelChecked = function(){
-            console.log(123)
             $scope.isCancelYesterdayCompare = false;
             $scope.isCancelWeekCompare = false;
             $(".specialCheckbox")[0].style.backgroundPosition = "0 0";
@@ -359,6 +358,9 @@ define(["./module"], function (ctrs) {
             if($scope.isCancelWeekCompare == false){
                 $scope.isCancelWeekCompare = true;
                 $scope.isCancelYesterdayCompare = false;
+                if(!$scope.todayCalendar){
+                    $scope.todayCalendar = GetDateStr(-1);
+                }
                 var todayCalendarArray = $scope.todayCalendar.split("-");
                 var lastDate = todayCalendarArray[2]-7;
                 $scope.dayOrWeek = todayCalendarArray[0]+"-"+todayCalendarArray[1]+"-"+lastDate;
