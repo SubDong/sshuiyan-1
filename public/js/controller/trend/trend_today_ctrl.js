@@ -326,7 +326,6 @@ define(["./module"], function (ctrs) {
         $scope.compareLastDay = function () {
             if ($scope.isCancelYesterdayCompare == false) {
                 $scope.isCancelWeekCompare = false;
-                console.log($scope.todayCalendar);
                 if (!$scope.todayCalendar) {
                     $scope.todayCalendar = GetDateStr(0);
                 }
@@ -353,6 +352,7 @@ define(["./module"], function (ctrs) {
                     util.renderLegend(chart, e.config);
                     //Custom.initCheckInfo();
                 });
+                Custom.initCheckInfo();
                 var todayData = $http.get("api/charts?type=" + chartUtils.convertEnglish($scope.charts[0].config.legendData[0]) + "&dimension=period&start=" + $rootScope.start + "&end=" + $rootScope.end + "&userType=" + $rootScope.userType + "&int=" + $rootScope.interval);
                 var lastDayData = $http.get("api/charts?type=" + chartUtils.convertEnglish($scope.charts[0].config.legendData[0]) + "&dimension=period&start=" + ($rootScope.start - 1) + "&end=" + ( $rootScope.end - 1) + "&userType=" + $rootScope.userType + "&int=" + $rootScope.interval);
                 $q.all([todayData, lastDayData]).then(function (res) {
@@ -376,6 +376,9 @@ define(["./module"], function (ctrs) {
             if ($scope.isCancelWeekCompare == false) {
                 $scope.isCancelWeekCompare = true;
                 $scope.isCancelYesterdayCompare = false;
+                if (!$scope.todayCalendar) {
+                    $scope.todayCalendar = GetDateStr(0);
+                }
                 var todayCalendarArray = $scope.todayCalendar.split("-");
                 var lastDate = todayCalendarArray[2] - 7;
                 $scope.dayOrWeek = todayCalendarArray[0] + "-" + todayCalendarArray[1] + "-" + lastDate;
@@ -399,6 +402,7 @@ define(["./module"], function (ctrs) {
                     util.renderLegend(chart, e.config);
                     //Custom.initCheckInfo();
                 });
+                Custom.initCheckInfo();
                 var todayData = $http.get("api/charts?type=" + chartUtils.convertEnglish($scope.charts[0].config.legendData[0]) + "&dimension=period&start=" + ($rootScope.start - 7) + "&end=" + ($rootScope.end - 7) + "&userType=" + $rootScope.userType + "&int=" + $rootScope.interval);
                 var lastDayData = $http.get("api/charts?type=" + chartUtils.convertEnglish($scope.charts[0].config.legendData[0]) + "&dimension=period&start=" + ($rootScope.start - 8) + "&end=" + ( $rootScope.end - 8) + "&userType=" + $rootScope.userType + "&int=" + $rootScope.interval);
                 $q.all([todayData, lastDayData]).then(function (res) {
