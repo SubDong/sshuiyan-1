@@ -291,11 +291,40 @@ define(["app"], function (app) {
 
         //地图分类
         $scope.setDimen = function (a) {
+            var b = "";
+            if(a == "city"){
+                b = 0;
+            }else{
+                b = 1;
+            }
+            var now = +new Date();
+            if (now - evTimeStamp < 100) {
+                return;
+            }
+            evTimeStamp = now;
+            var inputArray = $(".custom_select .styled");
+            inputArray.each(function (i, o) {
+                $(o).prev("span").css("background-position", "0px 0px");
+                $(o).prop("checked", false);
+            });
+            $(inputArray[b]).prev("span").css("background-position", "0px -51px");
             $rootScope.tableSwitch.dimen = a;
             $scope.targetSearch();
         }
         //设置来源终端
+        var evTimeStamp = 0;
         $scope.setTerminal = function (a) {
+            var now = +new Date();
+            if (now - evTimeStamp < 100) {
+                    return;
+                 }
+             evTimeStamp = now;
+            var inputArray = $(".chart_top2 .styled");
+            inputArray.each(function (i, o) {
+                $(o).prev("span").css("background-position", "0px 0px");
+                $(o).prop("checked", false);
+            });
+            $(inputArray[a]).prev("span").css("background-position", "0px -51px");
             if (a == 0) $rootScope.tableSwitch.tableFilter = null;
             if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[0]}]";
             if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[1]}]";
@@ -304,12 +333,49 @@ define(["app"], function (app) {
         };
         //设置（外部链接）设备过滤
         $scope.setExLinkTerminal = function (a) {
+            var now = +new Date();
+            if (now - evTimeStamp < 100) {
+                return;
+            }
+            evTimeStamp = now;
+            var inputArray = $(".chart_top2_1 .styled");
+            inputArray.each(function (i, o) {
+                $(o).prev("span").css("background-position", "0px 0px");
+                $(o).prop("checked", false);
+            });
+            $(inputArray[a]).prev("span").css("background-position", "0px -51px");
             if (a == 0) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[3]}]";
             if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[0]},{\"rf_type\":[3]}]";
             if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[1]},{\"rf_type\":[3]}]";
             $scope.isJudge = false;
             $scope.targetSearch();
         };
+        $scope.webClass = function(a){
+            var now = +new Date();
+            if (now - evTimeStamp < 100) {
+                return;
+            }
+            evTimeStamp = now;
+            var inputArray = $(".chart_top2_2 .styled");
+            inputArray.each(function (i, o) {
+                $(o).prev("span").css("background-position", "0px 0px");
+                $(o).prop("checked", false);
+            });
+            $(inputArray[a]).prev("span").css("background-position", "0px -51px");
+        }
+        $scope.urlDomain = function(a){
+            var now = +new Date();
+            if (now - evTimeStamp < 100) {
+                return;
+            }
+            evTimeStamp = now;
+            var inputArray = $(".custom_select .styled");
+            inputArray.each(function (i, o) {
+                $(o).prev("span").css("background-position", "0px 0px");
+                $(o).prop("checked", false);
+            });
+            $(inputArray[a]).prev("span").css("background-position", "0px -51px");
+        }
         //设置（搜索引擎）设备过滤
         $scope.setSearchEngineTerminal = function (a) {
             if (a == 0) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[2]}]";
@@ -328,6 +394,17 @@ define(["app"], function (app) {
         };
         //设置访客来源
         $scope.setVisitors = function (a) {
+            var now = +new Date();
+            if (now - evTimeStamp < 100) {
+                return;
+            }
+            evTimeStamp = now;
+            var inputArray = $(".chart_top2 .styled");
+            inputArray.each(function (i, o) {
+                $(o).prev("span").css("background-position", "0px 0px");
+                $(o).prop("checked", false);
+            });
+            $(inputArray[a]).prev("span").css("background-position", "0px -51px");
             if (a == 0) $rootScope.tableSwitch.tableFilter = null;
             if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"ct\":[0]}]";
             if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"ct\":[1]}]";
@@ -336,6 +413,17 @@ define(["app"], function (app) {
         };
         //设置来源网站
         $scope.setWebSite = function (a) {
+            var now = +new Date();
+            if (now - evTimeStamp < 100) {
+                return;
+            }
+            evTimeStamp = now;
+            var inputArray = $(".custom_select .styled");
+            inputArray.each(function (i, o) {
+                $(o).prev("span").css("background-position", "0px 0px");
+                $(o).prop("checked", false);
+            });
+            $(inputArray[a]).prev("span").css("background-position", "0px -51px");
             if (a == 1) {
                 $rootScope.tableSwitch.tableFilter = null;
                 $rootScope.tableSwitch.latitude = {name: "来源网站", displayName: "来源网站", field: "dm"};

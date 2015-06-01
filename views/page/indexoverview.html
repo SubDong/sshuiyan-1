@@ -82,10 +82,9 @@
                         <div class="chart_top2">
                             <ul>
                                 <li><span>访客过滤 :</span></li>
-                                <li><input type="radio" ng-click="setVisitors(0)" checked="checked" class="styled"
-                                           name="radio0"/><label>全部</label></li>
-                                <li><input type="radio" ng-click="setVisitors(1)" name="radio0"  class="styled" /><label>新访客</label></li>
-                                <li><input type="radio" ng-click="setVisitors(2)" name="radio0"  class="styled"/><label>老访客</label></li>
+                                <li><label ng-click="setVisitors(0)"><input type="radio" checked="checked" class="styled" name="radio0"/>全部</label></li>
+                                <li><label ng-click="setVisitors(1)"><input type="radio" name="radio0"  class="styled" />新访客</label></li>
+                                <li><label ng-click="setVisitors(2)"><input type="radio" name="radio0"  class="styled"/>老访客</label></li>
                             </ul>
                         </div>
                     </div>

@@ -25,14 +25,14 @@ define(["./module"], function (ctrs) {
             {consumption_name: "访问次数", name: "vc"},
             {consumption_name: "访客数(UV)", name: "uv"},
             {consumption_name: "新访客数", name: "nuv"},
-            {consumption_name: "新访客比率", name: "nuvRate"},
+            {consumption_name: "新访客比率", name: "nuvRate"}
             //{consumption_name: "页头访问次数", name: "o1"}
         ];
         $scope.flow = [
             {consumption_name: "跳出率", name: "outRate"},
             {consumption_name: "平均访问时长", name: "avgTime"},
             {consumption_name: "平均访问页数", name: "avgPage"},
-            {consumption_name: "抵达率", name: "arrivedRate"},
+            {consumption_name: "抵达率", name: "arrivedRate"}
         ];
 
         if ($rootScope.tableSwitch.number == 1) {
@@ -143,8 +143,20 @@ define(["./module"], function (ctrs) {
         };
 
         //设置来源终端
+        var evTimeStamp = 0;
         $scope.device = -1;
         $scope.setSearchTerminalData = function (a) {
+            var now = +new Date();
+            if (now - evTimeStamp < 100) {
+                return;
+            }
+            evTimeStamp = now;
+            var inputArray = $(".chart_top2 .styled");
+            inputArray.each(function (i, o) {
+                $(o).prev("span").css("background-position", "0px 0px");
+                $(o).prop("checked", false);
+            });
+            $(inputArray[a]).prev("span").css("background-position", "0px -51px");
             if (a == 0) {
                 $scope.es_filter = null;
                 $scope.device = -1;

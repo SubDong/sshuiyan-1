@@ -21,7 +21,7 @@
                     <a class="ng-binding">高级筛选</a></li>
             </ul>
             <div class="tabs_content">
-                <div class="custom_title" ng-show="tab === 1">
+                <div class="custom_title" ng-show="t ab === 1">
                     <div class="chart_top chart_default">
                         <ul>
                             <li><a href="javascript:void(0)" data-ssh-default-quota="source_externallinks">系统默认指标</a>
@@ -71,28 +71,21 @@
                     </div>
                 </div>
                 <div class="custom_title" ng-show="tab === 2">
-                    <div class="chart_top2">
+                    <div class="chart_top2 chart_top2_1">
                         <ul>
                             <li><span>设备过滤:</span></li>
-                            <li><input type="radio" checked="checked" name="radio0"
-                                       ng-click="setExLinkTerminal(0)" class="styled"/>
-                                <label>全部</label></li>
-                            <li><input type="radio" name="radio0" ng-click="setExLinkTerminal(1)" class="styled"/>
-                                <label>计算机</label>
-                            </li>
-                            <li><input type="radio" name="radio0" ng-click="setExLinkTerminal(2)" class="styled"/>
-                                <label>移动设备</label>
-                            </li>
+                            <li><label ng-click="setExLinkTerminal(0)"><input type="radio" checked="checked" name="radio0" class="styled"/>全部</label></li>
+                            <li><label ng-click="setExLinkTerminal(1)"><input type="radio" name="radio0" class="styled"/>计算机</label></li>
+                            <li><label ng-click="setExLinkTerminal(2)"><input type="radio" name="radio0" class="styled"/>移动设备</label></li>
                         </ul>
                     </div>
-                    <div class="chart_top2">
+                    <div class="chart_top2 chart_top2_2">
                         <ul>
                             <li><span>网站类型:</span></li>
-                            <li><input type="radio" checked="checked" name="radio1" class="styled"/>
-                                <label>全部 </label></li>
-                            <li><input type="radio" name="radio1" class="styled"/> <label>社会化媒体</label></li>
-                            <li><input type="radio" name="radio1" class="styled"/> <label>导航网站</label></li>
-                            <li><input type="radio" name="radio1" class="styled"/> <label>电子邮箱</label></li>
+                            <li><label ng-click="webClass(0)"><input type="radio" checked="checked" name="radio1" class="styled"/>全部 </label></li>
+                            <li><label ng-click="webClass(1)"><input type="radio" name="radio1" class="styled"/>社会化媒体</label></li>
+                            <li><label ng-click="webClass(2)"><input type="radio" name="radio1" class="styled"/>导航网站</label></li>
+                            <li><label ng-click="webClass(3)"><input type="radio" name="radio1" class="styled"/>电子邮箱</label></li>
                         </ul>
                     </div>
                 </div>
@@ -101,12 +94,8 @@
                 <div class="custom_select">
                     <div class="input_group fl">
                         <ul>
-                            <li>
-                                <input type="radio" checked="checked" name="radio2" class="styled"/>按URL
-                            </li>
-                            <li>
-                                <input type="radio" name="radio2" class="styled"/>按域名
-                            </li>
+                            <li><label ng-click="urlDomain(0)"><input type="radio" checked="checked" name="radio2" class="styled"/>按URL</label></li>
+                            <li><label ng-click="urlDomain(1)"><input type="radio" name="radio2" class="styled"/>按域名</label></li>
                         </ul>
                     </div>
                     <div class="input-group fl">

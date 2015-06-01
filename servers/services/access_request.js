@@ -258,15 +258,75 @@ var access_request = {
             if (response != undefined && response.aggregations != undefined) {
                 var result = response.aggregations.pv_uv.buckets;
                 for (var i = 0; i < result.length; i++) {
-                    for(var c = 0;c<result[i].path0.buckets.length;c++){
+                    for (var c = 0; c < result[i].path0.buckets.length; c++) {
                         path1Data = [];
-                        for(var k = 0;k<result[i].path0.buckets[c].path1.buckets.length;k++){
-                            path1Data.push({"pv":result[i].path0.buckets[c].path1.buckets[k].pv.value,"uv":result[i].path0.buckets[c].path1.buckets[k].uv.value,"pathName":result[i].path0.buckets[c].path1.buckets[k].key});
+                        for (var k = 0; k < result[i].path0.buckets[c].path1.buckets.length; k++) {
+                            path1Data.push({
+                                "pv": result[i].path0.buckets[c].path1.buckets[k].pv.value,
+                                "uv": result[i].path0.buckets[c].path1.buckets[k].uv.value,
+                                "pathName": result[i].path0.buckets[c].path1.buckets[k].key
+                            });
                         }
-                        console.log("pv:"+result[i].key);
-                        data.push({"pv": result[i].path0.buckets[c].pv.value, "uv": result[i].path0.buckets[c].pv.value, "pathName": result[i].path0.buckets[c].key,"path1":path1Data,"id":result[i].key});
+                        console.log("pv:" + result[i].key);
+                        data.push({
+                            "pv": result[i].path0.buckets[c].pv.value,
+                            "uv": result[i].path0.buckets[c].pv.value,
+                            "pathName": result[i].path0.buckets[c].key,
+                            "path1": path1Data,
+                            "id": result[i].key
+                        });
                     }
 
+                }
+                callbackFn(data);
+            } else
+                callbackFn(data);
+        });
+    },
+    trafficmapSearch: function (es, indexs, callbackFn) {
+        var request = {
+            index:indexs,
+            type:null,
+            body:{
+                "aggs": {
+                    "se_pv_uv": {
+                        "terms": {
+                            "field": "se"
+                        },
+                        "aggs": {
+                            "pv": {
+                                "sum": {
+                                    "script": "1"
+                                }
+                            },
+                            "uv": {
+                                "cardinality": {
+                                    "field": "tt"
+                                }
+                            }
+                            //"test": {
+                            //    "terms": {
+                            //        "script": ""
+                            //    }
+                            //}
+                        }
+                    },
+                    "all_uv": {
+                        "cardinality": {
+                            "field": "tt"
+                        }
+                    }
+                }
+            }
+        }
+        es.search(request, function (error, response) {
+            var data = [];
+            var path1Data = [];
+            if (response != undefined && response.aggregations != undefined) {
+                var result = response.aggregations;
+                var mostOfResult = result.se_pv_uv.buckets;
+                for(var i = 0;i<mostOfResult.length;i++){
+                    data.push({"pathName":mostOfResult[i].key,"pv":mostOfResult[i].pv.value,"uv":((Number(mostOfResult[i].uv.value)/Number(result.all_uv.value))*100).toFixed(2)+"%"});
                 }
                 callbackFn(data);
             } else
