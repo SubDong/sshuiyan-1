@@ -412,6 +412,18 @@ define(["app"], function (app) {
             $scope.targetSearch();
         };
 
+        // 按url，按域名过滤
+        $scope.setURLDomain = function (urlText) {
+            if (undefined == urlText || "" == urlText) {
+                $rootScope.tableSwitch.latitude.field = null;
+            } else {
+                $rootScope.gridArray[1].field = urlText;
+                $rootScope.tableSwitch.latitude.field = urlText;
+            }
+            $scope.isJudge = false;
+            $scope.targetSearch("rf_dm");
+        };
+
         // 外部链接搜索
         $scope.searchURLFilterBySourceEl = function (urlText) {
             if (!$rootScope.tableSwitch) {
@@ -424,6 +436,17 @@ define(["app"], function (app) {
             }
             $scope.isJudge = false;
             $scope.targetSearch();
+        };
+
+        // 查看入口页链接
+        $scope.showEntryPageLink = function (row, _type) {
+            if (_type == 1) {// 搜索引擎
+                popupService.showEntryPageData(row.entity.rf_type);
+            } else if (_type == 2) {
+                popupService.showEntryPageData(row.entity.se);
+            } else {
+                popupService.showEntryPageData(row.entity.rf);
+            }
         };
 
         /**
@@ -502,6 +525,15 @@ define(["app"], function (app) {
                             $scope.gridOptions.data = dataArray;
                         });
                     } else {
+                        if(isClicked == "rf_dm"){
+                            data.forEach(function(item,o){
+                                if(item["dm"]){
+                                    item["rf"] = item["dm"];
+                                }else{
+                                    item["dm"] = item["rf"];
+                                }
+                            })
+                        }
                         if ($rootScope.tableFormat != "hour") {
                             if ($rootScope.tableFormat == "week") {
                                 data.forEach(function (item, i) {
@@ -542,6 +574,7 @@ define(["app"], function (app) {
                             $scope.gridOptions.data = result;
                         }
                     }
+
                 }).error(function (error) {
                     console.log(error);
                 });
@@ -557,16 +590,6 @@ define(["app"], function (app) {
             $scope.gridOptions.columnDefs = $scope.gridOpArray;
             $scope.gridOptions.data = msg;
         });
-        // 查看入口页链接
-        $scope.showEntryPageLink = function (row, _type) {
-            if (_type == 1) {// 搜索引擎
-                popupService.showEntryPageData(row.entity.rf_type);
-            } else if (_type == 2) {
-                popupService.showEntryPageData(row.entity.se);
-            } else {
-                popupService.showEntryPageData(row.entity.rf);
-            }
-        };
 
         //数据对比
         $rootScope.datepickerClickTow = function (start, end, label) {
@@ -596,7 +619,7 @@ define(["app"], function (app) {
                         for (var i = 0; i < contrast.length; i++) {
                             if (a[target] == contrast[i][target]) {
                                 $rootScope.checkedArray.forEach(function (tt, aa) {
-                                    var bili = ((parseInt(a[tt].replace("%")) - parseInt((contrast[i][tt]).replace("%"))) / parseInt((contrast[i][tt]).replace("%")) * 100).toFixed(2);
+                                    var bili = ((parseInt(a[tt].replace("%")) - parseInt((contrast[i][tt]).replace("%"))) / (parseInt((contrast[i][tt]).replace("%")) == 0 ? parseInt(a[tt].replace("%")) : parseInt((contrast[i][tt]).replace("%"))) * 100).toFixed(2);
                                     dataObj[tt] = (isNaN(bili) ? 0 : bili) + "%";
                                     a[tt] = "　" + "," + a[tt] + "," + contrast[i][tt] + "," + dataObj[tt]
                                 });
@@ -821,21 +844,20 @@ define(["app"], function (app) {
         };
 
         //得到表格底部数据
-        $scope.getFooterData = function (a, option) {
-            var returnData = 0;
+        $scope.getFooterData = function (a, option, number) {
+            var returnData = [0, 0, 0, 0];
             var spl = 0;
             var newSpl = [0, 0, 0];
             var newitemSplData = [0, 0, 0, 0];
             if (option.length > 0) {
                 option.forEach(function (item, i) {
-                    var itemSplData = item.entity[a.col.field].split(",");
+                    var itemSplData = (item.entity[a.col.field] + "").split(",");
                     if (itemSplData.length >= 4) {
-                        newitemSplData[0] += itemSplData[0] == "--" ? 0 : parseInt(itemSplData[0]);
-                        newitemSplData[1] += itemSplData[1] == "--" ? 0 : parseInt(itemSplData[1]);
-                        newitemSplData[2] += itemSplData[2] == "--" ? 0 : parseInt(itemSplData[2]);
-                        newitemSplData[3] += itemSplData[3] == "--" ? 0 : parseInt(itemSplData[3]);
+                        itemSplData.forEach(function (data, index) {
+                            newitemSplData[index] += ((itemSplData[index] + "").replace("%", "") == "--" || (itemSplData[index] + "").replace("%", "") == "　" ? 0.0 : parseFloat(((itemSplData[index] + "").replace("%", ""))));
+                        })
                     } else {
-                        returnData += parseFloat((item.entity[a.col.field] + "").replace("%", ""));
+                        returnData[0] += parseFloat((item.entity[a.col.field] + "").replace("%", ""));
                         if (a.col.field == "avgTime") {
                             if (item.entity[a.col.field] != undefined) {
                                 spl = item.entity[a.col.field].split(":");
@@ -845,29 +867,48 @@ define(["app"], function (app) {
                             }
                         }
                     }
+
                 });
-                var itemSplDataTow = (option[0].entity[a.col.field]).split(",");
+                var itemSplDataTow = (option[0].entity[a.col.field] + "").split(",");
                 if (itemSplDataTow.length >= 4) {
-                    option.forEach(function (a, x) {
-                        if((option[0].entity[a.col.field] + "").indexOf("%") != -1){
-                            newitemSplData[x] = (newitemSplData[x] / option.length).toFixed(2) + "%";
-                        }else{
-                            newitemSplData[x] = (newitemSplData[x] / option.length).toFixed(2);
-                        }
-                    });
+                    //var itemSplData = (s.entity[a.col.field] + "").split(",");
+                    if (a.col.field == "outRate") {
+                        newitemSplData.forEach(function (tts, i) {
+                            newitemSplData[i] = (tts / option.length).toFixed(2) + "%"
+                        })
+                    }
+                    if (a.col.field == "avgPage") {
+                        //console.log(newitemSplData[x])
+                        newitemSplData[x] = (newitemSplData[x] / option.length).toFixed(2);
+                    }
+                    returnData = newitemSplData;
                 } else {
                     if ((option[0].entity[a.col.field] + "").indexOf("%") != -1) {
-                        returnData = (returnData / option.length).toFixed(2) + "%";
+                        returnData[0] = (returnData[0] / option.length).toFixed(2) + "%";
+                    }
+                    if (a.col.field == "avgPage") {
+                        returnData[0] = (returnData[0] / option.length).toFixed(2);
                     }
                     if (a.col.field == "avgTime") {
                         var atime1 = parseInt(newSpl[0] / option.length) + "";
                         var atime2 = parseInt(newSpl[1] / option.length) + "";
                         var atime3 = parseInt(newSpl[2] / option.length) + "";
-                        returnData = (atime1.length == 1 ? "0" + atime1 : atime1) + ":" + (atime2.length == 1 ? "0" + atime2 : atime2) + ":" + (atime3.length == 1 ? "0" + atime3 : atime3)
+                        returnData[0] = (atime1.length == 1 ? "0" + atime1 : atime1) + ":" + (atime2.length == 1 ? "0" + atime2 : atime2) + ":" + (atime3.length == 1 ? "0" + atime3 : atime3);
                     }
                 }
-
-                return returnData;
+                //console.log(returnData);
+                switch (number) {
+                    case 1:
+                        return returnData[0];
+                    case 2:
+                        return returnData[1] == 0 ? returnData[0] : returnData[1];
+                    case 3:
+                        return returnData[2];
+                    case 4:
+                        return returnData[3];
+                    default :
+                        return returnData[0];
+                }
             }
         }
 
