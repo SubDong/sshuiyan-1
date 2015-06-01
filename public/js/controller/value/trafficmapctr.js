@@ -13,26 +13,38 @@ define(["./module"], function (ctrs) {
         $rootScope.start = 0;
         $rootScope.end = 0;
 
-        $scope.init = function(){
+        $scope.init = function () {
             var linkData = [];
+
             $http.get("api/trafficmap?start=" + $scope.start + ",end=" + $scope.end).success(function (data) {
                 console.log(data);
-                for(var i = 0; i<data.length;i++){
-                    if(data[i].pathName=="-"){
+                for (var i = 0; i < data.length; i++) {
+                    if (data[i].pathName == "-") {
                         data[i].pathName = "直接输入网址或书签";
                     }
                     linkData.push({
-                        id:i,
-                        name:data[i].pathName,
-                        ratio:data[i].uv,
-                        count:data[i].pv
+                        id: i,
+                        name: data[i].pathName,
+                        ratio: data[i].uv,
+                        count: data[i].pv
                     });
                 }
                 $scope.links = linkData;
-                linkData=[];
+                linkData = [];
+                if (data.length <= 3) {
+                    document.getElementById("linkstree_top").style.top = "14%";
+                    document.getElementById("linkstree_right").style.top = "14%";
+                }
+                if (data.length == 4) {
+                    document.getElementById("linkstree_top").style.top = "20%";
+                    document.getElementById("linkstree_right").style.top = "20%";
+                }
+                if (data.length >= 5) {
+                    document.getElementById("linkstree_top").style.top = "35%";
+                    document.getElementById("linkstree_right").style.top = "35%";
+                }
             });
         }
-
         $scope.init();
         $scope.reloadByCalendar = function (type) {
             //console.info("info: now user click the " + type + " button");
@@ -185,6 +197,7 @@ define(["./module"], function (ctrs) {
             var d = dd.getDate();
             return y + "-" + m + "-" + d;
         }
+
         $('#reportrange span').html(GetDateStr(0));
         $('#reportrange').daterangepicker({
             format: 'YYYY-MM-DD',

@@ -1960,7 +1960,7 @@ nav, .navbar-default {
     }
     .linkstree_left_more {
       border-right: 5px solid #d7eafd;
-      min-height: 188px;
+      min-height: 133px;
     }
     .linkstree_left_list {
       height: 56px;
@@ -2805,10 +2805,12 @@ select.styled {
 .tooltip-inner {
   background: #fff;
   color: #000;
-  border: 1px solid #ccc;
+  border:none;
+  opacity: 1;
+  box-shadow:0 5px 10px rgba(0, 0, 0, 0.2);
 }
-.tooltip.bottom .tooltip-arrow {
-  border-bottom-color: #fff;
+.tooltip.right .tooltip-arrow {
+  border-right-color: #fff;
 }
 .tooltip.in {
   opacity: 1;
@@ -3433,5 +3435,14 @@ select.styled {
   border-right:none;
   .ui-grid-cell-contents{
     background-color: #fff;
+  }
+}
+.select2-results .select2-result-label{
+  span{
+    display:block;
+    width:100%;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
   }
 }
