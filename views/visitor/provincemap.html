@@ -121,27 +121,17 @@
                     <div class="chart_top2">
                         <ul>
                             <li><span>访客过滤 :</span></li>
-                            <li><input type="radio" ng-click="setVisitors(0)" checked="checked"
-                                       name="radio0" class="styled"/><label>全部</label></li>
-                            <li><input type="radio" ng-click="setVisitors(1)" name="radio0"
-                                       class="styled"/><label>新访客</label></li>
-                            <li><input type="radio" ng-click="setVisitors(2)" name="radio0"
-                                       class="styled"/><label>老访客</label></li>
+                            <li><label ng-click="setVisitors(0)"><input type="radio"  checked="checked" name="radio0" class="styled"/>全部</label></li>
+                            <li><label ng-click="setVisitors(1)"><input type="radio" name="radio0" class="styled"/>新访客</label></li>
+                            <li><label ng-click="setVisitors(2)"><input type="radio" name="radio0" class="styled"/>老访客</label></li>
                         </ul>
                     </div>
                 </div>
                 <div class="custom_secendtitle " >
                     <div class="custom_select custom_height">
                         <ul>
-                            <li>
-                                <input type="radio" checked="checked" name="radio1" class="styled"
-                                       ng-click="setDimen('city')"/>
-                                <label>按地域</label>
-                            </li>
-                            <li>
-                                <input type="radio" name="radio1" class="styled" ng-click="setDimen('isp')"/>
-                                <label>按网络设备商</label>
-                            </li>
+                            <li><label ng-click="setDimen('city')"><input type="radio" checked="checked" name="radio1" class="styled"/>按地域</label></li>
+                            <li><label ng-click="setDimen('isp')"><input type="radio" name="radio1" class="styled"/>按网络设备商</label></li>
                         </ul>
                         <!--<b></b>转化目标-->
                         <!--<div role="group" class="btn-group">-->
