@@ -13,19 +13,44 @@ define(["./module"], function (ctrs) {
         //配置默认指标
         $rootScope.checkedArray = ["impression", "cost", "cpc"]
         $rootScope.searchGridArray = [
-            {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
+            {
+                name: "xl",
+                displayName: "",
+                cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
+                maxWidth: 10
+            },
             {
                 name: "创意",
                 displayName: "创意",
                 field: "description1",
                 cellTemplate: "<div class='search_table_box'><a href='http://{{grid.appScope.getDataUrlInfo(grid, row, 6)}}' target='_blank' style='color:#0965b8;line-height:30px;'>{{grid.appScope.getDataUrlInfo(grid, row,5)}}</a><span>{{grid.appScope.getDataUrlInfo(grid, row,4)}}</span><span class='search_table_color'>{{grid.appScope.getDataUrlInfo(grid, row,6)}}</span>"
+                , footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"
             },
-            {name: "展现", displayName: "展现", field: "impression"},
-            {name: "消费", displayName: "消费", field: "cost"},
-            {name: "平均点击价格", displayName: "平均点击价格", field: "cpc"}
+            {
+                name: "展现",
+                displayName: "展现",
+                field: "impression",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "消费",
+                displayName: "消费",
+                field: "cost",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "平均点击价格",
+                displayName: "平均点击价格",
+                field: "cpc",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            }
         ];
         $rootScope.tableSwitch = {
-            latitude: {name: "创意", displayName: "创意", field: "description1"},
+            latitude: {
+                name: "创意",
+                displayName: "创意",
+                field: "description1"
+            },
             tableFilter: null,
             dimen: false,
             // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
@@ -173,8 +198,9 @@ define(["./module"], function (ctrs) {
             var d = dd.getDate();
             return y + "-" + m + "-" + d;
         }
+
         //刷新
-        $scope.page_refresh = function(){
+        $scope.page_refresh = function () {
             $rootScope.start = -1;
             $rootScope.end = -1;
             $rootScope.tableTimeStart = -1;//开始时间

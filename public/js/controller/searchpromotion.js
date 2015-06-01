@@ -159,9 +159,21 @@ define(["./module"], function (ctrs) {
             }
             $scope.targetSearchSpread();
         };
-        //设置地域过滤
-        $scope.setAreaFilter = function (area) {
-            if (!$rootScope.tableSwitch) {
+        //搜索推广地域过滤
+        $scope.setAreaFilter = function (area , id) {
+
+            /*$scope.gridOpArray = angular.copy($rootScope.searchGridArray);
+            $scope.gridOptions.columnDefs = $scope.gridOpArray;
+            var url = SEM_API_URL + user + "/" + baiduAccount + "/" + $rootScope.tableSwitch.promotionSearch.SEMData + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=" + $scope.device + ($scope.searchId != undefined || $scope.searchId != "undefined" ? "&" + $scope.searchId : "")
+            $http({
+                method: 'GET',
+                url: url
+            }).success(function (dataSEM, status) {
+
+            })*/
+
+
+            /*if (!$rootScope.tableSwitch) {
                 return;
             }
             if ("全部" == area) {
@@ -173,8 +185,8 @@ define(["./module"], function (ctrs) {
             if ($scope.tableJu == "html") {
                 getHtmlTableData();
             } else {
-                $scope.targetSearch();
-            }
+                $scope.targetSearchSpread();
+            }*/
         };
 
         $rootScope.targetSearchSpread = function (isClicked) {

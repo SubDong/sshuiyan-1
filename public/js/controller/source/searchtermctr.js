@@ -14,8 +14,18 @@ define(["./module"], function (ctrs) {
             //配置默认指标
             $rootScope.checkedArray = ["pv", "vc", "nuv", "ip"];
             $rootScope.gridArray = [
-                {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
-                {name: "搜索词", displayName: "搜索词", field: "kw"},
+                {
+                    name: "xl",
+                    displayName: "",
+                    cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
+                    maxWidth: 10
+                },
+                {
+                    name: "搜索词",
+                    displayName: "搜索词",
+                    field: "kw",
+                    footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"
+                },
                 {
                     name: " ",
                     cellTemplate: "<div class='table_box'>" +
@@ -29,10 +39,30 @@ define(["./module"], function (ctrs) {
                     "</div>" +
                     "</div>"
                 },
-                {name: "浏览量(PV)", displayName: "浏览量(PV)", field: "pv"},
-                {name: "访问次数", displayName: "访问次数", field: "vc"},
-                {name: "新访客数", displayName: "新访客数", field: "nuv"},
-                {name: "IP数", displayName: "IP数", field: "ip"}
+                {
+                    name: "浏览量(PV)",
+                    displayName: "浏览量(PV)",
+                    field: "pv",
+                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                },
+                {
+                    name: "访问次数",
+                    displayName: "访问次数",
+                    field: "vc",
+                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                },
+                {
+                    name: "新访客数",
+                    displayName: "新访客数",
+                    field: "nuv",
+                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                },
+                {
+                    name: "IP数",
+                    displayName: "IP数",
+                    field: "ip",
+                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                }
             ];
             $scope.showSearchUrl = function (row) {
                 popupService.showSourceData(row.entity.kw);
@@ -87,8 +117,9 @@ define(["./module"], function (ctrs) {
                 var d = dd.getDate();
                 return y + "-" + m + "-" + d;
             }
+
             //刷新
-            $scope.page_refresh = function(){
+            $scope.page_refresh = function () {
                 $rootScope.start = -1;
                 $rootScope.end = -1;
                 $rootScope.tableTimeStart = -1;

@@ -194,6 +194,7 @@ define(["app"], function (app) {
 
                     $scope.gridObj["name"] = item.consumption_name;
                     $scope.gridObj["displayName"] = item.consumption_name;
+                    $scope.gridObj["footerCellTemplate"] = "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
                     $scope.gridObj["field"] = item.name;
 
                     $rootScope.gridArray.push($scope.gridObj);
@@ -216,6 +217,7 @@ define(["app"], function (app) {
 
                     $scope.gridObj["name"] = item.consumption_name;
                     $scope.gridObj["displayName"] = item.consumption_name;
+                    $scope.gridObj["footerCellTemplate"] = "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
                     $scope.gridObj["field"] = item.name;
                     $rootScope.gridArray.push($scope.gridObj);
 
@@ -247,7 +249,7 @@ define(["app"], function (app) {
                 expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
                 expandableRowHeight: 360,
                 enableColumnMenus: false,
-                showColumnFooter: false,
+                showColumnFooter: true,
                 enablePaginationControls: false,
                 enableSorting: true,
                 enableGridMenu: false,
@@ -266,7 +268,7 @@ define(["app"], function (app) {
                 expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions' ></div>",
                 expandableRowHeight: 360,
                 enableColumnMenus: false,
-                showColumnFooter: false,
+                showColumnFooter: true,
                 enablePaginationControls: false,
                 enableSorting: true,
                 enableGridMenu: false,
@@ -322,7 +324,6 @@ define(["app"], function (app) {
             if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[1]}]";
             if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[2]}]";
             if (a == 3) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[3]}]";
-            $scope.isJudge = false;
             $scope.targetSearch();
         };
         //设置访客来源
@@ -359,6 +360,7 @@ define(["app"], function (app) {
             if ("全部" == area) {
                 $rootScope.tableSwitch.tableFilter = null;
             } else {
+                area = (area == "北京" ? area + "市" : area);
                 $rootScope.tableSwitch.tableFilter = "[{\"region\":[\"" + area + "\"]}]";
             }
             $scope.isJudge = false;
@@ -524,7 +526,11 @@ define(["app"], function (app) {
                                         obj["period"] = dataString + infoKey + ":00 - " + dataString + infoKey + ":59";
                                         maps[infoKey] = obj;
                                     }
-                                    obj[chartUtils.convertEnglish(info.label)] = info.quota[i]
+                                    if (info.label == "平均访问时长") {
+                                        obj["avgTime"] = ad.formatFunc(info.quota[i], "avgTime");
+                                    } else {
+                                        obj[chartUtils.convertEnglish(info.label)] = info.quota[i];
+                                    }
                                     maps[infoKey] = obj;
                                 }
                             });
@@ -816,14 +822,52 @@ define(["app"], function (app) {
 
         //得到表格底部数据
         $scope.getFooterData = function (a, option) {
+            console.log(option);
             var returnData = 0;
-            if (option.data.length > 0) {
-                option.data.forEach(function (item, i) {
-                    if (item[a.col.field] != undefined) returnData += parseFloat((item[a.col.field]).replace("%", ""));
+            var spl = 0;
+            var newSpl = [0, 0, 0];
+            var newitemSplData = [0, 0, 0, 0];
+            if (option.length > 0) {
+                option.forEach(function (item, i) {
+                    var itemSplData = item.entity[a.col.field].split(",");
+                    if (itemSplData.length >= 4) {
+                        newitemSplData[0] += itemSplData[0] == "--" ? 0 : parseInt(itemSplData[0]);
+                        newitemSplData[1] += itemSplData[1] == "--" ? 0 : parseInt(itemSplData[1]);
+                        newitemSplData[2] += itemSplData[2] == "--" ? 0 : parseInt(itemSplData[2]);
+                        newitemSplData[3] += itemSplData[3] == "--" ? 0 : parseInt(itemSplData[3]);
+                    } else {
+                        returnData += parseFloat((item.entity[a.col.field] + "").replace("%", ""));
+                        if (a.col.field == "avgTime") {
+                            if (item.entity[a.col.field] != undefined) {
+                                spl = item.entity[a.col.field].split(":");
+                                newSpl[0] += parseInt(spl[0]);
+                                newSpl[1] += parseInt(spl[1]);
+                                newSpl[2] += parseInt(spl[2]);
+                            }
+                        }
+                    }
                 });
-                if ((option.data[0][a.col.field] + "").indexOf("%") != -1) {
-                    returnData = (returnData / option.data.length).toFixed(2) + "%"
+                var itemSplDataTow = (option[0].entity[a.col.field]).split(",");
+                if (itemSplDataTow.length >= 4) {
+                    option.forEach(function (a, x) {
+                        if((option[0].entity[a.col.field] + "").indexOf("%") != -1){
+                            newitemSplData[x] = (newitemSplData[x] / option.length).toFixed(2) + "%";
+                        }else{
+                            newitemSplData[x] = (newitemSplData[x] / option.length).toFixed(2);
+                        }
+                    });
+                } else {
+                    if ((option[0].entity[a.col.field] + "").indexOf("%") != -1) {
+                        returnData = (returnData / option.length).toFixed(2) + "%";
+                    }
+                    if (a.col.field == "avgTime") {
+                        var atime1 = parseInt(newSpl[0] / option.length) + "";
+                        var atime2 = parseInt(newSpl[1] / option.length) + "";
+                        var atime3 = parseInt(newSpl[2] / option.length) + "";
+                        returnData = (atime1.length == 1 ? "0" + atime1 : atime1) + ":" + (atime2.length == 1 ? "0" + atime2 : atime2) + ":" + (atime3.length == 1 ? "0" + atime3 : atime3)
+                    }
                 }
+
                 return returnData;
             }
         }

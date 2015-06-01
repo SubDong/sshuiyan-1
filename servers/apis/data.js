@@ -341,7 +341,7 @@ api.get('/realTimeAccess', function (req, res) {
                 result["city"] = item._source.city == "-" ? "国外" : item._source.city;
                 var newDate = new Date(item._source.utime[0]).toString();
                 result["utime"] = newDate.substring(newDate.indexOf(":") - 3, newDate.indexOf("G") - 1);
-                result["source"] = item._source.rf + "," + (item._source.se != "-" ? (item._source.se===undefined?"-":item._source.se) : item._source.rf);
+                result["source"] = item._source.rf + "," + (item._source.se != "-" ? (item._source.se===undefined?item._source.rf:item._source.se) : item._source.rf);
                 result["tt"] = item._source.tt;
                 result["ip"] = item._source.remote;
                 result["utimeAll"] = new Date(item._source.utime[item._source.utime.length - 1] - item._source.utime[0]).format("hh:mm:ss");

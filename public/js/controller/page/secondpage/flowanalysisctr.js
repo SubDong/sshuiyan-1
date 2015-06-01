@@ -5,7 +5,7 @@ define(["./../module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.controller('flowanalysisctr', function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants,popupService) {
+    ctrs.controller('flowanalysisctr', function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants, popupService) {
         $scope.todayClass = true;
         $scope.reset = function () {
             $scope.todayClass = false;
@@ -23,15 +23,40 @@ define(["./../module"], function (ctrs) {
         //配置默认指标
         $rootScope.checkedArray = ["vc", "ip", "contribution"];
         $rootScope.gridArray = [
-            {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
-            {name: "页面url", displayName: "页面url", field: "loc"},
+            {
+                name: "xl",
+                displayName: "",
+                cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
+                maxWidth: 10
+            },
+            {
+                name: "页面url",
+                displayName: "页面url",
+                field: "loc",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"
+            },
             {
                 name: " ",
-                cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='javascript:void(0)' ng-click='grid.appScope.showEntryPageLink(row, 1)'>查看入口页链接</a></li></ul></div></div>"
+                cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='javascript:void(0)' ng-click='grid.appScope.showEntryPageLink(row, 1)'>查看来源分布</a></li></ul></div></div>"
             },
-            {name: "访问次数", displayName: "访问次数", field: "vc"},
-            {name: "访客数(UV)", displayName: "访客数(UV)", field: "ip"},
-            {name: "访问贡献量", displayName: "访问贡献量", field: "contribution"}
+            {
+                name: "访问次数",
+                displayName: "访问次数",
+                field: "vc",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "访客数(UV)",
+                displayName: "访客数(UV)",
+                field: "ip",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "访问贡献量",
+                displayName: "访问贡献量",
+                field: "contribution",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            }
         ];
         $rootScope.tableSwitch = {
             latitude: {name: "页面url", displayName: "页面url", field: "loc"},
@@ -40,7 +65,7 @@ define(["./../module"], function (ctrs) {
             // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
             number: 0,
             //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
-            coding: "<li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='javascript:void(0)' ng-click='grid.appScope.showEntryPageLink(row, 3)'>查看入口页链接</a></li>",
+            coding: "<li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='javascript:void(0)' ng-click='grid.appScope.showEntryPageLink(row, 3)'>查看来源分布</a></li>",
             arrayClear: false
         };
         //
@@ -173,8 +198,9 @@ define(["./../module"], function (ctrs) {
             var d = dd.getDate();
             return y + "-" + m + "-" + d;
         }
+
         //刷新
-        $scope.page_refresh = function(){
+        $scope.page_refresh = function () {
             $rootScope.start = 0;
             $rootScope.end = 0;
             $rootScope.tableTimeStart = 0;

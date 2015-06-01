@@ -32,12 +32,42 @@ define(["./module"], function (ctrs) {
                 cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
                 maxWidth: 10
             },
-            {name: "日期", displayName: "日期", field: "period"},
-            {name: "浏览量(PV)", displayName: "浏览量(PV)", field: "pv"},
-            {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},
-            {name: "IP数", displayName: "IP数", field: "ip"},
-            {name: "跳出率", displayName: "跳出率", field: "outRate"},
-            {name: "平均访问时长", displayName: "平均访问时长", field: "avgTime"}
+            {
+                name: "日期",
+                displayName: "日期",
+                field: "period",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"
+            },
+            {
+                name: "浏览量(PV)",
+                displayName: "浏览量(PV)",
+                field: "pv",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "访客数(UV)",
+                displayName: "访客数(UV)",
+                field: "uv",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "IP数",
+                displayName: "IP数",
+                field: "ip",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "跳出率",
+                displayName: "跳出率",
+                field: "outRate",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "平均访问时长",
+                displayName: "平均访问时长",
+                field: "avgTime",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            }
         ];
         $rootScope.tableSwitch = {
             latitude: {name: "日期", displayName: "日期", field: "period"},
@@ -300,7 +330,8 @@ define(["./module"], function (ctrs) {
             $rootScope.targetSearch();
             $scope.$broadcast("ssh_dateShow_options_time_change");
         }
-        $scope.cancelChecked = function(){
+
+        $scope.cancelChecked = function () {
             $scope.isCancelYesterdayCompare = false;
             $scope.isCancelWeekCompare = false;
             $(".specialCheckbox")[0].style.backgroundPosition = "0 0";
@@ -311,14 +342,14 @@ define(["./module"], function (ctrs) {
         $scope.isCancelWeekCompare = false;
         $scope.isShowCalendar = false;
         $scope.compareLastDay = function () {
-            if($scope.isCancelYesterdayCompare == false){
+            if ($scope.isCancelYesterdayCompare == false) {
                 $scope.isCancelWeekCompare = false;
-                if(!$scope.todayCalendar){
+                if (!$scope.todayCalendar) {
                     $scope.todayCalendar = GetDateStr(-1);
                 }
                 var todayCalendarArray = $scope.todayCalendar.split("-");
-                var lastDate = todayCalendarArray[2]-1;
-                $scope.dayOrWeek = todayCalendarArray[0]+"-"+todayCalendarArray[1]+"-"+lastDate;
+                var lastDate = todayCalendarArray[2] - 1;
+                $scope.dayOrWeek = todayCalendarArray[0] + "-" + todayCalendarArray[1] + "-" + lastDate;
                 $scope.isShowCalendar = true;
                 $(".specialCheckbox")[0].style.backgroundPosition = "0 -" + 50 + "px";
                 $(".specialCheckbox")[1].style.backgroundPosition = "0 0";
@@ -345,7 +376,7 @@ define(["./module"], function (ctrs) {
                     $scope.charts[0].config.compare = true;
                     cf.renderChart(final_result, $scope.charts[0].config);
                 });
-            }else{
+            } else {
                 $(".specialCheckbox")[0].style.backgroundPosition = "0 0";
                 $scope.isShowCalendar = false;
                 $scope.isCancelYesterdayCompare = false;
@@ -355,15 +386,15 @@ define(["./module"], function (ctrs) {
         $scope.compareType = 1;
 //上周同期
         $scope.compareLastWeek = function () {
-            if($scope.isCancelWeekCompare == false){
+            if ($scope.isCancelWeekCompare == false) {
                 $scope.isCancelWeekCompare = true;
                 $scope.isCancelYesterdayCompare = false;
                 if(!$scope.todayCalendar){
                     $scope.todayCalendar = GetDateStr(-1);
                 }
                 var todayCalendarArray = $scope.todayCalendar.split("-");
-                var lastDate = todayCalendarArray[2]-7;
-                $scope.dayOrWeek = todayCalendarArray[0]+"-"+todayCalendarArray[1]+"-"+lastDate;
+                var lastDate = todayCalendarArray[2] - 7;
+                $scope.dayOrWeek = todayCalendarArray[0] + "-" + todayCalendarArray[1] + "-" + lastDate;
                 $(".specialCheckbox")[1].style.backgroundPosition = "0 -" + 75 + "px";
                 $(".specialCheckbox")[0].style.backgroundPosition = "0 0";
                 $scope.isShowCalendar = true;
@@ -390,7 +421,7 @@ define(["./module"], function (ctrs) {
                     $scope.charts[0].config.compare = true;
                     cf.renderChart(final_result, $scope.charts[0].config);
                 });
-            }else{
+            } else {
                 $scope.isCancelWeekCompare = false;
                 $(".specialCheckbox")[1].style.backgroundPosition = "0 0";
                 $scope.restCompare();

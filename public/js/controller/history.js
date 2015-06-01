@@ -19,7 +19,7 @@ define(['./module'], function (ctrs) {
         $rootScope.tableFormat = null;
 
 
-        $rootScope.gridArray[0] = {name: "日期", displayName: "日期", field: "period"};
+        $rootScope.gridArray[0] = {name: "日期", displayName: "日期", field: "period",footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"};
         $rootScope.gridArray.splice(1, 1);
         $rootScope.tableSwitch.dimen = false;
 

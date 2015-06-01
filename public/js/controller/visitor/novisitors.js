@@ -5,9 +5,9 @@ define(["./module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.controller('novisitors', function (    $scope, $rootScope, $http,areaService) {
+    ctrs.controller('novisitors', function ($scope, $rootScope, $http, areaService) {
         //客户端属性初始化
-        $scope.equipment.selected =  {"name":"网络供应商","field":"isp"};
+        $scope.equipment.selected = {"name": "网络供应商", "field": "isp"};
         $scope.todayClass = true;
         $rootScope.tableTimeStart = 0;
         $rootScope.tableTimeEnd = 0;
@@ -15,17 +15,52 @@ define(["./module"], function (ctrs) {
         //配置默认指标
         $rootScope.checkedArray = ["vc", "uv", "outRate", "avgTime", "avgPage"];
         $rootScope.gridArray = [
-            {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
-            {name: "网络供应商", displayName: "网络供应商", field: "isp"},
+            {
+                name: "xl",
+                displayName: "",
+                cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
+                maxWidth: 10
+            },
+            {
+                name: "网络供应商",
+                displayName: "网络供应商",
+                field: "isp",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"
+            },
             {
                 name: " ",
                 cellTemplate: "<div class='table_box'><a ui-sref='history2' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn'  title='查看历史趋势'></a></div>"
             },
-            {name: "访问次数", displayName: "访问次数", field: "vc"},
-            {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},
-            {name: "跳出率", displayName: "跳出率", field: "outRate"},
-            {name: "平均访问时长", displayName: "平均访问时长", field: "avgTime"},
-            {name: "平均访问页数", displayName: "平均访问页数", field: "avgPage"}
+            {
+                name: "访问次数",
+                displayName: "访问次数",
+                field: "vc",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "访客数(UV)",
+                displayName: "访客数(UV)",
+                field: "uv",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "跳出率",
+                displayName: "跳出率",
+                field: "outRate",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "平均访问时长",
+                displayName: "平均访问时长",
+                field: "avgTime",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "平均访问页数",
+                displayName: "平均访问页数",
+                field: "avgPage",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            }
         ];
         $rootScope.tableSwitch = {
             latitude: {name: "网络供应商", displayName: "网络供应商", field: "isp"},
@@ -64,8 +99,9 @@ define(["./module"], function (ctrs) {
             var d = dd.getDate();
             return y + "-" + m + "-" + d;
         }
+
         //刷新
-        $scope.page_refresh = function(){
+        $scope.page_refresh = function () {
             $rootScope.start = 0;
             $rootScope.end = 0;
             $rootScope.tableTimeStart = 0;

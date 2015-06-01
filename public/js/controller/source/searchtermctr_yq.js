@@ -1,7 +1,7 @@
 /**
  * Created by john on 2015/4/2.
  */
-define(["./module"], function(ctrs) {
+define(["./module"], function (ctrs) {
 
     'use strict';
 
@@ -15,14 +15,54 @@ define(["./module"], function(ctrs) {
             //配置默认指标
             //$rootScope.checkedArray = ["pv", "vc", "nuv", "ip"];
             $rootScope.gridArray = [
-                {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",maxWidth:10},
-                {name: "搜索词", displayName: "搜索词", field: "word"},
-                {name: "总搜索次数", displayName: "总搜索次数", field: "freq"},
-                {name: "百度", displayName: "百度", field: "baidu"},
-                {name: "搜狗", displayName: "搜狗", field: "sougou"},
-                {name: "好搜", displayName: "好搜", field: "haosou"},
-                {name: "必应", displayName: "必应", field: "bing"},
-                {name: "其他", displayName: "其他", field: "other"}
+                {
+                    name: "xl",
+                    displayName: "",
+                    cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
+                    maxWidth: 10
+                },
+                {
+                    name: "搜索词",
+                    displayName: "搜索词",
+                    field: "word",
+                    footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"
+                },
+                {
+                    name: "总搜索次数",
+                    displayName: "总搜索次数",
+                    field: "freq",
+                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                },
+                {
+                    name: "百度",
+                    displayName: "百度",
+                    field: "baidu",
+                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                },
+                {
+                    name: "搜狗",
+                    displayName: "搜狗",
+                    field: "sougou",
+                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                },
+                {
+                    name: "好搜",
+                    displayName: "好搜",
+                    field: "haosou",
+                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                },
+                {
+                    name: "必应",
+                    displayName: "必应",
+                    field: "bing",
+                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                },
+                {
+                    name: "其他",
+                    displayName: "其他",
+                    field: "other",
+                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                }
             ];
             $rootScope.tableSwitch = {
                 latitude: {name: "搜索词", displayName: "搜索词", field: "word"},
@@ -86,29 +126,30 @@ define(["./module"], function(ctrs) {
                 var d = dd.getDate();
                 return y + "-" + m + "-" + d;
             }
-        //刷新
-        $scope.page_refresh = function(){
-            $rootScope.start = -1;
-            $rootScope.end = -1;
-            $rootScope.tableTimeStart = -1;
-            $rootScope.tableTimeEnd = -1;
+
+            //刷新
+            $scope.page_refresh = function () {
+                $rootScope.start = -1;
+                $rootScope.end = -1;
+                $rootScope.tableTimeStart = -1;
+                $rootScope.tableTimeEnd = -1;
 //            $scope.charts.forEach(function (e) {
 //                var chart = echarts.init(document.getElementById(e.config.id));
 //                e.config.instance = chart;
 //            });
-            //图表
+                //图表
 //            requestService.refresh($scope.charts);
-            //首页表格
-            //requestService.gridRefresh(scope.grids);
-            //其他页面表格
-            $rootScope.targetSearch(true);
-            $scope.reloadByCalendar("yesterday");
-            $('#reportrange span').html(GetDateStr(-1));
-            $scope.$broadcast("ssh_dateShow_options_time_change");
-            //classcurrent
-            $scope.reset();
-            $scope.yesterdayClass = true;
-        };
+                //首页表格
+                //requestService.gridRefresh(scope.grids);
+                //其他页面表格
+                $rootScope.targetSearch(true);
+                $scope.reloadByCalendar("yesterday");
+                $('#reportrange span').html(GetDateStr(-1));
+                $scope.$broadcast("ssh_dateShow_options_time_change");
+                //classcurrent
+                $scope.reset();
+                $scope.yesterdayClass = true;
+            };
 
         }
     );
