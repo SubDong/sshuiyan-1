@@ -476,7 +476,7 @@ api.get('/provincemap', function (req, res) {
  */
 api.get("/summary", function (req, res) {
     var query = url.parse(req.url, true).query;
-    var dimension = query['dimension'];
+    var dimension = query['dimension'] == "null" ? null : query['dimension'];
     var type = query['type'];
     var startOffset = Number(query['start']);
     var endOffset = Number(query['end']);
