@@ -822,7 +822,6 @@ define(["app"], function (app) {
 
         //得到表格底部数据
         $scope.getFooterData = function (a, option) {
-            console.log(option);
             var returnData = 0;
             var spl = 0;
             var newSpl = [0, 0, 0];
