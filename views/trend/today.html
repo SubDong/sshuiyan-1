@@ -95,14 +95,15 @@
                             <ul>
                                 <li><span>设备过滤:</span></li>
                                 <li>
-                                    <input type="radio" checked="checked" ng-click="setTerminal(0)" name="radio1" class="styled"/>
-                                    <lable>
+                                    <lable ng-click="setTerminal(0)">
+                                    <input type="radio" checked="checked" name="radio1" class="styled"/>
+
                                         全部
                                     </lable>
                                 </li>
-                                <li><input type="radio" ng-click="setTerminal(1)" name="radio1"  class="styled"/> <label>计算机</label>
+                                <li><label ng-click="setTerminal(1)"><input type="radio" name="radio1"  class="styled"/> 计算机</label>
                                 </li>
-                                <li><input type="radio" ng-click="setTerminal(2)" name="radio1"  class="styled"/> <label>移动设备</label>
+                                <li><label ng-click="setTerminal(2)"><input type="radio" name="radio1"  class="styled"/> 移动设备</label>
                                 </li>
                             </ul>
                         </div>
