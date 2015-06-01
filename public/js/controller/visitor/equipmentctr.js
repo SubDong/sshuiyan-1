@@ -87,9 +87,10 @@ define(["./module"], function (ctrs) {
 
             $rootScope.tableSwitch.latitude = val;
             val.field == "ips" ? $rootScope.tableSwitch.dimen = "region" : val.field == "pm" ? $rootScope.tableSwitch.dimen = "br" : $rootScope.tableSwitch.dimen = false
+            $
             $rootScope.indicators(null, null, null, "refresh");
             $rootScope.targetSearch();
-        }
+        };
         $scope.onLegendClick = function (radio, chartInstance, config, checkedVal) {
             $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
             $scope.charts[0].types = checkedVal;
