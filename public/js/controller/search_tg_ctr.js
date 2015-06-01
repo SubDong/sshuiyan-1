@@ -175,6 +175,37 @@ define(["./module"], function (ctrs) {
             $scope.endOffset = (endTime - today_start()) / 86400000;
             //console.log("startOffset=" + startOffset + ", " + "endOffset=" + endOffset);
         });
+
+        /**
+         * 自定义日期刷新
+         * @param start
+         * @param end
+         */
+        $rootScope.datepickerClick=function(start,end){
+            var time = chartUtils.getTimeOffset(start, end);
+            var offest = time[1] - time[0];
+            $scope.reset();
+            if (offest >= 31) {
+                $scope.mothselected = false;
+                $scope.weekselected = false;
+            } else {
+                if (offest >= 7) {
+                    $scope.weekselected = false;
+                } else {
+                    $scope.weekselected = true;
+                }
+                $scope.mothselected = true;
+            }
+            $rootScope.start = time[0];
+            $rootScope.end = time[1];
+            $rootScope.interval = -1;
+            $rootScope.targetSearchSpread();
+            $scope.charts.forEach(function (e) {
+                var chart = echarts.init(document.getElementById(e.config.id));
+                e.config.instance = chart;
+            })
+            requestService.refresh($scope.charts);
+        }
     });
 
 });

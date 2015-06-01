@@ -162,31 +162,81 @@ define(["./module"], function (ctrs) {
         //搜索推广地域过滤
         $scope.setAreaFilter = function (area , id) {
 
-            /*$scope.gridOpArray = angular.copy($rootScope.searchGridArray);
+            $scope.gridOptions.data=[];
+            $scope.gridOpArray = angular.copy($rootScope.searchGridArray);
             $scope.gridOptions.columnDefs = $scope.gridOpArray;
-            var url = SEM_API_URL + user + "/" + baiduAccount + "/" + $rootScope.tableSwitch.promotionSearch.SEMData + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=" + $scope.device + ($scope.searchId != undefined || $scope.searchId != "undefined" ? "&" + $scope.searchId : "")
+            if(area =="全部"){
+                var url = SEM_API_URL + user + "/" + baiduAccount + "/region/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1";
+            }else{
+                var url = SEM_API_URL + user + "/" + baiduAccount + "/region/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1&rgna="+area;
+            }
             $http({
                 method: 'GET',
                 url: url
             }).success(function (dataSEM, status) {
-
-            })*/
-
-
-            /*if (!$rootScope.tableSwitch) {
-                return;
-            }
-            if ("全部" == area) {
-                $rootScope.tableSwitch.tableFilter = null;
-            } else {
-                $rootScope.tableSwitch.tableFilter = "[{\"region\":[\"" + area + "\"]}]";
-            }
-            $scope.isJudge = false;
-            if ($scope.tableJu == "html") {
-                getHtmlTableData();
-            } else {
-                $scope.targetSearchSpread();
-            }*/
+                var dataArray = [];
+                dataSEM.forEach(function (item, i) {
+                    console.log(item);
+                    var searchId = $rootScope.tableSwitch.promotionSearch.SEMData;
+                    //if(id=='keyword'){
+                    //    searchId=  'adgroup';
+                    //}
+                    //console.log("item adgroupId = "+item['adgroupId']);
+                    var filter = "[{\"" + getTableFilter(searchId) + "\":[\"" + item[searchId + "Id"] + "\"]}]";
+                    var fieldQuery = $rootScope.tableSwitch.latitude.field;
+                    //console.log(searchId + "Id"+" filter="+filter);
+                    //if(id=='keyword'){
+                    //    $rootScope.tableSwitch.number=5;
+                    //}
+                    //console.log("$rootScope.tableSwitch.number="+$rootScope.tableSwitch.number);
+                    //console.log("$rootScope.tableSwitch.promotionSearch"+$rootScope.tableSwitch.promotionSearch);
+                    //console.log("=======$rootScope.tableSwitch.promotionSearch ="+($rootScope.tableSwitch.promotionSearch ? ($rootScope.tableSwitch.number == 5 ? fieldQuery : null) : fieldQuery ) );
+                    var esurl= '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? ($rootScope.tableSwitch.number == 5 ? fieldQuery : null) : fieldQuery )
+                    + "&filerInfo=" + filter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType;
+                    console.log("es url="+esurl);
+                    $http({
+                        method: 'GET',
+                        url: esurl
+                    }).success(function (data, status) {
+                        var datas = {};
+                        if ($rootScope.tableSwitch.number == 5) {
+                            data.forEach(function (item, i) {
+                                $rootScope.checkedArray.forEach(function (x, y) {
+                                    datas[x] = item[x] != undefined ? item[x] : data[0][x];
+                                });
+                                datas[fieldQuery] = item[fieldQuery] + getTableTitle(fieldQuery, item);
+                                dataArray.push(datas);
+                                if ((dataSEM.length - 1) == i) {
+                                    $scope.gridOptions.data = dataArray;
+                                }
+                            })
+                        } else {
+                            $rootScope.checkedArray.forEach(function (x, y) {
+                                datas[x] = item[x] != undefined ? item[x] : data[0][x];
+                            });
+                            var field = $rootScope.tableSwitch.latitude.field;
+                            datas[field] = item[field] + getTableTitle(field, item);
+                            datas["id"] = item[searchId + "Id"];
+                            dataArray.push(datas);
+                            if ((dataSEM.length - 1) == i) {
+                                if (field == "adgroupName" || field == "keywordName") {
+                                    $scope.gridOptions.rowHeight = 55;
+                                } else {
+                                    if (field == "description1") {
+                                        $scope.gridOptions.rowHeight = 100;
+                                    } else {
+                                        $scope.gridOptions.rowHeight = 32;
+                                    }
+                                }
+                                $scope.gridOptions.columnDefs = $scope.gridOpArray;
+                                $scope.gridOptions.data = dataArray;
+                            }
+                        }
+                    }).error(function (error) {
+                        console.log(error);
+                    });
+                });
+            });
         };
 
         $rootScope.targetSearchSpread = function (isClicked) {
@@ -203,8 +253,13 @@ define(["./module"], function (ctrs) {
                 var dataArray = [];
                 dataSEM.forEach(function (item, i) {
                     var searchId = $rootScope.tableSwitch.promotionSearch.SEMData;
+
                     var filter = "[{\"" + getTableFilter(searchId) + "\":[\"" + item[searchId + "Id"] + "\"]}]";
                     var fieldQuery = $rootScope.tableSwitch.latitude.field;
+
+                    var turl= '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? ($rootScope.tableSwitch.number == 5 ? fieldQuery : null) : fieldQuery )
+                    + "&filerInfo=" + filter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType;
+                    console.log(turl);
                     $http({
                         method: 'GET',
                         url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? ($rootScope.tableSwitch.number == 5 ? fieldQuery : null) : fieldQuery )
@@ -468,6 +523,7 @@ define(["./module"], function (ctrs) {
                 return "cid";
         }
     };
+
 
     var getTableTitle = function (a, b) {
         switch (a) {
