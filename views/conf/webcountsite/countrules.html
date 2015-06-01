@@ -3,15 +3,17 @@
         <!--标题-->
         <span class="count_title">www.best-ad.cn 统计规则设置</span>
         <!--主要内容-->
-        <div class="count_content">
+        <div class="count_content" style="width: 1000px;">
             <ul>
                 <li>
                     <div class="time_content_left count_content_left">   <!--主要内容 统一页面地址 左-->
                         <span>统一页面地址</span>
-                        <input type="text" class="form-control" placeholder="统一前的URL"/>
-                        <img src="../img/right-icon.png" alt=""/>
-                        <input type="text" class="form-control" placeholder="统一后的URL"/>
-                        <button class="btn btn-default">+&nbsp;新增网站</button>
+                        <div data-ng-repeat="re in records">
+                            <input type="text" data-ng-model="fzk.a"  class="form-control" placeholder="统一前的URL"/>
+                            <img src="../img/right-icon.png" alt=""/ >
+                            <input type="text" data-ng-model="fzk.b" class="form-control" placeholder="统一后的URL"/>
+                        </div>
+                        <button class="btn btn-default" data-ng-click="myAdd(records)">+&nbsp;新增网站</button>
                     </div>
 
                     <div class="count_content_right">   <!--提示:网站与域名不同提示 右-->
@@ -25,6 +27,7 @@
                 </li>
 
                 <li>
+
                     <div class="time_content_left  count_left">  <!--排除IP地址  左-->
                     <span>排除IP地址 <p>（请输入IP地址，每行一个，最多可设置20个）</p><br/>
                     提示：当前登录IP为：113.45.225.145， 请注意若为动态IP则下次登录IP会变化。</span>
