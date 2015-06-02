@@ -105,12 +105,13 @@ define(["./module"], function (ctrs) {
                     var tmpData = [];
                     var _value = []
                     for (var i = 0; i < e.key.length; i++) {
-                        if ($scope.equipment.selected)
+                        e.key[i] = e.key[i] == "-" ? "未知 " : e.key[i];
+                        if ($scope.equipment.selected) {
                             tmpData.push(chartUtils.getCustomDevice(e.key[i], $scope.equipment.selected.field));
-                        else
-                            tmpData.push(e.key[i] == "-" ? "未知" : e.key[i]);
+                        } else {
+                            tmpData.push(e.key[i]);
+                        }
                         _value.push(e.quota[i]);
-
                     }
                     e.key = tmpData;
                     e.quota = _value;
