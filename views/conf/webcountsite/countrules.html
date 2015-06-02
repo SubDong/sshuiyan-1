@@ -8,12 +8,12 @@
                 <li>
                     <div class="time_content_left count_content_left">   <!--主要内容 统一页面地址 左-->
                         <span>统一页面地址</span>
-                        <div data-ng-repeat="re in records">
-                        <input type="text" class="form-control" ng-model="re.a" placeholder="统一前的URL" ng-model="rules.source"/>
+                        <div data-ng-repeat="rule in rules">
+                        <input type="text" class="form-control"  placeholder="统一前的URL" ng-model="rule.source"/>
                         <img src="../img/right-icon.png" alt=""/>
-                        <input type="text" class="form-control" ng-model="re.b" placeholder="统一后的URL" ng-model="rules.convert"/>
+                        <input type="text" class="form-control"  placeholder="统一后的URL" ng-model="rule.convert"/>
                         </div>
-                        <button class="btn btn-default" data-ng-click="myAdd(records)">+&nbsp;新增网站</button>
+                        <button class="btn btn-default" data-ng-click="addRule()">+&nbsp;新增网站</button>
                     </div>
 
                     <div class="count_content_right">   <!--提示:网站与域名不同提示 右-->
