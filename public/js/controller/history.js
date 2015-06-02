@@ -32,7 +32,7 @@ define(['./module'], function (ctrs) {
         $rootScope.historyJu = "NO";
 
         $scope.historyInit = function () {
-            var getTime = $rootScope.tableTimeStart <= -6 ? "day" : "hour";
+            var getTime = $rootScope.tableTimeStart <= -1 ? "day" : "hour";
             if ($rootScope.tableSwitch.number == 4) {
                 var searchUrl = SEM_API_URL + "elasticsearch/" + esType + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd;
                 $http({
@@ -123,7 +123,7 @@ define(['./module'], function (ctrs) {
             if (types) {
                 quota = types;
             }
-            var getTime = $rootScope.tableTimeStart <= -6 ? "day" : "hour";
+            var getTime = $rootScope.tableTimeStart <=-1 ? "day" : "hour";
             var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
             $scope.charts[0].config.instance = chart;
             chart.showLoading({
@@ -134,7 +134,7 @@ define(['./module'], function (ctrs) {
                 url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + quota + "&dimension=" + $rootScope.tableSwitch.latitude.field
                 + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&formartInfo=" + getTime + "&type=" + esType
             }).success(function (data, status) {
-                if ($rootScope.tableTimeStart >= -1) {
+                if ($rootScope.tableTimeStart > -1) {
                     $scope.charts[0].config.noFormat = undefined;
                     cf.renderChart(data, $scope.charts[0].config);
                 } else {
@@ -174,9 +174,9 @@ define(['./module'], function (ctrs) {
                 customLegendData.push(chartUtils.convertChinese(item));
             });
             $scope.charts[0].config.legendData = customLegendData;
-            $scope.radioCheckVal = customLegendData;
-            var quota=[$rootScope.checkedArray[0]];
-            var getTime = $rootScope.tableTimeStart <= -6 ? "day" : "hour";
+            $scope.radioCheckVal = [$rootScope.checkedArray[0]];
+            var quota = [$rootScope.checkedArray[0]];
+            var getTime = $rootScope.tableTimeStart <= -1 ? "day" : "hour";
             $http({
                 method: 'GET',
                 url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + quota + "&dimension=" + $rootScope.tableSwitch.latitude.field
@@ -212,6 +212,7 @@ define(['./module'], function (ctrs) {
             $rootScope.tableTimeEnd = time[1];
             $scope.reset();
             $scope.refreshChart();
+            $scope.historyInit();
         }
         //日历
         this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
