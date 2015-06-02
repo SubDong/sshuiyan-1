@@ -292,9 +292,9 @@ define(["app"], function (app) {
         //地图分类
         $scope.setDimen = function (a) {
             var b = "";
-            if(a == "city"){
+            if (a == "city") {
                 b = 0;
-            }else{
+            } else {
                 b = 1;
             }
             var now = +new Date();
@@ -316,9 +316,9 @@ define(["app"], function (app) {
         $scope.setTerminal = function (a) {
             var now = +new Date();
             if (now - evTimeStamp < 100) {
-                    return;
-                 }
-             evTimeStamp = now;
+                return;
+            }
+            evTimeStamp = now;
             var inputArray = $(".chart_top2 .styled");
             inputArray.each(function (i, o) {
                 $(o).prev("span").css("background-position", "0px 0px");
@@ -350,7 +350,7 @@ define(["app"], function (app) {
             $scope.isJudge = false;
             $scope.targetSearch();
         };
-        $scope.webClass = function(a){
+        $scope.webClass = function (a) {
             var now = +new Date();
             if (now - evTimeStamp < 100) {
                 return;
@@ -363,7 +363,7 @@ define(["app"], function (app) {
             });
             $(inputArray[a]).prev("span").css("background-position", "0px -51px");
         }
-        $scope.urlDomain = function(a){
+        $scope.urlDomain = function (a) {
             var now = +new Date();
             if (now - evTimeStamp < 100) {
                 return;
@@ -613,11 +613,11 @@ define(["app"], function (app) {
                             $scope.gridOptions.data = dataArray;
                         });
                     } else {
-                        if(isClicked == "rf_dm"){
-                            data.forEach(function(item,o){
-                                if(item["dm"]){
+                        if (isClicked == "rf_dm") {
+                            data.forEach(function (item, o) {
+                                if (item["dm"]) {
                                     item["rf"] = item["dm"];
-                                }else{
+                                } else {
                                     item["dm"] = item["rf"];
                                 }
                             })
@@ -681,6 +681,7 @@ define(["app"], function (app) {
 
         //数据对比
         $rootScope.datepickerClickTow = function (start, end, label) {
+
             var gridArrayOld = angular.copy($rootScope.gridArray);
             $rootScope.gridArray.forEach(function (item, i) {
                 var a = item["field"];
@@ -707,7 +708,7 @@ define(["app"], function (app) {
                         for (var i = 0; i < contrast.length; i++) {
                             if (a[target] == contrast[i][target]) {
                                 $rootScope.checkedArray.forEach(function (tt, aa) {
-                                    var bili = ((parseInt(a[tt].replace("%")) - parseInt((contrast[i][tt]).replace("%"))) / (parseInt((contrast[i][tt]).replace("%")) == 0 ? parseInt(a[tt].replace("%")) : parseInt((contrast[i][tt]).replace("%"))) * 100).toFixed(2);
+                                    var bili = ((parseInt(a[tt] + "".replace("%")) - parseInt((contrast[i][tt] + "").replace("%"))) / (parseInt((contrast[i][tt] + "").replace("%")) == 0 ? parseInt(a[tt] + "".replace("%")) : parseInt((contrast[i][tt] + "").replace("%"))) * 100).toFixed(2);
                                     dataObj[tt] = (isNaN(bili) ? 0 : bili) + "%";
                                     a[tt] = "　" + "," + a[tt] + "," + contrast[i][tt] + "," + dataObj[tt]
                                 });
@@ -751,7 +752,7 @@ define(["app"], function (app) {
                 $http({
                     method: 'GET',
                     url: '/api/indextable/?start=' + (startInfoTime == null ? $rootScope.tableTimeStart : startInfoTime) + "&end=" + (endInfoTime == null ? $rootScope.tableTimeEnd : endInfoTime) + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field)
-                    + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=day&type=" + esType
+                    + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
                 }).success(function (data, status) {
                     if ($rootScope.tableSwitch.promotionSearch != undefined && $rootScope.tableSwitch.promotionSearch) {
                         var url = SEM_API_URL + user + "/" + baiduAccount + "/account/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1"
@@ -797,7 +798,7 @@ define(["app"], function (app) {
                             }
                         } else {
                             var result = [];
-                            var maps = {}
+                            var maps = {};
                             var newData = chartUtils.getByHourByDayData(data);
                             newData.forEach(function (info, x) {
                                 for (var i = 0; i < info.key.length; i++) {
@@ -967,7 +968,7 @@ define(["app"], function (app) {
                     }
                     if (a.col.field == "avgPage") {
                         //console.log(newitemSplData[x])
-                        newitemSplData[x] = (newitemSplData[x] / option.length).toFixed(2);
+                        newitemSplData[0] = (newitemSplData[0] / option.length).toFixed(2);
                     }
                     returnData = newitemSplData;
                 } else {

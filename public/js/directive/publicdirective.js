@@ -623,7 +623,7 @@ define(["../app"], function (app) {
                 scope.loadDataShow = function () {
                     scope.dateShowArray = angular.copy(scope.defaultDataShowArray);
                     var semRequest = $http.get(SEM_API_URL + "elasticsearch/" + $rootScope.userType
-                    + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd);
+                        + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd);
                     $q.all([semRequest]).then(function (final_result) {
                         angular.forEach(final_result[0].data, function (r) {
                             angular.forEach(scope.dateShowArray, function (q_r) {
@@ -637,7 +637,7 @@ define(["../app"], function (app) {
                 };
                 scope.loadCompareDataShow = function (startTime, endTime) {
                     var semRequest = $http.get(SEM_API_URL + "elasticsearch/" + $rootScope.userType
-                    + "/?startOffset=" + startTime + "&endOffset=" + endTime);
+                        + "/?startOffset=" + startTime + "&endOffset=" + endTime);
                     $q.all([semRequest]).then(function (final_result) {
                         // 初始化对比数据
                         angular.forEach(scope.dateShowArray, function (q_r) {
@@ -780,7 +780,7 @@ define(["../app"], function (app) {
                 case "cpm":
                 case "conversion":
                 {
-                    return count ? value.toFixed(2) : "0";
+                    return count ? value : "0";
                 }
                 case "avgPage":
                 case "cpc":
