@@ -73,7 +73,7 @@ define(["./module"], function (ctrs) {
 
                     $scope.searchGridObj["name"] = item.consumption_name;
                     $scope.searchGridObj["displayName"] = item.consumption_name;
-                    $scope.gridObj["footerCellTemplate"] = "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>";
+                    $scope.searchGridObj["footerCellTemplate"] = "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>";
                     $scope.searchGridObj["field"] = item.name;
 
                     $rootScope.searchGridArray.push($scope.searchGridObj);
@@ -96,7 +96,7 @@ define(["./module"], function (ctrs) {
 
                     $scope.searchGridObj["name"] = item.consumption_name;
                     $scope.searchGridObj["displayName"] = item.consumption_name;
-                    $scope.gridObj["footerCellTemplate"] = "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>";
+                    $scope.searchGridObj["footerCellTemplate"] = "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>";
                     $scope.searchGridObj["field"] = item.name;
                     $rootScope.searchGridArray.push($scope.searchGridObj);
 
@@ -193,7 +193,6 @@ define(["./module"], function (ctrs) {
             }).success(function (dataSEM, status) {
                 var dataArray = [];
                 dataSEM.forEach(function (item, i) {
-                    console.log(item);
                     var searchId = $rootScope.tableSwitch.promotionSearch.SEMData;
                     //if(id=='keyword'){
                     //    searchId=  'adgroup';
@@ -414,41 +413,6 @@ define(["./module"], function (ctrs) {
         };
 
 
-        //得到表格底部数据
-        $scope.getSearchFooterData = function (a, option, number) {
-            console.log(option)
-            var returnData = 0;
-            var spl = 0;
-            var newSpl = [0, 0, 0];
-            if (option.length > 0) {
-                option.forEach(function (item, i) {
-                    returnData += parseFloat((item.entity[a.col.field] + "").replace("%", ""));
-                    if (a.col.field == "avgTime") {
-                        if (item.entity[a.col.field] != undefined) {
-                            spl = item.entity[a.col.field].split(":");
-                            newSpl[0] += parseInt(spl[0]);
-                            newSpl[1] += parseInt(spl[1]);
-                            newSpl[2] += parseInt(spl[2]);
-                        }
-                    }
-                });
-                if ((option[0].entity[a.col.field] + "").indexOf("%") != -1) {
-                    returnData = (returnData / option.length).toFixed(2) + "%";
-                }
-                if (a.col.field == "avgPage") {
-                    returnData = (returnData / option.length).toFixed(2);
-                }
-                if (a.col.field == "avgTime") {
-                    var atime1 = parseInt(newSpl[0] / option.length) + "";
-                    var atime2 = parseInt(newSpl[1] / option.length) + "";
-                    var atime3 = parseInt(newSpl[2] / option.length) + "";
-                    returnData = (atime1.length == 1 ? "0" + atime1 : atime1) + ":" + (atime2.length == 1 ? "0" + atime2 : atime2) + ":" + (atime3.length == 1 ? "0" + atime3 : atime3);
-                }
-            }
-            return returnData;
-        }
-
-
         $scope.getHistoricalTrend = function (b) {
             if ($rootScope.tableSwitch.latitude.field == "campaignName") {
                 $rootScope.checkedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
@@ -463,7 +427,8 @@ define(["./module"], function (ctrs) {
                         name: "单元",
                         displayName: "单元",
                         field: "adgroupName",
-                        cellTemplate: "<div><a href='javascript:void(0)' target='_blank' style='color:#0965b8;line-height:30px;' ng-click='grid.appScope.getHistoricalTrend(this)'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</div>"
+                        cellTemplate: "<div><a href='javascript:void(0)' target='_blank' style='color:#0965b8;line-height:30px;' ng-click='grid.appScope.getHistoricalTrend(this)'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</div>",
+                        footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"
                     },
                     {
                         name: "展现",
@@ -531,7 +496,8 @@ define(["./module"], function (ctrs) {
                         name: "关键词",
                         displayName: "关键词",
                         field: "keywordName",
-                        cellTemplate: "<div><a href='http://www.baidu.com/s?wd={{grid.appScope.getDataUrlInfo(grid, row,1)}}' target='_blank' style='color:#0965b8;line-height:30px;margin-left: 10px'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</div>"
+                        cellTemplate: "<div><a href='http://www.baidu.com/s?wd={{grid.appScope.getDataUrlInfo(grid, row,1)}}' target='_blank' style='color:#0965b8;line-height:30px;margin-left: 10px'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</div>",
+                        footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"
                     },
                     {
                         name: "展现",
@@ -591,30 +557,65 @@ define(["./module"], function (ctrs) {
         };
 
 
+        //得到表格底部数据
+        $scope.getSearchFooterData = function (a, option, number) {
+            var returnData = 0;
+            var spl = 0;
+            var newSpl = [0, 0, 0];
+            if (option.length > 0) {
+                option.forEach(function (item, i) {
+                    returnData += parseFloat((item.entity[a.col.field] + "").replace("%", ""));
+                    if (a.col.field == "avgTime") {
+                        if (item.entity[a.col.field] != undefined) {
+                            spl = item.entity[a.col.field].split(":");
+                            newSpl[0] += parseInt(spl[0]);
+                            newSpl[1] += parseInt(spl[1]);
+                            newSpl[2] += parseInt(spl[2]);
+                        }
+                    }
+                });
+                if ((option[0].entity[a.col.field] + "").indexOf("%") != -1) {
+                    returnData = (returnData / option.length).toFixed(2) + "%";
+                }
+                if (a.col.field == "avgPage") {
+                    returnData = (returnData / option.length).toFixed(2);
+                }
+                if (a.col.field == "avgTime") {
+                    var atime1 = parseInt(newSpl[0] / option.length) + "";
+                    var atime2 = parseInt(newSpl[1] / option.length) + "";
+                    var atime3 = parseInt(newSpl[2] / option.length) + "";
+                    returnData = (atime1.length == 1 ? "0" + atime1 : atime1) + ":" + (atime2.length == 1 ? "0" + atime2 : atime2) + ":" + (atime3.length == 1 ? "0" + atime3 : atime3);
+                }
+            }
+            return returnData;
+        }
+
+
         //得到数据中的url
         $scope.getDataUrlInfo = function (grid, row, number) {
             var data = row.entity[$rootScope.tableSwitch.latitude.field] + "";
-            if (number < 3) {
-                var a = data.split(",");
-            } else if (number > 3) {
-                var a = data.split(",`");
-            } else {
-                var a = data
+            if (data != undefined && data != "" && data != "undefined") {
+                if (number < 3) {
+                    var a = data.split(",");
+                } else if (number > 3) {
+                    var a = data.split(",`");
+                } else {
+                    var a = data
+                }
+                if (number == 1) {
+                    return a[0];
+                } else if (number == 2) {
+                    return a[1];
+                } else if (number == 3) {
+                    return a;
+                } else if (number == 4) {
+                    return a[0]
+                } else if (number == 5) {
+                    return a[1]
+                } else if (number == 6) {
+                    return a[2]
+                }
             }
-            if (number == 1) {
-                return a[0];
-            } else if (number == 2) {
-                return a[1];
-            } else if (number == 3) {
-                return a;
-            } else if (number == 4) {
-                return a[0]
-            } else if (number == 5) {
-                return a[1]
-            } else if (number == 6) {
-                return a[2]
-            }
-
         };
         //得到序列号
         $scope.getIndex = function (b) {
