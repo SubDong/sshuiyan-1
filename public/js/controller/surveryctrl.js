@@ -28,7 +28,7 @@ define(["./module"], function (ctrs) {
                     $(".under_top").hide();
                 }
                 if ($rootScope.start == -29) {
-                    $scope.charts[0].config.qingXie = true
+                    $scope.charts[0].config.auotHidex = undefined;
                 }
                 $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $rootScope.start, $rootScope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
             });
