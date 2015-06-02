@@ -884,7 +884,7 @@ define(["app"], function (app) {
         //数据对比分割数据
         $scope.getContrastInfo = function (grid, row, number, fieldData) {
             if (fieldData != undefined || fieldData != "undefined") {
-                var a = row.entity[fieldData].split(",");
+                var a = (row.entity[fieldData] + "").split(",");
                 if (number == 0) {
                     return a[0];
                 } else if (number == 1) {
