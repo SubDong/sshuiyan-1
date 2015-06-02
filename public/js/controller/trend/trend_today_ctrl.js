@@ -130,6 +130,13 @@ define(["./module"], function (ctrs) {
                         config["bGap"] = true;//图表类型
                         chartUtils.noFormatConvertLabel(json);
                         cf.renderChart(json, config);
+                    }else if ($rootScope.interval == -1&&$rootScope.start>=-1) {
+                        config["keyFormat"] = "none";
+                        config["noFormat"] = "noFormat";
+                        config["bGap"] = true;//图表类型
+                        chartUtils.getXType(config, $rootScope.interval, $rootScope.start);
+                        var final_result = chartUtils.getDataByDay(data);
+                        cf.renderChart(final_result, config);
                     } else {
                         config["noFormat"] = undefined;
                         config["chartType"] = "line";//图表类型

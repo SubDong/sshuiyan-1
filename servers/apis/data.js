@@ -37,7 +37,7 @@ api.get('/charts', function (req, res) {
         if (Number(query['int']) == 1) {
             interval = 1;
         } else if (Number(query['int']) == -1) {
-            interval = 86400000;
+            interval = date.interval(start, end, Number(query['int']));
         } else {
             interval = Number(query['int']);
         }

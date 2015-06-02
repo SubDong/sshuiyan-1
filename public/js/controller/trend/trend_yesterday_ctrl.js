@@ -123,6 +123,13 @@ define(["./module"], function (ctrs) {
                         config["bGap"] = true;//图表类型
                         chartUtils.noFormatConvertLabel(json);
                         cf.renderChart(json, config);
+                    } else if ($rootScope.interval == -1&&$rootScope.start>=-1) {
+                        config["keyFormat"] = "none";
+                        config["noFormat"] = "noFormat";
+                        config["bGap"] = true;//图表类型
+                        chartUtils.getXType(config, $rootScope.interval, $rootScope.start);
+                        var final_result = chartUtils.getDataByDay(data);
+                        cf.renderChart(final_result, config);
                     } else {
                         config["noFormat"] = undefined;
                         config["chartType"] = "line";//图表类型
@@ -321,8 +328,8 @@ define(["./module"], function (ctrs) {
             $rootScope.interval = -1;
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
-                chart.config.time = chartUtils.getWeekTime($rootScope.start, $rootScope.end);
-                chart.config.instance = chart;
+                e.config.instance = chart;
+                e.config.time = chartUtils.getWeekTime($rootScope.start, $rootScope.end);
             });
             requestService.refresh($scope.charts);
             $rootScope.tableTimeStart = time[0];
@@ -389,7 +396,7 @@ define(["./module"], function (ctrs) {
             if ($scope.isCancelWeekCompare == false) {
                 $scope.isCancelWeekCompare = true;
                 $scope.isCancelYesterdayCompare = false;
-                if(!$scope.todayCalendar){
+                if (!$scope.todayCalendar) {
                     $scope.todayCalendar = GetDateStr(-1);
                 }
                 var todayCalendarArray = $scope.todayCalendar.split("-");
