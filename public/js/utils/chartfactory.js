@@ -132,7 +132,7 @@ var op = {
                     var res = params[0].name + '<br/>';
                     for (var i = 0, l = params.length; i < l; i++) {
                         var formatType = labelData[i];
-                        if (chartConfig.compare) {
+                        if (chartConfig.compare || chartConfig.compareCustom) {
                             var baseSerieName = params[i].seriesName.split(":");
                             res += baseSerieName[0] + chartUtils.convertChinese(baseSerieName[1]) + ' : ' + ad.formatFunc(params[i].value, baseSerieName[1]) + '<br/>';
                         } else {

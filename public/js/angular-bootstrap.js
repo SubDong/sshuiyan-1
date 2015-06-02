@@ -5,7 +5,7 @@ require(["angular", 'app', "router",
         "directive/publicdirective",
         "services/dateservice", "services/messageService", "services/popupService",
         "services/areaselect", "services/defaultQuotaService",
-        "controller/tabsctrl","controller/wayctrl"
+        "controller/wayctrl", "controller/tabsctrl"
     ],
     function (ng) {
         'use strict';

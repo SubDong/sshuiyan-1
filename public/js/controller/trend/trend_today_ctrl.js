@@ -17,6 +17,7 @@ define(["./module"], function (ctrs) {
             $scope.monthClass = false;
             $scope.definClass = false;
             $scope.hourcheckClass = false;
+            $scope.hourselect = true;
         };
         /*    $scope.hourcheck= function(){
          $scope.dayClass=false;
@@ -106,11 +107,16 @@ define(["./module"], function (ctrs) {
                     cf.renderChart(final_result, $scope.charts[0].config);
                 });
             } else {
-                clear.lineChart($scope.charts[0].config, checkedVal);
-                $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
-                $scope.charts[0].types = checkedVal;
-                var chartarray = [$scope.charts[0]];
-                requestService.refresh(chartarray);
+                if ($scope.compareType) {
+                    var times = [$rootScope.start, $rootScope.end];
+                    $scope.compare(times, checkedVal);
+                } else {
+                    clear.lineChart($scope.charts[0].config, checkedVal);
+                    $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
+                    $scope.charts[0].types = checkedVal;
+                    var chartarray = [$scope.charts[0]];
+                    requestService.refresh(chartarray);
+                }
             }
         }
         $scope.todayFormat = function (data, config, e) {
@@ -130,7 +136,7 @@ define(["./module"], function (ctrs) {
                         config["bGap"] = true;//图表类型
                         chartUtils.noFormatConvertLabel(json);
                         cf.renderChart(json, config);
-                    }else if ($rootScope.interval == -1&&$rootScope.start>=-1) {
+                    } else if ($rootScope.interval == -1 && $rootScope.start >= -1) {
                         config["keyFormat"] = "none";
                         config["noFormat"] = "noFormat";
                         config["bGap"] = true;//图表类型
@@ -175,12 +181,13 @@ define(["./module"], function (ctrs) {
                 url: "/api/charts",
                 cb: $scope.todayFormat
             }];
-
+        $scope.compareLegendData = [];
         $scope.init = function () {
             $rootScope.start = 0;
             $rootScope.end = 0;
             $rootScope.interval = 1;
             $scope.charts.forEach(function (e) {
+                $scope.compareLegendData = e.config.legendData;
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
                 util.renderLegend(chart, e.config);
@@ -201,7 +208,9 @@ define(["./module"], function (ctrs) {
                 } else {
                     $scope.restCompare();
                 }
-                return;
+            }
+            if ($scope.compareType) {
+                $scope.compareReset();
             }
             if ($rootScope.start > -6 && $scope.charts[0].config.keyFormat == "week") {
                 $rootScope.interval = -1;
@@ -322,6 +331,9 @@ define(["./module"], function (ctrs) {
         };
         //日历
         $rootScope.datepickerClick = function (start, end, label) {
+            if ($scope.compareType) {
+                $scope.compareReset();
+            }
             var time = chartUtils.getTimeOffset(start, end);
             var offest = time[1] - time[0];
             $scope.reset();
@@ -361,6 +373,9 @@ define(["./module"], function (ctrs) {
         $scope.isCancelWeekCompare = false;
         $scope.isShowCalendar = false;
         $scope.compareLastDay = function () {
+            if ($scope.compareType) {
+                $scope.compareReset();
+            }
             if ($scope.isCancelYesterdayCompare == false) {
                 $scope.isCancelWeekCompare = false;
                 if (!$scope.todayCalendar) {
@@ -410,6 +425,9 @@ define(["./module"], function (ctrs) {
         $scope.compareType = 1;
         //上周同期
         $scope.compareLastWeek = function () {
+            if ($scope.compareType) {
+                $scope.compareReset();
+            }
             if ($scope.isCancelWeekCompare == false) {
                 $scope.isCancelWeekCompare = true;
                 $scope.isCancelYesterdayCompare = false;
@@ -462,21 +480,119 @@ define(["./module"], function (ctrs) {
             $scope.hourcheckClass = true;
             $scope.compareLastDayClass = false;
             $scope.compareLastWeekClass = false;
-            $scope.charts[0].config.legendAllowCheckCount = 2;
-            $scope.charts[0].config.legendDefaultChecked = [0, 1];
-            $scope.charts[0].config.compare = undefined;
-            $scope.charts[0].types = [chartUtils.convertEnglish($scope.charts[0].config.legendData[0]), chartUtils.convertEnglish($scope.charts[0].config.legendData[1])];
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
                 e.config.chartType = "line";
+                e.config.noFormat = "none";
+                e.config.keyFormat = "day";
+                e.config.legendAllowCheckCount = 2;
+                e.config.legendDefaultChecked = [0, 1];
+                e.config.compare = undefined;
+                e.config.legendData = $scope.compareLegendData;
+                e.types = [chartUtils.convertEnglish(e.config.legendData[0]), chartUtils.convertEnglish(e.config.legendData[1])];
                 util.renderLegend(chart, e.config);
-            })
-            requestService.refresh($scope.charts);
-            Custom.initCheckInfo();
+                Custom.initCheckInfo();
+            });
+            var refreshCompare = false;
+            $("input[name='compareRadio']").each(function (i, o) {
+                if ($(o).prev("span")) {
+                    refreshCompare = true;
+                }
+            });
+            if (refreshCompare) {
+                requestService.refresh($scope.charts);
+            }
         }
         $scope.myradio = function () {
             Custom.initCheckInfo();
+        }
+        $scope.compareType = false;
+        $rootScope.datePickerCompare = function (start, end, label) {
+            if ($scope.charts[0].config.compare) {
+                $scope.restCompare();
+            }
+            var times = chartUtils.getTimeOffset(start, end);
+            $scope.reset();
+            $scope.hourselect = true;
+            $scope.dayselect = true;
+            $scope.mothselected = true;
+            $scope.weekselected = true;
+            $scope.choiceClass = true;
+            $scope.dayClass = false;
+            $scope.hourcheckClass = true;
+            $rootScope.start = times[0];
+            $rootScope.end = times[1];
+            $rootScope.interval = -1;
+            $(".time_select").hide();
+            $scope.compareType = true;
+            var type = [chartUtils.convertEnglish($scope.charts[0].config.legendData[0])];
+            $scope.compare(times, type, true);
+        }
+        $scope.compare = function (times, type, legendRender) {
+            $scope.charts.forEach(function (e) {
+                var chart = echarts.init(document.getElementById(e.config.id));
+                e.config.instance = chart;
+                e.config.legendAllowCheckCount = 1;
+                e.config.legendDefaultChecked = undefined;
+                e.config.noFormat = true;
+                e.config.bGap = false;
+                e.config.noFormat = "none";
+                e.config.keyFormat = "day";
+                e.config.compareCustom = true;
+                e.types = type;
+                if (legendRender) {
+                    e.config.legendData = $scope.compareLegendData;
+                    util.renderLegend(chart, e.config);
+                    Custom.initCheckInfo();
+                }
+                var reqRequestStart = $http.get(e.url + "?type=" + e.types + "&dimension=" + e.dimension + "&start=" + times[0] + "&end=" + times[0] + "&userType=" + $rootScope.userType);
+                var reqRequestEnd = $http.get(e.url + "?type=" + e.types + "&dimension=" + e.dimension + "&start=" + times[1] + "&end=" + times[1] + "&userType=" + $rootScope.userType);
+                e.config.instance.showLoading({
+                    text: "正在努力的读取数据中..."
+                });
+                $q.all([reqRequestStart, reqRequestEnd]).then(function (data) {
+                    var final_result = [];
+                    data.forEach(function (q) {
+                        var json = JSON.parse(eval("(" + q.data + ")").toString());
+                        json.forEach(function (item) {
+                            var _label = item.key[0].substring(0, 10) + ":" + chartUtils.convertChinese(item.label);
+                            var _key = [];
+                            item.key.forEach(function (k) {
+                                k = Number(k.toString().substring(10, 13));
+                                _key.push(k);
+                            });
+                            item.key = _key;
+                            item.label = _label;
+                        });
+                        final_result.push(json[0]);
+                    });
+                    cf.renderChart(final_result, e.config);
+                });
+            });
+        }
+        $scope.compareReset = function () {
+            $(".time_select").show();
+            $scope.compareType = false;
+            $scope.reset();
+            $scope.choiceClass = false;
+            $scope.dayselect = false;
+            $scope.hourselect = false;
+            $scope.hourcheckClass = false;
+            $scope.dayClass = true;
+            $rootScope.interval = 1;
+            $scope.date = "与其他时间段对比";
+            $scope.charts.forEach(function (e) {
+                var chart = echarts.init(document.getElementById(e.config.id));
+                e.config.instance = chart;
+                e.config.legendDefaultChecked = [0, 1];
+                e.config.legendAllowCheckCount = 2;
+                e.config.compareCustom = undefined;
+                e.types = [chartUtils.convertEnglish(e.config.legendData[0]), chartUtils.convertEnglish(e.config.legendData[1])];
+                util.renderLegend(chart, e.config);
+                Custom.initCheckInfo();
+            })
+            //requestService.refresh($scope.charts);
         }
         function GetDateStr(AddDayCount) {
             var dd = new Date();
