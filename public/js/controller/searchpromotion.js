@@ -201,7 +201,6 @@ define(["./module"], function (ctrs) {
                     var fieldQuery = $rootScope.tableSwitch.latitude.field;
                     var esurl = '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? ($rootScope.tableSwitch.number == 5 ? fieldQuery : null) : fieldQuery )
                         + "&filerInfo=" + filter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType;
-                    console.log("es url=" + esurl);
                     $http({
                         method: 'GET',
                         url: esurl

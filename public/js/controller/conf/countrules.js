@@ -1,7 +1,7 @@
 define(["./module"], function (ctrs) {
     "use strict";
 
-    ctrs.controller('countrules', function ($scope, $rootScope) {
+    ctrs.controller('countrules', function ($scope, $http,$rootScope) {
 
         $scope.rules =[{
             source:"",
@@ -28,15 +28,19 @@ define(["./module"], function (ctrs) {
             console.log(JSON.stringify($scope.rules));
             var strrules = "[";
             $scope.rules.forEach(function (rule, i){
-                strrules=strrules+"{source:"+rule.source+",convert:"+rule.convert+"}";
+                strrules=strrules+"{\"source\":\""+rule.source+"\",\"convert\":\""+rule.convert+"\"}";
                 if(i<$scope.rules.length-1){
                     strrules=strrules+",";
                 }
             });
             strrules=strrules+"]";
             //console.log(strrules);
-            var entity= "{rules:"+ strrules+",ex_ips:"+$scope.ex_ips+""+",ex_refer_urls:"
-                + $scope.ex_refer_urls+",ex_urls:"+ $scope.ex_urls+",cross_sites:"+ $scope.cross_sites+"}";
+            console.log(JSON.stringify($scope.rules));
+            //console.log(JSON.stringify($scope.ex_ips));
+            var uid= "test_uid2";
+            var site_id="test_site_id2";
+            var entity= "{\"uid\":\""+uid+"\",\"site_id\":\""+site_id+"\",\"rules\":"+ strrules+",\"ex_ips\":"+JSON.stringify($scope.ex_ips)+",\"ex_refer_urls\":"
+                + JSON.stringify($scope.ex_refer_urls)+",\"ex_urls\":"+ JSON.stringify($scope.ex_urls)+",\"cross_sites\":"+ JSON.stringify($scope.cross_sites)+"}";
             console.log(entity);
             var url= "/api/config?index=0&type='saveOrUpdate'&entity="+entity;
 
@@ -49,25 +53,23 @@ define(["./module"], function (ctrs) {
             $scope.clear();
         };
 
-        /**
-         * ��ճ�ʼ����������
-         */
+
         $scope.clear = function (){
             $scope.rules =[{
                 source:"",
                 convert:""
             }];
-            //�ų�IP
+
             $scope.ex_ips=[];
-            //�ų���Դ����
+
             $scope.ex_refer_urls=[];
-            //�ų��ܷ�����
+
             $scope.ex_urls=[];
-            //������
+
             $scope.cross_sites=[];
-            //���ó�Чת��
+
             $scope.open_tranver=false;
-            //�ÿ͵����������
+
             $scope.days=1;
         };
         $scope.addRule = function () {
