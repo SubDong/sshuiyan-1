@@ -525,25 +525,24 @@ api.get("/exchange", function (req, res) {
 
 // ================================= Config  ===============================
 api.get("/config", function (req, res) {
+    console.log("config request");
     var query = url.parse(req.url, true).query;
     var type = query['type'];
-    console.log("config request "+type);
-    console.log("config request "+query['rules'].source+"   "+query['rules'].convert);
-    var obj={
-        //id: String,
-        uid: "test_uid",
-        site_id: "test_site_id",
-        rules:query['rules'],//{source:"fsdfs",convert:"dfadfd"},
-        ex_ips: [],//query['ex_ips'],  // 排除IP
-        ex_refer_urls: [],//query['ex_refer_urls'], // 排除来源网站
-        ex_urls:[],//query['ex_urls'], // 排除受访地址
-        cross_sites: []//query['cross_sites'] // 跨域监控
-    };
-    //console.log(JSON.stringify(obj));
-    //dao.save(schemas.sites_model,obj,function(ins){
-    //    //datautils.send(res, JSON.stringify(ins));
-    //});
-    //datautils.send(res, "AAAA");
+    switch (type){
+        case "'save'":
+            var entity =JSON.parse(query['entity']);
+            dao.save("siterules_model",entity,function(ins){
+                datautils.send(res, JSON.stringify(ins));
+            });
+            break;
+        case "search":
+
+            break;
+        default :
+            break;
+    }
+
 });
+
 // ================================= Config  ==============================
 module.exports = api;
