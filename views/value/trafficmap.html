@@ -1,4 +1,4 @@
-<div class="middle_containers" ng-controller="trafficmapctr as app">
+<div class="middle_containers" ng-controller="trafficmapctr">
     <div class="date_select">
         <div  role="group" class="btn-group fl"><button class="btn btn-default" type="button" ng-click="today()" ng-hide="visible" ng-class="{'current':todayClass,'disabled':todaySelect}">今天</button>
         <button class="btn btn-default" type="button" ng-click="yesterday()" ng-class="{'current':yesterdayClass}">昨天</button>
@@ -10,7 +10,7 @@
     </div>
     <div class="my_concent">
         <div class="linkstree exchangetree">
-            <div class="linkstree_middle">
+            <div class="linkstree_middle" id="linkstree_top">
                 <div class="exchangetree_middle_top">
                     焦点频道
                 </div>
@@ -41,7 +41,7 @@
                     展示焦点频道TOP5的来源和去向，点击图标    可将该频道作为焦点频道
                 </div>
             </div>
-            <div class="linkstree_right">
+            <div class="linkstree_right" id="linkstree_right">
                 <div class="linkstree_right_left">
                 </div>
                 <div class="linkstree_right_right">

@@ -817,7 +817,7 @@ define(["../app"], function (app) {
                     scope.sumPv = 0;
                     $http({
                         method: 'GET',
-                        url: '/api/indextable/?type=' + $rootScope.ssh_es_type + '&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=pv,uv,outRate,avgTime,avgPage&dimension=ct'
+                        url: '/api/indextable/?type=' + $rootScope.userType + '&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=pv,uv,outRate,avgTime,avgPage&dimension=ct'
                     }).success(function (data, status) {
                         angular.forEach(data, function (e) {
                             if (e.ct === scope._ctText) {
@@ -844,7 +844,7 @@ define(["../app"], function (app) {
                 scope.loadFwlywzData = function () {
                     $http({
                         method: 'GET',
-                        url: '/api/fwlywz/?type=' + $rootScope.ssh_es_type + '&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=pv&ct=' + scope._ctValue
+                        url: '/api/fwlywz/?type=' + $rootScope.userType + '&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=pv&ct=' + scope._ctValue
                     }).success(function (data, status) {
                         scope.fwlywzTop5 = data;
                     }).error(function (error) {
@@ -856,7 +856,7 @@ define(["../app"], function (app) {
                 scope.loadFwrkyData = function () {
                     $http({
                         method: 'GET',
-                        url: '/api/indextable/?type=' + $rootScope.ssh_es_type + '&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=vc&dimension=loc&filerInfo=[{"ct": ["' + scope._ctValue + '"]}]'
+                        url: '/api/indextable/?type=' + $rootScope.userType + '&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=vc&dimension=loc&filerInfo=[{"ct": ["' + scope._ctValue + '"]}]'
                     }).success(function (data, status) {
                         scope.fwrkyTop5 = data ? ((data.length > 5) ? data.slice(0, 5) : data) : [];
                     }).error(function (error) {

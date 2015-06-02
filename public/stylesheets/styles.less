@@ -178,7 +178,7 @@ nav, .navbar-default {
   height: 62px;
   vertical-align: middle;
   .ui-select-container {
-    padding: 20px 0;
+    padding: 18px 0;
   }
   .website {
   }
@@ -843,6 +843,9 @@ nav, .navbar-default {
       margin-right: 10px;
 
     }
+    .input-group-en{
+      margin-top: -4px;
+    }
     .input_group {
       margin: 4px 10px 0 0;
     }
@@ -1163,7 +1166,6 @@ nav, .navbar-default {
 .date_select {
   .btn-Refresh {
     padding: 2px 10px;
-    border-radius: 2px;
   }
   .dateshow {
     width: 88px;
@@ -1246,7 +1248,7 @@ nav, .navbar-default {
 .survey_under {
   .select2-container .select2-choice {
     border: 0px;
-    border-radius: 2px;
+    border-radius: 4px;
     span {
       color: #01aeef;
     }
@@ -1765,6 +1767,7 @@ nav, .navbar-default {
     }
     .ng-scope {
       .ui-grid-cell-contents {
+        cursor: pointer;
         border: none !important;
         background: #fff !important;
       }
@@ -1960,7 +1963,7 @@ nav, .navbar-default {
     }
     .linkstree_left_more {
       border-right: 5px solid #d7eafd;
-      min-height: 188px;
+      min-height: 133px;
     }
     .linkstree_left_list {
       height: 56px;
@@ -2192,7 +2195,7 @@ nav, .navbar-default {
   display: none;
   left: 18px;
   z-index: 11;
-  padding: 20px 27px 7px 37px;
+  padding: 20px 15px 7px 30px;
   border: 1px solid #f0f0f0;
   opacity: 0.85;
   box-shadow: 0.5px 1px rgba(0, 0, 0, 0.2);
@@ -2806,10 +2809,12 @@ select.styled {
 .tooltip-inner {
   background: #fff;
   color: #000;
-  border: 1px solid #ccc;
+  border:none;
+  opacity: 1;
+  box-shadow:0 5px 10px rgba(0, 0, 0, 0.2);
 }
-.tooltip.bottom .tooltip-arrow {
-  border-bottom-color: #fff;
+.tooltip.right .tooltip-arrow {
+  border-right-color: #fff;
 }
 .tooltip.in {
   opacity: 1;
@@ -2868,6 +2873,7 @@ select.styled {
 
 .ui-grid-header-viewport .ui-grid-cell-contents {
   padding: 0px;
+  cursor: pointer;
 }
 
 .ui-grid-pinned-container .ui-grid-coluiGrid-003 {
@@ -2970,7 +2976,10 @@ select.styled {
 .count_content ul {
   margin-top: 70px;
 }
-
+.count_content ul li{
+  height: 100px;
+  width: 1000px;
+}
 .count_title {
   top: 62px;
 }
@@ -3216,7 +3225,7 @@ select.styled {
 .select2-container .select2-choice {
   background-image: none;
   border: 1px solid #e6e4e5;
-  border-radius: 2px;
+  border-radius: 4px;
   line-height: 25px;
 
 }
@@ -3436,8 +3445,17 @@ select.styled {
     background-color: #fff;
   }
 }
-.chart_top2 ul li label,.custom_select ul li label{
-  cursor: pointer;
+.select2-results .select2-result-label {
+  span {
+    display: block;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .chart_top2 ul li label, .custom_select ul li label {
+    cursor: pointer;
+  }
 }
 .ui-grid-footer-panel{
   border-bottom: none;

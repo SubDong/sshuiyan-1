@@ -9,6 +9,9 @@ var access_request = require('../services/access_request');
 var initial = require('../services/visitors/initialData');
 var map = require('../utils/map');
 var api = express.Router();
+var dao = require('../db/daos');
+var schemas = require('../db/schemas');
+
 
 api.get('/charts', function (req, res) {
     var query = url.parse(req.url, true).query, quotas = [], type = query['type'], dimension = query.dimension, filter = null, topN = [], userType = query.userType;
@@ -511,23 +514,36 @@ api.get("/exchange", function (req, res) {
     var start = Parameters[0].split("=")[1];
     var end = Parameters[1].split("=")[1];
     var type = Parameters[2].split("=")[1];
-    type = type.replace(/;/, ",");//由于穿过的数据是以;分号隔开的，所以替换成逗号
+    type = type.replace(/;/,",");//由于穿过的数据是以;分号隔开的，所以替换成逗号
     //start与end传过时间偏移量，调用creatIndexs()方法，把access-与时间拼接起来组成索引值
-    var indexString = date.createIndexes(start, end, "access-");
-    access_request.exchangeSearch(req.es, indexString, type, function (result) {
+    var indexString = date.createIndexes(start,end,"access-");
+    access_request.exchangeSearch(req.es, indexString, type, function(result){
         datautils.send(res, result);
     });
 
 });
-api.get("/trafficmap", function (req, res) {
-    var ParameterString = req.url.split("?");//获取url的？号以后的字符串
-    var Parameters = ParameterString[1].split(",");
-    var start = Parameters[0].split("=")[1];
-    var end = Parameters[1].split("=")[1];
-    //start与end传过时间偏移量，调用creatIndexs()方法，把access-与时间拼接起来组成索引值
-    var indexString = date.createIndexes(start, end, "access-");
-    access_request.trafficmapSearch(req.es,indexString,function(result){
-        datautils.send(res,result);
-    });
+
+// ================================= Config  ===============================
+api.get("/config", function (req, res) {
+    var query = url.parse(req.url, true).query;
+    var type = query['type'];
+    console.log("config request "+type);
+    console.log("config request "+query['rules'].source+"   "+query['rules'].convert);
+    var obj={
+        //id: String,
+        uid: "test_uid",
+        site_id: "test_site_id",
+        rules:query['rules'],//{source:"fsdfs",convert:"dfadfd"},
+        ex_ips: [],//query['ex_ips'],  // 排除IP
+        ex_refer_urls: [],//query['ex_refer_urls'], // 排除来源网站
+        ex_urls:[],//query['ex_urls'], // 排除受访地址
+        cross_sites: []//query['cross_sites'] // 跨域监控
+    };
+    //console.log(JSON.stringify(obj));
+    //dao.save(schemas.sites_model,obj,function(ins){
+    //    //datautils.send(res, JSON.stringify(ins));
+    //});
+    //datautils.send(res, "AAAA");
 });
+// ================================= Config  ==============================
 module.exports = api;

@@ -1,11 +1,11 @@
-<div class="middle_containers" ng-controller="linksctrl as app">
+<div class="middle_containers" ng-controller="linksctrl">
     <div class="date_select">
         <calendar></calendar>
         <refresh></refresh>
     </div>
     <div class="my_concent">
         <div class="linkstree">
-            <div class="linkstree_middle">
+            <div class="linkstree_middle" id="linkstree_top">
                 <div class="linkstree_left_line fl"></div>
                 <div class="linkstree_middle_left fl"></div>
                 <div class="linkstree_middle_center fl">
@@ -30,7 +30,7 @@
                 </div>
                 <div class="linkstree_middle_right fl"></div>
             </div>
-            <div class="linkstree_right">
+            <div class="linkstree_right" id="linkstree_right">
                 <div class="linkstree_right_left">
                 </div>
                 <div class="linkstree_right_right">

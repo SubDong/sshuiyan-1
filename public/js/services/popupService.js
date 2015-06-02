@@ -98,10 +98,10 @@ define(["../app"], function (app) {
          */
         function showSourceDistributionData(entrance) {
             ngDialog.open({
-                template: '<div style="overflow: hidden"><tabset justified="true">' +
-                '<tab heading="来源类型" id="source-category" ng-click="showCategory()"></tab>' +
-                '<tab heading="来源URL" id="source-url" ng-click="showUrl()"></tab>' +
-                '</tabset></div>',
+                    template: '<div style="overflow: hidden"><tabset justified="true">' +
+                    '<tab heading="来源类型" id="source-category" ng-click="showCategory()"></tab>' +
+                    '<tab heading="来源URL" id="source-url" ng-click="showUrl()"></tab>' +
+                    '</tabset></div>',
                 plain: true,
                 className: 'ngdialog-theme-default',
                 scope: $rootScope,

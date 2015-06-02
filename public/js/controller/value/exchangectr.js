@@ -6,12 +6,13 @@ define(["./module"], function (ctrs) {
     "use strict";
 
     ctrs.controller('exchangectr', function ($cookieStore, $http, $rootScope, $scope) {
+            $scope.selectedIndex= 0;
             $scope.start = -1;//时间偏移量开始
             $scope.end = -1;//时间偏移量结束
             $scope.sites = [];
             $scope.exchange = {};
             //对应域名的点击时间，获取该域名下的层级下数据
-            $scope.itemClicked = function (page) {
+            $scope.itemClicked = function (page,$index) {
                 $http.get("api/exchange?start=" + $scope.start + ",end=" + $scope.end + ",type=" + page.id).success(function (data) {
                     //注：data里面的数据在name、id、pv和uv与page对象的值不同，数据混乱
                     //原因是type的数量与数据查出来的域名数量不符合，数据库有问题
@@ -22,8 +23,11 @@ define(["./module"], function (ctrs) {
                         uv: page.uv,
                         path1: data[0].path1//层级下数据
                     }
+
                 });
+                $scope.selectedIndex= $index;
             };
+
             //获取前天统计数据
             $scope.beforeyesterday = function () {
                 $scope.start = -2;
