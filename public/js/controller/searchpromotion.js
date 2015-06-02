@@ -65,6 +65,12 @@ define(["./module"], function (ctrs) {
                     $rootScope.searchGridArray.unshift($scope.searchGridObjButton);
                 }
                 $rootScope.searchGridArray.unshift($rootScope.tableSwitch.latitude);
+                $scope.gridObjButton = {};
+                $scope.gridObjButton["name"] = "xl";
+                $scope.gridObjButton["displayName"] = "";
+                $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
+                $scope.gridObjButton["maxWidth"] = 10;
+                $rootScope.searchGridArray.unshift($scope.gridObjButton);
             } else {
                 if ($rootScope.checkedArray.length >= number) {
                     $rootScope.checkedArray.shift();
@@ -271,6 +277,9 @@ define(["./module"], function (ctrs) {
                             data.forEach(function (item, i) {
                                 $rootScope.checkedArray.forEach(function (x, y) {
                                     datas[x] = item[x] != undefined ? item[x] : data[0][x];
+                                    if(x == "ctr"){
+                                        datas[x] += "%";
+                                    }
                                 });
                                 datas[fieldQuery] = item[fieldQuery] + getTableTitle(fieldQuery, item);
                                 dataArray.push(datas);
@@ -281,6 +290,9 @@ define(["./module"], function (ctrs) {
                         } else {
                             $rootScope.checkedArray.forEach(function (x, y) {
                                 datas[x] = item[x] != undefined ? item[x] : data[0][x];
+                                if(x == "ctr"){
+                                    datas[x] += "%";
+                                }
                             });
                             var field = $rootScope.tableSwitch.latitude.field;
                             datas[field] = item[field] + getTableTitle(field, item);
