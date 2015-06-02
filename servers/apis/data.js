@@ -525,18 +525,22 @@ api.get("/exchange", function (req, res) {
 
 // ================================= Config  ===============================
 api.get("/config", function (req, res) {
-    console.log("config request");
+
     var query = url.parse(req.url, true).query;
     var type = query['type'];
+    //console.log("config request "+type);
     switch (type){
-        case "'save'":
+        case "save":
             var entity =JSON.parse(query['entity']);
             dao.save("siterules_model",entity,function(ins){
                 datautils.send(res, JSON.stringify(ins));
             });
             break;
         case "search":
-
+            //var qry =JSON.parse(query['query']);
+            dao.find("siterules_model",query['query'],null,{},function(err,docs){
+                datautils.send(res, docs);
+            });
             break;
         default :
             break;

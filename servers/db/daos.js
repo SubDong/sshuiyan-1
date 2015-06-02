@@ -19,8 +19,7 @@ var daos = {
         console.error("uid is empty.");
     },
     save: function (schema, obj, cb) {
-
-        var instance = this.createinstance(schema, obj)
+        var instance = this.createinstance(schema, obj);
         instance.save(function (err, ins) {
             if (err)
                 return console.error(err);
@@ -39,12 +38,12 @@ var daos = {
             cb()
         });
     },
-    find: function (schema, qry, options, cb) {
+    find: function (schema, qry, fields,options, cb) {
         if (qry.uid) {
             return this.uiderror();
         }
-        var instance = this.createmodel(schema);
-        instance.find(query, null, options, cb);
+        var  instance= this.createmodel(schema);
+        instance.find(JSON.parse(qry), fields, options,cb);
     },
     count: function (schema, qry, options, cb) {
         if (qry.uid) {
@@ -71,13 +70,24 @@ var daos = {
         instance.update(qry, updates, null, cb);
     },
     createmodel: function (schema) {
-        var dbschema = mongodb.service().Schema(schemas[schema].schema);
-        var Model = mongodb.service().model(schemas[schema].model_name, dbschema, schemas[schema].collection_name)
-        return Model;
+        try{
+            var dbschema = mongodb.service().Schema(schemas[schema].schema);
+            var Model = mongodb.service().model(schemas[schema].model_name, dbschema, schemas[schema].collection_name);
+            return Model;
+        }catch(err){
+            console.log("Model "+schemas[schema].model_name+" has been created!Just need get it!");
+            var Model = mongodb.service().model(schemas[schema].model_name);
+            return Model;
+        }
+
+
     },
     createinstance: function (schema, obj) {
+        console.log("createinstance1");
         var Model = this.createmodel(schema);
+        console.log("createinstance2");
         var instance = new Model(obj);
+        console.log("createinstance3");
         return instance;
     }
 }
