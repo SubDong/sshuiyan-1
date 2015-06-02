@@ -178,7 +178,7 @@ define(["./module"], function (ctrs) {
         };
         //搜索推广地域过滤
         $scope.setAreaFilter = function (area, id) {
-            console.log("当前标签" +$rootScope.tableSwitch.promotionSearch.turnOn)
+            //console.log("当前标签" +$rootScope.tableSwitch.promotionSearch.turnOn)
             if ($rootScope.tableSwitch.promotionSearch.turnOn == "ssc") {
 
             }else{
@@ -197,7 +197,7 @@ define(["./module"], function (ctrs) {
                         var fieldQuery = $rootScope.tableSwitch.latitude.field;
                         var esurl = '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? ($rootScope.tableSwitch.number == 5 ? fieldQuery : null) : fieldQuery )
                             + "&filerInfo=" + filter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType;
-                        console.log("es url=" + esurl);
+                        //console.log("es url=" + esurl);
                         $http({
                             method: 'GET',
                             url: esurl
@@ -404,7 +404,6 @@ define(["./module"], function (ctrs) {
 
         //得到表格底部数据
         $scope.getSearchFooterData = function (a, option, number) {
-            console.log(option)
             var returnData = 0;
             var spl = 0;
             var newSpl = [0, 0, 0];
@@ -438,143 +437,148 @@ define(["./module"], function (ctrs) {
 
 
         $scope.getHistoricalTrend = function (b) {
+            console.log("getHistoricalTrend响应点击表格");
+            console.log("field="+$rootScope.tableSwitch.latitude.field);
             if ($rootScope.tableSwitch.latitude.field == "campaignName") {
-                $rootScope.checkedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
-                $rootScope.searchGridArray = [
-                    {
-                        name: "xl",
-                        displayName: "",
-                        cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
-                        maxWidth: 10
-                    },
-                    {
-                        name: "单元",
-                        displayName: "单元",
-                        field: "adgroupName",
-                        cellTemplate: "<div><a href='javascript:void(0)' target='_blank' style='color:#0965b8;line-height:30px;' ng-click='grid.appScope.getHistoricalTrend(this)'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</div>"
-                    },
-                    {
-                        name: "展现",
-                        displayName: "展现",
-                        field: "impression",
-                        footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
-                    },
-                    {
-                        name: "消费",
-                        displayName: "消费",
-                        field: "cost",
-                        footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
-                    },
-                    {
-                        name: "平均点击价格",
-                        displayName: "平均点击价格",
-                        field: "cpc",
-                        footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
-                    },
-                    {
-                        name: "跳出率",
-                        displayName: "跳出率",
-                        field: "outRate",
-                        footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
-                    },
-                    {
-                        name: "平均访问时长",
-                        displayName: "平均访问时长",
-                        field: "avgTime",
-                        footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
-                    },
-                    {
-                        name: "新房客比率",
-                        displayName: "新房客比率",
-                        field: "nuvRate",
-                        footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
-                    }
-                ];
-                $rootScope.tableSwitch = {
-                    latitude: {name: "单元", displayName: "单元", field: "adgroupName"},
-                    tableFilter: null,
-                    dimen: false,
-                    // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
-                    number: 1,
-                    //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
-                    coding: false,
-                    //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
-                    arrayClear: false, //是否清空指标array
-                    promotionSearch: {
-                        turnOn: true, //是否开始推广中sem数据
-                        SEMData: "adgroup" //查询类型
-                    }
-                };
-                $scope.searchId = "cid=" + b.$parent.$parent.row.entity.id;
-            } else if ($rootScope.tableSwitch.latitude.field == "adgroupName") {
-                $rootScope.checkedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
-                $rootScope.searchGridArray = [
-                    {
-                        name: "xl",
-                        displayName: "",
-                        cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
-                        maxWidth: 10
-                    },
-                    {
-                        name: "关键词",
-                        displayName: "关键词",
-                        field: "keywordName",
-                        cellTemplate: "<div><a href='http://www.baidu.com/s?wd={{grid.appScope.getDataUrlInfo(grid, row,1)}}' target='_blank' style='color:#0965b8;line-height:30px;margin-left: 10px'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</div>"
-                    },
-                    {
-                        name: "展现",
-                        displayName: "展现",
-                        field: "impression",
-                        footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
-                    },
-                    {
-                        name: "消费",
-                        displayName: "消费",
-                        field: "cost",
-                        footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
-                    },
-                    {
-                        name: "平均点击价格",
-                        displayName: "平均点击价格",
-                        field: "cpc",
-                        footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
-                    },
-                    {
-                        name: "跳出率",
-                        displayName: "跳出率",
-                        field: "outRate",
-                        footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
-                    },
-                    {
-                        name: "平均访问时长",
-                        displayName: "平均访问时长",
-                        field: "avgTime",
-                        footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
-                    },
-                    {
-                        name: "新房客比率",
-                        displayName: "新房客比率",
-                        field: "nuvRate",
-                        footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
-                    }
-                ];
-                $rootScope.tableSwitch = {
-                    latitude: {name: "关键词", displayName: "关键词", field: "keywordName"},
-                    tableFilter: null,
-                    dimen: "city",
-                    // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
-                    number: 1,
-                    //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
-                    coding: false,
-                    //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
-                    arrayClear: false, //是否清空指标array
-                    promotionSearch: {
-                        turnOn: true, //是否开始推广中sem数据
-                        SEMData: "keyword" //查询类型
-                    }
-                };
-                $scope.searchId = "agid=" + b.$parent.$parent.row.entity.id;
-            }
+                    $rootScope.checkedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
+                    $rootScope.searchGridArray = [
+                        {
+                            name: "xl",
+                            displayName: "",
+                            cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
+                            maxWidth: 10
+                        },
+                        {
+                            name: "单元",
+                            displayName: "单元",
+                            field: "adgroupName",
+                            cellTemplate: "<div><a href='javascript:void(0)' target='_blank' style='color:#0965b8;line-height:30px;' ng-click='grid.appScope.getHistoricalTrend(this)'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</div>"
+                        },
+                        {
+                            name: "展现",
+                            displayName: "展现",
+                            field: "impression",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                        },
+                        {
+                            name: "消费",
+                            displayName: "消费",
+                            field: "cost",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                        },
+                        {
+                            name: "平均点击价格",
+                            displayName: "平均点击价格",
+                            field: "cpc",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                        },
+                        {
+                            name: "跳出率",
+                            displayName: "跳出率",
+                            field: "outRate",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                        },
+                        {
+                            name: "平均访问时长",
+                            displayName: "平均访问时长",
+                            field: "avgTime",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                        },
+                        {
+                            name: "新房客比率",
+                            displayName: "新房客比率",
+                            field: "nuvRate",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                        }
+                    ];
+                    $rootScope.tableSwitch = {
+                        latitude: {name: "单元", displayName: "单元", field: "adgroupName"},
+                        tableFilter: null,
+                        dimen: false,
+                        // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
+                        number: 1,
+                        //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
+                        coding: false,
+                        //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
+                        arrayClear: false, //是否清空指标array
+                        promotionSearch: {
+                            turnOn: true, //是否开始推广中sem数据
+                            SEMData: "adgroup" //查询类型
+                        }
+                    };
+                    $scope.searchId = "cid=" + b.$parent.$parent.row.entity.id;
+                }
+            else if ($rootScope.tableSwitch.latitude.field == "adgroupName") {
+                    $rootScope.checkedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
+                    $rootScope.searchGridArray = [
+                        {
+                            name: "xl",
+                            displayName: "",
+                            cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
+                            maxWidth: 10
+                        },
+                        {
+                            name: "关键词",
+                            displayName: "关键词",
+                            field: "keywordName",
+                            cellTemplate: "<div><a href='http://www.baidu.com/s?wd={{grid.appScope.getDataUrlInfo(grid, row,1)}}' target='_blank' style='color:#0965b8;line-height:30px;margin-left: 10px'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</div>"
+                        },
+                        {
+                            name: "展现",
+                            displayName: "展现",
+                            field: "impression",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                        },
+                        {
+                            name: "消费",
+                            displayName: "消费",
+                            field: "cost",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                        },
+                        {
+                            name: "平均点击价格",
+                            displayName: "平均点击价格",
+                            field: "cpc",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                        },
+                        {
+                            name: "跳出率",
+                            displayName: "跳出率",
+                            field: "outRate",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                        },
+                        {
+                            name: "平均访问时长",
+                            displayName: "平均访问时长",
+                            field: "avgTime",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                        },
+                        {
+                            name: "新房客比率",
+                            displayName: "新房客比率",
+                            field: "nuvRate",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                        }
+                    ];
+                    $rootScope.tableSwitch = {
+                        latitude: {name: "关键词", displayName: "关键词", field: "keywordName"},
+                        tableFilter: null,
+                        dimen: "city",
+                        // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
+                        number: 1,
+                        //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
+                        coding: false,
+                        //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
+                        arrayClear: false, //是否清空指标array
+                        promotionSearch: {
+                            turnOn: true, //是否开始推广中sem数据
+                            SEMData: "keyword" //查询类型
+                        }
+                    };
+                    $scope.searchId = "agid=" + b.$parent.$parent.row.entity.id;
+                //此时隐藏高级搜索中的 地域过滤
+                document.getElementById("areadiv").style.display = "none";
+                }
             $rootScope.targetSearchSpread();
         };
 
