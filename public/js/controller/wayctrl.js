@@ -1,14 +1,15 @@
 /**
  * Created by john on 2015/4/3.
  */
-define(["./module"], function (ctrs) {
+define(["app"], function (app) {
 
     "use strict";
 
-    ctrs.controller('wayctrl', function ($scope, $rootScope, $q, $http, requestService, areaService, SEM_API_URL) {
+    app.controller('wayctrl', function ($timeout,$scope, $rootScope, $q, $http, requestService, areaService, SEM_API_URL) {
         $scope.visible = true;
         $rootScope.tableTimeStart = -1;//开始时间
         $rootScope.tableTimeEnd = -1;//结束时间、
+        $scope.compareType = false;//对比标识
         //配置默认指标
         $rootScope.checkedArray = ["click", "cost", "cpc", "pv", "uv", "avgPage"];
         $rootScope.tableFormat = null;
@@ -89,17 +90,27 @@ define(["./module"], function (ctrs) {
 
         $scope.$on("ssh_refresh_charts", function (e, msg) {
             $rootScope.targetSearch(true);
-            $scope.init($rootScope.user, $rootScope.baiduAccount, "account", $scope.selectedQuota, $rootScope.start, $rootScope.end);
+            if ($scope.compareType) {
+                $scope.otherDateCompareReset();
+            } else {
+                $scope.init($rootScope.user, $rootScope.baiduAccount, "account", $scope.selectedQuota, $rootScope.start, $rootScope.end);
+            }
+
             //$scope.doSearchAreas($scope.tableTimeStart, $scope.tableTimeEnd, "1", $scope.mapOrPieConfig);
         });
 
         $scope.selectedQuota = ["click", "impression"];
         $scope.onLegendClick = function (radio, chartInstance, config, checkedVal) {
             $scope.selectedQuota = checkedVal;
-            if (checkedVal.length) {
-                $scope.init($rootScope.user, $rootScope.baiduAccount, "account", $scope.selectedQuota, $rootScope.start, $rootScope.end);
+            if ($scope.compareType) {
+                var times = [$rootScope.start, $rootScope.end];
+                $scope.otherDateCompare("account", times, checkedVal);
             } else {
-                def.defData($scope.charts[0].config);
+                if (checkedVal.length) {
+                    $scope.init($rootScope.user, $rootScope.baiduAccount, "account", $scope.selectedQuota, $rootScope.start, $rootScope.end);
+                } else {
+                    def.defData($scope.charts[0].config);
+                }
             }
         }
         $scope.charts = [
@@ -216,6 +227,7 @@ define(["./module"], function (ctrs) {
         ];
         //日历
         $rootScope.datepickerClick = function (start, end, label) {
+
             var time = chartUtils.getTimeOffset(start, end);
             $rootScope.start = time[0];
             $rootScope.end = time[1];
@@ -228,7 +240,11 @@ define(["./module"], function (ctrs) {
             } else {
                 $scope.charts[0].config.keyFormat = "hour";
             }
-            $scope.init($rootScope.user, $rootScope.baiduAccount, "account", $scope.selectedQuota, $rootScope.start, $rootScope.end);
+            if ($scope.compareType) {
+                $scope.otherDateCompareReset();
+            } else {
+                $scope.init($rootScope.user, $rootScope.baiduAccount, "account", $scope.selectedQuota, $rootScope.start, $rootScope.end);
+            }
             $rootScope.targetSearch();
             $rootScope.tableTimeStart = time[0];
             $rootScope.tableTimeEnd = time[1];
@@ -261,11 +277,94 @@ define(["./module"], function (ctrs) {
             $scope.reset();
             $scope.yesterdayClass = true;
         };
-        $scope.compareType = null;
-        $rootScope.datePickerCompare = function (start, end, label) {
-
-            console.log(start + ">>>>>>>>>>>>>>>>" + end);
+        $scope.dateCompareClick = function (start, end, label) {
+            $scope.compareType = true;
+            $scope.reset();
+            $scope.choiceClass = true;
+            var times = chartUtils.getTimeOffset(start, end);
+            $rootScope.start = times[0];
+            $rootScope.end = times[1];
+            if (times[0] == 0 && times[1] == 0) {
+                alert("请选择正确的对比时间!");
+            } else {
+                var type = chartUtils.convertEnglish($scope.charts[0].config.legendData[0]);
+                $scope.otherDateCompare("account", times, [type], true);
+            }
         };
+        $scope.otherDateCompare = function (semType, times, type, legendRender) {
+            $scope.charts.forEach(function (e) {
+                var chart = echarts.init(document.getElementById(e.config.id));
+                e.config.instance = chart;
+                e.config.legendAllowCheckCount = 1;
+                e.config.legendDefaultChecked = undefined;
+                e.types = type;
+                e.config.noFormat = "none";
+                if (legendRender) {
+                    util.renderLegend(chart, e.config);
+                    Custom.initCheckInfo();
+                }
+                chart.showLoading({
+                    text: "正在努力的读取数据中..."
+                });
+            });
+            var requestParams = chartUtils.qAll(type);
+            var requestArray = [];
+            if (requestParams[0] != "") {
+                var semRequest = $http.get(SEM_API_URL + $rootScope.user + "/" + $rootScope.baiduAccount + "/" + semType + "/" + requestParams[0] + "?startOffset=" + times[0] + "&endOffset=" + times[0]);
+                requestArray.push(semRequest);
+                if (times[1] != 0) {
+                    var semRequestCompare = $http.get(SEM_API_URL + $rootScope.user + "/" + $rootScope.baiduAccount + "/" + semType + "/" + requestParams[0] + "?startOffset=" + times[1] + "&endOffset=" + times[1]);
+                    requestArray.push(semRequestCompare);
+                }
+            }
+            if (requestParams[1].length) {
+                var esRequest = $http.get("/api/charts/?type=" + requestParams[1].toString() + "&dimension=period&start=" + times[0] + "&end=" + times[0] + "&userType=" + $rootScope.userType);
+                requestArray.push(esRequest);
+                var esRequestCompare = $http.get("/api/charts/?type=" + requestParams[1].toString() + "&dimension=period&start=" + times[1] + "&end=" + times[1] + "&userType=" + $rootScope.userType);
+                requestArray.push(esRequestCompare);
+            }
+            $q.all(requestArray).then(function (res) {
+                var final_result = [];
+                res.forEach(function (item) {
+                    if (item.data[0][type]) {
+                        var _tmp = {};
+                        _tmp["key"] = ["搜索推广"];
+                        _tmp["quota"] = [item.data[0][type]];
+                        _tmp["label"] = item.data[0]["date"] + " " + chartUtils.convertChinese(type.toString());
+                        final_result.push(_tmp);
+                    } else {
+                        var _tmpJson = JSON.parse(eval("(" + item.data + ")").toString());
+                        var _tmp = {};
+                        var count = 0;
+                        _tmpJson.forEach(function (item) {
+                            item.quota.forEach(function (quota) {
+                                count += quota;
+                            });
+                            _tmp["key"] = ["搜索推广"];
+                            _tmp["quota"] = [count];
+                            _tmp["label"] = item.key[0].substring(0, 10) + " " + chartUtils.convertChinese(type.toString());
+                            final_result.push(_tmp);
+                        });
+                    }
+                });
+                cf.renderChart(final_result, $scope.charts[0].config);
+            });
+        }
+        $scope.otherDateCompareReset = function () {
+            $scope.compareType = false;
+            $scope.selectedQuota = ["click", "impression"];
+            $scope.charts.forEach(function (e) {
+                var chart = echarts.init(document.getElementById(e.config.id));
+                e.config.instance = chart;
+                e.config.legendAllowCheckCount = 2;
+                e.config.legendDefaultChecked = [0, 1];
+                e.types = [chartUtils.convertEnglish($scope.charts[0].config.legendData[0]), chartUtils.convertEnglish($scope.charts[0].config.legendData[1])];
+                e.config.noFormat = "none";
+                util.renderLegend(chart, e.config);
+                Custom.initCheckInfo();
+            });
+            $scope.init($rootScope.user, $rootScope.baiduAccount, "account", $scope.selectedQuota, $rootScope.start, $rootScope.end);
+        }
 
     });
 });

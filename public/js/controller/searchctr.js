@@ -120,6 +120,16 @@ define(["./module"], function (ctrs) {
                 $scope.init(user, baiduAccount, semType, quotas, start, end, renderLegend);
             }
             $scope.init = function (user, baiduAccount, semType, quotas, start, end, renderLegend) {
+                //var request = chartUtils.qAll(quotas);
+                //var requestArray = [];
+                //if (request[0] != "") {
+                //    var semRequest = $http.get(SEM_API_URL + user + "/" + baiduAccount + "/" + semType + "/" + request[0] + "?startOffset=" + start + "&endOffset=" + end);
+                //    requestArray.push(semRequest);
+                //}
+                //if (request[1].length) {
+                //    var esRequest = $http.get("/api/charts/?type=" + request[1].toString() + "&dimension=one&start=" + start + "&end=" + end + "&userType=" + $rootScope.userType);
+                //    requestArray.push(esRequest);
+                //}
                 if (quotas.length) {
                     var semRequest = "";
                     if (quotas.length == 1) {

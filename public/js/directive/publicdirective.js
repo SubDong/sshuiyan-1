@@ -39,7 +39,7 @@ define(["../app"], function (app) {
                     scope.compareLastDayClass = false;
                     scope.compareLastWeekClass = false;
                     scope.clearCompareSelect = false;
-
+                    scope.choiceClass=false;
                 };
                 scope.reloadByCalendar = function (type) {
                     //console.info("info: now user click the " + type + " button");
@@ -180,8 +180,11 @@ define(["../app"], function (app) {
     app.directive("dateother", function ($rootScope) {
         var option = {
             restrict: "EA",
-            template: "<div role=\"group\" class=\"btn-group fl\"><button id=\"choicetrange\"  class=\"btn btn-default pull-right date-picker my_picker fl\"   max=\"max\" ng-model=\"date\"> " +
-            "<i class=\"glyphicon glyphicon-calendar fa fa-calendar\"></i><span>与其他时间段对比</span></button><button class=\"btn btn-default\" type=\"button\" ng-hide=\"dateshows\" >前一日</button> <button class=\"btn btn-default\" type=\"button\"  ng-hide=\"dateshows\" >上周同期</button></div>",
+            template: "<div role=\"group\" class=\"btn-group fl\">" +
+            "<button id=\"choicetrange\"  class=\"btn btn-default pull-right date-picker my_picker fl\" ng-class=\"{'current':choiceClass}\"  max=\"max\" ng-model=\"date\"> " +
+            "<i class=\"glyphicon glyphicon-calendar fa fa-calendar\"></i><span>与其他时间段对比</span></button>" +
+            "<button class=\"btn btn-default\" type=\"button\" ng-hide=\"dateshows\" >前一日</button>" +
+            " <button class=\"btn btn-default\" type=\"button\"  ng-hide=\"dateshows\" >上周同期</button></div>",
             replace: true,
             transclude: true,
             link: function (scope, element, attris, controller) {

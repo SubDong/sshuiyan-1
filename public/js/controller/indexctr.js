@@ -64,6 +64,13 @@ define(['./module'], function (ctrs) {
                         config["bGap"] = true;//图表类型
                         chartUtils.noFormatConvertLabel(json);
                         cf.renderChart(json, config);
+                    } else if ($rootScope.interval == -1&&$rootScope.start>=-1) {
+                        config["keyFormat"] = "none";
+                        config["noFormat"] = "noFormat";
+                        config["bGap"] = true;//图表类型
+                        chartUtils.getXType(config, $rootScope.interval, $rootScope.start);
+                        var final_result = chartUtils.getDataByDay(data);
+                        cf.renderChart(final_result, config);
                     } else {
                         config["noFormat"] = undefined;
                         config["bGap"] = false;//图表类型
@@ -82,7 +89,7 @@ define(['./module'], function (ctrs) {
             {
                 config: {
                     legendId: "index_charts_legend",
-                    legendData: ["浏览量(PV)", "访客数(UV)", "IP数","跳出率", "抵达率", "平均访问时长", "页面转化"],//显示几种数据
+                    legendData: ["浏览量(PV)", "访客数(UV)", "IP数", "跳出率", "抵达率", "平均访问时长", "页面转化"],//显示几种数据
                     legendAllowCheckCount: 2,
                     legendClickListener: $scope.onLegendClickListener,
                     legendDefaultChecked: [0, 1],
@@ -175,10 +182,9 @@ define(['./module'], function (ctrs) {
             $scope.weekcheckClass = false;
             $scope.mothcheckClass = false;
             $rootScope.interval = 1;
-            $scope.charts.forEach(function (e) {
-                var chart = echarts.init(document.getElementById(e.config.id));
-                e.config.instance = chart;
-            });
+            var e = $scope.charts[0];
+            var chart = echarts.init(document.getElementById(e.config.id));
+            e.config.instance = chart;
             $scope.charts[0].config.bGap = false;//图表类型
             requestService.refresh($scope.charts);
 
@@ -203,11 +209,10 @@ define(['./module'], function (ctrs) {
             $scope.mothcheckClass = false;
             $scope.dayClass = false;
             $rootScope.interval = 604800000;
-            $scope.charts.forEach(function (e) {
-                var chart = echarts.init(document.getElementById(e.config.id));
-                e.config.instance = chart;
-                e.config.noFormat = undefined;
-            });
+            var e = $scope.charts[0];
+            var chart = echarts.init(document.getElementById(e.config.id));
+            e.config.instance = chart;
+            e.config.noFormat = undefined;
             $scope.charts[0].config.time = chartUtils.getWeekTime($rootScope.start, $rootScope.end);
             $scope.charts[0].config.keyFormat = "week";
             requestService.refresh($scope.charts);

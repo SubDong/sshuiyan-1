@@ -294,7 +294,6 @@ var op = {
             xData.push(x);
             option.series.push(serie);
         });
-        console.log(chartConfig.twoYz);
         if (!chartConfig.twoYz) {
             for (var i = 0; i < labelData.length; i++) {
                 //if (labelData[i] == "uv" || labelData[i] == "pv" || labelData[i] == "访客数(UV)" || labelData[i] == "浏览量(PV)") {
@@ -587,14 +586,14 @@ var ad = {
                 var days = Math.floor(value / 1440 / 60);
                 var hours = Math.floor((value - days * 1440 * 60) / 3600);
                 var minutes = Math.floor((value - days * 1440 * 60 - hours * 3600) / 60);
-                var seconds = (value - days * 1440 * 60 - hours * 3600 - minutes * 60);
+                var seconds = Math.floor((value - days * 1440 * 60 - hours * 3600 - minutes * 60));
                 return this.getDoubleInteger(hours) + ":" + this.getDoubleInteger(minutes) + ":" + this.getDoubleInteger(seconds);
                 break;
             case "平均访问时长":
                 var days = Math.floor(value / 1440 / 60);
                 var hours = Math.floor((value - days * 1440 * 60) / 3600);
                 var minutes = Math.floor((value - days * 1440 * 60 - hours * 3600) / 60);
-                var seconds = (value - days * 1440 * 60 - hours * 3600 - minutes * 60);
+                var seconds = Math.floor((value - days * 1440 * 60 - hours * 3600 - minutes * 60));
                 return this.getDoubleInteger(hours) + ":" + this.getDoubleInteger(minutes) + ":" + this.getDoubleInteger(seconds);
                 break;
             case "outRate":

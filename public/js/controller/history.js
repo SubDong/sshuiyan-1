@@ -19,7 +19,12 @@ define(['./module'], function (ctrs) {
         $rootScope.tableFormat = null;
 
 
-        $rootScope.gridArray[0] = {name: "日期", displayName: "日期", field: "period",footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"};
+        $rootScope.gridArray[0] = {
+            name: "日期",
+            displayName: "日期",
+            field: "period",
+            footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"
+        };
         $rootScope.gridArray.splice(1, 1);
         $rootScope.tableSwitch.dimen = false;
 
@@ -35,7 +40,7 @@ define(['./module'], function (ctrs) {
                     url: searchUrl
                 }).success(function (data, status) {
                     var newDataInfo = "";
-                    if(getTime == "hour"){
+                    if (getTime == "hour") {
                         var result = [];
                         var vaNumber = 0;
                         var maps = {}
@@ -59,8 +64,8 @@ define(['./module'], function (ctrs) {
                                 result.push(maps[key]);
                             }
                         }
-                        newDataInfo =  result;
-                    }else{
+                        newDataInfo = result;
+                    } else {
                         newDataInfo = data;
                     }
 
@@ -77,7 +82,7 @@ define(['./module'], function (ctrs) {
                     + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&formartInfo=" + getTime + "&type=" + esType
                 }).success(function (data, status) {
                     var newDataInfo1 = "";
-                    if(getTime == "hour"){
+                    if (getTime == "hour") {
                         var result = [];
                         var vaNumber = 0;
                         var maps = {}
@@ -101,68 +106,113 @@ define(['./module'], function (ctrs) {
                                 result.push(maps[key]);
                             }
                         }
-                        newDataInfo1 =  result;
-                    }else{
+                        newDataInfo1 = result;
+                    } else {
                         newDataInfo1 = data;
                     }
                     $scope.$broadcast("history", newDataInfo1);
                     $rootScope.historyJu = "";
-                    $scope.init(data, $rootScope.checkedArray);
                 }).error(function (error) {
                     console.log(error);
                 });
             }
         }
+        $scope.radioCheckVal = [];
+        $scope.refreshChart = function (types) {
+            var quota = $scope.radioCheckVal;
+            if (types) {
+                quota = types;
+            }
+            var getTime = $rootScope.tableTimeStart <= -6 ? "day" : "hour";
+            var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
+            $scope.charts[0].config.instance = chart;
+            chart.showLoading({
+                text: "正在努力的读取数据中..."
+            });
+            $http({
+                method: 'GET',
+                url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + quota + "&dimension=" + $rootScope.tableSwitch.latitude.field
+                + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&formartInfo=" + getTime + "&type=" + esType
+            }).success(function (data, status) {
+                if ($rootScope.tableTimeStart >= -1) {
+                    $scope.charts[0].config.noFormat = undefined;
+                    cf.renderChart(data, $scope.charts[0].config);
+                } else {
+                    $scope.charts[0].config.noFormat = true;
+                    var final_result = chartUtils.getHistoryData(data, quota);
+                    cf.renderChart(final_result, $scope.charts[0].config);
+                }
+            });
+        }
+
+        $scope.onLegendClickListener = function (radio, chartObj, chartConfig, checkedVal) {
+            $scope.radioCheckVal = checkedVal;
+            $scope.refreshChart(checkedVal);
+        }
         $scope.charts = [
             {
                 config: {
                     id: 'VistorMap_charts',
-                    //legendId: "index_charts_legend",
-                    //legendData: ["浏览量(PV)", "访客数(UV)", "跳出率", "抵达率", "平均访问时长", "页面转化"],//显示几种数据
+                    legendId: "VistorMap_charts_legend",
+                    legendData: ["浏览量(PV)", "访问次数", "访客数(UV)", "新访客数", "新访客比率", "IP数", "跳出率", "平均访问时长", "平均访问页数"],//显示几种数据
                     min_max: false,
                     chartType: "line",//图表类型
+                    legendClickListener: $scope.onLegendClickListener,
                     lineType: 'none',
-                    bGap: true,
+                    bGap: false,
                     keyFormat: 'none',
-                    toolTip: false,
                     noFormat: true,
-                    twoYz: true,
                     qingXie: false,
                     dataKey: "key",//传入数据的key值
                     dataValue: "quota"//传入数据的value值
                 }
             }
         ];
-        $scope.init = function (data, quotas) {
-            $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
-            if ($rootScope.tableTimeStart > -6) {
-                $scope.charts[0].config.noFormat = undefined;
-                cf.renderChart(data, $scope.charts[0].config);
-                return;
-            }
-            $scope.charts[0].config.noFormat = true;
-            var final_result = [];
-            if (data) {
-                quotas.forEach(function (quota) {
-                    var _tmp = {};
-                    var _key = [];
-                    var _val = [];
-                    data.forEach(function (item) {
-                        _val.push(item[quota]);
-                        _key.push(item["period"]);
-                    });
-                    _tmp["label"] = chartUtils.convertChinese(quota);
-                    _tmp["quota"] = _val;
-                    _tmp["key"] = _key;
-                    final_result.push(_tmp);
+        $scope.init = function () {
+            var customLegendData = [];
+            $rootScope.checkedArray.forEach(function (item) {
+                customLegendData.push(chartUtils.convertChinese(item));
+            });
+            $scope.charts[0].config.legendData = customLegendData;
+            $scope.radioCheckVal = customLegendData;
+            var quota=[$rootScope.checkedArray[0]];
+            var getTime = $rootScope.tableTimeStart <= -6 ? "day" : "hour";
+            $http({
+                method: 'GET',
+                url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + quota + "&dimension=" + $rootScope.tableSwitch.latitude.field
+                + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&formartInfo=" + getTime + "&type=" + esType
+            }).success(function (data, status) {
+                var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
+                chart.showLoading({
+                    text: "正在努力的读取数据中..."
                 });
+                util.renderLegend(chart, $scope.charts[0].config);
+                Custom.initCheckInfo();
+                $scope.charts[0].config.instance = chart;
+                if ($rootScope.tableTimeStart > -6) {
+                    $scope.charts[0].config.noFormat = undefined;
+                    cf.renderChart(data, $scope.charts[0].config);
+                    return;
+                }
+                $scope.charts[0].config.noFormat = true;
+                var final_result = chartUtils.getHistoryData(data, quota)
                 cf.renderChart(final_result, $scope.charts[0].config);
-            }
+            });
         }
+        $scope.init();
 
         $scope.$on("ssh_refresh_charts", function (e, msg) {
-            $scope.historyInit()
+            $scope.historyInit();
+            $scope.refreshChart();
         });
+        $rootScope.datepickerClick = function (start, end, label) {
+            $scope.timeClass = true;
+            var time = chartUtils.getTimeOffset(start, end);
+            $rootScope.tableTimeStart = time[0];
+            $rootScope.tableTimeEnd = time[1];
+            $scope.reset();
+            $scope.refreshChart();
+        }
         //日历
         this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
 
