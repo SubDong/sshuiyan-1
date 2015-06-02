@@ -1051,7 +1051,19 @@ var util = {
             $(o).prev("span").css("background-position", "0px 0px");
             $(o).prop("checked", false);
         });
+        var position = ["0px -77px", "0px -51px"];
+
         checked.forEach(function (c, i) {
+            $(checks[c]).prop("checked", true);
+        });
+        var customCheck = [];
+        checks.each(function (i, check) {
+            if ($(check).prop("checked")) {
+                var c = $(check).attr("index");
+                customCheck.push(c);
+            }
+        });
+        customCheck.forEach(function (c, i) {
             switch (i) {
                 case 0:
                     $(checks[c]).prev("span").css("background-position", "0px -77px");
@@ -1060,7 +1072,6 @@ var util = {
                     $(checks[c]).prev("span").css("background-position", "0px -51px");
                     break;
             }
-            $(checks[c]).prop("checked", true);
         });
         return checked;
     },
