@@ -325,6 +325,59 @@ var chartUtils = {
         });
         return final_result;
     },
+    getDataByDay: function (data) {//按日数据累加
+        var json = JSON.parse(eval("(" + data + ")").toString());
+        var final_result = [];
+        json.forEach(function (item) {
+            var _tmp = {};
+            var count = 0;
+            var type = item.label;
+            item.quota.forEach(function (quota) {
+                if (type == "avgTime" || type == "outRate" || type == "arrivedRate" || type == "nuvRate") {
+                    count += Number(quota);
+                } else {
+                    count += quota;
+                }
+            });
+            if (type == "avgTime" || type == "outRate" || type == "arrivedRate" || type == "nuvRate") {
+                count = parseFloat(count / item.quota.length).toFixed(2);
+            }
+            _tmp["label"] = chartUtils.convertChinese(item.label);
+            _tmp["quota"] = [count];
+            _tmp["key"] = [item.key[0].substring(0, 10)];
+            final_result.push(_tmp);
+        });
+        return final_result;
+    },
+    getHistoryData: function (data, quotas) {
+        var final_result = [];
+        quotas.forEach(function (quota) {
+            var _tmp = {};
+            var _key = [];
+            var _val = [];
+            data.forEach(function (item) {
+                if (quota == "arrivedRate" || quota == "outRate" || quota == "nuvRate") {
+                    _val.push(Number(item[quota].split("%")[0]));
+                    _key.push(item["period"]);
+                } else if (quota == "avgTime") {
+                    var hour = _val.push(Number(item[quota].split(":")[0]));
+                    var min = _val.push(Number(item[quota].split(":")[1]));
+                    var sec = _val.push(Number(item[quota].split(":")[2]));
+                    var count = (((hour * 60) * 60) + (min * 60) + sec) / 1000;
+                    _val.push(count);
+                    _key.push(item["period"]);
+                } else {
+                    _val.push(item[quota]);
+                    _key.push(item["period"]);
+                }
+            });
+            _tmp["label"] = chartUtils.convertChinese(quota);
+            _tmp["quota"] = _val;
+            _tmp["key"] = _key;
+            final_result.push(_tmp);
+        });
+        return final_result;
+    },
     getExternalinkPie: function (result, split) {
         if (result) {
             var regex = /(baidu)+|(sogou)+|(haosou)+/, final_result = [];
@@ -484,7 +537,7 @@ var chartUtils = {
         return [a, b];
     },
     getWeekTime: function (start, end) {
-        return chartUtils.getSetOffTime(start, end,"/");
+        return chartUtils.getSetOffTime(start, end, "/");
     },
     getQuotaType: function (quota) {
         switch (quota) {

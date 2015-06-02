@@ -2063,7 +2063,6 @@ nav, .navbar-default {
   height: 50px;
   line-height: 50px;
   width: 100%;
-  background-color: #eee;
   vertical-align: middle;
   text-align: center;
   span.ng-binding {
@@ -2949,7 +2948,9 @@ select.styled {
 }
 
 .count_content_button {
-  margin: 0 0 30px 30px;
+  display: block;
+  float: left;
+  margin: 10px 0 30px 30px;
   width: 90px;
   height: 30px;
   background-color: #40befb;
@@ -2976,16 +2977,14 @@ select.styled {
 .count_content ul {
   margin-top: 70px;
 }
-.count_content ul li{
-  height: 100px;
-  width: 1000px;
-}
+
 .count_title {
   top: 62px;
 }
 
 .count_left {
-  margin-top: -10px;
+  margin-top: 10px;
+  margin-bottom: 15px;
   width: 520px;
 
 }
@@ -3059,18 +3058,23 @@ select.styled {
 
 .count_content_right {
   display: inline-block;
-  margin: 10px 0 30px 30px;
+  margin: 25px 0 0 10px;
   min-height: 100px;;
+  float: right;
 }
-
+.count_content ul li{
+  width: 1000px;
+  height: 120px;
+}
 .count_left p {
   color: #aaabab;
   display: inline;
 }
 
 .count_last_left {
-  margin: 0 90px 20px 30px;
-  float: left;
+  margin-top: 20px;
+  margin-bottom: 15px;
+  width: 520px;
 }
 
 .count_last_right {
@@ -3456,7 +3460,4 @@ select.styled {
   .chart_top2 ul li label, .custom_select ul li label {
     cursor: pointer;
   }
-}
-.ui-grid-footer-panel{
-  border-bottom: none;
 }
