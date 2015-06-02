@@ -217,7 +217,7 @@ define(["app"], function (app) {
 
                     $scope.gridObj["name"] = item.consumption_name;
                     $scope.gridObj["displayName"] = item.consumption_name;
-                    $scope.gridObj["footerCellTemplate"] = "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                    $scope.gridObj["footerCellTemplate"] = "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>";
                     $scope.gridObj["field"] = item.name;
                     $rootScope.gridArray.push($scope.gridObj);
 

@@ -73,6 +73,7 @@ define(["./module"], function (ctrs) {
 
                     $scope.searchGridObj["name"] = item.consumption_name;
                     $scope.searchGridObj["displayName"] = item.consumption_name;
+                    $scope.gridObj["footerCellTemplate"] = "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>";
                     $scope.searchGridObj["field"] = item.name;
 
                     $rootScope.searchGridArray.push($scope.searchGridObj);
@@ -95,6 +96,7 @@ define(["./module"], function (ctrs) {
 
                     $scope.searchGridObj["name"] = item.consumption_name;
                     $scope.searchGridObj["displayName"] = item.consumption_name;
+                    $scope.gridObj["footerCellTemplate"] = "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>";
                     $scope.searchGridObj["field"] = item.name;
                     $rootScope.searchGridArray.push($scope.searchGridObj);
 
@@ -125,10 +127,13 @@ define(["./module"], function (ctrs) {
             expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions' style='height:150px;'></div>",
             expandableRowHeight: 150,
             enableColumnMenus: false,
+            showColumnFooter: true,
             enablePaginationControls: false,
             enableSorting: true,
             enableGridMenu: false,
             enableHorizontalScrollbar: 0,
+            enableVerticalScrollbar: false,
+            enableScrollbars: false,
             onRegisterApi: function (gridApi) {
                 $scope.gridApi2 = gridApi;
                 if ($rootScope.tableSwitch.dimen) {
@@ -172,15 +177,15 @@ define(["./module"], function (ctrs) {
             $scope.targetSearchSpread();
         };
         //搜索推广地域过滤
-        $scope.setAreaFilter = function (area , id) {
+        $scope.setAreaFilter = function (area, id) {
 
-            $scope.gridOptions.data=[];
+            $scope.gridOptions.data = [];
             $scope.gridOpArray = angular.copy($rootScope.searchGridArray);
             $scope.gridOptions.columnDefs = $scope.gridOpArray;
-            if(area =="全部"){
+            if (area == "全部") {
                 var url = SEM_API_URL + user + "/" + baiduAccount + "/region/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1";
-            }else{
-                var url = SEM_API_URL + user + "/" + baiduAccount + "/region/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1&rgna="+area;
+            } else {
+                var url = SEM_API_URL + user + "/" + baiduAccount + "/region/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1&rgna=" + area;
             }
             $http({
                 method: 'GET',
@@ -203,9 +208,9 @@ define(["./module"], function (ctrs) {
                     //console.log("$rootScope.tableSwitch.number="+$rootScope.tableSwitch.number);
                     //console.log("$rootScope.tableSwitch.promotionSearch"+$rootScope.tableSwitch.promotionSearch);
                     //console.log("=======$rootScope.tableSwitch.promotionSearch ="+($rootScope.tableSwitch.promotionSearch ? ($rootScope.tableSwitch.number == 5 ? fieldQuery : null) : fieldQuery ) );
-                    var esurl= '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? ($rootScope.tableSwitch.number == 5 ? fieldQuery : null) : fieldQuery )
-                    + "&filerInfo=" + filter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType;
-                    console.log("es url="+esurl);
+                    var esurl = '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? ($rootScope.tableSwitch.number == 5 ? fieldQuery : null) : fieldQuery )
+                        + "&filerInfo=" + filter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType;
+                    console.log("es url=" + esurl);
                     $http({
                         method: 'GET',
                         url: esurl
@@ -269,9 +274,8 @@ define(["./module"], function (ctrs) {
                     var filter = "[{\"" + getTableFilter(searchId) + "\":[\"" + item[searchId + "Id"] + "\"]}]";
                     var fieldQuery = $rootScope.tableSwitch.latitude.field;
 
-                    var turl= '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? ($rootScope.tableSwitch.number == 5 ? fieldQuery : null) : fieldQuery )
-                    + "&filerInfo=" + filter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType;
-                    console.log(turl);
+                    var turl = '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? ($rootScope.tableSwitch.number == 5 ? fieldQuery : null) : fieldQuery )
+                        + "&filerInfo=" + filter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType;
                     $http({
                         method: 'GET',
                         url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? ($rootScope.tableSwitch.number == 5 ? fieldQuery : null) : fieldQuery )
@@ -329,42 +333,43 @@ define(["./module"], function (ctrs) {
                 + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=undefined&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
             }).success(function (data, status) {
                 var dataArray = [];
-               if(data!=null&&data.length>0) {
+                if (data != null && data.length > 0) {
 
-                   data.forEach(function (item, i) {
-                       var variousId = item.kw.split(",");
-                       item.kw = variousId[0];
-                       var url = SEM_API_URL + user + "/" + baiduAccount + "/" + $rootScope.tableSwitch.promotionSearch.SEMData + "/" + variousId[3] + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1"
-                       $http({
-                           method: 'GET',
-                           url: url
-                       }).success(function (dataSEM, status) {
-                           var datas = {};
-                           if (variousId[3] == 0) {
-                               $rootScope.checkedArray.forEach(function (x, y) {
-                                   datas[x] = (item[x] != undefined ? item[x] : 0);
-                                   var field = $rootScope.tableSwitch.latitude.field
-                                   datas[field] = item[field] + ",";
-                               })
-                           } else {
-                               $rootScope.checkedArray.forEach(function (x, y) {
-                                   datas[x] = (item[x] != undefined ? item[x] : dataSEM[0][x]);
-                               });
-                               var field = $rootScope.tableSwitch.latitude.field
-                               datas[field] = item[field] + getTableTitle(field, dataSEM[0]);
-                           }
-                           dataArray.push(datas);
+                    data.forEach(function (item, i) {
+                        var variousId = item.kw.split(",");
+                        item.kw = variousId[0];
+                        var url = SEM_API_URL + user + "/" + baiduAccount + "/" + $rootScope.tableSwitch.promotionSearch.SEMData + "/" + variousId[3] + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1"
+                        $http({
+                            method: 'GET',
+                            url: url
+                        }).success(function (dataSEM, status) {
+                            var datas = {};
+                            if (variousId[3] == 0) {
+                                $rootScope.checkedArray.forEach(function (x, y) {
+                                    datas[x] = (item[x] != undefined ? item[x] : 0);
+                                    var field = $rootScope.tableSwitch.latitude.field
+                                    datas[field] = item[field] + ",";
+                                })
+                            } else {
+                                $rootScope.checkedArray.forEach(function (x, y) {
+                                    datas[x] = (item[x] != undefined ? item[x] : dataSEM[0][x]);
+                                });
+                                var field = $rootScope.tableSwitch.latitude.field
+                                datas[field] = item[field] + getTableTitle(field, dataSEM[0]);
+                            }
+                            dataArray.push(datas);
 
-                       });
-                   });
-               };
+                        });
+                    });
+                }
+                ;
                 $scope.gridOptions.rowHeight = 55;
                 $scope.gridOptions.data = dataArray;
 
             });
         };
 
-        $rootScope.targetSearch= function (isClicked) {
+        $rootScope.targetSearch = function (isClicked) {
             if ($rootScope.tableSwitch.promotionSearch.turnOn == "ssc") {
                 $rootScope.targetSearchSSC(true);
             } else {
@@ -409,6 +414,41 @@ define(["./module"], function (ctrs) {
         };
 
 
+        //得到表格底部数据
+        $scope.getSearchFooterData = function (a, option, number) {
+            console.log(option)
+            var returnData = 0;
+            var spl = 0;
+            var newSpl = [0, 0, 0];
+            if (option.length > 0) {
+                option.forEach(function (item, i) {
+                    returnData += parseFloat((item.entity[a.col.field] + "").replace("%", ""));
+                    if (a.col.field == "avgTime") {
+                        if (item.entity[a.col.field] != undefined) {
+                            spl = item.entity[a.col.field].split(":");
+                            newSpl[0] += parseInt(spl[0]);
+                            newSpl[1] += parseInt(spl[1]);
+                            newSpl[2] += parseInt(spl[2]);
+                        }
+                    }
+                });
+                if ((option[0].entity[a.col.field] + "").indexOf("%") != -1) {
+                    returnData = (returnData / option.length).toFixed(2) + "%";
+                }
+                if (a.col.field == "avgPage") {
+                    returnData = (returnData / option.length).toFixed(2);
+                }
+                if (a.col.field == "avgTime") {
+                    var atime1 = parseInt(newSpl[0] / option.length) + "";
+                    var atime2 = parseInt(newSpl[1] / option.length) + "";
+                    var atime3 = parseInt(newSpl[2] / option.length) + "";
+                    returnData = (atime1.length == 1 ? "0" + atime1 : atime1) + ":" + (atime2.length == 1 ? "0" + atime2 : atime2) + ":" + (atime3.length == 1 ? "0" + atime3 : atime3);
+                }
+            }
+            return returnData;
+        }
+
+
         $scope.getHistoricalTrend = function (b) {
             if ($rootScope.tableSwitch.latitude.field == "campaignName") {
                 $rootScope.checkedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
@@ -425,12 +465,42 @@ define(["./module"], function (ctrs) {
                         field: "adgroupName",
                         cellTemplate: "<div><a href='javascript:void(0)' target='_blank' style='color:#0965b8;line-height:30px;' ng-click='grid.appScope.getHistoricalTrend(this)'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</div>"
                     },
-                    {name: "展现", displayName: "展现", field: "impression"},
-                    {name: "消费", displayName: "消费", field: "cost"},
-                    {name: "平均点击价格", displayName: "平均点击价格", field: "cpc"},
-                    {name: "跳出率", displayName: "跳出率", field: "outRate"},
-                    {name: "平均访问时长", displayName: "平均访问时长", field: "avgTime"},
-                    {name: "新房客比率", displayName: "新房客比率", field: "nuvRate"}
+                    {
+                        name: "展现",
+                        displayName: "展现",
+                        field: "impression",
+                        footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                    },
+                    {
+                        name: "消费",
+                        displayName: "消费",
+                        field: "cost",
+                        footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                    },
+                    {
+                        name: "平均点击价格",
+                        displayName: "平均点击价格",
+                        field: "cpc",
+                        footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                    },
+                    {
+                        name: "跳出率",
+                        displayName: "跳出率",
+                        field: "outRate",
+                        footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                    },
+                    {
+                        name: "平均访问时长",
+                        displayName: "平均访问时长",
+                        field: "avgTime",
+                        footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                    },
+                    {
+                        name: "新房客比率",
+                        displayName: "新房客比率",
+                        field: "nuvRate",
+                        footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                    }
                 ];
                 $rootScope.tableSwitch = {
                     latitude: {name: "单元", displayName: "单元", field: "adgroupName"},
@@ -463,12 +533,42 @@ define(["./module"], function (ctrs) {
                         field: "keywordName",
                         cellTemplate: "<div><a href='http://www.baidu.com/s?wd={{grid.appScope.getDataUrlInfo(grid, row,1)}}' target='_blank' style='color:#0965b8;line-height:30px;margin-left: 10px'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</div>"
                     },
-                    {name: "展现", displayName: "展现", field: "impression"},
-                    {name: "消费", displayName: "消费", field: "cost"},
-                    {name: "平均点击价格", displayName: "平均点击价格", field: "cpc"},
-                    {name: "跳出率", displayName: "跳出率", field: "outRate"},
-                    {name: "平均访问时长", displayName: "平均访问时长", field: "avgTime"},
-                    {name: "新房客比率", displayName: "新房客比率", field: "nuvRate"}
+                    {
+                        name: "展现",
+                        displayName: "展现",
+                        field: "impression",
+                        footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                    },
+                    {
+                        name: "消费",
+                        displayName: "消费",
+                        field: "cost",
+                        footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                    },
+                    {
+                        name: "平均点击价格",
+                        displayName: "平均点击价格",
+                        field: "cpc",
+                        footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                    },
+                    {
+                        name: "跳出率",
+                        displayName: "跳出率",
+                        field: "outRate",
+                        footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                    },
+                    {
+                        name: "平均访问时长",
+                        displayName: "平均访问时长",
+                        field: "avgTime",
+                        footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                    },
+                    {
+                        name: "新房客比率",
+                        displayName: "新房客比率",
+                        field: "nuvRate",
+                        footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                    }
                 ];
                 $rootScope.tableSwitch = {
                     latitude: {name: "关键词", displayName: "关键词", field: "keywordName"},
@@ -522,7 +622,7 @@ define(["./module"], function (ctrs) {
         };
     });
 
-    //得到tableFilter key
+//得到tableFilter key
     var getTableFilter = function (a) {
         switch (a) {
             case "campaign":
@@ -552,4 +652,5 @@ define(["./module"], function (ctrs) {
                 return returnData;
         }
     };
-});
+})
+;
