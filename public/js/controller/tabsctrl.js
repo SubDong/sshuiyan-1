@@ -591,7 +591,7 @@ define(["app"], function (app) {
                             if (dataSEM.length == 1) {
                                 $rootScope.checkedArray.forEach(function (item, i) {
                                     if ($rootScope.tableSwitch.latitude.field == "accountName") {
-                                        dataObj["accountName"] = dataSEM[0].accountName
+                                        dataObj["accountName"] = "搜索推广 ("+dataSEM[0].accountName+")"
                                     }
                                     dataSEM.forEach(function (sem, i) {
                                         if (dataObj[item] == undefined) {
