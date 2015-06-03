@@ -1,6 +1,6 @@
 var _pct = _pct || [];
 (function () {
-    var h = {}, md = {}, c = {
+    var points = [], h = {}, md = {}, c = {
         id: "2",
         version: "1.0.10"
     };
@@ -122,6 +122,7 @@ var _pct = _pct || [];
     md.g.tit = document.title;
     //ct 新老客户（0:新客户， 1：老客户）
     md.g.ct = ((md.cookie.get("vid") == null || md.cookie.get("vid") == undefined || md.cookie.get("vid") == "") ? "0" : "1");
+    // hm 热力图坐标
     // tt 用户的访问uv
     // vid cookie  id访客唯一标识
     // u       _trackPageview方法参数          PV跟踪
@@ -235,6 +236,31 @@ var _pct = _pct || [];
             a.getIntegerBits(a.rand(8191), 0, 15);
         return tl + tm + thv + csar + csl + n;
     };
+    //创建坐标对象
+    md.position = {}
+    //获取坐标
+    md.position.getXy = function position(event){
+        var e = event || window.event;
+        var scrollX = document.documentElement.scrollLeft || document.body.scrollLeft;
+        var scrollY = document.documentElement.scrollTop || document.body.scrollTop;
+        var x = e.pageX || e.clientX + scrollX;
+        var y = e.pageY || e.clientY + scrollY;
+        //var val = Math.floor(Math.random() * 100);
+        var point = {
+            x: x,
+            y: y
+            //value: val
+        };
+        points.push(point);
+        console.log(points)
+        if(points.length >= 5){
+            md.g.sm = points;
+            return true;
+        }else{
+            return false;
+        }
+    };
+    //全局变量h.I 访问地址URL设置 如：http://best-ad.cn/pft.gif?query string parameters
     h.I = {
         u: "best-ad.cn",
         P: "log.best-ad.cn",
@@ -243,6 +269,7 @@ var _pct = _pct || [];
         protocol: "https:" == document.location.protocol ? "https:" : "http:",
         Q: "os tit br fl pm sr lg ck ja sc dt rf loc tt ct vid u api et cv v".split(" ")
     };
+    //通过闭包 访问 私有变量 sa
     (function () {
         var sa = {
             i: {}, e: function (a, f) {
@@ -363,7 +390,7 @@ var _pct = _pct || [];
             this.init();
         }
 
-        var ccz = md.g, faz = md.achieve, sess = md.sessionStorage, loa = md.localStorage, cookie = md.cookie, u = md.UUID;
+        var ccz = md.g, faz = md.achieve, sess = md.sessionStorage, loa = md.localStorage, cookie = md.cookie, u = md.UUID, position = md.position;
         sta.prototype = {
             setData: function (a) {
                 try {
@@ -434,6 +461,7 @@ var _pct = _pct || [];
                 a.setAttribute("src", _c.protocol + "//" + _c.P + "/" + _c.S + "?t\=" + c.id + "\&" + this.par());
                 var f = document.getElementsByTagName("script")[0];
                 f.parentNode.insertBefore(a, f);
+                f.remove()
             },
             hbInfo: function () {
                 var _c = h.I;
@@ -443,6 +471,7 @@ var _pct = _pct || [];
                 a.setAttribute("src", _c.protocol + "//" + _c.P + "/" + _c.S + "?t\=" + c.id + "tt\=" + md.g.tt + "\&rf='-'\&ping=" + Date.parse(new Date()));
                 var f = document.getElementsByTagName("script")[0];
                 f.parentNode.insertBefore(a, f);
+                f.remove()
             },
             heartBeat: function (a) {
                 var b = 5 * 60 * 1000, c = 3 * 60 * 1000;
@@ -450,8 +479,23 @@ var _pct = _pct || [];
                 var e = a < c ? b : a
                 var d = setInterval(this.hbInfo, e);
             },
+            //监听点击事件
+            clickEvent:function(){
+                document.onclick = function(event){
+                    console.log(event)
+                    var a = md.position.getXy(event);//获取点击坐标
+                    if(a){
+                        var s = new sta;
+                        console.log(md.g)
+                        s.na()
+                        s.sm()
+                        points = [];
+                    }
+                }
+            },
             init: function () {
                 h.b = this;
+                this.clickEvent();
                 this.na();
                 this.sm();
                 //this.heartBeat("");
@@ -459,6 +503,7 @@ var _pct = _pct || [];
 
         };
         return new sta;
-    })()
+    })();
+
     console.log(md.g);
 })();
