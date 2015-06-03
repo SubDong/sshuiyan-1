@@ -528,29 +528,35 @@ api.get("/config", function (req, res) {
 
     var query = url.parse(req.url, true).query;
     var type = query['type'];
-    console.log("config request "+type);
+    var index = query['index'];
+    var schema_name = "";
+    switch (index){
+        case "0":
+            schema_name="siterules_model";
+            break;
+        default :
+    }
     switch (type){
         case "save":
             var entity =JSON.parse(query['entity']);
-            dao.save("siterules_model",entity,function(ins){
+            dao.save(schema_name,entity,function(ins){
                 datautils.send(res, JSON.stringify(ins));
             });
             break;
         case "search":
-        console.log(query['query']);
-        dao.find("siterules_model",query['query'],null,{},function(err,docs){
+        dao.find(schema_name,query['query'],null,{},function(err,docs){
             datautils.send(res, docs);
         });
         break;
         case "update":
             //条件下更新
-            dao.update("siterules_model",query['query'],query['updates'],function(err,docs){
+            dao.update(schema_name,query['query'],query['updates'],function(err,docs){
                 datautils.send(res, docs);
             });
             break;
         case "delete":
             //条件下删除
-            dao.remove("siterules_model",query['query'],function(){
+            dao.remove(schema_name,query['query'],function(){
                 datautils.send(res, "remove");
             });
             break;
