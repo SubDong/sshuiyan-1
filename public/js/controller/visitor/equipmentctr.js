@@ -7,7 +7,7 @@ define(["./module"], function (ctrs) {
 
     ctrs.controller('equipmentctr', function ($scope, $rootScope, $http, requestService, areaService) {
         //客户端属性初始化
-        $scope.equipment.selected = {"name": "网络供应商", "field": "isp"};
+        $scope.equipment.selected = {"name": "网络设备类型", "field": "pm"};
         $scope.todayClass = true;
         $scope.dt = new Date();
         //table配置
@@ -24,9 +24,9 @@ define(["./module"], function (ctrs) {
                 maxWidth: 10
             },
             {
-                name: "网络供应商",
-                displayName: "网络供应商",
-                field: "isp",
+                name: "网络设备类型",
+                displayName: "网络设备类型",
+                field: "pm",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"
             },
             {
@@ -61,7 +61,7 @@ define(["./module"], function (ctrs) {
             }
         ];
         $rootScope.tableSwitch = {
-            latitude: {name: "网络供应商", displayName: "网络供应商", field: "isp"},
+            latitude: {name: "网络设备类型", displayName: "网络设备类型", field: "pm"},
             tableFilter: null,
             dimen: "region",
             // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
@@ -86,7 +86,7 @@ define(["./module"], function (ctrs) {
             requestService.refresh($scope.charts);
 
             $rootScope.tableSwitch.latitude = val;
-            val.field == "ips" ? $rootScope.tableSwitch.dimen = "region" : val.field == "pm" ? $rootScope.tableSwitch.dimen = "br" : $rootScope.tableSwitch.dimen = false
+            val.field == "isp" ? $rootScope.tableSwitch.dimen = "region" : val.field == "pm" ? $rootScope.tableSwitch.dimen = "br" : $rootScope.tableSwitch.dimen = false
             $
             $rootScope.indicators(null, null, null, "refresh");
             $rootScope.targetSearch();

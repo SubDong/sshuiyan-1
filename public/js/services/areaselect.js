@@ -91,6 +91,7 @@ define(["../app"], function (app) {
         ];
         $rootScope.equipment = {};
         $rootScope.equipments = [
+            {name: '网络设备类型', field: 'pm'},
             {name: '网络供应商', field: 'isp'},
             {name: '浏览器', field: 'br'},
             {name: '分辨率', field: 'sr'},

@@ -383,7 +383,6 @@ define(["./module"], function (ctrs) {
         //表格数据展开项
         var griApiInfo = function (gridApi) {
             gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
-
                 var filter = "[{\"kwid\":[\"" + row.entity.id + "\"]}]";
                 row.entity.subGridOptions = {
                     enableColumnMenus: false,

@@ -430,7 +430,7 @@ define(["../app"], function (app) {
                         var count = 0;
                         angular.forEach(r.quota, function (qo, _i) {
                             var infoKey = r.key[_i];
-                            if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null" || infoKey == "国外" || infoKey.length >= 30)) {
+                            if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null" || infoKey.length >= 30)) {
                                 return false;
                             }
                             if (flag) {

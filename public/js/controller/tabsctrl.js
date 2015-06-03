@@ -114,6 +114,7 @@ define(["app"], function (app) {
             {consumption_name: "访客数(UV)", name: "uv"},
             {consumption_name: "IP数", name: "ip"}
         ];
+        //实时访问
         var getHtmlTableData = function () {
             $http({
                 method: 'GET',
@@ -262,7 +263,6 @@ define(["app"], function (app) {
                 enableHorizontalScrollbar: 0,
                 enableVerticalScrollbar: false,
                 enableScrollbars: false,
-                columnDefs: $scope.gridOpArray,
                 onRegisterApi: function (girApi) {
                     $rootScope.gridApi2 = girApi;
                     griApihtml(girApi);
@@ -281,7 +281,6 @@ define(["app"], function (app) {
                 enableHorizontalScrollbar: 0,
                 enableVerticalScrollbar: false,
                 enableScrollbars: false,
-                columnDefs: $scope.gridOpArray,
                 onRegisterApi: function (gridApi) {
                     $rootScope.gridApi2 = gridApi;
                     if ($rootScope.tableSwitch.dimen) {
@@ -559,6 +558,32 @@ define(["app"], function (app) {
                 popupService.showEntryPageData(row.entity.rf);
             }
         };
+        // 实时访问输入查询
+        $scope.input_gjc = "";
+        $scope.input_rky = "";
+        $scope.input_ip = "";
+        $scope.realTimeVisit = function(){
+
+            var visitFilert = [];
+            if($scope.input_gjc != ""){
+                visitFilert.push("{\"kw\": [\""+$scope.input_gjc+"\"]}")
+            }
+            if($scope.input_rky != ""){
+                visitFilert.push("{\"entrance\": [\""+$scope.input_rky+"\"]}")
+            }
+            if($scope.input_ip != ""){
+                visitFilert.push("{\"remote\": [\""+$scope.input_ip+"\"]}")
+            }
+            if($scope.input_ip == "" && $scope.input_rky == "" && $scope.input_gjc == ""){
+                $rootScope.tableSwitch.tableFilter = null;
+            }else{
+                $rootScope.tableSwitch.tableFilter = "["+visitFilert+"]";
+            }
+            console.log($rootScope.tableSwitch.tableFilter);
+            $scope.isJudge = false;
+            getHtmlTableData();
+            //console.log("["+visitFilert+"]")
+        }
 
         /**
          *
@@ -722,7 +747,7 @@ define(["app"], function (app) {
             var dateTime1 = chartUtils.getSetOffTime($rootScope.tableTimeStart, $rootScope.tableTimeEnd);
             var dateTime2 = chartUtils.getSetOffTime(startTime, endTime);
             $scope.targetDataContrast(null, null, function (item) {
-                var target = ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field);
+                var target = $rootScope.tableSwitch.latitude.field;
                 var dataArray = [];
                 var is = 0;
                 $scope.targetDataContrast(startTime, endTime, function (contrast) {
@@ -738,7 +763,7 @@ define(["app"], function (app) {
                                 a[target] = a[target] + "," + ($rootScope.startString != undefined ? $rootScope.startString : dateTime1[0] + " 至 " + dateTime1[1]) + "," + (dateTime2[0] + " 至 " + dateTime2[1]) + "," + "变化率"
                                 dataArray.push(a);
                                 is = 0;
-                                break;
+                                return;
                             } else {
                                 is = 1
                             }
@@ -853,6 +878,7 @@ define(["app"], function (app) {
 
         //表格数据展开项
         var griApiInfo = function (gridApi) {
+            $scope.gridOpArray = angular.copy($rootScope.gridArray);
             gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
                 var dataNumber;
                 if (row.isExpanded && $rootScope.tableSwitch.dimen != false) {
@@ -865,8 +891,7 @@ define(["app"], function (app) {
                     newEntity.length > 0 ? entity = newEntity[0] : "";
                     $rootScope.tableSwitch.tableFilter = "[{\"" + $rootScope.tableSwitch.latitude.field + "\":[\"" + getField(entity, $rootScope.tableSwitch.latitude.field) + "\"]}]";
                     row.entity.subGridOptions = {
-                        showHeader: false,
-                        columnDefs: $rootScope.gridArray
+                        showHeader: false
                     };
                     $http({
                         method: 'GET',
@@ -879,6 +904,7 @@ define(["app"], function (app) {
                             data = JSON.parse(JSON.stringify(data).replace(reg, $rootScope.tableSwitch.latitude.field));
                             dataNumber = data.length;
                         }
+                        row.entity.subGridOptions.columnDefs = $scope.gridOpArray;
                         row.entity.subGridOptions.data = data;
                         $rootScope.tableSwitch.tableFilter = returnFilter;
                     }).error(function (error) {
@@ -916,7 +942,6 @@ define(["app"], function (app) {
 
         //表格HTML展开项
         var griApihtml = function (gridApi) {
-
             gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
                 var filter = "[{\"tt\":[\"" + row.entity.tt + "\"]}]";
                 var htmlData = new Array();
