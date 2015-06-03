@@ -186,6 +186,12 @@ define(["app"], function (app) {
                     $rootScope.gridArray.unshift($scope.gridObjButton);
                 }
                 $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude);
+                $scope.gridObjButton = {};
+                $scope.gridObjButton["name"] = "xl";
+                $scope.gridObjButton["displayName"] = "";
+                $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
+                $scope.gridObjButton["maxWidth"] = 10;
+                $rootScope.gridArray.unshift($scope.gridObjButton);
             } else {
                 if ($rootScope.checkedArray.length >= number) {
                     $rootScope.checkedArray.shift();
@@ -878,7 +884,7 @@ define(["app"], function (app) {
         //数据对比分割数据
         $scope.getContrastInfo = function (grid, row, number, fieldData) {
             if (fieldData != undefined || fieldData != "undefined") {
-                var a = row.entity[fieldData].split(",");
+                var a = (row.entity[fieldData] + "").split(",");
                 if (number == 0) {
                     return a[0];
                 } else if (number == 1) {

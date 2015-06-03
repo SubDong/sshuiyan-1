@@ -277,7 +277,7 @@ define(["app"], function (app) {
             $scope.reset();
             $scope.yesterdayClass = true;
         };
-        $scope.dateCompareClick = function (start, end, label) {
+        $rootScope.datePickerCompare = function (start, end, label) {
             $scope.compareType = true;
             $scope.reset();
             $scope.choiceClass = true;

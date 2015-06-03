@@ -28,7 +28,7 @@ define(["./module"], function (ctrs) {
                     $(".under_top").hide();
                 }
                 if ($rootScope.start == -29) {
-                    $scope.charts[0].config.qingXie = true
+                    $scope.charts[0].config.auotHidex = undefined;
                 }
                 $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $rootScope.start, $rootScope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
             });
@@ -43,28 +43,6 @@ define(["./module"], function (ctrs) {
                 //$scope.reloadGrid();
                 $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $rootScope.start, $rootScope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
             };
-            //$scope.sevenDay = function () {
-            //    $(".under_top").hide();
-            //    $scope.reset();
-            //    $scope.sevenDayClass = true;
-            //    $scope.day_offset = -7;
-            //    $scope.start = -7;
-            //    $scope.end = -1;
-            //    $scope.compareArray = [];
-            //    //$scope.reloadGrid();
-            //    $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $scope.start, $scope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
-            //};
-            //$scope.month = function () {
-            //    $(".under_top").hide();
-            //    $scope.reset();
-            //    $scope.monthClass = true;
-            //    $scope.day_offset = -30;
-            //    $scope.start = -30;
-            //    $scope.end = -1;
-            //    $scope.compareArray = [];
-            //    //$scope.reloadGrid();
-            //    $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $scope.start, $scope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
-            //};
             $scope.open = function ($event) {
                 $scope.reset();
                 $scope.definClass = true;
@@ -431,6 +409,9 @@ define(["./module"], function (ctrs) {
                     var obj = {};
                     data.forEach(function (item) {
                         obj[item.label] = item.quota[0];
+                        if(item.label == "avgTime"){
+                            obj[item.label] = ad.formatFunc(item.quota[0], "avgTime")
+                        }
                     });
                     obj["page_conv"] = 0;
                     obj["outRate"] = obj["outRate"] + "%";
