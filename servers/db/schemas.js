@@ -46,6 +46,7 @@ var schemas = {
         schema: {
             //id: String,
             uid: String,
+            site_id:String,
             time_conv: {
                 status: Boolean,
                 val: Number

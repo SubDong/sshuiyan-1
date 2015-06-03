@@ -534,6 +534,9 @@ api.get("/config", function (req, res) {
         case "0":
             schema_name="siterules_model";
             break;
+        case "5":
+            schema_name="converts_model";
+            break;
         default :
     }
     switch (type){
