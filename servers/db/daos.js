@@ -30,9 +30,8 @@ var daos = {
         if (obj.uid) {
             return this.uiderror();
         }
-        var instance = this.createinstance(schema);
-
-        instance.remove(function (err) {
+        var instance = this.createmodel(schema);
+        instance.remove(JSON.parse(obj),function (err,docs) {
             if (err)
                 return console.error(err);
             cb()
@@ -67,7 +66,7 @@ var daos = {
             return this.uiderror();
         }
         var instance = this.createmodel(schema);
-        instance.update(qry, updates, null, cb);
+        instance.update(JSON.parse(qry), JSON.parse(updates), null, cb);
     },
     createmodel: function (schema) {
         try{
@@ -83,11 +82,8 @@ var daos = {
 
     },
     createinstance: function (schema, obj) {
-        console.log("createinstance1");
         var Model = this.createmodel(schema);
-        console.log("createinstance2");
         var instance = new Model(obj);
-        console.log("createinstance3");
         return instance;
     }
 }

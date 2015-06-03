@@ -528,7 +528,7 @@ api.get("/config", function (req, res) {
 
     var query = url.parse(req.url, true).query;
     var type = query['type'];
-    //console.log("config request "+type);
+    console.log("config request "+type);
     switch (type){
         case "save":
             var entity =JSON.parse(query['entity']);
@@ -537,9 +537,21 @@ api.get("/config", function (req, res) {
             });
             break;
         case "search":
-            //var qry =JSON.parse(query['query']);
-            dao.find("siterules_model",query['query'],null,{},function(err,docs){
+        console.log(query['query']);
+        dao.find("siterules_model",query['query'],null,{},function(err,docs){
+            datautils.send(res, docs);
+        });
+        break;
+        case "update":
+            //条件下更新
+            dao.update("siterules_model",query['query'],query['updates'],function(err,docs){
                 datautils.send(res, docs);
+            });
+            break;
+        case "delete":
+            //条件下删除
+            dao.remove("siterules_model",query['query'],function(){
+                datautils.send(res, "remove");
             });
             break;
         default :
