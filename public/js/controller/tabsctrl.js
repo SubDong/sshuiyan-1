@@ -508,6 +508,23 @@ define(["app"], function (app) {
 
         // 按url，按域名过滤
         $scope.setURLDomain = function (urlText) {
+            var b = "";
+            if (urlText == "rf") {
+                b = 0;
+            } else {
+                b = 1;
+            }
+            var now = +new Date();
+            if (now - evTimeStamp < 100) {
+                return;
+            }
+            evTimeStamp = now;
+            var inputArray = $(".custom_select .styled");
+            inputArray.each(function (i, o) {
+                $(o).prev("span").css("background-position", "0px 0px");
+                $(o).prop("checked", false);
+            });
+            $(inputArray[b]).prev("span").css("background-position", "0px -51px");
             if (undefined == urlText || "" == urlText) {
                 $rootScope.tableSwitch.latitude.field = null;
             } else {

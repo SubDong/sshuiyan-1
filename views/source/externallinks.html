@@ -94,12 +94,8 @@
                 <div class="custom_select">
                     <div class="input_group fl">
                         <ul>
-                            <li>
-                                <input type="radio" checked="checked" name="radio2" class="styled" ng-click="setURLDomain('rf')"/>按URL
-                            </li>
-                            <li>
-                                <input type="radio" name="radio2" class="styled" ng-click="setURLDomain('dm')"/>按域名
-                            </li>
+                            <li><label ng-click="setURLDomain('rf')"><input type="radio" checked="checked" name="radio2" class="styled"/>按URL</label></li>
+                            <li><label ng-click="setURLDomain('dm')"><input type="radio" name="radio2" class="styled"/>按域名</label></li>
                         </ul>
                     </div>
                     <div class="input-group fl">
@@ -130,7 +126,6 @@
                 <div ui-grid="gridOptions" class="grid"  ui-grid-pagination
                      ui-grid-exporter></div>
                 <gridpage></gridpage>
-
             </div>
         </div>
     </div>
