@@ -528,7 +528,6 @@ api.get("/config", function (req, res) {
 
     var query = url.parse(req.url, true).query;
     var type = query['type'];
-    console.log("config request "+type);
     switch (type){
         case "save":
             var entity =JSON.parse(query['entity']);
@@ -537,7 +536,6 @@ api.get("/config", function (req, res) {
             });
             break;
         case "search":
-        console.log(query['query']);
         dao.find("siterules_model",query['query'],null,{},function(err,docs){
             datautils.send(res, docs);
         });

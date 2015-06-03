@@ -10,18 +10,16 @@
                         <span>统一页面地址</span>
 
                         <div data-ng-repeat="rule in rules">
-                            <input type="text" class="form-control" data-ng-focus="myFocus(tyymdzObj)"
-                                   data-ng-blur="myBlur(tyymdzObj)" ng-model="rule.source" placeholder="统一前的URL"
-                                   ng-model="rules.source"/>
+                            <input type="text" class="form-control" data-ng-focus="myFocus(rules_area)"
+                                   data-ng-blur="myBlur(rules_area)" ng-model="rule.source" placeholder="统一前的URL" />
                             <img src="../img/right-icon.png" alt=""/>
-                            <input type="text" class="form-control" data-ng-focus="myFocus(tyymdzObj)"
-                                   data-ng-blur="myBlur(tyymdzObj)" ng-model="rule.convert" placeholder="统一后的URL"
-                                   ng-model="rules.convert"/>
+                            <input type="text" class="form-control" data-ng-focus="myFocus(rules_area)"
+                                   data-ng-blur="myBlur(rules_area)" ng-model="rule.convert" placeholder="统一后的URL"/>
                         </div>
                         <button class="btn btn-default" data-ng-if="rules.length<10" data-ng-click="addRule(rules)">+&nbsp;新增网站</button>
                     </div>
 
-                    <div data-ng-show="tyymdzObj.helpFlag"  class="count_content_right">
+                    <div data-ng-show="rules_area.helpFlag"  class="count_content_right">
                         <!--提示:网站与域名不同提示 右-->
                         <div class="popover right box " style="display: block;">
                             <div class="arrow"></div>
@@ -38,16 +36,16 @@
                     提示：当前登录IP为：113.45.225.145， 请注意若为动态IP则下次登录IP会变化。</span>
 
                         <div class="">
-                            <textarea data-ng-model="ipObj.tNum" class="tNum" disabled></textarea>
-                            <textarea data-ng-keyup="aaaaaaaaaaaaa($event, ipObj)" data-ng-model="ipObj.tText"
-                                      data-ng-focus="myFocus(ipObj)"
-                                      data-ng-blur="myBlur(ipObj)" class="tText"></textarea>
+                            <textarea data-ng-model="ex_ips_area.tNum" class="tNum" disabled></textarea>
+                            <textarea data-ng-keyup="addIP($event, ex_ips_area)" data-ng-model="ex_ips_area.tText"
+                                      data-ng-focus="myFocus(ex_ips_area)"
+                                      data-ng-blur="myBlur(ex_ips_area)" class="tText"></textarea>
 
-                            <div data-ng-show="ipObj.count > 20" class="errorMsg">您最多可输入20个</div>
+                            <div data-ng-show="ex_ips_area.count > 20" class="errorMsg">您最多可输入20个</div>
                         </div>
                     </div>
 
-                    <div data-ng-show="ipObj.helpFlag" class=" count_content_right ">  <!--提示:排除来自某些特定IP的访问 右-->
+                    <div data-ng-show="ex_ips_area.helpFlag" class=" count_content_right ">  <!--提示:排除来自某些特定IP的访问 右-->
                         <div class="popover right box " style="display: block;">
                             <div class="arrow"></div>
                             <div class="popover-content">
@@ -63,16 +61,16 @@
                         <span>排除来源网站域名  <p>（请输入IP地址，每行一个，最多可设置20个）</p></span>
 
                         <div class="">
-                            <textarea data-ng-model="pclywzObj.tNum" class="tNum" disabled></textarea>
-                            <textarea data-ng-keyup="aaaaaaaaaaaaa($event, pclywzObj)" data-ng-model="pclywzObj.tText"
-                                      data-ng-focus="myFocus(pclywzObj)"
-                                      data-ng-blur="myBlur(pclywzObj)" class="tText"></textarea>
+                            <textarea data-ng-model="ex_refer_urls_area.tNum" class="tNum" disabled></textarea>
+                            <textarea data-ng-keyup="addIP($event, ex_refer_urls_area)" data-ng-model="ex_refer_urls_area.tText"
+                                      data-ng-focus="myFocus(ex_refer_urls_area)"
+                                      data-ng-blur="myBlur(ex_refer_urls_area)" class="tText"></textarea>
 
-                            <div data-ng-show="pclywzObj.count > 20" class="errorMsg">您最多可输入20个</div>
+                            <div data-ng-show="ex_refer_urls_area.count > 20" class="errorMsg">您最多可输入20个</div>
                         </div>
                     </div>
 
-                    <div data-ng-show="pclywzObj.helpFlag" class=" count_content_right ">
+                    <div data-ng-show="ex_refer_urls_area.helpFlag" class=" count_content_right ">
                         <!--提示:排除【来源分析】报告中某些特定网站域名的来源流量 右-->
                         <div class="popover right box " style="display: block;">
                             <div class="arrow"></div>
@@ -90,16 +88,16 @@
 
 
                         <div class="">
-                            <textarea data-ng-model="pcsfwzobj.tNum" class="tNum" disabled></textarea>
-                            <textarea data-ng-keyup="aaaaaaaaaaaaa($event, pcsfwzobj)" data-ng-model="pcsfwzobj.tText"
-                                      data-ng-focus="myFocus(pcsfwzobj)"
-                                      data-ng-blur="myBlur(pcsfwzobj)" class="tText"></textarea>
+                            <textarea data-ng-model="ex_urls_area.tNum" class="tNum" disabled></textarea>
+                            <textarea data-ng-keyup="addIP($event, ex_urls_area)" data-ng-model="ex_urls_area.tText"
+                                      data-ng-focus="myFocus(ex_urls_area)"
+                                      data-ng-blur="myBlur(ex_urls_area)" class="tText"></textarea>
 
-                            <div data-ng-show="pcsfwzobj.count > 20" class="errorMsg">您最多可输入20个</div>
+                            <div data-ng-show="ex_urls_area.count > 20" class="errorMsg">您最多可输入20个</div>
                         </div>
                     </div>
 
-                    <div data-ng-show="pcsfwzobj.helpFlag" class=" count_content_right ">
+                    <div data-ng-show="ex_urls_area.helpFlag" class=" count_content_right ">
                         <!--提示:排除【受访页面】&【受访域名】报告中某些特定网站域名 右-->
                         <div class="popover right box " style="display: block;">
                             <div class="arrow"></div>
@@ -119,16 +117,16 @@
                         <span>跨域监控  <p>（请输入IP地址，每行一个，最多可设置20个）</p></span>
 
                         <div class="">
-                            <textarea data-ng-model="gyjkobj.tNum" class="tNum" disabled></textarea>
-                            <textarea data-ng-keyup="aaaaaaaaaaaaa($event, gyjkobj)" data-ng-model="gyjkobj.tText"
-                                      data-ng-focus="myFocus(gyjkobj)"
-                                      data-ng-blur="myBlur(gyjkobj)" class="tText"></textarea>
+                            <textarea data-ng-model="cross_sites_area.tNum" class="tNum" disabled></textarea>
+                            <textarea data-ng-keyup="addIP($event, cross_sites_area)" data-ng-model="cross_sites_area.tText"
+                                      data-ng-focus="myFocus(cross_sites_area)"
+                                      data-ng-blur="myBlur(cross_sites_area)" class="tText"></textarea>
 
-                            <div data-ng-show="gyjkobj.count > 20" class="errorMsg">您最多可输入20个</div>
+                            <div data-ng-show="cross_sites_area.count > 20" class="errorMsg">您最多可输入20个</div>
                         </div>
                     </div>
 
-                    <div data-ng-show="gyjkobj.helpFlag" class="count_content_right ">  <!--提示：跨域监控 右-->
+                    <div data-ng-show="cross_sites_area.helpFlag" class="count_content_right ">  <!--提示：跨域监控 右-->
                         <div class="popover right box " style="display: block;">
                             <div class="arrow"></div>
                             <div class="popover-content">
@@ -144,17 +142,17 @@
                 <li>
                     <div class="count_last_left  time_content_left"><!--设置时长转化 左-->
 
-                        <input type="checkbox" name="设置时长转化" data-ng-focus="myFocus(qdcxzhobj)"
-                               data-ng-blur="myBlur(qdcxzhobj)" ng-model="open_tranver"/>
+                        <input type="checkbox" name="设置时长转化" data-ng-focus="myFocus(open_tranver_area)"
+                               data-ng-blur="myBlur(open_tranver_area)" ng-model="open_tranver_area.text"/>
                             <span>
                             启用长效转化：访客点击广告后的<input type="text" class="form-control time_content_left_input"
-                                                  data-ng-focus="myFocus(qdcxzhobj)" data-ng-blur="myBlur(qdcxzhobj)"
-                                                  placeholder="1" ng-model="days"/> 天内，完成的转化计为该条广告的效果
+                                                  data-ng-focus="myFocus(days_area)" data-ng-blur="myBlur(days_area)"
+                                                  placeholder="1" ng-model="days_area.text"/> 天内，完成的转化计为该条广告的效果
                             </span>
 
                     </div>
 
-                    <div data-ng-show="qdcxzhobj.helpFlag" class="count_content_right"><!--提示：设置时长转化 右-->
+                    <div data-ng-show="days_area.helpFlag" class="count_content_right"><!--提示：设置时长转化 右-->
                         <div class="popover right box " style="display: block;">
                             <div class="arrow"></div>
                             <div class="popover-content">
