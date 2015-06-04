@@ -242,6 +242,10 @@ define(["angular", "app"], function (ng, app) {
                 url: '/conf/webcountsite/adtrack',
                 templateUrl: '../conf/webcountsite/adtrack.html'
             })
+            .state('adtrack_add', {
+                url: '/conf/webcountsite/adtrack_add',
+                templateUrl: '../conf/webcountsite/adtrack_add.html'
+            })
             .state('root', {
                 url: '/conf/admin/root',
                 templateUrl: '../conf/admin/root.html'
