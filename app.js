@@ -92,7 +92,7 @@ if (env == 'dev') {
         req.es = es_client;
         req.redisclient = redis_client;
         req.accountid = req.session.accountid
-        res.cookie('uname', JSON.stringify('perfect2015'));
+        res.cookie('uname', JSON.stringify('{name:"perfect2015",id:"55541528da50076cbff8e14f"}'));
         res.cookie('uid', JSON.stringify('cookie test uid'));
         var usites = [
             {

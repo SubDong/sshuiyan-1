@@ -36,7 +36,7 @@ var es_aggs = {
     "pv": {
         "pv_aggs": {
             "sum": {
-                "script": "c=0; c+=doc['loc'].values.size(); c"
+                "script": "_source.loc.size()"
             }
         }
     },
@@ -59,8 +59,8 @@ var es_aggs = {
     // 访问次数
     "vc": {
         "vc_aggs": {
-            "sum": {
-                "script": "1"
+            "value_count": {
+                "field": "tt"
             }
         }
     },
@@ -69,7 +69,7 @@ var es_aggs = {
         "single_visitor_aggs": {
             "filter": {
                 "script": {
-                    "script": "doc['loc'].values.size() == param1",
+                    "script": "_source.loc.size() == param1",
                     "params": {
                         "param1": 1
                     }
@@ -77,15 +77,15 @@ var es_aggs = {
             },
             "aggs": {
                 "svc_aggs": {
-                    "sum": {
-                        "script": "1"
+                    "value_count": {
+                        "field": "tt"
                     }
                 }
             }
         },
         "vc_aggs": {
-            "sum": {
-                "script": "1"
+            "value_count": {
+                "field": "tt"
             }
         }
     },
@@ -93,12 +93,12 @@ var es_aggs = {
     "avgTime": {
         "tvt_aggs": {
             "sum": {
-                "script": "sum_time = 0; len = doc['utime'].values.size() - 1; if (len > 0) { sum_time = doc['utime'].values[len] - doc['utime'].values[0] }; sum_time"
+                "script": "sum_time = 0; len = _source.utime.size() - 1; if (len > 0) { sum_time = doc['utime'].get(len) - doc['utime'].get(0) }; sum_time"
             }
         },
         "vc_aggs": {
-            "sum": {
-                "script": "1"
+            "value_count": {
+                "field": "tt"
             }
         }
     },
@@ -131,8 +131,8 @@ var es_aggs = {
             }
         },
         "vc_aggs": {
-            "sum": {
-                "script": "1"
+            "value_count": {
+                "field": "tt"
             }
         }
     },
@@ -147,8 +147,8 @@ var es_aggs = {
     // 抵达率=访问次数/点击量
     "arrivedRate": {
         "vc_aggs": {
-            "sum": {
-                "script": "1"
+            "value_count": {
+                "field": "tt"
             }
         }
     },
@@ -216,7 +216,7 @@ var buildRequest = function (indexes, type, quotas, dimension, filters, start, e
                         "result": {
                             "filter": {
                                 "script": {
-                                    "script": "doc['loc'].values.size() > param1",
+                                    "script": "_source.loc.size() > param1",
                                     "params": {
                                         "param1": 0
                                     }
