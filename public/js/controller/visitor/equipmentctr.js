@@ -5,7 +5,7 @@ define(["./module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.controller('equipmentctr', function ($scope, $rootScope, $http, requestService, areaService) {
+    ctrs.controller('equipmentctr', function ($scope, $rootScope, $q, $http, requestService, areaService) {
         //客户端属性初始化
         $scope.equipment.selected = {"name": "网络设备类型", "field": "pm"};
         $scope.todayClass = true;
@@ -81,44 +81,36 @@ define(["./module"], function (ctrs) {
             $scope.definClass = false;
         };
         $scope.equipmentChange = function (val) {
+
             $scope.charts[0].dimension = val.field;
+            if ($scope.compareType) {
+                var times = [$rootScope.start, $rootScope.end];
+                $scope.compare(times, chartUtils.convertEnglish($scope.compareLegendData[0]), true);
+                return;
+            }
             $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
             requestService.refresh($scope.charts);
 
             $rootScope.tableSwitch.latitude = val;
-            val.field == "isp" ? $rootScope.tableSwitch.dimen = "region" : val.field == "pm" ? $rootScope.tableSwitch.dimen = "os" : $rootScope.tableSwitch.dimen = false
-            $
+            val.field == "isp" ? $rootScope.tableSwitch.dimen = "region" : val.field == "pm" ? $rootScope.tableSwitch.dimen = "os" : $rootScope.tableSwitch.dimen = false;
             $rootScope.indicators(null, null, null, "refresh");
             $rootScope.targetSearch();
         };
         $scope.onLegendClick = function (radio, chartInstance, config, checkedVal) {
-            $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
-            $scope.charts[0].types = checkedVal;
-            var chartArray = [$scope.charts[0]];
-            requestService.refresh(chartArray);
+            if ($scope.compareType) {
+                var times = [$rootScope.start, $rootScope.end];
+                $scope.compare(times, checkedVal);
+            } else {
+                $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
+                $scope.charts[0].types = checkedVal;
+                var chartArray = [$scope.charts[0]];
+                requestService.refresh(chartArray);
+            }
         }
         $scope.pieFormat = function (data, config) {
             var json = JSON.parse(eval("(" + data + ")").toString());
-            var count = util.existData(json);
-            if (count) {
-                json.forEach(function (e) {
-                    var tmpData = [];
-                    var _value = []
-                    for (var i = 0; i < e.key.length; i++) {
-                        e.key[i] = e.key[i] == "-" ? "未知 " : e.key[i];
-                        if ($scope.equipment.selected) {
-                            tmpData.push(chartUtils.getCustomDevice(e.key[i], $scope.equipment.selected.field));
-                        } else {
-                            tmpData.push(e.key[i]);
-                        }
-                        _value.push(e.quota[i]);
-                    }
-                    e.key = tmpData;
-                    e.quota = _value;
-                    e.label = chartUtils.convertChinese(e.label);
-                });
-            }
             config["noFormat"] = "noFormat";
+            util.getEquipmentData(json, $scope.equipment.selected);
             cf.renderChart(json, config);
         }
         $scope.charts = [
@@ -138,17 +130,19 @@ define(["./module"], function (ctrs) {
                     keyFormat: 'none',
                     dataValue: "quota"
                 },
-                types: ["uv", "vc"],
-                dimension: ["isp"],
+                types: ["pv", "vc"],
+                dimension: ["pm"],
                 interval: $rootScope.interval,
                 url: "/api/charts",
                 cb: $scope.pieFormat
             }
         ]
+        $scope.compareLegendData = [];
         $scope.init = function () {
             $rootScope.start = 0;
             $rootScope.end = 0;
             $scope.charts.forEach(function (e) {
+                $scope.compareLegendData = e.config.legendData;
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
                 util.renderLegend(chart, e.config);
@@ -157,6 +151,9 @@ define(["./module"], function (ctrs) {
         }
         $scope.init();
         $scope.$on("ssh_refresh_charts", function (e, msg) {
+            if ($scope.compareType) {
+                $scope.compareReset();
+            }
             $rootScope.targetSearch();
             var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
             $scope.charts[0].config.instance = chart;
@@ -173,6 +170,9 @@ define(["./module"], function (ctrs) {
         };
         //日历
         $rootScope.datepickerClick = function (start, end, label) {
+            if ($scope.compareType) {
+                $scope.compareReset();
+            }
             var time = chartUtils.getTimeOffset(start, end);
             $rootScope.start = time[0];
             $rootScope.end = time[1];
@@ -191,6 +191,63 @@ define(["./module"], function (ctrs) {
             $rootScope.targetSearch();
             $scope.$broadcast("ssh_dateShow_options_time_change");
         }
+
+        $scope.compareType = false;
+        $rootScope.datePickerCompare = function (start, end, lable) {
+            var times = chartUtils.getTimeOffset(start, end);
+            var type = [chartUtils.convertEnglish($scope.charts[0].config.legendData[0])];
+            $scope.compare(times, type, true);
+            $scope.reset();
+            $rootScope.start = times[0];
+            $rootScope.end = times[1];
+            $scope.choiceClass = true;
+            $scope.compareType = true;
+        }
+
+        $scope.compare = function (times, type, legendRender) {
+            $scope.charts.forEach(function (e) {
+                var chart = echarts.init(document.getElementById(e.config.id));
+                e.config.instance = chart;
+                e.config.legendAllowCheckCount = 1;
+                e.config.legendDefaultChecked = undefined;
+                e.config.noFormat = true;
+                e.config.compare = true;
+                e.types = type;
+                if (legendRender) {
+                    e.config.legendData = $scope.compareLegendData;
+                    util.renderLegend(chart, e.config);
+                    Custom.initCheckInfo();
+                }
+                var reqRequestStart = $http.get(e.url + "?type=" + e.types + "&dimension=" + e.dimension + "&start=" + times[0] + "&end=" + times[0] + "&userType=" + $rootScope.userType);
+                var reqRequestEnd = $http.get(e.url + "?type=" + e.types + "&dimension=" + e.dimension + "&start=" + times[1] + "&end=" + times[1] + "&userType=" + $rootScope.userType);
+                e.config.instance.showLoading({
+                    text: "正在努力的读取数据中..."
+                });
+                $q.all([reqRequestStart, reqRequestEnd]).then(function (data) {
+                    var _dateTime = chartUtils.getSetOffTime(times[0], times[1], "/");
+                    var final_result = util.getEquipmentDataCompare(data, $scope.equipment.selected, _dateTime);
+                    cf.renderChart(final_result, e.config);
+                });
+            });
+        }
+        $scope.compareReset = function () {
+            $scope.compareType = false;
+            $scope.choiceClass = false;
+            $rootScope.interval = 1;
+            $scope.date = "与其他时间段对比";
+            $scope.charts.forEach(function (e) {
+                var chart = echarts.init(document.getElementById(e.config.id));
+                e.config.instance = chart;
+                e.config.legendDefaultChecked = [0, 1];
+                e.config.legendAllowCheckCount = 2;
+                e.config.compareCustom = undefined;
+                e.types = [chartUtils.convertEnglish(e.config.legendData[0]), chartUtils.convertEnglish(e.config.legendData[1])];
+                util.renderLegend(chart, e.config);
+                Custom.initCheckInfo();
+            })
+            //requestService.refresh($scope.charts);
+        }
+
         function GetDateStr(AddDayCount) {
             var dd = new Date();
             dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
