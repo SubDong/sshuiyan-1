@@ -223,7 +223,11 @@ define(["./module"], function (ctrs) {
         };
 
 
-        $scope.userName = $cookieStore.get('uname');
+        $scope.initPerfectAccount = function () {
+            var userObj = eval("(" + $cookieStore.get('uname') + ")");
+            $rootScope.perfectUser = userObj;
+        }
+        $scope.initPerfectAccount();
 
         var usites = $cookieStore.get('usites');
         var sites = [];
@@ -245,10 +249,10 @@ define(["./module"], function (ctrs) {
         $rootScope.baiduAccount = sites[0].bd_name;//baidu-perfect2151880
         $rootScope.userType = sites[0].id;//www.perfect-cn.cn
 
-        $scope.changeUrl = function (select) {
-            $rootScope.user = select.p_name;
-            $rootScope.baiduAccount = select.bd_name;
-            $rootScope.userType = select.id;
-        }
+            $scope.changeUrl = function (select) {
+                $rootScope.user = select.p_name;
+                $rootScope.baiduAccount = select.bd_name;
+                $rootScope.userType = select.id;
+            }
     })
 });

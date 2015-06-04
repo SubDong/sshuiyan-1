@@ -562,22 +562,22 @@ define(["app"], function (app) {
         $scope.input_gjc = "";
         $scope.input_rky = "";
         $scope.input_ip = "";
-        $scope.realTimeVisit = function(){
+        $scope.realTimeVisit = function () {
 
             var visitFilert = [];
-            if($scope.input_gjc != ""){
-                visitFilert.push("{\"kw\": [\""+$scope.input_gjc+"\"]}")
+            if ($scope.input_gjc != "") {
+                visitFilert.push("{\"kw\": [\"" + $scope.input_gjc + "\"]}")
             }
-            if($scope.input_rky != ""){
-                visitFilert.push("{\"entrance\": [\""+$scope.input_rky+"\"]}")
+            if ($scope.input_rky != "") {
+                visitFilert.push("{\"entrance\": [\"" + $scope.input_rky + "\"]}")
             }
-            if($scope.input_ip != ""){
-                visitFilert.push("{\"remote\": [\""+$scope.input_ip+"\"]}")
+            if ($scope.input_ip != "") {
+                visitFilert.push("{\"remote\": [\"" + $scope.input_ip + "\"]}")
             }
-            if($scope.input_ip == "" && $scope.input_rky == "" && $scope.input_gjc == ""){
+            if ($scope.input_ip == "" && $scope.input_rky == "" && $scope.input_gjc == "") {
                 $rootScope.tableSwitch.tableFilter = null;
-            }else{
-                $rootScope.tableSwitch.tableFilter = "["+visitFilert+"]";
+            } else {
+                $rootScope.tableSwitch.tableFilter = "[" + visitFilert + "]";
             }
             console.log($rootScope.tableSwitch.tableFilter);
             $scope.isJudge = false;
@@ -639,7 +639,7 @@ define(["app"], function (app) {
                             if (dataSEM.length == 1) {
                                 $rootScope.checkedArray.forEach(function (item, i) {
                                     if ($rootScope.tableSwitch.latitude.field == "accountName") {
-                                        dataObj["accountName"] = "搜索推广 ("+dataSEM[0].accountName+")"
+                                        dataObj["accountName"] = "搜索推广 (" + dataSEM[0].accountName + ")"
                                     }
                                     dataSEM.forEach(function (sem, i) {
                                         if (dataObj[item] == undefined) {
@@ -693,11 +693,18 @@ define(["app"], function (app) {
                                         var dataString = (infoKey.toString().length >= 2 ? "" : "0")
                                         obj["period"] = dataString + infoKey + ":00 - " + dataString + infoKey + ":59";
                                         maps[infoKey] = obj;
+
                                     }
+                                    console.log(info.label);
                                     if (info.label == "平均访问时长") {
                                         obj["avgTime"] = ad.formatFunc(info.quota[i], "avgTime");
                                     } else {
-                                        obj[chartUtils.convertEnglish(info.label)] = info.quota[i];
+                                        if (info.label == "跳出率") {
+                                            obj[chartUtils.convertEnglish(info.label)] = info.quota[i] + "%";
+                                        } else {
+                                            obj[chartUtils.convertEnglish(info.label)] = info.quota[i];
+                                        }
+
                                     }
                                     maps[infoKey] = obj;
                                 }
@@ -905,6 +912,7 @@ define(["app"], function (app) {
                             dataNumber = data.length;
                         }
                         row.entity.subGridOptions.columnDefs = $scope.gridOpArray;
+
                         row.entity.subGridOptions.data = data;
                         $rootScope.tableSwitch.tableFilter = returnFilter;
                     }).error(function (error) {

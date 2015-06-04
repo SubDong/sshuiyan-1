@@ -6,6 +6,7 @@ var resutil = require('../utils/responseutils');
 var datautils = require('../utils/datautils');
 var es_request = require('../services/es_request');
 var access_request = require('../services/access_request');
+var promotion_request = require('../services/promotion_request');
 var initial = require('../services/visitors/initialData');
 var map = require('../utils/map');
 var api = express.Router();
@@ -166,7 +167,7 @@ api.get('/survey/1', function (req, res) {
     // 指标数组
     var quotas = ["pv", "vc", "pageConversion", "outRate", "avgTime", "eventConversion", "arrivedRate"];
 
-    es_request.search(req.es, indexes, type, quotas, null, [0], null, null, null, null, function (result) {
+    promotion_request.search(req.es, indexes, type, quotas, null, null, function (result) {
         datautils.send(res, result);
     });
     /* {
@@ -193,7 +194,7 @@ api.get('/survey/2', function (req, res) {
     // 指标数组
     var quotas = ["pv", "vc", "pageConversion", "outRate", "avgTime", "arrivedRate"];
 
-    es_request.search(req.es, indexes, type, quotas, null, [0], filters, null, null, null, function (result) {
+    promotion_request.search(req.es, indexes, type, quotas, null, filters, function (result) {
         datautils.send(res, result);
     });
 
@@ -211,7 +212,7 @@ api.get('/survey/3', function (req, res) {
     // 指标数组
     var quotas = ["pv", "vc", "pageConversion", "outRate", "avgTime", "arrivedRate"];
 
-    es_request.search(req.es, indexes, type, quotas, "region", [0], null, null, null, null, function (result) {
+    promotion_request.search(req.es, indexes, type, quotas, "region", null, function (result) {
         datautils.send(res, result);
     });
 
@@ -258,7 +259,7 @@ api.get('/indextable', function (req, res) {
                         infoKey = info.key[i]
                     }
                     if (popFlag != 1) {
-                        if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null"  || infoKey.length >= 30)) continue;
+                        if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null" || infoKey.length >= 30)) continue;
                     }
                     var infoKey = info.key[i];
                     var obj = maps[infoKey];
@@ -344,7 +345,7 @@ api.get('/realTimeAccess', function (req, res) {
                 result["city"] = item._source.city == "-" ? "国外" : item._source.city;
                 var newDate = new Date(item._source.utime[0]).toString();
                 result["utime"] = newDate.substring(newDate.indexOf(":") - 3, newDate.indexOf("G") - 1);
-                result["source"] = item._source.rf + "," + (item._source.se != "-" ? (item._source.se===undefined?item._source.rf:item._source.se) : item._source.rf);
+                result["source"] = item._source.rf + "," + (item._source.se != "-" ? (item._source.se === undefined ? item._source.rf : item._source.se) : item._source.rf);
                 result["tt"] = item._source.tt;
                 result["ip"] = item._source.remote;
                 result["utimeAll"] = new Date(item._source.utime[item._source.utime.length - 1] - item._source.utime[0]).format("hh:mm:ss");
@@ -514,10 +515,10 @@ api.get("/exchange", function (req, res) {
     var start = Parameters[0].split("=")[1];
     var end = Parameters[1].split("=")[1];
     var type = Parameters[2].split("=")[1];
-    type = type.replace(/;/,",");//由于穿过的数据是以;分号隔开的，所以替换成逗号
+    type = type.replace(/;/, ",");//由于穿过的数据是以;分号隔开的，所以替换成逗号
     //start与end传过时间偏移量，调用creatIndexs()方法，把access-与时间拼接起来组成索引值
-    var indexString = date.createIndexes(start,end,"access-");
-    access_request.exchangeSearch(req.es, indexString, type, function(result){
+    var indexString = date.createIndexes(start, end, "access-");
+    access_request.exchangeSearch(req.es, indexString, type, function (result) {
         datautils.send(res, result);
     });
 
@@ -530,36 +531,39 @@ api.get("/config", function (req, res) {
     var type = query['type'];
     var index = query['index'];
     var schema_name = "";
-    switch (index){
+    switch (index) {
+        case "site_list"://网站列表
+            schema_name = "sites_model";
+            break;
         case "0":
-            schema_name="siterules_model";
+            schema_name = "siterules_model";
             break;
         case "5":
-            schema_name="converts_model";
+            schema_name = "converts_model";
             break;
         default :
     }
-    switch (type){
+    switch (type) {
         case "save":
-            var entity =JSON.parse(query['entity']);
-            dao.save(schema_name,entity,function(ins){
+            var entity = JSON.parse(query['entity']);
+            dao.save(schema_name, entity, function (ins) {
                 datautils.send(res, JSON.stringify(ins));
             });
             break;
         case "search":
-        dao.find(schema_name,query['query'],null,{},function(err,docs){
-            datautils.send(res, docs);
-        });
-        break;
+            dao.find(schema_name, query['query'], null, {}, function (err, docs) {
+                datautils.send(res, docs);
+            });
+            break;
         case "update":
             //条件下更新
-            dao.update(schema_name,query['query'],query['updates'],function(err,docs){
+            dao.update(schema_name, query['query'], query['updates'], function (err, docs) {
                 datautils.send(res, docs);
             });
             break;
         case "delete":
             //条件下删除
-            dao.remove(schema_name,query['query'],function(){
+            dao.remove(schema_name, query['query'], function () {
                 datautils.send(res, "remove");
             });
             break;

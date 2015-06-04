@@ -1177,6 +1177,49 @@ var util = {
             });
         }
         return count;
+    },
+    getEquipmentData: function (json, selected) {
+        var count = util.existData(json);
+        if (count) {
+            json.forEach(function (e) {
+                var tmpData = [];
+                var _value = []
+                for (var i = 0; i < e.key.length; i++) {
+                    var _key = e.key[i] == "-" ? "未知 " : e.key[i];
+                    if (selected) {
+                        tmpData.push(chartUtils.getCustomDevice(_key, selected.field));
+                    } else {
+                        tmpData.push(_key);
+                    }
+                    _value.push(e.quota[i]);
+                }
+                e.key = tmpData;
+                e.quota = _value;
+                e.label = chartUtils.convertChinese(e.label);
+            });
+        }
+    },
+    getEquipmentDataCompare: function (data, selected,_dateTime) {
+        var final_result = [];
+        data.forEach(function (q, index) {
+            var json = JSON.parse(eval("(" + q.data + ")").toString());
+            json.forEach(function (item) {
+                var _label = _dateTime[index] + ":" + chartUtils.convertChinese(item.label);
+                var _key = [];
+                item.key.forEach(function (k, i) {
+                    var _formatKey = item.key[i] == "-" ? "未知 " : item.key[i];
+                    if (selected) {
+                        _key.push(chartUtils.getCustomDevice(_formatKey, selected.field));
+                    } else {
+                        _key.push(_formatKey);
+                    }
+                });
+                item.key = _key;
+                item.label = _label;
+                final_result.push(item);
+            });
+        });
+        return final_result;
     }
 
 }
