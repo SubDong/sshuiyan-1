@@ -514,7 +514,7 @@ api.get("/exchange", function (req, res) {
     var start = Parameters[0].split("=")[1];
     var end = Parameters[1].split("=")[1];
     var type = Parameters[2].split("=")[1];
-    type = type.replace(/;/,",");//由于穿过的数据是以;分号隔开的，所以替换成逗号
+    type = type.replace(/;/g,",");//由于穿过的数据是以;分号隔开的，所以替换成逗号
     //start与end传过时间偏移量，调用creatIndexs()方法，把access-与时间拼接起来组成索引值
     var indexString = date.createIndexes(start,end,"access-");
     access_request.exchangeSearch(req.es, indexString, type, function(result){
@@ -544,6 +544,30 @@ api.get("/config", function (req, res) {
     //    //datautils.send(res, JSON.stringify(ins));
     //});
     //datautils.send(res, "AAAA");
+});
+api.get("/trafficmap", function (req, res) {
+    var parameterString = req.url.split("?");//获取url的？号以后的字符串
+    var parameters = parameterString[1].split(",");
+    var start = parameters[0].split("=")[1];
+    var end = parameters[1].split("=")[1];
+    var indexString = date.createIndexes(start,end,"access-");
+    //if(parameters.length>=3){
+        var pathName = parameters[2].split("=")[1];
+        console.log("访问的索引"+parameterString)
+        //access_request.offsitelinksSearchForPathName(req.es, indexString,pathName, function(result){
+        //    datautils.send(res, result);
+        //});
+    //}else{
+        //start与end传过时间偏移量，调用creatIndexs()方法，把access-与时间拼接起来组成索引值
+
+        access_request.offsitelinksSearch(req.es, indexString,pathName, function(result){
+            datautils.send(res, result);
+        });
+    //}
+    //var type = Parameters[2].split("=")[1];
+    //type = type.replace(/;/,",");//由于穿过的数据是以;分号隔开的，所以替换成逗号
+
+
 });
 // ================================= Config  ==============================
 module.exports = api;

@@ -5,50 +5,71 @@ define(["./module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.controller('linksctrl', function ($scope, $rootScope, $http, $modal, $log, requestService, messageService, areaService) {
+    ctrs.controller('linksctrl', function ($cookieStore,$scope, $rootScope, $http, $modal, $log, requestService, messageService, areaService) {
         $scope.todayClass = true;
         $scope.dt = new Date();
         $scope.dayClass = true;
         $scope.isCollapsed = true;
+        //获取站点
+        $scope.usites = $cookieStore.get('usites');
+        $scope.sites = [];
+        $scope.usites.forEach(function (item, i) {
+            $scope.sites.push({
+                name: item.site_name,
+                id: item.site_id
+            });
+        });
+        var initSiteName = "http://" + $scope.sites[0].name+"/";
+        $scope.init = function () {
+            $scope.links = [];
+            $scope.out_data = [];
+            $scope.out_site = [];
+            var linksData = [];
+            //默认对用户其中一个站点进行统计
+            $http.get("api/trafficmap?start=" + $rootScope.start + ",end=" + $rootScope.end + ",name=" + initSiteName).success(function (result) {
+                if(result==null){
+                    linksData = [];
+                    $scope.offsitelinks = {
+                        name: initSiteName,
+                        rf_pv: 0
+                    }
+                }else{
+                    console.log(result);
+                    $scope.offsitelinks = {
+                        name: result[0].targetPathName_pv[0].pathname,
+                        rf_pv: result[0].targetPathName_pv[0].pv
+                    }
+                    console.log(result[0].in_data.length);
+                    for (var i = 0; i < result[0].in_data.length; i++) {
+                        linksData.push({
+                            id: i,
+                            name: result[0].in_data[i].pathname,
+                            ratio: result[0].in_data[i].proportion,
+                            count: result[0].in_data[i].pv
+                        });
+                    }
+                    for(var i = 0;i<result[0].out_data.length;i++){
+                        $scope.out_data.push({
+                            id: i,
+                            name: result[0].out_data[i].pathname,
+                            ratio: result[0].out_data[i].proportion,
+                            count: result[0].out_data[i].pv
+                        });
+                    }
+                    $scope.out_site ={
+                        ratio:result[0].out_site[0].proportion
+                    };
+                    console.log($scope.out_site)
+                    $scope.links = linksData;
+                }
 
-        $scope.links = [{
-            "id": 1,
-            "name": "http://jsfiddle.net/czerwin/5qFzg/4/",
-            "ratio": "50%",
-            "count": 213
-        }, {
-            "id": 2,
-            "name": "http://jsfiddle.net/czerwin/5qFzg/4/",
-            "ratio": "50%",
-            "count": 213
-        }, {
-            "id": 3,
-            "name": "http://jsfiddle.net/czerwin/5qFzg/4/",
-            "ratio": "50%",
-            "count": 213
-        }, {
-            "id": 4,
-            "name": "http://jsfiddle.net/czerwin/5qFzg/4/",
-            "ratio": "50%",
-            "count": 213
-        },
-            {
-                "id": 4,
-                "name": "http://jsfiddle.net/czerwin/5qFzg/4/",
-                "ratio": "50%",
-                "count": 213
-            }
-        ];
-        $scope.offsitelinks = [
-            {
-                "id": 1,
-                "name": "http://127.0.0.1:8000/#/page/offsitelinks"
-            },
-            {
-                "id": 2,
-                "name": "http://127.0.0.1:8000/#/extension/survey"
-            }
-        ]
+
+            });
+
+
+        };
+        $scope.init();//初始化第一次进该页面默认显示默认网址的当天的数据
+
         $scope.hoverIn = function () {
             this.hoverEdit = true;
         };
@@ -73,12 +94,14 @@ define(["./module"], function (ctrs) {
             $scope.todayClass = true;
             $rootScope.start = 0;
             $rootScope.end = 0;
+            $scope.init();
         };
         $scope.yesterday = function () {
             $scope.reset();
             $scope.yesterdayClass = true;
             $rootScope.start = -1;
             $rootScope.end = -1;
+            $scope.init();
         };
         $scope.sevenDay = function () {
             $scope.reset();
@@ -86,6 +109,7 @@ define(["./module"], function (ctrs) {
             $rootScope.start = -7;
             $rootScope.end = -1;
             $rootScope.interval = 7;
+            $scope.init();
 
         };
         $scope.month = function () {
@@ -94,6 +118,7 @@ define(["./module"], function (ctrs) {
             $rootScope.start = -30;
             $rootScope.end = -1;
             $rootScope.interval = 30;
+            $scope.init();
 
         };
         $scope.open = function ($event) {
@@ -119,7 +144,6 @@ define(["./module"], function (ctrs) {
 
         //index select
         //弹窗
-
         $scope.open = function (size) {
             var modalInstance = $modal.open({
                 templateUrl: 'myModalContent.html',
@@ -149,8 +173,9 @@ define(["./module"], function (ctrs) {
             var d = dd.getDate();
             return y + "-" + m + "-" + d;
         }
+
         //刷新
-        $scope.page_refresh = function(){
+        $scope.page_refresh = function () {
             $rootScope.start = 0;
             $rootScope.end = 0;
             $rootScope.tableTimeStart = 0;
@@ -164,7 +189,6 @@ define(["./module"], function (ctrs) {
     });
 
     ctrs.controller('ModalInstanceCtrl', function ($scope, $modalInstance, items) {
-
         $scope.ok = function () {
             $modalInstance.close();
         };
