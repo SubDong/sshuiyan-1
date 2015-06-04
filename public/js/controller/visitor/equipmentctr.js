@@ -63,7 +63,7 @@ define(["./module"], function (ctrs) {
         $rootScope.tableSwitch = {
             latitude: {name: "网络设备类型", displayName: "网络设备类型", field: "pm"},
             tableFilter: null,
-            dimen: "region",
+            dimen: "os",
             // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
             number: 0,
             //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
@@ -86,7 +86,7 @@ define(["./module"], function (ctrs) {
             requestService.refresh($scope.charts);
 
             $rootScope.tableSwitch.latitude = val;
-            val.field == "isp" ? $rootScope.tableSwitch.dimen = "region" : val.field == "pm" ? $rootScope.tableSwitch.dimen = "br" : $rootScope.tableSwitch.dimen = false
+            val.field == "isp" ? $rootScope.tableSwitch.dimen = "region" : val.field == "pm" ? $rootScope.tableSwitch.dimen = "os" : $rootScope.tableSwitch.dimen = false
             $
             $rootScope.indicators(null, null, null, "refresh");
             $rootScope.targetSearch();
