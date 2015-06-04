@@ -17,7 +17,7 @@ define(["./module"], function (ctrs) {
         //table配置
         $rootScope.adminSetHtml ="<div class='mid_left'><div class='mid_left_code'> 邓子豪</div> </div><div class='mid_right'><button type='button' class='btn btn-default navbar-btn'>复制代码</button><ul type='disc'>"+
         "  <li>请将代码添加至网站全部页面的&lt;/head&gt;标签前；</li><li>建议在header.htm类似的页头模板页面中安装，以达到一处安装，全站皆有的效果；</li><li>如需在JS文件中调用统计分析代码，请直接去掉以下代码首尾的&lt;script type='text/javascript' &gt;与&lt;/script&gt;后，放入JS文件中即可；</li>"+
-        "<li> 如果代码安装正确，一般20分钟 后,可以查看网站分析数据；</li></ul></div>"
+        "<li> 如果代码安装正确，一般20分钟 后,可以查看网站分析数据；</li></ul></div>";
         //配置默认指标
         //配置默认指标
         $rootScope.checkedArray = ["", "", ""];
@@ -74,7 +74,7 @@ define(["./module"], function (ctrs) {
                 var chartarray = [$scope.charts[0]];
                 requestService.refresh(chartarray);
             }
-        }
+        };
 
         Custom.initCheckInfo();
 
