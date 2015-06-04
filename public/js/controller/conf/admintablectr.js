@@ -5,12 +5,24 @@ define(["../module"], function (app) {
 
     "use strict";
 
-    app.controller("admintablectr", function ($timeout, $scope, $rootScope, $http) {
+    app.controller("admintablectr", function ($timeout, $scope, $rootScope, $http,$cookieStore) {
+        $scope.site_config={
+            uid: "", // user i
+            site_url: "", // site url
+            site_name: "", // site name
+            track_code: "", // js track id
+            track_status: "", // track code status
+            status: "", // enable or disable track
+            type_id: "" // es type id ( hidden in front-end)
+        };
+
+
         if($rootScope.tableSwitch.number == 6){
             $scope.tableJu = "html";
         }
 
         $rootScope.adminIndicators = function (item, entities, number, refresh) {
+            console.log("adminIndicators");
             $rootScope.gridArray.shift();
             $rootScope.gridArray.shift();
             if (refresh == "refresh") {
@@ -85,7 +97,7 @@ define(["../module"], function (app) {
             });
             //$rootScope.$broadcast("ssh_reload_datashow");
         };
-        // �ƹ�ſ����������
+        //
         if (typeof($rootScope.checkedArray) != undefined && $scope.tableJu == "html") {
             $scope.gridOptions = {
                 paginationPageSize: 25,
@@ -122,7 +134,66 @@ define(["../module"], function (app) {
             };
         }
 
-        $scope.gridOptions.data = [{a:"aaaaaaaaaa",b:"bbbbbbbbbb",c:"ccccccccc"},{a:"dddddddddd",b:"eeeeeeeee",c:"ccccccccc"}];
+        /**
+         * 初始化数据
+         */
+        var initGridData = function(){
+            var uid= $cookieStore.get("uid");
+            var site_id=$rootScope.userType;
+            var url= "/api/config?index=site_list&type=search&query={\"uid\":\""+uid+"\"}";
+            $http({
+                method: 'GET',
+                url: url
+            }).success(function (dataConfig, status) {
+                //console.log("获取网站列表数据");
+                //数据拼装
+                //var urls=[];
+                //var names=[];
+                //dataConfig.forEach(function(item,i){
+                //    urls[i]=item.site_url;
+                //    names[i]=item.site_name
+                //});
+                $scope.gridOptions.data = dataConfig;
+            });
+        };
+        initGridData();
+
+        var addSiteConfig=function(){
+            $scope.site_config.uid = $cookieStore.get("uid");
+            $scope.site_config.site_url = "www.perfect.com";
+            $scope.site_config.site_name="普菲特";
+            var query= "/api/config?index=site_list&type=search&query={\"uid\":\""+$scope.site_config.uid+"\",\"site_url\":\""+$scope.site_config.site_url+"\"}";
+            $http({
+                method: 'GET',
+                url: query
+            }).success(function (dataConfig, status) {
+                console.log("获取网站列表数据");
+                console.log(angular.toJson($scope.site_config));
+                if(dataConfig==null||dataConfig.length==0){//不存在配置 save
+
+                    var url= "/api/config?index=site_list&type=save&entity="+angular.toJson($scope.site_config);
+                    $http({
+                        method: 'GET',
+                        url: url
+                    }).success(function (dataConfig, status) {
+                        console.log("保存网站列表数据");
+                    });
+                }else{//update
+                    var url= "/api/config?index=site_list&type=update&query={\"uid\":\""+$scope.site_config.uid+"\",\"site_url\":\""+$scope.site_config.site_url+"\"}&updates="+angular.toJson($scope.site_config);;
+                    $http({
+                        method: 'GET',
+                        url: url
+                    }).success(function (dataConfig, status) {
+                        console.log("更新网站列表数据");
+                    });
+
+                }
+
+            });
+        };
+        addSiteConfig();
+
+        //$scope.gridOptions.data = [{a:"aaaaaaaaaa",b:"bbbbbbbbbb",c:"ccccccccc"},{a:"dddddddddd",b:"eeeeeeeee",c:"ccccccccc"}];
 
 
         $scope.page = "";
@@ -139,7 +210,7 @@ define(["../module"], function (app) {
         var adminGriApihtml = function(gridApi){
             var htmlData = [];
             gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
-                console.log(row)
+                console.log("+++++++++"+row);
                 row.entity.subGridOptions = {
                     showHeader: false,
                     enableHorizontalScrollbar: 0,

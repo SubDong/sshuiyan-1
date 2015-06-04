@@ -532,6 +532,9 @@ api.get("/config", function (req, res) {
     var index = query['index'];
     var schema_name = "";
     switch (index) {
+        case "site_list"://网站列表
+            schema_name = "sites_model";
+            break;
         case "0":
             schema_name = "siterules_model";
             break;
