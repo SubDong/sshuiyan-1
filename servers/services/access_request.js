@@ -468,7 +468,6 @@ var access_request = {
                     })
                 }
                 var out_pv_sum = 0;
-                console.log(result.out_pv.buckets.data.filtered_data.buckets);
                 for (var i = 0; i < result.out_pv.buckets.data.filtered_data.buckets.length; i++) {
                     out_data.push({
                         "pathname": result.out_pv.buckets.data.filtered_data.buckets[i].key,
