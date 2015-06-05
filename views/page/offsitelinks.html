@@ -50,29 +50,32 @@
                     <!--</div>-->
                 </div>
 
-                <div class="linkstree_right_right">
+                <div class="linkstree_right_right" ng-mouseover="linkstreeIn()" ng-mouseleave="linkstreeOut()">
 
                     <p><b>离开网站</b></p>
                     <p><span>退出率</span><span>{{out_site.ratio}}</span></p>
                 </div>
-                <div class="linkstree_right_right" ng-repeat="out_link in out_data ">
-                    <p><a href="{{link.name}}">{{ out_link.name }}</a></p>
-                    <p><span>带去浏览量</span><span>{{ out_link.count}}</span></p>
-                    <p><span>占比</span><span>{{ out_link.ratio }}</span></p>
-
+                <div class="linkstree_mode" ng-show="linkstreeEdit">
+                    <div class="arrow"></div>
+                    <div class="linkstree_right_mode" ng-repeat="out_link in out_data " >
+                        <p><a href="{{link.name}}" target="_blank">{{ out_link.name }}</a></p>
+                        <p><span>带去浏览量</span><span>{{ out_link.count}}</span></p>
+                        <p><span>占比</span><span>{{ out_link.ratio }}</span></p>
+                    </div>
                 </div>
             </div>
             <div class="linkstree_left fl">
                 <div class="linkstree_left_more fl">
                   <div class="linkstree_left_list" ng-repeat="link in links " ng-mouseover="hoverIn()" ng-mouseleave="hoverOut()">
                       <div class="linkstree_left_list_left fl"  >
-                          <a href="{{link.name}}">{{ link.name }}</a>
+                          <a href="{{link.name}}"  target="_blank">{{ link.name }}</a>
                       </div>
                       <div class="linkstree_left_list_left_right fl">
                        </div>
                       <div class="linkstree_left_list_left_line fl">
                       </div>
                       <div class="link_tree_mode" ng-show="hoverEdit">
+                          <div class="arrow"></div>
                           <div class="link_tree_row"></div>
                           <div class="link_tree_value">
                               <p><span>带来浏览量</span><span>{{ link.count}}</span></p>

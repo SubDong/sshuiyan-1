@@ -76,6 +76,13 @@ define(["./module"], function (ctrs) {
         $scope.hoverOut = function () {
             this.hoverEdit = false;
         };
+        $scope.linkstreeIn = function () {
+            this.linkstreeEdit = true;
+        };
+        $scope.linkstreeOut = function () {
+            this.linkstreeEdit = false;
+        };
+
         $scope.weblink = function () {
             $scope.isCollapsed = true
             $scope.offsitelinks = offsitelink.value;
