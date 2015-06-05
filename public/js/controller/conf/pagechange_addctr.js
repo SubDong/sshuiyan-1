@@ -11,25 +11,50 @@ define(["./module"], function (ctrs) {
         };
         $scope.targetBlur = function() {
             $scope.target = false;
-        }
+        };
         $scope.record = false;
-        $scope.steps = [{}];//添加步骤
-        $scope.addSteps = function(steps){
-            steps.push({});
-        }
-        $scope.removeSteps = function(steps) {
-            steps.pop({})
-        }
-        $scope.paths = [{}];//添加路径
+        $scope.benefitSet = false;
+        $scope.pathType = false;
+        $scope.changeType = false;
+        $scope.paths = [{
+            steps: [{
+                pages:[{}]
+            }]
+        }];//添加路径
         $scope.addPaths = function(paths) {
-            paths.push({});
-        }
-        $scope.removePath = function(paths) {
-            paths.pop({});
-        }
+            paths.push({
+                steps : [{
+                    pages:[{}]
+                }]
+            });
+        };
+        $scope.removePath = function(steps, _index) {
+            steps.splice(_index, 1);
+        };
+        $scope.steps = [{
+            pages:[{}]
+        }];//添加步骤
+        $scope.addPrompt = false;//当添加超过10的时候显示提示信息
+        $scope.addSteps = function(path, steps){
+            if(path.steps.length > 2){
+                $scope.addPrompt = true;
+                return false;
+            }else{
+                $scope.addPrompt = false;
+                path.steps.push({
+                    pages:[{}]
+                });
+            }
+        };
+        $scope.removeSteps = function(steps, _index) {
+            if(_index < 3){
+                $scope.addPrompt = false;
+            }
+            steps.splice(_index, 1);
+        };
         $scope.pages = [{}];//添加页面
-        $scope.addPages = function(pages) {
-            pages.push({})
+        $scope.addPages = function(step, pages) {
+            step.pages.push({});
         }
     })
 });
