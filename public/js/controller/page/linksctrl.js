@@ -26,7 +26,7 @@ define(["./module"], function (ctrs) {
             $scope.out_site = [];
             var linksData = [];
             //默认对用户其中一个站点进行统计
-            $http.get("api/trafficmap?start=" + $rootScope.start + ",end=" + $rootScope.end + ",name=" + initSiteName).success(function (result) {
+            $http.get("api/offsitelinks?start=" + $rootScope.start + ",end=" + $rootScope.end + ",name=" + initSiteName).success(function (result) {
                 if(result==null){
                     linksData = [];
                     $scope.offsitelinks = {
