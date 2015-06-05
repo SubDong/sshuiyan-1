@@ -4,7 +4,7 @@
 define(["./module"], function (ctrs) {
     "use strict";
 
-    ctrs.controller('adminmainctr', function ($scope, $q, $rootScope, $http, requestService) {
+    ctrs.controller('adminmainctr', function ($scope, $q, $rootScope, $http, requestService,ngDialog) {
 
         /*    $scope.hourcheck= function(){
          $scope.dayClass=false;
@@ -78,5 +78,31 @@ define(["./module"], function (ctrs) {
 
         Custom.initCheckInfo();
 
+        $scope.open=function(){
+        ngDialog.open({
+                    template:'\
+              <div class="ngdialog-buttons" >\
+                   <ul> \
+                   <li>网站域名</li>\
+                    <li><input type="text" data-ng-click="fzk()" class="form-control"/></li> \
+                    <li style="color: red;">不能为空</li>\
+                    <br>\
+                    <li>可输入如下4种域名形式</li>\
+                    <li>1.主域名（如：www.baidu.com）</li>\
+                    <li>2.二级域名（如：sub.baidu.com)</li>\
+                    <li>3.子目录（如：www.baidu.com/sub）</li>\
+                    <li>4.wap站域名（如：wap.baidu.com）</li>\
+                    </ul>\
+                     \
+                    <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
+                    <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="closeThisDialog(0)">确定</button>\
+                </div>',
+                    className: 'ngdialog-theme-default',
+                    plain: true
+
+                });
+
+                // NOTE: return the promise from openConfirm
+         }
     });
 });
