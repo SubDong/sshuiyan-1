@@ -222,9 +222,17 @@ define(["angular", "app"], function (ng, app) {
                 url: '/conf/webcountsite/countrules',
                 templateUrl: '../conf/webcountsite/countrules.html'
             })
+            .state('web_add', {
+                url: '/conf/weblist/web_add',
+                templateUrl: '../conf/weblist/web_add.html'
+            })
             .state('childlist', {
                 url: '/conf/webcountsite/childlist',
                 templateUrl: '../conf/webcountsite/childlist.html'
+            })
+            .state('childlist_add', {
+                url: '/conf/webcountsite/childlist_add',
+                templateUrl: '../conf/webcountsite/childlist_add.html'
             })
             .state('pagechange', {
                 url: '/conf/webcountsite/pagechange',

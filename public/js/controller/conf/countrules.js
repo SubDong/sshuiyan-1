@@ -156,7 +156,6 @@ define(["./module"], function (ctrs) {
             $scope.myBlur = function (obj) {
                 obj.helpFlag = false;
             };
-
             var convertIpArea = function (ips) {
                 var ips_area = angular.copy($scope.ipArea);
                 ips_area.tNum = ips.length;
