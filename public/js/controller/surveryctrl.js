@@ -433,7 +433,10 @@ define(["./module"], function (ctrs) {
                             }
                         });
                         //console.log($rootScope.chartTmp);
+                        console.log($rootScope.chartTmp);
                         cf.renderChart($rootScope.chartTmp, $scope.charts[0].config);
+                    }else{
+                        alert("暂无数据");
                     }
                 });
             }

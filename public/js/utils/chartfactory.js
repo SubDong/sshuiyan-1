@@ -339,6 +339,7 @@ var op = {
     pieChart: function (data, chartConfig) {
         if (!chartConfig.instance)return;
         var chartObj = chartConfig.instance;
+        var labelData = [];
         if (data[0]) {
             if (data[0].key.length == 0) {
                 //chartObj = echarts.init(document.getElementById(chartConfig.id));
@@ -349,10 +350,23 @@ var op = {
             def.mapDef(chartConfig);
             return;
         }
+        data.forEach(function (item) {
+            labelData.push(item.label);
+        });
         var option = {
             tooltip: {
                 trigger: !chartConfig.tt ? "item" : chartConfig.tt,
-                formatter: "{a} <br/>{b} : {c} ({d}%)"
+                formatter: function (params, ticket, callback) {
+                    var res = params.name + '<br/>';
+                        var formatType = labelData[0];
+                        if (chartConfig.toolTip == undefined) {
+                            res += params.seriesName + ' : ' + ad.formatFunc(params.value, formatType) + '<br/>';
+                        } else {
+                            res += params.seriesName + ' : ' + params.value + '<br/>';
+                        }
+
+                    return res;
+                }
             },
             color: [
                 '#87cefa', '#ff7f50', '#da70d6', '#32cd32', '#6495ed',

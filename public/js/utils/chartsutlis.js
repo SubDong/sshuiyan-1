@@ -662,7 +662,7 @@ var chartUtils = {
                         var _tmp = {};
                         var semCount = 0;
                         if (res[0].data.indexOf('[') == -1) {
-                            console.log(res[0].data);
+                            //console.log(res[0].data);
                             res[0].data.forEach(function (i) {
                                 semCount += i[quota];
                             });
