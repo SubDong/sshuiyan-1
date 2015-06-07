@@ -126,8 +126,8 @@ var es_aggs = {
     // 平均访问页数
     "avgPage": {
         "pv_aggs": {
-            "value_count": {
-                "field": "loc"
+            "sum": {
+                "script": "_source.loc.size()"
             }
         },
         "vc_aggs": {

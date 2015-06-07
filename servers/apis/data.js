@@ -1,4 +1,5 @@
 var express = require('express');
+var csvApi = require('json-2-csv');
 var url = require('url');
 var date = require('../utils/date');
 var dateFormat = require('../utils/dateFormat')();
@@ -12,6 +13,9 @@ var map = require('../utils/map');
 var api = express.Router();
 var dao = require('../db/daos');
 var schemas = require('../db/schemas');
+var fsApi = require("fs");
+var uuid = require("node-uuid");
+var iconv = require('iconv-lite');
 
 
 api.get('/charts', function (req, res) {
@@ -259,7 +263,7 @@ api.get('/indextable', function (req, res) {
                         infoKey = info.key[i]
                     }
                     if (popFlag != 1) {
-                        if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null" || infoKey.length >= 30)) continue;
+                        if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null" )) continue;
                     }
                     var infoKey = info.key[i];
                     var obj = maps[infoKey];
@@ -474,6 +478,63 @@ api.get('/provincemap', function (req, res) {
         datautils.send(res, result);
     })
 });
+
+api.get("/downCSV", function (req, res) {
+
+    var query = url.parse(req.url, true).query;
+    var dataInfo = query['dataInfo'].replace(/\*/g, "%");
+    var jsonData = JSON.parse(dataInfo);
+    csvApi.json2csv(jsonData, function (err, csv) {
+        if (err) throw err;
+        /*var options = {
+         root: '/tmp/',
+         dotfiles: 'deny',
+         encoding: 'utf8',
+         headers: {
+         'x-timestamp': Date.now(),
+         'x-sent': true
+         }
+         };
+         var options1 = {
+         encoding: 'utf8'
+         }
+         var uid = uuid.v1().toString().replace(/\-/g, "");
+         var fileName = "down-"+uid+".csv"
+         fsApi.appendFile(fileName, csv, options, function(err){
+         if(err)
+         console.log("fail " + err);
+         else {
+         console.log("写入成功")
+         /!*res.sendFile(fileName, options, function (err) {
+         if (err) {
+         console.log(err);
+         res.status(err.status).end();
+         }
+         else {
+         console.log('Sent:', fileName);
+         }
+         });*!/
+         }
+         });*/
+        //var fileName = req.params.name;
+
+
+        /*var uid = uuid.v1().toString().replace(/\-/g, "");
+        var fileName = "down-" + uid + ".csv"
+        res.set({
+            'Content-Type': 'text/csv',
+            'Content-Disposition': "attachment;filename=" + encodeURIComponent(fileName),
+            'Pragma': 'no-cache',
+            'Expires': 0
+        });*/
+        var buffer = new Buffer(csv);
+        //需要转换字符集
+
+        var str = iconv.encode(buffer, 'utf-8');
+        res.send(str);
+    });
+});
+
 
 /**
  * summary.by wms

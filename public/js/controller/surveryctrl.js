@@ -414,7 +414,7 @@ define(["./module"], function (ctrs) {
                         }
                     });
                     obj["page_conv"] = 0;
-                    obj["outRate"] = obj["outRate"] + "%";
+                    obj["outRate"] = (obj["outRate"] == undefined ? 0 : obj["outRate"]) + "%";
                     obj["event_conv"] = 0;
 
                     $scope.surveyData1.push(obj);

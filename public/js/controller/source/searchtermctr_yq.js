@@ -5,7 +5,7 @@ define(["./module"], function (ctrs) {
 
     'use strict';
 
-    ctrs.controller('searchtermctr_yq', function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
+    ctrs.controller('searchtermctr_yq', function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants,popupService) {
             $scope.yesterdayClass = true;
             $scope.visible = false;
             //table默认信息配置

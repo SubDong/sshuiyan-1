@@ -4,7 +4,7 @@
 define(["./module"], function (ctrs) {
 
     'use strict';
-    ctrs.controller('searchtermctr', function ($scope, $rootScope) {
+    ctrs.controller('searchtermctr', function ($scope, $rootScope,popupService) {
 
             $scope.visible = true;
             //table默认信息配置

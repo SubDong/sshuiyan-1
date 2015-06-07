@@ -241,7 +241,7 @@ var _pct = _pct || [];
     //创建坐标对象
     md.position = {}
     //获取坐标
-    md.position.getXy = function position(event){
+    md.position.getXy = function position(event) {
         var e = event || window.event;
         var scrollX = document.documentElement.scrollLeft || document.body.scrollLeft;
         var scrollY = document.documentElement.scrollTop || document.body.scrollTop;
@@ -254,10 +254,10 @@ var _pct = _pct || [];
             //value: val
         };
         points.push(point);
-        if(points.length >= 5){
+        if (points.length >= 5) {
             md.g.sm = JSON.stringify(points);
             return true;
-        }else{
+        } else {
             return false;
         }
     };
@@ -482,10 +482,10 @@ var _pct = _pct || [];
                 var d = setInterval(this.hbInfo, e);
             },
             //监听点击事件
-            clickEvent:function(){
-                document.onclick = function(event){
+            clickEvent: function () {
+                document.onclick = function (event) {
                     var a = md.position.getXy(event);//获取点击坐标
-                    if(a){
+                    if (a) {
                         var s = new sta;
                         s.na()
                         s.sm()
