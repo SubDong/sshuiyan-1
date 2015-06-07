@@ -4,7 +4,7 @@ var date = require('../utils/date');
 var dateFormat = require('../utils/dateFormat')();
 var resutil = require('../utils/responseutils');
 var datautils = require('../utils/datautils');
-var es_request = require('../services/es_request');
+var es_request = require('../services/refactor_request');
 var access_request = require('../services/access_request');
 var promotion_request = require('../services/promotion_request');
 var initial = require('../services/visitors/initialData');
@@ -33,7 +33,7 @@ api.get('/charts', function (req, res) {
         quotas.push(type);
     var start = Number(query['start']);//
     var end = Number(query['end']);//
-    var indexes = date.createIndexes(start, end, "visitor-");
+    var indexes = date.createIndexes(start, end, "access-");
 
     var period = date.period(start, end);
     var interval = 1;
@@ -111,7 +111,7 @@ api.get('/map', function (req, res) {
     }
     var start = Number(query['start']);//0
     var end = Number(query['end']);
-    var indexes = date.createIndexes(start, end, "visitor-");
+    var indexes = date.createIndexes(start, end, "access-");
 
     var period = date.period(start, end);
     var interval = date.interval(start, end, Number(query['int']));
@@ -143,7 +143,7 @@ api.get('/pie', function (req, res) {
     }
     var start = Number(query['start']);
     var end = Number(query['end']);
-    var indexes = date.createIndexes(start, end, "visitor-");
+    var indexes = date.createIndexes(start, end, "access-");
 
     var period = date.period(start, end);
     var interval = date.interval(start, end, Number(query['int']));
@@ -162,7 +162,7 @@ api.get('/survey/1', function (req, res) {
     var type = query['type'];
     var startOffset = Number(query['start']);
     var endOffset = Number(query['end']);
-    var indexes = date.createIndexes(startOffset, endOffset, "visitor-");
+    var indexes = date.createIndexes(startOffset, endOffset, "access-");
 
     // 指标数组
     var quotas = ["pv", "vc", "pageConversion", "outRate", "avgTime", "eventConversion", "arrivedRate"];
@@ -188,7 +188,7 @@ api.get('/survey/2', function (req, res) {
     var type = query['type'];
     var startOffset = Number(query['start']);
     var endOffset = Number(query['end']);
-    var indexes = date.createIndexes(startOffset, endOffset, "visitor-");
+    var indexes = date.createIndexes(startOffset, endOffset, "access-");
     var filters = JSON.parse(query['filter']);
 
     // 指标数组
@@ -207,7 +207,7 @@ api.get('/survey/3', function (req, res) {
     var type = query['type'];
     var startOffset = Number(query['start']);
     var endOffset = Number(query['end']);
-    var indexes = date.createIndexes(startOffset, endOffset, "visitor-");
+    var indexes = date.createIndexes(startOffset, endOffset, "access-");
 
     // 指标数组
     var quotas = ["pv", "vc", "pageConversion", "outRate", "avgTime", "arrivedRate"];
@@ -236,7 +236,7 @@ api.get('/indextable', function (req, res) {
     var _formartInfo = query["formartInfo"];
 
     var _filter = query["filerInfo"] != null && query["filerInfo"] != 'null' ? JSON.parse(query["filerInfo"]) : query["filerInfo"] == 'null' ? null : query["filerInfo"];//过滤器
-    var indexes = date.createIndexes(_startTime, _endTime, "visitor-");//indexs
+    var indexes = date.createIndexes(_startTime, _endTime, "access-");//indexs
 
     var popFlag = query["popup"];
 
@@ -336,7 +336,7 @@ api.get('/realTimeAccess', function (req, res) {
     var query = url.parse(req.url, true).query;
     var _type = query["type"];
     var _filters = query["filerInfo"] != null && query["filerInfo"] != 'null' ? JSON.parse(query["filerInfo"]) : query["filerInfo"] == 'null' ? null : query["filerInfo"];//过滤器;
-    var indexes = date.createIndexes(0, 0, "visitor-");
+    var indexes = date.createIndexes(0, 0, "access-");
     es_request.realTimeSearch(req.es, indexes, _type, _filters, function (data) {
         var resultArray = new Array();
         data.forEach(function (item, i) {
@@ -363,7 +363,7 @@ api.get('/realTimeHtml', function (req, res) {
     var query = url.parse(req.url, true).query;
     var _type = query["type"];
     var _filters = query["filerInfo"] != null && query["filerInfo"] != 'null' ? JSON.parse(query["filerInfo"]) : query["filerInfo"] == 'null' ? null : query["filerInfo"];//过滤器;
-    var indexes = date.createIndexes(0, 0, "visitor-");
+    var indexes = date.createIndexes(0, 0, "access-");
     es_request.realTimeSearch(req.es, indexes, _type, _filters, function (data) {
         data.forEach(function (item, i) {
             es_request.search(req.es, indexes, _type, ["vc"], null, [0], [{"vid": [item._source.vid]}], null, null, null, function (datainfo) {
@@ -417,7 +417,7 @@ api.get('/visitormap', function (req, res) {
     var _startTime = Number(query['start']);
     var _endTime = Number(query['end']);
     var _quotas = query["quotas"].split(",");
-    var indexes = date.createIndexes(_startTime, _endTime, "visitor-");//indexs
+    var indexes = date.createIndexes(_startTime, _endTime, "access-");//indexs
     var period = date.period(_startTime, _endTime); //时间段
     var interval = date.interval(_startTime, _endTime); //时间分割
 
@@ -438,9 +438,9 @@ api.get('/provincemap', function (req, res) {
     var areas = query['areas'];
     var property = query['property'];
     if (property == "ct") {
-        var indexes = date.createIndexes(_startTime, _endTime, "visitor-");
+        var indexes = date.createIndexes(_startTime, _endTime, "access-");
     } else {
-        var indexes = date.createIndexes(_startTime, _endTime, "visitor-");
+        var indexes = date.createIndexes(_startTime, _endTime, "access-");
     }
     initial.chartData(req.es, indexes, type, areas, property, function (data) {
         var result = {};
@@ -484,7 +484,7 @@ api.get("/summary", function (req, res) {
     var type = query['type'];
     var startOffset = Number(query['start']);
     var endOffset = Number(query['end']);
-    var indexes = date.createIndexes(startOffset, endOffset, "visitor-");
+    var indexes = date.createIndexes(startOffset, endOffset, "access-");
     var quotas = query['quotas'];
     var period = date.period(startOffset, endOffset);
     var interval = date.interval(startOffset, endOffset);
