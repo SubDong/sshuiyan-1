@@ -42,6 +42,9 @@ define(["./module"], function (ctrs) {
                         rf_pv: result[0].targetPathName_pv[0].pv
                     }
                     for (var i = 0; i < result[0].in_data.length; i++) {
+                        if(result[0].in_data[i].pathname=="-"){
+                            result[0].in_data[i].pathname = "直接输入网址"
+                        }
                         linksData.push({
                             id: i,
                             name: result[0].in_data[i].pathname,
