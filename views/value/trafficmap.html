@@ -19,7 +19,7 @@
                     <div class="linkstree_middle_left fl"></div>
                     <div class="linkstree_middle_center fl">
                         <div class="linkstree_center_top">
-                            <a href="#">{{offsitelinks.name||"www.dyxunlei.com"}}</a><span class="caret fr" ng-click="isCollapsed = !isCollapsed"></span>
+                            <a href="#">{{offsitelinks.name||"http://www.best-ad.cn/"}}</a><span class="caret fr" ng-click="isCollapsed = !isCollapsed"></span>
                             <div class="link_tree_mode" collapse="isCollapsed">
                                 <div class="link_tree_row"></div>
                                 <div class="link_tree_value">
@@ -30,9 +30,9 @@
                             </div>
                         </div>
                         <div class="linkstree_center_bottom">
-                            <p><span>进入次数 :</span><b>200</b></p>
-                            <p><span>PV:</span><b>100%</b></p>
-                            <p><span>UV: </span><b>100%</b></p>
+                            <p><span>进入次数 :</span><b>{{targetPathData.pv}}</b></p>
+                            <p><span>PV:</span><b>{{targetPathData.pv_proportion}}</b></p>
+                            <p><span>UV: </span><b>{{targetPathData.uv_proportion}}</b></p>
                         </div>
                     </div>
                     <div class="linkstree_middle_right fl"></div>
@@ -46,8 +46,8 @@
                 </div>
                 <div class="linkstree_right_right">
                     <p><b>离开网站</b></p>
-                    <p><span>输出PV:</span><span>100%</span></p>
-                    <p><span>输出UV::</span><span>100%</span></p>
+                    <p><span>输出PV:</span><span>{{out_siteData.pv_proportion}}</span></p>
+                    <p><span>输出UV::</span><span>{{out_siteData.uv_proportion}}</span></p>
                 </div>
             </div>
             <div class="linkstree_left fl">

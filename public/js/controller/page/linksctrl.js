@@ -1,5 +1,5 @@
 /**
- * Created by john on 2015/3/30.
+ * Created by perfection on 2015/3/30.
  */
 define(["./module"], function (ctrs) {
 
@@ -34,12 +34,10 @@ define(["./module"], function (ctrs) {
                         rf_pv: 0
                     }
                 }else{
-                    console.log(result);
                     $scope.offsitelinks = {
                         name: result[0].targetPathName_pv[0].pathname,
                         rf_pv: result[0].targetPathName_pv[0].pv
                     }
-                    console.log(result[0].in_data.length);
                     for (var i = 0; i < result[0].in_data.length; i++) {
                         linksData.push({
                             id: i,
@@ -59,7 +57,6 @@ define(["./module"], function (ctrs) {
                     $scope.out_site ={
                         ratio:result[0].out_site[0].proportion
                     };
-                    console.log($scope.out_site)
                     $scope.links = linksData;
                 }
 

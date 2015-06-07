@@ -84,9 +84,10 @@ define(["./module"], function (ctrs) {
 });
 var dataSave = function ($scope, data) {
     var text = [];
+    var replaceString = new RegExp("www.","g");
     for (var k = 0; k < data.length; k++) {
         text.push({
-            name: data[k].pathName,
+            name: data[k].pathName.replace(replaceString,""),
             id: data[k].id,
             pv: data[k].pv,
             uv: data[k].uv,
