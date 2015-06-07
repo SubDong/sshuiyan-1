@@ -16,21 +16,21 @@ define(["./module"], function (ctrs) {
         $scope.init = function () {
             var linkData = [];
 
-            $http.get("api/trafficmap?start=" + $scope.start + ",end=" + $scope.end+",targetPathName=http://www.best-ad.cn/").success(function (data) {
-                if(data.length==0){
-                    $scope.links=[];
+            $http.get("api/trafficmap?start=" + $scope.start + ",end=" + $scope.end + ",targetPathName=http://www.best-ad.cn/").success(function (data) {
+                if (data.length == 0) {
+                    $scope.links = [];
                     $scope.targetPathData = {
-                        pathname:"http://www.best-ad.cn/",
-                        pv_proportion:"0%",
-                        uv_proportion:"0%",
-                        pv:0
+                        pathname: "http://www.best-ad.cn/",
+                        pv_proportion: "0%",
+                        uv_proportion: "0%",
+                        pv: 0
                     }
                     $scope.out_siteData = {
-                        pv_proportion:"0%",
-                        uv_proportion:"0%"
+                        pv_proportion: "0%",
+                        uv_proportion: "0%"
                     }
                     return;
-                }else {
+                } else {
                     for (var i = 0; i < data.data.length; i++) {
                         if (data.data[i].pathName == "-") {
                             data.data[i].pathName = "直接输入网址或书签";

@@ -6,13 +6,13 @@ define(["./module"], function (ctrs) {
     "use strict";
 
     ctrs.controller('exchangectr', function ($cookieStore, $http, $rootScope, $scope) {
-            $scope.selectedIndex= 0;
+            $scope.selectedIndex = 0;
             $scope.start = -1;//时间偏移量开始
             $scope.end = -1;//时间偏移量结束
             $scope.sites = [];
             $scope.exchange = {};
             //对应域名的点击时间，获取该域名下的层级下数据
-            $scope.itemClicked = function (page,$index) {
+            $scope.itemClicked = function (page, $index) {
                 $http.get("api/exchange?start=" + $scope.start + ",end=" + $scope.end + ",type=" + page.id).success(function (data) {
                     //注：data里面的数据在name、id、pv和uv与page对象的值不同，数据混乱
                     //原因是type的数量与数据查出来的域名数量不符合，数据库有问题
@@ -23,9 +23,15 @@ define(["./module"], function (ctrs) {
                         uv: page.uv,
                         path1: data[0].path1//层级下数据
                     }
-
+                    $scope.exchange_prefix = {
+                        name: page.prefix + page.name,
+                        id: page.id,
+                        pv: page.pv,
+                        uv: page.uv,
+                        path1: data[0].path1//层级下数据
+                    };
                 });
-                $scope.selectedIndex= $index;
+                $scope.selectedIndex = $index;
             };
 
             //获取前天统计数据
@@ -62,13 +68,19 @@ define(["./module"], function (ctrs) {
                     $scope.exchanges = dataSave($scope, data);
                     $scope.exchange = {};
                     $scope.exchange = {
+                        name: data[0].pathName.replace(/www./g, ""),
+                        id: data[0].id,
+                        pv: data[0].pv,
+                        uv: data[0].uv,
+                        path1: data[0].path1
+                    };
+                    $scope.exchange_prefix = {
                         name: data[0].pathName,
                         id: data[0].id,
                         pv: data[0].pv,
                         uv: data[0].uv,
                         path1: data[0].path1
                     };
-
                 });
             }
 
@@ -84,14 +96,19 @@ define(["./module"], function (ctrs) {
 });
 var dataSave = function ($scope, data) {
     var text = [];
-    var replaceString = new RegExp("www.","g");
+    var replaceString = new RegExp("www.", "g");
     for (var k = 0; k < data.length; k++) {
+        var prefix = "";
+        if (data[k].pathName.match(/www./g) != null) {
+            prefix = "www.";
+        }
         text.push({
-            name: data[k].pathName.replace(replaceString,""),
+            name: data[k].pathName.replace(replaceString, ""),
             id: data[k].id,
             pv: data[k].pv,
             uv: data[k].uv,
-            path1: data[k].path1
+            path1: data[k].path1,
+            prefix: prefix
         });
 
     }
