@@ -79,12 +79,12 @@ define(["./module"], function (ctrs) {
         Custom.initCheckInfo();
 
         $scope.open=function(){
-        ngDialog.open({
+            ngDialog.open({
                     template:'\
               <div class="ngdialog-buttons" >\
                    <ul> \
                    <li>网站域名</li>\
-                    <li><input type="text" data-ng-click="fzk()" class="form-control"/></li> \
+                    <li><input type="text" data-ng-modal="sss" class="form-control"/></li> \
                     <li style="color: red;">不能为空</li>\
                     <br>\
                     <li>可输入如下4种域名形式</li>\
@@ -99,10 +99,9 @@ define(["./module"], function (ctrs) {
                 </div>',
                     className: 'ngdialog-theme-default',
                     plain: true
-
                 });
+         };
 
-                // NOTE: return the promise from openConfirm
-         }
+
     });
 });

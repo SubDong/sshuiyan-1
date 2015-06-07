@@ -42,6 +42,9 @@ define(["./module"], function (ctrs) {
                         rf_pv: result[0].targetPathName_pv[0].pv
                     }
                     for (var i = 0; i < result[0].in_data.length; i++) {
+                        if(result[0].in_data[i].pathname=="-"){
+                            result[0].in_data[i].pathname = "直接输入网址"
+                        }
                         linksData.push({
                             id: i,
                             name: result[0].in_data[i].pathname,
@@ -61,6 +64,18 @@ define(["./module"], function (ctrs) {
                         ratio: result[0].out_site[0].proportion
                     };
                     $scope.links = linksData;
+                }
+                if (result.length <= 3) {
+                    document.getElementById("linkstree_top").style.top = "14%";
+                    document.getElementById("linkstree_right").style.top = "14%";
+                }
+                if (result.length == 4) {
+                    document.getElementById("linkstree_top").style.top = "20%";
+                    document.getElementById("linkstree_right").style.top = "20%";
+                }
+                if (result.length >= 5) {
+                    document.getElementById("linkstree_top").style.top = "35%";
+                    document.getElementById("linkstree_right").style.top = "35%";
                 }
 
 
