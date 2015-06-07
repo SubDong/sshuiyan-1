@@ -282,12 +282,12 @@ var access_request = {
                 callbackFn(data);
         });
     },
-    trafficmapSearch: function (es, indexs,targetPathName, callbackFn) {
+    trafficmapSearch: function (es, indexs, targetPathName, callbackFn) {
         var request = {
             index: indexs,
             type: null,
             body: {
-                "size":0,
+                "size": 0,
                 "aggs": {
                     "se_pv_uv": {
                         "terms": {
@@ -363,7 +363,7 @@ var access_request = {
             var out_siteData = {};
             var results = {};
             console.log(response);
-            if(response.status==404){
+            if (response.status == 404) {
                 callbackFn([]);
             }
             if (response != undefined && response.aggregations != undefined) {
@@ -377,19 +377,19 @@ var access_request = {
                     });
                 }
                 targetPathData = {
-                    pathname:targetPathName,
-                    pv_proportion:((Number(result.target_pv_uv.buckets.data1.pv.value)/Number(result.target_pv_uv.buckets.data.pv.value))*100).toFixed(2)+"%",
-                    uv_proportion:((Number(result.target_pv_uv.buckets.data1.uv.value)/Number(result.target_pv_uv.buckets.data.uv.value))*100).toFixed(2)+"%",
-                    pv:result.target_pv_uv.buckets.data1.pv.value
+                    pathname: targetPathName,
+                    pv_proportion: ((Number(result.target_pv_uv.buckets.data1.pv.value) / Number(result.target_pv_uv.buckets.data.pv.value)) * 100).toFixed(2) + "%",
+                    uv_proportion: ((Number(result.target_pv_uv.buckets.data1.uv.value) / Number(result.target_pv_uv.buckets.data.uv.value)) * 100).toFixed(2) + "%",
+                    pv: result.target_pv_uv.buckets.data1.pv.value
                 }
                 out_siteData = {
-                    pv_proportion:(((Number(result.target_pv_uv.buckets.data.pv.value)-Number(result.target_pv_uv.buckets.data2.pv.value))/Number(result.target_pv_uv.buckets.data.pv.value))*100).toFixed(2)+"%",
-                    uv_proportion:(((Number(result.target_pv_uv.buckets.data.uv.value)-Number(result.target_pv_uv.buckets.data2.uv.value))/Number(result.target_pv_uv.buckets.data.uv.value))*100).toFixed(2)+"%"
+                    pv_proportion: (((Number(result.target_pv_uv.buckets.data.pv.value) - Number(result.target_pv_uv.buckets.data2.pv.value)) / Number(result.target_pv_uv.buckets.data.pv.value)) * 100).toFixed(2) + "%",
+                    uv_proportion: (((Number(result.target_pv_uv.buckets.data.uv.value) - Number(result.target_pv_uv.buckets.data2.uv.value)) / Number(result.target_pv_uv.buckets.data.uv.value)) * 100).toFixed(2) + "%"
                 }
-                results ={
-                    data:data,
-                    targetPathData:targetPathData,
-                    out_siteData:out_siteData
+                results = {
+                    data: data,
+                    targetPathData: targetPathData,
+                    out_siteData: out_siteData
                 };
                 callbackFn(results);
             } else
@@ -426,8 +426,7 @@ var access_request = {
                             "filters": {
                                 "data": {
                                     "bool": {
-                                        "must":
-                                        {
+                                        "must": {
                                             "term": {
                                                 "loc": targetPathName
                                             }
@@ -500,6 +499,9 @@ var access_request = {
             var in_data = [];//进过其他页面跳入的监控目标页面的pv
             var out_data = [];//流经监控目标的pv
             var out_site = [];//离站占比
+            if (response.status == 404) {
+                callbackFn([]);
+            }
             if (response != undefined && response.aggregations != undefined) {
                 var result = response.aggregations;
                 targetPathName_pv.push({

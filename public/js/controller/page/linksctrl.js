@@ -5,7 +5,7 @@ define(["./module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.controller('linksctrl', function ($cookieStore,$scope, $rootScope, $http, $modal, $log, requestService, messageService, areaService) {
+    ctrs.controller('linksctrl', function ($cookieStore, $scope, $rootScope, $http, $modal, $log, requestService, messageService, areaService) {
         $scope.todayClass = true;
         $scope.dt = new Date();
         $scope.dayClass = true;
@@ -19,7 +19,7 @@ define(["./module"], function (ctrs) {
                 id: item.site_id
             });
         });
-        var initSiteName = "http://" + $scope.sites[0].name+"/";
+        var initSiteName = "http://" + $scope.sites[0].name + "/";
         $scope.init = function () {
             $scope.links = [];
             $scope.out_data = [];
@@ -27,13 +27,16 @@ define(["./module"], function (ctrs) {
             var linksData = [];
             //默认对用户其中一个站点进行统计
             $http.get("api/offsitelinks?start=" + $rootScope.start + ",end=" + $rootScope.end + ",name=" + initSiteName).success(function (result) {
-                if(result==null){
+                if (result.length == 0) {
                     linksData = [];
                     $scope.offsitelinks = {
                         name: initSiteName,
                         rf_pv: 0
                     }
-                }else{
+                    $scope.out_site = {
+                        ratio: "0%"
+                    };
+                } else {
                     $scope.offsitelinks = {
                         name: result[0].targetPathName_pv[0].pathname,
                         rf_pv: result[0].targetPathName_pv[0].pv
@@ -46,7 +49,7 @@ define(["./module"], function (ctrs) {
                             count: result[0].in_data[i].pv
                         });
                     }
-                    for(var i = 0;i<result[0].out_data.length;i++){
+                    for (var i = 0; i < result[0].out_data.length; i++) {
                         $scope.out_data.push({
                             id: i,
                             name: result[0].out_data[i].pathname,
@@ -54,8 +57,8 @@ define(["./module"], function (ctrs) {
                             count: result[0].out_data[i].pv
                         });
                     }
-                    $scope.out_site ={
-                        ratio:result[0].out_site[0].proportion
+                    $scope.out_site = {
+                        ratio: result[0].out_site[0].proportion
                     };
                     $scope.links = linksData;
                 }
