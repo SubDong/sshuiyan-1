@@ -294,6 +294,7 @@ var op = {
             xData.push(x);
             option.series.push(serie);
         });
+        //console.log(option);
         if (!chartConfig.twoYz) {
             for (var i = 0; i < labelData.length; i++) {
                 //if (labelData[i] == "uv" || labelData[i] == "pv" || labelData[i] == "访客数(UV)" || labelData[i] == "浏览量(PV)") {
@@ -1199,7 +1200,7 @@ var util = {
             });
         }
     },
-    getEquipmentDataCompare: function (data, selected,_dateTime) {
+    getEquipmentDataCompare: function (data, selected, _dateTime) {
         var final_result = [];
         data.forEach(function (q, index) {
             var json = JSON.parse(eval("(" + q.data + ")").toString());

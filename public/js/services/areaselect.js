@@ -86,6 +86,7 @@ define(["../app"], function (app) {
         ];
         $rootScope.choosedate = {};
         $rootScope.choosedates = [
+            {name:'取消对比',value:100},
             {name: '前一日', value: -2},
             {name: '上周同期 ', value: -7}
         ];
