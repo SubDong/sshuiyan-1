@@ -1,5 +1,5 @@
 /**
- * Created by dolphineor on 2015-5-20.
+ * Created by perfection on 2015-5-20.
  */
 
 var buildQuery = function (filters, start, end) {
@@ -267,7 +267,6 @@ var access_request = {
                                 "pathName": result[i].path0.buckets[c].path1.buckets[k].key
                             });
                         }
-                        console.log("pv:" + result[i].key);
                         data.push({
                             "pv": result[i].path0.buckets[c].pv.value,
                             "uv": result[i].path0.buckets[c].pv.value,
@@ -283,11 +282,12 @@ var access_request = {
                 callbackFn(data);
         });
     },
-    trafficmapSearch: function (es, indexs, callbackFn) {
+    trafficmapSearch: function (es, indexs,targetPathName, callbackFn) {
         var request = {
             index: indexs,
             type: null,
             body: {
+                "size":0,
                 "aggs": {
                     "se_pv_uv": {
                         "terms": {
@@ -304,24 +304,68 @@ var access_request = {
                                     "field": "tt"
                                 }
                             }
-                            //"test": {
-                            //    "terms": {
-                            //        "script": ""
-                            //    }
-                            //}
                         }
                     },
                     "all_uv": {
                         "cardinality": {
                             "field": "tt"
                         }
+                    },
+                    "target_pv_uv": {
+                        "filters": {
+                            "filters": {
+                                "data": {
+                                    "term": {
+                                        "loc": targetPathName
+                                    }
+                                },
+                                "data1": {
+                                    "bool": {
+                                        "must": {
+                                            "term": {
+                                                "loc": targetPathName
+                                            }
+                                        },
+                                        "must_not": {
+                                            "term": {
+                                                "rf": "-"
+                                            }
+                                        }
+                                    }
+                                },
+                                "data2": {
+                                    "term": {
+                                        "rf": targetPathName
+                                    }
+                                }
+                            }
+                        },
+                        "aggs": {
+                            "pv": {
+                                "value_count": {
+                                    "field": "loc"
+                                }
+                            },
+                            "uv": {
+                                "cardinality": {
+                                    "field": "tt"
+                                }
+                            }
+                        }
                     }
+
                 }
             }
         }
         es.search(request, function (error, response) {
             var data = [];
-            var path1Data = [];
+            var targetPathData = {};
+            var out_siteData = {};
+            var results = {};
+            console.log(response);
+            if(response.status==404){
+                callbackFn([]);
+            }
             if (response != undefined && response.aggregations != undefined) {
                 var result = response.aggregations;
                 var mostOfResult = result.se_pv_uv.buckets;
@@ -332,9 +376,24 @@ var access_request = {
                         "uv": ((Number(mostOfResult[i].uv.value) / Number(result.all_uv.value)) * 100).toFixed(2) + "%"
                     });
                 }
-                callbackFn(data);
+                targetPathData = {
+                    pathname:targetPathName,
+                    pv_proportion:((Number(result.target_pv_uv.buckets.data1.pv.value)/Number(result.target_pv_uv.buckets.data.pv.value))*100).toFixed(2)+"%",
+                    uv_proportion:((Number(result.target_pv_uv.buckets.data1.uv.value)/Number(result.target_pv_uv.buckets.data.uv.value))*100).toFixed(2)+"%",
+                    pv:result.target_pv_uv.buckets.data1.pv.value
+                }
+                out_siteData = {
+                    pv_proportion:(((Number(result.target_pv_uv.buckets.data.pv.value)-Number(result.target_pv_uv.buckets.data2.pv.value))/Number(result.target_pv_uv.buckets.data.pv.value))*100).toFixed(2)+"%",
+                    uv_proportion:(((Number(result.target_pv_uv.buckets.data.uv.value)-Number(result.target_pv_uv.buckets.data2.uv.value))/Number(result.target_pv_uv.buckets.data.uv.value))*100).toFixed(2)+"%"
+                }
+                results ={
+                    data:data,
+                    targetPathData:targetPathData,
+                    out_siteData:out_siteData
+                };
+                callbackFn(results);
             } else
-                callbackFn(data);
+                callbackFn(results);
         });
     },
     offsitelinksSearch: function (es, indexs, targetPathName, callbackFn) {
@@ -367,11 +426,7 @@ var access_request = {
                             "filters": {
                                 "data": {
                                     "bool": {
-                                        "must": //{
-                                        //    "term": {
-                                        //        "rf_type": "3"
-                                        //    }
-                                        //},
+                                        "must":
                                         {
                                             "term": {
                                                 "loc": targetPathName
@@ -407,7 +462,7 @@ var access_request = {
                                                 "range": {
                                                     "rf_type": {
                                                         "gt": "0",
-                                                        "lt": "4"
+                                                        "lt": "3"
                                                     }
                                                 }
                                             },
@@ -460,11 +515,11 @@ var access_request = {
                         "pv": result.in_pv.buckets.data.filtered_data.buckets[i].pv.value
                     });
                 }
-                if(in_pv_sum<Number(targetPathName_pv[0].pv)){
+                if (in_pv_sum < Number(targetPathName_pv[0].pv)) {
                     in_data.push({
-                        "pathname":"直接输入网址",
-                        "proportion":(Number(result.all_pv.buckets.data.pv.value)-in_pv_sum)/Number(result.all_pv.buckets.data.pv.value)+"%",
-                        "pv":(Number(result.all_pv.buckets.data.pv.value)-in_pv_sum)
+                        "pathname": "直接输入网址",
+                        "proportion": (Number(result.all_pv.buckets.data.pv.value) - in_pv_sum) / Number(result.all_pv.buckets.data.pv.value) + "%",
+                        "pv": (Number(result.all_pv.buckets.data.pv.value) - in_pv_sum)
                     })
                 }
                 var out_pv_sum = 0;
@@ -545,21 +600,14 @@ var access_request = {
             var path1Data = [];
             if (response != undefined && response.aggregations != undefined) {
                 var result = response.aggregations;
-                console.log(result);
                 for (var i = 0; i < result.pv_uv.buckets.length; i++) {
-                    //for(var k = 0;k<pathName.split(",").length;k++){
-                    //    if(result.pv_uv.buckets[i].key==pathName.split(",")[k]){
                     data.push({
                         name: result.pv_uv.buckets[i].key,
                         count: result.pv_uv.buckets[i].pv.value,
                         ratio: ((Number(result.pv_uv.buckets[i].uv.value) / Number(result.uv.value)) * 100).toFixed(2) + "%"
                     });
-                    //        break;
-                    //    }
-                    //}
 
                 }
-                console.log(data);
                 callbackFn(data);
             } else
                 callbackFn(data);
@@ -579,7 +627,6 @@ var requestBodyBoolForPathName = function (value) {
         });
 
     }
-    console.log(requestSentence)
     return requestSentence;
 }
 var exchangeField = function (value) {
@@ -590,14 +637,3 @@ var exchangeField = function (value) {
     }
 }
 module.exports = access_request;
-//去重
-//Array.prototype.removal = function () {
-//    this.sort();
-//    var re = [this[0]];
-//    for (var i = 1; i < this.length; i++) {
-//        if (this[i] !== re[re.length - 1]) {
-//            re.push(this[i]);
-//        }
-//    }
-//    return re;
-//}
