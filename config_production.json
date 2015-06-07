@@ -11,10 +11,10 @@
   },
   "redis": {
     "host": "redis",
-    "port": 6379,
+    "port": 16379,
     "password": "3edcvfr4"
   },
-  "mongo":{
-    "url":"mongodb://mongo:23135/conf"
+  "mongo": {
+    "url": "mongodb://admin:3edczaq1@mongo:27017/admin?pooled=true"
   }
 }
