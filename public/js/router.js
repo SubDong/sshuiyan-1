@@ -222,9 +222,17 @@ define(["angular", "app"], function (ng, app) {
                 url: '/conf/webcountsite/countrules',
                 templateUrl: '../conf/webcountsite/countrules.html'
             })
+            .state('web_add', {
+                url: '/conf/weblist/web_add',
+                templateUrl: '../conf/weblist/web_add.html'
+            })
             .state('childlist', {
                 url: '/conf/webcountsite/childlist',
                 templateUrl: '../conf/webcountsite/childlist.html'
+            })
+            .state('childlist_add', {
+                url: '/conf/webcountsite/childlist_add',
+                templateUrl: '../conf/webcountsite/childlist_add.html'
             })
             .state('pagechange', {
                 url: '/conf/webcountsite/pagechange',
@@ -234,6 +242,14 @@ define(["angular", "app"], function (ng, app) {
                 url: '/conf/webcountsite/eventchange',
                 templateUrl: '../conf/webcountsite/eventchange.html'
             })
+            .state('eventchange_add', {
+                url: '/conf/webcountsite/eventchange_add',
+                templateUrl: '../conf/webcountsite/eventchange_add.html'
+            })
+            .state('pagechange_add', {
+                url: '/conf/webcountsite/pagechange_add',
+                templateUrl: '../conf/webcountsite/pagechange_add.html'
+            })
             .state('timechange', {
                 url: '/conf/webcountsite/timechange',
                 templateUrl: '../conf/webcountsite/timechange.html'
@@ -241,6 +257,10 @@ define(["angular", "app"], function (ng, app) {
             .state('adtrack', {
                 url: '/conf/webcountsite/adtrack',
                 templateUrl: '../conf/webcountsite/adtrack.html'
+            })
+            .state('adtrack_add', {
+                url: '/conf/webcountsite/adtrack_add',
+                templateUrl: '../conf/webcountsite/adtrack_add.html'
             })
             .state('root', {
                 url: '/conf/admin/root',

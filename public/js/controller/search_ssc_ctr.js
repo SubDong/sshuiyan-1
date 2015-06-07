@@ -98,12 +98,16 @@ define(["./module"], function (ctrs) {
             var final_result = JSON.parse(eval("(" + data + ")").toString());
             //删除key为"-"数据对
             final_result.forEach(function (item, i) {
+                var tempKey=[];
+                var tempQuata=[];
                 item.key.forEach(function (k, j) {
-                    if (k == "-") {
-                        item.key.remove(j);
-                        item.quota.remove(j);
+                    if (k != "-"&&k.length<30) {
+                        tempKey.push(item.key[j]);
+                        tempQuata.push(item.quota[j]);
                     }
                 });
+                item.key=tempKey;
+                item.quato=tempQuata;
                 item.label=chartUtils.convertChinese(item.label);
             });
             $scope.charts[0].config.noFormat = "none";

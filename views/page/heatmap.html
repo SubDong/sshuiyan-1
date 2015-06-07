@@ -54,26 +54,33 @@
 </div>
 <script type="text/javascript">
     window.onload = function heatmaponlad() {
-        var xx = h337.create({"element": document.getElementById("heatmap"), "radius": 25, "visible": true});
-        var el = {
-            max: 90, data: [
-                {x: 1600, y: 60, count: 900},
-                {x: 1250, y: 60, count: 60},
-                {x: 100, y: 80, count: 90},
-                {x: 111, y: 110, count: 60},
-                {x: 201, y: 150, count: 90},
-                {x: 311, y: 110, count: 60},
-                {x: 121, y: 510, count: 70},
-                {x: 511, y: 110, count: 60},
-                {x: 211, y: 110, count: 50},
-                {x: 191, y: 110, count: 20},
-                {x: 511, y: 110, count: 40}
-            ]
-        };
-        xx.store.setDataSet(el);
+        document.onclick = function position(event){
+            var e = event || window.event;
+            var scrollX = document.documentElement.scrollLeft || document.body.scrollLeft;
+            var scrollY = document.documentElement.scrollTop || document.body.scrollTop;
+            var x = e.pageX || e.clientX + scrollX;
+            var y = e.pageY || e.clientY + scrollY;
+            var xx = h337.create({"element": document.getElementById("heatmap"), "radius": 25, "visible": true});
+            var points = [];
+            var max = 0;
+            var val = Math.floor(Math.random() * 100);
+            max = Math.max(max, val);
+            var point = {
+                x: x,
+                y: y,
+                value: val
+            };
+            points.push(point);
+            if(points.length > 5){
+                points = [];
+            }
+            var el = {max: max, data: points};
+            xx.store.setDataSet(el);
+        }
         document.getElementById("heatmap").style.height = document.getElementById("iframe").scrollHeight + "px";
         document.getElementById("heatmap").style.width = document.getElementById("iframe").scrollWidth + "px" - 10;
         console.log(document.getElementById("iframe"));
+
         /*        xx.get("canvas").onclick = function(ev){
          var pos = h337.util.mousePosition(ev);
          xx.store.addDataPoint(pos[0],pos[1]);

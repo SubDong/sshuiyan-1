@@ -12,7 +12,7 @@ define(["../app"], function (app) {
         $rootScope.country = {};
         $rootScope.countrys = [
             {name: '中国'},
-            {name: '泰国'},
+            {name: '泰国'}
         ];
         $rootScope.city = {};
         $rootScope.citys = [
@@ -48,7 +48,7 @@ define(["../app"], function (app) {
             {name: '青海'},
             {name: '宁夏'},
             {name: '新疆'},
-            {name: '港澳台'},
+            {name: '港澳台'}
 
         ];
         $rootScope.continent = {};
@@ -64,7 +64,7 @@ define(["../app"], function (app) {
             {name: '完整下载'},
             {name: '在线下载'},
             {name: '时长目标'},
-            {name: '访问页数目标'},
+            {name: '访问页数目标'}
         ];
 
         $rootScope.souce = {};
@@ -72,7 +72,7 @@ define(["../app"], function (app) {
             {name: '全部', value: 0},
             {name: '直接访问', value: 1},
             {name: '搜索引擎', value: 2},
-            {name: '外部链接', value: 3},
+            {name: '外部链接', value: 3}
         ];
         $rootScope.rootSelect = {};
         $rootScope.rootSelects = [
@@ -91,6 +91,7 @@ define(["../app"], function (app) {
         ];
         $rootScope.equipment = {};
         $rootScope.equipments = [
+            {name: '网络设备类型', field: 'pm'},
             {name: '网络供应商', field: 'isp'},
             {name: '浏览器', field: 'br'},
             {name: '分辨率', field: 'sr'},

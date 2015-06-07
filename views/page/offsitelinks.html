@@ -1,7 +1,12 @@
 <div class="middle_containers" ng-controller="linksctrl">
     <div class="date_select">
-        <calendar></calendar>
-        <refresh></refresh>
+        <div  role="group" class="btn-group fl"><button class="btn btn-default" type="button" ng-click="today()" ng-hide="visible" ng-class="{'current':todayClass,'disabled':todaySelect}">今天</button>
+            <button class="btn btn-default" type="button" ng-click="yesterday()" ng-class="{'current':yesterdayClass}">昨天</button>
+            <button class="btn btn-default" type="button" ng-click="sevenDay()" ng-class="{'current':sevenDayClass}">最近7天</button>
+            <button class="btn btn-default" type="button" ng-click="month()" ng-class="{'current':monthClass}">最近30天</button>
+            <button id="reportrange"  class="btn btn-default pull-right date-picker my_picker" ng-click='timeclick()' ng-hide="datechoice" ng-class="{'current':timeClass}" max="max" ng-model="date">
+                <i class="glyphicon glyphicon-calendar fa fa-calendar"></i><span></span></button>
+        </div>
     </div>
     <div class="my_concent">
         <div class="linkstree">
@@ -10,18 +15,19 @@
                 <div class="linkstree_middle_left fl"></div>
                 <div class="linkstree_middle_center fl">
                     <div class="linkstree_center_top">
-                        <a href="#">{{offsitelinks.name||"http://127.0.0.1:8000/#/page/offsitelinks"}}</a><span class="caret fr" ng-click="isCollapsed = !isCollapsed"></span>
+                        <a href="#">{{offsitelinks.name||"http://www.best-ad.cn/"}}</a><span class="caret fr" ng-click="isCollapsed = !isCollapsed"></span>
                         <div class="link_tree_mode" collapse="isCollapsed">
                             <div class="link_tree_row"></div>
                             <div class="link_tree_value">
                                <ul>
-                                   <li ng-repeat="offsitelink in offsitelinks" ng-click="weblink()">{{offsitelink.name}}</li>
+                                   <!--<li ng-repeat="offsitelink in offsitelinks" ng-click="weblink()">{{offsitelink.name}}</li>-->
+                                   <li  ng-click="weblink()">{{offsitelinks.name}}</li>
                                </ul>
                             </div>
                         </div>
                     </div>
                     <div class="linkstree_center_bottom">
-                        <p><span>浏览量</span><b>200</b></p>
+                        <p><span>浏览量</span><b>{{offsitelinks.rf_pv}}</b></p>
                         <p><span>退出率</span><b>100%</b></p>
                         <div class="linktree_set btn-lg" >
                             <span aria-hidden="true" class="glyphicon glyphicon-cog large"  ng-click="open()"></span>
@@ -31,24 +37,45 @@
                 <div class="linkstree_middle_right fl"></div>
             </div>
             <div class="linkstree_right" id="linkstree_right">
+
+
                 <div class="linkstree_right_left">
+                    <!--<div  ng-repeat="out_link in out_data " ng-mouseover="hoverIn()" ng-mouseleave="hoverOut()">-->
+                    <!--<p><a href="{{link.name}}">{{ out_link.name }}</a></p>-->
+
+                    <!--<p><span>带去浏览量</span><span>{{ out_link.count}}</span></p>-->
+                    <!--<p><span>占比</span><span>{{ out_link.ratio }}</span></p>-->
+
+                    <!--</div>-->
+                    <!--</div>-->
                 </div>
-                <div class="linkstree_right_right">
+
+                <div class="linkstree_right_right" ng-mouseover="linkstreeIn()" ng-mouseleave="linkstreeOut()">
+
                     <p><b>离开网站</b></p>
-                    <p><span>退出率</span><span>100%</span></p>
+                    <p><span>退出率</span><span>{{out_site.ratio}}</span></p>
+                </div>
+                <div class="linkstree_mode" ng-show="linkstreeEdit">
+                    <div class="arrow"></div>
+                    <div class="linkstree_right_mode" ng-repeat="out_link in out_data " >
+                        <p><a href="{{link.name}}" target="_blank">{{ out_link.name }}</a></p>
+                        <p><span>带去浏览量</span><span>{{ out_link.count}}</span></p>
+                        <p><span>占比</span><span>{{ out_link.ratio }}</span></p>
+                    </div>
                 </div>
             </div>
             <div class="linkstree_left fl">
                 <div class="linkstree_left_more fl">
                   <div class="linkstree_left_list" ng-repeat="link in links " ng-mouseover="hoverIn()" ng-mouseleave="hoverOut()">
                       <div class="linkstree_left_list_left fl"  >
-                          <a href="{{link.name}}">{{ link.name }}</a>
+                          <a href="{{link.name}}"  target="_blank">{{ link.name }}</a>
                       </div>
                       <div class="linkstree_left_list_left_right fl">
                        </div>
                       <div class="linkstree_left_list_left_line fl">
                       </div>
                       <div class="link_tree_mode" ng-show="hoverEdit">
+                          <div class="arrow"></div>
                           <div class="link_tree_row"></div>
                           <div class="link_tree_value">
                               <p><span>带来浏览量</span><span>{{ link.count}}</span></p>
@@ -72,11 +99,14 @@
     <div class="modal-body">
         <p>您还能添加19个监控页：</p>
         <ul>
-            <li ng-repeat="item in items">
-                <a ng-click="selected.item = item">{{ item }}</a>
+            <!--<li ng-repeat="item in items">-->
+            <li>
+                <!--<a ng-click="selected.item = item">{{ item }}</a>-->
+                <a ng-click="selected.item = item">http://www.perfect-cn.cn/</a>
+                <a ng-click="selected.item = item">http://sem.best-ad.cn/index</a>
             </li>
         </ul>
-        Selected: <b>{{ selected.item }}</b>
+        Selected: <b>http://www.best-ad.cn/</b>
     </div>
     <div class="modal-footer">
         <button class="btn btn-primary" ng-click="ok()">确定</button>

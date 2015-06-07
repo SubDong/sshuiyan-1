@@ -22,9 +22,9 @@ define(["./module"], function (ctrs) {
                 maxWidth: 10
             },
             {
-                name: "网络供应商",
-                displayName: "网络供应商",
-                field: "isp",
+                name: "新老访客",
+                displayName: "新老访客",
+                field: "ct",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"
             },
             {
@@ -63,7 +63,7 @@ define(["./module"], function (ctrs) {
             }
         ];
         $rootScope.tableSwitch = {
-            latitude: {name: "网络供应商", displayName: "网络供应商", field: "isp"},
+            latitude: {name: "新老访客", displayName: "新老访客", field: "ct"},
             tableFilter: null,
             dimen: false,
             // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
@@ -79,7 +79,7 @@ define(["./module"], function (ctrs) {
 
         $scope.equipmentChange = function (val) {
             $rootScope.tableSwitch.latitude = val;
-            val.field == "ips" ? $rootScope.tableSwitch.dimen = "region" : val.field == "pm" ? $rootScope.tableSwitch.dimen = "br" : $rootScope.tableSwitch.dimen = false
+            val.field == "isp" ? $rootScope.tableSwitch.dimen = "region" : val.field == "pm" ? $rootScope.tableSwitch.dimen = "br" : $rootScope.tableSwitch.dimen = false
             $rootScope.indicators(null, null, null, "refresh");
             $rootScope.targetSearch();
         }

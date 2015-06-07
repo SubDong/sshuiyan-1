@@ -28,7 +28,7 @@ define(["./module"], function (ctrs) {
                     $(".under_top").hide();
                 }
                 if ($rootScope.start == -29) {
-                    $scope.charts[0].config.qingXie = true
+                    $scope.charts[0].config.auotHidex = undefined;
                 }
                 $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $rootScope.start, $rootScope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
             });
@@ -43,28 +43,6 @@ define(["./module"], function (ctrs) {
                 //$scope.reloadGrid();
                 $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $rootScope.start, $rootScope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
             };
-            //$scope.sevenDay = function () {
-            //    $(".under_top").hide();
-            //    $scope.reset();
-            //    $scope.sevenDayClass = true;
-            //    $scope.day_offset = -7;
-            //    $scope.start = -7;
-            //    $scope.end = -1;
-            //    $scope.compareArray = [];
-            //    //$scope.reloadGrid();
-            //    $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $scope.start, $scope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
-            //};
-            //$scope.month = function () {
-            //    $(".under_top").hide();
-            //    $scope.reset();
-            //    $scope.monthClass = true;
-            //    $scope.day_offset = -30;
-            //    $scope.start = -30;
-            //    $scope.end = -1;
-            //    $scope.compareArray = [];
-            //    //$scope.reloadGrid();
-            //    $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $scope.start, $scope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
-            //};
             $scope.open = function ($event) {
                 $scope.reset();
                 $scope.definClass = true;
@@ -304,7 +282,7 @@ define(["./module"], function (ctrs) {
                         $scope.charts[0].config.chartType = "bar";
                         $scope.charts[0].config.bGap = true;
                         $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
-                        chartUtils.addStep(chart_result,24);
+                        chartUtils.addStep(chart_result, 24);
                         cf.renderChart(chart_result, $scope.charts[0].config);
                     } else {
                         var esJson = JSON.parse(eval("(" + final_result[1].data + ")").toString());
@@ -343,7 +321,7 @@ define(["./module"], function (ctrs) {
             $scope.compareSemArray = [];
             $scope.semCompareTo = function (semSelected) {
                 if ($scope.compareSemArray.toString().indexOf(semSelected.value) == -1) {
-                    $scope.compareSemArray.push( semSelected.value);
+                    $scope.compareSemArray.push(semSelected.value);
                     $http.get(SEM_API_URL + $rootScope.user + "/" + $rootScope.baiduAccount + "/account/" + $scope.selectedQuota[0] + "-?startOffset=" + semSelected.value + "&endOffset=" + semSelected.value).success
                     (function (res) {
                         var c = $scope.charts[0].config.instance;
@@ -359,7 +337,7 @@ define(["./module"], function (ctrs) {
             $scope.esCompareTo = function (esSelected) {
                 if ($scope.compareEsArray.toString().indexOf(esSelected.value) == -1) {
                     $scope.compareEsArray.push(esSelected.value);
-                    $http.get("/api/charts?start=" + esSelected.value + "&end=" + esSelected.value + "&dimension=period&userType="+$rootScope.userType+"&type=" + $scope.selectedQuota[1]).success
+                    $http.get("/api/charts?start=" + esSelected.value + "&end=" + esSelected.value + "&dimension=period&userType=" + $rootScope.userType + "&type=" + $scope.selectedQuota[1]).success
                     (function (res) {
                         var json = JSON.parse(eval("(" + res + ")").toString());
                         if (json.length) {
@@ -431,6 +409,9 @@ define(["./module"], function (ctrs) {
                     var obj = {};
                     data.forEach(function (item) {
                         obj[item.label] = item.quota[0];
+                        if (item.label == "avgTime") {
+                            obj[item.label] = ad.formatFunc(item.quota[0], "avgTime")
+                        }
                     });
                     obj["page_conv"] = 0;
                     obj["outRate"] = obj["outRate"] + "%";
@@ -585,6 +566,9 @@ define(["./module"], function (ctrs) {
                             obj[item.label] = item.quota[0];
                         });
 
+                        if (data.length == 0)
+                            obj[$scope.effectQuota_] = 0;
+
                         $scope.gridOptions1Data[0][$scope.effectQuota_] = ($scope.effectQuota_ == "outRate" || $scope.effectQuota_ == "arrivedRate") ? obj[$scope.effectQuota_] + "%" : obj[$scope.effectQuota_];
                         $scope.gridOptions1.data = $scope.gridOptions1Data;
                     }).error(function (error) {
@@ -632,6 +616,9 @@ define(["./module"], function (ctrs) {
                             obj[item.label] = item.quota[0];
                         });
 
+                        if (data.length == 0)
+                            obj[$scope.effectQuota_] = 0;
+
                         $scope.gridOptions2Data[0][$scope.effectQuota_] = ($scope.effectQuota_ == "outRate" || $scope.effectQuota_ == "arrivedRate") ? obj[$scope.effectQuota_] + "%" : obj[$scope.effectQuota_];
                         $scope.gridOptions2.data = $scope.gridOptions2Data;
                     }).error(function (error) {
@@ -675,7 +662,7 @@ define(["./module"], function (ctrs) {
                     pcObj["device"] = "计算机";
                     pcObj[$scope.outQuota_] = tmpResult[0][0][$scope.outQuota_];
                     pcObj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? pcObj[$scope.outQuota_] + "%" : pcObj[$scope.outQuota_];
-                    pcObj[$scope.effectQuota_] = tmpResult[2][0].quota[0];
+                    pcObj[$scope.effectQuota_] = tmpResult[2][0] + "" == "undefined" ? 0 : tmpResult[2][0].quota[0];
                     pcObj[$scope.effectQuota_] = ($scope.effectQuota_ == "outRate" || $scope.effectQuota_ == "arrivedRate") ? pcObj[$scope.effectQuota_] + "%" : pcObj[$scope.effectQuota_];
                     $scope.gridOptions3Data = [];
                     $scope.gridOptions3Data.push(pcObj);
@@ -685,7 +672,7 @@ define(["./module"], function (ctrs) {
                     mobileObj["device"] = "移动设备";
                     mobileObj[$scope.outQuota_] = tmpResult[1][0][$scope.outQuota_];
                     mobileObj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? mobileObj[$scope.outQuota_] + "%" : mobileObj[$scope.outQuota_];
-                    mobileObj[$scope.effectQuota_] = tmpResult[3][0].quota[0];
+                    mobileObj[$scope.effectQuota_] = tmpResult[3][0] + "" == "undefined" ? 0 : tmpResult[3][0].quota[0];
                     mobileObj[$scope.effectQuota_] = ($scope.effectQuota_ == "outRate" || $scope.effectQuota_ == "arrivedRate") ? mobileObj[$scope.effectQuota_] + "%" : mobileObj[$scope.effectQuota_];
                     $scope.gridOptions3Data.push(mobileObj);
                     $scope.gridOptions3.data = $scope.gridOptions3Data;
@@ -723,19 +710,27 @@ define(["./module"], function (ctrs) {
                 }).then(function (tmpResult) {
                     $scope.gridOptions4Data = [];
                     tmpResult[0].forEach(function (item) {
-                        var esRegionArr = tmpResult[1][0].key;
-                        var regionName = item.regionName;
-                        if ($scope.contains(esRegionArr.toString(), regionName, true)) {
-                            for (var i = 0, l = esRegionArr.length; i < l; i++) {
-                                if (esRegionArr[i].replace("市", "") == regionName) {
-                                    var obj = {};
-                                    obj["region"] = regionName;
-                                    obj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? item[$scope.outQuota_] + "%" : item[$scope.outQuota_];
-                                    obj[$scope.effectQuota_] = tmpResult[1][0].quota[i];
-                                    obj[$scope.effectQuota_] = ($scope.effectQuota_ == "outRate" || $scope.effectQuota_ == "arrivedRate") ? obj[$scope.effectQuota_] + "%" : obj[$scope.effectQuota_];
-                                    $scope.gridOptions4Data.push(obj);
+                        if (!(tmpResult[1][0] + "" == "undefined")) {
+                            var esRegionArr = tmpResult[1][0].key;
+                            var regionName = item.regionName;
+                            if ($scope.contains(esRegionArr.toString(), regionName, true)) {
+                                for (var i = 0, l = esRegionArr.length; i < l; i++) {
+                                    if (esRegionArr[i].replace("市", "") == regionName) {
+                                        var obj = {};
+                                        obj["region"] = regionName;
+                                        obj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? item[$scope.outQuota_] + "%" : item[$scope.outQuota_];
+                                        obj[$scope.effectQuota_] = tmpResult[1][0].quota[i];
+                                        obj[$scope.effectQuota_] = ($scope.effectQuota_ == "outRate" || $scope.effectQuota_ == "arrivedRate") ? obj[$scope.effectQuota_] + "%" : obj[$scope.effectQuota_];
+                                        $scope.gridOptions4Data.push(obj);
+                                    }
                                 }
                             }
+                        } else {
+                            var _obj = {};
+                            _obj["region"] = item.regionName;
+                            _obj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? item[$scope.outQuota_] + "%" : item[$scope.outQuota_];
+                            _obj[$scope.effectQuota_] = 0;
+                            $scope.gridOptions4Data.push(_obj);
                         }
                     });
 

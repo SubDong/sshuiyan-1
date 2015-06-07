@@ -6,6 +6,7 @@ var resutil = require('../utils/responseutils');
 var datautils = require('../utils/datautils');
 var es_request = require('../services/es_request');
 var access_request = require('../services/access_request');
+var promotion_request = require('../services/promotion_request');
 var initial = require('../services/visitors/initialData');
 var map = require('../utils/map');
 var api = express.Router();
@@ -166,7 +167,7 @@ api.get('/survey/1', function (req, res) {
     // 指标数组
     var quotas = ["pv", "vc", "pageConversion", "outRate", "avgTime", "eventConversion", "arrivedRate"];
 
-    es_request.search(req.es, indexes, type, quotas, null, [0], null, null, null, null, function (result) {
+    promotion_request.search(req.es, indexes, type, quotas, null, null, function (result) {
         datautils.send(res, result);
     });
     /* {
@@ -193,7 +194,7 @@ api.get('/survey/2', function (req, res) {
     // 指标数组
     var quotas = ["pv", "vc", "pageConversion", "outRate", "avgTime", "arrivedRate"];
 
-    es_request.search(req.es, indexes, type, quotas, null, [0], filters, null, null, null, function (result) {
+    promotion_request.search(req.es, indexes, type, quotas, null, filters, function (result) {
         datautils.send(res, result);
     });
 
@@ -211,7 +212,7 @@ api.get('/survey/3', function (req, res) {
     // 指标数组
     var quotas = ["pv", "vc", "pageConversion", "outRate", "avgTime", "arrivedRate"];
 
-    es_request.search(req.es, indexes, type, quotas, "region", [0], null, null, null, null, function (result) {
+    promotion_request.search(req.es, indexes, type, quotas, "region", null, function (result) {
         datautils.send(res, result);
     });
 
@@ -258,7 +259,7 @@ api.get('/indextable', function (req, res) {
                         infoKey = info.key[i]
                     }
                     if (popFlag != 1) {
-                        if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null" || infoKey == "国外" || infoKey.length >= 30)) continue;
+                        if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null" || infoKey.length >= 30)) continue;
                     }
                     var infoKey = info.key[i];
                     var obj = maps[infoKey];
@@ -344,7 +345,7 @@ api.get('/realTimeAccess', function (req, res) {
                 result["city"] = item._source.city == "-" ? "国外" : item._source.city;
                 var newDate = new Date(item._source.utime[0]).toString();
                 result["utime"] = newDate.substring(newDate.indexOf(":") - 3, newDate.indexOf("G") - 1);
-                result["source"] = item._source.rf + "," + (item._source.se != "-" ? (item._source.se===undefined?item._source.rf:item._source.se) : item._source.rf);
+                result["source"] = item._source.rf + "," + (item._source.se != "-" ? (item._source.se === undefined ? item._source.rf : item._source.se) : item._source.rf);
                 result["tt"] = item._source.tt;
                 result["ip"] = item._source.remote;
                 result["utimeAll"] = new Date(item._source.utime[item._source.utime.length - 1] - item._source.utime[0]).format("hh:mm:ss");
@@ -514,10 +515,10 @@ api.get("/exchange", function (req, res) {
     var start = Parameters[0].split("=")[1];
     var end = Parameters[1].split("=")[1];
     var type = Parameters[2].split("=")[1];
-    type = type.replace(/;/,",");//由于穿过的数据是以;分号隔开的，所以替换成逗号
+    type = type.replace(/;/g,",");//由于穿过的数据是以;分号隔开的，所以替换成逗号
     //start与end传过时间偏移量，调用creatIndexs()方法，把access-与时间拼接起来组成索引值
-    var indexString = date.createIndexes(start,end,"access-");
-    access_request.exchangeSearch(req.es, indexString, type, function(result){
+    var indexString = date.createIndexes(start, end, "access-");
+    access_request.exchangeSearch(req.es, indexString, type, function (result) {
         datautils.send(res, result);
     });
 
@@ -525,25 +526,80 @@ api.get("/exchange", function (req, res) {
 
 // ================================= Config  ===============================
 api.get("/config", function (req, res) {
+
     var query = url.parse(req.url, true).query;
     var type = query['type'];
-    console.log("config request "+type);
-    console.log("config request "+query['rules'].source+"   "+query['rules'].convert);
-    var obj={
-        //id: String,
-        uid: "test_uid",
-        site_id: "test_site_id",
-        rules:query['rules'],//{source:"fsdfs",convert:"dfadfd"},
-        ex_ips: [],//query['ex_ips'],  // 排除IP
-        ex_refer_urls: [],//query['ex_refer_urls'], // 排除来源网站
-        ex_urls:[],//query['ex_urls'], // 排除受访地址
-        cross_sites: []//query['cross_sites'] // 跨域监控
-    };
-    //console.log(JSON.stringify(obj));
-    //dao.save(schemas.sites_model,obj,function(ins){
-    //    //datautils.send(res, JSON.stringify(ins));
-    //});
-    //datautils.send(res, "AAAA");
+    var index = query['index'];
+    var schema_name = "";
+    switch (index) {
+        case "site_list"://网站列表
+            schema_name = "sites_model";
+            break;
+        case "0":
+            schema_name = "siterules_model";
+            break;
+        case "5":
+            schema_name = "converts_model";
+            break;
+        default :
+    }
+    switch (type) {
+        case "save":
+            var entity = JSON.parse(query['entity']);
+            dao.save(schema_name, entity, function (ins) {
+                datautils.send(res, JSON.stringify(ins));
+            });
+            break;
+        case "search":
+            dao.find(schema_name, query['query'], null, {}, function (err, docs) {
+                datautils.send(res, docs);
+            });
+            break;
+        case "update":
+            //条件下更新
+            dao.update(schema_name, query['query'], query['updates'], function (err, docs) {
+                datautils.send(res, docs);
+            });
+            break;
+        case "delete":
+            //条件下删除
+            dao.remove(schema_name, query['query'], function () {
+                datautils.send(res, "remove");
+            });
+            break;
+        default :
+            break;
+    }
+
+});
+api.get("/trafficmap", function (req, res) {
+    var parameterString = req.url.split("?");//获取url的？号以后的字符串
+    var parameters = parameterString[1].split(",");
+    var start = parameters[0].split("=")[1];
+    var end = parameters[1].split("=")[1];
+    //start与end传过时间偏移量，调用creatIndexs()方法，把access-与时间拼接起来组成索引值
+    var indexString = date.createIndexes(start,end,"access-");
+        console.log("访问的索引"+parameterString)
+
+        access_request.trafficmapSearch(req.es, indexString, function(result){
+            datautils.send(res, result);
+        });
+
+
+});
+api.get("/offsitelinks",function(req, res){
+    var parameterString = req.url.split("?");//获取url的？号以后的字符串
+    var parameters = parameterString[1].split(",");
+    var start = parameters[0].split("=")[1];
+    var end = parameters[1].split("=")[1];
+    //start与end传过时间偏移量，调用creatIndexs()方法，把access-与时间拼接起来组成索引值
+    var indexString = date.createIndexes(start,end,"access-");
+    //if(parameters.length>=3){
+    var pathName = parameters[2].split("=")[1];
+    access_request.offsitelinksSearch(req.es, indexString,pathName, function(result){
+        datautils.send(res, result);
+    });
+
 });
 // ================================= Config  ==============================
 module.exports = api;

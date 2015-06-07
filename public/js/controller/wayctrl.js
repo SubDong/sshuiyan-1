@@ -214,12 +214,6 @@ define(["app"], function (app) {
             {name: '泰国'}
 
         ];
-        $scope.city = {};
-        $scope.citys = [
-            {name: '北京'},
-            {name: '上海'},
-            {name: '成都'}
-        ];
         $scope.continent = {};
         $scope.continents = [
             {name: '亚洲'},
@@ -277,7 +271,7 @@ define(["app"], function (app) {
             $scope.reset();
             $scope.yesterdayClass = true;
         };
-        $scope.dateCompareClick = function (start, end, label) {
+        $rootScope.datePickerCompare = function (start, end, label) {
             $scope.compareType = true;
             $scope.reset();
             $scope.choiceClass = true;

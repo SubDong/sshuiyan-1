@@ -285,9 +285,9 @@ var access_request = {
     },
     trafficmapSearch: function (es, indexs, callbackFn) {
         var request = {
-            index:indexs,
-            type:null,
-            body:{
+            index: indexs,
+            type: null,
+            body: {
                 "aggs": {
                     "se_pv_uv": {
                         "terms": {
@@ -325,16 +325,263 @@ var access_request = {
             if (response != undefined && response.aggregations != undefined) {
                 var result = response.aggregations;
                 var mostOfResult = result.se_pv_uv.buckets;
-                for(var i = 0;i<mostOfResult.length;i++){
-                    data.push({"pathName":mostOfResult[i].key,"pv":mostOfResult[i].pv.value,"uv":((Number(mostOfResult[i].uv.value)/Number(result.all_uv.value))*100).toFixed(2)+"%"});
+                for (var i = 0; i < mostOfResult.length; i++) {
+                    data.push({
+                        "pathName": mostOfResult[i].key,
+                        "pv": mostOfResult[i].pv.value,
+                        "uv": ((Number(mostOfResult[i].uv.value) / Number(result.all_uv.value)) * 100).toFixed(2) + "%"
+                    });
                 }
                 callbackFn(data);
             } else
                 callbackFn(data);
         });
+    },
+    offsitelinksSearch: function (es, indexs, targetPathName, callbackFn) {
+        var request = {
+            index: indexs,
+            type: null,
+            body: {
+                "size": 0,
+                "aggs": {
+                    "all_pv": {
+                        "filters": {
+                            "filters": {
+                                "data": {
+                                    "term": {
+                                        "loc": targetPathName
+                                    }
+                                }
+                            }
+                        },
+                        "aggs": {
+                            "pv": {
+                                "value_count": {
+                                    "field": "rf"
+                                }
+                            }
+                        }
+                    },
+                    "in_pv": {
+                        "filters": {
+                            "filters": {
+                                "data": {
+                                    "bool": {
+                                        "must": //{
+                                        //    "term": {
+                                        //        "rf_type": "3"
+                                        //    }
+                                        //},
+                                        {
+                                            "term": {
+                                                "loc": targetPathName
+                                            }
+                                        }
+
+                                    }
+                                }
+                            }
+                        },
+                        "aggs": {
+                            "filtered_data": {
+                                "terms": {
+                                    "field": "dm"
+                                },
+                                "aggs": {
+                                    "pv": {
+                                        "value_count": {
+                                            "field": "rf"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "out_pv": {
+                        "filters": {
+                            "filters": {
+                                "data": {
+                                    "bool": {
+                                        "must": [
+                                            {
+                                                "range": {
+                                                    "rf_type": {
+                                                        "gt": "0",
+                                                        "lt": "4"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "term": {
+                                                    "rf": targetPathName
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        "aggs": {
+                            "filtered_data": {
+                                "terms": {
+                                    "field": "loc"
+                                },
+                                "aggs": {
+                                    "pv": {
+                                        "value_count": {
+                                            "field": "loc"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        es.search(request, function (error, response) {
+            var data = [];//总结果
+            var targetPathName_pv = [];//监控目标的pv
+            var in_data = [];//进过其他页面跳入的监控目标页面的pv
+            var out_data = [];//流经监控目标的pv
+            var out_site = [];//离站占比
+            if (response != undefined && response.aggregations != undefined) {
+                var result = response.aggregations;
+                targetPathName_pv.push({
+                    "pathname": targetPathName,
+                    "pv": result.all_pv.buckets.data.pv.value
+                });
+                var in_pv_sum = 0;
+                for (var i = 0; i < result.in_pv.buckets.data.filtered_data.buckets.length; i++) {
+                    in_pv_sum += Number(result.in_pv.buckets.data.filtered_data.buckets[i].pv.value);
+                    in_data.push({
+                        "pathname": result.in_pv.buckets.data.filtered_data.buckets[i].key,
+                        "proportion": ((Number(result.in_pv.buckets.data.filtered_data.buckets[i].pv.value) / Number(result.all_pv.buckets.data.pv.value)) * 100).toFixed(2) + "%",
+                        "pv": result.in_pv.buckets.data.filtered_data.buckets[i].pv.value
+                    });
+                }
+                if(in_pv_sum<Number(targetPathName_pv[0].pv)){
+                    in_data.push({
+                        "pathname":"直接输入网址",
+                        "proportion":(Number(result.all_pv.buckets.data.pv.value)-in_pv_sum)/Number(result.all_pv.buckets.data.pv.value)+"%",
+                        "pv":(Number(result.all_pv.buckets.data.pv.value)-in_pv_sum)
+                    })
+                }
+                var out_pv_sum = 0;
+                for (var i = 0; i < result.out_pv.buckets.data.filtered_data.buckets.length; i++) {
+                    out_data.push({
+                        "pathname": result.out_pv.buckets.data.filtered_data.buckets[i].key,
+                        "proportion": ((Number(result.out_pv.buckets.data.filtered_data.buckets[i].pv.value) / Number(result.all_pv.buckets.data.pv.value)) * 100).toFixed(2) + "%",
+                        "pv": result.out_pv.buckets.data.filtered_data.buckets[i].pv.value
+                    });
+                    out_pv_sum += Number(result.out_pv.buckets.data.filtered_data.buckets[i].pv.value);
+                }
+
+                if (out_pv_sum == 0) {
+                    out_site.push({
+                        "proportion": "100%"
+                    });
+                } else if (out_pv_sum == Number(result.all_pv.buckets.data.pv.value)) {
+                    out_site.push({
+                        "proportion": "0%"
+                    });
+                } else {
+                    out_site.push({
+                        "proportion": (((Number(result.all_pv.buckets.data.pv.value) - out_pv_sum) / Number(result.all_pv.buckets.data.pv.value)) * 100).toFixed(2) + "%"
+                    });
+                }
+
+                data.push({
+                    "targetPathName_pv": targetPathName_pv,
+                    "in_data": in_data,
+                    "out_data": out_data,
+                    "out_site": out_site
+                });
+                callbackFn(data);
+
+            } else
+                callbackFn(data);
+        });
+    },
+    offsitelinksSearchForPathName: function (es, indexs, pathName, callbackFn) {
+        var request = {
+            index: indexs,
+            type: null,
+            body: {
+                "size": 0,
+                "query": {
+                    "bool": {
+                        "should": requestBodyBoolForPathName(pathName)
+                    }
+                },
+                "aggs": {
+                    "pv_uv": {
+                        "terms": {
+                            "field": "loc"
+                        },
+                        "aggs": {
+                            "uv": {
+                                "cardinality": {
+                                    "field": "tt"
+                                }
+                            },
+                            "pv": {
+                                "value_count": {
+                                    "field": "loc"
+                                }
+                            }
+                        }
+                    },
+                    "uv": {
+                        "cardinality": {
+                            "field": "tt"
+                        }
+                    }
+                }
+            }
+        };
+        es.search(request, function (error, response) {
+            var data = [];
+            var path1Data = [];
+            if (response != undefined && response.aggregations != undefined) {
+                var result = response.aggregations;
+                console.log(result);
+                for (var i = 0; i < result.pv_uv.buckets.length; i++) {
+                    //for(var k = 0;k<pathName.split(",").length;k++){
+                    //    if(result.pv_uv.buckets[i].key==pathName.split(",")[k]){
+                    data.push({
+                        name: result.pv_uv.buckets[i].key,
+                        count: result.pv_uv.buckets[i].pv.value,
+                        ratio: ((Number(result.pv_uv.buckets[i].uv.value) / Number(result.uv.value)) * 100).toFixed(2) + "%"
+                    });
+                    //        break;
+                    //    }
+                    //}
+
+                }
+                console.log(data);
+                callbackFn(data);
+            } else
+                callbackFn(data);
+        });
+
     }
 
 };
+var requestBodyBoolForPathName = function (value) {
+    var data = value.split(",");
+    var requestSentence = [];
+    for (var i = 0; i < data.length; i++) {
+        requestSentence.push({
+            term: {
+                "loc": data[i]
+            }
+        });
+
+    }
+    console.log(requestSentence)
+    return requestSentence;
+}
 var exchangeField = function (value) {
     if (value.indexOf(",") == -1) {
         return "loc";
@@ -343,3 +590,14 @@ var exchangeField = function (value) {
     }
 }
 module.exports = access_request;
+//去重
+//Array.prototype.removal = function () {
+//    this.sort();
+//    var re = [this[0]];
+//    for (var i = 1; i < this.length; i++) {
+//        if (this[i] !== re[re.length - 1]) {
+//            re.push(this[i]);
+//        }
+//    }
+//    return re;
+//}

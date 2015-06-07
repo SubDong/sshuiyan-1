@@ -39,7 +39,7 @@ define(["../app"], function (app) {
                     scope.compareLastDayClass = false;
                     scope.compareLastWeekClass = false;
                     scope.clearCompareSelect = false;
-                    scope.choiceClass=false;
+                    scope.choiceClass = false;
                 };
                 scope.reloadByCalendar = function (type) {
                     //console.info("info: now user click the " + type + " button");
@@ -156,6 +156,7 @@ define(["../app"], function (app) {
                 $('#reportrange').daterangepicker({
                     format: 'YYYY-MM-DD',
                     maxDate: GetDateStr(0),
+                    minDate: GetDateStr(-43),
                     showDropdowns: true,
                     showWeekNumbers: false,
                     timePicker: false,
@@ -182,11 +183,11 @@ define(["../app"], function (app) {
             restrict: "EA",
             template: "<div role=\"group\" class=\"btn-group fl\">" +
             "<button id=\"choicetrange\"  class=\"btn btn-default pull-right date-picker my_picker fl\" ng-class=\"{'current':choiceClass}\"  max=\"max\" ng-model=\"date\"> " +
-            "<i class=\"glyphicon glyphicon-calendar fa fa-calendar\"></i><span>与其他时间段对比</span></button>" +
+            "<i class=\"glyphicon glyphicon-calendar fa fa-calendar\"></i><span data-ng-bind='date'></span></button>" +
             "<button class=\"btn btn-default\" type=\"button\" ng-hide=\"dateshows\" >前一日</button>" +
             " <button class=\"btn btn-default\" type=\"button\"  ng-hide=\"dateshows\" >上周同期</button></div>",
             replace: true,
-            transclude: true,
+            //transclude: true,
             link: function (scope, element, attris, controller) {
                 function GetDateStr(AddDayCount) {
                     var dd = new Date();
@@ -197,10 +198,12 @@ define(["../app"], function (app) {
                     return y + "-" + m + "-" + d;
                 }
 
+                scope.date = "与其他时间段对比";
                 scope.dateshows = true;
                 $('#choicetrange').daterangepicker({
                     format: 'YYYY-MM-DD',
                     maxDate: GetDateStr(0),
+                    minDate: GetDateStr(-43),
                     showDropdowns: true,
                     showWeekNumbers: false,
                     timePicker: false,
@@ -214,11 +217,23 @@ define(["../app"], function (app) {
                     cancelClass: 'btn-default',
                     separator: ' to '
                 }, function (start, end, label) {
+                    //if(){
+
                     $rootScope.datepickerClickTow(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
-                    //$rootScope.datePickerCompare(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
-                    $('#choicetrange span').html(start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD'));
+                    if (!$rootScope.datePickerCompare) {
+                        $rootScope.datePickerCompare = function (a, b, c) {
+                        }
+                    } else {
+                        $rootScope.datePickerCompare(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
+                    }
+                    scope.date = start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD');
+                    //$('#choicetrange span').html(start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD'));
                 });
             }
+            //,
+            //controller: function($scope, $element) {
+            //    $scope.ctrl = !!$element.controller('ngModel');
+            //}
         };
         return option;
     });
@@ -274,8 +289,9 @@ define(["../app"], function (app) {
         return {
             restrict: "EA",
             template: "<div ng-hide='hiddenSeven'>" +
-            "<label>对比：</label><label><span class='checkbox specialCheckbox'></span><input class=\"select2-search\" type=\"radio\" ng-click=\"compareLastDay()\"><span>前一日</span></label>&nbsp;&nbsp;&nbsp;&nbsp;" +
-            "<label><span class='checkbox specialCheckbox'></span><input class=\"select2-search\" type=\"radio\" ng-click=\"compareLastWeek()\"><span>上周同期</span></label>" +
+            "<label>对比：</label>" +
+            "<label><span class='checkbox specialCheckbox'></span><input class=\"select2-search\" name=\"compareRadio\" type=\"checkBox\" ng-click=\"compareLastDay()\"><span>前一日</span></label>&nbsp;&nbsp;&nbsp;&nbsp;" +
+            "<label><span class='checkbox specialCheckbox'></span><input class=\"select2-search\" name=\"compareRadio\" type=\"checkBox\" ng-click=\"compareLastWeek()\"><span>上周同期</span></label>" +
 //            "<input class=\"styled\" type=\"checkbox\" ng-click=\"restCompare()\">取消对比" +
             "</div>",
             transclude: true
@@ -414,7 +430,7 @@ define(["../app"], function (app) {
                         var count = 0;
                         angular.forEach(r.quota, function (qo, _i) {
                             var infoKey = r.key[_i];
-                            if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null" || infoKey == "国外" || infoKey.length >= 30)) {
+                            if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null" || infoKey.length >= 30)) {
                                 return false;
                             }
                             if (flag) {
@@ -623,7 +639,7 @@ define(["../app"], function (app) {
                 scope.loadDataShow = function () {
                     scope.dateShowArray = angular.copy(scope.defaultDataShowArray);
                     var semRequest = $http.get(SEM_API_URL + "elasticsearch/" + $rootScope.userType
-                        + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd);
+                    + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd);
                     $q.all([semRequest]).then(function (final_result) {
                         angular.forEach(final_result[0].data, function (r) {
                             angular.forEach(scope.dateShowArray, function (q_r) {
@@ -637,7 +653,7 @@ define(["../app"], function (app) {
                 };
                 scope.loadCompareDataShow = function (startTime, endTime) {
                     var semRequest = $http.get(SEM_API_URL + "elasticsearch/" + $rootScope.userType
-                        + "/?startOffset=" + startTime + "&endOffset=" + endTime);
+                    + "/?startOffset=" + startTime + "&endOffset=" + endTime);
                     $q.all([semRequest]).then(function (final_result) {
                         // 初始化对比数据
                         angular.forEach(scope.dateShowArray, function (q_r) {

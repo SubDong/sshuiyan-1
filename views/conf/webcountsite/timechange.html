@@ -1,4 +1,4 @@
-<div class="middle_containers" >
+<div class="middle_containers" ng-controller="timechange">
     <div class="time">
         <span class="time_title_span">www.best-ad.cn 时长转化目标</span>   <!--标题-->
         <div class="time_banner"><img src="../img/bg.png" alt="背景图片" class="img-responsive"/></div> <!--banner图-->
@@ -8,8 +8,8 @@
                 <li>
                     <div class="time_content_left">
                         <ul>
-                            <li><input type="checkbox" name="设置时长转化" /><span>设置时长转化</span></li>
-                            <li>访客的一次访问中，访问总时长超过 <input type="text" class="form-control time_content_left_input" placeholder="30"/> 秒时，记录为一次转化。</li>
+                            <li><input type="checkbox" name="设置时长转化" ng-model="time_conv.status"/><span>设置时长转化</span></li>
+                            <li>访客的一次访问中，访问总时长超过 <input type="text" class="form-control time_content_left_input" placeholder="30" ng-model="time_conv.val" /> 秒时，记录为一次转化。</li>
                         </ul>
                     </div>
                     <div class="time_content_right">
@@ -25,8 +25,8 @@
                 <li>
                     <div class="time_content_left">
                         <ul>
-                            <li><input type="checkbox" name="设置时长转化" /><span>设置访问页数转化</span></li>
-                            <li>访客的一次访问中，访问总页数超过  <input type="text"class="form-control time_content_left_input" placeholder="3"/> 页时，记录为一次转化。</li>
+                            <li><input type="checkbox" name="设置时长转化" ng-model="pv_conv.status"/><span>设置访问页数转化</span></li>
+                            <li>访客的一次访问中，访问总页数超过  <input type="text"class="form-control time_content_left_input" placeholder="3" ng-model="pv_conv.val"/> 页时，记录为一次转化。</li>
                         </ul>
                     </div>
                     <div class="time_content_right">
@@ -40,7 +40,7 @@
                 </li>
             </ul>
         </div>
-        <button class="btn btn-info time_button">确定</button>
+        <button class="btn btn-info time_button" ng-click="onSubmitClickListener()">确定</button>
         <button class="btn btn-info time_button ">取消</button>
     </div>
 </div>

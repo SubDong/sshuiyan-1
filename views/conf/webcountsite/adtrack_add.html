@@ -1,0 +1,53 @@
+<div class="middle_containers" ng-controller="adtrack_add">
+        <!--网站导航-->
+    <div class="web_list">
+        <div class="web_list_nav">
+            <p>web.best-ad.cn 新增指定广告跟踪</p>
+        </div>
+    </div>
+    <div class="adtrack_add">
+        <ul>
+            <li><span>以下信息必须填写:</span></li>
+            <li>
+                <span>目标URL<p>（在其媒体投放广告时所指向的URL）</p></span>
+
+                <div class="adtrack_add_input">*<input type="text"  placeholder="www.mydomain/product.html"/></div>
+            </li>
+            <li>
+                <span>媒体平台<p>（广告所投放的平台，如：新浪,搜狐等）</p></span>
+
+                <div class="adtrack_add_input">*<input type="text" /></div>
+            </li>
+        </ul>
+        <ul>
+            <li><span class="adtrack_add_tz">高级选项</span><p>（广告类型&gt;计划名称&gt;关键词&gt;创意，逐级填写，选填）</p></li>
+            <li>
+                <span>广告类型<p>（广告所投放的具体形式，如：文字广告，图片广告等）</p></span>
+
+                <div><input type="text" ></div>
+            </li>
+            <li>
+                <span>计划名称<p>（广告所属的推广计划，如元旦促销）</p></span>
+
+                <div><input type="text" /></div>
+            </li>
+            <li>
+                <span>关键词<p>（可填写多个，每行一个）</p></span>
+
+                <div class="">
+                    <textarea data-ng-model="adtrack_add.tNum" class="tNum" disabled></textarea>
+                            <textarea data-ng-keyup="addIP($event, adtrack_add)" data-ng-model="adtrack_add.tText"
+                                     class="tText"></textarea>
+                </div>
+            </li>
+            <li>
+            <span>创意<p>（广告内容的简要描述信息）</p></span>
+
+            <div><input type="text" /></div>
+        </li>
+        </ul>
+        <button>确定拼生成URL</button>&nbsp;&nbsp;&nbsp;<span class="adtrack_add_tz">取消</span>
+    </div>
+
+
+</div>

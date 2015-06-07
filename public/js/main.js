@@ -39,9 +39,8 @@ require.config({
         "angular": {
             exports: "angular"
         },
-
-        'angular-cookies': {
-            deps: ['angular'],
+        "angular-cookies": {
+            deps: ["angular"],
             exports: "angular-cookies"
         },
         // 确保angular在ui-select之前载入
@@ -50,8 +49,8 @@ require.config({
         "js005": ["angular"],
         "js002": ["angular"],
         "angularjs/vfs_fonts": ["angularjs/pdfmake", "angularjs/csv"],
+        "angularjs/ui-bootstrap-tpls": ["angular", "angularjs/ui-bootstrap.min"],
         "angularjs/ui-bootstrap.min": ["angular"],
-        "angularjs/ui-bootstrap-tpls": ["angular"],
         "angularjs/csv": ["angular"],
         "angularjs/pdfmake": ["angular"],
         "angularjs/ui-grid-unstable.min": ["angular"],

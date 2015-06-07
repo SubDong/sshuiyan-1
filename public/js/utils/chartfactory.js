@@ -132,7 +132,7 @@ var op = {
                     var res = params[0].name + '<br/>';
                     for (var i = 0, l = params.length; i < l; i++) {
                         var formatType = labelData[i];
-                        if (chartConfig.compare) {
+                        if (chartConfig.compare || chartConfig.compareCustom) {
                             var baseSerieName = params[i].seriesName.split(":");
                             res += baseSerieName[0] + chartUtils.convertChinese(baseSerieName[1]) + ' : ' + ad.formatFunc(params[i].value, baseSerieName[1]) + '<br/>';
                         } else {
@@ -1051,7 +1051,19 @@ var util = {
             $(o).prev("span").css("background-position", "0px 0px");
             $(o).prop("checked", false);
         });
+        var position = ["0px -77px", "0px -51px"];
+
         checked.forEach(function (c, i) {
+            $(checks[c]).prop("checked", true);
+        });
+        var customCheck = [];
+        checks.each(function (i, check) {
+            if ($(check).prop("checked")) {
+                var c = $(check).attr("index");
+                customCheck.push(c);
+            }
+        });
+        customCheck.forEach(function (c, i) {
             switch (i) {
                 case 0:
                     $(checks[c]).prev("span").css("background-position", "0px -77px");
@@ -1060,7 +1072,6 @@ var util = {
                     $(checks[c]).prev("span").css("background-position", "0px -51px");
                     break;
             }
-            $(checks[c]).prop("checked", true);
         });
         return checked;
     },
@@ -1166,6 +1177,49 @@ var util = {
             });
         }
         return count;
+    },
+    getEquipmentData: function (json, selected) {
+        var count = util.existData(json);
+        if (count) {
+            json.forEach(function (e) {
+                var tmpData = [];
+                var _value = []
+                for (var i = 0; i < e.key.length; i++) {
+                    var _key = e.key[i] == "-" ? "未知 " : e.key[i];
+                    if (selected) {
+                        tmpData.push(chartUtils.getCustomDevice(_key, selected.field));
+                    } else {
+                        tmpData.push(_key);
+                    }
+                    _value.push(e.quota[i]);
+                }
+                e.key = tmpData;
+                e.quota = _value;
+                e.label = chartUtils.convertChinese(e.label);
+            });
+        }
+    },
+    getEquipmentDataCompare: function (data, selected,_dateTime) {
+        var final_result = [];
+        data.forEach(function (q, index) {
+            var json = JSON.parse(eval("(" + q.data + ")").toString());
+            json.forEach(function (item) {
+                var _label = _dateTime[index] + ":" + chartUtils.convertChinese(item.label);
+                var _key = [];
+                item.key.forEach(function (k, i) {
+                    var _formatKey = item.key[i] == "-" ? "未知 " : item.key[i];
+                    if (selected) {
+                        _key.push(chartUtils.getCustomDevice(_formatKey, selected.field));
+                    } else {
+                        _key.push(_formatKey);
+                    }
+                });
+                item.key = _key;
+                item.label = _label;
+                final_result.push(item);
+            });
+        });
+        return final_result;
     }
 
 }

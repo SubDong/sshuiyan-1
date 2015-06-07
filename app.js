@@ -20,11 +20,8 @@ var express = require('express'),
     daos = require('./servers/db/daos');
 
 
-var env = process.argv.splice(2);
-if (env === undefined || env) {
-    env = "dev";
-}
-var config = require("./config_" + env + ".json");
+var env = "dev";
+var config = require("./config.json");
 
 var es_client = es.init(config.es);
 
@@ -92,7 +89,8 @@ if (env == 'dev') {
         req.es = es_client;
         req.redisclient = redis_client;
         req.accountid = req.session.accountid
-        res.cookie('uname', JSON.stringify('perfect2015'));
+        res.cookie('uname', JSON.stringify('{name:"perfect2015",id:"55541528da50076cbff8e14f"}'));
+        res.cookie('uid', JSON.stringify('cookie test uid'));
         var usites = [
             {
                 site_name: "www.best-ad.cn",

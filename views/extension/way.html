@@ -63,9 +63,9 @@
                             <li>
                                 <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
                                     <div role="group" class="btn-group">
-                                        <ui-select ng-model="city.selected" theme="select2" reset-search-input="false" class="fl"
+                                        <ui-select ng-model="city.selected" theme="select2" reset-search-input="false"  class="fl btn-pv"
                                                    data-ng-change="setAreaFilter(city.selected.name)"
-                                                   style="width: 80px;">
+                                                   style="width: 120px;">
                                             <ui-select-match placeholder="全部">{{$select.selected.name}}
                                             </ui-select-match>
                                             <ui-select-choices repeat="city in citys">

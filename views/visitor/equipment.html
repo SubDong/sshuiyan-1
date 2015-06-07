@@ -5,7 +5,7 @@
             <span class="fl"> 客户端属性：</span>
             <ui-select ng-model="equipment.selected" theme="select2" reset-search-input="false" ng-disabled="disabled" class="fl btn-delta" ng-change="equipmentChange(equipment.selected)"
                        style="width: 160px;">
-                <ui-select-match placeholder="网络供应商">{{$select.selected.name}}</ui-select-match>
+                <ui-select-match placeholder="网络设备类型">{{$select.selected.name}}</ui-select-match>
                 <ui-select-choices repeat="equipment in equipments">
                     <span ng-bind-html="equipment.name"></span>
                 </ui-select-choices>

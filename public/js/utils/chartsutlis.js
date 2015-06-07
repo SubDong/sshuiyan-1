@@ -714,7 +714,6 @@ var chartUtils = {
         return [chartUtils.getDateStampCount(count), chartUtils.getDateStampCount(count - 1)];
     }
 }
-
 //去重
 Array.prototype.removal = function () {
     this.sort();
