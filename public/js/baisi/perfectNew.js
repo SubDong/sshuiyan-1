@@ -1,8 +1,8 @@
 var _pct = _pct || [];
 (function () {
     var points = [], h = {}, md = {}, c = {
-        id: "2",
-        version: "1.0.10"
+        id: "1",
+        version: "1.0.11"
     };
 
     md.achieve = {};
@@ -122,7 +122,9 @@ var _pct = _pct || [];
     md.g.tit = document.title;
     //ct 新老客户（0:新客户， 1：老客户）
     md.g.ct = ((md.cookie.get("vid") == null || md.cookie.get("vid") == undefined || md.cookie.get("vid") == "") ? "0" : "1");
-    // hm 热力图坐标
+    // n是否是第一次访问
+    // sm 热力图坐标
+    // api
     // tt 用户的访问uv
     // vid cookie  id访客唯一标识
     // u       _trackPageview方法参数          PV跟踪
@@ -252,9 +254,8 @@ var _pct = _pct || [];
             //value: val
         };
         points.push(point);
-        console.log(points)
         if(points.length >= 5){
-            md.g.sm = points;
+            md.g.sm = JSON.stringify(points);
             return true;
         }else{
             return false;
@@ -267,7 +268,7 @@ var _pct = _pct || [];
         S: "pft.gif",
         //dk: 8088,":" + _c.dk +
         protocol: "https:" == document.location.protocol ? "https:" : "http:",
-        Q: "os tit br fl pm sr lg ck ja sc dt rf loc tt ct vid u api et cv v".split(" ")
+        Q: "os tit br fl pm sr lg ck ja sc dt rf loc tt ct vid u api et cv sm n v".split(" ")
     };
     //通过闭包 访问 私有变量 sa
     (function () {
@@ -427,6 +428,7 @@ var _pct = _pct || [];
                         md.cookie.setNull("PFT_" + c.id, u.createUUID());
                         md.g.tt = this.getData("PFT_" + c.id);
                     }
+                    md.g.n = "1";
                 }
                 var cookie_pos = document.cookie.indexOf("vid");
                 if (cookie_pos == -1) {
@@ -482,11 +484,9 @@ var _pct = _pct || [];
             //监听点击事件
             clickEvent:function(){
                 document.onclick = function(event){
-                    console.log(event)
                     var a = md.position.getXy(event);//获取点击坐标
                     if(a){
                         var s = new sta;
-                        console.log(md.g)
                         s.na()
                         s.sm()
                         points = [];

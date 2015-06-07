@@ -2,6 +2,7 @@
  * Created by dolphineor on 2015-6-3.
  *
  * 百度推广流量统计elasticsearch查询
+ * TODO migrate to access
  */
 
 var buildMustQuery = function (filters) {

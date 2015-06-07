@@ -2,30 +2,42 @@
     <div class="date_select">
         <div class="btn-group fl" role="group" aria-label="First group">
 
-            <button type="button"  class="btn btn-default"  ng-repeat="time in times "  ng-class="{ 'current': $index == selectedIndex }"   ng-click="timechange()">昨天</button>
-            <button type="button" ng-click="beforeyesterday()" ng-class="{'current':beforeyesterdayClass}" class="btn btn-default">前天</button>
-            <button type="button" ng-click="dayone()" ng-class="{'current':dayoneClass}"class="btn btn-default">5月10日</button>
-            <button type="button" ng-click="daytwo()" ng-class="{'current':daytwoClass}" class="btn btn-default">5月9日</button>
-            <button type="button" ng-click="daythree()" ng-class="{'current':dayoneClass}" class="btn btn-default">5月8日</button>
-            <button type="button" ng-click="dayfour()" ng-class="{'current':dayoneClass}" class="btn btn-default">5月7日</button>
-            <button type="button" ng-click="dayfive()" ng-class="{'current':dayoneClass}" class="btn btn-default">5月6日</button>
-            <button type="button" ng-click="daysix()" ng-class="{'current':dayoneClass}" class="btn btn-default">5月5日</button>
+            <button type="button" class="btn btn-default" ng-repeat="time in times "
+                    ng-class="{ 'current': $index == selectedIndex }" ng-click="timechange()">昨天
+            </button>
+            <button type="button" ng-click="beforeyesterday()" ng-class="{'current':beforeyesterdayClass}"
+                    class="btn btn-default">前天
+            </button>
+            <button type="button" ng-click="dayone()" ng-class="{'current':dayoneClass}" class="btn btn-default">5月10日
+            </button>
+            <button type="button" ng-click="daytwo()" ng-class="{'current':daytwoClass}" class="btn btn-default">5月9日
+            </button>
+            <button type="button" ng-click="daythree()" ng-class="{'current':dayoneClass}" class="btn btn-default">
+                5月8日
+            </button>
+            <button type="button" ng-click="dayfour()" ng-class="{'current':dayoneClass}" class="btn btn-default">5月7日
+            </button>
+            <button type="button" ng-click="dayfive()" ng-class="{'current':dayoneClass}" class="btn btn-default">5月6日
+            </button>
+            <button type="button" ng-click="daysix()" ng-class="{'current':dayoneClass}" class="btn btn-default">5月5日
+            </button>
         </div>
         <refresh></refresh>
     </div>
     <div class="my_concent">
-          <div class="exchange_top">
-           <ul>
-               <li ng-repeat="exchange in exchanges "  ng-class="{ 'current': $index == selectedIndex }"   ng-click="itemClicked(exchange)">
-                   <div class="webname">{{exchange.name}}</div>
-                   <div class="web_scale">
-                       <span>PV:{{exchange.pv}}</span>
-                       <span >UV:{{exchange.uv}}</span>
-                   </div>
-                   <span class="glyphicon glyphicon-triangle-bottom"></span>
-               </li>
-           </ul>
-          </div>
+        <div class="exchange_top">
+            <ul>
+                <li ng-repeat="exchange in exchanges " ng-class="{ 'current': $index == selectedIndex }"
+                    ng-click="itemClicked(exchange)">
+                    <div class="webname">{{exchange.name}}</div>
+                    <div class="web_scale">
+                        <span>PV:{{exchange.pv}}</span>
+                        <span>UV:{{exchange.uv}}</span>
+                    </div>
+                    <span class="glyphicon glyphicon-triangle-bottom"></span>
+                </li>
+            </ul>
+        </div>
         <div class="exchange_concent">
             <div class="exchange_content_top">
                 <div class="exchange_content_top_left fl">
@@ -36,6 +48,7 @@
                 </div>
                 <div class="exchange_content_top_right fl">
                     <span class="glyphicon glyphicon-triangle-left fl"></span>
+
                     <div class="exchange_content_top_right_concent fl">
                         <div class="fl"><b>{{exchange.name}}</b></div>
                         <div class="fr">
@@ -56,27 +69,27 @@
             <div class="exchange_list_right fl">
                 <div class="exchange_list_level1">
                     <div class="exchange_list1 fl">
-                       <div class="exchange_list1_name fl">
-                           {{exchange.name}}
-                       </div>
+                        <div class="exchange_list1_name fl">
+                            {{exchange_prefix.name}}
+                        </div>
                         <div class="exchange_list1_text fr">
                             <span>
-                              PV:{{exchange.pv}}
+                              PV:{{exchange_prefix.pv}}
                             </span>
                             <span>
-                              UV:{{exchange.uv}}
+                              UV:{{exchange_prefix.uv}}
                             </span>
                         </div>
                     </div>
                     <a class="exchange_list1_more fl" ng-click="showDetails = ! showDetails">
                     </a>
                 </div>
-                <div class="exchange_list_level2box" ng-show="showDetails" >
+                <div class="exchange_list_level2box" ng-show="showDetails">
                     <ul>
                         <li ng-repeat="path in exchange.path1">
-                            <div class="exchange_list_level2" >
-                                <div class="exchange_list1 fl" >
-                                    <div class="exchange_list1_name exchange_page fl" >
+                            <div class="exchange_list_level2">
+                                <div class="exchange_list1 fl">
+                                    <div class="exchange_list1_name exchange_page fl">
                                         {{path.pathName}}
                                     </div>
                                     <div class="exchange_list1_text fr">
@@ -92,48 +105,48 @@
 
                                 <a class="exchange_list1_more fl">
                                 </a>
-                            </div >
+                            </div>
 
                         </li>
 
                     </ul>
 
                     <!--<div class="exchange_list_level2" >-->
-                        <!--<div class="exchange_list1 fl">-->
-                            <!--<div class="exchange_list1_name fl">-->
-                                <!--/package/-->
-                            <!--</div>-->
-                            <!--<div class="exchange_list1_text fr">-->
-                            <!--<span>-->
-                              <!--PV:3434-->
-                            <!--</span>-->
-                            <!--<span>-->
-                              <!--UV:7389-->
-                            <!--</span>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                        <!--<a class="exchange_list1_more fl" ng-click="showDetail = ! showDetail">-->
-                        <!--</a>-->
-                        <!--<div class="exchange_list_level2" ng-show="showDetail">-->
-                        <!--<div class="exchange_list1 fl">-->
-                            <!--<div class="exchange_list1_name fl">-->
-                                <!--best-ad.cn-->
-                            <!--</div>-->
-                            <!--<div class="exchange_list1_text fr">-->
-                            <!--<span>-->
-                              <!--PV:3434-->
-                            <!--</span>-->
-                            <!--<span>-->
-                              <!--UV:7389-->
-                            <!--</span>-->
-
-                            <!--</div>-->
-                        <!--</div>-->
+                    <!--<div class="exchange_list1 fl">-->
+                    <!--<div class="exchange_list1_name fl">-->
+                    <!--/package/-->
                     <!--</div>-->
-                    </div>
-                </div>
+                    <!--<div class="exchange_list1_text fr">-->
+                    <!--<span>-->
+                    <!--PV:3434-->
+                    <!--</span>-->
+                    <!--<span>-->
+                    <!--UV:7389-->
+                    <!--</span>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--<a class="exchange_list1_more fl" ng-click="showDetail = ! showDetail">-->
+                    <!--</a>-->
+                    <!--<div class="exchange_list_level2" ng-show="showDetail">-->
+                    <!--<div class="exchange_list1 fl">-->
+                    <!--<div class="exchange_list1_name fl">-->
+                    <!--best-ad.cn-->
+                    <!--</div>-->
+                    <!--<div class="exchange_list1_text fr">-->
+                    <!--<span>-->
+                    <!--PV:3434-->
+                    <!--</span>-->
+                    <!--<span>-->
+                    <!--UV:7389-->
+                    <!--</span>-->
 
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                </div>
             </div>
+
         </div>
     </div>
+</div>
 </div>
