@@ -1,10 +1,10 @@
 {
   "es": {
-    "host": "182.92.227.79:19200",
+    "host": "182.92.227.79:19500",
     "sniffOnStart": false,
     "sniffOnConnectionFault": false,
     "keepAlive": true,
-    "log":"debug"
+    "log": "debug"
   },
   "redis": {
     "host": "192.168.100.10",
@@ -13,7 +13,7 @@
       "auth_pass": "3edcvfr4"
     }
   },
-  "mongodb":{
-    "url":"mongodb://192.168.100.10:23135/conf"
+  "mongodb": {
+    "url": "mongodb://192.168.100.10:23135/conf"
   }
 }
