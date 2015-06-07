@@ -258,7 +258,8 @@ var buildRequest = function (indexes, type, quotas, dimension, filters, start, e
                         "aggs": {
                             "dimension": {
                                 "terms": {
-                                    "field": dimensionArr[1]
+                                    "field": dimensionArr[1],
+                                    "size": 0
                                 },
                                 "aggs": _aggs
                             }
@@ -360,7 +361,8 @@ var buildRequest = function (indexes, type, quotas, dimension, filters, start, e
                 "aggs": {
                     "result": {
                         "terms": {
-                            "script": dimensionScript
+                            "script": dimensionScript,
+                            "size": 0
                         },
                         "aggs": _aggs
                     }
@@ -860,31 +862,54 @@ var es_request = {
             "body": {
                 "query": {
                     "bool": {
-                        "must": mustQuery
+                        "must": []
                     }
                 },
-                "sort": {"utime": {"order": "asc"}},
-                "size": 100000
+                "sort": {
+                    "utime": {
+                        "order": "asc"
+                    }
+                },
+                "size": 1000000,
+                "aggs": {
+                    "vc_aggs": {
+                        "terms": {
+                            "field": "tt",
+                            "size": 0
+                        },
+                        "aggs": {
+                            "utime_aggs": {
+                                "terms": {
+                                    "script": "doc['utime'].value + ',' + doc['loc'].value",
+                                    "size": 0,
+                                    "order": {
+                                        "_term": "desc"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         };
 
         es.search(request, function (error, response) {
-            if (response != undefined && response.hits != undefined) {
-                var hits = response.hits.hits;
+            if (response != undefined && response.aggregations != undefined && response.aggregations.vc_aggs != undefined) {
+                var hits = response.aggregations.vc_aggs.buckets;
                 hits.forEach(function (item) {
-                    var locArr = item._source.loc;
-                    var utimeArr = item._source.utime;
+                    var locUtimeArr = item.utime_aggs.buckets;
                     var record = [];
 
-                    for (var i = 0, l = utimeArr.length - 1; i <= l; i++) {
+                    for (var i = 0, l = locUtimeArr.length - 1; i <= l; i++) {
                         var obj = {};
+                        var tmpArr = locUtimeArr[i].key.split(",");
                         if (i == l) {
-                            obj["loc"] = locArr[i];
+                            obj["loc"] = tmpArr[1];
                             obj["vtime"] = "-";
                             record.push(obj);
                         } else {
-                            obj["loc"] = locArr[i];
-                            obj["vtime"] = new Date(utimeArr[i + 1] - utimeArr[i]).format("hh:mm:ss");
+                            obj["loc"] = tmpArr[1];
+                            obj["vtime"] = new Date(parseInt(tmpArr[0]) - parseInt(locUtimeArr[i + 1].key.split(",")[0])).format("hh:mm:ss");
                             record.push(obj);
                         }
                     }
@@ -910,6 +935,7 @@ var es_request = {
                                 "result": {
                                     "terms": {
                                         "script": "doc['utime'].value",
+                                        "size": 0,
                                         "order": {
                                             "_term": "desc"
                                         }
