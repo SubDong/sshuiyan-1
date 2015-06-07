@@ -7,7 +7,7 @@
     "sniffOnStart": false,
     "sniffOnConnectionFault": false,
     "keepAlive": true,
-    "log": "INFO"
+    "log": "info"
   },
   "redis": {
     "host": "redis",
