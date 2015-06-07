@@ -24,7 +24,8 @@ define(["app"], function (app) {
                 name: "推广方式",
                 displayName: "推广方式",
                 field: "accountName",
-                footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                minWidth:200
             },
             {
                 name: " ",

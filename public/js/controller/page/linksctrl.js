@@ -65,6 +65,18 @@ define(["./module"], function (ctrs) {
                     };
                     $scope.links = linksData;
                 }
+                if (result.length <= 3) {
+                    document.getElementById("linkstree_top").style.top = "14%";
+                    document.getElementById("linkstree_right").style.top = "14%";
+                }
+                if (result.length == 4) {
+                    document.getElementById("linkstree_top").style.top = "20%";
+                    document.getElementById("linkstree_right").style.top = "20%";
+                }
+                if (result.length >= 5) {
+                    document.getElementById("linkstree_top").style.top = "35%";
+                    document.getElementById("linkstree_right").style.top = "35%";
+                }
 
 
             });

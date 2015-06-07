@@ -67,7 +67,7 @@ define(["./module"], function (ctrs) {
                 enableHorizontalScrollbar: 0,
                 enableVerticalScrollbar: 0,
                 columnDefs: [
-                    {name: ' ', field: 'category'},
+                    {name: ' ', field: 'category',cellClass:'grid_padding',},
                     {name: '消费', field: 'cost'},
                     {name: '展现量', field: 'impression'},
                     {name: '点击量', field: 'click'},
