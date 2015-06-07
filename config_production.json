@@ -1,17 +1,20 @@
 {
   "es": {
     "hosts": [
-      "http://master1:29200",
-      "http://master2:29200"
+      "http://query0:30000",
+      "http://query1:30001"
     ],
     "sniffOnStart": false,
     "sniffOnConnectionFault": false,
     "keepAlive": true,
-    "log": "debug"
+    "log": "INFO"
   },
   "redis": {
-    "host": "master1",
+    "host": "redis",
     "port": 6379,
     "password": "3edcvfr4"
+  },
+  "mongo":{
+    "url":"mongodb://mongo:23135/conf"
   }
 }

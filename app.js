@@ -20,11 +20,8 @@ var express = require('express'),
     daos = require('./servers/db/daos');
 
 
-var env = process.argv.splice(2);
-if (env === undefined || env) {
-    env = "dev";
-}
-var config = require("./config_" + env + ".json");
+var env = "dev";
+var config = require("./config.json");
 
 var es_client = es.init(config.es);
 

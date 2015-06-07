@@ -31,3 +31,7 @@ node_modules
 # Users Environment Variables
 .lock-wscript
 *.css
+
+
+#config link symbol file
+config.json
