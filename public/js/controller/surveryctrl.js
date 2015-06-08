@@ -30,7 +30,7 @@ define(["./module"], function (ctrs) {
                 if ($rootScope.start == -29) {
                     $scope.charts[0].config.auotHidex = undefined;
                 }
-                $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $rootScope.start, $rootScope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
+                $scope.initGrid($scope.selectedQuota[0], $scope.selectedQuota[1]);
             });
             $scope.yesterday = function () {
                 $(".under_top").show();
@@ -41,7 +41,7 @@ define(["./module"], function (ctrs) {
                 $rootScope.end = -1;
                 $scope.compareArray = [];
                 //$scope.reloadGrid();
-                $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $rootScope.start, $rootScope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
+                $scope.initGrid($scope.selectedQuota[0], $scope.selectedQuota[1]);
             };
             $scope.open = function ($event) {
                 $scope.reset();
@@ -67,7 +67,7 @@ define(["./module"], function (ctrs) {
                 enableHorizontalScrollbar: 0,
                 enableVerticalScrollbar: 0,
                 columnDefs: [
-                    {name: ' ', field: 'category'},
+                    {name: ' ', field: 'category',cellClass:'grid_padding',},
                     {name: '消费', field: 'cost'},
                     {name: '展现量', field: 'impression'},
                     {name: '点击量', field: 'click'},
@@ -232,58 +232,26 @@ define(["./module"], function (ctrs) {
                     }
                 }
             ];
-            $scope.initGrid = function (user, baiduAccount, type, startOffset, endOffset, quota, estype) {
-                var semRegionRequest = $http.get(SEM_API_URL + user + "/" + baiduAccount + "/" + type + "/?startOffset=" + startOffset + "&endOffset=" + endOffset);
-                var esRequest = $http.get("/api/charts?start=" + startOffset + "&end=" + endOffset + "&dimension=period&userType=2&type=" + estype);
+            $rootScope.chartTmp = [];
+            $scope.initGrid = function (quota, estype, cb) {
+                $rootScope.chartTmp = [];
+                var semRegionRequest = $http.get(SEM_API_URL + $rootScope.user + "/" + $rootScope.baiduAccount + "/account/?startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end);
+                var esRequest = $http.get("/api/charts?start=" + $rootScope.start + "&end=" + $rootScope.end + "&dimension=period&userType=2&type=" + estype);
                 $q.all([semRegionRequest, esRequest]).then(function (final_result) {
-                    var chart_result = [];
-                    if (startOffset == -1 && endOffset == -1) {
-                        var tmp = [];
-                        var _semData = {};
-                        var esJson = JSON.parse(eval("(" + final_result[1].data + ")").toString());
-                        var esDate = esJson[0].key[0];
-                        if (final_result[0].data.length) {
-                            tmp.push(final_result[0].data[0][quota]);
-                            _semData["label"] = chartUtils.convertChinese(quota);
-                            _semData["quota"] = tmp;
-                            _semData["key"] = [final_result[0].data[0].date];
-                            chart_result.push(_semData);
-                        } else {
-                            if (esDate) {
-                                chart_result.push({
-                                    label: chartUtils.convertChinese(quota),
-                                    quota: [0],
-                                    key: [esDate.substring(0, 10)]
-                                });
-                            } else {
-                                chart_result.push({
-                                    label: chartUtils.convertChinese(quota),
-                                    quota: [0],
-                                    key: ['']
-                                });
-                            }
-                        }
-                        var totalCount = 0;
-                        var _esData = {};
-                        esJson[0].quota.forEach(function (e) {
-                            totalCount += Number(e);
-                        });
-                        if (estype == "outRate") {
-                            totalCount = parseFloat(totalCount / esJson[0].quota.length).toFixed(2);
-                        }
-                        _esData["label"] = chartUtils.convertChinese(estype);
-                        _esData["quota"] = [totalCount];
-                        if (esDate) {
-                            _esData["key"] = [esDate.substring(0, 10)];
-                        } else {
-                            _esData["key"] = [''];
-                        }
-                        chart_result.push(_esData);
+                    if ($rootScope.start == -1 && $rootScope.end == -1) {
+
+                        var chart_result = chartUtils.getSurveryDataByOneDay(final_result, quota, estype);
+
                         $scope.charts[0].config.chartType = "bar";
                         $scope.charts[0].config.bGap = true;
                         $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
-                        chartUtils.addStep(chart_result, 24);
+                        //chartUtils.addStep(chart_result, 24);
+                        $rootScope.chartTmp = chart_result;
+                        //console.log($rootScope.chartTmp)
                         cf.renderChart(chart_result, $scope.charts[0].config);
+                        if (cb) {
+                            cb(chart_result);
+                        }
                     } else {
                         var esJson = JSON.parse(eval("(" + final_result[1].data + ")").toString());
                         chartUtils.formatDate(esJson);//格式化日期
@@ -293,8 +261,8 @@ define(["./module"], function (ctrs) {
                         $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
                         cf.renderChart(esJson, $scope.charts[0].config);
                     }
-
                 });
+                return $rootScope.chartTmp;
             };
             $scope.yesterday();
 
@@ -303,9 +271,30 @@ define(["./module"], function (ctrs) {
                 $scope.outQuota_ = outQuota.value;
                 $scope.selectedQuota[0] = outQuota.value;
                 $scope.reloadGrid();
-                $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $rootScope.start, $rootScope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
-                //$scope.refreshData();
-                //$scope.init($rootScope.user, $rootScope.baiduAccount, "account", -1, -1, -1, 1);
+                $scope.compareSemArray = [];
+
+
+                var quota = $scope.selectedQuota[0];
+                var semType = $scope.selectedQuota[1];
+                if ($scope.tmpSemCompare) {
+                    $scope.initGrid($scope.selectedQuota[0], $scope.selectedQuota[1], function (chart_result) {
+                        $http.get(SEM_API_URL + $rootScope.user + "/" + $rootScope.baiduAccount + "/account/" + outQuota.value + "-?startOffset=" + $scope.tmpSemCompare.value + "&endOffset=" + $scope.tmpSemCompare.value).success
+                        (function (res) {
+                            chart_result.forEach(function (item, index) {
+                                if (index == 0) {
+                                    item.key.push("对比数据");
+                                    item.quota.push(res[0][semType]);
+                                } else {
+                                    item.key.push("对比数据");
+                                    item.quota.push(0);
+                                }
+                            });
+                            cf.renderChart(chart_result, $scope.charts[0].config);
+                        });
+                    });
+                } else {
+                    $scope.initGrid(quota, semType);
+                }
             };
 
             // 触发效果指标的事件
@@ -313,53 +302,151 @@ define(["./module"], function (ctrs) {
                 $scope.effectQuota_ = effectQuota.value;
                 $scope.selectedQuota[1] = effectQuota.value;
                 $scope.reloadGrid();
-                $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "account", $rootScope.start, $rootScope.end, $scope.selectedQuota[0], $scope.selectedQuota[1]);
+                $scope.compareEsArray = [];
+                var quota = $scope.selectedQuota[0];
+                var esType = $scope.selectedQuota[1];
+                if ($scope.tmpEsCompare) {
+                    $scope.initGrid(esType, quota, function (chart_result) {
+                        $http.get("/api/charts?start=" + $scope.tmpEsCompare.value + "&end=" + $scope.tmpEsCompare.value + "&dimension=period&userType=" + $rootScope.userType + "&type=" + esType).success
+                        (function (res) {
+                            var json = JSON.parse(eval("(" + res + ")").toString());
+                            if (json.length) {
+                                var date = json[0].key[0].substring(0, 10);
+                                var count = 0;
+                                json[0].quota.forEach(function (item) {
+                                    if (esType == "outRate" || esType == "arrivedRate") {
+                                        count += parseFloat(item);
+                                    } else {
+                                        count += item;
+                                    }
+                                });
+                                if (esType == "outRate" || esType == "arrivedRate") {
+                                    count = parseFloat(count / json[0].quota.length).toFixed(2);
+                                }
+                                chart_result.forEach(function (item, index) {
+                                    if (index == 1) {
+                                        item.key.push("对比数据");
+                                        item.quota.push(count);
+                                    } else {
+                                        //item.key.push(date);
+                                        item.key.push("对比数据");
+                                        item.quota.push(0);
+                                    }
+                                });
+                                cf.renderChart(chart_result, $scope.charts[0].config);
+                            }
+                        });
+                    });
+                    //$scope.tmpEsCompare
+                } else {
+                    $scope.initGrid(esType, quota);
+                }
+
                 //$scope.refreshData();
             };
 
 
-            $scope.compareSemArray = [];
+            $scope.compareType = false;
+            $scope.compareSemCompare = null;
+            $scope.tmpSemCompare = null;
             $scope.semCompareTo = function (semSelected) {
-                if ($scope.compareSemArray.toString().indexOf(semSelected.value) == -1) {
-                    $scope.compareSemArray.push(semSelected.value);
-                    $http.get(SEM_API_URL + $rootScope.user + "/" + $rootScope.baiduAccount + "/account/" + $scope.selectedQuota[0] + "-?startOffset=" + semSelected.value + "&endOffset=" + semSelected.value).success
-                    (function (res) {
-                        var c = $scope.charts[0].config.instance;
-                        c.addData([
-                            [0, res[0][$scope.selectedQuota[0]], true, false]
-                        ]);
+                if (semSelected.value == 100) {
+                    $scope.compareReset();
+                    return;
+                }
+                $scope.tmpSemCompare = semSelected;
+                $scope.compareType = true;
+                $scope.compareSemCompare = true;
+                var semQuery = $scope.selectedQuota[0];
+                if (!$scope.compareEsCompare) {
+                    $rootScope.chartTmp.forEach(function (item) {
+                        item.key = item.key.slice(0, 1);
+                        item.quota = item.quota.slice(0, 1);
                     });
                 }
-            }
-
-
-            $scope.compareEsArray = [];
-            $scope.esCompareTo = function (esSelected) {
-                if ($scope.compareEsArray.toString().indexOf(esSelected.value) == -1) {
-                    $scope.compareEsArray.push(esSelected.value);
-                    $http.get("/api/charts?start=" + esSelected.value + "&end=" + esSelected.value + "&dimension=period&userType=" + $rootScope.userType + "&type=" + $scope.selectedQuota[1]).success
-                    (function (res) {
-                        var json = JSON.parse(eval("(" + res + ")").toString());
-                        if (json.length) {
-                            var date = json[0].key[0].substring(0, 10);
-                            var count = 0;
-                            json[0].quota.forEach(function (item) {
-                                if ($scope.selectedQuota[1] == "outRate" || $scope.selectedQuota[1] == "arrivedRate") {
-                                    count += parseFloat(item);
-                                } else {
-                                    count += item;
-                                }
-                            });
-                            if ($scope.selectedQuota[1] == "outRate" || $scope.selectedQuota[1] == "arrivedRate") {
-                                count = parseFloat(count / json[0].quota.length).toFixed(2);
-                            }
-                            var c = $scope.charts[0].config.instance;
-                            c.addData([
-                                [1, count, true, false, date]
-                            ]);
+                $http.get(SEM_API_URL + $rootScope.user + "/" + $rootScope.baiduAccount + "/account/" + semQuery + "-?startOffset=" + semSelected.value + "&endOffset=" + semSelected.value).success
+                (function (res) {
+                    if ($scope.compareEsCompare) {
+                        $rootScope.chartTmp[0].quota[1] = res[0][semQuery];
+                        cf.renderChart($rootScope.chartTmp, $scope.charts[0].config);
+                        return;
+                    }
+                    $rootScope.chartTmp.forEach(function (item, index) {
+                        if (index == 0) {
+                            item.key.push("对比数据");
+                            item.quota.push(res[0][semQuery]);
+                        } else {
+                            item.key.push("对比数据");
+                            item.quota.push(0);
                         }
                     });
+                    cf.renderChart($rootScope.chartTmp, $scope.charts[0].config);
+                });
+            }
+
+            $scope.compareEsCompare = null;
+            $scope.tmpEsCompare = null;
+            $scope.esCompareTo = function (esSelected) {
+                if (esSelected.value == 100) {
+                    $scope.compareReset();
+                    return;
                 }
+                $scope.compareType = true;
+                $scope.compareEsCompare = true;
+                $scope.tmpEsCompare = esSelected;
+                if (!$scope.compareSemCompare) {
+                    $rootScope.chartTmp.forEach(function (item) {
+                        item.key = item.key.slice(0, 1);
+                        item.quota = item.quota.slice(0, 1);
+                    });
+                }
+                var esQuery = $scope.selectedQuota[1];
+                $http.get("/api/charts?start=" + esSelected.value + "&end=" + esSelected.value + "&dimension=period&userType=" + $rootScope.userType + "&type=" + esQuery).success
+                (function (res) {
+                    var json = JSON.parse(eval("(" + res + ")").toString());
+                    if (json.length) {
+                        var date = json[0].key[0].substring(0, 10);
+                        var count = 0;
+                        json[0].quota.forEach(function (item) {
+                            if (esQuery == "outRate" || esQuery == "arrivedRate") {
+                                count += parseFloat(item);
+                            } else {
+                                count += item;
+                            }
+                        });
+                        if (esQuery == "outRate" || esQuery == "arrivedRate") {
+                            count = parseFloat(count / json[0].quota.length).toFixed(2);
+                        }
+                        if ($scope.compareSemCompare) {
+                            $rootScope.chartTmp[1].quota[1] = count;
+                            cf.renderChart($rootScope.chartTmp, $scope.charts[0].config);
+                            return;
+                        }
+                        $rootScope.chartTmp.forEach(function (item, index) {
+                            if (index == 1) {
+                                item.key.push("对比数据");
+                                item.quota.push(count);
+                            } else {
+                                //item.key.push(date);
+                                item.key.push("对比数据");
+                                item.quota.push(0);
+                            }
+                        });
+                        //console.log($rootScope.chartTmp);
+                        console.log($rootScope.chartTmp);
+                        cf.renderChart($rootScope.chartTmp, $scope.charts[0].config);
+                    }else{
+                        alert("暂无数据");
+                    }
+                });
+            }
+            $scope.compareReset = function () {
+                $scope.tmpSemCompare = null;
+                $scope.tmpEsCompare = null;
+                $scope.compareType = false;
+                $scope.compareSemCompare = false;
+                $scope.compareEsCompare = false;
+                $scope.initGrid($scope.selectedQuota[0], $scope.selectedQuota[1]);
             }
 
             // 通过效果指标获取搜索结果
@@ -414,7 +501,7 @@ define(["./module"], function (ctrs) {
                         }
                     });
                     obj["page_conv"] = 0;
-                    obj["outRate"] = obj["outRate"] + "%";
+                    obj["outRate"] = (obj["outRate"] == undefined ? 0 : obj["outRate"]) + "%";
                     obj["event_conv"] = 0;
 
                     $scope.surveyData1.push(obj);

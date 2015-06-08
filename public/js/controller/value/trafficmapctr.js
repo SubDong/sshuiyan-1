@@ -1,5 +1,5 @@
 /**
- * Created by weiMS on 2015/5/18....
+ * Created by perfection on 2015/5/18....
  */
 define(["./module"], function (ctrs) {
 
@@ -16,30 +16,46 @@ define(["./module"], function (ctrs) {
         $scope.init = function () {
             var linkData = [];
 
-            $http.get("api/trafficmap?start=" + $scope.start + ",end=" + $scope.end).success(function (data) {
-                console.log(data);
-                for (var i = 0; i < data.length; i++) {
-                    if (data[i].pathName == "-") {
-                        data[i].pathName = "直接输入网址或书签";
+            $http.get("api/trafficmap?start=" + $scope.start + ",end=" + $scope.end + ",targetPathName=http://www.best-ad.cn/").success(function (data) {
+                if (data.length == 0) {
+                    $scope.links = [];
+                    $scope.targetPathData = {
+                        pathname: "http://www.best-ad.cn/",
+                        pv_proportion: "0%",
+                        uv_proportion: "0%",
+                        pv: 0
                     }
-                    linkData.push({
-                        id: i,
-                        name: data[i].pathName,
-                        ratio: data[i].uv,
-                        count: data[i].pv
-                    });
+                    $scope.out_siteData = {
+                        pv_proportion: "0%",
+                        uv_proportion: "0%"
+                    }
+                    return;
+                } else {
+                    for (var i = 0; i < data.data.length; i++) {
+                        if (data.data[i].pathName == "-") {
+                            data.data[i].pathName = "直接输入网址或书签";
+                        }
+                        linkData.push({
+                            id: i,
+                            name: data.data[i].pathName,
+                            ratio: data.data[i].uv,
+                            count: data.data[i].pv
+                        });
+                    }
+                    $scope.links = linkData;
+                    $scope.targetPathData = data.targetPathData;
+                    $scope.out_siteData = data.out_siteData;
+                    linkData = [];
                 }
-                $scope.links = linkData;
-                linkData = [];
-                if (data.length <= 3) {
+                if (data.data.length <= 3) {
                     document.getElementById("linkstree_top").style.top = "14%";
                     document.getElementById("linkstree_right").style.top = "14%";
                 }
-                if (data.length == 4) {
+                if (data.data.length == 4) {
                     document.getElementById("linkstree_top").style.top = "20%";
                     document.getElementById("linkstree_right").style.top = "20%";
                 }
-                if (data.length >= 5) {
+                if (data.data.length >= 5) {
                     document.getElementById("linkstree_top").style.top = "35%";
                     document.getElementById("linkstree_right").style.top = "35%";
                 }
@@ -47,7 +63,6 @@ define(["./module"], function (ctrs) {
         }
         $scope.init();
         $scope.reloadByCalendar = function (type) {
-            //console.info("info: now user click the " + type + " button");
             $rootScope.$broadcast("ssh_refresh_charts");
             $rootScope.$broadcast("ssh_dateShow_options_time_change", type);
         };
@@ -55,7 +70,7 @@ define(["./module"], function (ctrs) {
         $scope.offsitelinks = [
             {
                 "id": 1,
-                "name": "http://127.0.0.1:8000/#/page/offsitelinks"
+                "name": "http://www.best-ad.cn/"
             },
             {
                 "id": 2,

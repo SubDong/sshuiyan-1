@@ -1,10 +1,11 @@
 var express = require('express');
+var csvApi = require('json-2-csv');
 var url = require('url');
 var date = require('../utils/date');
 var dateFormat = require('../utils/dateFormat')();
 var resutil = require('../utils/responseutils');
 var datautils = require('../utils/datautils');
-var es_request = require('../services/es_request');
+var es_request = require('../services/refactor_request');
 var access_request = require('../services/access_request');
 var promotion_request = require('../services/promotion_request');
 var initial = require('../services/visitors/initialData');
@@ -12,6 +13,9 @@ var map = require('../utils/map');
 var api = express.Router();
 var dao = require('../db/daos');
 var schemas = require('../db/schemas');
+var fsApi = require("fs");
+var uuid = require("node-uuid");
+var iconv = require('iconv-lite');
 
 
 api.get('/charts', function (req, res) {
@@ -33,7 +37,7 @@ api.get('/charts', function (req, res) {
         quotas.push(type);
     var start = Number(query['start']);//
     var end = Number(query['end']);//
-    var indexes = date.createIndexes(start, end, "visitor-");
+    var indexes = date.createIndexes(start, end, "access-");
 
     var period = date.period(start, end);
     var interval = 1;
@@ -111,7 +115,7 @@ api.get('/map', function (req, res) {
     }
     var start = Number(query['start']);//0
     var end = Number(query['end']);
-    var indexes = date.createIndexes(start, end, "visitor-");
+    var indexes = date.createIndexes(start, end, "access-");
 
     var period = date.period(start, end);
     var interval = date.interval(start, end, Number(query['int']));
@@ -143,7 +147,7 @@ api.get('/pie', function (req, res) {
     }
     var start = Number(query['start']);
     var end = Number(query['end']);
-    var indexes = date.createIndexes(start, end, "visitor-");
+    var indexes = date.createIndexes(start, end, "access-");
 
     var period = date.period(start, end);
     var interval = date.interval(start, end, Number(query['int']));
@@ -162,7 +166,7 @@ api.get('/survey/1', function (req, res) {
     var type = query['type'];
     var startOffset = Number(query['start']);
     var endOffset = Number(query['end']);
-    var indexes = date.createIndexes(startOffset, endOffset, "visitor-");
+    var indexes = date.createIndexes(startOffset, endOffset, "access-");
 
     // 指标数组
     var quotas = ["pv", "vc", "pageConversion", "outRate", "avgTime", "eventConversion", "arrivedRate"];
@@ -188,7 +192,7 @@ api.get('/survey/2', function (req, res) {
     var type = query['type'];
     var startOffset = Number(query['start']);
     var endOffset = Number(query['end']);
-    var indexes = date.createIndexes(startOffset, endOffset, "visitor-");
+    var indexes = date.createIndexes(startOffset, endOffset, "access-");
     var filters = JSON.parse(query['filter']);
 
     // 指标数组
@@ -207,7 +211,7 @@ api.get('/survey/3', function (req, res) {
     var type = query['type'];
     var startOffset = Number(query['start']);
     var endOffset = Number(query['end']);
-    var indexes = date.createIndexes(startOffset, endOffset, "visitor-");
+    var indexes = date.createIndexes(startOffset, endOffset, "access-");
 
     // 指标数组
     var quotas = ["pv", "vc", "pageConversion", "outRate", "avgTime", "arrivedRate"];
@@ -236,7 +240,7 @@ api.get('/indextable', function (req, res) {
     var _formartInfo = query["formartInfo"];
 
     var _filter = query["filerInfo"] != null && query["filerInfo"] != 'null' ? JSON.parse(query["filerInfo"]) : query["filerInfo"] == 'null' ? null : query["filerInfo"];//过滤器
-    var indexes = date.createIndexes(_startTime, _endTime, "visitor-");//indexs
+    var indexes = date.createIndexes(_startTime, _endTime, "access-");//indexs
 
     var popFlag = query["popup"];
 
@@ -259,7 +263,7 @@ api.get('/indextable', function (req, res) {
                         infoKey = info.key[i]
                     }
                     if (popFlag != 1) {
-                        if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null" || infoKey.length >= 30)) continue;
+                        if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null" )) continue;
                     }
                     var infoKey = info.key[i];
                     var obj = maps[infoKey];
@@ -336,7 +340,7 @@ api.get('/realTimeAccess', function (req, res) {
     var query = url.parse(req.url, true).query;
     var _type = query["type"];
     var _filters = query["filerInfo"] != null && query["filerInfo"] != 'null' ? JSON.parse(query["filerInfo"]) : query["filerInfo"] == 'null' ? null : query["filerInfo"];//过滤器;
-    var indexes = date.createIndexes(0, 0, "visitor-");
+    var indexes = date.createIndexes(0, 0, "access-");
     es_request.realTimeSearch(req.es, indexes, _type, _filters, function (data) {
         var resultArray = new Array();
         data.forEach(function (item, i) {
@@ -363,7 +367,7 @@ api.get('/realTimeHtml', function (req, res) {
     var query = url.parse(req.url, true).query;
     var _type = query["type"];
     var _filters = query["filerInfo"] != null && query["filerInfo"] != 'null' ? JSON.parse(query["filerInfo"]) : query["filerInfo"] == 'null' ? null : query["filerInfo"];//过滤器;
-    var indexes = date.createIndexes(0, 0, "visitor-");
+    var indexes = date.createIndexes(0, 0, "access-");
     es_request.realTimeSearch(req.es, indexes, _type, _filters, function (data) {
         data.forEach(function (item, i) {
             es_request.search(req.es, indexes, _type, ["vc"], null, [0], [{"vid": [item._source.vid]}], null, null, null, function (datainfo) {
@@ -417,7 +421,7 @@ api.get('/visitormap', function (req, res) {
     var _startTime = Number(query['start']);
     var _endTime = Number(query['end']);
     var _quotas = query["quotas"].split(",");
-    var indexes = date.createIndexes(_startTime, _endTime, "visitor-");//indexs
+    var indexes = date.createIndexes(_startTime, _endTime, "access-");//indexs
     var period = date.period(_startTime, _endTime); //时间段
     var interval = date.interval(_startTime, _endTime); //时间分割
 
@@ -438,9 +442,9 @@ api.get('/provincemap', function (req, res) {
     var areas = query['areas'];
     var property = query['property'];
     if (property == "ct") {
-        var indexes = date.createIndexes(_startTime, _endTime, "visitor-");
+        var indexes = date.createIndexes(_startTime, _endTime, "access-");
     } else {
-        var indexes = date.createIndexes(_startTime, _endTime, "visitor-");
+        var indexes = date.createIndexes(_startTime, _endTime, "access-");
     }
     initial.chartData(req.es, indexes, type, areas, property, function (data) {
         var result = {};
@@ -475,6 +479,63 @@ api.get('/provincemap', function (req, res) {
     })
 });
 
+api.get("/downCSV", function (req, res) {
+
+    var query = url.parse(req.url, true).query;
+    var dataInfo = query['dataInfo'].replace(/\*/g, "%");
+    var jsonData = JSON.parse(dataInfo);
+    csvApi.json2csv(jsonData, function (err, csv) {
+        if (err) throw err;
+        /*var options = {
+         root: '/tmp/',
+         dotfiles: 'deny',
+         encoding: 'utf8',
+         headers: {
+         'x-timestamp': Date.now(),
+         'x-sent': true
+         }
+         };
+         var options1 = {
+         encoding: 'utf8'
+         }
+         var uid = uuid.v1().toString().replace(/\-/g, "");
+         var fileName = "down-"+uid+".csv"
+         fsApi.appendFile(fileName, csv, options, function(err){
+         if(err)
+         console.log("fail " + err);
+         else {
+         console.log("写入成功")
+         /!*res.sendFile(fileName, options, function (err) {
+         if (err) {
+         console.log(err);
+         res.status(err.status).end();
+         }
+         else {
+         console.log('Sent:', fileName);
+         }
+         });*!/
+         }
+         });*/
+        //var fileName = req.params.name;
+
+
+        /*var uid = uuid.v1().toString().replace(/\-/g, "");
+        var fileName = "down-" + uid + ".csv"
+        res.set({
+            'Content-Type': 'text/csv',
+            'Content-Disposition': "attachment;filename=" + encodeURIComponent(fileName),
+            'Pragma': 'no-cache',
+            'Expires': 0
+        });*/
+        var buffer = new Buffer(csv);
+        //需要转换字符集
+
+        var str = iconv.encode(buffer, 'utf-8');
+        res.send(str);
+    });
+});
+
+
 /**
  * summary.by wms
  */
@@ -484,7 +545,7 @@ api.get("/summary", function (req, res) {
     var type = query['type'];
     var startOffset = Number(query['start']);
     var endOffset = Number(query['end']);
-    var indexes = date.createIndexes(startOffset, endOffset, "visitor-");
+    var indexes = date.createIndexes(startOffset, endOffset, "access-");
     var quotas = query['quotas'];
     var period = date.period(startOffset, endOffset);
     var interval = date.interval(startOffset, endOffset);
@@ -515,7 +576,7 @@ api.get("/exchange", function (req, res) {
     var start = Parameters[0].split("=")[1];
     var end = Parameters[1].split("=")[1];
     var type = Parameters[2].split("=")[1];
-    type = type.replace(/;/g,",");//由于穿过的数据是以;分号隔开的，所以替换成逗号
+    type = type.replace(/;/g, ",");//由于穿过的数据是以;分号隔开的，所以替换成逗号
     //start与end传过时间偏移量，调用creatIndexs()方法，把access-与时间拼接起来组成索引值
     var indexString = date.createIndexes(start, end, "access-");
     access_request.exchangeSearch(req.es, indexString, type, function (result) {
@@ -527,29 +588,35 @@ api.get("/exchange", function (req, res) {
 
 api.get("/trafficmap", function (req, res) {
     var parameterString = req.url.split("?");//获取url的？号以后的字符串
+
     var parameters = parameterString[1].split(",");
+
     var start = parameters[0].split("=")[1];
     var end = parameters[1].split("=")[1];
-    //start与end传过时间偏移量，调用creatIndexs()方法，把access-与时间拼接起来组成索引值
-    var indexString = date.createIndexes(start,end,"access-");
-        console.log("访问的索引"+parameterString)
+    var targetPathName = parameters[2].split("=")[1];
 
-        access_request.trafficmapSearch(req.es, indexString, function(result){
-            datautils.send(res, result);
-        });
+    //start与end传过时间偏移量，调用creatIndexs()方法，把access-与时间拼接起来组成索引值
+    var indexString = date.createIndexes(start, end, "access-");
+
+    access_request.trafficmapSearch(req.es, indexString, targetPathName, function (result) {
+        datautils.send(res, result);
+    });
 
 
 });
-api.get("/offsitelinks",function(req, res){
+api.get("/offsitelinks", function (req, res) {
     var parameterString = req.url.split("?");//获取url的？号以后的字符串
+
     var parameters = parameterString[1].split(",");
+
     var start = parameters[0].split("=")[1];
     var end = parameters[1].split("=")[1];
+
     //start与end传过时间偏移量，调用creatIndexs()方法，把access-与时间拼接起来组成索引值
-    var indexString = date.createIndexes(start,end,"access-");
-    //if(parameters.length>=3){
+    var indexString = date.createIndexes(start, end, "access-");
     var pathName = parameters[2].split("=")[1];
-    access_request.offsitelinksSearch(req.es, indexString,pathName, function(result){
+
+    access_request.offsitelinksSearch(req.es, indexString, pathName, function (result) {
         datautils.send(res, result);
     });
 

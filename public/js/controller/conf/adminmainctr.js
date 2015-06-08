@@ -8,17 +8,17 @@ define(["./module"], function (ctrs) {
     ctrs.controller('adminmainctr', function ($scope, $q, $rootScope, $http, requestService,ngDialog,$cookieStore) {
 
 
-        $scope.sites_model={
+        $scope.sites_model = {
 
-                //_id: String, // mongoid
-                uid: "", // user id 用户ID
-                type_id: "", // es type id ( hidden in front-end) 对应ES ID
-                track_id: "", // js track id 随机生成
-                site_url: "", // site url 设置的URL
-                site_name: "", // site name 设置的URL
-                site_pause:false,//配置暂停 true：暂停 false：使用
-                track_status: "" // track code status
-                //status: String, // enable or disable track
+            //_id: String, // mongoid
+            uid: "", // user id 用户ID
+            type_id: "", // es type id ( hidden in front-end) 对应ES ID
+            track_id: "", // js track id 随机生成
+            site_url: "", // site url 设置的URL
+            site_name: "", // site name 设置的URL
+            site_pause: false,//配置暂停 true：暂停 false：使用
+            track_status: "" // track code status
+            //status: String, // enable or disable track
 
         };
         $scope.urlconfig = {
@@ -143,23 +143,48 @@ define(["./module"], function (ctrs) {
             };
         }
         //table配置
-        $rootScope.adminSetHtml ="<div class='mid_left'><div class='mid_left_code'> 邓子豪</div> </div><div class='mid_right'><button type='button' class='btn btn-default navbar-btn'>复制代码</button><ul type='disc'>"+
-        "  <li>请将代码添加至网站全部页面的&lt;/head&gt;标签前；</li><li>建议在header.htm类似的页头模板页面中安装，以达到一处安装，全站皆有的效果；</li><li>如需在JS文件中调用统计分析代码，请直接去掉以下代码首尾的&lt;script type='text/javascript' &gt;与&lt;/script&gt;后，放入JS文件中即可；</li>"+
-        "<li> 如果代码安装正确，一般20分钟 后,可以查看网站分析数据；</li></ul></div>";
+        $rootScope.adminSetHtml = "<div class='mid_left'><div class='mid_left_code'> 邓子豪</div> </div><div class='mid_right'><button type='button' class='btn btn-default navbar-btn'>复制代码</button><ul type='disc'>" +
+            "  <li>请将代码添加至网站全部页面的&lt;/head&gt;标签前；</li><li>建议在header.htm类似的页头模板页面中安装，以达到一处安装，全站皆有的效果；</li><li>如需在JS文件中调用统计分析代码，请直接去掉以下代码首尾的&lt;script type='text/javascript' &gt;与&lt;/script&gt;后，放入JS文件中即可；</li>" +
+            "<li> 如果代码安装正确，一般20分钟 后,可以查看网站分析数据；</li></ul></div>";
         //配置默认指标
         //配置默认指标
         $rootScope.checkedArray = ["", "", ""];
         $rootScope.gridArray = [
             {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>1</div>", maxWidth: 5},
-            {name: "网站域名", displayName:"网站域名", field: "site_url", maxWidth: '', cellClass:'table_admin'},
+            {name: "网站域名", displayName: "网站域名", field: "site_url", maxWidth: '', cellClass: 'table_admin'},
 
-            {name: "网站名称",  displayName:"网站名称", field: "site_name" ,maxWidth: '', cellClass:'table_admin'  },
-            {name: "首页代码状态",  displayName:"首页代码状态", field: "track_code", maxWidth:500,cellClass:'table_admin' },
-            {name: "x6", displayName: "",cellTemplate: "<div class='table_admin'><a href=''>获取代码</a><span class='glyphicon glyphicon-file'></span></div>" ,maxWidth:100 },
-            {name: "x2", displayName: "",cellTemplate: "<div class='table_admin'><a href=''>查看网站概览</a></div>", maxWidth:100 },
-            {name: "x3", displayName: "",cellTemplate: "<div class='table_admin'><span class='glyphicon glyphicon-cog'></span><a href=''>设置</a></div>", maxWidth:80  },
-            {name: "x4", displayName: "",cellTemplate: "<div class='table_admin'><a href=''>暂停</a></div>", maxWidth:80 },
-            {name: "x5", displayName: "",cellTemplate: "<div class='table_admin'><a href=''>删除</a></div>", maxWidth:80 }
+            {name: "网站名称", displayName: "网站名称", field: "site_name", maxWidth: '', cellClass: 'table_admin'},
+            {name: "首页代码状态", displayName: "首页代码状态", field: "track_code", maxWidth: 500, cellClass: 'table_admin'},
+            {
+                name: "x6",
+                displayName: "",
+                cellTemplate: "<div class='table_admin'><a href=''>获取代码</a><span class='glyphicon glyphicon-file'></span></div>",
+                maxWidth: 100
+            },
+            {
+                name: "x2",
+                displayName: "",
+                cellTemplate: "<div class='table_admin'><a href=''>查看网站概览</a></div>",
+                maxWidth: 100
+            },
+            {
+                name: "x3",
+                displayName: "",
+                cellTemplate: "<div class='table_admin'><span class='glyphicon glyphicon-cog'></span><a href=''>设置</a></div>",
+                maxWidth: 80
+            },
+            {
+                name: "x4",
+                displayName: "",
+                cellTemplate: "<div class='table_admin'><a href=''>暂停</a></div>",
+                maxWidth: 80
+            },
+            {
+                name: "x5",
+                displayName: "",
+                cellTemplate: "<div class='table_admin'><a href=''>删除</a></div>",
+                maxWidth: 80
+            }
 
         ];
 
@@ -185,11 +210,11 @@ define(["./module"], function (ctrs) {
                 $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
                 var todayData = $http.get("api/charts?type=" + checkedVal + "&dimension=period&start=" + time + "&end=" + time + "&userType=" + $rootScope.userType + "&int=" + $rootScope.interval);
                 var lastDayData = $http.get("api/charts?type=" + checkedVal + "&dimension=period&start=" + (time - 1) + "&end=" + ( time - 1) + "&userType=" + $rootScope.userType + "&int=" + $rootScope.interval);
-                console.log("*********`"+todayData);
-                console.log("*********1"+lastDayData);
+                console.log("*********`" + todayData);
+                console.log("*********1" + lastDayData);
                 $q.all([todayData, lastDayData]).then(function (res) {
                     var dateStamp = chartUtils.getDateStamp(time);
-                    console.log("*********1"+dateStamp);
+                    console.log("*********1" + dateStamp);
                     var final_result = chartUtils.compareTo(res, dateStamp);
                     $scope.charts[0].config.noFormat = "none";
                     $scope.charts[0].config.compare = true;
@@ -210,10 +235,10 @@ define(["./module"], function (ctrs) {
         };
 
         //����HTML ���չ����
-        var adminGriApihtml = function(gridApi){
+        var adminGriApihtml = function (gridApi) {
             var htmlData = [];
             gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
-                console.log("+++++++++"+row);
+                console.log("+++++++++" + row);
                 row.entity.subGridOptions = {
                     showHeader: false,
                     enableHorizontalScrollbar: 0,
@@ -226,24 +251,6 @@ define(["./module"], function (ctrs) {
                 htmlData.push(res);
                 row.entity.subGridOptions.data = [{"info": " "}];
             });
-        };
-        /**
-         * 初始化数据
-         */
-        var refushGridData = function(){
-            var uid= $cookieStore.get("uid");
-            var site_id=$rootScope.userType;
-            var url= "/config/conf?index=site_list&type=search&query={\"uid\":\""+uid+"\"}";
-            $http({
-                method: 'GET',
-                url: url
-            }).success(function (dataConfig, status) {
-                $scope.gridOptions.data = dataConfig;
-            });
-        };
-        refushGridData();
-        var closeThisDialog = function(clicked){
-            console.log("dfdfsdfd");
         };
 
         $scope.open=function(){
@@ -276,36 +283,57 @@ define(["./module"], function (ctrs) {
             });
         };
 
+
+        /**
+         * 初始化数据
+         */
+        var refushGridData = function () {
+            var uid = $cookieStore.get("uid");
+            var site_id = $rootScope.userType;
+            var url = "/config/conf?index=site_list&type=search&query={\"uid\":\"" + uid + "\"}";
+            $http({
+                method: 'GET',
+                url: url
+            }).success(function (dataConfig, status) {
+                $scope.gridOptions.data = dataConfig;
+            });
+        };
+        refushGridData();
+        var closeThisDialog = function (clicked) {
+            console.log("dfdfsdfd");
+        };
+
+
         /**
          * 增加网站配置时候 添加配置
          * @param cliecked
          */
-        $scope.submit = function(cliecked){
+        $scope.submit = function (cliecked) {
             console.log("submit");
 
             //var site_id=$rootScope.userType;//从conf_sites中获取
             var model = angular.copy($scope.sites_model);
-            model.site_url=$scope.urlconfig.site_url;//网站URL 页面输入
-            model.site_name=$scope.urlconfig.site_name;//网站名称 页面输入
-            model.uid=$cookieStore.get("uid");
+            model.site_url = $scope.urlconfig.site_url;//网站URL 页面输入
+            model.site_name = $scope.urlconfig.site_name;//网站名称 页面输入
+            model.uid = $cookieStore.get("uid");
             //用户ID+url 确定该用户对某个网站是否进行配置
-            var query= "/config/site_list?type=search&query={\"uid\":\""+model.uid+"\",\"site_url\":\""+model.site_url+"\"}";
+            var query = "/config/site_list?type=search&query={\"uid\":\"" + model.uid + "\",\"site_url\":\"" + model.site_url + "\"}";
             $http({
                 method: 'GET',
                 url: query
             }).success(function (dataConfig, status) {
-                if(dataConfig==null||dataConfig.length==0){//不存在配置 save
-                    var url= "/config/site_list?type=save&entity="+JSON.stringify(model);
+                if (dataConfig == null || dataConfig.length == 0) {//不存在配置 save
+                    var url = "/config/site_list?type=save&entity=" + JSON.stringify(model);
                     $http({
                         method: 'GET',
                         url: url
                     }).success(function (dataConfig, status) {
                     });
-                }else{//update
-                    model.type_id=dataConfig.type_id;//更新传入不再重新生成
-                    model.track_id=dataConfig.track_id;
-                    if(dataConfig.site_name!=model.site_name){
-                        var url=  "/config/site_list?type=update&query={\"uid\":\""+model.uid+"\",\"site_url\":\""+ model.site_url+"\"}&updates="+JSON.stringify(model);
+                } else {//update
+                    model.type_id = dataConfig.type_id;//更新传入不再重新生成
+                    model.track_id = dataConfig.track_id;
+                    if (dataConfig.site_name != model.site_name) {
+                        var url = "/config/site_list?type=update&query={\"uid\":\"" + model.uid + "\",\"site_url\":\"" + model.site_url + "\"}&updates=" + JSON.stringify(model);
                         $http({
                             method: 'GET',
                             url: url

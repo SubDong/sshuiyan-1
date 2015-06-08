@@ -1,6 +1,7 @@
 /**
  * Created by weims on 2015/5/15.
  */
+
 define(["../app"], function (app) {
     'use strict';
 
@@ -250,7 +251,7 @@ define(["../app"], function (app) {
         };
         return option;
     });
-    app.directive("refresh", function ($rootScope, requestService, $location) {
+    app.directive("refresh", function ($rootScope, requestService, $location, $http) {
         var option = {
             restrict: "EA",
             template: "<div class=\"right_refresh fr\"><button class=\"btn btn-default btn-Refresh fl\" ng-click=\"page_refresh()\"  type=\"button\"><span aria-hidden=\"true\" class=\"glyphicon glyphicon-refresh\"></span></button><ui-select ng-model=\"export.selected\"   ng-change='fileSave(export.selected)' theme=\"select2\" ng-hide=\"menu_select\" reset-search-input=\"false\" class=\"fl\"style=\"min-width: 90px;background-color: #fff;\"> <ui-select-match placeholder=\"保存\">{{$select.selected.name}} </ui-select-match> <ui-select-choices repeat=\"export in exportsaa\"> <span ng-bind-html=\"export.name\"></span></ui-select-choices></ui-select></div>",
@@ -262,15 +263,43 @@ define(["../app"], function (app) {
                     {name: 'CSV', value: 'csv'},
                     {name: 'PDF（含图） ', value: 'pdf'}
                 ];
-                scope.flag = $location.path() != "/index"
+                scope.flag = $location.path() != "/index";
                 //导出功能
                 scope.fileSave = function (obj) {
                     if (obj.value == "csv") {
-                        if (scope.flag) {
-                            $rootScope.gridApi2.exporter.csvExport("all", "visible", angular.element())
-                        } else {
-                            $rootScope.gridApi.exporter.csvExport("all", "visible", angular.element());
-                        }
+                        var dataInfo = angular.copy($rootScope.gridApi2.grid.options.data);
+                        var dataHeadInfo = angular.copy($rootScope.gridApi2.grid.options.columnDefs);
+                        dataHeadInfo.forEach(function (item, i) {
+                            if (item.field != undefined) {
+                                dataInfo.forEach(function (dataItem, x) {
+                                    dataInfo[x] = JSON.parse(JSON.stringify(dataItem).replace(item.field, item.displayName));
+                                })
+                            }
+                        });
+                        var repData = JSON.stringify(dataInfo).replace(/\%/g, "*");
+                        $http({
+                            method: 'GET',
+                            url: '/api/downCSV/?dataInfo=' + repData,
+                            headers: {
+                                'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+                                'Content-type': 'text/csv; charset=utf-8'
+
+                            }
+                        }).success(function (data, status, headers, config) {
+                            console.log(data);
+                            var hiddenElement = document.createElement('a');
+
+                            hiddenElement.href = 'data:attachment/csv;charset=utf-8,' + encodeURI(data);
+                            hiddenElement.target = '_blank';
+                            hiddenElement.download = 'myFile.csv';
+                            hiddenElement.click();
+                        })
+
+                        /*if (scope.flag) {
+                         $rootScope.gridApi2.exporter.csvExport("all", "visible", angular.element())
+                         } else {
+                         $rootScope.gridApi.exporter.csvExport("all", "visible", angular.element());
+                         }*/
                     }
                     else {
                         if (scope.flag) {
@@ -430,7 +459,7 @@ define(["../app"], function (app) {
                         var count = 0;
                         angular.forEach(r.quota, function (qo, _i) {
                             var infoKey = r.key[_i];
-                            if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null" || infoKey.length >= 30)) {
+                            if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null" )) {
                                 return false;
                             }
                             if (flag) {
@@ -639,7 +668,7 @@ define(["../app"], function (app) {
                 scope.loadDataShow = function () {
                     scope.dateShowArray = angular.copy(scope.defaultDataShowArray);
                     var semRequest = $http.get(SEM_API_URL + "elasticsearch/" + $rootScope.userType
-                    + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd);
+                        + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd);
                     $q.all([semRequest]).then(function (final_result) {
                         angular.forEach(final_result[0].data, function (r) {
                             angular.forEach(scope.dateShowArray, function (q_r) {
@@ -653,7 +682,7 @@ define(["../app"], function (app) {
                 };
                 scope.loadCompareDataShow = function (startTime, endTime) {
                     var semRequest = $http.get(SEM_API_URL + "elasticsearch/" + $rootScope.userType
-                    + "/?startOffset=" + startTime + "&endOffset=" + endTime);
+                        + "/?startOffset=" + startTime + "&endOffset=" + endTime);
                     $q.all([semRequest]).then(function (final_result) {
                         // 初始化对比数据
                         angular.forEach(scope.dateShowArray, function (q_r) {

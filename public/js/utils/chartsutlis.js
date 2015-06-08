@@ -661,11 +661,14 @@ var chartUtils = {
                     quotas.forEach(function (quota, o) {
                         var _tmp = {};
                         var semCount = 0;
-                        res[0].data.forEach(function (i) {
-                            semCount += i[quota];
-                        });
-                        if (quota == "ctr" || quota == "cpc") {
-                            semCount = parseFloat(semCount / res[0].data.length).toFixed(2);
+                        if (res[0].data.indexOf('[') == -1) {
+                            //console.log(res[0].data);
+                            res[0].data.forEach(function (i) {
+                                semCount += i[quota];
+                            });
+                            if (quota == "ctr" || quota == "cpc") {
+                                semCount = parseFloat(semCount / res[0].data.length).toFixed(2);
+                            }
                         }
                         _tmp["label"] = chartUtils.convertChinese(quota);
                         _tmp["key"] = ["搜索推广"];
@@ -712,6 +715,55 @@ var chartUtils = {
     },
     getDateStamp: function (count) {
         return [chartUtils.getDateStampCount(count), chartUtils.getDateStampCount(count - 1)];
+    },
+    getSurveryDataByOneDay: function (final_result, quota, estype) {
+        var chart_result = [];
+        var tmp = [];
+        var _semData = {};
+        var esJson = JSON.parse(eval("(" + final_result[1].data + ")").toString());
+        var esDate = !esJson.length ? null : esJson[0].key[0];
+        //console.log(esJson);
+        if (final_result[0].data.length) {
+            tmp.push(final_result[0].data[0][quota]);
+            _semData["label"] = chartUtils.convertChinese(quota);
+            _semData["quota"] = tmp;
+            _semData["key"] = [final_result[0].data[0].date];
+            chart_result.push(_semData);
+        } else {
+            if (esDate) {
+                chart_result.push({
+                    label: chartUtils.convertChinese(quota),
+                    quota: [0],
+                    key: [esDate.substring(0, 10)]
+                });
+            } else {
+                chart_result.push({
+                    label: chartUtils.convertChinese(quota),
+                    quota: [0],
+                    key: ['']
+                });
+            }
+        }
+        var totalCount = 0;
+        var _esData = {};
+        if (esJson.length) {
+            esJson[0].quota.forEach(function (e) {
+                totalCount += Number(e);
+            });
+
+            if (estype == "outRate") {
+                totalCount = parseFloat(totalCount / esJson[0].quota.length).toFixed(2);
+            }
+        }
+        _esData["label"] = chartUtils.convertChinese(estype);
+        _esData["quota"] = [totalCount];
+        if (esDate) {
+            _esData["key"] = [esDate.substring(0, 10)];
+        } else {
+            _esData["key"] = [''];
+        }
+        chart_result.push(_esData);
+        return chart_result;
     }
 }
 //去重

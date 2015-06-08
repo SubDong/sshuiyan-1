@@ -1,10 +1,14 @@
 var redis = require('redis');
 
+var client;
 
 var redis_module = {
 
     init: function (config) {
-        var client = redis.createClient(config.port, config.host,config.options);
+        client = redis.createClient(config.port, config.host, config.options);
+        return client;
+    },
+    service: function () {
         return client;
     }
 }

@@ -87,49 +87,7 @@ define(["./module"], function (ctrs) {
             });
 
         };
-        //
-        //$scope.addRule = function () {
-        //    $scope.rules.push({source:"",convert:""});
-        //////};
-        ////点击效果
-        //$scope.obj = {
-        //    "tNum": "1",
-        //    "tText": "",
-        //    "count": 1,
-        //    "helpFlag": false
-        //};
-        //$scope.ipObj = angular.copy($scope.obj);
-        //$scope.tyymdzObj = angular.copy($scope.obj);
-        //$scope.pclywzObj =angular.copy($scope.obj);
-        //$scope.pcsfwzobj =angular.copy($scope.obj);
-        //$scope.gyjkobj =angular.copy($scope.obj);
-        //$scope.qdcxzhobj =angular.copy($scope.obj);
-        //$scope.ips = [];
-        //$scope.init = function () {
-        //    var ips = new Array(20);
-        //    for (var i = 0; i < ips.length; i++) {
-        //        ips[i] = {
-        //            "id": ""
-        //        };
-        //        $scope.ips.push(ips[i]);
-        //    }
-        //};
-        //$scope.init();
-        //    $scope.addRule = function (o) {
-            //点击效果
-            //$scope.obj = {
-            //    "tNum": "1",
-            //    "tText": "",
-            //    "count": 1,
-            //    "helpFlag": false
-            //};
-            //$scope.ipObj = angular.copy($scope.obj);
-            //$scope.tyymdzObj = angular.copy($scope.obj);
-            //$scope.pclywzObj = angular.copy($scope.obj);
-            //$scope.pcsfwzobj = angular.copy($scope.obj);
-            //$scope.gyjkobj = angular.copy($scope.obj);
-            //$scope.qdcxzhobj = angular.copy($scope.obj);
-            //$scope.ips = [];
+
 
             $scope.addRule = function (o) {
                 o.push({});
@@ -158,7 +116,10 @@ define(["./module"], function (ctrs) {
             };
             var convertIpArea = function (ips) {
                 var ips_area = angular.copy($scope.ipArea);
-                ips_area.tNum = ips.length;
+                ips_area.tNum = "";
+                for (var i = 0; i < ips.length; i++) {
+                    ips_area.tNum += (i + 1) + "\r\n";
+                }
                 ips_area.count = ips.length;
                 ips_area.tText = ips.toString().replace(/\,/g, "\n");
                 return ips_area;

@@ -25,7 +25,7 @@ var config = require("./config.json");
 
 var es_client = es.init(config.es);
 
-var mongo = mongoose.init(config.mongodb)
+var mongo = mongoose.init(config.mongo)
 var redis_client = redis_module.init(config.redis);
 
 //app.use(express.static('public'))

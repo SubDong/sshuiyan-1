@@ -1,13 +1,140 @@
 /**
- * Created by baizz on 2015-04-09.
+ * Created by dolphineor on 2015-6-4.
  *
- * ES查询接口
- * quotas: 指标
- * dimension: 维度
- * filters: 过滤器
+ * refactor, elasticsearch query migrate to access.
  */
 
-require('../utils/dateFormat')();
+var _new_visitor_aggs = {
+    "filter": {
+        "script": {
+            "script": "doc['entrance'].value == 1"
+        }
+    },
+    "aggs": {
+        "nuv_aggs": {
+            "sum": {
+                "script": "c=0; if (doc['ct'].value == 0) {c = 1}; c"
+            }
+        }
+    }
+};
+
+var _vc_aggs = {
+    "cardinality": {
+        "field": "tt"
+    }
+};
+
+var es_aggs = {
+    // 浏览量
+    "pv": {
+        "pv_aggs": {
+            "value_count": {
+                "field": "loc"
+            }
+        }
+    },
+    // 贡献浏览量
+    "contribution": {
+        "cpv_aggs": {
+            "filter": {
+                "term": {
+                    "entrance": "1"
+                }
+            },
+            "aggs": {
+                "cpv_aggs": {
+                    "value_count": {
+                        "field": "entrance"
+                    }
+                }
+            }
+        }
+    },
+    // 访客数
+    "uv": {
+        "uv_aggs": {
+            "cardinality": {
+                "field": "_ucv"
+            }
+        }
+    },
+    // 访问次数
+    "vc": {
+        "vc_aggs": _vc_aggs
+    },
+    // 跳出率
+    "outRate": {
+        "single_visitor_aggs": {
+            "terms": {
+                "field": "tt",
+                "size": 0,
+                "min_doc_count": 2
+            }
+        },
+        "vc_aggs": _vc_aggs
+    },
+    // 平均访问时长
+    "avgTime": {
+        "tvt_aggs": {
+            "terms": {
+                "field": "tt",
+                "size": 0
+            },
+            "aggs": {
+                "min_aggs": {
+                    "min": {
+                        "field": "utime"
+                    }
+                },
+                "max_aggs": {
+                    "max": {
+                        "field": "utime"
+                    }
+                }
+            }
+        },
+        "vc_aggs": _vc_aggs
+    },
+    // 新访客数
+    "nuv": {
+        "new_visitor_aggs": _new_visitor_aggs
+    },
+    // 新访客比率
+    "nuvRate": {
+        "new_visitor_aggs": _new_visitor_aggs,
+        "uv_aggs": {
+            "cardinality": {
+                "field": "_ucv"
+            }
+        }
+    },
+    // 平均访问页数
+    "avgPage": {
+        "pv_aggs": {
+            "value_count": {
+                "field": "loc"
+            }
+        },
+        "vc_aggs": _vc_aggs
+    },
+    // IP数
+    "ip": {
+        "ip_aggs": {
+            "cardinality": {
+                "field": "remote"
+            }
+        }
+    },
+    // 抵达率=访问次数/点击量
+    "arrivedRate": {
+        "vc_aggs": _vc_aggs
+    },
+    // TODO 页面转化
+    "pageConversion": {},
+    // TODO 事件转化
+    "eventConversion": {}
+};
 
 var buildMustQuery = function (filters) {
     var mustQuery = [];
@@ -31,135 +158,8 @@ var buildQuery = function (filters) {
     }
 };
 
-var es_aggs = {
-    // 浏览量
-    "pv": {
-        "pv_aggs": {
-            "sum": {
-                "script": "_source.loc.size()"
-            }
-        }
-    },
-    // 贡献浏览量
-    "contribution": {
-        "cpv_aggs": {
-            "value_count": {
-                "field": "entrance"
-            }
-        }
-    },
-    // 访客数
-    "uv": {
-        "uv_aggs": {
-            "cardinality": {
-                "field": "_ucv"
-            }
-        }
-    },
-    // 访问次数
-    "vc": {
-        "vc_aggs": {
-            "value_count": {
-                "field": "tt"
-            }
-        }
-    },
-    // 跳出率
-    "outRate": {
-        "single_visitor_aggs": {
-            "filter": {
-                "script": {
-                    "script": "_source.loc.size() == param1",
-                    "params": {
-                        "param1": 1
-                    }
-                }
-            },
-            "aggs": {
-                "svc_aggs": {
-                    "value_count": {
-                        "field": "tt"
-                    }
-                }
-            }
-        },
-        "vc_aggs": {
-            "value_count": {
-                "field": "tt"
-            }
-        }
-    },
-    // 平均访问时长
-    "avgTime": {
-        "tvt_aggs": {
-            "sum": {
-                "script": "sum_time = 0; len = _source.utime.size() - 1; if (len > 0) { sum_time = doc['utime'].get(len) - doc['utime'].get(0) }; sum_time"
-            }
-        },
-        "vc_aggs": {
-            "value_count": {
-                "field": "tt"
-            }
-        }
-    },
-    // 新访客数
-    "nuv": {
-        "new_visitor_aggs": {
-            "sum": {
-                "script": "c = 0; if (doc['ct'].value == 0) { c = 1 }; c"
-            }
-        }
-    },
-    // 新访客比率
-    "nuvRate": {
-        "new_visitor_aggs": {
-            "sum": {
-                "script": "c = 0; if (doc['ct'].value == 0) { c = 1 }; c"
-            }
-        },
-        "uv_aggs": {
-            "cardinality": {
-                "field": "_ucv"
-            }
-        }
-    },
-    // 平均访问页数
-    "avgPage": {
-        "pv_aggs": {
-            "sum": {
-                "script": "_source.loc.size()"
-            }
-        },
-        "vc_aggs": {
-            "value_count": {
-                "field": "tt"
-            }
-        }
-    },
-    // IP数
-    "ip": {
-        "ip_aggs": {
-            "cardinality": {
-                "field": "remote"
-            }
-        }
-    },
-    // 抵达率=访问次数/点击量
-    "arrivedRate": {
-        "vc_aggs": {
-            "value_count": {
-                "field": "tt"
-            }
-        }
-    },
-    // TODO 页面转化
-    "pageConversion": {},
-    // TODO 事件转化
-    "eventConversion": {}
-};
 
 var buildRequest = function (indexes, type, quotas, dimension, filters, start, end, interval) {
-
     var _aggs = {};
 
     quotas.forEach(function (quota) {
@@ -258,7 +258,8 @@ var buildRequest = function (indexes, type, quotas, dimension, filters, start, e
                         "aggs": {
                             "dimension": {
                                 "terms": {
-                                    "field": dimensionArr[1]
+                                    "field": dimensionArr[1],
+                                    "size": 0
                                 },
                                 "aggs": _aggs
                             }
@@ -360,11 +361,8 @@ var buildRequest = function (indexes, type, quotas, dimension, filters, start, e
                 "aggs": {
                     "result": {
                         "terms": {
-                            "script": dimensionScript
-                            //"field": dimension,
-                            //"order": {
-                            //    "_key": "asc"
-                            //}
+                            "script": dimensionScript,
+                            "size": 0
                         },
                         "aggs": _aggs
                     }
@@ -372,7 +370,6 @@ var buildRequest = function (indexes, type, quotas, dimension, filters, start, e
             }
         };
     }
-
 };
 
 var pvFn = function (result, dimension) {
@@ -468,7 +465,11 @@ var avgTimeFn = function (result, dimension) {
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
-        var tvt = result[i].tvt_aggs.value;
+        var _tvt_aggs_result = result[i].tvt_aggs.buckets;
+        var tvt = 0;
+        if (_tvt_aggs_result.length > 0)
+            tvt = parseInt(_tvt_aggs_result[0].max_aggs.value) - parseInt(_tvt_aggs_result[0].min_aggs.value);
+
         var vc = result[i].vc_aggs.value;
         if (dimension == "period") {
             var dateStr = result[i].key_as_string + "";
@@ -495,8 +496,8 @@ var outRateFn = function (result, dimension) {
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
-        var svc = result[i].single_visitor_aggs.svc_aggs.value;
         var vc = result[i].vc_aggs.value;
+        var svc = parseInt(vc) - result[i].single_visitor_aggs.buckets.length;
         if (dimension == "period") {
             var dateStr = result[i].key_as_string + "";
             keyArr.push(dateStr);
@@ -522,7 +523,7 @@ var nuvFn = function (result, dimension) {
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
-        var nuv = result[i].new_visitor_aggs.value;
+        var nuv = result[i].new_visitor_aggs.nuv_aggs.value;
         if (dimension == "period") {
             var dateStr = result[i].key_as_string + "";
             keyArr.push(dateStr);
@@ -544,7 +545,7 @@ var nuvRateFn = function (result, dimension) {
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
-        var nuv = result[i].new_visitor_aggs.value;
+        var nuv = result[i].new_visitor_aggs.nuv_aggs.value;
         var uv = result[i].uv_aggs.value;
         if (dimension == "period") {
             var dateStr = result[i].key_as_string + "";
@@ -665,6 +666,7 @@ var eventConversionFn = function (result, dimension) {
     };
 };
 
+
 var es_request = {
     search: function (es, indexes, type, quotas, dimension, topN, filters, start, end, interval, callbackFn) {
         var request = null;
@@ -768,6 +770,7 @@ var es_request = {
             var data = [];
             if (response != undefined && response.aggregations != undefined && response.aggregations.result != undefined) {
                 var result = response.aggregations.result.buckets;
+                //console.log(JSON.stringify(result));
 
                 if (!result) {
                     result = [];
@@ -859,31 +862,54 @@ var es_request = {
             "body": {
                 "query": {
                     "bool": {
-                        "must": mustQuery
+                        "must": []
                     }
                 },
-                "sort": {"utime": {"order": "asc"}},
-                "size": 100000
+                "sort": {
+                    "utime": {
+                        "order": "asc"
+                    }
+                },
+                "size": 1000000,
+                "aggs": {
+                    "vc_aggs": {
+                        "terms": {
+                            "field": "tt",
+                            "size": 0
+                        },
+                        "aggs": {
+                            "utime_aggs": {
+                                "terms": {
+                                    "script": "doc['utime'].value + ',' + doc['loc'].value",
+                                    "size": 0,
+                                    "order": {
+                                        "_term": "desc"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         };
 
         es.search(request, function (error, response) {
-            if (response != undefined && response.hits != undefined) {
-                var hits = response.hits.hits;
+            if (response != undefined && response.aggregations != undefined && response.aggregations.vc_aggs != undefined) {
+                var hits = response.aggregations.vc_aggs.buckets;
                 hits.forEach(function (item) {
-                    var locArr = item._source.loc;
-                    var utimeArr = item._source.utime;
+                    var locUtimeArr = item.utime_aggs.buckets;
                     var record = [];
 
-                    for (var i = 0, l = utimeArr.length - 1; i <= l; i++) {
+                    for (var i = 0, l = locUtimeArr.length - 1; i <= l; i++) {
                         var obj = {};
+                        var tmpArr = locUtimeArr[i].key.split(",");
                         if (i == l) {
-                            obj["loc"] = locArr[i];
+                            obj["loc"] = tmpArr[1];
                             obj["vtime"] = "-";
                             record.push(obj);
                         } else {
-                            obj["loc"] = locArr[i];
-                            obj["vtime"] = new Date(utimeArr[i + 1] - utimeArr[i]).format("hh:mm:ss");
+                            obj["loc"] = tmpArr[1];
+                            obj["vtime"] = new Date(parseInt(tmpArr[0]) - parseInt(locUtimeArr[i + 1].key.split(",")[0])).format("hh:mm:ss");
                             record.push(obj);
                         }
                     }
@@ -909,6 +935,7 @@ var es_request = {
                                 "result": {
                                     "terms": {
                                         "script": "doc['utime'].value",
+                                        "size": 0,
                                         "order": {
                                             "_term": "desc"
                                         }
@@ -945,7 +972,7 @@ var es_request = {
                 callbackFn([]);
         });
     },
-    top5visit: function (es, indexes, type, ct, callbackFn) {   // index => access-*
+    top5visit: function (es, indexes, type, ct, callbackFn) {
         var request = {
             "index": indexes.toString(),
             "type": type,
@@ -964,10 +991,7 @@ var es_request = {
                     "direct_result": {
                         "filter": {
                             "script": {
-                                "script": "doc['rf_type'].value == param1",
-                                "params": {
-                                    "param1": 1
-                                }
+                                "script": "doc['rf_type'].value == 1"
                             }
                         },
                         "aggs": {

@@ -1,8 +1,14 @@
+
 var _pct = _pct || [];
+
+if(config.mouse){
+    console.log("jajaj")
+}
+
 (function () {
     var points = [], h = {}, md = {}, c = {
-        id: "1",
-        version: "1.0.11"
+        id: config.siteid,
+        version: "1.0.10"
     };
 
     md.achieve = {};
@@ -122,9 +128,7 @@ var _pct = _pct || [];
     md.g.tit = document.title;
     //ct 新老客户（0:新客户， 1：老客户）
     md.g.ct = ((md.cookie.get("vid") == null || md.cookie.get("vid") == undefined || md.cookie.get("vid") == "") ? "0" : "1");
-    // n是否是第一次访问
-    // sm 热力图坐标
-    // api
+    // hm 热力图坐标
     // tt 用户的访问uv
     // vid cookie  id访客唯一标识
     // u       _trackPageview方法参数          PV跟踪
@@ -241,7 +245,7 @@ var _pct = _pct || [];
     //创建坐标对象
     md.position = {}
     //获取坐标
-    md.position.getXy = function position(event) {
+    md.position.getXy = function position(event){
         var e = event || window.event;
         var scrollX = document.documentElement.scrollLeft || document.body.scrollLeft;
         var scrollY = document.documentElement.scrollTop || document.body.scrollTop;
@@ -254,10 +258,11 @@ var _pct = _pct || [];
             //value: val
         };
         points.push(point);
-        if (points.length >= 5) {
-            md.g.sm = JSON.stringify(points);
+        console.log(points)
+        if(points.length >= 5){
+            md.g.sm = points;
             return true;
-        } else {
+        }else{
             return false;
         }
     };
@@ -268,7 +273,7 @@ var _pct = _pct || [];
         S: "pft.gif",
         //dk: 8088,":" + _c.dk +
         protocol: "https:" == document.location.protocol ? "https:" : "http:",
-        Q: "os tit br fl pm sr lg ck ja sc dt rf loc tt ct vid u api et cv sm n v".split(" ")
+        Q: "os tit br fl pm sr lg ck ja sc dt rf loc tt ct vid u api et cv v".split(" ")
     };
     //通过闭包 访问 私有变量 sa
     (function () {
@@ -428,7 +433,6 @@ var _pct = _pct || [];
                         md.cookie.setNull("PFT_" + c.id, u.createUUID());
                         md.g.tt = this.getData("PFT_" + c.id);
                     }
-                    md.g.n = "1";
                 }
                 var cookie_pos = document.cookie.indexOf("vid");
                 if (cookie_pos == -1) {
@@ -482,11 +486,13 @@ var _pct = _pct || [];
                 var d = setInterval(this.hbInfo, e);
             },
             //监听点击事件
-            clickEvent: function () {
-                document.onclick = function (event) {
+            clickEvent:function(){
+                document.onclick = function(event){
+                    console.log(event)
                     var a = md.position.getXy(event);//获取点击坐标
-                    if (a) {
+                    if(a){
                         var s = new sta;
+                        console.log(md.g)
                         s.na()
                         s.sm()
                         points = [];

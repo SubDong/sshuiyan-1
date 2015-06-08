@@ -1,11 +1,20 @@
 <div class="middle_containers" ng-controller="trafficmapctr">
     <div class="date_select">
-        <div  role="group" class="btn-group fl"><button class="btn btn-default" type="button" ng-click="today()" ng-hide="visible" ng-class="{'current':todayClass,'disabled':todaySelect}">今天</button>
-        <button class="btn btn-default" type="button" ng-click="yesterday()" ng-class="{'current':yesterdayClass}">昨天</button>
-        <button class="btn btn-default" type="button" ng-click="sevenDay()" ng-class="{'current':sevenDayClass}">最近7天</button>
-        <button class="btn btn-default" type="button" ng-click="month()" ng-class="{'current':monthClass}">最近30天</button>
-        <button id="reportrange"  class="btn btn-default pull-right date-picker my_picker" ng-click='timeclick()' ng-hide="datechoice" ng-class="{'current':timeClass}" max="max" ng-model="date">
-        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i><span></span></button>
+        <div role="group" class="btn-group fl">
+            <button class="btn btn-default" type="button" ng-click="today()" ng-hide="visible"
+                    ng-class="{'current':todayClass,'disabled':todaySelect}">今天
+            </button>
+            <button class="btn btn-default" type="button" ng-click="yesterday()" ng-class="{'current':yesterdayClass}">
+                昨天
+            </button>
+            <button class="btn btn-default" type="button" ng-click="sevenDay()" ng-class="{'current':sevenDayClass}">
+                最近7天
+            </button>
+            <button class="btn btn-default" type="button" ng-click="month()" ng-class="{'current':monthClass}">最近30天
+            </button>
+            <button id="reportrange" class="btn btn-default pull-right date-picker my_picker" ng-click='timeclick()'
+                    ng-hide="datechoice" ng-class="{'current':timeClass}" max="max" ng-model="date">
+                <i class="glyphicon glyphicon-calendar fa fa-calendar"></i><span></span></button>
         </div>
     </div>
     <div class="my_concent">
@@ -19,26 +28,32 @@
                     <div class="linkstree_middle_left fl"></div>
                     <div class="linkstree_middle_center fl">
                         <div class="linkstree_center_top">
-                            <a href="#">{{offsitelinks.name||"www.dyxunlei.com"}}</a><span class="caret fr" ng-click="isCollapsed = !isCollapsed"></span>
+                            <a href="#">{{offsitelinks.name||"http://www.best-ad.cn/"}}</a><span class="caret fr"
+                                                                                                 ng-click="isCollapsed = !isCollapsed"></span>
+
                             <div class="link_tree_mode" collapse="isCollapsed">
                                 <div class="link_tree_row"></div>
                                 <div class="link_tree_value">
                                     <ul>
-                                        <li ng-repeat="offsitelink in offsitelinks" ng-click="weblink()">{{offsitelink.name}}</li>
+                                        <li ng-repeat="offsitelink in offsitelinks" ng-click="weblink()">
+                                            {{offsitelink.name}}
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
                         <div class="linkstree_center_bottom">
-                            <p><span>进入次数 :</span><b>200</b></p>
-                            <p><span>PV:</span><b>100%</b></p>
-                            <p><span>UV: </span><b>100%</b></p>
+                            <p><span>进入次数 :</span><b>{{targetPathData.pv}}</b></p>
+
+                            <p><span>PV:</span><b>{{targetPathData.pv_proportion}}</b></p>
+
+                            <p><span>UV: </span><b>{{targetPathData.uv_proportion}}</b></p>
                         </div>
                     </div>
                     <div class="linkstree_middle_right fl"></div>
                 </div>
                 <div class="exchangetree_middle_bottom">
-                    展示焦点频道TOP5的来源和去向，点击图标    可将该频道作为焦点频道
+                    展示焦点频道TOP5的来源和去向，点击图标 可将该频道作为焦点频道
                 </div>
             </div>
             <div class="linkstree_right" id="linkstree_right">
@@ -46,16 +61,20 @@
                 </div>
                 <div class="linkstree_right_right">
                     <p><b>离开网站</b></p>
-                    <p><span>输出PV:</span><span>100%</span></p>
-                    <p><span>输出UV::</span><span>100%</span></p>
+
+                    <p><span>输出PV:</span><span>{{out_siteData.pv_proportion}}</span></p>
+
+                    <p><span>输出UV::</span><span>{{out_siteData.uv_proportion}}</span></p>
                 </div>
             </div>
             <div class="linkstree_left fl">
                 <div class="linkstree_left_more fl">
                     <div class="linkstree_left_list" ng-repeat="link in links ">
-                        <div class="linkstree_left_list_left fl"  >
+                        <div class="linkstree_left_list_left fl">
                             <p>{{ link.name }}</p>
+
                             <p><span>进入次数：</span><span>{{ link.count}}</span></p>
+
                             <p><span>带来UV：</span><span>{{ link.ratio }}</span></p>
                         </div>
                         <div class="linkstree_left_list_left_right fl">

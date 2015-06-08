@@ -188,7 +188,7 @@ define(["./module"], function (ctrs) {
             $scope.gridOptions.data = [];
             $scope.gridOpArray = angular.copy($rootScope.searchGridArray);
             $scope.gridOptions.columnDefs = $scope.gridOpArray;
-            var url = SEM_API_URL + user + "/" + baiduAccount + "/"+(area == "全部"?$rootScope.tableSwitch.promotionSearch.SEMData:"region")+"/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1"+(area == "全部"?"":"&rgna="+area);
+            var url = SEM_API_URL + user + "/" + baiduAccount + "/" + (area == "全部" ? $rootScope.tableSwitch.promotionSearch.SEMData : "region") + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1" + (area == "全部" ? "" : "&rgna=" + area);
 
             $http({
                 method: 'GET',
@@ -265,18 +265,18 @@ define(["./module"], function (ctrs) {
                     var fieldQuery = $rootScope.tableSwitch.latitude.field;
 
                     var turl = '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? ($rootScope.tableSwitch.number == 5 ? fieldQuery : null) : fieldQuery )
-                        + "&filerInfo=" + filter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType;
+                        + "&filerInfo=" + filter + "&promotion=" + JSON.stringify($rootScope.tableSwitch.promotionSearch) + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType;
                     $http({
                         method: 'GET',
                         url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? ($rootScope.tableSwitch.number == 5 ? fieldQuery : null) : fieldQuery )
-                        + "&filerInfo=" + filter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
+                        + "&filerInfo=" + filter + "&promotion=" + JSON.stringify($rootScope.tableSwitch.promotionSearch) + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
                     }).success(function (data, status) {
                         var datas = {};
                         if ($rootScope.tableSwitch.number == 5) {
                             data.forEach(function (item, i) {
                                 $rootScope.checkedArray.forEach(function (x, y) {
-                                    datas[x] = item[x] != undefined ? item[x] : data[0][x];
-                                    if(x == "ctr"){
+                                    datas[x] = item[x] != undefined ? item[x] : (data[0] == undefined ? (x == "avgTime" ? "00:00:00" : 0) : data[0][x]);
+                                    if (x == "ctr" || x == "arrivedRate") {
                                         datas[x] += "%";
                                     }
                                 });
@@ -288,8 +288,8 @@ define(["./module"], function (ctrs) {
                             })
                         } else {
                             $rootScope.checkedArray.forEach(function (x, y) {
-                                datas[x] = item[x] != undefined ? item[x] : data[0][x];
-                                if(x == "ctr"){
+                                datas[x] = item[x] != undefined ? item[x] : (data[0] == undefined ? (x == "avgTime" ? "00:00:00" : 0) : data[0][x]);
+                                if (x == "ctr" || x == "arrivedRate") {
                                     datas[x] += "%";
                                 }
                             });
@@ -565,7 +565,7 @@ define(["./module"], function (ctrs) {
                     returnData += parseFloat((item.entity[a.col.field] + "").replace("%", ""));
                     if (a.col.field == "avgTime") {
                         if (item.entity[a.col.field] != undefined) {
-                            spl = item.entity[a.col.field].split(":");
+                            spl = (item.entity[a.col.field] + "").split(":");
                             newSpl[0] += parseInt(spl[0]);
                             newSpl[1] += parseInt(spl[1]);
                             newSpl[2] += parseInt(spl[2]);

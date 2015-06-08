@@ -1,4 +1,4 @@
-
+@import "public.less";
 .containers {
   min-height: 100%;
 }
@@ -19,7 +19,7 @@ nav, .navbar-default {
   border-radius: 0;
   width: 100%;
   background-color: @background-color;
-  z-index: 1067;
+  z-index: 1020;
   .dropdown a {
     padding-left: 5px;
   }
@@ -1937,7 +1937,7 @@ nav, .navbar-default {
     }
     .linkstree_left_more {
       border-right: 5px solid #d7eafd;
-      min-height: 133px;
+     // min-height: 133px;
     }
     .linkstree_left_list {
       height: 56px;
@@ -3495,7 +3495,8 @@ textarea.tNum {
    }
  }
 .ui-grid-row{
-  height:auto !important;
+height:auto !important;
+  //overflow:hidden;
 }
 .ui-grid-animate-spin{
   display:none !important;
@@ -3504,7 +3505,9 @@ textarea.tNum {
   height:auto !important;
 
 }
-
+.ui-grid-viewport{
+  min-height:0px !important;
+}
 .ui-grid-render-container-body .ui-grid-canvas{
   height:auto !important;
 }

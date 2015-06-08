@@ -434,13 +434,27 @@ define(["app"], function (app) {
                 $rootScope.tableSwitch.latitude = {name: "来源网站", displayName: "来源网站", field: "dm"};
                 $scope.webSite = 1;
                 $rootScope.gridArray.shift();
+                $rootScope.gridArray.shift();
                 $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude)
+                $rootScope.gridArray.unshift({
+                    name: "a",
+                    displayName: "",
+                    cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
+                    maxWidth: 10
+                })
             }
             if (a == 0) {
                 $rootScope.tableSwitch.tableFilter = null;
                 $rootScope.tableSwitch.latitude = {name: "来源类型", displayName: "来源类型", field: "rf_type"};
                 $rootScope.gridArray.shift();
+                $rootScope.gridArray.shift();
                 $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude)
+                $rootScope.gridArray.unshift({
+                    name: "a",
+                    displayName: "",
+                    cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
+                    maxWidth: 10
+                })
             }
             $scope.isJudge = false;
             $scope.targetSearch();
@@ -579,10 +593,8 @@ define(["app"], function (app) {
             } else {
                 $rootScope.tableSwitch.tableFilter = "[" + visitFilert + "]";
             }
-            console.log($rootScope.tableSwitch.tableFilter);
             $scope.isJudge = false;
             getHtmlTableData();
-            //console.log("["+visitFilert+"]")
         }
 
         /**
@@ -695,7 +707,6 @@ define(["app"], function (app) {
                                         maps[infoKey] = obj;
 
                                     }
-                                    console.log(info.label);
                                     if (info.label == "平均访问时长") {
                                         obj["avgTime"] = ad.formatFunc(info.quota[i], "avgTime");
                                     } else {
@@ -704,7 +715,6 @@ define(["app"], function (app) {
                                         } else {
                                             obj[chartUtils.convertEnglish(info.label)] = info.quota[i];
                                         }
-
                                     }
                                     maps[infoKey] = obj;
                                 }
@@ -1023,7 +1033,6 @@ define(["app"], function (app) {
                         })
                     }
                     if (a.col.field == "avgPage") {
-                        //console.log(newitemSplData[x])
                         newitemSplData[0] = (newitemSplData[0] / option.length).toFixed(2);
                     }
                     returnData = newitemSplData;
@@ -1041,7 +1050,6 @@ define(["app"], function (app) {
                         returnData[0] = (atime1.length == 1 ? "0" + atime1 : atime1) + ":" + (atime2.length == 1 ? "0" + atime2 : atime2) + ":" + (atime3.length == 1 ? "0" + atime3 : atime3);
                     }
                 }
-                //console.log(returnData);
                 switch (number) {
                     case 1:
                         return returnData[0];
