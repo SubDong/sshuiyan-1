@@ -531,6 +531,126 @@ define(["../app"], function (app) {
     });
 
     /**
+     * Create by wms on 2015-04-22.合计信息显示
+     */
+    app.directive("sshTrendDateShow", function ($http, $rootScope, $q) {
+        return {
+            restrict: 'E',
+            templateUrl: '../commons/date_show.html',
+            link: function (scope, element, attris, controller) {
+                // 初始化参数
+                scope.isCompared = false;
+                scope.dateShowArray = [];
+                scope.ds_defaultQuotasOption = ["pv", "uv", "ip", "nuv", "outRate", "avgTime"];
+                scope.ds_keyData = [];
+                scope.ds_dateShowQuotasOption = scope.checkedArray ? scope.checkedArray : scope.ds_defaultQuotasOption;
+                scope.setDefaultShowArray = function () {
+                    var tempArray = [];
+                    angular.forEach(scope.ds_dateShowQuotasOption, function (q_r) {
+                        tempArray.push({"label": q_r, "value": 0, "cValue": 0, "count": 0});
+                    });
+                    scope.ds_keyData = [];
+                    scope.dateShowArray = $rootScope.copy(tempArray);
+                };
+                // 获取数据
+                scope.loadDataShow = function () {
+                    scope.setDefaultShowArray();
+                    var esRequest = $http.get('/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field) + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
+                    $q.all([esRequest]).then(function (final_result) {
+                        scope.pushESData(final_result[0].data);
+                    });
+                };
+                scope.loadCompareDataShow = function (startTime, endTime) {
+                    var esRequest = $http.get('/api/indextable/?start=' + startTime + "&end=" + endTime + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field) + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
+                    $q.all([esRequest]).then(function (final_result) {
+                        // 初始化对比数据
+                        scope.pushESData(final_result[0].data, true);
+                    });
+                };
+
+                scope.pushESData = function (result, flag) {
+                    var _array = $rootScope.copy(scope.dateShowArray);
+                    if (Object.prototype.toString.call(result) === '[object Array]') {
+                        var _count = 0;
+                        angular.forEach(result, function (r) {
+                            var infoKey = r[$rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field];
+                            if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null")) {
+                                return false;
+                            }
+                            if (!flag) {
+                                scope.ds_keyData.push(infoKey);
+                            }
+                            if (flag && scope.ds_keyData.targetIndexOf(infoKey) == -1) {
+                                return false;
+                            }
+                            _count++;
+                            angular.forEach(_array, function (obj) {
+                                var temp = obj.label;
+                                if (r[temp] == undefined) {
+                                    return false;
+                                }
+                                if (flag) {
+                                    obj.cValue += (r[temp].indexOf("%") != -1) ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
+                                } else {
+                                    obj.value += (r[temp].indexOf("%") != -1) ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
+                                }
+                            });
+                        });
+                        // 设置_count
+                        angular.forEach(_array, function (obj) {
+                            obj.count = _count;
+                        });
+                    } else {
+                        var obj = JSON.parse(eval('(' + result + ')').toString()); //由JSON字符串转换为JSON对象
+                        angular.forEach(obj, function (r) {
+                            var dateShowObject = {};
+                            dateShowObject.label = r.label;
+                            var temp = 0;
+                            var count = 0;
+                            angular.forEach(r.quota, function (qo, _i) {
+                                temp += Number(qo);
+                                count++;
+                            });
+                            angular.forEach(_array, function (_array_r) {
+                                if (_array_r.label == dateShowObject.label) {
+                                    _array_r.count = count;
+                                    flag ? (_array_r.cValue = temp) : (_array_r.value = temp);
+                                }
+                            });
+                        });
+                    }
+
+                    scope.dateShowArray = $rootScope.copy(_array);
+                };
+
+                // 第一种方式。通过用户点击时发出的事件进行监听，此方法需要在每个controller方法内部添加代码实现
+                scope.$on("ssh_dateShow_options_time_change", function (e, msg) {
+                    scope.isCompared = false;
+                    scope.loadDataShow();
+                });
+                // 指标
+                scope.$on("ssh_dateShow_options_quotas_change", function (e, msg) {
+                    scope.isCompared = false;
+                    var temp = $rootScope.copy(msg);
+                    if (temp.length > 0) {
+                        scope.ds_dateShowQuotasOption = temp;
+                    }
+                    scope.loadDataShow();
+                });
+                scope.loadDataShow();
+                // 对比
+                scope.$on("ssh_load_compare_datashow", function (e, startTime, endTime) {
+                    scope.isCompared = true;
+                    angular.forEach(scope.dateShowArray, function (dsa) {
+                        dsa.cValue = 0;
+                    });
+                    scope.loadCompareDataShow(startTime, endTime);
+                });
+            }
+        };
+    });
+
+    /**
      * 搜索引擎dateShow
      */
     app.directive("sshSEDateShow", function ($http, $rootScope, $q, SEM_API_URL) {
@@ -704,7 +824,7 @@ define(["../app"], function (app) {
                 case "bing":
                 case "other":
                 {
-                    return count ? (value / count).toFixed(2) + "%" : "--";
+                    return count ? (value / count).toFixed(2) + "%" : "0";
                 }
                 case "avgTime":
                 {
