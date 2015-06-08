@@ -47,6 +47,7 @@ define(["./module"], function (ctrs) {
         $scope.pages = [{}];//添加页面
         $scope.addPages = function(step, pages) {
             step.pages.push({});
-        }
+        };
+        Custom.initCheckInfo();//页面check样式js调用
     })
 });

@@ -151,7 +151,7 @@ define(["./module"], function (ctrs) {
         $rootScope.checkedArray = ["", "", ""];
         $rootScope.gridArray = [
             {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>1</div>", maxWidth: 5},
-            {name: "网站域名", displayName: "网站域名", field: "site_url", maxWidth: '', height:"100px", cellClass: 'table_admin'},
+            {name: "网站域名", displayName: "网站域名", field: "site_url", maxWidth: '', cellClass: 'table_admin'},
 
             {name: "网站名称", displayName: "网站名称", field: "site_name", maxWidth: '', cellClass: 'table_admin'},
             {name: "首页代码状态", displayName: "首页代码状态", field: "track_code", maxWidth: 500, cellClass: 'table_admin'},
@@ -229,7 +229,7 @@ define(["./module"], function (ctrs) {
             }
         };
 
-        Custom.initCheckInfo();
+
         var adminGriApiInfo = function (gridApi) {
 //            $scope.gridOptions.data = [{a:"<div class='table_admin'>aaaaaaaaaa</div>",b:"bbbbbbbbbb",c:"ccccccccc"},{a:"dddddddddd",b:"eeeeeeeee",c:"ccccccccc"}]
         };
@@ -344,5 +344,6 @@ define(["./module"], function (ctrs) {
             });
             //refushGridData();
         };
+        Custom.initCheckInfo();//页面check样式js调用
     });
 });

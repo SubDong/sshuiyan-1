@@ -17,6 +17,7 @@ define(["./module"], function (ctrs) {
         /**
          * 数据初始化
          */
+
         $scope.init= function(){
             var uid= $cookieStore.get("uid");
             var site_id=$rootScope.userType;
@@ -35,6 +36,6 @@ define(["./module"], function (ctrs) {
             });
 
         };
-
+        Custom.initCheckInfo();//页面check样式js调用
     });
 });
