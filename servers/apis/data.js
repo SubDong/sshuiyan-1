@@ -12,9 +12,13 @@ var map = require('../utils/map');
 var api = express.Router();
 var dao = require('../db/daos');
 var schemas = require('../db/schemas');
+
 var fsApi = require("fs");
 var uuid = require("node-uuid");
 var iconv = require('iconv-lite');
+
+var es_position = require('../services/es_position');
+
 
 
 api.get('/charts', function (req, res) {
@@ -525,6 +529,17 @@ api.get("/exchange", function (req, res) {
         datautils.send(res, result);
     });
 
+});
+
+api.get("/heatmap", function(req, res){
+    var query = url.parse(req.url, true).query;
+    var _type = query['type'];
+    var _startTime = Number(query['start']);
+    var _endTime = Number(query['end']);
+    var indexes = date.createIndexes(_startTime, _endTime, "access-");//indexs
+    es_position.search(req.es, indexes, _type, function(result){
+        datautils.send(res, result);
+    });
 });
 
 // ================================= Config  ===============================
