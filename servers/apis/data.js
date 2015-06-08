@@ -12,6 +12,7 @@ var map = require('../utils/map');
 var api = express.Router();
 var dao = require('../db/daos');
 var schemas = require('../db/schemas');
+var errorDeal = require("../utils/error");
 
 
 api.get('/charts', function (req, res) {
@@ -583,13 +584,30 @@ api.get("/trafficmap", function (req, res) {
 
     //start与end传过时间偏移量，调用creatIndexs()方法，把access-与时间拼接起来组成索引值
     var indexString = date.createIndexes(start, end, "access-");
+    console.log("索引" + indexString);
+    var int = function() {
+        access_request.trafficmapSearch(req.es, indexString, targetPathName, function (result) {
+            console.log(result.toString().length);
+            if(result.toString().length==17){
+                var index = result;
+                var newIndexs = [];
+                for (var i = 0; i < indexString.length; i++) {
+                    if (indexString[i] == index) {
+                        continue;
+                    }
+                    newIndexs.push(indexString[i]);
+                }
+                indexString = newIndexs;
+                int();
+            }else{
+                datautils.send(res, result);
+            }
 
-    access_request.trafficmapSearch(req.es, indexString, targetPathName, function (result) {
-        datautils.send(res, result);
-    });
-
-
-});
+        });
+    }
+    int();
+})
+;
 api.get("/offsitelinks", function (req, res) {
     var parameterString = req.url.split("?");//获取url的？号以后的字符串
 
