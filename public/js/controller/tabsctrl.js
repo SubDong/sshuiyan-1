@@ -163,6 +163,8 @@ define(["app"], function (app) {
         $rootScope.indicators = function (item, entities, number, refresh) {
             $rootScope.gridArray.shift();
             $rootScope.gridArray.shift();
+            console.log($rootScope.checkedArray)
+            console.log("item="+item+"-----entities="+JSON.stringify(entities)+"-----number="+number+"-----refresh="+refresh)
             if (refresh == "refresh") {
                 $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude);
                 $scope.gridObjButton = {};
