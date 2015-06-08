@@ -290,7 +290,7 @@ define(["./module"], function (ctrs) {
         var refushGridData = function () {
             var uid = $cookieStore.get("uid");
             var site_id = $rootScope.userType;
-            var url = "/config/conf?index=site_list&type=search&query={\"uid\":\"" + uid + "\"}";
+            var url = "/config/site_list?index=site_list&type=search&query={\"uid\":\"" + uid + "\"}";
             $http({
                 method: 'GET',
                 url: url
@@ -309,7 +309,6 @@ define(["./module"], function (ctrs) {
          * @param cliecked
          */
         $scope.submit = function (cliecked) {
-            console.log("submit");
 
             //var site_id=$rootScope.userType;//从conf_sites中获取
             var model = angular.copy($scope.sites_model);

@@ -10,6 +10,7 @@ var express = require('express'),
     numCPUs = require('os').cpus().length,
     root = require('./routes/index'),
     api = require('./servers/apis/data'),
+    configapi = require('./servers/apis/configapi'),
     app = express(),
     uuid = require('node-uuid'),
     auth = require('./routes/auth'),
@@ -21,7 +22,7 @@ var express = require('express'),
 
 
 var env = "dev";
-var config = require("./config.json");
+var config = require("./config_dev.json");
 
 var es_client = es.init(config.es);
 
@@ -134,6 +135,8 @@ if (env == 'dev') {
 app.use('/', root);
 
 app.use('/api', api);
+
+app.use('/config', configapi);
 
 app.use('/token', token);
 
