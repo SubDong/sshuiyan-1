@@ -357,14 +357,15 @@ var access_request = {
                 }
             }
         }
+
         es.search(request, function (error, response) {
             var data = [];
             var targetPathData = {};
             var out_siteData = {};
             var results = {};
-            console.log(response);
+
             if (response.status == 404) {
-                callbackFn([]);
+                callbackFn(response.error.split("[")[2].split("]")[0]);
             }
             if (response != undefined && response.aggregations != undefined) {
                 var result = response.aggregations;

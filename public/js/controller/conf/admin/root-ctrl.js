@@ -6,11 +6,6 @@ define(["../module"], function (ctrs) {
     "use strict";
 
     ctrs.controller('rootCtrl', function ($scope, $q, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
-
-        //table配置
-        $rootScope.tableTimeStart = 0;
-        $rootScope.tableTimeEnd = 0;
-        $rootScope.tableFormat = "hour";
         //配置默认指标
         $rootScope.checkArray = ["", "", ""];
         $rootScope.gridArray = [

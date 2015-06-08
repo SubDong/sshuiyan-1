@@ -111,7 +111,7 @@ Date.prototype.Format = function (fmt) {
  * @constructor
  */
 function MillisecondToDate(msd) {
-    var time = parseFloat(msd) / 1000;
+    var time = parseFloat(msd);
     if (null!= time && ""!= time) {
         if (time > 60 && time < 60*60) {
             time = "00:" + myParseInt(time / 60) + ":" + myParseInt(time % 60);
