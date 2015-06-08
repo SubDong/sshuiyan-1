@@ -1,5 +1,4 @@
 var express = require('express');
-var csvApi = require('json-2-csv');
 var url = require('url');
 var date = require('../utils/date');
 var dateFormat = require('../utils/dateFormat')();
@@ -263,7 +262,7 @@ api.get('/indextable', function (req, res) {
                         infoKey = info.key[i]
                     }
                     if (popFlag != 1) {
-                        if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null" )) continue;
+                        if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null" || infoKey.length >= 30)) continue;
                     }
                     var infoKey = info.key[i];
                     var obj = maps[infoKey];
@@ -479,63 +478,6 @@ api.get('/provincemap', function (req, res) {
     })
 });
 
-api.get("/downCSV", function (req, res) {
-
-    var query = url.parse(req.url, true).query;
-    var dataInfo = query['dataInfo'].replace(/\*/g, "%");
-    var jsonData = JSON.parse(dataInfo);
-    csvApi.json2csv(jsonData, function (err, csv) {
-        if (err) throw err;
-        /*var options = {
-         root: '/tmp/',
-         dotfiles: 'deny',
-         encoding: 'utf8',
-         headers: {
-         'x-timestamp': Date.now(),
-         'x-sent': true
-         }
-         };
-         var options1 = {
-         encoding: 'utf8'
-         }
-         var uid = uuid.v1().toString().replace(/\-/g, "");
-         var fileName = "down-"+uid+".csv"
-         fsApi.appendFile(fileName, csv, options, function(err){
-         if(err)
-         console.log("fail " + err);
-         else {
-         console.log("写入成功")
-         /!*res.sendFile(fileName, options, function (err) {
-         if (err) {
-         console.log(err);
-         res.status(err.status).end();
-         }
-         else {
-         console.log('Sent:', fileName);
-         }
-         });*!/
-         }
-         });*/
-        //var fileName = req.params.name;
-
-
-        /*var uid = uuid.v1().toString().replace(/\-/g, "");
-        var fileName = "down-" + uid + ".csv"
-        res.set({
-            'Content-Type': 'text/csv',
-            'Content-Disposition': "attachment;filename=" + encodeURIComponent(fileName),
-            'Pragma': 'no-cache',
-            'Expires': 0
-        });*/
-        var buffer = new Buffer(csv);
-        //需要转换字符集
-
-        var str = iconv.encode(buffer, 'utf-8');
-        res.send(str);
-    });
-});
-
-
 /**
  * summary.by wms
  */
@@ -585,7 +527,54 @@ api.get("/exchange", function (req, res) {
 
 });
 
+// ================================= Config  ===============================
+api.get("/config", function (req, res) {
 
+    var query = url.parse(req.url, true).query;
+    var type = query['type'];
+    var index = query['index'];
+    var schema_name = "";
+    switch (index) {
+        case "site_list"://网站列表
+            schema_name = "sites_model";
+            break;
+        case "0":
+            schema_name = "siterules_model";
+            break;
+        case "5":
+            schema_name = "converts_model";
+            break;
+        default :
+    }
+    switch (type) {
+        case "save":
+            var entity = JSON.parse(query['entity']);
+            dao.save(schema_name, entity, function (ins) {
+                datautils.send(res, JSON.stringify(ins));
+            });
+            break;
+        case "search":
+            dao.find(schema_name, query['query'], null, {}, function (err, docs) {
+                datautils.send(res, docs);
+            });
+            break;
+        case "update":
+            //条件下更新
+            dao.update(schema_name, query['query'], query['updates'], function (err, docs) {
+                datautils.send(res, docs);
+            });
+            break;
+        case "delete":
+            //条件下删除
+            dao.remove(schema_name, query['query'], function () {
+                datautils.send(res, "remove");
+            });
+            break;
+        default :
+            break;
+    }
+
+});
 api.get("/trafficmap", function (req, res) {
     var parameterString = req.url.split("?");//获取url的？号以后的字符串
 
