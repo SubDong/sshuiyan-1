@@ -3464,7 +3464,6 @@ textarea.tNum {
 .errorMsg {
   color: red;
 }
-/*
 .ui-grid{
   height:auto !important;
   //overflow: hidden;
@@ -3494,10 +3493,6 @@ textarea.tNum {
      height:auto !important;
    }
  }
-.ui-grid-row{
-height:auto !important;
-  //overflow:hidden;
-}
 .ui-grid-animate-spin{
   display:none !important;
 }
@@ -3538,10 +3533,20 @@ height:auto !important;
 }
 .ui-grid-footer-panel {
   height:30px;
+  z-index: -1;
   overflow: hidden;
 }
 .grid_padding{
   padding:0 10px;
 }
+.secondary_table{
+  .ui-grid-row:nth-child(even) .ui-grid-cell{
+   background:none;
+ // border-top:1px solid #f3f3f3;
 
-*/
+  }
+  .ui-grid-row:nth-child(odd) .ui-grid-cell{
+    background:none;
+   //border-top:1px solid #f3f3f3;
+  }
+}

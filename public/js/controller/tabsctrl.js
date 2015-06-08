@@ -254,14 +254,14 @@ define(["app"], function (app) {
             $scope.gridOptions = {
                 paginationPageSize: 20,
                 expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
-                expandableRowHeight: 360,
+                //expandableRowHeight: 360,
                 enableColumnMenus: false,
                 showColumnFooter: true,
                 enablePaginationControls: false,
                 enableSorting: true,
                 enableGridMenu: false,
                 enableHorizontalScrollbar: 0,
-                enableVerticalScrollbar: false,
+                enableVerticalScrollbar: 0,
                 enableScrollbars: false,
                 onRegisterApi: function (girApi) {
                     $rootScope.gridApi2 = girApi;
@@ -272,14 +272,14 @@ define(["app"], function (app) {
             $scope.gridOptions = {
                 paginationPageSize: 20,
                 expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions' ></div>",
-                expandableRowHeight: 360,
+                //expandableRowHeight: 360,
                 enableColumnMenus: false,
                 showColumnFooter: true,
                 enablePaginationControls: false,
                 enableSorting: true,
                 enableGridMenu: false,
                 enableHorizontalScrollbar: 0,
-                enableVerticalScrollbar: false,
+                enableVerticalScrollbar: 0,
                 enableScrollbars: false,
                 onRegisterApi: function (gridApi) {
                     $rootScope.gridApi2 = gridApi;
@@ -907,8 +907,13 @@ define(["app"], function (app) {
                     var newEntity = row.entity[$rootScope.tableSwitch.latitude.field].split(",");
                     newEntity.length > 0 ? entity = newEntity[0] : "";
                     $rootScope.tableSwitch.tableFilter = "[{\"" + $rootScope.tableSwitch.latitude.field + "\":[\"" + getField(entity, $rootScope.tableSwitch.latitude.field) + "\"]}]";
+                  //  $scope.gridApi2.expandable.collapseAllRows();
                     row.entity.subGridOptions = {
-                        showHeader: false
+                        showHeader: false,
+                        enableHorizontalScrollbar: 0,
+                        enableVerticalScrollbar: 0,
+                        enableScrollbars: false,
+                        columnDefs: $rootScope.gridArray
                     };
                     $http({
                         method: 'GET',
@@ -922,9 +927,9 @@ define(["app"], function (app) {
                             dataNumber = data.length;
                         }
                         row.entity.subGridOptions.columnDefs = $scope.gridOpArray;
-
                         row.entity.subGridOptions.data = data;
                         $rootScope.tableSwitch.tableFilter = returnFilter;
+                      $scope.gridOptions.expandableRowHeight = row.entity.subGridOptions.data.length * 30;
                     }).error(function (error) {
                         console.log(error);
                     });
@@ -961,11 +966,14 @@ define(["app"], function (app) {
         //表格HTML展开项
         var griApihtml = function (gridApi) {
             gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
+                console.log(gridApi)
                 var filter = "[{\"tt\":[\"" + row.entity.tt + "\"]}]";
                 var htmlData = new Array();
                 row.entity.subGridOptions = {
-                    showHeader: false,
                     enableHorizontalScrollbar: 0,
+                    //enableVerticalScrollbar: false,
+                    //enableScrollbars: false,
+                    showHeader: false,
                     columnDefs: htmlData
                 };
                 $http({
@@ -978,6 +986,7 @@ define(["app"], function (app) {
                     res["cellTemplate"] = datas.htmlData;
                     htmlData.push(res);
                     row.entity.subGridOptions.data = [{"info": " "}];
+                    $scope.gridOptions.expandableRowHeight =  row.entity.subGridOptions.data.length * 360;
                 }).error(function (error) {
                     console.log(error);
                 });
