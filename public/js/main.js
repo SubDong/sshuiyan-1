@@ -60,7 +60,7 @@ require.config({
     }
 });
 
-require(["angular-bootstrap", "js001", "utils/chartfactory", "utils/chartsMapOrPie", "utils/chartsutlis", "utils/date", "utils/map"], function () {
+require(["angular-bootstrap", "js001", "utils/chartfactory", "utils/chartsMapOrPie", "utils/chartsutlis", "utils/date", "utils/map", "utils/arrayUtil"], function () {
     "use strict";
 
 });
