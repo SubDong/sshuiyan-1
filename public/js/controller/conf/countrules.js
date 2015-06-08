@@ -31,7 +31,7 @@ define(["./module"], function (ctrs) {
         $scope.init= function(){
             var uid= $cookieStore.get("uid");
             var site_id=$rootScope.userType;
-            var url= "/api/config?index=0&type=search&query={\"uid\":\""+uid+"\",\"site_id\":\""+site_id+"\"}";
+            var url= "/config/conf?index=0&type=search&query={\"uid\":\""+uid+"\",\"site_id\":\""+site_id+"\"}";
             $http({
                 method: 'GET',
                 url: url
@@ -54,7 +54,7 @@ define(["./module"], function (ctrs) {
         $scope.onSubmitClickListener = function (){
             var uid= $cookieStore.get("uid");
             var site_id=$rootScope.userType;//从conf_sites中获取
-            var query= "/api/config?index=0&type=search&query={\"uid\":\""+uid+"\",\"site_id\":\""+site_id+"\"}";
+            var query= "/config/conf?index=0&type=search&query={\"uid\":\""+uid+"\",\"site_id\":\""+site_id+"\"}";
             $http({
                 method: 'GET',
                 url: query
@@ -63,7 +63,7 @@ define(["./module"], function (ctrs) {
                     var entity= "{\"uid\":\""+uid+"\",\"site_id\":\""+site_id+"\",\"rules\":"+ angular.toJson($scope.rules)+",\"ex_ips\":[\""+$scope.ex_ips_area.tText.replace(/\n/g,"\",\"")+"\"],\"ex_refer_urls\":[\""
                         + $scope.ex_refer_urls_area.tText.replace(/\n/g,"\",\"")+"\"],\"ex_urls\":[\""+ $scope.ex_urls_area.tText.replace(/\n/g,"\",\"")+"\"],\"cross_sites\":[\""+ $scope.cross_sites_area.tText.replace(/\n/g,"\",\"")+"\"]}";
                     console.log(entity);
-                    var url= "/api/config?index=0&type=save&entity="+entity;
+                    var url= "/config/conf?index=0&type=save&entity="+entity;
                     $http({
                         method: 'GET',
                         url: url
@@ -74,7 +74,7 @@ define(["./module"], function (ctrs) {
                     var updates= "{\"uid\":\""+uid+"\",\"site_id\":\""+site_id+"\",\"rules\":"+ angular.toJson($scope.rules)+",\"ex_ips\":[\""+$scope.ex_ips_area.tText.replace(/\n/g,"\",\"")+"\"],\"ex_refer_urls\":[\""
                         + $scope.ex_refer_urls_area.tText.replace(/\n/g,"\",\"")+"\"],\"ex_urls\":[\""+ $scope.ex_urls_area.tText.replace(/\n/g,"\",\"")+"\"],\"cross_sites\":[\""+ $scope.cross_sites_area.tText.replace(/\n/g,"\",\"")+"\"]}";
                     console.log(updates);
-                    var url= "/api/config?index=0&type=update&query={\"uid\":\""+uid+"\",\"site_id\":\""+site_id+"\"}&updates="+updates;
+                    var url= "/config/conf?index=0&type=update&query={\"uid\":\""+uid+"\",\"site_id\":\""+site_id+"\"}&updates="+updates;
                     $http({
                         method: 'GET',
                         url: url

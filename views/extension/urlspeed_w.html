@@ -48,11 +48,10 @@
                 </tab>
             </tabset>
             <div class="custom_table">
-                <div class="uconcentctrl" ng-controller="TabsCtrl">
-                    <div ui-grid="gridOptions" class="grid" ui-grid-pinning></div>
-                    <gridpage></gridpage>
-                </div>
-        </div>
+                <div ui-grid="gridOptions" class="grid clearfix"  ui-grid-pagination
+                     ui-grid-exporter ui-grid-auto-resize></div>
+                <gridpage></gridpage>
+            </div>
         </div>
     </div>
 </div>

@@ -6,7 +6,7 @@
         <refresh></refresh>
     </div>
     <div class="my_concent">
-        <ssh-date-show type="month"></ssh-date-show>
+        <ssh-trend-date-show></ssh-trend-date-show>
         <div class="index_chart">
             <div id="moth_charts_legend"></div>
             <div id="moth_charts" style="height:400px;"></div>
@@ -135,8 +135,8 @@
             <!--</div>-->
             <!--</div>-->
             <div class="custom_table">
-                <div ui-grid="gridOptions" class="grid"  ui-grid-pagination
-                     ui-grid-exporter></div>
+                <div ui-grid="gridOptions" class="grid clearfix"  ui-grid-pagination
+                     ui-grid-exporter ui-grid-auto-resize></div>
                 <gridpage></gridpage>
             </div>
         </div>

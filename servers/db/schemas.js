@@ -5,14 +5,15 @@ var schemas = {
         model_name: "Sites",
         collection_name: "conf_sites",
         schema: {
-            //id: String, // mongoid
-            uid: String, // user id
-            site_url: String, // site url
-            site_name: String, // site name
-            track_code: String, // js track id
+            //_id: String, // mongoid
+            uid: String, // user id 用户ID
+            type_id: String, // es type id ( hidden in front-end) 对应ES ID
+            track_id: String, // js track id 随机生成
+            site_url: String, // site url 设置的URL
+            site_name: String, // site name 设置的URL
+            site_pause:Boolean,//配置暂停 true：暂停 false：使用
             track_status: String, // track code status
-            status: String, // enable or disable track
-            type_id: String // es type id ( hidden in front-end)
+            //status: String, // enable or disable track
         }
     },
 

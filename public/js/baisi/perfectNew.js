@@ -122,8 +122,9 @@ var _pct = _pct || [];
     md.g.tit = document.title;
     //ct 新老客户（0:新客户， 1：老客户）
     md.g.ct = ((md.cookie.get("vid") == null || md.cookie.get("vid") == undefined || md.cookie.get("vid") == "") ? "0" : "1");
+    // hm 热力图坐标
     // n是否是第一次访问
-    // sm 热力图坐标
+    // sm
     // api
     // tt 用户的访问uv
     // vid cookie  id访客唯一标识
@@ -238,29 +239,31 @@ var _pct = _pct || [];
             a.getIntegerBits(a.rand(8191), 0, 15);
         return tl + tm + thv + csar + csl + n;
     };
-    //创建坐标对象
-    md.position = {}
-    //获取坐标
-    md.position.getXy = function position(event) {
-        var e = event || window.event;
-        var scrollX = document.documentElement.scrollLeft || document.body.scrollLeft;
-        var scrollY = document.documentElement.scrollTop || document.body.scrollTop;
-        var x = e.pageX || e.clientX + scrollX;
-        var y = e.pageY || e.clientY + scrollY;
-        //var val = Math.floor(Math.random() * 100);
-        var point = {
-            x: x,
-            y: y
-            //value: val
+
+    (function(){
+        //创建坐标对象
+        md.position = {}
+        //获取坐标
+        md.position.getXy = function position(event){
+            var e = event || window.event;
+            var scrollX = document.documentElement.scrollLeft || document.body.scrollLeft;
+            var scrollY = document.documentElement.scrollTop || document.body.scrollTop;
+            var x = e.pageX || e.clientX + scrollX;
+            var y = e.pageY || e.clientY + scrollY;
+            var point = {
+                x: x,
+                y: y
+            };
+            points.push(point);
+            if(points.length >= 5){
+                md.g.hm = JSON.stringify(points);
+                return true;
+            }else{
+                return false;
+            }
         };
-        points.push(point);
-        if (points.length >= 5) {
-            md.g.sm = JSON.stringify(points);
-            return true;
-        } else {
-            return false;
-        }
-    };
+    })();
+
     //全局变量h.I 访问地址URL设置 如：http://best-ad.cn/pft.gif?query string parameters
     h.I = {
         u: "best-ad.cn",
@@ -465,6 +468,16 @@ var _pct = _pct || [];
                 f.parentNode.insertBefore(a, f);
                 f.remove()
             },
+            hm: function () {
+                var _c = h.I;
+                var a = document.createElement("script");
+                a.setAttribute("type", "text/javascript");
+                a.setAttribute("charset", "utf-8");
+                a.setAttribute("src", _c.protocol + "//" + _c.P + "/" + _c.S + "?t\=" + c.id + "\&_xy" + 1);
+                var f = document.getElementsByTagName("script")[0];
+                f.parentNode.insertBefore(a, f);
+                f.remove()
+            },
             hbInfo: function () {
                 var _c = h.I;
                 var a = document.createElement("script");
@@ -488,7 +501,7 @@ var _pct = _pct || [];
                     if (a) {
                         var s = new sta;
                         s.na()
-                        s.sm()
+                        s.hm()
                         points = [];
                     }
                 }
@@ -498,6 +511,7 @@ var _pct = _pct || [];
                 this.clickEvent();
                 this.na();
                 this.sm();
+                this.hm();
                 //this.heartBeat("");
             }
 

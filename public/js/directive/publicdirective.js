@@ -375,38 +375,26 @@ define(["../app"], function (app) {
                 // 初始化参数
                 scope.isCompared = false;
                 scope.dateShowArray = [];
-                //scope.dateShowArray_base = [];
                 scope.ssh_seo_type = attris.semType;
-                //scope.ds_start = scope.ds_end = 0;
                 scope.ds_defaultQuotasOption = ["pv", "uv", "ip", "nuv", "outRate", "avgTime"];
                 scope.ds_keyData = [];
                 scope.ds_dateShowQuotasOption = scope.checkedArray ? scope.checkedArray : scope.ds_defaultQuotasOption;
                 scope.setDefaultShowArray = function () {
                     var tempArray = [];
                     angular.forEach(scope.ds_dateShowQuotasOption, function (q_r) {
-                        tempArray.push({"label": q_r, "value": "", "cValue": ""});
+                        tempArray.push({"label": q_r, "value": 0, "cValue": 0, "count": 0});
                     });
-                    scope.dateShowArray = angular.copy(tempArray);
-                };
-                // 数组方法
-                scope.inArray = function (array, e) {
-                    var flag = false;
-                    array.forEach(function (a_r) {
-                        if (a_r == e || scope.ds_dimension == "period") {
-                            flag = true;
-                        }
-                    });
-                    return flag;
+                    scope.ds_keyData = [];
+                    scope.dateShowArray = $rootScope.copy(tempArray);
                 };
                 // 获取数据
                 scope.loadDataShow = function () {
                     scope.setDefaultShowArray();
-                    //scope.dateShowArray = scope.dateShowArray_base = [];
-                    var esRequest = $http.get("/api/summary?type=" + $rootScope.userType + "&dimension=" + scope.ds_dimension + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&quotas=" + scope.ds_dateShowQuotasOption + "&start=" + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd);
+                    //var esRequest = $http.get("/api/summary?type=" + $rootScope.userType + "&dimension=" + $rootScope.tableSwitch.dimen + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&quotas=" + scope.ds_dateShowQuotasOption + "&start=" + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd);
+                    var esRequest = $http.get('/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field) + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
                     var seoQuotas = scope.getSEOQuotas();
                     if (seoQuotas.length > 0) {
-                        var stringQuotas = seoQuotas.toString().replace(/,/g, "-") + "-";
-                        var seoRequest = $http.get(SEM_API_URL + $rootScope.user + "/" + $rootScope.baiduAccount + "/" + scope.ssh_seo_type + "/" + stringQuotas + "?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd);
+                        var seoRequest = $http.get(SEM_API_URL + $rootScope.user + "/" + $rootScope.baiduAccount + "/" + scope.ssh_seo_type + "?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd);
                     }
                     $q.all([esRequest, seoRequest]).then(function (final_result) {
                         scope.pushESData(final_result[0].data);
@@ -416,11 +404,11 @@ define(["../app"], function (app) {
                     });
                 };
                 scope.loadCompareDataShow = function (startTime, endTime) {
-                    var esRequest = $http.get("/api/summary?type=" + $rootScope.userType + "&dimension=" + scope.ds_dimension + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&quotas=" + scope.ds_dateShowQuotasOption + "&start=" + startTime + "&end=" + endTime);
+                    //var esRequest = $http.get("/api/summary?type=" + $rootScope.userType + "&dimension=" + $rootScope.tableSwitch.dimen + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&quotas=" + scope.ds_dateShowQuotasOption + "&start=" + startTime + "&end=" + endTime);
+                    var esRequest = $http.get('/api/indextable/?start=' + startTime + "&end=" + endTime + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field) + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
                     var seoQuotas = scope.getSEOQuotas();
                     if (seoQuotas.length > 0) {
-                        var stringQuotas = seoQuotas.toString().replace(/,/g, "-") + "-";
-                        var seoRequest = $http.get(SEM_API_URL + $rootScope.user + "/" + $rootScope.baiduAccount + "/" + scope.ssh_seo_type + "/" + stringQuotas + "?startOffset=" + startTime + "&endOffset=" + endTime);
+                        var seoRequest = $http.get(SEM_API_URL + $rootScope.user + "/" + $rootScope.baiduAccount + "/" + scope.ssh_seo_type + "?startOffset=" + startTime + "&endOffset=" + endTime);
                     }
                     $q.all([esRequest, seoRequest]).then(function (final_result) {
                         // 初始化对比数据
@@ -448,181 +436,214 @@ define(["../app"], function (app) {
                     return seoQuotas;
                 };
                 scope.pushESData = function (result, flag) {
-                    var obj = JSON.parse(eval('(' + result + ')').toString()); //由JSON字符串转换为JSON对象
-                    if (!obj && !flag) {
-                        scope.ds_keyData = angular.copy(obj[0]["key"]);
-                    }
-                    angular.forEach(obj, function (r) {
-                        var dateShowObject = {};
-                        dateShowObject.label = r.label;
-                        var temp = 0;
-                        var count = 0;
-                        angular.forEach(r.quota, function (qo, _i) {
-                            var infoKey = r.key[_i];
-                            if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null" )) {
+                    var _array = $rootScope.copy(scope.dateShowArray);
+                    var _count = 0;
+                    angular.forEach(result, function (r) {
+                        var infoKey = r[$rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field];
+                        if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null")) {
+                            return false;
+                        }
+                        if (!flag) {
+                            scope.ds_keyData.push(infoKey);
+                        }
+                        if (flag && scope.ds_keyData.targetIndexOf(infoKey) == -1) {
+                            return false;
+                        }
+                        _count++;
+                        angular.forEach(_array, function (obj) {
+                            var temp = obj.label;
+                            if (r[temp] == undefined) {
                                 return false;
                             }
                             if (flag) {
-                                if (scope.inArray(scope.ds_keyData, infoKey)) {// 对比的时候处理原始数据中不存在的对比数据参数
-                                    temp += Number(qo);
-                                    count++;
-                                }
+                                obj.cValue += (r[temp].indexOf("%") != -1) ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
                             } else {
-                                temp += Number(qo);
-                                count++;
+                                obj.value += (r[temp].indexOf("%") != -1) ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
                             }
                         });
-                        dateShowObject.value = temp;
-                        dateShowObject.count = count;
-                        if (flag) {
-                            scope.pushCompareArray(dateShowObject);
-                        } else {
-                            scope.correctAndPushArray(dateShowObject);
-                        }
                     });
+                    // 设置_count
+                    angular.forEach(_array, function (obj) {
+                        obj.count = _count;
+                    });
+
+                    scope.dateShowArray = $rootScope.copy(_array);
                 };
                 scope.pushSEOData = function (result, flag) {
-                    var costObj, impressionObj, clickObj, ctrObj, cpcObj, cpmObj, conversionObj;
-                    angular.forEach(scope.ds_dateShowQuotasOption, function (e) {
-                        switch (e) {
-                            case "cost":
-                                costObj = {"label": e, "value": 0};
-                                break;
-                            case "impression":
-                                impressionObj = {"label": e, "value": 0};
-                                break;
-                            case "click":
-                                clickObj = {"label": e, "value": 0};
-                                break;
-                            case "ctr":
-                                ctrObj = {"label": e, "value": 0};
-                                break;
-                            case "cpc":
-                                cpcObj = {"label": e, "value": 0};
-                                break;
-                            case "cpm":
-                                cpmObj = {"label": e, "value": 0};
-                                break;
-                            case "conversion":
-                                conversionObj = {"label": e, "value": 0};
-                                break;
-                        }
-                    });
-                    // 对指标的值求和
-                    function sumValue(obj, value) {
-                        if (obj) {
-                            obj.value += Number(value);
-                        }
-                    }
-
-                    function calculateValue(obj, type, count) {
-                        if (!obj) {
-                            return;
-                        }
-                        obj.count = count;
-                        if (flag) {
-                            scope.pushCompareArray(obj);
-                        } else {
-                            scope.correctAndPushArray(obj);
-                        }
-                    }
-
-                    var count = 0;
+                    var _array = $rootScope.copy(scope.dateShowArray);
+                    var _count = 0;
                     angular.forEach(result, function (r) {
-                        count++;
-                        sumValue(costObj, r.cost);
-                        sumValue(impressionObj, r.impression);
-                        sumValue(clickObj, r.click);
-                        sumValue(ctrObj, r.ctr);
-                        sumValue(cpcObj, r.cpc);
-                        sumValue(cpmObj, r.cpm);
-                        sumValue(conversionObj, r.conversion);
-                    });
-                    // 根据不同SEO指标的算法，进行指标对象值的计算
-                    calculateValue(costObj, "2", count);
-                    calculateValue(impressionObj, "2", count);
-                    calculateValue(clickObj, "1", count);
-                    calculateValue(ctrObj, "2", count);
-                    calculateValue(cpcObj, "3", count);
-                    calculateValue(cpmObj, "2", count);
-                    calculateValue(conversionObj, "2", count);
-                };
-                // 特殊处理，保证指标显示顺序
-                scope.correctAndPushArray = function (obj) {
-                    var index = 0;
-                    angular.forEach(scope.ds_dateShowQuotasOption, function (ds_r) {
-                        if (ds_r == obj.label) {
-                            scope.dateShowArray[index] = obj;
-                            //scope.dateShowArray_base[index] = obj;
+                        var infoKey = r[$rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field];
+                        if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null")) {
+                            return false;
                         }
-                        index++;
+                        _count++;
+                        angular.forEach(_array, function (obj) {
+                            var temp = obj.label;
+                            if (r[temp] == undefined) {
+                                return false;
+                            }
+                            if (flag) {
+                                obj.cValue += r[temp];
+                            } else {
+                                obj.value += r[temp];
+                            }
+                        });
                     });
-                };
-                // 添加比较值
-                scope.pushCompareArray = function (obj) {
-                    angular.forEach(scope.dateShowArray, function (ds_r) {
-                        if (ds_r.label == obj.label) {
-                            ds_r.cValue = obj.value;
-                        }
+                    // 设置_count
+                    angular.forEach(_array, function (obj) {
+                        obj.count = _count;
                     });
-                    //angular.forEach(scope.dateShowArray_base, function (dsb_r) {
-                    //    if (dsb_r.label == obj.label) {
-                    //        dsb_r.cValue = obj.value;
-                    //    }
-                    //});
+
+                    scope.dateShowArray = $rootScope.copy(_array);
                 };
-                // 改变时间参数
-                scope.setDateShowTimeOption = function (type, cb) {
-                    scope.isCompared = false;
-                    if (cb) {
-                        cb();
-                    }
-                };
-                scope.setDateShowTimeOption(attris.type);
+
                 // 第一种方式。通过用户点击时发出的事件进行监听，此方法需要在每个controller方法内部添加代码实现
                 scope.$on("ssh_dateShow_options_time_change", function (e, msg) {
-                    scope.setDateShowTimeOption(msg, scope.loadDataShow);
+                    scope.isCompared = false;
+                    scope.loadDataShow();
                 });
-                // 维度dimension
-                scope.setDateShowDimensionOption = function (dimension) {
-                    scope.ds_dimension = "period";
-                    if (undefined != dimension) {
-                        scope.ds_dimension = dimension;
-                    }
-                };
-                scope.setDateShowDimensionOption(attris.dimension);
                 // 指标
                 scope.$on("ssh_dateShow_options_quotas_change", function (e, msg) {
-                    var temp = angular.copy(msg);
+                    scope.isCompared = false;
+                    var temp = $rootScope.copy(msg);
                     if (temp.length > 0) {
                         scope.ds_dateShowQuotasOption = temp;
                     }
-                    scope.isCompared = false;
-                    //scope.dateShowArray = scope.dateShowArray_base = [];
                     scope.loadDataShow();
                 });
                 scope.loadDataShow();
-                //// 用于动态效果
-                //scope.$on("ssh_reload_datashow", function () {
-                //    var tempArray = [];
-                //    angular.forEach(scope.checkedArray, function (ca_r) {
-                //        tempArray.push({"label": ca_r, "value": "", "cValue": ""});
-                //    });
-                //
-                //    angular.forEach(tempArray, function (ta_r) {
-                //        angular.forEach(scope.dateShowArray_base, function (ab_r) {
-                //            if (ta_r.label == ab_r.label) {
-                //                ta_r.value = ab_r.value;
-                //                ta_r.cValue = ab_r.cValue;
-                //            }
-                //        });
-                //    });
-                //
-                //    scope.dateShowArray = angular.copy(tempArray);
-                //});
                 // 对比
                 scope.$on("ssh_load_compare_datashow", function (e, startTime, endTime) {
                     scope.isCompared = true;
+                    angular.forEach(scope.dateShowArray, function (dsa) {
+                        dsa.cValue = 0;
+                    });
+                    scope.loadCompareDataShow(startTime, endTime);
+                });
+                // 设备环境
+                scope.$on("ssh_data_show_refresh", function (e) {
+                    scope.isCompared = false;
+                    scope.loadDataShow();
+                });
+            }
+        };
+    });
+
+    /**
+     * Create by wms on 2015-04-22.合计信息显示
+     */
+    app.directive("sshTrendDateShow", function ($http, $rootScope, $q) {
+        return {
+            restrict: 'E',
+            templateUrl: '../commons/date_show.html',
+            link: function (scope, element, attris, controller) {
+                // 初始化参数
+                scope.isCompared = false;
+                scope.dateShowArray = [];
+                scope.ds_defaultQuotasOption = ["pv", "uv", "ip", "nuv", "outRate", "avgTime"];
+                scope.ds_keyData = [];
+                scope.ds_dateShowQuotasOption = scope.checkedArray ? scope.checkedArray : scope.ds_defaultQuotasOption;
+                scope.setDefaultShowArray = function () {
+                    var tempArray = [];
+                    angular.forEach(scope.ds_dateShowQuotasOption, function (q_r) {
+                        tempArray.push({"label": q_r, "value": 0, "cValue": 0, "count": 0});
+                    });
+                    scope.ds_keyData = [];
+                    scope.dateShowArray = $rootScope.copy(tempArray);
+                };
+                // 获取数据
+                scope.loadDataShow = function () {
+                    scope.setDefaultShowArray();
+                    var esRequest = $http.get('/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field) + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
+                    $q.all([esRequest]).then(function (final_result) {
+                        scope.pushESData(final_result[0].data);
+                    });
+                };
+                scope.loadCompareDataShow = function (startTime, endTime) {
+                    var esRequest = $http.get('/api/indextable/?start=' + startTime + "&end=" + endTime + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field) + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
+                    $q.all([esRequest]).then(function (final_result) {
+                        // 初始化对比数据
+                        scope.pushESData(final_result[0].data, true);
+                    });
+                };
+
+                scope.pushESData = function (result, flag) {
+                    var _array = $rootScope.copy(scope.dateShowArray);
+                    if (Object.prototype.toString.call(result) === '[object Array]') {
+                        var _count = 0;
+                        angular.forEach(result, function (r) {
+                            var infoKey = r[$rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field];
+                            if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null")) {
+                                return false;
+                            }
+                            if (!flag) {
+                                scope.ds_keyData.push(infoKey);
+                            }
+                            if (flag && scope.ds_keyData.targetIndexOf(infoKey) == -1) {
+                                return false;
+                            }
+                            _count++;
+                            angular.forEach(_array, function (obj) {
+                                var temp = obj.label;
+                                if (r[temp] == undefined) {
+                                    return false;
+                                }
+                                if (flag) {
+                                    obj.cValue += (r[temp].indexOf("%") != -1) ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
+                                } else {
+                                    obj.value += (r[temp].indexOf("%") != -1) ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
+                                }
+                            });
+                        });
+                        // 设置_count
+                        angular.forEach(_array, function (obj) {
+                            obj.count = _count;
+                        });
+                    } else {
+                        var obj = JSON.parse(eval('(' + result + ')').toString()); //由JSON字符串转换为JSON对象
+                        angular.forEach(obj, function (r) {
+                            var dateShowObject = {};
+                            dateShowObject.label = r.label;
+                            var temp = 0;
+                            var count = 0;
+                            angular.forEach(r.quota, function (qo, _i) {
+                                temp += Number(qo);
+                                count++;
+                            });
+                            angular.forEach(_array, function (_array_r) {
+                                if (_array_r.label == dateShowObject.label) {
+                                    _array_r.count = count;
+                                    flag ? (_array_r.cValue = temp) : (_array_r.value = temp);
+                                }
+                            });
+                        });
+                    }
+
+                    scope.dateShowArray = $rootScope.copy(_array);
+                };
+
+                // 第一种方式。通过用户点击时发出的事件进行监听，此方法需要在每个controller方法内部添加代码实现
+                scope.$on("ssh_dateShow_options_time_change", function (e, msg) {
+                    scope.isCompared = false;
+                    scope.loadDataShow();
+                });
+                // 指标
+                scope.$on("ssh_dateShow_options_quotas_change", function (e, msg) {
+                    scope.isCompared = false;
+                    var temp = $rootScope.copy(msg);
+                    if (temp.length > 0) {
+                        scope.ds_dateShowQuotasOption = temp;
+                    }
+                    scope.loadDataShow();
+                });
+                scope.loadDataShow();
+                // 对比
+                scope.$on("ssh_load_compare_datashow", function (e, startTime, endTime) {
+                    scope.isCompared = true;
+                    angular.forEach(scope.dateShowArray, function (dsa) {
+                        dsa.cValue = 0;
+                    });
                     scope.loadCompareDataShow(startTime, endTime);
                 });
             }
@@ -668,7 +689,7 @@ define(["../app"], function (app) {
                 scope.loadDataShow = function () {
                     scope.dateShowArray = angular.copy(scope.defaultDataShowArray);
                     var semRequest = $http.get(SEM_API_URL + "elasticsearch/" + $rootScope.userType
-                        + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd);
+                    + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd);
                     $q.all([semRequest]).then(function (final_result) {
                         angular.forEach(final_result[0].data, function (r) {
                             angular.forEach(scope.dateShowArray, function (q_r) {
@@ -682,7 +703,7 @@ define(["../app"], function (app) {
                 };
                 scope.loadCompareDataShow = function (startTime, endTime) {
                     var semRequest = $http.get(SEM_API_URL + "elasticsearch/" + $rootScope.userType
-                        + "/?startOffset=" + startTime + "&endOffset=" + endTime);
+                    + "/?startOffset=" + startTime + "&endOffset=" + endTime);
                     $q.all([semRequest]).then(function (final_result) {
                         // 初始化对比数据
                         angular.forEach(scope.dateShowArray, function (q_r) {
@@ -698,20 +719,14 @@ define(["../app"], function (app) {
                         });
                     });
                 };
-                // 改变时间参数
-                scope.setDateShowTimeOption = function (type, cb) {
-                    scope.isCompared = false;
-                    if (cb) {
-                        cb();
-                    }
-                };
-                scope.setDateShowTimeOption(attris.type);
+                // 时间刷新
                 scope.$on("ssh_dateShow_options_time_change", function (e, msg) {
-                    scope.setDateShowTimeOption(msg, scope.loadDataShow);
+                    scope.isCompared = true;
+                    scope.loadDataShow();
                 });
                 scope.loadDataShow();
 
-                // 对比
+                // 对比刷新
                 scope.$on("ssh_load_compare_datashow", function (e, startTime, endTime) {
                     scope.isCompared = true;
                     scope.loadCompareDataShow(startTime, endTime);
@@ -809,7 +824,7 @@ define(["../app"], function (app) {
                 case "bing":
                 case "other":
                 {
-                    return count ? (value / count).toFixed(2) + "%" : "--";
+                    return count ? (value / count).toFixed(2) + "%" : "0";
                 }
                 case "avgTime":
                 {
@@ -820,6 +835,9 @@ define(["../app"], function (app) {
                     return count ? value : "0";
                 }
                 case "cost":
+                {
+                    return value ? value.toFixed(2) : value;
+                }
                 case "impression":
                 case "ctr":
                 case "cpm":
