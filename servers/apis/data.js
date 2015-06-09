@@ -12,13 +12,11 @@ var map = require('../utils/map');
 var api = express.Router();
 var dao = require('../db/daos');
 var schemas = require('../db/schemas');
-
-var fsApi = require("fs");
-var uuid = require("node-uuid");
+var csvApi = require('json-2-csv');
 var iconv = require('iconv-lite');
+var uuid = require("node-uuid");
 
 var es_position = require('../services/es_position');
-
 
 
 api.get('/charts', function (req, res) {
@@ -482,6 +480,21 @@ api.get('/provincemap', function (req, res) {
     })
 });
 
+//csv下载功能
+api.get("/downCSV", function (req, res) {
+    var query = url.parse(req.url, true).query;
+    var dataInfo = query['dataInfo'].replace(/\*/g, "%");
+    var jsonData = JSON.parse(dataInfo);
+    csvApi.json2csv(jsonData, function (err, csv) {
+        if (err) throw err;
+        var buffer = new Buffer(csv);
+        //需要转换字符集
+        var uid = uuid.v1();
+        var str = iconv.encode(buffer, 'utf-8');
+        res.send(str);
+    });
+});
+
 /**
  * summary.by wms
  */
@@ -531,13 +544,13 @@ api.get("/exchange", function (req, res) {
 
 });
 
-api.get("/heatmap", function(req, res){
+api.get("/heatmap", function (req, res) {
     var query = url.parse(req.url, true).query;
     var _type = query['type'];
     var _startTime = Number(query['start']);
     var _endTime = Number(query['end']);
     var indexes = date.createIndexes(_startTime, _endTime, "access-");//indexs
-    es_position.search(req.es, indexes, _type, function(result){
+    es_position.search(req.es, indexes, _type, function (result) {
         datautils.send(res, result);
     });
 });
