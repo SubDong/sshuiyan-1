@@ -9,12 +9,21 @@ var mixingMap = {
                 max = data.chart_data.sort(chartUtils.by("value"))[0].value;
             }
         }
-        max=Number(max*1.3).toFixed(0);
+        max = Number(max * 1.3).toFixed(0);
         if (!chart) return;
         var option = {
             loadingText: "数据读取中...",
             tooltip: {
-                trigger: 'item'
+                trigger: 'item',
+                backgroundColor: '#fff',
+                borderColor: '#ededed',
+                borderWidth: 1,
+                padding: 10,
+                textStyle: {
+                    color: '#000',
+                    decoration: 'none',
+                    fontSize: 12
+                }
             },
             legend: {
                 x: 'right',
@@ -25,7 +34,7 @@ var mixingMap = {
                 orient: 'horizontal',
                 min: 0,
                 max: max,
-                text: [chart.quota + ":" , '']     // 文本，默认为数值文本
+                text: [chart.quota + ":", '']     // 文本，默认为数值文本
             },
             series: [
                 {
