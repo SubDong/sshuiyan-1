@@ -21,7 +21,7 @@
 
                     <div data-ng-show="rules_area.helpFlag"  class="count_content_right">
                         <!--提示:网站与域名不同提示 右-->
-                        <div class="popover right box " style="display: block;">
+                        <div class="popover right box " >
                             <div class="arrow"></div>
                             <div class="popover-content">
                                 <p>如果您的网站域名（www.url.com）与首页URL<br/>（www.url.com/index.html）不同，建议您将其设为“统一首<br/>页”，设置后对上述URL的访问将统一为对网站首页的访问，<br/>以保证统计准确。
@@ -36,8 +36,8 @@
                     提示：当前登录IP为：113.45.225.145， 请注意若为动态IP则下次登录IP会变化。</span>
 
                         <div class="">
-                            <textarea data-ng-model="ex_ips_area.tNum" class="tNum" disabled></textarea>
-                            <textarea data-ng-keyup="addIP($event, ex_ips_area)" data-ng-model="ex_ips_area.tText"
+                            <textarea  data-ng-model="ex_ips_area.tNum" class="tNum" disabled></textarea>
+                            <textarea  data-ng-keyup="addIP($event, ex_ips_area)"  wrap="off" data-ng-model="ex_ips_area.tText"
                                       data-ng-focus="myFocus(ex_ips_area)"
                                       data-ng-blur="myBlur(ex_ips_area)" class="tText"></textarea>
 
@@ -62,7 +62,7 @@
 
                         <div class="">
                             <textarea data-ng-model="ex_refer_urls_area.tNum" class="tNum" disabled></textarea>
-                            <textarea data-ng-keyup="addIP($event, ex_refer_urls_area)" data-ng-model="ex_refer_urls_area.tText"
+                            <textarea data-ng-keyup="addIP($event, ex_refer_urls_area)" wrap="off" data-ng-model="ex_refer_urls_area.tText"
                                       data-ng-focus="myFocus(ex_refer_urls_area)"
                                       data-ng-blur="myBlur(ex_refer_urls_area)" class="tText"></textarea>
 
@@ -89,7 +89,7 @@
 
                         <div class="">
                             <textarea data-ng-model="ex_urls_area.tNum" class="tNum" disabled></textarea>
-                            <textarea data-ng-keyup="addIP($event, ex_urls_area)" data-ng-model="ex_urls_area.tText"
+                            <textarea data-ng-keyup="addIP($event, ex_urls_area)" wrap="off" data-ng-model="ex_urls_area.tText"
                                       data-ng-focus="myFocus(ex_urls_area)"
                                       data-ng-blur="myBlur(ex_urls_area)" class="tText"></textarea>
 
@@ -118,7 +118,7 @@
 
                         <div class="">
                             <textarea data-ng-model="cross_sites_area.tNum" class="tNum" disabled></textarea>
-                            <textarea data-ng-keyup="addIP($event, cross_sites_area)" data-ng-model="cross_sites_area.tText"
+                            <textarea data-ng-keyup="addIP($event, cross_sites_area)" wrap="off" data-ng-model="cross_sites_area.tText"
                                       data-ng-focus="myFocus(cross_sites_area)"
                                       data-ng-blur="myBlur(cross_sites_area)" class="tText"></textarea>
 

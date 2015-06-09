@@ -1,21 +1,19 @@
 <div class="middle_containers" ng-controller="pagechange_addctr">
         <!--网站导航-->
    <div class="page_add_container">
-       <p class="web-title">best-ad.cn</p>
+       <p class="web-title"><strong>best-ad.cn</strong></p>
        <div class="add_page_title">
            <p>新增页面转化目标</p>
            <div class="add_page_content">
                <p>目标(你希望访客进入的任何页面)</p>
                <div class="row-fluid add_page_target">
-                   <div class="col-xs-4">
-                       <ul class="add_target">
-                           <li><input type="text" class="form-control" data-ng-focus="targetFocus()" data-ng-blur="targetBlur()" placeholder="目标名称"></li>
-                           <li><input type="text" class="form-control" data-ng-focus="targetFocus()" data-ng-blur="targetBlur()" placeholder="目标URL"></li>
-                           <li><a href="#">添加页面</a></li>
-                       </ul>
+                   <div class="col-xs-5">
+                       <input type="text" data-ng-focus="targetFocus()" data-ng-blur="targetBlur()" placeholder="目标名称">
+                       <input type="text" data-ng-focus="targetFocus()" style="width: 50%;" data-ng-blur="targetBlur()" placeholder="目标URL">
+                       <a href="#">添加页面</a>
                        <div class="clearfix"></div>
-                       <div class="col-xs-5">
-                           <div class="choice_record_way" data-ng-click="record=!record"><span>可选择记录方式&nbsp;&nbsp;<i class="caret"></i></span></div>
+                       <div style="width: 200px">
+                           <div class="choice_record_way"><span data-ng-click="record=!record">可选择记录方式&nbsp;&nbsp;<i class="caret"></i></span></div>
                            <div class="record_way" ng-show="record">
                                <ul>
                                    <li><label><input type="radio" name="record" checked>访问次数</label></li>
@@ -46,16 +44,28 @@
                </p>
                <div class="earnings" ng-show="benefitSet">
                    <h6 style="padding-left: 30px;color: #ccc">此指标填写后，在推广类报告的自定义指标中勾选"收益"后，可以查看</h6>
-                   <div class="col-xs-12">
-                       <div class="col-xs-1">预期每次转化收益</div>
-                       <div class="col-xs-1"><input type="text" class="form-control">元<a href="#">@</a></div>
-                       <div class="col-xs-2">（精确到两位小数）</div>
-                   </div>
-                   <div class="col-xs-12" style="margin-top: 10px">
-                       <div class="col-xs-1">预期转化率</div>
-                       <div class="col-xs-1"><input type="text" class="form-control">元<a href="#">@</a></div>
-                       <div class="col-xs-2">（精确到两位小数）</div>
-                   </div>
+                   <!--<div class="col-xs-12">-->
+                       <!--<div class="col-xs-1">预期每次转化收益</div>-->
+                       <!--<div class="col-xs-1"><input type="text" class="form-control">元<a href="#">@</a></div>-->
+                       <!--<div class="col-xs-2">（精确到两位小数）</div>-->
+                   <!--</div>-->
+                   <!--<div class="col-xs-12" style="margin-top: 10px">-->
+                       <!--<div class="col-xs-1">预期转化率</div>-->
+                       <!--<div class="col-xs-1"><input type="text" class="form-control">元<a href="#">@</a></div>-->
+                       <!--<div class="col-xs-2">（精确到两位小数）</div>-->
+                   <!--</div>-->
+                   <table>
+                       <tr>
+                           <td>预期每次转化收益</td>
+                           <td><input type="text" class="">元<a href="#">@</a></td>
+                           <td>（精确到两位小数）</td>
+                       </tr>
+                       <tr>
+                           <td>预期转化率</td>
+                           <td><input type="text" class="">%<a href="#">@</a></td>
+                           <td>（精确到两位小数）</td>
+                       </tr>
+                   </table>
                </div>
            </div>
            <div class="clearfix"></div>
@@ -66,24 +76,25 @@
                </p>
                <div class="col-xs-12 path_type" ng-show="pathType" data-ng-repeat="path in paths">
                    <ul class="path_name">
-                       <li><input type="text" placeholder="路径名称" class="form-control"></li>
+                       <li><input type="text" placeholder="路径名称" class=""></li>
                        <li class="remove" data-ng-click="removePath(paths, $index)"><i class="glyphicon glyphicon-remove"></i></li>
                        <li><label><input type="checkbox">只有经过此路径的目标记为转化</label></li>
                    </ul>
                    <div class="clearfix"></div>
                    <ul class="path_steps" data-ng-repeat="step in path.steps">
                        <li><span>步骤{{$index+1}}</span></li>
-                       <li><input type="text" placeholder="步骤名称" class="form-control"></li>
-                       <li data-ng-repeat="page in step.pages"><input type="text" placeholder="步骤URL" class="form-control"></li>
-                       <li data-ng-click="addPages(step, pages)"><a href="#">添加页面</a></li>
+                       <li><input type="text" placeholder="步骤名称" class=""></li>
+                       <li data-ng-repeat="page in step.pages"><input type="text" placeholder="步骤URL" class=""></li>
+                       <li data-ng-click="addPages(step, pages)" class="{{step.pages.length==4?cancelAdd:0}}"><a href="#">添加页面</a></li>
                        <li class="remove" data-ng-click="removeSteps(path.steps, $index)"><i class="glyphicon glyphicon-remove"></i></li>
                    </ul>
                    <div class="clearfix"></div>
-                   <p style="background-color: #fff" ng-show="addPrompt" class="errorMsg">最多添加3条</p>
-                   <a href="#" style="display:block;padding: 10px 0 0 15px;width: 68px" data-ng-click="addSteps(path, steps)">添加步骤</a>
+                   <a href="#" style="display:block;padding: 10px 0 0 15px;width: 68px"
+                      class="{{path.steps.length==10?cancelAdd:0}}" data-ng-click="addSteps(path, steps)">添加步骤</a>
                </div>
                <div class="col-xs-2" ng-show="pathType">
-                   <button style="margin: 10px 0 0 15px" class="btn btn-info" data-ng-click="addPaths(paths)">添加路径</button>
+                   <button style="margin: 10px 0 0 15px" ng-show="isAddPath"
+                           class="btn btn-info {{path.length==4?cancelAdd:0}}" data-ng-click="addPaths(paths)">添加路径</button>
                </div>
            </div>
            <div class="clearfix"></div>
@@ -93,10 +104,10 @@
                    <i ng-show="changeType" class="glyphicon glyphicon-minus"></i>
                    &nbsp;&nbsp;转化类型<a href="#">@</a>(选填)</p>
                <div class="col-xs-12 transform_type" ng-show="changeType">
-                   <label><input type="radio" name="type">注册</label>
-                   <label><input type="radio" name="type">沟通</label>
-                   <label><input type="radio" name="type">下单</label>
-                   <label><input type="radio" name="type" checked>其他<input type="text"></label>
+                   <label><input type="radio" class="styled" name="type">注册</label>
+                   <label><input type="radio" class="styled" name="type">沟通</label>
+                   <label><input type="radio" class="styled" name="type">下单</label>
+                   <label><input type="radio" class="styled" name="type" checked>其他<input type="text"></label>
                </div>
                <div class="clearfix"></div>
            </div>

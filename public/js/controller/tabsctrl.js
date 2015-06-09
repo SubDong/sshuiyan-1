@@ -17,13 +17,12 @@ define(["app"], function (app) {
         ]
         //sem
         $scope.target = [
-            {consumption_name: "展现量", name: "impression"},
             {consumption_name: "点击量", name: "click"},
+            {consumption_name: "展现量", name: "impression"},
             {consumption_name: "消费", name: "cost"},
             {consumption_name: "点击率", name: "ctr"},
             {consumption_name: "平均点击价格", name: "cpc"}
         ];
-        //
         $scope.Webbased = [
             {consumption_name: "浏览量(PV)", name: "pv"},
             {consumption_name: "访问次数", name: "vc"},
@@ -153,7 +152,6 @@ define(["app"], function (app) {
             if ($rootScope.tableSwitch.arrayClear)$rootScope.checkedArray = new Array();
             if ($rootScope.tableSwitch.arrayClear)$rootScope.gridArray = new Array();
         }
-
         //table Button 配置 table_nextbtn
         if ($rootScope.tableSwitch.number == 1) {
             $scope.gridBtnDivObj = "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn test'  title='查看历史趋势'></a></div>";
@@ -163,6 +161,8 @@ define(["app"], function (app) {
         $rootScope.indicators = function (item, entities, number, refresh) {
             $rootScope.gridArray.shift();
             $rootScope.gridArray.shift();
+            console.log($rootScope.checkedArray)
+            console.log("item="+item+"-----entities="+JSON.stringify(entities)+"-----number="+number+"-----refresh="+refresh)
             if (refresh == "refresh") {
                 $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude);
                 $scope.gridObjButton = {};
@@ -254,14 +254,14 @@ define(["app"], function (app) {
             $scope.gridOptions = {
                 paginationPageSize: 20,
                 expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
-                expandableRowHeight: 360,
+                //expandableRowHeight: 360,
                 enableColumnMenus: false,
                 showColumnFooter: true,
                 enablePaginationControls: false,
                 enableSorting: true,
                 enableGridMenu: false,
                 enableHorizontalScrollbar: 0,
-                enableVerticalScrollbar: false,
+                enableVerticalScrollbar: 0,
                 enableScrollbars: false,
                 onRegisterApi: function (girApi) {
                     $rootScope.gridApi2 = girApi;
@@ -272,14 +272,14 @@ define(["app"], function (app) {
             $scope.gridOptions = {
                 paginationPageSize: 20,
                 expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions' ></div>",
-                expandableRowHeight: 360,
+                //expandableRowHeight: 360,
                 enableColumnMenus: false,
                 showColumnFooter: true,
                 enablePaginationControls: false,
                 enableSorting: true,
                 enableGridMenu: false,
                 enableHorizontalScrollbar: 0,
-                enableVerticalScrollbar: false,
+                enableVerticalScrollbar: 0,
                 enableScrollbars: false,
                 onRegisterApi: function (gridApi) {
                     $rootScope.gridApi2 = gridApi;
@@ -293,7 +293,6 @@ define(["app"], function (app) {
         $scope.pagego = function (pagevalue) {
             pagevalue.pagination.seek(Number($scope.page));
         }
-
         //地图分类
         $scope.setDimen = function (a) {
             var b = "";
@@ -490,7 +489,12 @@ define(["app"], function (app) {
             $scope.isJudge = false;
             $scope.targetSearch();
         };
-
+        //设置搜索引擎过滤
+        $scope.searchEngine = function(info){
+            $rootScope.tableSwitch.tableFilter = "[{\"se\":[\""+info+"\"]}]";
+            $scope.isJudge = false;
+            $scope.targetSearch();
+        };
         // 搜索词过滤
         $scope.setGjcFilter = function (gjcText) {
             if (!$rootScope.tableSwitch) {
@@ -504,7 +508,6 @@ define(["app"], function (app) {
             $scope.isJudge = false;
             $scope.targetSearch();
         };
-
         // 输入URL过滤
         $scope.searchURLFilter = function (urlText) {
             if (!$rootScope.tableSwitch) {
@@ -518,7 +521,6 @@ define(["app"], function (app) {
             $scope.isJudge = false;
             $scope.targetSearch();
         };
-
         // 按url，按域名过滤
         $scope.setURLDomain = function (urlText) {
             var b = "";
@@ -547,7 +549,6 @@ define(["app"], function (app) {
             $scope.isJudge = false;
             $scope.targetSearch("rf_dm");
         };
-
         // 外部链接搜索
         $scope.searchURLFilterBySourceEl = function (urlText) {
             if (!$rootScope.tableSwitch) {
@@ -561,7 +562,6 @@ define(["app"], function (app) {
             $scope.isJudge = false;
             $scope.targetSearch();
         };
-
         // 查看入口页链接
         $scope.showEntryPageLink = function (row, _type) {
             if (_type == 1) {// 搜索引擎
@@ -577,7 +577,6 @@ define(["app"], function (app) {
         $scope.input_rky = "";
         $scope.input_ip = "";
         $scope.realTimeVisit = function () {
-
             var visitFilert = [];
             if ($scope.input_gjc != "") {
                 visitFilert.push("{\"kw\": [\"" + $scope.input_gjc + "\"]}")
@@ -596,15 +595,7 @@ define(["app"], function (app) {
             $scope.isJudge = false;
             getHtmlTableData();
         }
-
-        /**
-         *
-         * @param start 开始时间
-         * @param end   结束时间
-         * @param indic   查询指标
-         * @param lati   查询纬度
-         * @param type
-         */
+        //前端ui-grid通用查询方法
         $rootScope.targetSearch = function (isClicked) {
             $scope.gridOpArray = angular.copy($rootScope.gridArray);
             $scope.gridOptions.columnDefs = $scope.gridOpArray;
@@ -648,28 +639,38 @@ define(["app"], function (app) {
                         }).success(function (dataSEM, status) {
                             var dataArray = []
                             var dataObj = {};
-                            if (dataSEM.length == 1) {
-                                $rootScope.checkedArray.forEach(function (item, i) {
-                                    if ($rootScope.tableSwitch.latitude.field == "accountName") {
-                                        dataObj["accountName"] = "搜索推广 (" + dataSEM[0].accountName + ")"
-                                    }
-                                    dataSEM.forEach(function (sem, i) {
-                                        if (dataObj[item] == undefined) {
-                                            if (item == "ctr") {
-                                                dataObj[item] = sem[item] + "%"
-                                            } else {
-                                                dataObj[item] = sem[item]
-                                            }
-                                        }
-                                    });
-                                    data.forEach(function (es, i) {
-                                        if (dataObj[item] == undefined) {
-                                            dataObj[item] = es[item]
-                                        }
-                                    })
+                            var semDataArray = [];
+                            var semDataObj = {};
+                            $scope.target.forEach(function (array, b) {
+                                dataSEM.forEach(function (items, a) {
+                                    if (items[array.name] != undefined) if (semDataObj[array.name] == undefined) semDataObj[array.name] = items[array.name]; else semDataObj[array.name] += items[array.name];
                                 });
-                                dataArray.push(dataObj);
+                            });
+                            if (dataSEM.length > 1) {
+                                semDataObj["cpc"] = (semDataObj["cost"] / semDataObj["click"]).toFixed(2);
+                                semDataObj["ctr"] = ((semDataObj["click"] / semDataObj["impression"]).toFixed(4)) * 100;
                             }
+                            semDataArray.push(semDataObj);
+                            $rootScope.checkedArray.forEach(function (item, i) {
+                                if ($rootScope.tableSwitch.latitude.field == "accountName") {
+                                    dataObj["accountName"] = "搜索推广 (" + dataSEM[0].accountName + ")"
+                                }
+                                semDataArray.forEach(function (sem, i) {
+                                    if (dataObj[item] == undefined) {
+                                        if (item == "ctr") {
+                                            dataObj[item] = sem[item] + "%"
+                                        } else {
+                                            dataObj[item] = sem[item]
+                                        }
+                                    }
+                                });
+                                data.forEach(function (es, i) {
+                                    if (dataObj[item] == undefined) {
+                                        dataObj[item] = es[item]
+                                    }
+                                })
+                            });
+                            dataArray.push(dataObj);
                             $scope.gridOptions.data = dataArray;
                         });
                     } else {
@@ -743,10 +744,8 @@ define(["app"], function (app) {
             $scope.gridOptions.columnDefs = $scope.gridOpArray;
             $scope.gridOptions.data = msg;
         });
-
         //数据对比
         $rootScope.datepickerClickTow = function (start, end, label) {
-
             var gridArrayOld = angular.copy($rootScope.gridArray);
             $rootScope.gridArray.forEach(function (item, i) {
                 var a = item["field"];
@@ -758,9 +757,7 @@ define(["app"], function (app) {
             var time = chartUtils.getTimeOffset(start, end);
             var startTime = time[0];
             var endTime = time[0] + ($rootScope.tableTimeEnd - $rootScope.tableTimeStart);
-
             $rootScope.$broadcast("ssh_load_compare_datashow", startTime, endTime);
-
             var dateTime1 = chartUtils.getSetOffTime($rootScope.tableTimeStart, $rootScope.tableTimeEnd);
             var dateTime2 = chartUtils.getSetOffTime(startTime, endTime);
             $scope.targetDataContrast(null, null, function (item) {
@@ -892,7 +889,6 @@ define(["app"], function (app) {
                 });
             }
         };
-
         //表格数据展开项
         var griApiInfo = function (gridApi) {
             $scope.gridOpArray = angular.copy($rootScope.gridArray);
@@ -907,8 +903,13 @@ define(["app"], function (app) {
                     var newEntity = row.entity[$rootScope.tableSwitch.latitude.field].split(",");
                     newEntity.length > 0 ? entity = newEntity[0] : "";
                     $rootScope.tableSwitch.tableFilter = "[{\"" + $rootScope.tableSwitch.latitude.field + "\":[\"" + getField(entity, $rootScope.tableSwitch.latitude.field) + "\"]}]";
+                  //  $scope.gridApi2.expandable.collapseAllRows();
                     row.entity.subGridOptions = {
-                        showHeader: false
+                        showHeader: false,
+                        enableHorizontalScrollbar: 0,
+                        enableVerticalScrollbar: 0,
+                        enableScrollbars: false,
+                        columnDefs: $rootScope.gridArray
                     };
                     $http({
                         method: 'GET',
@@ -922,9 +923,9 @@ define(["app"], function (app) {
                             dataNumber = data.length;
                         }
                         row.entity.subGridOptions.columnDefs = $scope.gridOpArray;
-
                         row.entity.subGridOptions.data = data;
                         $rootScope.tableSwitch.tableFilter = returnFilter;
+                      $scope.gridOptions.expandableRowHeight = row.entity.subGridOptions.data.length * 30;
                     }).error(function (error) {
                         console.log(error);
                     });
@@ -941,7 +942,6 @@ define(["app"], function (app) {
                 return url;
             }
         };
-
         //数据对比分割数据
         $scope.getContrastInfo = function (grid, row, number, fieldData) {
             if (fieldData != undefined || fieldData != "undefined") {
@@ -957,15 +957,17 @@ define(["app"], function (app) {
                 }
             }
         };
-
         //表格HTML展开项
         var griApihtml = function (gridApi) {
             gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
+                console.log(gridApi)
                 var filter = "[{\"tt\":[\"" + row.entity.tt + "\"]}]";
                 var htmlData = new Array();
                 row.entity.subGridOptions = {
-                    showHeader: false,
                     enableHorizontalScrollbar: 0,
+                    //enableVerticalScrollbar: false,
+                    //enableScrollbars: false,
+                    showHeader: false,
                     columnDefs: htmlData
                 };
                 $http({
@@ -978,15 +980,13 @@ define(["app"], function (app) {
                     res["cellTemplate"] = datas.htmlData;
                     htmlData.push(res);
                     row.entity.subGridOptions.data = [{"info": " "}];
+                    $scope.gridOptions.expandableRowHeight =  row.entity.subGridOptions.data.length * 360;
                 }).error(function (error) {
                     console.log(error);
                 });
             });
         };
-
-        /**
-         *  table 历史趋势
-         */
+        // table 历史趋势
         $scope.getHistoricalTrend = function (b) {
             if ($rootScope.tableSwitch.isJudge == undefined)$scope.isJudge = true;
             if ($rootScope.tableSwitch.isJudge)$rootScope.tableSwitch.tableFilter = undefined;
@@ -997,7 +997,6 @@ define(["app"], function (app) {
             $rootScope.tableSwitch.tableFilter = "[{\"" + $rootScope.tableSwitch.latitude.field + "\":[\"" + getField(a, $rootScope.tableSwitch.latitude.field) + "\"]}]";
 
         };
-
         //得到表格底部数据
         $scope.getFooterData = function (a, option, number) {
             var returnData = [0, 0, 0, 0];
@@ -1064,7 +1063,6 @@ define(["app"], function (app) {
                 }
             }
         }
-
         //得到数据中的url
         $scope.getDataUrlInfo = function (grid, row, number) {
             var a = row.entity.source.split(",");
@@ -1084,7 +1082,6 @@ define(["app"], function (app) {
         $scope.getIndex = function (b) {
             return b.$parent.$parent.rowRenderIndex + 1
         };
-
         var getField = function (rr, ss) {
             switch (rr) {
                 case "新访客":
@@ -1106,7 +1103,6 @@ define(["app"], function (app) {
             }
         }
         var select = $scope.select = {};
-
         //数组对象用来给ng-options遍历
         select.optionsData = [{
             title: "公告"
@@ -1125,7 +1121,6 @@ define(["app"], function (app) {
         ];
     });
 });
-
 /**********************隐藏table中按钮的弹出层*******************************/
 var s = 1;
 function getMyButton(item) {

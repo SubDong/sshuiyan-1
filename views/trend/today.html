@@ -12,7 +12,7 @@
         </ul>
     </div>
     <div class="my_concent">
-        <ssh-date-show type="today"></ssh-date-show>
+        <ssh-trend-date-show></ssh-trend-date-show>
         <div class="index_chart">
             <div id="today_charts_legend" style="position:relative;"></div>
             <div id="today_charts" style="height:400px;margin-top: 20px"></div>
@@ -82,13 +82,13 @@
                                             </ui-select-choices>
                                         </ui-select>
                                         <ul aria-labelledby="btnGroupDrop" role="menu" class="dropdown-menu">
-                                            <li><a href="#">百度</a></li>
-                                            <li><a href="#">Google</a></li>
+                                            <li><a href="javascript:void(0)" ng-click="searchEngine('百度')">百度</a></li>
+                                            <li><a href="javascript:" ng-click="searchEngine('Google')">Google</a></li>
                                         </ul>
                                     </div>
                                 </li>
-                                <li><a href="#">百度</a></li>
-                                <li><a href="#">Google</a></li>
+                                <li><a href="javascript:void(0)" ng-click="searchEngine('百度')">百度</a></li>
+                                <li><a href="javascript:void(0)" ng-click="searchEngine('Google')">Google</a></li>
                             </ul>
                         </div>
                         <div class="chart_top2">
@@ -148,8 +148,8 @@
                 <!--</div>-->
             <!--</div>-->
             <div class="custom_table">
-                <div ui-grid="gridOptions" class="grid" ui-grid-pagination
-                     ui-grid-exporter></div>
+                <div ui-grid="gridOptions" class="grid clearfix" ui-grid-pagination
+                     ui-grid-exporter ui-grid-auto-resize></div>
                 <gridpage></gridpage>
             </div>
         </div>

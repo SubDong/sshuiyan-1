@@ -229,7 +229,7 @@ define(["./module"], function (ctrs) {
             }
         };
 
-        Custom.initCheckInfo();
+
         var adminGriApiInfo = function (gridApi) {
 //            $scope.gridOptions.data = [{a:"<div class='table_admin'>aaaaaaaaaa</div>",b:"bbbbbbbbbb",c:"ccccccccc"},{a:"dddddddddd",b:"eeeeeeeee",c:"ccccccccc"}]
         };
@@ -344,5 +344,6 @@ define(["./module"], function (ctrs) {
             });
             //refushGridData();
         };
+        Custom.initCheckInfo();//页面check样式js调用
     });
 });
