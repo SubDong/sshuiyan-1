@@ -36,6 +36,10 @@ define(["angular", "js001", "js002", "js003", "js004", "js005", "js006", "js007"
             }
         });
 
+        $rootScope.copy = function (obj) {
+            return angular.copy(obj);
+        };
+
     });
 
     return myApp;
