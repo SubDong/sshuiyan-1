@@ -64,7 +64,7 @@ var schemas = {
         schema: {
             //id: String,
             uid: String,
-            site_id:String,
+            site_id: String,
             time_conv: {
                 status: Boolean,
                 val: Number
@@ -88,9 +88,56 @@ var schemas = {
             paths: [String],
             ex_paths: [String]
         }
+    },
+
+    /**
+     * 页面转化
+     */
+    page_conv_model: {
+        model_name: "PageConvent",
+        collection_name: "conf_page_conv",
+        schema: {
+            uid: String,//用户ID
+            site_id: String, // 站点ID
+            target_name: String,//目标名称
+            target_url: [String],//目标URL
+            record_type: String,//记录方式
+            //收益设置
+            expected_yield: Number,//预期收益
+            pecent_yield: Number,//预期收益率
+            //路径类型
+            paths: [{
+                path_name: String,//路径名称
+                path_mark: Boolean,//只有经过此路径的目标记为转化
+                steps: [{
+                    step_name: String,//步骤名称
+                    step_urls: [{url:String}]//步骤URL 最多三个
+                }]
+
+            }],
+            conv_tpye: String//转换类型，regist,communicate,place_order,othre_order
+        },
+        /**
+         * 事件转化
+         */
+        event_conv_model: {
+            model_name: "SubPaths",
+            collection_name: "conf_event_conv",
+            schema: {
+                //id: String,
+                uid: String,
+                site_id: String, // 站点ID
+                site_url: String,//网站地址
+                event_name: String,//时间名称
+                event_elem: String,//时间元素
+                reg_enable: Boolean,
+                name: String,
+                paths: [String],
+                ex_paths: [String]
+            }
+        }
     }
 }
-
 module.exports = schemas
 
 

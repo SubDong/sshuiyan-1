@@ -5,9 +5,13 @@
 define(["./module"], function (ctrs) {
     "use strict";
 
-    ctrs.controller('adminmainctr', function ($scope, $q, $rootScope, $http, requestService,ngDialog,$cookieStore) {
 
-
+    ctrs.controller('adminmainctr', function ($scope, $q, $rootScope, $http, requestService, ngDialog, $cookieStore) {
+        $scope.tableJu = "main";
+        /**
+         * 对应Mongo
+         * @type {{uid: string, type_id: string, track_id: string, site_url: string, site_name: string, site_pause: boolean, track_status: string}}
+         */
         $scope.sites_model = {
 
             //_id: String, // mongoid
@@ -17,7 +21,7 @@ define(["./module"], function (ctrs) {
             site_url: "", // site url 设置的URL
             site_name: "", // site name 设置的URL
             site_pause: false,//配置暂停 true：暂停 false：使用
-            track_status: "" // track code status
+            track_status: true // track code status
             //status: String, // enable or disable track
 
         };
@@ -25,130 +29,73 @@ define(["./module"], function (ctrs) {
             "site_url": "",
             "site_name": ""
         };
+        //table配置
+        $rootScope.adminSetHtml = "<div class='mid_left'><div class='mid_left_code'>" +
+        "var _pct= _pct|| [];\<br\>"+
+        " (function() {\<br\>"+
+        "   var hm = document.createElement(\"script\");\<br\>"+
+        "   hm.src = \"//t.best-ad.cn/_t.js?tid=ex_track_id\";\<br\>"+
+        "   var s = document.getElementsByTagName(\"script\")[0];\<br\>"+
+        "    s.parentNode.insertBefore(hm, s);\<br\>"+
+        " })();"+
+            "</div> </div><div class='mid_right'><button type='button' class='btn btn-default navbar-btn'>复制代码</button><ul type='disc'>" +
+            "  <li>请将代码添加至网站全部页面的&lt;/head&gt;标签前；</li><li>建议在header.htm类似的页头模板页面中安装，以达到一处安装，全站皆有的效果；</li><li>如需在JS文件中调用统计分析代码，请直接去掉以下代码首尾的&lt;script type='text/javascript' &gt;与&lt;/script&gt;后，放入JS文件中即可；</li>" +
+            "<li> 如果代码安装正确，一般20分钟 后,可以查看网站分析数据；</li></ul></div>";
+        //配置默认指标
+        $rootScope.checkedArray = ["_uid","uid", "type_id", "track_id", "site_url", "site_name", "site_pause", "track_status"];
 
-        //if($rootScope.tableSwitch.number == 6){
-        //    $scope.tableJu = "html";
-        //}
-
-        $rootScope.adminIndicators = function (item, entities, number, refresh) {
-            console.log("adminIndicators");
-            $rootScope.gridArray.shift();
-            $rootScope.gridArray.shift();
-            if (refresh == "refresh") {
-                $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude);
-                return
-            }
-            $rootScope.tableSwitch.number != 0 ? $scope.gridArray.shift() : "";
-            $scope.gridObj = {};
-            $scope.gridObjButton = {};
-            var a = $rootScope.checkedArray.indexOf(item.name);
-            if (a != -1) {
-                $rootScope.checkedArray.splice(a, 1);
-                $rootScope.gridArray.splice(a, 1);
-
-                if ($rootScope.tableSwitch.number != 0) {
-                    $scope.gridObjButton["name"] = " ";
-                    $scope.gridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
-                    $rootScope.gridArray.unshift($scope.gridObjButton);
-                }
-                $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude);
-            } else {
-                if ($rootScope.checkedArray.length >= number) {
-                    $rootScope.checkedArray.shift();
-                    $rootScope.checkedArray.push(item.name);
-                    $rootScope.gridArray.shift();
-
-                    $scope.gridObj["name"] = item.consumption_name;
-                    $scope.gridObj["displayName"] = item.consumption_name;
-                    $scope.gridObj["field"] = item.name;
-
-                    $rootScope.gridArray.push($scope.gridObj);
-
-                    if ($rootScope.tableSwitch.number != 0) {
-                        $scope.gridObjButton["name"] = " ";
-                        $scope.gridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
-                        $rootScope.gridArray.unshift($scope.gridObjButton);
-                    }
-
-                    $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude);
-                    $scope.gridObjButton = {};
-                    $scope.gridObjButton["name"] = "xl";
-                    $scope.gridObjButton["displayName"] = "";
-                    $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
-                    $scope.gridObjButton["maxWidth"] = 10;
-                    $rootScope.gridArray.unshift($scope.gridObjButton);
-                } else {
-                    $rootScope.checkedArray.push(item.name);
-
-                    $scope.gridObj["name"] = item.consumption_name;
-                    $scope.gridObj["displayName"] = item.consumption_name;
-                    $scope.gridObj["field"] = item.name;
-                    $rootScope.gridArray.push($scope.gridObj);
-
-                    if ($rootScope.tableSwitch.number != 0) {
-                        $scope.gridObjButton["name"] = " ";
-                        $scope.gridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
-                        $rootScope.gridArray.unshift($scope.gridObjButton);
-                    }
-                    $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude);
-                    $scope.gridObjButton = {};
-                    $scope.gridObjButton["name"] = "xl";
-                    $scope.gridObjButton["displayName"] = "";
-                    $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
-                    $scope.gridObjButton["maxWidth"] = 10;
-                    $rootScope.gridArray.unshift($scope.gridObjButton);
-                }
-            }
-            angular.forEach(entities, function (subscription, index) {
-                if (subscription.name == item.name) {
-                    $scope.classInfo = 'current';
+        /**
+         * 删除按钮响应
+         * @param index
+         * @param grid
+         * @param row
+         */
+        $scope.onDelete = function(index,grid,row){
+            var query = "/config/site_list?type=delete&query={\"_id\":\"" + row.entity._id +  "\"}";
+            $http({
+                method: 'GET',
+                url: query
+            }).success(function (dataConfig, status) {
+                if(dataConfig == "success"){
+                    refushGridData();
                 }
             });
-            //$rootScope.$broadcast("ssh_reload_datashow");
         };
-        //
-        if (typeof($rootScope.checkedArray) != undefined && $scope.tableJu == "html") {
-            $scope.gridOptions = {
-                paginationPageSize: 25,
-                expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
-                expandableRowHeight: 360,
-                enableColumnMenus: false,
-                enablePaginationControls: false,
-                enableSorting: true,
-                enableGridMenu: false,
-                enableHorizontalScrollbar: 0,
-                columnDefs: $rootScope.gridArray,
-                onRegisterApi: function (girApi) {
-                    $scope.gridApi2 = girApi;
-                    adminGriApihtml(girApi);
+        /**
+         * 暂停按钮响应
+         * @param index
+         * @param grid
+         * @param row
+         */
+        $scope.onPause = function(index,grid,row){
+            //用户ID+url 确定该用户对某个网站是否进行配置
+            var query = "/config/site_list?type=search&query={\"uid\":\"" +   row.entity.uid + "\",\"site_url\":\"" +   row.entity.site_url + "\"}";
+            $http({
+                method: 'GET',
+                url: query
+            }).success(function (dataConfig, status) {
+                if (dataConfig != null ) {//不存在配置 save
+
+                    //model.type_id = dataConfig.type_id;//更新传入不再重新生成
+                    //model.track_id = dataConfig.track_id;
+                    row.entity.site_pause =   !row.entity.site_pause;
+                    var url = "/config/site_list?type=update&query={\"uid\":\"" +  row.entity.uid + "\",\"site_url\":\"" +  row.entity.site_url + "\"}&updates={\"site_pause\":\"" + row.entity.site_pause+"\"}";
+                    $http({
+                        method: 'GET',
+                        url: url
+                    }).success(function (dataConfig, status) {
+
+                    });
+
                 }
-            };
-        } else {
-            $scope.gridOptions = {
-                paginationPageSize: 25,
-                expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
-                expandableRowHeight: 360,
-                enableColumnMenus: false,
-                enablePaginationControls: false,
-                enableSorting: true,
-                enableGridMenu: false,
-                enableHorizontalScrollbar: 0,
-                columnDefs: $rootScope.gridArray,
-                onRegisterApi: function (gridApi) {
-                    $scope.gridApi2 = gridApi;
-                    if ($rootScope.tableSwitch.dimen) {
-                        adminGriApiInfo(gridApi);
-                    }
-                }
-            };
-        }
+            });
+        };
         //table配置
         $rootScope.adminSetHtml = "<div class='mid_left'><div class='mid_left_code'> 邓子豪</div> </div><div class='mid_right'><button type='button' class='btn btn-default navbar-btn'>复制代码</button><ul type='disc'>" +
             "  <li>请将代码添加至网站全部页面的&lt;/head&gt;标签前；</li><li>建议在header.htm类似的页头模板页面中安装，以达到一处安装，全站皆有的效果；</li><li>如需在JS文件中调用统计分析代码，请直接去掉以下代码首尾的&lt;script type='text/javascript' &gt;与&lt;/script&gt;后，放入JS文件中即可；</li>" +
             "<li> 如果代码安装正确，一般20分钟 后,可以查看网站分析数据；</li></ul></div>";
         //配置默认指标
         //配置默认指标
-        $rootScope.checkedArray = ["", "", ""];
         $rootScope.gridArray = [
             {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>1</div>", maxWidth: 5},
             {name: "网站域名", displayName: "网站域名", field: "site_url", maxWidth: '', cellClass: 'table_admin'},
@@ -189,7 +136,6 @@ define(["./module"], function (ctrs) {
 
         ];
 
-
         $rootScope.tableSwitch = {
             latitude: {name: "网站域名", displayName: "网站域名", field: ""},
             tableFilter: null,
@@ -203,46 +149,11 @@ define(["./module"], function (ctrs) {
         };
         //
         $scope.deleteWeb = function() {
-            console.log(686878);
-            //if($scope.gridOpts. data.length > 0){
             $scope.gridArray.splice(0,1);
+            //$scope.onDelete();
             //}
         };
-        $scope.dt = new Date();
-        $scope.onLegendClickListener = function (radio, chartObj, chartConfig, checkedVal) {
-            if ($scope.charts[0].config.compare) {
-                var time = $rootScope.start;
-                if ($scope.compareType == 2) {
-                    time = $rootScope.start - 7;
-                }
-                $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
-                var todayData = $http.get("api/charts?type=" + checkedVal + "&dimension=period&start=" + time + "&end=" + time + "&userType=" + $rootScope.userType + "&int=" + $rootScope.interval);
-                var lastDayData = $http.get("api/charts?type=" + checkedVal + "&dimension=period&start=" + (time - 1) + "&end=" + ( time - 1) + "&userType=" + $rootScope.userType + "&int=" + $rootScope.interval);
-                console.log("*********`" + todayData);
-                console.log("*********1" + lastDayData);
-                $q.all([todayData, lastDayData]).then(function (res) {
-                    var dateStamp = chartUtils.getDateStamp(time);
-                    console.log("*********1" + dateStamp);
-                    var final_result = chartUtils.compareTo(res, dateStamp);
-                    $scope.charts[0].config.noFormat = "none";
-                    $scope.charts[0].config.compare = true;
-                    cf.renderChart(final_result, $scope.charts[0].config);
-                });
-            } else {
-                clear.lineChart($scope.charts[0].config, checkedVal);
-                $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
-                $scope.charts[0].types = checkedVal;
-                var chartarray = [$scope.charts[0]];
-                requestService.refresh(chartarray);
-            }
-        };
-
-
-        var adminGriApiInfo = function (gridApi) {
-//            $scope.gridOptions.data = [{a:"<div class='table_admin'>aaaaaaaaaa</div>",b:"bbbbbbbbbb",c:"ccccccccc"},{a:"dddddddddd",b:"eeeeeeeee",c:"ccccccccc"}]
-        };
-
-        //����HTML ���չ����
+        //
         var adminGriApihtml = function (gridApi) {
             var htmlData = [];
             gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
@@ -262,7 +173,6 @@ define(["./module"], function (ctrs) {
         };
         //新增网站弹框
         $scope.open=function(){
-
             $scope.urlDialog = ngDialog.open({
                 template:'\
               <div class="ngdialog-buttons" >\
@@ -301,7 +211,7 @@ define(["./module"], function (ctrs) {
                         <li>注意</li>\
                         <li> 暂停后，您将不再分析该网站，直至您重新启用，你确定现在暂停使用吗？</li></ul>   \
                     <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
-                    <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="submit(0)">确定</button>\
+                    <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="onPause()">确定</button>\
                 </div>',
                 className: 'ngdialog-theme-default',
                 plain: true,
@@ -360,6 +270,7 @@ define(["./module"], function (ctrs) {
                         method: 'GET',
                         url: url
                     }).success(function (dataConfig, status) {
+                        refushGridData();
                     });
                 } else {//update
                     model.type_id = dataConfig.type_id;//更新传入不再重新生成
@@ -377,8 +288,18 @@ define(["./module"], function (ctrs) {
             });
             //refushGridData();
         };
-
-
+        var refushGridData = function () {
+            var uid = $cookieStore.get("uid");
+            var site_id = $rootScope.userType;
+            var url = "/config/site_list?index=site_list&type=search&query={\"uid\":\"" + uid + "\"}";
+            $http({
+                method: 'GET',
+                url: url
+            }).success(function (dataConfig, status) {
+                $rootScope.gridOptions.data = dataConfig;
+            });
+        };
         Custom.initCheckInfo();//页面check样式js调用
+
     });
 });
