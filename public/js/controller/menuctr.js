@@ -124,7 +124,7 @@ define(["./module"], function (ctrs) {
                     text: '入口页面',
                     sref: '#page/entrancepage'
                 }, {
-                    text: '页面标题',
+                    text: '页面热点图',
                     sref: '#page/pagetitle'
                 }, {
                     text: '离站链接',
