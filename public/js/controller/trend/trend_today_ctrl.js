@@ -10,6 +10,8 @@ define(["./module"], function (ctrs) {
         $scope.lastDaySelect = true;
         $scope.lastWeekSelect = true;
         $scope.clearCompareSelect = true;
+        $scope.souce.selected = {"name": "全部"};
+        $scope.browser.selected = {"name": "全部"};
         $scope.reset = function () {
             $scope.todayClass = false;
             $scope.yesterdayClass = false;
