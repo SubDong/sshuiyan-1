@@ -82,7 +82,9 @@ define(["../app"], function (app) {
             {name: 'IP数', value: 'ip'},
             {name: '跳出率', value: 'outRate'},
             {name: '平均访问时长', value: 'avgTime'},
+            {name: '平均访问页数', value: 'avgPage'},
             {name: '转化次数', value: 'convert'}
+
         ];
         $rootScope.choosedate = {};
         $rootScope.choosedates = [

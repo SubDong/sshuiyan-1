@@ -72,10 +72,10 @@ define(["./module"], function (ctrs) {
                     {name: '展现量', field: 'impression'},
                     {name: '点击量', field: 'click'},
                     {name: '访问次数', field: 'vc'},
-                    {name: '页面转化', field: 'page_conv'},
-                    {name: '事件转化', field: 'event_conv'},
                     {name: '跳出率', field: 'outRate'},
-                    {name: '平均访问时长', field: 'avgTime'}
+                    {name: '平均访问时长', field: 'avgTime'},
+                    {name: '抵达率', field: 'arrivedRate'},
+                    {name: '浏览量（PV)',displayName: "浏览量(PV)", field: 'pv'}
                 ]
             };
 
@@ -503,9 +503,9 @@ define(["./module"], function (ctrs) {
                             obj[item.label] = ad.formatFunc(item.quota[0], "avgTime")
                         }
                     });
-                    obj["page_conv"] = 0;
+                    obj["arrivedRate"] = obj["arrivedRate"] == undefined ? 0:obj["arrivedRate"];
                     obj["outRate"] = (obj["outRate"] == undefined ? 0 : obj["outRate"]) + "%";
-                    obj["event_conv"] = 0;
+                    obj["pv"] = obj["pv"] == undefined ? 0 : obj["pv"];
                     obj["avgTime"] = obj["avgTime"] == undefined ? "00:00:00" : obj["avgTime"];
                     obj["vc"] = obj["vc"] == undefined ? 0 : obj["vc"];
 
