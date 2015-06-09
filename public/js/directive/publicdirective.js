@@ -456,9 +456,25 @@ define(["../app"], function (app) {
                                 return false;
                             }
                             if (flag) {
-                                obj.cValue += (r[temp].indexOf("%") != -1) ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
+                                if (obj.label == "avgTime") {
+                                    var hour = Number(r[temp].split(":")[0]);
+                                    var min = Number(r[temp].split(":")[1]);
+                                    var sec = Number(r[temp].split(":")[2]);
+                                    var count = (((hour * 60) * 60) + (min * 60) + sec);
+                                    obj.cValue += count;
+                                } else {
+                                    obj.cValue += (r[temp].indexOf("%") != -1) ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
+                                }
                             } else {
-                                obj.value += (r[temp].indexOf("%") != -1) ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
+                                if (obj.label == "avgTime") {
+                                    var hour = Number(r[temp].split(":")[0]);
+                                    var min = Number(r[temp].split(":")[1]);
+                                    var sec = Number(r[temp].split(":")[2]);
+                                    var count = (((hour * 60) * 60) + (min * 60) + sec);
+                                    obj.value += count;
+                                } else {
+                                    obj.value += (r[temp].indexOf("%") != -1) ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
+                                }
                             }
                         });
                     });
@@ -590,9 +606,25 @@ define(["../app"], function (app) {
                                     return false;
                                 }
                                 if (flag) {
-                                    obj.cValue += (r[temp].indexOf("%") != -1) ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
+                                    if (obj.label == "avgTime") {
+                                        var hour = Number(r[temp].split(":")[0]);
+                                        var min = Number(r[temp].split(":")[1]);
+                                        var sec = Number(r[temp].split(":")[2]);
+                                        var count = (((hour * 60) * 60) + (min * 60) + sec);
+                                        obj.cValue += count;
+                                    } else {
+                                        obj.cValue += (r[temp].indexOf("%") != -1) ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
+                                    }
                                 } else {
-                                    obj.value += (r[temp].indexOf("%") != -1) ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
+                                    if (obj.label == "avgTime") {
+                                        var hour = Number(r[temp].split(":")[0]);
+                                        var min = Number(r[temp].split(":")[1]);
+                                        var sec = Number(r[temp].split(":")[2]);
+                                        var count = (((hour * 60) * 60) + (min * 60) + sec);
+                                        obj.value += count;
+                                    } else {
+                                        obj.value += (r[temp].indexOf("%") != -1) ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
+                                    }
                                 }
                             });
                         });
@@ -931,7 +963,7 @@ define(["../app"], function (app) {
                 };
                 scope.loadFwrkyData();
                 scope.$on("ssh_refresh_charts", function (e, msg) {
-                    scope._visitor = angular.copy(scope.defaultObject);
+                    scope._visitor = $rootScope.copy(scope.defaultObject);
                     scope.fwlywzTop5 = [];
                     scope.fwrkyTop5 = [];
                     scope.loadBaseData();

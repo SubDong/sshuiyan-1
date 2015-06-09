@@ -90,7 +90,7 @@ define(["app"], function (app) {
         };
 
         $scope.$on("ssh_refresh_charts", function (e, msg) {
-            $rootScope.targetSearch(true);
+            $rootScope.targetSearch();
             if ($scope.compareType) {
                 $scope.otherDateCompareReset();
             } else {
@@ -265,9 +265,6 @@ define(["app"], function (app) {
             requestService.refresh($scope.charts);
             $scope.reloadByCalendar("today");
             $('#reportrange span').html(GetDateStr(0));
-            //其他页面表格
-            $rootScope.targetSearch(true);
-            $scope.$broadcast("ssh_dateShow_options_time_change");
             //classcurrent
             $scope.reset();
             $scope.yesterdayClass = true;
