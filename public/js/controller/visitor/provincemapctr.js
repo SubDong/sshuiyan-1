@@ -3,9 +3,10 @@
  */
 define(["./module"], function (ctrs) {
 
-    ctrs.controller("provincemapctr", function ($scope, uiGridConstants, $rootScope, $http) {
+    ctrs.controller("provincemapctr", function ($scope, uiGridConstants, $rootScope, $http,areaService) {
         $scope.todayClass = true;
-
+        $scope.souce.selected = {"name": "全部"};
+        $scope.browser.selected = {"name": "全部"};
         $rootScope.tableTimeStart = 0;//开始时间
         $rootScope.tableTimeEnd = 0;//结束时间、
         $rootScope.tableFormat = null;
