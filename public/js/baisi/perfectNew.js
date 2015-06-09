@@ -473,7 +473,7 @@ var _pct = _pct || [];
                 var a = document.createElement("script");
                 a.setAttribute("type", "text/javascript");
                 a.setAttribute("charset", "utf-8");
-                a.setAttribute("src", _c.protocol + "//" + _c.P + "/" + _c.S + "?t\=" + c.id + "\&_xy" + 1);
+                a.setAttribute("src", _c.protocol + "//" + _c.P + "/" + _c.S + "?t\=" + c.id + "\&_xy=" + 1 + "\&_position=" + md.g.hm);
                 var f = document.getElementsByTagName("script")[0];
                 f.parentNode.insertBefore(a, f);
                 f.remove()
@@ -511,7 +511,6 @@ var _pct = _pct || [];
                 this.clickEvent();
                 this.na();
                 this.sm();
-                this.hm();
                 //this.heartBeat("");
             }
 
