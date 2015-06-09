@@ -143,7 +143,7 @@ define(["../module"], function (app) {
             $scope.gridOpArray = angular.copy($rootScope.gridArray);
             gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
                 console.log(row);
-                var tempHtml=$rootScope.adminSetHtml.replace('ex_track_id', row.entity.track_id);//替换
+                var tempHtml = $rootScope.adminSetHtml.replace('ex_track_id', row.entity.track_id);//替换
                 var data = [{
                     name: "p",
                     displayName: "",

@@ -67,7 +67,7 @@ define(["./module"], function (ctrs) {
                 enableHorizontalScrollbar: 0,
                 enableVerticalScrollbar: 0,
                 columnDefs: [
-                    {name: ' ', field: 'category',cellClass:'grid_padding'},
+                    {name: ' ', field: 'category', cellClass: 'grid_padding'},
                     {name: '消费', field: 'cost'},
                     {name: '展现量', field: 'impression'},
                     {name: '点击量', field: 'click'},
@@ -283,7 +283,7 @@ define(["./module"], function (ctrs) {
                             chart_result.forEach(function (item, index) {
                                 if (index == 0) {
                                     item.key.push("对比数据");
-                                    item.quota.push(res[0][semType]);
+                                    item.quota.push(res[0][quota]);
                                 } else {
                                     item.key.push("对比数据");
                                     item.quota.push(0);
@@ -304,9 +304,8 @@ define(["./module"], function (ctrs) {
                 $scope.reloadGrid();
                 $scope.compareEsArray = [];
                 var quota = $scope.selectedQuota[0];
-                console.log(esType);
                 if ($scope.tmpEsCompare) {
-                    $scope.initGrid(esType, quota, function (chart_result) {
+                    $scope.initGrid(quota, esType, function (chart_result) {
                         $http.get("/api/charts?start=" + $scope.tmpEsCompare.value + "&end=" + $scope.tmpEsCompare.value + "&dimension=period&userType=" + $rootScope.userType + "&type=" + esType).success
                         (function (res) {
                             var json = JSON.parse(eval("(" + res + ")").toString());
@@ -339,7 +338,7 @@ define(["./module"], function (ctrs) {
                     });
                     //$scope.tmpEsCompare
                 } else {
-                    $scope.initGrid(esType, quota);
+                    $scope.initGrid(quota, esType);
                 }
 
                 //$scope.refreshData();
@@ -405,7 +404,7 @@ define(["./module"], function (ctrs) {
                 (function (res) {
                     var json = JSON.parse(eval("(" + res + ")").toString());
                     if (json.length) {
-                        var date = json[0].key[0].substring(0, 10);
+                        //var date = json[0].key[0].substring(0, 10);
                         var count = 0;
                         json[0].quota.forEach(function (item) {
                             if (esQuery == "outRate" || esQuery == "arrivedRate") {
@@ -433,7 +432,6 @@ define(["./module"], function (ctrs) {
                             }
                         });
                         //console.log($rootScope.chartTmp);
-                        console.log($rootScope.chartTmp);
                         cf.renderChart($rootScope.chartTmp, $scope.charts[0].config);
                     } else {
                         $scope.compareType = false;
