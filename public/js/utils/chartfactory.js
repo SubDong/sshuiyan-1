@@ -357,14 +357,13 @@ var op = {
             tooltip: {
                 trigger: !chartConfig.tt ? "item" : chartConfig.tt,
                 formatter: function (params, ticket, callback) {
-                    var res = params.name + '<br/>';
-                        var formatType = labelData[0];
-                        if (chartConfig.toolTip == undefined) {
-                            res += params.seriesName + ' : ' + ad.formatFunc(params.value, formatType) + '<br/>';
-                        } else {
-                            res += params.seriesName + ' : ' + params.value + '<br/>';
-                        }
-
+                    var formatType = labelData[0];
+                    var res = chartUtils.convertChinese(formatType) + "值：";
+                    if (chartConfig.toolTip == undefined) {
+                        res += ad.formatFunc(params.value, formatType) + '<br/>' + '占比：' + params[3] + '%<br/>';
+                    } else {
+                        res += params.value + '<br/>' + '占比：' + params[3] + '%<br/>';
+                    }
                     return res;
                 }
             },

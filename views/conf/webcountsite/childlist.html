@@ -2,13 +2,13 @@
     <div class="web_list">
         <!--网站导航-->
         <div class="web_list_nav">
-            <p>web.best-ad.cn 子目录</p>
+            <p>  <span ng-bind-html="userTypeName">子目录</span></p>
         </div>
         <!--网站上部列表部分-->
         <div class="web_list_up" >
             <div class="table_content" ng-controller="TabsCtrl">
                 <div class="custom_table">
-                    <div ui-grid="gridOptions" class="grid grid_table" style="min-height:400px;" ui-grid-pagination ui-grid-selection
+                    <div ui-grid="gridOptions" class="grid grid_table" ui-grid-pagination ui-grid-selection
                          ui-grid-exporter ui-grid-expandable></div>
                 </div>
             </div>

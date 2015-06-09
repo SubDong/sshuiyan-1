@@ -261,7 +261,6 @@ define(["./module"], function (ctrs) {
             $rootScope.tableTimeStart = -1;//开始时间
             $rootScope.tableTimeEnd = -1;//结束时间、
             $rootScope.tableFormat = null;
-            $rootScope.targetSearchSpread();
             $scope.init($rootScope.user, $rootScope.baiduAccount, "creative", $scope.selectedQuota, $rootScope.start, $rootScope.end);
             //图表
             requestService.refresh($scope.charts);
@@ -269,7 +268,6 @@ define(["./module"], function (ctrs) {
             $('#reportrange span').html(GetDateStr(-1));
             //其他页面表格
             //classcurrent
-            $scope.$broadcast("ssh_dateShow_options_time_change");
             $scope.reset();
             $scope.yesterdayClass = true;
         };

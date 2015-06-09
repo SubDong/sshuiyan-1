@@ -8,8 +8,10 @@ define(["./module"], function (ctrs) {
         //配置默认指标
         $rootScope.checkArray = ["", "", ""];
         $rootScope.gridArray = [
+
             {name: "子目录名称", displayName: "子目录名称", field: ""},
             {name: "包含的页面或目录", displayName: "包含的页面或目录", field: ""},
+            {name: "不包含的页面或目录", displayName: "不包含的页面或目录", field: ""},
             {name: "创建时间 ", displayName: "创建时间", field: ""}
         ];
         $rootScope.tableSwitch = {
@@ -25,5 +27,22 @@ define(["./module"], function (ctrs) {
         };
         //
 
+        /**
+         * 初始化数据
+         */
+        var refushGridData = function () {
+            var uid = $cookieStore.get("uid");
+            var site_id = $rootScope.userType;
+            var url = "/config/site_list?index=site_list&type=search&query={\"uid\":\"" + uid + "\"}";
+            $http({
+                method: 'GET',
+                url: url
+            }).success(function (dataConfig, status) {
+                console.log(dataConfig);
+                // $scope.gridOptions.data = dataConfig;
+
+            });
+        };
+        refushGridData();
     });
 });

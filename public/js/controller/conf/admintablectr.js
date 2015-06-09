@@ -5,22 +5,7 @@ define(["../module"], function (app) {
 
     "use strict";
 
-    app.controller("admintablectr", function ($timeout, $scope, $rootScope, $http,$cookieStore) {
-        $scope.site_config={
-            uid: "", // user i
-            site_url: "", // site url
-            site_name: "", // site name
-            track_code: "", // js track id
-            track_status: "", // track code status
-            status: "", // enable or disable track
-            type_id: "" // es type id ( hidden in front-end)
-        };
-
-        //
-        //if($rootScope.tableSwitch.number == 6){
-        //    $scope.tableJu = "html";
-        //}
-
+    app.controller("admintablectr", function ($timeout, $scope, $rootScope, $http, $cookieStore) {
         $rootScope.adminIndicators = function (item, entities, number, refresh) {
             console.log("adminIndicators");
             $rootScope.gridArray.shift();
@@ -127,90 +112,56 @@ define(["../module"], function (app) {
                 columnDefs: $rootScope.gridArray,
                 onRegisterApi: function (gridApi) {
                     $scope.gridApi2 = gridApi;
-                    if ($rootScope.tableSwitch.dimen) {
-                        adminGriApiInfo(gridApi);
-                    }
+                    adminGriApiInfo(gridApi);
                 }
             };
         }
 
+        //////DENG
+
         /**
          * 初始化数据
          */
-        var initGridData = function(){
-            var uid= $cookieStore.get("uid");
-            var site_id=$rootScope.userType;
-            var url= "/config/conf?index=site_list&type=search&query={\"uid\":\""+uid+"\"}";
+        var refushGridData = function () {
+            var uid = $cookieStore.get("uid");
+            var site_id = $rootScope.userType;
+            var url = "/config/site_list?index=site_list&type=search&query={\"uid\":\"" + uid + "\"}";
             $http({
                 method: 'GET',
                 url: url
             }).success(function (dataConfig, status) {
-                //console.log("获取网站列表数据");
-                //数据拼装
-                //var urls=[];
-                //var names=[];
-                //dataConfig.forEach(function(item,i){
-                //    urls[i]=item.site_url;
-                //    names[i]=item.site_name
-                //});
                 $scope.gridOptions.data = dataConfig;
             });
         };
-        initGridData();
-
-        //var addSiteConfig=function(){
-        //    $scope.site_config.uid = $cookieStore.get("uid");
-        //    $scope.site_config.site_url = "www.perfect.com";
-        //    $scope.site_config.site_name="普菲特";
-        //    var query= "/config/conf?index=site_list&type=search&query={\"uid\":\""+$scope.site_config.uid+"\",\"site_url\":\""+$scope.site_config.site_url+"\"}";
-        //    $http({
-        //        method: 'GET',
-        //        url: query
-        //    }).success(function (dataConfig, status) {
-        //        console.log("获取网站列表数据");
-        //        console.log(angular.toJson($scope.site_config));
-        //        if(dataConfig==null||dataConfig.length==0){//不存在配置 save
-        //
-        //            var url= "/config/conf?index=site_list&type=save&entity="+angular.toJson($scope.site_config);
-        //            $http({
-        //                method: 'GET',
-        //                url: url
-        //            }).success(function (dataConfig, status) {
-        //                console.log("保存网站列表数据");
-        //            });
-        //        }else{//update
-        //            var url= "/config/conf?index=site_list&type=update&query={\"uid\":\""+$scope.site_config.uid+"\",\"site_url\":\""+$scope.site_config.site_url+"\"}&updates="+angular.toJson($scope.site_config);;
-        //            $http({
-        //                method: 'GET',
-        //                url: url
-        //            }).success(function (dataConfig, status) {
-        //                console.log("更新网站列表数据");
-        //            });
-        //
-        //        }
-        //
-        //    });
-        //};
-        //addSiteConfig();
-
-        //$scope.gridOptions.data = [{a:"aaaaaaaaaa",b:"bbbbbbbbbb",c:"ccccccccc"},{a:"dddddddddd",b:"eeeeeeeee",c:"ccccccccc"}];
-
-
+        refushGridData();
         $scope.page = "";
         $scope.pagego = function (pagevalue) {
             pagevalue.pagination.seek(Number($scope.page));
         };
-
-        //��ͨ���չ����
+        //配置展开巷HTML
         var adminGriApiInfo = function (gridApi) {
-//            $scope.gridOptions.data = [{a:"<div class='table_admin'>aaaaaaaaaa</div>",b:"bbbbbbbbbb",c:"ccccccccc"},{a:"dddddddddd",b:"eeeeeeeee",c:"ccccccccc"}]
-        };
+            $scope.gridOpArray = angular.copy($rootScope.gridArray);
+            gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
+                console.log(row);
+                var tempHtml=$rootScope.adminSetHtml.replace('ex_track_id', row.entity.track_id);//替换
+                var data = [{
+                    name: "p",
+                    displayName: "",
+                    field: 'info',
+                    cellTemplate: tempHtml
+                }];
 
-        //����HTML ���չ����
-        var adminGriApihtml = function(gridApi){
+                row.entity.subGridOptions = {
+                    showHeader: false,
+                    columnDefs: data
+                };
+                row.entity.subGridOptions.data = [{"info": " "}];
+            })
+        }
+        ////
+        var adminGriApihtml = function (gridApi) {
             var htmlData = [];
             gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
-                console.log("+++++++++"+row);
                 row.entity.subGridOptions = {
                     showHeader: false,
                     enableHorizontalScrollbar: 0,
@@ -224,5 +175,9 @@ define(["../module"], function (app) {
                 row.entity.subGridOptions.data = [{"info": " "}];
             });
         };
+        $scope.getDiv = function (a) {
+            console.log(a);
+        }
+        ///////////
     });
 });

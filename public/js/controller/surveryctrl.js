@@ -67,15 +67,15 @@ define(["./module"], function (ctrs) {
                 enableHorizontalScrollbar: 0,
                 enableVerticalScrollbar: 0,
                 columnDefs: [
-                    {name: ' ', field: 'category',cellClass:'grid_padding',},
+                    {name: ' ', field: 'category',cellClass:'grid_padding'},
                     {name: '消费', field: 'cost'},
                     {name: '展现量', field: 'impression'},
                     {name: '点击量', field: 'click'},
                     {name: '访问次数', field: 'vc'},
-                    {name: '页面转化', field: 'page_conv'},
-                    {name: '事件转化', field: 'event_conv'},
                     {name: '跳出率', field: 'outRate'},
-                    {name: '平均访问时长', field: 'avgTime'}
+                    {name: '平均访问时长', field: 'avgTime'},
+                    {name: '抵达率', field: 'arrivedRate'},
+                    {name: '浏览量（PV)',displayName: "浏览量(PV)", field: 'pv'}
                 ]
             };
 
@@ -300,11 +300,11 @@ define(["./module"], function (ctrs) {
             // 触发效果指标的事件
             $scope.setEffectQuota = function (effectQuota) {
                 $scope.effectQuota_ = effectQuota.value;
-                $scope.selectedQuota[1] = effectQuota.value;
+                var esType = effectQuota.value;
                 $scope.reloadGrid();
                 $scope.compareEsArray = [];
                 var quota = $scope.selectedQuota[0];
-                var esType = $scope.selectedQuota[1];
+                console.log(esType);
                 if ($scope.tmpEsCompare) {
                     $scope.initGrid(esType, quota, function (chart_result) {
                         $http.get("/api/charts?start=" + $scope.tmpEsCompare.value + "&end=" + $scope.tmpEsCompare.value + "&dimension=period&userType=" + $rootScope.userType + "&type=" + esType).success
@@ -435,7 +435,10 @@ define(["./module"], function (ctrs) {
                         //console.log($rootScope.chartTmp);
                         console.log($rootScope.chartTmp);
                         cf.renderChart($rootScope.chartTmp, $scope.charts[0].config);
-                    }else{
+                    } else {
+                        $scope.compareType = false;
+                        $scope.compareEsCompare = false;
+                        $scope.tmpEsCompare = null;
                         alert("暂无数据");
                     }
                 });
@@ -500,9 +503,11 @@ define(["./module"], function (ctrs) {
                             obj[item.label] = ad.formatFunc(item.quota[0], "avgTime")
                         }
                     });
-                    obj["page_conv"] = 0;
+                    obj["arrivedRate"] = obj["arrivedRate"] == undefined ? 0:obj["arrivedRate"];
                     obj["outRate"] = (obj["outRate"] == undefined ? 0 : obj["outRate"]) + "%";
-                    obj["event_conv"] = 0;
+                    obj["pv"] = obj["pv"] == undefined ? 0 : obj["pv"];
+                    obj["avgTime"] = obj["avgTime"] == undefined ? "00:00:00" : obj["avgTime"];
+                    obj["vc"] = obj["vc"] == undefined ? 0 : obj["vc"];
 
                     $scope.surveyData1.push(obj);
 

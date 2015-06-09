@@ -15,6 +15,7 @@ define(["./module"], function (ctrs) {
             {name: "记录方式", displayName: "记录方式", field: ""},
             {name: "转化类型", displayName: "转化类型", field: ""}
         ];
+
         $rootScope.tableSwitch = {
             latitude: {name: "网站域名", displayName: "网站域名", field: ""},
             tableFilter: null,
@@ -26,7 +27,7 @@ define(["./module"], function (ctrs) {
             //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
             arrayClear: false //是否清空指标array
         };
-        //
+
 
     });
 });
