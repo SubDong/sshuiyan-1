@@ -1,6 +1,22 @@
 // schema types 参考 http://mongoosejs.com/docs/schematypes.html
 
 var schemas = {
+
+    //子目录管理
+    subdirectories_model: {
+        model_name: "Subdirectories",
+        collection_name: "conf_subdirectories",
+        schema: {
+            //_id: String, // mongoid
+            uid: String, // user id 用户ID
+            root_url:String, //根目录
+            subdirectory_url:String,//子目录
+            is_regular:Boolean,//是否使用正则表达式
+            analysis_url: String, //分析的目录
+            not_analysis_url:String, //不分析的目录
+        }
+    },
+
     sites_model: {
         model_name: "Sites",
         collection_name: "conf_sites",

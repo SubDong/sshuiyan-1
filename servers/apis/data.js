@@ -559,6 +559,9 @@ api.get("/config", function (req, res) {
         case "5":
             schema_name = "converts_model";
             break;
+        case "subdirectoryList"://子目录管理
+            schema_name = "subdirectories_model";
+            break;
         default :
     }
     switch (type) {
