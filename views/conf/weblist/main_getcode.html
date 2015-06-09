@@ -1,0 +1,45 @@
+<div class="middle_containers" ng-controller="main_getcodectr" xmlns="http://www.w3.org/1999/html"
+     xmlns="http://www.w3.org/1999/html">
+    <div class="page_container">
+        <div class="title_bar">
+            <strong>best-ad.cn 代码获取</strong>
+            <span>（不想手工加载代码吗？<a href="#">立刻一键安装）</a></span>
+        </div>
+        <div class="async_loading">
+            <div class="code_title">
+                <strong>新版访问分析代码（异步加载）</strong>
+                <span>&nbsp;&nbsp;(请将代码添加至网站全部页面的&lt;/header&gt;标签前。
+                    <a href="#">查看示例</a>&nbsp;&nbsp;
+                    <a href="#">查看建站工具中的安装方法</a>)
+                </span>
+            </div>
+            <div class="code_content">
+                <p>新的升级版代码是以异步加载形式加载，统计数据更准确、加载速度更快，代码出错率更小。</p>
+                <textarea class="code">
+&lt;script&gt;
+    var _hmt = _hmt || [];
+    (function() {
+        var hm = document.createElement("script");
+        hm.src = "//hm.baidu.com/hm.js?83dc23ab32f972b924c07b183db8646f";
+        var s = document.getElementsByTagName("script")[0];
+         s.parentNode.insertBefore(hm, s);
+    })();
+&lt;/script&gt;
+                </textarea>
+                <div class="copyCodeWrap">
+                    <button class="btn btn-info">复制代码</button>
+                </div>
+                <div>
+                    <a href="#">展开代码安装攻略<i class="caret"></i></a>
+                </div>
+                <div class="asyncCodeTipDetail">
+                    <p>1、 请将代码添加至网站全部页面的&lt;/head&gt;标签前；</p>
+                    <p>2、 建议在header.htm类似的页头模板页面中安装，以达到一处安装，全站皆有的效果；</p>
+                    <p>3、 如需在JS文件中调用统计分析代码，请直接去掉以下代码首尾的&lt;script type="text/javascript"&gt;与&lt;/script&gt;后，放入JS文件中即可；</p>
+                    <p>4、 如果代码安装正确，一般20分钟 后,可以查看网站分析数据；</p>
+                    <p>5、 刚安装后可能暂时出现浏览器缓存问题导致的统计误差，查看详情。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

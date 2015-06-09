@@ -250,6 +250,11 @@ define(["angular", "app"], function (ng, app) {
                 url: '/conf/webcountsite/pagechange_add',
                 templateUrl: '../conf/webcountsite/pagechange_add.html'
             })
+//            获取代码
+            .state('main_getcode', {
+                url: '/conf/weblist/main_getcode',
+                templateUrl: '../conf/weblist/main_getcode.html'
+            })
             .state('timechange', {
                 url: '/conf/webcountsite/timechange',
                 templateUrl: '../conf/webcountsite/timechange.html'

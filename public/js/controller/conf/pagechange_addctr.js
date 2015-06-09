@@ -16,6 +16,19 @@ define(["./module"], function (ctrs) {
         $scope.benefitSet = false;
         $scope.pathType = false;
         $scope.changeType = false;
+//        添加目标URL
+        $scope.targets=[{}];
+        $scope.showRemove = false;
+        $scope.targetRemoves = [];
+        $scope.targetUrlAdd = function(targets,targetRemoves) {
+            $scope.showRemove = true;
+            targets.push({});
+            targetRemoves.push({});
+        }
+        $scope.removeTargetUrl = function(targets,targetRemoves,_index) {
+            targets.splice(_index+1,1);
+            targetRemoves.splice(_index,1);
+        }
         $scope.paths = [{
             steps: [{
                 pages:[{}]
