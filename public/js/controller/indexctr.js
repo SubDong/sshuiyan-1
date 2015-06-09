@@ -9,6 +9,7 @@ define(['./module'], function (ctrs) {
         $scope.todayClass = true;
         $scope.hourcheckClass = true;
         $scope.menu_select = false;
+        //$rootScope.interval=1;
         $scope.reset = function () {
             $scope.definClass = false;
         };
@@ -89,7 +90,7 @@ define(['./module'], function (ctrs) {
             {
                 config: {
                     legendId: "index_charts_legend",
-                    legendData: ["浏览量(PV)", "访客数(UV)", "IP数", "跳出率", "抵达率", "平均访问时长", "页面转化"],//显示几种数据
+                    legendData: ["浏览量(PV)", "访客数(UV)", "IP数", "跳出率", "抵达率", "平均访问时长", "平均访问页数", "页面转化"],//显示几种数据
                     legendAllowCheckCount: 2,
                     legendClickListener: $scope.onLegendClickListener,
                     legendDefaultChecked: [0, 1],
@@ -289,7 +290,6 @@ define(['./module'], function (ctrs) {
             }
             $rootScope.start = time[0];
             $rootScope.end = time[1];
-            $rootScope.interval = -1;
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;

@@ -333,20 +333,20 @@ var chartUtils = {
             var count = 0;
             var type = item.label;
             item.quota.forEach(function (quota) {
-                if (type == "avgTime" || type == "outRate" || type == "arrivedRate" || type == "nuvRate") {
+                if (type == "avgTime" || type == "outRate" || type == "arrivedRate" || type == "nuvRate", type == "avgPage") {
                     count += Number(quota);
                 } else {
                     count += quota;
                 }
             });
-            if (type == "avgTime" || type == "outRate" || type == "arrivedRate" || type == "nuvRate") {
+            if (type == "avgTime" || type == "outRate" || type == "arrivedRate" || type == "nuvRate", type == "avgPage") {
                 count = parseFloat(count / item.quota.length).toFixed(2);
             }
             _tmp["label"] = chartUtils.convertChinese(item.label);
             _tmp["quota"] = [count];
             if (item.key[0]) {
                 _tmp["key"] = [item.key[0].substring(0, 10)];
-            }else{
+            } else {
                 _tmp["key"] = [new Date().Format("yyyy-MM-dd")];
             }
             final_result.push(_tmp);
