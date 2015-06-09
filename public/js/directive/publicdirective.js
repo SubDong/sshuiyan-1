@@ -892,7 +892,7 @@ define(["../app"], function (app) {
     /**
      * Create by wms on 2015-05-05.新老访客信息
      */
-    app.directive("sshNoVisitor", function ($http, $rootScope) {
+    app.directive("sshNoVisitor", function ($http, $rootScope, $q) {
         return {
             restrict: 'E',
             templateUrl: '../commons/no_visitor.html',
@@ -906,10 +906,10 @@ define(["../app"], function (app) {
                     pv: 0,
                     uv: 0,
                     outRate: 0,
-                    avgTime: "--",
+                    avgTime: "00:00:00",
                     avgPage: 0
                 };
-                scope._visitor = angular.copy(scope.defaultObject);
+                scope._visitor = $rootScope.copy(scope.defaultObject);
                 // 读取基础数据
                 scope.loadBaseData = function () {
                     scope.sumPv = 0;
@@ -939,36 +939,23 @@ define(["../app"], function (app) {
                     });
                 };
                 scope.loadBaseData();
-                scope.loadFwlywzData = function () {
-                    $http({
-                        method: 'GET',
-                        url: '/api/fwlywz/?type=' + $rootScope.userType + '&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=pv&ct=' + scope._ctValue
-                    }).success(function (data, status) {
-                        scope.fwlywzTop5 = data;
-                    }).error(function (error) {
-                        console.log(error);
+                scope.loadData = function () {
+                    // 访问来源网站
+                    var fwlywzRequest = $http.get('/api/fwlywz/?type=' + $rootScope.userType + '&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=pv&ct=' + scope._ctValue);
+                    // 访问入口页TOP5
+                    var fwrkyRequest = $http.get('/api/indextable/?type=' + $rootScope.userType + '&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=vc&dimension=loc&filerInfo=[{"ct": ["' + scope._ctValue + '"]}]');
+                    $q.all([fwlywzRequest, fwrkyRequest]).then(function (final_result) {
+                        scope.fwlywzTop5 = final_result[0].data;
+                        scope.fwrkyTop5 = final_result[1].data.length > 5 ? final_result[1].data.slice(0, 5) : final_result[1].data;
                     });
                 };
-                scope.loadFwlywzData();
-                // 访问入口页TOP5
-                scope.loadFwrkyData = function () {
-                    $http({
-                        method: 'GET',
-                        url: '/api/indextable/?type=' + $rootScope.userType + '&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=vc&dimension=loc&filerInfo=[{"ct": ["' + scope._ctValue + '"]}]'
-                    }).success(function (data, status) {
-                        scope.fwrkyTop5 = data ? ((data.length > 5) ? data.slice(0, 5) : data) : [];
-                    }).error(function (error) {
-                        console.log(error);
-                    });
-                };
-                scope.loadFwrkyData();
+                scope.loadData();
                 scope.$on("ssh_refresh_charts", function (e, msg) {
                     scope._visitor = $rootScope.copy(scope.defaultObject);
                     scope.fwlywzTop5 = [];
                     scope.fwrkyTop5 = [];
                     scope.loadBaseData();
-                    scope.loadFwlywzData();
-                    scope.loadFwrkyData();
+                    scope.loadData();
                 });
             }
         }

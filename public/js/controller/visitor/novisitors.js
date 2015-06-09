@@ -90,6 +90,7 @@ define(["./module"], function (ctrs) {
             $rootScope.tableTimeStart = time[0];
             $rootScope.tableTimeEnd = time[1];
             $rootScope.targetSearch();
+            $rootScope.$broadcast("ssh_refresh_charts");
         }
         function GetDateStr(AddDayCount) {
             var dd = new Date();
