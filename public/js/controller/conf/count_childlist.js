@@ -27,5 +27,22 @@ define(["./module"], function (ctrs) {
         };
         //
 
+        /**
+         * 初始化数据
+         */
+        var refushGridData = function () {
+            var uid = $cookieStore.get("uid");
+            var site_id = $rootScope.userType;
+            var url = "/config/site_list?index=site_list&type=search&query={\"uid\":\"" + uid + "\"}";
+            $http({
+                method: 'GET',
+                url: url
+            }).success(function (dataConfig, status) {
+                console.log(dataConfig);
+                // $scope.gridOptions.data = dataConfig;
+
+            });
+        };
+        refushGridData();
     });
 });

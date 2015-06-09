@@ -27,6 +27,22 @@ var daos = {
         });
     },
     remove: function (schema, obj, cb) {
+        console.log("remove 1");
+        if (obj.uid) {
+            return this.uiderror();
+        }
+
+        var instance = this.createmodel(schema);
+
+        instance.remove(JSON.parse(obj),function (err,docs) {
+
+            if (err)
+                return console.error(err);
+            cb()
+        });
+    },
+    remove: function (schema, obj, cb) {
+        console.log("remove 2");
         if (obj.uid) {
             return this.uiderror();
         }
@@ -34,7 +50,7 @@ var daos = {
         instance.remove(JSON.parse(obj),function (err,docs) {
             if (err)
                 return console.error(err);
-            cb()
+            cb(docs)
         });
     },
     find: function (schema, qry, fields,options, cb) {
