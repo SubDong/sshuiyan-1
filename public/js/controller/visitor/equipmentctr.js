@@ -197,10 +197,14 @@ define(["./module"], function (ctrs) {
         $rootScope.datePickerCompare = function (start, end, lable) {
             var times = chartUtils.getTimeOffset(start, end);
             var type = [chartUtils.convertEnglish($scope.charts[0].config.legendData[0])];
-            $scope.compare(times, type, true);
-            $scope.reset();
             $rootScope.start = times[0];
             $rootScope.end = times[1];
+            if ($rootScope.start == $rootScope.end) {
+                alert("请选择正确的对比时间");
+                return;
+            }
+            $scope.compare(times, type, true);
+            $scope.reset();
             $scope.choiceClass = true;
             $scope.compareType = true;
         }

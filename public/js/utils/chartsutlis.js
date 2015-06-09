@@ -344,7 +344,11 @@ var chartUtils = {
             }
             _tmp["label"] = chartUtils.convertChinese(item.label);
             _tmp["quota"] = [count];
-            _tmp["key"] = [item.key[0].substring(0, 10)];
+            if (item.key[0]) {
+                _tmp["key"] = [item.key[0].substring(0, 10)];
+            }else{
+                _tmp["key"] = [new Date().Format("yyyy-MM-dd")];
+            }
             final_result.push(_tmp);
         });
         return final_result;

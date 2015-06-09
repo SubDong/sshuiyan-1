@@ -300,11 +300,11 @@ define(["./module"], function (ctrs) {
             // 触发效果指标的事件
             $scope.setEffectQuota = function (effectQuota) {
                 $scope.effectQuota_ = effectQuota.value;
-                $scope.selectedQuota[1] = effectQuota.value;
+                var esType = effectQuota.value;
                 $scope.reloadGrid();
                 $scope.compareEsArray = [];
                 var quota = $scope.selectedQuota[0];
-                var esType = $scope.selectedQuota[1];
+                console.log(esType);
                 if ($scope.tmpEsCompare) {
                     $scope.initGrid(esType, quota, function (chart_result) {
                         $http.get("/api/charts?start=" + $scope.tmpEsCompare.value + "&end=" + $scope.tmpEsCompare.value + "&dimension=period&userType=" + $rootScope.userType + "&type=" + esType).success
@@ -435,7 +435,10 @@ define(["./module"], function (ctrs) {
                         //console.log($rootScope.chartTmp);
                         console.log($rootScope.chartTmp);
                         cf.renderChart($rootScope.chartTmp, $scope.charts[0].config);
-                    }else{
+                    } else {
+                        $scope.compareType = false;
+                        $scope.compareEsCompare = false;
+                        $scope.tmpEsCompare = null;
                         alert("暂无数据");
                     }
                 });
