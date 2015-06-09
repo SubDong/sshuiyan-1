@@ -227,23 +227,26 @@ define(["./module"], function (ctrs) {
             var userObj = $cookieStore.get('uname').user;
             $rootScope.perfectUser = userObj;
             $rootScope.usites = $cookieStore.get('usites');
-            $rootScope.default = $rootScope.usites[0].name;     // default site
-            $rootScope.defaultType = $rootScope.usites[0].id;   // default site trackId
-            console.log($scope.usites);
+
+            // TODO
+            $rootScope.default = $rootScope.usites[0].site_name;     // default site
+            $rootScope.defaultType = $rootScope.usites[0].site_id;   // default site id
+
+            //console.log($scope.usites);
         }
         $scope.initPerfectAccount();
 
         $scope.siteselect = {};
         $scope.siteselects = $rootScope.usites;
 
-        $rootScope.user = $rootScope.usites[0].p_name;//perfect2015
-        $rootScope.baiduAccount = $rootScope.usites[0].bd_name;//baidu-perfect2151880
+        $rootScope.user = $cookieStore.get('uname');//perfect2015
+        //$rootScope.baiduAccount = $rootScope.usites[0].bd_name;//baidu-perfect2151880
         $rootScope.userType = $rootScope.usites[0].id;//www.perfect-cn.cn
         $rootScope.userTypeName = $rootScope.usites[0].name;
 
         $scope.changeUrl = function (select) {
             $rootScope.user = select.p_name;
-            $rootScope.baiduAccount = select.bd_name;
+            //$rootScope.baiduAccount = select.bd_name;
             $rootScope.userType = select.id;
             $rootScope.userTypeName = select.name;
 

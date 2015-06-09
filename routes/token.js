@@ -5,7 +5,6 @@ token.post("/", tokener)
 token.get("/", tokener)
 
 function tokener(req, res, next) {
-    console.log(req.url)
 
     var tokenid = req.query['tokenid'];
 
@@ -20,11 +19,11 @@ function tokener(req, res, next) {
         } else {
             var userinfo = JSON.parse(redis_res);
             req.session.user = userinfo;
-            if (userinfo.baiduAccounts.length > 0) {
-                req.session.currentBaiduUser = userinfo.baiduAccounts[0];
-                req.session.accountid = userinfo.baiduAccounts[0].id
-                req.session.accountname = userinfo.baiduAccounts[0].baiduUserName
-            }
+            //if (userinfo.baiduAccounts.length > 0) {
+            //    req.session.currentBaiduUser = userinfo.baiduAccounts[0];
+            //    req.session.accountid = userinfo.baiduAccounts[0].id
+            //    req.session.accountname = userinfo.baiduAccounts[0].baiduUserName
+            //}
             res.redirect("/");
             return;
         }

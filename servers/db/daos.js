@@ -34,7 +34,7 @@ var daos = {
 
         var instance = this.createmodel(schema);
 
-        instance.remove(JSON.parse(obj),function (err,docs) {
+        instance.remove(JSON.parse(obj), function (err, docs) {
 
             if (err)
                 return console.error(err);
@@ -47,18 +47,32 @@ var daos = {
             return this.uiderror();
         }
         var instance = this.createmodel(schema);
-        instance.remove(JSON.parse(obj),function (err,docs) {
+        instance.remove(JSON.parse(obj), function (err, docs) {
             if (err)
                 return console.error(err);
             cb(docs)
         });
     },
-    find: function (schema, qry, fields,options, cb) {
+    find: function (schema, qry, fields, options, cb) {
         if (qry.uid) {
             return this.uiderror();
         }
-        var  instance= this.createmodel(schema);
-        instance.find(JSON.parse(qry), fields, options,cb);
+        var instance = this.createmodel(schema);
+        instance.find(JSON.parse(qry), fields, options, cb);
+    },
+    findSync: function (schema, qry, fields, options, cb) {
+        if (qry.uid) {
+            return this.uiderror();
+        }
+        var instance = this.createmodel(schema);
+        var promise = instance.find(JSON.parse(qry), fields, options).exec()
+
+        return promise;
+
+        //promise.then(cb(docs)).then(null, function (err) {
+        //        assert.ok(err instanceof Error);
+        //    }
+        //);
     },
     count: function (schema, qry, options, cb) {
         if (qry.uid) {
@@ -85,12 +99,12 @@ var daos = {
         instance.update(JSON.parse(qry), JSON.parse(updates), null, cb);
     },
     createmodel: function (schema) {
-        try{
+        try {
             var dbschema = mongodb.service().Schema(schemas[schema].schema);
             var Model = mongodb.service().model(schemas[schema].model_name, dbschema, schemas[schema].collection_name);
             return Model;
-        }catch(err){
-            console.log("Model "+schemas[schema].model_name+" has been created!Just need get it!");
+        } catch (err) {
+            console.log("Model " + schemas[schema].model_name + " has been created!Just need get it!");
             var Model = mongodb.service().model(schemas[schema].model_name);
             return Model;
         }

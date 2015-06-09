@@ -22,7 +22,7 @@ var express = require('express'),
 
 
 var env = "dev";
-var config = require("./config_dev.json");
+var config = require("./config.json");
 
 var es_client = es.init(config.es);
 
@@ -82,36 +82,45 @@ app.use(function (req, res, next) {
     req.es = es_client;
     req.redisclient = redis_client;
     req.accountid = req.session.accountid;
-    res.cookie('uname', JSON.stringify(req.session));
     if (req.session.user) {
+        res.cookie('uname', JSON.stringify(req.session.user.userName));
         res.cookie('uid', JSON.stringify(req.session.user.id));
-        daos.find("sites_model", JSON.stringify({uid: req.session.user.id}), null, {}, function (err, docs) {
-            if (err) {
-                console.error(err);
-                next();
-            }
-            if (docs) {
-                var uistes = [];
+
+
+        var promise = daos.findSync("sites_model", JSON.stringify({uid: req.session.user.id}), null, {});
+
+        promise.then(function (docs) {
+            var usites = [];
+
+            if (docs.length > 0) {
                 docs.forEach(function (item) {
                     var site = {};
-                    site["name"] = item.site_name;
+                    site['site_id'] = item._id.toString();
+                    site["site_name"] = item.site_name;
                     if (item.site_url == "www.best-ad.cn") {
-                        site["id"] = 1;
+                        site["type_id"] = 1;
                     } else if (item.site_url == "www.perfect-cn.cn") {
-                        site["id"] = 2;
+                        site["type_id"] = 2;
                     } else {
-                        site["id"] = item._id.toString();
+                        site["type_id"] = item.type_id;
                     }
-                    site["p_name"] = req.session.user.userName;
-                    site["bd_name"] = req.session.accountname;
-                    uistes.push(site);
+                    //site["u_name"] = req.session.user.userName;
+                    //site["bd_name"] = req.session.accountname;
+                    usites.push(site);
                 });
-                res.cookie('usites', JSON.stringify(uistes));
-                next();
+
+            } else {
+                usites.push({
+                    'site_id': -1,
+                    'site_name': '<无>',
+                    'type_id': -1
+                })
             }
-        });
+
+            res.cookie('usites', '' + JSON.stringify(usites) + '');
+            next();
+        })
     } else {
-        res.cookie('uid', "cookie test uid");
         next();
     }
 })
