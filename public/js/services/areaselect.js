@@ -134,6 +134,16 @@ define(["../app"], function (app) {
             //{label: '搜索页APP下载展现', name: 'pv'},
             //{label: '搜索页APP下载点击', name: 'pv'},
             //{label: '搜索页APP下载消费', name: 'pv'}
-        ]
+        ];
+        $rootScope.browser = {};
+        $rootScope.browsers = [
+            {name: '全部', value: '全部'},
+            {name: '百度', value:  '百度'},
+            {name: 'Google', value: 'Google'},
+            {name: '搜狗', value: '搜狗'},
+            {name: '好搜', value: '好搜'},
+            {name: '必应', value: '必应'},
+            {name: '其他', value: '其他'}
+        ];
     }]);
 });

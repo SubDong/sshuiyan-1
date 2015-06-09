@@ -6,8 +6,11 @@ define(["./module"], function (ctrs) {
     "use strict";
 
     ctrs.controller('novisitors', function ($scope, $rootScope, $http, areaService) {
+
         //客户端属性初始化
         $scope.equipment.selected = {"name": "网络供应商", "field": "isp"};
+        $scope.souce.selected = {"name": "全部"};
+        $scope.browser.selected = {"name": "全部"};
         $scope.todayClass = true;
         $rootScope.tableTimeStart = 0;
         $rootScope.tableTimeEnd = 0;
@@ -122,6 +125,7 @@ define(["./module"], function (ctrs) {
             $scope.reset();
             $scope.todayClass = true;
         };
+
     });
 
 });

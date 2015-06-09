@@ -13,6 +13,49 @@ var dao = require('../db/daos');
 var schemas = require('../db/schemas');
 var randstring = require('../utils/randstring');
 
+
+// ================================= subdirectory_list ===============================
+api.get("/subdirectory_list", function (req, res) {
+
+
+    var query = url.parse(req.url, true).query;
+    var type = query['type'];
+    var schema_name = "subdirectories_model";
+    switch (type) {
+        case "save":
+            var entity = query['entity'];
+            var temp = JSON.parse(entity);
+            dao.save(schema_name, temp, function (ins) {
+                datautils.send(res, JSON.stringify(ins));
+            });
+            break;
+        case "search":
+            dao.find(schema_name, query['query'], null, {}, function (err, docs) {
+                datautils.send(res, docs);
+            });
+            break;
+        case "update":
+            var update = query['updates'];
+            dao.update(schema_name, query['query'], query['updates'], function (err, docs) {
+                datautils.send(res, docs);
+            });
+            break;
+        case "delete":
+            //Ìõ¼þÏÂÉ¾³ý
+            var qry = query['query'];
+            dao.remove(schema_name, qry, function (docs) {
+                datautils.send(res, "success");
+            });
+            break;
+        default :
+            break;
+    }
+
+});
+
+
+
+
 // ================================= Config  ===============================
 api.get("/site_list", function (req, res) {
 

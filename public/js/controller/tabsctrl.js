@@ -7,6 +7,7 @@ define(["app"], function (app) {
 
     app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, requestService, SEM_API_URL, $cookieStore, popupService) {
         $scope.todayClass = true;
+        $scope.browserselect = true;
         var user = $rootScope.user
         var baiduAccount = $rootScope.baiduAccount;
         var esType = $rootScope.userType;
@@ -393,6 +394,12 @@ define(["app"], function (app) {
             if (a == 0) $rootScope.tableSwitch.tableFilter = null;
             if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[1]}]";
             if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[2]}]";
+            if(a == 2){
+                $scope.browserselect= false;
+            }
+            else{
+                $scope.browserselect= true;
+            }
             if (a == 3) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[3]}]";
             $scope.targetSearch();
         };
@@ -491,7 +498,11 @@ define(["app"], function (app) {
         };
         //设置搜索引擎过滤
         $scope.searchEngine = function(info){
-            $rootScope.tableSwitch.tableFilter = "[{\"se\":[\""+info+"\"]}]";
+            if(info==='全部'){
+                $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[2]}]";
+            } else {
+                $rootScope.tableSwitch.tableFilter = "[{\"se\":[\""+info+"\"]}]";
+            }
             $scope.isJudge = false;
             $scope.targetSearch();
         };

@@ -5,11 +5,13 @@ define(["./module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.controller('indexoverview', function ($scope, $rootScope) {
+    ctrs.controller('indexoverview', function ($scope, $rootScope,areaService) {
         $scope.todayClass = true;
         $rootScope.tableTimeStart = 0;
         $rootScope.tableTimeEnd = 0;
         $rootScope.tableFormat = null;
+        $scope.souce.selected = {"name": "全部"};
+        $scope.browser.selected = {"name": "全部"};
         //配置默认指标
         $rootScope.checkedArray = ["vc", "uv", "avgTime"];
         $rootScope.gridArray = [
