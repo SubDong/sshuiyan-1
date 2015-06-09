@@ -14,6 +14,7 @@ var schemas = {
             is_regular:Boolean,//是否使用正则表达式
             analysis_url: String, //分析的目录
             not_analysis_url:String, //不分析的目录
+            create_date:Date //创建时间
         }
     },
 

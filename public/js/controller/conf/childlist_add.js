@@ -20,7 +20,8 @@ define(["./module"], function (ctrs) {
         $scope.subdirectory.uid =  $cookieStore.get("uid");
         // 根目录
         $scope.subdirectory.root_url =$rootScope.userType;
-
+        //创建时间
+        $scope.subdirectory.create_date = new Date();
 
 
 

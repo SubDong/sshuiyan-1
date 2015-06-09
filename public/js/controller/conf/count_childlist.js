@@ -12,7 +12,9 @@ define(["./module"], function (ctrs) {
 
             {name: "子目录名称", displayName: "子目录名称", field: "subdirectory_url",cellClass: 'table_admin'},
             {name: "包含的页面或目录", displayName: "包含的页面或目录", field: "analysis_url",cellClass: 'table_admin'},
-            {name: "不包含的页面或目录", displayName: "不包含的页面或目录", field: "not_analysis_url",cellClass: 'table_admin'}
+            {name: "不包含的页面或目录", displayName: "不包含的页面或目录", field: "not_analysis_url",cellClass: 'table_admin'},
+            {name: "创建时间", displayName: "创建时间", field: "create_date",cellClass: 'table_admin'}
+
         ];
         $rootScope.tableSwitch = {
             latitude: {name: "网站域名", displayName: "网站域名", field: ""},
