@@ -67,7 +67,7 @@ define(["./module"], function (ctrs) {
                 enableHorizontalScrollbar: 0,
                 enableVerticalScrollbar: 0,
                 columnDefs: [
-                    {name: ' ', field: 'category',cellClass:'grid_padding',},
+                    {name: ' ', field: 'category',cellClass:'grid_padding'},
                     {name: '消费', field: 'cost'},
                     {name: '展现量', field: 'impression'},
                     {name: '点击量', field: 'click'},
@@ -503,6 +503,8 @@ define(["./module"], function (ctrs) {
                     obj["page_conv"] = 0;
                     obj["outRate"] = (obj["outRate"] == undefined ? 0 : obj["outRate"]) + "%";
                     obj["event_conv"] = 0;
+                    obj["avgTime"] = obj["avgTime"] == undefined ? "00:00:00" : obj["avgTime"];
+                    obj["vc"] = obj["vc"] == undefined ? 0 : obj["vc"];
 
                     $scope.surveyData1.push(obj);
 

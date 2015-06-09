@@ -114,8 +114,8 @@
                                     </ui-select>
                                 </div>
                             </li>
-                            <li><a href="#">百度</a></li>
-                            <li><a href="#">Google</a></li>
+                            <li><a href="javascript:void(0)" ng-click="searchEngine('百度')">百度</a></li>
+                            <li><a href="javascript:void(0)" ng-click="searchEngine('Google')">Google</a></li>
                         </ul>
                     </div>
                     <div class="chart_top2">
@@ -143,8 +143,8 @@
                 </div>
             </div>
             <div class="custom_table">
-                <div ui-grid="gridOptions" class="grid" style="min-height:400px;" ui-grid-pagination
-                     ui-grid-exporter ui-grid-expandable></div>
+                <div ui-grid="gridOptions" class="grid clearfix secondary_table"  ui-grid-pagination
+                     ui-grid-exporter ui-grid-expandable ui-grid-auto-resize></div>
                 <gridpage></gridpage>
             </div>
         </div>
