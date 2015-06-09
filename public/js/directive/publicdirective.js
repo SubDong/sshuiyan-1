@@ -286,12 +286,12 @@ define(["../app"], function (app) {
 
                             }
                         }).success(function (data, status, headers, config) {
-                            console.log(data);
                             var hiddenElement = document.createElement('a');
-
+                            var dateTime = new Date();
+                            var dateString = dateTime.Format("yyyyMdhmsS");
                             hiddenElement.href = 'data:attachment/csv;charset=utf-8,' + encodeURI(data);
                             hiddenElement.target = '_blank';
-                            hiddenElement.download = 'myFile.csv';
+                            hiddenElement.download = "down-" + dateString;
                             hiddenElement.click();
                         })
 
@@ -721,7 +721,7 @@ define(["../app"], function (app) {
                 scope.loadDataShow = function () {
                     scope.dateShowArray = angular.copy(scope.defaultDataShowArray);
                     var semRequest = $http.get(SEM_API_URL + "elasticsearch/" + $rootScope.userType
-                    + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd);
+                        + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd);
                     $q.all([semRequest]).then(function (final_result) {
                         angular.forEach(final_result[0].data, function (r) {
                             angular.forEach(scope.dateShowArray, function (q_r) {
@@ -735,7 +735,7 @@ define(["../app"], function (app) {
                 };
                 scope.loadCompareDataShow = function (startTime, endTime) {
                     var semRequest = $http.get(SEM_API_URL + "elasticsearch/" + $rootScope.userType
-                    + "/?startOffset=" + startTime + "&endOffset=" + endTime);
+                        + "/?startOffset=" + startTime + "&endOffset=" + endTime);
                     $q.all([semRequest]).then(function (final_result) {
                         // 初始化对比数据
                         angular.forEach(scope.dateShowArray, function (q_r) {
