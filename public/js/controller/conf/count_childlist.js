@@ -57,8 +57,10 @@ define(["./module"], function (ctrs) {
 
             });
         };
-
-
         refushGridData();
+
+
+
+
     });
 });
