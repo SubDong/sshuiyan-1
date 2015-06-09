@@ -248,11 +248,14 @@ define(["./module"], function (ctrs) {
         $rootScope.user = sites[0].p_name;//perfect2015
         $rootScope.baiduAccount = sites[0].bd_name;//baidu-perfect2151880
         $rootScope.userType = sites[0].id;//www.perfect-cn.cn
+        $rootScope.userTypeName = sites[0].name;
 
             $scope.changeUrl = function (select) {
                 $rootScope.user = select.p_name;
                 $rootScope.baiduAccount = select.bd_name;
                 $rootScope.userType = select.id;
+                $rootScope.userTypeName = select.name;
+
             }
     })
 });
