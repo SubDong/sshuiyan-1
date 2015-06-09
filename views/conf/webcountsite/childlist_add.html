@@ -5,13 +5,14 @@
             <p>  <span ng-bind-html="userTypeName">新增子目录</span></p>
         </div>
     </div>
+    <form role="form" name="subdirectoryForm" ng-submit="submitForm(subdirectoryForm.$valid)" class="form-horizontal" novalidate>
     <div class="adtrack_add chlidlist_add">
         <ul>
             <li>
             <li>
                 <span>是否使用正则表达式？</span>
                 <input  data-ng-focus="myFocus(childlist_add_yes)" data-ng-blur="myBlur(childlist_add_yes)"  class="chlidlist_add_input" type="radio"   ng-model="subdirectory.is_regular" name="regular" value="1"  />是
-                <input data-ng-focus="myFocus(childlist_add_no)" data-ng-blur="myBlur(childlist_add_no)"  class="chlidlist_add_input" type="radio"     ng-model="subdirectory.is_regular" name="regular" value="0" />否 &nbsp;&nbsp;&nbsp;
+                <input data-ng-focus="myFocus(childlist_add_no)" data-ng-blur="myBlur(childlist_add_no)"  class="chlidlist_add_input" type="radio"     ng-model="subdirectory.is_regular" name="regular" value="0"  />否 &nbsp;&nbsp;&nbsp;
                 <p>(可直接输入URL也可以使用通配符*)</p>
                 <div data-ng-show="childlist_add_yes.helpFlag"  class="count_content_right">
                     <!--提示:网站与域名不同提示 右-->
@@ -49,30 +50,66 @@
                 </div>
 
             </li>
-            <li>
-                <span>子目录名称</span>
-                <div><input  data-ng-model="subdirectory.subdirectory_url" type="text" class="form-control" placeholder="子目录1" data-ng-model=""/></div>
-            </li>
-            <li>
-                <span>要分析的页面或目录</span>
-                <p>（目录中加入通配符*，表示包含该目录下所有页面）</p>
-                <div data-ng-repeat="page in pages"><input type="text" class="form-control" ng-model="page.url" placeholder="url.com/a.html"/>
-                    <button class="glyphicon glyphicon-remove" data-ng-click="deletePage(pages)"></button></div>
-                <a href="#" data-ng-click="addPage(pages)" class="adtrack_add_tz" >新增URL</a>
-            </li>
-            <li>
-                <span>不分析的页面或目录</span>
-                <p>（目录中加入通配符*，表示包含该目录下所有页面）</p>
-                <div data-ng-repeat="page in no_pages "><input type="text" class="form-control" ng-model="page.url" placeholder="url.com/a.html"/>
-                    <button class="glyphicon glyphicon-remove" data-ng-click="deletePage(no_pages)"></button></div>
-                <a href="#" data-ng-click="addPage(no_pages)" class="adtrack_add_tz">新增URL</a>
-            </li>
-            <li>
 
-                <button class="btn btn-info count_content_button" ng-click="onSaveSubdirectory()">确定</button>
-                <button class="btn btn-info count_content_button ">取消</button>
+            <!--<li>-->
+                <!--<span>子目录名称</span>-->
+                <!--<div>-->
+                    <!--<input  required    type="text"-->
+                             <!--placeholder="子目录1" data-ng-model="subdirectory.subdirectory_url"/>-->
+                <!--</div>-->
+            <!--</li>-->
+            <!--<li>-->
+                <!--<span>要分析的页面或目录</span>-->
+                <!--<p>（目录中加入通配符*，表示包含该目录下所有页面）</p>-->
+                <!--<div data-ng-repeat="page in pages"><input type="text" class="form-control" ng-model="page.url" placeholder="url.com/a.html"/>-->
+                    <!--<button class="glyphicon glyphicon-remove" data-ng-click="deletePage(pages)"></button></div>-->
+                <!--<a href="#" data-ng-click="addPage(pages)" class="adtrack_add_tz" >新增URL</a>-->
+            <!--</li>-->
+            <!--<li>-->
+                <!--<span>不分析的页面或目录</span>-->
+                <!--<p>（目录中加入通配符*，表示包含该目录下所有页面）</p>-->
+                <!--<div data-ng-repeat="page in no_pages "><input type="text" class="form-control" ng-model="page.url" placeholder="url.com/a.html"/>-->
+                    <!--<button class="glyphicon glyphicon-remove" data-ng-click="deletePage(no_pages)"></button></div>-->
+                <!--<a href="#" data-ng-click="addPage(no_pages)" class="adtrack_add_tz">新增URL</a>-->
+            <!--</li>-->
+            <!--<li>-->
 
-            </li>
+              <!--<button   ng-disabled="subdirectoryForm.$invalid" class="btn btn-info count_content_button" ng-click="onSaveSubdirectory()">确定</button>-->
+
+<!--<<<<<<< Updated upstream-->
+
+                <!--<button class="btn btn-info count_content_button ">取消</button>-->
+
+            <!--</li>-->
+<!--=======-->
+                <!--</li>-->
+
+                <li>
+                    <span>子目录名称</span>
+                    <div><input  type="text" class="form-control" placeholder="子目录1"   onfocus="this.setAttribute('placeholder','')" onblur="this.setAttribute('placeholder','子目录1') " data-ng-model="subdirectory.subdirectory_url" /> </div>
+                </li>
+                <li>
+                    <span>要分析的页面或目录</span>
+                    <p>（目录中加入通配符*，表示包含该目录下所有页面）</p>
+                    <div data-ng-repeat="page in pages"><input type="text" class="form-control" ng-model="page.url"  placeholder="url.com/a.html" onfocus="this.setAttribute('placeholder','')" onblur="this.setAttribute('placeholder','url.com/a.html')"/>
+                        <button class="glyphicon glyphicon-remove" data-ng-click="deletePage(pages)"></button></div>
+                    <a href="#" data-ng-click="addPage(pages)" class="adtrack_add_tz" data-ng-if="pages.length<10" >新增URL</a>
+                    <div data-ng-show="pages.length > 9" class="errorMsg">您最多可输入10个</div>
+                </li>
+                <li>
+                    <span>不分析的页面或目录</span>
+                    <p>（目录中加入通配符*，表示包含该目录下所有页面）</p>
+                    <div data-ng-repeat="page in no_pages "><input type="text" class="form-control" ng-model="page.url"  placeholder="url.com/a.html" onfocus="this.setAttribute('placeholder','')" onblur="this.setAttribute('placeholder','url.com/a.html')"/>
+                        <button class="glyphicon glyphicon-remove" data-ng-click="deletePage(no_pages)"></button></div>
+                    <a href="#" data-ng-click="addPage(no_pages)" class="adtrack_add_tz" data-ng-if="no_pages.length<10">新增URL</a>
+                    <div data-ng-show="no_pages.length > 9" class="errorMsg">您最多可输入10个</div>
+                </li>
+                <li>
+                    <button   ng-disabled="subdirectoryForm.$invalid" class="btn btn-info count_content_button" ng-click="onSaveSubdirectory()">确定</button>&nbsp;&nbsp;
+                    <button class="btn btn-info count_content_button ">取消</button>
+                </li>
         </ul>
     </div>
+
+        </form>
 </div>

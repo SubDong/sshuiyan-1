@@ -9,7 +9,7 @@ define(["./module"], function (ctrs) {
         //子目录对象
         $scope.subdirectory = {};
         //是否使用正则表达式
-        $scope.subdirectory.is_regular;
+        $scope.subdirectory.is_regular = "0";
         //要分析的页面
         $scope.subdirectory.analysis_url ="";
         //不分析的页面
@@ -21,7 +21,7 @@ define(["./module"], function (ctrs) {
         // 根目录
         $scope.subdirectory.root_url =$rootScope.userType;
         //创建时间
-        $scope.subdirectory.create_date = new Date();
+        $scope.subdirectory.create_date = new Date().Format("yyyy-MM-dd hh:mm:ss");
 
 
 
@@ -64,20 +64,23 @@ define(["./module"], function (ctrs) {
 
         $scope.onSaveSubdirectory = function (){
 
+
+
             $scope.subdirectory.analysis_url = listToStirng($scope.pages);
 
             $scope.subdirectory.not_analysis_url = listToStirng($scope.no_pages);
 
             var entity =  JSON.stringify($scope.subdirectory);
 
+            console.log(entity);
 
             var url= "/config/subdirectory_list?type=save&entity="+entity;
             $http({
                 method: 'GET',
                 url: url
             }).success(function (dataConfig, status) {
-                console.log(dataConfig);
-            });
+                alert("save success");
+        });
 
         };
 
@@ -89,9 +92,6 @@ define(["./module"], function (ctrs) {
             str=str.substring(0,str.length-1);
             return str;
         }
-
-
-
 
 
     });

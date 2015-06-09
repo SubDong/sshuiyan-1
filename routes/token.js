@@ -9,18 +9,18 @@ function tokener(req, res, next) {
 
     var tokenid = req.query['tokenid'];
 
-    if(!validate(tokenid)){
+    if (!validate(tokenid)) {
         res.send("tokenid is invalidate.");
         return;
     }
-    req.redisclient.get(tokenid,function(error, redis_res){
-        if(error){
+    req.redisclient.get(tokenid, function (error, redis_res) {
+        if (error) {
             res.redirect("http://sem.best-ad.cn/login")
             return;
-        }else{
+        } else {
             var userinfo = JSON.parse(redis_res);
-            req.session.user= userinfo;
-            if(userinfo.baiduAccounts.length > 0) {
+            req.session.user = userinfo;
+            if (userinfo.baiduAccounts.length > 0) {
                 req.session.currentBaiduUser = userinfo.baiduAccounts[0];
                 req.session.accountid = userinfo.baiduAccounts[0].id
                 req.session.accountname = userinfo.baiduAccounts[0].baiduUserName
@@ -32,7 +32,7 @@ function tokener(req, res, next) {
 
 }
 
-function validate(id){
+function validate(id) {
     return !!id && id.length > 0 && id.length < 64
 }
 module.exports = token;

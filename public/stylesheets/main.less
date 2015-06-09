@@ -3078,21 +3078,30 @@ select.styled {
 }
 
 .web_list_nav {
-  background-color: #eee;
-  color: #838383;
+  background-color: #f0f0f0;
+  color: #525252;
   position: fixed;
   width: 100%;
-  z-index: 1061;
+  z-index: 106;
+  margin-top: 2px;
+  height: 40px;
 }
 
 .web_list_nav_right {
   height: 35px;
   float: right;
-  margin: 10px 150px 0 0;
-  ul li {
-    display: block;
-    float: left;
+  margin: 5px 160px 0 0;
+  ul li{
+    display:block;
+    float:left;
     margin: 8px 15px 0 0;
+  }
+  b{
+    font-weight: normal;
+    margin-left: 5px;
+  }
+  .checkbox, .radio{
+    margin-top:-4px;
   }
 }
 
@@ -3103,6 +3112,7 @@ select.styled {
   height: 30px;
   border-radius: 2px;
   line-height: 17px;
+  margin-left: 10px;
 }
 
 .nav_btn {
@@ -3113,8 +3123,15 @@ select.styled {
   background-color: #2FABE7;
 }
 
-.web_list_up {
-  padding-top: 45px;
+.web_list_up{
+  padding-top: 43px;
+  .ui-grid-top-panel{
+    font-weight: normal;
+    color: #525252;
+  }
+  [class^="ui-grid-icon"]:before, [class*=" ui-grid-icon"]:before {
+    margin-left: 10px;
+  }
 }
 
 .web_list_up ul {
@@ -3146,31 +3163,19 @@ select.styled {
   height: 150px;
 }
 
-.mid_left {
-  margin: 0 20px 0 15px;
-  height: 150px;
-  float: left;
-}
 
 .mid_left_code {
   border: 1px solid #ccc;
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
   transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
   list-style: decimal;
-  min-width: 520px;
-  height: 125px;
+  min-width: 400px;
+  height: 120px;
   padding: 3px;
-  margin: 10px 20px 0 20px;
+  margin-top: 20px;
   overflow-x: hidden;
   overflow-y: scroll;
-}
-
-.mid_right {
-  display: inline-block;
-  width: 620px;
-  height: 120px;
-  margin-left: 15px;
-
+  background-color: white;
 }
 
 .mid_right button {
@@ -3181,7 +3186,7 @@ select.styled {
 
 .mid_right ul {
   line-height: 20px;
-  margin-left: 85px;
+  margin-left: 25px;
 }
 
 .mid_right ul li {
@@ -3400,9 +3405,19 @@ select.styled {
   line-height: 32px;
   vertical-align: middle;
   text-align: center;
-  color: #ff937a;
+  color:#ff937a;
+  width: 20px;
 }
-
+.table_box{
+  .table_admin{
+    margin-top: -2px;
+    ul li{
+      height: 100px;
+      width: 100px;
+      float: none;
+    }
+  }
+}
 .table_admin {
   height: 32px;
   line-height: 32px;
@@ -3413,6 +3428,9 @@ select.styled {
 .table_admin a, a:active {
   color: #2fabe7;
 }
+.table_admin_color{
+  color:#333;
+}
 
 .table_admin a {
   color: #2fabe7;
@@ -3421,7 +3439,6 @@ select.styled {
 .table_admin a:hover {
   color: #cccccc;
 }
-
 .visitor_table_width {
   .ui-grid-row .ng-scope {
     padding: 0 5px;
