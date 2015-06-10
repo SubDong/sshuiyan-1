@@ -81,11 +81,11 @@
                 </div>
                 <div class="exchange_list_level2box" ng-show="showDetails">
                     <ul>
-                        <li ng-repeat="path in exchange.path1">
+                        <li ng-repeat="path in pathData">
                             <div class="exchange_list_level2">
                                 <div class="exchange_list1 fl">
                                     <div class="exchange_list1_name exchange_page fl">
-                                        {{path.pathName}}
+                                       {{path.pathName}}
                                     </div>
                                     <div class="exchange_list1_text fr">
                             <span>
@@ -98,14 +98,15 @@
                                     </div>
                                 </div>
 
-                                <a class="exchange_list1_more fl">
+                                <a class="exchange_list1_more fl" data-ng-click="queryPathData(path)"　>
                                 </a>
+                                <span ng-bind-html = "htmlStr"></span>
+
                             </div>
 
                         </li>
 
                     </ul>
-
                     <!--<div class="exchange_list_level2" >-->
                     <!--<div class="exchange_list1 fl">-->
                     <!--<div class="exchange_list1_name fl">-->
@@ -138,6 +139,8 @@
                     <!--</div>-->
                     <!--</div>-->
                     <!--</div>-->
+
+
                 </div>
             </div>
 
