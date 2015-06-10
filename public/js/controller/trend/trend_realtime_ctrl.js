@@ -4,7 +4,7 @@
 define(["./module"], function (ctrs) {
     "use strict";
 
-    ctrs.controller('trend_realtime_ctrl', function ($scope, $rootScope, $http, requestService, messageService, $log, areaService) {
+    ctrs.controller('trend_realtime_ctrl', function ($scope, $rootScope, $http, requestService, messageService, $log, areaService,SEM_API_URL) {
         $scope.visitorCount = 0;
         //table配置
         $rootScope.tableTimeStart = 0;
@@ -83,7 +83,7 @@ define(["./module"], function (ctrs) {
             $scope.initPeron();
         }
         $scope.initPeron = function () {
-            $http.get("/api/realTimeAccess/?filerInfo=null&type=" + $rootScope.userType).success(function (data) {
+            $http.get(SEM_API_URL + "real_time/" + $rootScope.userType).success(function (data) {
                 $scope.visitorCount = data.length;
             });
         }

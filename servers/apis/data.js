@@ -256,76 +256,80 @@ api.get('/indextable', function (req, res) {
             var infoKey;
             var maps = {};
             var valueData = ["arrivedRate", "outRate", "nuvRate", "ct", "period", "se", "pm", "rf", "ja", "ck"];
-            data.forEach(function (info, x) {
-                for (var i = 0; i < info.key.length; i++) {
-                    if (info.key[i] != undefined && info.key[i].split(",").length > 1) {
-                        infoKey = info.key[i].split(",")[0]
-                    } else {
-                        infoKey = info.key[i]
-                    }
-                    if (popFlag != 1) {
-                        if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null" || infoKey.length >= 30)) continue;
-                    }
-                    var infoKey = info.key[i];
-                    var obj = maps[infoKey];
-                    if (!obj) {
-                        obj = {};
-                        if (_lati != null && _lati.split(":").length > 1) {
-                            dimensionInfo = _lati.split(":")[0]
+            try {
+                data.forEach(function (info, x) {
+                    for (var i = 0; i < info.key.length; i++) {
+                        if (info.key[i] != undefined && info.key[i].split(",").length > 1) {
+                            infoKey = info.key[i].split(",")[0]
                         } else {
-                            dimensionInfo = _lati
+                            infoKey = info.key[i]
                         }
-                        switch (dimensionInfo) {
-                            case "ct":
-                                obj[dimensionInfo] = infoKey == 0 ? "新访客" : "老访客";
-                                break;
-                            case "rf_type":
-                                obj[dimensionInfo] = infoKey == 1 ? "直接访问" : infoKey == 2 ? "搜索引擎" : "外部链接";
-                                break;
-                            case "period":
-                                if (_formartInfo == "day") {
-                                    obj[dimensionInfo] = infoKey.substring(0, 10);
-                                } else if (_formartInfo == "week") {
-                                    obj[dimensionInfo] = infoKey.substring(0, 10);
-                                } else if (_formartInfo == "month") {
-                                    obj[dimensionInfo] = infoKey.substring(0, 7);
-                                } else {
-                                    obj[dimensionInfo] = infoKey.substring(infoKey.indexOf(" "), infoKey.length - 3) + " - " + infoKey.substring(infoKey.indexOf(" "), infoKey.length - 5) + "59";
-                                }
-                                break;
-                            case "se":
-                                obj[dimensionInfo] = (infoKey == "-" ? "直接访问" : infoKey);
-                                break;
-                            case "pm":
-                                obj[dimensionInfo] = (infoKey == 0 ? "计算机端" : "移动端");
-                                break;
-                            case "rf":
-                                obj[dimensionInfo] = (infoKey == "-" ? "直接访问" : infoKey);
-                                break;
-                            case "ja":
-                                obj[dimensionInfo] = (infoKey == "1" ? "支持" : "不支持");
-                                break;
-                            case "ck":
-                                obj[dimensionInfo] = (infoKey == "1" ? "支持" : "不支持");
-                                break;
-                            default :
-                                obj[dimensionInfo] = infoKey;
-                                break;
+                        if (popFlag != 1) {
+                            if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null" || infoKey.length >= 30)) continue;
                         }
+                        var infoKey = info.key[i];
+                        var obj = maps[infoKey];
+                        if (!obj) {
+                            obj = {};
+                            if (_lati != null && _lati.split(":").length > 1) {
+                                dimensionInfo = _lati.split(":")[0]
+                            } else {
+                                dimensionInfo = _lati
+                            }
+                            switch (dimensionInfo) {
+                                case "ct":
+                                    obj[dimensionInfo] = infoKey == 0 ? "新访客" : "老访客";
+                                    break;
+                                case "rf_type":
+                                    obj[dimensionInfo] = infoKey == 1 ? "直接访问" : infoKey == 2 ? "搜索引擎" : "外部链接";
+                                    break;
+                                case "period":
+                                    if (_formartInfo == "day") {
+                                        obj[dimensionInfo] = infoKey.substring(0, 10);
+                                    } else if (_formartInfo == "week") {
+                                        obj[dimensionInfo] = infoKey.substring(0, 10);
+                                    } else if (_formartInfo == "month") {
+                                        obj[dimensionInfo] = infoKey.substring(0, 7);
+                                    } else {
+                                        obj[dimensionInfo] = infoKey.substring(infoKey.indexOf(" "), infoKey.length - 3) + " - " + infoKey.substring(infoKey.indexOf(" "), infoKey.length - 5) + "59";
+                                    }
+                                    break;
+                                case "se":
+                                    obj[dimensionInfo] = (infoKey == "-" ? "直接访问" : infoKey);
+                                    break;
+                                case "pm":
+                                    obj[dimensionInfo] = (infoKey == 0 ? "计算机端" : "移动端");
+                                    break;
+                                case "rf":
+                                    obj[dimensionInfo] = (infoKey == "-" ? "直接访问" : infoKey);
+                                    break;
+                                case "ja":
+                                    obj[dimensionInfo] = (infoKey == "1" ? "支持" : "不支持");
+                                    break;
+                                case "ck":
+                                    obj[dimensionInfo] = (infoKey == "1" ? "支持" : "不支持");
+                                    break;
+                                default :
+                                    obj[dimensionInfo] = infoKey;
+                                    break;
+                            }
+                        }
+                        if (info.label == "avgTime") {
+                            obj[info.label] = new Date(info.quota[i]).format("hh:mm:ss")
+                        } else {
+                            obj[info.label] = info.quota[i] + (valueData.indexOf(info.label) != -1 ? "%" : "");
+                        }
+                        maps[infoKey] = obj;
                     }
-                    if (info.label == "avgTime") {
-                        obj[info.label] = new Date(info.quota[i]).format("hh:mm:ss")
-                    } else {
-                        obj[info.label] = info.quota[i] + (valueData.indexOf(info.label) != -1 ? "%" : "");
+                    vidx++;
+                });
+                for (var key in maps) {
+                    if (key != null) {
+                        result.push(maps[key]);
                     }
-                    maps[infoKey] = obj;
                 }
-                vidx++;
-            });
-            for (var key in maps) {
-                if (key != null) {
-                    result.push(maps[key]);
-                }
+            } catch (e) {
+                console.error(e.stack);
             }
             datautils.send(res, result);
         } else {
@@ -337,16 +341,16 @@ api.get('/indextable', function (req, res) {
 /**
  * 实时访问
  */
-api.get('/realTimeAccess', function (req, res) {
+/*api.get('/realTimeAccess', function (req, res) {
     var query = url.parse(req.url, true).query;
     var _type = query["type"];
     var _filters = query["filerInfo"] != null && query["filerInfo"] != 'null' ? JSON.parse(query["filerInfo"]) : query["filerInfo"] == 'null' ? null : query["filerInfo"];//过滤器;
     var indexes = date.createIndexes(0, 0, "access-");
     es_request.realTimeSearch(req.es, indexes, _type, _filters, function (data) {
         var resultArray = new Array();
-        data.forEach(function (item, i) {
-            if (item._source.city) {
-                if (item._source.city != "-") {
+        try {
+            data.forEach(function (item, i) {
+                if (item._source != null && item._source.city != "-") {
                     var result = {};
                     result["city"] = item._source.city == "-" ? "国外" : item._source.city;
                     var newDate = new Date(item._source.utime[0]).toString();
@@ -355,14 +359,21 @@ api.get('/realTimeAccess', function (req, res) {
                     result["tt"] = item._source.tt;
                     result["ip"] = item._source.remote;
                     result["utimeAll"] = new Date(item._source.utime[item._source.utime.length - 1] - item._source.utime[0]).format("hh:mm:ss");
-                    result["pageNumber"] = item._source.loc.length
+                    result["pageNumber"] = item._source.loc.length;
+                    resultArray.push(result)
+                }else{
+                    result["city"] = "暂无数据";result["city"] = "暂无数据";result["utime"] = "暂无数据"
+                    result["source"] = "暂无数据";result["tt"] = "暂无数据";result["ip"] = "暂无数据"
+                    result["utimeAll"] = "暂无数据";result["pageNumber"] = "暂无数据"
                     resultArray.push(result)
                 }
-            }
-        });
+            });
+        } catch (e) {
+            console.error(e.stack);
+        }
         datautils.send(res, resultArray);
     });
-});
+});*/
 /**
  * 实时访问 HTML数据
  */
@@ -373,43 +384,47 @@ api.get('/realTimeHtml', function (req, res) {
     var indexes = date.createIndexes(0, 0, "access-");
     es_request.realTimeSearch(req.es, indexes, _type, _filters, function (data) {
         data.forEach(function (item, i) {
-            es_request.search(req.es, indexes, _type, ["vc"], null, [0], [{"vid": [item._source.vid]}], null, null, null, function (datainfo) {
-                var utimeHtml = "";
-                var vtimeHtml = "";
-                var urlHtml = "";
-                item._source.utime.forEach(function (utime, i) {
-                    var newDate = new Date(utime).toString();
-                    utimeHtml = utimeHtml + "<li><span>" + newDate.substring(newDate.indexOf(":") - 3, newDate.indexOf("G") - 1);
-                    +"</span></li>"
-                });
-                item.record.forEach(function (vtime, i) {
-                    vtimeHtml = vtimeHtml + "<li><span>" + vtime.vtime + "</span></li>"
-                    urlHtml = urlHtml + "<li><span><a href='" + vtime.loc + "' target='_blank'>" + vtime.loc + "</a></span></li>"
-                });
-                var classInfo;
-                item._source.os.indexOf("Windows") != -1 ? classInfo = "windows" : "";
-                item._source.os.indexOf("Windows") != -1 ? classInfo = "mac" : "";
-                item._source.os.indexOf("Windows") != -1 ? classInfo = "liunx" : "";
 
-
-                var result = "<div class='trendbox'>" +
-                    "<div class='trend_top'><div class='trend_left'><div class='left_top'><div class='trend_img'><img class=" + classInfo + "></div><div class='trend_text'>" +
-                    "<ul><li>操作系统：<span>" + item._source.os + "</span></li><li>网络服务商：<span>" + item._source.isp + "</span></li><li>屏幕分辨率：<span>" + item._source.sr + "</span></li>" +
-                    "<li>屏幕颜色:<span>" + item._source.sc + "</span></li></ul></div></div><div class='left_under'><div class='trend_img'><img src='../images/google.png'></div><div class='trend_text'>" +
-                    "<ul><li>浏览器：<span>" + item._source.br + "</span></li><li>Flash版本：<span>" + item._source.fl + "</span></li><li>是否支持Cookie：<span>" + (item._source.ck == '1' ? " 支持" : " 不支持" ) + "</span></li>" +
-                    "<li>是否支持JAVA:<span>" + (item._source.ja == "0" ? " 支持" : " 不支持") + "</span></li></ul></div></div></div><div class='trend_right'>" +
-                    "<ul><li>访问类型：<span>" + (item._source.ct == 0 ? " 新访客" : " 老访客") + "</span></li>" +
-                    "<li>当天访问频次：<span>" + datainfo[0].quota[0] + "</span></li>" +
-                    "<li>上一次访问时间：<span>" + (item.last != "首次访问" ? new Date(parseInt(item.last)).LocalFormat("yyyy-MM-dd hh:mm:ss") : item.last) + "</span></li>" +
-                    "<li>本次来路:<span>" + (item._source.se == "-" ? " 直接访问" : "<a href='" + item._source.rf + "' target='_blank'>" + item._source.se + "( 搜索词:" + item._source.kw + ")</a>") + "</span></li>" +
-                    "<li>入口页面：<span><a href='" + item._source.loc[0] + "' target='_blank'>" + item._source.loc[0] + "</a></span></li>" +
-                    "<li>最后停留在:<span><a href='" + item._source.loc[item._source.loc.length - 1] + "' target='_blank'>" + item._source.loc[item._source.loc.length - 1] + "</a></span></li></ul>" +
-                    "</div></div><div class='trendunder'><b>访问路径：</b>" +
-                    "<ul><li>打开时间</li>" + utimeHtml + "</ul>" +
-                    "<ul><li>停留时长</li>" + vtimeHtml + "</ul>" +
-                    "<ul><li>页面地址</li>" + urlHtml + "</ul></div></div>";
-                var returnData = {"htmlData": result};
-
+            es_request.search(req.es, indexes, _type, ["vc"], null, [0], [{"vid": item._source != undefined?[item._source.vid]:"1"}], null, null, null, function (datainfo) {
+                var returnData = "";
+                try {
+                    var utimeHtml = "";
+                    var vtimeHtml = "";
+                    var urlHtml = "";
+                    item._source.utime.forEach(function (utime, i) {
+                        var newDate = new Date(utime).toString();
+                        utimeHtml = utimeHtml + "<li><span>" + newDate.substring(newDate.indexOf(":") - 3, newDate.indexOf("G") - 1);
+                        +"</span></li>"
+                    });
+                    item.record.forEach(function (vtime, i) {
+                        vtimeHtml = vtimeHtml + "<li><span>" + vtime.vtime + "</span></li>"
+                        urlHtml = urlHtml + "<li><span><a href='" + vtime.loc + "' target='_blank'>" + vtime.loc + "</a></span></li>"
+                    });
+                    var classInfo;
+                    item._source.os.indexOf("Windows") != -1 ? classInfo = "windows" : "";
+                    item._source.os.indexOf("mac") != -1 ? classInfo = "mac" : "";
+                    item._source.os.indexOf("liunx") != -1 ? classInfo = "liunx" : "";
+                    var result = "<div class='trendbox'>" +
+                        "<div class='trend_top'><div class='trend_left'><div class='left_top'><div class='trend_img'><img class=" + classInfo + "></div><div class='trend_text'>" +
+                        "<ul><li>操作系统：<span>" + item._source.os + "</span></li><li>网络服务商：<span>" + item._source.isp + "</span></li><li>屏幕分辨率：<span>" + item._source.sr + "</span></li>" +
+                        "<li>屏幕颜色:<span>" + item._source.sc + "</span></li></ul></div></div><div class='left_under'><div class='trend_img'><img src='../images/google.png'></div><div class='trend_text'>" +
+                        "<ul><li>浏览器：<span>" + item._source.br + "</span></li><li>Flash版本：<span>" + item._source.fl + "</span></li><li>是否支持Cookie：<span>" + (item._source.ck == '1' ? " 支持" : " 不支持" ) + "</span></li>" +
+                        "<li>是否支持JAVA:<span>" + (item._source.ja == "0" ? " 支持" : " 不支持") + "</span></li></ul></div></div></div><div class='trend_right'>" +
+                        "<ul><li>访问类型：<span>" + (item._source.ct == 0 ? " 新访客" : " 老访客") + "</span></li>" +
+                        "<li>当天访问频次：<span>" + datainfo[0].quota[0] + "</span></li>" +
+                        "<li>上一次访问时间：<span>" + (item.last != "首次访问" ? new Date(parseInt(item.last)).LocalFormat("yyyy-MM-dd hh:mm:ss") : item.last) + "</span></li>" +
+                        "<li>本次来路:<span>" + (item._source.se == "-" ? " 直接访问" : "<a href='" + item._source.rf + "' target='_blank'>" + item._source.se + "( 搜索词:" + item._source.kw + ")</a>") + "</span></li>" +
+                        "<li>入口页面：<span><a href='" + item._source.loc[0] + "' target='_blank'>" + item._source.loc[0] + "</a></span></li>" +
+                        "<li>最后停留在:<span><a href='" + item._source.loc[item._source.loc.length - 1] + "' target='_blank'>" + item._source.loc[item._source.loc.length - 1] + "</a></span></li></ul>" +
+                        "</div></div><div class='trendunder'><b>访问路径：</b>" +
+                        "<ul><li>打开时间</li>" + utimeHtml + "</ul>" +
+                        "<ul><li>停留时长</li>" + vtimeHtml + "</ul>" +
+                        "<ul><li>页面地址</li>" + urlHtml + "</ul></div></div>";
+                    returnData = {"htmlData": result};
+                } catch (e) {
+                    console.error(e.stack);
+                    returnData = {"htmlData": "<div class='trendbox'>暂无数据</div>"};
+                }
                 datautils.send(res, returnData);
             });
         });
