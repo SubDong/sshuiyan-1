@@ -2,6 +2,11 @@
   "name": "sshuiyan",
   "version": "1.0.0",
   "dependencies": {
+    "async": {
+      "version": "1.2.1",
+      "from": "async@*",
+      "resolved": "https://registry.npmjs.org/async/-/async-1.2.1.tgz"
+    },
     "body-parser": {
       "version": "1.12.4",
       "from": "body-parser@>=1.12.2 <2.0.0",

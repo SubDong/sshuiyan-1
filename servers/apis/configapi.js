@@ -69,23 +69,28 @@ api.get("/site_list", function (req, res) {
             temp.type_id = randstring.rand_string();
             temp.track_id = randstring.rand_string();
             dao.save(schema_name, temp, function (ins) {
+
                 datautils.send(res, JSON.stringify(ins));
+
+
                 //Redis瀛樻斁鍓湰
-                req.redisclient.set(temp.track_id, temp.type_id, function (err, reply) {//es
-                    //console.log(reply.toString() + " " + req.redisclient.get(temp.track_id, function (error, redis_res) {
-                    //    }));
-                });
-                //var tempConfig = angular.copy(config_redis);//鍒濆鍖栨椂榛樿閰嶇疆 缃戠珯鏂板閫昏緫涓婁笉浼氭湁閰嶇疆
-                req.redisclient.set(temp.track_id + "|" + temp.site_url, config_redis, function (err, reply) {//閰嶇疆
-                    //console.log(reply.toString() + " " + req.redisclient.get(temp.track_id + "|" + temp.site_url, function (error, redis_res) {
-                    //    }));
-                });
+                // 参考 https://github.com/zerocoolys/sshuiyan/wiki/%E9%85%8D%E7%BD%AE%E5%8F%82%E6%95%B0%5Bredis-key-%E8%A7%84%E8%8C%83%5D
+                var siteconfig = {
+                    siteid: ins._id.toString(),
+                    siteurl: temp.site_url
+                }
+
+                req.redisclient.multi().set("tt:".concat(temp.track_id), temp.type_id)
+                    .set("tsj:" + temp.track_id, siteconfig)
+                    .set(temp.track_id + "|" + temp.site_url, config_redis)
+                    .exec();
             });
 
             break;
         case "search":
             dao.find(schema_name, query['query'], null, {}, function (err, docs) {
                 datautils.send(res, docs);
+                // TODO 为什么要去差redis
                 docs.forEach(function (doc, i) {
                     req.redisclient.get(doc.type_id, function (error, redis_res) {
                     });
@@ -119,7 +124,6 @@ api.get("/site_list", function (req, res) {
             });
             break;
         case "delete":
-            //鏉′欢涓嬪垹闄�
             var qry = query['query'];
             dao.remove(schema_name, qry, function (docs) {
                 if (docs != null) {
@@ -291,7 +295,7 @@ api.get("/tc_conf", function (req, res) {
 
 //================================adtrack-icepros==========================
 //nodejs   路由处理
-api.get("/adtrack", function(req, res){
+api.get("/adtrack", function (req, res) {
     var query = url.parse(req.url, true).query;
     var type = query['type'];
     var index = query['index'];
