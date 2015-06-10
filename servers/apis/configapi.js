@@ -16,8 +16,6 @@ var randstring = require('../utils/randstring');
 
 // ================================= subdirectory_list ===============================
 api.get("/subdirectory_list", function (req, res) {
-
-
     var query = url.parse(req.url, true).query;
     var type = query['type'];
     var schema_name = "subdirectories_model";
@@ -52,8 +50,6 @@ api.get("/subdirectory_list", function (req, res) {
     }
 
 });
-
-
 
 
 // ================================= Config  ===============================
