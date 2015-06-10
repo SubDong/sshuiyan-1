@@ -10,7 +10,7 @@ define(["./module"], function (ctrs) {
             uid: "",//用户ID
             site_id: "", // 站点ID
             target_name: "",//目标名称
-            target_url: [{url:""}],//目标URL
+            target_url: [{url: ""}],//目标URL
             record_type: "",//记录方式
             //收益设置
             expected_yield: null,//预期收益
@@ -61,8 +61,8 @@ define(["./module"], function (ctrs) {
         $scope.targetRemoves = [];
         $scope.targetUrlAdd = function (targets, targetRemoves) {
             $scope.showRemove = true;
-            targets.push({url:""});
-            targetRemoves.push({url:""});
+            targets.push({url: ""});
+            targetRemoves.push({url: ""});
         }
         $scope.removeTargetUrl = function (targets, targetRemoves, _index) {
             targets.splice(_index + 1, 1);
@@ -135,12 +135,12 @@ define(["./module"], function (ctrs) {
                     });
                 } else {//存在配置 更新
                     /*console.log("update");
-                    var url = "/config/page_conv?type=update&query={\"uid\":\"" + $scope.page_schema.uid + "\",\"site_id\":\"" + $scope.page_schema.site_id + "\",target_name" + $scope.page_schema.target_name + "\"}&updates=" + JSON.stringify($scope.page_schema);
-                    $http({
-                        method: 'GET',
-                        url: url
-                    }).success(function (dataConfig, status) {
-                    });*/
+                     var url = "/config/page_conv?type=update&query={\"uid\":\"" + $scope.page_schema.uid + "\",\"site_id\":\"" + $scope.page_schema.site_id + "\",target_name" + $scope.page_schema.target_name + "\"}&updates=" + JSON.stringify($scope.page_schema);
+                     $http({
+                     method: 'GET',
+                     url: url
+                     }).success(function (dataConfig, status) {
+                     });*/
                 }
             });
         }
