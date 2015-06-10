@@ -65,20 +65,20 @@ define(["./module"], function (ctrs) {
                     };
                     $scope.links = linksData;
                 }
-                if (result.length <= 3) {
+                if (result[0].in_data.length <= 3) {
                     document.getElementById("linkstree_top").style.top = "14%";
                     document.getElementById("linkstree_right").style.top = "14%";
                 }
-                if (data.data.length == 1) {
+                if (result[0].in_data.length == 1) {
                     document.getElementById("linkstree_top").style.top = "0";
                     document.getElementById("linkstree_right").style.top = "0";
                     $(".linkstree_left").css("margin-top", "14px")
                 }
-                if (result.length == 4) {
+                if (result[0].in_data.length == 4) {
                     document.getElementById("linkstree_top").style.top = "20%";
                     document.getElementById("linkstree_right").style.top = "20%";
                 }
-                if (result.length >= 5) {
+                if (result[0].in_data.length >= 5) {
                     document.getElementById("linkstree_top").style.top = "35%";
                     document.getElementById("linkstree_right").style.top = "35%";
                 }

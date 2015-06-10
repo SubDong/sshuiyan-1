@@ -49,11 +49,12 @@ define(["./module"], function (ctrs) {
             $scope.exchanges = {};
             var ids = "";
             $scope.usites.forEach(function (item, i) {
+                console.log(item);
                 $scope.sites.push({
                     name: item.site_name,
-                    id: item.site_id
+                    id: item.type_id
                 });
-                ids += item.site_id + ";";
+                ids += item.type_id + ";";
             });
 
             $scope.exchanges = $scope.sites;
@@ -62,6 +63,9 @@ define(["./module"], function (ctrs) {
             $scope.init = function () {
                 $http.get("api/exchange?start=" + $rootScope.start + ",end=" + $rootScope.end + ",type=" + ids.substring(0, ids.length - 1) + ",pathUp=path0,pathDown=path1" + ",address=" + null).success(function (data) {
                     console.log(data)
+                    if(data.length==0){
+                        return;
+                    }
                     $scope.exchanges = dataSave($scope, data);
                     $scope.exchange = {};
                     $scope.exchange = {
