@@ -26,7 +26,7 @@ define(["./module"], function (ctrs) {
 
             }],
             conv_tpye: "other",//转换类型，regist,communicate,place_order,other
-            conv_text: "3333"
+            conv_text: ""
 
         };
 
