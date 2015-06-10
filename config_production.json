@@ -12,9 +12,12 @@
   "redis": {
     "host": "web1",
     "port": 6379,
-    "password": "3edcvfr4"
+    "options": {
+      "auth_pass": "3edcvfr4"
+    },
+    "sessiondb": 10
   },
-  "mongo":{
-    "url":"mongodb://mongo:23135/conf"
+  "mongo": {
+    "url": "mongodb://mongo:23135/conf"
   }
 }
