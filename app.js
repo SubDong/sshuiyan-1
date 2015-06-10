@@ -15,7 +15,6 @@ var express = require('express'),
     uuid = require('node-uuid'),
     auth = require('./routes/auth'),
     token = require('./routes/token'),
-    logout = require('./routes/logout'),
     redis_module = require("./servers/utils/redis"),
     RedisStore = require('connect-redis')(session),
     mongoose = require('./servers/utils/mongo'),
@@ -135,8 +134,6 @@ app.use(function (req, res, next) {
 })
 
 app.use('/', root);
-
-app.use('/logout', logout)
 
 app.use('/api', api);
 
