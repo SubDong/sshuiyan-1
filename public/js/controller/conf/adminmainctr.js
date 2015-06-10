@@ -135,8 +135,8 @@ define(["./module"], function (ctrs) {
         //};
         //新增网站弹框
         $scope.open = function () {
-            urlconfig.site_url="";
-            urlconfig.site_name="";
+            urlconfig.site_url = "";
+            urlconfig.site_name = "";
             $scope.urlDialog = ngDialog.open({
                 template: '\
               <div class="ngdialog-buttons" >\
