@@ -139,8 +139,16 @@ var op = {
                 },
                 formatter: function (params, ticket, callback) {
                     var res ='<li>'+ params[0].name+'</li>';
+                    if (chartConfig.compare || chartConfig.compareCustom) {
+                        if (chartConfig.keyFormat=="day"){
+                            res ='<li>'+ params[0].name+':00-'+ params[0].name+':59</li>';
+                        }
+                    }else{
+                        if (chartConfig.keyFormat=="none"){
+                            res ='<li>'+ params[0].name+':00-'+ params[0].name+':59</li>';
+                        }
+                    }
                     for (var i = 0, l = params.length; i < l; i++) {
-
                         var formatType = labelData[i];
                         if (chartConfig.compare || chartConfig.compareCustom) {
                             var baseSerieName = params[i].seriesName.split(":");
@@ -867,6 +875,9 @@ var util = {
                 } else {
                     return key;
                 }
+            }
+            if(chartConfig.keyFormat=="eq"){
+                return key;
             }
             if (chartConfig.keyFormat == "day") {
                 var _time = [];
