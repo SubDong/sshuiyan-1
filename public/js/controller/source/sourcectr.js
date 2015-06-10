@@ -26,7 +26,7 @@ define(["./module"], function (ctrls) {
                 displayName: "来源类型",
                 field: "rf_type",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
-                cellClass:"table_list_color",
+                cellClass:"table_list_color"
             },
             {
                 name: " ",

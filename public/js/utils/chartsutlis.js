@@ -111,6 +111,9 @@ var chartUtils = {
     },
     getLinked: function (number) {
         switch (Number(number)) {
+            case 0:
+                return "内站访问";
+                break;
             case 1:
                 return "直接访问";
                 break;
@@ -198,18 +201,16 @@ var chartUtils = {
         var label = chartUtils.getLabel(json);//去重
         var result = [];
         label.forEach(function (label) {
-            if (label) {
-                var tmp = {};
-                var val = chartUtils.getObject(json, label, types);
-                if (labelType) {
-                    tmp['label'] = label;
-                } else {
-                    tmp['label'] = chartUtils.getLinked(label);
-                }
-                tmp['key'] = time;
-                tmp['quota'] = val;
-                result.push(tmp);
+            var tmp = {};
+            var val = chartUtils.getObject(json, label, types);
+            if (labelType) {
+                tmp['label'] = label;
+            } else {
+                tmp['label'] = chartUtils.getLinked(label);
             }
+            tmp['key'] = time;
+            tmp['quota'] = val;
+            result.push(tmp);
         });
         return result;
     },

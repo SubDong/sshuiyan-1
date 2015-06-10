@@ -46,7 +46,11 @@ api.get('/charts', function (req, res) {
         if (Number(query['int']) == 1) {
             interval = 1;
         } else if (Number(query['int']) == -1) {
-            interval = date.interval(start, end, Number(query['int']));
+            if (Number(query['int']) == -1 && dimension == "period") {
+                interval = 2;
+            } else {
+                interval = date.interval(start, end, Number(query['int']));
+            }
         } else {
             interval = Number(query['int']);
         }
@@ -545,7 +549,7 @@ api.get("/exchange", function (req, res) {
     pathUp = Parameters[3].split("=")[1];
     pathDown = Parameters[4].split("=")[1];
     var address = Parameters[5].split("=")[1];
-    access_request.exchangeSearch(req.es, indexString, type,pathUp,pathDown,address, function (result) {
+    access_request.exchangeSearch(req.es, indexString, type, pathUp, pathDown, address, function (result) {
         datautils.send(res, result);
     });
 

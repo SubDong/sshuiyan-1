@@ -307,6 +307,8 @@ var buildRequest = function (indexes, type, quotas, dimension, filters, start, e
                 inter = "1w";
             } else if (interval == 2592000000) {
                 inter = "1M";
+            } else if (interval == 2) {
+                inter = "1d";
             }
             return {
                 "index": indexes.toString(),
