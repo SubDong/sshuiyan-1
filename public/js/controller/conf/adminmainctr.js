@@ -78,7 +78,7 @@ define(["./module"], function (ctrs) {
             {
                 name: "x2",
                 displayName: "",
-                cellTemplate: "<div class='table_admin'><a href=''>查看网站概览</a></div>",
+                cellTemplate: "<div class='table_admin'><a href='/#index'>查看网站概览</a></div>",
                 maxWidth: 100
             },
             {
