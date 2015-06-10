@@ -18,7 +18,7 @@ router.get('/*.html', function (req, res, next) {
 });
 
 router.get("/logout", function (req, res, next) {
-    console.log('logout')
+    //console.log('logout')
     req.session.destroy(function (err) {
         if (err) {
             console.error(err);
