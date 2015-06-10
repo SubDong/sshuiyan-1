@@ -2,7 +2,7 @@ var _pct = _pct || [];
 (function () {
     var points = [], h = {}, md = {}, c = {
         id: "1",
-        version: "1.0.11"
+        version: "1.0.12"
     };
 
     md.achieve = {};
@@ -111,7 +111,7 @@ var _pct = _pct || [];
     //sc 屏幕颜色
     md.g.sc = window.screen.colorDepth + "-bit";
     //dt 浏览页面时间
-    md.g.dt = Date.parse(new Date());
+    md.g.dt = new Date().getTime();
     //rf 来源页面 url
     md.g.rf = document.referrer == "" ? "-" : encodeURIComponent(document.referrer);
     //loc 当前页面url
@@ -240,38 +240,14 @@ var _pct = _pct || [];
         return tl + tm + thv + csar + csl + n;
     };
 
-    (function(){
-        //创建坐标对象
-        md.position = {}
-        //获取坐标
-        md.position.getXy = function position(event){
-            var e = event || window.event;
-            var scrollX = document.documentElement.scrollLeft || document.body.scrollLeft;
-            var scrollY = document.documentElement.scrollTop || document.body.scrollTop;
-            var x = e.pageX || e.clientX + scrollX;
-            var y = e.pageY || e.clientY + scrollY;
-            var point = {
-                x: x,
-                y: y
-            };
-            points.push(point);
-            if(points.length >= 5){
-                md.g.hm = JSON.stringify(points);
-                return true;
-            }else{
-                return false;
-            }
-        };
-    })();
-
     //全局变量h.I 访问地址URL设置 如：http://best-ad.cn/pft.gif?query string parameters
     h.I = {
         u: "best-ad.cn",
-        P: "log.best-ad.cn",
+        P: "192.168.1.180",
         S: "pft.gif",
-        //dk: 8088,":" + _c.dk +
+        dk: 20001,//":" + _c.dk +
         protocol: "https:" == document.location.protocol ? "https:" : "http:",
-        Q: "os tit br fl pm sr lg ck ja sc dt rf loc tt ct vid u api et cv sm n v".split(" ")
+        Q: "os tit br fl pm sr lg ck ja sc dt rf loc tt ct vid u api et cv xy ut n v".split(" ")
     };
     //通过闭包 访问 私有变量 sa
     (function () {
@@ -286,7 +262,6 @@ var _pct = _pct || [];
         };
         return h.w = sa
     })();
-
 
     /**
      * 用户  调用方法参数说明
@@ -423,7 +398,7 @@ var _pct = _pct || [];
                 ab = ab.substring(ab.indexOf(".") + 1, ab.indexOf("/"));
                 md.g.tt = a = this.getData("PFT_" + c.id);
                 var Judge = (this.getData("PFT_COOKIE_RF") == null || this.getData("PFT_COOKIE_RF") != decodeURIComponent(md.g.rf));
-                if (null == a || "" == a || (as != "-" && as != ab && Judge)) {
+                if (null == a || undefined == a || "" == a || (as != "-" && as != ab && Judge)) {
                     this.setData("PFT_" + c.id);
                     cookie.set("PFT_COOKIE_RF", decodeURIComponent(md.g.rf));
                     md.g.tt = this.getData("PFT_" + c.id);
@@ -463,17 +438,7 @@ var _pct = _pct || [];
                 var a = document.createElement("script");
                 a.setAttribute("type", "text/javascript");
                 a.setAttribute("charset", "utf-8");
-                a.setAttribute("src", _c.protocol + "//" + _c.P + "/" + _c.S + "?t\=" + c.id + "\&" + this.par());
-                var f = document.getElementsByTagName("script")[0];
-                f.parentNode.insertBefore(a, f);
-                f.remove()
-            },
-            hm: function () {
-                var _c = h.I;
-                var a = document.createElement("script");
-                a.setAttribute("type", "text/javascript");
-                a.setAttribute("charset", "utf-8");
-                a.setAttribute("src", _c.protocol + "//" + _c.P + "/" + _c.S + "?t\=" + c.id + "\&_xy=" + 1 + "\&_position=" + md.g.hm);
+                a.setAttribute("src", _c.protocol + "//" + _c.P + ":" + h.I.dk + "/" + _c.S + "?t\=" + c.id + "\&" + this.par());
                 var f = document.getElementsByTagName("script")[0];
                 f.parentNode.insertBefore(a, f);
                 f.remove()
@@ -494,21 +459,8 @@ var _pct = _pct || [];
                 var e = a < c ? b : a
                 var d = setInterval(this.hbInfo, e);
             },
-            //监听点击事件
-            clickEvent: function () {
-                document.onclick = function (event) {
-                    var a = md.position.getXy(event);//获取点击坐标
-                    if (a) {
-                        var s = new sta;
-                        s.na()
-                        s.hm()
-                        points = [];
-                    }
-                }
-            },
             init: function () {
                 h.b = this;
-                this.clickEvent();
                 this.na();
                 this.sm();
                 //this.heartBeat("");
@@ -516,6 +468,61 @@ var _pct = _pct || [];
 
         };
         return new sta;
+    })();
+
+    //获取热力图点击坐标
+    (function () {
+        document.onclick = function (event) {
+            //获取坐标
+            var e = event || window.event;
+            var scrollX = document.documentElement.scrollLeft || document.body.scrollLeft;
+            var scrollY = document.documentElement.scrollTop || document.body.scrollTop;
+            var x = e.pageX || e.clientX + scrollX;
+            var y = e.pageY || e.clientY + scrollY;
+            var point = {
+                x: x,
+                y: y
+            };
+            points.push(point);
+            if (points.length >= 5) {
+                md.g.xy = JSON.stringify(points);
+                h.b.sm();
+                points = [];
+            }
+        }
+    })();
+
+    //url速度
+    (function () {
+        var en = md.event, cookie = md.cookie;
+        var la = function (a) {
+            var b = performance.timing, d = b[a + "Start"] ? b[a + "Start"] : 0;
+            a = b[a + "End"] ? b[a + "End"] : 0;
+            return {start: d, end: a, value: 0 < a - d ? a - d : 0}
+        }
+        var ut = function () {
+            var a, req, nav;
+            nav = la("navigation");
+            req = la("request");
+            a = {
+                nett: req.start - nav.start,    // netAll 浏览所用全部时间
+                netd: la("domainLookup").value,  // netDns 域名查找时间
+                nttp: la("connect").value,  //netTcp连接加载时间
+                srv: la("response").start - req.start,  //响应时间
+                dms: performance.timing.domInteractive - performance.timing.fetchStart,  //dom树加载时间
+                let: la("loadEvent").end - nav.start  //事件加载时间
+            };
+            var ctime = cookie.get(md.g.tt);
+            if (ctime == null) {
+                cookie.setNull(md.g.tt, "a");
+                md.g.ut = JSON.stringify(a);
+                h.b.sm();
+                md.g.ut = null;
+            }
+        };
+        en.e(window, "load", function () {
+            setTimeout(ut, 400);
+        })
     })();
 
     console.log(md.g);

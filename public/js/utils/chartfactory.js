@@ -128,18 +128,28 @@ var op = {
             },
             tooltip: {
                 trigger: !chartConfig.tt ? "axis" : chartConfig.tt,
+                backgroundColor : '#fff',
+                borderColor : '#ededed',
+                borderWidth: 1,
+                padding: 0,
+                textStyle : {
+                    color: '#000',
+                    decoration: 'none',
+                    fontSize: 12
+                },
                 formatter: function (params, ticket, callback) {
-                    var res = params[0].name + '<br/>';
+                    var res ='<li>'+ params[0].name+'</li>';
                     for (var i = 0, l = params.length; i < l; i++) {
+
                         var formatType = labelData[i];
                         if (chartConfig.compare || chartConfig.compareCustom) {
                             var baseSerieName = params[i].seriesName.split(":");
-                            res += baseSerieName[0] + chartUtils.convertChinese(baseSerieName[1]) + ' : ' + ad.formatFunc(params[i].value, baseSerieName[1]) + '<br/>';
+                            res +=baseSerieName[0] + chartUtils.convertChinese(baseSerieName[1]) + ' : ' + ad.formatFunc(params[i].value, baseSerieName[1]) + '</li>';
                         } else {
                             if (chartConfig.toolTip == undefined) {
-                                res += params[i].seriesName + ' : ' + ad.formatFunc(params[i].value, formatType) + '<br/>';
+                                res +='<li class=chartstyle'+i+'>'+ params[i].seriesName + ' : ' + ad.formatFunc(params[i].value, formatType) + '</li>';
                             } else {
-                                res += params[i].seriesName + ' : ' + params[i].value + '<br/>';
+                                res += params[i].seriesName + ' : ' + params[i].value + '</li>';
                             }
                         }
 
@@ -356,6 +366,15 @@ var op = {
         var option = {
             tooltip: {
                 trigger: !chartConfig.tt ? "item" : chartConfig.tt,
+                backgroundColor : '#fff',
+                borderColor : '#ededed',
+                borderWidth: 1,
+                padding:10,
+                textStyle : {
+                    color: '#000',
+                    decoration: 'none',
+                    fontSize: 12
+                },
                 formatter: function (params, ticket, callback) {
                     var formatType = labelData[0];
                     var res = chartUtils.convertChinese(formatType) + "值：";

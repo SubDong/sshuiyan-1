@@ -13,6 +13,49 @@ var dao = require('../db/daos');
 var schemas = require('../db/schemas');
 var randstring = require('../utils/randstring');
 
+
+// ================================= subdirectory_list ===============================
+api.get("/subdirectory_list", function (req, res) {
+
+
+    var query = url.parse(req.url, true).query;
+    var type = query['type'];
+    var schema_name = "subdirectories_model";
+    switch (type) {
+        case "save":
+            var entity = query['entity'];
+            var temp = JSON.parse(entity);
+            dao.save(schema_name, temp, function (ins) {
+                datautils.send(res, JSON.stringify(ins));
+            });
+            break;
+        case "search":
+            dao.find(schema_name, query['query'], null, {}, function (err, docs) {
+                datautils.send(res, docs);
+            });
+            break;
+        case "update":
+            var update = query['updates'];
+            dao.update(schema_name, query['query'], query['updates'], function (err, docs) {
+                datautils.send(res, docs);
+            });
+            break;
+        case "delete":
+            //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½
+            var qry = query['query'];
+            dao.remove(schema_name, qry, function (docs) {
+                datautils.send(res, "success");
+            });
+            break;
+        default :
+            break;
+    }
+
+});
+
+
+
+
 // ================================= Config  ===============================
 api.get("/site_list", function (req, res) {
 
@@ -31,13 +74,13 @@ api.get("/site_list", function (req, res) {
             temp.track_id = randstring.rand_string();
             dao.save(schema_name, temp, function (ins) {
                 datautils.send(res, JSON.stringify(ins));
-                //Redis´æ·Å¸±±¾
+                //Rediså­˜æ”¾å‰¯æœ¬
                 req.redisclient.set(temp.track_id, temp.type_id, function (err, reply) {//es
                     //console.log(reply.toString() + " " + req.redisclient.get(temp.track_id, function (error, redis_res) {
                     //    }));
                 });
-                //var tempConfig = angular.copy(config_redis);//³õÊ¼»¯Ê±Ä¬ÈÏÅäÖÃ ÍøÕ¾ĞÂÔöÂß¼­ÉÏ²»»áÓĞÅäÖÃ
-                req.redisclient.set(temp.track_id + "|" + temp.site_url, config_redis, function (err, reply) {//ÅäÖÃ
+                //var tempConfig = angular.copy(config_redis);//åˆå§‹åŒ–æ—¶é»˜è®¤é…ç½® ç½‘ç«™æ–°å¢é€»è¾‘ä¸Šä¸ä¼šæœ‰é…ç½®
+                req.redisclient.set(temp.track_id + "|" + temp.site_url, config_redis, function (err, reply) {//é…ç½®
                     //console.log(reply.toString() + " " + req.redisclient.get(temp.track_id + "|" + temp.site_url, function (error, redis_res) {
                     //    }));
                 });
@@ -54,10 +97,10 @@ api.get("/site_list", function (req, res) {
             });
             break;
         case "update":
-            //Ìõ¼şÏÂ¸üĞÂ
+            //æ¡ä»¶ä¸‹æ›´æ–°
             var update = query['updates'];
             dao.update(schema_name, query['query'], query['updates'], function (err, docs) {
-                //track_id¸üĞÂÇé¿öÏÂ ¸üĞÂRides  Ö»¸üĞÂKey
+                //track_idæ›´æ–°æƒ…å†µä¸‹ æ›´æ–°Rides  åªæ›´æ–°Key
 
                 if (docs != null && docs.length == 1 && update.track_id != docs[0].track_id) {
                     req.redisclient.get(docs[0].track_id, function (error, redis_type_id) {
@@ -69,7 +112,7 @@ api.get("/site_list", function (req, res) {
                     });
                     req.redisclient.get(docs[0].track_id | docs[0].site_url, function (error, redis_conf) {//
                         if (redis_conf != null)
-                            req.redisclient.set(update.track_id + "|" + update.site_url, redis_conf, function (err, reply) {//ÅäÖÃ
+                            req.redisclient.set(update.track_id + "|" + update.site_url, redis_conf, function (err, reply) {//é…ç½®
                                 //console.log(reply.toString() + " " + req.redisclient.get(temp.track_id + "|" + temp.site_url, function (error, redis_res) {
                                 //    }));
                             });
@@ -80,22 +123,22 @@ api.get("/site_list", function (req, res) {
             });
             break;
         case "delete":
-            //Ìõ¼şÏÂÉ¾³ı
+            //æ¡ä»¶ä¸‹åˆ é™¤
             var qry = query['query'];
             dao.remove(schema_name, qry, function (docs) {
-                if(docs!=null){
-                //    docs.forEach(function (doc, i) {
-                        //É¾³ıRedis¶ÔÓ¦ÔªËØ
-                        //req.redisclient.remove(docs.track_id, function (error, redis_res) {
-                        //    console.log(redis_res);
-                        //});
-                        //req.redisclient.remove(docs.track_id + "|*", function (error, redis_res) {//É¾³ıËùÓĞÔÚtrack_idÏÂµÄÅäÖÃ
-                        //    console.log(redis_res);
-                        //});
+                if (docs != null) {
+                    //    docs.forEach(function (doc, i) {
+                    //åˆ é™¤Rediså¯¹åº”å…ƒç´ 
+                    //req.redisclient.remove(docs.track_id, function (error, redis_res) {
+                    //    console.log(redis_res);
+                    //});
+                    //req.redisclient.remove(docs.track_id + "|*", function (error, redis_res) {//åˆ é™¤æ‰€æœ‰åœ¨track_idä¸‹çš„é…ç½®
+                    //    console.log(redis_res);
+                    //});
                     //});
                 }
 
-                datautils.send(res, "success");
+                res.send("success");
             });
             break;
         default :
@@ -110,7 +153,7 @@ api.get("/conf", function (req, res) {
     var index = query['index'];
     var schema_name = "";
     switch (index) {
-        case "site_list"://ÍøÕ¾ÁĞ±í
+        case "site_list"://ç½‘ç«™åˆ—è¡¨
             schema_name = "sites_model";
             break;
         case "0":
@@ -125,7 +168,7 @@ api.get("/conf", function (req, res) {
         case "save":
             var entity = JSON.parse(query['entity']);
             dao.save(schema_name, entity, function (ins) {
-                //¸üĞÂRedisÅäÖÃ
+                //æ›´æ–°Redisé…ç½®
                 datautils.send(res, JSON.stringify(ins));
             });
             break;
@@ -135,16 +178,92 @@ api.get("/conf", function (req, res) {
             });
             break;
         case "update":
-            //Ìõ¼şÏÂ¸üĞÂ
+            //æ¡ä»¶ä¸‹æ›´æ–°
             dao.update(schema_name, query['query'], query['updates'], function (err, docs) {
-                //¸üĞÂRedisÅäÖÃ
+                //æ›´æ–°Redisé…ç½®
                 datautils.send(res, docs);
             });
             break;
         case "delete":
-            //Ìõ¼şÏÂÉ¾³ı
+            //æ¡ä»¶ä¸‹åˆ é™¤
             dao.remove(schema_name, query['query'], function () {
-                //¸üĞÂRedisÅäÖÃ
+                //æ›´æ–°Redisé…ç½®
+                datautils.send(res, "remove");
+            });
+            break;
+        default :
+            break;
+    }
+
+});
+api.get("/page_conv", function (req, res) {
+
+    var query = url.parse(req.url, true).query;
+    var type = query['type'];
+    var schema_name = "page_conv_model";
+    switch (type) {
+        case "save":
+            var entity = JSON.parse(query['entity']);
+            dao.save(schema_name, entity, function (ins) {
+                //æ›´æ–°Redisé…ç½®
+                datautils.send(res, JSON.stringify(ins));
+            });
+            break;
+        case "search":
+            dao.find(schema_name, query['query'], null, {}, function (err, docs) {
+                datautils.send(res, docs);
+            });
+            break;
+        case "update":
+            //æ¡ä»¶ä¸‹æ›´æ–°
+            dao.update(schema_name, query['query'], query['updates'], function (err, docs) {
+                //æ›´æ–°Redisé…ç½®
+                datautils.send(res, docs);
+            });
+            break;
+        case "delete":
+            //æ¡ä»¶ä¸‹åˆ é™¤
+
+            dao.remove(schema_name, query['query'], function () {
+                //æ›´æ–°Redisé…ç½®
+                datautils.send(res, "remove");
+            });
+            break;
+        default :
+            break;
+    }
+
+});
+api.get("/page_conv", function (req, res) {
+
+    var query = url.parse(req.url, true).query;
+    var type = query['type'];
+    var schema_name = "page_conv_model";
+    switch (type) {
+        case "save":
+            var entity = JSON.parse(query['entity']);
+            dao.save(schema_name, entity, function (ins) {
+                //æ›´æ–°Redisé…ç½®
+                datautils.send(res, JSON.stringify(ins));
+            });
+            break;
+        case "search":
+            dao.find(schema_name, query['query'], null, {}, function (err, docs) {
+                datautils.send(res, docs);
+            });
+            break;
+        case "update":
+            //æ¡ä»¶ä¸‹æ›´æ–°
+            dao.update(schema_name, query['query'], query['updates'], function (err, docs) {
+                //æ›´æ–°Redisé…ç½®
+                datautils.send(res, docs);
+            });
+            break;
+        case "delete":
+            //æ¡ä»¶ä¸‹åˆ é™¤
+
+            dao.remove(schema_name, query['query'], function () {
+                //æ›´æ–°Redisé…ç½®
                 datautils.send(res, "remove");
             });
             break;
@@ -154,16 +273,16 @@ api.get("/conf", function (req, res) {
 
 });
 /**
- * »ñÈ¡track_idºÍtype_id¹ØÏµ
+ * è·å–track_idå’Œtype_idå…³ç³»
  */
 api.get("/tt_conf", function (req, res) {
     var query = url.parse(req.url, true).query;
     req.redisclient.get(query['query'], function (error, redis_type_id) {
-                datautils.send(res, redis_type_id);
+        datautils.send(res, redis_type_id);
     });
 });
 /**
- * »ñÈ¡track_idºÍconfig¹ØÏµ
+ * è·å–track_idå’Œconfigå…³ç³»
  */
 api.get("/tc_conf", function (req, res) {
     var query = url.parse(req.url, true).query;

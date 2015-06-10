@@ -7,7 +7,6 @@ define(["../module"], function (app) {
 
     app.controller("admintablectr", function ($timeout, $scope, $rootScope, $http, $cookieStore) {
         $rootScope.adminIndicators = function (item, entities, number, refresh) {
-            console.log("adminIndicators");
             $rootScope.gridArray.shift();
             $rootScope.gridArray.shift();
             if (refresh == "refresh") {
@@ -83,11 +82,10 @@ define(["../module"], function (app) {
             //$rootScope.$broadcast("ssh_reload_datashow");
         };
         //
-        if (typeof($rootScope.checkedArray) != undefined && $scope.tableJu == "html") {
-            $scope.gridOptions = {
+        if (typeof($rootScope.checkedArray) != undefined && $rootScope.tableJu == "html") {
+            $rootScope.gridOptions = {
                 paginationPageSize: 25,
                 expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
-                expandableRowHeight: 360,
                 enableColumnMenus: false,
                 enablePaginationControls: false,
                 enableSorting: true,
@@ -95,12 +93,12 @@ define(["../module"], function (app) {
                 enableHorizontalScrollbar: 0,
                 columnDefs: $rootScope.gridArray,
                 onRegisterApi: function (girApi) {
-                    $scope.gridApi2 = girApi;
+                    $rootScope.gridApi2 = girApi;
                     adminGriApihtml(girApi);
                 }
             };
         } else {
-            $scope.gridOptions = {
+            $rootScope.gridOptions = {
                 paginationPageSize: 25,
                 expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
                 expandableRowHeight: 360,
@@ -111,73 +109,55 @@ define(["../module"], function (app) {
                 enableHorizontalScrollbar: 0,
                 columnDefs: $rootScope.gridArray,
                 onRegisterApi: function (gridApi) {
-                    $scope.gridApi2 = gridApi;
+                    $rootScope.gridApi2 = gridApi;
                     adminGriApiInfo(gridApi);
                 }
             };
         }
 
         //////DENG
-
-        /**
-         * 初始化数据
-         */
-        var refushGridData = function () {
-            var uid = $cookieStore.get("uid");
-            var site_id = $rootScope.userType;
-            var url = "/config/site_list?index=site_list&type=search&query={\"uid\":\"" + uid + "\"}";
-            $http({
-                method: 'GET',
-                url: url
-            }).success(function (dataConfig, status) {
-                $scope.gridOptions.data = dataConfig;
-            });
-        };
-        refushGridData();
-        $scope.page = "";
-        $scope.pagego = function (pagevalue) {
-            pagevalue.pagination.seek(Number($scope.page));
-        };
         //配置展开巷HTML
         var adminGriApiInfo = function (gridApi) {
-            $scope.gridOpArray = angular.copy($rootScope.gridArray);
-            gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
-                console.log(row);
-                var tempHtml=$rootScope.adminSetHtml.replace('ex_track_id', row.entity.track_id);//替换
-                var data = [{
-                    name: "p",
-                    displayName: "",
-                    field: 'info',
-                    cellTemplate: tempHtml
-                }];
 
-                row.entity.subGridOptions = {
-                    showHeader: false,
-                    columnDefs: data
-                };
-                row.entity.subGridOptions.data = [{"info": " "}];
-            })
+            if (typeof($rootScope.checkedArray) != undefined && $rootScope.tableJu == "html") {
+                $scope.gridOpArray = angular.copy($rootScope.gridArray);
+                gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
+                    var tempHtml = $rootScope.adminSetHtml.replace('ex_track_id', row.entity.track_id);//替换
+                    var data = [{
+                        name: "p",
+                        displayName: "",
+                        field: 'info',
+                        cellTemplate: tempHtml
+                    }];
+
+                    row.entity.subGridOptions = {
+                        showHeader: false,
+                        columnDefs: data
+                    };
+                    row.entity.subGridOptions.data = [{"info": " "}];
+                })
+            }
+
         }
         ////
         var adminGriApihtml = function (gridApi) {
-            var htmlData = [];
-            gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
-                row.entity.subGridOptions = {
-                    showHeader: false,
-                    enableHorizontalScrollbar: 0,
-                    columnDefs: htmlData
-                };
-                var res = {};
-                res["name"] = "test";
-                res["field"] = "info";
-                res["cellTemplate"] = $rootScope.adminSetHtml;
-                htmlData.push(res);
-                row.entity.subGridOptions.data = [{"info": " "}];
-            });
+            if (typeof($rootScope.checkedArray) != undefined && $rootScope.tableJu == "html") {
+                var htmlData = [];
+                gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
+                    row.entity.subGridOptions = {
+                        showHeader: false,
+                        enableHorizontalScrollbar: 0,
+                        columnDefs: htmlData
+                    };
+                    var res = {};
+                    res["name"] = "test";
+                    res["field"] = "info";
+                    res["cellTemplate"] = $rootScope.adminSetHtml;
+                    htmlData.push(res);
+                    row.entity.subGridOptions.data = [{"info": " "}];
+                });
+            }
         };
-        $scope.getDiv = function (a) {
-            console.log(a);
-        }
         ///////////
     });
 });

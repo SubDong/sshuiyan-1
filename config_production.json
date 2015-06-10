@@ -10,7 +10,7 @@
     "log": "INFO"
   },
   "redis": {
-    "host": "redis",
+    "host": "web1",
     "port": 6379,
     "password": "3edcvfr4"
   },

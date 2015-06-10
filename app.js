@@ -22,7 +22,7 @@ var express = require('express'),
 
 
 var env = "dev";
-var config = require("./config_dev.json");
+var config = require("./config.json");
 
 var es_client = es.init(config.es);
 
@@ -72,66 +72,59 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 // 非测试环境加入认证
-if (env != 'dev') {
+if (env == 'dev') {
     app.use(auth.auth)
 }
 
 // 登陆信息
-if (env == 'dev') {
+app.use(function (req, res, next) {
+    req.db = mongo;
+    req.es = es_client;
+    req.redisclient = redis_client;
+    req.accountid = req.session.accountid;
+    if (req.session.user) {
+        res.cookie('uname', JSON.stringify(req.session.user.userName));
+        res.cookie('uid', JSON.stringify(req.session.user.id));
 
-    //daos.save("sites_model", {id: 123123}, function (err, docs) {
-    //    if (err)
-    //        return console.error(err);
-    //    console.log(docs)
-    //})
-    // 测试环境
-    app.use(function (req, res, next) {
-        req.db = mongo;
-        req.es = es_client;
-        req.redisclient = redis_client;
-        req.accountid = req.session.accountid
-        res.cookie('uname', JSON.stringify('{name:"perfect2015",id:"55541528da50076cbff8e14f"}'));
-        res.cookie('uid', JSON.stringify('cookie test uid'));
-        var usites = [
-            {
-                site_name: "www.best-ad.cn",
-                site_id: 1,
-                perfect_name: 'perfect2015',
-                bd_name: 'baidu-perfect2151880'
-            }, {
-                site_name: "www.perfect-cn.cn",
-                site_id: 2,
-                perfect_name: 'perfect2015',
-                bd_name: 'baidu-perfect2151880'
-            }]
 
-        res.cookie('usites', JSON.stringify(usites));
+        var promise = daos.findSync("sites_model", JSON.stringify({uid: req.session.user.id}), null, {});
+
+        promise.then(function (docs) {
+            var usites = [];
+
+            if (docs.length > 0) {
+                docs.forEach(function (item) {
+                    var site = {};
+                    site['site_id'] = item._id.toString();
+                    site["site_name"] = item.site_name;
+                    if (item.site_url == "www.best-ad.cn") {
+                        site["type_id"] = 1;
+                    } else if (item.site_url == "www.perfect-cn.cn") {
+                        site["type_id"] = 2;
+                    } else {
+                        site["type_id"] = item.type_id;
+                    }
+                    //site["u_name"] = req.session.user.userName;
+                    //site["bd_name"] = req.session.accountname;
+                    usites.push(site);
+                });
+
+            } else {
+                usites.push({
+                    'site_id': -1,
+                    'site_name': '<无>',
+                    'type_id': -1
+                })
+            }
+
+            res.cookie('usites', '' + JSON.stringify(usites) + '');
+            next();
+        })
+    } else {
         next();
-    })
-} else {
-    // 非测试环境
-    app.use(function (req, res, next) {
-        req.db = mongo;
-        req.es = es_client;
-        req.redisclient = redis_client;
-        req.accountid = req.session.accountid
+    }
+})
 
-
-        if (!!req.session.user) {
-            res.cookie('uname', "\"" + req.session.user.userName + "\"");
-            var usites = []
-            req.session.user.baiduAccounts.forEach(function (item, i) {
-                var obj = {};
-                obj['site_name'] = item.baiduUserName;
-                obj['site_id'] = item.id;
-
-                usites.push(obj);
-            })
-            res.cookie('usites', JSON.stringify(usites));
-        }
-        next();
-    })
-}
 app.use('/', root);
 
 app.use('/api', api);

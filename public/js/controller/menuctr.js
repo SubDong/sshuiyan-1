@@ -224,38 +224,32 @@ define(["./module"], function (ctrs) {
 
 
         $scope.initPerfectAccount = function () {
-            var userObj = eval("(" + $cookieStore.get('uname') + ")");
+            var userObj = $cookieStore.get('uname').user;
             $rootScope.perfectUser = userObj;
+            $rootScope.usites = $cookieStore.get('usites');
+
+            // TODO
+            $rootScope.default = $rootScope.usites[0].site_name;     // default site
+            $rootScope.defaultType = $rootScope.usites[0].site_id;   // default site id
+
+            //console.log($scope.usites);
         }
         $scope.initPerfectAccount();
 
-        var usites = $cookieStore.get('usites');
-        var sites = [];
-        usites.forEach(function (item, i) {
-            sites.push({
-                name: item.site_name,
-                id: item.site_id,
-                bd_name: item.bd_name,
-                p_name: item.perfect_name
-            })
-        });
-        $rootScope.default = sites[0].name;     // default site
-        $rootScope.defaultType = sites[0].id;   // default site trackId
-
         $scope.siteselect = {};
-        $scope.siteselects = sites;
+        $scope.siteselects = $rootScope.usites;
 
-        $rootScope.user = sites[0].p_name;//perfect2015
-        $rootScope.baiduAccount = sites[0].bd_name;//baidu-perfect2151880
-        $rootScope.userType = sites[0].id;//www.perfect-cn.cn
-        $rootScope.userTypeName = sites[0].name;
+        $rootScope.user = $cookieStore.get('uname');//perfect2015
+        //$rootScope.baiduAccount = $rootScope.usites[0].bd_name;//baidu-perfect2151880
+        $rootScope.userType = $rootScope.usites[0].id;//www.perfect-cn.cn
+        $rootScope.userTypeName = $rootScope.usites[0].name;
 
-            $scope.changeUrl = function (select) {
-                $rootScope.user = select.p_name;
-                $rootScope.baiduAccount = select.bd_name;
-                $rootScope.userType = select.id;
-                $rootScope.userTypeName = select.name;
+        $scope.changeUrl = function (select) {
+            $rootScope.user = select.p_name;
+            //$rootScope.baiduAccount = select.bd_name;
+            $rootScope.userType = select.id;
+            $rootScope.userTypeName = select.name;
 
-            }
+        }
     })
 });

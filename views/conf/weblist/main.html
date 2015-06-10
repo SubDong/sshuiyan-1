@@ -7,7 +7,8 @@
                 <ul>
                     <li><input type="checkbox" class="styled web_list_nav_input1" /> <b>其他首页</b></li>
                     <li><input type="checkbox" class="styled web_list_nav_input1" /> <b>网站首页</b></li>
-                    <li><input type="text" class="form-control " id="web_list_nav_input" value="请输入网址…"/></li>
+                    <li><input type="text" class="form-control " id="web_list_nav_input" placeholder="请输入网址…" onfocus="this.setAttribute('placeholder','')"
+                               onblur="this.setAttribute('placeholder','请输入网址...')"/></li>
                     <li><button class="btn btn-info nav_btn ">代码安装检查</button></li>
                 </ul>
             </div>
@@ -16,10 +17,10 @@
         <div class="web_list_up" >
             <div class="table_content" ng-controller="admintablectr">
                 <div class="custom_table">
+                    <div ui-grid="gridOptions" class="grid clearfix secondary_table" ui-grid-selection ui-grid-pagination
+                         ui-grid-exporter ui-grid-auto-resize></div>
 
-                    <div ui-grid="gridOptions" class="grid grid_table" ui-grid-edit style="min-height:400px;"ui-grid-pagination ui-grid-selection
 
-                         ui-grid-exporter ui-grid-expandable></div>
                 </div>
             </div>
         </div>
