@@ -540,7 +540,12 @@ api.get("/exchange", function (req, res) {
     type = type.replace(/;/g, ",");//由于穿过的数据是以;分号隔开的，所以替换成逗号
     //start与end传过时间偏移量，调用creatIndexs()方法，把access-与时间拼接起来组成索引值
     var indexString = date.createIndexes(start, end, "access-");
-    access_request.exchangeSearch(req.es, indexString, type, function (result) {
+    var pathUp = "path0";
+    var pathDown = "path1";
+    pathUp = Parameters[3].split("=")[1];
+    pathDown = Parameters[4].split("=")[1];
+    var address = Parameters[5].split("=")[1];
+    access_request.exchangeSearch(req.es, indexString, type,pathUp,pathDown,address, function (result) {
         datautils.send(res, result);
     });
 

@@ -118,6 +118,8 @@ define(["./module"], function (ctrs) {
         };
         $scope.today = function () {
             $scope.reset();
+            $scope.todayCalendar = GetDateStr(0);
+            $('#reportrange span').html(GetDateStr(0));
             $scope.todayClass = true;
             $rootScope.start = 0;
             $rootScope.end = 0;
@@ -125,6 +127,8 @@ define(["./module"], function (ctrs) {
         };
         $scope.yesterday = function () {
             $scope.reset();
+            $scope.todayCalendar = GetDateStr(-1);
+            $('#reportrange span').html(GetDateStr(-1));
             $scope.yesterdayClass = true;
             $rootScope.start = -1;
             $rootScope.end = -1;
@@ -132,6 +136,8 @@ define(["./module"], function (ctrs) {
         };
         $scope.sevenDay = function () {
             $scope.reset();
+            $scope.todayCalendar = GetDateStr(-6);
+            $('#reportrange span').html(GetDateStr(-6) + "至" + GetDateStr(0));
             $scope.sevenDayClass = true;
             $rootScope.start = -7;
             $rootScope.end = -1;
@@ -141,6 +147,8 @@ define(["./module"], function (ctrs) {
         };
         $scope.month = function () {
             $scope.reset();
+            $scope.todayCalendar = GetDateStr(-29);
+            $('#reportrange span').html(GetDateStr(-29) + "至" + GetDateStr(0));
             $scope.monthClass = true;
             $rootScope.start = -30;
             $rootScope.end = -1;
@@ -184,6 +192,35 @@ define(["./module"], function (ctrs) {
             });
 
         };
+        function GetDateStr(AddDayCount) {
+            var dd = new Date();
+            dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
+            var y = dd.getFullYear();
+            var m = dd.getMonth() + 1;//获取当前月份的日期
+            var d = dd.getDate();
+            return y + "-" + m + "-" + d;
+        }
+        $('#reportrange span').html(GetDateStr(0));
+        $('#reportrange').daterangepicker({
+            format: 'YYYY-MM-DD',
+            maxDate: GetDateStr(0),
+            showDropdowns: true,
+            showWeekNumbers: false,
+            timePicker: false,
+            //timePickerIncrement: 1,
+            timePicker12Hour: false,
+            opens: 'left',
+            drops: 'down',
+            timeZone: true,
+            buttonClasses: ['btn', 'btn-sm'],
+            applyClass: 'btn-primary',
+            cancelClass: 'btn-default',
+            separator: ' to '
+        }, function (start, end, label) {
+            $rootScope.datepickerClick(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
+            $rootScope.startString = (start.format('YYYY-MM-DD') + ' 至 ' + end.format('YYYY-MM-DD'))
+            $('#reportrange span').html(start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD'));
+        });
         //日历
         this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
         this.type = 'range';

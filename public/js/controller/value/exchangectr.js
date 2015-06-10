@@ -5,7 +5,7 @@ define(["./module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.controller('exchangectr', function ($cookieStore, $http, $rootScope, $scope) {
+    ctrs.controller('exchangectr', function ($cookieStore, $http, $rootScope, $scope,$compile) {
             $scope.selectedIndex = 0;
             $rootScope.start = -1;//时间偏移量开始
             $rootScope.end = -1;//时间偏移量结束
@@ -13,22 +13,21 @@ define(["./module"], function (ctrs) {
             $scope.exchange = {};
             //对应域名的点击时间，获取该域名下的层级下数据
             $scope.itemClicked = function (page, $index) {
-                $http.get("api/exchange?start=" + $scope.start + ",end=" + $scope.end + ",type=" + page.id).success(function (data) {
+                $http.get("api/exchange?start=" + $rootScope.start + ",end=" + $rootScope.end + ",type=" + page.id + ",pathUp=path0,pathDown=path1" + ",address=" + null).success(function (data) {
                     //注：data里面的数据在name、id、pv和uv与page对象的值不同，数据混乱
                     //原因是type的数量与数据查出来的域名数量不符合，数据库有问题
                     $scope.exchange = {
                         name: page.name,
                         id: page.id,
                         pv: page.pv,
-                        uv: page.uv,
-                        path1: data[0].path1//层级下数据
-                    }
+                        uv: page.uv
+                    };
+                    $scope.pathData = data[0].path1
                     $scope.exchange_prefix = {
                         name: page.prefix + page.name,
                         id: page.id,
                         pv: page.pv,
-                        uv: page.uv,
-                        path1: data[0].path1//层级下数据
+                        uv: page.uv
                     };
                 });
                 $scope.selectedIndex = $index;
@@ -38,11 +37,11 @@ define(["./module"], function (ctrs) {
                 $rootScope.$broadcast("ssh_dateShow_options_time_change", type);
             };
             $scope.reset = function () {
-                $scope.todayClass = false;
                 $scope.yesterdayClass = false;
                 $scope.sevenDayClass = false;
                 $scope.monthClass = false;
                 $scope.definClass = false;
+                $scope.beforeyesterdayClass = false;
             };
 
             $scope.usites = $cookieStore.get('usites');
@@ -61,7 +60,8 @@ define(["./module"], function (ctrs) {
             //根据域名type查询pv和uv
 
             $scope.init = function () {
-                $http.get("api/exchange?start=" + $rootScope.start + ",end=" + $rootScope.end + ",type=" + ids.substring(0, ids.length - 1)).success(function (data) {
+                $http.get("api/exchange?start=" + $rootScope.start + ",end=" + $rootScope.end + ",type=" + ids.substring(0, ids.length - 1) + ",pathUp=path0,pathDown=path1" + ",address=" + null).success(function (data) {
+                    console.log(data)
                     $scope.exchanges = dataSave($scope, data);
                     $scope.exchange = {};
                     $scope.exchange = {
@@ -71,17 +71,48 @@ define(["./module"], function (ctrs) {
                         uv: data[0].uv,
                         path1: data[0].path1
                     };
+                    $scope.pathData = data[0].path1
                     $scope.exchange_prefix = {
                         name: data[0].pathName,
                         id: data[0].id,
                         pv: data[0].pv,
-                        uv: data[0].uv,
-                        path1: data[0].path1
+                        uv: data[0].uv
                     };
                 });
-            }
+            };
 
-            $scope.init();
+            $scope.queryPathData = function (context) {
+                var pathDown = "path" + (Number(context.pathUp.toString().substring(context.pathUp.length - 1, context.pathUp.length)) + 1)
+                $http.get("api/exchange?start=" + $rootScope.start + ",end=" + $rootScope.end + ",type=" + context.id + ",pathUp=" + context.pathUp + ",pathDown=" + pathDown + ",address=" + context.pathName).success(function (result) {
+                    //if(result.length==0){
+                    //    return;
+                    //}else{
+
+                        //$scope.htmlStr = $compile("<ul><li ng-repeat='path in pathData'>"
+                        //    + "<div class='exchange_list_level2'>"
+                        //    + "<div class='exchange_list1 fl'>"
+                        //    + "<div class='exchange_list1_name exchange_page fl'>"
+                        //    + " {{path.pathName}}"
+                        //    + "</div>"
+                        //    + "<div class='exchange_list1_text fr'>"
+                        //    + "<span>"
+                        //    + "PV:{{path.pv}}"
+                        //    + "</span>"
+                        //    + "<span>"
+                        //    + "UV:{{path.uv}}"
+                        //    + "</span>"
+                        //    + "</div>"
+                        //    + "</div>"
+                        //    + "<a class='exchange_list1_more fl' click='queryPathData(path)'　ng-bind-html = 'htmlStr'>"
+                        //    + "</a>"
+                        //    + "</div>"
+                        //    + "</li>"
+                        //    + "</ul>")($scope);
+                    //}
+
+                });
+            };
+
 
             $scope.times = [{}];
             $scope.isCollapsed = false;
@@ -108,6 +139,7 @@ define(["./module"], function (ctrs) {
                 $rootScope.end = -1;
                 $scope.init();
             };
+
             //获取前天统计数据
             $scope.beforeyesterday = function () {
                 $scope.reset();
@@ -125,7 +157,7 @@ define(["./module"], function (ctrs) {
                 $rootScope.tableTimeEnd = -2;
                 $scope.reloadByCalendar("beforeyesterday");
                 $('#reportrange span').html(GetDateStr(-2));
-                $scope.yesterdayClass = true;
+                $scope.beforeyesterdayClass = true;
                 $rootScope.start = -2;
                 $rootScope.end = -2;
                 $scope.init();
@@ -175,6 +207,7 @@ define(["./module"], function (ctrs) {
                 var d = dd.getDate();
                 return y + "-" + m + "-" + d;
             }
+
             $('#reportrange span').html(GetDateStr(0));
             $('#reportrange').daterangepicker({
                 format: 'YYYY-MM-DD',
@@ -204,6 +237,7 @@ define(["./module"], function (ctrs) {
             this.removeFromSelected = function (dt) {
                 this.selectedDates.splice(this.selectedDates.indexOf(dt), 1);
             }
+            $scope.yesterday();
         }
     );
 });
