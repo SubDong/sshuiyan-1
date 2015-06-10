@@ -530,14 +530,16 @@ define(["./module"], function (ctrs) {
                     data.forEach(function (q) {
                         var json = JSON.parse(eval("(" + q.data + ")").toString());
                         json.forEach(function (item) {
-                            var _label = item.key[0].substring(0, 10) + ":" + chartUtils.convertChinese(item.label);
-                            var _key = [];
-                            item.key.forEach(function (k) {
-                                k = Number(k.toString().substring(10, 13));
-                                _key.push(k);
-                            });
-                            item.key = _key;
-                            item.label = _label;
+                            if (item.key.length) {
+                                var _label = item.key[0].substring(0, 10) + ":" + chartUtils.convertChinese(item.label);
+                                var _key = [];
+                                item.key.forEach(function (k) {
+                                    k = Number(k.toString().substring(10, 13));
+                                    _key.push(k);
+                                });
+                                item.key = _key;
+                                item.label = _label;
+                            }
                         });
                         final_result.push(json[0]);
                     });

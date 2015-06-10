@@ -345,17 +345,19 @@ api.get('/realTimeAccess', function (req, res) {
     es_request.realTimeSearch(req.es, indexes, _type, _filters, function (data) {
         var resultArray = new Array();
         data.forEach(function (item, i) {
-            if (item._source!=null&&item._source.city != "-") {
-                var result = {};
-                result["city"] = item._source.city == "-" ? "国外" : item._source.city;
-                var newDate = new Date(item._source.utime[0]).toString();
-                result["utime"] = newDate.substring(newDate.indexOf(":") - 3, newDate.indexOf("G") - 1);
-                result["source"] = item._source.rf + "," + (item._source.se != "-" ? (item._source.se === undefined ? item._source.rf : item._source.se) : item._source.rf);
-                result["tt"] = item._source.tt;
-                result["ip"] = item._source.remote;
-                result["utimeAll"] = new Date(item._source.utime[item._source.utime.length - 1] - item._source.utime[0]).format("hh:mm:ss");
-                result["pageNumber"] = item._source.loc.length
-                resultArray.push(result)
+            if (item._source.city) {
+                if (item._source.city != "-") {
+                    var result = {};
+                    result["city"] = item._source.city == "-" ? "国外" : item._source.city;
+                    var newDate = new Date(item._source.utime[0]).toString();
+                    result["utime"] = newDate.substring(newDate.indexOf(":") - 3, newDate.indexOf("G") - 1);
+                    result["source"] = item._source.rf + "," + (item._source.se != "-" ? (item._source.se === undefined ? item._source.rf : item._source.se) : item._source.rf);
+                    result["tt"] = item._source.tt;
+                    result["ip"] = item._source.remote;
+                    result["utimeAll"] = new Date(item._source.utime[item._source.utime.length - 1] - item._source.utime[0]).format("hh:mm:ss");
+                    result["pageNumber"] = item._source.loc.length
+                    resultArray.push(result)
+                }
             }
         });
         datautils.send(res, resultArray);
@@ -538,7 +540,12 @@ api.get("/exchange", function (req, res) {
     type = type.replace(/;/g, ",");//由于穿过的数据是以;分号隔开的，所以替换成逗号
     //start与end传过时间偏移量，调用creatIndexs()方法，把access-与时间拼接起来组成索引值
     var indexString = date.createIndexes(start, end, "access-");
-    access_request.exchangeSearch(req.es, indexString, type, function (result) {
+    var pathUp = "path0";
+    var pathDown = "path1";
+    pathUp = Parameters[3].split("=")[1];
+    pathDown = Parameters[4].split("=")[1];
+    var address = Parameters[5].split("=")[1];
+    access_request.exchangeSearch(req.es, indexString, type,pathUp,pathDown,address, function (result) {
         datautils.send(res, result);
     });
 

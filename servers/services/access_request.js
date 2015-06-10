@@ -147,49 +147,51 @@ var access_request = {
                 callbackFn(data);
         });
     },
-    //exchangeSearch: function (es, indexs, type, callbackFn) {
-    //    var request = {
-    //        "index": indexs,
-    //        "type": type,
-    //        "body": {
-    //            "size": 0,
-    //            "aggs": {
-    //                "aggs_pv": {
-    //                    "terms": {
-    //                        "field": "_type"
-    //                    },
-    //                    "aggs": {
-    //                        "pv": {
-    //                            "sum": {
-    //                                "script": "1"
-    //                            }
-    //                        }
-    //                    }
-    //                },
-    //                "uv": {
-    //                    "cardinality": {
-    //                        "field": "tt"
-    //                    }
-    //                }
-    //            }
-    //        }
-    //    }
-    //    es.search(request, function (error, response) {
-    //        var data = [];
-    //        if (response != undefined && response.aggregations != undefined) {
-    //            var result = response.aggregations;
-    //            data.push({"pv": result.aggs_pv.buckets[0].pv.value, "uv": result.uv.value});
-    //            callbackFn(data);
-    //        } else
-    //            callbackFn(data);
-    //    });
-    //},
-    exchangeSearch: function (es, indexs, type, callbackFn) {
+    exchangeSearch: function (es, indexs, type,pathUp,pathDown,address, callbackFn) {
+        var checkAddress = function(){
+            if(address=="null"){
+                return {
+                    "match_all":{}
+                }
+            }else{
+                if(pathDown=="path1"){
+                    return {
+                        "match":{
+                            "path1":address
+                        }
+                    }
+                }else if(pathDown=="path2"){
+                    return {
+                        "match":{
+                            "path2":address
+                        }
+                    }
+                }else if(pathDown=="path3"){
+                    return {
+                        "match":{
+                            "path3":address
+                        }
+                    }
+                }else if(pathDown=="path4"){
+                    return {
+                        "match":{
+                            "path4":address
+                        }
+                    }
+                }else{
+                    return {
+                        "match_all":{}
+                    };
+                }
+            }
+        };
+        console.log(checkAddress());
         var request = {
             index: indexs,
             type: type,
             body: {
                 "size": 0,
+                "query":checkAddress(),
                 "aggs": {
                     "pv_uv": {
                         "terms": {
@@ -198,31 +200,15 @@ var access_request = {
                         "aggs": {
                             "path0": {
                                 "terms": {
-                                    "field": "path0"
+                                    "field": pathUp
                                 },
                                 "aggs": {
                                     "path1": {
                                         "terms": {
-                                            "field": "path1"
+                                            "field": pathDown
                                         },
                                         "aggs": {
-                                            "path2": {
-                                                "terms": {
-                                                    "field": "path2"
-                                                },
-                                                "aggs": {
-                                                    "pv": {
-                                                        "sum": {
-                                                            "script": "1"
-                                                        }
-                                                    },
-                                                    "uv": {
-                                                        "cardinality": {
-                                                            "field": "tt"
-                                                        }
-                                                    }
-                                                }
-                                            },
+
                                             "pv": {
                                                 "sum": {
                                                     "script": "1"
@@ -251,7 +237,7 @@ var access_request = {
                     }
                 }
             }
-        }
+        };
         es.search(request, function (error, response) {
             var data = [];
             var path1Data = [];
@@ -264,7 +250,9 @@ var access_request = {
                             path1Data.push({
                                 "pv": result[i].path0.buckets[c].path1.buckets[k].pv.value,
                                 "uv": result[i].path0.buckets[c].path1.buckets[k].uv.value,
-                                "pathName": result[i].path0.buckets[c].path1.buckets[k].key
+                                "pathName": result[i].path0.buckets[c].path1.buckets[k].key,
+                                "pathUp":pathDown,
+                                "id": result[i].key
                             });
                         }
                         data.push({
@@ -377,16 +365,34 @@ var access_request = {
                         "uv": ((Number(mostOfResult[i].uv.value) / Number(result.all_uv.value)) * 100).toFixed(2) + "%"
                     });
                 }
-                targetPathData = {
-                    pathname: targetPathName,
-                    pv_proportion: ((Number(result.target_pv_uv.buckets.data1.pv.value) / Number(result.target_pv_uv.buckets.data.pv.value)) * 100).toFixed(2) + "%",
-                    uv_proportion: ((Number(result.target_pv_uv.buckets.data1.uv.value) / Number(result.target_pv_uv.buckets.data.uv.value)) * 100).toFixed(2) + "%",
-                    pv: result.target_pv_uv.buckets.data1.pv.value
+                console.log(result.target_pv_uv.buckets.data.pv.value)
+                if(result.target_pv_uv.buckets.data1.pv.value==0){
+                    targetPathData = {
+                        pathname: targetPathName,
+                        pv_proportion:  "0%",
+                        uv_proportion:  "0%",
+                        pv: result.target_pv_uv.buckets.data1.pv.value
+                    }
+                }else{
+                    targetPathData = {
+                        pathname: targetPathName,
+                        pv_proportion: ((Number(result.target_pv_uv.buckets.data1.pv.value) / Number(result.target_pv_uv.buckets.data.pv.value)) * 100).toFixed(2) + "%",
+                        uv_proportion: ((Number(result.target_pv_uv.buckets.data1.uv.value) / Number(result.target_pv_uv.buckets.data.uv.value)) * 100).toFixed(2) + "%",
+                        pv: result.target_pv_uv.buckets.data1.pv.value
+                    }
                 }
-                out_siteData = {
-                    pv_proportion: (((Number(result.target_pv_uv.buckets.data.pv.value) - Number(result.target_pv_uv.buckets.data2.pv.value)) / Number(result.target_pv_uv.buckets.data.pv.value)) * 100).toFixed(2) + "%",
-                    uv_proportion: (((Number(result.target_pv_uv.buckets.data.uv.value) - Number(result.target_pv_uv.buckets.data2.uv.value)) / Number(result.target_pv_uv.buckets.data.uv.value)) * 100).toFixed(2) + "%"
+                if(result.target_pv_uv.buckets.data.pv.value==0){
+                    out_siteData = {
+                        pv_proportion:  "0%",
+                        uv_proportion:  "0%"
+                    }
+                }else{
+                    out_siteData = {
+                        pv_proportion: (((Number(result.target_pv_uv.buckets.data.pv.value) - Number(result.target_pv_uv.buckets.data2.pv.value)) / Number(result.target_pv_uv.buckets.data.pv.value)) * 100).toFixed(2) + "%",
+                        uv_proportion: (((Number(result.target_pv_uv.buckets.data.uv.value) - Number(result.target_pv_uv.buckets.data2.uv.value)) / Number(result.target_pv_uv.buckets.data.uv.value)) * 100).toFixed(2) + "%"
+                    }
                 }
+
                 results = {
                     data: data,
                     targetPathData: targetPathData,
@@ -493,7 +499,7 @@ var access_request = {
                     }
                 }
             }
-        }
+        };
         es.search(request, function (error, response) {
             var data = [];//总结果
             var targetPathName_pv = [];//监控目标的pv

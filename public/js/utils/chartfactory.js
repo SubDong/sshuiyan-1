@@ -128,7 +128,7 @@ var op = {
             },
             tooltip: {
                 trigger: !chartConfig.tt ? "axis" : chartConfig.tt,
-                backgroundColor : '#fff',
+                backgroundColor : 'rgba(255,255,255,0.8)',
                 borderColor : '#ededed',
                 borderWidth: 1,
                 padding: 0,
@@ -144,12 +144,12 @@ var op = {
                         var formatType = labelData[i];
                         if (chartConfig.compare || chartConfig.compareCustom) {
                             var baseSerieName = params[i].seriesName.split(":");
-                            res +=baseSerieName[0] + chartUtils.convertChinese(baseSerieName[1]) + ' : ' + ad.formatFunc(params[i].value, baseSerieName[1]) + '</li>';
+                            res +='<li class=chartstyle'+i+'>'+ baseSerieName[0] + chartUtils.convertChinese(baseSerieName[1]) + ' : ' + ad.formatFunc(params[i].value, baseSerieName[1]) + '</li>';
                         } else {
                             if (chartConfig.toolTip == undefined) {
                                 res +='<li class=chartstyle'+i+'>'+ params[i].seriesName + ' : ' + ad.formatFunc(params[i].value, formatType) + '</li>';
                             } else {
-                                res += params[i].seriesName + ' : ' + params[i].value + '</li>';
+                                res +='<li class=chartstyle'+i+'>'+  params[i].seriesName + ' : ' + params[i].value + '</li>';
                             }
                         }
 
@@ -366,7 +366,7 @@ var op = {
         var option = {
             tooltip: {
                 trigger: !chartConfig.tt ? "item" : chartConfig.tt,
-                backgroundColor : '#fff',
+                backgroundColor : 'rgba(255,255,255,0.8)',
                 borderColor : '#ededed',
                 borderWidth: 1,
                 padding:10,

@@ -7,7 +7,6 @@ define(["./module"], function (ctrs) {
 
 
     ctrs.controller('adminmainctr', function ($scope, $q, $rootScope, $http, requestService, ngDialog, $cookieStore) {
-        $scope.tableJu = "main";
         /**
          * 对应Mongo
          * @type {{uid: string, type_id: string, track_id: string, site_url: string, site_name: string, site_pause: boolean, track_status: string}}
@@ -31,73 +30,41 @@ define(["./module"], function (ctrs) {
         };
         //table配置
         $rootScope.adminSetHtml = "<div class='mid_left'><div class='mid_left_code'>" +
-        "var _pct= _pct|| [];\<br\>"+
-        " (function() {\<br\>"+
-        "   var hm = document.createElement(\"script\");\<br\>"+
-        "   hm.src = \"//t.best-ad.cn/_t.js?tid=ex_track_id\";\<br\>"+
-        "   var s = document.getElementsByTagName(\"script\")[0];\<br\>"+
-        "    s.parentNode.insertBefore(hm, s);\<br\>"+
-        " })();"+
+            "var _pct= _pct|| [];\<br\>" +
+            " (function() {\<br\>" +
+            "   var hm = document.createElement(\"script\");\<br\>" +
+            "   hm.src = \"http://t.best-ad.cn/t.js?tid=ex_track_id\";\<br\>" +
+            "   var s = document.getElementsByTagName(\"script\")[0];\<br\>" +
+            "    s.parentNode.insertBefore(hm, s);\<br\>" +
+            " })();" +
             "</div> </div><div class='mid_right'><button type='button' class='btn btn-default navbar-btn'>复制代码</button><ul type='disc'>" +
             "  <li>请将代码添加至网站全部页面的&lt;/head&gt;标签前；</li><li>建议在header.htm类似的页头模板页面中安装，以达到一处安装，全站皆有的效果；</li><li>如需在JS文件中调用统计分析代码，请直接去掉以下代码首尾的&lt;script type='text/javascript' &gt;与&lt;/script&gt;后，放入JS文件中即可；</li>" +
             "<li> 如果代码安装正确，一般20分钟 后,可以查看网站分析数据；</li></ul></div>";
         //配置默认指标
-        $rootScope.checkedArray = ["_uid","uid", "type_id", "track_id", "site_url", "site_name", "site_pause", "track_status"];
-
-        /**
-         * 删除按钮响应
-         * @param index
-         * @param grid
-         * @param row
-         */
-        $scope.onDelete = function(index,grid,row){
-            var query = "/config/site_list?type=delete&query={\"_id\":\"" + row.entity._id +  "\"}";
-            $http({
-                method: 'GET',
-                url: query
-            }).success(function (dataConfig, status) {
-                if(dataConfig == "success"){
-                    refushGridData();
-                }
-            });
-        };
-        /**
-         * 暂停按钮响应
-         * @param index
-         * @param grid
-         * @param row
-         */
-        $scope.onPause = function(index,grid,row){
-            //用户ID+url 确定该用户对某个网站是否进行配置
-            var query = "/config/site_list?type=search&query={\"uid\":\"" +   row.entity.uid + "\",\"site_url\":\"" +   row.entity.site_url + "\"}";
-            $http({
-                method: 'GET',
-                url: query
-            }).success(function (dataConfig, status) {
-                if (dataConfig != null ) {//不存在配置 save
-
-                    //model.type_id = dataConfig.type_id;//更新传入不再重新生成
-                    //model.track_id = dataConfig.track_id;
-                    row.entity.site_pause =   !row.entity.site_pause;
-                    var url = "/config/site_list?type=update&query={\"uid\":\"" +  row.entity.uid + "\",\"site_url\":\"" +  row.entity.site_url + "\"}&updates={\"site_pause\":\"" + row.entity.site_pause+"\"}";
-                    $http({
-                        method: 'GET',
-                        url: url
-                    }).success(function (dataConfig, status) {
-
-                    });
-
-                }
-            });
-        };
+        $rootScope.checkedArray = ["_uid", "uid", "type_id", "track_id", "site_url", "site_name", "site_pause", "track_status"];
+        //$rootScope.isPau
         //table配置
-        $rootScope.adminSetHtml = "<div class='mid_left'><div class='mid_left_code'> 邓子豪</div> </div><div class='mid_right'><button type='button' class='btn btn-default navbar-btn'>复制代码</button><ul type='disc'>" +
+        $rootScope.adminSetHtml = "<div class='mid_left'><div class='mid_left_code'>" +
+            "var _pct= _pct|| [];\<br\>" +
+            " (function() {\<br\>" +
+            "   var hm = document.createElement(\"script\");\<br\>" +
+            "   hm.src = \"//t.best-ad.cn/_t.js?tid=ex_track_id\";\<br\>" +
+            "   var s = document.getElementsByTagName(\"script\")[0];\<br\>" +
+            "    s.parentNode.insertBefore(hm, s);\<br\>" +
+            " })();" +
+            "</div> </div><div class='mid_right'><button type='button' class='btn btn-default navbar-btn'>复制代码</button><ul type='disc'>" +
             "  <li>请将代码添加至网站全部页面的&lt;/head&gt;标签前；</li><li>建议在header.htm类似的页头模板页面中安装，以达到一处安装，全站皆有的效果；</li><li>如需在JS文件中调用统计分析代码，请直接去掉以下代码首尾的&lt;script type='text/javascript' &gt;与&lt;/script&gt;后，放入JS文件中即可；</li>" +
             "<li> 如果代码安装正确，一般20分钟 后,可以查看网站分析数据；</li></ul></div>";
-        //配置默认指标
+
+
         //配置默认指标
         $rootScope.gridArray = [
-            {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>1</div>", maxWidth: 5},
+            {
+                name: "xl",
+                displayName: "",
+                cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
+                maxWidth: 5
+            },
             {name: "网站域名", displayName: "网站域名", field: "site_url", maxWidth: '', cellClass: 'table_admin'},
 
             {name: "网站名称", displayName: "网站名称", field: "site_name", maxWidth: '', cellClass: 'table_admin_color'},
@@ -105,36 +72,37 @@ define(["./module"], function (ctrs) {
             {
                 name: "x6",
                 displayName: "",
-                cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.gain()'>获取代码</a><span class='glyphicon glyphicon-file'></span></div>",
+                cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.gain(index,grid,row)'>获取代码</a><span class='glyphicon glyphicon-file'></span></div>",
                 maxWidth: 100
             },
             {
                 name: "x2",
                 displayName: "",
-                cellTemplate: "<div class='table_admin'><a href=''>查看网站概览</a></div>",
+                cellTemplate: "<div class='table_admin'><a href='/#index'>查看网站概览</a></div>",
                 maxWidth: 100
             },
             {
                 name: "x3",
                 displayName: "",
-                    cellTemplate: "<div class='table_box'> <span onmousemove='getMyButton(this)' class='table_admin glyphicon glyphicon-cog'>设置</span><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history7' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='javascript:void(0)'>查看来源分布</a></li><li><a href='javascript:void(0)' ng-click='grid.appScope.showEntryPageLink(row)'>查看入口页链接</a></li></ul></div></div>",
+                cellTemplate: "<div class='table_box'> <span onmousemove='getMyButton(this)' class='table_admin glyphicon glyphicon-cog'>设置</span><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history7' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='javascript:void(0)'>查看来源分布</a></li><li><a href='javascript:void(0)' ng-click='grid.appScope.showEntryPageLink(row)'>查看入口页链接</a></li></ul></div></div>",
                 maxWidth: 80
             },
             {
                 name: "x4",
                 displayName: "",
-                cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.stop()'>暂停</a></div>",
+                cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.stop(index,grid,row)'>暂停</a></div>",
                 maxWidth: 80
             },
             {
                 name: "x5",
                 displayName: "",
                 // grid.appScope.Delete(row, grid.options.data)
-                cellTemplate: "<div class='table_admin'><a href='' ng-click='grid.options.data.splice(grid.options.data.indexOf(row.entity), 1);' >删除</a></div>",
+                cellTemplate: "<div class='table_admin'><a href='' ng-click='grid.appScope.onDelete(index,grid,row)' >删除</a></div>",
                 maxWidth: 80
             }
 
         ];
+
 
         $rootScope.tableSwitch = {
             latitude: {name: "网站域名", displayName: "网站域名", field: ""},
@@ -147,34 +115,30 @@ define(["./module"], function (ctrs) {
             //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
             arrayClear: false //是否清空指标array
         };
-        //
-        $scope.deleteWeb = function() {
-            $scope.gridArray.splice(0,1);
-            //$scope.onDelete();
-            //}
-        };
-        //
-        var adminGriApihtml = function (gridApi) {
-            var htmlData = [];
-            gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
-                console.log("+++++++++" + row);
-                row.entity.subGridOptions = {
-                    showHeader: false,
-                    enableHorizontalScrollbar: 0,
-                    columnDefs: htmlData
-                };
-                var res = {};
-                res["name"] = "test";
-                res["field"] = "info";
-                res["cellTemplate"] = $rootScope.adminSetHtml;
-                htmlData.push(res);
-                row.entity.subGridOptions.data = [{"info": " "}];
-            });
-        };
+
+        //var adminGriApihtml = function (gridApi) {
+        //    var htmlData = [];
+        //    gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
+        //        console.log("+++++++++" + row);
+        //        row.entity.subGridOptions = {
+        //            showHeader: false,
+        //            enableHorizontalScrollbar: 0,
+        //            columnDefs: htmlData
+        //        };
+        //        var res = {};
+        //        res["name"] = "test";
+        //        res["field"] = "info";
+        //        res["cellTemplate"] = $rootScope.adminSetHtml;
+        //        htmlData.push(res);
+        //        row.entity.subGridOptions.data = [{"info": " "}];
+        //    });
+        //};
         //新增网站弹框
-        $scope.open=function(){
+        $scope.open = function () {
+            $scope.urlconfig.site_url = "";
+            $scope.urlconfig.site_name = "";
             $scope.urlDialog = ngDialog.open({
-                template:'\
+                template: '\
               <div class="ngdialog-buttons" >\
                    <ul> \
                    <li>网站域名</li>\
@@ -197,15 +161,59 @@ define(["./module"], function (ctrs) {
                 </div>',
                 className: 'ngdialog-theme-default',
                 plain: true,
-                scope : $scope
+                scope: $scope
             });
         };
 
+        /**
+         * 删除按钮响应
+         * @param index
+         * @param grid
+         * @param row
+         */
+        $rootScope.onDelete = function (index, grid, row) {
+            console.log("delete")
+            var query = "/config/site_list?type=delete&query={\"_id\":\"" + row.entity._id + "\"}";
+            $http({
+                method: 'GET',
+                url: query
+            }).success(function (dataConfig, status) {
+                if (dataConfig == "success") {
+                    refushGridData();
+                }
+            });
+        };
         //暂停弹框
-        $scope.stop=function(){
+        $scope.stop = function (index, grid, row) {
 
+            //console.log(index);
+            //console.log(grid);
+            //console.log(row);
+            $scope.onPause = function () {
+                //用户ID+url 确定该用户对某个网站是否进行配置
+                var query = "/config/site_list?type=search&query={\"uid\":\"" + row.entity.uid + "\",\"site_url\":\"" + row.entity.site_url + "\"}";
+                $http({
+                    method: 'GET',
+                    url: query
+                }).success(function (dataConfig, status) {
+                    if (dataConfig != null) {//不存在配置 save
+
+                        //model.type_id = dataConfig.type_id;//更新传入不再重新生成
+                        //model.track_id = dataConfig.track_id;
+                        row.entity.site_pause = !row.entity.site_pause;
+                        var url = "/config/site_list?type=update&query={\"uid\":\"" + row.entity.uid + "\",\"site_url\":\"" + row.entity.site_url + "\"}&updates={\"site_pause\":\"" + row.entity.site_pause + "\"}";
+                        $http({
+                            method: 'GET',
+                            url: url
+                        }).success(function (dataConfig, status) {
+
+                        });
+
+                    }
+                });
+            };
             $scope.urlDialog = ngDialog.open({
-                template:'\
+                template: '\
               <div class="ngdialog-buttons" >\
                         <ul>\
                         <li>注意</li>\
@@ -215,17 +223,17 @@ define(["./module"], function (ctrs) {
                 </div>',
                 className: 'ngdialog-theme-default',
                 plain: true,
-                scope : $scope
+                scope: $scope
             });
         };
         //获取代码弹框
-        $scope.gain=function(){
-
+        $scope.gain = function (index,grid,row) {
+            var thtml = $rootScope.adminSetHtml.replace("ex_track_id",row.entity.track_id);
             $scope.urlDialog = ngDialog.open({
-                template:$rootScope.adminSetHtml,
+                template: thtml,
                 className: 'ngdialog-theme-default',
                 plain: true,
-                scope : $scope
+                scope: $scope
             });
         };
         /**

@@ -12,34 +12,21 @@
                 <div class="row-fluid add_page_target">
                     <div class="col-xs-5">
                         <div class="col-xs-4">
-                            <input type="text" class="form-control" placeholder="目标名称" data-ng-model="page_schema.target_name" onfocus="this.setAttribute('placeholder','')" onblur="this.setAttribute('placeholder','目标名称')">
-                        </div>
-                        <div class="col-xs-6">
-                            <input type="text" data-ng-repeat="url in page_schema.target_url" class="form-control" style="margin-bottom: 7px" placeholder="目标URL" data-ng-model="url" onfocus="this.setAttribute('placeholder','')" onblur="this.setAttribute('placeholder','目标URL')">
-                        </div>
-                        <div class="col-xs-2" style="height: 34px">
-                            <a href="#" data-ng-click="targetUrlAdd(page_schema.target_url,targetRemoves)" id="addTargetUrl" style="line-height: 33px" class="{{page_schema.target_url.length==4?cancelAdd:0}}">添加页面</a>
-                            <input type="text" class="form-control" data-ng-focus="targetFocus()"
-                                   data-ng-blur="targetBlur()" placeholder="目标名称"
+                            <input type="text" class="form-control" placeholder="目标名称"
                                    data-ng-model="page_schema.target_name" onfocus="this.setAttribute('placeholder','')"
                                    onblur="this.setAttribute('placeholder','目标名称')">
                         </div>
                         <div class="col-xs-6">
-                            <input type="text" data-ng-repeat="target in page_schema.target_url" class="form-control"
-                                   style="margin-bottom: 7px" data-ng-focus="targetFocus()" data-ng-blur="targetBlur()"
-                                   placeholder="目标URL"  data-ng-model="target.url" onfocus="this.setAttribute('placeholder','')"
+                            <input type="text" data-ng-repeat="url in page_schema.target_url" class="form-control"
+                                   style="margin-bottom: 7px" placeholder="目标URL" data-ng-model="url.url"
+                                   onfocus="this.setAttribute('placeholder','')"
                                    onblur="this.setAttribute('placeholder','目标URL')">
                         </div>
                         <div class="col-xs-2" style="height: 34px">
-                            <a data-ng-click="targetUrlAdd(page_schema.target_url,targetRemoves)" id="addTargetUrl"
-                               style="line-height: 33px" class="{{page_schema.target_url.length==4?cancelAdd:0}}">添加页面</a>
-                        </div>
-                        <!--<div class="col-xs-2" style="height: 34px">
-                            <a data-ng-click="targetUrlAdd(page_schema.target_url,targetRemoves,$index)"
-                               id="addTargetUrl"
-                               style="line-height: 33px"
+                            <a href="#" data-ng-click="targetUrlAdd(page_schema.target_url,targetRemoves)"
+                               id="addTargetUrl" style="line-height: 33px"
                                class="{{page_schema.target_url.length==4?cancelAdd:0}}">添加页面</a>
-                        </div>-->
+                        </div>
                         <div class="col-xs-2">
                             <span class="remove"
                                   data-ng-click="removeTargetUrl(page_schema.target_url,targetRemoves,$index)"
@@ -90,12 +77,12 @@
                         <tr>
                             <td>预期每次转化收益</td>
                             <td><input type="text" class="" data-ng-model="page_schema.expected_yield">元<a
-                                    href="#">@</a></td>
+                                    href="#"></a></td>
                             <td>（精确到两位小数）</td>
                         </tr>
                         <tr>
                             <td>预期转化率</td>
-                            <td><input type="text" class="" data-ng-model="page_schema.pecent_yield">%<a href="#">@</a>
+                            <td><input type="text" class="" data-ng-model="page_schema.pecent_yield">%<a href="#"></a>
                             </td>
                             <td>（精确到两位小数）</td>
                         </tr>
@@ -132,7 +119,7 @@
                         </li>
                         <li data-ng-click="addStepUrls(step, pages)" class="{{step.step_urls.length==4?cancelAdd:0}}"><a
                                 href="#">添加页面</a></li>
-                        <li class="remove" data-ng-click="removeStepUrls(step.step_urls, $index)"><i
+                        <li class="remove" data-ng-click="removeStepUrls(path.steps, $index)"><i
                                 class="glyphicon glyphicon-remove"></i></li>
                     </ul>
                     <div class="clearfix"></div>

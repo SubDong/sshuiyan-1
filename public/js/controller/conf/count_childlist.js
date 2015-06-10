@@ -10,10 +10,31 @@ define(["./module"], function (ctrs) {
         $rootScope.gridArray = [
 
 
-            {name: "子目录名称", displayName: "子目录名称", field: "subdirectory_url",cellClass: 'table_admin'},
-            {name: "包含的页面或目录", displayName: "包含的页面或目录", field: "analysis_url",cellClass: 'table_admin'},
-            {name: "不包含的页面或目录", displayName: "不包含的页面或目录", field: "not_analysis_url",cellClass: 'table_admin'},
-            {name: "创建时间", displayName: "创建时间", field: "create_date",cellClass: 'table_admin'}
+            {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>1</div>", maxWidth: 5},
+            {name: "子目录名称", displayName: "子目录名称", field: "subdirectory_url",cellClass: 'table_admin_color'},
+            {name: "包含的页面或目录", displayName: "包含的页面或目录", field: "analysis_url",cellClass: 'table_admin_color'},
+            {name: "不包含的页面或目录", displayName: "不包含的页面或目录", field: "not_analysis_url",cellClass: 'table_admin_color'},
+            {name: "创建时间", displayName: "创建时间", field: "create_date",cellClass: 'table_admin_color'},
+            {
+                name: "x2",
+                displayName: "",
+                cellTemplate: "<div class='table_admin'><a href='/#index'>查看网站概览</a></div>",
+                maxWidth: 150
+            },
+            {
+                name: "x3",
+                displayName: "",
+                cellTemplate: "<div class='table_admin'><a href=''>修改</a></div>",
+                maxWidth: 100
+            },
+            {
+                name: "x4",
+                displayName: "",
+                // grid.appScope.Delete(row, grid.options.data)
+                cellTemplate: "<div class='table_admin'><a href='' ng-click='grid.options.data.splice(grid.options.data.indexOf(row.entity), 1);' >删除</a></div>",
+                maxWidth: 100
+            }
+
 
         ];
         $rootScope.tableSwitch = {

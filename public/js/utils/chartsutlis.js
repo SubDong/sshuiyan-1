@@ -495,7 +495,11 @@ var chartUtils = {
             var _tmp = {};
             final_result[0].data.forEach(function (e, i) {
                 _key.push(e[semName]);
-                _value.push(e[quota]);
+                if (e[quota]) {
+                    _value.push(e[quota]);
+                } else {
+                    _value.push(0);
+                }
             });
             _tmp["label"] = chartUtils.convertChinese(quota);
             _tmp["key"] = _key;
