@@ -2,32 +2,57 @@
     <!--网站导航-->
     <div class="page_container">
         <p><strong>best-ad.cn</strong></p>
+
         <div class="add_page_title">
             <p>新增页面转化目标</p>
+
             <div class="add_page_content">
                 <p>目标(你希望访客进入的任何页面)</p>
+
                 <div class="row-fluid add_page_target">
                     <div class="col-xs-5">
                         <div class="col-xs-4">
-                            <input type="text" class="form-control" data-ng-focus="targetFocus()" data-ng-blur="targetBlur()" placeholder="目标名称" data-ng-model="page_schema.target_name" onfocus="this.setAttribute('placeholder','')" onblur="this.setAttribute('placeholder','目标名称')">
+                            <input type="text" class="form-control" data-ng-focus="targetFocus()"
+                                   data-ng-blur="targetBlur()" placeholder="目标名称"
+                                   data-ng-model="page_schema.target_name" onfocus="this.setAttribute('placeholder','')"
+                                   onblur="this.setAttribute('placeholder','目标名称')">
                         </div>
                         <div class="col-xs-6">
-                            <input type="text" data-ng-repeat="url in page_schema.target_url" class="form-control" style="margin-bottom: 7px" data-ng-focus="targetFocus()" data-ng-blur="targetBlur()" placeholder="目标URL" data-ng-model="url" onfocus="this.setAttribute('placeholder','')" onblur="this.setAttribute('placeholder','目标URL')">
+                            <input type="text" data-ng-repeat="target in page_schema.target_url" class="form-control"
+                                   style="margin-bottom: 7px" data-ng-focus="targetFocus()" data-ng-blur="targetBlur()"
+                                   placeholder="目标URL"  data-ng-model="target.url" onfocus="this.setAttribute('placeholder','')"
+                                   onblur="this.setAttribute('placeholder','目标URL')">
                         </div>
                         <div class="col-xs-2" style="height: 34px">
-                            <a data-ng-click="targetUrlAdd(page_schema.target_url,targetRemoves)" id="addTargetUrl" style="line-height: 33px" class="{{page_schema.target_url.length==4?cancelAdd:0}}">添加页面</a>
+                            <a data-ng-click="targetUrlAdd(page_schema.target_url,targetRemoves)" id="addTargetUrl"
+                               style="line-height: 33px" class="{{page_schema.target_url.length==4?cancelAdd:0}}">添加页面</a>
                         </div>
+                        <!--<div class="col-xs-2" style="height: 34px">
+                            <a data-ng-click="targetUrlAdd(page_schema.target_url,targetRemoves,$index)"
+                               id="addTargetUrl"
+                               style="line-height: 33px"
+                               class="{{page_schema.target_url.length==4?cancelAdd:0}}">添加页面</a>
+                        </div>-->
                         <div class="col-xs-2">
-                            <span class="remove" data-ng-click="removeTargetUrl(page_schema.target_url,targetRemoves,$index)" style="margin-top: 7px;" ng-show="showRemove" data-ng-repeat="targetRemove in targetRemoves"><i class="glyphicon glyphicon-remove"></i></span>
+                            <span class="remove"
+                                  data-ng-click="removeTargetUrl(page_schema.target_url,targetRemoves,$index)"
+                                  style="margin-top: 7px;" ng-show="showRemove"
+                                  data-ng-repeat="targetRemove in targetRemoves"><i
+                                    class="glyphicon glyphicon-remove"></i></span>
                         </div>
                         <div class="clearfix"></div>
                         <div style="width: 200px">
-                            <div class="choice_record_way"><span data-ng-click="record=!record">可选择记录方式&nbsp;&nbsp;<i class="caret"></i></span></div>
+                            <div class="choice_record_way"><span data-ng-click="record=!record">可选择记录方式&nbsp;&nbsp;<i
+                                    class="caret"></i></span></div>
                             <div class="record_way" ng-show="record">
                                 <ul>
-                                    <li><label><input type="radio" name="record" checked>访问次数</label></li>
-                                    <li><label><input type="radio" name="record">测量PV</label></li>
-                                    <li><label><input type="radio" name="record">订单转化</label>&nbsp;&nbsp;&nbsp;&nbsp;<span>插入订单号</span></li>
+                                    <li><label><input type="radio" name="record" ng-checked="radio_record.visit_times"
+                                                      data-ng-click="chooseRecordType('visit_time')">访问次数</label></li>
+                                    <li><label><input type="radio" name="record" data-ng-click="chooseRecordType('pv')"
+                                                      ng-checked="radio_record.pv">测量PV</label></li>
+                                    <li><label><input type="radio" name="record" ng-checked="radio_record.order_conv"
+                                                      data-ng-click="chooseRecordType('order_conv')">订单转化</label>&nbsp;&nbsp;&nbsp;&nbsp;<span>插入订单号</span>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -51,17 +76,20 @@
                     <i ng-show="!benefitSet" class="glyphicon glyphicon-plus"></i>
                     <i ng-show="benefitSet" class="glyphicon glyphicon-minus"></i>&nbsp;&nbsp;收益设置(选填)
                 </p>
+
                 <div class="earnings" ng-show="benefitSet">
                     <h6 style="padding-left: 30px;color: #ccc">此指标填写后，在推广类报告的自定义指标中勾选"收益"后，可以查看</h6>
                     <table>
                         <tr>
                             <td>预期每次转化收益</td>
-                            <td><input type="text" class="" data-ng-model="page_schema.expected_yield">元<a href="#">@</a></td>
+                            <td><input type="text" class="" data-ng-model="page_schema.expected_yield">元<a
+                                    href="#">@</a></td>
                             <td>（精确到两位小数）</td>
                         </tr>
                         <tr>
                             <td>预期转化率</td>
-                            <td><input type="text" class="" data-ng-model="page_schema.pecent_yield">%<a href="#">@</a></td>
+                            <td><input type="text" class="" data-ng-model="page_schema.pecent_yield">%<a href="#">@</a>
+                            </td>
                             <td>（精确到两位小数）</td>
                         </tr>
                     </table>
@@ -73,21 +101,32 @@
                     <i ng-show="!pathType" class="glyphicon glyphicon-plus"></i>
                     <i ng-show="pathType" class="glyphicon glyphicon-minus"></i>&nbsp;&nbsp;路径类型(选填)
                 </p>
+
                 <div class="col-xs-12 path_type" ng-show="pathType" data-ng-repeat="path in page_schema.paths">
                     <ul class="path_name">
-                        <li><input type="text" placeholder="路径名称" data-ng-model="path.path_name" class="form-control" onfocus="this.setAttribute('placeholder','')"
+                        <li><input type="text" placeholder="路径名称" data-ng-model="path.path_name" class="form-control"
+                                   onfocus="this.setAttribute('placeholder','')"
                                    onblur="this.setAttribute('placeholder','路径名称')"></li>
-                        <li class="remove" data-ng-click="removePath(page_schema.paths, $index)"><i class="glyphicon glyphicon-remove"></i></li>
+                        <li class="remove" data-ng-click="removePath(page_schema.paths, $index)"><i
+                                class="glyphicon glyphicon-remove"></i></li>
                         <li><label><input type="checkbox" data-ng-model="path.path_mark">只有经过此路径的目标记为转化</label></li>
                     </ul>
                     <div class="clearfix"></div>
                     <ul class="path_steps" data-ng-repeat="step in path.steps">
                         <li><span>步骤{{$index+1}}</span></li>
-                        <li><input type="text" placeholder="步骤名称" data-ng-model="step.step_name" onfocus="this.setAttribute('placeholder','')"
+                        <li><input type="text" placeholder="步骤名称" data-ng-model="step.step_name"
+                                   onfocus="this.setAttribute('placeholder','')"
                                    onblur="this.setAttribute('placeholder','步骤名称')" class="form-control"></li>
-                        <li data-ng-repeat="step_url in step.step_urls"><input type="text" placeholder="步骤URL" data-ng-model="step_url.url"class="form-control" onfocus="this.setAttribute('placeholder','')" onblur="this.setAttribute('placeholder','步骤URL')"></li>
-                        <li data-ng-click="addStepUrls(step, pages)" class="{{step.step_urls.length==4?cancelAdd:0}}"><a href="#">添加页面</a></li>
-                        <li class="remove" data-ng-click="removeStepUrls(step.step_urls, $index)"><i class="glyphicon glyphicon-remove"></i></li>
+                        <li data-ng-repeat="step_url in step.step_urls"><input type="text" placeholder="步骤URL"
+                                                                               data-ng-model="step_url.url"
+                                                                               class="form-control"
+                                                                               onfocus="this.setAttribute('placeholder','')"
+                                                                               onblur="this.setAttribute('placeholder','步骤URL')">
+                        </li>
+                        <li data-ng-click="addStepUrls(step, pages)" class="{{step.step_urls.length==4?cancelAdd:0}}"><a
+                                href="#">添加页面</a></li>
+                        <li class="remove" data-ng-click="removeStepUrls(step.step_urls, $index)"><i
+                                class="glyphicon glyphicon-remove"></i></li>
                     </ul>
                     <div class="clearfix"></div>
                     <a href="#" style="display:block;padding: 10px 0 0 15px;width: 68px"
@@ -95,7 +134,9 @@
                 </div>
                 <div class="col-xs-2" ng-show="pathType">
                     <button style="margin: 10px 0 0 15px" ng-show="isAddPath"
-                            class="btn btn-info {{path.length==4?cancelAdd:0}}" data-ng-click="addPaths(page_schema.paths)">添加路径</button>
+                            class="btn btn-info {{path.length==4?cancelAdd:0}}"
+                            data-ng-click="addPaths(page_schema.paths)">添加路径
+                    </button>
                 </div>
             </div>
             <div class="clearfix"></div>
@@ -103,16 +144,19 @@
                 <p data-ng-click="changeType=!changeType">
                     <i ng-show="!changeType" class="glyphicon glyphicon-plus"></i>
                     <i ng-show="changeType" class="glyphicon glyphicon-minus"></i>
-                    &nbsp;&nbsp;转化类型<a href="#">@</a>(选填)</p>
+                    &nbsp;&nbsp;转化类型<a href="#"></a>(选填)</p>
+
                 <div class="col-xs-12 transform_type" ng-show="changeType">
-                    <label><input type="radio" class="styled" name="type">注册</label>
-                    <label><input type="radio" class="styled" name="type">沟通</label>
-                    <label><input type="radio" class="styled" name="type">下单</label>
-                    <label><input type="radio" class="styled" name="type" checked>其他<input type="text"></label>
+                    <label><input type="radio" class="styled" name="type"
+                                  data-ng-click="chooseConvType('regist')">注册</label>
+                    <label><input type="radio" class="styled" name="type" data-ng-click="chooseConvType('communicate')">沟通</label>
+                    <label><input type="radio" class="styled" name="type" data-ng-click="chooseConvType('place_order')">下单</label>
+                    <label><input type="radio" class="styled" name="type" data-ng-click="chooseConvType('other')"
+                                  ng-checked="true">其他<input type="text" data-ng-model="page_schema.conv_text"></label>
                 </div>
                 <div class="clearfix"></div>
             </div>
-            <div class="footer-btn"  ng-click= "submit()">
+            <div class="footer-btn" ng-click="submit()">
                 <button>确定</button>
             </div>
         </div>

@@ -10,7 +10,7 @@ define(["./module"], function (ctrs) {
             uid: "",//用户ID
             site_id: "", // 站点ID
             target_name: "",//目标名称
-            target_url: [""],//目标URL
+            target_url: [{url:""}],//目标URL
             record_type: "",//记录方式
             //收益设置
             expected_yield: null,//预期收益
@@ -21,16 +21,32 @@ define(["./module"], function (ctrs) {
                 path_mark: false,//只有经过此路径的目标记为转化
                 steps: [{
                     step_name: "",//步骤名称
-                    step_urls: [{url:""}, {url:""}]//步骤URL 最多三个
+                    step_urls: [{url: ""}, {url: ""}]//步骤URL 最多三个
                 }]
 
             }],
-            conv_tpye: ""//转换类型，regist,communicate,place_order,othre_order
-        };
-        $scope.page_schema = angular.copy($scope.page_schema_model);
+            conv_tpye: "other",//转换类型，regist,communicate,place_order,other
+            conv_text: "3333"
 
+        };
+
+        $scope.radio_record = {
+            visit_times: true,
+            pv: false,
+            order_conv: false
+        };
+        $scope.radio_conv = {
+            regist: false,
+            communicate: false,
+            place_order: false,
+            other: true
+        };
+
+
+        $scope.page_schema = angular.copy($scope.page_schema_model);
+        //UID 和site_id初始化
         $scope.page_schema.site_id = $rootScope.userType;
-        $scope.page_schema.uid=$cookieStore.get("uid");
+        $scope.page_schema.uid = $cookieStore.get("uid");
 
         $scope.target = false;
         $scope.targetFocus = function () {
@@ -45,19 +61,27 @@ define(["./module"], function (ctrs) {
         $scope.changeType = false;
 
         $scope.showRemove = false;
-        $scope.targetRemoves = [];
-        $scope.removeTargetUrl = function(targets,targetRemoves,_index) {
-            targets.splice(_index+1,1);
-            targetRemoves.splice(_index,1);
-        }
+
+
         $scope.isAddPath = true;
+        // 添加目标URL
+        $scope.targetRemoves = [];
+        $scope.targetUrlAdd = function (targets, targetRemoves) {
+            $scope.showRemove = true;
+            targets.push({url:""});
+            targetRemoves.push({url:""});
+        }
+        $scope.removeTargetUrl = function (targets, targetRemoves, _index) {
+            targets.splice(_index + 1, 1);
+            targetRemoves.splice(_index, 1);
+        }
         $scope.addPaths = function (paths) {
             paths.push({
                 path_name: "",//路径名称
                 path_mark: false,//只有经过此路径的目标记为转化
                 steps: [{
                     step_name: "",//步骤名称
-                    step_urls: [{url:""}, {url:""}]//步骤URL 最多三个
+                    step_urls: [{url: ""}, {url: ""}]//步骤URL 最多三个
                 }]
 
             });
@@ -69,7 +93,7 @@ define(["./module"], function (ctrs) {
         $scope.addSteps = function (path, steps) {
             path.steps.push({
                 step_name: "",//步骤名称
-                step_urls: [{url:""},{url:""}]//步骤URL 最多三个
+                step_urls: [{url: ""}, {url: ""}]//步骤URL 最多三个
             });
         };
         $scope.removeStepUrls = function (step_urls, _index) {
@@ -77,10 +101,22 @@ define(["./module"], function (ctrs) {
         };
         $scope.addStepUrls = function (step, turl) {
             console.log(step.step_urls);
-            step.step_urls.push({url:turl});
+            step.step_urls.push({url: turl});
         };
-        $scope.chooseRecord=function(){
-            console.log("choose redio")
+        $scope.chooseRecordType = function (curType) {
+            $scope.radio_record.visit_times = false;
+            $scope.radio_record.pv = false;
+            $scope.radio_record.order_conv = false;
+            $scope.radio_record[curType] = true;
+            $scope.page_schema.record_type = curType;
+        };
+        $scope.chooseConvType = function (curType) {
+            $scope.radio_conv.regist = false;
+            $scope.radio_conv.communicate = false;
+            $scope.radio_conv.place_order = false;
+            $scope.radio_conv.other = false;
+            $scope.radio_conv[curType] = true;
+            $scope.page_schema.conv_tpye = curType;
         }
         Custom.initCheckInfo();//页面check样式js调用
 
@@ -89,23 +125,15 @@ define(["./module"], function (ctrs) {
          */
         $scope.submit = function () {
 
-            var url = "/config/page_conv?type=search&query={\"uid\":\"" +  $scope.page_schema.uid + "\",\"site_id\":\"" + $scope.page_schema.site_id + "\",\"target_name\":\""+ $scope.page_schema.target_name+"\"}";
+            var url = "/config/page_conv?type=search&query={\"uid\":\"" + $scope.page_schema.uid + "\",\"site_id\":\"" + $scope.page_schema.site_id + "\",\"target_name\":\"" + $scope.page_schema.target_name + "\"}";
 
             $http({
                 method: 'GET',
                 url: url
             }).success(function (dataConfig, status) {
-                //重组数据
-                //$scope.page_schema.target_url.forEach(
-                    //www.开头替换为http://www
-                    //function(item,i){
-                    //    if(item.)
-                    //}
-                //)
-                //console.log("save"+JSON.stringify($scope.page_schema));
-                if (dataConfig == null||dataConfig.length==0) {//不存在配置 保存
+                if (dataConfig == null || dataConfig.length == 0) {//不存在配置 保存
                     //console.log("save"+JSON.stringify($scope.page_schema));
-                    var url = "/config/page_conv?type=save&entity="+JSON.stringify($scope.page_schema);
+                    var url = "/config/page_conv?type=save&entity=" + JSON.stringify($scope.page_schema);
                     $http({
                         method: 'GET',
                         url: url
@@ -113,13 +141,13 @@ define(["./module"], function (ctrs) {
 
                     });
                 } else {//存在配置 更新
-                    console.log("update");
-                    var url ="/config/page_conv?type=update&query={\"uid\":\"" + $scope.page_schema.uid + "\",\"site_id\":\"" + $scope.page_schema.site_id  + "\",target_name"+ $scope.page_schema.target_name+ "\"}&updates="+JSON.stringify($scope.page_schema);
+                    /*console.log("update");
+                    var url = "/config/page_conv?type=update&query={\"uid\":\"" + $scope.page_schema.uid + "\",\"site_id\":\"" + $scope.page_schema.site_id + "\",target_name" + $scope.page_schema.target_name + "\"}&updates=" + JSON.stringify($scope.page_schema);
                     $http({
                         method: 'GET',
                         url: url
                     }).success(function (dataConfig, status) {
-                    });
+                    });*/
                 }
             });
         }

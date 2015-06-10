@@ -345,7 +345,7 @@ api.get('/realTimeAccess', function (req, res) {
     es_request.realTimeSearch(req.es, indexes, _type, _filters, function (data) {
         var resultArray = new Array();
         data.forEach(function (item, i) {
-            if (item._source.city != "-") {
+            if (item._source!=null&&item._source.city != "-") {
                 var result = {};
                 result["city"] = item._source.city == "-" ? "国外" : item._source.city;
                 var newDate = new Date(item._source.utime[0]).toString();

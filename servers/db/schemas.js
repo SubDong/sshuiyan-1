@@ -9,12 +9,20 @@ var schemas = {
         schema: {
             //_id: String, // mongoid
             uid: String, // user id 用户ID
-            root_url:String, //根目录
-            subdirectory_url:String,//子目录
-            is_regular:Boolean,//是否使用正则表达式
+            root_url: String, //根目录
+            subdirectory_url: String,//子目录
+            is_regular: Boolean,//是否使用正则表达式
             analysis_url: String, //分析的目录
-            not_analysis_url:String, //不分析的目录
-            create_date:String //创建时间
+
+
+            not_analysis_url: String, //不分析的目录
+            create_date: String,//创建时间
+
+            not_analysis_url: String, //不分析的目录
+            create_date: Date,//创建时间
+            not_analysis_url: String, //不分析的目录
+            create_date: Date //创建时间
+
         }
     },
 
@@ -28,7 +36,7 @@ var schemas = {
             track_id: String, // js track id 随机生成
             site_url: String, // site url 设置的URL
             site_name: String, // site name 设置的URL
-            site_pause:Boolean,//配置暂停 true：暂停 false：使用
+            site_pause: Boolean,//配置暂停 true：暂停 false：使用
             track_status: String // track code status
             //status: String, // enable or disable track
         }
@@ -100,7 +108,7 @@ var schemas = {
             uid: String,//用户ID
             site_id: String, // 站点ID
             target_name: String,//目标名称
-            target_url: [String],//目标URL
+            target_url: [{url: String}],//目标URL
             record_type: String,//记录方式
             //收益设置
             expected_yield: Number,//预期收益
@@ -111,11 +119,12 @@ var schemas = {
                 path_mark: Boolean,//只有经过此路径的目标记为转化
                 steps: [{
                     step_name: String,//步骤名称
-                    step_urls: [{url:String}]//步骤URL 最多三个
+                    step_urls: [{url: String}]//步骤URL 最多三个
                 }]
 
             }],
-            conv_tpye: String//转换类型，regist,communicate,place_order,othre_order
+            conv_tpye: String,//转换类型，regist,communicate,place_order,othre_order
+            conv_text: String
         },
         /**
          * 事件转化
