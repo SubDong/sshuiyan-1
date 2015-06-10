@@ -101,7 +101,7 @@ define(["./module"], function (ctrs) {
                     autoInput: 20,
                     id: "indicators_charts",
                     chartType: "bar",//图表类型
-                    keyFormat: 'none',
+                    keyFormat: 'eq',
                     auotHidex: true,
                     qingXie: true,
                     noFormat: true,

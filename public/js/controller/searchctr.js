@@ -107,7 +107,7 @@ define(["./module"], function (ctrs) {
                         auotHidex: true,
                         id: "indicators_charts",
                         chartType: "bar",//图表类型
-                        keyFormat: 'none',
+                        keyFormat: 'eq',
                         noFormat: true,
                         dataKey: "key",//传入数据的key值
                         dataValue: "quota"//传入数据的value值

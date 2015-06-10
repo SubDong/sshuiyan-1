@@ -83,7 +83,7 @@ define(["./module"], function (ctrs) {
         }
         $scope.externalinkFormat = function (data, config, e) {
             var json = JSON.parse(eval("(" + data + ")").toString());
-            var result = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", e.types);
+            var result = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", e.types,config);
             config['noFormat'] = true;//告知chart工厂无须格式化json，可以直接使用data对象
             config['twoYz'] = "none";
             cf.renderChart(result, config);
@@ -129,7 +129,7 @@ define(["./module"], function (ctrs) {
                     legendClickListener: $scope.onLegendClick,
                     legendAllowCheckCount: 1,
                     min_max: false,
-                    bGap: true,
+                    bGap: false,
                     id: "indicators_charts",
                     chartType: "line",
                     lineType: false,
@@ -189,14 +189,11 @@ define(["./module"], function (ctrs) {
             $rootScope.start = time[0];
             $rootScope.end = time[1];
             $scope.charts.forEach(function (e) {
+                e.config.keyFormat = "day";
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
             })
-            if ($rootScope.start <= -1) {
-                $scope.charts[0].config.keyFormat = "day";
-            } else {
-                $scope.charts[0].config.keyFormat = "hour";
-            }
+
             requestService.refresh($scope.charts);
             $rootScope.tableTimeStart = time[0];
             $rootScope.tableTimeEnd = time[1];

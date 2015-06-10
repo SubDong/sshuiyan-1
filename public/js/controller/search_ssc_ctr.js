@@ -126,7 +126,7 @@ define(["./module"], function (ctrs) {
                     id: "indicators_charts",
                     bGap: true,//首行缩进
                     chartType: "bar",//图表类型
-                    keyFormat: 'none',
+                    keyFormat: 'eq',
                     dataKey: "key",//传入数据的key值
                     dataValue: "quota"//传入数据的value值
                 },
