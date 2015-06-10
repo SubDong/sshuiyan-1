@@ -12,6 +12,13 @@
                 <div class="row-fluid add_page_target">
                     <div class="col-xs-5">
                         <div class="col-xs-4">
+                            <input type="text" class="form-control" placeholder="目标名称" data-ng-model="page_schema.target_name" onfocus="this.setAttribute('placeholder','')" onblur="this.setAttribute('placeholder','目标名称')">
+                        </div>
+                        <div class="col-xs-6">
+                            <input type="text" data-ng-repeat="url in page_schema.target_url" class="form-control" style="margin-bottom: 7px" placeholder="目标URL" data-ng-model="url" onfocus="this.setAttribute('placeholder','')" onblur="this.setAttribute('placeholder','目标URL')">
+                        </div>
+                        <div class="col-xs-2" style="height: 34px">
+                            <a href="#" data-ng-click="targetUrlAdd(page_schema.target_url,targetRemoves)" id="addTargetUrl" style="line-height: 33px" class="{{page_schema.target_url.length==4?cancelAdd:0}}">添加页面</a>
                             <input type="text" class="form-control" data-ng-focus="targetFocus()"
                                    data-ng-blur="targetBlur()" placeholder="目标名称"
                                    data-ng-model="page_schema.target_name" onfocus="this.setAttribute('placeholder','')"
@@ -57,7 +64,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-5" ng-show="target">
+                    <div class="col-xs-5">
                         <div>
                             <div class="popover right box " style="display: block;">
                                 <div class="arrow"></div>
