@@ -377,14 +377,19 @@ var pvFn = function (result, dimension) {
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
-        var pv = result[i].pv_aggs.value;
-        if (dimension == "period") {
-            var dateStr = result[i].key_as_string + "";
-            Array.prototype.push.call(keyArr, dateStr);
-        } else
-            Array.prototype.push.call(keyArr, result[i].key);
+        try{
+            var pv = result[i].pv_aggs.value;
+            if (dimension == "period") {
+                var dateStr = result[i].key_as_string + "";
+                Array.prototype.push.call(keyArr, dateStr);
+            } else
+                Array.prototype.push.call(keyArr, result[i].key);
 
-        Array.prototype.push.call(quotaArr, pv);
+            Array.prototype.push.call(quotaArr, pv);
+        }catch(e){
+            console.error(e);
+        }
+
     }
 
     return {

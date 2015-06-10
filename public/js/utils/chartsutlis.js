@@ -161,16 +161,40 @@ var chartUtils = {
             return "不支持";
         }
     },
-    getObjectTime: function (json, start) {
-        var time = [];
-        json.forEach(function (e) {
-            if (start <= -6) {
-                time.push((e.key_as_string).toString().substr(0, 10));
-            } else {
-                time.push(Number((e.key_as_string).toString().substring(10, 13)));
-            }
-        })
-        return time
+    getObjectTime: function (json, start, config) {
+        if (config.keyFormat == "day") {
+            var time = [];
+            json.forEach(function (e) {
+                if (start == 0 || start == -1) {
+                    config.keyFormat = "none";
+                    time.push(Number((e.key_as_string).toString().substring(10, 13)));
+                } else {
+                    time.push((e.key_as_string).toString().substr(0, 10));
+                }
+            });
+            return time
+        }
+        if (start <= -6) {
+
+            var time = [];
+            json.forEach(function (e) {
+                time.push((e.key_as_string).toString());
+            });
+            config.keyFormat = "day";
+            return time
+        } else {
+
+            var time = [];
+            json.forEach(function (e) {
+                if (start == 0 || start == -1) {
+                    time.push(Number((e.key_as_string).toString().substring(10, 13)));
+                } else {
+                    time.push((e.key_as_string).toString().substr(0, 10));
+                }
+            });
+            return time
+        }
+
     },
     getObject: function (json, key, types) {
         var val = [];
@@ -193,8 +217,8 @@ var chartUtils = {
         });
         return val;
     },
-    getRf_type: function (json, start, labelType, types) {
-        var time = chartUtils.getObjectTime(json, start);
+    getRf_type: function (json, start, labelType, types, config) {
+        var time = chartUtils.getObjectTime(json, start, config);
         var label = chartUtils.getLabel(json);//去重
         var result = [];
         label.forEach(function (label) {

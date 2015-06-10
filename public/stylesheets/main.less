@@ -900,6 +900,13 @@ nav, .navbar-default {
       line-height: inherit;
       padding: 0 12px;
     }
+    @media screen and (max-width: 1180px) {
+      .form-control {
+        width: 100px;
+
+      }
+
+    }
 
   }
 
@@ -1253,7 +1260,7 @@ nav, .navbar-default {
   .row {
     .col-xs-6 {
       .grid {
-        min-height: 200px;
+       // min-height: 200px;
         background: #ffffff;
         overflow: inherit;
       }
@@ -1877,6 +1884,7 @@ nav, .navbar-default {
           line-height: 16px;
           float: left;
           width: 162px;
+          height:35px;
           color: #fff;
           word-break: break-all;
           overflow: hidden;
@@ -1893,6 +1901,8 @@ nav, .navbar-default {
         text-align: center;
         padding: 5px 0;
         position: relative;
+        width:100%;
+        overflow:hidden;
         span {
           color: #fff;
         }
@@ -2189,6 +2199,7 @@ nav, .navbar-default {
       list-style-type: disc;
       a {
         color: #45b1ec;
+        cursor: pointer;
         position: relative;
 
       }

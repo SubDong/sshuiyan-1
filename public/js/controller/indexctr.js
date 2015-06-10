@@ -117,7 +117,7 @@ define(['./module'], function (ctrs) {
                     auotHidex: true,
                     dataKey: "key",
                     autoInput: 10,
-                    keyFormat: 'none',
+                    keyFormat: 'eq',
                     dataValue: "quota"
 
                 },
