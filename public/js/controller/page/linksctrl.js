@@ -19,7 +19,8 @@ define(["./module"], function (ctrs) {
                 id: item.site_id
             });
         });
-        var initSiteName = "http://" + $scope.sites[0].name + "/";
+
+        var initSiteName = "http://www.best-ad.cn/";
         $scope.init = function () {
             $scope.links = [];
             $scope.out_data = [];
