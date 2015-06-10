@@ -32,13 +32,6 @@ define(["./module"], function (ctrs) {
         $scope.page_schema.site_id = $rootScope.userType;
         $scope.page_schema.uid=$cookieStore.get("uid");
 
-        $scope.target = false;
-        $scope.targetFocus = function () {
-            $scope.target = true;
-        };
-        $scope.targetBlur = function () {
-            $scope.target = false;
-        };
         $scope.record = false;
         $scope.benefitSet = false;
         $scope.pathType = false;
