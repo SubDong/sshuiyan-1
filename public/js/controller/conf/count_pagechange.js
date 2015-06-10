@@ -10,7 +10,7 @@ define(["./module"], function (ctrs) {
             uid: "",//用户ID
             site_id: "", // 站点ID
             target_name: "",//目标名称
-            target_url: [""],//目标URL
+            target_url: [{url:""}],//目标URL
             record_type: "",//记录方式
             //收益设置
             expected_yield: null,//预期收益
@@ -21,12 +21,26 @@ define(["./module"], function (ctrs) {
                 path_mark: false,//只有经过此路径的目标记为转化
                 steps: [{
                     step_name: "",//步骤名称
-                    step_urls: [{url:""}, {url:""}]//步骤URL 最多三个
+                    step_urls: [{url: ""}, {url: ""}]//步骤URL 最多三个
                 }]
 
             }],
-            conv_tpye: ""//转换类型，regist,communicate,place_order,othre_order
+            conv_tpye: "other",//转换类型，regist,communicate,place_order,other
+            conv_text: ""
         };
+        $scope.record_type_cn={
+            visit_times: "访问次数",
+            pv: "测量PV",
+            order_conv: "订单转化"
+        }
+
+        $scope.conv_tpye_cn = {
+            regist: "注册",
+            communicate: "沟通",
+            place_order: "下单",
+            other: "其他"
+        };
+
         //配置默认指标
         $rootScope.checkedArray = ["target_name", "target_url", "needPath","record_type","conv_tpye"   ];
         $rootScope.gridArray = [
@@ -56,11 +70,13 @@ define(["./module"], function (ctrs) {
             var uid = $cookieStore.get("uid");
             var site_id = $rootScope.userType;
             var url = "/config/page_conv?type=search&query={\"uid\":\"" + uid + "\",\"site_id\":\"" + site_id + "\"}";
+            console.log(url);
             $http({
                 method: 'GET',
                 url: url
             }).success(function (dataConfig, status) {
                 $rootScope.gridOptions.data=dataConfig;
+                //console.log("");
                 //修改数据
                 dataConfig.forEach(function(item,i){
                     if(item.paths==null||item.paths.length==0){
@@ -68,11 +84,23 @@ define(["./module"], function (ctrs) {
                     }else{
                         $rootScope.gridOptions.data[i].needPath="是";
                     }
+                    if(item.target_url!=null&&item.target_url.length>0){
+                        var url="";
+                        item.target_url.forEach(function(item,i){
+                            url=url+item.url+"";
+                        })
+                        $rootScope.gridOptions.data[i].target_url=url;
+                    }
+                    if(item.record_type!=null){
+                        $rootScope.gridOptions.data[i].record_type = $scope.record_type_cn[item.record_type]
+                    }
+                    if(item.conv_tpye!=null){
+                        $rootScope.gridOptions.data[i].conv_tpye = $scope.conv_tpye_cn[item.conv_tpye]
+                    }
                 });
 
             });
         };
-
         refushGridData();
 
     });
