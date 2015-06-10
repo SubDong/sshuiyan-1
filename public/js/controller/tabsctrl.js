@@ -332,6 +332,7 @@ define(["app"], function (app) {
             });
             $(inputArray[b]).prev("span").css("background-position", "0px -51px");
             $rootScope.tableSwitch.dimen = a;
+            $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.targetSearch();
         }
         //设置来源终端
@@ -352,6 +353,7 @@ define(["app"], function (app) {
             if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[0]}]";
             if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[1]}]";
             $scope.isJudge = false;
+            $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.targetSearch();
         };
         //设置（外部链接）设备过滤
@@ -371,6 +373,7 @@ define(["app"], function (app) {
             if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[0]},{\"rf_type\":[3]}]";
             if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[1]},{\"rf_type\":[3]}]";
             $scope.isJudge = false;
+            $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.targetSearch();
         };
         $scope.webClass = function (a) {
@@ -405,6 +408,7 @@ define(["app"], function (app) {
             if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[0]},{\"rf_type\":[2]}]";
             if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[1]},{\"rf_type\":[2]}]";
             $scope.isJudge = false;
+            $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.targetSearch();
         };
         //设置来源过滤
@@ -419,6 +423,7 @@ define(["app"], function (app) {
                 $scope.browserselect = true;
             }
             if (a == 3) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[3]}]";
+            $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.targetSearch();
         };
         //设置访客来源
@@ -438,6 +443,7 @@ define(["app"], function (app) {
             if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"ct\":[0]}]";
             if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"ct\":[1]}]";
             //$scope.isJudge = false;
+            $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.targetSearch();
         };
         //设置来源网站
@@ -481,6 +487,7 @@ define(["app"], function (app) {
                 })
             }
             $scope.isJudge = false;
+            $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.targetSearch();
         };
         //设置地域过滤
@@ -498,6 +505,7 @@ define(["app"], function (app) {
             if ($scope.tableJu == "html") {
                 getHtmlTableData();
             } else {
+                $rootScope.$broadcast("ssh_data_show_refresh");
                 $scope.targetSearch();
             }
         };
@@ -512,6 +520,7 @@ define(["app"], function (app) {
                 $rootScope.tableSwitch.tableFilter = "[{\"region\":[\"" + area + "\"]},{\"rf_type\":[2]}]";
             }
             $scope.isJudge = false;
+            $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.targetSearch();
         };
         //设置搜索引擎过滤
@@ -522,6 +531,7 @@ define(["app"], function (app) {
                 $rootScope.tableSwitch.tableFilter = "[{\"se\":[\"" + info + "\"]}]";
             }
             $scope.isJudge = false;
+            $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.targetSearch();
         };
         // 搜索词过滤
@@ -535,6 +545,7 @@ define(["app"], function (app) {
                 $rootScope.tableSwitch.tableFilter = "[{\"kw\":[\"" + gjcText + "\"]}]";
             }
             $scope.isJudge = false;
+            $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.targetSearch();
         };
         // 输入URL过滤
@@ -548,6 +559,7 @@ define(["app"], function (app) {
                 $rootScope.tableSwitch.tableFilter = "[{\"loc\":[\"" + urlText + "\"]}]";
             }
             $scope.isJudge = false;
+            $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.targetSearch();
         };
         // 按url，按域名过滤
@@ -576,6 +588,7 @@ define(["app"], function (app) {
                 $rootScope.tableSwitch.latitude.field = urlText;
             }
             $scope.isJudge = false;
+            $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.targetSearch("rf_dm");
         };
         // 外部链接搜索
@@ -589,6 +602,7 @@ define(["app"], function (app) {
                 $rootScope.tableSwitch.tableFilter = "[{\"rf_type\": [\"3\"]}, {\"rf\":[\"" + urlText + "\"]}]";
             }
             $scope.isJudge = false;
+            $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.targetSearch();
         };
         // 查看入口页链接

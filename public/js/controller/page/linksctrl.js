@@ -19,7 +19,8 @@ define(["./module"], function (ctrs) {
                 id: item.site_id
             });
         });
-        var initSiteName = "http://" + $scope.sites[0].name + "/";
+
+        var initSiteName = "http://www.best-ad.cn/";
         $scope.init = function () {
             $scope.links = [];
             $scope.out_data = [];
@@ -65,20 +66,20 @@ define(["./module"], function (ctrs) {
                     };
                     $scope.links = linksData;
                 }
-                if (result.length <= 3) {
+                if (result[0].in_data.length <= 3) {
                     document.getElementById("linkstree_top").style.top = "14%";
                     document.getElementById("linkstree_right").style.top = "14%";
                 }
-                if (data.data.length == 1) {
+                if (result[0].in_data.length == 1) {
                     document.getElementById("linkstree_top").style.top = "0";
                     document.getElementById("linkstree_right").style.top = "0";
                     $(".linkstree_left").css("margin-top", "14px")
                 }
-                if (result.length == 4) {
+                if (result[0].in_data.length == 4) {
                     document.getElementById("linkstree_top").style.top = "20%";
                     document.getElementById("linkstree_right").style.top = "20%";
                 }
-                if (result.length >= 5) {
+                if (result[0].in_data.length >= 5) {
                     document.getElementById("linkstree_top").style.top = "35%";
                     document.getElementById("linkstree_right").style.top = "35%";
                 }
@@ -118,6 +119,8 @@ define(["./module"], function (ctrs) {
         };
         $scope.today = function () {
             $scope.reset();
+            $scope.todayCalendar = GetDateStr(0);
+            $('#reportrange span').html(GetDateStr(0));
             $scope.todayClass = true;
             $rootScope.start = 0;
             $rootScope.end = 0;
@@ -125,6 +128,8 @@ define(["./module"], function (ctrs) {
         };
         $scope.yesterday = function () {
             $scope.reset();
+            $scope.todayCalendar = GetDateStr(-1);
+            $('#reportrange span').html(GetDateStr(-1));
             $scope.yesterdayClass = true;
             $rootScope.start = -1;
             $rootScope.end = -1;
@@ -132,6 +137,8 @@ define(["./module"], function (ctrs) {
         };
         $scope.sevenDay = function () {
             $scope.reset();
+            $scope.todayCalendar = GetDateStr(-6);
+            $('#reportrange span').html(GetDateStr(-6) + "至" + GetDateStr(0));
             $scope.sevenDayClass = true;
             $rootScope.start = -7;
             $rootScope.end = -1;
@@ -141,6 +148,8 @@ define(["./module"], function (ctrs) {
         };
         $scope.month = function () {
             $scope.reset();
+            $scope.todayCalendar = GetDateStr(-29);
+            $('#reportrange span').html(GetDateStr(-29) + "至" + GetDateStr(0));
             $scope.monthClass = true;
             $rootScope.start = -30;
             $rootScope.end = -1;
@@ -184,6 +193,35 @@ define(["./module"], function (ctrs) {
             });
 
         };
+        function GetDateStr(AddDayCount) {
+            var dd = new Date();
+            dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
+            var y = dd.getFullYear();
+            var m = dd.getMonth() + 1;//获取当前月份的日期
+            var d = dd.getDate();
+            return y + "-" + m + "-" + d;
+        }
+        $('#reportrange span').html(GetDateStr(0));
+        $('#reportrange').daterangepicker({
+            format: 'YYYY-MM-DD',
+            maxDate: GetDateStr(0),
+            showDropdowns: true,
+            showWeekNumbers: false,
+            timePicker: false,
+            //timePickerIncrement: 1,
+            timePicker12Hour: false,
+            opens: 'left',
+            drops: 'down',
+            timeZone: true,
+            buttonClasses: ['btn', 'btn-sm'],
+            applyClass: 'btn-primary',
+            cancelClass: 'btn-default',
+            separator: ' to '
+        }, function (start, end, label) {
+            $rootScope.datepickerClick(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
+            $rootScope.startString = (start.format('YYYY-MM-DD') + ' 至 ' + end.format('YYYY-MM-DD'))
+            $('#reportrange span').html(start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD'));
+        });
         //日历
         this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
         this.type = 'range';

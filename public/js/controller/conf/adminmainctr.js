@@ -33,7 +33,7 @@ define(["./module"], function (ctrs) {
             "var _pct= _pct|| [];\<br\>" +
             " (function() {\<br\>" +
             "   var hm = document.createElement(\"script\");\<br\>" +
-            "   hm.src = \"//t.best-ad.cn/_t.js?tid=ex_track_id\";\<br\>" +
+            "   hm.src = \"http://t.best-ad.cn/t.js?tid=ex_track_id\";\<br\>" +
             "   var s = document.getElementsByTagName(\"script\")[0];\<br\>" +
             "    s.parentNode.insertBefore(hm, s);\<br\>" +
             " })();" +
@@ -72,13 +72,13 @@ define(["./module"], function (ctrs) {
             {
                 name: "x6",
                 displayName: "",
-                cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.gain()'>获取代码</a><span class='glyphicon glyphicon-file'></span></div>",
+                cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.gain(index,grid,row)'>获取代码</a><span class='glyphicon glyphicon-file'></span></div>",
                 maxWidth: 100
             },
             {
                 name: "x2",
                 displayName: "",
-                cellTemplate: "<div class='table_admin'><a href=''>查看网站概览</a></div>",
+                cellTemplate: "<div class='table_admin'><a href='/#index'>查看网站概览</a></div>",
                 maxWidth: 100
             },
             {
@@ -135,8 +135,8 @@ define(["./module"], function (ctrs) {
         //};
         //新增网站弹框
         $scope.open = function () {
-            urlconfig.site_url = "";
-            urlconfig.site_name = "";
+            $scope.urlconfig.site_url = "";
+            $scope.urlconfig.site_name = "";
             $scope.urlDialog = ngDialog.open({
                 template: '\
               <div class="ngdialog-buttons" >\
@@ -227,10 +227,10 @@ define(["./module"], function (ctrs) {
             });
         };
         //获取代码弹框
-        $scope.gain = function () {
-
+        $scope.gain = function (index,grid,row) {
+            var thtml = $rootScope.adminSetHtml.replace("ex_track_id",row.entity.track_id);
             $scope.urlDialog = ngDialog.open({
-                template: $rootScope.adminSetHtml,
+                template: thtml,
                 className: 'ngdialog-theme-default',
                 plain: true,
                 scope: $scope

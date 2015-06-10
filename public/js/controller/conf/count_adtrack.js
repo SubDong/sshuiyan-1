@@ -4,14 +4,29 @@
 define(["./module"], function (ctrs) {
     "use strict";
 
-    ctrs.controller('adtrack', function ($scope, $q, $rootScope) {
+    ctrs.controller('adtrack', function ($scope, $q, $rootScope,ngDialog) {
         //配置默认指标
         $rootScope.checkArray = ["", "", ""];
         $rootScope.gridArray = [
+            {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>1</div>", maxWidth: 5},
             {name: "事件目标事件名称", displayName: "事件目标事件名称", field: "a", cellClass: 'table_admin'},
             {name: "事件元素ID", displayName: "事件元素ID", field: "b", cellClass: 'table_admin'},
             {name: "事件作用或目录", displayName: "事件作用或目录", field: "c", cellClass: 'table_admin'  },
-            {name: "记录方式", displayName: "记录方式", field: ""}
+            {name: "记录方式", displayName: "记录方式", field: ""},
+            {
+                name: "x2",
+                displayName: "",
+                cellTemplate: "<div class='table_admin'><a data-ng-click='grid.appScope.gainURL()' href=''>查看生成的URL</a></div>",
+                maxWidth: 100
+            },
+            {
+                name: "x4",
+                displayName: "",
+                // grid.appScope.Delete(row, grid.options.data)
+                cellTemplate: "<div class='table_admin'><a href='' ng-click='grid.options.data.splice(grid.options.data.indexOf(row.entity), 1);' >删除</a></div>",
+                maxWidth: 100
+            }
+
         ];
         $rootScope.tableSwitch = {
             latitude: {name: "网站域名", displayName: "网站域名", field: ""},
@@ -25,7 +40,6 @@ define(["./module"], function (ctrs) {
             arrayClear: false //是否清空指标array
         };
 
-        console.log("!23123");
         $scope.gridOptions = {
             paginationPageSize: 25,
             expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
@@ -38,6 +52,18 @@ define(["./module"], function (ctrs) {
             columnDefs: $rootScope.gridArray
         };
          $scope.gridOptions.data = [{a:"<div class='table_admin'>aaaaaaaaaa</div>",b:"bbbbbbbbbb",c:"ccccccccc"},{a:"dddddddddd",b:"eeeeeeeee",c:"ccccccccc"}]
+        $scope.gainURL=function(){
+
+            $scope.urlDialog = ngDialog.open({
+                template:$rootScope.urlDialogHtml,
+                className: 'ngdialog-theme-default',
+                plain: true,
+                scope : $scope
+            });
+        };
+        $rootScope.urlDialogHtml = "<div class='mid_left'>生成URL<div class='mid_left_code'>   </div> </div><div class='mid_right'><button type='button' class='btn btn-default navbar-btn'>复制</button><ul type='disc'>" +
+            "  <li style='color：red；'>请将生成的URL复制到你的其他媒介的推广目标URL位置</li></ul></div>";
+
 
     });
 });
