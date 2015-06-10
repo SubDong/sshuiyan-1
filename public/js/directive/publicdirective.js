@@ -847,6 +847,7 @@ define(["../app"], function (app) {
     app.filter("quotaDataFormat", function () {
         return function (value, label, count) {
             switch (label) {
+                case "ctr":
                 case "outRate":
                 case "nuvRate":
                 case "arrivedRate":
@@ -871,7 +872,6 @@ define(["../app"], function (app) {
                     return value ? value.toFixed(2) : value;
                 }
                 case "impression":
-                case "ctr":
                 case "cpm":
                 case "conversion":
                 {
@@ -909,7 +909,6 @@ define(["../app"], function (app) {
                     avgTime: "00:00:00",
                     avgPage: 0
                 };
-                scope._visitor = $rootScope.copy(scope.defaultObject);
                 // 读取基础数据
                 scope.loadBaseData = function () {
                     scope.sumPv = 0;
@@ -924,7 +923,7 @@ define(["../app"], function (app) {
                             scope.sumPv += parseInt(e.pv);
                         });
                         if (!scope._visitor.ct) {
-                            scope._visitor = angular.copy(scope.defaultObject);
+                            scope._visitor = $rootScope.copy(scope.defaultObject);
                             return;
                         }
                         if (scope.sumPv == 0) {
@@ -934,11 +933,15 @@ define(["../app"], function (app) {
                         } else {
                             scope._visitor.percent = (scope._visitor.pv * 100 / scope.sumPv).toFixed(2) + "%";
                         }
+                        // 处理后台数据错误问题
+                        if (scope._visitor.avgTime == "aN:aN:aN") {
+                            scope._visitor.avgTime = "00:00:00";
+                        }
                     }).error(function (error) {
                         console.log(error);
                     });
                 };
-                scope.loadBaseData();
+
                 scope.loadData = function () {
                     // 访问来源网站
                     var fwlywzRequest = $http.get('/api/fwlywz/?type=' + $rootScope.userType + '&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=pv&ct=' + scope._ctValue);
@@ -949,13 +952,18 @@ define(["../app"], function (app) {
                         scope.fwrkyTop5 = final_result[1].data.length > 5 ? final_result[1].data.slice(0, 5) : final_result[1].data;
                     });
                 };
-                scope.loadData();
-                scope.$on("ssh_refresh_charts", function (e, msg) {
+
+                scope.initData = function () {
                     scope._visitor = $rootScope.copy(scope.defaultObject);
                     scope.fwlywzTop5 = [];
                     scope.fwrkyTop5 = [];
                     scope.loadBaseData();
                     scope.loadData();
+                };
+
+                scope.initData();
+                scope.$on("ssh_refresh_charts", function (e, msg) {
+                    scope.initData();
                 });
             }
         }

@@ -41,9 +41,16 @@ if (env == 'dev') {
         genid: function (req) {
             return uuid.v4();// use UUIDs for session IDs
         },
+        store: new RedisStore({
+            host: config.redis.host,
+            port: config.redis.port,
+            pass: config.redis.options.auth_pass,
+            unref: false,
+            db: 10
+        }),
         resave: false,
         saveUninitialized: false,
-        secret: 'keyboard cat'
+        secret: 'huiyan sem'
     }));
 } else {
     app.use(session({
@@ -59,7 +66,7 @@ if (env == 'dev') {
         }),
         resave: false,
         saveUninitialized: false,
-        secret: 'keyboard cat'
+        secret: 'huiyan production'
     }));
 }
 

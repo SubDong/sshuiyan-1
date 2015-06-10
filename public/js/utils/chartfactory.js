@@ -128,7 +128,7 @@ var op = {
             },
             tooltip: {
                 trigger: !chartConfig.tt ? "axis" : chartConfig.tt,
-                backgroundColor : '#fff',
+                backgroundColor : 'rgba(255,255,255,0.8)',
                 borderColor : '#ededed',
                 borderWidth: 1,
                 padding: 0,
@@ -366,7 +366,7 @@ var op = {
         var option = {
             tooltip: {
                 trigger: !chartConfig.tt ? "item" : chartConfig.tt,
-                backgroundColor : '#fff',
+                backgroundColor : 'rgba(255,255,255,0.8)',
                 borderColor : '#ededed',
                 borderWidth: 1,
                 padding:10,
