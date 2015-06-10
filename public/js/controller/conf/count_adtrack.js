@@ -4,27 +4,19 @@
 define(["./module"], function (ctrs) {
     "use strict";
 
-    ctrs.controller('childlist', function ($scope, $q, $rootScope,$cookieStore,$http) {
+    ctrs.controller('adtrack', function ($scope, $q, $rootScope,ngDialog) {
         //配置默认指标
         $rootScope.checkArray = ["", "", ""];
         $rootScope.gridArray = [
-
-
             {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>1</div>", maxWidth: 5},
-            {name: "子目录名称", displayName: "子目录名称", field: "subdirectory_url",cellClass: 'table_admin_color'},
-            {name: "包含的页面或目录", displayName: "包含的页面或目录", field: "analysis_url",cellClass: 'table_admin_color'},
-            {name: "不包含的页面或目录", displayName: "不包含的页面或目录", field: "not_analysis_url",cellClass: 'table_admin_color'},
-            {name: "创建时间", displayName: "创建时间", field: "create_date",cellClass: 'table_admin_color'},
+            {name: "事件目标事件名称", displayName: "事件目标事件名称", field: "a", cellClass: 'table_admin'},
+            {name: "事件元素ID", displayName: "事件元素ID", field: "b", cellClass: 'table_admin'},
+            {name: "事件作用或目录", displayName: "事件作用或目录", field: "c", cellClass: 'table_admin'  },
+            {name: "记录方式", displayName: "记录方式", field: ""},
             {
                 name: "x2",
                 displayName: "",
-                cellTemplate: "<div class='table_admin'><a href='/#index'>查看网站概览</a></div>",
-                maxWidth: 150
-            },
-            {
-                name: "x3",
-                displayName: "",
-                cellTemplate: "<div class='table_admin'><a href=''>修改</a></div>",
+                cellTemplate: "<div class='table_admin'><a data-ng-click='grid.appScope.gainURL()' href=''>查看生成的URL</a></div>",
                 maxWidth: 100
             },
             {
@@ -34,7 +26,6 @@ define(["./module"], function (ctrs) {
                 cellTemplate: "<div class='table_admin'><a href='' ng-click='grid.options.data.splice(grid.options.data.indexOf(row.entity), 1);' >删除</a></div>",
                 maxWidth: 100
             }
-
 
         ];
         $rootScope.tableSwitch = {
@@ -60,27 +51,18 @@ define(["./module"], function (ctrs) {
             enableHorizontalScrollbar: 0,
             columnDefs: $rootScope.gridArray
         };
+         $scope.gridOptions.data = [{a:"<div class='table_admin'>aaaaaaaaaa</div>",b:"bbbbbbbbbb",c:"ccccccccc"},{a:"dddddddddd",b:"eeeeeeeee",c:"ccccccccc"}]
+        $scope.gainURL=function(){
 
-        /**
-         * 初始化数据
-         */
-        var refushGridData = function () {
-            var uid = $cookieStore.get("uid");
-            var root_url = $rootScope.userType;
-            var url = "/config/subdirectory_list?type=search&query={\"uid\":\"" + uid + "\",\"root_url\":\"" + root_url + "\"}";
-            $http({
-                method: 'GET',
-                url: url
-            }).success(function (dataConfig, status) {
-
-                console.log(dataConfig);
-               $scope.gridOptions.data = dataConfig;
-
+            $scope.urlDialog = ngDialog.open({
+                template:$rootScope.urlDialogHtml,
+                className: 'ngdialog-theme-default',
+                plain: true,
+                scope : $scope
             });
         };
-        refushGridData();
-
-
+        $rootScope.urlDialogHtml = "<div class='mid_left'>生成URL<div class='mid_left_code'>   </div> </div><div class='mid_right'><button type='button' class='btn btn-default navbar-btn'>复制</button><ul type='disc'>" +
+            "  <li style='color：red；'>请将生成的URL复制到你的其他媒介的推广目标URL位置</li></ul></div>";
 
 
     });

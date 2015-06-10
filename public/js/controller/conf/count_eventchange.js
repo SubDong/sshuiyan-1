@@ -11,7 +11,27 @@ define(["./module"], function (ctrs) {
             {name: "事件目标事件名称", displayName: "事件目标事件名称", field: ""},
             {name: "事件元素ID", displayName: "事件元素ID", field: ""},
             {name: "事件作用或目录", displayName: "事件作用或目录", field: ""},
-            {name: "记录方式", displayName: "记录方式", field: ""}
+            {name: "记录方式", displayName: "记录方式", field: ""},
+            {
+                name: "x4",
+                displayName: "",
+                cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.stop()'>暂停</a></div>",
+                maxWidth: 80
+            },
+            {
+                name: "x3",
+                displayName: "",
+                cellTemplate: "<div class='table_admin'><a href=''>修改</a></div>",
+                maxWidth: 100
+            },
+            {
+                name: "x5",
+                displayName: "",
+                // grid.appScope.Delete(row, grid.options.data)
+                cellTemplate: "<div class='table_admin'><a href='' ng-click='grid.options.data.splice(grid.options.data.indexOf(row.entity), 1);' >删除</a></div>",
+                maxWidth: 80
+            }
+
         ];
         $rootScope.tableSwitch = {
             latitude: {name: "网站域名", displayName: "网站域名", field: ""},

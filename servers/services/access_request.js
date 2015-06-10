@@ -365,16 +365,34 @@ var access_request = {
                         "uv": ((Number(mostOfResult[i].uv.value) / Number(result.all_uv.value)) * 100).toFixed(2) + "%"
                     });
                 }
-                targetPathData = {
-                    pathname: targetPathName,
-                    pv_proportion: ((Number(result.target_pv_uv.buckets.data1.pv.value) / Number(result.target_pv_uv.buckets.data.pv.value)) * 100).toFixed(2) + "%",
-                    uv_proportion: ((Number(result.target_pv_uv.buckets.data1.uv.value) / Number(result.target_pv_uv.buckets.data.uv.value)) * 100).toFixed(2) + "%",
-                    pv: result.target_pv_uv.buckets.data1.pv.value
+                console.log(result.target_pv_uv.buckets.data.pv.value)
+                if(result.target_pv_uv.buckets.data1.pv.value==0){
+                    targetPathData = {
+                        pathname: targetPathName,
+                        pv_proportion:  "0%",
+                        uv_proportion:  "0%",
+                        pv: result.target_pv_uv.buckets.data1.pv.value
+                    }
+                }else{
+                    targetPathData = {
+                        pathname: targetPathName,
+                        pv_proportion: ((Number(result.target_pv_uv.buckets.data1.pv.value) / Number(result.target_pv_uv.buckets.data.pv.value)) * 100).toFixed(2) + "%",
+                        uv_proportion: ((Number(result.target_pv_uv.buckets.data1.uv.value) / Number(result.target_pv_uv.buckets.data.uv.value)) * 100).toFixed(2) + "%",
+                        pv: result.target_pv_uv.buckets.data1.pv.value
+                    }
                 }
-                out_siteData = {
-                    pv_proportion: (((Number(result.target_pv_uv.buckets.data.pv.value) - Number(result.target_pv_uv.buckets.data2.pv.value)) / Number(result.target_pv_uv.buckets.data.pv.value)) * 100).toFixed(2) + "%",
-                    uv_proportion: (((Number(result.target_pv_uv.buckets.data.uv.value) - Number(result.target_pv_uv.buckets.data2.uv.value)) / Number(result.target_pv_uv.buckets.data.uv.value)) * 100).toFixed(2) + "%"
+                if(result.target_pv_uv.buckets.data.pv.value==0){
+                    out_siteData = {
+                        pv_proportion:  "0%",
+                        uv_proportion:  "0%"
+                    }
+                }else{
+                    out_siteData = {
+                        pv_proportion: (((Number(result.target_pv_uv.buckets.data.pv.value) - Number(result.target_pv_uv.buckets.data2.pv.value)) / Number(result.target_pv_uv.buckets.data.pv.value)) * 100).toFixed(2) + "%",
+                        uv_proportion: (((Number(result.target_pv_uv.buckets.data.uv.value) - Number(result.target_pv_uv.buckets.data2.uv.value)) / Number(result.target_pv_uv.buckets.data.uv.value)) * 100).toFixed(2) + "%"
+                    }
                 }
+
                 results = {
                     data: data,
                     targetPathData: targetPathData,

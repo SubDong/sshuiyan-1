@@ -4,7 +4,7 @@
 define(["./module"], function (ctrs) {
     "use strict";
 
-    ctrs.controller('adtrack', function ($scope, $rootScope, $cookieStore, $http) {
+    ctrs.controller('adtrack', function ($scope, $rootScope, $cookieStore, $http,ngDialog) {
 
         $scope.adtrack_model = {
             //_id: "", // mongoid
@@ -86,5 +86,17 @@ define(["./module"], function (ctrs) {
             });
         };
         refushGridData();
+        $scope.onViewUrl=function(index,grid,row){
+
+            $scope.urlDialog = ngDialog.open({
+                template:$rootScope.urlDialogHtml,
+                className: 'ngdialog-theme-default',
+                plain: true,
+                scope : $scope
+            });
+        };
+        $rootScope.urlDialogHtml = "<div class='mid_left'>生成URL<div class='mid_left_code'>   </div> </div><div class='mid_right'><button type='button' class='btn btn-default navbar-btn'>复制</button><ul type='disc'>" +
+            "  <li style='color：red；'>请将生成的URL复制到你的其他媒介的推广目标URL位置</li></ul></div>";
+
     });
 });

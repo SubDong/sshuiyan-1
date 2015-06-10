@@ -922,9 +922,10 @@ define(["../app"], function (app) {
                 // 读取基础数据
                 scope.loadBaseData = function () {
                     scope.sumPv = 0;
+
                     $http({
                         method: 'GET',
-                        url: '/api/indextable/?type=' + $rootScope.userType + '&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=pv,uv,outRate,avgTime,avgPage&dimension=ct'
+                        url: '/api/indextable/?type=' + $rootScope.userType + '&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=pv,uv,outRate,avgTime,avgPage&dimension=ct&filerInfo=' + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat
                     }).success(function (data, status) {
                         angular.forEach(data, function (e) {
                             if (e.ct === scope._ctText) {
@@ -973,6 +974,10 @@ define(["../app"], function (app) {
 
                 scope.initData();
                 scope.$on("ssh_refresh_charts", function (e, msg) {
+                    scope.initData();
+                });
+
+                scope.$on("ssh_data_show_refresh", function (e) {
                     scope.initData();
                 });
             }

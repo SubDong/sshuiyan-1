@@ -44,11 +44,33 @@ define(["./module"], function (ctrs) {
         //配置默认指标
         $rootScope.checkedArray = ["target_name", "target_url", "needPath","record_type","conv_tpye"   ];
         $rootScope.gridArray = [
+            {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>1</div>", maxWidth: 5},
             {name: "目标名称", displayName: "目标名称", field: "target_name"},
             {name: "路径", displayName: "目标路径", field: "target_url"},
             {name: "是否需要经过路径", displayName: "是否需要经过路径", field: "needPath"},
             {name: "记录方式", displayName: "记录方式", field: "record_type"},
-            {name: "转化类型", displayName: "转化类型", field: "conv_tpye"}
+            {name: "转化类型", displayName: "转化类型", field: "conv_tpye"},
+            {
+                name: "x2",
+                displayName: "",
+                cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.stop()'>暂停</a></div>",
+                maxWidth: 100
+            },
+            {
+                name: "x3",
+                displayName: "",
+                cellTemplate: "<div class='table_admin'><a href=''>修改</a></div>",
+                maxWidth: 100
+            },
+            {
+                name: "x4",
+                displayName: "",
+                // grid.appScope.Delete(row, grid.options.data)
+                cellTemplate: "<div class='table_admin'><a href='' ng-click='grid.options.data.splice(grid.options.data.indexOf(row.entity), 1);' >删除</a></div>",
+                maxWidth: 100
+            }
+
+
         ];
 
         $rootScope.tableSwitch = {
