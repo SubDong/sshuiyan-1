@@ -145,6 +145,26 @@ var schemas = {
                 ex_paths: [String]
             }
         }
+    },
+
+    /**
+     * mongodb 指定广告追踪 表结构
+     */
+    adtrack_model: {
+        model_name: "ConfigAdtrack",
+        collection_name: "t_configAdtrack",
+        schema: {
+            uid: "", // user id 用户ID
+            type_id: "", // es type id ( hidden in front-end) 对应ES ID
+            track_id: "", // js track id 随机生成
+            targetUrl: "", // 目标URL
+            mediaPlatform: "", // 媒体平台
+            adTypes: "",    //广告类型
+            planName: "", //计划名称
+            keywords: "",   //关键词
+            creative: "", //创意
+            produceUrl: ""  //产生后的URL
+        }
     }
 }
 module.exports = schemas
