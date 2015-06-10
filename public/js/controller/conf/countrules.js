@@ -37,7 +37,7 @@ define(["./module"], function (ctrs) {
                 url: url
             }).success(function (dataConfig, status) {
                 console.log("获取配置结果"+status);
-                if(dataConfig!=null){
+                if(dataConfig!=null && dataConfig.length > 0){
                     $scope.rules = dataConfig[0].rules;
                     $scope.ex_ips_area =convertIpArea(dataConfig[0].ex_ips);
                     $scope.ex_refer_urls_area= convertIpArea(dataConfig[0].ex_refer_urls);

@@ -64,15 +64,12 @@ define(["./module"], function (ctrs) {
 
         $scope.onSaveSubdirectory = function (){
 
-
-
             $scope.subdirectory.analysis_url = listToStirng($scope.pages);
 
             $scope.subdirectory.not_analysis_url = listToStirng($scope.no_pages);
 
             var entity =  JSON.stringify($scope.subdirectory);
 
-            console.log(entity);
 
             var url= "/config/subdirectory_list?type=save&entity="+entity;
             $http({
@@ -80,7 +77,7 @@ define(["./module"], function (ctrs) {
                 url: url
             }).success(function (dataConfig, status) {
                 alert("save success");
-        });
+             });
 
         };
 
