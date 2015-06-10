@@ -144,12 +144,12 @@ var op = {
                         var formatType = labelData[i];
                         if (chartConfig.compare || chartConfig.compareCustom) {
                             var baseSerieName = params[i].seriesName.split(":");
-                            res +=baseSerieName[0] + chartUtils.convertChinese(baseSerieName[1]) + ' : ' + ad.formatFunc(params[i].value, baseSerieName[1]) + '</li>';
+                            res +='<li class=chartstyle'+i+'>'+ baseSerieName[0] + chartUtils.convertChinese(baseSerieName[1]) + ' : ' + ad.formatFunc(params[i].value, baseSerieName[1]) + '</li>';
                         } else {
                             if (chartConfig.toolTip == undefined) {
                                 res +='<li class=chartstyle'+i+'>'+ params[i].seriesName + ' : ' + ad.formatFunc(params[i].value, formatType) + '</li>';
                             } else {
-                                res += params[i].seriesName + ' : ' + params[i].value + '</li>';
+                                res +='<li class=chartstyle'+i+'>'+  params[i].seriesName + ' : ' + params[i].value + '</li>';
                             }
                         }
 
