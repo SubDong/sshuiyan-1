@@ -45,10 +45,10 @@
                     <span class="glyphicon glyphicon-triangle-left fl"></span>
 
                     <div class="exchange_content_top_right_concent fl">
-                        <div class="fl"><b>{{exchange.name}}</b></div>
+                        <div class="fl"><b>{{exchange.name || '没有数据'}}</b></div>
                         <div class="fr">
-                            <span>PV:{{exchange.pv}}</span>
-                            <span>UV:{{exchange.uv}}</span>
+                            <span>PV:{{exchange.pv|| '没有数据'}}</span>
+                            <span>UV:{{exchange.uv|| '没有数据'}}</span>
                         </div>
                     </div>
                 </div>
@@ -65,14 +65,14 @@
                 <div class="exchange_list_level1">
                     <div class="exchange_list1 fl">
                         <div class="exchange_list1_name fl">
-                            {{exchange_prefix.name}}
+                            {{exchange_prefix.name|| '没有数据'}}
                         </div>
                         <div class="exchange_list1_text fr">
                             <span>
-                              PV:{{exchange_prefix.pv}}
+                              PV:{{exchange_prefix.pv|| '没有数据'}}
                             </span>
                             <span>
-                              UV:{{exchange_prefix.uv}}
+                              UV:{{exchange_prefix.uv|| '没有数据'}}
                             </span>
                         </div>
                     </div>
