@@ -15,10 +15,11 @@ var mixingMap = {
             loadingText: "数据读取中...",
             tooltip: {
                 trigger: 'item',
-                backgroundColor: '#fff',
+                backgroundColor: 'rgba(255,255,255,0.8)',
+                backgroundColor: 'rgba(255,255,255,0.8)',
                 borderColor: '#ededed',
                 borderWidth: 1,
-                padding: 10,
+                padding: 0,
                 textStyle: {
                     color: '#000',
                     decoration: 'none',
@@ -46,7 +47,7 @@ var mixingMap = {
                     },
                     tooltip: {
                         trigger: 'item',
-                        formatter: "{a} <br/>{b} : {c}"
+                        formatter: "<p>{b}</p><p>{a} : {c}</p><p>占比:{d}%</p> "
                     },
                     itemStyle: {
                         emphasis: {label: {show: true}},
@@ -66,7 +67,7 @@ var mixingMap = {
                     type: 'pie',
                     tooltip: {
                         trigger: 'item',
-                        formatter: "{a} <br/>{b} : {c} ({d}%)"
+                        formatter: "<p>{b}</p><p>{a}: {c}</p> <p>占比:{d}%</p>"
                     },
                     center: ['80%', '50%'],
                     radius: ["0", "50%"],
