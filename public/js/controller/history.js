@@ -10,7 +10,7 @@ define(['./module'], function (ctrs) {
             var _index = temp_path.indexOf("/history");
             $location.path(temp_path.substring(0, _index));
         }
-
+        $scope.webName = $rootScope.webName
         $scope.monthClass = true;
         var esType = $rootScope.userType;
 
@@ -30,7 +30,7 @@ define(['./module'], function (ctrs) {
         $rootScope.gridArray.splice(1, 1);
         $rootScope.tableSwitch.dimen = false;
 
-        $rootScope.tableSwitch.latitude = {name: "日期", displayName: "日期", field: "period" ,cellClass:'grid_padding',};
+        $rootScope.tableSwitch.latitude = {name: "日期", displayName: "日期", field: "period" ,cellClass:'grid_padding'};
         $rootScope.historyJu = "NO";
 
         $scope.historyInit = function () {
