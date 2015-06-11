@@ -5,6 +5,30 @@
 define(["./module"], function (ctrs) {
     "use strict";
 
+    ctrs.directive('adminmainctrRemoteValidation', function ($http,$cookieStore) {
+        return {
+            require: 'ngModel',
+            link: function (scope, elm, attrs, ctrl) {
+                elm.bind('keyup', function () {
+                    var uid=$cookieStore.get("uid");
+                    var url = "/config/site_list?type=search&query={\"uid\":\"" + uid + "\",\"site_url\":\"" +scope.urlconfig.site_url + "\"}";
+                    $http({method: 'GET', url: url}).
+                        success(function (data, status) {
+                            if (data.length > 0) {
+                                ctrl.$setValidity('remote', false);
+                            } else {
+                                ctrl.$setValidity('remote', true);
+                            }
+                        }).
+                        error(function (data, status, headers, config) {
+                            ctrl.$setValidity('remote', false);
+                        });
+
+
+                });
+            }
+        };
+    });
 
     ctrs.controller('adminmainctr', function ($scope, $q, $rootScope, $http, requestService, ngDialog, $cookieStore) {
         /**
@@ -144,10 +168,12 @@ define(["./module"], function (ctrs) {
             $scope.urlconfig.is_top = false;
             $scope.urlDialog = ngDialog.open({
                 template: '\
+                <form role="form" name="adminmainctrForm" class="form-horizontal" novalidate>\
               <div class="ngdialog-buttons" >\
                    <ul> \
                    <li>网站域名</li>\
-                     <li><input type="text" data-ng-focus="site_url_focus = true" data-ng-blur="site_name_focus = false" data-ng-model="urlconfig.site_url" class="form-control"/></li> \
+                     <li><input type="text" name="remote" adminmainctr-remote-validation data-ng-focus="site_url_focus = true" data-ng-blur="site_name_focus = false" data-ng-model="urlconfig.site_url" class="form-control" required/></li> \
+                    <li ng-show="adminmainctrForm.remote.$error.remote" style="color: red;">网站域名重复！</li> \
                     <li data-ng-show="site_url_focus && !urlconfig.site_url" style="color: red;">不能为空</li>\
                     <br>\
                     <li>网站名称</li>\
@@ -164,8 +190,8 @@ define(["./module"], function (ctrs) {
                     <li>4.wap站域名（如：wap.baidu.com）</li>\
                     </ul>\
                     <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
-                    <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="submit(0)">确定</button>\
-                </div>',
+                    <button type="button" ng-disabled="adminmainctrForm.$invalid" class="ngdialog-button ngdialog-button-primary" ng-click="submit(0)">确定</button>\
+                </div></form>',
                 className: 'ngdialog-theme-default',
                 plain: true,
                 scope: $scope
