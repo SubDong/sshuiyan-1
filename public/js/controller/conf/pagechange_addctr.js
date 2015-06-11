@@ -60,6 +60,11 @@ define(["./module"], function (ctrs) {
         // 添加目标URL
         $scope.targetRemoves = [];
         $scope.targetUrlAdd = function (targets, targetRemoves) {
+            if(targets.length ==4){
+                $("#addTargetUrl").html("");
+            }else{
+                $("#addTargetUrl").html("添加页面");
+            }
             $scope.showRemove = true;
             targets.push({url: ""});
             targetRemoves.push({url: ""});

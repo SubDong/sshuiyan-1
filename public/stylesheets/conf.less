@@ -33,88 +33,112 @@
   border-bottom: none;
 }
 /*页面转化目标样式*/
-.add_page_title{
-  width: 95%;
-  border: 1px solid #eee;
-  margin-top: 15px;
-}
-.add_page_title p{
-  background-color: #eee;
-  padding-left: 15px;
-  line-height: 33px;
-}
-.add_page_content{
-  margin-top: 20px;
-  padding: 0 15px 0 15px;
-}
-.add_page_content .add_page_target{
-  margin-top: 20px;
-}
-.add_page_content .add_page_target input{
-  line-height: 20px;
-}
-.add_page_content .earnings table{
-  margin-left: 20px;
-}
-.add_page_content .earnings table td{
-  padding: 10px;
-}
-.add_page_content .earnings input{
-  width: 50px;
-}
-.add_page_target .choice_record_way{
-  line-height: 30px;
-  margin-top: 15px;
-}
-.add_page_target .choice_record_way span{
-  padding: 10px 15px 6px 15px;
-  border: 1px solid #eee;
-}
-.add_page_target .record_way{
-  border: 1px solid #eee;
-  padding: 15px 15px 0 15px;
-}
-.path_steps{
-  clear: both;
-}
-.path_type{
-  margin-top: 20px;
-}
-.path_type ul{
-  margin-top: 10px;
-  padding-bottom: 37px;
-}
-.path_type ul li{
-  float: left;
-  margin-left: 15px;
-  line-height: 30px;
-}
-.path_type ul li input{
-  line-height: 21px;
-}
-.path_type .path_steps span{
-  display: inline-block;
-  background-color: #eee;
-  padding: 1px 15px 2px 15px;
-  line-height: 24px;
-}
-.remove{
-  display: inline-block;
-  width: 25px;
-  height: 35px;
-  line-height: 35px;
-  background-color: #eee;
-  text-align: center;
-  color: #ccc;
-}
-.add_page_content .transform_type{
-  margin-top: 15px;
-}
-.add_page_content .transform_type label{
-  margin-left: 15px;
+//重新编辑的样式
+.page_content{
+  border: 1px solid #f1f1f1;
+  .padding_content{
+    padding-right: 20px
+  }
+  .add_title_bar{
+    background-color: #f1f1f1;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 49px;
+  }
+  .small_title{
+    background-color: #f7f7f7;
+    margin-bottom: 15px;
+    padding: 0 10px 0 10px;
+    line-height: 28px;
+  }
+  .target_add {
+    .target_add_content li{
+      width: 200px;
+      float: left;
+      margin-right: 10px;
+    }
+    .target_add_content li:first-child{
+      width: 114px;
+    }
+    .target_add_content li:last-child{
+      width: 48px;
+    }
+    .target_add_content li:last-child a{
+      display: block;
+      width: 48px;
+      height: 22px;
+      margin-top: 3px;
+    }
+    .target_way_title span{
+      padding: 5px;
+      border: 1px solid #eee;
+    }
+    .target_way_content ul{
+      width: 180px;
+      padding: 10px;
+      border: 1px solid #eee;
+    }
+  }
+  .input_name{
+    width: 114px;
+  }
+  .input_url{
+    width: 200px;
+    margin-bottom: 10px;
+  }
+  .remove{
+    display: inline-block;
+    width: 22px;
+    height: 24px;
+    line-height: 24px;
+    background-color: #eee;
+    text-align: center;
+    color: #ccc;
+  }
+  //  benefit_content
+  .benefit_content{
+    padding-left: 30px;
+    .benefit_title{
+      color: #ccc
+    }
+    table tr td{
+      padding-top: 6px;
+      color: #666;
+      line-height: 22px;
+    }
+    table input{
+      width: 55px;
+      margin-left: 9px;
+      height: 22px;
+    }
+  }
+  //  路径
+  .path_type_content{
+    margin-top: 10px;
+    clear: both;
+  }
+  .path_type_content li{
+    float: left;
+    width: 200px;
+    margin-right: 10px;
+  }
+  .path_type_content li:first-child{
+    width: 50px;
+    background-color: #f1f1f1;
+    text-align: center;
+    line-height: 24px;
+  }
+  .path_type_content li:nth-child(2){
+    width: 114px;
+  }
+  .path_type_content li:nth-child(4){
+    width: 50px;
+  }
+  .path_type_content li:last-child{
+    width: 22px;
+  }
 }
 .footer-btn{
-  margin-top: 10px;
   background-color: #eee;
 }
 .footer-btn button{
