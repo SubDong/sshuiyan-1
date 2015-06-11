@@ -401,7 +401,7 @@ api.get('/realTimeHtml', function (req, res) {
                         +"</span></li>"
                     });
                     item.record.forEach(function (vtime, i) {
-                        vtimeHtml = vtimeHtml + "<li><span>" + vtime.vtime + "</span></li>"
+                        vtimeHtml = vtimeHtml + "<li><span>" + vtime.vtime + "</span></li>";
                         urlHtml = urlHtml + "<li><span><a href='" + vtime.loc + "' target='_blank'>" + vtime.loc + "</a></span></li>"
                     });
                     var classInfo;

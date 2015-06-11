@@ -2254,8 +2254,10 @@ nav, .navbar-default {
 
 .trend_img {
   span {
+    display:block;
     width: 58px;
     height: 58px;
+    margin:0 25px;
   }
   .windows {
     background: url(../images/windows.png) no-repeat;
@@ -3516,6 +3518,11 @@ textarea.tNum {
 
   .ui-grid-cell .ui-grid-vertical-bar {
     height: auto !important;
+  }
+  .expandableRow{
+    .ui-grid-cell{
+      height:360px !important;
+    }
   }
 }
 

@@ -10,7 +10,7 @@ define(['./module'], function (ctrs) {
             var _index = temp_path.indexOf("/history");
             $location.path(temp_path.substring(0, _index));
         }
-
+        console.log($rootScope.tableSwitch.tableFilter)
         $scope.monthClass = true;
         var esType = $rootScope.userType;
 
