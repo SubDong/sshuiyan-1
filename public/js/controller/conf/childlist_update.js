@@ -25,6 +25,7 @@ define(["./module"], function (ctrs) {
 
         $scope.subdirectory._id = $stateParams.id;
 
+        console.log("child"+$stateParams.id)
         $scope.pages = [{
             url: ""
         }];

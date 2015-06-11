@@ -6,30 +6,6 @@ define(["./module"], function (ctrs) {
 
     ctrs.controller('pagechange_update', function ($scope, $http, $rootScope, $cookieStore, $stateParams, ngDialog, $state) {
 
-        $scope.page_schema_model = {
-            //id: String,
-            uid: "",//用户ID
-            site_id: "", // 站点ID
-            target_name: "",//目标名称
-            target_url: [{url: ""}],//目标URL
-            record_type: "",//记录方式
-            //收益设置
-            expected_yield: null,//预期收益
-            pecent_yield: null,//预期收益率
-            //路径类型
-            paths: [{
-                path_name: "",//路径名称
-                path_mark: false,//只有经过此路径的目标记为转化
-                steps: [{
-                    step_name: "",//步骤名称
-                    step_urls: [{url: ""}, {url: ""}]//步骤URL 最多三个
-                }]
-
-            }],
-            conv_tpye: "other",//转换类型，regist,communicate,place_order,other
-            conv_text: ""
-
-        };
 
         $scope.radio_record = {
             visit_times: true,
@@ -44,10 +20,9 @@ define(["./module"], function (ctrs) {
         };
 
 
-        $scope.page_schema = angular.copy($scope.page_schema_model);
+        //$scope.page_schema = $stateParams.id;
+        console.log( $stateParams.id);
         //UID 和site_id初始化
-        $scope.page_schema.site_id = $rootScope.userType;
-        $scope.page_schema.uid = $cookieStore.get("uid");
 
         $scope.record = false;
         $scope.benefitSet = false;
@@ -99,7 +74,7 @@ define(["./module"], function (ctrs) {
             step_urls.splice(_index, 1);
         };
         $scope.addStepUrls = function (step, turl) {
-            console.log(step.step_urls);
+            //console.log(step.step_urls);
             step.step_urls.push({url: turl});
         };
         $scope.chooseRecordType = function (curType) {
@@ -132,7 +107,7 @@ define(["./module"], function (ctrs) {
             }).success(function (dataConfig, status) {
                 if (dataConfig != null || dataConfig.length == 1) {//不存在配置 保存
                     //存在配置 更新
-                    console.log("update");
+                    //console.log("update");
                     var url = "/config/page_conv?type=update&query={\"uid\":\"" + $scope.page_schema.uid + "\",\"site_id\":\"" + $scope.page_schema.site_id + "\",target_name" + $scope.page_schema.target_name + "\"}&updates=" + JSON.stringify($scope.page_schema);
                     $http({
                         method: 'GET',

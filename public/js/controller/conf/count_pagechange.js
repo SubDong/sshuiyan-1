@@ -44,11 +44,28 @@ define(["./module"], function (ctrs) {
 
         //跳转到修改界面
         $scope.onUpdate = function (entity) {
+            //var uid = $cookieStore.get("uid");
+            //var site_id = $rootScope.userType;
+            //var url = "/config/page_conv?type=search&query={\"_id\":\"" + entity._id + "\"}";id
+            console.log("传递ID="+entity._id);
             $state.go('pagechange_update',{ 'id':entity._id});
+            //$http({
+            //    method: 'GET',
+            //    url: url
+            //}).success(function (dataConfig, status) {
+            //    if(dataConfig!=null&&dataConfig.length==1){
+            //        console.log("onupdate "+entity._id);
+            //        console.log(dataConfig[0]);
+            //        $state.go('pagechange_update',{ 'entity':dataConfig[0]._id});
+            //    }else{
+            //        alert("该数据已被删除，请刷新页面");
+            //    }
+            //})
+
         }
 
         //配置默认指标
-        $rootScope.checkedArray = ["target_name", "target_url", "needPath","record_type","conv_tpye"   ];
+        $rootScope.checkedArray = ["target_name", "target_url", "needPath","record_type","conv_tpye"  ,"_id" ];
         $rootScope.gridArray = [
             {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>", maxWidth: 5},
             {name: "目标名称", displayName: "目标名称", field: "target_name"},
@@ -97,7 +114,6 @@ define(["./module"], function (ctrs) {
                 url: url
             }).success(function (dataConfig, status) {
                 $rootScope.gridOptions.data=dataConfig;
-                //console.log("");
                 //修改数据
                 dataConfig.forEach(function(item,i){
                     if(item.paths==null||item.paths.length==0){
@@ -145,7 +161,6 @@ define(["./module"], function (ctrs) {
                     method: 'GET',
                     url: query
                 }).success(function (dataConfig, status) {
-                           console.log(dataConfig);
                     if (dataConfig == "\"success\"") {
                         refushGridData();
                     }
