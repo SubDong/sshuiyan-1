@@ -98,15 +98,24 @@
                                     </div>
                                 </div>
 
-                                <a class="exchange_list1_more fl" data-ng-click="queryPathData(path)" id="{{order_id}}"　>
+                                <a class="exchange_list1_more fl" data-ng-click="queryPathData(path)" >
                                 </a>
-                                <span ng-bind-html = "htmlStr"></span>
-
+                                <div  ng-show="false" id="{{path.order_id}}">
+                                    <span ng-bind-html = "htmlStr"></span>
+                                    <h1>54666666666666666666666666666</h1>
+                                </div>
                             </div>
 
                         </li>
 
                     </ul>
+                    <script>
+                        function toggle(id){
+                            document.getElementById(id).attributes[0].value = true;
+                            alert(document.getElementById(id).attributes[0].value)
+                        }
+
+                    </script>
                     <!--<div class="exchange_list_level2" >-->
                     <!--<div class="exchange_list1 fl">-->
                     <!--<div class="exchange_list1_name fl">-->
