@@ -73,7 +73,6 @@ define(["./module"], function (ctrs) {
             model.keywords = $scope.urlconfig.keywords;
             model.creative = $scope.urlconfig.creative;
             //model.produceUrl = $scope.parseUrl();
-            console.log($scope.parseUrl());
             model.uid = $cookieStore.get("uid");
 
             var query = "/config/adtrack?type=search&query={\"uid\":\"" + model.uid + "\",\"targetUrl\":\"" + model.targetUrl + "\"}";
