@@ -102,7 +102,7 @@ api.get("/site_list", function (req, res) {
             var update = query['updates'];
             dao.update(schema_name, query['query'], query['updates'], function (err, docs) {
                 //track_id
-                if (docs != null && docs.length == 1 && update.track_id != docs[0].track_id) {
+                /*if (docs != null && docs.length == 1 && update.track_id != docs[0].track_id) {
                     req.redisclient.get(docs[0].track_id, function (error, redis_type_id) {
                         if (redis_type_id != null && redis_type_id != "")
                             req.redisclient.set(update.track_id, redis_type_id, function (err, reply) {//es
@@ -114,7 +114,7 @@ api.get("/site_list", function (req, res) {
                             });
                     });
 
-                }
+                }*/
                 datautils.send(res, docs);
             });
             break;

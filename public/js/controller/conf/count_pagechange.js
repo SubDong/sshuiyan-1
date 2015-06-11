@@ -108,8 +108,11 @@ define(["./module"], function (ctrs) {
                     }
                     if(item.target_url!=null&&item.target_url.length>0){
                         var url="";
-                        item.target_url.forEach(function(item,i){
-                            url=url+item.url+"";
+                        item.target_url.forEach(function(u,i){
+                            url=url+u.url;
+                            if(i<item.target_url.length-1){
+                                url=url+"或";
+                            }
                         })
                         $rootScope.gridOptions.data[i].target_url=url;
                     }
