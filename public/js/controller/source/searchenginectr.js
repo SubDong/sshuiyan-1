@@ -193,10 +193,9 @@ define(["./module"], function (ctrs) {
             //首页表格
             //requestService.gridRefresh(scope.grids);
             //其他页面表格
-            $rootScope.targetSearch(true);
+            $rootScope.targetSearch();
             $scope.reloadByCalendar("today");
             $('#reportrange span').html(GetDateStr(0));
-            $scope.$broadcast("ssh_dateShow_options_time_change");
             //classcurrent
             $scope.reset();
             $scope.todayClass = true;

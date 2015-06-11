@@ -206,8 +206,7 @@ define(["./../module"], function (ctrs) {
             $scope.reloadByCalendar("today");
             $('#reportrange span').html(GetDateStr(0));
             //其他页面表格
-            $rootScope.targetSearch(true);
-            $scope.$broadcast("ssh_dateShow_options_time_change");
+            $rootScope.targetSearch();
             //classcurrent
             $scope.reset();
             $scope.todayClass = true;
