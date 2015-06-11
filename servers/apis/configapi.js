@@ -12,6 +12,7 @@ var api = express.Router();
 var dao = require('../db/daos');
 var schemas = require('../db/schemas');
 var randstring = require('../utils/randstring');
+var querystring = require('querystring');
 
 
 
@@ -150,7 +151,7 @@ api.get("/site_list", function (req, res) {
             var update = query['updates'];
             dao.update(schema_name, query['query'], query['updates'], function (err, docs) {
                 //track_id
-                if (docs != null && docs.length == 1 && update.track_id != docs[0].track_id) {
+                /*if (docs != null && docs.length == 1 && update.track_id != docs[0].track_id) {
                     req.redisclient.get(docs[0].track_id, function (error, redis_type_id) {
                         if (redis_type_id != null && redis_type_id != "")
                             req.redisclient.set(update.track_id, redis_type_id, function (err, reply) {//es
@@ -162,7 +163,7 @@ api.get("/site_list", function (req, res) {
                             });
                     });
 
-                }
+                }*/
                 datautils.send(res, docs);
             });
             break;
@@ -255,7 +256,7 @@ api.get("/page_conv", function (req, res) {
             break;
         case "delete":
             dao.remove(schema_name, query['query'], function () {
-                datautils.send(res, "remove");
+                datautils.send(res, "success");
             });
             break;
         default :
@@ -293,6 +294,21 @@ api.get("/adtrack", function (req, res) {
     switch (type) {
         case "save":
             var entity = JSON.parse(query['entity']);
+            var targetUrl = entity.targetUrl;
+            var mediaPlatform = entity.mediaPlatform;
+            var adTypes = entity.adTypes;
+            var planName = entity.planName;
+            var keywords = entity.keywords;
+            var creative = entity.creative;
+            var strUrl = "http://" + targetUrl
+                + "?hmsr=" + mediaPlatform
+                + "&_hmmd=" + adTypes
+                + "&_hmpl=" + planName
+                + "&_hmkw=" + keywords
+                + "&_hmci=" + creative;
+            entity.produceUrl = encodeURI(strUrl);
+
+            console.log(entity.targetUrl);
             dao.save(schema_name, entity, function (ins) {
                 datautils.send(res, JSON.stringify(ins));
             });

@@ -211,6 +211,22 @@ define(["angular", "app"], function (ng, app) {
                 url: "/source/externallinks/history",
                 templateUrl: "../historytrend/history.html"
             })
+            .state('history8', {
+                url: "/page/entrancepage_fa/history",
+                templateUrl: "../historytrend/history.html"
+            })
+            .state('history9', {
+                url: "/page/entrancepage_nv/history",
+                templateUrl: "../historytrend/history.html"
+            })
+            .state('history10', {
+                url: "/page/entrancepage_as/history",
+                templateUrl: "../historytrend/history.html"
+            })
+            .state('history11', {
+                url: "/page/entrancepage_af/history",
+                templateUrl: "../historytrend/history.html"
+            })
         $urlRouterProvider.when('', '/conf');
         $stateProvider
             .state('conf', {

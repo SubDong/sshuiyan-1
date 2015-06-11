@@ -8,7 +8,7 @@ define(["./module"], function (ctrs) {
         //配置默认指标
         $rootScope.checkArray = ["", "", ""];
         $rootScope.gridArray = [
-            {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>1</div>", maxWidth: 5},
+            {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>", maxWidth: 5},
             {name: "事件目标事件名称", displayName: "事件目标事件名称", field: "a", cellClass: 'table_admin'},
             {name: "事件元素ID", displayName: "事件元素ID", field: "b", cellClass: 'table_admin'},
             {name: "事件作用或目录", displayName: "事件作用或目录", field: "c", cellClass: 'table_admin'  },

@@ -49,6 +49,19 @@ define(['./module'], function (ctrs) {
             });
             cf.renderChart(json, config);
         }
+        $scope.secondChartFormat = function (data, config) {
+            var json = JSON.parse(eval("(" + data + ")").toString());
+            if (json[0]) {
+                json[0].label = chartUtils.convertChinese(json[0].label);
+                if (json[0].quota.length > 10) {
+                    json[0].quota = json[0].quota.slice(0, 10);
+                    json[0].key = json[0].key.slice(0, 10);
+                }
+                json[0].quota.sort(chartUtils.NumDescSort)
+            }
+            config["noFormat"] = "noFormat";
+            cf.renderChart(json, config);
+        }
         $scope.indexLineFormat = function (data, config, e) {
             if ($rootScope.interval == 1) {
                 var final_result = chartUtils.getByHourByDayData(data);
@@ -123,7 +136,8 @@ define(['./module'], function (ctrs) {
                 },
                 types: ["pv"],
                 dimension: ["region"],
-                url: "/api/map"
+                url: "/api/map",
+                cb: $scope.secondChartFormat
             },
             {
                 config: {

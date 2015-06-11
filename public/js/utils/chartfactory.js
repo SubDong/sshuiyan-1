@@ -102,6 +102,18 @@ var op = {
         } else {
             json = JSON.parse(eval('(' + data + ')').toString());
         }
+        json.forEach(function (j) {
+            var count = 0;
+            j.quota.forEach(function (q) {
+                count += Number(q);
+            });
+            if (count == 0) {
+                chartConfig.instance = echarts.init(document.getElementById(chartConfig.id));
+                def.defData(chartConfig);
+                chartConfig.legendData = _legendTmp;
+                return;
+            }
+        });
         if (!json[0]) {
             chartConfig.instance = echarts.init(document.getElementById(chartConfig.id));
             def.defData(chartConfig);
@@ -128,36 +140,40 @@ var op = {
             },
             tooltip: {
                 trigger: !chartConfig.tt ? "axis" : chartConfig.tt,
-                backgroundColor : 'rgba(255,255,255,0.8)',
-                borderColor : '#ededed',
+                backgroundColor: 'rgba(255,255,255,0.8)',
+                borderColor: '#ededed',
                 borderWidth: 1,
                 padding: 0,
-                textStyle : {
+                textStyle: {
                     color: '#000',
                     decoration: 'none',
                     fontSize: 12
                 },
                 formatter: function (params, ticket, callback) {
-                    var res ='<li>'+ params[0].name+'</li>';
+                    var xName = params[0].name.toString();
+                    var res = '<li>' + xName + '</li>';
+                    if (xName.indexOf("/点") > -1) {
+                        xName = xName.split("/点")[0];
+                    }
                     if (chartConfig.compare || chartConfig.compareCustom) {
-                        if (chartConfig.keyFormat=="day"){
-                            res ='<li>'+ params[0].name+':00-'+ params[0].name+':59</li>';
+                        if (chartConfig.keyFormat == "day") {
+                            res = '<li>' + xName + ':00-' + xName + ':59</li>';
                         }
-                    }else{
-                        if (chartConfig.keyFormat=="none"){
-                            res ='<li>'+ params[0].name+':00-'+ params[0].name+':59</li>';
+                    } else {
+                        if (chartConfig.keyFormat == "none") {
+                            res = '<li>' + xName + ':00-' + xName + ':59</li>';
                         }
                     }
                     for (var i = 0, l = params.length; i < l; i++) {
                         var formatType = labelData[i];
                         if (chartConfig.compare || chartConfig.compareCustom) {
                             var baseSerieName = params[i].seriesName.split(":");
-                            res +='<li class=chartstyle'+i+'>'+ baseSerieName[0] + chartUtils.convertChinese(baseSerieName[1]) + ' : ' + ad.formatFunc(params[i].value, baseSerieName[1]) + '</li>';
+                            res += '<li class=chartstyle' + i + '>' + baseSerieName[0] + chartUtils.convertChinese(baseSerieName[1]) + ' : ' + ad.formatFunc(params[i].value, baseSerieName[1]) + '</li>';
                         } else {
                             if (chartConfig.toolTip == undefined) {
-                                res +='<li class=chartstyle'+i+'>'+ params[i].seriesName + ' : ' + ad.formatFunc(params[i].value, formatType) + '</li>';
+                                res += '<li class=chartstyle' + i + '>' + params[i].seriesName + ' : ' + ad.formatFunc(params[i].value, formatType) + '</li>';
                             } else {
-                                res +='<li class=chartstyle'+i+'>'+  params[i].seriesName + ' : ' + params[i].value + '</li>';
+                                res += '<li class=chartstyle' + i + '>' + params[i].seriesName + ' : ' + params[i].value + '</li>';
                             }
                         }
 
@@ -301,7 +317,7 @@ var op = {
                     ]
                 }
             }
-            var x = util.getX(item, chartConfig);
+            var x = util.getX(item, chartConfig, option);
             if (chartConfig.keyFormat == "week") {
                 if (chartConfig.time) {
                     var hasChange = [];
@@ -374,11 +390,11 @@ var op = {
         var option = {
             tooltip: {
                 trigger: !chartConfig.tt ? "item" : chartConfig.tt,
-                backgroundColor : 'rgba(255,255,255,0.8)',
-                borderColor : '#ededed',
+                backgroundColor: 'rgba(255,255,255,0.8)',
+                borderColor: '#ededed',
                 borderWidth: 1,
-                padding:10,
-                textStyle : {
+                padding: 10,
+                textStyle: {
                     color: '#000',
                     decoration: 'none',
                     fontSize: 12
@@ -857,7 +873,7 @@ var def = {
     }
 }
 var util = {
-    getX: function (item, chartConfig) {
+    getX: function (item, chartConfig, option) {
         var _time = [];
         var key = item[chartConfig.dataKey];
         if (chartConfig.keyFormat) {
@@ -873,10 +889,13 @@ var util = {
                     });
                     return xAxis;
                 } else {
+                    if (key[key.length - 1].toString().indexOf("/点") == -1) {
+                        key[key.length - 1] = key[key.length - 1] + "/点";
+                    }
                     return key;
                 }
             }
-            if(chartConfig.keyFormat=="eq"){
+            if (chartConfig.keyFormat == "eq") {
                 return key;
             }
             if (chartConfig.keyFormat == "day") {
