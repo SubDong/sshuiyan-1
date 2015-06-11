@@ -93,7 +93,7 @@ define(["./module"], function (ctrs) {
             {name: "网站域名", displayName: "网站域名", field: "site_url", maxWidth: '', cellClass: 'table_admin'},
 
             {name: "网站名称", displayName: "网站名称", field: "site_name", maxWidth: '', cellClass: 'table_admin_color'},
-            {name: "首页代码状态", displayName: "首页代码状态", field: "track_code", maxWidth: 500, cellClass: 'table_admin_color'},
+            {name: "首页代码状态", displayName: "首页代码状态", field: "track_status", maxWidth: 500, cellClass: 'table_admin_color'},
             {
                 name: "x6",
                 displayName: "",
@@ -310,6 +310,9 @@ define(["./module"], function (ctrs) {
                 url: url
             }).success(function (dataConfig, status) {
                 $scope.gridOptions.data = dataConfig;
+                $scope.gridOptions.data.forEach(function(data){
+                    data.track_status = data.track_status?"正常":"异常"
+                })
             });
         };
         refushGridData();
