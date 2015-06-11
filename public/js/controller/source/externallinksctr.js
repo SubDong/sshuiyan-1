@@ -67,7 +67,7 @@ define(["./module"], function (ctrs) {
             clear.lineChart(config, checkedVal);
             $scope.charts[1].config.instance = echarts.init(document.getElementById($scope.charts[1].config.id));
             $scope.charts[1].types = checkedVal;
-            var chartArray = [$scope.charts[1]]
+            var chartArray = [$scope.charts[1]];
             requestService.refresh(chartArray);
         }
         $scope.pieFormat = function (data, config) {
@@ -83,26 +83,26 @@ define(["./module"], function (ctrs) {
         }
         $scope.externalinkFormat = function (data, config, e) {
             var json = JSON.parse(eval("(" + data + ")").toString());
-            var result = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", e.types,config);
+            var result = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", e.types, config);
+            result.forEach(function (item) {
+                var _thisCount = 0;
+                item.quota.forEach(function (q) {
+                    _thisCount += Number(q);
+                });
+                item["totalCount"] = _thisCount;
+            })
+            result.sort(chartUtils.by("totalCount"));
+            if (result.length > 3) {
+                result = result.slice(0,3);
+            }
             config['noFormat'] = true;//告知chart工厂无须格式化json，可以直接使用data对象
             config['twoYz'] = "none";
+            console.log(result);
             cf.renderChart(result, config);
             //渲染pie图
             var pieData = chartUtils.getEnginePie(result, "?");
             $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
             cf.renderChart(pieData, $scope.charts[0].config);
-        }
-        $scope.topNFormat = function (data, config, e) {
-            var json = JSON.parse(eval("(" + data + ")").toString());
-            var _key = [];
-            json.forEach(function (e) {
-                e.dimension.buckets.forEach(function (buck) {
-                    if (buck) {
-                    }
-                    //console.log(e.key_as_string + ">>" + buck.value_count);
-                });
-                _key.push(e.key_as_string);
-            });
         }
         $scope.charts = [
             {
@@ -188,13 +188,12 @@ define(["./module"], function (ctrs) {
             var time = chartUtils.getTimeOffset(start, end);
             $rootScope.start = time[0];
             $rootScope.end = time[1];
-            $scope.charts.forEach(function (e) {
-                e.config.keyFormat = "day";
-                var chart = echarts.init(document.getElementById(e.config.id));
-                e.config.instance = chart;
-            })
+            var chart = echarts.init(document.getElementById($scope.charts[1].config.id));
+            $scope.charts[1].config.keyFormat = "day";
+            $scope.charts[1].config.instance = chart;
+            var arrayChart = [$scope.charts[1]];
 
-            requestService.refresh($scope.charts);
+            requestService.refresh(arrayChart);
             $rootScope.tableTimeStart = time[0];
             $rootScope.tableTimeEnd = time[1];
             $rootScope.targetSearch();

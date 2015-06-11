@@ -450,6 +450,13 @@ var chartUtils = {
             }
         }
     },
+    NumAscSort: function (a, b) {
+        return a - b;
+    },
+
+    NumDescSort: function (a, b) {
+        return b - a;
+    },
     addStep: function (json, number) {
         json.forEach(function (e) {
             var _key = [];
