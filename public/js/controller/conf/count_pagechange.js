@@ -140,7 +140,7 @@ define(["./module"], function (ctrs) {
                     url: query
                 }).success(function (dataConfig, status) {
                            console.log(dataConfig);
-                    if (dataConfig == "\"remove\"") {
+                    if (dataConfig == "\"success\"") {
                         refushGridData();
                     }
                 });

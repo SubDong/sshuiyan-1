@@ -292,7 +292,7 @@ define(["./module"], function (ctrs) {
         $scope.gain = function (index, grid, row) {
             var thtml = $rootScope.adminSetHtml.replace("ex_track_id", row.entity.track_id);
             $scope.urlDialog = ngDialog.open({
-                template: $rootScope.adminSetHtml,
+                template: thtml,
                 className: 'ngdialog-theme-default',
                 plain: true,
                 scope: $scope
