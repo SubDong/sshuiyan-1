@@ -178,27 +178,34 @@ define(["./module"], function (ctrs) {
          * @param grid
          * @param row
          */
-        $rootScope.onDelete = function (index, grid, row) {
-            console.log("delete")
-            var query = "/config/site_list?type=delete&query={\"_id\":\"" + row.entity._id + "\"}";
-            $http({
-                method: 'GET',
-                url: query
-            }).success(function (dataConfig, status) {
-                if (dataConfig == "success") {
-                    console.log("delete")
-                    refushGridData();
-                }
-            });
-            ngDialog.open({
-                template: ' 删除成功',
-
+        $scope.onDelete = function (index,grid,row) {
+            $scope.onDeleteDialog= ngDialog.open({
+                template: '' +
+                '<div class="ngdialog-buttons" ><ui><li> 确认删除吗？<span style=" color: red " >（要测试自己新建条删哈！）<span></li></ui>' +
+                '<button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
+                  <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="sureonDelete()">确定</button></div>',
                 className: 'ngdialog-theme-default',
                 plain: true,
                 scope: $scope
             });
 
+            $scope.sureonDelete= function(){
+                $scope.onDeleteDialog.close();
+                var query = "/config/site_list?type=delete&query={\"_id\":\"" + row.entity._id + "\"}";
+                $http({
+                    method: 'GET',
+                    url: query
+                }).success(function (dataConfig, status) {
+                    if (dataConfig == "success") {
+                        refushGridData();
+                    }
+
+                });
+            };
         };
+
+
+
         //暂停弹框
         $scope.stop = function (index, grid, row) {
 
