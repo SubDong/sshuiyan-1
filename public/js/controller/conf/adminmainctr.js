@@ -33,7 +33,7 @@ define(["./module"], function (ctrs) {
             "var _pct= _pct|| [];\<br\>" +
             " (function() {\<br\>" +
             "   var hm = document.createElement(\"script\");\<br\>" +
-            "   hm.src = \"http://t.best-ad.cn/t.js?tid=ex_track_id\";\<br\>" +
+            "   hm.src = \"//t.best-ad.cn/_t.js?tid=ex_track_id\";\<br\>" +
             "   var s = document.getElementsByTagName(\"script\")[0];\<br\>" +
             "    s.parentNode.insertBefore(hm, s);\<br\>" +
             " })();" +
@@ -72,7 +72,7 @@ define(["./module"], function (ctrs) {
             {
                 name: "x6",
                 displayName: "",
-                cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.gain(index,grid,row)'>获取代码</a><span class='glyphicon glyphicon-file'></span></div>",
+                cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.gain()'>获取代码</a><span class='glyphicon glyphicon-file'></span></div>",
                 maxWidth: 100
             },
             {
@@ -90,7 +90,7 @@ define(["./module"], function (ctrs) {
             {
                 name: "x4",
                 displayName: "",
-                cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.stop(index,grid,row)'>暂停</a></div>",
+                cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.stop(index,grid,row)'>{{grid.appScope.x4Text(row)}}</a></div>",
                 maxWidth: 80
             },
             {
@@ -134,7 +134,13 @@ define(["./module"], function (ctrs) {
         //    });
         //};
         //新增网站弹框
+
+
+
+
+
         $scope.open = function () {
+
             $scope.urlconfig.site_url = "";
             $scope.urlconfig.site_name = "";
             $scope.urlDialog = ngDialog.open({
@@ -142,12 +148,12 @@ define(["./module"], function (ctrs) {
               <div class="ngdialog-buttons" >\
                    <ul> \
                    <li>网站域名</li>\
-                    <li><input type="text" data-ng-model="urlconfig.site_url" class="form-control"/></li> \
-                    <li style="color: red;">不能为空</li>\
+                     <li><input type="text" data-ng-focus="site_url_focus = true" data-ng-blur="site_name_focus = false" data-ng-model="urlconfig.site_url" class="form-control"/></li> \
+                    <li data-ng-show="site_url_focus && !urlconfig.site_url" style="color: red;">不能为空</li>\
                     <br>\
                     <li>网站名称</li>\
-                    <li><input type="text" data-ng-model="urlconfig.site_name" class="form-control"/></li> \
-                    <li style="color: red;">不能为空</li>\
+                    <li><input type="text" data-ng-focus="site_name_focus=true" data-ng-blur="site_name_focus =false" data-ng-model="urlconfig.site_name" class="form-control"/></li> \
+                    <li data-ng-show="site_name_focus && !urlconfig.site_name" style="color: red;">不能为空</li>\
                     <br>\
                     <li>可输入如下4种域名形式</li>\
                     <li>1.主域名（如：www.baidu.com）</li>\
@@ -182,6 +188,14 @@ define(["./module"], function (ctrs) {
                     refushGridData();
                 }
             });
+            ngDialog.open({
+                template:' 删除成功',
+
+                className: 'ngdialog-theme-default',
+                plain: true,
+                scope: $scope
+            });
+
         };
         //暂停弹框
         $scope.stop = function (index, grid, row) {
@@ -190,6 +204,9 @@ define(["./module"], function (ctrs) {
             //console.log(grid);
             //console.log(row);
             $scope.onPause = function () {
+                //关闭弹出窗
+                $scope.urlDialog.close();
+
                 //用户ID+url 确定该用户对某个网站是否进行配置
                 var query = "/config/site_list?type=search&query={\"uid\":\"" + row.entity.uid + "\",\"site_url\":\"" + row.entity.site_url + "\"}";
                 $http({
@@ -212,25 +229,38 @@ define(["./module"], function (ctrs) {
                     }
                 });
             };
+            var tip = "";
+            if (row.entity.site_pause) {
+                tip = "重新启用成功";
+            } else {
+                tip = "<li>注意</li><li>暂停后，您将不再分析该网站，直至您重新启用，你确定现在暂停使用吗？</li>"
+            }
             $scope.urlDialog = ngDialog.open({
-                template: '\
-              <div class="ngdialog-buttons" >\
-                        <ul>\
-                        <li>注意</li>\
-                        <li> 暂停后，您将不再分析该网站，直至您重新启用，你确定现在暂停使用吗？</li></ul>   \
-                    <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
-                    <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="onPause()">确定</button>\
-                </div>',
-                className: 'ngdialog-theme-default',
-                plain: true,
-                scope: $scope
+                    template: '\
+                  <div class="ngdialog-buttons" >\
+                            <ul>'+tip+'</ul>   \
+                        <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
+                        <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="onPause()">确定</button>\
+                  </div>',
+                    className: 'ngdialog-theme-default',
+                    plain: true,
+                    scope: $scope
+
             });
+
+        };
+
+        $scope.x4Text = function (row) {
+            if (row.entity.site_pause) {
+                return "重新启用";
+            }
+            return "暂停"
         };
         //获取代码弹框
-        $scope.gain = function (index,grid,row) {
-            var thtml = $rootScope.adminSetHtml.replace("ex_track_id",row.entity.track_id);
+        $scope.gain = function () {
+
             $scope.urlDialog = ngDialog.open({
-                template: thtml,
+                template: $rootScope.adminSetHtml,
                 className: 'ngdialog-theme-default',
                 plain: true,
                 scope: $scope
@@ -266,6 +296,7 @@ define(["./module"], function (ctrs) {
             model.site_url = $scope.urlconfig.site_url;//网站URL 页面输入
             model.site_name = $scope.urlconfig.site_name;//网站名称 页面输入
             model.uid = $cookieStore.get("uid");
+
             //用户ID+url 确定该用户对某个网站是否进行配置
             var query = "/config/site_list?type=search&query={\"uid\":\"" + model.uid + "\",\"site_url\":\"" + model.site_url + "\"}";
             $http({
@@ -293,6 +324,7 @@ define(["./module"], function (ctrs) {
                         });
                     }
                 }
+                $scope.urlDialog.close();
             });
             //refushGridData();
         };

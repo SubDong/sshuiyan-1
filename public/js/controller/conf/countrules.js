@@ -1,7 +1,7 @@
 define(["./module"], function (ctrs) {
     "use strict";
 
-    ctrs.controller('countrules', function ($scope, $http,$rootScope,$cookieStore) {
+    ctrs.controller('countrules', function ($scope, $http,$rootScope,$cookieStore,ngDialog) {
 
 
         //规则IP
@@ -84,6 +84,16 @@ define(["./module"], function (ctrs) {
                     });
 
                 }
+
+            });
+            $scope.urlDialog = ngDialog.open({
+                template: '\
+                  <div class="ngdialog-buttons" >\
+                            <ul>设置保存成功</ul>   \
+                  </div>',
+                className: 'ngdialog-theme-default',
+                plain: true,
+                scope: $scope
 
             });
 

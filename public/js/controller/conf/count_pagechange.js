@@ -44,7 +44,7 @@ define(["./module"], function (ctrs) {
         //配置默认指标
         $rootScope.checkedArray = ["target_name", "target_url", "needPath","record_type","conv_tpye"   ];
         $rootScope.gridArray = [
-            {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>1</div>", maxWidth: 5},
+            {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>", maxWidth: 5},
             {name: "目标名称", displayName: "目标名称", field: "target_name"},
             {name: "路径", displayName: "目标路径", field: "target_url"},
             {name: "是否需要经过路径", displayName: "是否需要经过路径", field: "needPath"},
