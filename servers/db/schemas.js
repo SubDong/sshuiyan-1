@@ -13,7 +13,9 @@ var schemas = {
            event_id:String,//事件ID
            event_name:String,//事件名称
            event_page: String, //事件作用页面
-           create_date:String //创建时间
+           event_method:String, //事件设置方式
+           event_status:String //事件状态 1：启动  0：暂停
+
         }
     },
     //子目录管理

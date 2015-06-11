@@ -252,6 +252,11 @@ define(["angular", "app"], function (ng, app) {
                 url: '/conf/webcountsite/eventchange_add',
                 templateUrl: '../conf/webcountsite/eventchange_add.html'
             })
+            .state('eventchange_update', {
+                url: '/conf/webcountsite/eventchange_update',
+                params:      {'id': null},
+                templateUrl: '../conf/webcountsite/eventchange_update.html'
+            })
             .state('pagechange_add', {
                 url: '/conf/webcountsite/pagechange_add',
                 templateUrl: '../conf/webcountsite/pagechange_add.html'
