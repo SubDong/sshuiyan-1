@@ -4,7 +4,8 @@
 define(["./module"], function (ctrs) {
     "use strict";
 
-    ctrs.controller('pagechange_addctr', function ($scope, $http, $rootScope, $cookieStore,$state) {    //$scope.
+    ctrs.controller('pagechange_update', function ($scope, $http, $rootScope, $cookieStore, $stateParams, ngDialog, $state) {
+
         $scope.page_schema_model = {
             //id: String,
             uid: "",//用户ID
@@ -60,9 +61,9 @@ define(["./module"], function (ctrs) {
         // 添加目标URL
         $scope.targetRemoves = [];
         $scope.targetUrlAdd = function (targets, targetRemoves) {
-            if(targets.length ==4){
+            if (targets.length == 4) {
                 $("#addTargetUrl").html("");
-            }else{
+            } else {
                 $("#addTargetUrl").html("添加页面");
             }
             $scope.showRemove = true;
@@ -129,17 +130,14 @@ define(["./module"], function (ctrs) {
                 method: 'GET',
                 url: url
             }).success(function (dataConfig, status) {
-                if (dataConfig == null || dataConfig.length == 0) {//不存在配置 保存
-                    //console.log("save"+JSON.stringify($scope.page_schema));
-                    var url = "/config/page_conv?type=save&entity=" + JSON.stringify($scope.page_schema);
+                if (dataConfig != null || dataConfig.length == 1) {//不存在配置 保存
+                    //存在配置 更新
+                    console.log("update");
+                    var url = "/config/page_conv?type=update&query={\"uid\":\"" + $scope.page_schema.uid + "\",\"site_id\":\"" + $scope.page_schema.site_id + "\",target_name" + $scope.page_schema.target_name + "\"}&updates=" + JSON.stringify($scope.page_schema);
                     $http({
                         method: 'GET',
                         url: url
                     }).success(function (dataConfig, status) {
-                        //跳转到修改界面
-                        $scope.onUpdate = function (entity) {
-
-                        }
                     });
                 }
                 $state.go('pagechange');

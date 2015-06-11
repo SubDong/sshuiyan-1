@@ -4,7 +4,7 @@
 define(["./module"], function (ctrs) {
     "use strict";
 
-    ctrs.controller('pagechange', function ($http,$scope, $q, $rootScope,$cookieStore,ngDialog) {
+    ctrs.controller('pagechange', function ($http,$scope, $q, $rootScope,$cookieStore,ngDialog, $state) {
         $scope.page_schema_model = {
             //id: String,
             uid: "",//用户ID
@@ -41,6 +41,12 @@ define(["./module"], function (ctrs) {
             other: "其他"
         };
 
+
+        //跳转到修改界面
+        $scope.onUpdate = function (entity) {
+            $state.go('pagechange_update',{ 'id':entity._id});
+        }
+
         //配置默认指标
         $rootScope.checkedArray = ["target_name", "target_url", "needPath","record_type","conv_tpye"   ];
         $rootScope.gridArray = [
@@ -53,7 +59,7 @@ define(["./module"], function (ctrs) {
             {
                 name: "x3",
                 displayName: "",
-                cellTemplate: "<div class='table_admin'><a href=''>修改</a></div>",
+                cellTemplate: "<div class='table_admin' ng-click='grid.appScope.onUpdate(row.entity)'><a href=''>修改</a></div>",
                 maxWidth: 150
             },
             {
@@ -146,6 +152,7 @@ define(["./module"], function (ctrs) {
                 });
             };
         };
+
 
     });
 });
