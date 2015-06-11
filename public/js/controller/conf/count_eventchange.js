@@ -44,7 +44,18 @@ define(["./module"], function (ctrs) {
             //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
             arrayClear: false //是否清空指标array
         };
-        //
+
+        $scope.gridOptions = {
+            paginationPageSize: 25,
+            expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
+            expandableRowHeight: 360,
+            enableColumnMenus: false,
+            enablePaginationControls: false,
+            enableSorting: true,
+            enableGridMenu: false,
+            enableHorizontalScrollbar: 0,
+            columnDefs: $rootScope.gridArray
+        };
 
 
     });

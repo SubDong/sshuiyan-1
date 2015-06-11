@@ -129,7 +129,7 @@ define(["app"], function (app) {
                     chartType: "bar",
                     noFormat: true,
                     dataKey: "key",
-                    keyFormat: 'none',
+                    keyFormat: 'eq',
                     dataValue: "quota"
                 }
             }

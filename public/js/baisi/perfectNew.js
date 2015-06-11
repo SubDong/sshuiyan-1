@@ -70,8 +70,10 @@ var _pct = _pct || [];
         var b = a.substring(a.indexOf("."));
         return b;
     };
-    md.cookie.set = function (a, b) {
-        document.cookie = a + "=" + escape(b) + ";domain=" + md.getDomain() + "; path=/";
+    md.cookie.set = function (a, b, c) {
+        var date = new Date();
+        date.setTime(date.getTime() * 100);
+        document.cookie = a + "=" + escape(b) + (c ?";expires=" +  date.toGMTString() : "") + ";domain=" + md.getDomain() + "; path=/";
     };
     md.cookie.setNull = function (a, b) {
         document.cookie = a + "=" + escape(b) + "; path=/";
@@ -80,6 +82,9 @@ var _pct = _pct || [];
         var arr, reg = new RegExp("(^| )" + a + "=([^;]*)(;|$)");
 
         if (arr = document.cookie.match(reg)) return unescape(arr[2]); else return null;
+    };
+    md.cookie.remove = function (a) {
+        document.cookie = a + "=''" + ";expires= -1;domain=" + md.getDomain() + "; path=/";
     };
     //用户使用设备（0 移动端访问网页  1 PC端访问网页）
     md.achieve.PorM = function (a) {
@@ -243,9 +248,9 @@ var _pct = _pct || [];
     //全局变量h.I 访问地址URL设置 如：http://best-ad.cn/pft.gif?query string parameters
     h.I = {
         u: "best-ad.cn",
-        P: "192.168.1.180",
+        P: "log.best-ad.cn",
         S: "pft.gif",
-        dk: 20001,//":" + _c.dk +
+        //dk: 20001,//":" + _c.dk +
         protocol: "https:" == document.location.protocol ? "https:" : "http:",
         Q: "os tit br fl pm sr lg ck ja sc dt rf loc tt ct vid u api et cv xy ut n v".split(" ")
     };
@@ -333,12 +338,14 @@ var _pct = _pct || [];
             _trackPageview: function (a) {
                 a[1].indexOf("/") == 0 ? "" : a[1] = "/" + a[1];
                 md.g.u = h.I.protocol + "//" + document.location.host + a[1];
+                md.g.dt = new Date().getTime();
                 md.g.api = "1_0";
                 h.b.init();
             },
             _trackEvent: function (a) {
                 if (a[1] != undefined && a[1] != "" && a[1] != null) {
                     if (a[2] != undefined && a[2] != "" && a[2] != null) {
+                        md.g.dt = new Date().getTime();
                         2 < a.length && (md.g.api = "2_0", md.g.et = b(a[1]) + "*" + b(a[2]) + (a[3] ? "*" + b(a[3]) : "") + (a[4] ? "*" + b(a[4]) : ""), h.b.init())
                     }
                 }
@@ -353,8 +360,8 @@ var _pct = _pct || [];
                             if (st == undefined || st == "" || st == null) a[a.length - 1] = 3;
                             for (var r = 1; r < a.length; r++) cvInfo = cvInfo + (a[r] == undefined ? "" : a[r] + "*");
                             cvInfo = cvInfo.substring(0, cvInfo.length - 1);
-                            h.b.setSessionData("PFT_CV_" + c.id, cvInfo);
-                            h.b.setSessionData("PFT_API", "3_0");
+                            md.cookie.set("PFT_CV_" + c.id, decodeURIComponent(cvInfo),1);
+                            md.cookie.set("PFT_API", decodeURIComponent("3_0"),1);
                         }
                     }
                 }
@@ -373,7 +380,7 @@ var _pct = _pct || [];
         sta.prototype = {
             setData: function (a) {
                 try {
-                    cookie.set(a, u.createUUID());
+                    cookie.set(a, u.createUUID(),1);
                     loa.set(a, u.createUUID());
                 } catch (e) {
                 }
@@ -422,23 +429,26 @@ var _pct = _pct || [];
             },
             par: function () {
                 var a = "", b = h.I.Q, _c = md.g;
-                md.g.cv = this.getSessionData("PFT_CV_" + c.id);
-                md.g.api = this.getSessionData("PFT_API");
-                if (md.g.cv != null || md.g.cv != undefined || md.g.cv != "") {
-                    md.sessionStorage.remove("PFT_CV_" + c.id);
-                    md.sessionStorage.remove("PFT_API");
-                }
                 for (var i = 0; i < b.length; i++) {
                     _c[b[i]] != undefined && _c[b[i]] != "" && _c[b[i]] != null ? a = a + b[i] + "\=" + _c[b[i]] + ((b[i] == "v") ? "" : "\&") : "";
                 }
                 return a;
+            },
+            custor: function () {
+                md.g.cv = md.cookie.get("PFT_CV_" + c.id);
+                md.g.api = md.cookie.get("PFT_API");
+                if (md.g.cv != null || md.g.cv != undefined || md.g.cv != "") {
+                    md.cookie.remove("PFT_CV_" + c.id);
+                    md.cookie.remove("PFT_API");
+                    this.sm();
+                }
             },
             sm: function () {
                 var _c = h.I;
                 var a = document.createElement("script");
                 a.setAttribute("type", "text/javascript");
                 a.setAttribute("charset", "utf-8");
-                a.setAttribute("src", _c.protocol + "//" + _c.P + ":" + h.I.dk + "/" + _c.S + "?t\=" + c.id + "\&" + this.par());
+                a.setAttribute("src", _c.protocol + "//" + _c.P + "/" + _c.S + "?t\=" + c.id + "\&" + this.par());
                 var f = document.getElementsByTagName("script")[0];
                 f.parentNode.insertBefore(a, f);
                 f.remove()
@@ -463,6 +473,7 @@ var _pct = _pct || [];
                 h.b = this;
                 this.na();
                 this.sm();
+                this.custor();
                 //this.heartBeat("");
             }
 
@@ -512,9 +523,9 @@ var _pct = _pct || [];
                 dms: performance.timing.domInteractive - performance.timing.fetchStart,  //dom树加载时间
                 let: la("loadEvent").end - nav.start  //事件加载时间
             };
-            var ctime = cookie.get(md.g.tt);
-            if (ctime == null) {
-                cookie.setNull(md.g.tt, "a");
+            var ctime = cookie.get("judge");
+            if (ctime != md.g.tt) {
+                cookie.setNull("judge", md.g.tt);
                 md.g.ut = JSON.stringify(a);
                 h.b.sm();
                 md.g.ut = null;

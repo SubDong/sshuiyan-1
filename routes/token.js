@@ -18,6 +18,7 @@ function tokener(req, res, next) {
             return;
         } else {
             var userinfo = JSON.parse(redis_res);
+            console.log(userinfo)
             req.session.user = userinfo;
             //if (userinfo.baiduAccounts.length > 0) {
             //    req.session.currentBaiduUser = userinfo.baiduAccounts[0];

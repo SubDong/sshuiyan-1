@@ -46,7 +46,7 @@ if (env == 'dev') {
             port: config.redis.port,
             pass: config.redis.options.auth_pass,
             unref: false,
-            db: 10
+            db: config.redis.sessiondb
         }),
         resave: false,
         saveUninitialized: false,
@@ -62,7 +62,7 @@ if (env == 'dev') {
             port: config.redis.port,
             pass: config.redis.options.auth_pass,
             unref: false,
-            db: 10
+            db: config.redis.sessiondb
         }),
         resave: false,
         saveUninitialized: false,
@@ -90,8 +90,8 @@ app.use(function (req, res, next) {
     req.redisclient = redis_client;
     req.accountid = req.session.accountid;
     if (req.session.user) {
-        res.cookie('uname', JSON.stringify(req.session.user.userName),{ maxAge: 60000 });
-        res.cookie('uid', JSON.stringify(req.session.user.id),{ maxAge: 60000 });
+        res.cookie('uname', JSON.stringify(req.session.user.userName), {maxAge: 60000});
+        res.cookie('uid', JSON.stringify(req.session.user.id), {maxAge: 60000});
 
 
         var promise = daos.findSync("sites_model", JSON.stringify({uid: req.session.user.id}), null, {});
@@ -125,7 +125,7 @@ app.use(function (req, res, next) {
                 })
             }
 
-            res.cookie('usites', '' + JSON.stringify(usites) + '',{ maxAge: 60000 });
+            res.cookie('usites', '' + JSON.stringify(usites) + '', {maxAge: 60000});
             next();
         })
     } else {
