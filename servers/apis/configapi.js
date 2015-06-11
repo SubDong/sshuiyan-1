@@ -29,7 +29,7 @@ api.get("/subdirectory_list", function (req, res) {
             break;
         case "search":
             dao.find(schema_name, query['query'], null, {}, function (err, docs) {
-                datautils.send(res, docs);
+                    datautils.send(res, docs);
             });
             break;
         case "update":
@@ -43,6 +43,12 @@ api.get("/subdirectory_list", function (req, res) {
             var qry = query['query'];
             dao.remove(schema_name, qry, function (docs) {
                 datautils.send(res, "success");
+            });
+            break;
+        case "findById":
+            var qry = query['query'];
+            dao.findById(schema_name, query['query'], null, {}, function (err, docs) {
+                datautils.send(res, docs);
             });
             break;
         default :

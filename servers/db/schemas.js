@@ -27,16 +27,8 @@ var schemas = {
             subdirectory_url: String,//子目录
             is_regular: Boolean,//是否使用正则表达式
             analysis_url: String, //分析的目录
-
-
             not_analysis_url: String, //不分析的目录
-            create_date: String,//创建时间
-
-            not_analysis_url: String, //不分析的目录
-            create_date: Date,//创建时间
-            not_analysis_url: String, //不分析的目录
-            create_date: Date //创建时间
-
+            create_date: String//创建时间
         }
     },
 

@@ -4,47 +4,74 @@
 define(["./module"], function (ctrs) {
     "use strict";
 
-    ctrs.controller('childlist_add', function ($scope, $http,$rootScope,$cookieStore) {
 
-        //×ÓÄ¿Â¼¶ÔÏó
+    ctrs.directive('remoteValidation', function ($http) {
+        return {
+            require: 'ngModel',
+            link: function (scope, elm, attrs, ctrl) {
+                elm.bind('keyup', function () {
+
+
+                    var url = "/config/subdirectory_list?type=search&query={\"subdirectory_url\":\"" + scope.subdirectory.subdirectory_url + "\"}";
+
+                    $http({method: 'GET', url: url}).
+                        success(function (data, status, headers, config) {
+                            if (data.length > 0) {
+                                ctrl.$setValidity('remote', false);
+                            } else {
+                                ctrl.$setValidity('remote', true);
+                            }
+                        }).
+                        error(function (data, status, headers, config) {
+                            ctrl.$setValidity('remote', false);
+                        });
+
+
+                });
+            }
+        };
+    });
+
+    ctrs.controller('childlist_add', function ($scope, $http, $rootScope, $cookieStore, ngDialog, $state) {
+
+
         $scope.subdirectory = {};
-        //ÊÇ·ñÊ¹ÓÃÕıÔò±í´ïÊ½
+
         $scope.subdirectory.is_regular = "0";
-        //Òª·ÖÎöµÄÒ³Ãæ
-        $scope.subdirectory.analysis_url ="";
-        //²»·ÖÎöµÄÒ³Ãæ
-        $scope.subdirectory.not_analysis_url ="";
-        //×ÓÄ¿Â¼Ãû³Æ
-        $scope.subdirectory.subdirectory_url="";
-        // user id ÓÃ»§ID
-        $scope.subdirectory.uid =  $cookieStore.get("uid");
-        // ¸ùÄ¿Â¼
-        $scope.subdirectory.root_url =$rootScope.userType;
-        //´´½¨Ê±¼ä
+
+        $scope.subdirectory.analysis_url = "";
+
+        $scope.subdirectory.not_analysis_url = "";
+
+        $scope.subdirectory.subdirectory_url = "";
+
+        $scope.subdirectory.uid = $cookieStore.get("uid");
+
+        $scope.subdirectory.root_url = $rootScope.userType;
+
         $scope.subdirectory.create_date = new Date().Format("yyyy-MM-dd hh:mm:ss");
 
 
-
-        $scope.pages =[{
-            url:""
+        $scope.pages = [{
+            url: ""
         }];
 
-        $scope.no_pages =[{
-            url:""
+        $scope.no_pages = [{
+            url: ""
         }];
 
 
         $scope.ipArea = {
-            "tNum": "1",//µ±Ç°¸öÊı£¿
-            "tText": "",//ÄÚÈİ
-            "count": 1,//¸öÊı
-            "helpFlag": false//ÊÇ·ñÏÔÊ¾°ï×éĞÅÏ¢
+            "tNum": "1",//å½“å‰ä¸ªæ•°ï¼Ÿ
+            "tText": "",//å†…å®¹
+            "count": 1,//ä¸ªæ•°
+            "helpFlag": false//æ˜¯å¦æ˜¾ç¤ºå¸®ç»„ä¿¡æ¯
         };
 
 
         $scope.childlist_add_yes = angular.copy($scope.ipArea);
         $scope.childlist_add_no = angular.copy($scope.ipArea);
-        //¹æÔòIP
+
         $scope.myFocus = function (obj) {
             obj.helpFlag = true;
         };
@@ -54,42 +81,64 @@ define(["./module"], function (ctrs) {
         };
         $scope.addPage = function (o) {
             o.push({
-                url:""
+                url: ""
             });
         };
-        $scope.deletePage=function(p){
+        $scope.deletePage = function (p) {
             p.pop();
         };
 
+        $scope.onCancel = function () {
+            $state.go('childlist');
+        }
 
-        $scope.onSaveSubdirectory = function (){
+
+        $scope.onSaveSubdirectory = function () {
 
             $scope.subdirectory.analysis_url = listToStirng($scope.pages);
 
             $scope.subdirectory.not_analysis_url = listToStirng($scope.no_pages);
 
-            var entity =  JSON.stringify($scope.subdirectory);
+            var entity = JSON.stringify($scope.subdirectory);
 
 
-            var url= "/config/subdirectory_list?type=save&entity="+entity;
+            var url = "/config/subdirectory_list?type=save&entity=" + entity;
             $http({
                 method: 'GET',
                 url: url
             }).success(function (dataConfig, status) {
-                alert("save success");
-             });
+
+
+                $scope.urlDialog = ngDialog.open({
+                    preCloseCallback: function() {
+                        $state.go('childlist');
+                    },
+                    template: '\
+              <div class="ngdialog-buttons" >\
+                        <ul>\
+                        <li> ä¿å­˜æˆåŠŸ</li></ul>   \
+                    <a href="#conf/webcountsite/childlist" ng-click=closeThisDialog(0)>ç¡®å®š</a>\
+                </div>',
+                    className: 'ngdialog-theme-default',
+                    plain: true,
+                    scope: $scope
+                });
+
+            });
 
         };
 
         var listToStirng = function (list) {
             var str = "";
             list.forEach(function (page) {
-                str += page.url +",";
+                str += page.url + ",";
             })
-            str=str.substring(0,str.length-1);
+            str = str.substring(0, str.length - 1);
             return str;
         }
 
 
     });
+
+
 });
