@@ -23,7 +23,7 @@
         <div class="exchange_top">
             <ul>
                 <li ng-repeat="exchange in exchanges " ng-class="{ 'current': $index == selectedIndex }"
-                    ng-click="itemClicked(exchange)">
+                    ng-click="itemClicked(exchange, $index)">
                     <div class="webname">{{exchange.name}}</div>
                     <div class="web_scale">
                         <span>PV:{{exchange.pv}}</span>
