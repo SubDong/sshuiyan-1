@@ -27,29 +27,14 @@
                                id="addTargetUrl" style="line-height: 33px"
                                class="{{page_schema.target_url.length==4?cancelAdd:0}}">添加页面</a>
                         </div>
-                        <div class="col-xs-2">
+                        <div class="col-xs-1">
                             <span class="remove"
                                   data-ng-click="removeTargetUrl(page_schema.target_url,targetRemoves,$index)"
                                   style="margin-top: 7px;" ng-show="showRemove"
                                   data-ng-repeat="targetRemove in targetRemoves"><i
                                     class="glyphicon glyphicon-remove"></i></span>
                         </div>
-                        <div class="clearfix"></div>
-                        <div style="width: 200px">
-                            <div class="choice_record_way"><span data-ng-click="record=!record">可选择记录方式&nbsp;&nbsp;<i
-                                    class="caret"></i></span></div>
-                            <div class="record_way" ng-show="record">
-                                <ul>
-                                    <li><label><input type="radio" name="record" ng-checked="radio_record.visit_times"
-                                                      data-ng-click="chooseRecordType('visit_time')">访问次数</label></li>
-                                    <li><label><input type="radio" name="record" data-ng-click="chooseRecordType('pv')"
-                                                      ng-checked="radio_record.pv">测量PV</label></li>
-                                    <li><label><input type="radio" name="record" ng-checked="radio_record.order_conv"
-                                                      data-ng-click="chooseRecordType('order_conv')">订单转化</label>&nbsp;&nbsp;&nbsp;&nbsp;<span>插入订单号</span>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+
                     </div>
                     <div class="col-xs-4">
                         <div>
@@ -61,6 +46,22 @@
                                     </p>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div style="width: 200px">
+                        <div class="choice_record_way"><span data-ng-click="record=!record">可选择记录方式&nbsp;&nbsp;<i
+                                class="caret"></i></span></div>
+                        <div class="record_way" ng-show="record">
+                            <ul>
+                                <li><label><input type="radio" name="record" ng-checked="radio_record.visit_times"
+                                                  data-ng-click="chooseRecordType('visit_time')">访问次数</label></li>
+                                <li><label><input type="radio" name="record" data-ng-click="chooseRecordType('pv')"
+                                                  ng-checked="radio_record.pv">测量PV</label></li>
+                                <li><label><input type="radio" name="record" ng-checked="radio_record.order_conv"
+                                                  data-ng-click="chooseRecordType('order_conv')">订单转化</label>&nbsp;&nbsp;&nbsp;&nbsp;<span>插入订单号</span>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
