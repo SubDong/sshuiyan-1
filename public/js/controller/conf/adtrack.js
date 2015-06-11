@@ -66,15 +66,36 @@ define(["./module"], function (ctrs) {
         };
 
         //删除按钮
-        $scope.onDelete = function(index,grid,row){
-            var query = "/config/adtrack?type=delete&query={\"_id\":\"" + row.entity._id +  "\"}";
-            $http({
-                method: 'GET',
-                url: query
-            }).success(function (dataConfig, status) {
-                refushGridData();
+        $scope.onDelete = function (index,grid,row) {
+            $scope.onDeleteDialog= ngDialog.open({
+                template: '' +
+                '<div class="ngdialog-buttons" ><ui><li> 确认删除吗？<span style=" color: red " >（要测试自己新建条删哈！）<span></li></ui>' +
+                '<button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
+                  <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="sureonDelete()">确定</button></div>',
+                className: 'ngdialog-theme-default',
+                plain: true,
+                scope: $scope
             });
+
+            $scope.sureonDelete= function(){
+                $scope.onDeleteDialog.close();
+                var query = "/config/adtrack?type=delete&query={\"_id\":\"" + row.entity._id +  "\"}";
+                $http({
+                    method: 'GET',
+                    url: query
+                }).success(function (dataConfig, status) {
+                    console.log(dataConfig);
+                    if (dataConfig == "\"remove\"") {
+
+                        refushGridData();
+                    }
+
+                });
+            };
         };
+
+
+
         var refushGridData = function () {
             var uid = $cookieStore.get("uid");
             var site_id = $rootScope.userType;
@@ -83,7 +104,6 @@ define(["./module"], function (ctrs) {
                 method: 'GET',
                 url: url
             }).success(function (dataConfig, status) {
-
                 $scope.gridArray.data = dataConfig;
                 console.log(dataConfig);
             });

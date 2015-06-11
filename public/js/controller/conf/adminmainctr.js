@@ -109,7 +109,7 @@ define(["./module"], function (ctrs) {
             {
                 name: "x3",
                 displayName: "",
-                cellTemplate: "<div class='table_box'> <span onmousemove='getMyButton(this)' class='table_admin glyphicon glyphicon-cog'>设置</span><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history7' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='javascript:void(0)'>查看来源分布</a></li><li><a href='javascript:void(0)' ng-click='grid.appScope.showEntryPageLink(row)'>查看入口页链接</a></li></ul></div></div>",
+                cellTemplate: "<div data-ng-focus='fzk '  class='table_admin'><span class='glyphicon glyphicon-cog'></span> <a href=''>设置</a> </div><div data-ng-show='fzk' >1</div>",
                 maxWidth: 80
             },
             {
