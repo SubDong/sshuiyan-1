@@ -138,15 +138,14 @@ define(["./module"], function (ctrs) {
 
             $scope.sureonDelete= function(){
                 $scope.onDeleteDialog.close();
-                var query = "/config/site_list?type=delete&query={\"_id\":\"" + row.entity._id + "\"}";
+                var query = "/config/page_conv?type=delete&query={\"_id\":\"" + row.entity._id + "\"}";
                 $http({
                     method: 'GET',
                     url: query
-                }).success(function (dataConfig, status) {
-                    if (dataConfig == "success") {
+                }).success(function (res, status) {
+                    if (res == "\"success\"") {
                         refushGridData();
                     }
-
                 });
             };
         };

@@ -207,7 +207,7 @@ api.get("/page_conv", function (req, res) {
             break;
         case "delete":
             dao.remove(schema_name, query['query'], function () {
-                datautils.send(res, "remove");
+                datautils.send(res, "success");
             });
             break;
         default :
