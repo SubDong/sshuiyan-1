@@ -118,6 +118,7 @@ define(["./module"], function (ctrls) {
                     bGap: false,
                     chartType: "line",
                     lineType: false,
+                    auotHidex:true,
                     keyFormat: "none",
                     dataKey: "key",
                     dataValue: "quota"

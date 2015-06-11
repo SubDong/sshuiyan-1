@@ -33,7 +33,7 @@ api.get("/subdirectory_list", function (req, res) {
             break;
         case "search":
             dao.find(schema_name, query['query'], null, {}, function (err, docs) {
-                datautils.send(res, docs);
+                    datautils.send(res, docs);
             });
             break;
         case "update":
@@ -46,6 +46,12 @@ api.get("/subdirectory_list", function (req, res) {
             var qry = query['query'];
             dao.remove(schema_name, qry, function (docs) {
                 datautils.send(res, "success");
+            });
+            break;
+        case "findById":
+            var qry = query['query'];
+            dao.findById(schema_name, query['query'], null, {}, function (err, docs) {
+                datautils.send(res, docs);
             });
             break;
         default :
@@ -97,7 +103,7 @@ api.get("/site_list", function (req, res) {
             var update = query['updates'];
             dao.update(schema_name, query['query'], query['updates'], function (err, docs) {
                 //track_id
-                if (docs != null && docs.length == 1 && update.track_id != docs[0].track_id) {
+                /*if (docs != null && docs.length == 1 && update.track_id != docs[0].track_id) {
                     req.redisclient.get(docs[0].track_id, function (error, redis_type_id) {
                         if (redis_type_id != null && redis_type_id != "")
                             req.redisclient.set(update.track_id, redis_type_id, function (err, reply) {//es
@@ -109,7 +115,7 @@ api.get("/site_list", function (req, res) {
                             });
                     });
 
-                }
+                }*/
                 datautils.send(res, docs);
             });
             break;
@@ -202,7 +208,7 @@ api.get("/page_conv", function (req, res) {
             break;
         case "delete":
             dao.remove(schema_name, query['query'], function () {
-                datautils.send(res, "remove");
+                datautils.send(res, "success");
             });
             break;
         default :

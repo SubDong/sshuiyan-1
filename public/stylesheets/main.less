@@ -3579,13 +3579,26 @@ textarea.tNum {
 .secondary_table {
   .ui-grid-row:nth-child(even) .ui-grid-cell {
     background: #fff;
-    // border-top:1px solid #f3f3f3;
+ border-top:1px solid #f3f3f3;
 
   }
   .ui-grid-row:nth-child(odd) .ui-grid-cell {
     background: #fff;
-    //border-top:1px solid #f3f3f3;
+    border-top:1px solid #f3f3f3;
   }
+.expandableRow{
+  background:#fdfdfd;
+  .ui-grid-row:nth-child(even) .ui-grid-cell {
+   // background: #fff;
+    border:none !important;
+
+  }
+  .ui-grid-row:nth-child(odd) .ui-grid-cell {
+    background: #fff;
+    border:none !important;
+  }
+
+}
 }
 
 //图表

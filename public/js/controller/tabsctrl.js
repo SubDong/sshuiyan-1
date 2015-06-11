@@ -150,7 +150,7 @@ define(["app"], function (app) {
                     maxWidth: 10
                 },
                 {name: '地域', displayName: "地域", field: "region"},
-                {name: '访问时间', displayName: "访问时间", field: "visitTime",minWidth:150},
+                {name: '访问时间', displayName: "访问时间", field: "visitTime", minWidth: 150},
                 {
                     name: '来源',
                     displayName: "来源",
@@ -1035,6 +1035,7 @@ define(["app"], function (app) {
             if ($rootScope.tableSwitch.isJudge)$rootScope.tableSwitch.tableFilter = undefined;
 
             var a = b.$parent.$parent.row.entity[$rootScope.tableSwitch.latitude.field];
+            $rootScope.webName = "[" + a + "]";
             var s = a.split(",");
             s.length > 0 ? a = s[0] : "";
             $rootScope.tableSwitch.tableFilter = "[{\"" + $rootScope.tableSwitch.latitude.field + "\":[\"" + getField(a, $rootScope.tableSwitch.latitude.field) + "\"]}]";

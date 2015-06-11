@@ -40,6 +40,7 @@ define(["./module"], function (ctrs) {
             enableGridMenu: false,
             enableHorizontalScrollbar: 0,
             columnDefs: [
+                {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>", maxWidth: 5},
                 {name: "目标URL", displayName: "目标URL", field: "targetUrl"},
                 {name: "媒体平台", displayName: "媒体平台", field: "mediaPlatform"},
                 {name: "广告类型", displayName: "广告类型", field: "adTypes"},

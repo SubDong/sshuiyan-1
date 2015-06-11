@@ -4,7 +4,7 @@
 define(["./module"], function (ctrs) {
     "use strict";
 
-    ctrs.controller('pagechange', function ($http,$scope, $q, $rootScope,$cookieStore) {
+    ctrs.controller('pagechange', function ($http,$scope, $q, $rootScope,$cookieStore,ngDialog) {
         $scope.page_schema_model = {
             //id: String,
             uid: "",//用户ID
@@ -44,7 +44,7 @@ define(["./module"], function (ctrs) {
         //配置默认指标
         $rootScope.checkedArray = ["target_name", "target_url", "needPath","record_type","conv_tpye"   ];
         $rootScope.gridArray = [
-            {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>1</div>", maxWidth: 5},
+            {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>", maxWidth: 5},
             {name: "目标名称", displayName: "目标名称", field: "target_name"},
             {name: "路径", displayName: "目标路径", field: "target_url"},
             {name: "是否需要经过路径", displayName: "是否需要经过路径", field: "needPath"},
@@ -66,7 +66,7 @@ define(["./module"], function (ctrs) {
                 name: "x4",
                 displayName: "",
                 // grid.appScope.Delete(row, grid.options.data)
-                cellTemplate: "<div class='table_admin'><a href='' ng-click='grid.options.data.splice(grid.options.data.indexOf(row.entity), 1);' >删除</a></div>",
+                cellTemplate: "<div class='table_admin'><a href='' ng-click='grid.appScope.onDelete(index,grid,row)' >删除</a></div>",
                 maxWidth: 100
             }
 
@@ -108,8 +108,11 @@ define(["./module"], function (ctrs) {
                     }
                     if(item.target_url!=null&&item.target_url.length>0){
                         var url="";
-                        item.target_url.forEach(function(item,i){
-                            url=url+item.url+"";
+                        item.target_url.forEach(function(u,i){
+                            url=url+u.url;
+                            if(i<item.target_url.length-1){
+                                url=url+"或";
+                            }
                         })
                         $rootScope.gridOptions.data[i].target_url=url;
                     }
@@ -124,6 +127,31 @@ define(["./module"], function (ctrs) {
             });
         };
         refushGridData();
+        $scope.onDelete = function (index,grid,row) {
+            $scope.onDeleteDialog= ngDialog.open({
+                template: '' +
+                '<div class="ngdialog-buttons" ><ui><li> 确认删除吗？<span style=" color: red " >（要测试自己新建条删哈！）<span></li></ui>' +
+                '<button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
+                    <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="sureonDelete()">确定</button></div>',
+
+                className: 'ngdialog-theme-default',
+                plain: true,
+                scope: $scope
+            });
+
+            $scope.sureonDelete= function(){
+                $scope.onDeleteDialog.close();
+                var query = "/config/page_conv?type=delete&query={\"_id\":\"" + row.entity._id + "\"}";
+                $http({
+                    method: 'GET',
+                    url: query
+                }).success(function (res, status) {
+                    if (res == "\"success\"") {
+                        refushGridData();
+                    }
+                });
+            };
+        };
 
     });
 });
