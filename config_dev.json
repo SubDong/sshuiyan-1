@@ -11,9 +11,10 @@
     "port": 6379,
     "options": {
       "auth_pass": "3edcvfr4"
-    }
+    },
+    "sessiondb": 10
   },
-  "mongo":{
-    "url":"mongodb://192.168.100.10:23135/conf"
+  "mongo": {
+    "url": "mongodb://192.168.100.10:23135/conf"
   }
 }

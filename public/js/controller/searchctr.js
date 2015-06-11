@@ -107,7 +107,7 @@ define(["./module"], function (ctrs) {
                         auotHidex: true,
                         id: "indicators_charts",
                         chartType: "bar",//图表类型
-                        keyFormat: 'none',
+                        keyFormat: 'eq',
                         noFormat: true,
                         dataKey: "key",//传入数据的key值
                         dataValue: "quota"//传入数据的value值
@@ -149,6 +149,7 @@ define(["./module"], function (ctrs) {
                             util.renderLegend(chart, $scope.charts[0].config);
                             Custom.initCheckInfo();
                         }
+                        console.log(total_result);
                         cf.renderChart(total_result, $scope.charts[0].config);
                         chart.hideLoading();
                     });

@@ -382,7 +382,7 @@ define(["../app"], function (app) {
                 scope.setDefaultShowArray = function () {
                     var tempArray = [];
                     angular.forEach(scope.ds_dateShowQuotasOption, function (q_r) {
-                        tempArray.push({"label": q_r, "value": 0, "cValue": 0, "count": 0});
+                        tempArray.push({"label": q_r, "value": 0, "cValue": 0, "count": 0, "cCount": 0});
                     });
                     scope.ds_keyData = [];
                     scope.dateShowArray = $rootScope.copy(tempArray);
@@ -480,7 +480,11 @@ define(["../app"], function (app) {
                     });
                     // 设置_count
                     angular.forEach(_array, function (obj) {
-                        obj.count = _count;
+                        if (flag) {
+                            obj.cCount = _count;
+                        } else {
+                            obj.count = _count;
+                        }
                     });
 
                     scope.dateShowArray = $rootScope.copy(_array);
@@ -508,7 +512,11 @@ define(["../app"], function (app) {
                     });
                     // 设置_count
                     angular.forEach(_array, function (obj) {
-                        obj.count = _count;
+                        if (flag) {
+                            obj.cCount = _count;
+                        } else {
+                            obj.count = _count;
+                        }
                     });
 
                     scope.dateShowArray = $rootScope.copy(_array);
@@ -563,7 +571,7 @@ define(["../app"], function (app) {
                 scope.setDefaultShowArray = function () {
                     var tempArray = [];
                     angular.forEach(scope.ds_dateShowQuotasOption, function (q_r) {
-                        tempArray.push({"label": q_r, "value": 0, "cValue": 0, "count": 0});
+                        tempArray.push({"label": q_r, "value": 0, "cValue": 0, "count": 0, "cCount": 0});
                     });
                     scope.ds_keyData = [];
                     scope.dateShowArray = $rootScope.copy(tempArray);
@@ -630,7 +638,11 @@ define(["../app"], function (app) {
                         });
                         // 设置_count
                         angular.forEach(_array, function (obj) {
-                            obj.count = _count;
+                            if (flag) {
+                                obj.cCount = _count;
+                            } else {
+                                obj.count = _count;
+                            }
                         });
                     } else {
                         var obj = JSON.parse(eval('(' + result + ')').toString()); //由JSON字符串转换为JSON对象
@@ -645,8 +657,13 @@ define(["../app"], function (app) {
                             });
                             angular.forEach(_array, function (_array_r) {
                                 if (_array_r.label == dateShowObject.label) {
-                                    _array_r.count = count;
-                                    flag ? (_array_r.cValue = temp) : (_array_r.value = temp);
+                                    if (flag) {
+                                        _array_r.cCount = count;
+                                        _array_r.cValue = temp
+                                    } else {
+                                        _array_r.count = count;
+                                        _array_r.value = temp
+                                    }
                                 }
                             });
                         });
@@ -678,6 +695,11 @@ define(["../app"], function (app) {
                     });
                     scope.loadCompareDataShow(startTime, endTime);
                 });
+
+                scope.$on("ssh_data_show_refresh", function (e) {
+                    scope.isCompared = false;
+                    scope.loadDataShow();
+                });
             }
         };
     });
@@ -691,42 +713,21 @@ define(["../app"], function (app) {
             templateUrl: '../commons/date_show.html',
             scope: 'true',
             link: function (scope, element, attris, controller) {
-                scope.isCompared = false;
-                scope.dateShowArray = [];
-                scope.defaultDataShowArray = [{
-                    label: "freq",
-                    value: 0,
-                    count: 0
-                }, {
-                    label: "baidu",
-                    value: 0,
-                    count: 0
-                }, {
-                    label: "sougou",
-                    value: 0,
-                    count: 0
-                }, {
-                    label: "haosou",
-                    value: 0,
-                    count: 0
-                }, {
-                    label: "bing",
-                    value: 0,
-                    count: 0
-                }, {
-                    label: "other",
-                    value: 0,
-                    count: 0
-                }];
+                scope.ds_l_a = ["freq", "baidu", "sougou", "haosou", "bing", "other"];
+                scope.initDefaultShowArray = function () {
+                    var t_a = [];
+                    scope.ds_l_a.forEach(function (_r) {
+                        t_a.push({"label": _r, "value": 0, "cValue": 0, "count": 0, "cCount": 0});
+                    });
+                    scope.dateShowArray = $rootScope.copy(t_a);
+                };
                 scope.loadDataShow = function () {
-                    scope.dateShowArray = angular.copy(scope.defaultDataShowArray);
                     var semRequest = $http.get(SEM_API_URL + "elasticsearch/" + $rootScope.userType
-                        + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd);
+                    + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd);
                     $q.all([semRequest]).then(function (final_result) {
                         angular.forEach(final_result[0].data, function (r) {
                             angular.forEach(scope.dateShowArray, function (q_r) {
                                 var temp = q_r.label;
-                                var value = r[temp];
                                 q_r.value += temp != "freq" ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
                                 q_r.count = final_result[0].data.length;
                             });
@@ -735,33 +736,42 @@ define(["../app"], function (app) {
                 };
                 scope.loadCompareDataShow = function (startTime, endTime) {
                     var semRequest = $http.get(SEM_API_URL + "elasticsearch/" + $rootScope.userType
-                        + "/?startOffset=" + startTime + "&endOffset=" + endTime);
+                    + "/?startOffset=" + startTime + "&endOffset=" + endTime);
                     $q.all([semRequest]).then(function (final_result) {
-                        // 初始化对比数据
-                        angular.forEach(scope.dateShowArray, function (q_r) {
-                            q_r.cValue = 0;
-                        });
                         angular.forEach(final_result[0].data, function (r) {
                             angular.forEach(scope.dateShowArray, function (q_r) {
                                 var temp = q_r.label;
-                                var value = r[temp];
                                 q_r.cValue += temp != "freq" ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
-                                q_r.count = final_result[0].data.length;
+                                q_r.cCount = final_result[0].data.length;
                             });
                         });
                     });
                 };
+                scope.initData = function () {
+                    scope.isCompared = false;
+                    scope.initDefaultShowArray();
+                    scope.loadDataShow();
+                };
+
                 // 时间刷新
                 scope.$on("ssh_dateShow_options_time_change", function (e, msg) {
-                    scope.isCompared = true;
-                    scope.loadDataShow();
+                    scope.initData();
                 });
-                scope.loadDataShow();
+
+                scope.initData();
 
                 // 对比刷新
                 scope.$on("ssh_load_compare_datashow", function (e, startTime, endTime) {
                     scope.isCompared = true;
+                    // 初始化对比数据
+                    angular.forEach(scope.dateShowArray, function (q_r) {
+                        q_r.cValue = q_r.cCount = 0;
+                    });
                     scope.loadCompareDataShow(startTime, endTime);
+                });
+
+                scope.$on("ssh_data_show_refresh", function (e) {
+                    scope.initData();
                 });
             }
         }
@@ -847,6 +857,7 @@ define(["../app"], function (app) {
     app.filter("quotaDataFormat", function () {
         return function (value, label, count) {
             switch (label) {
+                case "ctr":
                 case "outRate":
                 case "nuvRate":
                 case "arrivedRate":
@@ -871,7 +882,6 @@ define(["../app"], function (app) {
                     return value ? value.toFixed(2) : value;
                 }
                 case "impression":
-                case "ctr":
                 case "cpm":
                 case "conversion":
                 {
@@ -909,13 +919,13 @@ define(["../app"], function (app) {
                     avgTime: "00:00:00",
                     avgPage: 0
                 };
-                scope._visitor = $rootScope.copy(scope.defaultObject);
                 // 读取基础数据
                 scope.loadBaseData = function () {
                     scope.sumPv = 0;
+
                     $http({
                         method: 'GET',
-                        url: '/api/indextable/?type=' + $rootScope.userType + '&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=pv,uv,outRate,avgTime,avgPage&dimension=ct'
+                        url: '/api/indextable/?type=' + $rootScope.userType + '&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=pv,uv,outRate,avgTime,avgPage&dimension=ct&filerInfo=' + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat
                     }).success(function (data, status) {
                         angular.forEach(data, function (e) {
                             if (e.ct === scope._ctText) {
@@ -924,7 +934,7 @@ define(["../app"], function (app) {
                             scope.sumPv += parseInt(e.pv);
                         });
                         if (!scope._visitor.ct) {
-                            scope._visitor = angular.copy(scope.defaultObject);
+                            scope._visitor = $rootScope.copy(scope.defaultObject);
                             return;
                         }
                         if (scope.sumPv == 0) {
@@ -934,11 +944,15 @@ define(["../app"], function (app) {
                         } else {
                             scope._visitor.percent = (scope._visitor.pv * 100 / scope.sumPv).toFixed(2) + "%";
                         }
+                        // 处理后台数据错误问题
+                        if (scope._visitor.avgTime == "aN:aN:aN") {
+                            scope._visitor.avgTime = "00:00:00";
+                        }
                     }).error(function (error) {
                         console.log(error);
                     });
                 };
-                scope.loadBaseData();
+
                 scope.loadData = function () {
                     // 访问来源网站
                     var fwlywzRequest = $http.get('/api/fwlywz/?type=' + $rootScope.userType + '&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=pv&ct=' + scope._ctValue);
@@ -949,13 +963,22 @@ define(["../app"], function (app) {
                         scope.fwrkyTop5 = final_result[1].data.length > 5 ? final_result[1].data.slice(0, 5) : final_result[1].data;
                     });
                 };
-                scope.loadData();
-                scope.$on("ssh_refresh_charts", function (e, msg) {
+
+                scope.initData = function () {
                     scope._visitor = $rootScope.copy(scope.defaultObject);
                     scope.fwlywzTop5 = [];
                     scope.fwrkyTop5 = [];
                     scope.loadBaseData();
                     scope.loadData();
+                };
+
+                scope.initData();
+                scope.$on("ssh_refresh_charts", function (e, msg) {
+                    scope.initData();
+                });
+
+                scope.$on("ssh_data_show_refresh", function (e) {
+                    scope.initData();
                 });
             }
         }

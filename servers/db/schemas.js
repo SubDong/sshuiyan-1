@@ -23,12 +23,20 @@ var schemas = {
         schema: {
             //_id: String, // mongoid
             uid: String, // user id 用户ID
-            root_url:String, //根目录
-            subdirectory_url:String,//子目录
-            is_regular:Boolean,//是否使用正则表达式
+            root_url: String, //根目录
+            subdirectory_url: String,//子目录
+            is_regular: Boolean,//是否使用正则表达式
             analysis_url: String, //分析的目录
-            not_analysis_url:String, //不分析的目录
-            create_date:String //创建时间
+
+
+            not_analysis_url: String, //不分析的目录
+            create_date: String,//创建时间
+
+            not_analysis_url: String, //不分析的目录
+            create_date: Date,//创建时间
+            not_analysis_url: String, //不分析的目录
+            create_date: Date //创建时间
+
         }
     },
 
@@ -42,7 +50,7 @@ var schemas = {
             track_id: String, // js track id 随机生成
             site_url: String, // site url 设置的URL
             site_name: String, // site name 设置的URL
-            site_pause:Boolean,//配置暂停 true：暂停 false：使用
+            site_pause: Boolean,//配置暂停 true：暂停 false：使用
             track_status: String // track code status
             //status: String, // enable or disable track
         }
@@ -114,7 +122,7 @@ var schemas = {
             uid: String,//用户ID
             site_id: String, // 站点ID
             target_name: String,//目标名称
-            target_url: [String],//目标URL
+            target_url: [{url: String}],//目标URL
             record_type: String,//记录方式
             //收益设置
             expected_yield: Number,//预期收益
@@ -125,11 +133,12 @@ var schemas = {
                 path_mark: Boolean,//只有经过此路径的目标记为转化
                 steps: [{
                     step_name: String,//步骤名称
-                    step_urls: [{url:String}]//步骤URL 最多三个
+                    step_urls: [{url: String}]//步骤URL 最多三个
                 }]
 
             }],
-            conv_tpye: String//转换类型，regist,communicate,place_order,othre_order
+            conv_tpye: String,//转换类型，regist,communicate,place_order,othre_order
+            conv_text: String
         },
         /**
          * 事件转化
@@ -149,6 +158,26 @@ var schemas = {
                 paths: [String],
                 ex_paths: [String]
             }
+        }
+    },
+
+    /**
+     * mongodb 指定广告追踪 表结构
+     */
+    adtrack_model: {
+        model_name: "ConfigAdtrack",
+        collection_name: "t_configAdtrack",
+        schema: {
+            uid: "", // user id 用户ID
+            type_id: "", // es type id ( hidden in front-end) 对应ES ID
+            track_id: "", // js track id 随机生成
+            targetUrl: "", // 目标URL
+            mediaPlatform: "", // 媒体平台
+            adTypes: "",    //广告类型
+            planName: "", //计划名称
+            keywords: "",   //关键词
+            creative: "", //创意
+            produceUrl: ""  //产生后的URL
         }
     }
 }

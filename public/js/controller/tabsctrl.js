@@ -116,13 +116,26 @@ define(["app"], function (app) {
         ];
         //实时访问
         var getHtmlTableData = function () {
+            var searchUrl = SEM_API_URL + "real_time/" + esType;
             $http({
                 method: 'GET',
-                url: '/api/realTimeAccess/?filerInfo=' + $rootScope.tableSwitch.tableFilter + "&type=" + esType
+                url: searchUrl
             }).success(function (data, status) {
-                $scope.gridOpArray = angular.copy($rootScope.gridArray);
-                $scope.gridOptions.columnDefs = $scope.gridOpArray;
-                $scope.gridOptions.data = data;
+                if (data != undefined) {
+                    data.forEach(function (item, i) {
+                        console.log(item["referrer"])
+                        item["visitTime"] = new Date(item["visitTime"]).Format("yyyy-MM-dd hh:mm:ss");
+                        item["referrer"] = item["referrer"] == "-" ? "-,直接访问" : item["referrer"] + "," + item["referrer"].substring(0, 40) + (item["referrer"].length > 40 ? "..." : "");
+                        item["searchWord"] = item["searchWord"] == "" ? "--" : item["searchWord"];
+                        item["keyword"] = item["keyword"] == "-" ? "--" : item["searchWord"];
+                        item["isPromotion"] = item["isPromotion"] ? "是" : "否";
+                        var a = (item["totalTime"] - 28800000);
+                        item["totalTime"] = new Date(a).Format("hh:mm:ss");
+                    })
+                    $scope.gridOpArray = angular.copy($rootScope.gridArray);
+                    $scope.gridOptions.columnDefs = $scope.gridOpArray;
+                    $scope.gridOptions.data = data;
+                }
             }).error(function (error) {
                 console.log(error);
             });
@@ -136,18 +149,23 @@ define(["app"], function (app) {
                     cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
                     maxWidth: 10
                 },
-                {name: '地域', displayName: "地域", field: "city"},
-                {name: '访问时间', displayName: "访问时间", field: "utime"},
+                {name: '地域', displayName: "地域", field: "region"},
+                {name: '访问时间', displayName: "访问时间", field: "visitTime",minWidth:150},
                 {
                     name: '来源',
                     displayName: "来源",
-                    field: "source",
-                    cellTemplate: "<a href='{{grid.appScope.getDataUrlInfo(grid, row,1)}}' style='color:#0965b8;line-height:30px; display:block; padding:0 10px;'>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</a>"
+                    field: "referrer",
+                    cellTemplate: "<a href='{{grid.appScope.getDataUrlInfo(grid, row,1)}}' style='color:#0965b8;line-height:30px; display:block; padding:0 10px;'>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</a>",
+                    minWidth: 300
                 },
-                {name: '访客标识码', displayName: "访客标识码", field: "tt"},
+                {name: '入口页面', displayName: "入口页面", field: "entrance", minWidth: 250},
+                {name: '关键词', displayName: "关键词", field: "keyword"},
+                {name: '搜索词', displayName: "搜索词", field: "searchWord"},
+                {name: '搜索带来', displayName: "搜索带来", field: "isPromotion"},
                 {name: "访问IP", displayName: "访问IP", field: "ip"},
-                {name: "访问时长", displayName: "访问时长", field: "utimeAll"},
-                {name: "访问页数", displayName: "访问页数", field: "pageNumber"}];
+                {name: '访客标识码', displayName: "访客标识码", field: "vid", minWidth: 250},
+                {name: "访问时长", displayName: "访问时长", field: "totalTime"},
+                {name: "访问页数", displayName: "访问页数", field: "viewPages"}];
             getHtmlTableData();
         } else {
             if ($rootScope.tableSwitch.arrayClear)$rootScope.checkedArray = new Array();
@@ -163,7 +181,7 @@ define(["app"], function (app) {
             $rootScope.gridArray.shift();
             $rootScope.gridArray.shift();
             console.log($rootScope.checkedArray)
-            console.log("item="+item+"-----entities="+JSON.stringify(entities)+"-----number="+number+"-----refresh="+refresh)
+            console.log("item=" + item + "-----entities=" + JSON.stringify(entities) + "-----number=" + number + "-----refresh=" + refresh)
             if (refresh == "refresh") {
                 $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude);
                 $scope.gridObjButton = {};
@@ -314,6 +332,7 @@ define(["app"], function (app) {
             });
             $(inputArray[b]).prev("span").css("background-position", "0px -51px");
             $rootScope.tableSwitch.dimen = a;
+            $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.targetSearch();
         }
         //设置来源终端
@@ -334,6 +353,7 @@ define(["app"], function (app) {
             if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[0]}]";
             if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[1]}]";
             $scope.isJudge = false;
+            $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.targetSearch();
         };
         //设置（外部链接）设备过滤
@@ -353,6 +373,7 @@ define(["app"], function (app) {
             if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[0]},{\"rf_type\":[3]}]";
             if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[1]},{\"rf_type\":[3]}]";
             $scope.isJudge = false;
+            $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.targetSearch();
         };
         $scope.webClass = function (a) {
@@ -387,6 +408,7 @@ define(["app"], function (app) {
             if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[0]},{\"rf_type\":[2]}]";
             if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[1]},{\"rf_type\":[2]}]";
             $scope.isJudge = false;
+            $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.targetSearch();
         };
         //设置来源过滤
@@ -394,13 +416,14 @@ define(["app"], function (app) {
             if (a == 0) $rootScope.tableSwitch.tableFilter = null;
             if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[1]}]";
             if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[2]}]";
-            if(a == 2){
-                $scope.browserselect= false;
+            if (a == 2) {
+                $scope.browserselect = false;
             }
-            else{
-                $scope.browserselect= true;
+            else {
+                $scope.browserselect = true;
             }
             if (a == 3) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[3]}]";
+            $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.targetSearch();
         };
         //设置访客来源
@@ -420,6 +443,7 @@ define(["app"], function (app) {
             if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"ct\":[0]}]";
             if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"ct\":[1]}]";
             //$scope.isJudge = false;
+            $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.targetSearch();
         };
         //设置来源网站
@@ -463,6 +487,7 @@ define(["app"], function (app) {
                 })
             }
             $scope.isJudge = false;
+            $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.targetSearch();
         };
         //设置地域过滤
@@ -480,6 +505,7 @@ define(["app"], function (app) {
             if ($scope.tableJu == "html") {
                 getHtmlTableData();
             } else {
+                $rootScope.$broadcast("ssh_data_show_refresh");
                 $scope.targetSearch();
             }
         };
@@ -494,16 +520,18 @@ define(["app"], function (app) {
                 $rootScope.tableSwitch.tableFilter = "[{\"region\":[\"" + area + "\"]},{\"rf_type\":[2]}]";
             }
             $scope.isJudge = false;
+            $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.targetSearch();
         };
         //设置搜索引擎过滤
-        $scope.searchEngine = function(info){
-            if(info==='全部'){
+        $scope.searchEngine = function (info) {
+            if (info === '全部') {
                 $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[2]}]";
             } else {
-                $rootScope.tableSwitch.tableFilter = "[{\"se\":[\""+info+"\"]}]";
+                $rootScope.tableSwitch.tableFilter = "[{\"se\":[\"" + info + "\"]}]";
             }
             $scope.isJudge = false;
+            $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.targetSearch();
         };
         // 搜索词过滤
@@ -517,6 +545,7 @@ define(["app"], function (app) {
                 $rootScope.tableSwitch.tableFilter = "[{\"kw\":[\"" + gjcText + "\"]}]";
             }
             $scope.isJudge = false;
+            $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.targetSearch();
         };
         // 输入URL过滤
@@ -530,6 +559,7 @@ define(["app"], function (app) {
                 $rootScope.tableSwitch.tableFilter = "[{\"loc\":[\"" + urlText + "\"]}]";
             }
             $scope.isJudge = false;
+            $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.targetSearch();
         };
         // 按url，按域名过滤
@@ -558,6 +588,7 @@ define(["app"], function (app) {
                 $rootScope.tableSwitch.latitude.field = urlText;
             }
             $scope.isJudge = false;
+            $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.targetSearch("rf_dm");
         };
         // 外部链接搜索
@@ -571,6 +602,7 @@ define(["app"], function (app) {
                 $rootScope.tableSwitch.tableFilter = "[{\"rf_type\": [\"3\"]}, {\"rf\":[\"" + urlText + "\"]}]";
             }
             $scope.isJudge = false;
+            $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.targetSearch();
         };
         // 查看入口页链接
@@ -914,7 +946,7 @@ define(["app"], function (app) {
                     var newEntity = row.entity[$rootScope.tableSwitch.latitude.field].split(",");
                     newEntity.length > 0 ? entity = newEntity[0] : "";
                     $rootScope.tableSwitch.tableFilter = "[{\"" + $rootScope.tableSwitch.latitude.field + "\":[\"" + getField(entity, $rootScope.tableSwitch.latitude.field) + "\"]}]";
-                  //  $scope.gridApi2.expandable.collapseAllRows();
+                    //  $scope.gridApi2.expandable.collapseAllRows();
                     row.entity.subGridOptions = {
                         showHeader: false,
                         enableHorizontalScrollbar: 0,
@@ -936,7 +968,7 @@ define(["app"], function (app) {
                         row.entity.subGridOptions.columnDefs = $scope.gridOpArray;
                         row.entity.subGridOptions.data = data;
                         $rootScope.tableSwitch.tableFilter = returnFilter;
-                      $scope.gridOptions.expandableRowHeight = row.entity.subGridOptions.data.length * 30;
+                        $scope.gridOptions.expandableRowHeight = row.entity.subGridOptions.data.length * 30;
                     }).error(function (error) {
                         console.log(error);
                     });
@@ -991,7 +1023,7 @@ define(["app"], function (app) {
                     res["cellTemplate"] = datas.htmlData;
                     htmlData.push(res);
                     row.entity.subGridOptions.data = [{"info": " "}];
-                    $scope.gridOptions.expandableRowHeight =  row.entity.subGridOptions.data.length * 360;
+                    $scope.gridOptions.expandableRowHeight = row.entity.subGridOptions.data.length * 360;
                 }).error(function (error) {
                     console.log(error);
                 });
@@ -1076,7 +1108,7 @@ define(["app"], function (app) {
         }
         //得到数据中的url
         $scope.getDataUrlInfo = function (grid, row, number) {
-            var a = row.entity.source.split(",");
+            var a = row.entity.referrer.split(",");
             if (number == 1) {
                 if (a[0] == "-") {
                     a[0] = "javascript:void(0)"

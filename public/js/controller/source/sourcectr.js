@@ -26,12 +26,12 @@ define(["./module"], function (ctrls) {
                 displayName: "来源类型",
                 field: "rf_type",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
-                cellClass:"table_list_color",
+                cellClass: "table_list_color"
             },
             {
                 name: " ",
-               cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li><li><a href='javascript:void(0)' ng-click='grid.appScope.showEntryPageLink(row, 1)'>查看入口页链接</a></li></ul></div></div>"
-               // cellTemplate:" <button popover-placement='right' popover='On the Right!' class='btn btn-default'>Right</button>"
+                cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li><li><a href='javascript:void(0)' ng-click='grid.appScope.showEntryPageLink(row, 1)'>查看入口页链接</a></li></ul></div></div>"
+                // cellTemplate:" <button popover-placement='right' popover='On the Right!' class='btn btn-default'>Right</button>"
             },
             {
                 name: "访问次数",
@@ -86,7 +86,7 @@ define(["./module"], function (ctrls) {
         }
         $scope.customFormat = function (data, config, e) {
             var json = JSON.parse(eval("(" + data + ")").toString());
-            var result = chartUtils.getRf_type(json, $rootScope.start, null, e.types);
+            var result = chartUtils.getRf_type(json, $rootScope.start, null, e.types, config);
             config['noFormat'] = true;
             config['twoYz'] = "none";
             cf.renderChart(result, config);
@@ -186,14 +186,11 @@ define(["./module"], function (ctrls) {
             $rootScope.start = time[0];
             $rootScope.end = time[1];
             $scope.charts.forEach(function (e) {
+                    e.config.keyFormat = "day";
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
             })
-            if ($rootScope.start <= -1) {
-                $scope.charts[0].config.keyFormat = "day";
-            } else {
-                $scope.charts[0].config.keyFormat = "hour";
-            }
+
             requestService.refresh($scope.charts);
             $rootScope.targetSearch();
             $rootScope.tableTimeStart = time[0];

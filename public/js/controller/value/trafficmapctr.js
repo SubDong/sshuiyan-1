@@ -51,6 +51,12 @@ define(["./module"], function (ctrs) {
                     document.getElementById("linkstree_top").style.top = "14%";
                     document.getElementById("linkstree_right").style.top = "14%";
                 }
+
+                if (data.data.length == 1) {
+                    document.getElementById("linkstree_top").style.top = "0";
+                    document.getElementById("linkstree_right").style.top = "0";
+                    $(".linkstree_left").css("margin-top", "14px")
+                }
                 if (data.data.length == 4) {
                     document.getElementById("linkstree_top").style.top = "20%";
                     document.getElementById("linkstree_right").style.top = "20%";

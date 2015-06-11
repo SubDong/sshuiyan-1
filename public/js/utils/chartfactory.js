@@ -128,7 +128,7 @@ var op = {
             },
             tooltip: {
                 trigger: !chartConfig.tt ? "axis" : chartConfig.tt,
-                backgroundColor : '#fff',
+                backgroundColor : 'rgba(255,255,255,0.8)',
                 borderColor : '#ededed',
                 borderWidth: 1,
                 padding: 0,
@@ -139,17 +139,25 @@ var op = {
                 },
                 formatter: function (params, ticket, callback) {
                     var res ='<li>'+ params[0].name+'</li>';
+                    if (chartConfig.compare || chartConfig.compareCustom) {
+                        if (chartConfig.keyFormat=="day"){
+                            res ='<li>'+ params[0].name+':00-'+ params[0].name+':59</li>';
+                        }
+                    }else{
+                        if (chartConfig.keyFormat=="none"){
+                            res ='<li>'+ params[0].name+':00-'+ params[0].name+':59</li>';
+                        }
+                    }
                     for (var i = 0, l = params.length; i < l; i++) {
-
                         var formatType = labelData[i];
                         if (chartConfig.compare || chartConfig.compareCustom) {
                             var baseSerieName = params[i].seriesName.split(":");
-                            res +=baseSerieName[0] + chartUtils.convertChinese(baseSerieName[1]) + ' : ' + ad.formatFunc(params[i].value, baseSerieName[1]) + '</li>';
+                            res +='<li class=chartstyle'+i+'>'+ baseSerieName[0] + chartUtils.convertChinese(baseSerieName[1]) + ' : ' + ad.formatFunc(params[i].value, baseSerieName[1]) + '</li>';
                         } else {
                             if (chartConfig.toolTip == undefined) {
                                 res +='<li class=chartstyle'+i+'>'+ params[i].seriesName + ' : ' + ad.formatFunc(params[i].value, formatType) + '</li>';
                             } else {
-                                res += params[i].seriesName + ' : ' + params[i].value + '</li>';
+                                res +='<li class=chartstyle'+i+'>'+  params[i].seriesName + ' : ' + params[i].value + '</li>';
                             }
                         }
 
@@ -366,7 +374,7 @@ var op = {
         var option = {
             tooltip: {
                 trigger: !chartConfig.tt ? "item" : chartConfig.tt,
-                backgroundColor : '#fff',
+                backgroundColor : 'rgba(255,255,255,0.8)',
                 borderColor : '#ededed',
                 borderWidth: 1,
                 padding:10,
@@ -867,6 +875,9 @@ var util = {
                 } else {
                     return key;
                 }
+            }
+            if(chartConfig.keyFormat=="eq"){
+                return key;
             }
             if (chartConfig.keyFormat == "day") {
                 var _time = [];

@@ -87,7 +87,7 @@ define(["./module"], function (ctrs) {
         }
         $scope.searchengineFormat = function (data, config, e) {
             var json = JSON.parse(eval("(" + data + ")").toString());
-            var result_json = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", e.types);
+            var result_json = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", e.types,config);
             config['noFormat'] = true;
             config['twoYz'] = "none"
             cf.renderChart(result_json, config);
@@ -158,14 +158,11 @@ define(["./module"], function (ctrs) {
             $rootScope.start = time[0];
             $rootScope.end = time[1];
             $scope.charts.forEach(function (e) {
+                e.config.keyFormat = "day";
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
             })
-            if ($rootScope.start <= -1) {
-                $scope.charts[0].config.keyFormat = "day";
-            } else {
-                $scope.charts[0].config.keyFormat = "hour";
-            }
+
             requestService.refresh($scope.charts);
             $rootScope.tableTimeStart = time[0];
             $rootScope.tableTimeEnd = time[1];

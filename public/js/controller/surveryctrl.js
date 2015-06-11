@@ -223,7 +223,7 @@ define(["./module"], function (ctrs) {
                         id: "index_charts",
                         min_max: false,
                         chartType: "line",//图表类型
-                        keyFormat: 'none',
+                        keyFormat: 'eq',
                         noFormat: true,
                         auotHidex: true,
                         qingXie: false,

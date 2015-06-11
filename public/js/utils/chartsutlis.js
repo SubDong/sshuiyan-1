@@ -111,6 +111,9 @@ var chartUtils = {
     },
     getLinked: function (number) {
         switch (Number(number)) {
+            case 0:
+                return "内站访问";
+                break;
             case 1:
                 return "直接访问";
                 break;
@@ -161,16 +164,40 @@ var chartUtils = {
             return "不支持";
         }
     },
-    getObjectTime: function (json, start) {
-        var time = [];
-        json.forEach(function (e) {
-            if (start <= -6) {
-                time.push((e.key_as_string).toString().substr(0, 10));
-            } else {
-                time.push(Number((e.key_as_string).toString().substring(10, 13)));
-            }
-        })
-        return time
+    getObjectTime: function (json, start, config) {
+        if (config.keyFormat == "day") {
+            var time = [];
+            json.forEach(function (e) {
+                if (start == 0 || start == -1) {
+                    config.keyFormat = "none";
+                    time.push(Number((e.key_as_string).toString().substring(10, 13)));
+                } else {
+                    time.push((e.key_as_string).toString().substr(0, 10));
+                }
+            });
+            return time
+        }
+        if (start <= -6) {
+
+            var time = [];
+            json.forEach(function (e) {
+                time.push((e.key_as_string).toString());
+            });
+            config.keyFormat = "day";
+            return time
+        } else {
+
+            var time = [];
+            json.forEach(function (e) {
+                if (start == 0 || start == -1) {
+                    time.push(Number((e.key_as_string).toString().substring(10, 13)));
+                } else {
+                    time.push((e.key_as_string).toString().substr(0, 10));
+                }
+            });
+            return time
+        }
+
     },
     getObject: function (json, key, types) {
         var val = [];
@@ -193,23 +220,21 @@ var chartUtils = {
         });
         return val;
     },
-    getRf_type: function (json, start, labelType, types) {
-        var time = chartUtils.getObjectTime(json, start);
+    getRf_type: function (json, start, labelType, types, config) {
+        var time = chartUtils.getObjectTime(json, start, config);
         var label = chartUtils.getLabel(json);//去重
         var result = [];
         label.forEach(function (label) {
-            if (label) {
-                var tmp = {};
-                var val = chartUtils.getObject(json, label, types);
-                if (labelType) {
-                    tmp['label'] = label;
-                } else {
-                    tmp['label'] = chartUtils.getLinked(label);
-                }
-                tmp['key'] = time;
-                tmp['quota'] = val;
-                result.push(tmp);
+            var tmp = {};
+            var val = chartUtils.getObject(json, label, types);
+            if (labelType) {
+                tmp['label'] = label;
+            } else {
+                tmp['label'] = chartUtils.getLinked(label);
             }
+            tmp['key'] = time;
+            tmp['quota'] = val;
+            result.push(tmp);
         });
         return result;
     },
@@ -495,7 +520,11 @@ var chartUtils = {
             var _tmp = {};
             final_result[0].data.forEach(function (e, i) {
                 _key.push(e[semName]);
-                _value.push(e[quota]);
+                if (e[quota]) {
+                    _value.push(e[quota]);
+                } else {
+                    _value.push(0);
+                }
             });
             _tmp["label"] = chartUtils.convertChinese(quota);
             _tmp["key"] = _key;

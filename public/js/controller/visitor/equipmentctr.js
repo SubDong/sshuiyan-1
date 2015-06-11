@@ -128,7 +128,7 @@ define(["./module"], function (ctrs) {
                     chartType: "bar",
                     dataKey: "key",
                     auotHidex: true,
-                    keyFormat: 'none',
+                    keyFormat: 'eq',
                     dataValue: "quota"
                 },
                 types: ["pv", "vc"],

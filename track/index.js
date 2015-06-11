@@ -2,52 +2,70 @@ var router = require('express').Router(),
     redis = require('../servers/utils/redis'),
     path = require('path'),
     fs = require('fs'),
+    async = require('async'),
     mongo = require('../servers/utils/mongo');
 
-
-var errmsg = "id missing"
 
 router.get('/', function (req, resp) {
     var tid = req.query.id
 
-    redis.service().get(tid, function (err, siteid) {
+    redis.service().get('tsj:'.concat(tid), function (err, sitejson) {
 
-        if (true) {
+        sitejson = {}
+
+        if (err || sitejson == null) {
+            resp.end();
+            return;
+        }
+
+        var ref = req.header('Referer')
+
+        if (ref == undefined || ref == '') {
+            resp.end()
+            return;
+        } else {
+            ref = ref.slice(0, ref.indexOf('?'));
 
             var config = {
                 "tid": tid,
-                "mouse": false
+                "domain": sitejson.siteurl,
+                "mouse": false,
+                "evt": []
             }
 
-            var ref = req.header('Referer')
+            var siteid = sitejson.siteid ? sitejson.siteid : "1";
 
-            redis.service().sismember("heat".concat(siteid, '|', ref), function (err, is) {
-                if (!is)
-                    config['mouse'] = true;
+            var tasks = ['mouse', 'evt'];
 
-                resp.set('Content-Type', 'application/javascript')
-                resp.set('Cache-Control', 'max-age=0,must-revalidate');
-
-                fs.readFile('./track/t.js', function (err, data) {
-                    resp.send("var config = ".concat(JSON.stringify(config), ';', data));
+            async.eachSeries(tasks, function (item, cb) {
+                console.log(item)
+                redis.service().get(siteid.concat(":", item, ":", ref), function (err, val) {
+                    if (val != null)
+                        config[item] = val[item];
+                    cb();
                 })
-
+            }, function (err) {
+                if (err) {
+                    resp.end();
+                } else {
+                    flush(config, resp);
+                }
             })
-        } else {
-            resp.end("error.");
+
+
         }
     });
 
-    try {
-        var conf = redis.service().get(req.query.id, function (err, reply) {
-
-        })
-
-    } catch (err) {
-        resp.end(errmsg);
-    }
-
 })
+
+function flush(config, resp) {
+    fs.readFile('./track/t.js', function (err, data) {
+        resp.set('Content-Type', 'application/javascript')
+        resp.set('Cache-Control', 'max-age=0,must-revalidate');
+        resp.send("var config = ".concat(JSON.stringify(config), ';', data));
+    })
+
+}
 
 
 module.exports = router

@@ -82,6 +82,7 @@
 }
 .path_type ul{
   margin-top: 10px;
+  padding-bottom: 37px;
 }
 .path_type ul li{
   float: left;
@@ -98,7 +99,7 @@
   line-height: 24px;
 }
 .remove{
-  display: block;
+  display: inline-block;
   width: 25px;
   height: 35px;
   line-height: 35px;
@@ -165,12 +166,64 @@
 #example-navbar-collapse .dropdown:hover .select2-choice{
   background-color: #f9f9f9;
 }
+#example-navbar-collapse .dropdown:hover .select2-choice>.select2-chosen{
+  color:  #01aeef !important;
+  font-weight: bold !important;
+}
 #example-navbar-collapse .dropdown .nav .select2-container > a, .nav .select2-container > a:hover, .nav .select2-container > a:focus {
   background-color: #f9f9f9;
   color:  #01aeef ;
   font-weight: bold;
 }
 #example-navbar-collapse .dropdown .select2-container .select2-choice>.select2-chosen {
-  color:  #01aeef;
-  font-weight: bold;
+  color:  #777;
+}
+.ui-grid-row:hover{
+  .ui-grid-cell{
+    background-color: #bcedfe;
+  }
+}
+.secondary_table {
+  .ui-grid-row:hover {
+    background-color: none;
+   .ui-grid-cell {
+     background-color: none;
+    }
+  }
+}
+.table_box {
+  .table_admin {
+    margin-top: -2px;
+    ul li {
+      height: 100px;
+      width: 100px;
+      float: none;
+    }
+  }
+}
+
+.table_admin {
+  height: 32px;
+  line-height: 32px;
+  color: #2fabe7;
+
+}
+
+.table_admin a, a:active {
+  color: #2fabe7;
+}
+
+.table_admin_color {
+  color: #333;
+}
+
+.table_admin a {
+  color: #2fabe7;
+}
+.table_admin:hover{
+  color:#cccccc;
+}
+
+.table_admin a:hover {
+  color: #cccccc;
 }

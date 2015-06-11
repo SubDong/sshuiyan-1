@@ -15,12 +15,12 @@
             <li><a href="/#index"><span aria-hidden="true" class="glyphicon glyphicon-home"></span>网站概览</a></a></li>
             <li class="dropdown">
                 <span class="fl website">网站：</span>
-                <ui-select ng-model="siteselect.selected" theme="select2" reset-search-input="false" class="fl"
-                           ng-change="changeUrl(siteselect.selected)" style="min-width:140px;">
+                <ui-select ng-model="siteselect.selected" theme="select2" reset-search-input="false" class="fl" style="min-width:80px;"
+                           ng-change="changeUrl(siteselect.selected)" >
                     <ui-select-match placeholder="{{ default }}"><span data-ng-bind="$select.selected.site_name"></span>
                     </ui-select-match>
 
-                    <ui-select-choices repeat="siteselect in usites">
+                    <ui-select-choices repeat="siteselect in siteselects">
                         <a data-ng-href="#index"><span ng-bind-html="siteselect.site_name"></span></a>
                     </ui-select-choices>
                 </ui-select>
@@ -29,9 +29,9 @@
             </li>
             <li>
                 <span aria-hidden="true" class="glyphicon glyphicon-user fl"></span>
-                <span data-ng-bind="perfectUser.userName"></span>
+                <span data-ng-bind="perfectUser"></span>
             </li>
-            <li><a href="#"><span aria-hidden="true" class="glyphicon glyphicon-share"></span>退出</a></li>
+            <li><a href="/logout"><span aria-hidden="true" class="glyphicon glyphicon-share"></span>退出</a></li>
         </ul>
     </div>
 </nav>
