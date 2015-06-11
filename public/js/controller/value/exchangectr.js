@@ -56,14 +56,19 @@ define(["./module"], function (ctrs) {
                 });
                 ids += item.type_id + ";";
             });
-
-            $scope.exchanges = $scope.sites;
+            console.log($rootScope.user);
+            console.log($rootScope.baiduAccount);
+            console.log($rootScope.userType);
+            console.log($rootScope.userTypeName);
             //根据域名type查询pv和uv
 
             $scope.init = function () {
-                $http.get("api/exchange?start=" + $rootScope.start + ",end=" + $rootScope.end + ",type=" + ids.substring(0, ids.length - 1) + ",pathUp=path0,pathDown=path1" + ",address=" + null).success(function (data) {
+                $http.get("api/exchange?start=" + $rootScope.start + ",end=" + $rootScope.end + ",type=" + $rootScope.userType + ",pathUp=path0,pathDown=path1" + ",address=" + null).success(function (data) {
                     console.log(data)
                     if(data.length==0){
+                        $scope.exchanges=null;
+                        $scope.exchange = null;
+                        $scope.exchange_prefix=null;
                         return;
                     }
                     $scope.exchanges = dataSave($scope, data);
@@ -91,7 +96,13 @@ define(["./module"], function (ctrs) {
                     //if(result.length==0){
                     //    return;
                     //}else{
-
+                    //var test = document.getElementById(context.order_id);
+                    //console.log(test.value);
+                    $scope.htmlStr = (
+                        $compile(
+                            '<button ng-click="submitForm()">' + 'Submit' + '</button>'
+                        )($scope)
+                    );
                         //$scope.htmlStr = $compile("<ul><li ng-repeat='path in pathData'>"
                         //    + "<div class='exchange_list_level2'>"
                         //    + "<div class='exchange_list1 fl'>"

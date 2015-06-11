@@ -252,7 +252,8 @@ var access_request = {
                                 "uv": result[i].path0.buckets[c].path1.buckets[k].uv.value,
                                 "pathName": result[i].path0.buckets[c].path1.buckets[k].key,
                                 "pathUp":pathDown,
-                                "id": result[i].key
+                                "id": result[i].key,
+                                "order_id":k
                             });
                         }
                         data.push({
