@@ -238,7 +238,7 @@ define(["./module"], function (ctrs) {
 
         $scope.siteselect = {};
         $scope.siteselects = $rootScope.usites;
-        console.log($scope.usites);
+        //console.log($scope.usites);
         $rootScope.user = $cookieStore.get('uname');//perfect2015
         //$rootScope.baiduAccount = $rootScope.usites[0].bd_name;//baidu-perfect2151880
         $rootScope.userType = $rootScope.usites[0].site_id;//www.perfect-cn.cn

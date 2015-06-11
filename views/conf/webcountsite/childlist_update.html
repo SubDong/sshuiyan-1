@@ -1,0 +1,87 @@
+<div class="middle_containers" ng-controller="childlist_update">
+    <div class="web_list">
+        <!--网站导航-->
+        <div class="web_list_nav">
+            <p>  <span ng-bind-html="userTypeName">修改子目录</span></p>
+        </div>
+    </div>
+    <form role="form" name="subdirectoryForm" ng-submit="submitForm(subdirectoryForm.$valid)" class="form-horizontal" novalidate>
+    <div class="adtrack_add chlidlist_add">
+        <ul>
+            <li>
+            <li>
+                <span>是否使用正则表达式？</span>
+                <input  data-ng-focus="myFocus(childlist_add_yes)" data-ng-blur="myBlur(childlist_add_yes)"  class="chlidlist_add_input" type="radio"   ng-model="subdirectory.is_regular" name="regular" value="1"  />是
+                <input data-ng-focus="myFocus(childlist_add_no)" data-ng-blur="myBlur(childlist_add_no)"  class="chlidlist_add_input" type="radio"     ng-model="subdirectory.is_regular" name="regular" value="0"  />否 &nbsp;&nbsp;&nbsp;
+                <p>(可直接输入URL也可以使用通配符*)</p>
+                <div data-ng-show="childlist_add_yes.helpFlag"  class="count_content_right">
+                    <!--提示:网站与域名不同提示 右-->
+                    <div class="popover right box " style="display: block;">
+                        <div class="arrow"></div>
+                        <div class="popover-content">
+                            <p>通配符，即 * 符号，可以添加在url中，代替任意字符。假设<br>您添加的网站域名是url.com，则通配符的使用规则如下：<br><br>
+                                网站域名后不能直接添加通配符，如url.com* 这种方式会提<br>示错误；通配符与域名至少间隔一个字符，如url.com?abab<br>需用url.com？* 来表示；<br><br>
+                                url.com/*，表示包含url.com/ 这个形式的所有url，如 <br>url.com/abab，url.com/abab/cdcd等；<br><br>
+                                url.com/abab*，表示包含url.com/abab这个形式的所有url<br>，如 url.com/abab，url.com/ababcd，url.com/abab/cdcd<br>等；<br><br>
+                                url.com/*.html，表示包含url.com/ 这个形式，且以 html 结<br><br>尾的所有url，如url.com/abab.html等。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div data-ng-show="childlist_add_no.helpFlag"  class="count_content_right">
+                    <!--提示:网站与域名不同提示 右-->
+                    <div class="popover right box " style="display: block;">
+                        <div class="arrow"></div>
+                        <div class="popover-content">
+                            <p>只能通过正则表达式来设置。<br>
+                                正则表达式即匹配或捕获字段的若干部分的特殊字符以及支<br>配这些字符的规则。比如：<br><br>
+                                . 匹配任何单个字符（字母、数字或符号），bai.du 与 <br>baigdu 和 bai8du 匹配；<br><br>
+                                ? 匹配 0 个或 1 个先前项，labou?r 与 labor 和 labour 匹<br>配；<br><br>
+                                | 执行“或”匹配， a|b 与 a 或 b 匹配；<br><br>
+                                () 创建项，如love(able|ly)匹配loveable或lovely；<br><br>
+                                [] 创建要匹配的项列表，www\.aaa\.com/mp[1-4]匹配<br> www.aaa.com/mp1、www.aaa.com/mp2、www.aaa.com<br> /mp3和www.aaa.com/mp4；<br><br>
+                                $ 要求您的数据位于字段末尾，如www\.aaa\.com/mp[1-4]$<br> 就不能匹配www.aaa.com/mp5、www.aaa.com/mp11等。<br><br>
+                                注意：为了避免系统误判给您带来不必要的困扰，请确认您<br>输入的正则表达式正确、完整、没有歧义并注意转义。另外<br>含有“？*”（即问号星号紧密连接）等不规范形式的正则表
+                                达<br>式会被系统自动抛弃，请务必避免。<br><br>
+                                如需了解本设置支持的正则表达式字符及含义，请查看更<br>多。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </li>
+
+            <li>
+                <span>子目录名称</span>
+                <div>
+                    <input  required    type="text"
+                             placeholder="子目录1" data-ng-model="subdirectory.subdirectory_url"/>
+                </div>
+            </li>
+            <li>
+                <span>要分析的页面或目录</span>
+                <p>（目录中加入通配符*，表示包含该目录下所有页面）</p>
+                <div data-ng-repeat="page in pages"><input type="text" class="form-control" ng-model="page.url"  placeholder="url.com/a.html" onfocus="this.setAttribute('placeholder','')" onblur="this.setAttribute('placeholder','url.com/a.html')"/>
+                    <button class="glyphicon glyphicon-remove" data-ng-click="deletePage(pages)"></button></div>
+                <a href="#" data-ng-click="addPage(pages)" class="adtrack_add_tz" data-ng-if="pages.length<10" >新增URL</a>
+                <div data-ng-show="pages.length > 9" class="errorMsg">您最多可输入10个</div>
+            </li>
+            <li>
+                <span>不分析的页面或目录</span>
+                <p>（目录中加入通配符*，表示包含该目录下所有页面）</p>
+                <div data-ng-repeat="page in no_pages "><input type="text" class="form-control" ng-model="page.url"  placeholder="url.com/a.html" onfocus="this.setAttribute('placeholder','')" onblur="this.setAttribute('placeholder','url.com/a.html')"/>
+                    <button class="glyphicon glyphicon-remove" data-ng-click="deletePage(no_pages)"></button></div>
+                <a href="#" data-ng-click="addPage(no_pages)" class="adtrack_add_tz" data-ng-if="no_pages.length<10">新增URL</a>
+                <div data-ng-show="no_pages.length > 9" class="errorMsg">您最多可输入10个</div>
+            </li>
+            <li>
+
+              <<button   ng-disabled="subdirectoryForm.$invalid" class="btn btn-info count_content_button" ng-click="onSaveSubdirectory()">确定</button>
+                <button class="btn btn-info count_content_button ">取消</button>
+
+            </li>
+        </ul>
+
+    </div>
+    </form>
+</div>

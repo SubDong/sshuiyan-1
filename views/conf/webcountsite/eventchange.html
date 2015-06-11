@@ -2,11 +2,11 @@
     <div class="web_list">
         <!--网站导航-->
         <div class="web_list_nav">
-            <p>web.best-ad.cn 事件转化目标</p>
+            <p>  <span ng-bind-html="userTypeName"></span> 事件转化目标</p>
         </div>
         <!--网站上部列表部分-->
         <div class="web_list_up">
-            <div class="table_content" ng-controller="TabsCtrl">
+            <div class="table_content">
                 <div class="custom_table">
                     <div ui-grid="gridOptions" class="grid grid_table"  ui-grid-pagination ui-grid-selection
                          ui-grid-exporter ></div>

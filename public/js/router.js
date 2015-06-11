@@ -234,6 +234,12 @@ define(["angular", "app"], function (ng, app) {
                 url: '/conf/webcountsite/childlist_add',
                 templateUrl: '../conf/webcountsite/childlist_add.html'
             })
+            .state('childlist_update', {
+                url: '/conf/webcountsite/childlist_update',
+                params:      {'id': null},
+                templateUrl: '../conf/webcountsite/childlist_update.html'
+            })
+
             .state('pagechange', {
                 url: '/conf/webcountsite/pagechange',
                 templateUrl: '../conf/webcountsite/pagechange.html'
