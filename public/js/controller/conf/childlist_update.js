@@ -4,35 +4,7 @@
 define(["./module"], function (ctrs) {
     "use strict";
 
-
-    ctrs.directive('remoteValidation', function ($http) {
-        return {
-            require: 'ngModel',
-            link: function (scope, elm, attrs, ctrl) {
-                elm.bind('keyup', function () {
-
-
-                    var url = "/config/subdirectory_list?type=search&query={\"subdirectory_url\":\"" + scope.subdirectory.subdirectory_url + "\"}";
-
-                    $http({method: 'GET', url: url}).
-                        success(function (data, status, headers, config) {
-                            if (data.length > 0) {
-                                ctrl.$setValidity('remote', false);
-                            } else {
-                                ctrl.$setValidity('remote', true);
-                            }
-                        }).
-                        error(function (data, status, headers, config) {
-                            ctrl.$setValidity('remote', false);
-                        });
-
-
-                });
-            }
-        };
-    });
-
-    ctrs.controller('childlist_add', function ($scope, $http, $rootScope, $cookieStore, ngDialog, $state) {
+    ctrs.controller('childlist_update', function ($scope, $http, $rootScope, $cookieStore, $stateParams, ngDialog,$state) {
 
 
         $scope.subdirectory = {};
@@ -45,13 +17,15 @@ define(["./module"], function (ctrs) {
 
         $scope.subdirectory.subdirectory_url = "";
 
-        $scope.subdirectory.uid = $cookieStore.get("uid");
+        $scope.subdirectory.uid = "";
 
-        $scope.subdirectory.root_url = $rootScope.userType;
+        $scope.subdirectory.root_url = "";
 
-        $scope.subdirectory.create_date = new Date().Format("yyyy-MM-dd hh:mm:ss");
+        $scope.subdirectory.create_date = "";
 
+        $scope.subdirectory._id = $stateParams.id;
 
+        console.log("child"+$stateParams.id)
         $scope.pages = [{
             url: ""
         }];
@@ -87,13 +61,11 @@ define(["./module"], function (ctrs) {
         $scope.deletePage = function (p) {
             p.pop();
         };
-
         $scope.onCancel = function () {
             $state.go('childlist');
         }
 
-
-        $scope.onSaveSubdirectory = function () {
+        $scope.onUpdateSubdirectory = function () {
 
             $scope.subdirectory.analysis_url = listToStirng($scope.pages);
 
@@ -101,29 +73,25 @@ define(["./module"], function (ctrs) {
 
             var entity = JSON.stringify($scope.subdirectory);
 
+            var url = "/config/subdirectory_list?type=update&query={\"_id\":\"" + $scope.subdirectory._id + "\"}&updates=" + entity;
 
-            var url = "/config/subdirectory_list?type=save&entity=" + entity;
+
             $http({
                 method: 'GET',
                 url: url
             }).success(function (dataConfig, status) {
 
-
                 $scope.urlDialog = ngDialog.open({
-                    preCloseCallback: function() {
-                        $state.go('childlist');
-                    },
                     template: '\
               <div class="ngdialog-buttons" >\
                         <ul>\
-                        <li> 保存成功</li></ul>   \
-                    <a href="#conf/webcountsite/childlist" ng-click=closeThisDialog(0)>确定</a>\
+                        <li> 修改成功</li></ul>   \
+                    <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click=closeThisDialog(0)>确定</button>\
                 </div>',
                     className: 'ngdialog-theme-default',
                     plain: true,
                     scope: $scope
                 });
-
             });
 
         };
@@ -138,7 +106,33 @@ define(["./module"], function (ctrs) {
         }
 
 
+        var stringToList = function (str) {
+            var list = [];
+            str.split(",").forEach(function (s) {
+                var page = {};
+                page.url = s;
+                list.push(page);
+            })
+            return list;
+        }
+
+
+        var loadData = function () {
+
+            var url = "/config/subdirectory_list?type=findById&query={\"_id\":\"" + $scope.subdirectory._id + "\"}";
+
+            $http({
+                method: 'GET',
+                url: url
+            }).success(function (dataConfig, status) {
+                $scope.subdirectory = dataConfig;
+                $scope.pages = stringToList($scope.subdirectory.analysis_url);
+                $scope.no_pages = stringToList($scope.subdirectory.not_analysis_url);
+            });
+        }
+
+        loadData();
+
+
     });
-
-
 });

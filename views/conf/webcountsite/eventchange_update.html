@@ -1,40 +1,13 @@
-<div class="middle_containers" ng-controller="eventchange_addctr">
+<div class="middle_containers" ng-controller="eventchange_updatectr">
     <div class="add_event_title">
-        <p>  <span ng-bind-html="userTypeName"></span> -新增事件转化目标</p>
+        <p>  <span ng-bind-html="userTypeName"></span> -修改事件转化目标</p>
     </div>
     <div class="add_event_content">
         <div class="table_content">
-            <ul ng-init="tab = 1" class="nav nav-tabs nav-justified">
-                <li class="ng-isolate-scope"  ng-class="{active:tab===1}" ng-click="tab = 1">
-                    <a class="ng-binding">预览添加</a></li>
-                <li class="ng-isolate-scope" ng-class="{active:tab===2}" ng-click="tab = 2">
-                    <a class="ng-binding">手动添加</a></li>
-            </ul>
-            <div class="tabs_content add_event_tabs">
-                <div class="custom_title" ng-show="tab === 1">
-                    <p>  <span ng-bind-html="userTypeName"></span> -新增事件转化目标</p>
-
-                    <form class="form-horizontal">
-                        <div class="form-group">
-                            <label  class="col-sm-2 col-md-1 control-label">事件预览目标URL:</label>
-                            <div class="col-sm-4">
-                                <input type="text" class="form-control" placeholder="请输入..." onfocus="this.setAttribute('placeholder','')"
-                                       onblur="this.setAttribute('placeholder','请输入...')">
-
-                            </div>
-                            <div class="col-sm-4">
-                                <button type="submit" class="btn btn-info">保 存</button>
-                                <button type="submit" class="btn btn-default">取 消</button>
-                            </div>
-                        </div>
-                    </form>
-                    <p>提示：请输入您所要监控的事件目标(按钮、下载链接等)所在页面的URL，系统将读入该页面供您设置事件目标。</p>
-                    <p><span class="errorMsg">注意：</span>事件目标需要在网页源代码中有位移的ID标志,如果此页面需要登录后才能访问，请您登录后再在同一浏览器中登录百度统计后进行设置。</p>
-                </div>
 
                 <form role="form" name="eventForm" ng-submit="submitForm(eventForm.$valid)" class="form-horizontal" novalidate>
-                <div class="custom_title" ng-show="tab === 2">
-                    <p>  <span ng-bind-html="userTypeName"></span> -新增事件转化目标</p>
+                <div class="custom_title" >
+
                     <form class="form-horizontal">
                         <div class="form-group">
                             <label class="col-sm-2 col-md-1 control-label">事件元素ID：</label>
@@ -61,7 +34,7 @@
                             <div class="col-sm-offset-2 col-md-offset-1 col-sm-10">
                                 <p>可以在URL首或尾使用*匹配任意长度字符，直接填写*代表事件作用目标为整个网站</p>
 
-                                <button  ng-disabled="eventForm.$invalid" class="btn btn-info count_content_button" ng-click="onSaveEvent()">确定</button>
+                                <button  ng-disabled="eventForm.$invalid" class="btn btn-info count_content_button" ng-click="onUpdateEvent()">确定</button>
                                 <button  class="btn btn-info count_content_button" ng-click="onCancel()">取消</button>
 
                             </div>

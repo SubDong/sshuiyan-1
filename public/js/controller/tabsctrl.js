@@ -1070,6 +1070,7 @@ define(["app"], function (app) {
             if ($rootScope.tableSwitch.isJudge == undefined)$scope.isJudge = true;
             if ($rootScope.tableSwitch.isJudge)$rootScope.tableSwitch.tableFilter = undefined;
             var a = b.$parent.$parent.row.entity[$rootScope.tableSwitch.latitude.field];
+            $rootScope.webName = "[" + a + "]";
             var s = a.split(",");
             s.length > 0 ? a = s[0] : "";
             var fileteran = $rootScope.tableSwitch.tableFilter;

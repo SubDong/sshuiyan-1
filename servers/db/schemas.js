@@ -2,6 +2,22 @@
 
 var schemas = {
 
+    //事件转化目标
+   event_change_model: {
+        model_name: "EventChange",
+        collection_name: "conf_event_change",
+        schema: {
+            //_id: String, // mongoid
+           uid: String, // user id 用户ID
+           root_url:String, //根目录
+           event_id:String,//事件ID
+           event_name:String,//事件名称
+           event_page: String, //事件作用页面
+           event_method:String, //事件设置方式
+           event_status:String //事件状态 1：启动  0：暂停
+
+        }
+    },
     //子目录管理
     subdirectories_model: {
         model_name: "Subdirectories",
@@ -13,16 +29,8 @@ var schemas = {
             subdirectory_url: String,//子目录
             is_regular: Boolean,//是否使用正则表达式
             analysis_url: String, //分析的目录
-
-
             not_analysis_url: String, //不分析的目录
-            create_date: String,//创建时间
-
-            not_analysis_url: String, //不分析的目录
-            create_date: Date,//创建时间
-            not_analysis_url: String, //不分析的目录
-            create_date: Date //创建时间
-
+            create_date: String//创建时间
         }
     },
 
@@ -37,8 +45,9 @@ var schemas = {
             site_url: String, // site url 设置的URL
             site_name: String, // site name 设置的URL
             site_pause: Boolean,//配置暂停 true：暂停 false：使用
-            track_status: String // track code status
+            track_status: String ,// track code status
             //status: String, // enable or disable track
+            is_top:Boolean
         }
     },
 

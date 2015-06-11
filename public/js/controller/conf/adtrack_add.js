@@ -51,20 +51,18 @@ define(["./module"], function (ctrs) {
             planName: "",
             keywords: "",
             creative: "",
-            produceUrl: $scope.parseUrl
+            produceUrl: ""
+        };
 
-        }
-        //转换生成的URL
-        $scope.parseUrl = function(){
-            var strUrl = "\http://"+ $scope.urlconfig.targetUrl
-                + "?hmsr=" +$scope.urlconfig.mediaPlatform
+        /*$scope.parseUrl = function() {
+            var strUrl = "http://" + $scope.urlconfig.targetUrl
+                + "?hmsr=" + $scope.urlconfig.mediaPlatform
                 + "&_hmmd=" + $scope.urlconfig.adTypes
                 + "&_hmpl=" + $scope.urlconfig.planName
                 + "&_hmkw=" + $scope.urlconfig.keywords
                 + "&_hmci=" + $scope.urlconfig.creative;
             return encodeURI(strUrl);
-        }
-
+        };*/
 
         $scope.submit = function () {
             var model = angular.copy($scope.adtrack_model);
@@ -74,11 +72,12 @@ define(["./module"], function (ctrs) {
             model.planName = $scope.urlconfig.planName;
             model.keywords = $scope.urlconfig.keywords;
             model.creative = $scope.urlconfig.creative;
-            model.produceUrl = $scope.urlconfig.produceUrl;
+            //model.produceUrl = $scope.parseUrl();
             model.uid = $cookieStore.get("uid");
 
             var query = "/config/adtrack?type=search&query={\"uid\":\"" + model.uid + "\",\"targetUrl\":\"" + model.targetUrl + "\"}";
             $http({method: 'GET', url: query}).success(function (dataConfig, status) {
+
 
                 if (dataConfig == null || dataConfig.length == 0) {
                     var url = "/config/adtrack?type=save&entity=" + JSON.stringify(model);

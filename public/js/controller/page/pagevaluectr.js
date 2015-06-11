@@ -84,8 +84,7 @@ define(["./module"], function (ctrs) {
             //其他页面表格
             $scope.reloadByCalendar("today");
             $('#reportrange span').html(GetDateStr(0));
-            $rootScope.targetSearch(true);
-            $scope.$broadcast("ssh_dateShow_options_time_change");
+            $rootScope.targetSearch();
             //classcurrent
             $scope.reset();
             $scope.todayClass = true;

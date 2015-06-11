@@ -1,8 +1,9 @@
-<div class="middle_containers" ng-controller="childlist_add">
+<div class="middle_containers" ng-controller="childlist_update">
     <div class="web_list">
         <!--网站导航-->
         <div class="web_list_nav">
-            <p>  <span ng-bind-html="userTypeName"></span> -新增子目录</p>
+
+            <p>  <span ng-bind-html="userTypeName"></span>  -修改子目录</p>
         </div>
     </div>
     <form role="form" name="subdirectoryForm" ng-submit="submitForm(subdirectoryForm.$valid)" class="form-horizontal" novalidate>
@@ -54,12 +55,8 @@
             <li>
                 <span>子目录名称</span>
                 <div>
-                    <input  required  type="text" placeholder="子目录1" class="form-control" data-ng-model="subdirectory.subdirectory_url"
-                            name="remote" remote-validation
-                            onfocus="this.setAttribute('placeholder','')" onblur="this.setAttribute('placeholder','子目录1')"
-                            />
-                    <span ng-show="subdirectoryForm.remote.$error.remote">子目录名称重复！</span>
-
+                    <input  required    type="text" disabled
+                             placeholder="子目录1" data-ng-model="subdirectory.subdirectory_url"/>
                 </div>
             </li>
             <li>
@@ -80,8 +77,8 @@
             </li>
             <li>
 
-              <button  ng-disabled="subdirectoryForm.$invalid" class="btn btn-info count_content_button" ng-click="onSaveSubdirectory()">确定</button>
-                <button class="btn btn-info count_content_button ">取消</button>
+              <button   ng-disabled="subdirectoryForm.$invalid" class="btn btn-info count_content_button" ng-click="onUpdateSubdirectory()">确定</button>
+                <button class="btn btn-info count_content_button "  ng-click="onCancel()" >取消</button>
 
             </li>
         </ul>

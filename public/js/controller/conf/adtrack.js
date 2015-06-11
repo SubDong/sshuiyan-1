@@ -29,7 +29,7 @@ define(["./module"], function (ctrs) {
         };
 
         //配置默认指标
-        $rootScope.checkedArray = ["_uid","uid", "type_id", "track_id", "site_url", "site_name", "site_pause", "track_status"];
+        $rootScope.checkedArray = ["_uid","uid", "type_id", "track_id", "targetUrl", "mediaPlatform", "adTypes", "planName", "keywords", "creative","produceUrl"];
         $rootScope.gridArray = {
             paginationPageSize: 25,
             expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
@@ -40,6 +40,7 @@ define(["./module"], function (ctrs) {
             enableGridMenu: false,
             enableHorizontalScrollbar: 0,
             columnDefs: [
+                {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>", maxWidth: 5},
                 {name: "目标URL", displayName: "目标URL", field: "targetUrl"},
                 {name: "媒体平台", displayName: "媒体平台", field: "mediaPlatform"},
                 {name: "广告类型", displayName: "广告类型", field: "adTypes"},
@@ -82,20 +83,29 @@ define(["./module"], function (ctrs) {
                 method: 'GET',
                 url: url
             }).success(function (dataConfig, status) {
+
                 $scope.gridArray.data = dataConfig;
+                console.log(dataConfig);
             });
         };
         refushGridData();
+        //$scope.text="eeeeee";
+
         $scope.onViewUrl=function(index,grid,row){
 
+            console.log(row);
+
+           var thtml= $rootScope.urlDialogHtml.replace("produceUrl", row.entity.produceUrl);
+            //col
             $scope.urlDialog = ngDialog.open({
-                template:$rootScope.urlDialogHtml,
+                template:thtml,
                 className: 'ngdialog-theme-default',
                 plain: true,
                 scope : $scope
             });
         };
-        $rootScope.urlDialogHtml = "<div class='mid_left'>生成URL<div class='mid_left_code'>   </div> </div><div class='mid_right'><button type='button' class='btn btn-default navbar-btn'>复制</button><ul type='disc'>" +
+        $rootScope.urlDialogHtml = "<div class='mid_left'>生成URL<div class='mid_left_code'>produceUrl</div> " +
+        "</div><div class='mid_right'><button type='button' class='btn btn-default navbar-btn'>复制</button><ul type='disc'>" +
             "  <li style='color：red；'>请将生成的URL复制到你的其他媒介的推广目标URL位置</li></ul></div>";
 
     });

@@ -37,7 +37,7 @@ define(["./../module"], function (ctrs) {
             },
             {
                 name: " ",
-                cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='javascript:void(0)' ng-click='grid.appScope.showEntryPageLink(row, 1)'>查看来源分布</a></li></ul></div></div>"
+                cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history9' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='javascript:void(0)' ng-click='grid.appScope.showEntryPageLink(row, 1)'>查看来源分布</a></li></ul></div></div>"
             },
             {
                 name: "访客数(UV)",
@@ -215,8 +215,7 @@ define(["./../module"], function (ctrs) {
             $scope.reloadByCalendar("today");
             $('#reportrange span').html(GetDateStr(0));
             //其他页面表格
-            $rootScope.targetSearch(true);
-            $scope.$broadcast("ssh_dateShow_options_time_change");
+            $rootScope.targetSearch();
             //classcurrent
             $scope.reset();
             $scope.todayClass = true;

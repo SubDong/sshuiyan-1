@@ -60,6 +60,13 @@ var daos = {
         var instance = this.createmodel(schema);
         instance.find(JSON.parse(qry), fields, options, cb);
     },
+    findById: function (schema, qry, fields, options, cb) {
+        if (qry._id) {
+            return this.uiderror();
+        }
+        var instance = this.createmodel(schema);
+        instance.findById(JSON.parse(qry), fields, options, cb);
+    },
     findSync: function (schema, qry, fields, options, cb) {
         if (qry.uid) {
             return this.uiderror();
@@ -92,7 +99,7 @@ var daos = {
         }, null, options, cb);
     },
     update: function (schema, qry, updates, cb) {
-        if (qry.uid) {
+        if (updates._id) {
             return this.uiderror();
         }
         var instance = this.createmodel(schema);
@@ -108,8 +115,6 @@ var daos = {
             var Model = mongodb.service().model(schemas[schema].model_name);
             return Model;
         }
-
-
     },
     createinstance: function (schema, obj) {
         var Model = this.createmodel(schema);

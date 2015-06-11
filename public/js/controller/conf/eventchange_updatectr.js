@@ -4,9 +4,7 @@
 define(["./module"], function (ctrs) {
     "use strict";
 
-    ctrs.controller('eventchange_addctr', function ($scope, $http, $rootScope, $cookieStore, ngDialog, $state) {
-
-
+    ctrs.controller('eventchange_updatectr', function ($scope, $http, $rootScope, $cookieStore, $stateParams, ngDialog,$state) {
 
 
         $scope.eventChange = {};
@@ -19,18 +17,25 @@ define(["./module"], function (ctrs) {
 
         $scope.eventChange.event_method ="手动方式";
 
-        $scope.eventChange.event_status = "1";
+        $scope.eventChange.event_status;
 
-        $scope.eventChange.uid =  $cookieStore.get("uid");
+        $scope.eventChange.uid =  "";
 
-        $scope.eventChange.root_url =$rootScope.userType;
+        $scope.eventChange.root_url =  "";
+
+        $scope.eventChange._id = $stateParams.id;
 
 
-        $scope.onSaveEvent = function () {
+        $scope.onCancel = function () {
+            $state.go('eventchange');
+        }
+
+        $scope.onUpdateEvent = function () {
 
             var entity = JSON.stringify($scope.eventChange);
 
-            var url = "/config/eventchnage_list?type=save&entity=" + entity;
+            var url = "/config/eventchnage_list?type=update&query={\"_id\":\"" + $scope.eventChange._id + "\"}&updates=" + entity;
+
             $http({
                 method: 'GET',
                 url: url
@@ -53,6 +58,22 @@ define(["./module"], function (ctrs) {
             });
 
         };
+
+        var loadData = function () {
+
+            var url = "/config/eventchnage_list?type=findById&query={\"_id\":\"" + $scope.eventChange._id + "\"}";
+
+            $http({
+                method: 'GET',
+                url: url
+            }).success(function (dataConfig, status) {
+                $scope.eventChange = dataConfig;
+
+            });
+        }
+
+        loadData();
+
 
 
 
