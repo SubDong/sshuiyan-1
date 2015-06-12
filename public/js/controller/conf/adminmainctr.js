@@ -97,7 +97,8 @@ define(["./module"], function (ctrs) {
             {
                 name: "x6",
                 displayName: "",
-                cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.gain(index,grid,row)'>获取代码</a><span class='glyphicon glyphicon-file'></span></div>",
+                cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.gain(index,grid,row)'>" +
+                "获取代码</a><span class='glyphicon glyphicon-file'></span></div>",
                 maxWidth: 100
             },
             {
@@ -109,7 +110,15 @@ define(["./module"], function (ctrs) {
             {
                 name: "x3",
                 displayName: "",
-                cellTemplate: "<div data-ng-focus='fzk '  class='table_admin'><span class='glyphicon glyphicon-cog'></span> <a href=''>设置</a> </div><div data-ng-show='fzk' >1</div>",
+                cellTemplate: "<div class='btn-group table_admin' dropdown='' is-open='status.isopen'>" +
+                "<span class='glyphicon glyphicon-cog'></span><a type='button' dropdown-toggle='' ng-disabled='disabled' aria-haspopup='true' aria-expanded='false'>设置 </a> <ul class='dropdown-menu' role='menu'>" +
+            "<li><a href='#conf/webcountsite/countrules'>设置统计规则</a></li>" +
+            "<li><a href='#conf/webcountsite/childlist'>设置子目录</a></li>" +
+            "<li><a href='#conf/webcountsite/pagechange'>设置页面转化目标</a></li>" +
+            "<li><a href='#conf/webcountsite/eventchange'>设置事件转化目标</a></li>" +
+            "<li><a href='#conf/webcountsite/timechange'>设置市场转化目标</a></li>" +
+            " <li><a href='#conf/webcountsite/adtrack'>设置指定广告跟踪</a></li>" +
+            "</ul> </div>",
                 maxWidth: 80
             },
             {
@@ -263,7 +272,7 @@ define(["./module"], function (ctrs) {
             };
             var tip = "";
             if (row.entity.site_pause) {
-                tip = "重新启用成功";
+                tip = "确定重新启用？";
             } else {
                 tip = "<li>注意</li><li>暂停后，您将不再分析该网站，直至您重新启用，你确定现在暂停使用吗？</li>"
             }

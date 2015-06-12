@@ -4,7 +4,7 @@
 define(["./module"], function (ctrs) {
     "use strict";
 
-    ctrs.controller('timechange', function ($scope, $http,$rootScope,$cookieStore) {
+    ctrs.controller('timechange', function ($scope, $http,$rootScope,$cookieStore,ngDialog  ) {
        //$scope.
         $scope.time_conv={
             status: false,
@@ -36,6 +36,16 @@ define(["./module"], function (ctrs) {
         init();
         Custom.initCheckInfo();//页面check样式js调用
         $scope.onSubmitClickListener = function (){
+            $scope.urlDialog = ngDialog.open({
+                template: '\
+                  <div class="ngdialog-buttons" >\
+                            <ul>设置保存成功</ul>   \
+                  </div>',
+                className: 'ngdialog-theme-default',
+                plain: true,
+                scope: $scope
+
+            });
             var uid= $cookieStore.get("uid");
             var site_id=$rootScope.userType;//从conf_sites中获取
             var query= "/config/conf?index=5&type=search&query={\"uid\":\""+uid+"\",\"site_id\":\""+site_id+"\"}";
