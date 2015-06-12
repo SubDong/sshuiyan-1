@@ -66,11 +66,10 @@ define(["./../module"], function (ctrs) {
 
         $scope.onLegendClick = function (radio, chartInstance, config, checkedVal) {
             clear.lineChart(config, checkedVal);
-            $scope.charts.forEach(function (chart) {
-                chart.config.instance = echarts.init(document.getElementById(chart.config.id));
-                chart.types = checkedVal;
-            });
-            requestService.refresh([$scope.charts[1]]);
+            var chart = $scope.charts[1];
+            chart.config.instance = echarts.init(document.getElementById(chart.config.id));
+            chart.types = checkedVal;
+            requestService.refresh([chart]);
         }
         $scope.pieFormat = function (data, config) {
             var json = JSON.parse(eval("(" + data + ")").toString());
@@ -78,15 +77,12 @@ define(["./../module"], function (ctrs) {
         }
         $scope.attractiveFormat = function (data, config, e) {
             var json = JSON.parse(eval("(" + data + ")").toString());
-            var result = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", e.types,config);
+            var result = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", e.types, config);
             config['noFormat'] = true;
             config['twoYz'] = "none";
-            if (result.length > 5) {
-                result = result.slice(result.length - 5);
-            }
             cf.renderChart(result, config);
             var final_result = chartUtils.getExternalinkPie(result);//获取barchart的数据
-            var pieData = chartUtils.getEnginePie(final_result);
+            var pieData = chartUtils.getEnginePie(final_result, null, e);
             $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
             cf.renderChart(pieData, $scope.charts[0].config);
         }
@@ -116,6 +112,7 @@ define(["./../module"], function (ctrs) {
                     min_max: false,
                     bGap: false,
                     chartType: "line",
+                    auotHidex: true,
                     lineType: false,
                     keyFormat: 'none',
                     dataKey: "key",
@@ -132,12 +129,11 @@ define(["./../module"], function (ctrs) {
             $rootScope.start = 0;
             $rootScope.end = 0;
             $rootScope.interval = undefined;
-            $scope.charts.forEach(function (e) {
-                var chart = echarts.init(document.getElementById(e.config.id));
-                e.config.instance = chart;
-                util.renderLegend(chart, e.config);
-            })
-            requestService.refresh([$scope.charts[1]]);
+            var e = $scope.charts[1];
+            var chart = echarts.init(document.getElementById(e.config.id));
+            e.config.instance = chart;
+            util.renderLegend(chart, e.config);
+            requestService.refresh([e]);
         }
         $scope.init();
 
@@ -148,6 +144,9 @@ define(["./../module"], function (ctrs) {
             requestService.refresh(arrayChart);
         });
         //日历
+        <<<<<<<
+        Updated
+        upstream
         $scope.dateClosed = function () {
             $rootScope.start = $scope.startOffset;
             $rootScope.end = $scope.endOffset;
@@ -164,54 +163,71 @@ define(["./../module"], function (ctrs) {
             requestService.refresh($scope.charts);
             $rootScope.tableTimeStart = $scope.startOffset;
             $rootScope.tableTimeEnd = $scope.endOffset;
-            $rootScope.targetSearch();
-            $scope.$broadcast("ssh_dateShow_options_time_change");
-        };
-        //
+            ======
+            =
+                $rootScope.datepickerClick = function (start, end, label) {
+                    var time = chartUtils.getTimeOffset(start, end);
+                    $rootScope.start = time[0];
+                    $rootScope.end = time[1];
+                    var e = $scope.charts[1];
+                    e.config.keyFormat = "day";
+                    var chart = echarts.init(document.getElementById(e.config.id));
+                    e.config.instance = chart;
+                    requestService.refresh([e]);
+                    $rootScope.tableTimeStart = time[0];
+                    $rootScope.tableTimeEnd = time[1];
+                    >>>>>>>
+                    Stashed
+                    changes
+                    $rootScope.targetSearch();
+                    $scope.$broadcast("ssh_dateShow_options_time_change");
+                }     //
 
-        this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
-        //this.type = 'range';
-        /*      this.identity = angular.identity;*/
-        //$scope.$broadcast("update", "msg");
-        $scope.$on("update", function (e, datas) {
-            // 选择时间段后接收的事件
-            datas.sort();
-            //console.log(datas);
-            var startTime = datas[0];
-            var endTime = datas[datas.length - 1];
-            $scope.startOffset = (startTime - today_start()) / 86400000;
-            $scope.endOffset = (endTime - today_start()) / 86400000;
-            //console.log("startOffset=" + startOffset + ", " + "endOffset=" + endOffset);
-        });
-        function GetDateStr(AddDayCount) {
-            var dd = new Date();
-            dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
-            var y = dd.getFullYear();
-            var m = dd.getMonth() + 1;//获取当前月份的日期
-            var d = dd.getDate();
-            return y + "-" + m + "-" + d;
-        }
-
-        //刷新
-        $scope.page_refresh = function () {
-            $rootScope.start = 0;
-            $rootScope.end = 0;
-            $rootScope.tableTimeStart = 0;
-            $rootScope.tableTimeEnd = 0;
-            $scope.charts.forEach(function (e) {
-                var chart = echarts.init(document.getElementById(e.config.id));
-                e.config.instance = chart;
+            this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
+            //this.type = 'range';
+            /*      this.identity = angular.identity;*/
+            //$scope.$broadcast("update", "msg");
+            $scope.$on("update", function (e, datas) {
+                // 选择时间段后接收的事件
+                datas.sort();
+                //console.log(datas);
+                var startTime = datas[0];
+                var endTime = datas[datas.length - 1];
+                $scope.startOffset = (startTime - today_start()) / 86400000;
+                $scope.endOffset = (endTime - today_start()) / 86400000;
+                //console.log("startOffset=" + startOffset + ", " + "endOffset=" + endOffset);
             });
-            //图表
-            requestService.refresh($scope.charts);
-            $scope.reloadByCalendar("today");
-            $('#reportrange span').html(GetDateStr(0));
-            //其他页面表格
-            $rootScope.targetSearch();
-            //classcurrent
-            $scope.reset();
-            $scope.todayClass = true;
-        };
-    });
+            function GetDateStr(AddDayCount) {
+                var dd = new Date();
+                dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
+                var y = dd.getFullYear();
+                var m = dd.getMonth() + 1;//获取当前月份的日期
+                var d = dd.getDate();
+                return y + "-" + m + "-" + d;
+            }
 
-});
+            //刷新
+            $scope.page_refresh = function () {
+                $rootScope.start = 0;
+                $rootScope.end = 0;
+                $rootScope.tableTimeStart = 0;
+                $rootScope.tableTimeEnd = 0;
+                $scope.charts.forEach(function (e) {
+                    var chart = echarts.init(document.getElementById(e.config.id));
+                    e.config.instance = chart;
+                });
+                //图表
+                requestService.refresh($scope.charts);
+                $scope.reloadByCalendar("today");
+                $('#reportrange span').html(GetDateStr(0));
+                //其他页面表格
+                $rootScope.targetSearch();
+                //classcurrent
+                $scope.reset();
+                $scope.todayClass = true;
+            };
+        }
+        )
+        ;
+
+    });

@@ -208,10 +208,8 @@ var chartUtils = {
                 buckets.forEach(function (buc) {
                     if (buc) {
                         if (buc.key == key) {
-                            var aggs = chartUtils.getAggs(types.toString());
-                            if (buc[aggs + "_aggs"]) {
-                                _val = buc[aggs + "_aggs"].value;
-                            }
+                            var aggs = types.toString();
+                            _val = chartUtils.getAggs(buc, aggs);
                         }
                     }
                 })
@@ -236,6 +234,18 @@ var chartUtils = {
             tmp['quota'] = val;
             result.push(tmp);
         });
+        //排序top10
+        result.forEach(function (item) {
+            var count = 0;
+            item.quota.forEach(function (q) {
+                count += Number(q);
+            });
+            item.totalCount = count;
+        });
+        result.sort(chartUtils.by("totalCount"));
+        if (result.length > 10) {
+            result = result.slice(0, 10);
+        }
         return result;
     },
     getLabel: function (json) {
@@ -244,7 +254,8 @@ var chartUtils = {
             var buckets = e.dimension.buckets;
             if (buckets) {
                 buckets.forEach(function (item) {
-                    label.push(item.key);
+                    if (item.key != '-')
+                        label.push(item.key);
                 });
             } else {
                 label.push("暂无数据");
@@ -252,12 +263,17 @@ var chartUtils = {
         });
         return label.removal();
     },
-    getAggs: function (res) {
-        switch (res) {
+    getAggs: function (buc, aggs) {
+        switch (aggs) {
             case "nuv":
-                return "new_visitor";
+                return buc.new_visitor_aggs.nuv_aggs.value;
+                break;
             default :
-                return res;
+                if (buc[aggs + "_aggs"]) {
+                    return buc[aggs + "_aggs"].value;
+                } else {
+                    return 0;
+                }
         }
     },
     arrayMerge: function (a, b) {
@@ -270,7 +286,7 @@ var chartUtils = {
             return v + (b[i] || 0)
         })
     },
-    getEnginePie: function (data, split) {
+    getEnginePie: function (data, split, chart) {
         if (data) {
             var result_data = [];
             var _label = [];
@@ -295,6 +311,7 @@ var chartUtils = {
             });
             result["key"] = _label;
             result["quota"] = _data;
+            result["label"] = chart.types.toString();
             result_data.push(result);
             return result_data;
         }

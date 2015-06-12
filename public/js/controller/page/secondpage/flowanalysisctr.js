@@ -73,11 +73,10 @@ define(["./../module"], function (ctrs) {
 
         $scope.onLegendClick = function (radio, chartInstance, config, checkedVal) {
             clear.lineChart(config, checkedVal);
-            $scope.charts.forEach(function (chart) {
-                chart.config.instance = echarts.init(document.getElementById(chart.config.id));
-                chart.types = checkedVal;
-            });
-            requestService.refresh([$scope.charts[1]]);
+            var chart = $scope.charts[1];
+            chart.config.instance = echarts.init(document.getElementById(chart.config.id));
+            chart.types = checkedVal;
+            requestService.refresh([chart]);
         }
         $scope.pieFormat = function (data, config) {
             var json = JSON.parse(eval("(" + data + ")").toString());
@@ -85,15 +84,12 @@ define(["./../module"], function (ctrs) {
         }
         $scope.flowanalyFomrmat = function (data, config, e) {
             var json = JSON.parse(eval("(" + data + ")").toString());
-            var result = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", e.types,config);
+            var result = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", e.types, config);
             config['noFormat'] = true;
             config['twoYz'] = "none";
-            if (result.length > 5) {
-                result = result.slice(result.length - 5);
-            }
             cf.renderChart(result, config);
             var final_result = chartUtils.getExternalinkPie(result);//获取barchart的数据
-            var pieData = chartUtils.getEnginePie(final_result);
+            var pieData = chartUtils.getEnginePie(final_result, null, e);
             $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
             cf.renderChart(pieData, $scope.charts[0].config);
         }
@@ -123,6 +119,7 @@ define(["./../module"], function (ctrs) {
                     min_max: false,
                     bGap: false,
                     chartType: "line",
+                    auotHidex: true,
                     lineType: false,
                     keyFormat: 'none',
                     dataKey: "key",
@@ -139,12 +136,11 @@ define(["./../module"], function (ctrs) {
             $rootScope.start = 0;
             $rootScope.end = 0;
             $rootScope.interval = undefined;
-            $scope.charts.forEach(function (e) {
-                var chart = echarts.init(document.getElementById(e.config.id));
-                e.config.instance = chart;
-                util.renderLegend(chart, e.config);
-            })
-            requestService.refresh($scope.charts);
+            var e = $scope.charts[1];
+            var chart = echarts.init(document.getElementById(e.config.id));
+            e.config.instance = chart;
+            util.renderLegend(chart, e.config);
+            requestService.refresh([e]);
         }
         $scope.init();
 
@@ -155,21 +151,20 @@ define(["./../module"], function (ctrs) {
             var arrayChart = [$scope.charts[1]]
             requestService.refresh(arrayChart);
         });
-        //日历
-        $scope.dateClosed = function () {
-            $rootScope.start = $scope.startOffset;
-            $rootScope.end = $scope.endOffset;
-            $scope.charts.forEach(function (e) {
-                e.config.keyFormat = "day";
-                var chart = echarts.init(document.getElementById(e.config.id));
-                e.config.instance = chart;
-            })
-            requestService.refresh($scope.charts);
+        $rootScope.datepickerClick = function (start, end, label) {
+            var time = chartUtils.getTimeOffset(start, end);
+            $rootScope.start = time[0];
+            $rootScope.end = time[1];
+            var e = $scope.charts[1];
+            e.config.keyFormat = "day";
+            var chart = echarts.init(document.getElementById(e.config.id));
+            e.config.instance = chart;
+            requestService.refresh([e]);
+            $rootScope.tableTimeStart = time[0];
+            $rootScope.tableTimeEnd = time[1];
             $rootScope.targetSearch();
-            $rootScope.tableTimeStart = $scope.startOffset;
-            $rootScope.tableTimeEnd = $scope.endOffset;
             $scope.$broadcast("ssh_dateShow_options_time_change");
-        };
+        }
         //
 
         this.selectedDates = [new Date().setHours(0, 0, 0, 0)];

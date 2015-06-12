@@ -87,30 +87,12 @@ define(["./module"], function (ctrs) {
         }
         $scope.mainFormat = function (data, config, e) {
             var json = JSON.parse(eval("(" + data + ")").toString());
-            var result = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", e.types,config);
+            var result = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", e.types, config);
             config['noFormat'] = true;
             config['twoYz'] = "none";
-
-            /*===============TopN开始=============*/
-            //if (result.length > 5) {
-            //    var top = [];
-            //    var _index = [];
-            //    result.forEach(function (e, i) {
-            //        var value = 0;
-            //        e.quota.forEach(function (item) {
-            //            value += item;
-            //        });
-            //        top.push(value);
-            //        _index.push(i);
-            //    });
-            //}
-            /*=================TopN结束==================*/
-            if (result.length > 5) {
-                result = result.slice(result.length - 5);
-            }
             cf.renderChart(result, config);
             var final_result = chartUtils.getExternalinkPie(result);//获取barchart的数据
-            var pieData = chartUtils.getEnginePie(final_result);
+            var pieData = chartUtils.getEnginePie(final_result, null, e);
             $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
             cf.renderChart(pieData, $scope.charts[0].config);
         }
@@ -140,6 +122,7 @@ define(["./module"], function (ctrs) {
                     bGap: false,
                     min_max: false,
                     chartType: "line",
+                    auotHidex: true,
                     lineType: false,
                     keyFormat: 'none',
                     dataKey: "key",
@@ -175,12 +158,11 @@ define(["./module"], function (ctrs) {
             var time = chartUtils.getTimeOffset(start, end);
             $rootScope.start = time[0];
             $rootScope.end = time[1];
-            $scope.charts.forEach(function (e) {
-                e.config.keyFormat = "day";
-                var chart = echarts.init(document.getElementById(e.config.id));
-                e.config.instance = chart;
-            })
-            requestService.refresh($scope.charts);
+            var e = $scope.charts[1];
+            e.config.keyFormat = "day";
+            var chart = echarts.init(document.getElementById(e.config.id));
+            e.config.instance = chart;
+            requestService.refresh([e]);
             $rootScope.tableTimeStart = time[0];
             $rootScope.tableTimeEnd = time[1];
             $rootScope.targetSearch();

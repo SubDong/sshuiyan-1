@@ -93,16 +93,19 @@ define(["./module"], function (ctrs) {
             })
             result.sort(chartUtils.by("totalCount"));
             if (result.length > 3) {
-                result = result.slice(0,3);
+                result = result.slice(0, 3);
             }
             config['noFormat'] = true;//告知chart工厂无须格式化json，可以直接使用data对象
             config['twoYz'] = "none";
-            console.log(result);
             cf.renderChart(result, config);
             //渲染pie图
-            var pieData = chartUtils.getEnginePie(result, "?");
+            var pieData = chartUtils.getEnginePie(result, "?",e);
             $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
+            //$scope.charts[0].config.instance.on("hover", $scope.pieListener);
             cf.renderChart(pieData, $scope.charts[0].config);
+        }
+        $scope.pieListener = function (params) {
+            console.log(params);
         }
         $scope.charts = [
             {
@@ -125,7 +128,7 @@ define(["./module"], function (ctrs) {
             {
                 config: {
                     legendId: "indicators_charts_legend",
-                    legendData: ["浏览量(PV)", "访客数(UV)", "访问次数", "新访客数", "IP数", "页面转化", "订单数", "订单金额", "订单转化率"],
+                    legendData: ["浏览量(PV)", "访客数(UV)", "访问次数", "新访客数", "IP数", "页面转化"],
                     legendClickListener: $scope.onLegendClick,
                     legendAllowCheckCount: 1,
                     min_max: false,
@@ -133,6 +136,7 @@ define(["./module"], function (ctrs) {
                     id: "indicators_charts",
                     chartType: "line",
                     lineType: false,
+                    auotHidex: true,
                     dataKey: "key",
                     keyFormat: "none",
                     dataValue: "quota"
@@ -150,6 +154,7 @@ define(["./module"], function (ctrs) {
             $rootScope.end = 0;
             $rootScope.interval = undefined;
             var chart = echarts.init(document.getElementById($scope.charts[1].config.id));
+            //chart.on("hover", $scope.pieListener);
             $scope.charts[1].config.instance = chart;
             util.renderLegend(chart, $scope.charts[1].config);
             var arrayChart = [$scope.charts[1]];

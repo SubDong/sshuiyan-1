@@ -67,11 +67,10 @@ define(["./module"], function (ctrls) {
 
         $scope.onLegendClick = function (radio, chartInstance, config, checkedVal) {
             clear.lineChart(config, checkedVal);
-            $scope.charts.forEach(function (chart) {
-                chart.config.instance = echarts.init(document.getElementById(chart.config.id));
-                chart.types = checkedVal;
-            })
-            requestService.refresh($scope.charts);
+            var chart = $scope.charts[1];
+            chart.config.instance = echarts.init(document.getElementById(chart.config.id));
+            chart.types = checkedVal;
+            requestService.refresh([chart]);
         }
         $scope.pieFormat = function (data, config) {
             var json = JSON.parse(eval("(" + data + ")").toString());
@@ -90,6 +89,13 @@ define(["./module"], function (ctrls) {
             config['noFormat'] = true;
             config['twoYz'] = "none";
             cf.renderChart(result, config);
+            var pieData = chartUtils.getEnginePie(result, "?", e);
+            var e0 = $scope.charts[0];
+            e0.config.instance = echarts.init(document.getElementById(e0.config.id));
+            //$scope.charts[0].config.instance.on("hover", $scope.pieListener);
+            cf.renderChart(pieData, e0.config);
+        }
+        $scope.pieListener = function (params) {
         }
         $scope.charts = [
             {
@@ -110,7 +116,7 @@ define(["./module"], function (ctrls) {
             {
                 config: {
                     legendId: "source_charts_legend",
-                    legendData: ["浏览量(PV)", "访客数(UV)", "访问次数", "新访客数", "IP数", "页面转化", "订单数", "订单金额", "订单转化率"],
+                    legendData: ["浏览量(PV)", "访客数(UV)", "访问次数", "新访客数", "IP数", "页面转化"],
                     legendClickListener: $scope.onLegendClick,
                     legendAllowCheckCount: 1,
                     id: "indicators_charts",
@@ -118,7 +124,7 @@ define(["./module"], function (ctrls) {
                     bGap: false,
                     chartType: "line",
                     lineType: false,
-                    auotHidex:true,
+                    auotHidex: true,
                     keyFormat: "none",
                     dataKey: "key",
                     dataValue: "quota"
@@ -134,22 +140,20 @@ define(["./module"], function (ctrls) {
             $rootScope.start = 0;
             $rootScope.end = 0;
             $rootScope.interval = undefined;
-            $scope.charts.forEach(function (e) {
-                var chart = echarts.init(document.getElementById(e.config.id));
-                e.config.instance = chart;
-                util.renderLegend(chart, e.config);
-            })
-            requestService.refresh($scope.charts);
+            var chart = echarts.init(document.getElementById($scope.charts[1].config.id));
+            chart.on("hover", $scope.pieListener);
+            $scope.charts[1].config.instance = chart;
+            util.renderLegend(chart, $scope.charts[1].config);
+            requestService.refresh([$scope.charts[1]]);
         }
         $scope.init();
 
         $scope.$on("ssh_refresh_charts", function (e, msg) {
             $rootScope.targetSearch();
-            $scope.charts.forEach(function (e) {
-                var chart = echarts.init(document.getElementById(e.config.id));
-                e.config.instance = chart;
-            })
-            requestService.refresh($scope.charts);
+            var e = $scope.charts[1];
+            var chart = echarts.init(document.getElementById(e.config.id));
+            e.config.instance = chart;
+            requestService.refresh([e]);
         });
 
         $scope.disabled = undefined;
@@ -186,13 +190,11 @@ define(["./module"], function (ctrls) {
             var time = chartUtils.getTimeOffset(start, end);
             $rootScope.start = time[0];
             $rootScope.end = time[1];
-            $scope.charts.forEach(function (e) {
-                    e.config.keyFormat = "day";
-                var chart = echarts.init(document.getElementById(e.config.id));
-                e.config.instance = chart;
-            })
-
-            requestService.refresh($scope.charts);
+            var e = $scope.charts[1];
+            e.config.keyFormat = "day";
+            var chart = echarts.init(document.getElementById(e.config.id));
+            e.config.instance = chart;
+            requestService.refresh([e]);
             $rootScope.targetSearch();
             $rootScope.tableTimeStart = time[0];
             $rootScope.tableTimeEnd = time[1];

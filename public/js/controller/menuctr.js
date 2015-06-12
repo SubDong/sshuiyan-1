@@ -217,7 +217,7 @@ define(["./module"], function (ctrs) {
     });
 
     /*********nav-select*********/
-    ctrs.controller('ngSelect', function ($scope, $location, $cookieStore, $window, $rootScope) {
+    ctrs.controller('ngSelect', function ($scope, $location, $cookieStore, $window, $rootScope,$state) {
         $scope.clear = function () {
             $scope.siteselect.selected = undefined;
         };
@@ -243,7 +243,7 @@ define(["./module"], function (ctrs) {
             $rootScope.baiduAccount = select.bd_name;
             $rootScope.userType = select.type_id;
             $rootScope.userTypeName = select.site_name;
-
+            $state.go("index");
         }
     })
 });

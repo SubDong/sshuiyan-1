@@ -102,18 +102,18 @@ var op = {
         } else {
             json = JSON.parse(eval('(' + data + ')').toString());
         }
+        var count = 0;
         json.forEach(function (j) {
-            var count = 0;
             j.quota.forEach(function (q) {
                 count += Number(q);
             });
-            if (count == 0) {
-                chartConfig.instance = echarts.init(document.getElementById(chartConfig.id));
-                def.defData(chartConfig);
-                chartConfig.legendData = _legendTmp;
-                return;
-            }
         });
+        if (count == 0) {
+            chartConfig.instance = echarts.init(document.getElementById(chartConfig.id));
+            def.defData(chartConfig);
+            chartConfig.legendData = _legendTmp;
+            return;
+        }
         if (!json[0]) {
             chartConfig.instance = echarts.init(document.getElementById(chartConfig.id));
             def.defData(chartConfig);
@@ -168,7 +168,12 @@ var op = {
                         var formatType = labelData[i];
                         if (chartConfig.compare || chartConfig.compareCustom) {
                             var baseSerieName = params[i].seriesName.split(":");
-                            res += '<li class=chartstyle' + i + '>' + baseSerieName[0] + chartUtils.convertChinese(baseSerieName[1]) + ' : ' + ad.formatFunc(params[i].value, baseSerieName[1]) + '</li>';
+                            var re = /[^\x00-\xff]/;//判断是否有中文
+                            if (re.test(baseSerieName[1])) {
+                                res += '<li class=chartstyle' + i + '>' + baseSerieName[0] + baseSerieName[1] + ' : ' + ad.formatFunc(params[i].value, baseSerieName[1]) + '</li>';
+                            } else {
+                                res += '<li class=chartstyle' + i + '>' + baseSerieName[0] + chartUtils.convertChinese(baseSerieName[1]) + ' : ' + ad.formatFunc(params[i].value, baseSerieName[1]) + '</li>';
+                            }
                         } else {
                             if (chartConfig.toolTip == undefined) {
                                 res += '<li class=chartstyle' + i + '>' + params[i].seriesName + ' : ' + ad.formatFunc(params[i].value, formatType) + '</li>';
@@ -401,7 +406,7 @@ var op = {
                 },
                 formatter: function (params, ticket, callback) {
                     var formatType = labelData[0];
-                    var res = chartUtils.convertChinese(formatType) + "值：";
+                    var res = chartUtils.convertChinese(formatType) + "：";
                     if (chartConfig.toolTip == undefined) {
                         res += ad.formatFunc(params.value, formatType) + '<br/>' + '占比：' + params[3] + '%<br/>';
                     } else {
@@ -410,18 +415,19 @@ var op = {
                     return res;
                 }
             },
-            color: [
-                '#87cefa', '#ff7f50', '#da70d6', '#32cd32', '#6495ed',
-                '#ff69b4', '#ba55d3', '#cd5c5c', '#ffa500', '#40e0d0',
-                '#1e90ff', '#ff6347', '#7b68ee', '#00fa9a', '#ffd700',
-                '#6b8e23', '#ff00ff', '#3cb371', '#b8860b', '#30e0e0'
-            ],
+            //color: [
+            //    '#87cefa', '#ff7f50', '#da70d6', '#32cd32', '#6495ed',
+            //    '#ff69b4', '#ba55d3', '#cd5c5c', '#ffa500', '#40e0d0',
+            //    '#1e90ff', '#ff6347', '#7b68ee', '#00fa9a', '#ffd700',
+            //    '#6b8e23', '#ff00ff', '#3cb371', '#b8860b', '#30e0e0'
+            //],
             legend: {
                 show: chartConfig.legendShow ? chartConfig.legendShow : false,
                 orient: !chartConfig.ledLayout ? "vertical" : chartConfig.ledLayout,
                 x: 'left',
                 data: !chartConfig.legendData ? data.label : chartConfig.legendData
             },
+            calculable: true,
             series: []
         };
         chartConfig.toolShow = !chartConfig.toolShow ? false : true;
@@ -1269,6 +1275,7 @@ var util = {
             json.forEach(function (item) {
                 var _label = _dateTime[index] + ":" + chartUtils.convertChinese(item.label);
                 var _key = [];
+                var _val = [];
                 item.key.forEach(function (k, i) {
                     var _formatKey = item.key[i] == "-" ? "未知 " : item.key[i];
                     if (selected) {
