@@ -42,6 +42,7 @@ define(["./module"], function (ctrs) {
                 $scope.monthClass = false;
                 $scope.definClass = false;
                 $scope.beforeyesterdayClass = false;
+                $scope.timeClass = false;
             };
 
             $scope.usites = $cookieStore.get('usites');
@@ -49,7 +50,6 @@ define(["./module"], function (ctrs) {
             $scope.exchanges = {};
             var ids = "";
             $scope.usites.forEach(function (item, i) {
-                console.log(item);
                 $scope.sites.push({
                     name: item.site_name,
                     id: item.type_id
@@ -93,13 +93,6 @@ define(["./module"], function (ctrs) {
                     if(result.length==0){
                         return;
                     }else {
-                        //var test = document.getElementById(context.order_id);
-                        //console.log(test.value);
-                        //$scope.htmlStr = (
-                        //    $compile(
-                        //        '<button ng-click="submitForm()">' + 'Submit' + '</button>'
-                        //    )($scope)
-                        //);
 
                         var text = "";
                         for (var i = 0; i < data[0].path1.length; i++) {
@@ -242,7 +235,13 @@ define(["./module"], function (ctrs) {
                 var d = dd.getDate();
                 return y + "-" + m + "-" + d;
             }
-
+            $rootScope.datepickerClick = function (start, end, label) {
+                $scope.reset();
+                $scope.timeClass = true;
+                $rootScope.start = start;
+                $rootScope.end = end;
+                $scope.init();
+            };
             $('#reportrange span').html(GetDateStr(0));
             $('#reportrange').daterangepicker({
                 format: 'YYYY-MM-DD',
