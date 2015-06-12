@@ -111,9 +111,6 @@ define(["./module"], function (ctrs) {
         //$scope.text="eeeeee";
 
         $scope.onViewUrl=function(index,grid,row){
-
-            console.log(row);
-
            var thtml= $rootScope.urlDialogHtml.replace("produceUrl", row.entity.produceUrl);
             //col
             $scope.urlDialog = ngDialog.open({
