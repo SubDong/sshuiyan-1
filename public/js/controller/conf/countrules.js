@@ -17,7 +17,6 @@ define(["./module"], function (ctrs) {
             "helpFlag": false//是否显示帮组信息
         };
         $scope.rules_area = angular.copy($scope.ipArea); //规则IP 与其他域不同 该与不使用其text
-
         $scope.ex_ips_area = angular.copy($scope.ipArea);//排除IP
         $scope.ex_refer_urls_area = angular.copy($scope.ipArea);//排除来源域名
         $scope.ex_urls_area =angular.copy($scope.ipArea);//排除受访域名
