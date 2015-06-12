@@ -6,182 +6,158 @@ define(["./../module"], function (ctrs) {
     "use strict";
 
     ctrs.controller('attractivenessanalysisctr', function ($scope, $rootScope, requestService) {
-        $scope.todayClass = true;
+            $scope.todayClass = true;
 
-        $rootScope.tableTimeStart = 0;
-        $rootScope.tableTimeEnd = 0;
-        $rootScope.tableFormat = null;
-        //配置默认指标
-        $rootScope.checkedArray = ["contribution", "outRate", "avgTime", "avgPage"];
-        $rootScope.gridArray = [
-            {
-                name: "xl",
-                displayName: "",
-                cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
-                maxWidth: 10
-            },
-            {
-                name: "页面url",
-                displayName: "页面url",
-                field: "loc",
-                footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"
-            },
-            {
-                name: " ",
-                cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history10' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='javascript:void(0)' ng-click='grid.appScope.showEntryPageLink(row, 1)'>查看来源分布</a></li></ul></div></div>"
-            },
-            {
-                name: "贡献量",
-                displayName: "贡献量",
-                field: "outRate",
-                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
-            },
-            {
-                name: "跳出率",
-                displayName: "跳出率",
-                field: "outRate",
-                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
-            },
-            {
-                name: "平均访问时长",
-                field: "avgTime",
-                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
-            },
-            {
-                name: "平均访问页面",
-                field: "avgPage",
-                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
-            }
-        ];
-        $rootScope.tableSwitch = {
-            latitude: {name: "页面url", displayName: "页面url", field: "loc"},
-            tableFilter: null,
-            dimen: false,
-            // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
-            number: 2,
-            //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
-            coding: "<li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='javascript:void(0)' ng-click='grid.appScope.showEntryPageLink(row, 3)'>查看来源分布</a></li>",
-            arrayClear: false
-        };
-
-        $scope.onLegendClick = function (radio, chartInstance, config, checkedVal) {
-            clear.lineChart(config, checkedVal);
-            var chart = $scope.charts[1];
-            chart.config.instance = echarts.init(document.getElementById(chart.config.id));
-            chart.types = checkedVal;
-            requestService.refresh([chart]);
-        }
-        $scope.pieFormat = function (data, config) {
-            var json = JSON.parse(eval("(" + data + ")").toString());
-            cf.renderChart(json, config);
-        }
-        $scope.attractiveFormat = function (data, config, e) {
-            var json = JSON.parse(eval("(" + data + ")").toString());
-            var result = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", e.types, config);
-            config['noFormat'] = true;
-            config['twoYz'] = "none";
-            cf.renderChart(result, config);
-            var final_result = chartUtils.getExternalinkPie(result);//获取barchart的数据
-            var pieData = chartUtils.getEnginePie(final_result, null, e);
-            $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
-            cf.renderChart(pieData, $scope.charts[0].config);
-        }
-        $scope.charts = [
-            {
-                config: {
-                    legendData: [],
-                    id: "sourse_charts",
-                    pieStyle: true,
-                    serieName: "入口页面",
-                    chartType: "pie",
-                    dataKey: "key",
-                    dataValue: "quota"
+            $rootScope.tableTimeStart = 0;
+            $rootScope.tableTimeEnd = 0;
+            $rootScope.tableFormat = null;
+            //配置默认指标
+            $rootScope.checkedArray = ["contribution", "outRate", "avgTime", "avgPage"];
+            $rootScope.gridArray = [
+                {
+                    name: "xl",
+                    displayName: "",
+                    cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
+                    maxWidth: 10
                 },
-                types: ["pv"],
-                dimension: ["rf"],
-                url: "/api/map",
-                cb: $scope.pieFormat
-            },
-            {
-                config: {
-                    legendId: "indicators_charts_legend",
-                    legendData: ["访客数(UV)", "访问次数", "新访客数", "IP数", "贡献浏览量", "转化次数"],
-                    legendClickListener: $scope.onLegendClick,
-                    legendAllowCheckCount: 1,
-                    id: "indicators_charts",
-                    min_max: false,
-                    bGap: false,
-                    chartType: "line",
-                    auotHidex: true,
-                    lineType: false,
-                    keyFormat: 'none',
-                    dataKey: "key",
-                    dataValue: "quota"
+                {
+                    name: "页面url",
+                    displayName: "页面url",
+                    field: "loc",
+                    footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"
                 },
-                types: ["pv"],
-                dimension: ["period,loc"],
-                interval: $rootScope.interval,
-                url: "/api/charts",
-                cb: $scope.attractiveFormat
-            }
-        ]
-        $scope.init = function () {
-            $rootScope.start = 0;
-            $rootScope.end = 0;
-            $rootScope.interval = undefined;
-            var e = $scope.charts[1];
-            var chart = echarts.init(document.getElementById(e.config.id));
-            e.config.instance = chart;
-            util.renderLegend(chart, e.config);
-            requestService.refresh([e]);
-        }
-        $scope.init();
+                {
+                    name: " ",
+                    cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history10' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='javascript:void(0)' ng-click='grid.appScope.showEntryPageLink(row, 1)'>查看来源分布</a></li></ul></div></div>"
+                },
+                {
+                    name: "贡献量",
+                    displayName: "贡献量",
+                    field: "outRate",
+                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                },
+                {
+                    name: "跳出率",
+                    displayName: "跳出率",
+                    field: "outRate",
+                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                },
+                {
+                    name: "平均访问时长",
+                    field: "avgTime",
+                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                },
+                {
+                    name: "平均访问页面",
+                    field: "avgPage",
+                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                }
+            ];
+            $rootScope.tableSwitch = {
+                latitude: {name: "页面url", displayName: "页面url", field: "loc"},
+                tableFilter: null,
+                dimen: false,
+                // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
+                number: 2,
+                //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
+                coding: "<li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='javascript:void(0)' ng-click='grid.appScope.showEntryPageLink(row, 3)'>查看来源分布</a></li>",
+                arrayClear: false
+            };
 
-        $scope.$on("ssh_refresh_charts", function (e, msg) {
-            var chart = echarts.init(document.getElementById($scope.charts[1].config.id));
-            $scope.charts[1].config.instance = chart;
-            var arrayChart = [$scope.charts[1]]
-            requestService.refresh(arrayChart);
-        });
-        //日历
-        <<<<<<<
-        Updated
-        upstream
-        $scope.dateClosed = function () {
-            $rootScope.start = $scope.startOffset;
-            $rootScope.end = $scope.endOffset;
-            $scope.charts.forEach(function (e) {
+            $scope.onLegendClick = function (radio, chartInstance, config, checkedVal) {
+                clear.lineChart(config, checkedVal);
+                var chart = $scope.charts[1];
+                chart.config.instance = echarts.init(document.getElementById(chart.config.id));
+                chart.types = checkedVal;
+                requestService.refresh([chart]);
+            }
+            $scope.pieFormat = function (data, config) {
+                var json = JSON.parse(eval("(" + data + ")").toString());
+                cf.renderChart(json, config);
+            }
+            $scope.attractiveFormat = function (data, config, e) {
+                var json = JSON.parse(eval("(" + data + ")").toString());
+                var result = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", e.types, config);
+                config['noFormat'] = true;
+                config['twoYz'] = "none";
+                cf.renderChart(result, config);
+                var final_result = chartUtils.getExternalinkPie(result);//获取barchart的数据
+                var pieData = chartUtils.getEnginePie(final_result, null, e);
+                $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
+                cf.renderChart(pieData, $scope.charts[0].config);
+            }
+            $scope.charts = [
+                {
+                    config: {
+                        legendData: [],
+                        id: "sourse_charts",
+                        pieStyle: true,
+                        serieName: "入口页面",
+                        chartType: "pie",
+                        dataKey: "key",
+                        dataValue: "quota"
+                    },
+                    types: ["pv"],
+                    dimension: ["rf"],
+                    url: "/api/map",
+                    cb: $scope.pieFormat
+                },
+                {
+                    config: {
+                        legendId: "indicators_charts_legend",
+                        legendData: ["访客数(UV)", "访问次数", "新访客数", "IP数", "贡献浏览量", "转化次数"],
+                        legendClickListener: $scope.onLegendClick,
+                        legendAllowCheckCount: 1,
+                        id: "indicators_charts",
+                        min_max: false,
+                        bGap: false,
+                        chartType: "line",
+                        auotHidex: true,
+                        lineType: false,
+                        keyFormat: 'none',
+                        dataKey: "key",
+                        dataValue: "quota"
+                    },
+                    types: ["pv"],
+                    dimension: ["period,loc"],
+                    interval: $rootScope.interval,
+                    url: "/api/charts",
+                    cb: $scope.attractiveFormat
+                }
+            ]
+            $scope.init = function () {
+                $rootScope.start = 0;
+                $rootScope.end = 0;
+                $rootScope.interval = undefined;
+                var e = $scope.charts[1];
+                var chart = echarts.init(document.getElementById(e.config.id));
+                e.config.instance = chart;
+                util.renderLegend(chart, e.config);
+                requestService.refresh([e]);
+            }
+            $scope.init();
+
+            $scope.$on("ssh_refresh_charts", function (e, msg) {
+                var chart = echarts.init(document.getElementById($scope.charts[1].config.id));
+                $scope.charts[1].config.instance = chart;
+                var arrayChart = [$scope.charts[1]]
+                requestService.refresh(arrayChart);
+            });
+            //日历
+            $rootScope.datepickerClick = function (start, end, label) {
+                var time = chartUtils.getTimeOffset(start, end);
+                $rootScope.start = time[0];
+                $rootScope.end = time[1];
+                var e = $scope.charts[1];
                 e.config.keyFormat = "day";
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
-            })
-            if ($rootScope.start <= -1) {
-                $scope.charts[0].config.keyFormat = "day";
-            } else {
-                $scope.charts[0].config.keyFormat = "hour";
-            }
-            requestService.refresh($scope.charts);
-            $rootScope.tableTimeStart = $scope.startOffset;
-            $rootScope.tableTimeEnd = $scope.endOffset;
-            ======
-            =
-                $rootScope.datepickerClick = function (start, end, label) {
-                    var time = chartUtils.getTimeOffset(start, end);
-                    $rootScope.start = time[0];
-                    $rootScope.end = time[1];
-                    var e = $scope.charts[1];
-                    e.config.keyFormat = "day";
-                    var chart = echarts.init(document.getElementById(e.config.id));
-                    e.config.instance = chart;
-                    requestService.refresh([e]);
-                    $rootScope.tableTimeStart = time[0];
-                    $rootScope.tableTimeEnd = time[1];
-                    >>>>>>>
-                    Stashed
-                    changes
-                    $rootScope.targetSearch();
-                    $scope.$broadcast("ssh_dateShow_options_time_change");
-                }     //
+                requestService.refresh([e]);
+                $rootScope.tableTimeStart = time[0];
+                $rootScope.tableTimeEnd = time[1];
+                $rootScope.targetSearch();
+                $scope.$broadcast("ssh_dateShow_options_time_change");
+            }     //
 
             this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
             //this.type = 'range';
@@ -227,7 +203,7 @@ define(["./../module"], function (ctrs) {
                 $scope.todayClass = true;
             };
         }
-        )
-        ;
+    )
+    ;
 
-    });
+});
