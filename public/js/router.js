@@ -307,6 +307,7 @@ define(["angular", "app"], function (ng, app) {
                 templateUrl: '../conf/admin/reportsite.html'
             }).state('pagechange_update', {
                 url: '/conf/webcountsite/pagechange_update',
+                params:      {'id': null},
                 templateUrl: '../conf/webcountsite/pagechange_update.html'
             })
     });
