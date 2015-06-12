@@ -9,9 +9,19 @@
         <ssh-date-show type="today" dimension="rf"></ssh-date-show>
         <div class="index_chart">
             <div id="indicators_charts_legend"></div>
-            <div id="sourse_charts" class="pin_chart"></div>
-            <div id="indicators_charts" class="line_chart"></div>
-
+            <div class="pin_chart">
+                <div id="sourse_charts" class="chart_height" ></div>
+            </div>
+            <div  class="line_chart">
+                <div id="indicators_charts" class="chart_height"></div>
+                <div class="chart-bottom">
+                    <ul>
+                        <li><span class="chart_box"  style="background:#2fabe9;"></span>http://tongji.baidu.com</li>
+                        <li>总浏览量(PV)：<span>37</span></li>
+                        <li>占比：<span>45.68%</span></li>
+                    </ul>
+                </div>
+            </div>
         </div>
         <div class="table_content" ng-controller="TabsCtrl">
             <ul ng-init="tab = 1" class="nav nav-tabs nav-justified">

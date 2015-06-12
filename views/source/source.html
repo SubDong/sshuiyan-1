@@ -8,24 +8,20 @@
     <div class="my_concent">
         <ssh-date-show type="today" dimension="rf_type"></ssh-date-show>
         <div class="index_chart">
-            <!--<div class="chart_top">-->
-            <!--<ul>-->
-            <!--<li><label>指标：</label></li>-->
-            <!--<li><label><input type="radio"  checked="checked" name="rate" value="pv" ng-model="value" />浏览量(PV)</label></li>-->
-            <!--<li><label><input type="radio" ng-model="value" value="arrCount" name="rate" ng-change="change(value)"/> 访问次数</label></li>-->
-            <!--<li><label><input type="radio" ng-model="value" value="uv" name="rate" ng-change="change(value)"/> 访客数(UV)</label></li>-->
-            <!--<li><label><input type="radio" ng-model="value" value="newClient" name="rate" ng-change="change(value)"/> 新访客数</label></li>-->
-            <!--<li><label><input type="radio" ng-model="value" value="ip" name="rate" ng-change="change(value)"/> IP数</label></li>-->
-            <!--<li><label><input type="radio" ng-model="value" value="convertRate" name="rate" ng-change="change(value)"/> 转化次数</label></li>-->
-            <!--<li><label><input type="radio" ng-model="value" value="order" name="rate" ng-change="change(value)"/> 订单数</label></li>-->
-            <!--<li><label><input type="radio" ng-model="value" value="orderPrice" name="rate" ng-change="change(value)"/> 订单金额</label></li>-->
-            <!--<li><label><input type="radio" ng-model="value" value="orderConvert"  name="rate" ng-change="change(value)"/> 订单转化率</label></li>-->
-            <!--<li class="disabled">* 可同时选择1项</li>-->
-            <!--</ul>-->
-            <!--</div>-->
-            <div id="source_charts_legend" class="pin_chart" style="position:absolute;width: 100%;"></div>
-            <div id="sourse_charts" class="pin_chart"></div>
-            <div id="indicators_charts" class="line_chart"></div>
+            <div id="source_charts_legend"></div>
+            <div class="pin_chart">
+                <div id="sourse_charts" class="chart_height" ></div>
+            </div>
+            <div  class="line_chart">
+                <div id="indicators_charts" class="chart_height"></div>
+                <div class="chart-bottom">
+                    <ul>
+                        <li><span class="chart_box"  style="background:#2fabe9;"></span>http://tongji.baidu.com</li>
+                        <li>总浏览量(PV)：<span>37</span></li>
+                        <li>占比：<span>45.68%</span></li>
+                    </ul>
+                </div>
+            </div>
         </div>
         <div class="table_content" ng-controller="TabsCtrl">
             <ul ng-init="tab = 1" class="nav nav-tabs nav-justified">
