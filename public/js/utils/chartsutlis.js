@@ -164,11 +164,11 @@ var chartUtils = {
             return "不支持";
         }
     },
-    getObjectTime: function (json, start, config) {
+    getObjectTime: function (json, _times, config) {
         if (config.keyFormat == "day") {
             var time = [];
             json.forEach(function (e) {
-                if (start == 0 || start == -1) {
+                if ((_times[1] - _times[0]) == 0) {
                     config.keyFormat = "none";
                     time.push(Number((e.key_as_string).toString().substring(10, 13)));
                 } else {
@@ -177,8 +177,7 @@ var chartUtils = {
             });
             return time
         }
-        if (start <= -6) {
-
+        if ((_times[1] - _times[0]) > 0) {
             var time = [];
             json.forEach(function (e) {
                 time.push((e.key_as_string).toString());
@@ -186,10 +185,9 @@ var chartUtils = {
             config.keyFormat = "day";
             return time
         } else {
-
             var time = [];
             json.forEach(function (e) {
-                if (start == 0 || start == -1) {
+                if ((_times[1] - _times[0]) == 0) {
                     time.push(Number((e.key_as_string).toString().substring(10, 13)));
                 } else {
                     time.push((e.key_as_string).toString().substr(0, 10));
@@ -218,8 +216,8 @@ var chartUtils = {
         });
         return val;
     },
-    getRf_type: function (json, start, labelType, types, config) {
-        var time = chartUtils.getObjectTime(json, start, config);
+    getRf_type: function (json, times, labelType, types, config) {
+        var time = chartUtils.getObjectTime(json, times, config);
         var label = chartUtils.getLabel(json);//去重
         var result = [];
         label.forEach(function (label) {
@@ -243,8 +241,8 @@ var chartUtils = {
             item.totalCount = count;
         });
         result.sort(chartUtils.by("totalCount"));
-        if (result.length > 10) {
-            result = result.slice(0, 10);
+        if (result.length > 7) {
+            result = result.slice(0, 7);
         }
         return result;
     },

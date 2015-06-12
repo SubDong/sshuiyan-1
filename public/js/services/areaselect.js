@@ -14,6 +14,12 @@ define(["../app"], function (app) {
             {name: '中国'},
             {name: '泰国'}
         ];
+        $rootScope.chartColors = [
+            '#ff7f50', '#87cefa', '#da70d6', '#32cd32', '#6495ed',
+            '#ff69b4', '#ba55d3', '#cd5c5c', '#ffa500', '#40e0d0',
+            '#1e90ff', '#ff6347', '#7b68ee', '#00fa9a', '#ffd700',
+            '#6b8e23', '#ff00ff', '#3cb371', '#b8860b', '#30e0e0'
+        ];
         $rootScope.city = {};
         $rootScope.citys = [
             {name: '全部'},
@@ -88,7 +94,7 @@ define(["../app"], function (app) {
         ];
         $rootScope.choosedate = {};
         $rootScope.choosedates = [
-            {name:'取消对比',value:100},
+            {name: '取消对比', value: 100},
             {name: '前一日', value: -2},
             {name: '上周同期 ', value: -7}
         ];
@@ -138,7 +144,7 @@ define(["../app"], function (app) {
         $rootScope.browser = {};
         $rootScope.browsers = [
             {name: '全部', value: '全部'},
-            {name: '百度', value:  '百度'},
+            {name: '百度', value: '百度'},
             {name: 'Google', value: 'Google'},
             {name: '搜狗', value: '搜狗'},
             {name: '好搜', value: '好搜'},

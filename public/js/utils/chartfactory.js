@@ -150,40 +150,61 @@ var op = {
                     fontSize: 12
                 },
                 formatter: function (params, ticket, callback) {
-                    var xName = params[0].name.toString();
-                    var res = '<li>' + xName + '</li>';
-                    if (xName.indexOf("/点") > -1) {
-                        xName = xName.split("/点")[0];
-                    }
-                    if (chartConfig.compare || chartConfig.compareCustom) {
-                        if (chartConfig.keyFormat == "day") {
-                            res = '<li>' + xName + ':00-' + xName + ':59</li>';
+                    if (option.tooltip.trigger == "axis") {
+                        var xName = params[0].name.toString();
+                        var res = '<li>' + xName + '</li>';
+                        if (xName.indexOf("/点") > -1) {
+                            xName = xName.split("/点")[0];
                         }
-                    } else {
-                        if (chartConfig.keyFormat == "none") {
-                            res = '<li>' + xName + ':00-' + xName + ':59</li>';
-                        }
-                    }
-                    for (var i = 0, l = params.length; i < l; i++) {
-                        var formatType = labelData[i];
                         if (chartConfig.compare || chartConfig.compareCustom) {
-                            var baseSerieName = params[i].seriesName.split(":");
-                            var re = /[^\x00-\xff]/;//判断是否有中文
-                            if (re.test(baseSerieName[1])) {
-                                res += '<li class=chartstyle' + i + '>' + baseSerieName[0] + baseSerieName[1] + ' : ' + ad.formatFunc(params[i].value, baseSerieName[1]) + '</li>';
-                            } else {
-                                res += '<li class=chartstyle' + i + '>' + baseSerieName[0] + chartUtils.convertChinese(baseSerieName[1]) + ' : ' + ad.formatFunc(params[i].value, baseSerieName[1]) + '</li>';
+                            if (chartConfig.keyFormat == "day") {
+                                res = '<li>' + xName + ':00-' + xName + ':59</li>';
                             }
                         } else {
-                            if (chartConfig.toolTip == undefined) {
-                                res += '<li class=chartstyle' + i + '>' + params[i].seriesName + ' : ' + ad.formatFunc(params[i].value, formatType) + '</li>';
-                            } else {
-                                res += '<li class=chartstyle' + i + '>' + params[i].seriesName + ' : ' + params[i].value + '</li>';
+                            if (chartConfig.keyFormat == "none") {
+                                res = '<li>' + xName + ':00-' + xName + ':59</li>';
                             }
                         }
+                        for (var i = 0, l = params.length; i < l; i++) {
+                            var formatType = labelData[i];
+                            if (chartConfig.compare || chartConfig.compareCustom) {
+                                var baseSerieName = params[i].seriesName.split(":");
+                                var re = /[^\x00-\xff]/;//判断是否有中文
+                                if (re.test(baseSerieName[1])) {
+                                    res += '<li class=chartstyle' + i + '>' + baseSerieName[0] + baseSerieName[1] + ' : ' + ad.formatFunc(params[i].value, baseSerieName[1]) + '</li>';
+                                } else {
+                                    res += '<li class=chartstyle' + i + '>' + baseSerieName[0] + chartUtils.convertChinese(baseSerieName[1]) + ' : ' + ad.formatFunc(params[i].value, baseSerieName[1]) + '</li>';
+                                }
+                            } else {
+                                if (chartConfig.toolTip == undefined) {
+                                    res += '<li class=chartstyle' + i + '>' + params[i].seriesName + ' : ' + ad.formatFunc(params[i].value, formatType) + '</li>';
+                                } else {
+                                    res += '<li class=chartstyle' + i + '>' + params[i].seriesName + ' : ' + params[i].value + '</li>';
+                                }
+                            }
 
+                        }
+                        return res;
+                    } else {
+                        if (chartConfig.itemHover) {
+                            var _typeTotal = 0;
+                            var _allTotal = 0;
+                            json.forEach(function (item) {
+                                item.quota.forEach(function (q) {
+                                    if (item.label == params[0]) {
+                                        _typeTotal += Number(q);
+                                    }
+                                    _allTotal += Number(q);
+                                });
+                            });
+                            return chartConfig.itemHover(params, _typeTotal, _allTotal);
+                        } else {
+                            var xName = params[1].toString();
+                            var res = '<li>' + xName + ':00-' + xName + ':59</li>';
+                            res += '<li>' + params[2] + '</li>';
+                            return res;
+                        }
                     }
-                    return res;
                 },
                 axisPointer: {
                     type: 'line',
@@ -378,6 +399,15 @@ var op = {
     pieChart: function (data, chartConfig) {
         if (!chartConfig.instance)return;
         var chartObj = chartConfig.instance;
+        if (chartConfig.onHover) {
+            chartObj.on("hover", function (params) {
+                if (data.length) {
+                    chartConfig.onHover(params, data[0].label);
+                } else {
+                    chartConfig.onHover(params);
+                }
+            });
+        }
         var labelData = [];
         if (data[0]) {
             if (data[0].key.length == 0) {
@@ -416,7 +446,7 @@ var op = {
                 }
             },
             //color: [
-            //    '#87cefa', '#ff7f50', '#da70d6', '#32cd32', '#6495ed',
+            //    '#ff7f50', '#87cefa', '#da70d6', '#32cd32', '#6495ed',
             //    '#ff69b4', '#ba55d3', '#cd5c5c', '#ffa500', '#40e0d0',
             //    '#1e90ff', '#ff6347', '#7b68ee', '#00fa9a', '#ffd700',
             //    '#6b8e23', '#ff00ff', '#3cb371', '#b8860b', '#30e0e0'
@@ -494,7 +524,7 @@ var op = {
                 emphasis: {
                     label: {
                         show: true,
-                        formatter: "{b}\n{d}%"
+                        formatter: "{d}%"
                     }
                 }
 
