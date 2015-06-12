@@ -19,31 +19,37 @@ define(["../app"], function (app) {
                     text: "正在努力的读取数据中..."
                 });
             });
-                charts.forEach(function (e) {
-                    var req = e.url + "?type=" + e.types + "&dimension=" + e.dimension + "&start=" + $rootScope.start + "&end=" + $rootScope.end + "&userType=" + $rootScope.userType;
-                    if ($rootScope.interval) {
-                        req = req + "&int=" + $rootScope.interval;
+            charts.forEach(function (e) {
+                var req = e.url + "?type=" + e.types + "&dimension=" + e.dimension + "&start=" + $rootScope.start + "&end=" + $rootScope.end + "&userType=" + $rootScope.userType;
+                if ($rootScope.interval) {
+                    req = req + "&int=" + $rootScope.interval;
+                }
+                if (e.filter) {
+                    req = req + "&filter=" + e.filter;
+                }
+                if (e.topN) {
+                    req += "&topN=" + e.topN;
+                }
+                $http.get(req).success(function (result) {
+                    if (e.cb) {
+                        e.cb(result, e.config, e);
+                    } else {
+                        $rootScope.defaultcb(result, e.config, e);
                     }
-                    if (e.filter) {
-                        req = req + "&filter=" + e.filter;
-                    }
-                    if (e.topN) {
-                        req += "&topN=" + e.topN;
-                    }
-                    $http.get(req).success(function (result) {
-                        if (e.cb) {
-                            e.cb(result, e.config, e);
-                        } else {
-                            $rootScope.defaultcb(result, e.config, e);
-                        }
-                    });
                 });
+            });
         }
         this.gridRefresh = function (grids) {
             grids.forEach(function (grid) {
                 $http.get(grid.url + "?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + grid.types + "&dimension=" + grid.dimension + "&userType=" + $rootScope.userType).success(function (data) {
                     var json = JSON.parse((eval("(" + data + ")").toString()));
                     grid.config.gridOptions.data = [];
+                    if (json[0].quota.length) {
+                        if (json[0].quota.length > 11) {
+                            json[0].key = json[0].key.slice(0, 11);
+                            json[0].quota = json[0].quota.slice(0, 11);
+                        }
+                    }
                     json.forEach(function (item) {
                         for (var i = 0; i < item["key"].length; i++) {
                             var _val = {};

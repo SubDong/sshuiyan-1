@@ -4,7 +4,7 @@
 define(["./module"], function (ctrs) {
     "use strict";
 
-    ctrs.controller('timechange', function ($scope, $http,$rootScope,$cookieStore) {
+    ctrs.controller('timechange', function ($scope, $http,$rootScope,$cookieStore,ngDialog  ) {
        //$scope.
         $scope.time_conv={
             status: false,
@@ -22,12 +22,10 @@ define(["./module"], function (ctrs) {
             var uid= $cookieStore.get("uid");
             var site_id=$rootScope.userType;
             var url= "/config/conf?index=5&type=search&query={\"uid\":\""+uid+"\",\"site_id\":\""+site_id+"\"}";
-            console.log(url);
             $http({
                 method: 'GET',
                 url: url
             }).success(function (dataConfig, status) {
-                console.log(dataConfig);
                 if(dataConfig!=null&&dataConfig.length>0){
                     $scope.time_conv = dataConfig[0].time_conv;
                     $scope.pv_conv =dataConfig[0].pv_conv;
@@ -38,7 +36,16 @@ define(["./module"], function (ctrs) {
         init();
         Custom.initCheckInfo();//页面check样式js调用
         $scope.onSubmitClickListener = function (){
-            console.log("onSubmitClickListener");
+            $scope.urlDialog = ngDialog.open({
+                template: '\
+                  <div class="ngdialog-buttons" >\
+                            <ul>设置保存成功</ul>   \
+                  </div>',
+                className: 'ngdialog-theme-default',
+                plain: true,
+                scope: $scope
+
+            });
             var uid= $cookieStore.get("uid");
             var site_id=$rootScope.userType;//从conf_sites中获取
             var query= "/config/conf?index=5&type=search&query={\"uid\":\""+uid+"\",\"site_id\":\""+site_id+"\"}";
@@ -49,7 +56,6 @@ define(["./module"], function (ctrs) {
                 if(dataConfig==null||dataConfig.length==0){//不存在配置 save
                     var entity= "{\"uid\":\""+uid+"\",\"site_id\":\""+site_id+"\",\"time_conv\":"+ angular.toJson($scope.time_conv)+",\"pv_conv\":"+ angular.toJson($scope.pv_conv)+"}";
                     var url= "/config/conf?index=5&type=save&entity="+entity;
-                    console.log(url);
                     $http({
                         method: 'GET',
                         url: url
@@ -59,7 +65,6 @@ define(["./module"], function (ctrs) {
                 }else{//update
                     var updates= "{\"uid\":\""+uid+"\",\"site_id\":\""+site_id+"\",\"time_conv\":"+ angular.toJson($scope.time_conv)+",\"pv_conv\":"+ angular.toJson($scope.pv_conv)+"}";
                     var url= "/config/conf?index=5&type=update&query={\"uid\":\""+uid+"\",\"site_id\":\""+site_id+"\"}&updates="+updates;
-                    console.log(url);
                     $http({
                         method: 'GET',
                         url: url

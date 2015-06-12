@@ -101,6 +101,7 @@ define(["./module"], function (ctrs) {
             $scope.sevenDayClass = false;
             $scope.monthClass = false;
             $scope.definClass = false;
+            $scope.timeClass = false;
         };
         $scope.today = function () {
             $scope.reset();
@@ -218,7 +219,13 @@ define(["./module"], function (ctrs) {
             var d = dd.getDate();
             return y + "-" + m + "-" + d;
         }
-
+        $rootScope.datepickerClick = function (start, end, label) {
+            $scope.reset();
+            $scope.timeClass = true;
+            $rootScope.start = start;
+            $rootScope.end = end;
+            $scope.init();
+        };
         $('#reportrange span').html(GetDateStr(0));
         $('#reportrange').daterangepicker({
             format: 'YYYY-MM-DD',

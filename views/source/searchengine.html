@@ -8,11 +8,20 @@
     <div class="my_concent">
         <ssh-date-show type="today" dimension="se"></ssh-date-show>
         <div class="index_chart">
-
-            <div id="sourse_charts" style="height:400px;float:left;width:30%;"></div>
             <div id="indicators_charts_legend"></div>
-            <div id="indicators_charts" style="height:400px;float:right;width:70%;"></div>
-
+            <div class="pin_chart">
+                <div id="sourse_charts" class="chart_height" ></div>
+            </div>
+            <div  class="line_chart">
+                <div id="indicators_charts" class="chart_height"></div>
+                <div class="chart-bottom">
+                    <ul>
+                        <li><span class="chart_box" style="background:#2fabe9;"></span><b id="chartlink"></b></li>
+                        <li>总<b id="chartname"></b>：<span id="chartnumber"></span></li>
+                        <li>占比：<span id="chartpointe"></span></li>
+                    </ul>
+                </div>
+            </div>
         </div>
         <div class="table_content" ng-controller="TabsCtrl">
             <ul ng-init="tab = 1" class="nav nav-tabs nav-justified">

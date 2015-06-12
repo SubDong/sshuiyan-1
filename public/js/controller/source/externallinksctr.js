@@ -83,7 +83,8 @@ define(["./module"], function (ctrs) {
         }
         $scope.externalinkFormat = function (data, config, e) {
             var json = JSON.parse(eval("(" + data + ")").toString());
-            var result = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", e.types, config);
+            var times = [$rootScope.start, $rootScope.end];
+            var result = chartUtils.getRf_type(json, times, "serverLabel", e.types, config);
             result.forEach(function (item) {
                 var _thisCount = 0;
                 item.quota.forEach(function (q) {
@@ -92,31 +93,56 @@ define(["./module"], function (ctrs) {
                 item["totalCount"] = _thisCount;
             })
             result.sort(chartUtils.by("totalCount"));
-            if (result.length > 3) {
-                result = result.slice(0,3);
-            }
             config['noFormat'] = true;//告知chart工厂无须格式化json，可以直接使用data对象
             config['twoYz'] = "none";
-            console.log(result);
             cf.renderChart(result, config);
             //渲染pie图
-            var pieData = chartUtils.getEnginePie(result, "?");
+            var pieData = chartUtils.getEnginePie(result, "?", e);
             $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
+            //$scope.charts[0].config.instance.on("hover", $scope.pieListener);
             cf.renderChart(pieData, $scope.charts[0].config);
+        }
+        $scope.extPieHover = function (params, type) {
+            if (params.dataIndex != -1) {
+                var colorIndex = Number(params.dataIndex);
+                $(".chart_box").attr("style", "background:" + $rootScope.chartColors[colorIndex]);
+                $("#chartlink").html(params.name);
+                $("#chartname").html(chartUtils.convertChinese(type));
+                $("#chartnumber").html(params.data.value);
+                $("#chartpointe").html(params.special + "%");
+            }
+        }
+        $scope.itemHover = function (params, typeTotal, allTotal) {
+            var type = chartUtils.convertChinese($scope.charts[1].types.toString())
+            $(".chart_box").attr("style", "background:" + $rootScope.chartColors[params.seriesIndex]);
+            $("#chartlink").html(params[0]);
+            $("#chartname").html(type);
+            $("#chartnumber").html(typeTotal);
+            $("#chartpointe").html(parseFloat(typeTotal / allTotal * 100).toFixed(2) + "%");
+            var xName = params[1].toString();
+            var res = '<li>' + type + '</li>';
+            if ($rootScope.start - $rootScope.end == 0) {
+                res += '<li>' + xName + ':00-' + xName + ':59</li>';
+            } else {
+                res += '<li>' + xName + '</li>';
+            }
+            res += '<li  class=chartstyle' + params.seriesIndex + '>外部链接：' + params[2] + '</li>';
+            return res;
         }
         $scope.charts = [
             {
                 config: {
                     legendData: ["外部链接", "直接访问", "搜索引擎"],
                     id: "sourse_charts",
-                    pieStyle: true,
+                    //pieStyle: true,
                     serieName: "访问情况",
                     chartType: "pie",
                     dataKey: "key",
-                    dataValue: "quota"
+                    dataValue: "quota",
+                    onHover: $scope.extPieHover
                 },
                 types: ["pv"],
-                dimension: ["dm"],
+                dimension: ["rf"],
                 filter: '[{\"rf_type\":[3]}]',
                 topN: [-2, 5],
                 url: "/api/map",
@@ -125,7 +151,7 @@ define(["./module"], function (ctrs) {
             {
                 config: {
                     legendId: "indicators_charts_legend",
-                    legendData: ["浏览量(PV)", "访客数(UV)", "访问次数", "新访客数", "IP数", "页面转化", "订单数", "订单金额", "订单转化率"],
+                    legendData: ["浏览量(PV)", "访客数(UV)", "访问次数", "新访客数", "IP数", "页面转化"],
                     legendClickListener: $scope.onLegendClick,
                     legendAllowCheckCount: 1,
                     min_max: false,
@@ -133,12 +159,15 @@ define(["./module"], function (ctrs) {
                     id: "indicators_charts",
                     chartType: "line",
                     lineType: false,
+                    auotHidex: true,
+                    tt: "item",
+                    itemHover: $scope.itemHover,
                     dataKey: "key",
                     keyFormat: "none",
                     dataValue: "quota"
                 },
                 types: ["pv"],
-                dimension: ["period,dm"],
+                dimension: ["period,rf"],
                 filter: '[{\"rf_type\":[3]}]',
                 interval: $rootScope.interval,
                 url: "/api/charts",

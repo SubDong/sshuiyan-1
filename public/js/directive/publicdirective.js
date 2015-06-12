@@ -722,7 +722,7 @@ define(["../app"], function (app) {
                     scope.dateShowArray = $rootScope.copy(t_a);
                 };
                 scope.loadDataShow = function () {
-                    var semRequest = $http.get(SEM_API_URL + "elasticsearch/" + $rootScope.userType
+                    var semRequest = $http.get(SEM_API_URL + "search_word/" + $rootScope.userType
                     + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd);
                     $q.all([semRequest]).then(function (final_result) {
                         angular.forEach(final_result[0].data, function (r) {
@@ -735,7 +735,7 @@ define(["../app"], function (app) {
                     });
                 };
                 scope.loadCompareDataShow = function (startTime, endTime) {
-                    var semRequest = $http.get(SEM_API_URL + "elasticsearch/" + $rootScope.userType
+                    var semRequest = $http.get(SEM_API_URL + "search_word/" + $rootScope.userType
                     + "/?startOffset=" + startTime + "&endOffset=" + endTime);
                     $q.all([semRequest]).then(function (final_result) {
                         angular.forEach(final_result[0].data, function (r) {
@@ -1116,6 +1116,38 @@ define(["../app"], function (app) {
                     scope.$apply(function () {
                     });
                 };
+            }
+        };
+    });
+
+    /**
+     * 复制。
+     */
+    app.directive('sshClip', function ($rootScope) {
+        "use strict";
+        return {
+            restrict: 'EA',
+            link: function (scope, element, attris, controller) {
+                console.log("!231231231231313123123123123");
+
+                var clip = new ZeroClipboard.Client(); // 新建一个对象
+                clip.setHandCursor(true); // 设置鼠标为手型
+                // 注册在元素上
+                clip.glue(element[0]); // 和上一句位置不可调换
+
+                clip.addEventListener("mouseOver", function (client) {
+                    client.setText("玩儿玩儿额"); // 设置要复制的文本。
+                });
+
+                clip.addEventListener("load", function (client) {
+                    console.log("加载完成");
+                    //clip.reposition();
+                });
+
+                clip.addEventListener('complete', function (client, text) {
+                    alert("恭喜复制成功");
+                });
+
             }
         };
     });

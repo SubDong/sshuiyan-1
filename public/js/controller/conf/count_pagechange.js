@@ -44,24 +44,8 @@ define(["./module"], function (ctrs) {
 
         //跳转到修改界面
         $scope.onUpdate = function (entity) {
-            //var uid = $cookieStore.get("uid");
-            //var site_id = $rootScope.userType;
-            //var url = "/config/page_conv?type=search&query={\"_id\":\"" + entity._id + "\"}";id
             console.log("传递ID="+entity._id);
             $state.go('pagechange_update',{ 'id':entity._id});
-            //$http({
-            //    method: 'GET',
-            //    url: url
-            //}).success(function (dataConfig, status) {
-            //    if(dataConfig!=null&&dataConfig.length==1){
-            //        console.log("onupdate "+entity._id);
-            //        console.log(dataConfig[0]);
-            //        $state.go('pagechange_update',{ 'entity':dataConfig[0]._id});
-            //    }else{
-            //        alert("该数据已被删除，请刷新页面");
-            //    }
-            //})
-
         }
 
         //配置默认指标

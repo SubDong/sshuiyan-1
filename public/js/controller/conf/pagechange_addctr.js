@@ -44,6 +44,7 @@ define(["./module"], function (ctrs) {
 
 
         $scope.page_schema = angular.copy($scope.page_schema_model);
+        $scope.t_conv_text = "";//路径类型其他
         //UID 和site_id初始化
         $scope.page_schema.site_id = $rootScope.userType;
         $scope.page_schema.uid = $cookieStore.get("uid");
@@ -102,6 +103,7 @@ define(["./module"], function (ctrs) {
             step.step_urls.push({url: turl});
         };
         $scope.chooseRecordType = function (curType) {
+            //console.
             $scope.radio_record.visit_times = false;
             $scope.radio_record.pv = false;
             $scope.radio_record.order_conv = false;
@@ -115,6 +117,12 @@ define(["./module"], function (ctrs) {
             $scope.radio_conv.other = false;
             $scope.radio_conv[curType] = true;
             $scope.page_schema.conv_tpye = curType;
+            if(! $scope.radio_conv.other){//去掉非其他情况时conv_text的值
+                $scope.page_schema.conv_text = $scope.t_conv_text;
+                $scope.t_conv_text="";
+            }else{
+                $scope.t_conv_text= $scope.page_schema.conv_text;
+            }
         }
         Custom.initCheckInfo();//页面check样式js调用
 
@@ -130,7 +138,14 @@ define(["./module"], function (ctrs) {
                 url: url
             }).success(function (dataConfig, status) {
                 if (dataConfig == null || dataConfig.length == 0) {//不存在配置 保存
-                    //console.log("save"+JSON.stringify($scope.page_schema));
+
+                    //存在配置 更新
+                    if(!$scope.radio_conv.other){//去掉非其他情况时conv_text的值
+                        $scope.page_schema.conv_text = "";
+                    }else{
+                        $scope.page_schema.conv_text= $scope.t_conv_text;
+                    }
+                    console.log($scope.page_schema.conv_text);
                     var url = "/config/page_conv?type=save&entity=" + JSON.stringify($scope.page_schema);
                     $http({
                         method: 'GET',

@@ -40,6 +40,12 @@ define(["angular", "js001", "js002", "js003", "js004", "js005", "js006", "js007"
             return angular.copy(obj);
         };
 
+        // 获取table行index
+        // 求别删
+        $rootScope.getIndex = function (b) {
+            return b.$parent.$parent.rowRenderIndex + 1;
+        };
+
     });
 
     return myApp;

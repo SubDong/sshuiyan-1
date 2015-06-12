@@ -43,7 +43,7 @@ define(["./module"], function (ctrs) {
                         rf_pv: result[0].targetPathName_pv[0].pv
                     }
                     for (var i = 0; i < result[0].in_data.length; i++) {
-                        if(result[0].in_data[i].pathname=="-"){
+                        if (result[0].in_data[i].pathname == "-") {
                             result[0].in_data[i].pathname = "直接输入网址"
                         }
                         linksData.push({
@@ -66,24 +66,25 @@ define(["./module"], function (ctrs) {
                     };
                     $scope.links = linksData;
                 }
-                if (result[0].in_data.length <= 3) {
-                    document.getElementById("linkstree_top").style.top = "14%";
-                    document.getElementById("linkstree_right").style.top = "14%";
+                if (result.length == 0) {
+                    if (result[0].in_data.length <= 3) {
+                        document.getElementById("linkstree_top").style.top = "14%";
+                        document.getElementById("linkstree_right").style.top = "14%";
+                    }
+                    if (result[0].in_data.length == 1) {
+                        document.getElementById("linkstree_top").style.top = "0";
+                        document.getElementById("linkstree_right").style.top = "0";
+                        $(".linkstree_left").css("margin-top", "14px")
+                    }
+                    if (result[0].in_data.length == 4) {
+                        document.getElementById("linkstree_top").style.top = "20%";
+                        document.getElementById("linkstree_right").style.top = "20%";
+                    }
+                    if (result[0].in_data.length >= 5) {
+                        document.getElementById("linkstree_top").style.top = "35%";
+                        document.getElementById("linkstree_right").style.top = "35%";
+                    }
                 }
-                if (result[0].in_data.length == 1) {
-                    document.getElementById("linkstree_top").style.top = "0";
-                    document.getElementById("linkstree_right").style.top = "0";
-                    $(".linkstree_left").css("margin-top", "14px")
-                }
-                if (result[0].in_data.length == 4) {
-                    document.getElementById("linkstree_top").style.top = "20%";
-                    document.getElementById("linkstree_right").style.top = "20%";
-                }
-                if (result[0].in_data.length >= 5) {
-                    document.getElementById("linkstree_top").style.top = "35%";
-                    document.getElementById("linkstree_right").style.top = "35%";
-                }
-
 
             });
 
@@ -116,6 +117,7 @@ define(["./module"], function (ctrs) {
             $scope.sevenDayClass = false;
             $scope.monthClass = false;
             $scope.definClass = false;
+            $scope.timeClass = false;
         };
         $scope.today = function () {
             $scope.reset();
@@ -201,6 +203,14 @@ define(["./module"], function (ctrs) {
             var d = dd.getDate();
             return y + "-" + m + "-" + d;
         }
+
+        $rootScope.datepickerClick = function (start, end, label) {
+            $scope.reset();
+            $scope.timeClass = true;
+            $rootScope.start = start;
+            $rootScope.end = end;
+            $scope.init();
+        };
         $('#reportrange span').html(GetDateStr(0));
         $('#reportrange').daterangepicker({
             format: 'YYYY-MM-DD',
@@ -229,14 +239,6 @@ define(["./module"], function (ctrs) {
 
         this.removeFromSelected = function (dt) {
             this.selectedDates.splice(this.selectedDates.indexOf(dt), 1);
-        }
-        function GetDateStr(AddDayCount) {
-            var dd = new Date();
-            dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
-            var y = dd.getFullYear();
-            var m = dd.getMonth() + 1;//获取当前月份的日期
-            var d = dd.getDate();
-            return y + "-" + m + "-" + d;
         }
 
         //刷新

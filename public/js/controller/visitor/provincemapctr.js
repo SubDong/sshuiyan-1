@@ -65,7 +65,7 @@ define(["./module"], function (ctrs) {
 
         $scope.$on("ssh_refresh_charts", function (e, msg) {
             $rootScope.targetSearch();
-            $scope.doSearchAreas($scope.tableTimeStart, $scope.tableTimeEnd, "2", $scope.mapOrPieConfig);
+            $scope.doSearchAreas($scope.tableTimeStart, $scope.tableTimeEnd, $rootScope.userType, $scope.mapOrPieConfig);
         });
 
         $scope.gridOptions = {
@@ -92,7 +92,7 @@ define(["./module"], function (ctrs) {
 
         $scope.setProperty = function (property, position, entities) {
             $scope.property = property;
-            $scope.doSearchAreas($scope.dateTimeStart, $scope.dateTimeEnd, "2", $scope.mapOrPieConfig);
+            $scope.doSearchAreas($scope.dateTimeStart, $scope.dateTimeEnd, $rootScope.userType, $scope.mapOrPieConfig);
         }
 
         $scope.setArea = function (area) {
@@ -211,8 +211,8 @@ define(["./module"], function (ctrs) {
         //图标数据
 
         // init
-        $scope.doSearch($scope.dateTimeStart, $scope.dateTimeEnd, "2");
-        $scope.doSearchAreas($scope.dateTimeStart, $scope.dateTimeEnd, "2", $scope.mapOrPieConfig);
+        $scope.doSearch($scope.dateTimeStart, $scope.dateTimeEnd, $rootScope.userType);
+        $scope.doSearchAreas($scope.dateTimeStart, $scope.dateTimeEnd, $rootScope.userType, $scope.mapOrPieConfig);
         $scope.mapselect = [
             {consumption_name: "浏览量(PV)"},
             {consumption_name: "访问次数"},
@@ -236,7 +236,7 @@ define(["./module"], function (ctrs) {
             $rootScope.tableTimeStart = time[0];
             $rootScope.tableTimeEnd = time[1];
             $rootScope.targetSearch();
-            $scope.doSearchAreas($rootScope.tableTimeStart, $rootScope.tableTimeEnd, "2", $scope.mapOrPieConfig);
+            $scope.doSearchAreas($rootScope.tableTimeStart, $rootScope.tableTimeEnd, $rootScope.userType, $scope.mapOrPieConfig);
             $scope.$broadcast("ssh_dateShow_options_time_change");
         }
         function GetDateStr(AddDayCount) {
@@ -254,8 +254,8 @@ define(["./module"], function (ctrs) {
             $rootScope.end = 0;
             $rootScope.tableTimeStart = 0;
             $rootScope.tableTimeEnd = 0;
-            $scope.doSearch($scope.dateTimeStart, $scope.dateTimeEnd, "2");
-            $scope.doSearchAreas($scope.dateTimeStart, $scope.dateTimeEnd, "2", $scope.mapOrPieConfig);
+            $scope.doSearch($scope.dateTimeStart, $scope.dateTimeEnd, $rootScope.userType);
+            $scope.doSearchAreas($scope.dateTimeStart, $scope.dateTimeEnd, $rootScope.userType, $scope.mapOrPieConfig);
             $scope.reloadByCalendar("today");
             $('#reportrange span').html(GetDateStr(0));
             //其他页面表格

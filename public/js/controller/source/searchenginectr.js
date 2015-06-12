@@ -79,22 +79,50 @@ define(["./module"], function (ctrs) {
         }
         $scope.onLegendClick = function (radio, chartInstance, config, checkedVal) {
             clear.lineChart(config, checkedVal);
-            $scope.charts.forEach(function (chart) {
-                chart.config.instance = echarts.init(document.getElementById(chart.config.id));
-                chart.types = checkedVal;
-            });
-            requestService.refresh($scope.charts);
+            var chart = $scope.charts[1];
+            chart.config.instance = echarts.init(document.getElementById(chart.config.id));
+            chart.types = checkedVal;
+            requestService.refresh([chart]);
         }
         $scope.searchengineFormat = function (data, config, e) {
             var json = JSON.parse(eval("(" + data + ")").toString());
-            var result_json = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", e.types,config);
+            var times = [$rootScope.start, $rootScope.end];
+            var result_json = chartUtils.getRf_type(json, times, "serverLabel", e.types, config);
             config['noFormat'] = true;
             config['twoYz'] = "none"
             cf.renderChart(result_json, config);
-            //var pieData = chartUtils.getEnginePie(final_result);
-            //$scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
-            //cf.renderChart(pieData, $scope.charts[0].config);
+            var pieData = chartUtils.getEnginePie(result_json, null, e);
+            var e0 = $scope.charts[0];
+            e0.config.instance = echarts.init(document.getElementById(e0.config.id));
+            cf.renderChart(pieData, e0.config);
 
+        }
+        $scope.extPieHover = function (params, type) {
+            if (params.dataIndex != -1) {
+                var colorIndex = Number(params.dataIndex);
+                $(".chart_box").attr("style", "background:" + $rootScope.chartColors[colorIndex]);
+                $("#chartlink").html(params.name);
+                $("#chartname").html(chartUtils.convertChinese(type));
+                $("#chartnumber").html(params.data.value);
+                $("#chartpointe").html(params.special + "%");
+            }
+        }
+        $scope.itemHover = function (params, typeTotal, allTotal) {
+            var type = chartUtils.convertChinese($scope.charts[1].types.toString())
+            $(".chart_box").attr("style", "background:" + $rootScope.chartColors[params.seriesIndex]);
+            $("#chartlink").html(params[0]);
+            $("#chartname").html(type);
+            $("#chartnumber").html(typeTotal);
+            $("#chartpointe").html(parseFloat(typeTotal / allTotal * 100).toFixed(2) + "%");
+            var xName = params[1].toString();
+            var res = '<li>' + type + '</li>';
+            if ($rootScope.start - $rootScope.end == 0) {
+                res += '<li>' + xName + ':00-' + xName + ':59</li>';
+            } else {
+                res += '<li>' + xName + '</li>';
+            }
+            res += '<li  class=chartstyle' + params.seriesIndex + '>' + params[0] + '：' + params[2] + '</li>';
+            return res;
         }
         $scope.charts = [{
             config: {
@@ -104,7 +132,8 @@ define(["./module"], function (ctrs) {
                 serieName: "搜索引擎",
                 chartType: "pie",
                 dataKey: "key",
-                dataValue: "quota"
+                dataValue: "quota",
+                onHover: $scope.extPieHover
             },
             types: ["pv"],
             dimension: ["se"],
@@ -115,13 +144,16 @@ define(["./module"], function (ctrs) {
             {
                 config: {
                     legendId: "indicators_charts_legend",
-                    legendData: ["浏览量(PV)", "访客数(UV)", "访问次数", "新访客数", "IP数", "页面转化", "订单数", "订单金额", "订单转化率"],
+                    legendData: ["浏览量(PV)", "访客数(UV)", "访问次数", "新访客数", "IP数", "页面转化"],
                     legendClickListener: $scope.onLegendClick,
                     legendAllowCheckCount: 1,
                     min_max: false,
                     bGap: false,
                     id: "indicators_charts",
                     keyFormat: "none",//设置不需要chart工厂处理x轴数据
+                    auotHidex: true,
+                    tt: "item",
+                    itemHover: $scope.itemHover,
                     chartType: "line",
                     lineType: false,
                     dataKey: "key",
@@ -138,32 +170,28 @@ define(["./module"], function (ctrs) {
             $rootScope.start = 0;
             $rootScope.end = 0;
             $rootScope.interval = undefined;
-            $scope.charts.forEach(function (chart) {
-                chart.config.instance = echarts.init(document.getElementById(chart.config.id));
-                util.renderLegend(chart, chart.config);
-            });
-            requestService.refresh($scope.charts);
+            var chart = $scope.charts[1];
+            chart.config.instance = echarts.init(document.getElementById(chart.config.id));
+            util.renderLegend(chart, chart.config);
+            requestService.refresh([$scope.charts[1]]);
         }
         $scope.init();
         $scope.$on("ssh_refresh_charts", function (e, msg) {
             $rootScope.targetSearch();
-            $scope.charts.forEach(function (chart) {
-                chart.config.instance = echarts.init(document.getElementById(chart.config.id));
-            });
-            requestService.refresh($scope.charts);
+            var chart = $scope.charts[1];
+            chart.config.instance = echarts.init(document.getElementById(chart.config.id));
+            requestService.refresh([chart]);
         });
         //日历
         $rootScope.datepickerClick = function (start, end, label) {
             var time = chartUtils.getTimeOffset(start, end);
             $rootScope.start = time[0];
             $rootScope.end = time[1];
-            $scope.charts.forEach(function (e) {
-                e.config.keyFormat = "day";
-                var chart = echarts.init(document.getElementById(e.config.id));
-                e.config.instance = chart;
-            })
-
-            requestService.refresh($scope.charts);
+            var e = $scope.charts[1];
+            e.config.keyFormat = "day";
+            var chart = echarts.init(document.getElementById(e.config.id));
+            e.config.instance = chart;
+            requestService.refresh([e]);
             $rootScope.tableTimeStart = time[0];
             $rootScope.tableTimeEnd = time[1];
             $rootScope.targetSearch();

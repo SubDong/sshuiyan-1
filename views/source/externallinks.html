@@ -9,9 +9,19 @@
         <ssh-date-show type="today" dimension="rf"></ssh-date-show>
         <div class="index_chart">
             <div id="indicators_charts_legend"></div>
-            <div id="sourse_charts" class="pin_chart"></div>
-            <div id="indicators_charts" class="line_chart"></div>
-
+            <div class="pin_chart">
+                <div id="sourse_charts" class="chart_height"></div>
+            </div>
+            <div class="line_chart">
+                <div id="indicators_charts" class="chart_height"></div>
+                <div class="chart-bottom">
+                    <ul>
+                        <li><span class="chart_box" style="background:#2fabe9;"></span><b id="chartlink"></b></li>
+                        <li>总<b id="chartname"></b>：<span id="chartnumber"></span></li>
+                        <li>占比：<span id="chartpointe"></span></li>
+                    </ul>
+                </div>
+            </div>
         </div>
         <div class="table_content" ng-controller="TabsCtrl">
             <ul ng-init="tab = 1" class="nav nav-tabs nav-justified">
@@ -74,18 +84,26 @@
                     <div class="chart_top2 chart_top2_1">
                         <ul>
                             <li><span>设备过滤:</span></li>
-                            <li><label ng-click="setExLinkTerminal(0)"><input type="radio" checked="checked" name="radio0" class="styled"/>全部</label></li>
-                            <li><label ng-click="setExLinkTerminal(1)"><input type="radio" name="radio0" class="styled"/>计算机</label></li>
-                            <li><label ng-click="setExLinkTerminal(2)"><input type="radio" name="radio0" class="styled"/>移动设备</label></li>
+                            <li><label ng-click="setExLinkTerminal(0)"><input type="radio" checked="checked"
+                                                                              name="radio0" class="styled"/>全部</label>
+                            </li>
+                            <li><label ng-click="setExLinkTerminal(1)"><input type="radio" name="radio0"
+                                                                              class="styled"/>计算机</label></li>
+                            <li><label ng-click="setExLinkTerminal(2)"><input type="radio" name="radio0"
+                                                                              class="styled"/>移动设备</label></li>
                         </ul>
                     </div>
                     <div class="chart_top2 chart_top2_2">
                         <ul>
                             <li><span>网站类型:</span></li>
-                            <li><label ng-click="webClass(0)"><input type="radio" checked="checked" name="radio1" class="styled"/>全部 </label></li>
-                            <li><label ng-click="webClass(1)"><input type="radio" name="radio1" class="styled"/>社会化媒体</label></li>
-                            <li><label ng-click="webClass(2)"><input type="radio" name="radio1" class="styled"/>导航网站</label></li>
-                            <li><label ng-click="webClass(3)"><input type="radio" name="radio1" class="styled"/>电子邮箱</label></li>
+                            <li><label ng-click="webClass(0)"><input type="radio" checked="checked" name="radio1"
+                                                                     class="styled"/>全部 </label></li>
+                            <li><label ng-click="webClass(1)"><input type="radio" name="radio1"
+                                                                     class="styled"/>社会化媒体</label></li>
+                            <li><label ng-click="webClass(2)"><input type="radio" name="radio1"
+                                                                     class="styled"/>导航网站</label></li>
+                            <li><label ng-click="webClass(3)"><input type="radio" name="radio1"
+                                                                     class="styled"/>电子邮箱</label></li>
                         </ul>
                     </div>
                 </div>
@@ -94,8 +112,10 @@
                 <div class="custom_select">
                     <div class="input_group fl">
                         <ul>
-                            <li><label ng-click="setURLDomain('rf')"><input type="radio" checked="checked" name="radio2" class="styled"/>按URL</label></li>
-                            <li><label ng-click="setURLDomain('dm')"><input type="radio" name="radio2" class="styled"/>按域名</label></li>
+                            <li><label ng-click="setURLDomain('rf')"><input type="radio" checked="checked" name="radio2"
+                                                                            class="styled"/>按URL</label></li>
+                            <li><label ng-click="setURLDomain('dm')"><input type="radio" name="radio2" class="styled"/>按域名</label>
+                            </li>
                         </ul>
                     </div>
                     <div class="input-group fl">
@@ -123,7 +143,7 @@
                 </div>
             </div>
             <div class="custom_table">
-                <div ui-grid="gridOptions" class="grid clearfix"  ui-grid-pagination
+                <div ui-grid="gridOptions" class="grid clearfix" ui-grid-pagination
                      ui-grid-exporter ui-grid-auto-resize></div>
                 <gridpage></gridpage>
             </div>

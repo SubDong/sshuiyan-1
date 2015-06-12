@@ -1783,7 +1783,6 @@ nav, .navbar-default {
 
 .linkstree {
   min-height: 380px;
-  overflow: hidden;
   position: relative;
   .linkstree_right {
     position: absolute;
@@ -2214,16 +2213,37 @@ nav, .navbar-default {
 
 .pin_chart {
   width: 40%;
-  height: 400px;
   float: left;
 }
-
 .line_chart {
   width: 60%;
   float: right;
-  height: 400px;
 }
-
+.chart_height{
+  height:400px
+}
+.chart-bottom{
+  margin-top:-20px;
+  ul li{
+    display:block;
+    float:left;
+    margin-right:2%;
+    color:#8a8a8a;
+    .chart_box{
+      display:block;
+      float:left;
+      width:10px;
+      height:10px;
+      border-radius: 2px;
+      margin:4px 5px 0 0 ;
+    }
+    span{
+      color:#2fabe9;
+    }
+  }
+  padding-left:80px;
+  overflow:hidden;
+}
 .pin_charts {
   width: 50%;
   height: 400px;
@@ -3518,4 +3538,9 @@ textarea.tNum {
   -webkit-box-shadow: 0 4px 5px rgba(0, 0, 0, .15);
   box-shadow: 0 4px 5px rgba(0, 0, 0, .15);
 
+}
+.index_chart{
+  .chart_detalie{
+
+  }
 }

@@ -54,6 +54,23 @@ define(["./module"], function (ctrs) {
             produceUrl: ""
         };
 
+        //根据 keywords 来进行回车符换行拆分
+        $scope.allSubmit = function(){
+            var kVal = $scope.urlconfig.keywords;
+            var includeObj = kVal.indexOf("\\n");
+            if( includeObj < -1) {
+                $scope.submit();
+            } else {
+                var kVal2 = $scope.urlconfig.keywords;
+                var splArray = kVal2.split("\n");
+                //console.log(splArray);
+                for (var i=0 ; i< splArray.length ; i++) {
+                    var kwObj = splArray[i];
+                    $scope.submit(kwObj);
+                }
+            }
+        };
+
         /*$scope.parseUrl = function() {
             var strUrl = "http://" + $scope.urlconfig.targetUrl
                 + "?hmsr=" + $scope.urlconfig.mediaPlatform
@@ -64,25 +81,25 @@ define(["./module"], function (ctrs) {
             return encodeURI(strUrl);
         };*/
 
-        $scope.submit = function () {
+        $scope.submit = function (obj) {
             var model = angular.copy($scope.adtrack_model);
             model.targetUrl = $scope.urlconfig.targetUrl;
             model.mediaPlatform = $scope.urlconfig.mediaPlatform;
             model.adTypes = $scope.urlconfig.adTypes;
             model.planName = $scope.urlconfig.planName;
-            model.keywords = $scope.urlconfig.keywords;
+            model.keywords = obj;
             model.creative = $scope.urlconfig.creative;
             //model.produceUrl = $scope.parseUrl();
             model.uid = $cookieStore.get("uid");
 
             var query = "/config/adtrack?type=search&query={\"uid\":\"" + model.uid + "\",\"targetUrl\":\"" + model.targetUrl + "\"}";
             $http({method: 'GET', url: query}).success(function (dataConfig, status) {
-
+                refushGridData();
 
                 if (dataConfig == null || dataConfig.length == 0) {
                     var url = "/config/adtrack?type=save&entity=" + JSON.stringify(model);
                     $http({method: 'GET', url: url}).success(function (dataConfig, status) {
-
+                        refushGridData();
                     });
                 } else {
                     model.type_id = dataConfig.type_id;
@@ -90,11 +107,24 @@ define(["./module"], function (ctrs) {
                     if (dataConfig.site_name != model.site_name) {
                         var url = "/config/adtrack?type=update&query={\"uid\":\"" + model.uid + "\",\"targetUrl\":\"" + model.targetUrl + "\"}&updates=" + JSON.stringify(model);
                         $http({method: 'GET', url: url}).success(function (dataConfig, status) {
-
+                            refushGridData();
                         });
                     }
                 }
             });
         };
+
+        var refushGridData = function () {
+            var uid = $cookieStore.get("uid");
+            var site_id = $rootScope.userType;
+            var url = "/config/adtrack?index=adtrack&type=search&query={\"uid\":\"" + uid + "\"}";
+            $http({
+                method: 'GET',
+                url: url
+            }).success(function (dataConfig, status) {
+                $scope.gridArray.data = dataConfig;
+            });
+        };
+
     });
 });
