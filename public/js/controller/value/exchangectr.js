@@ -59,8 +59,8 @@ define(["./module"], function (ctrs) {
             //根据域名type查询pv和uv
 
             $scope.init = function () {
+
                 $http.get("api/exchange?start=" + $rootScope.start + ",end=" + $rootScope.end + ",type=" + $rootScope.userType + ",pathUp=path0,pathDown=path1" + ",address=" + null).success(function (data) {
-                    console.log(data)
                     if (data.length == 0) {
                         $scope.exchanges = null;
                         $scope.exchange = null;
@@ -83,6 +83,7 @@ define(["./module"], function (ctrs) {
                         pv: data[0].pv,
                         uv: data[0].uv
                     };
+                    $scope.selectedIndex=0;
                 });
             };
 
@@ -285,6 +286,9 @@ define(["./module"], function (ctrs) {
                     return ;
                 }
 
+            }
+            $scope.page_refresh = function(){
+                $scope.init();
             }
         }
     );
