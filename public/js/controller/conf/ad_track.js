@@ -84,10 +84,10 @@ define(["./module"], function (ctrs) {
                     method: 'GET',
                     url: query
                 }).success(function (dataConfig, status) {
-                    console.log(dataConfig);
+                    //console.log(dataConfig);
                     if (dataConfig == "\"remove\"") {
 
-                        refushGridData();
+                        $scope.refushGridData();
                     }
 
                 });
@@ -96,7 +96,7 @@ define(["./module"], function (ctrs) {
 
 
 
-        var refushGridData = function () {
+        $scope.refushGridData = function () {
             var uid = $cookieStore.get("uid");
             var site_id = $rootScope.userType;
             var url = "/config/adtrack?index=adtrack&type=search&query={\"uid\":\"" + uid + "\"}";
@@ -105,10 +105,9 @@ define(["./module"], function (ctrs) {
                 url: url
             }).success(function (dataConfig, status) {
                 $scope.gridArray.data = dataConfig;
-                console.log(dataConfig);
             });
         };
-        refushGridData();
+        $scope.refushGridData();
         //$scope.text="eeeeee";
 
         $scope.onViewUrl=function(index,grid,row){
