@@ -722,7 +722,7 @@ define(["../app"], function (app) {
                     scope.dateShowArray = $rootScope.copy(t_a);
                 };
                 scope.loadDataShow = function () {
-                    var semRequest = $http.get(SEM_API_URL + "elasticsearch/" + $rootScope.userType
+                    var semRequest = $http.get(SEM_API_URL + "search_word/" + $rootScope.userType
                     + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd);
                     $q.all([semRequest]).then(function (final_result) {
                         angular.forEach(final_result[0].data, function (r) {
@@ -735,7 +735,7 @@ define(["../app"], function (app) {
                     });
                 };
                 scope.loadCompareDataShow = function (startTime, endTime) {
-                    var semRequest = $http.get(SEM_API_URL + "elasticsearch/" + $rootScope.userType
+                    var semRequest = $http.get(SEM_API_URL + "search_word/" + $rootScope.userType
                     + "/?startOffset=" + startTime + "&endOffset=" + endTime);
                     $q.all([semRequest]).then(function (final_result) {
                         angular.forEach(final_result[0].data, function (r) {
