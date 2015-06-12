@@ -1066,7 +1066,6 @@ define(["app"], function (app) {
         };
         // table 历史趋势
         $scope.getHistoricalTrend = function (b) {
-            alert(0)
             if ($rootScope.tableSwitch.isJudge == undefined)$scope.isJudge = true;
             if ($rootScope.tableSwitch.isJudge)$rootScope.tableSwitch.tableFilter = undefined;
             var a = b.$parent.$parent.row.entity[$rootScope.tableSwitch.latitude.field];
