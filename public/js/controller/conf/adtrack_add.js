@@ -94,12 +94,12 @@ define(["./module"], function (ctrs) {
 
             var query = "/config/adtrack?type=search&query={\"uid\":\"" + model.uid + "\",\"targetUrl\":\"" + model.targetUrl + "\"}";
             $http({method: 'GET', url: query}).success(function (dataConfig, status) {
-
+                refushGridData();
 
                 if (dataConfig == null || dataConfig.length == 0) {
                     var url = "/config/adtrack?type=save&entity=" + JSON.stringify(model);
                     $http({method: 'GET', url: url}).success(function (dataConfig, status) {
-
+                        refushGridData();
                     });
                 } else {
                     model.type_id = dataConfig.type_id;
@@ -107,11 +107,24 @@ define(["./module"], function (ctrs) {
                     if (dataConfig.site_name != model.site_name) {
                         var url = "/config/adtrack?type=update&query={\"uid\":\"" + model.uid + "\",\"targetUrl\":\"" + model.targetUrl + "\"}&updates=" + JSON.stringify(model);
                         $http({method: 'GET', url: url}).success(function (dataConfig, status) {
-
+                            refushGridData();
                         });
                     }
                 }
             });
         };
+
+        var refushGridData = function () {
+            var uid = $cookieStore.get("uid");
+            var site_id = $rootScope.userType;
+            var url = "/config/adtrack?index=adtrack&type=search&query={\"uid\":\"" + uid + "\"}";
+            $http({
+                method: 'GET',
+                url: url
+            }).success(function (dataConfig, status) {
+                $scope.gridArray.data = dataConfig;
+            });
+        };
+
     });
 });
