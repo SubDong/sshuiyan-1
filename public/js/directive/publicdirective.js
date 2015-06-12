@@ -172,8 +172,16 @@ define(["../app"], function (app) {
                     separator: ' to '
                 }, function (start, end, label) {
                     $rootScope.datepickerClick(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
-                    $rootScope.startString = (start.format('YYYY-MM-DD') + ' 至 ' + end.format('YYYY-MM-DD'))
-                    $('#reportrange span').html(start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD'));
+                    $rootScope.startString = (start.format('YYYY-MM-DD') + ' 至 ' + end.format('YYYY-MM-DD'));
+
+                    if (start.format('YYYY-MM-DD') == end.format('YYYY-MM-DD')) {
+                        $('#reportrange span').html(start.format('YYYY-MM-DD'));
+                        $rootScope.startString = (start.format('YYYY-MM-DD'));
+                    }
+                    else {
+                        $('#reportrange span').html(start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD'));
+                    }
+                    //$('#reportrange span').html(start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD'));
                 });
             }
         };
@@ -219,7 +227,6 @@ define(["../app"], function (app) {
                     separator: ' to '
                 }, function (start, end, label) {
                     //if(){
-
                     $rootScope.datepickerClickTow(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
                     if (!$rootScope.datePickerCompare) {
                         $rootScope.datePickerCompare = function (a, b, c) {
@@ -227,7 +234,14 @@ define(["../app"], function (app) {
                     } else {
                         $rootScope.datePickerCompare(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
                     }
-                    scope.date = start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD');
+                    if (start.format('YYYY-MM-DD') == end.format('YYYY-MM-DD')) {
+                        scope.date = start.format('YYYY-MM-DD');
+                    }
+                    else {
+                        scope.date = start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD');
+
+                    }
+                    //console.log(scope.date)
                     //$('#choicetrange span').html(start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD'));
                 });
             }
