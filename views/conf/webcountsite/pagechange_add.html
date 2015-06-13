@@ -95,7 +95,7 @@
                             class="glyphicon glyphicon-remove"></i></span>
                     <label><input type="checkbox" data-ng-model="path.path_mark">只有经过此路径的目标记为转化</label>
                     <ul class="path_type_content" data-ng-repeat="step in path.steps">
-                        <li>步骤1</li>
+                        <li>步骤{{$index}}</li>
                         <li><input type="text" class="input_name" placeholder="步骤名称" data-ng-model="step.step_name"
                                    onfocus="this.setAttribute('placeholder','')"
                                    onblur="this.setAttribute('placeholder','步骤名称')"></li>
