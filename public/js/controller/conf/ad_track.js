@@ -69,7 +69,7 @@ define(["./module"], function (ctrs) {
         $scope.onDelete = function (index,grid,row) {
             $scope.onDeleteDialog= ngDialog.open({
                 template: '' +
-                '<div class="ngdialog-buttons" ><ui><li> 确认删除吗？<span style=" color: red " >（要测试自己新建条删哈！）<span></li></ui>' +
+                '<div class="ngdialog-buttons" ><ui><li> 确认删除吗？</li></ui>' +
                 '<button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
                   <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="sureonDelete()">确定</button></div>',
                 className: 'ngdialog-theme-default',
