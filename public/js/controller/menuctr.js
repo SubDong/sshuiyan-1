@@ -16,6 +16,8 @@ define(["./module"], function (ctrs) {
         $scope.menuClass = function (menu, hrefs, i) {
             if ("" === menu) {
                 return 0;
+            }else if("/conf" === menu){
+                return 0;
             }
             if ((menu.indexOf(hrefs[i]) != -1 & menu.indexOf(hrefs[i]) < 3) || i > hrefs.length) {
                 return i;
@@ -24,7 +26,6 @@ define(["./module"], function (ctrs) {
         }
 
         $scope.selectedRow = $scope.menuClass(menu, $scope.array, 0);
-
         $scope.groups = [
             {
                 title: '趋向分析 ',
