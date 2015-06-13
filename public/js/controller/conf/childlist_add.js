@@ -47,7 +47,7 @@ define(["./module"], function (ctrs) {
 
         $scope.subdirectory.uid = $cookieStore.get("uid");
 
-        $scope.subdirectory.root_url = $rootScope.userType;
+        $scope.subdirectory.root_url = $rootScope.site_id;
 
         $scope.subdirectory.create_date = new Date().Format("yyyy-MM-dd hh:mm:ss");
 
