@@ -199,7 +199,7 @@ define(["./module"], function (ctrs) {
                 title: '系统管理设置',
                 icon: 'glyphicon glyphicon-user',
                 stype: 1,
-                sref: 'adminrootsite',
+                sref: 'admin',
                 child: [{
                     text: ' 权限账户管理',
                     sref: '#conf/admin/root'
@@ -236,6 +236,7 @@ define(["./module"], function (ctrs) {
         $scope.siteselects = $rootScope.usites;
         $rootScope.baiduAccount = $rootScope.usites[0].bd_name;//baidu-perfect2151880
         $rootScope.userType = $rootScope.usites[0].type_id;//www.perfect-cn.cn
+        $rootScope.siteId=$rootScope.usites[0].site_id;
         $rootScope.userTypeName = $rootScope.usites[0].site_name;
 
         $scope.changeUrl = function (select) {

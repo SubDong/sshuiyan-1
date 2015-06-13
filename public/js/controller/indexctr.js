@@ -6,6 +6,9 @@ define(['./module'], function (ctrs) {
     'use strict';
 
     ctrs.controller("indexctr", ['$scope', '$rootScope', '$http', 'requestService', 'messageService', 'areaService', function ($scope, $rootScope, $http, requestService, messageService, areaService) {
+      $scope.menuselect=function($location){
+
+       }
         $scope.todayClass = true;
         $scope.hourcheckClass = true;
         $scope.menu_select = false;

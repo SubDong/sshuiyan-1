@@ -164,8 +164,7 @@ var schemas = {
         collection_name: "t_configAdtrack",
         schema: {
             uid: "", // user id 用户ID
-            type_id: "", // es type id ( hidden in front-end) 对应ES ID
-            track_id: "", // js track id 随机生成
+            site_id: "",    //站点ID
             targetUrl: "", // 目标URL
             mediaPlatform: "", // 媒体平台
             adTypes: "",    //广告类型
