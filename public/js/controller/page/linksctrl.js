@@ -66,7 +66,7 @@ define(["./module"], function (ctrs) {
                     };
                     $scope.links = linksData;
                 }
-                if (result.length == 0) {
+                if (result.length != 0) {
                     if (result[0].in_data.length <= 3) {
                         document.getElementById("linkstree_top").style.top = "14%";
                         document.getElementById("linkstree_right").style.top = "14%";

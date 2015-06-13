@@ -47,24 +47,27 @@ define(["./module"], function (ctrs) {
                     $scope.out_siteData = data.out_siteData;
                     linkData = [];
                 }
-                if (data.data.length <= 3) {
-                    document.getElementById("linkstree_top").style.top = "14%";
-                    document.getElementById("linkstree_right").style.top = "14%";
+                if (data.length != 0) {
+                    if (data.data.length <= 3) {
+                        document.getElementById("linkstree_top").style.top = "14%";
+                        document.getElementById("linkstree_right").style.top = "14%";
+                    }
+
+                    if (data.data.length == 1) {
+                        document.getElementById("linkstree_top").style.top = "0";
+                        document.getElementById("linkstree_right").style.top = "0";
+                        $(".linkstree_left").css("margin-top", "14px")
+                    }
+                    if (data.data.length == 4) {
+                        document.getElementById("linkstree_top").style.top = "20%";
+                        document.getElementById("linkstree_right").style.top = "20%";
+                    }
+                    if (data.data.length >= 5) {
+                        document.getElementById("linkstree_top").style.top = "35%";
+                        document.getElementById("linkstree_right").style.top = "35%";
+                    }
                 }
 
-                if (data.data.length == 1) {
-                    document.getElementById("linkstree_top").style.top = "0";
-                    document.getElementById("linkstree_right").style.top = "0";
-                    $(".linkstree_left").css("margin-top", "14px")
-                }
-                if (data.data.length == 4) {
-                    document.getElementById("linkstree_top").style.top = "20%";
-                    document.getElementById("linkstree_right").style.top = "20%";
-                }
-                if (data.data.length >= 5) {
-                    document.getElementById("linkstree_top").style.top = "35%";
-                    document.getElementById("linkstree_right").style.top = "35%";
-                }
             });
         }
         $scope.init();
@@ -219,6 +222,7 @@ define(["./module"], function (ctrs) {
             var d = dd.getDate();
             return y + "-" + m + "-" + d;
         }
+
         $rootScope.datepickerClick = function (start, end, label) {
             $scope.reset();
             $scope.timeClass = true;
