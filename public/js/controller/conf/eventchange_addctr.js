@@ -25,12 +25,18 @@ define(["./module"], function (ctrs) {
 
         $scope.eventChange.root_url =$rootScope.userType;
 
+        $scope.targetUrl ="";
+
+
+        $scope.onCancel = function () {
+            $state.go('eventchange');
+        }
+
 
         $scope.onSaveEvent = function () {
 
             var entity = JSON.stringify($scope.eventChange);
-
-            var url = "/config/eventchnage_list?type=save&entity=" + entity;
+           var url = "/config/eventchnage_list?type=save&entity=" + entity;
             $http({
                 method: 'GET',
                 url: url
@@ -40,7 +46,7 @@ define(["./module"], function (ctrs) {
                         $state.go('eventchange');
                     },
                     template: '\
-              <div class="ngdialog-buttons" >\
+              <div class="ngdialog-buttons">\
                         <ul>\
                         <li> 保存成功</li></ul>   \
                     <a href="#conf/webcountsite/eventchange" ng-click=closeThisDialog(0)>确认</a>\
@@ -48,14 +54,9 @@ define(["./module"], function (ctrs) {
                     className: 'ngdialog-theme-default',
                     plain: true,
                     scope: $scope
+
                 });
-
             });
-
         };
-
-
-
-
     })
 });
