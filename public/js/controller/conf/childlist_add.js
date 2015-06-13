@@ -137,6 +137,7 @@ define(["./module"], function (ctrs) {
             return str;
         }
 
+        Custom.initCheckInfo();//页面check样式js调用
 
     });
 

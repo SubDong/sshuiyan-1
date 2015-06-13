@@ -2,7 +2,8 @@ var _pct = _pct || [];
 (function () {
     var points = [], h = {}, md = {}, c = {
         id: "1",
-        version: "1.0.12"
+        version: "1.0.12",
+        q: null
     };
 
     md.achieve = {};
@@ -64,6 +65,18 @@ var _pct = _pct || [];
         }
         return ((v_flash == undefined || v_flash == "") ? "" : v_flash);
     };
+
+    md.V = {};
+    md.V.log = function (a, b) {
+        var f = new Image, d = "mini_tangram_log_" + Math.floor(2147483648 * Math.random()).toString(36);
+        window[d] = f;
+        f.onload = f.onerror = f.onabort = function () {
+            f.onload = f.onerror = f.onabort = c.q;
+            f = window[d] = c.q;
+            b && b(a)
+        };
+        f.src = a
+    };
     md.cookie = {};
     md.getDomain = function () {
         var a = document.location.hostname;
@@ -73,7 +86,7 @@ var _pct = _pct || [];
     md.cookie.set = function (a, b, c) {
         var date = new Date();
         date.setTime(date.getTime() * 100);
-        document.cookie = a + "=" + escape(b) + (c ?";expires=" +  date.toGMTString() : "") + ";domain=" + md.getDomain() + "; path=/";
+        document.cookie = a + "=" + escape(b) + (c ? ";expires=" + date.toGMTString() : "") + ";domain=" + md.getDomain() + "; path=/";
     };
     md.cookie.setNull = function (a, b) {
         document.cookie = a + "=" + escape(b) + "; path=/";
@@ -360,8 +373,8 @@ var _pct = _pct || [];
                             if (st == undefined || st == "" || st == null) a[a.length - 1] = 3;
                             for (var r = 1; r < a.length; r++) cvInfo = cvInfo + (a[r] == undefined ? "" : a[r] + "*");
                             cvInfo = cvInfo.substring(0, cvInfo.length - 1);
-                            md.cookie.set("PFT_CV_" + c.id, decodeURIComponent(cvInfo),1);
-                            md.cookie.set("PFT_API", decodeURIComponent("3_0"),1);
+                            md.cookie.set("PFT_CV_" + c.id, decodeURIComponent(cvInfo), 1);
+                            md.cookie.set("PFT_API", decodeURIComponent("3_0"), 1);
                         }
                     }
                 }
@@ -376,11 +389,11 @@ var _pct = _pct || [];
             this.init();
         }
 
-        var ccz = md.g, faz = md.achieve, sess = md.sessionStorage, loa = md.localStorage, cookie = md.cookie, u = md.UUID, position = md.position;
+        var ccz = md.g,ast = md.V, faz = md.achieve, sess = md.sessionStorage, loa = md.localStorage, cookie = md.cookie, u = md.UUID, position = md.position;
         sta.prototype = {
             setData: function (a) {
                 try {
-                    cookie.set(a, u.createUUID(),1);
+                    cookie.set(a, u.createUUID(), 1);
                     loa.set(a, u.createUUID());
                 } catch (e) {
                 }
@@ -443,15 +456,10 @@ var _pct = _pct || [];
                     this.sm();
                 }
             },
-            sm: function () {
-                var _c = h.I;
-                var a = document.createElement("script");
-                a.setAttribute("type", "text/javascript");
-                a.setAttribute("charset", "utf-8");
-                a.setAttribute("src", _c.protocol + "//" + _c.P + "/" + _c.S + "?t\=" + c.id + "\&" + this.par());
-                var f = document.getElementsByTagName("script")[0];
-                f.parentNode.insertBefore(a, f);
-                f.remove()
+            sm: function (a) {
+                var  _c = h.I;
+                var d = _c.protocol + "//" + _c.P + "/" + _c.S + "?t\=" + c.id + "\&" + this.par();
+                ast.log(d);
             },
             hbInfo: function () {
                 var _c = h.I;
@@ -461,7 +469,6 @@ var _pct = _pct || [];
                 a.setAttribute("src", _c.protocol + "//" + _c.P + "/" + _c.S + "?t\=" + c.id + "tt\=" + md.g.tt + "\&rf='-'\&ping=" + Date.parse(new Date()));
                 var f = document.getElementsByTagName("script")[0];
                 f.parentNode.insertBefore(a, f);
-                f.remove()
             },
             heartBeat: function (a) {
                 var b = 5 * 60 * 1000, c = 3 * 60 * 1000;

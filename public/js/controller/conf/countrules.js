@@ -133,7 +133,7 @@ define(["./module"], function (ctrs) {
                 ips_area.count = ips.length;
                 ips_area.tText = ips.toString().replace(/\,/g, "\n");
                 return ips_area;
-            }
-
+            };
+        Custom.initCheckInfo();//页面check样式js调用
     });
 });
