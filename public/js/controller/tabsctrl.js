@@ -1001,6 +1001,9 @@ define(["app"], function (app) {
                         }
                         row.entity.subGridOptions.columnDefs = $scope.gridOpArray;
                         row.entity.subGridOptions.data = data;
+                        if(data.length == 0){
+                            row.isExpanded=false
+                        }
                         $rootScope.tableSwitch.tableFilter = returnFilter;
                     }).error(function (error) {
                         console.log(error);
@@ -1063,7 +1066,7 @@ define(["app"], function (app) {
 
                     datas.record.forEach(function (vtime, i) {
                         utimeHtml = utimeHtml + "<li><span>" + (new Date(parseInt(vtime.otime)).Format("hh:mm:ss")) + "</span></li>";
-                        var a = (Math.round(parseInt(vtime.vtime) / 1000));
+                         var a = (Math.round(parseInt(vtime.vtime) / 1000));
                         vtimeHtml = vtimeHtml + "<li><span>" + (datas.record.length - 1 == i ? "--" : (parseInt(a / 60) + "\'" + (a % 60) + "\"")) + "</span></li>";
                         urlHtml = urlHtml + "<li><span><a href='" + vtime.loc + "' target='_blank'>" + vtime.loc + "</a></span></li>"
                     });
