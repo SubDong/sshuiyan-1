@@ -198,19 +198,19 @@ define(["./module"], function (ctrs) {
         }
         $scope.init();
         $scope.$on("ssh_refresh_charts", function (e, msg) {
-            if ($scope.charts[0].config.compare) {
-                if ($rootScope.start > -7) {
-                    $scope.start--;
-                    $scope.end--
-                    if ($scope.compareType == 1) {
-                        $scope.compareLastDay();
-                    } else {
-                        $scope.compareLastWeek();
-                    }
-                } else {
-                    $scope.restCompare();
-                }
-            }
+            //if ($scope.charts[0].config.compare) {
+            //    if ($rootScope.start > -7) {
+            //        $scope.start--;
+            //        $scope.end--
+            //        if ($scope.compareType == 1) {
+            //            $scope.compareLastDay();
+            //        } else {
+            //            $scope.compareLastWeek();
+            //        }
+            //    } else {
+            //        $scope.restCompare();
+            //    }
+            //}
             if ($scope.compareType) {
                 $scope.compareReset();
             }
@@ -393,7 +393,7 @@ define(["./module"], function (ctrs) {
                 $scope.compareType = 1;
                 $scope.compareLastDayClass = true;
                 $scope.compareLastWeekClass = false;
-                $scope.dayselect = true;
+                //$scope.dayselect = true;
                 $scope.dayClass = false;
                 $scope.hourcheckClass = true;
                 $scope.charts.forEach(function (e) {

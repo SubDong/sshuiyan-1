@@ -18,7 +18,7 @@ var express = require('express'),
     redis_module = require("./servers/utils/redis"),
     RedisStore = require('connect-redis')(session),
     mongoose = require('./servers/utils/mongo'),
-    daos = require('./servers/db/daos');
+    security = require('./servers/services/security');
 
 
 var env = "dev";
@@ -90,47 +90,7 @@ app.use(function (req, res, next) {
     req.redisclient = redis_client;
     req.accountid = req.session.accountid;
     if (req.session.user) {
-        res.cookie('uname', JSON.stringify(req.session.user.userName), {maxAge: 60000});
-        res.cookie('uid', JSON.stringify(req.session.user.id), {maxAge: 60000});
-
-
-        var promise = daos.findSync("sites_model", JSON.stringify({uid: req.session.user.id}), null, {});
-
-        promise.then(function (docs) {
-            var usites = [];
-
-            if (docs.length > 0) {
-                docs.forEach(function (item) {
-                    var site = {};
-                    site['site_id'] = item._id.toString();
-                    site["site_name"] = item.site_name;
-                    //site["bd_name"] = req.session.user.baiduAccounts[0];
-                    //if (item.site_url == "www.best-ad.cn") {
-                    //    site["type_id"] = 1;
-                    //} else if (item.site_url == "www.perfect-cn.cn") {
-                    //    site["type_id"] = 2;
-                    //} else {
-                    //}
-                    site["type_id"] = item.type_id;
-                    //site["u_name"] = req.session.user.userName;
-
-                    if (!!req.session.user.baiduAccounts && req.session.user.baiduAccounts.length > 0)
-                        site["bd_name"] = req.session.user.baiduAccounts[0].baiduUserName;
-                    
-                    usites.push(site);
-                });
-
-            } else {
-                usites.push({
-                    'site_id': -1,
-                    'site_name': '<无>',
-                    'type_id': -1
-                })
-            }
-
-            res.cookie('usites', '' + JSON.stringify(usites) + '', {maxAge: 60000});
-            next();
-        })
+        security.login(req, res, next);
     } else {
         next();
     }
