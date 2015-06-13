@@ -17,12 +17,11 @@
                         <div class="form-group">
                             <label  class="col-sm-2 col-md-1 control-label">事件预览目标URL:</label>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" placeholder="请输入..." onfocus="this.setAttribute('placeholder','')"
+                                <input type="text" class="form-control" ng-model="site_url" placeholder="请输入..." onfocus="this.setAttribute('placeholder','')"
                                        onblur="this.setAttribute('placeholder','请输入...')">
-
                             </div>
                             <div class="col-sm-4">
-                                <button type="submit" class="btn btn-info">保 存</button>
+                                <button class="btn btn-info" data-ng-click="saveUrl()">保 存</button>
                                 <button type="submit" class="btn btn-default">取 消</button>
                             </div>
                         </div>
@@ -64,6 +63,65 @@
                     </form>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+<style>
+    .event_modal{
+        position: fixed;
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+        z-index: 10000;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        display: none;
+    }
+    .url_modal{
+        position: fixed;
+        background: rgba(0,0,0,.4);
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        -webkit-backface-visibility: hidden;
+        -webkit-animation: ngdialog-fadein .5s;
+        animation: ngdialog-fadein .5s;
+    }
+    .modal_content{
+        width: 1000px;
+        height: 900px;
+        position: absolute;
+        left: 50%;
+        margin-left: -500px;
+        top: 65px;
+    }
+    .modal_content .modal_title p{
+        line-height: 22px;
+        background-color: #747474;
+        color: #fff;
+    }
+    .modal_content .modal_footer {
+        margin-bottom: 40px;
+    }
+    .modal_content .modal_footer p{
+        line-height: 22px;
+        background-color: #747474;
+        color: #fff;
+        text-align: center;
+    }
+</style>
+<div class="event_modal" ng-controller="eventchange_addctr">
+    <div class="url_modal" data-ng-click="closed()"></div>
+    <div class="modal_content">
+        <div class="modal_title">
+            <p>http://www.best-ad.cn/</p>
+        </div>
+        <iframe id="iframe" src="https:best-ad.cn" frameborder="0" style="overflow:hidden;width:100%;background-color: #fff;" height="100%"  width="100%">
+        </iframe>
+        <div class="modal_footer" data-ng-click="closed()">
+            <p>关 闭</p>
         </div>
     </div>
 </div>

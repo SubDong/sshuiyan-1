@@ -60,9 +60,9 @@ define(["./module"], function (ctrs) {
         // 添加目标URL
         $scope.targetRemoves = [];
         $scope.targetUrlAdd = function (targets, targetRemoves) {
-            if(targets.length ==4){
+            if(targets.length == 4){
                 $("#addTargetUrl").html("");
-            }else{
+            }else {
                 $("#addTargetUrl").html("添加页面");
             }
             $scope.showRemove = true;
@@ -70,6 +70,9 @@ define(["./module"], function (ctrs) {
             targetRemoves.push({url: ""});
         }
         $scope.removeTargetUrl = function (targets, targetRemoves, _index) {
+            if(targets.length <= 5){
+                $("#addTargetUrl").text("添加页面");
+            }
             targets.splice(_index + 1, 1);
             targetRemoves.splice(_index, 1);
         }

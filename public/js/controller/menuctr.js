@@ -199,7 +199,7 @@ define(["./module"], function (ctrs) {
                 title: '系统管理设置',
                 icon: 'glyphicon glyphicon-user',
                 stype: 1,
-                sref: 'adminrootsite',
+                sref: 'admin',
                 child: [{
                     text: ' 权限账户管理',
                     sref: '#conf/admin/root'

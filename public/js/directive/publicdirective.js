@@ -1024,7 +1024,7 @@ define(["../app"], function (app) {
     /**
      * 手风琴。
      */
-    app.directive('sshAccordion', function () {
+    app.directive('sshAccordion', function ($rootScope, $location) {
         return {
             restrict: 'E',
             template: '<div ng-transclude></div>',
@@ -1040,9 +1040,33 @@ define(["../app"], function (app) {
                         }
                     });
                 }
+
                 this.addExpander = function (e) {
                     expanders.push(e);
                 }
+
+                $rootScope.$on("$locationChangeSuccess", function (e, n, o) {
+                    var _path = $location.path();
+                    angular.forEach(expanders, function (e_r, index) {
+                        console.log("e_r.sref==="+e_r.sref);
+//                        console.log("_path==="+_path.substring(1, _path.substring(1).indexOf("/") + 1));
+//                        console.log("true or false ==="+e_r.sref == _path.substring(1, _path.substring(1).indexOf("/") + 1));
+                        console.log("_path.split==="+_path.split("/")[2]);
+                        if (e_r.sref == _path.substring(1, _path.substring(1).indexOf("/") + 1)) {
+                            e_r.showText = true;
+                            $rootScope.$broadcast("ssssss", index);
+                        }else if(e_r.sref == _path.split("/")[2]){
+                            e_r.showText = true;
+                        }else {
+                            e_r.showText = false;
+                        }
+                    });
+                });
+            },
+            link: function (scope) {
+                scope.$on("ssssss", function (e, msg) {
+                    scope.selectedRow = msg;
+                });
             }
         }
     });

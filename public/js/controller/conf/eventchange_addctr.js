@@ -4,26 +4,31 @@
 define(["./module"], function (ctrs) {
     "use strict";
 
-    ctrs.controller('eventchange_addctr', function ($scope, $http,$rootScope,$cookieStore) {
+    ctrs.controller('eventchange_addctr', function ($scope, $http,$rootScope,$cookieStore,ngDialog) {
 
-        //ÊÂ¼þ×ª»¯¶ÔÏó
+        //ï¿½Â¼ï¿½×ªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         $scope.eventChange = {};
-        //ÊÇ·ñÊ¹ÓÃÕýÔò±í´ïÊ½
+        //ï¿½Ç·ï¿½Ê¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½
         $scope.eventChange.event_id = "0";
-        //Òª·ÖÎöµÄÒ³Ãæ
+        //Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò³ï¿½ï¿½
         $scope.eventChange.event_name ="";
-        //²»·ÖÎöµÄÒ³Ãæ
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò³ï¿½ï¿½
         $scope.eventChange.event_page ="";
-        // user id ÓÃ»§ID
+        // user id ï¿½Ã»ï¿½ID
         $scope.eventChange.uid =  $cookieStore.get("uid");
-        // ¸ùÄ¿Â¼
+        // ï¿½ï¿½Ä¿Â¼
         $scope.eventChange.root_url =$rootScope.userType;
-        //´´½¨Ê±¼ä
+        //ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
         $scope.eventChange.create_date = new Date().Format("yyyy-MM-dd hh:mm:ss");
+        $scope.site_url='';
+       $scope.saveUrl = function() {
+           $("#iframe").attr("src",'https://www.'+$scope.site_url);
+           $(".modal_title p").html('äº‹ä»¶ç›®æ ‡é¢„è§ˆURL:'+$scope.site_url);
+           $(".event_modal").fadeIn();
+       }
+        $scope.closed = function() {
+            $(".event_modal").fadeOut();
 
-
-
-
-
+        }
     })
 });
