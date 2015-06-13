@@ -5,6 +5,30 @@
 define(["./module"], function (ctrs) {
     "use strict";
 
+    ctrs.directive('adminmainctrRemoteValidation', function ($http,$cookieStore) {
+        return {
+            require: 'ngModel',
+            link: function (scope, elm, attrs, ctrl) {
+                elm.bind('keyup', function () {
+                    var uid=$cookieStore.get("uid");
+                    var url = "/config/site_list?type=search&query={\"uid\":\"" + uid + "\",\"site_url\":\"" +scope.urlconfig.site_url + "\"}";
+                    $http({method: 'GET', url: url}).
+                        success(function (data, status) {
+                            if (data.length > 0) {
+                                ctrl.$setValidity('remote', false);
+                            } else {
+                                ctrl.$setValidity('remote', true);
+                            }
+                        }).
+                        error(function (data, status, headers, config) {
+                            ctrl.$setValidity('remote', false);
+                        });
+
+
+                });
+            }
+        };
+    });
 
     ctrs.controller('adminmainctr', function ($scope, $q, $rootScope, $http, requestService, ngDialog, $cookieStore) {
         /**
@@ -69,11 +93,12 @@ define(["./module"], function (ctrs) {
             {name: "网站域名", displayName: "网站域名", field: "site_url", maxWidth: '', cellClass: 'table_admin'},
 
             {name: "网站名称", displayName: "网站名称", field: "site_name", maxWidth: '', cellClass: 'table_admin_color'},
-            {name: "首页代码状态", displayName: "首页代码状态", field: "track_code", maxWidth: 500, cellClass: 'table_admin_color'},
+            {name: "首页代码状态", displayName: "首页代码状态", field: "track_status", maxWidth: 500, cellClass: 'table_admin_color'},
             {
                 name: "x6",
                 displayName: "",
-                cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.gain(index,grid,row)'>获取代码</a><span class='glyphicon glyphicon-file'></span></div>",
+                cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.gain(index,grid,row)'>" +
+                "获取代码</a><span class='glyphicon glyphicon-file'></span></div>",
                 maxWidth: 100
             },
             {
@@ -85,7 +110,15 @@ define(["./module"], function (ctrs) {
             {
                 name: "x3",
                 displayName: "",
-                cellTemplate: "<div class='table_box'> <span onmousemove='getMyButton(this)' class='table_admin glyphicon glyphicon-cog'>设置</span><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history7' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='javascript:void(0)'>查看来源分布</a></li><li><a href='javascript:void(0)' ng-click='grid.appScope.showEntryPageLink(row)'>查看入口页链接</a></li></ul></div></div>",
+                cellTemplate: "<div class='btn-group table_admin' dropdown='' is-open='status.isopen'>" +
+                "<span class='glyphicon glyphicon-cog'></span><a type='button' dropdown-toggle='' ng-disabled='disabled' aria-haspopup='true' aria-expanded='false'>设置 </a> <ul class='dropdown-menu' role='menu'>" +
+            "<li><a href='#conf/webcountsite/countrules'>设置统计规则</a></li>" +
+            "<li><a href='#conf/webcountsite/childlist'>设置子目录</a></li>" +
+            "<li><a href='#conf/webcountsite/pagechange'>设置页面转化目标</a></li>" +
+            "<li><a href='#conf/webcountsite/eventchange'>设置事件转化目标</a></li>" +
+            "<li><a href='#conf/webcountsite/timechange'>设置市场转化目标</a></li>" +
+            " <li><a href='#conf/webcountsite/adtrack'>设置指定广告跟踪</a></li>" +
+            "</ul> </div>",
                 maxWidth: 80
             },
             {
@@ -144,10 +177,12 @@ define(["./module"], function (ctrs) {
             $scope.urlconfig.is_top = false;
             $scope.urlDialog = ngDialog.open({
                 template: '\
+                <form role="form" name="adminmainctrForm" class="form-horizontal" novalidate>\
               <div class="ngdialog-buttons" >\
                    <ul> \
                    <li>网站域名</li>\
-                     <li><input type="text" data-ng-focus="site_url_focus = true" data-ng-blur="site_name_focus = false" data-ng-model="urlconfig.site_url" class="form-control"/></li> \
+                     <li><input type="text" name="remote" adminmainctr-remote-validation data-ng-focus="site_url_focus = true" data-ng-blur="site_name_focus = false" data-ng-model="urlconfig.site_url" class="form-control" required/></li> \
+                    <li ng-show="adminmainctrForm.remote.$error.remote" style="color: red;">网站域名重复！</li> \
                     <li data-ng-show="site_url_focus && !urlconfig.site_url" style="color: red;">不能为空</li>\
                     <br>\
                     <li>网站名称</li>\
@@ -164,8 +199,8 @@ define(["./module"], function (ctrs) {
                     <li>4.wap站域名（如：wap.baidu.com）</li>\
                     </ul>\
                     <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
-                    <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="submit(0)">确定</button>\
-                </div>',
+                    <button type="button" ng-disabled="adminmainctrForm.$invalid" class="ngdialog-button ngdialog-button-primary" ng-click="submit(0)">确定</button>\
+                </div></form>',
                 className: 'ngdialog-theme-default',
                 plain: true,
                 scope: $scope
@@ -237,7 +272,7 @@ define(["./module"], function (ctrs) {
             };
             var tip = "";
             if (row.entity.site_pause) {
-                tip = "重新启用成功";
+                tip = "确定重新启用？";
             } else {
                 tip = "<li>注意</li><li>暂停后，您将不再分析该网站，直至您重新启用，你确定现在暂停使用吗？</li>"
             }
@@ -266,7 +301,7 @@ define(["./module"], function (ctrs) {
         $scope.gain = function (index, grid, row) {
             var thtml = $rootScope.adminSetHtml.replace("ex_track_id", row.entity.track_id);
             $scope.urlDialog = ngDialog.open({
-                template: $rootScope.adminSetHtml,
+                template: thtml,
                 className: 'ngdialog-theme-default',
                 plain: true,
                 scope: $scope
@@ -284,6 +319,9 @@ define(["./module"], function (ctrs) {
                 url: url
             }).success(function (dataConfig, status) {
                 $scope.gridOptions.data = dataConfig;
+                $scope.gridOptions.data.forEach(function(data){
+                    data.track_status = data.track_status?"正常":"异常"
+                })
             });
         };
         refushGridData();

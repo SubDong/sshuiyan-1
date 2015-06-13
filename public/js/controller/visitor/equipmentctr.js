@@ -81,7 +81,7 @@ define(["./module"], function (ctrs) {
             $scope.definClass = false;
         };
         $scope.equipmentChange = function (val) {
-
+            $scope.charts[0].keyFormat = "wq";
             $scope.charts[0].dimension = val.field;
             if ($scope.compareType) {
                 var times = [$rootScope.start, $rootScope.end];
@@ -231,6 +231,7 @@ define(["./module"], function (ctrs) {
                 $q.all([reqRequestStart, reqRequestEnd]).then(function (data) {
                     var _dateTime = chartUtils.getSetOffTime(times[0], times[1], "/");
                     var final_result = util.getEquipmentDataCompare(data, $scope.equipment.selected, _dateTime);
+                    console.log(final_result);
                     cf.renderChart(final_result, e.config);
                 });
             });
@@ -246,6 +247,7 @@ define(["./module"], function (ctrs) {
                 e.config.legendDefaultChecked = [0, 1];
                 e.config.legendAllowCheckCount = 2;
                 e.config.compareCustom = undefined;
+                e.config.compare = undefined;
                 e.types = [chartUtils.convertEnglish(e.config.legendData[0]), chartUtils.convertEnglish(e.config.legendData[1])];
                 util.renderLegend(chart, e.config);
                 Custom.initCheckInfo();
@@ -277,8 +279,7 @@ define(["./module"], function (ctrs) {
             //图表
             requestService.refresh($scope.charts);
             //其他页面表格
-            $rootScope.targetSearch(true);
-            $scope.$broadcast("ssh_dateShow_options_time_change");
+            $rootScope.targetSearch();
             //classcurrent
             $scope.reset();
             $scope.todayClass = true;

@@ -1,7 +1,7 @@
 <div class="middle_containers" ng-controller="history" ng-init="historyInit()">
 
     <div class="date_select">
-        <b class="">历史趋势</b>
+        <b class="" ng-model="webName">{{webName}}历史趋势</b>
         <calendar></calendar>
         <datecontrast></datecontrast>
         <refresh></refresh>
@@ -69,7 +69,7 @@
             <div class="custom_secendtitle">
             </div>
             <div class="custom_table">
-                <div ui-grid="gridOptions" class="grid clearfix" style="min-height:400px;" ui-grid-pagination
+                <div ui-grid="gridOptions" class="grid clearfix"  ui-grid-pagination
                      ui-grid-exporter></div>
                 <gridpage></gridpage>
             </div>

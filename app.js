@@ -105,15 +105,18 @@ app.use(function (req, res, next) {
                     site['site_id'] = item._id.toString();
                     site["site_name"] = item.site_name;
                     //site["bd_name"] = req.session.user.baiduAccounts[0];
-                    if (item.site_url == "www.best-ad.cn") {
-                        site["type_id"] = 1;
-                    } else if (item.site_url == "www.perfect-cn.cn") {
-                        site["type_id"] = 2;
-                    } else {
-                        site["type_id"] = item.type_id;
-                    }
+                    //if (item.site_url == "www.best-ad.cn") {
+                    //    site["type_id"] = 1;
+                    //} else if (item.site_url == "www.perfect-cn.cn") {
+                    //    site["type_id"] = 2;
+                    //} else {
+                    //}
+                    site["type_id"] = item.type_id;
                     //site["u_name"] = req.session.user.userName;
-                    site["bd_name"] = req.session.user.baiduAccounts[0].baiduUserName;
+
+                    if (!!req.session.user.baiduAccounts && req.session.user.baiduAccounts.length > 0)
+                        site["bd_name"] = req.session.user.baiduAccounts[0].baiduUserName;
+                    
                     usites.push(site);
                 });
 

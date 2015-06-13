@@ -1,0 +1,49 @@
+<div class="middle_containers" ng-controller="eventchange_updatectr">
+    <div class="add_event_title">
+        <p>  <span ng-bind-html="userTypeName"></span> -修改事件转化目标</p>
+    </div>
+    <div class="add_event_content">
+        <div class="table_content">
+
+                <form role="form" name="eventForm" ng-submit="submitForm(eventForm.$valid)" class="form-horizontal" novalidate>
+                <div class="custom_title" >
+
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-2 col-md-1 control-label">事件元素ID：</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" placeholder="事件元素ID" onfocus="this.setAttribute('placeholder','')"
+                                      required data-ng-model="eventChange.event_id" onblur="this.setAttribute('placeholder','事件元素ID')">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 col-md-1 control-label">事件目标名称：</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" placeholder="事件目标名称" onfocus="this.setAttribute('placeholder','')"
+                                       required data-ng-model="eventChange.event_name"  onblur="this.setAttribute('placeholder','事件目标名称')">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 col-md-1 control-label">事件作用页面或目录：</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" placeholder="事件作用页面或目录" onfocus="this.setAttribute('placeholder','')"
+                                       required data-ng-model="eventChange.event_page" onblur="this.setAttribute('placeholder','事件作用页面或目录')">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-md-offset-1 col-sm-10">
+                                <p>可以在URL首或尾使用*匹配任意长度字符，直接填写*代表事件作用目标为整个网站</p>
+
+                                <button  ng-disabled="eventForm.$invalid" class="btn btn-info count_content_button" ng-click="onUpdateEvent()">确定</button>
+                                <button  class="btn btn-info count_content_button" ng-click="onCancel()">取消</button>
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

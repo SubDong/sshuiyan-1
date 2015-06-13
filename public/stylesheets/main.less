@@ -469,7 +469,7 @@ nav, .navbar-default {
       background: #028fe1 url(../img/biying.png) 95% 20px no-repeat;
     }
     .date_seven2 {
-      background: #8a65ce url(../img/ie.png) 95% 20px no-repeat;
+      background: #8a65ce url(../img/ie2.png) 95% 20px no-repeat;
     }
     .badge {
       padding: 0;
@@ -1260,7 +1260,7 @@ nav, .navbar-default {
   .row {
     .col-xs-6 {
       .grid {
-       // min-height: 200px;
+        // min-height: 200px;
         background: #ffffff;
         overflow: inherit;
       }
@@ -1470,8 +1470,10 @@ nav, .navbar-default {
   }
   .trendunder {
     padding: 18px 10px;
-    overflow: hidden;
     border-left: 1px solid #eeeeee;
+    height: 150px;
+    overflow-y: scroll;
+
     b {
 
       .fl;
@@ -1781,7 +1783,6 @@ nav, .navbar-default {
 
 .linkstree {
   min-height: 380px;
-  overflow: hidden;
   position: relative;
   .linkstree_right {
     position: absolute;
@@ -1884,7 +1885,7 @@ nav, .navbar-default {
           line-height: 16px;
           float: left;
           width: 162px;
-          height:35px;
+          height: 35px;
           color: #fff;
           word-break: break-all;
           overflow: hidden;
@@ -1901,8 +1902,8 @@ nav, .navbar-default {
         text-align: center;
         padding: 5px 0;
         position: relative;
-        width:100%;
-        overflow:hidden;
+        width: 100%;
+        overflow: hidden;
         span {
           color: #fff;
         }
@@ -2212,14 +2213,39 @@ nav, .navbar-default {
 
 .pin_chart {
   width: 40%;
-  height: 400px;
   float: left;
 }
 
 .line_chart {
   width: 60%;
   float: right;
-  height: 400px;
+}
+
+.chart_height {
+  height: 400px
+}
+
+.chart-bottom {
+  margin-top: -20px;
+  ul li {
+    display: block;
+    float: left;
+    margin-right: 2%;
+    color: #8a8a8a;
+    .chart_box {
+      display: block;
+      float: left;
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      margin: 4px 5px 0 0;
+    }
+    span {
+      color: #2fabe9;
+    }
+  }
+  padding-left: 80px;
+  overflow: hidden;
 }
 
 .pin_charts {
@@ -2254,8 +2280,10 @@ nav, .navbar-default {
 
 .trend_img {
   span {
+    display: block;
     width: 58px;
     height: 58px;
+    margin: 0 25px;
   }
   .windows {
     background: url(../images/windows.png) no-repeat;
@@ -3079,143 +3107,6 @@ select.styled {
 
 }
 
-/*网站列表*/
-
-.web_list p {
-  display: inline;
-  margin-left: 20px;
-  line-height: 45px;
-
-}
-
-.web_list_nav {
-  background-color: #f0f0f0;
-  color: #525252;
-  position: fixed;
-  width: 100%;
-  z-index: 106;
-  margin-top: 2px;
-  height: 40px;
-}
-
-.web_list_nav_right {
-  height: 35px;
-  float: right;
-  margin: 5px 160px 0 0;
-  ul li {
-    display: block;
-    float: left;
-    margin: 8px 15px 0 0;
-  }
-  b {
-    font-weight: normal;
-    margin-left: 5px;
-  }
-  .checkbox, .radio {
-    margin-top: -4px;
-  }
-}
-
-#web_list_nav_input {
-  width: 180px;
-  display: inline-block;
-  margin-top: -8px;
-  height: 30px;
-  border-radius: 2px;
-  line-height: 17px;
-  margin-left: 10px;
-}
-
-.nav_btn {
-  margin-top: -8px;
-  height: 30px;
-  border-radius: 2px;
-  line-height: 10px;
-  background-color: #2FABE7;
-}
-
-.web_list_up {
-  padding-top: 43px;
-  .ui-grid-top-panel {
-    font-weight: normal;
-    color: #525252;
-  }
-  [class^="ui-grid-icon"]:before, [class*=" ui-grid-icon"]:before {
-    margin-left: 10px;
-  }
-}
-
-.web_list_up ul {
-  line-height: 100px;
-  margin-left: 45px;
-  height: 100px;
-  font-weight: bold;
-
-}
-
-.web_list_up ul li {
-  float: left;
-
-  margin-left: 20px;
-}
-
-.web_list_up p {
-  color: #40befb;
-}
-
-.web_list_up span {
-
-}
-
-.web_list_mid {
-  background-color: #fdfdfd;
-  border-top: 1px solid #eeeeee;
-  border-bottom: 1px solid #eeeeee;
-  height: 150px;
-}
-
-.mid_left_code {
-  border: 1px solid #ccc;
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
-  transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
-  list-style: decimal;
-  min-width: 400px;
-  height: 120px;
-  padding: 3px;
-  margin-top: 20px;
-  overflow-x: hidden;
-  overflow-y: scroll;
-  background-color: white;
-}
-
-.mid_right button {
-  line-height: 10px;
-  width: 95px;
-  height: 28px;
-}
-
-.mid_right ul {
-  line-height: 20px;
-  margin-left: 25px;
-}
-
-.mid_right ul li {
-  list-style-type: disc;
-  color: #a4a4a4;
-}
-
-.web_list_down a {
-  display: block;
-  background-color: #f0f0f0;
-  color: #838383;
-  font-weight: bold;
-  width: 100%;
-  height: 25px;
-  line-height: 10px;
-  border-radius: 0;
-  border: 1px solid #f0f0f0;
-}
-
 .daterangepicker.opensleft .ranges, .daterangepicker.opensleft .calendar {
   margin: 0px;
 }
@@ -3419,7 +3310,6 @@ select.styled {
   width: 20px;
 }
 
-
 .visitor_table_width {
   .ui-grid-row .ng-scope {
     padding: 0 5px;
@@ -3517,6 +3407,11 @@ textarea.tNum {
   .ui-grid-cell .ui-grid-vertical-bar {
     height: auto !important;
   }
+  .expandableRow {
+    .ui-grid-cell {
+      height: 360px !important;
+    }
+  }
 }
 
 .ui-grid-animate-spin {
@@ -3579,12 +3474,25 @@ textarea.tNum {
 .secondary_table {
   .ui-grid-row:nth-child(even) .ui-grid-cell {
     background: #fff;
-    // border-top:1px solid #f3f3f3;
+    border-top: 1px solid #f3f3f3;
 
   }
   .ui-grid-row:nth-child(odd) .ui-grid-cell {
     background: #fff;
-    //border-top:1px solid #f3f3f3;
+    border-top: 1px solid #f3f3f3;
+  }
+  .expandableRow {
+    background: #fdfdfd;
+    .ui-grid-row:nth-child(even) .ui-grid-cell {
+      // background: #fff;
+      border: none !important;
+
+    }
+    .ui-grid-row:nth-child(odd) .ui-grid-cell {
+      background: #fff;
+      border: none !important;
+    }
+
   }
 }
 
@@ -3594,14 +3502,14 @@ textarea.tNum {
     background: #f2f2f2;
     padding: 0 10px 0 5px;
   }
- p:first-child {
+  p:first-child {
     background: #f2f2f2;
   }
-  p{
+  p {
     display: block;
     width: 100%;
     padding: 0 10px;
-    margin-bottom:2px;
+    margin-bottom: 2px;
   }
   li {
     display: block;
@@ -3631,4 +3539,10 @@ textarea.tNum {
   -webkit-box-shadow: 0 4px 5px rgba(0, 0, 0, .15);
   box-shadow: 0 4px 5px rgba(0, 0, 0, .15);
 
+}
+
+.index_chart {
+  .chart_detalie {
+
+  }
 }

@@ -11,6 +11,7 @@ define(['./module'], function (ctrs) {
             $location.path(temp_path.substring(0, _index));
         }
 
+        $scope.webName = $rootScope.webName
         $scope.monthClass = true;
         var esType = $rootScope.userType;
 
@@ -30,13 +31,13 @@ define(['./module'], function (ctrs) {
         $rootScope.gridArray.splice(1, 1);
         $rootScope.tableSwitch.dimen = false;
 
-        $rootScope.tableSwitch.latitude = {name: "日期", displayName: "日期", field: "period" ,cellClass:'grid_padding',};
+        $rootScope.tableSwitch.latitude = {name: "日期", displayName: "日期", field: "period" ,cellClass:'grid_padding'};
         $rootScope.historyJu = "NO";
 
         $scope.historyInit = function () {
             var getTime = $rootScope.tableTimeStart <= -1 ? "day" : "hour";
             if ($rootScope.tableSwitch.number == 4) {
-                var searchUrl = SEM_API_URL + "elasticsearch/" + esType + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd;
+                var searchUrl = SEM_API_URL + "search_word/" + esType + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd;
                 $http({
                     method: 'GET',
                     url: searchUrl

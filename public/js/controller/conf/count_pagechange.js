@@ -4,7 +4,7 @@
 define(["./module"], function (ctrs) {
     "use strict";
 
-    ctrs.controller('pagechange', function ($http,$scope, $q, $rootScope,$cookieStore,ngDialog) {
+    ctrs.controller('pagechange', function ($http,$scope, $q, $rootScope,$cookieStore,ngDialog, $state) {
         $scope.page_schema_model = {
             //id: String,
             uid: "",//用户ID
@@ -41,8 +41,15 @@ define(["./module"], function (ctrs) {
             other: "其他"
         };
 
+
+        //跳转到修改界面
+        $scope.onUpdate = function (entity) {
+            console.log("传递ID="+entity._id);
+            $state.go('pagechange_update',{ 'id':entity._id});
+        }
+
         //配置默认指标
-        $rootScope.checkedArray = ["target_name", "target_url", "needPath","record_type","conv_tpye"   ];
+        $rootScope.checkedArray = ["target_name", "target_url", "needPath","record_type","conv_tpye"  ,"_id" ];
         $rootScope.gridArray = [
             {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>", maxWidth: 5},
             {name: "目标名称", displayName: "目标名称", field: "target_name"},
@@ -51,23 +58,17 @@ define(["./module"], function (ctrs) {
             {name: "记录方式", displayName: "记录方式", field: "record_type"},
             {name: "转化类型", displayName: "转化类型", field: "conv_tpye"},
             {
-                name: "x2",
-                displayName: "",
-                cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.stop()'>暂停</a></div>",
-                maxWidth: 100
-            },
-            {
                 name: "x3",
                 displayName: "",
-                cellTemplate: "<div class='table_admin'><a href=''>修改</a></div>",
-                maxWidth: 100
+                cellTemplate: "<div class='table_admin' ng-click='grid.appScope.onUpdate(row.entity)'><a href=''>修改</a></div>",
+                maxWidth: 150
             },
             {
                 name: "x4",
                 displayName: "",
                 // grid.appScope.Delete(row, grid.options.data)
                 cellTemplate: "<div class='table_admin'><a href='' ng-click='grid.appScope.onDelete(index,grid,row)' >删除</a></div>",
-                maxWidth: 100
+                maxWidth: 150
             }
 
 
@@ -92,13 +93,11 @@ define(["./module"], function (ctrs) {
             var uid = $cookieStore.get("uid");
             var site_id = $rootScope.userType;
             var url = "/config/page_conv?type=search&query={\"uid\":\"" + uid + "\",\"site_id\":\"" + site_id + "\"}";
-            console.log(url);
             $http({
                 method: 'GET',
                 url: url
             }).success(function (dataConfig, status) {
                 $rootScope.gridOptions.data=dataConfig;
-                //console.log("");
                 //修改数据
                 dataConfig.forEach(function(item,i){
                     if(item.paths==null||item.paths.length==0){
@@ -145,13 +144,14 @@ define(["./module"], function (ctrs) {
                 $http({
                     method: 'GET',
                     url: query
-                }).success(function (res, status) {
-                    if (res == "\"success\"") {
+                }).success(function (dataConfig, status) {
+                    if (dataConfig == "\"success\"") {
                         refushGridData();
                     }
                 });
             };
         };
+
 
     });
 });

@@ -211,6 +211,22 @@ define(["angular", "app"], function (ng, app) {
                 url: "/source/externallinks/history",
                 templateUrl: "../historytrend/history.html"
             })
+            .state('history8', {
+                url: "/page/entrancepage_fa/history",
+                templateUrl: "../historytrend/history.html"
+            })
+            .state('history9', {
+                url: "/page/entrancepage_nv/history",
+                templateUrl: "../historytrend/history.html"
+            })
+            .state('history10', {
+                url: "/page/entrancepage_as/history",
+                templateUrl: "../historytrend/history.html"
+            })
+            .state('history11', {
+                url: "/page/entrancepage_af/history",
+                templateUrl: "../historytrend/history.html"
+            })
         $urlRouterProvider.when('', '/conf');
         $stateProvider
             .state('conf', {
@@ -252,6 +268,11 @@ define(["angular", "app"], function (ng, app) {
                 url: '/conf/webcountsite/eventchange_add',
                 templateUrl: '../conf/webcountsite/eventchange_add.html'
             })
+            .state('eventchange_update', {
+                url: '/conf/webcountsite/eventchange_update',
+                params:      {'id': null},
+                templateUrl: '../conf/webcountsite/eventchange_update.html'
+            })
             .state('pagechange_add', {
                 url: '/conf/webcountsite/pagechange_add',
                 templateUrl: '../conf/webcountsite/pagechange_add.html'
@@ -284,6 +305,10 @@ define(["angular", "app"], function (ng, app) {
             .state('reportsite', {
                 url: '/conf/admin/reportsite',
                 templateUrl: '../conf/admin/reportsite.html'
+            }).state('pagechange_update', {
+                url: '/conf/webcountsite/pagechange_update',
+                params:      {'id': null},
+                templateUrl: '../conf/webcountsite/pagechange_update.html'
             })
     });
 

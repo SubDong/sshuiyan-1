@@ -30,5 +30,62 @@ define(["./module"], function (ctrs) {
             $(".event_modal").fadeOut();
 
         }
+    ctrs.controller('eventchange_addctr', function ($scope, $http, $rootScope, $cookieStore, ngDialog, $state) {
+
+
+
+
+        $scope.eventChange = {};
+
+        $scope.eventChange.event_id = "";
+
+        $scope.eventChange.event_name ="";
+
+        $scope.eventChange.event_page ="";
+
+        $scope.eventChange.event_method ="手动方式";
+
+        $scope.eventChange.event_status = "1";
+
+        $scope.eventChange.uid =  $cookieStore.get("uid");
+
+        $scope.eventChange.root_url =$rootScope.site_id;
+
+
+
+        $scope.targetUrl ="";
+
+
+        $scope.onCancel = function () {
+            $state.go('eventchange');
+        }
+
+
+        $scope.onSaveEvent = function () {
+
+            var entity = JSON.stringify($scope.eventChange);
+           var url = "/config/eventchnage_list?type=save&entity=" + entity;
+            $http({
+                method: 'GET',
+                url: url
+            }).success(function (dataConfig, status) {
+                $scope.urlDialog = ngDialog.open({
+                    preCloseCallback: function() {
+                        $state.go('eventchange');
+                    },
+                    template: '\
+              <div class="ngdialog-buttons">\
+                        <ul>\
+                        <li> 保存成功</li></ul>   \
+                    <a href="#conf/webcountsite/eventchange" ng-click=closeThisDialog(0)>确认</a>\
+                </div>',
+                    className: 'ngdialog-theme-default',
+                    plain: true,
+                    scope: $scope
+
+                });
+            });
+        };
     })
+});
 });

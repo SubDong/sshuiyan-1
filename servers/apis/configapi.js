@@ -12,6 +12,55 @@ var api = express.Router();
 var dao = require('../db/daos');
 var schemas = require('../db/schemas');
 var randstring = require('../utils/randstring');
+var querystring = require('querystring');
+
+
+
+// ================================= eventchnage_list ===============================
+/**
+ *事件转化目标
+ */
+api.get("/eventchnage_list", function (req, res) {
+    var query = url.parse(req.url, true).query;
+    var type = query['type'];
+    var schema_name = "event_change_model";//设置选择schemas Model名称
+    switch (type) {
+        case "save":
+            var entity = query['entity'];
+            var temp = JSON.parse(entity);
+            dao.save(schema_name, temp, function (ins) {
+                datautils.send(res, JSON.stringify(ins));
+            });
+            break;
+        case "search":
+            dao.find(schema_name, query['query'], null, {}, function (err, docs) {
+                datautils.send(res, docs);
+            });
+            break;
+        case "update":
+            var update = query['updates'];
+            dao.update(schema_name, query['query'], query['updates'], function (err, docs) {
+                datautils.send(res, docs);
+            });
+            break;
+        case "delete":
+            var qry = query['query'];
+            dao.remove(schema_name, qry, function (docs) {
+                datautils.send(res, "success");
+            });
+            break;
+        case "findById":
+            var qry = query['query'];
+            dao.findById(schema_name, query['query'], null, {}, function (err, docs) {
+                datautils.send(res, docs);
+            });
+            break;
+        default :
+            break;
+    }
+
+});
+
 
 
 // ================================= subdirectory_list ===============================
@@ -245,6 +294,21 @@ api.get("/adtrack", function (req, res) {
     switch (type) {
         case "save":
             var entity = JSON.parse(query['entity']);
+            var targetUrl = entity.targetUrl;
+            var mediaPlatform = entity.mediaPlatform;
+            var adTypes = entity.adTypes;
+            var planName = entity.planName;
+            var keywords = entity.keywords;
+            var creative = entity.creative;
+            var strUrl = "http://" + targetUrl
+                + "?hmsr=" + mediaPlatform
+                + "&_hmmd=" + adTypes
+                + "&_hmpl=" + planName
+                + "&_hmkw=" + keywords
+                + "&_hmci=" + creative;
+            entity.produceUrl = encodeURI(strUrl);
+
+            console.log(entity.targetUrl);
             dao.save(schema_name, entity, function (ins) {
                 datautils.send(res, JSON.stringify(ins));
             });

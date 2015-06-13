@@ -164,11 +164,11 @@ var chartUtils = {
             return "不支持";
         }
     },
-    getObjectTime: function (json, start, config) {
+    getObjectTime: function (json, _times, config) {
         if (config.keyFormat == "day") {
             var time = [];
             json.forEach(function (e) {
-                if (start == 0 || start == -1) {
+                if ((_times[1] - _times[0]) == 0) {
                     config.keyFormat = "none";
                     time.push(Number((e.key_as_string).toString().substring(10, 13)));
                 } else {
@@ -177,8 +177,7 @@ var chartUtils = {
             });
             return time
         }
-        if (start <= -6) {
-
+        if ((_times[1] - _times[0]) > 0) {
             var time = [];
             json.forEach(function (e) {
                 time.push((e.key_as_string).toString());
@@ -186,10 +185,9 @@ var chartUtils = {
             config.keyFormat = "day";
             return time
         } else {
-
             var time = [];
             json.forEach(function (e) {
-                if (start == 0 || start == -1) {
+                if ((_times[1] - _times[0]) == 0) {
                     time.push(Number((e.key_as_string).toString().substring(10, 13)));
                 } else {
                     time.push((e.key_as_string).toString().substr(0, 10));
@@ -208,10 +206,8 @@ var chartUtils = {
                 buckets.forEach(function (buc) {
                     if (buc) {
                         if (buc.key == key) {
-                            var aggs = chartUtils.getAggs(types.toString());
-                            if (buc[aggs + "_aggs"]) {
-                                _val = buc[aggs + "_aggs"].value;
-                            }
+                            var aggs = types.toString();
+                            _val = chartUtils.getAggs(buc, aggs);
                         }
                     }
                 })
@@ -220,8 +216,8 @@ var chartUtils = {
         });
         return val;
     },
-    getRf_type: function (json, start, labelType, types, config) {
-        var time = chartUtils.getObjectTime(json, start, config);
+    getRf_type: function (json, times, labelType, types, config) {
+        var time = chartUtils.getObjectTime(json, times, config);
         var label = chartUtils.getLabel(json);//去重
         var result = [];
         label.forEach(function (label) {
@@ -236,6 +232,18 @@ var chartUtils = {
             tmp['quota'] = val;
             result.push(tmp);
         });
+        //排序top10
+        result.forEach(function (item) {
+            var count = 0;
+            item.quota.forEach(function (q) {
+                count += Number(q);
+            });
+            item.totalCount = count;
+        });
+        result.sort(chartUtils.by("totalCount"));
+        if (result.length > 7) {
+            result = result.slice(0, 7);
+        }
         return result;
     },
     getLabel: function (json) {
@@ -244,7 +252,8 @@ var chartUtils = {
             var buckets = e.dimension.buckets;
             if (buckets) {
                 buckets.forEach(function (item) {
-                    label.push(item.key);
+                    if (item.key != '-')
+                        label.push(item.key);
                 });
             } else {
                 label.push("暂无数据");
@@ -252,12 +261,17 @@ var chartUtils = {
         });
         return label.removal();
     },
-    getAggs: function (res) {
-        switch (res) {
+    getAggs: function (buc, aggs) {
+        switch (aggs) {
             case "nuv":
-                return "new_visitor";
+                return buc.new_visitor_aggs.nuv_aggs.value;
+                break;
             default :
-                return res;
+                if (buc[aggs + "_aggs"]) {
+                    return buc[aggs + "_aggs"].value;
+                } else {
+                    return 0;
+                }
         }
     },
     arrayMerge: function (a, b) {
@@ -270,7 +284,7 @@ var chartUtils = {
             return v + (b[i] || 0)
         })
     },
-    getEnginePie: function (data, split) {
+    getEnginePie: function (data, split, chart) {
         if (data) {
             var result_data = [];
             var _label = [];
@@ -295,6 +309,7 @@ var chartUtils = {
             });
             result["key"] = _label;
             result["quota"] = _data;
+            result["label"] = chart.types.toString();
             result_data.push(result);
             return result_data;
         }

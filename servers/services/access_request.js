@@ -185,7 +185,6 @@ var access_request = {
                 }
             }
         };
-        console.log(checkAddress());
         var request = {
             index: indexs,
             type: type,
@@ -366,7 +365,6 @@ var access_request = {
                         "uv": ((Number(mostOfResult[i].uv.value) / Number(result.all_uv.value)) * 100).toFixed(2) + "%"
                     });
                 }
-                console.log(result.target_pv_uv.buckets.data.pv.value)
                 if(result.target_pv_uv.buckets.data1.pv.value==0){
                     targetPathData = {
                         pathname: targetPathName,

@@ -23,7 +23,7 @@
 
                     <div data-ng-show="rules_area.helpFlag"  class="count_content_right">
                         <!--提示:网站与域名不同提示 右-->
-                        <div class="popover right box " >
+                        <div class="popover right box " style="display: block;">
                             <div class="arrow"></div>
                             <div class="popover-content">
                                 <p>如果您的网站域名（www.url.com）与首页URL<br/>（www.url.com/index.html）不同，建议您将其设为“统一首<br/>页”，设置后对上述URL的访问将统一为对网站首页的访问，<br/>以保证统计准确。
@@ -144,7 +144,7 @@
                 <li>
                     <div class="count_last_left  time_content_left"><!--设置时长转化 左-->
 
-                        <input type="checkbox" name="设置时长转化" data-ng-focus="myFocus(days_area)"
+                        <input type="checkbox" name="设置时长转化" data-ng-focus="myFocus(days_area)" class="styled"
                                data-ng-blur="myBlur(days_area)" ng-model="days_area.text"/>
                             <span>
                             启用长效转化：访客点击广告后的<input type="text" class="form-control time_content_left_input"

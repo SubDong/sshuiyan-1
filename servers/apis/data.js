@@ -15,7 +15,7 @@ var schemas = require('../db/schemas');
 var csvApi = require('json-2-csv');
 var iconv = require('iconv-lite');
 var uuid = require("node-uuid");
-
+var fmt = require('strftime');
 var es_position = require('../services/es_position');
 
 
@@ -268,9 +268,9 @@ api.get('/indextable', function (req, res) {
                         } else {
                             infoKey = info.key[i]
                         }
-                        if (popFlag != 1) {
-                            if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null" || infoKey.length >= 30)) continue;
-                        }
+                        //if (popFlag != 1) {
+                        //    if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null")) continue;
+                        //}
                         var infoKey = info.key[i];
                         var obj = maps[infoKey];
                         if (!obj) {
@@ -346,38 +346,38 @@ api.get('/indextable', function (req, res) {
  * 实时访问
  */
 /*api.get('/realTimeAccess', function (req, res) {
-    var query = url.parse(req.url, true).query;
-    var _type = query["type"];
-    var _filters = query["filerInfo"] != null && query["filerInfo"] != 'null' ? JSON.parse(query["filerInfo"]) : query["filerInfo"] == 'null' ? null : query["filerInfo"];//过滤器;
-    var indexes = date.createIndexes(0, 0, "access-");
-    es_request.realTimeSearch(req.es, indexes, _type, _filters, function (data) {
-        var resultArray = new Array();
-        try {
-            data.forEach(function (item, i) {
-                if (item._source != null && item._source.city != "-") {
-                    var result = {};
-                    result["city"] = item._source.city == "-" ? "国外" : item._source.city;
-                    var newDate = new Date(item._source.utime[0]).toString();
-                    result["utime"] = newDate.substring(newDate.indexOf(":") - 3, newDate.indexOf("G") - 1);
-                    result["source"] = item._source.rf + "," + (item._source.se != "-" ? (item._source.se === undefined ? item._source.rf : item._source.se) : item._source.rf);
-                    result["tt"] = item._source.tt;
-                    result["ip"] = item._source.remote;
-                    result["utimeAll"] = new Date(item._source.utime[item._source.utime.length - 1] - item._source.utime[0]).format("hh:mm:ss");
-                    result["pageNumber"] = item._source.loc.length;
-                    resultArray.push(result)
-                }else{
-                    result["city"] = "暂无数据";result["city"] = "暂无数据";result["utime"] = "暂无数据"
-                    result["source"] = "暂无数据";result["tt"] = "暂无数据";result["ip"] = "暂无数据"
-                    result["utimeAll"] = "暂无数据";result["pageNumber"] = "暂无数据"
-                    resultArray.push(result)
-                }
-            });
-        } catch (e) {
-            console.error(e.stack);
-        }
-        datautils.send(res, resultArray);
-    });
-});*/
+ var query = url.parse(req.url, true).query;
+ var _type = query["type"];
+ var _filters = query["filerInfo"] != null && query["filerInfo"] != 'null' ? JSON.parse(query["filerInfo"]) : query["filerInfo"] == 'null' ? null : query["filerInfo"];//过滤器;
+ var indexes = date.createIndexes(0, 0, "access-");
+ es_request.realTimeSearch(req.es, indexes, _type, _filters, function (data) {
+ var resultArray = new Array();
+ try {
+ data.forEach(function (item, i) {
+ if (item._source != null && item._source.city != "-") {
+ var result = {};
+ result["city"] = item._source.city == "-" ? "国外" : item._source.city;
+ var newDate = new Date(item._source.utime[0]).toString();
+ result["utime"] = newDate.substring(newDate.indexOf(":") - 3, newDate.indexOf("G") - 1);
+ result["source"] = item._source.rf + "," + (item._source.se != "-" ? (item._source.se === undefined ? item._source.rf : item._source.se) : item._source.rf);
+ result["tt"] = item._source.tt;
+ result["ip"] = item._source.remote;
+ result["utimeAll"] = new Date(item._source.utime[item._source.utime.length - 1] - item._source.utime[0]).format("hh:mm:ss");
+ result["pageNumber"] = item._source.loc.length;
+ resultArray.push(result)
+ }else{
+ result["city"] = "暂无数据";result["city"] = "暂无数据";result["utime"] = "暂无数据"
+ result["source"] = "暂无数据";result["tt"] = "暂无数据";result["ip"] = "暂无数据"
+ result["utimeAll"] = "暂无数据";result["pageNumber"] = "暂无数据"
+ resultArray.push(result)
+ }
+ });
+ } catch (e) {
+ console.error(e.stack);
+ }
+ datautils.send(res, resultArray);
+ });
+ });*/
 /**
  * 实时访问 HTML数据
  */
@@ -389,7 +389,7 @@ api.get('/realTimeHtml', function (req, res) {
     es_request.realTimeSearch(req.es, indexes, _type, _filters, function (data) {
         data.forEach(function (item, i) {
 
-            es_request.search(req.es, indexes, _type, ["vc"], null, [0], [{"vid": item._source != undefined?[item._source.vid]:"1"}], null, null, null, function (datainfo) {
+            es_request.search(req.es, indexes, _type, ["vc"], null, [0], [{"vid": item._source != undefined ? [item._source.vid] : "1"}], null, null, null, function (datainfo) {
                 var returnData = "";
                 try {
                     var utimeHtml = "";
@@ -401,7 +401,7 @@ api.get('/realTimeHtml', function (req, res) {
                         +"</span></li>"
                     });
                     item.record.forEach(function (vtime, i) {
-                        vtimeHtml = vtimeHtml + "<li><span>" + vtime.vtime + "</span></li>"
+                        vtimeHtml = vtimeHtml + "<li><span>" + vtime.vtime + "</span></li>";
                         urlHtml = urlHtml + "<li><span><a href='" + vtime.loc + "' target='_blank'>" + vtime.loc + "</a></span></li>"
                     });
                     var classInfo;
@@ -557,8 +557,13 @@ api.get("/exchange", function (req, res) {
     var end = Parameters[1].split("=")[1];
     var type = Parameters[2].split("=")[1];
     type = type.replace(/;/g, ",");//由于穿过的数据是以;分号隔开的，所以替换成逗号
-    //start与end传过时间偏移量，调用creatIndexs()方法，把access-与时间拼接起来组成索引值
-    var indexString = date.createIndexes(start, end, "access-");
+    var indexString = [];
+    //start与end传过时间偏移量或者时间，调用creatIndexs()或createIndexsByTime()方法，把access-与时间拼接起来组成索引值
+    if (start.substring(1,start.length).match("-") != null && end.substring(1,start.length).match("-") != null) {
+        indexString = date.createIndexsByTime(start,end,"access-");
+    } else {
+        indexString = date.createIndexes(start, end, "access-");
+    }
     var pathUp = "path0";
     var pathDown = "path1";
     pathUp = Parameters[3].split("=")[1];
@@ -641,9 +646,13 @@ api.get("/trafficmap", function (req, res) {
     var end = parameters[1].split("=")[1];
     var targetPathName = parameters[2].split("=")[1];
 
-    //start与end传过时间偏移量，调用creatIndexs()方法，把access-与时间拼接起来组成索引值
-    var indexString = date.createIndexes(start, end, "access-");
-
+    var indexString = [];
+    //start与end传过时间偏移量或者时间，调用creatIndexs()或createIndexsByTime()方法，把access-与时间拼接起来组成索引值
+    if (start.substring(1,start.length).match("-") != null && end.substring(1,start.length).match("-") != null) {
+        indexString = date.createIndexsByTime(start,end,"access-");
+    } else {
+        indexString = date.createIndexes(start, end, "access-");
+    }
     access_request.trafficmapSearch(req.es, indexString, targetPathName, function (result) {
         datautils.send(res, result);
     });
@@ -657,9 +666,13 @@ api.get("/offsitelinks", function (req, res) {
 
     var start = parameters[0].split("=")[1];
     var end = parameters[1].split("=")[1];
-
-    //start与end传过时间偏移量，调用creatIndexs()方法，把access-与时间拼接起来组成索引值
-    var indexString = date.createIndexes(start, end, "access-");
+    var indexString = [];
+    //start与end传过时间偏移量或者时间，调用creatIndexs()或createIndexsByTime()方法，把access-与时间拼接起来组成索引值
+    if (start.substring(1,start.length).match("-") != null && end.substring(1,start.length).match("-") != null) {
+        indexString = date.createIndexsByTime(start,end,"access-");
+    } else {
+        indexString = date.createIndexes(start, end, "access-");
+    }
     var pathName = parameters[2].split("=")[1];
 
     access_request.offsitelinksSearch(req.es, indexString, pathName, function (result) {

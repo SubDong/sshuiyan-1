@@ -41,6 +41,21 @@ var dateutils = {
 
         return dates;
     },
+    createIndexsByTime:function(startDay, endDay, prefix){
+        var startTime = Date.parse(startDay);
+        var endTime = Date.parse(endDay);
+        var start = new Date(startTime);
+        var end = new Date(endTime);
+        console.log(end-start);
+        var number = Math.floor((end - start) / (24 * 60 * 60 * 1000));
+        console.log("=================="+number);
+        var dates = [prefix + startDay];
+        for (var i = 1; i <= number; i++) {
+            start.setDate(start.getDate() + 1);
+            dates.push(prefix +  fmt("%F", start))
+        }
+        return dates;
+    },
     period: function (startDay, endDay) {
         var dayMills = 24 * 60 * 60 * 1000;
 

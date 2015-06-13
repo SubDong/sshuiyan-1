@@ -6,30 +6,8 @@ define(["./module"], function (ctrs) {
 
     ctrs.controller('adtrack', function ($scope, $rootScope, $cookieStore, $http,ngDialog) {
 
-        $scope.adtrack_model = {
-            //_id: "", // mongoid
-            uid: "", // user id 用户ID
-            type_id: "", // es type id ( hidden in front-end) 对应ES ID
-            track_id: "", // js track id 随机生成
-            targetUrl: "", // 目标URL
-            mediaPlatform: "", // 媒体平台
-            adTypes: "",    //广告类型
-            planName: "", //计划名称
-            keywords: "",   //关键词
-            creative: "" //创意
-        };
-        $scope.urlconfig = {
-            "targetUrl": "",
-            "mediaPlatform": "",
-            "adTypes": "",
-            "planName": "",
-            "keywords": "",
-            "creative": ""
-
-        };
-
         //配置默认指标
-        $rootScope.checkedArray = ["_uid","uid", "type_id", "track_id", "site_url", "site_name", "site_pause", "track_status"];
+        $rootScope.checkedArray = ["_uid","uid", "type_id", "track_id", "targetUrl", "mediaPlatform", "adTypes", "planName", "keywords", "creative","produceUrl"];
         $rootScope.gridArray = {
             paginationPageSize: 25,
             expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
@@ -66,37 +44,56 @@ define(["./module"], function (ctrs) {
         };
 
         //删除按钮
-        $scope.onDelete = function(index,grid,row){
-            var query = "/config/adtrack?type=delete&query={\"_id\":\"" + row.entity._id +  "\"}";
-            $http({
-                method: 'GET',
-                url: query
-            }).success(function (dataConfig, status) {
-                refushGridData();
+        $scope.onDelete = function (index,grid,row) {
+            $scope.onDeleteDialog= ngDialog.open({
+                template: '' +
+                '<div class="ngdialog-buttons" ><ui><li> 确认删除吗？</li></ui>' +
+                '<button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
+                  <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="sureonDelete()">确定</button></div>',
+                className: 'ngdialog-theme-default',
+                plain: true,
+                scope: $scope
             });
+
+            $scope.sureonDelete= function(){
+                $scope.onDeleteDialog.close();
+                var query = "/config/adtrack?type=delete&query={\"_id\":\"" + row.entity._id +  "\"}";
+                $http({
+                    method: 'GET',
+                    url: query
+                }).success(function (dataConfig, status) {
+                    //console.log(dataConfig);
+                    if (dataConfig == "\"remove\"") {
+
+                        $scope.refushGridData();
+                    }
+
+                });
+            };
         };
-        var refushGridData = function () {
+
+        $scope.refushGridData = function () {
             var uid = $cookieStore.get("uid");
-            var site_id = $rootScope.userType;
-            var url = "/config/adtrack?index=adtrack&type=search&query={\"uid\":\"" + uid + "\"}";
-            $http({
-                method: 'GET',
-                url: url
-            }).success(function (dataConfig, status) {
+            var site_id = $rootScope.siteId;
+            var url = "/config/adtrack?index=adtrack&type=search&query={\"uid\":\"" + uid + "\",\"site_id\":\"" + site_id + "\"}";
+            $http({method: 'GET', url: url}).success(function (dataConfig, status) {
                 $scope.gridArray.data = dataConfig;
             });
         };
-        refushGridData();
-        $scope.onViewUrl=function(index,grid,row){
+        $scope.refushGridData();
 
+        $scope.onViewUrl=function(index,grid,row){
+           var thtml= $rootScope.urlDialogHtml.replace("produceUrl", row.entity.produceUrl);
+            //col
             $scope.urlDialog = ngDialog.open({
-                template:$rootScope.urlDialogHtml,
+                template:thtml,
                 className: 'ngdialog-theme-default',
                 plain: true,
                 scope : $scope
             });
         };
-        $rootScope.urlDialogHtml = "<div class='mid_left'>生成URL<div class='mid_left_code'>   </div> </div><div class='mid_right'><button type='button' class='btn btn-default navbar-btn'>复制</button><ul type='disc'>" +
+        $rootScope.urlDialogHtml = "<div class='mid_left'>生成URL<div class='mid_left_code'>produceUrl</div> " +
+        "</div><div class='mid_right'><button type='button' class='btn btn-default navbar-btn'>复制</button><ul type='disc'>" +
             "  <li style='color：red；'>请将生成的URL复制到你的其他媒介的推广目标URL位置</li></ul></div>";
 
     });

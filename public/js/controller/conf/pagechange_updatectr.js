@@ -4,7 +4,8 @@
 define(["./module"], function (ctrs) {
     "use strict";
 
-    ctrs.controller('pagechange_addctr', function ($scope, $http, $rootScope, $cookieStore,$state) {    //$scope.
+    ctrs.controller('pagechange_update', function ($scope, $http, $rootScope, $cookieStore, $stateParams, ngDialog, $state) {
+
         $scope.page_schema_model = {
             //id: String,
             uid: "",//用户ID
@@ -29,7 +30,6 @@ define(["./module"], function (ctrs) {
             conv_text: ""
 
         };
-
         $scope.radio_record = {
             visit_times: true,
             pv: false,
@@ -42,12 +42,10 @@ define(["./module"], function (ctrs) {
             other: true
         };
 
-
+        $scope.id = $stateParams.id;
         $scope.page_schema = angular.copy($scope.page_schema_model);
-        $scope.t_conv_text = "";//路径类型其他
+        $scope.t_conv_text = "";
         //UID 和site_id初始化
-        $scope.page_schema.site_id = $rootScope.userType;
-        $scope.page_schema.uid = $cookieStore.get("uid");
 
         $scope.record = false;
         $scope.benefitSet = false;
@@ -61,9 +59,9 @@ define(["./module"], function (ctrs) {
         // 添加目标URL
         $scope.targetRemoves = [];
         $scope.targetUrlAdd = function (targets, targetRemoves) {
-            if(targets.length == 4){
+            if (targets.length == 4) {
                 $("#addTargetUrl").html("");
-            }else {
+            } else {
                 $("#addTargetUrl").html("添加页面");
             }
             $scope.showRemove = true;
@@ -71,9 +69,6 @@ define(["./module"], function (ctrs) {
             targetRemoves.push({url: ""});
         }
         $scope.removeTargetUrl = function (targets, targetRemoves, _index) {
-            if(targets.length <= 5){
-                $("#addTargetUrl").text("添加页面");
-            }
             targets.splice(_index + 1, 1);
             targetRemoves.splice(_index, 1);
         }
@@ -102,11 +97,9 @@ define(["./module"], function (ctrs) {
             step_urls.splice(_index, 1);
         };
         $scope.addStepUrls = function (step, turl) {
-            console.log(step.step_urls);
             step.step_urls.push({url: turl});
         };
         $scope.chooseRecordType = function (curType) {
-            //console.
             $scope.radio_record.visit_times = false;
             $scope.radio_record.pv = false;
             $scope.radio_record.order_conv = false;
@@ -120,44 +113,66 @@ define(["./module"], function (ctrs) {
             $scope.radio_conv.other = false;
             $scope.radio_conv[curType] = true;
             $scope.page_schema.conv_tpye = curType;
-            if(! $scope.radio_conv.other){//去掉非其他情况时conv_text的值
-                $scope.page_schema.conv_text = $scope.t_conv_text;
-                $scope.t_conv_text="";
+            if(! $scope.radio_conv.other) {//去掉非其他情况时conv_text的值
+                $scope.t_conv_text = "";
             }else{
-                $scope.t_conv_text= $scope.page_schema.conv_text;
+                $scope.t_conv_text=$scope.page_schema.conv_text;
             }
         }
         Custom.initCheckInfo();//页面check样式js调用
-
-        /**
-         * 提交
-         */
-        $scope.submit = function () {
-
-            var url = "/config/page_conv?type=search&query={\"uid\":\"" + $scope.page_schema.uid + "\",\"site_id\":\"" + $scope.page_schema.site_id + "\",\"target_name\":\"" + $scope.page_schema.target_name + "\"}";
-
+        $scope.urlname = "";
+        var init = function () {
+            var url = "/config/page_conv?type=search&query={\"_id\":\"" + $scope.id + "\"}";
             $http({
                 method: 'GET',
                 url: url
             }).success(function (dataConfig, status) {
-                if (dataConfig == null || dataConfig.length == 0) {//不存在配置 保存
+                    if (dataConfig != null && dataConfig.length == 1) {
+                        $scope.page_schema = dataConfig[0];
+
+                        $scope.radio_record.visit_times = true;
+                        $scope.radio_record.pv = false;
+                        $scope.radio_record.order_conv = false;
+                        $scope.radio_record[dataConfig[0].record_type] = true;
+
+                        $scope.radio_conv.regist = false;
+                        $scope.radio_conv.communicate = false;
+                        $scope.radio_conv.place_order = false;
+                        $scope.radio_conv.other = true;
+                        $scope.radio_conv[dataConfig[0].conv_tpye] = true;
+                        if (!$scope.radio_conv.other) {
+                            $scope.page_schema.conv_text = "";
+                        }else{
+                            $scope.t_conv_text=$scope.page_schema.conv_text;
+                        }
+                    }
+                }
+            )
+            ;
+        }
+        init();
+        /**
+         * 提交
+         */
+        $scope.submit = function () {
+            var url = "/config/page_conv?type=search&query={\"_id\":\"" + $scope.id + "\"}";
+            $http({
+                method: 'GET',
+                url: url
+            }).success(function (dataConfig, status) {
+                if (dataConfig != null || dataConfig.length == 1) {//不存在配置 保存
 
                     //存在配置 更新
-                    if(!$scope.radio_conv.other){//去掉非其他情况时conv_text的值
-                        $scope.page_schema.conv_text = "";
-                    }else{
-                        $scope.page_schema.conv_text= $scope.t_conv_text;
-                    }
-                    console.log($scope.page_schema.conv_text);
-                    var url = "/config/page_conv?type=save&entity=" + JSON.stringify($scope.page_schema);
+                   if(!$scope.radio_conv.other){//去掉非其他情况时conv_text的值
+                       $scope.page_schema.conv_text = "";
+                   }else{
+                      $scope.page_schema.conv_text= $scope.t_conv_text;
+                   }
+                    var url = "/config/page_conv?type=update&query={\"_id\":\"" + $scope.id + "\"}&updates=" + JSON.stringify($scope.page_schema);
                     $http({
                         method: 'GET',
                         url: url
                     }).success(function (dataConfig, status) {
-                        //跳转到修改界面
-                        $scope.onUpdate = function (entity) {
-
-                        }
                     });
                 }
                 $state.go('pagechange');
@@ -165,4 +180,5 @@ define(["./module"], function (ctrs) {
         }
 
     })
-});
+})
+;
