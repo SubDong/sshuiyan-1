@@ -86,7 +86,8 @@ define(["./module"], function (ctrs) {
         }
         $scope.searchengineFormat = function (data, config, e) {
             var json = JSON.parse(eval("(" + data + ")").toString());
-            var result_json = chartUtils.getRf_type(json, $rootScope.start, "serverLabel", e.types, config);
+            var times = [$rootScope.start, $rootScope.end];
+            var result_json = chartUtils.getRf_type(json, times, "serverLabel", e.types, config);
             config['noFormat'] = true;
             config['twoYz'] = "none"
             cf.renderChart(result_json, config);
@@ -96,6 +97,33 @@ define(["./module"], function (ctrs) {
             cf.renderChart(pieData, e0.config);
 
         }
+        $scope.extPieHover = function (params, type) {
+            if (params.dataIndex != -1) {
+                var colorIndex = Number(params.dataIndex);
+                $(".chart_box").attr("style", "background:" + $rootScope.chartColors[colorIndex]);
+                $("#chartlink").html(params.name);
+                $("#chartname").html(chartUtils.convertChinese(type));
+                $("#chartnumber").html(params.data.value);
+                $("#chartpointe").html(params.special + "%");
+            }
+        }
+        $scope.itemHover = function (params, typeTotal, allTotal) {
+            var type = chartUtils.convertChinese($scope.charts[1].types.toString())
+            $(".chart_box").attr("style", "background:" + $rootScope.chartColors[params.seriesIndex]);
+            $("#chartlink").html(params[0]);
+            $("#chartname").html(type);
+            $("#chartnumber").html(typeTotal);
+            $("#chartpointe").html(parseFloat(typeTotal / allTotal * 100).toFixed(2) + "%");
+            var xName = params[1].toString();
+            var res = '<li>' + type + '</li>';
+            if ($rootScope.start - $rootScope.end == 0) {
+                res += '<li>' + xName + ':00-' + xName + ':59</li>';
+            } else {
+                res += '<li>' + xName + '</li>';
+            }
+            res += '<li  class=chartstyle' + params.seriesIndex + '>' + params[0] + '：' + params[2] + '</li>';
+            return res;
+        }
         $scope.charts = [{
             config: {
                 legendData: [],
@@ -104,7 +132,8 @@ define(["./module"], function (ctrs) {
                 serieName: "搜索引擎",
                 chartType: "pie",
                 dataKey: "key",
-                dataValue: "quota"
+                dataValue: "quota",
+                onHover: $scope.extPieHover
             },
             types: ["pv"],
             dimension: ["se"],
@@ -122,6 +151,9 @@ define(["./module"], function (ctrs) {
                     bGap: false,
                     id: "indicators_charts",
                     keyFormat: "none",//设置不需要chart工厂处理x轴数据
+                    auotHidex: true,
+                    tt: "item",
+                    itemHover: $scope.itemHover,
                     chartType: "line",
                     lineType: false,
                     dataKey: "key",

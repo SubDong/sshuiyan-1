@@ -11,7 +11,9 @@
             <li>
                 <span>目标URL<p>（在其媒体投放广告时所指向的URL）</p></span>
 
-                <div class="adtrack_add_input">*<input type="text" data-ng-model="urlconfig.targetUrl"  placeholder="www.mydomain/product.html"/></div>
+                <div class="adtrack_add_input">*<input type="text" data-ng-model="urlconfig.targetUrl"  placeholder="www.mydomain/product.html"
+                                                       onfocus="this.setAttribute('placeholder','')"
+                                                       onblur="this.setAttribute('placeholder','www.mydomain/product.html')"/></div>
             </li>
             <li>
                 <span>媒体平台<p>（广告所投放的平台，如：新浪,搜狐等）</p></span>
@@ -46,7 +48,9 @@
             <div><input type="text" data-ng-model="urlconfig.creative"/></div>
         </li>
         </ul>
-        <a class="btn btn-info timechange_button_button" href="#conf/webcountsite/adtrack"  ng-click="allSubmit()">确定拼生成URL</a>&nbsp;&nbsp;&nbsp;<span class="adtrack_add_tz">取消</span>
+
+        <a class="btn btn-info timechange_button" href="#conf/webcountsite/adtrack" ng-click="submit()">确定拼生成URL</a>&nbsp;&nbsp;&nbsp;<span class="adtrack_add_tz">取消</span>
+    </div>
 
     </div>
 </div>

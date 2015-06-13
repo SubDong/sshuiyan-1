@@ -117,7 +117,9 @@ define(["app"], function (app) {
         //实时访问
         //TODO item["searchWord"] == ""?"百思" 为捕获到暂为  百思
         var getHtmlTableData = function () {
-            var searchUrl = SEM_API_URL + "real_time/" + esType;
+
+            var fi = $rootScope.tableSwitch.tableFilter != undefined && $rootScope.tableSwitch.tableFilter != null ? "?q=" + $rootScope.tableSwitch.tableFilter : "";
+            var searchUrl = SEM_API_URL + "real_time/" + esType + fi;
             $http({
                 method: 'GET',
                 url: searchUrl
@@ -332,7 +334,7 @@ define(["app"], function (app) {
             $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.targetSearch();
         }
-//设置来源终端
+        //设置来源终端
         var evTimeStamp = 0;
         $scope.setTerminal = function (a) {
             var now = +new Date();
@@ -350,10 +352,17 @@ define(["app"], function (app) {
             if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[0]}]";
             if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[1]}]";
             $scope.isJudge = false;
-            $rootScope.$broadcast("ssh_data_show_refresh");
-            $scope.targetSearch();
+            if ($scope.tableJu == "html") {
+                if (a == 0) $rootScope.tableSwitch.tableFilter = null;
+                if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"pm\":\"0\"}]";
+                if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"pm\":\"1\"}]";
+                getHtmlTableData();
+            } else {
+                $rootScope.$broadcast("ssh_data_show_refresh");
+                $scope.targetSearch();
+            }
         };
-//设置（外部链接）设备过滤
+        //设置（外部链接）设备过滤
         $scope.setExLinkTerminal = function (a) {
             var now = +new Date();
             if (now - evTimeStamp < 100) {
@@ -399,7 +408,7 @@ define(["app"], function (app) {
             });
             $(inputArray[a]).prev("span").css("background-position", "0px -51px");
         }
-//设置（搜索引擎）设备过滤
+        //设置（搜索引擎）设备过滤
         $scope.setSearchEngineTerminal = function (a) {
             if (a == 0) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[2]}]";
             if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[0]},{\"rf_type\":[2]}]";
@@ -420,8 +429,17 @@ define(["app"], function (app) {
                 $scope.browserselect = true;
             }
             if (a == 3) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[3]}]";
-            $rootScope.$broadcast("ssh_data_show_refresh");
-            $scope.targetSearch();
+
+            if ($scope.tableJu == "html") {
+                if (a == 0) $rootScope.tableSwitch.tableFilter = null;
+                if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":\"1\"}]";
+                if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":\"2\"}]";
+                if (a == 3) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":\"3\"}]";
+                getHtmlTableData();
+            } else {
+                $rootScope.$broadcast("ssh_data_show_refresh");
+                $scope.targetSearch();
+            }
         };
         //设置访客来源
         $scope.setVisitors = function (a) {
@@ -496,7 +514,11 @@ define(["app"], function (app) {
                 $rootScope.tableSwitch.tableFilter = null;
             } else {
                 area = (area == "北京" ? area + "市" : area);
-                $rootScope.tableSwitch.tableFilter = "[{\"region\":[\"" + area + "\"]}]";
+                if ($scope.tableJu == "html") {
+                    $rootScope.tableSwitch.tableFilter = "[{\"region\":\"" + area + "\"}]";
+                } else {
+                    $rootScope.tableSwitch.tableFilter = "[{\"region\":[\"" + area + "\"]}]";
+                }
             }
             $scope.isJudge = false;
             if ($scope.tableJu == "html") {
@@ -528,8 +550,17 @@ define(["app"], function (app) {
                 $rootScope.tableSwitch.tableFilter = "[{\"se\":[\"" + info + "\"]}]";
             }
             $scope.isJudge = false;
-            $rootScope.$broadcast("ssh_data_show_refresh");
-            $scope.targetSearch();
+            if ($scope.tableJu == "html") {
+                if (info === '全部') {
+                    $rootScope.tableSwitch.tableFilter = null;
+                } else {
+                    $rootScope.tableSwitch.tableFilter = "[{\"se\":\"" + info + "\"}]";
+                }
+                getHtmlTableData();
+            } else {
+                $rootScope.$broadcast("ssh_data_show_refresh");
+                $scope.targetSearch();
+            }
         };
         // 搜索词过滤
         $scope.setGjcFilter = function (gjcText) {
@@ -619,13 +650,13 @@ define(["app"], function (app) {
         $scope.realTimeVisit = function () {
             var visitFilert = [];
             if ($scope.input_gjc != "") {
-                visitFilert.push("{\"kw\": [\"" + $scope.input_gjc + "\"]}")
+                visitFilert.push("{\"kw\": \"" + $scope.input_gjc + "\"}")
             }
             if ($scope.input_rky != "") {
-                visitFilert.push("{\"entrance\": [\"" + $scope.input_rky + "\"]}")
+                visitFilert.push("{\"entrance\": \"1\"},{\"loc\":\"" + $scope.input_rky + "\"}")
             }
             if ($scope.input_ip != "") {
-                visitFilert.push("{\"remote\": [\"" + $scope.input_ip + "\"]}")
+                visitFilert.push("{\"remote\": \"" + $scope.input_ip + "\"}")
             }
             if ($scope.input_ip == "" && $scope.input_rky == "" && $scope.input_gjc == "") {
                 $rootScope.tableSwitch.tableFilter = null;
@@ -929,12 +960,11 @@ define(["app"], function (app) {
                 });
             }
         };
+
         //表格数据展开项
         var griApiInfo = function (gridApi) {
             $scope.gridOpArray = angular.copy($rootScope.gridArray);
             gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
-                console.log(row)
-
                 var dataNumber;
                 if (row.isExpanded && $rootScope.tableSwitch.dimen != false) {
                     if (row.entity[$rootScope.tableSwitch.latitude.field] == "搜索引擎" && $rootScope.tableSwitch.latitude.field == "rf_type")$rootScope.tableSwitch.dimen = "se";
@@ -951,6 +981,7 @@ define(["app"], function (app) {
                     //  $scope.gridApi2.expandable.collapseAllRows();
 
                     row.entity.subGridOptions = {
+                        appScopeProvider: $scope.subGridScope,
                         showHeader: false,
                         enableHorizontalScrollbar: 0,
                         enableVerticalScrollbar: 0,
@@ -976,6 +1007,12 @@ define(["app"], function (app) {
                     });
                 }
             });
+        };
+        //子表格方法通用
+        $scope.subGridScope = {
+            getHistoricalTrend: function (b) {
+                $scope.getHistoricalTrend(b, true);
+            }
         };
         //得到数据中的url
         $scope.getDataUrlInfoa = function (grid, row, number) {
@@ -1007,7 +1044,10 @@ define(["app"], function (app) {
             gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
                 var htmlData = new Array();
                 row.entity.subGridOptions = {
+                    appScopeProvider: $scope.subGridScope,
                     expandableRowHeight: 360,
+                    enableHorizontalScrollbar: 1,
+                    enableVerticalScrollbar: 1,
                     showHeader: false,
                     columnDefs: htmlData
                 };
@@ -1045,7 +1085,7 @@ define(["app"], function (app) {
                         "<ul><li>访问类型：<span>" + (datas.ct == 0 ? " 新访客" : " 老访客") + "</span></li>" +
                         "<li>当天访问频次：<span>" + datas.vfreq + "</span></li>" +
                         "<li>上一次访问时间：<span>" + (datas.last != "首次访问" ? new Date(parseInt(datas.last)).Format("yyyy-MM-dd hh:mm:ss") : datas.last) + "</span></li>" +
-                        "<li>本次来路:<span>" + (datas.se == "-" ? " 直接访问" : "<a href='" + datas.rf + "' target='_blank'>" + datas.se + "( 搜索词:" + datas.kw + ")</a>") + "</span></li>" +
+                        "<li>本次来路:<span>" + (datas.se == "-" || datas.se == undefined || datas.se == "" ? " 直接访问" : "<a href='" + datas.rf + "' target='_blank'>" + datas.se + "( 搜索词:" + datas.kw + ")</a>") + "</span></li>" +
                         "<li>入口页面：<span><a href='" + datas.loc + "' target='_blank'>" + datas.loc + "</a></span></li>" +
                         "<li>最后停留在:<span><a href='" + datas.record[datas.record.length - 1]["loc"] + "' target='_blank'>" + datas.record[datas.record.length - 1]["loc"] + "</a></span></li></ul>" +
                         "</div></div><div class='trendunder'><b>访问路径：</b>" +
@@ -1065,7 +1105,7 @@ define(["app"], function (app) {
             });
         };
         // table 历史趋势
-        $scope.getHistoricalTrend = function (b) {
+        $scope.getHistoricalTrend = function (b, x) {
             if ($rootScope.tableSwitch.isJudge == undefined)$scope.isJudge = true;
             if ($rootScope.tableSwitch.isJudge)$rootScope.tableSwitch.tableFilter = undefined;
             var a = b.$parent.$parent.row.entity[$rootScope.tableSwitch.latitude.field];
@@ -1074,8 +1114,14 @@ define(["app"], function (app) {
             s.length > 0 ? a = s[0] : "";
             var fileteran = $rootScope.tableSwitch.tableFilter;
             var newFileter = fileteran != undefined && fileteran != "undefined" && fileteran != null ? "," + fileteran : "";
-            newFileter = newFileter.toString().replace("[", "").replace(/]$/gi, "")
-            $rootScope.tableSwitch.tableFilter = "[{\"" + $rootScope.tableSwitch.latitude.field + "\":[\"" + getField(a, $rootScope.tableSwitch.latitude.field) + "\"]}" + newFileter + "]";
+            newFileter = newFileter.toString().replace("[", "").replace(/]$/gi, "");
+            if (x) {
+                var f = $rootScope.tableSwitch.dimen;
+                var field = f != undefined && f != null ? $rootScope.tableSwitch.dimen : $rootScope.tableSwitch.latitude.field;
+                $rootScope.tableSwitch.tableFilter = "[{\"" + field + "\":[\"" + getField(a, $rootScope.tableSwitch.latitude.field) + "\"]}" + newFileter + "]";
+            } else {
+                $rootScope.tableSwitch.tableFilter = "[{\"" + $rootScope.tableSwitch.latitude.field + "\":[\"" + getField(a, $rootScope.tableSwitch.latitude.field) + "\"]}" + newFileter + "]";
+            }
         };
         //得到表格底部数据
         $scope.getFooterData = function (a, option, number) {

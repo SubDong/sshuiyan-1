@@ -172,8 +172,16 @@ define(["../app"], function (app) {
                     separator: ' to '
                 }, function (start, end, label) {
                     $rootScope.datepickerClick(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
-                    $rootScope.startString = (start.format('YYYY-MM-DD') + ' 至 ' + end.format('YYYY-MM-DD'))
-                    $('#reportrange span').html(start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD'));
+                    $rootScope.startString = (start.format('YYYY-MM-DD') + ' 至 ' + end.format('YYYY-MM-DD'));
+
+                    if (start.format('YYYY-MM-DD') == end.format('YYYY-MM-DD')) {
+                        $('#reportrange span').html(start.format('YYYY-MM-DD'));
+                        $rootScope.startString = (start.format('YYYY-MM-DD'));
+                    }
+                    else {
+                        $('#reportrange span').html(start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD'));
+                    }
+                    //$('#reportrange span').html(start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD'));
                 });
             }
         };
@@ -219,7 +227,6 @@ define(["../app"], function (app) {
                     separator: ' to '
                 }, function (start, end, label) {
                     //if(){
-
                     $rootScope.datepickerClickTow(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
                     if (!$rootScope.datePickerCompare) {
                         $rootScope.datePickerCompare = function (a, b, c) {
@@ -227,7 +234,14 @@ define(["../app"], function (app) {
                     } else {
                         $rootScope.datePickerCompare(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
                     }
-                    scope.date = start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD');
+                    if (start.format('YYYY-MM-DD') == end.format('YYYY-MM-DD')) {
+                        scope.date = start.format('YYYY-MM-DD');
+                    }
+                    else {
+                        scope.date = start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD');
+
+                    }
+                    //console.log(scope.date)
                     //$('#choicetrange span').html(start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD'));
                 });
             }
@@ -1116,6 +1130,38 @@ define(["../app"], function (app) {
                     scope.$apply(function () {
                     });
                 };
+            }
+        };
+    });
+
+    /**
+     * 复制。
+     */
+    app.directive('sshClip', function ($rootScope) {
+        "use strict";
+        return {
+            restrict: 'EA',
+            link: function (scope, element, attris, controller) {
+                console.log("!231231231231313123123123123");
+
+                var clip = new ZeroClipboard.Client(); // 新建一个对象
+                clip.setHandCursor(true); // 设置鼠标为手型
+                // 注册在元素上
+                clip.glue(element[0]); // 和上一句位置不可调换
+
+                clip.addEventListener("mouseOver", function (client) {
+                    client.setText("玩儿玩儿额"); // 设置要复制的文本。
+                });
+
+                clip.addEventListener("load", function (client) {
+                    console.log("加载完成");
+                    //clip.reposition();
+                });
+
+                clip.addEventListener('complete', function (client, text) {
+                    alert("恭喜复制成功");
+                });
+
             }
         };
     });

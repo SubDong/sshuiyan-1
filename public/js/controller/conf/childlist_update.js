@@ -86,7 +86,7 @@ define(["./module"], function (ctrs) {
               <div class="ngdialog-buttons" >\
                         <ul>\
                         <li> 修改成功</li></ul>   \
-                    <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click=closeThisDialog(0)>确定</button>\
+                    <a data-ng-href="#conf/webcountsite/childlist"  type="button" class="ngdialog-button ngdialog-button-secondary" ng-click=closeThisDialog(0)>确定</a>\
                 </div>',
                     className: 'ngdialog-theme-default',
                     plain: true,
