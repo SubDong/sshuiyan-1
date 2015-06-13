@@ -242,6 +242,7 @@ define(["./module"], function (ctrs) {
             $rootScope.user = $rootScope.perfectUser;
             $rootScope.baiduAccount = select.bd_name;
             $rootScope.userType = select.type_id;
+            $rootScope.siteId=select.site_id;
             $rootScope.userTypeName = select.site_name;
             $state.go("index");
         }
