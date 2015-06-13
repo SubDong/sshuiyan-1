@@ -42,7 +42,6 @@ var daos = {
         });
     },
     remove: function (schema, obj, cb) {
-        console.log("remove 2");
         if (obj.uid) {
             return this.uiderror();
         }

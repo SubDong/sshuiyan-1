@@ -20,8 +20,8 @@ define(["./module"], function (ctrs) {
 
        var init= function(){
             var uid= $cookieStore.get("uid");
-            var site_id=$rootScope.userType;
-            var url= "/config/conf?index=5&type=search&query={\"uid\":\""+uid+"\",\"site_id\":\""+site_id+"\"}";
+            var site_id=$rootScope.siteId;
+            var url= "/config/time_conv?type=search&query={\"uid\":\""+uid+"\",\"site_id\":\""+site_id+"\"}";
             $http({
                 method: 'GET',
                 url: url
@@ -47,15 +47,15 @@ define(["./module"], function (ctrs) {
 
             });
             var uid= $cookieStore.get("uid");
-            var site_id=$rootScope.userType;//从conf_sites中获取
-            var query= "/config/conf?index=5&type=search&query={\"uid\":\""+uid+"\",\"site_id\":\""+site_id+"\"}";
+            var site_id=$rootScope.siteId;//从conf_sites中获取
+            var query= "/config/time_conv?type=search&query={\"uid\":\""+uid+"\",\"site_id\":\""+site_id+"\"}";
             $http({
                 method: 'GET',
                 url: query
             }).success(function (dataConfig, status) {
                 if(dataConfig==null||dataConfig.length==0){//不存在配置 save
                     var entity= "{\"uid\":\""+uid+"\",\"site_id\":\""+site_id+"\",\"time_conv\":"+ angular.toJson($scope.time_conv)+",\"pv_conv\":"+ angular.toJson($scope.pv_conv)+"}";
-                    var url= "/config/conf?index=5&type=save&entity="+entity;
+                    var url= "/config/time_conv?type=save&entity="+entity;
                     $http({
                         method: 'GET',
                         url: url
@@ -64,7 +64,7 @@ define(["./module"], function (ctrs) {
                     });
                 }else{//update
                     var updates= "{\"uid\":\""+uid+"\",\"site_id\":\""+site_id+"\",\"time_conv\":"+ angular.toJson($scope.time_conv)+",\"pv_conv\":"+ angular.toJson($scope.pv_conv)+"}";
-                    var url= "/config/conf?index=5&type=update&query={\"uid\":\""+uid+"\",\"site_id\":\""+site_id+"\"}&updates="+updates;
+                    var url= "/config/time_conv?type=update&query={\"uid\":\""+uid+"\",\"site_id\":\""+site_id+"\"}&updates="+updates;
                     $http({
                         method: 'GET',
                         url: url

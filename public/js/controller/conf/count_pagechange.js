@@ -91,7 +91,7 @@ define(["./module"], function (ctrs) {
          */
         var refushGridData = function () {
             var uid = $cookieStore.get("uid");
-            var site_id = $rootScope.userType;
+            var site_id = $rootScope.siteId;
             var url = "/config/page_conv?type=search&query={\"uid\":\"" + uid + "\",\"site_id\":\"" + site_id + "\"}";
             $http({
                 method: 'GET',
