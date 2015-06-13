@@ -53,6 +53,19 @@ define(["./module"], function (ctrs) {
             produceUrl: ""
         };
 
+        //去重
+        Array.prototype.unique = function(){
+            var res = [];
+            var json = {};
+            for(var i = 0; i < this.length; i++){
+                if(!json[this[i]]){
+                    res.push(this[i]);
+                    json[this[i]] = 1;
+                }
+            }
+            return res;
+        }
+
         //根据 keywords 来进行回车符换行拆分
         $scope.allSubmit = function(){
             var kVal = $scope.urlconfig.keywords;
@@ -61,7 +74,7 @@ define(["./module"], function (ctrs) {
                 $scope.submit();
             } else {
                 var kVal2 = $scope.urlconfig.keywords;
-                var splArray = kVal2.split("\n");
+                var splArray = kVal2.split("\n").unique();  //拆分回车换行符并去重
                 for (var i=0 ; i< splArray.length ; i++) {
                     var kwObj = splArray[i];
                     $scope.submit(kwObj);
