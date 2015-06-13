@@ -56,8 +56,6 @@ define(["./module"], function (ctrs) {
 
         $scope.showRemove = false;
 
-
-        $scope.isAddPath = true;
         // 添加目标URL
         $scope.targetRemoves = [];
         $scope.targetUrlAdd = function (targets, targetRemoves) {
