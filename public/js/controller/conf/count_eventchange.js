@@ -127,7 +127,7 @@ define(["./module"], function (ctrs) {
         //操作-初始化
         var refushGridData = function () {
             var uid = $cookieStore.get("uid");
-            var root_url = $rootScope.site_id;
+            var root_url = $rootScope.siteId;
             var url = "/config/eventchnage_list?type=search&query={\"uid\":\"" + uid + "\",\"root_url\":\"" + root_url + "\"}";
             $http({
                 method: 'GET',
