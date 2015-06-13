@@ -1,6 +1,6 @@
 <div class="middle_containers" ng-controller="eventchange_addctr">
     <div class="add_event_title">
-        <p><span ng-bind-html="userTypeName"></span> -新增事件转化目标</p>
+        <p>  <span ng-bind-html="userTypeName"></span> -新增事件转化目标</p>
     </div>
     <div class="add_event_content">
         <div class="table_content">
@@ -18,10 +18,12 @@
                         <div class="form-group">
                             <label  class="col-sm-2 col-md-1 control-label">事件预览目标URL:</label>
                             <div class="col-sm-4">
-                                <input type="text" data-ng-bind="targetUrl" ng-model="site_url" class="form-control" placeholder="请输入..." onfocus="this.setAttribute('placeholder','')" onblur="this.setAttribute('placeholder','请输入...')">
+                                <input type="text" data-ng-bind="targetUrl" class="form-control" placeholder="请输入..." onfocus="this.setAttribute('placeholder','')"
+                                       onblur="this.setAttribute('placeholder','请输入...')">
+
                             </div>
                             <div class="col-sm-4">
-                                <button class="btn btn-info" data-ng-click="saveUrl()">保 存</button>
+                                <button type="submit" class="btn btn-info">保 存</button>
                                 <button type="submit" class="btn btn-default">取 消</button>
                             </div>
                         </div>
@@ -31,105 +33,43 @@
 
                 </div>
                 <form role="form" name="eventForm" ng-submit="submitForm(eventForm.$valid)" class="form-horizontal" novalidate>
-                <div class="custom_title" ng-show="tab === 2">
-                    <p>  <span ng-bind-html="userTypeName"></span> -新增事件转化目标</p>
-                    <form class="form-horizontal">
-                        <div class="form-group">
-                            <label class="col-sm-2 col-md-1 control-label">事件元素ID：</label>
-                            <div class="col-sm-4">
-                                <input type="text" class="form-control" placeholder="事件元素ID" onfocus="this.setAttribute('placeholder','')"
-                                      required data-ng-model="eventChange.event_id" onblur="this.setAttribute('placeholder','事件元素ID')">
+                    <div class="custom_title" ng-show="tab === 2">
+                        <p>  <span ng-bind-html="userTypeName"></span> -新增事件转化目标</p>
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-2 col-md-1 control-label">事件元素ID：</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control" placeholder="事件元素ID" onfocus="this.setAttribute('placeholder','')"
+                                           required data-ng-model="eventChange.event_id" onblur="this.setAttribute('placeholder','事件元素ID')">
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 col-md-1 control-label">事件目标名称：</label>
-                            <div class="col-sm-4">
-                                <input type="text" class="form-control" placeholder="事件目标名称" onfocus="this.setAttribute('placeholder','')"
-                                       required data-ng-model="eventChange.event_name"  onblur="this.setAttribute('placeholder','事件目标名称')">
+                            <div class="form-group">
+                                <label class="col-sm-2 col-md-1 control-label">事件目标名称：</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control" placeholder="事件目标名称" onfocus="this.setAttribute('placeholder','')"
+                                           required data-ng-model="eventChange.event_name"  onblur="this.setAttribute('placeholder','事件目标名称')">
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 col-md-1 control-label">事件作用页面或目录：</label>
-                            <div class="col-sm-4">
-                                <input type="text" class="form-control" placeholder="事件作用页面或目录" onfocus="this.setAttribute('placeholder','')"
-                                       required data-ng-model="eventChange.event_page" onblur="this.setAttribute('placeholder','事件作用页面或目录')">
+                            <div class="form-group">
+                                <label class="col-sm-2 col-md-1 control-label">事件作用页面或目录：</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control" placeholder="事件作用页面或目录" onfocus="this.setAttribute('placeholder','')"
+                                           required data-ng-model="eventChange.event_page" onblur="this.setAttribute('placeholder','事件作用页面或目录')">
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-sm-offset-2 col-md-offset-1 col-sm-10">
-                                <p>可以在URL首或尾使用*匹配任意长度字符，直接填写*代表事件作用目标为整个网站</p>
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-md-offset-1 col-sm-10">
+                                    <p>可以在URL首或尾使用*匹配任意长度字符，直接填写*代表事件作用目标为整个网站</p>
 
-                                <button  ng-disabled="eventForm.$invalid" class="btn btn-info count_content_button" ng-click="onSaveEvent()">确定</button>
-                                <button  class="btn btn-info count_content_button" ng-click="onCancel()">取消</button>
+                                    <button  ng-disabled="eventForm.$invalid" class="btn btn-info count_content_button" ng-click="onSaveEvent()">确定</button>
+                                    <button  class="btn btn-info count_content_button" ng-click="onCancel()">取消</button>
 
+                                </div>
                             </div>
-                        </div>
-                    </form>
-                </div>
+                        </form>
+                    </div>
                 </form>
-
-
-
             </div>
-        </div>
-    </div>
-</div>
-<style>
-    .event_modal{
-        position: fixed;
-        overflow: auto;
-        -webkit-overflow-scrolling: touch;
-        z-index: 10000;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        display: none;
-    }
-    .url_modal{
-        position: fixed;
-        background: rgba(0,0,0,.4);
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        -webkit-backface-visibility: hidden;
-        -webkit-animation: ngdialog-fadein .5s;
-        animation: ngdialog-fadein .5s;
-    }
-    .modal_content{
-        width: 1000px;
-        height: 900px;
-        position: absolute;
-        left: 50%;
-        margin-left: -500px;
-        top: 65px;
-    }
-    .modal_content .modal_title p{
-        line-height: 22px;
-        background-color: #747474;
-        color: #fff;
-    }
-    .modal_content .modal_footer {
-        margin-bottom: 40px;
-    }
-    .modal_content .modal_footer p{
-        line-height: 22px;
-        background-color: #747474;
-        color: #fff;
-        text-align: center;
-    }
-</style>
-<div class="event_modal" ng-controller="eventchange_addctr">
-    <div class="url_modal" data-ng-click="closed()"></div>
-    <div class="modal_content">
-        <div class="modal_title">
-            <p>http://www.best-ad.cn/</p>
-        </div>
-        <iframe id="iframe" src="https:best-ad.cn" frameborder="0" style="overflow:hidden;width:100%;background-color: #fff;" height="100%"  width="100%">
-        </iframe>
-        <div class="modal_footer" data-ng-click="closed()">
-            <p>关 闭</p>
         </div>
     </div>
 </div>
