@@ -5,7 +5,7 @@ define(["app"], function (app) {
 
     "use strict";
 
-    app.controller('wayctrl', function ($timeout,$scope, $rootScope, $q, $http, requestService, areaService, SEM_API_URL) {
+    app.controller('wayctrl', function ($timeout, $scope, $rootScope, $q, $http, requestService, areaService, SEM_API_URL) {
         $scope.visible = true;
         $rootScope.tableTimeStart = -1;//开始时间
         $rootScope.tableTimeEnd = -1;//结束时间、
@@ -25,7 +25,7 @@ define(["app"], function (app) {
                 displayName: "推广方式",
                 field: "accountName",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
-                minWidth:200
+                minWidth: 200
             },
             {
                 name: " ",
@@ -142,12 +142,16 @@ define(["app"], function (app) {
             var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
             $scope.charts[0].config.instance = chart;
             chart.showLoading({
+                effect: 'whirling',
                 text: "正在努力的读取数据中..."
             });
             var requestParams = chartUtils.qAll(quotas);
             var requestArray = [];
             if (requestParams[0] != "") {
                 var semRequest = $http.get(SEM_API_URL + user + "/" + baiduAccount + "/" + semType + "/" + requestParams[0] + "?startOffset=" + start + "&endOffset=" + end);
+                semRequest.error(function (e) {
+                    console.error(e);
+                })
                 requestArray.push(semRequest);
             }
             if (requestParams[1].length) {
@@ -172,6 +176,7 @@ define(["app"], function (app) {
                     Custom.initCheckInfo();
                 }
             });
+
 
         }
         $scope.yesterday = function () {
@@ -359,4 +364,5 @@ define(["app"], function (app) {
         }
 
     });
-});
+})
+;

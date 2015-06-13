@@ -16,6 +16,7 @@ define(["../app"], function (app) {
         this.refresh = function (charts) {
             charts.forEach(function (chart) {
                 chart.config.instance.showLoading({
+                    effect:'whirling',
                     text: "正在努力的读取数据中..."
                 });
             });

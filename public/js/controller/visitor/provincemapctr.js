@@ -3,7 +3,7 @@
  */
 define(["./module"], function (ctrs) {
 
-    ctrs.controller("provincemapctr", function ($scope, uiGridConstants, $rootScope, $http,areaService) {
+    ctrs.controller("provincemapctr", function ($scope, uiGridConstants, $rootScope, $http, areaService) {
         $scope.todayClass = true;
         $scope.souce.selected = {"name": "全部"};
         $scope.browser.selected = {"name": "全部"};
@@ -81,10 +81,13 @@ define(["./module"], function (ctrs) {
                 {name: '访问页数', displayName: "访问页数"}
             ]
         };
-
+        //$scope.pieHover = function (params) {
+        //
+        //}
         $scope.mapOrPieConfig = {
             chartId: "VistorMap_charts",
             serieName: "地域分布"
+            //pieHover: $scope.pieHover
         }
 
         $scope.areas = "region";

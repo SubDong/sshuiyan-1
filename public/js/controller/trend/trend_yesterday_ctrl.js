@@ -191,19 +191,19 @@ define(["./module"], function (ctrs) {
         }
         $scope.init();
         $scope.$on("ssh_refresh_charts", function (e, msg) {
-            if ($scope.charts[0].config.compare) {
-                if ($rootScope.start > -7) {
-                    $scope.start--;
-                    $scope.end--
-                    if ($scope.compareType == 1) {
-                        $scope.compareLastDay();
-                    } else {
-                        $scope.compareLastWeek();
-                    }
-                } else {
-                    $scope.restCompare();
-                }
-            }
+            //if ($scope.charts[0].config.compare) {
+            //    if ($rootScope.start > -7) {
+            //        $scope.start--;
+            //        $scope.end--
+            //        if ($scope.compareType == 1) {
+            //            $scope.compareLastDay();
+            //        } else {
+            //            $scope.compareLastWeek();
+            //        }
+            //    } else {
+            //        $scope.restCompare();
+            //    }
+            //}
             if ($scope.compareType) {
                 $scope.compareReset();
             }
@@ -235,6 +235,7 @@ define(["./module"], function (ctrs) {
             $scope.weekcheckClass = false;
             $scope.mothcheckClass = false;
             $rootScope.interval = 1;
+            $(".time_select").show();
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.bGap = false;//图表类型
@@ -264,6 +265,7 @@ define(["./module"], function (ctrs) {
             $scope.lastDaySelect = false;
             $scope.lastWeekSelect = false;
             $scope.clearCompareSelect = false;
+            $(".time_select").hide();
             $rootScope.interval = -1;
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));

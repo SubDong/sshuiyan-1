@@ -31,6 +31,7 @@ var mixingMap = {
                 orient: 'vertical',
                 data: data.data_name
             },
+            calculable: true,
             dataRange: {
                 orient: 'horizontal',
                 min: 0,
