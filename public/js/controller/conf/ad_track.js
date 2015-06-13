@@ -6,28 +6,6 @@ define(["./module"], function (ctrs) {
 
     ctrs.controller('adtrack', function ($scope, $rootScope, $cookieStore, $http,ngDialog) {
 
-        $scope.adtrack_model = {
-            //_id: "", // mongoid
-            uid: "", // user id 用户ID
-            type_id: "", // es type id ( hidden in front-end) 对应ES ID
-            track_id: "", // js track id 随机生成
-            targetUrl: "", // 目标URL
-            mediaPlatform: "", // 媒体平台
-            adTypes: "",    //广告类型
-            planName: "", //计划名称
-            keywords: "",   //关键词
-            creative: "" //创意
-        };
-        $scope.urlconfig = {
-            "targetUrl": "",
-            "mediaPlatform": "",
-            "adTypes": "",
-            "planName": "",
-            "keywords": "",
-            "creative": ""
-
-        };
-
         //配置默认指标
         $rootScope.checkedArray = ["_uid","uid", "type_id", "track_id", "targetUrl", "mediaPlatform", "adTypes", "planName", "keywords", "creative","produceUrl"];
         $rootScope.gridArray = {
@@ -94,21 +72,15 @@ define(["./module"], function (ctrs) {
             };
         };
 
-
-
         $scope.refushGridData = function () {
             var uid = $cookieStore.get("uid");
-            var site_id = $rootScope.userType;
-            var url = "/config/adtrack?index=adtrack&type=search&query={\"uid\":\"" + uid + "\"}";
-            $http({
-                method: 'GET',
-                url: url
-            }).success(function (dataConfig, status) {
+            var site_id = $rootScope.siteId;
+            var url = "/config/adtrack?index=adtrack&type=search&query={\"uid\":\"" + uid + "\",\"site_id\":\"" + site_id + "\"}";
+            $http({method: 'GET', url: url}).success(function (dataConfig, status) {
                 $scope.gridArray.data = dataConfig;
             });
         };
         $scope.refushGridData();
-        //$scope.text="eeeeee";
 
         $scope.onViewUrl=function(index,grid,row){
            var thtml= $rootScope.urlDialogHtml.replace("produceUrl", row.entity.produceUrl);

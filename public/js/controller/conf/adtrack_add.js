@@ -34,8 +34,7 @@ define(["./module"], function (ctrs) {
         $scope.adtrack_model = {
             //_id: "", // mongoid
             uid: "", // user id 用户ID
-            type_id: "", // es type id ( hidden in front-end) 对应ES ID
-            track_id: "", // js track id 随机生成
+            site_id: "",
             targetUrl: "", // 目标URL
             mediaPlatform: "", // 媒体平台
             adTypes: "",    //广告类型
@@ -63,7 +62,6 @@ define(["./module"], function (ctrs) {
             } else {
                 var kVal2 = $scope.urlconfig.keywords;
                 var splArray = kVal2.split("\n");
-                //console.log(splArray);
                 for (var i=0 ; i< splArray.length ; i++) {
                     var kwObj = splArray[i];
                     $scope.submit(kwObj);
@@ -90,6 +88,7 @@ define(["./module"], function (ctrs) {
             model.keywords = obj;
             model.creative = $scope.urlconfig.creative;
             //model.produceUrl = $scope.parseUrl();
+            model.site_id = $rootScope.siteId;
             model.uid = $cookieStore.get("uid");
 
             var query = "/config/adtrack?type=search&query={\"uid\":\"" + model.uid + "\",\"targetUrl\":\"" + model.targetUrl + "\"}";
@@ -116,15 +115,11 @@ define(["./module"], function (ctrs) {
 
         var refushGridData = function () {
             var uid = $cookieStore.get("uid");
-            var site_id = $rootScope.userType;
-            var url = "/config/adtrack?index=adtrack&type=search&query={\"uid\":\"" + uid + "\"}";
-            $http({
-                method: 'GET',
-                url: url
-            }).success(function (dataConfig, status) {
+            var site_id = $rootScope.siteId;
+            var url = "/config/adtrack?index=adtrack&type=search&query={\"uid\":\"" + uid + "\",\"site_id\":\"" + site_id + "\"}";
+            $http({method: 'GET', url: url}).success(function (dataConfig, status) {
                 $scope.gridArray.data = dataConfig;
             });
         };
-
     });
 });
