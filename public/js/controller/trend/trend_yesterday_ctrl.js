@@ -92,10 +92,11 @@ define(["./module"], function (ctrs) {
                     time = $rootScope.start - 7;
                 }
                 $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
-                var todayData = $http.get("api/charts?type=" + checkedVal + "&dimension=period&start=" + time + "&end=" + $rootScope.end + "&userType=" + $rootScope.userType + "&int=" + $rootScope.interval);
-                var lastDayData = $http.get("api/charts?type=" + checkedVal + "&dimension=period&start=" + (time - 1) + "&end=" + ( $rootScope.end - 1) + "&userType=" + $rootScope.userType + "&int=" + $rootScope.interval);
+                var todayData = $http.get("api/charts?type=" + checkedVal + "&dimension=period&start=" + time + "&end=" + time + "&userType=" + $rootScope.userType + "&int=" + $rootScope.interval);
+                var lastDayData = $http.get("api/charts?type=" + checkedVal + "&dimension=period&start=" + (time - 1) + "&end=" + ( time - 1) + "&userType=" + $rootScope.userType + "&int=" + $rootScope.interval);
                 $q.all([todayData, lastDayData]).then(function (res) {
-                    var final_result = chartUtils.compareTo(res, $scope.compareArray);
+                    var dateStamp = chartUtils.getDateStamp(time);
+                    var final_result = chartUtils.compareTo(res, dateStamp);
                     $scope.charts[0].config.noFormat = "none";
                     $scope.charts[0].config.compare = true;
                     cf.renderChart(final_result, $scope.charts[0].config);
@@ -380,6 +381,9 @@ define(["./module"], function (ctrs) {
                 $scope.compareType = 1;
                 $scope.compareLastDayClass = true;
                 $scope.compareLastWeekClass = false;
+                $scope.dayselect = true;
+                $scope.dayClass = false;
+                $scope.hourcheckClass = true;
                 $scope.charts.forEach(function (e) {
                     var chart = echarts.init(document.getElementById(e.config.id));
                     e.config.instance = chart;
@@ -428,6 +432,9 @@ define(["./module"], function (ctrs) {
                 $scope.compareArray = ["上周今日", "上周昨日"];
                 $scope.compareLastDayClass = false;
                 $scope.compareLastWeekClass = true;
+                $scope.dayselect = true;
+                $scope.dayClass = false;
+                $scope.hourcheckClass = true;
                 $scope.charts.forEach(function (e) {
                     var chart = echarts.init(document.getElementById(e.config.id));
                     e.config.instance = chart;

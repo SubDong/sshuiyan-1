@@ -157,9 +157,7 @@ var op = {
                             xName = xName.split("/点")[0];
                         }
                         if (chartConfig.compare || chartConfig.compareCustom) {
-                            if (chartConfig.keyFormat == "day") {
-                                res = '<li>' + xName + ':00-' + xName + ':59</li>';
-                            }
+                            res = '<li>' + xName + ':00-' + xName + ':59</li>';
                         } else {
                             if (chartConfig.keyFormat == "none") {
                                 res = '<li>' + xName + ':00-' + xName + ':59</li>';

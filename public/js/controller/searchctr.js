@@ -149,7 +149,6 @@ define(["./module"], function (ctrs) {
                             util.renderLegend(chart, $scope.charts[0].config);
                             Custom.initCheckInfo();
                         }
-                        console.log(total_result);
                         cf.renderChart(total_result, $scope.charts[0].config);
                         chart.hideLoading();
                     });

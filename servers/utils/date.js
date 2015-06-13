@@ -41,18 +41,18 @@ var dateutils = {
 
         return dates;
     },
-    createIndexsByTime:function(startDay, endDay, prefix){
+    createIndexsByTime: function (startDay, endDay, prefix) {
         var startTime = Date.parse(startDay);
         var endTime = Date.parse(endDay);
         var start = new Date(startTime);
         var end = new Date(endTime);
-        console.log(end-start);
+        console.log(end - start);
         var number = Math.floor((end - start) / (24 * 60 * 60 * 1000));
-        console.log("=================="+number);
+        console.log("==================" + number);
         var dates = [prefix + startDay];
         for (var i = 1; i <= number; i++) {
             start.setDate(start.getDate() + 1);
-            dates.push(prefix +  fmt("%F", start))
+            dates.push(prefix + fmt("%F", start))
         }
         return dates;
     },
@@ -156,6 +156,25 @@ var dateutils = {
     },
     formatDate: function (time) {
         return new Date(parseInt(time)).toLocaleDateString();
+    },
+    by: function (name) {
+        return function (o, p) {
+            var a, b;
+            if (typeof o === "object" && typeof p === "object" && o && p) {
+                a = o[name];
+                b = p[name];
+                if (a === b) {
+                    return 0;
+                }
+                if (typeof a === typeof b) {
+                    return a < b ? 1 : -1;
+                }
+                return typeof a < typeof b ? 1 : -1;
+            }
+            else {
+                throw ("error");
+            }
+        }
     }
 };
 
