@@ -23,7 +23,9 @@ define(["./module"], function (ctrs) {
 
         $scope.eventChange.uid =  $cookieStore.get("uid");
 
-        $scope.eventChange.root_url =$rootScope.userType;
+        $scope.eventChange.root_url =$rootScope.site_id;
+
+
 
         $scope.targetUrl ="";
 
