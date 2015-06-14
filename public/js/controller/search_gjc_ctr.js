@@ -139,7 +139,11 @@ define(["./module"], function (ctrs) {
                         Custom.initCheckInfo();
                     }
                     cf.renderChart(total_result, $scope.charts[0].config);
-                    chart.hideLoading();
+                    //if (final_result.length) {
+                    //    if (final_result[0].data.length) {
+                    //        chart.hideLoading();
+                    //    }
+                    //}
                 });
             }
         }

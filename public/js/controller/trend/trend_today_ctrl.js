@@ -271,6 +271,7 @@ define(["./module"], function (ctrs) {
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
+                e.keyFormat == "day";
                 e.config.noFormat = undefined;
             });
             $rootScope.tableFormat = "day";
@@ -581,7 +582,7 @@ define(["./module"], function (ctrs) {
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
-                e.bGap=false;
+                e.bGap = false;
                 e.config.legendDefaultChecked = [0, 1];
                 e.config.legendAllowCheckCount = 2;
                 e.config.compareCustom = undefined;

@@ -164,7 +164,7 @@ define(["app"], function (app) {
                 {name: '搜索词', displayName: "搜索词", field: "searchWord"},
                 {name: '搜索带来', displayName: "搜索带来", field: "isPromotion"},
                 {name: "访问IP", displayName: "访问IP", field: "ip"},
-                {name: '访客标识码', displayName: "访客标识码", field: "vid" },
+                {name: '访客标识码', displayName: "访客标识码", field: "vid"},
                 {name: "访问时长", displayName: "访问时长", field: "totalTime"},
                 {name: "访问页数", displayName: "访问页数", field: "viewPages"}];
             getHtmlTableData();
@@ -757,7 +757,11 @@ define(["app"], function (app) {
                             semDataArray.push(semDataObj);
                             $rootScope.checkedArray.forEach(function (item, i) {
                                 if ($rootScope.tableSwitch.latitude.field == "accountName") {
-                                    dataObj["accountName"] = "搜索推广 (" + dataSEM[0].accountName + ")"
+                                    if (dataSEM[0]) {
+                                        dataObj["accountName"] = "搜索推广 (" + dataSEM[0].accountName + ")";
+                                    } else {
+                                        dataObj["accountName"] = "搜索推广 ()";
+                                    }
                                 }
                                 semDataArray.forEach(function (sem, i) {
                                     if (dataObj[item] == undefined) {

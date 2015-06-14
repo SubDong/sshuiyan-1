@@ -151,7 +151,6 @@ define(["./module"], function (ctrs) {
                             Custom.initCheckInfo();
                         }
                         cf.renderChart(total_result, $scope.charts[0].config);
-                        chart.hideLoading();
                     });
                 }
             }
