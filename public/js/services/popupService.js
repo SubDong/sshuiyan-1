@@ -41,7 +41,6 @@ define(["../app"], function (app) {
 
         // 获取指定url为来源的入口页面
         function showEntryPageData(rf) {
-            console.log(rf);
             var filerInfo = "";
             if (rf == "直接访问") {
                 filerInfo = "[{\"rf_type\": [\"1\"]}]";
@@ -57,7 +56,6 @@ define(["../app"], function (app) {
             } else {
                 filerInfo = "[{\"se\": [\"" + rf + "\"]}]";
             }
-            console.log(filerInfo);
             ngDialog.open({
                 template: '<div id="url-source-distribution"  style="overflow: hidden"><div class="modal-header">查看以  <font color="red">' + rf + '</font>' + '  为来源的入口页面</div></div>',
                 plain: true,
@@ -68,6 +66,7 @@ define(["../app"], function (app) {
                         method: 'GET',
                         url: "/api/summary/?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.defaultType + "&quotas=pv&dimension=entrance" + "&filerInfo=" + filerInfo
                     }).success(function (data, status) {
+                        console.log(data)
                         var obj = JSON.parse(eval('(' + data + ')').toString())
                         var contentHtml = "<div class='modal-body'><table class='table'><tr><th>排名</th><th>入口页链接</th></tr>";
                         obj.forEach(function (item, i) {
@@ -106,11 +105,11 @@ define(["../app"], function (app) {
                 className: 'ngdialog-theme-default',
                 scope: $rootScope,
                 controller: ['$scope', '$http', '$compile', function ($scope, $http, $compile) {
-                    $scope.liexingClass=true;
+                    $scope.liexingClass = true;
                     $scope.showUrl = function () {
                         console.log(11111)
-                        $scope.liexingClass=false;
-                        $scope.laiyuanClass=true;
+                        $scope.liexingClass = false;
+                        $scope.laiyuanClass = true;
                         $http({
                             method: 'GET',
                             url: "/api/indextable/?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.defaultType + "&indic=contribution,pv&dimension=rf&popup=1" + "&filerInfo=[{\"entrance\":[\"" + entrance + "\"]}]"
@@ -141,8 +140,8 @@ define(["../app"], function (app) {
 
                     $scope.showCategory = function () {
                         console.log(22221)
-                        $scope.laiyuanClass=false;
-                        $scope.liexingClass=true;
+                        $scope.laiyuanClass = false;
+                        $scope.liexingClass = true;
                         $http({
                             method: 'GET',
                             url: "/api/indextable/?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.defaultType + "&indic=contribution&dimension=rf_type&popup=1" + "&filerInfo=[{\"entrance\":[\"" + entrance + "\"]}]"

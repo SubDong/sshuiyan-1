@@ -333,7 +333,7 @@ define(["./module"], function (ctrs) {
             $http({
                 method: 'GET',
                 url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=kwsid"
-                + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=undefined&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
+                + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=ssc&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
             }).success(function (data, status) {
                 var dataArray = [];
                 if (data != null && data.length > 0) {
@@ -590,6 +590,12 @@ define(["./module"], function (ctrs) {
                     var atime2 = parseInt(newSpl[1] / option.length) + "";
                     var atime3 = parseInt(newSpl[2] / option.length) + "";
                     returnData = (atime1.length == 1 ? "0" + atime1 : atime1) + ":" + (atime2.length == 1 ? "0" + atime2 : atime2) + ":" + (atime3.length == 1 ? "0" + atime3 : atime3);
+                }
+                /**
+                 * TODO  ...
+                 */
+                if (a.col.field == "cpc") {
+                    returnData = (returnData+"").substring(0,(returnData+"").indexOf(".")+3);
                 }
             }
             return returnData;

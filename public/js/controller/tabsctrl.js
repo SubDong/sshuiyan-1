@@ -117,7 +117,6 @@ define(["app"], function (app) {
         //实时访问
         //TODO item["searchWord"] == ""?"百思" 为捕获到暂为  百思
         var getHtmlTableData = function () {
-
             var fi = $rootScope.tableSwitch.tableFilter != undefined && $rootScope.tableSwitch.tableFilter != null ? "?q=" + $rootScope.tableSwitch.tableFilter : "";
             var searchUrl = SEM_API_URL + "real_time/" + esType + fi;
             $http({
@@ -129,7 +128,7 @@ define(["app"], function (app) {
                         item["visitTime"] = new Date(item["visitTime"]).Format("yyyy-MM-dd hh:mm:ss");
                         var reere = item["searchEngine"] != "-" ? (item["referrer"] + "," + item["searchEngine"]) : item["referrer"] == "-" ? "-,直接访问" : item["referrer"] + "," + item["referrer"].substring(0, 40) + (item["referrer"].length > 40 ? "..." : "")
                         item["referrer"] = reere;
-                        item["searchWord"] = item["searchWord"] == "-" ? "--" : item["searchWord"] == "" ? "百思" : item["searchWord"];
+                        item["searchWord"] = item["searchWord"] == "-" ? "--" : item["searchWord"] == "" ? "--" : item["searchWord"];
                         item["keyword"] = item["keyword"] == "-" ? "--" : item["searchWord"];
                         item["isPromotion"] = item["isPromotion"] ? "是" : "否";
                         var a = (Math.round(parseInt(item["totalTime"]) / 1000));
@@ -310,7 +309,7 @@ define(["app"], function (app) {
         $scope.pagego = function (pagevalue) {
             pagevalue.pagination.seek(Number($scope.page));
         }
-//地图分类
+        //地图分类
         $scope.setDimen = function (a) {
             var b = "";
             if (a == "city") {
@@ -720,7 +719,15 @@ define(["app"], function (app) {
                     method: 'GET',
                     url: searchUrl
                 }).success(function (data, status) {
-                    $scope.gridOptions.data = data;
+                    var result = [];
+                    data.forEach(function (item, i) {
+                        var infoKey = item["word"];
+                        if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null" || infoKey.length >= 40)) {
+                        } else {
+                            result.push(item);
+                        }
+                    })
+                    $scope.gridOptions.data = result;
                 })
             } else {
                 $http({
@@ -757,12 +764,12 @@ define(["app"], function (app) {
                                         if (item == "ctr") {
                                             dataObj[item] = sem[item] + "%"
                                         } else {
-                                            dataObj[item] = sem[item]
+                                            dataObj[item] = parseFloat(sem[item]).toFixed(2);
                                         }
                                     }
                                 });
                                 data.forEach(function (es, i) {
-                                    if (dataObj[item] == undefined) {
+                                    if (isNaN(dataObj[item]) || dataObj[item] == undefined) {
                                         dataObj[item] = es[item]
                                     }
                                 })
@@ -811,9 +818,9 @@ define(["app"], function (app) {
                                         if (info.label == "跳出率") {
                                             obj[chartUtils.convertEnglish(info.label)] = info.quota[i] + "%";
                                         } else {
-                                            if(info.label == "新访客比率"){
+                                            if (info.label == "新访客比率") {
                                                 obj[chartUtils.convertEnglish(info.label)] = info.quota[i] + "%";
-                                            }else{
+                                            } else {
                                                 obj[chartUtils.convertEnglish(info.label)] = info.quota[i];
                                             }
                                         }
@@ -915,7 +922,7 @@ define(["app"], function (app) {
                 $http({
                     method: 'GET',
                     url: '/api/indextable/?start=' + (startInfoTime == null ? $rootScope.tableTimeStart : startInfoTime) + "&end=" + (endInfoTime == null ? $rootScope.tableTimeEnd : endInfoTime) + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field)
-                    + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
+                    + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + JSON.stringify($rootScope.tableSwitch.promotionSearch) + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
                 }).success(function (data, status) {
                     if ($rootScope.tableSwitch.promotionSearch != undefined && $rootScope.tableSwitch.promotionSearch) {
                         var url = SEM_API_URL + user + "/" + baiduAccount + "/account/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1"

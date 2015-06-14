@@ -222,11 +222,6 @@ define(["./module"], function (ctrs) {
                 chart.config.time = chartUtils.getWeekTime($rootScope.start, $rootScope.end);
             });
             requestService.refresh($scope.charts);
-            if ($rootScope.start <= -7) {
-                $rootScope.tableFormat = "day";
-            } else {
-                $rootScope.tableFormat = "hour";
-            }
             $rootScope.targetSearch();
         });
 
@@ -274,11 +269,7 @@ define(["./module"], function (ctrs) {
                 e.config.instance = chart;
                 e.config.noFormat = undefined;
             });
-            if ($rootScope.start <= -7) {
-                $rootScope.tableFormat = "day";
-            } else {
-                $rootScope.tableFormat = "hour";
-            }
+            $rootScope.tableFormat = "day";
             $rootScope.targetSearch();
             requestService.refresh($scope.charts);
         };
