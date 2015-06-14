@@ -70,13 +70,14 @@ define(["./module"], function (ctrs) {
                 }, {
                     text: '搜索推广',
                     sref: '#extension/search'
-                }, {
+                }/*, {
                     text: '网盟推广',
                     sref: '#extension/alliance'
                 }, {
                     text: '推广URL速度',
                     sref: '#extension/urlspeed'
-                }]
+                }*/
+                ]
             }, {
                 title: '趋向分析',
                 icon: 'glyphicon glyphicon-stats',
@@ -145,10 +146,10 @@ define(["./module"], function (ctrs) {
                 }, {
                     text: '新老访客',
                     sref: '#visitor/novisitors'
-                }, {
+                }/*, {
                     text: '访客特征',
                     sref: '#visitor/visitorfeature'
-                }]
+                }*/]
             }, {
                 title: '价值透析',
                 icon: 'glyphicon glyphicon-yen',

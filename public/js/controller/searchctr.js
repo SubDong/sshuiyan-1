@@ -3,6 +3,7 @@
  */
 define(["./module"], function (ctrs) {
     ctrs.controller('searchctr', function ($scope, $rootScope, $q, requestService, areaService, $http, SEM_API_URL) {
+            $scope.city.selected = {"name": "全部"};
             $scope.visible = true;
             $scope.yesterdayClass = true;
             $rootScope.tableTimeStart = -1;//开始时间

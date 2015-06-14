@@ -10,6 +10,7 @@ define(["./module"], function (ctrs) {
         $scope.weekselected = false;
         $scope.souce.selected = {"name": "全部"};
         $scope.browser.selected = {"name": "全部"};
+        $scope.city.selected = {"name": "全部"};
         $scope.reset = function () {
             $scope.todayClass = false;
             $scope.yesterdayClass = false;

@@ -7,7 +7,7 @@ define(["./module"], function (ctrs) {
 
     ctrs.controller('search_ssc_ctr', function ($scope, $rootScope, requestService, areaService, $http) {
         $scope.yesterdayClass = true;
-
+        $scope.city.selected = {"name": "全部"};
         $rootScope.tableTimeStart = -1;//开始时间
         $rootScope.tableTimeEnd = -1;//结束时间、
         $rootScope.tableFormat = null;

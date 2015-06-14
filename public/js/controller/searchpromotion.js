@@ -184,7 +184,14 @@ define(["./module"], function (ctrs) {
         };
         //搜索推广地域过滤
         $scope.setAreaFilter = function (area, id) {
-
+            if (area == "北京" || area == "上海" || area == "广州") {
+                if ($scope.city.selected != undefined) {
+                    $scope.city.selected.name = area;
+                } else {
+                    $scope.city.selected = {};
+                    $scope.city.selected["name"] = area;
+                }
+            }
             $scope.gridOptions.data = [];
             $scope.gridOpArray = angular.copy($rootScope.searchGridArray);
             $scope.gridOptions.columnDefs = $scope.gridOpArray;

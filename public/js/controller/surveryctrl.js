@@ -162,7 +162,10 @@ define(["./module"], function (ctrs) {
                 {
                     name: "平均访问时长",
                     value: "avgTime"
-                }
+                },
+                {
+                    name: '平均访问页数',
+                    value: 'avgPage'},
             ];
 
             // 默认投放指标
@@ -506,6 +509,7 @@ define(["./module"], function (ctrs) {
                     obj["outRate"] = (obj["outRate"] == undefined ? 0 : obj["outRate"]) + "%";
                     obj["pv"] = obj["pv"] == undefined ? 0 : obj["pv"];
                     obj["avgTime"] = obj["avgTime"] == undefined ? "00:00:00" : obj["avgTime"];
+                    obj["avgPage"] = obj["avgPage"] == undefined ? 0 : obj["avgPage"];
                     obj["vc"] = obj["vc"] == undefined ? 0 : obj["vc"];
 
                     $scope.surveyData1.push(obj);
@@ -878,6 +882,7 @@ define(["./module"], function (ctrs) {
                 $scope.quotaMap.put("pageConversion", "页面转化");
                 $scope.quotaMap.put("arrivedRate", "抵达率");
                 $scope.quotaMap.put("avgTime", "平均访问时长");
+                $scope.quotaMap.put("avgPage", "平均访问页数");
                 $scope.quotaMap.put("cost", "消费");
                 $scope.quotaMap.put("impression", "展现量");
                 $scope.quotaMap.put("click", "点击量");

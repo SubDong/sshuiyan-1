@@ -6,6 +6,7 @@ define(["app"], function (app) {
     "use strict";
 
     app.controller('wayctrl', function ($timeout, $scope, $rootScope, $q, $http, requestService, areaService, SEM_API_URL) {
+        $scope.city.selected = {"name": "全部"};
         $scope.visible = true;
         $rootScope.tableTimeStart = -1;//开始时间
         $rootScope.tableTimeEnd = -1;//结束时间、
