@@ -16,5 +16,9 @@
   },
   "mongo": {
     "url": "mongodb://192.168.100.10:23135/conf"
+  },
+  "app": {
+    "mode": "single",
+    "auth_url": "http://182.92.227.23:8080/login?url="
   }
 }

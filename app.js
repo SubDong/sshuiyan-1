@@ -79,9 +79,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 // 非测试环境加入认证
-if (env == 'dev') {
-    app.use(auth.auth)
-}
+auth.init(config.app)
+app.use(auth.auth)
 
 // 登陆信息
 app.use(function (req, res, next) {
@@ -135,7 +134,7 @@ app.use(function (err, req, res, next) {
     });
 });
 
-if (process.argv.slice(3) == 'cluster') {
+if (config.app.mode == 'cluster') {
     if (cluster.isMaster) {
 // Fork workers.
         for (var i = 0; i < numCPUs; i++) {
