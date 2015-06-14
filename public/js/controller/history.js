@@ -21,17 +21,17 @@ define(['./module'], function (ctrs) {
 
 
         $rootScope.gridArray[0] = {
-             name: "日期",
+            name: "日期",
             displayName: "日期",
-            cellClass:'grid_padding',
-            headerCellClass:'grid_padding',
-             field: "period",
+            cellClass: 'grid_padding',
+            headerCellClass: 'grid_padding',
+            field: "period",
             footerCellTemplate: "<div class='ui-grid-cell-contents grid_padding'>当页汇总</div>"
         };
         $rootScope.gridArray.splice(1, 1);
         $rootScope.tableSwitch.dimen = false;
 
-        $rootScope.tableSwitch.latitude = {name: "日期", displayName: "日期", field: "period" ,cellClass:'grid_padding'};
+        $rootScope.tableSwitch.latitude = {name: "日期", displayName: "日期", field: "period", cellClass: 'grid_padding'};
         $rootScope.historyJu = "NO";
 
         $scope.historyInit = function () {
@@ -126,7 +126,12 @@ define(['./module'], function (ctrs) {
             if (types) {
                 quota = types;
             }
-            var getTime = $rootScope.tableTimeStart <-1 ? "day" : "hour";
+            if ($rootScope.end - $rootScope.start == 0) {
+                $scope.charts[0].config.keyFormat = "none";
+            } else {
+                $scope.charts[0].config.keyFormat = "day";
+            }
+            var getTime = $rootScope.tableTimeStart < -1 ? "day" : "hour";
             var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
             $scope.charts[0].config.instance = chart;
             chart.showLoading({
@@ -163,7 +168,7 @@ define(['./module'], function (ctrs) {
                     legendClickListener: $scope.onLegendClickListener,
                     lineType: 'none',
                     bGap: false,
-                    keyFormat: 'none',
+                    keyFormat: 'day',
                     noFormat: true,
                     qingXie: false,
                     dataKey: "key",//传入数据的key值
@@ -214,6 +219,7 @@ define(['./module'], function (ctrs) {
             $rootScope.tableTimeStart = time[0];
             $rootScope.tableTimeEnd = time[1];
             $scope.reset();
+            $scope.charts[0].config.keyFormat = "day";
             $scope.refreshChart();
             $scope.historyInit();
         }

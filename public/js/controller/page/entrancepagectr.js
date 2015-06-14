@@ -23,7 +23,7 @@ define(["./module"], function (ctrs) {
             {
                 name: "页面url",
                 displayName: "页面url",
-                field: "entrance",
+                field: "loc",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"
             },
             {
@@ -54,7 +54,7 @@ define(["./module"], function (ctrs) {
             }
         ];
         $rootScope.tableSwitch = {
-            latitude: {name: "页面url", displayName: "页面url", field: "entrance"},
+            latitude: {name: "页面url", displayName: "页面url", field: "loc"},
             tableFilter: null,
             dimen: false,
             // 0 不需要btn ，1 无展开项btn ，2 有展开项btn

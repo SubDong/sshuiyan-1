@@ -65,6 +65,8 @@ define(["./module"], function (ctrs) {
 
         $scope.$on("ssh_refresh_charts", function (e, msg) {
             $rootScope.targetSearch();
+            $scope.tableTimeStart = $rootScope.start;
+            $scope.tableTimeEnd = $rootScope.end;
             $scope.doSearchAreas($scope.tableTimeStart, $scope.tableTimeEnd, $rootScope.userType, $scope.mapOrPieConfig);
         });
 

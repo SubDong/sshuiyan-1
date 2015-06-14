@@ -406,7 +406,7 @@ var contributionFn = function (result, dimension) {
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
-        var cpv = result[i].cpv_aggs.value;
+        var cpv = result[i].cpv_aggs.cpv_aggs.value;
         if (dimension == "period") {
             var dateStr = result[i].key_as_string + "";
             Array.prototype.push.call(keyArr, dateStr);

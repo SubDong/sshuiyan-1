@@ -16,7 +16,7 @@ define(["./module"], function (ctrs) {
         $scope.menuClass = function (menu, hrefs, i) {
             if ("" === menu) {
                 return 0;
-            }else if("/conf" === menu){
+            } else if ("/conf" === menu) {
                 return 0;
             }
             if ((menu.indexOf(hrefs[i]) != -1 & menu.indexOf(hrefs[i]) < 3) || i > hrefs.length) {
@@ -218,7 +218,7 @@ define(["./module"], function (ctrs) {
     });
 
     /*********nav-select*********/
-    ctrs.controller('ngSelect', function ($scope, $location, $cookieStore, $window, $rootScope,$state) {
+    ctrs.controller('ngSelect', function ($scope, $location, $cookieStore, $window, $rootScope, $state) {
         $scope.clear = function () {
             $scope.siteselect.selected = undefined;
         };
@@ -237,14 +237,15 @@ define(["./module"], function (ctrs) {
         $scope.siteselects = $rootScope.usites;
         $rootScope.baiduAccount = $rootScope.usites[0].bd_name;//baidu-perfect2151880
         $rootScope.userType = $rootScope.usites[0].type_id;//www.perfect-cn.cn
-        $rootScope.siteId=$rootScope.usites[0].site_id;
+        $rootScope.siteId = $rootScope.usites[0].site_id;
         $rootScope.userTypeName = $rootScope.usites[0].site_name;
-
+        $rootScope.siteUrl = $rootScope.usites[0].site_url;
         $scope.changeUrl = function (select) {
             $rootScope.user = $rootScope.perfectUser;
             $rootScope.baiduAccount = select.bd_name;
             $rootScope.userType = select.type_id;
-            $rootScope.siteId=select.site_id;
+            $rootScope.siteId = select.site_id;
+            $rootScope.siteUrl = select.site_url;
             $rootScope.userTypeName = select.site_name;
             $state.go("index");
         }
