@@ -75,7 +75,7 @@ define(["./module"], function (ctrs) {
                     {name: '跳出率', field: 'outRate'},
                     {name: '平均访问时长', field: 'avgTime'},
                     {name: '抵达率', field: 'arrivedRate'},
-                    {name: '浏览量（PV)',displayName: "浏览量(PV)", field: 'pv'}
+                    {name: '浏览量（PV)', displayName: "浏览量(PV)", field: 'pv'}
                 ]
             };
 
@@ -170,32 +170,32 @@ define(["./module"], function (ctrs) {
             // 默认效果指标
             $scope.effectQuota_ = "vc";
 
-            $scope.startDate_ = 0;
-            $scope.endDate_ = 0;
+            $rootScope.start = 0;
+            $rootScope.end = 0;
 
-            // 根据$scope.day_offset计算startDate和endDate
-            $scope.calDatePeriod = function () {
-                switch ($scope.day_offset) {
-                    case 0:
-                        $scope.startDate_ = 0;
-                        $scope.endDate_ = 0;
-                        break;
-                    case -1:
-                        $scope.startDate_ = -1;
-                        $scope.endDate_ = -1;
-                        break;
-                    case -7:
-                        $scope.startDate_ = -7;
-                        $scope.endDate_ = -1;
-                        break;
-                    case -30:
-                        $scope.startDate_ = -30;
-                        $scope.endDate_ = -1;
-                        break;
-                    default :
-                        break;
-                }
-            };
+            //// 根据$scope.day_offset计算startDate和endDate
+            //$scope.calDatePeriod = function () {
+            //    switch ($scope.day_offset) {
+            //        case 0:
+            //            $scope.startDate_ = 0;
+            //            $scope.endDate_ = 0;
+            //            break;
+            //        case -1:
+            //            $scope.startDate_ = -1;
+            //            $scope.endDate_ = -1;
+            //            break;
+            //        case -7:
+            //            $scope.startDate_ = -7;
+            //            $scope.endDate_ = -1;
+            //            break;
+            //        case -30:
+            //            $scope.startDate_ = -30;
+            //            $scope.endDate_ = -1;
+            //            break;
+            //        default :
+            //            break;
+            //    }
+            //};
 
             // 更改指标或日期时刷新数据
             $scope.refreshData = function () {
@@ -300,6 +300,7 @@ define(["./module"], function (ctrs) {
             // 触发效果指标的事件
             $scope.setEffectQuota = function (effectQuota) {
                 $scope.effectQuota_ = effectQuota.value;
+                $scope.selectedQuota[1] = effectQuota.value;
                 var esType = effectQuota.value;
                 $scope.reloadGrid();
                 $scope.compareEsArray = [];
@@ -457,7 +458,7 @@ define(["./module"], function (ctrs) {
                     interval = -$scope.day_offset;
                 $http({
                     method: 'GET',
-                    url: "/api/survey/?start=" + $scope.startDate_ + "&end=" + $scope.endDate_ + "&type=" + type + "&int=" + interval + "&qtype=" + $scope.effectQuota_
+                    url: "/api/survey/?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + type + "&int=" + interval + "&qtype=" + $scope.effectQuota_
                 }).success(function (data, status) {
                     data = JSON.parse(eval('(' + data + ')').toString());
 
@@ -501,7 +502,7 @@ define(["./module"], function (ctrs) {
                             obj[item.label] = ad.formatFunc(item.quota[0], "avgTime")
                         }
                     });
-                    obj["arrivedRate"] = obj["arrivedRate"] == undefined ? 0:obj["arrivedRate"];
+                    obj["arrivedRate"] = obj["arrivedRate"] == undefined ? 0 : obj["arrivedRate"];
                     obj["outRate"] = (obj["outRate"] == undefined ? 0 : obj["outRate"]) + "%";
                     obj["pv"] = obj["pv"] == undefined ? 0 : obj["pv"];
                     obj["avgTime"] = obj["avgTime"] == undefined ? "00:00:00" : obj["avgTime"];
@@ -641,9 +642,19 @@ define(["./module"], function (ctrs) {
                     method: 'GET',
                     url: url
                 }).success(function (data, status) {
+
                     var _obj = {};
                     _obj["accountName"] = data[0].accountName;
-                    _obj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? data[0][$scope.outQuota_] + "%" : data[0][$scope.outQuota_];
+                    var _val = 0;
+                    if (data.length) {
+                        data.forEach(function (item) {
+                            _val += parseFloat(item[$scope.outQuota_]);
+                        });
+                        if ($scope.outQuota_ == "cpc" || $scope.outQuota_ == "ctr")_val = parseFloat(_val / data.length).toFixed(2);
+                    } else {
+                        _val = data[0][$scope.outQuota_]
+                    }
+                    _obj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? parseFloat(_val).toFixed(2) + "%" : parseFloat(_val).toFixed(2);
                     $scope.gridOptions1Data = [];
                     $scope.gridOptions1Data.push(_obj);
 
@@ -693,7 +704,16 @@ define(["./module"], function (ctrs) {
                 }).success(function (data, status) {
                     var _obj = {};
                     _obj["way"] = "搜索推广(" + data[0].accountName + ")";
-                    _obj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? data[0][$scope.outQuota_] + "%" : data[0][$scope.outQuota_];
+                    var _val = 0;
+                    if (data.length) {
+                        data.forEach(function (item) {
+                            _val += parseFloat(item[$scope.outQuota_]);
+                        });
+                        if ($scope.outQuota_ == "cpc" || $scope.outQuota_ == "ctr")_val = parseFloat(_val / data.length).toFixed(2);
+                    } else {
+                        _val = data[0][$scope.outQuota_]
+                    }
+                    _obj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? parseFloat(_val).toFixed(2) + "%" : parseFloat(_val).toFixed(2);
                     $scope.gridOptions2Data = [];
                     $scope.gridOptions2Data.push(_obj);
 
@@ -750,7 +770,16 @@ define(["./module"], function (ctrs) {
                 }).then(function (tmpResult) {
                     var pcObj = {};
                     pcObj["device"] = "计算机";
-                    pcObj[$scope.outQuota_] = tmpResult[0][0][$scope.outQuota_];
+                    var _val = 0;
+                    if (tmpResult[0].length) {
+                        tmpResult[0].forEach(function (item) {
+                            _val += parseFloat(item[$scope.outQuota_]);
+                        });
+                        if ($scope.outQuota_ == "cpc" || $scope.outQuota_ == "ctr")_val = parseFloat(_val / data.length).toFixed(2);
+                    } else {
+                        _val = tmpResult[0][0][$scope.outQuota_];
+                    }
+                    pcObj[$scope.outQuota_] = parseFloat(_val).toFixed(2);
                     pcObj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? pcObj[$scope.outQuota_] + "%" : pcObj[$scope.outQuota_];
                     pcObj[$scope.effectQuota_] = tmpResult[2][0] + "" == "undefined" ? 0 : tmpResult[2][0].quota[0];
                     pcObj[$scope.effectQuota_] = ($scope.effectQuota_ == "outRate" || $scope.effectQuota_ == "arrivedRate") ? pcObj[$scope.effectQuota_] + "%" : pcObj[$scope.effectQuota_];
@@ -760,7 +789,16 @@ define(["./module"], function (ctrs) {
 
                     var mobileObj = {};
                     mobileObj["device"] = "移动设备";
-                    mobileObj[$scope.outQuota_] = tmpResult[1][0][$scope.outQuota_];
+                    var _val = 0;
+                    if (tmpResult[1].length) {
+                        tmpResult[1].forEach(function (item) {
+                            _val += parseFloat(item[$scope.outQuota_]);
+                        });
+                        if ($scope.outQuota_ == "cpc" || $scope.outQuota_ == "ctr")_val = parseFloat(_val / data.length).toFixed(2);
+                    } else {
+                        _val = tmpResult[1][0][$scope.outQuota_];
+                    }
+                    mobileObj[$scope.outQuota_] = _val.toFixed(2);
                     mobileObj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? mobileObj[$scope.outQuota_] + "%" : mobileObj[$scope.outQuota_];
                     mobileObj[$scope.effectQuota_] = tmpResult[3][0] + "" == "undefined" ? 0 : tmpResult[3][0].quota[0];
                     mobileObj[$scope.effectQuota_] = ($scope.effectQuota_ == "outRate" || $scope.effectQuota_ == "arrivedRate") ? mobileObj[$scope.effectQuota_] + "%" : mobileObj[$scope.effectQuota_];
@@ -784,7 +822,6 @@ define(["./module"], function (ctrs) {
                 enableHorizontalScrollbar: 0,
                 enableVerticalScrollbar: 0,
                 columnDefs: $scope.columns4
-
             };
 
             $scope.loadGridOptions4Data = function (user, baiduAccount, type, startOffset, endOffset, device, esType) {
@@ -798,6 +835,7 @@ define(["./module"], function (ctrs) {
                     });
                     return tmp;
                 }).then(function (tmpResult) {
+                    tmpResult[0].sort(chartUtils.by($scope.selectedQuota[0]));
                     $scope.gridOptions4Data = [];
                     tmpResult[0].forEach(function (item) {
                         if (!(tmpResult[1][0] + "" == "undefined")) {
@@ -823,7 +861,6 @@ define(["./module"], function (ctrs) {
                             $scope.gridOptions4Data.push(_obj);
                         }
                     });
-
                     $scope.gridOptions4.data = $scope.gridOptions4Data;
 
                 });
