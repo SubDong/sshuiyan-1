@@ -1,23 +1,30 @@
 {
   "es": {
     "hosts": [
-      "http://query0:30000",
-      "http://query1:30001"
+      "http://server1:30001",
+      "http://server1:30002",
+      "http://server2:30003",
+      "http://server2:30004"
     ],
     "sniffOnStart": false,
     "sniffOnConnectionFault": false,
     "keepAlive": true,
-    "log": "INFO"
+    "log": "info"
   },
   "redis": {
-    "host": "web1",
-    "port": 6379,
+    "host": "server1",
+    "port": 16379,
     "options": {
-      "auth_pass": "3edcvfr4"
+      "auth_pass": "3edcvxsw2"
     },
     "sessiondb": 10
   },
   "mongo": {
-    "url": "mongodb://mongo:23135/conf"
+    "url": "mongodb://server1:37017/conf"
+  },
+  "app":{
+    "mode":"cluster",
+    "auth_url":"http://sem.best-ad.cn/login?url="
   }
+
 }
