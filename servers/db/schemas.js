@@ -3,18 +3,18 @@
 var schemas = {
 
     //事件转化目标
-   event_change_model: {
+    event_change_model: {
         model_name: "EventChange",
         collection_name: "conf_event_change",
         schema: {
             //_id: String, // mongoid
-           uid: String, // user id 用户ID
-           root_url:String, //根目录
-           event_id:String,//事件ID
-           event_name:String,//事件名称
-           event_page: String, //事件作用页面
-           event_method:String, //事件设置方式
-           event_status:String //事件状态 1：启动  0：暂停
+            uid: String, // user id 用户ID
+            root_url: String, //根目录
+            event_id: String,//事件ID
+            event_name: String,//事件名称
+            event_page: String, //事件作用页面
+            event_method: String, //事件设置方式
+            event_status: String //事件状态 1：启动  0：暂停
 
         }
     },
@@ -45,9 +45,9 @@ var schemas = {
             site_url: String, // site url 设置的URL
             site_name: String, // site name 设置的URL
             site_pause: Boolean,//配置暂停 true：暂停 false：使用
-            track_status: String ,// track code status
+            track_status: String,// track code status
             //status: String, // enable or disable track
-            is_top:Boolean
+            is_top: Boolean
         }
     },
 
@@ -135,27 +135,23 @@ var schemas = {
             conv_tpye: String,//转换类型，regist,communicate,place_order,othre_order
             conv_text: String
         },
-        /**
-         * 事件转化
-         */
-        event_conv_model: {
-            model_name: "SubPaths",
-            collection_name: "conf_event_conv",
-            schema: {
-                //id: String,
-                uid: String,
-                site_id: String, // 站点ID
-                site_url: String,//网站地址
-                event_name: String,//时间名称
-                event_elem: String,//时间元素
-                reg_enable: Boolean,
-                name: String,
-                paths: [String],
-                ex_paths: [String]
-            }
-        }
-    },
 
+    },
+    /**
+     * 页面转化
+     */
+    page_title_model: {
+        model_name: "PageTitleConfig",
+        collection_name: "conf_page_title",
+        schema: {
+            uid: String, // user id 用户ID
+            site_id: String,    //站点ID
+            page_url: String,//点击图页面
+            icon_name: String,//点击图名称
+            is_open: Boolean//是否开启
+        },
+
+    },
     /**
      * mongodb 指定广告追踪 表结构
      */
@@ -173,7 +169,9 @@ var schemas = {
             creative: "", //创意
             produceUrl: ""  //产生后的URL
         }
-    }
+    },
+
+
 }
 module.exports = schemas
 
