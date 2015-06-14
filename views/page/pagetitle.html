@@ -27,30 +27,15 @@
             </div>
             <span class="pagetitle_text fl">本功能将同时搜索“手动设置”与“自动设置”两部分，通过关键字段模糊匹配对应的页面点击监控页面。</span>
         </div>
-        <div class="table_content">
-            <ul role="tablist" class="nav nav-tabs" id="myTab">
-                <li class="active" role="presentation">
-                    <a aria-expanded="true" aria-controls="home" data-toggle="tab" role="tab" id="home-tab" href="#home">手动设置</a>
-                </li>
-            </ul>
-            <div class="tab-content" id="myTabContent">
+        <div class="chart_top chart_noborder">
+            <button class="btn btn-primary" type="button" ng-click="openAddDialog()">手动添加</button>
+        </div>
+        <!--网站上半部分列表-->
+        <div class="web_list_up" >
+            <div class="table_content">
                 <div class="custom_table">
-                <!--    <div ui-grid="gridOptions" class="grid clearfix" ui-grid-pagination ui-grid-selection ui-grid-exporter></div>
-                    <gridpage></gridpage>-->
-                    <div class="">
-                        <table>
-                             <thead>
-                                 <tr></tr>
-                                 <tr></tr>
-                                 <tr></tr>
-                             </thead>
-                            <tbody>
-                              <td></td>
-                              <td></td>
-                              <td><a href="../page/heatmap.html"  target="_blank"> 查看热力图</a></td>
-                            </tbody>
-                        </table>
-                    </div>
+                    <div ui-grid="gridOptions"  class="grid clearfix secondary_table" ui-grid-selection ui-grid-pagination
+                         ui-grid-exporter ui-grid-auto-resize></div>
                 </div>
             </div>
         </div>
