@@ -13,15 +13,6 @@ define(["./module"], function (ctrs) {
         $scope.dt = new Date();
         $scope.dayClass = true;
         $scope.isCollapsed = true;
-        //获取站点
-        $scope.usites = $cookieStore.get('usites');
-        $scope.sites = [];
-        $scope.usites.forEach(function (item, i) {
-            $scope.sites.push({
-                name: item.site_name,
-                id: item.type_id
-            });
-        });
         if($rootScope.siteUrl!=shareSiteUrl){
             shareSiteName = "http://"+$rootScope.siteUrl+"/";
 
