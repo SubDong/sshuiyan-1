@@ -23,6 +23,7 @@
     "url": "mongodb://server1:37017/conf"
   },
   "app":{
+    "tuiguang_url": "http://server1:19082/",
     "mode":"cluster",
     "auth_url":"http://sem.best-ad.cn/login?url="
   }

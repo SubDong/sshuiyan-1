@@ -6,8 +6,8 @@
 
 var _new_visitor_aggs = {
     "filter": {
-        "script": {
-            "script": "doc['entrance'].value == 1"
+        "term": {
+            "entrance": "1"
         }
     },
     "aggs": {
@@ -54,8 +54,15 @@ var es_aggs = {
     // 访客数
     "uv": {
         "uv_aggs": {
-            "cardinality": {
-                "field": "_ucv"
+            "filter": {
+                "term": {"entrance": "1"}
+            },
+            "aggs": {
+                "uv_aggs": {
+                    "cardinality": {
+                        "field": "_ucv"
+                    }
+                }
             }
         }
     },
@@ -379,7 +386,7 @@ var pvFn = function (result, dimension) {
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
-        try{
+        try {
             var pv = result[i].pv_aggs.value;
             if (dimension == "period") {
                 var dateStr = result[i].key_as_string + "";
@@ -388,7 +395,7 @@ var pvFn = function (result, dimension) {
                 Array.prototype.push.call(keyArr, result[i].key);
 
             Array.prototype.push.call(quotaArr, pv);
-        }catch(e){
+        } catch (e) {
             console.error(e);
         }
 
@@ -428,7 +435,7 @@ var uvFn = function (result, dimension) {
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
-        var uv = result[i].uv_aggs.value;
+        var uv = result[i].uv_aggs.uv_aggs.value;
         if (dimension == "period") {
             var dateStr = result[i].key_as_string + "";
             keyArr.push(dateStr);
