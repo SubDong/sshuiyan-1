@@ -1,8 +1,7 @@
-var _pct = _pct || [];
 (function () {
     var points = [], h = {}, md = {}, c = {
-        id: "1",
-        version: "1.0.15",
+        id: config.tid,
+        version: "1.0.12",
         q: null
     };
 
@@ -80,11 +79,13 @@ var _pct = _pct || [];
     md.cookie = {};
     md.getDomain = function () {
         var a = document.location.hostname;
-        var b = a.substring(a.indexOf(".") + 1);
+        var b = a.substring(a.indexOf("."));
         return b;
     };
     md.cookie.set = function (a, b, c) {
-        document.cookie = a + "=" + escape(b) + "; path=/";
+        var date = new Date();
+        date.setTime(date.getTime() * 100);
+        document.cookie = a + "=" + escape(b) + (c ? ";expires=" + date.toGMTString() : "") + ";domain=" + md.getDomain() + "; path=/";
     };
     md.cookie.setNull = function (a, b) {
         document.cookie = a + "=" + escape(b) + "; path=/";
@@ -95,10 +96,7 @@ var _pct = _pct || [];
         if (arr = document.cookie.match(reg)) return unescape(arr[2]); else return null;
     };
     md.cookie.remove = function (a) {
-        var exp = new Date();
-        exp.setTime(exp.getTime() - 1);
-        var cval = md.cookie.get(a);
-        if (cval != null) document.cookie = a + "="+cval+";expires="+exp.toGMTString();
+        document.cookie = a + "=''" + ";expires= -1;domain=" + md.getDomain() + "; path=/";
     };
     //用户使用设备（0 移动端访问网页  1 PC端访问网页）
     md.achieve.PorM = function (a) {
@@ -261,12 +259,11 @@ var _pct = _pct || [];
 
     //全局变量h.I 访问地址URL设置 如：http://best-ad.cn/pft.gif?query string parameters
     h.I = {
-        u: "best-ad.cn",
-        P: "192.168.1.1",
+        u: config.domain,
+        P: "log.best-ad.cn",
         S: "pft.gif",
-        //dk: 20001,//":" + _c.dk +
         protocol: "https:" == document.location.protocol ? "https:" : "http:",
-        Q: "os tit br fl pm sr lg ck ja sc dt rf loc tt ct vid u api et cv xy ut duration durPage n v".split(" ")
+        Q: "os tit br fl pm sr lg ck ja sc dt rf loc tt ct vid u api et cv xy ut n v".split(" ")
     };
     //通过闭包 访问 私有变量 sa
     (function () {
@@ -390,7 +387,7 @@ var _pct = _pct || [];
             this.init();
         }
 
-        var ccz = md.g, ast = md.V, faz = md.achieve, sess = md.sessionStorage, loa = md.localStorage, cookie = md.cookie, u = md.UUID, position = md.position;
+        var ccz = md.g,ast = md.V, faz = md.achieve, sess = md.sessionStorage, loa = md.localStorage, cookie = md.cookie, u = md.UUID, position = md.position;
         sta.prototype = {
             setData: function (a) {
                 try {
@@ -428,8 +425,6 @@ var _pct = _pct || [];
                         md.g.tt = this.getData("PFT_" + c.id);
                     }
                     md.g.n = "1";
-                    md.cookie.remove("PFT_DTNJ");
-                    md.cookie.remove("PFT_DTNP");
                 }
                 var cookie_pos = document.cookie.indexOf("vid");
                 if (cookie_pos == -1) {
@@ -438,6 +433,10 @@ var _pct = _pct || [];
                     document.cookie = "vid=" + u.createUUID() + ";expires=" + date.toGMTString() + ";domain=" + md.getDomain() + "; path=/";
                 }
                 md.g.vid = this.getData("vid");
+                if (md.g.vid == null || md.g.vid == "") {
+                    document.cookie = "vid=" + u.createUUID() + ";expires=" + date.toGMTString() + "; path=/";
+                    md.g.vid = this.getData("vid");
+                }
             },
             par: function () {
                 var a = "", b = h.I.Q, _c = md.g;
@@ -456,7 +455,7 @@ var _pct = _pct || [];
                 }
             },
             sm: function (a) {
-                var _c = h.I;
+                var  _c = h.I;
                 var d = _c.protocol + "//" + _c.P + "/" + _c.S + "?t\=" + c.id + "\&" + this.par();
                 ast.log(d);
             },
@@ -487,65 +486,29 @@ var _pct = _pct || [];
         return new sta;
     })();
 
-    //时长转化
-    (function () {
-        var ck = md.cookie;
-        ck.get("PFT_DTNJ") === null ? ck.set("PFT_DTNJ", true) : "";
-        if (ck.get("PFT_DTNJ") == "true") {
-            var duration = function () {
-
-                var dtn = ck.get("PFT_DTN") == null ? ck.set("PFT_DTN", new Date().getTime()) : ck.get("PFT_DTN");
-                var dateTime = new Date().getTime();
-                if (parseInt((dateTime - dtn) / 1000) >= 10) {
-                    md.g.duration = 1;
+    if(config.mouse){
+        //获取热力图点击坐标
+        (function () {
+            document.onclick = function (event) {
+                //获取坐标
+                var e = event || window.event;
+                var scrollX = document.documentElement.scrollLeft || document.body.scrollLeft;
+                var scrollY = document.documentElement.scrollTop || document.body.scrollTop;
+                var x = e.pageX || e.clientX + scrollX;
+                var y = e.pageY || e.clientY + scrollY;
+                var point = {
+                    x: x,
+                    y: y
+                };
+                points.push(point);
+                if (points.length >= 5) {
+                    md.g.xy = JSON.stringify(points);
                     h.b.sm();
-                    md.g.duration = null;
-                    clearInterval(timer);
+                    points = [];
                 }
-                ck.set("PFT_DTNJ", false);
             }
-        }
-        var timer = setInterval(duration, 1000);
-    }());
-
-    //问页数转化
-    (function () {
-        var ck = md.cookie;
-        ck.get("PFT_DTNP") == null ? ck.set("PFT_DTNP", true) : "";
-        if (ck.get("PFT_DTNP") === "true") {
-            var dtn = ck.get("PFT_PAGE") == null ? ck.set("PFT_PAGE", 0) : ck.get("PFT_PAGE");
-            if (parseInt(dtn) >= 2) {
-                md.g.durPage = 1;
-                h.b.sm();
-                md.g.durPage = null;
-                ck.set("PFT_DTNP", false);
-            } else {
-                ck.set("PFT_PAGE", parseInt(ck.get("PFT_PAGE")) + 1)
-            }
-        }
-    }());
-
-    //获取热力图点击坐标
-    (function () {
-        document.onclick = function (event) {
-            //获取坐标
-            var e = event || window.event;
-            var scrollX = document.documentElement.scrollLeft || document.body.scrollLeft;
-            var scrollY = document.documentElement.scrollTop || document.body.scrollTop;
-            var x = e.pageX || e.clientX + scrollX;
-            var y = e.pageY || e.clientY + scrollY;
-            var point = {
-                x: x,
-                y: y
-            };
-            points.push(point);
-            if (points.length >= 5) {
-                md.g.xy = JSON.stringify(points);
-                h.b.sm();
-                points = [];
-            }
-        }
-    })();
+        })();
+    }
 
     //url速度
     (function () {
@@ -579,6 +542,4 @@ var _pct = _pct || [];
             setTimeout(ut, 400);
         })
     })();
-
-    console.log(md.g);
 })();

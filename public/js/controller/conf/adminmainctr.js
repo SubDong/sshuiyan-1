@@ -5,13 +5,13 @@
 define(["./module"], function (ctrs) {
     "use strict";
 
-    ctrs.directive('adminmainctrRemoteValidation', function ($http,$cookieStore) {
+    ctrs.directive('adminmainctrRemoteValidation', function ($http, $cookieStore) {
         return {
             require: 'ngModel',
             link: function (scope, elm, attrs, ctrl) {
                 elm.bind('keyup', function () {
-                    var uid=$cookieStore.get("uid");
-                    var url = "/config/site_list?type=search&query={\"uid\":\"" + uid + "\",\"site_url\":\"" +scope.urlconfig.site_url + "\"}";
+                    var uid = $cookieStore.get("uid");
+                    var url = "/config/site_list?type=search&query={\"uid\":\"" + uid + "\",\"site_url\":\"" + scope.urlconfig.site_url + "\"}";
                     $http({method: 'GET', url: url}).
                         success(function (data, status) {
                             if (data.length > 0) {
@@ -55,31 +55,20 @@ define(["./module"], function (ctrs) {
         };
         //table配置
         $rootScope.adminSetHtml = "<div class='mid_left'><div class='mid_left_code'>" +
+            "&lt;script&gt;\<br\>" +
             "var _pct= _pct|| [];\<br\>" +
             " (function() {\<br\>" +
             "   var hm = document.createElement(\"script\");\<br\>" +
-            "   hm.src = \"//t.best-ad.cn/_t.js?tid=ex_track_id\";\<br\>" +
+            "   hm.src = \"//t.best-ad.cn/t.js?tid=ex_track_id\";\<br\>" +
             "   var s = document.getElementsByTagName(\"script\")[0];\<br\>" +
             "    s.parentNode.insertBefore(hm, s);\<br\>" +
-            " })();" +
+            " })();\<br\>" +
+            "&lt;/script&gt;" +
             "</div> </div><div class='mid_right'><button type='button' class='btn btn-default navbar-btn'>复制代码</button><ul type='disc'>" +
             "  <li>请将代码添加至网站全部页面的&lt;/head&gt;标签前；</li><li>建议在header.htm类似的页头模板页面中安装，以达到一处安装，全站皆有的效果；</li><li>如需在JS文件中调用统计分析代码，请直接去掉以下代码首尾的&lt;script type='text/javascript' &gt;与&lt;/script&gt;后，放入JS文件中即可；</li>" +
             "<li> 如果代码安装正确，一般20分钟 后,可以查看网站分析数据；</li></ul></div>";
         //配置默认指标
         $rootScope.checkedArray = ["_uid", "uid", "type_id", "track_id", "site_url", "site_name", "site_pause", "track_status"];
-        //$rootScope.isPau
-        //table配置
-        $rootScope.adminSetHtml = "<div class='mid_left'><div class='mid_left_code'>" +
-            "var _pct= _pct|| [];\<br\>" +
-            " (function() {\<br\>" +
-            "   var hm = document.createElement(\"script\");\<br\>" +
-            "   hm.src = \"//t.best-ad.cn/_t.js?tid=ex_track_id\";\<br\>" +
-            "   var s = document.getElementsByTagName(\"script\")[0];\<br\>" +
-            "    s.parentNode.insertBefore(hm, s);\<br\>" +
-            " })();" +
-            "</div> </div><div class='mid_right'><button type='button' class='btn btn-default navbar-btn'>复制代码</button><ul type='disc'>" +
-            "  <li>请将代码添加至网站全部页面的&lt;/head&gt;标签前；</li><li>建议在header.htm类似的页头模板页面中安装，以达到一处安装，全站皆有的效果；</li><li>如需在JS文件中调用统计分析代码，请直接去掉以下代码首尾的&lt;script type='text/javascript' &gt;与&lt;/script&gt;后，放入JS文件中即可；</li>" +
-            "<li> 如果代码安装正确，一般20分钟 后,可以查看网站分析数据；</li></ul></div>";
 
 
         //配置默认指标
@@ -93,7 +82,13 @@ define(["./module"], function (ctrs) {
             {name: "网站域名", displayName: "网站域名", field: "site_url", maxWidth: '', cellClass: 'table_admin'},
 
             {name: "网站名称", displayName: "网站名称", field: "site_name", maxWidth: '', cellClass: 'table_admin_color'},
-            {name: "首页代码状态", displayName: "首页代码状态", field: "track_status", maxWidth: 500, cellClass: 'table_admin_color'},
+            {
+                name: "首页代码状态",
+                displayName: "首页代码状态",
+                field: "track_status",
+                maxWidth: 500,
+                cellClass: 'table_admin_color'
+            },
             {
                 name: "x6",
                 displayName: "",
@@ -112,13 +107,13 @@ define(["./module"], function (ctrs) {
                 displayName: "",
                 cellTemplate: "<div class='btn-group table_admin' dropdown='' is-open='status.isopen'>" +
                 "<span class='glyphicon glyphicon-cog'></span><a type='button' dropdown-toggle='' ng-disabled='disabled' aria-haspopup='true' aria-expanded='false'>设置 </a> <ul class='dropdown-menu' role='menu'>" +
-            "<li><a href='#conf/webcountsite/countrules'>设置统计规则</a></li>" +
-            "<li><a href='#conf/webcountsite/childlist'>设置子目录</a></li>" +
-            "<li><a href='#conf/webcountsite/pagechange'>设置页面转化目标</a></li>" +
-            "<li><a href='#conf/webcountsite/eventchange'>设置事件转化目标</a></li>" +
-            "<li><a href='#conf/webcountsite/timechange'>设置市场转化目标</a></li>" +
-            " <li><a href='#conf/webcountsite/adtrack'>设置指定广告跟踪</a></li>" +
-            "</ul> </div>",
+                "<li><a href='#conf/webcountsite/countrules'>设置统计规则</a></li>" +
+                "<li><a href='#conf/webcountsite/childlist'>设置子目录</a></li>" +
+                "<li><a href='#conf/webcountsite/pagechange'>设置页面转化目标</a></li>" +
+                "<li><a href='#conf/webcountsite/eventchange'>设置事件转化目标</a></li>" +
+                "<li><a href='#conf/webcountsite/timechange'>设置市场转化目标</a></li>" +
+                " <li><a href='#conf/webcountsite/adtrack'>设置指定广告跟踪</a></li>" +
+                "</ul> </div>",
                 maxWidth: 80
             },
             {
@@ -213,8 +208,8 @@ define(["./module"], function (ctrs) {
          * @param grid
          * @param row
          */
-        $scope.onDelete = function (index,grid,row) {
-            $scope.onDeleteDialog= ngDialog.open({
+        $scope.onDelete = function (index, grid, row) {
+            $scope.onDeleteDialog = ngDialog.open({
                 template: '' +
                 '<div class="ngdialog-buttons" ><ui><li> 确认删除吗？<span style=" color: red " >（要测试自己新建条删哈！）<span></li></ui>' +
                 '<button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
@@ -224,7 +219,7 @@ define(["./module"], function (ctrs) {
                 scope: $scope
             });
 
-            $scope.sureonDelete= function(){
+            $scope.sureonDelete = function () {
                 $scope.onDeleteDialog.close();
                 var query = "/config/site_list?type=delete&query={\"_id\":\"" + row.entity._id + "\"}";
                 $http({
@@ -238,7 +233,6 @@ define(["./module"], function (ctrs) {
                 });
             };
         };
-
 
 
         //暂停弹框
@@ -319,8 +313,8 @@ define(["./module"], function (ctrs) {
                 url: url
             }).success(function (dataConfig, status) {
                 $scope.gridOptions.data = dataConfig;
-                $scope.gridOptions.data.forEach(function(data){
-                    data.track_status = data.track_status?"正常":"异常"
+                $scope.gridOptions.data.forEach(function (data) {
+                    data.track_status = data.track_status ? "正常" : "异常"
                 })
             });
         };
