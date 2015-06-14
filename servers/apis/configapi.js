@@ -85,7 +85,7 @@ api.get("/eventchnage_list", function (req, res) {
                                         };
                                         confs.push(event_config);
                                     });
-                                    console.log("测试事件转化目标配置保存情况" + (sres[0].root_url + ":e:" + sres[0].root_url));
+                                    console.log("测试事件转化目标配置保存情况" + (sres[0].root_url + ":e:" + sres[0].event_page));
                                     req.redisclient.multi().set(sres[0].root_url + ":e:" + sres[0].event_page, JSON.stringify(confs)).exec();
                                 }
                                 datautils.send(res, docs);
@@ -370,6 +370,7 @@ api.get("/time_conv", function (req, res) {
             });
             break;
         case "update":
+            console.log(query['updates']);
             dao.update(schema_name, query['query'], query['updates'], function (err, up) {
 
                 datautils.send(res, up);
@@ -433,17 +434,17 @@ api.get("/redis", function (req, res) {
     var query = url.parse(req.url, true).query;
     req.redisclient.get(query['key'], function (error, redis_conf) {//
 
-        //console.log(JSON.parse(redis_conf).);
-        if(redis_conf!=null){
-            try{
-                datautils.send(res, JSON.parse(redis_conf));
-            }catch(err){
-                datautils.send(res, redis_conf);
-            }
-
-        }else{
+        console.log(redis_conf);
+        //if(redis_conf!=null){
+        //    try{
+        //        datautils.send(res, JSON.parse(redis_conf));
+        //    }catch(err){
+        //        datautils.send(res, redis_conf);
+        //    }
+        //
+        //}else{
             datautils.send(res, redis_conf);
-        }
+        //}
     });
 });
 
