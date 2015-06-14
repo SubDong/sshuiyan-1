@@ -20,8 +20,17 @@ var _new_visitor_aggs = {
 };
 
 var _vc_aggs = {
-    "cardinality": {
-        "field": "tt"
+    "filter": {
+        "term": {
+            "entrance": "1"
+        }
+    },
+    "aggs": {
+        "vc_aggs": {
+            "cardinality": {
+                "field": "tt"
+            }
+        }
     }
 };
 
@@ -457,7 +466,7 @@ var vcFn = function (result, dimension) {
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
-        var vc = result[i].vc_aggs.value;
+        var vc = result[i].vc_aggs.vc_aggs.value;
         if (dimension == "period") {
             var dateStr = result[i].key_as_string + "";
             keyArr.push(dateStr);
