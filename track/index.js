@@ -21,7 +21,7 @@ router.get('/', function (req, resp) {
         } else {
             ref = ref.slice(0, ref.indexOf('?'));
             var config = {
-                "trckid": tid,
+                "trackid": tid,
                 "domain": sitejson.siteurl,
                 "open": sitejson.sitepause   //是否启用
             }

@@ -1,7 +1,7 @@
 if (!config.open) {
     (function () {
         var points = [], h = {}, md = {}, c = {
-            id: config.typeid,
+            id: config.trackid,
             version: "1.0.15",
             q: null
         };
