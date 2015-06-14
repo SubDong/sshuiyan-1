@@ -454,7 +454,10 @@ define(["../app"], function (app) {
                     var _count = 0;
                     angular.forEach(result, function (r) {
                         var infoKey = r[$rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field];
-                        if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null")) {
+                        //if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null")) {
+                        //    return false;
+                        //}
+                        if (infoKey == undefined) {
                             return false;
                         }
                         if (!flag) {
@@ -508,7 +511,10 @@ define(["../app"], function (app) {
                     var _count = 0;
                     angular.forEach(result, function (r) {
                         var infoKey = r[$rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field];
-                        if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null")) {
+                        //if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null")) {
+                        //    return false;
+                        //}
+                        if (infoKey == undefined) {
                             return false;
                         }
                         _count++;
@@ -612,7 +618,10 @@ define(["../app"], function (app) {
                         var _count = 0;
                         angular.forEach(result, function (r) {
                             var infoKey = r[$rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field];
-                            if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null")) {
+                            //if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null")) {
+                            //    return false;
+                            //}
+                            if (infoKey == undefined) {
                                 return false;
                             }
                             if (!flag) {
