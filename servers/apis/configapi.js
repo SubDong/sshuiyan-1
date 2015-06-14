@@ -35,7 +35,6 @@ api.get("/eventchnage_list", function (req, res) {
                         root_url: ins.root_url,
                         event_page: ins.event_page
                     }
-                    console.log(qry);
                     dao.find(schema_name, JSON.stringify(qry), null, {}, function (err, docs) {//查询所有配置
                         if (docs != null && docs.length > 0) {//存在配置
                             var confs = [];
@@ -47,7 +46,6 @@ api.get("/eventchnage_list", function (req, res) {
                                 };
                                 confs.push(event_config);
                             });
-                            console.log("测试事件转化目标配置保存情况" + (ins.root_url + ":e:" + ins.event_page));
                             req.redisclient.multi().set(ins.root_url + ":e:" + ins.event_page, JSON.stringify(confs)).exec();
                         }
                     });
@@ -63,7 +61,6 @@ api.get("/eventchnage_list", function (req, res) {
             var update = query['updates'];
             dao.update(schema_name, query['query'], query['updates'], function (err, up) {
                 datautils.send(res, up);
-                console.log(up.nModified);
                 if (up.nModified > 0) {//有更新 刷新配置
                     dao.find(schema_name, query['query'], null, {}, function (err, sres) {//先获取一条 用这条的获取uid 和site_id
                         if (sres != null & sres.length > 0) {
@@ -73,9 +70,7 @@ api.get("/eventchnage_list", function (req, res) {
                                 event_page: sres[0].event_page
                             }
                             dao.find(schema_name, JSON.stringify(qry), null, {}, function (err, docs) {//查询所有配置
-                                console.log(docs);
                                 if (docs != null && docs.length > 0) {//存在配置
-                                    console.log("测试事件转化目标配置保存情况" + sres[0].root_url);
                                     var confs = [];
                                     docs.forEach(function (item) {
                                         var event_config = {
@@ -85,7 +80,6 @@ api.get("/eventchnage_list", function (req, res) {
                                         };
                                         confs.push(event_config);
                                     });
-                                    console.log("测试事件转化目标配置保存情况" + (sres[0].root_url + ":e:" + sres[0].event_page));
                                     req.redisclient.multi().set(sres[0].root_url + ":e:" + sres[0].event_page, JSON.stringify(confs)).exec();
                                 }
                                 datautils.send(res, docs);
@@ -195,13 +189,13 @@ api.get("/site_list", function (req, res) {
                     pvpause: false,
                     pvtimes: 3
                 }
-                req.redisclient.multi().set("tt:".concat(temp.track_id), temp.type_id)//
+                req.redisclient.multi().set("typeid:".concat(temp.track_id), temp.type_id)//
                     .set("ts:" + temp.track_id, ins._id)//
                     .set("st:" + ins._id, temp.track_id)//
                     .set("tsj:" + temp.track_id, JSON.stringify(siteconfig))
-                    .set(ins._id + ":m:" + ins.site_url, JSON.stringify(config_mouse))//目前无具体URL配置 暂时设置在站点上
-                    .set("t:" + ins.site_id, JSON.stringify(time_config))//站点级别设置
-                    .set("p:" + ins.site_id, JSON.stringify(pv_config)).exec();
+                    .set(ins._id + ":mouse:" + ins.site_url, JSON.stringify(config_mouse))//目前无具体URL配置 暂时设置在站点上
+                    .set("duration:" + ins.site_id, JSON.stringify(time_config))//站点级别设置
+                    .set("visit:" + ins.site_id, JSON.stringify(pv_config)).exec();
             });
             break;
         case "search":
@@ -215,9 +209,7 @@ api.get("/site_list", function (req, res) {
             var update = query['updates'];
             dao.update(schema_name, query['query'], query['updates'], function (err, up) {
                 datautils.send(res, up);
-                console.log(up.nModified);
                 if (up.nModified > 0) {//有更新 刷新配置
-                    console.log("update");
                     dao.find(schema_name, query['query'], null, {}, function (err, docs) {
                         if (docs != null && docs.length > 0) {//站点更新时候只更新状态
                             var siteconfig = {
@@ -268,7 +260,6 @@ api.get("/conf", function (req, res) {
 
     switch (type) {
         case "save":
-            console.log("save")
             var entity = JSON.parse(query['entity']);
             dao.save(schema_name, entity, function (ins) {
                 datautils.send(res, JSON.stringify(ins));
@@ -282,7 +273,6 @@ api.get("/conf", function (req, res) {
         case "update":
             dao.update(schema_name, query['query'], query['updates'], function (err, docs) {
                 datautils.send(res, docs);
-                console.log(docs);
             });
             break;
         case "delete":
@@ -356,17 +346,8 @@ api.get("/time_conv", function (req, res) {
                     pvtimes: ins.pv_conv.val
                 }
                 //通过site_id 去获取track_id
-                console.log(ins.site_id);
-                req.redisclient.multi().set("t:" + ins.site_id, JSON.stringify(time_config))//站点级别设置
-                    .set("p:" + ins.site_id, JSON.stringify(pv_config)).exec();
-                //测试
-                req.redisclient.get("t:" + ins.site_id, function (error, rres) {//site_id获取track_id
-                    console.log(ins.site_id + " track_id-->time_conv " + JSON.stringify(rres));
-                });
-                //测试
-                req.redisclient.get("p:" + ins.site_id, function (error, rres) {//site_id获取track_id
-                    console.log(ins.site_id + " site_id-->pv_conv " + JSON.stringify(rres));
-                });
+                req.redisclient.multi().set("duration:" + ins.site_id, JSON.stringify(time_config))//站点级别设置
+                    .set("visit:" + ins.site_id, JSON.stringify(pv_config)).exec();
             });
             break;
         case "search":
@@ -375,15 +356,11 @@ api.get("/time_conv", function (req, res) {
             });
             break;
         case "update":
-            console.log(query['updates']);
             dao.update(schema_name, query['query'], query['updates'], function (err, up) {
 
                 datautils.send(res, up);
-                //console.log(up.nModified);
                 if (up.nModified > 0) {//有更新 刷新配置
-                    console.log();
                     dao.find(schema_name, query['query'], null, {}, function (err, docs) {
-                        console.log(docs);
                         if (docs != null && docs.length > 0) {
                             //存储时长转化和PV转化到Redis
                             var time_config = {
@@ -395,23 +372,15 @@ api.get("/time_conv", function (req, res) {
                                 pvtimes: docs[0].pv_conv.val
                             }
                             //通过site_id 去获取track_id
-                            console.log("st:" + docs[0].site_id);
-                            req.redisclient.multi().set("t:" + docs[0].site_id, JSON.stringify(time_config))//站点级别设置
-                                .set("p:" + docs[0].site_id, JSON.stringify(pv_config)).exec();
-                            //测试
-                            req.redisclient.get("t:" + docs[0].site_id, function (error, rres) {//site_id获取track_id
-                                console.log(docs[0].site_id + " track_id-->time_conv " + JSON.stringify(rres));
-                            });
-                            //测试
-                            req.redisclient.get("p:" + docs[0].site_id, function (error, rres) {//site_id获取track_id
-                                console.log(docs[0].site_id + " site_id-->pv_conv " + JSON.stringify(rres));
-                            });
+                            req.redisclient.multi().set("duration:" + docs[0].site_id, JSON.stringify(time_config))//站点级别设置
+                                .set("visit:" + docs[0].site_id, JSON.stringify(pv_config)).exec();
                         }
                     });
                 }
             });
             break;
         case "delete":
+            //先删除Redis 查询到要删除的数据
             dao.remove(schema_name, query['query'], function () {
                 datautils.send(res, "success");
             });
@@ -439,7 +408,6 @@ api.get("/redis", function (req, res) {
     var query = url.parse(req.url, true).query;
     req.redisclient.get(query['key'], function (error, redis_conf) {//
 
-        console.log(redis_conf);
         //if(redis_conf!=null){
         //    try{
         //        datautils.send(res, JSON.parse(redis_conf));
@@ -477,7 +445,6 @@ api.get("/adtrack", function (req, res) {
                 + "&_hmci=" + creative;
             entity.produceUrl = encodeURI(strUrl);
 
-            console.log(entity.targetUrl);
             dao.save(schema_name, entity, function (ins) {
                 datautils.send(res, JSON.stringify(ins));
             });
