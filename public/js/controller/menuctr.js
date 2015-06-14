@@ -196,24 +196,24 @@ define(["./module"], function (ctrs) {
                     text: '指定广告跟踪',
                     sref: '#conf/webcountsite/adtrack'
                 }]
-            },
-            {
-                title: '系统管理设置',
-                icon: 'glyphicon glyphicon-user',
-                stype: 1,
-                sref: 'admin',
-                child: [{
-                    text: ' 权限账户管理',
-                    sref: '#conf/admin/root'
-                }, {
-                    text: '统计图标设置',
-                    sref: '#conf/admin/counticon'
-                }, {
-                    text: '报告发送设置',
-                    sref: '#conf/admin/reportsite'
-
-                }]
             }
+            //{
+            //    title: '系统管理设置',
+            //    icon: 'glyphicon glyphicon-user',
+            //    stype: 1,
+            //    sref: 'admin',
+            //    child: [{
+            //        text: ' 权限账户管理',
+            //        sref: '#conf/admin/root'
+            //    }, {
+            //        text: '统计图标设置',
+            //        sref: '#conf/admin/counticon'
+            //    }, {
+            //        text: '报告发送设置',
+            //        sref: '#conf/admin/reportsite'
+            //
+            //    }]
+            //}
         ];
 
     });
