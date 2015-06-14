@@ -3,6 +3,7 @@
  */
 var sharedData;
 var shareSiteName = "http://www.best-ad.cn/";
+var shareSiteUrl = "";
 define(["./module"], function (ctrs) {
 
     "use strict";
@@ -21,17 +22,22 @@ define(["./module"], function (ctrs) {
                 id: item.type_id
             });
         });
+        if($rootScope.siteUrl!=shareSiteUrl){
+            shareSiteName = $rootScope.siteUrl;
+            shareSiteUrl = $rootScope.siteUrl;
+        }
         $scope.init = function () {
             $scope.links = [];
             $scope.out_data = [];
             $scope.out_site = [];
             var linksData = [];
+
             //默认对用户其中一个站点进行统计
             $http.get("api/offsitelinks?start=" + $rootScope.start + ",end=" + $rootScope.end + ",name=" + shareSiteName).success(function (result) {
                 if (result.length == 0) {
                     linksData = [];
                     $scope.offsitelinks = {
-                        name: initSiteName,
+                        name: shareSiteName,
                         rf_pv: 0
                     }
                     $scope.out_site = {
@@ -289,7 +295,7 @@ define(["./module"], function (ctrs) {
 
     ctrs.controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http, $rootScope) {
 
-        $http.get("api/modalInstance?type" + $rootScope.userType).success(function (result) {
+        $http.get("api/modalInstance?type=" + $rootScope.userType).success(function (result) {
             $("#selected_item").html(shareSiteName);
             if (result.length != 0) {
                 $scope.items = result;
