@@ -5,6 +5,7 @@ define(["./module"], function (ctrs) {
     "use strict";
 
     ctrs.controller('trend_yesterday_ctrl', function ($scope, $rootScope, $q, $http, requestService, messageService, areaService, uiGridConstants) {
+        $('#reportrange span').html(GetDateStr(-1));
         $scope.yesterdayClass = true;
         $scope.hourcheckClass = true;
         $scope.lastDaySelect = true;
