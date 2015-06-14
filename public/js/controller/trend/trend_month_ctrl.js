@@ -5,6 +5,7 @@ define(["./module"], function (ctrs) {
     "use strict";
 
     ctrs.controller('trend_month_ctrl', function ($scope, $rootScope, $q, $http, requestService, messageService, areaService, uiGridConstants) {
+        $('#reportrange span').html(GetDateStr(-29) + "至" + GetDateStr(0));
         $scope.monthClass = true;
         $scope.hourcheckClass = true;
         $scope.weekselected = false;
