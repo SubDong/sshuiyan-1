@@ -2,6 +2,8 @@
  * Created by perfection on 2015/3/30.
  */
 var sharedData;
+var shareSiteName = "http://www.best-ad.cn/";
+var shareSiteUrl = "";
 define(["./module"], function (ctrs) {
 
     "use strict";
@@ -20,30 +22,35 @@ define(["./module"], function (ctrs) {
                 id: item.type_id
             });
         });
-
-        var initSiteName = "http://www.best-ad.cn/";
+        if($rootScope.siteUrl!=shareSiteUrl){
+            shareSiteName = $rootScope.siteUrl;
+            shareSiteUrl = $rootScope.siteUrl;
+        }
         $scope.init = function () {
             $scope.links = [];
             $scope.out_data = [];
             $scope.out_site = [];
             var linksData = [];
+
             //默认对用户其中一个站点进行统计
-            $http.get("api/offsitelinks?start=" + $rootScope.start + ",end=" + $rootScope.end + ",name=" + initSiteName).success(function (result) {
+            $http.get("api/offsitelinks?start=" + $rootScope.start + ",end=" + $rootScope.end + ",name=" + shareSiteName).success(function (result) {
                 if (result.length == 0) {
                     linksData = [];
                     $scope.offsitelinks = {
-                        name: initSiteName,
+                        name: shareSiteName,
                         rf_pv: 0
                     }
                     $scope.out_site = {
                         ratio: "0%"
                     };
                 } else {
-                    if(result[0].in_data.length==0){
-                        $scope.links.push({id: 1,
+                    if (result[0].in_data.length == 0) {
+                        $scope.links.push({
+                            id: 1,
                             name: null,
                             ratio: null,
-                            count: null});
+                            count: null
+                        });
                         $scope.offsitelinks = {
                             name: result[0].targetPathName_pv[0].pathname,
                             rf_pv: result[0].targetPathName_pv[0].pv
@@ -59,7 +66,7 @@ define(["./module"], function (ctrs) {
                         $scope.out_site = {
                             ratio: result[0].out_site[0].proportion
                         };
-                    }else{
+                    } else {
                         $scope.offsitelinks = {
                             name: result[0].targetPathName_pv[0].pathname,
                             rf_pv: result[0].targetPathName_pv[0].pv
@@ -280,14 +287,16 @@ define(["./module"], function (ctrs) {
             $scope.reset();
             $scope.todayClass = true;
         };
-        sharedData = function(monitorPath){
-            initSiteName = monitorPath;
+        sharedData = function (monitorPath) {
+            shareSiteName = monitorPath;
             $scope.init();
         }
     });
 
     ctrs.controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http, $rootScope) {
-        $http.get("api/modalInstance?type" + $rootScope.userType).success(function (result) {
+
+        $http.get("api/modalInstance?type=" + $rootScope.userType).success(function (result) {
+            $("#selected_item").html(shareSiteName);
             if (result.length != 0) {
                 $scope.items = result;
             }
@@ -300,11 +309,14 @@ define(["./module"], function (ctrs) {
         $scope.ok = function () {
             var monitorPath = $("#selected_item").html();
             sharedData(monitorPath);
+            shareSiteName = monitorPath;
             $modalInstance.close();
         };
         $scope.cancel = function () {
             $modalInstance.dismiss('cancel');
         };
+
+
     });
 
 });
