@@ -4,7 +4,7 @@
 define(["./module"], function (ctrs) {
     "use strict";
 
-    ctrs.controller('adtrack_add', function ($scope, $rootScope, $http, $cookieStore) {
+    ctrs.controller('adtrack_add', function ($scope, $rootScope, $http, $cookieStore, $state, ngDialog) {
         $scope.ipArea = {
             "tNum": "1",//当前个数？
             "tText": "",//内容
@@ -26,23 +26,19 @@ define(["./module"], function (ctrs) {
             $(f.previousElementSibling).scrollTop(f.scrollTop);
         };
 
-
-        /**
-         * 对应Mongo
-         * @type {{uid: string, type_id: string, track_id: string, site_url: string, site_name: string, site_pause: boolean, track_status: string}}
-         */
+        //初始化 entity
         $scope.adtrack_model = {
-            //_id: "", // mongoid
-            uid: "", // user id 用户ID
-            site_id: "",
-            targetUrl: "", // 目标URL
-            mediaPlatform: "", // 媒体平台
-            adTypes: "",    //广告类型
-            planName: "", //计划名称
-            keywords: "",   //关键词
-            creative: "", //创意
-            produceUrl: ""
+            uid: "",            //用户ID
+            site_id: "",        //站点ID
+            targetUrl: "",      //目标URL
+            mediaPlatform: "",  //媒体平台
+            adTypes: "",        //广告类型
+            planName: "",       //计划名称
+            keywords: "",       //关键词
+            creative: "",       //创意
+            produceUrl: ""      //生成的URL
         };
+        //接收页面输入的值
         $scope.urlconfig = {
             targetUrl: "",
             mediaPlatform: "",
@@ -53,6 +49,19 @@ define(["./module"], function (ctrs) {
             produceUrl: ""
         };
 
+        //去重
+        Array.prototype.unique = function(){
+            var res = [];
+            var json = {};
+            for(var i = 0; i < this.length; i++){
+                if(!json[this[i]]){
+                    res.push(this[i]);
+                    json[this[i]] = 1;
+                }
+            }
+            return res;
+        }
+
         //根据 keywords 来进行回车符换行拆分
         $scope.allSubmit = function(){
             var kVal = $scope.urlconfig.keywords;
@@ -61,7 +70,7 @@ define(["./module"], function (ctrs) {
                 $scope.submit();
             } else {
                 var kVal2 = $scope.urlconfig.keywords;
-                var splArray = kVal2.split("\n");
+                var splArray = kVal2.split("\n").unique();  //拆分回车换行符并去重
                 for (var i=0 ; i< splArray.length ; i++) {
                     var kwObj = splArray[i];
                     $scope.submit(kwObj);
@@ -79,6 +88,15 @@ define(["./module"], function (ctrs) {
             return encodeURI(strUrl);
         };*/
 
+        //返回列表
+        $scope.onCancel = function () {
+            $state.go('adtrack');
+        }
+        //继续添加
+        $scope.onAdd = function () {
+            $state.go('adtrack_add');
+        }
+
         $scope.submit = function (obj) {
             var model = angular.copy($scope.adtrack_model);
             model.targetUrl = $scope.urlconfig.targetUrl;
@@ -91,35 +109,25 @@ define(["./module"], function (ctrs) {
             model.site_id = $rootScope.siteId;
             model.uid = $cookieStore.get("uid");
 
-            var query = "/config/adtrack?type=search&query={\"uid\":\"" + model.uid + "\",\"targetUrl\":\"" + model.targetUrl + "\"}";
-            $http({method: 'GET', url: query}).success(function (dataConfig, status) {
-                refushGridData();
-
-                if (dataConfig == null || dataConfig.length == 0) {
-                    var url = "/config/adtrack?type=save&entity=" + JSON.stringify(model);
-                    $http({method: 'GET', url: url}).success(function (dataConfig, status) {
-                        refushGridData();
-                    });
-                } else {
-                    model.type_id = dataConfig.type_id;
-                    model.track_id = dataConfig.track_id;
-                    if (dataConfig.site_name != model.site_name) {
-                        var url = "/config/adtrack?type=update&query={\"uid\":\"" + model.uid + "\",\"targetUrl\":\"" + model.targetUrl + "\"}&updates=" + JSON.stringify(model);
-                        $http({method: 'GET', url: url}).success(function (dataConfig, status) {
-                            refushGridData();
-                        });
-                    }
-                }
-            });
-        };
-
-        var refushGridData = function () {
-            var uid = $cookieStore.get("uid");
-            var site_id = $rootScope.siteId;
-            var url = "/config/adtrack?index=adtrack&type=search&query={\"uid\":\"" + uid + "\",\"site_id\":\"" + site_id + "\"}";
+            //保存
+            var url = "/config/adtrack?type=save&entity=" + JSON.stringify(model);
             $http({method: 'GET', url: url}).success(function (dataConfig, status) {
-                $scope.gridArray.data = dataConfig;
+                $scope.urlDialog = ngDialog.open({
+                    preCloseCallback: function() {
+                        $state.go('adtrack');
+                    },
+                    template: '\
+                        <div class="ngdialog-buttons" >\
+                            <span><h3>保存成功</h3></span><p/>\
+                            <a href="#conf/webcountsite/adtrack_add">继续添加</a>\
+                            <a href="#conf/webcountsite/adtrack" ng-click="closeThisDialog(0)">返回列表</a>\
+                        </div>',
+                    className: 'ngdialog-theme-default',
+                    plain: true,
+                    scope: $scope
+                });
             });
+
         };
     });
 });
