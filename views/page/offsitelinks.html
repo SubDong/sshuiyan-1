@@ -85,7 +85,7 @@
                     <div class="linkstree_left_list" ng-repeat="link in links " ng-mouseover="hoverIn()"
                          ng-mouseleave="hoverOut()">
                         <div class="linkstree_left_list_left fl">
-                            <a href="{{link.name}}" target="_blank">{{ link.name }}</a>
+                            <a href="{{link.name}}" target="_blank">{{ link.name ||'没有数据'}}</a>
                         </div>
                         <div class="linkstree_left_list_left_right fl">
                         </div>
@@ -95,9 +95,9 @@
                             <div class="arrow"></div>
                             <div class="link_tree_row"></div>
                             <div class="link_tree_value">
-                                <p><span>带来浏览量</span><span>{{ link.count}}</span></p>
+                                <p><span>带来浏览量</span><span>{{ link.count||'没有数据'}}</span></p>
 
-                                <p><span>占比</span><span>{{ link.ratio }}</span></p>
+                                <p><span>占比</span><span>{{ link.ratio || '没有数据'}}</span></p>
                             </div>
                         </div>
                     </div>
@@ -110,24 +110,21 @@
         </div>
     </div>
 </div>
-<script type="text/ng-template" id="myModalContent.html">
+<script type="text/ng-template" id="myModalContent.html" >
     <div class="modal-header">
-        <h3 class="modal-title">链接设置</h3>
+        <h3 class="modal-title">I'm a modal!</h3>
     </div>
     <div class="modal-body">
-        <p>您还能添加19个监控页：</p>
         <ul>
-            <!--<li ng-repeat="item in items">-->
-            <li>
-                <!--<a ng-click="selected.item = item">{{ item }}</a>-->
-                <a ng-click="selected.item = item">http://www.perfect-cn.cn/</a>
-                <a ng-click="selected.item = item">http://sem.best-ad.cn/index</a>
+            <li ng-repeat="item in items">
+                <a ng-click="selected(item)">{{item.monitorPath}}</a>
             </li>
         </ul>
-        Selected: <b>http://www.best-ad.cn/</b>
+        监控中: <b id="selected_item">http://www.best-ad.cn/</b>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-primary" ng-click="ok()">确定</button>
+        <button class="btn btn-primary" ng-click="ok()">监控</button>
         <button class="btn btn-warning" ng-click="cancel()">取消</button>
     </div>
 </script>
+<!--<button class="btn btn-default" ng-click="open()">Open me!</button>-->

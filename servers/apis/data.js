@@ -15,7 +15,7 @@ var schemas = require('../db/schemas');
 var csvApi = require('json-2-csv');
 var iconv = require('iconv-lite');
 var uuid = require("node-uuid");
-var fmt = require('strftime');
+
 var es_position = require('../services/es_position');
 
 
@@ -559,8 +559,8 @@ api.get("/exchange", function (req, res) {
     type = type.replace(/;/g, ",");//由于穿过的数据是以;分号隔开的，所以替换成逗号
     var indexString = [];
     //start与end传过时间偏移量或者时间，调用creatIndexs()或createIndexsByTime()方法，把access-与时间拼接起来组成索引值
-    if (start.substring(1,start.length).match("-") != null && end.substring(1,start.length).match("-") != null) {
-        indexString = date.createIndexsByTime(start,end,"access-");
+    if (start.substring(1, start.length).match("-") != null && end.substring(1, start.length).match("-") != null) {
+        indexString = date.createIndexsByTime(start, end, "access-");
     } else {
         indexString = date.createIndexes(start, end, "access-");
     }
@@ -648,8 +648,8 @@ api.get("/trafficmap", function (req, res) {
 
     var indexString = [];
     //start与end传过时间偏移量或者时间，调用creatIndexs()或createIndexsByTime()方法，把access-与时间拼接起来组成索引值
-    if (start.substring(1,start.length).match("-") != null && end.substring(1,start.length).match("-") != null) {
-        indexString = date.createIndexsByTime(start,end,"access-");
+    if (start.substring(1, start.length).match("-") != null && end.substring(1, start.length).match("-") != null) {
+        indexString = date.createIndexsByTime(start, end, "access-");
     } else {
         indexString = date.createIndexes(start, end, "access-");
     }
@@ -668,8 +668,8 @@ api.get("/offsitelinks", function (req, res) {
     var end = parameters[1].split("=")[1];
     var indexString = [];
     //start与end传过时间偏移量或者时间，调用creatIndexs()或createIndexsByTime()方法，把access-与时间拼接起来组成索引值
-    if (start.substring(1,start.length).match("-") != null && end.substring(1,start.length).match("-") != null) {
-        indexString = date.createIndexsByTime(start,end,"access-");
+    if (start.substring(1, start.length).match("-") != null && end.substring(1, start.length).match("-") != null) {
+        indexString = date.createIndexsByTime(start, end, "access-");
     } else {
         indexString = date.createIndexes(start, end, "access-");
     }
@@ -681,4 +681,11 @@ api.get("/offsitelinks", function (req, res) {
 
 });
 // ================================= Config  ==============================
+api.get("/modalInstance", function (req, res) {
+    var parameterString = req.url.split("?");//获取url的？号以后的字符串
+    var type = parameterString[1].split("=")[1];
+    access_request.modalInstanceSearch(req.es,type,function(result){
+        datautils.send(res,result);
+    });
+});
 module.exports = api;

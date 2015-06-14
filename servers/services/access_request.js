@@ -621,6 +621,35 @@ var access_request = {
                 callbackFn(data);
         });
 
+    },
+    modalInstanceSearch:function(es,type,callbackFn){
+        var request = {
+            index:null,
+            type:type,
+            body:{
+                "size":0,
+                "aggs":{
+                    "monitorPath":{
+                        "terms":{
+                            "field":"loc"
+                        }
+                    }
+                }
+            }
+        }
+        es.search(request,function(error,response){
+            var data = [];
+            if (response != undefined && response.aggregations != undefined) {
+                var result = response.aggregations.monitorPath.buckets;
+                for (var i = 0; i < result.length; i++) {
+                    data.push({
+                        monitorPath:result[i].key
+                    });
+                }
+                callbackFn(data);
+            } else
+                callbackFn(data);
+        });
     }
 
 };
