@@ -20,7 +20,12 @@ define(["../app"], function (app) {
             link: function (scope, element, attris, controller) {
                 Custom.initCheckInfo();
                 scope.$watch("opened", function () {
-                    /*    console.log();*/
+                    if(scope.yesterdayClass){
+                        $('#reportrange span').html(GetDateStr(-1));
+                    }
+                    if(scope.monthClass){
+                        $('#reportrange span').html(GetDateStr(-29) + "至" + GetDateStr(0));
+                    }
                 });
                 scope.weekselected = true;
                 scope.mothselected = true;
@@ -65,7 +70,7 @@ define(["../app"], function (app) {
                     $rootScope.tableTimeEnd = 0;
                     $rootScope.keyFormat = "hour";
                     $rootScope.start = 0;
-                    $rootScope.end = 0
+                    $rootScope.end = 0;
                     scope.reloadByCalendar("today");
                     $('#reportrange span').html(GetDateStr(0));
                 };
@@ -881,7 +886,7 @@ define(["../app"], function (app) {
                 case "bing":
                 case "other":
                 {
-                    return count ? (value / count).toFixed(2) + "%" : "0";
+                    return count ? (value / count).toFixed(2) + "%" : "0.00%";
                 }
                 case "avgTime":
                 {

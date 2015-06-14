@@ -6,7 +6,8 @@ define(["./module"], function (ctrs) {
     'use strict';
     ctrs.controller('searchtermctr', function ($scope, $rootScope,popupService) {
 
-            $scope.visible = true;
+            $scope.visible = false;
+            $scope.todayClass = true;
             //table默认信息配置
             $rootScope.tableTimeStart = 0;
             $rootScope.tableTimeEnd = 0;
@@ -87,7 +88,7 @@ define(["./module"], function (ctrs) {
 
             //$scope.initMap();
             //点击显示指标
-            $scope.visible = true;
+            $scope.visible = false;
             $scope.select = function () {
                 $scope.visible = false;
             };
@@ -120,10 +121,10 @@ define(["./module"], function (ctrs) {
 
             //刷新
             $scope.page_refresh = function () {
-                $rootScope.start = -1;
-                $rootScope.end = -1;
-                $rootScope.tableTimeStart = -1;
-                $rootScope.tableTimeEnd = -1;
+                $rootScope.start = 0;
+                $rootScope.end = 0;
+                $rootScope.tableTimeStart = 0;
+                $rootScope.tableTimeEnd = 0;
 //                $scope.charts.forEach(function (e) {
 //                    var chart = echarts.init(document.getElementById(e.config.id));
 //                    e.config.instance = chart;
@@ -132,13 +133,13 @@ define(["./module"], function (ctrs) {
 //                requestService.refresh($scope.charts);
                 //首页表格
                 //requestService.gridRefresh(scope.grids);
-                $scope.reloadByCalendar("yesterday");
-                $('#reportrange span').html(GetDateStr(-1));
+                $scope.reloadByCalendar("today");
+                $('#reportrange span').html(GetDateStr(0));
                 //其他页面表格
                 $rootScope.targetSearch();
                 //classcurrent
                 $scope.reset();
-                $scope.yesterdayClass = true;
+                $scope.todayClass = true;
             };
         }
     );

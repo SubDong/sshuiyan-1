@@ -785,7 +785,11 @@ define(["app"], function (app) {
                                         if (info.label == "跳出率") {
                                             obj[chartUtils.convertEnglish(info.label)] = info.quota[i] + "%";
                                         } else {
-                                            obj[chartUtils.convertEnglish(info.label)] = info.quota[i];
+                                            if(info.label == "新访客比率"){
+                                                obj[chartUtils.convertEnglish(info.label)] = info.quota[i] + "%";
+                                            }else{
+                                                obj[chartUtils.convertEnglish(info.label)] = info.quota[i];
+                                            }
                                         }
                                     }
                                     maps[infoKey] = obj;
