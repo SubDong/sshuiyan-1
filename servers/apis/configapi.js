@@ -168,7 +168,6 @@ api.get("/site_list", function (req, res) {
     //config 鼠标点击配置
     var config_mouse = {
         mouse_ckick: false,
-        site_pause: false
     };
     var query = url.parse(req.url, true).query;
     var type = query['type'];
@@ -185,46 +184,52 @@ api.get("/site_list", function (req, res) {
                 var siteconfig = {
                     siteid: ins._id.toString(),//站点ID 对应MongoDb _id
                     siteurl: temp.site_url,//站点URL
-                    sitepause: false//站点暂停状态，false启用，true暂停
+                    sitepause: ins.site_pause//站点暂停状态，false启用，true暂停
+                }
+                //默认存储时长转化和PV转化到Redis
+                var time_config = {
+                    ttpause: false,
+                    tttime: 30
+                }
+                var pv_config = {
+                    pvpause: false,
+                    pvtimes: 3
                 }
                 req.redisclient.multi().set("tt:".concat(temp.track_id), temp.type_id)//
                     .set("ts:" + temp.track_id, ins._id)//
                     .set("st:" + ins._id, temp.track_id)//
                     .set("tsj:" + temp.track_id, JSON.stringify(siteconfig))
                     .set(ins._id + ":m:" + ins.site_url, JSON.stringify(config_mouse))//目前无具体URL配置 暂时设置在站点上
-                    .exec();
-                //测试
-                req.redisclient.get("tt:".concat(temp.track_id), function (error, rres) {//site_id获取track_id
-                    console.log(temp.track_id + "track_id-->type_id" + rres);
-                });
-                //测试
-                req.redisclient.get("tsj:" + temp.track_id, function (error, rres) {//site_id获取track_id
-                    console.log(temp.track_id + " track_id-->siteJSON " + JSON.stringify(rres));
-                });
-                //测试
-                req.redisclient.get("st:" + ins._id, function (error, rres) {//site_id获取track_id
-                    console.log(ins._id + " site_id-->track_id " + rres);
-                });
-                //测试
-                req.redisclient.get(temp.track_id + ":m:" + temp.site_url, function (error, rres) {//site_id获取track_id
-                    console.log(temp.track_id + ":m:" + temp.site_url + "track_id+url--> mouse_config " + JSON.stringify(rres));
-                });
+                    .set("t:" + ins.site_id, JSON.stringify(time_config))//站点级别设置
+                    .set("p:" + ins.site_id, JSON.stringify(pv_config)).exec();
             });
             break;
         case "search":
-            dao.find(schema_name, query['query'], null, {}, function (err, docs) {
-                datautils.send(res, docs);
+            dao.find(schema_name, query['query'], null, {}, function (err, up) {
+                datautils.send(res, up);
                 // TODO 为什么要去差redis
             });
             break;
         case "update":
             //
             var update = query['updates'];
-            dao.update(schema_name, query['query'], query['updates'], function (err, docs) {
-                datautils.send(res, docs);
-                dao.find(schema_name, query['query'], null, {}, function (err, docs) {
-                    datautils.send(res, docs);
-                });
+            dao.update(schema_name, query['query'], query['updates'], function (err, up) {
+                datautils.send(res, up);
+                console.log(up.nModified);
+                if (up.nModified > 0) {//有更新 刷新配置
+                    console.log("update");
+                    dao.find(schema_name, query['query'], null, {}, function (err, docs) {
+                        if (docs != null && docs.length > 0) {//站点更新时候只更新状态
+                            var siteconfig = {
+                                siteid: docs[0]._id.toString(),//站点ID 对应MongoDb _id
+                                siteurl: docs[0].site_url,//站点URL
+                                sitepause: docs[0].site_pause//站点暂停状态，false启用，true暂停
+                            }
+                            req.redisclient.multi()
+                                .set("tsj:" + docs[0].track_id, JSON.stringify(siteconfig)).exec();
+                        }
+                    });
+                }
             });
             break;
         case "delete":
@@ -374,7 +379,7 @@ api.get("/time_conv", function (req, res) {
             dao.update(schema_name, query['query'], query['updates'], function (err, up) {
 
                 datautils.send(res, up);
-                console.log(up.nModified);
+                //console.log(up.nModified);
                 if (up.nModified > 0) {//有更新 刷新配置
                     console.log();
                     dao.find(schema_name, query['query'], null, {}, function (err, docs) {
@@ -443,7 +448,7 @@ api.get("/redis", function (req, res) {
         //    }
         //
         //}else{
-            datautils.send(res, redis_conf);
+        datautils.send(res, redis_conf);
         //}
     });
 });

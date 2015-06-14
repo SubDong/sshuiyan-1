@@ -246,14 +246,16 @@ define(["./module"], function (ctrs) {
                 $scope.urlDialog.close();
 
                 //用户ID+url 确定该用户对某个网站是否进行配置
-                var query = "/config/site_list?type=search&query={\"uid\":\"" + row.entity.uid + "\",\"site_url\":\"" + row.entity.site_url + "\"}";
+                var query = "/config/site_list?type=search&query={\"_id\":\"" + row.entity._id + "\"}";
+                console.log("stop")
                 $http({
                     method: 'GET',
                     url: query
                 }).success(function (dataConfig, status) {
                     if (dataConfig != null) {//不存在配置 save
                         row.entity.site_pause = !row.entity.site_pause;
-                        var url = "/config/site_list?type=update&query={\"uid\":\"" + row.entity.uid + "\",\"site_url\":\"" + row.entity.site_url + "\"}&updates={\"site_pause\":\"" + row.entity.site_pause + "\"}";
+                        var url = "/config/site_list?type=update&query={\"_id\":\"" + row.entity._id  + "\"}&updates={\"site_pause\":\"" + row.entity.site_pause + "\"}";
+                        console.log(url)
                         $http({
                             method: 'GET',
                             url: url
