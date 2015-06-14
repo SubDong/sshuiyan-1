@@ -529,10 +529,15 @@ define(["./module"], function (ctrs) {
                 }).success(function (data, status) {
                     var obj = $scope.surveyData1[0];
                     obj["category"] = "昨日";
-                    obj["cost"] = data[0].cost;
-                    obj["impression"] = data[0].impression;
-                    obj["click"] = data[0].click;
-
+                    if (data[0]) {
+                        obj["cost"] = data[0].cost;
+                        obj["impression"] = data[0].impression;
+                        obj["click"] = data[0].click;
+                    } else {
+                        obj["cost"] = 0;
+                        obj["impression"] = 0;
+                        obj["click"] = 0;
+                    }
                     $scope.gridOptions.data = [obj];
                 });
             };
@@ -646,9 +651,12 @@ define(["./module"], function (ctrs) {
                     method: 'GET',
                     url: url
                 }).success(function (data, status) {
-
                     var _obj = {};
-                    _obj["accountName"] = data[0].accountName;
+                    if (data[0]) {
+                        _obj["accountName"] = data[0].accountName;
+                    } else {
+                        _obj["accountName"] = '';
+                    }
                     var _val = 0;
                     if (data.length) {
                         data.forEach(function (item) {
@@ -656,7 +664,11 @@ define(["./module"], function (ctrs) {
                         });
                         if ($scope.outQuota_ == "cpc" || $scope.outQuota_ == "ctr")_val = parseFloat(_val / data.length).toFixed(2);
                     } else {
-                        _val = data[0][$scope.outQuota_]
+                        if (data[0]) {
+                            _val = data[0][$scope.outQuota_];
+                        } else {
+                            _val = 0;
+                        }
                     }
                     _obj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? parseFloat(_val).toFixed(2) + "%" : parseFloat(_val).toFixed(2);
                     $scope.gridOptions1Data = [];
@@ -707,7 +719,12 @@ define(["./module"], function (ctrs) {
                     url: url
                 }).success(function (data, status) {
                     var _obj = {};
-                    _obj["way"] = "搜索推广(" + data[0].accountName + ")";
+                    if (data[0]) {
+                        _obj["way"] = "搜索推广(" + data[0].accountName + ")";
+                    } else {
+                        _obj["way"] = "搜索推广()";
+                    }
+
                     var _val = 0;
                     if (data.length) {
                         data.forEach(function (item) {
@@ -715,7 +732,11 @@ define(["./module"], function (ctrs) {
                         });
                         if ($scope.outQuota_ == "cpc" || $scope.outQuota_ == "ctr")_val = parseFloat(_val / data.length).toFixed(2);
                     } else {
-                        _val = data[0][$scope.outQuota_]
+                        if (data[0]) {
+                            _val = data[0][$scope.outQuota_];
+                        } else {
+                            _val = 0;
+                        }
                     }
                     _obj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? parseFloat(_val).toFixed(2) + "%" : parseFloat(_val).toFixed(2);
                     $scope.gridOptions2Data = [];
@@ -781,7 +802,11 @@ define(["./module"], function (ctrs) {
                         });
                         if ($scope.outQuota_ == "cpc" || $scope.outQuota_ == "ctr")_val = parseFloat(_val / data.length).toFixed(2);
                     } else {
-                        _val = tmpResult[0][0][$scope.outQuota_];
+                        if (tmpResult[0][0]) {
+                            _val = tmpResult[0][0][$scope.outQuota_];
+                        } else {
+                            _val = 0;
+                        }
                     }
                     pcObj[$scope.outQuota_] = parseFloat(_val).toFixed(2);
                     pcObj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? pcObj[$scope.outQuota_] + "%" : pcObj[$scope.outQuota_];
@@ -800,7 +825,11 @@ define(["./module"], function (ctrs) {
                         });
                         if ($scope.outQuota_ == "cpc" || $scope.outQuota_ == "ctr")_val = parseFloat(_val / data.length).toFixed(2);
                     } else {
-                        _val = tmpResult[1][0][$scope.outQuota_];
+                        if (tmpResult[1][0]) {
+                            _val = tmpResult[1][0][$scope.outQuota_];
+                        } else {
+                            _val = 0;
+                        }
                     }
                     mobileObj[$scope.outQuota_] = _val.toFixed(2);
                     mobileObj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? mobileObj[$scope.outQuota_] + "%" : mobileObj[$scope.outQuota_];

@@ -385,7 +385,7 @@ define(["./module"], function (ctrs) {
                 $scope.compareType = 1;
                 $scope.compareLastDayClass = true;
                 $scope.compareLastWeekClass = false;
-                //$scope.dayselect = true;
+                $scope.dayselect = true;
                 $scope.dayClass = false;
                 $scope.hourcheckClass = true;
                 $scope.charts.forEach(function (e) {
