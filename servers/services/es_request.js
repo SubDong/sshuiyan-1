@@ -9,6 +9,13 @@
 
 require('../utils/dateFormat')();
 
+/**
+ *
+ * @param filters
+ * @returns {Array}
+ *
+ * @deprecated
+ */
 var buildMustQuery = function (filters) {
     var mustQuery = [];
 
@@ -23,6 +30,13 @@ var buildMustQuery = function (filters) {
     return mustQuery;
 };
 
+/**
+ *
+ * @param filters
+ * @returns {{bool: {must}}}
+ *
+ * @deprecated
+ */
 var buildQuery = function (filters) {
     return {
         "bool": {
@@ -31,6 +45,9 @@ var buildQuery = function (filters) {
     }
 };
 
+/**
+ * @deprecated
+ */
 var es_aggs = {
     // 浏览量
     "pv": {
@@ -158,6 +175,20 @@ var es_aggs = {
     "eventConversion": {}
 };
 
+/**
+ *
+ * @param indexes
+ * @param type
+ * @param quotas
+ * @param dimension
+ * @param filters
+ * @param start
+ * @param end
+ * @param interval
+ * @returns {*}
+ *
+ * @deprecated
+ */
 var buildRequest = function (indexes, type, quotas, dimension, filters, start, end, interval) {
 
     var _aggs = {};
@@ -375,6 +406,14 @@ var buildRequest = function (indexes, type, quotas, dimension, filters, start, e
 
 };
 
+/**
+ *
+ * @param result
+ * @param dimension
+ * @returns {{label: string, key: Array, quota: Array}}
+ *
+ * @deprecated
+ */
 var pvFn = function (result, dimension) {
     var keyArr = [];
     var quotaArr = [];
@@ -397,6 +436,14 @@ var pvFn = function (result, dimension) {
     };
 };
 
+/**
+ *
+ * @param result
+ * @param dimension
+ * @returns {{label: string, key: Array, quota: Array}}
+ *
+ * @deprecated
+ */
 var contributionFn = function (result, dimension) {
     var keyArr = [];
     var quotaArr = [];
@@ -419,6 +466,14 @@ var contributionFn = function (result, dimension) {
     };
 };
 
+/**
+ *
+ * @param result
+ * @param dimension
+ * @returns {{label: string, key: Array, quota: Array}}
+ *
+ * @deprecated
+ */
 var uvFn = function (result, dimension) {
     var keyArr = [];
     var quotaArr = [];
@@ -441,6 +496,14 @@ var uvFn = function (result, dimension) {
     };
 };
 
+/**
+ *
+ * @param result
+ * @param dimension
+ * @returns {{label: string, key: Array, quota: Array}}
+ *
+ * @deprecated
+ */
 var vcFn = function (result, dimension) {
     var keyArr = [];
     var quotaArr = [];
@@ -463,6 +526,14 @@ var vcFn = function (result, dimension) {
     };
 };
 
+/**
+ *
+ * @param result
+ * @param dimension
+ * @returns {{label: string, key: Array, quota: Array}}
+ *
+ * @deprecated
+ */
 var avgTimeFn = function (result, dimension) {
     var keyArr = [];
     var quotaArr = [];
@@ -490,6 +561,14 @@ var avgTimeFn = function (result, dimension) {
     };
 };
 
+/**
+ *
+ * @param result
+ * @param dimension
+ * @returns {{label: string, key: Array, quota: Array}}
+ *
+ * @deprecated
+ */
 var outRateFn = function (result, dimension) {
     var keyArr = [];
     var quotaArr = [];
@@ -517,6 +596,14 @@ var outRateFn = function (result, dimension) {
     };
 };
 
+/**
+ *
+ * @param result
+ * @param dimension
+ * @returns {{label: string, key: Array, quota: Array}}
+ *
+ * @deprecated
+ */
 var nuvFn = function (result, dimension) {
     var keyArr = [];
     var quotaArr = [];
@@ -539,6 +626,14 @@ var nuvFn = function (result, dimension) {
     };
 };
 
+/**
+ *
+ * @param result
+ * @param dimension
+ * @returns {{label: string, key: Array, quota: Array}}
+ *
+ * @deprecated
+ */
 var nuvRateFn = function (result, dimension) {
     var keyArr = [];
     var quotaArr = [];
@@ -566,6 +661,14 @@ var nuvRateFn = function (result, dimension) {
     };
 };
 
+/**
+ *
+ * @param result
+ * @param dimension
+ * @returns {{label: string, key: Array, quota: Array}}
+ *
+ * @deprecated
+ */
 var ipFn = function (result, dimension) {
     var keyArr = [];
     var quotaArr = [];
@@ -588,6 +691,14 @@ var ipFn = function (result, dimension) {
     };
 };
 
+/**
+ *
+ * @param result
+ * @param dimension
+ * @returns {{label: string, key: Array, quota: Array}}
+ *
+ * @deprecated
+ */
 var avgPageFn = function (result, dimension) {
     var keyArr = [];
     var quotaArr = [];
@@ -615,6 +726,14 @@ var avgPageFn = function (result, dimension) {
     };
 };
 
+/**
+ *
+ * @param result
+ * @param dimension
+ * @returns {{label: string, key: Array, quota: Array}}
+ *
+ * @deprecated
+ */
 var arrivedRateFn = function (result, dimension) {
     var keyArr = [];
     var quotaArr = [];
@@ -637,6 +756,14 @@ var arrivedRateFn = function (result, dimension) {
     };
 };
 
+/**
+ *
+ * @param result
+ * @param dimension
+ * @returns {{label: string, key: Array, quota: Array}}
+ *
+ * @deprecated
+ */
 var pageConversionFn = function (result, dimension) {
     var keyArr = [];
     var quotaArr = [];
@@ -651,6 +778,14 @@ var pageConversionFn = function (result, dimension) {
     };
 };
 
+/**
+ *
+ * @param result
+ * @param dimension
+ * @returns {{label: string, key: Array, quota: Array}}
+ *
+ * @deprecated
+ */
 var eventConversionFn = function (result, dimension) {
     var keyArr = [];
     var quotaArr = [];
@@ -665,6 +800,12 @@ var eventConversionFn = function (result, dimension) {
     };
 };
 
+/**
+ *
+ * @type {{search: Function, realTimeSearch: Function, top5visit: Function}}
+ *
+ * @deprecated please migrate to refactor_request
+ */
 var es_request = {
     search: function (es, indexes, type, quotas, dimension, topN, filters, start, end, interval, callbackFn) {
         var request = null;

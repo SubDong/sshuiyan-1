@@ -1,7 +1,7 @@
 /**
  * Created by dolphineor on 2015-6-3.
  *
- * 百度推广流量统计elasticsearch查询
+ * 此查询只针对百度推广模块
  */
 
 var buildMustQuery = function (filters) {
