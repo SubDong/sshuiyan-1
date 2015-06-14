@@ -396,6 +396,7 @@ define(["./module"], function (ctrs) {
                     enablePaginationControls: false,
                     enableHorizontalScrollbar: 0,
                     enableVerticalScrollbar: 0,
+                    //expandableRowHeight: 61,
                     columnDefs: [{name: "kw", displayName: "触发关键词搜索词", field: "kw"}]
                 };
                 $http({
@@ -410,7 +411,9 @@ define(["./module"], function (ctrs) {
                     } else {
                         dataArray.push({kw: "无"})
                     }
+                    row.entity.subGridOptions.expandableRowHeight = (row.entity.subGridOptions.data.length == 0?1 * 60: row.entity.subGridOptions.data.length * 60)+1;
                     row.entity.subGridOptions.data = dataArray;
+
                 })
             });
         };
