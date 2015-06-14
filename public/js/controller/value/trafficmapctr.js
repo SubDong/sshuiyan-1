@@ -1,6 +1,8 @@
 /**
  * Created by perfection on 2015/5/18....
  */
+var shardD = null;
+var shard = null;
 define(["./module"], function (ctrs) {
 
     "use strict";
@@ -12,23 +14,49 @@ define(["./module"], function (ctrs) {
         $scope.isCollapsed = true;
         $rootScope.start = 0;
         $rootScope.end = 0;
+        $scope.getAllAddress = function () {
+            $http.get("api/modalInstance?type=" + $rootScope.userType).success(function (result) {
+                if (result.length != 0) {
+                    var data = [];
+                    for (var i = 0; i < result.length; i++) {
+                        data.push({
+                            id: i + 1,
+                            name: result[i].monitorPath
+                        })
+                    }
+                    $scope.offsitelinks = data;
+                }
+                if (shard == null) {
+                    $scope.offsite_links = {id: 1, name: "http://" + $rootScope.siteUrl + "/"};
+                    shardD = "http://" + $rootScope.siteUrl + "/";
+                    shard = "http://" + $rootScope.siteUrl + "/";
+                }else if(shard!=$rootScope.siteUrl){
+                    shardD = "http://" + $rootScope.siteUrl + "/";
+                    shard = shardD;
+                }
+                $scope.init();
+            });
+        };
+        $scope.getAllAddress();
 
         $scope.init = function () {
             var linkData = [];
-
-            $http.get("api/trafficmap?start=" + $scope.start + ",end=" + $scope.end + ",targetPathName=http://www.best-ad.cn/").success(function (data) {
+            if(shardD==null){
+                shardD = "http://" + $rootScope.siteUrl + "/";
+            }
+            $http.get("api/trafficmap?start=" + $scope.start + ",end=" + $scope.end + ",targetPathName=" + shardD).success(function (data) {
                 if (data.length == 0) {
                     $scope.links = [];
                     $scope.targetPathData = {
-                        pathname: "http://www.best-ad.cn/",
+                        pathname: shardD,
                         pv_proportion: "0%",
                         uv_proportion: "0%",
                         pv: 0
-                    }
+                    };
                     $scope.out_siteData = {
                         pv_proportion: "0%",
                         uv_proportion: "0%"
-                    }
+                    };
                     return;
                 } else {
                     for (var i = 0; i < data.data.length; i++) {
@@ -44,6 +72,7 @@ define(["./module"], function (ctrs) {
                     }
                     $scope.links = linkData;
                     $scope.targetPathData = data.targetPathData;
+                    $scope.offsite_links = {id: 1, name: data.targetPathData.pathname};
                     $scope.out_siteData = data.out_siteData;
                     linkData = [];
                 }
@@ -69,34 +98,26 @@ define(["./module"], function (ctrs) {
                 }
 
             });
-        }
-        $scope.init();
+        };
+
         $scope.reloadByCalendar = function (type) {
             $rootScope.$broadcast("ssh_refresh_charts");
             $rootScope.$broadcast("ssh_dateShow_options_time_change", type);
         };
 
-        $scope.offsitelinks = [
-            {
-                "id": 1,
-                "name": "http://www.best-ad.cn/"
-            },
-            {
-                "id": 2,
-                "name": "http://127.0.0.1:8000/#/extension/survey"
-            },
-        ]
+
         $scope.hoverIn = function () {
             this.hoverEdit = true;
         };
         $scope.hoverOut = function () {
             this.hoverEdit = false;
         };
-        $scope.weblink = function () {
+        $scope.weblink = function (offsitelink) {
             $scope.isCollapsed = true
-            $scope.offsitelinks = offsitelink.value;
-
-        }
+            $scope.offsite_links = offsitelink;
+            shardD = offsitelink.name;
+            $scope.init();
+        };
         $scope.timeselect = true;
         $scope.reset = function () {
             $scope.todayClass = false;

@@ -23,8 +23,9 @@ define(["./module"], function (ctrs) {
             });
         });
         if($rootScope.siteUrl!=shareSiteUrl){
-            shareSiteName = $rootScope.siteUrl;
-            shareSiteUrl = $rootScope.siteUrl;
+            shareSiteName = "http://"+$rootScope.siteUrl+"/";
+
+            shareSiteUrl = shareSiteName;
         }
         $scope.init = function () {
             $scope.links = [];
