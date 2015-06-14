@@ -45,7 +45,7 @@ var schemas = {
             site_url: String, // site url 设置的URL
             site_name: String, // site name 设置的URL
             site_pause: Boolean,//配置暂停 true：暂停 false：使用
-            track_status: String,// track code status
+            track_status: Number,// track code status
             //status: String, // enable or disable track
             is_top: Boolean
         }
