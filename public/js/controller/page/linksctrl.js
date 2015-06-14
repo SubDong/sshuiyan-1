@@ -1,6 +1,7 @@
 /**
  * Created by perfection on 2015/3/30.
  */
+var sharedData;
 define(["./module"], function (ctrs) {
 
     "use strict";
@@ -16,7 +17,7 @@ define(["./module"], function (ctrs) {
         $scope.usites.forEach(function (item, i) {
             $scope.sites.push({
                 name: item.site_name,
-                id: item.site_id
+                id: item.type_id
             });
         });
 
@@ -38,38 +39,66 @@ define(["./module"], function (ctrs) {
                         ratio: "0%"
                     };
                 } else {
-                    $scope.offsitelinks = {
-                        name: result[0].targetPathName_pv[0].pathname,
-                        rf_pv: result[0].targetPathName_pv[0].pv
-                    }
-                    for (var i = 0; i < result[0].in_data.length; i++) {
-                        if (result[0].in_data[i].pathname == "-") {
-                            result[0].in_data[i].pathname = "直接输入网址"
+                    if(result[0].in_data.length==0){
+                        $scope.links.push({id: 1,
+                            name: null,
+                            ratio: null,
+                            count: null});
+                        $scope.offsitelinks = {
+                            name: result[0].targetPathName_pv[0].pathname,
+                            rf_pv: result[0].targetPathName_pv[0].pv
+                        };
+                        for (var i = 0; i < result[0].out_data.length; i++) {
+                            $scope.out_data.push({
+                                id: i,
+                                name: result[0].out_data[i].pathname,
+                                ratio: result[0].out_data[i].proportion,
+                                count: result[0].out_data[i].pv
+                            });
                         }
-                        linksData.push({
-                            id: i,
-                            name: result[0].in_data[i].pathname,
-                            ratio: result[0].in_data[i].proportion,
-                            count: result[0].in_data[i].pv
-                        });
+                        $scope.out_site = {
+                            ratio: result[0].out_site[0].proportion
+                        };
+                    }else{
+                        $scope.offsitelinks = {
+                            name: result[0].targetPathName_pv[0].pathname,
+                            rf_pv: result[0].targetPathName_pv[0].pv
+                        };
+                        for (var i = 0; i < result[0].in_data.length; i++) {
+                            if (result[0].in_data[i].pathname == "-") {
+                                result[0].in_data[i].pathname = "直接输入网址"
+                            }
+                            linksData.push({
+                                id: i,
+                                name: result[0].in_data[i].pathname,
+                                ratio: result[0].in_data[i].proportion,
+                                count: result[0].in_data[i].pv
+                            });
+                        }
+                        for (var i = 0; i < result[0].out_data.length; i++) {
+                            $scope.out_data.push({
+                                id: i,
+                                name: result[0].out_data[i].pathname,
+                                ratio: result[0].out_data[i].proportion,
+                                count: result[0].out_data[i].pv
+                            });
+                        }
+                        $scope.out_site = {
+                            ratio: result[0].out_site[0].proportion
+                        };
+                        $scope.links = linksData;
                     }
-                    for (var i = 0; i < result[0].out_data.length; i++) {
-                        $scope.out_data.push({
-                            id: i,
-                            name: result[0].out_data[i].pathname,
-                            ratio: result[0].out_data[i].proportion,
-                            count: result[0].out_data[i].pv
-                        });
-                    }
-                    $scope.out_site = {
-                        ratio: result[0].out_site[0].proportion
-                    };
-                    $scope.links = linksData;
+
                 }
                 if (result.length != 0) {
                     if (result[0].in_data.length <= 3) {
                         document.getElementById("linkstree_top").style.top = "14%";
                         document.getElementById("linkstree_right").style.top = "14%";
+                    }
+                    if (result[0].in_data.length == 0) {
+                        document.getElementById("linkstree_top").style.top = "0";
+                        document.getElementById("linkstree_right").style.top = "0";
+                        $(".linkstree_left").css("margin-top", "14px")
                     }
                     if (result[0].in_data.length == 1) {
                         document.getElementById("linkstree_top").style.top = "0";
@@ -179,17 +208,15 @@ define(["./module"], function (ctrs) {
             $scope.today();
         };
 
-
-        //index select
         //弹窗
-        $scope.open = function (size) {
+        $scope.open = function () {
             var modalInstance = $modal.open({
                 templateUrl: 'myModalContent.html',
                 controller: 'ModalInstanceCtrl',
-                size: size,
                 resolve: {
                     items: function () {
                         return $scope.items;
+
                     }
                 }
             });
@@ -253,10 +280,26 @@ define(["./module"], function (ctrs) {
             $scope.reset();
             $scope.todayClass = true;
         };
+        sharedData = function(monitorPath){
+            initSiteName = monitorPath;
+            $scope.init();
+        }
     });
 
-    ctrs.controller('ModalInstanceCtrl', function ($scope, $modalInstance, items) {
+    ctrs.controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http, $rootScope) {
+        $http.get("api/modalInstance?type" + $rootScope.userType).success(function (result) {
+            if (result.length != 0) {
+                $scope.items = result;
+            }
+        });
+        $scope.selected = function (item) {
+            $scope.Selected = item.monitorPath;
+            $("#selected_item").html(item.monitorPath);
+            return;
+        }
         $scope.ok = function () {
+            var monitorPath = $("#selected_item").html();
+            sharedData(monitorPath);
             $modalInstance.close();
         };
         $scope.cancel = function () {
