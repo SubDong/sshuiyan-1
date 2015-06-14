@@ -189,13 +189,13 @@ api.get("/site_list", function (req, res) {
                     pvpause: false,
                     pvtimes: 3
                 }
-                req.redisclient.multi().set("typeid:".concat(temp.track_id), temp.type_id)//
+                req.redisclient.multi().set("typeid:".concat(ins.track_id), ins.type_id)//
                     .set("ts:" + temp.track_id, ins._id)//
-                    .set("st:" + ins._id, temp.track_id)//
-                    .set("tsj:" + temp.track_id, JSON.stringify(siteconfig))
+                    .set("st:" + ins._id, ins.track_id)//
+                    .set("tsj:" + ins.track_id, JSON.stringify(siteconfig))
                     .set(ins._id + ":mouse:" + ins.site_url, JSON.stringify(config_mouse))//目前无具体URL配置 暂时设置在站点上
-                    .set("duration:" + ins.site_id, JSON.stringify(time_config))//站点级别设置
-                    .set("visit:" + ins.site_id, JSON.stringify(pv_config)).exec();
+                    .set("duration:" + ins._id, JSON.stringify(time_config))//站点级别设置
+                    .set("visit:" +ins._id, JSON.stringify(pv_config)).exec();
             });
             break;
         case "search":
