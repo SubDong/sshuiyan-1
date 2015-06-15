@@ -66,9 +66,13 @@ define(["./module"], function (ctrs) {
             "    s.parentNode.insertBefore(hm, s);\<br\>" +
             " })();\<br\>" +
             "&lt;/script&gt;" +
-            "</div> </div><div class='mid_right'><button type='button' class='btn btn-default navbar-btn' ssh-clip='' title='单击复制到剪贴板' data-clipboard-target='base_code'>复制代码</button><ul type='disc'>" +
+            "</div> </div><div class='mid_right'><button type='button' class='btn btn-default navbar-btn' ssh-clip=''  data-clipboard-target='base_code'>复制</div></button><ul type='disc'>" +
             "  <li>请将代码添加至网站全部页面的&lt;/head&gt;标签前；</li><li>建议在header.htm类似的页头模板页面中安装，以达到一处安装，全站皆有的效果；</li><li>如需在JS文件中调用统计分析代码，请直接去掉以下代码首尾的&lt;script type='text/javascript' &gt;与&lt;/script&gt;后，放入JS文件中即可；</li>" +
             "<li> 如果代码安装正确，一般20分钟 后,可以查看网站分析数据；</li></ul></div>";
+
+
+
+
         //配置默认指标
         $rootScope.checkedArray = ["_uid", "uid", "type_id", "track_id", "site_url", "site_name", "site_pause", "track_status_ch"];
 
@@ -95,7 +99,7 @@ define(["./module"], function (ctrs) {
                 name: "x7",
                 displayName: "",
                 cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.gain(index,grid,row)'>" +
-                "获取代码</a><span class='glyphicon glyphicon-file'></span></div>",
+                "获取代码<span class='glyphicon glyphicon-file'></span></a></div>",
                 maxWidth: 100
             },
             {
@@ -108,7 +112,7 @@ define(["./module"], function (ctrs) {
                 name: "x3",
                 displayName: "",
                 cellTemplate: "<div class='btn-group table_admin' dropdown='' is-open='status.isopen'>" +
-                "<span class='glyphicon glyphicon-cog'></span><a type='button' dropdown-toggle='' ng-disabled='disabled' aria-haspopup='true' aria-expanded='false'>设置 </a> <ul class='dropdown-menu' role='menu'>" +
+                "<a type='button' dropdown-toggle='' ng-disabled='disabled' aria-haspopup='true' aria-expanded='false'><span class='glyphicon glyphicon-cog'></span>设置 </a> <ul class='dropdown-menu' role='menu'>" +
                 "<li><a href='#conf/webcountsite/countrules'>设置统计规则</a></li>" +
                 "<li><a href='#conf/webcountsite/childlist'>设置子目录</a></li>" +
                 "<li><a href='#conf/webcountsite/pagechange'>设置页面转化目标</a></li>" +

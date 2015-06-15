@@ -51,6 +51,7 @@ require.config({
         "angularjs/vfs_fonts": ["angularjs/pdfmake", "angularjs/csv"],
         "angularjs/ui-bootstrap-tpls": ["angular", "angularjs/ui-bootstrap.min"],
         "angularjs/ui-bootstrap.min": ["angular"],
+        "angularjs/tooltip": ["angular"],
         "angularjs/csv": ["angular"],
         "angularjs/pdfmake": ["angular"],
         "angularjs/ui-grid-unstable.min": ["angular"],

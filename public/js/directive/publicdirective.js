@@ -1187,10 +1187,11 @@ define(["../app"], function (app) {
             link: function (scope, element, attris, controller) {
 
                 var clip = new ZeroClipboard(element[0]); // 新建一个对象
-
+                scope.tooltipText = "复制到剪贴板";
                 clip.on('ready', function () {
+                    $(element[0]).attr("title", "复制到剪贴板").tooltip();
                     this.on('aftercopy', function (event) {
-                        alert("复制成功");
+                        $(element[0]).attr("title", "完成复制！").tooltip("fixTitle").tooltip("show").attr("title", "复制到剪贴板").tooltip("fixTitle");
                     });
                 });
 

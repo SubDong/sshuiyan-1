@@ -11,9 +11,13 @@
             <li>
                 <span>目标URL<p>（在其媒体投放广告时所指向的URL）</p></span>
                 <div class="adtrack_add_input">*
-                    <input type="text" name="targetUrl" data-ng-model="urlconfig.targetUrl"
-                                                        data-ng-focus="targetUrl_focus = true"
-                                                        data-ng-blur="targetUrl_focus = true" placeholder="www.mydomain/product.html"/>
+                    <input type="text" name="remote" data-ng-model="urlconfig.targetUrl"
+                                                     data-ng-focus="url_focus = true"
+                                                     data-ng-blur="url_focus = true"
+                                                     placeholder="www.mydomain/product.html"
+                                                     onfocus="this.setAttribute('placeholder','')"
+                    onblur="this.setAttribute('placeholder','www.mydomain/product.html')"
+                                                     />
                 </div>&nbsp;&nbsp;&nbsp;
                 <span data-ng-show="targetUrl_focus && !urlconfig.targetUrl" style="color: red">请输入目标URL</span>
             </li>
