@@ -111,23 +111,26 @@ define(["./module"], function (ctrs) {
 
             //保存
             var url = "/config/adtrack?type=save&entity=" + JSON.stringify(model);
-            $http({method: 'GET', url: url}).success(function (dataConfig, status) {
-                $scope.urlDialog = ngDialog.open({
-                    preCloseCallback: function() {
-                        $state.go('adtrack');
-                    },
-                    template: '\
+            if(model.targetUrl == undefined || model.targetUrl == ""){
+                return alert("请输入目标URL");
+            }else if(model.mediaPlatform == undefined || model.mediaPlatform == ""){
+                return alert("请输入媒介平台");
+            }else{
+                $http({method: 'GET', url: url}).success(function (dataConfig, status) {
+                    $scope.urlDialog = ngDialog.open({
+                        preCloseCallback: function() {
+                            $state.go('adtrack');
+                        },
+                        template: '\
                         <div class="ngdialog-buttons" >\
-                            <span><h3>保存成功</h3></span><p/>\
-                            <a href="#conf/webcountsite/adtrack_add">继续添加</a>\
-                            <a href="#conf/webcountsite/adtrack" ng-click="closeThisDialog(0)">返回列表</a>\
+                            <span><h4>保存成功</h4></span>\
                         </div>',
-                    className: 'ngdialog-theme-default',
-                    plain: true,
-                    scope: $scope
+                        className: 'ngdialog-theme-default',
+                        plain: true,
+                        scope: $scope
+                    });
                 });
-            });
-
+            }
         };
     });
 });
