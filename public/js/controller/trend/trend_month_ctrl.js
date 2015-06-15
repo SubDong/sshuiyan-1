@@ -340,6 +340,12 @@ define(["./module"], function (ctrs) {
 
         $scope.compareType = false;
         $rootScope.datePickerCompare = function (start, end, label) {
+            var time = chartUtils.getTimeOffset(start, end);
+            var offset=time[1]-time[0];
+            if (offset == 0) {
+                alert("请选择正确的对比时间！");
+                return ;
+            }
             if ($scope.charts[0].config.compare) {
                 $scope.restCompare();
             }

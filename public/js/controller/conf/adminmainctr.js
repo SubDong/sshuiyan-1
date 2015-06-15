@@ -355,7 +355,6 @@ define(["./module"], function (ctrs) {
          */
         var refushGridData = function () {
             var uid = $cookieStore.get("uid");
-            var site_id = $rootScope.userType;
             var url = "/config/site_list?index=site_list&type=search&query={\"uid\":\"" + uid + "\"}";
             $http({
                 method: 'GET',
@@ -410,7 +409,6 @@ define(["./module"], function (ctrs) {
                         url: url
                     }).success(function (dataConfig, status) {
                         var uid = $cookieStore.get("uid");
-                        var site_id = $rootScope.userType;
                         var url = "/config/site_list?index=site_list&type=search&query={\"uid\":\"" + uid + "\"}";
                         $http({
                             method: 'GET',
@@ -444,7 +442,6 @@ define(["./module"], function (ctrs) {
                             url: url
                         }).success(function (dataConfig, status) {
                             var uid = $cookieStore.get("uid");
-                            var site_id = $rootScope.userType;
                             var url = "/config/site_list?index=site_list&type=search&query={\"uid\":\"" + uid + "\"}";
                             $http({
                                 method: 'GET',
