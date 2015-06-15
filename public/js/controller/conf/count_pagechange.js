@@ -93,10 +93,12 @@ define(["./module"], function (ctrs) {
             var uid = $cookieStore.get("uid");
             var site_id = $rootScope.siteId;
             var url = "/config/page_conv?type=search&query={\"uid\":\"" + uid + "\",\"site_id\":\"" + site_id + "\"}";
+            console.log(url)
             $http({
                 method: 'GET',
                 url: url
             }).success(function (dataConfig, status) {
+                console.log(dataConfig)
                 $rootScope.gridOptions.data=dataConfig;
                 //修改数据
                 dataConfig.forEach(function(item,i){

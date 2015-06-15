@@ -134,7 +134,6 @@ define(["./module"], function (ctrs) {
                 url: url
             }).success(function (dataConfig, status) {
 
-                console.log(dataConfig);
                 $scope.gridOptions.data = dataConfig;
 
             });

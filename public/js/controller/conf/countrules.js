@@ -29,7 +29,7 @@ define(["./module"], function (ctrs) {
          */
         $scope.init= function(){
             var uid= $cookieStore.get("uid");
-            var site_id=$rootScope.userType;
+            var site_id=$rootScope.siteId;
             var url= "/config/conf?index=0&type=search&query={\"uid\":\""+uid+"\",\"site_id\":\""+site_id+"\"}";
             $http({
                 method: 'GET',
@@ -53,7 +53,7 @@ define(["./module"], function (ctrs) {
 
         $scope.onSubmitClickListener = function (){
             var uid= $cookieStore.get("uid");
-            var site_id=$rootScope.userType;//从conf_sites中获取
+            var site_id=$rootScope.siteId;//从conf_sites中获取
             var query= "/config/conf?index=0&type=search&query={\"uid\":\""+uid+"\",\"site_id\":\""+site_id+"\"}";
             $http({
                 method: 'GET',
