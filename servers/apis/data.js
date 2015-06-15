@@ -259,7 +259,7 @@ api.get('/indextable', function (req, res) {
             var dimensionInfo;
             var infoKey;
             var maps = {};
-            var valueData = ["arrivedRate", "outRate", "nuvRate", "ct", "period", "se", "pm", "rf", "ja", "ck","isp"];
+            var valueData = ["arrivedRate", "outRate", "nuvRate", "ct", "period", "se", "pm", "rf", "ja", "ck", "isp"];
             try {
                 data.forEach(function (info, x) {
                     for (var i = 0; i < info.key.length; i++) {
@@ -269,8 +269,8 @@ api.get('/indextable', function (req, res) {
                             infoKey = info.key[i]
                         }
                         if (popFlag != 1) {
-                            if(_lati == "rf" && _filter != null && _filter[0]["rf_type"][0] && infoKey == "-") continue
-                            if(_promotion == "ssc" || _lati=="kw"){
+                            if (_lati == "rf" && _filter != null && _filter[0]["rf_type"][0] && infoKey == "-") continue
+                            if (_promotion == "ssc" || _lati == "kw") {
                                 if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null" || infoKey.length >= 40)) continue;
                             }
                         }
@@ -578,9 +578,26 @@ api.get("/exchange", function (req, res) {
     pathUp = Parameters[3].split("=")[1];
     pathDown = Parameters[4].split("=")[1];
     var address = Parameters[5].split("=")[1];
-    access_request.exchangeSearch(req.es, indexString, type, pathUp, pathDown, address, function (result) {
-        datautils.send(res, result);
-    });
+    var int = function () {
+        access_request.exchangeSearch(req.es, indexString, type, pathUp, pathDown, address, function (result) {
+            console.log(result.toString().length);
+            if (result.toString().length == 17) {
+                var index = result;
+                var newIndexs = [];
+                for (var i = 0; i < indexString.length; i++) {
+                    if (indexString[i] == index) {
+                        continue;
+                    }
+                    newIndexs.push(indexString[i]);
+                }
+                indexString = newIndexs;
+                int();
+            } else {
+                datautils.send(res, result);
+            }
+        });
+    };
+    int();
 
 });
 
@@ -662,11 +679,26 @@ api.get("/trafficmap", function (req, res) {
     } else {
         indexString = date.createIndexes(start, end, "access-");
     }
-    access_request.trafficmapSearch(req.es, indexString, targetPathName, function (result) {
-        datautils.send(res, result);
-    });
-
-
+    var int = function () {
+        access_request.trafficmapSearch(req.es, indexString, targetPathName, function (result) {
+            console.log(result.toString().length);
+            if (result.toString().length == 17) {
+                var index = result;
+                var newIndexs = [];
+                for (var i = 0; i < indexString.length; i++) {
+                    if (indexString[i] == index) {
+                        continue;
+                    }
+                    newIndexs.push(indexString[i]);
+                }
+                indexString = newIndexs;
+                int();
+            } else {
+                datautils.send(res, result);
+            }
+        });
+    };
+    int();
 });
 api.get("/offsitelinks", function (req, res) {
     var parameterString = req.url.split("?");//获取url的？号以后的字符串
@@ -683,18 +715,33 @@ api.get("/offsitelinks", function (req, res) {
         indexString = date.createIndexes(start, end, "access-");
     }
     var pathName = parameters[2].split("=")[1];
-
-    access_request.offsitelinksSearch(req.es, indexString, pathName, function (result) {
-        datautils.send(res, result);
-    });
-
+    var int = function () {
+        access_request.offsitelinksSearch(req.es, indexString, pathName, function (result) {
+            console.log(result.toString().length);
+            if (result.toString().length == 17) {
+                var index = result;
+                var newIndexs = [];
+                for (var i = 0; i < indexString.length; i++) {
+                    if (indexString[i] == index) {
+                        continue;
+                    }
+                    newIndexs.push(indexString[i]);
+                }
+                indexString = newIndexs;
+                int();
+            } else {
+                datautils.send(res, result);
+            }
+        });
+    };
+    int();
 });
 // ================================= Config  ==============================
 api.get("/modalInstance", function (req, res) {
     var parameterString = req.url.split("?");//获取url的？号以后的字符串
     var type = parameterString[1].split("=")[1];
-    access_request.modalInstanceSearch(req.es,type,function(result){
-        datautils.send(res,result);
+    access_request.modalInstanceSearch(req.es, type, function (result) {
+        datautils.send(res, result);
     });
 });
 module.exports = api;
