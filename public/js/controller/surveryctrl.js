@@ -147,10 +147,10 @@ define(["./module"], function (ctrs) {
                     name: "浏览量(PV)",
                     value: "pv"
                 },
-                {
-                    name: "页面转化",
-                    value: "pageConversion"
-                },
+//                {
+//                    name: "页面转化",
+//                    value: "pageConversion"
+//                },
                 {
                     name: "跳出率",
                     value: "outRate"

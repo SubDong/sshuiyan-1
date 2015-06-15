@@ -143,7 +143,7 @@ define(["./module"], function (ctrls) {
             {
                 config: {
                     legendId: "source_charts_legend",
-                    legendData: ["浏览量(PV)", "访客数(UV)", "访问次数", "新访客数", "IP数", "页面转化"],
+                    legendData: ["浏览量(PV)", "访客数(UV)", "访问次数", "新访客数", "IP数"],
                     legendClickListener: $scope.onLegendClick,
                     legendAllowCheckCount: 1,
                     id: "indicators_charts",
