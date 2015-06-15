@@ -382,7 +382,6 @@ define(["../app"], function (app) {
         return option;
     });
 
-
     /**
      * Create by wms on 2015-04-22.合计信息显示
      */
@@ -464,10 +463,6 @@ define(["../app"], function (app) {
                             if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null")) {
                                 return false;
                             }
-                        } else {
-                            if (infoKey == undefined) {
-                                return false;
-                            }
                         }
                         if (!flag) {
                             scope.ds_keyData.push(infoKey);
@@ -522,10 +517,6 @@ define(["../app"], function (app) {
                         var infoKey = r[$rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field];
                         if (scope.filter) {
                             if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null")) {
-                                return false;
-                            }
-                        } else {
-                            if (infoKey == undefined) {
                                 return false;
                             }
                         }
