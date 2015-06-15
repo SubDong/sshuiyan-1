@@ -4,6 +4,41 @@
 define(['./module'], function (ctrs) {
     'use strict';
     ctrs.controller('history', function ($scope, $window, $location, $rootScope, requestService, areaService, $http, SEM_API_URL) {
+
+
+
+        $scope.extendwayChange = function (extendway) {
+
+            var uid = $cookieStore.get("uid");
+            var site_id = $rootScope.siteId;
+            var url = "";
+
+            if(extendway.id == 0) { //页面
+                url = "/config/page_conv?type=search&query={\"uid\":\"" + uid + "\",\"site_id\":\"" + site_id + "\"}";
+            } else if(extendway.id == 1) { //事件
+                url = "/config/eventchnage_list?type=search&query={\"uid\":\"" + uid + "\",\"root_url\":\"" + site_id + "\"}";
+            }
+
+            $http({
+                method: 'GET',
+                url: url
+            }).success(function (dataConfig, status) {
+                $scope.gridOptions.data = dataConfig;
+
+                if(extendway.id == 0) {
+
+                } else if(extendway.id == 1) {
+
+                }
+
+            });
+
+
+        }
+
+
+
+
         if ($rootScope.gridArray == undefined || $rootScope.tableSwitch == undefined) {
             $rootScope.gridArray = [];
             var temp_path = $location.path();

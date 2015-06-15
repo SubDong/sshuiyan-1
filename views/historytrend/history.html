@@ -59,9 +59,15 @@
                                        style="width: 120px;">
                                 <ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>
                                 <ui-select-choices repeat="extendway in extendways">
-                                    <span ng-bind-html="extendway.name"></span>
+                                    <span ng-bind-html="extendway.name" data-ng-change="extendwayChange(extendway)" ></span>
                                 </ui-select-choices>
                             </ui-select>
+
+                            <ui-select ng-model="selectMod2" ng-options="o.id as o.text for o in select2">
+
+                            </ui-select>
+
+
                         </div>
                     </div>
                 </div>
