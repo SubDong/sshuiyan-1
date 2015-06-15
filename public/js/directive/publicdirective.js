@@ -895,7 +895,7 @@ define(["../app"], function (app) {
                 case "bing":
                 case "other":
                 {
-                    return count ? (value / count).toFixed(2) + "%" : "0.00%";
+                    return count ? (value / count).toFixed(2) + "%" : "0%";
                 }
                 case "avgTime":
                 {
@@ -918,7 +918,7 @@ define(["../app"], function (app) {
                 case "avgPage":
                 case "cpc":
                 {
-                    return count ? (value / count).toFixed(2) : "0.00";
+                    return count ? (value / count).toFixed(2) : "0";
                 }
                 default :
                 {
@@ -940,7 +940,7 @@ define(["../app"], function (app) {
                 scope._ctValue = attris.myScope === "nv" ? "0" : "1";
                 scope._ctText = attris.myScope === "nv" ? "新访客" : "老访客";
                 scope.defaultObject = {
-                    percent: "0.00%",
+                    percent: "0%",
                     pv: 0,
                     uv: 0,
                     outRate: 0,
