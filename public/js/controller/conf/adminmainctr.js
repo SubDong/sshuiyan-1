@@ -56,7 +56,7 @@ define(["./module"], function (ctrs) {
             add_update: ""
         };
         //table配置
-        $rootScope.adminSetHtml = "<div class='mid_left'><div class='mid_left_code'>" +
+        $rootScope.adminSetHtml = "<div class='mid_left'><div id='base_code' class='mid_left_code'>" +
             "&lt;script&gt;\<br\>" +
             "var _pct= _pct|| [];\<br\>" +
             " (function() {\<br\>" +
@@ -66,7 +66,7 @@ define(["./module"], function (ctrs) {
             "    s.parentNode.insertBefore(hm, s);\<br\>" +
             " })();\<br\>" +
             "&lt;/script&gt;" +
-            "</div> </div><div class='mid_right'><button type='button' class='btn btn-default navbar-btn'>复制代码</button><ul type='disc'>" +
+            "</div> </div><div class='mid_right'><button type='button' class='btn btn-default navbar-btn' ssh-clip='' title='单击复制到剪贴板' data-clipboard-target='base_code'>复制代码</button><ul type='disc'>" +
             "  <li>请将代码添加至网站全部页面的&lt;/head&gt;标签前；</li><li>建议在header.htm类似的页头模板页面中安装，以达到一处安装，全站皆有的效果；</li><li>如需在JS文件中调用统计分析代码，请直接去掉以下代码首尾的&lt;script type='text/javascript' &gt;与&lt;/script&gt;后，放入JS文件中即可；</li>" +
             "<li> 如果代码安装正确，一般20分钟 后,可以查看网站分析数据；</li></ul></div>";
         //配置默认指标
@@ -355,7 +355,6 @@ define(["./module"], function (ctrs) {
          */
         var refushGridData = function () {
             var uid = $cookieStore.get("uid");
-            var site_id = $rootScope.userType;
             var url = "/config/site_list?index=site_list&type=search&query={\"uid\":\"" + uid + "\"}";
             $http({
                 method: 'GET',
@@ -410,7 +409,6 @@ define(["./module"], function (ctrs) {
                         url: url
                     }).success(function (dataConfig, status) {
                         var uid = $cookieStore.get("uid");
-                        var site_id = $rootScope.userType;
                         var url = "/config/site_list?index=site_list&type=search&query={\"uid\":\"" + uid + "\"}";
                         $http({
                             method: 'GET',
@@ -444,7 +442,6 @@ define(["./module"], function (ctrs) {
                             url: url
                         }).success(function (dataConfig, status) {
                             var uid = $cookieStore.get("uid");
-                            var site_id = $rootScope.userType;
                             var url = "/config/site_list?index=site_list&type=search&query={\"uid\":\"" + uid + "\"}";
                             $http({
                                 method: 'GET',

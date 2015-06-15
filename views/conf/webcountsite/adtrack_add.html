@@ -5,29 +5,27 @@
             <p><span ng-bind-html="userTypeName"></span> - 新增指定广告跟踪</p>
         </div>
     </div>
-
     <div class="adtrack_add">
         <ul>
             <li><span>以下信息必须填写:</span></li>
             <li>
                 <span>目标URL<p>（在其媒体投放广告时所指向的URL）</p></span>
                 <div class="adtrack_add_input">*
-                    <input type="text" name="remote" data-ng-model="urlconfig.targetUrl"
-                                                     data-ng-focus="url_focus = true"
-                                                     data-ng-blur="url_focus = true"
-                                                     placeholder="www.mydomain/product.html"/>
+                    <input type="text" name="targetUrl" data-ng-model="urlconfig.targetUrl"
+                                                        data-ng-focus="targetUrl_focus = true"
+                                                        data-ng-blur="targetUrl_focus = true" placeholder="www.mydomain/product.html"/>
                 </div>&nbsp;&nbsp;&nbsp;
-                <span data-ng-show="url_focus && !urlconfig.targetUrl" style="color: red;">请输入目标URL</span>
+                <span data-ng-show="targetUrl_focus && !urlconfig.targetUrl" style="color: red">请输入目标URL</span>
             </li>
 
             <li>
                 <span>媒介平台<p>（广告所投放的平台，如：新浪,搜狐等）</p></span>
                 <div class="adtrack_add_input">*
-                    <input type="text" data-ng-model="urlconfig.mediaPlatform"
-                                       data-ng-focus="platform_focus = true"
-                                       data-ng-blur="platform_focus = true"/>
+                    <input type="text" name="mediaPlatform" data-ng-model="urlconfig.mediaPlatform"
+                                                            data-ng-focus="mediaPlatform_focus = true"
+                                                            data-ng-blur="mediaPlatform_focus = true"/>
                 </div>&nbsp;&nbsp;&nbsp;
-                <span data-ng-show="platform_focus && !urlconfig.mediaPlatform" style="color: red;">请输入媒介平台</span>
+                <span data-ng-show="mediaPlatform_focus && !urlconfig.mediaPlatform" style="color: red">请输入媒介平台</span>
             </li>
         </ul>
         <ul>
@@ -58,9 +56,8 @@
         </li>
         </ul>
 
-        <a class="btn btn-info timechange_button"  ng-click="allSubmit()" >确定拼生成URL</a>&nbsp;&nbsp;&nbsp;
+        <a class="btn btn-info timechange_button"  ng-click="allSubmit()">确定拼生成URL</a>&nbsp;&nbsp;&nbsp;
         <span class="adtrack_add_tz" data-ng-click="onCancel()" >取消</span>
     </div>
-
     </div>
 </div>

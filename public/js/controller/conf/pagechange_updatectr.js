@@ -2,7 +2,6 @@
  * Created by ss on 2015/6/4.
  */
 define(["./module"], function (ctrs) {
-    "use strict";
 
     ctrs.controller('pagechange_update', function ($scope, $http, $rootScope, $cookieStore, $stateParams, ngDialog, $state) {
 

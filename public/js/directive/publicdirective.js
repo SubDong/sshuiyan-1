@@ -20,10 +20,10 @@ define(["../app"], function (app) {
             link: function (scope, element, attris, controller) {
                 Custom.initCheckInfo();
                 scope.$watch("opened", function () {
-                    if(scope.yesterdayClass){
+                    if (scope.yesterdayClass) {
                         $('#reportrange span').html(GetDateStr(-1));
                     }
-                    if(scope.monthClass){
+                    if (scope.monthClass) {
                         $('#reportrange span').html(GetDateStr(-29) + "至" + GetDateStr(0));
                     }
                 });
@@ -751,11 +751,17 @@ define(["../app"], function (app) {
                     var semRequest = $http.get(SEM_API_URL + "search_word/" + $rootScope.userType
                     + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd);
                     $q.all([semRequest]).then(function (final_result) {
+                        var count = 0;
                         angular.forEach(final_result[0].data, function (r) {
+                            var infokey = r.word;
+                            if (infokey != undefined && (infokey == "-" || infokey == "" || infokey == "www" || infokey == "null" || infokey.length >= 40)) {
+                                return;
+                            };
+                            count++;
                             angular.forEach(scope.dateShowArray, function (q_r) {
                                 var temp = q_r.label;
                                 q_r.value += temp != "freq" ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
-                                q_r.count = final_result[0].data.length;
+                                q_r.count = count;
                             });
                         });
                     });
@@ -765,10 +771,15 @@ define(["../app"], function (app) {
                     + "/?startOffset=" + startTime + "&endOffset=" + endTime);
                     $q.all([semRequest]).then(function (final_result) {
                         angular.forEach(final_result[0].data, function (r) {
+                            var infokey = r.word;
+                            if (infokey != undefined && (infokey == "-" || infokey == "" || infokey == "www" || infokey == "null" || infokey.length >= 40)) {
+                                return;
+                            };
+                            count++;
                             angular.forEach(scope.dateShowArray, function (q_r) {
                                 var temp = q_r.label;
                                 q_r.cValue += temp != "freq" ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
-                                q_r.cCount = final_result[0].data.length;
+                                q_r.cCount = count;
                             });
                         });
                     });
@@ -1077,9 +1088,9 @@ define(["../app"], function (app) {
                         if (e_r.sref == _path.substring(1, _path.substring(1).indexOf("/") + 1)) {
                             e_r.showText = true;
                             $rootScope.$broadcast("ssssss", index);
-                        }else if(e_r.sref == _path.split("/")[2]){
+                        } else if (e_r.sref == _path.split("/")[2]) {
                             e_r.showText = true;
-                        }else {
+                        } else {
                             e_r.showText = false;
                         }
                     });
@@ -1169,29 +1180,26 @@ define(["../app"], function (app) {
     /**
      * 复制。
      */
-    app.directive('sshClip', function ($rootScope) {
+    app.directive('sshClip', function ($rootScope, ngDialog) {
         "use strict";
         return {
             restrict: 'EA',
             link: function (scope, element, attris, controller) {
-                //console.log("!231231231231313123123123123");
 
-                var clip = new ZeroClipboard.Client(); // 新建一个对象
-                clip.setHandCursor(true); // 设置鼠标为手型
-                // 注册在元素上
-                clip.glue(element[0]); // 和上一句位置不可调换
+                var clip = new ZeroClipboard(element[0]); // 新建一个对象
 
-                clip.addEventListener("mouseOver", function (client) {
-                    //client.setText("玩儿玩儿额"); // 设置要复制的文本。
+                clip.on('ready', function () {
+                    this.on('aftercopy', function (event) {
+                        alert("复制成功");
+                    });
                 });
 
-                clip.addEventListener("load", function (client) {
-                    //console.log("加载完成");
-                    //clip.reposition();
+                clip.on('error', function (event) {
+                    ZeroClipboard.destroy();
                 });
 
-                clip.addEventListener('complete', function (client, text) {
-                    //alert("恭喜复制成功");
+                clip.on('mouseover', function (client, args) {
+                    //console.log(clip);
                 });
 
             }

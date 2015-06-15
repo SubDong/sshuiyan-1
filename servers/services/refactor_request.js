@@ -62,7 +62,7 @@ var es_aggs = {
     },
     // 访客数
     "uv": {
-        "uv_aggs": {
+        "uv_filter": {
             "filter": {
                 "term": {"entrance": "1"}
             },
@@ -444,7 +444,7 @@ var uvFn = function (result, dimension) {
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
-        var uv = result[i].uv_aggs.uv_aggs.value;
+        var uv = result[i].uv_filter.uv_aggs.value;
         if (dimension == "period") {
             var dateStr = result[i].key_as_string + "";
             keyArr.push(dateStr);
