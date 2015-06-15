@@ -5,11 +5,13 @@ define(["./module"], function (ctrs) {
     "use strict";
 
     ctrs.controller('trend_month_ctrl', function ($scope, $rootScope, $q, $http, requestService, messageService, areaService, uiGridConstants) {
+        $('#reportrange span').html(GetDateStr(-29) + "至" + GetDateStr(0));
         $scope.monthClass = true;
         $scope.hourcheckClass = true;
         $scope.weekselected = false;
         $scope.souce.selected = {"name": "全部"};
         $scope.browser.selected = {"name": "全部"};
+        $scope.city.selected = {"name": "全部"};
         $scope.reset = function () {
             $scope.todayClass = false;
             $scope.yesterdayClass = false;
@@ -22,7 +24,7 @@ define(["./module"], function (ctrs) {
         //table配置
         $rootScope.tableTimeStart = -30;
         $rootScope.tableTimeEnd = -1;
-        $rootScope.tableFormat = "day";
+        $rootScope.tableFormat = "hour";
         //配置默认指标
         $rootScope.checkedArray = ["pv", "uv", "ip", "outRate", "avgTime"];
         $rootScope.gridArray = [
@@ -181,11 +183,6 @@ define(["./module"], function (ctrs) {
                 chart.config.time = chartUtils.getWeekTime($rootScope.start, $rootScope.end);
             });
             requestService.refresh($scope.charts);
-            if ($rootScope.start <= -6) {
-                $rootScope.tableFormat = "day";
-            } else {
-                $rootScope.tableFormat = "hour";
-            }
             $rootScope.targetSearch();
         });
 
@@ -235,11 +232,7 @@ define(["./module"], function (ctrs) {
                 e.config.instance = chart;
                 e.config.noFormat = undefined;
             });
-            if ($rootScope.start <= -7) {
-                $rootScope.tableFormat = "day";
-            } else {
-                $rootScope.tableFormat = "hour";
-            }
+            $rootScope.tableFormat = "day";
             $rootScope.targetSearch();
             requestService.refresh($scope.charts);
         };

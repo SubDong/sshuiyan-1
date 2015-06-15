@@ -6,8 +6,8 @@
 
 var _new_visitor_aggs = {
     "filter": {
-        "script": {
-            "script": "doc['entrance'].value == 1"
+        "term": {
+            "entrance": "1"
         }
     },
     "aggs": {
@@ -20,8 +20,17 @@ var _new_visitor_aggs = {
 };
 
 var _vc_aggs = {
-    "cardinality": {
-        "field": "tt"
+    "filter": {
+        "term": {
+            "entrance": "1"
+        }
+    },
+    "aggs": {
+        "vc_aggs": {
+            "cardinality": {
+                "field": "tt"
+            }
+        }
     }
 };
 
@@ -54,8 +63,15 @@ var es_aggs = {
     // 访客数
     "uv": {
         "uv_aggs": {
-            "cardinality": {
-                "field": "_ucv"
+            "filter": {
+                "term": {"entrance": "1"}
+            },
+            "aggs": {
+                "uv_aggs": {
+                    "cardinality": {
+                        "field": "_ucv"
+                    }
+                }
             }
         }
     },
@@ -379,7 +395,7 @@ var pvFn = function (result, dimension) {
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
-        try{
+        try {
             var pv = result[i].pv_aggs.value;
             if (dimension == "period") {
                 var dateStr = result[i].key_as_string + "";
@@ -388,7 +404,7 @@ var pvFn = function (result, dimension) {
                 Array.prototype.push.call(keyArr, result[i].key);
 
             Array.prototype.push.call(quotaArr, pv);
-        }catch(e){
+        } catch (e) {
             console.error(e);
         }
 
@@ -428,7 +444,7 @@ var uvFn = function (result, dimension) {
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
-        var uv = result[i].uv_aggs.value;
+        var uv = result[i].uv_aggs.uv_aggs.value;
         if (dimension == "period") {
             var dateStr = result[i].key_as_string + "";
             keyArr.push(dateStr);
@@ -450,7 +466,7 @@ var vcFn = function (result, dimension) {
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
-        var vc = result[i].vc_aggs.value;
+        var vc = result[i].vc_aggs.vc_aggs.value;
         if (dimension == "period") {
             var dateStr = result[i].key_as_string + "";
             keyArr.push(dateStr);
@@ -1075,6 +1091,100 @@ var es_request = {
 
             }
         });
+    },
+    entranceSearch: function (es, indexes, type, quotas, dimension, filters, start, end, callbackFn) {
+        var mustQuery = [
+            {
+                "range": {
+                    "utime": {
+                        "gte": start,
+                        "lte": end,
+                        "time_zone": "+8:00"
+                    }
+                }
+            }
+        ];
+
+        if (filters != null) {
+            filters.forEach(function (filter) {
+                mustQuery.push({
+                    "terms": filter
+                });
+            });
+        }
+
+        var request = {
+            "index": indexes,
+            "type": type,
+            "body": {
+                "query": {
+                    "bool": {
+                        "must": mustQuery
+                    }
+                },
+                "size": 0,
+                "aggs": {
+                    "url_group": {
+                        "terms": {
+                            "field": "loc"
+                        },
+                        "aggs": {
+                            "pv_aggs": {
+                                "value_count": {
+                                    "field": "loc"
+                                }
+                            },
+                            "uv_aggs": {
+                                "cardinality": {
+                                    "field": "_ucv"
+                                }
+                            },
+                            "entrance_aggs": {
+                                "sum": {
+                                    "script": "e = 0; if (doc['entrance'].value == 1) {e = 1}; e"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        es.search(request, function (error, response) {
+            var data = [];
+            if (response != undefined && response.aggregations != undefined) {
+                var result = response.aggregations.url_group.buckets;
+
+                quotas.forEach(function (quota) {
+                    switch (quota) {
+                        case "pv":
+                            data.push(pvFn(result));
+                            break;
+                        case "uv":
+                            data.push(uvFn(result));
+                            break;
+                        case "entrance":
+                            var keyArr = [];
+                            var quotaArr = [];
+
+                            for (var i = 0, l = result.length; i < l; i++) {
+                                var uv = result[i].entrance_aggs.value;
+                                keyArr.push(result[i].key);
+                                quotaArr.push(uv);
+                            }
+
+                            data.push({"label": "entrance", "key": keyArr, "quota": quotaArr});
+                            break;
+                        default :
+                            break;
+                    }
+                });
+
+                callbackFn(data);
+            } else
+                callbackFn(data);
+        });
+
     }
 };
 

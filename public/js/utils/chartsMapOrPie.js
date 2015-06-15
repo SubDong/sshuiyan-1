@@ -16,7 +16,6 @@ var mixingMap = {
             tooltip: {
                 trigger: 'item',
                 backgroundColor: 'rgba(255,255,255,0.8)',
-                backgroundColor: 'rgba(255,255,255,0.8)',
                 borderColor: '#ededed',
                 borderWidth: 1,
                 padding: 0,

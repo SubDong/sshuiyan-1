@@ -2219,10 +2219,10 @@ nav, .navbar-default {
 .line_chart {
   width: 60%;
   float: right;
-  .echarts-tooltip{
-   li:nth-of-type(2){
-     padding:0 ;
-   }
+  .echarts-tooltip {
+    li:nth-of-type(2) {
+      padding: 0 0 0 5px;
+    }
 
   }
 }
@@ -3319,7 +3319,7 @@ select.styled {
 
 .visitor_table_width {
   .ui-grid-row .ng-scope {
-    padding: 0 5px;
+    //  padding: 0 5px;
   }
 }
 
@@ -3552,4 +3552,41 @@ textarea.tNum {
   .chart_detalie {
 
   }
+}
+
+.pop_title {
+  ul {
+    margin-bottom: 0px;
+    overflow: hidden;
+    .current {
+      background: #fff;
+    }
+  }
+  ul li {
+    float: left;
+    display: block;
+    cursor: pointer;
+    width: 100px;
+    height: 48px;
+    line-height: 48px;
+    text-align: center;
+    border-radius: 4px 4px 0 0;
+    overflow: hidden;
+  }
+  .modal-body {
+    padding: 0px;
+    background: #fff;
+  }
+  .table {
+    margin-bottom: 0px;
+    tbody > tr:nth-child(1) > td:nth-child(1) {
+      border: 0px;
+    }
+    tbody > tr:nth-child(1) > td:nth-child(2) {
+      border: 0px;
+    }
+  }
+}
+.modal-header{
+  border-bottom:none;
 }

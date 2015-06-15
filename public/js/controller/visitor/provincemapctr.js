@@ -97,7 +97,7 @@ define(["./module"], function (ctrs) {
 
         $scope.setProperty = function (property, position, entities) {
             $scope.property = property;
-            $scope.doSearchAreas($scope.dateTimeStart, $scope.dateTimeEnd, $rootScope.userType, $scope.mapOrPieConfig);
+            $scope.doSearchAreas($rootScope.start, $rootScope.end, $rootScope.userType, $scope.mapOrPieConfig);
         }
 
         $scope.setArea = function (area) {
@@ -165,7 +165,7 @@ define(["./module"], function (ctrs) {
                                 tooltip: {
                                     show: true,
                                     trigger: 'item',
-                                    formatter: "{a} <br/>{b} : {c}"
+                                    formatter: "<p>{b}</p><p>{a}: {c}</p> <p>占比:{d}%</p>"
                                 },
                                 selected: true
                             });

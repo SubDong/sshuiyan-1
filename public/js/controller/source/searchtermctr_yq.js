@@ -6,6 +6,7 @@ define(["./module"], function (ctrs) {
     'use strict';
 
     ctrs.controller('searchtermctr_yq', function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants,popupService) {
+            $scope.city.selected = {"name": "全部"};
             $scope.todayClass = true;
             $scope.visible = false;
             //table默认信息配置

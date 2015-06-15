@@ -70,13 +70,14 @@ define(["./module"], function (ctrs) {
                 }, {
                     text: '搜索推广',
                     sref: '#extension/search'
-                }, {
+                }/*, {
                     text: '网盟推广',
                     sref: '#extension/alliance'
                 }, {
                     text: '推广URL速度',
                     sref: '#extension/urlspeed'
-                }]
+                }*/
+                ]
             }, {
                 title: '趋向分析',
                 icon: 'glyphicon glyphicon-stats',
@@ -145,10 +146,10 @@ define(["./module"], function (ctrs) {
                 }, {
                     text: '新老访客',
                     sref: '#visitor/novisitors'
-                }, {
+                }/*, {
                     text: '访客特征',
                     sref: '#visitor/visitorfeature'
-                }]
+                }*/]
             }, {
                 title: '价值透析',
                 icon: 'glyphicon glyphicon-yen',
@@ -195,24 +196,24 @@ define(["./module"], function (ctrs) {
                     text: '指定广告跟踪',
                     sref: '#conf/webcountsite/adtrack'
                 }]
-            },
-            {
-                title: '系统管理设置',
-                icon: 'glyphicon glyphicon-user',
-                stype: 1,
-                sref: 'admin',
-                child: [{
-                    text: ' 权限账户管理',
-                    sref: '#conf/admin/root'
-                }, {
-                    text: '统计图标设置',
-                    sref: '#conf/admin/counticon'
-                }, {
-                    text: '报告发送设置',
-                    sref: '#conf/admin/reportsite'
-
-                }]
             }
+            //{
+            //    title: '系统管理设置',
+            //    icon: 'glyphicon glyphicon-user',
+            //    stype: 1,
+            //    sref: 'admin',
+            //    child: [{
+            //        text: ' 权限账户管理',
+            //        sref: '#conf/admin/root'
+            //    }, {
+            //        text: '统计图标设置',
+            //        sref: '#conf/admin/counticon'
+            //    }, {
+            //        text: '报告发送设置',
+            //        sref: '#conf/admin/reportsite'
+            //
+            //    }]
+            //}
         ];
 
     });

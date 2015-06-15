@@ -21,13 +21,14 @@ router.get('/', function (req, resp) {
         } else {
             ref = ref.slice(0, ref.indexOf('?'));
             var config = {
+                "trackid": tid,
                 "domain": sitejson.siteurl,
                 "open": sitejson.sitepause   //是否启用
             }
             var siteid = sitejson.siteid ? sitejson.siteid : "1";
-            var tasks = ['typeid', 'mouse', 'duration', 'visit', 'evt'];
+            var tasks = ['mouse', 'duration', 'visit', 'evt'];
             async.eachSeries(tasks, function (item, cb) {
-                var url = (item == "typeid" ? item.concat(":",tid) : item == "mouse" ? siteid.concat(":", item, ":", ref) : item.concat(":",siteid));
+                var url = (item == "mouse" ? siteid.concat(":", item, ":", ref) : item.concat(":",siteid));
                 redis.service().get(url, function (err, val) {
                     if (val != null) {
                         try{

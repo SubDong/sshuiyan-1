@@ -6,6 +6,7 @@ define(["./module"], function (ctrs) {
     "use strict";
 
     ctrs.controller('search_gjc_ctr', function ($scope, $rootScope, $q, requestService, areaService, $http, SEM_API_URL) {
+        $scope.city.selected = {"name": "全部"};
         $scope.yesterdayClass = true;
         $rootScope.tableTimeStart = -1;//开始时间
         $rootScope.tableTimeEnd = -1;//结束时间、
@@ -138,7 +139,11 @@ define(["./module"], function (ctrs) {
                         Custom.initCheckInfo();
                     }
                     cf.renderChart(total_result, $scope.charts[0].config);
-                    chart.hideLoading();
+                    //if (final_result.length) {
+                    //    if (final_result[0].data.length) {
+                    //        chart.hideLoading();
+                    //    }
+                    //}
                 });
             }
         }

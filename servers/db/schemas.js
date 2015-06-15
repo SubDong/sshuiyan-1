@@ -159,15 +159,15 @@ var schemas = {
         model_name: "ConfigAdtrack",
         collection_name: "t_configAdtrack",
         schema: {
-            uid: "", // user id 用户ID
-            site_id: "",    //站点ID
-            targetUrl: "", // 目标URL
-            mediaPlatform: "", // 媒体平台
-            adTypes: "",    //广告类型
-            planName: "", //计划名称
-            keywords: "",   //关键词
-            creative: "", //创意
-            produceUrl: ""  //产生后的URL
+            uid: String,            //用户ID
+            site_id: String,        //站点ID
+            targetUrl: String,      //目标URL
+            mediaPlatform: String,  //媒体平台
+            adTypes: String,        //广告类型
+            planName: String,       //计划名称
+            keywords: String,       //关键词
+            creative: String,       //创意
+            produceUrl: String      //产生后的URL
         }
     },
 

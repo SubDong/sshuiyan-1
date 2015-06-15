@@ -3,6 +3,7 @@
  */
 define(["./module"], function (ctrs) {
     ctrs.controller('searchctr', function ($scope, $rootScope, $q, requestService, areaService, $http, SEM_API_URL) {
+            $scope.city.selected = {"name": "全部"};
             $scope.visible = true;
             $scope.yesterdayClass = true;
             $rootScope.tableTimeStart = -1;//开始时间
@@ -150,7 +151,6 @@ define(["./module"], function (ctrs) {
                             Custom.initCheckInfo();
                         }
                         cf.renderChart(total_result, $scope.charts[0].config);
-                        chart.hideLoading();
                     });
                 }
             }

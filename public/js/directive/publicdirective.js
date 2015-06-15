@@ -395,6 +395,7 @@ define(["../app"], function (app) {
                 scope.isCompared = false;
                 scope.dateShowArray = [];
                 scope.ssh_seo_type = attris.semType;
+                scope.filter = attris.filter;
                 scope.ds_defaultQuotasOption = ["pv", "uv", "ip", "nuv", "outRate", "avgTime"];
                 scope.ds_keyData = [];
                 scope.ds_dateShowQuotasOption = scope.checkedArray ? scope.checkedArray : scope.ds_defaultQuotasOption;
@@ -459,11 +460,14 @@ define(["../app"], function (app) {
                     var _count = 0;
                     angular.forEach(result, function (r) {
                         var infoKey = r[$rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field];
-                        //if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null")) {
-                        //    return false;
-                        //}
-                        if (infoKey == undefined) {
-                            return false;
+                        if (scope.filter) {
+                            if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null")) {
+                                return false;
+                            }
+                        } else {
+                            if (infoKey == undefined) {
+                                return false;
+                            }
                         }
                         if (!flag) {
                             scope.ds_keyData.push(infoKey);
@@ -516,11 +520,14 @@ define(["../app"], function (app) {
                     var _count = 0;
                     angular.forEach(result, function (r) {
                         var infoKey = r[$rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field];
-                        //if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null")) {
-                        //    return false;
-                        //}
-                        if (infoKey == undefined) {
-                            return false;
+                        if (scope.filter) {
+                            if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null")) {
+                                return false;
+                            }
+                        } else {
+                            if (infoKey == undefined) {
+                                return false;
+                            }
                         }
                         _count++;
                         angular.forEach(_array, function (obj) {
@@ -1176,7 +1183,7 @@ define(["../app"], function (app) {
         return {
             restrict: 'EA',
             link: function (scope, element, attris, controller) {
-                console.log("!231231231231313123123123123");
+                //console.log("!231231231231313123123123123");
 
                 var clip = new ZeroClipboard.Client(); // 新建一个对象
                 clip.setHandCursor(true); // 设置鼠标为手型
@@ -1184,16 +1191,16 @@ define(["../app"], function (app) {
                 clip.glue(element[0]); // 和上一句位置不可调换
 
                 clip.addEventListener("mouseOver", function (client) {
-                    client.setText("玩儿玩儿额"); // 设置要复制的文本。
+                    //client.setText("玩儿玩儿额"); // 设置要复制的文本。
                 });
 
                 clip.addEventListener("load", function (client) {
-                    console.log("加载完成");
+                    //console.log("加载完成");
                     //clip.reposition();
                 });
 
                 clip.addEventListener('complete', function (client, text) {
-                    alert("恭喜复制成功");
+                    //alert("恭喜复制成功");
                 });
 
             }

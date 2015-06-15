@@ -184,7 +184,14 @@ define(["./module"], function (ctrs) {
         };
         //搜索推广地域过滤
         $scope.setAreaFilter = function (area, id) {
-
+            if (area == "北京" || area == "上海" || area == "广州") {
+                if ($scope.city.selected != undefined) {
+                    $scope.city.selected.name = area;
+                } else {
+                    $scope.city.selected = {};
+                    $scope.city.selected["name"] = area;
+                }
+            }
             $scope.gridOptions.data = [];
             $scope.gridOpArray = angular.copy($rootScope.searchGridArray);
             $scope.gridOptions.columnDefs = $scope.gridOpArray;
@@ -326,7 +333,7 @@ define(["./module"], function (ctrs) {
             $http({
                 method: 'GET',
                 url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=kwsid"
-                + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=undefined&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
+                + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=ssc&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
             }).success(function (data, status) {
                 var dataArray = [];
                 if (data != null && data.length > 0) {
@@ -389,6 +396,7 @@ define(["./module"], function (ctrs) {
                     enablePaginationControls: false,
                     enableHorizontalScrollbar: 0,
                     enableVerticalScrollbar: 0,
+                    //expandableRowHeight: 61,
                     columnDefs: [{name: "kw", displayName: "触发关键词搜索词", field: "kw"}]
                 };
                 $http({
@@ -403,7 +411,9 @@ define(["./module"], function (ctrs) {
                     } else {
                         dataArray.push({kw: "无"})
                     }
+                    row.entity.subGridOptions.expandableRowHeight = (row.entity.subGridOptions.data.length == 0?1 * 60: row.entity.subGridOptions.data.length * 60)+1;
                     row.entity.subGridOptions.data = dataArray;
+
                 })
             });
         };
@@ -583,6 +593,12 @@ define(["./module"], function (ctrs) {
                     var atime2 = parseInt(newSpl[1] / option.length) + "";
                     var atime3 = parseInt(newSpl[2] / option.length) + "";
                     returnData = (atime1.length == 1 ? "0" + atime1 : atime1) + ":" + (atime2.length == 1 ? "0" + atime2 : atime2) + ":" + (atime3.length == 1 ? "0" + atime3 : atime3);
+                }
+                /**
+                 * TODO  ...
+                 */
+                if (a.col.field == "cpc") {
+                    returnData = (returnData+"").substring(0,(returnData+"").indexOf(".")+3);
                 }
             }
             return returnData;

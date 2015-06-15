@@ -1,12 +1,17 @@
 var ignore_url = /^\/token/
 
+var redirect = "http://sem.best-ad.cn/login?url=";
+
 var auth = {
+    init: function (config) {
+        redirect = config.auth_url;
+    },
     auth: function (req, res, next) {
         if (!auth.ignore(req)) {
             var user = req.session.user;
             if (!user) {
                 var url = req.header('host');
-                res.redirect("http://sem.best-ad.cn/login?url=" + url);
+                res.redirect(redirect + url);
                 return;
             }
         }

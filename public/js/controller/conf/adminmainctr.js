@@ -92,7 +92,7 @@ define(["./module"], function (ctrs) {
                 cellClass: 'table_admin_color'
             },
             {
-                name: "x6",
+                name: "x7",
                 displayName: "",
                 cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.gain(index,grid,row)'>" +
                 "获取代码</a><span class='glyphicon glyphicon-file'></span></div>",
