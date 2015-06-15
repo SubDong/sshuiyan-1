@@ -46,7 +46,7 @@ define(["./module"], function (ctrs) {
         $scope.page_schema = angular.copy($scope.page_schema_model);
         $scope.t_conv_text = "";//路径类型其他
         //UID 和site_id初始化
-        $scope.page_schema.site_id = $rootScope.userType;
+        $scope.page_schema.site_id = $rootScope.siteId;
         $scope.page_schema.uid = $cookieStore.get("uid");
 
         $scope.record = false;
@@ -100,7 +100,6 @@ define(["./module"], function (ctrs) {
             step_urls.splice(_index, 1);
         };
         $scope.addStepUrls = function (step, turl) {
-            console.log(step.step_urls);
             step.step_urls.push({url: turl});
         };
         $scope.chooseRecordType = function (curType) {
@@ -146,7 +145,6 @@ define(["./module"], function (ctrs) {
                     }else{
                         $scope.page_schema.conv_text= $scope.t_conv_text;
                     }
-                    console.log($scope.page_schema.conv_text);
                     var url = "/config/page_conv?type=save&entity=" + JSON.stringify($scope.page_schema);
                     $http({
                         method: 'GET',

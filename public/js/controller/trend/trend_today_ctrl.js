@@ -330,13 +330,13 @@ define(["./module"], function (ctrs) {
                 $scope.compareReset();
             }
             var time = chartUtils.getTimeOffset(start, end);
-            var offest = time[1] - time[0];
+            var offset = time[1] - time[0];
             $scope.reset();
-            if (offest >= 31) {
+            if (offset >= 31) {
                 $scope.mothselected = false;
                 $scope.weekselected = false;
             } else {
-                if (offest >= 7) {
+                if (offset >= 7) {
                     $scope.weekselected = false;
                 } else {
                     $scope.weekselected = true;
@@ -504,6 +504,12 @@ define(["./module"], function (ctrs) {
         }
         $scope.compareType = false;
         $rootScope.datePickerCompare = function (start, end, label) {
+            var time = chartUtils.getTimeOffset(start, end);
+            var offset=time[1]-time[0];
+            if (offset == 0) {
+                alert("请选择正确的对比时间！");
+               return ;
+            }
             if ($scope.charts[0].config.compare) {
                 $scope.restCompare();
             }
