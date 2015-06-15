@@ -1,7 +1,7 @@
 /**
  * Created by perfection on 2015-5-20.
+ * @deprecated
  */
-
 var buildQuery = function (filters, start, end) {
     var mustQuery = [
         {
@@ -30,7 +30,13 @@ var buildQuery = function (filters, start, end) {
     }
 };
 
-// pv
+/**
+ * pv
+ * @param result
+ * @returns {{label: string, key: Array, quota: Array}}
+ *
+ * @deprecated
+ */
 var pvFn = function (result) {
     var keyArr = [];
     var quotaArr = [];
@@ -48,7 +54,13 @@ var pvFn = function (result) {
     };
 };
 
-// uv
+/**
+ * uv
+ * @param result
+ * @returns {{label: string, key: Array, quota: Array}}
+ *
+ * @deprecated
+ */
 var uvFn = function (result) {
     var keyArr = [];
     var quotaArr = [];
@@ -66,7 +78,13 @@ var uvFn = function (result) {
     };
 };
 
-// 入口页查询结果解析
+/**
+ * 入口页查询结果解析
+ * @param result
+ * @returns {{label: string, key: Array, quota: Array}}
+ *
+ * @deprecated
+ */
 var entranceFn = function (result) {
     var keyArr = [];
     var quotaArr = [];
@@ -84,7 +102,10 @@ var entranceFn = function (result) {
     };
 };
 
-// 目前查询仅适用于页面分析模块中受访页面的入口页
+/**
+ *
+ * @deprecated
+ */
 var access_request = {
     search: function (es, indexes, type, quotas, dimension, filters, start, end, callbackFn) {
         var request = {
@@ -147,40 +168,41 @@ var access_request = {
                 callbackFn(data);
         });
     },
-    exchangeSearch: function (es, indexs, type,pathUp,pathDown,address, callbackFn) {
-        var checkAddress = function(){
-            if(address=="null"){
+    exchangeSearch: function (es, indexs, type, pathUp, pathDown, address, callbackFn) {
+        // TODO why not use switch case
+        var checkAddress = function () {
+            if (address == "null") {
                 return {
-                    "match_all":{}
+                    "match_all": {}
                 }
-            }else{
-                if(pathDown=="path1"){
+            } else {
+                if (pathDown == "path1") {
                     return {
-                        "match":{
-                            "path1":address
+                        "match": {
+                            "path1": address
                         }
                     }
-                }else if(pathDown=="path2"){
+                } else if (pathDown == "path2") {
                     return {
-                        "match":{
-                            "path2":address
+                        "match": {
+                            "path2": address
                         }
                     }
-                }else if(pathDown=="path3"){
+                } else if (pathDown == "path3") {
                     return {
-                        "match":{
-                            "path3":address
+                        "match": {
+                            "path3": address
                         }
                     }
-                }else if(pathDown=="path4"){
+                } else if (pathDown == "path4") {
                     return {
-                        "match":{
-                            "path4":address
+                        "match": {
+                            "path4": address
                         }
                     }
-                }else{
+                } else {
                     return {
-                        "match_all":{}
+                        "match_all": {}
                     };
                 }
             }
@@ -190,7 +212,7 @@ var access_request = {
             type: type,
             body: {
                 "size": 0,
-                "query":checkAddress(),
+                "query": checkAddress(),
                 "aggs": {
                     "pv_uv": {
                         "terms": {
@@ -250,9 +272,9 @@ var access_request = {
                                 "pv": result[i].path0.buckets[c].path1.buckets[k].pv.value,
                                 "uv": result[i].path0.buckets[c].path1.buckets[k].uv.value,
                                 "pathName": result[i].path0.buckets[c].path1.buckets[k].key,
-                                "pathUp":pathDown,
+                                "pathUp": pathDown,
                                 "id": result[i].key,
-                                "order_id":k
+                                "order_id": k
                             });
                         }
                         data.push({
@@ -270,6 +292,7 @@ var access_request = {
                 callbackFn(data);
         });
     },
+    // TODO 为什么不按照指标来进行统一处理
     trafficmapSearch: function (es, indexs, targetPathName, callbackFn) {
         var request = {
             index: indexs,
@@ -365,14 +388,14 @@ var access_request = {
                         "uv": ((Number(mostOfResult[i].uv.value) / Number(result.all_uv.value)) * 100).toFixed(2) + "%"
                     });
                 }
-                if(result.target_pv_uv.buckets.data1.pv.value==0){
+                if (result.target_pv_uv.buckets.data1.pv.value == 0) {
                     targetPathData = {
                         pathname: targetPathName,
-                        pv_proportion:  "0%",
-                        uv_proportion:  "0%",
+                        pv_proportion: "0%",
+                        uv_proportion: "0%",
                         pv: result.target_pv_uv.buckets.data1.pv.value
                     }
-                }else{
+                } else {
                     targetPathData = {
                         pathname: targetPathName,
                         pv_proportion: ((Number(result.target_pv_uv.buckets.data1.pv.value) / Number(result.target_pv_uv.buckets.data.pv.value)) * 100).toFixed(2) + "%",
@@ -380,12 +403,12 @@ var access_request = {
                         pv: result.target_pv_uv.buckets.data1.pv.value
                     }
                 }
-                if(result.target_pv_uv.buckets.data.pv.value==0){
+                if (result.target_pv_uv.buckets.data.pv.value == 0) {
                     out_siteData = {
-                        pv_proportion:  "0%",
-                        uv_proportion:  "0%"
+                        pv_proportion: "0%",
+                        uv_proportion: "0%"
                     }
-                }else{
+                } else {
                     out_siteData = {
                         pv_proportion: (((Number(result.target_pv_uv.buckets.data.pv.value) - Number(result.target_pv_uv.buckets.data2.pv.value)) / Number(result.target_pv_uv.buckets.data.pv.value)) * 100).toFixed(2) + "%",
                         uv_proportion: (((Number(result.target_pv_uv.buckets.data.uv.value) - Number(result.target_pv_uv.buckets.data2.uv.value)) / Number(result.target_pv_uv.buckets.data.uv.value)) * 100).toFixed(2) + "%"
@@ -402,6 +425,7 @@ var access_request = {
                 callbackFn(results);
         });
     },
+    // TODO 为什么不按照指标来进行统一处理
     offsitelinksSearch: function (es, indexs, targetPathName, callbackFn) {
         var request = {
             index: indexs,
@@ -566,6 +590,7 @@ var access_request = {
                 callbackFn(data);
         });
     },
+    // TODO 为什么不按照指标来进行统一处理
     offsitelinksSearchForPathName: function (es, indexs, pathName, callbackFn) {
         var request = {
             index: indexs,
@@ -622,28 +647,28 @@ var access_request = {
         });
 
     },
-    modalInstanceSearch:function(es,type,callbackFn){
+    modalInstanceSearch: function (es, type, callbackFn) {
         var request = {
-            index:null,
-            type:type,
-            body:{
-                "size":0,
-                "aggs":{
-                    "monitorPath":{
-                        "terms":{
-                            "field":"loc"
+            index: null,
+            type: type,
+            body: {
+                "size": 0,
+                "aggs": {
+                    "monitorPath": {
+                        "terms": {
+                            "field": "loc"
                         }
                     }
                 }
             }
         }
-        es.search(request,function(error,response){
+        es.search(request, function (error, response) {
             var data = [];
             if (response != undefined && response.aggregations != undefined) {
                 var result = response.aggregations.monitorPath.buckets;
                 for (var i = 0; i < result.length; i++) {
                     data.push({
-                        monitorPath:result[i].key
+                        monitorPath: result[i].key
                     });
                 }
                 callbackFn(data);

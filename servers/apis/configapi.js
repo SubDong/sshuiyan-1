@@ -193,7 +193,7 @@ api.get("/site_list", function (req, res) {
                     .set("ts:" + temp.track_id, ins._id)//
                     .set("st:" + ins._id, ins.track_id)//
                     .set("tsj:" + ins.track_id, JSON.stringify(siteconfig))
-                    .set(ins._id + ":mouse:" + ins.site_url, JSON.stringify(config_mouse))//目前无具体URL配置 暂时设置在站点上
+                    //.set(ins._id + ":mouse:" + ins.site_url, JSON.stringify(config_mouse))//目前无具体URL配置 暂时设置在站点上
                     .set("duration:" + ins._id, JSON.stringify(time_config))//站点级别设置
                     .set("visit:" +ins._id, JSON.stringify(pv_config)).exec();
             });
@@ -377,6 +377,62 @@ api.get("/time_conv", function (req, res) {
                         }
                     });
                 }
+            });
+            break;
+        case "delete":
+            //先删除Redis 查询到要删除的数据
+            dao.remove(schema_name, query['query'], function () {
+                datautils.send(res, "success");
+            });
+            break;
+        default :
+            break;
+    }
+
+});
+
+/**
+ * 时长转化规则单独剥离 路由
+ * 包括PV转化
+ */
+api.get("/page_title", function (req, res) {
+    console.log("page-title'")
+    var query = url.parse(req.url, true).query;
+    var type = query['type'];
+    var schema_name = "page_title_model";
+    switch (type) {
+        case "save":
+            console.log(query['entity'])
+            var entity = JSON.parse(query['entity']);
+            dao.save(schema_name, entity, function (ins) {
+                datautils.send(res, JSON.stringify(ins));
+
+                //存储时长转化和PV转化到Redsi
+                var page_title = {//默认状态下存储
+                    page_url: "",
+                    icon_name: "",
+                    is_open:false
+                }
+                if(ins!=null){
+                    page_title.page_url = ins.page_url;
+                    page_title.icon_name = ins.icon_name;
+                    page_title.is_open = ins.is_open;
+                }
+                //通过site_id 去获取track_id
+                if(entity.site_id!=null&&entity.page_url!=null){
+                    req.redisclient.multi().set(entity.site_id+":mouse:" + entity.page_url, JSON.stringify(page_title)) .exec();//站点级别设置
+                }
+            });
+            break;
+        case "search":
+            console.log(query['query'])
+            dao.find(schema_name, query['query'], null, {}, function (err, docs) {
+                datautils.send(res, docs);
+            });
+            break;
+        case "update":
+            dao.update(schema_name, query['query'], query['updates'], function (err, up) {
+                datautils.send(res, up);
             });
             break;
         case "delete":

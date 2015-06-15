@@ -231,7 +231,6 @@ define(["./module"], function (ctrs) {
                 $q.all([reqRequestStart, reqRequestEnd]).then(function (data) {
                     var _dateTime = chartUtils.getSetOffTime(times[0], times[1], "/");
                     var final_result = util.getEquipmentDataCompare(data, $scope.equipment.selected, _dateTime);
-                    console.log(final_result);
                     cf.renderChart(final_result, e.config);
                 });
             });

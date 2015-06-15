@@ -5,7 +5,7 @@ define(["./../module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.controller('attractivenessanalysisctr',function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
+    ctrs.controller('attractivenessanalysisctr', function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants, popupService) {
             $scope.todayClass = true;
 
             $rootScope.tableTimeStart = 0;
@@ -28,7 +28,7 @@ define(["./../module"], function (ctrs) {
                 },
                 {
                     name: " ",
-                    cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history10' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='javascript:void(0)' ng-click='grid.appScope.showEntryPageLink(row, 1)'>查看来源分布</a></li></ul></div></div>"
+                    cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history10' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a ng-click='grid.appScope.showSourceDistribution(row)'>查看来源分布</a></li></ul></div></div>"
                 },
                 {
                     name: "贡献量",
@@ -60,8 +60,12 @@ define(["./../module"], function (ctrs) {
                 // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
                 number: 2,
                 //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
-                coding: "<li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='javascript:void(0)' ng-click='grid.appScope.showEntryPageLink(row, 3)'>查看来源分布</a></li>",
+                coding: "<li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a ng-click='grid.appScope.showSourceDistribution(row)'>查看来源分布</a></li>",
                 arrayClear: false
+            };
+
+            $scope.showSourceDistribution = function (row) {
+                popupService.showSourceDistributionData(row.entity.loc);
             };
 
             $scope.onLegendClick = function (radio, chartInstance, config, checkedVal) {
@@ -78,7 +82,7 @@ define(["./../module"], function (ctrs) {
             $scope.attractiveFormat = function (data, config, e) {
                 var json = JSON.parse(eval("(" + data + ")").toString());
                 var times = [$rootScope.start, $rootScope.end];
-                var result = chartUtils.getRf_type(json,times, "serverLabel", e.types, config);
+                var result = chartUtils.getRf_type(json, times, "serverLabel", e.types, config);
                 config['noFormat'] = true;
                 config['twoYz'] = "none";
                 cf.renderChart(result, config);

@@ -25,9 +25,9 @@
                     </ul>
                     <div class="clearfix"></div>
                     <div class="target_way_title">
-                        <span>可选择记录方式&nbsp;&nbsp;<i class="caret"></i></span>
+                        <span data-ng-click="record=!record">可选择记录方式&nbsp;&nbsp;<i class="caret"></i></span>
                     </div>
-                    <div class="target_way_content">
+                    <div class="target_way_content" ng-show="record">
                         <ul>
                             <li><label><input type="radio" name="record" ng-checked="radio_record.visit_times"
                                               data-ng-click="chooseRecordType('visit_times')">访问次数</label></li>

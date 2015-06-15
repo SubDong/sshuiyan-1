@@ -20,7 +20,12 @@ define(["../app"], function (app) {
             link: function (scope, element, attris, controller) {
                 Custom.initCheckInfo();
                 scope.$watch("opened", function () {
-                    /*    console.log();*/
+                    if(scope.yesterdayClass){
+                        $('#reportrange span').html(GetDateStr(-1));
+                    }
+                    if(scope.monthClass){
+                        $('#reportrange span').html(GetDateStr(-29) + "至" + GetDateStr(0));
+                    }
                 });
                 scope.weekselected = true;
                 scope.mothselected = true;
@@ -65,7 +70,7 @@ define(["../app"], function (app) {
                     $rootScope.tableTimeEnd = 0;
                     $rootScope.keyFormat = "hour";
                     $rootScope.start = 0;
-                    $rootScope.end = 0
+                    $rootScope.end = 0;
                     scope.reloadByCalendar("today");
                     $('#reportrange span').html(GetDateStr(0));
                 };
@@ -390,6 +395,7 @@ define(["../app"], function (app) {
                 scope.isCompared = false;
                 scope.dateShowArray = [];
                 scope.ssh_seo_type = attris.semType;
+                scope.filter = attris.filter;
                 scope.ds_defaultQuotasOption = ["pv", "uv", "ip", "nuv", "outRate", "avgTime"];
                 scope.ds_keyData = [];
                 scope.ds_dateShowQuotasOption = scope.checkedArray ? scope.checkedArray : scope.ds_defaultQuotasOption;
@@ -454,8 +460,14 @@ define(["../app"], function (app) {
                     var _count = 0;
                     angular.forEach(result, function (r) {
                         var infoKey = r[$rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field];
-                        if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null")) {
-                            return false;
+                        if (scope.filter) {
+                            if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null")) {
+                                return false;
+                            }
+                        } else {
+                            if (infoKey == undefined) {
+                                return false;
+                            }
                         }
                         if (!flag) {
                             scope.ds_keyData.push(infoKey);
@@ -508,8 +520,14 @@ define(["../app"], function (app) {
                     var _count = 0;
                     angular.forEach(result, function (r) {
                         var infoKey = r[$rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field];
-                        if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null")) {
-                            return false;
+                        if (scope.filter) {
+                            if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null")) {
+                                return false;
+                            }
+                        } else {
+                            if (infoKey == undefined) {
+                                return false;
+                            }
                         }
                         _count++;
                         angular.forEach(_array, function (obj) {
@@ -612,7 +630,10 @@ define(["../app"], function (app) {
                         var _count = 0;
                         angular.forEach(result, function (r) {
                             var infoKey = r[$rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field];
-                            if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null")) {
+                            //if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null")) {
+                            //    return false;
+                            //}
+                            if (infoKey == undefined) {
                                 return false;
                             }
                             if (!flag) {
@@ -881,7 +902,7 @@ define(["../app"], function (app) {
                 case "bing":
                 case "other":
                 {
-                    return count ? (value / count).toFixed(2) + "%" : "0";
+                    return count ? (value / count).toFixed(2) + "%" : "0%";
                 }
                 case "avgTime":
                 {
@@ -904,7 +925,7 @@ define(["../app"], function (app) {
                 case "avgPage":
                 case "cpc":
                 {
-                    return count ? (value / count).toFixed(2) : "0.00";
+                    return count ? (value / count).toFixed(2) : "0";
                 }
                 default :
                 {
@@ -926,7 +947,7 @@ define(["../app"], function (app) {
                 scope._ctValue = attris.myScope === "nv" ? "0" : "1";
                 scope._ctText = attris.myScope === "nv" ? "新访客" : "老访客";
                 scope.defaultObject = {
-                    percent: "0.00%",
+                    percent: "0%",
                     pv: 0,
                     uv: 0,
                     outRate: 0,
@@ -1162,7 +1183,7 @@ define(["../app"], function (app) {
         return {
             restrict: 'EA',
             link: function (scope, element, attris, controller) {
-                console.log("!231231231231313123123123123");
+                //console.log("!231231231231313123123123123");
 
                 var clip = new ZeroClipboard.Client(); // 新建一个对象
                 clip.setHandCursor(true); // 设置鼠标为手型
@@ -1170,16 +1191,16 @@ define(["../app"], function (app) {
                 clip.glue(element[0]); // 和上一句位置不可调换
 
                 clip.addEventListener("mouseOver", function (client) {
-                    client.setText("玩儿玩儿额"); // 设置要复制的文本。
+                    //client.setText("玩儿玩儿额"); // 设置要复制的文本。
                 });
 
                 clip.addEventListener("load", function (client) {
-                    console.log("加载完成");
+                    //console.log("加载完成");
                     //clip.reposition();
                 });
 
                 clip.addEventListener('complete', function (client, text) {
-                    alert("恭喜复制成功");
+                    //alert("恭喜复制成功");
                 });
 
             }

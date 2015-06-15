@@ -13,6 +13,7 @@ define(["./module"], function (ctrs) {
         $rootScope.tableFormat = null;
         $scope.souce.selected = {"name": "全部"};
         $scope.browser.selected = {"name": "全部"};
+        $scope.city.selected = {"name": "全部"};
         $rootScope.tableSwitch = {
             dimen: true,
             latitude: {name:"地域", displayName: "地域", field: "region"},

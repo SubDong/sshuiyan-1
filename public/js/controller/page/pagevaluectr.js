@@ -5,7 +5,9 @@ define(["./module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.controller('pagevaluectr', function ($scope, $rootScope) {
+    ctrs.controller('pagevaluectr', function ($scope, $rootScope,areaService) {
+        $scope.souce.selected = {"name": "全部"};
+        $scope.browser.selected = {"name": "全部"};
         $scope.todayClass = true;
         $rootScope.tableTimeStart = 0;
         $rootScope.tableTimeEnd = 0;

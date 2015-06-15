@@ -41,7 +41,6 @@ define(["../app"], function (app) {
 
         // 获取指定url为来源的入口页面
         function showEntryPageData(rf) {
-            console.log(rf);
             var filerInfo = "";
             if (rf == "直接访问") {
                 filerInfo = "[{\"rf_type\": [\"1\"]}]";
@@ -57,7 +56,6 @@ define(["../app"], function (app) {
             } else {
                 filerInfo = "[{\"se\": [\"" + rf + "\"]}]";
             }
-            console.log(filerInfo);
             ngDialog.open({
                 template: '<div id="url-source-distribution"  style="overflow: hidden"><div class="modal-header">查看以  <font color="red">' + rf + '</font>' + '  为来源的入口页面</div></div>',
                 plain: true,
@@ -68,6 +66,7 @@ define(["../app"], function (app) {
                         method: 'GET',
                         url: "/api/summary/?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.defaultType + "&quotas=pv&dimension=entrance" + "&filerInfo=" + filerInfo
                     }).success(function (data, status) {
+                        console.log(data)
                         var obj = JSON.parse(eval('(' + data + ')').toString())
                         var contentHtml = "<div class='modal-body'><table class='table'><tr><th>排名</th><th>入口页链接</th></tr>";
                         obj.forEach(function (item, i) {
@@ -98,15 +97,19 @@ define(["../app"], function (app) {
          */
         function showSourceDistributionData(entrance) {
             ngDialog.open({
-                    template: '<div style="overflow: hidden"><tabset justified="true">' +
-                    '<tab heading="来源类型" id="source-category" ng-click="showCategory()"></tab>' +
-                    '<tab heading="来源URL" id="source-url" ng-click="showUrl()"></tab>' +
-                    '</tabset></div>',
+                template: "<div style=\'overflow: hidden\' class=\'pop_title\'><ul>" +
+                "<li ng-click=\'showCategory()\' ng-class=\"{'current':liexingClass}\">来源类型</li>" +
+                "<li ng-click=\'showUrl()\' ng-class=\"{'current':laiyuanClass}\">来源URL</li>" +
+                "</ul><div id=\"source_box\"></div></div>",
                 plain: true,
                 className: 'ngdialog-theme-default',
                 scope: $rootScope,
                 controller: ['$scope', '$http', '$compile', function ($scope, $http, $compile) {
+                    $scope.liexingClass = true;
                     $scope.showUrl = function () {
+                        console.log(11111)
+                        $scope.liexingClass = false;
+                        $scope.laiyuanClass = true;
                         $http({
                             method: 'GET',
                             url: "/api/indextable/?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.defaultType + "&indic=contribution,pv&dimension=rf&popup=1" + "&filerInfo=[{\"entrance\":[\"" + entrance + "\"]}]"
@@ -124,19 +127,21 @@ define(["../app"], function (app) {
                                 contentHtml += "<tr><td><a href='" + item.rf + "'>" + _url + "</a></td><td>" + item.contribution + "</td><td>" + item.pv + "</td></tr>"
                             });
                             contentHtml += "</table></div>";
-                            var sourceUrl = angular.element(document.getElementById('source-url'));
+                            var sourceUrl = angular.element(document.getElementById('source_box'));
                             sourceUrl.find("div").remove();
                             sourceUrl.append($compile(contentHtml)($scope));
                         }).error(function (error) {
                             console.log(error);
                         });
-
-                        if (document.getElementById('source-category') != null) {
-                            angular.element(document.getElementById('source-category').getElementsByTagName("div")).css("display", "none");
+                        if (document.getElementById('source_box') != null) {
+                            angular.element(document.getElementById('source_box').getElementsByTagName("div")).css("display", "none");
                         }
                     };
 
                     $scope.showCategory = function () {
+                        console.log(22221)
+                        $scope.laiyuanClass = false;
+                        $scope.liexingClass = true;
                         $http({
                             method: 'GET',
                             url: "/api/indextable/?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.defaultType + "&indic=contribution&dimension=rf_type&popup=1" + "&filerInfo=[{\"entrance\":[\"" + entrance + "\"]}]"
@@ -177,15 +182,15 @@ define(["../app"], function (app) {
                             }
 
                             contentHtml += "</table></div>";
-                            var sourceCategory = angular.element(document.getElementById('source-category'));
+                            var sourceCategory = angular.element(document.getElementById('source_box'));
                             sourceCategory.find("div").remove();
                             sourceCategory.append($compile(contentHtml)($scope));
                         }).error(function (error) {
                             console.log(error);
                         });
 
-                        if (document.getElementById('source-url') != null) {
-                            angular.element(document.getElementById('source-url').getElementsByTagName("div")).css("display", "none");
+                        if (document.getElementById('source_box') != null) {
+                            angular.element(document.getElementById('source_box').getElementsByTagName("div")).css("display", "none");
                         }
                     };
 

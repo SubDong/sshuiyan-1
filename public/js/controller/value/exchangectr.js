@@ -48,14 +48,6 @@ define(["./module"], function (ctrs) {
             $scope.usites = $cookieStore.get('usites');
 
             $scope.exchanges = {};
-            var ids = "";
-            $scope.usites.forEach(function (item, i) {
-                $scope.sites.push({
-                    name: item.site_name,
-                    id: item.type_id
-                });
-                ids += item.type_id + ";";
-            });
             //根据域名type查询pv和uv
 
             $scope.init = function () {

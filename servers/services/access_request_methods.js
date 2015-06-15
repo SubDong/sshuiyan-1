@@ -1,5 +1,8 @@
 /**
  * Created by perfection on 15-5-26.
+ *
+ * @deprecated
+ * // TODO 下述指标的查询均可在refactor_request中获取, 为什么还要重写? 请速改正.
  */
 //
 function getPath(path, address) {
@@ -95,7 +98,7 @@ function getUV(es, indexes, type, se, rf_type, callbackFn) {
         var data = [];
         if (response != undefined && response.aggregations != undefined) {
             var result = response.aggregations.all_uv.value;
-            data.push({"uv":result});
+            data.push({"uv": result});
             callbackFn(data);
         } else
             callbackFn(data);
@@ -354,7 +357,7 @@ function getVC(es, indexes, type, filters, start, end, callbackFn) {
             "aggs": {
                 "all_index": {
                     "terms": {
-                        "field": "_index"
+                        "field": "_index"   // TODO 确定要按index做分组聚合? index直接可做一级过滤
                     },
                     "aggs": {
                         "ip": {

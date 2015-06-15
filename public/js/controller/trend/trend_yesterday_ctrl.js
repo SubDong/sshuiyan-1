@@ -5,12 +5,14 @@ define(["./module"], function (ctrs) {
     "use strict";
 
     ctrs.controller('trend_yesterday_ctrl', function ($scope, $rootScope, $q, $http, requestService, messageService, areaService, uiGridConstants) {
+        $('#reportrange span').html(GetDateStr(-1));
         $scope.yesterdayClass = true;
         $scope.hourcheckClass = true;
         $scope.lastDaySelect = true;
         $scope.lastWeekSelect = true;
         $scope.clearCompareSelect = true;
         $scope.souce.selected = {"name": "全部"};
+        $scope.city.selected = {"name": "全部"};
         $scope.browser.selected = {"name": "全部"};
         $scope.reset = function () {
             $scope.todayClass = false;
@@ -220,11 +222,6 @@ define(["./module"], function (ctrs) {
                 chart.config.time = chartUtils.getWeekTime($rootScope.start, $rootScope.end);
             });
             requestService.refresh($scope.charts);
-            if ($rootScope.start <= -7) {
-                $rootScope.tableFormat = "day";
-            } else {
-                $rootScope.tableFormat = "hour";
-            }
             $rootScope.targetSearch();
         });
 
@@ -272,11 +269,7 @@ define(["./module"], function (ctrs) {
                 e.config.instance = chart;
                 e.config.noFormat = undefined;
             });
-            if ($rootScope.start <= -7) {
-                $rootScope.tableFormat = "day";
-            } else {
-                $rootScope.tableFormat = "hour";
-            }
+            $rootScope.tableFormat = "day";
             $rootScope.targetSearch();
             requestService.refresh($scope.charts);
         };
@@ -450,11 +443,15 @@ define(["./module"], function (ctrs) {
                 var todayData = $http.get("api/charts?type=" + chartUtils.convertEnglish($scope.charts[0].config.legendData[0]) + "&dimension=period&start=" + ($rootScope.start - 7) + "&end=" + ($rootScope.end - 7) + "&userType=" + $rootScope.userType + "&int=" + $rootScope.interval);
                 var lastDayData = $http.get("api/charts?type=" + chartUtils.convertEnglish($scope.charts[0].config.legendData[0]) + "&dimension=period&start=" + ($rootScope.start - 8) + "&end=" + ( $rootScope.end - 8) + "&userType=" + $rootScope.userType + "&int=" + $rootScope.interval);
                 $q.all([todayData, lastDayData]).then(function (res) {
+                    var compareData = JSON.parse(eval("(" + res[1].data + ")").toString());
+                    var count = util.existData(compareData);
+                    if(count){
                     var dateStamp = chartUtils.getDateStamp($rootScope.start - 7);
                     var final_result = chartUtils.compareTo(res, dateStamp);
                     $scope.charts[0].config.noFormat = "none";
                     $scope.charts[0].config.compare = true;
                     cf.renderChart(final_result, $scope.charts[0].config);
+                    }
                 });
             } else {
                 $scope.isCancelWeekCompare = false;

@@ -117,7 +117,6 @@ define(["app"], function (app) {
         //实时访问
         //TODO item["searchWord"] == ""?"百思" 为捕获到暂为  百思
         var getHtmlTableData = function () {
-
             var fi = $rootScope.tableSwitch.tableFilter != undefined && $rootScope.tableSwitch.tableFilter != null ? "?q=" + $rootScope.tableSwitch.tableFilter : "";
             var searchUrl = SEM_API_URL + "real_time/" + esType + fi;
             $http({
@@ -129,7 +128,7 @@ define(["app"], function (app) {
                         item["visitTime"] = new Date(item["visitTime"]).Format("yyyy-MM-dd hh:mm:ss");
                         var reere = item["searchEngine"] != "-" ? (item["referrer"] + "," + item["searchEngine"]) : item["referrer"] == "-" ? "-,直接访问" : item["referrer"] + "," + item["referrer"].substring(0, 40) + (item["referrer"].length > 40 ? "..." : "")
                         item["referrer"] = reere;
-                        item["searchWord"] = item["searchWord"] == "-" ? "--" : item["searchWord"] == "" ? "百思" : item["searchWord"];
+                        item["searchWord"] = item["searchWord"] == "-" ? "--" : item["searchWord"] == "" ? "--" : item["searchWord"];
                         item["keyword"] = item["keyword"] == "-" ? "--" : item["searchWord"];
                         item["isPromotion"] = item["isPromotion"] ? "是" : "否";
                         var a = (Math.round(parseInt(item["totalTime"]) / 1000));
@@ -153,20 +152,19 @@ define(["app"], function (app) {
                     maxWidth: 10
                 },
                 {name: '地域', displayName: "地域", field: "city"},
-                {name: '访问时间', displayName: "访问时间", field: "visitTime", minWidth: 150},
+                {name: '访问时间', displayName: "访问时间", field: "visitTime"},
                 {
                     name: '来源',
                     displayName: "来源",
                     field: "referrer",
-                    cellTemplate: "<a href='{{grid.appScope.getDataUrlInfo(grid, row,1)}}' target='_blank' style='color:#0965b8;line-height:30px; display:block; padding:0 10px;'>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</a>",
-                    minWidth: 300
+                    cellTemplate: "<a href='{{grid.appScope.getDataUrlInfo(grid, row,1)}}' target='_blank' style='color:#0965b8;line-height:30px; display:block; padding:0 10px;'>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</a>"
                 },
-                {name: '入口页面', displayName: "入口页面", field: "entrance", minWidth: 250},
+                {name: '入口页面', displayName: "入口页面", field: "entrance"},
                 {name: '关键词', displayName: "关键词", field: "keyword"},
                 {name: '搜索词', displayName: "搜索词", field: "searchWord"},
                 {name: '搜索带来', displayName: "搜索带来", field: "isPromotion"},
                 {name: "访问IP", displayName: "访问IP", field: "ip"},
-                {name: '访客标识码', displayName: "访客标识码", field: "vid", minWidth: 250},
+                {name: '访客标识码', displayName: "访客标识码", field: "vid"},
                 {name: "访问时长", displayName: "访问时长", field: "totalTime"},
                 {name: "访问页数", displayName: "访问页数", field: "viewPages"}];
             getHtmlTableData();
@@ -311,7 +309,7 @@ define(["app"], function (app) {
         $scope.pagego = function (pagevalue) {
             pagevalue.pagination.seek(Number($scope.page));
         }
-//地图分类
+        //地图分类
         $scope.setDimen = function (a) {
             var b = "";
             if (a == "city") {
@@ -507,9 +505,18 @@ define(["app"], function (app) {
         };
         //设置地域过滤
         $scope.setAreaFilter = function (area) {
+            if (area == "北京" || area == "上海" || area == "广州") {
+                if ($scope.city.selected != undefined) {
+                    $scope.city.selected.name = area;
+                } else {
+                    $scope.city.selected = {};
+                    $scope.city.selected["name"] = area;
+                }
+            }
             if (!$rootScope.tableSwitch) {
                 return;
             }
+
             if ("全部" == area) {
                 $rootScope.tableSwitch.tableFilter = null;
             } else {
@@ -527,6 +534,7 @@ define(["app"], function (app) {
                 $rootScope.$broadcast("ssh_data_show_refresh");
                 $scope.targetSearch();
             }
+
         };
         //设置（搜索引擎）地域过滤
         $scope.setSearchEngineAreaFilter = function (area) {
@@ -538,12 +546,21 @@ define(["app"], function (app) {
             } else {
                 $rootScope.tableSwitch.tableFilter = "[{\"region\":[\"" + area + "\"]},{\"rf_type\":[2]}]";
             }
+            if (area == "北京" || area == "上海" || area == "广州") {
+                if ($scope.city.selected != undefined) {
+                    $scope.city.selected.name = area;
+                } else {
+                    $scope.city.selected = {};
+                    $scope.city.selected["name"] = area;
+                }
+            }
             $scope.isJudge = false;
             $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.targetSearch();
         };
         //设置搜索引擎过滤
         $scope.searchEngine = function (info) {
+
             if (info === '全部') {
                 $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[2]}]";
             } else {
@@ -560,6 +577,14 @@ define(["app"], function (app) {
             } else {
                 $rootScope.$broadcast("ssh_data_show_refresh");
                 $scope.targetSearch();
+            }
+            if (info == "百度" || info == "Google") {
+                if ($scope.browser.selected != undefined) {
+                    $scope.browser.selected.name = info;
+                } else {
+                    $scope.browser.selected = {};
+                    $scope.browser.selected["name"] = info;
+                }
             }
         };
         // 搜索词过滤
@@ -694,7 +719,15 @@ define(["app"], function (app) {
                     method: 'GET',
                     url: searchUrl
                 }).success(function (data, status) {
-                    $scope.gridOptions.data = data;
+                    var result = [];
+                    data.forEach(function (item, i) {
+                        var infoKey = item["word"];
+                        if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null" || infoKey.length >= 40)) {
+                        } else {
+                            result.push(item);
+                        }
+                    })
+                    $scope.gridOptions.data = result;
                 })
             } else {
                 $http({
@@ -724,19 +757,23 @@ define(["app"], function (app) {
                             semDataArray.push(semDataObj);
                             $rootScope.checkedArray.forEach(function (item, i) {
                                 if ($rootScope.tableSwitch.latitude.field == "accountName") {
-                                    dataObj["accountName"] = "搜索推广 (" + dataSEM[0].accountName + ")"
+                                    if (dataSEM[0]) {
+                                        dataObj["accountName"] = "搜索推广 (" + dataSEM[0].accountName + ")";
+                                    } else {
+                                        dataObj["accountName"] = "搜索推广 ()";
+                                    }
                                 }
                                 semDataArray.forEach(function (sem, i) {
                                     if (dataObj[item] == undefined) {
                                         if (item == "ctr") {
                                             dataObj[item] = sem[item] + "%"
                                         } else {
-                                            dataObj[item] = sem[item]
+                                            dataObj[item] = parseFloat(sem[item]).toFixed(2);
                                         }
                                     }
                                 });
                                 data.forEach(function (es, i) {
-                                    if (dataObj[item] == undefined) {
+                                    if (isNaN(dataObj[item]) || dataObj[item] == undefined) {
                                         dataObj[item] = es[item]
                                     }
                                 })
@@ -785,7 +822,11 @@ define(["app"], function (app) {
                                         if (info.label == "跳出率") {
                                             obj[chartUtils.convertEnglish(info.label)] = info.quota[i] + "%";
                                         } else {
-                                            obj[chartUtils.convertEnglish(info.label)] = info.quota[i];
+                                            if (info.label == "新访客比率") {
+                                                obj[chartUtils.convertEnglish(info.label)] = info.quota[i] + "%";
+                                            } else {
+                                                obj[chartUtils.convertEnglish(info.label)] = info.quota[i];
+                                            }
                                         }
                                     }
                                     maps[infoKey] = obj;
@@ -885,7 +926,7 @@ define(["app"], function (app) {
                 $http({
                     method: 'GET',
                     url: '/api/indextable/?start=' + (startInfoTime == null ? $rootScope.tableTimeStart : startInfoTime) + "&end=" + (endInfoTime == null ? $rootScope.tableTimeEnd : endInfoTime) + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field)
-                    + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
+                    + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + JSON.stringify($rootScope.tableSwitch.promotionSearch) + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
                 }).success(function (data, status) {
                     if ($rootScope.tableSwitch.promotionSearch != undefined && $rootScope.tableSwitch.promotionSearch) {
                         var url = SEM_API_URL + user + "/" + baiduAccount + "/account/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1"
@@ -1001,8 +1042,8 @@ define(["app"], function (app) {
                         }
                         row.entity.subGridOptions.columnDefs = $scope.gridOpArray;
                         row.entity.subGridOptions.data = data;
-                        if(data.length == 0){
-                            row.isExpanded=false
+                        if (data.length == 0) {
+                            row.isExpanded = false
                         }
                         $rootScope.tableSwitch.tableFilter = returnFilter;
                     }).error(function (error) {
@@ -1066,7 +1107,7 @@ define(["app"], function (app) {
 
                     datas.record.forEach(function (vtime, i) {
                         utimeHtml = utimeHtml + "<li><span>" + (new Date(parseInt(vtime.otime)).Format("hh:mm:ss")) + "</span></li>";
-                         var a = (Math.round(parseInt(vtime.vtime) / 1000));
+                        var a = (Math.round(parseInt(vtime.vtime) / 1000));
                         vtimeHtml = vtimeHtml + "<li><span>" + (datas.record.length - 1 == i ? "--" : (parseInt(a / 60) + "\'" + (a % 60) + "\"")) + "</span></li>";
                         urlHtml = urlHtml + "<li><span><a href='" + vtime.loc + "' target='_blank'>" + vtime.loc + "</a></span></li>"
                     });
@@ -1128,6 +1169,7 @@ define(["app"], function (app) {
         };
         //得到表格底部数据
         $scope.getFooterData = function (a, option, number) {
+
             var returnData = [0, 0, 0, 0];
             var spl = 0;
             var newSpl = [0, 0, 0];

@@ -23,6 +23,7 @@ var security = {
                         site["site_top"] = 0;
 
                     site["type_id"] = item.type_id;
+                    site["site_url"] = item.site_url;
                     if (!!req.session.user.baiduAccounts && req.session.user.baiduAccounts.length > 0)
                         site["bd_name"] = req.session.user.baiduAccounts[0].baiduUserName;
 

@@ -501,8 +501,8 @@ var _pct = _pct || [];
                     h.b.sm();
                     md.g.duration = null;
                     clearInterval(timer);
+                    ck.set("PFT_DTNJ", false);
                 }
-                ck.set("PFT_DTNJ", false);
             }
         }
         var timer = setInterval(duration, 1000);

@@ -16,7 +16,7 @@ define(["./module"], function (ctrs) {
         $scope.menuClass = function (menu, hrefs, i) {
             if ("" === menu) {
                 return 0;
-            }else if("/conf" === menu){
+            } else if ("/conf" === menu) {
                 return 0;
             }
             if ((menu.indexOf(hrefs[i]) != -1 & menu.indexOf(hrefs[i]) < 3) || i > hrefs.length) {
@@ -70,13 +70,14 @@ define(["./module"], function (ctrs) {
                 }, {
                     text: '搜索推广',
                     sref: '#extension/search'
-                }, {
+                }/*, {
                     text: '网盟推广',
                     sref: '#extension/alliance'
                 }, {
                     text: '推广URL速度',
                     sref: '#extension/urlspeed'
-                }]
+                }*/
+                ]
             }, {
                 title: '趋向分析',
                 icon: 'glyphicon glyphicon-stats',
@@ -145,10 +146,10 @@ define(["./module"], function (ctrs) {
                 }, {
                     text: '新老访客',
                     sref: '#visitor/novisitors'
-                }, {
+                }/*, {
                     text: '访客特征',
                     sref: '#visitor/visitorfeature'
-                }]
+                }*/]
             }, {
                 title: '价值透析',
                 icon: 'glyphicon glyphicon-yen',
@@ -195,30 +196,30 @@ define(["./module"], function (ctrs) {
                     text: '指定广告跟踪',
                     sref: '#conf/webcountsite/adtrack'
                 }]
-            },
-            {
-                title: '系统管理设置',
-                icon: 'glyphicon glyphicon-user',
-                stype: 1,
-                sref: 'admin',
-                child: [{
-                    text: ' 权限账户管理',
-                    sref: '#conf/admin/root'
-                }, {
-                    text: '统计图标设置',
-                    sref: '#conf/admin/counticon'
-                }, {
-                    text: '报告发送设置',
-                    sref: '#conf/admin/reportsite'
-
-                }]
             }
+            //{
+            //    title: '系统管理设置',
+            //    icon: 'glyphicon glyphicon-user',
+            //    stype: 1,
+            //    sref: 'admin',
+            //    child: [{
+            //        text: ' 权限账户管理',
+            //        sref: '#conf/admin/root'
+            //    }, {
+            //        text: '统计图标设置',
+            //        sref: '#conf/admin/counticon'
+            //    }, {
+            //        text: '报告发送设置',
+            //        sref: '#conf/admin/reportsite'
+            //
+            //    }]
+            //}
         ];
 
     });
 
     /*********nav-select*********/
-    ctrs.controller('ngSelect', function ($scope, $location, $cookieStore, $window, $rootScope,$state) {
+    ctrs.controller('ngSelect', function ($scope, $location, $cookieStore, $window, $rootScope, $state) {
         $scope.clear = function () {
             $scope.siteselect.selected = undefined;
         };
@@ -237,14 +238,15 @@ define(["./module"], function (ctrs) {
         $scope.siteselects = $rootScope.usites;
         $rootScope.baiduAccount = $rootScope.usites[0].bd_name;//baidu-perfect2151880
         $rootScope.userType = $rootScope.usites[0].type_id;//www.perfect-cn.cn
-        $rootScope.siteId=$rootScope.usites[0].site_id;
+        $rootScope.siteId = $rootScope.usites[0].site_id;
         $rootScope.userTypeName = $rootScope.usites[0].site_name;
-
+        $rootScope.siteUrl = $rootScope.usites[0].site_url;
         $scope.changeUrl = function (select) {
             $rootScope.user = $rootScope.perfectUser;
             $rootScope.baiduAccount = select.bd_name;
             $rootScope.userType = select.type_id;
-            $rootScope.siteId=select.site_id;
+            $rootScope.siteId = select.site_id;
+            $rootScope.siteUrl = select.site_url;
             $rootScope.userTypeName = select.site_name;
             $state.go("index");
         }

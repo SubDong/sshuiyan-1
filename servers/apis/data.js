@@ -237,7 +237,7 @@ api.get('/indextable', function (req, res) {
     var query = url.parse(req.url, true).query;
     var _promotion = query["promotion"];
     var _startTime = Number(query["start"]);//开始时间
-    var _endTime = Number(query["end"]);//结束时间
+    var _endTime = Number(query["end"]);//结束时间query
     var _indic = query["indic"].split(",");//统计指标
     var _lati = query["dimension"] == "null" ? null : query["dimension"];//统计纬度
     if (_lati == "kwsid") _lati = "kw:cid:agid:kwid";
@@ -250,7 +250,7 @@ api.get('/indextable', function (req, res) {
     var popFlag = query["popup"];
 
     var period = date.period(_startTime, _endTime); //时间段
-    var interval = _promotion == "undefined" || _promotion == undefined ? date.interval(_startTime, _endTime) : null; //时间分割
+    var interval = _promotion == "undefined" || _promotion == "ssc" || _promotion == undefined ? date.interval(_startTime, _endTime) : null; //时间分割
     var formartInterval = (_formartInfo == "hour" ? 1 : _formartInfo == "week" ? 604800000 : _formartInfo == "month" ? 2592000000 : _formartInfo == "day" ? 86400000 : interval);
     es_request.search(req.es, indexes, _type, _indic, _lati, [0], _filter, _promotion == "undefined" || _promotion == undefined ? period[0] : null, _promotion == "undefined" || _promotion == undefined ? period[1] : null, formartInterval, function (data) {
         if (_formartInfo != "hour") {
@@ -259,7 +259,7 @@ api.get('/indextable', function (req, res) {
             var dimensionInfo;
             var infoKey;
             var maps = {};
-            var valueData = ["arrivedRate", "outRate", "nuvRate", "ct", "period", "se", "pm", "rf", "ja", "ck"];
+            var valueData = ["arrivedRate", "outRate", "nuvRate", "ct", "period", "se", "pm", "rf", "ja", "ck","isp"];
             try {
                 data.forEach(function (info, x) {
                     for (var i = 0; i < info.key.length; i++) {
@@ -268,9 +268,12 @@ api.get('/indextable', function (req, res) {
                         } else {
                             infoKey = info.key[i]
                         }
-                        //if (popFlag != 1) {
-                        //    if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null")) continue;
-                        //}
+                        if (popFlag != 1) {
+                            if(_lati == "rf" && _filter != null && _filter[0]["rf_type"][0] && infoKey == "-") continue
+                            if(_promotion == "ssc" || _lati=="kw"){
+                                if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null" || infoKey.length >= 40)) continue;
+                            }
+                        }
                         var infoKey = info.key[i];
                         var obj = maps[infoKey];
                         if (!obj) {
@@ -312,6 +315,12 @@ api.get('/indextable', function (req, res) {
                                     break;
                                 case "ck":
                                     obj[dimensionInfo] = (infoKey == "1" ? "支持" : "不支持");
+                                    break;
+                                case "isp":
+                                    obj[dimensionInfo] = (infoKey == "-" ? "其他" : infoKey);
+                                    break;
+                                case "dm":
+                                    obj[dimensionInfo] = (infoKey == "-" ? "直接访问" : infoKey);
                                     break;
                                 default :
                                     obj[dimensionInfo] = infoKey;

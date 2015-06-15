@@ -8,7 +8,7 @@ var es_request = {
         request = {
             "index": indexes,   //请求的索引 等同于 Databases
             "type": type,       //请求的类型 等同于 Tables
-            "body": {}
+            "body": {}          // TODO 确定要查出所有数据, 请修改
         };
 
         es.search(request, function (error, response) {

@@ -11,7 +11,7 @@ define(["./module"], function (ctrs) {
             link: function (scope, elm, attrs, ctrl) {
                 elm.bind('keyup', function () {
                     var uid = $cookieStore.get("uid");
-                    var url = "/config/site_list?type=search&query={\"uid\":\"" + uid + "\",\"site_url\":\"" + scope.urlconfig.site_url + "\"}";
+                    var url = "/config/site_list?type=search&query={\"uid\":\"" + uid + "\",\"site_url\":\"" + scope.dialog_model.site_url + "\"}";
                     $http({method: 'GET', url: url}).
                         success(function (data, status) {
                             if (data.length > 0) {
@@ -44,14 +44,16 @@ define(["./module"], function (ctrs) {
             site_url: "", // site url 设置的URL
             site_name: "", // site name 设置的URL
             site_pause: false,//配置暂停 true：暂停 false：使用
-            track_status: true, // track code status
+            track_status: 0, // track code status
             //status: String, // enable or disable track
             is_top: false
         };
-        $scope.urlconfig = {
+        $scope.dialog_model = {
             "site_url": "",
             "site_name": "",
-            is_top: false
+            is_top: true,
+            readOnly: "",
+            add_update: ""
         };
         //table配置
         $rootScope.adminSetHtml = "<div class='mid_left'><div class='mid_left_code'>" +
@@ -68,7 +70,7 @@ define(["./module"], function (ctrs) {
             "  <li>请将代码添加至网站全部页面的&lt;/head&gt;标签前；</li><li>建议在header.htm类似的页头模板页面中安装，以达到一处安装，全站皆有的效果；</li><li>如需在JS文件中调用统计分析代码，请直接去掉以下代码首尾的&lt;script type='text/javascript' &gt;与&lt;/script&gt;后，放入JS文件中即可；</li>" +
             "<li> 如果代码安装正确，一般20分钟 后,可以查看网站分析数据；</li></ul></div>";
         //配置默认指标
-        $rootScope.checkedArray = ["_uid", "uid", "type_id", "track_id", "site_url", "site_name", "site_pause", "track_status"];
+        $rootScope.checkedArray = ["_uid", "uid", "type_id", "track_id", "site_url", "site_name", "site_pause", "track_status_ch"];
 
 
         //配置默认指标
@@ -85,12 +87,12 @@ define(["./module"], function (ctrs) {
             {
                 name: "首页代码状态",
                 displayName: "首页代码状态",
-                field: "track_status",
+                field: "track_status_ch",
                 maxWidth: 500,
                 cellClass: 'table_admin_color'
             },
             {
-                name: "x6",
+                name: "x7",
                 displayName: "",
                 cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.gain(index,grid,row)'>" +
                 "获取代码</a><span class='glyphicon glyphicon-file'></span></div>",
@@ -128,6 +130,13 @@ define(["./module"], function (ctrs) {
                 // grid.appScope.Delete(row, grid.options.data)
                 cellTemplate: "<div class='table_admin'><a href='' ng-click='grid.appScope.onDelete(index,grid,row)' >删除</a></div>",
                 maxWidth: 80
+            },
+            {
+                name: "x6",
+                displayName: "",
+                // grid.appScope.Delete(row, grid.options.data)
+                cellTemplate: "<div class='table_admin'><a href='' ng-click='grid.appScope.onUpdate(index,grid,row)' >修改</a></div>",
+                maxWidth: 80
             }
 
         ];
@@ -148,7 +157,6 @@ define(["./module"], function (ctrs) {
         //var adminGriApihtml = function (gridApi) {
         //    var htmlData = [];
         //    gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
-        //        console.log("+++++++++" + row);
         //        row.entity.subGridOptions = {
         //            showHeader: false,
         //            enableHorizontalScrollbar: 0,
@@ -165,26 +173,22 @@ define(["./module"], function (ctrs) {
         //新增网站弹框
 
 
-        $scope.open = function () {
-
-            $scope.urlconfig.site_url = "";
-            $scope.urlconfig.site_name = "";
-            $scope.urlconfig.is_top = false;
+        $scope.openAddDialog = function () {
             $scope.urlDialog = ngDialog.open({
                 template: '\
                 <form role="form" name="adminmainctrForm" class="form-horizontal" novalidate>\
               <div class="ngdialog-buttons" >\
                    <ul> \
                    <li>网站域名</li>\
-                     <li><input type="text" name="remote" adminmainctr-remote-validation data-ng-focus="site_url_focus = true" data-ng-blur="site_name_focus = false" data-ng-model="urlconfig.site_url" class="form-control" required/></li> \
+                     <li><input type="text" name="remote" adminmainctr-remote-validation data-ng-focus="site_url_focus = true" data-ng-blur="site_name_focus = false" data-ng-model="dialog_model.site_url" class="form-control" required/></li> \
                     <li ng-show="adminmainctrForm.remote.$error.remote" style="color: red;">网站域名重复！</li> \
-                    <li data-ng-show="site_url_focus && !urlconfig.site_url" style="color: red;">不能为空</li>\
+                    <li data-ng-show="site_url_focus && !dialog_model.site_url" style="color: red;">不能为空</li>\
                     <br>\
                     <li>网站名称</li>\
-                    <li><input type="text" data-ng-focus="site_name_focus=true" data-ng-blur="site_name_focus =false" data-ng-model="urlconfig.site_name" class="form-control"/></li> \
-                    <li data-ng-show="site_name_focus && !urlconfig.site_name" style="color: red;">不能为空</li>\
+                    <li><input type="text" data-ng-focus="site_name_focus=true" data-ng-blur="site_name_focus =false" data-ng-model="dialog_model.site_name" class="form-control"/></li> \
+                    <li data-ng-show="site_name_focus && !dialog_model.site_name" style="color: red;">不能为空</li>\
                     <br>\
-                    <li style="color: black;"><input type="checkbox"  name="置顶" ng-model="urlconfig.is_top"/>\
+                    <li style="color: black;"><input type="checkbox"  name="置顶" data-ng-model="dialog_model.is_top"/>\
                     <span>设置站点是否置顶</span></li>\
                     <br>\
                     <li>可输入如下4种域名形式</li>\
@@ -194,7 +198,7 @@ define(["./module"], function (ctrs) {
                     <li>4.wap站域名（如：wap.baidu.com）</li>\
                     </ul>\
                     <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
-                    <button type="button" ng-disabled="adminmainctrForm.$invalid" class="ngdialog-button ngdialog-button-primary" ng-click="submit(0)">确定</button>\
+                    <button type="button" ng-disabled="adminmainctrForm.$invalid" class="ngdialog-button ngdialog-button-primary" ng-click="submit()">确定</button>\
                 </div></form>',
                 className: 'ngdialog-theme-default',
                 plain: true,
@@ -202,6 +206,54 @@ define(["./module"], function (ctrs) {
             });
         };
 
+        $scope.openUpdateDialog = function () {
+            $scope.urlDialog = ngDialog.open({
+                template: '\
+                <form role="form" name="adminmainctrForm" class="form-horizontal" novalidate>\
+              <div class="ngdialog-buttons" >\
+                   <ul> \
+                   <li>网站域名</li>\
+                     <li><input type="text" name="remote" readOnly  adminmainctr-remote-validation data-ng-focus="site_url_focus = true" data-ng-blur="site_name_focus = false" data-ng-model="dialog_model.site_url" class="form-control" required/></li> \
+                    <li ng-show="adminmainctrForm.remote.$error.remote" style="color: red;">网站域名重复！</li> \
+                    <li data-ng-show="site_url_focus && !dialog_model.site_url" style="color: red;">不能为空</li>\
+                    <br>\
+                    <li>网站名称</li>\
+                    <li><input type="text" data-ng-focus="site_name_focus=true" data-ng-blur="site_name_focus =false" data-ng-model="dialog_model.site_name" class="form-control"/></li> \
+                    <li data-ng-show="site_name_focus && !dialog_model.site_name" style="color: red;">不能为空</li>\
+                    <br>\
+                    <li style="color: black;"><input type="checkbox"  name="置顶" data-ng-model="dialog_model.is_top"/>\
+                    <span>设置站点是否置顶</span></li>\
+                    <br>\
+                    <li>可输入如下4种域名形式</li>\
+                    <li>1.主域名（如：www.baidu.com）</li>\
+                    <li>2.二级域名（如：sub.baidu.com)</li>\
+                    <li>3.子目录（如：www.baidu.com/sub）</li>\
+                    <li>4.wap站域名（如：wap.baidu.com）</li>\
+                    </ul>\
+                    <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
+                    <button type="button" ng-disabled="adminmainctrForm.$invalid" class="ngdialog-button ngdialog-button-primary" ng-click="submit()">确定</button>\
+                </div></form>',
+                className: 'ngdialog-theme-default',
+                plain: true,
+                scope: $scope
+            });
+        };
+        $scope.onInsert = function () {
+            //$scope.dialog_model.readOnly = "";
+            $scope.dialog_model.site_url = "";
+            $scope.dialog_model.site_name = "";
+            $scope.dialog_model.is_top = false;
+            //$scope.dialog_model.add_update = "add";
+            $scope.openAddDialog();
+        }
+        $scope.onUpdate = function (index, grid, row) {
+            $scope.dialog_model.readOnly = "readonly";
+            $scope.dialog_model.site_url = row.entity.site_url;
+            $scope.dialog_model.site_name = row.entity.site_name;
+            $scope.dialog_model.is_top = row.entity.is_top;
+            $scope.dialog_model.add_update = "update";
+            $scope.openUpdateDialog();
+        }
         /**
          * 删除按钮响应
          * @param index
@@ -238,24 +290,19 @@ define(["./module"], function (ctrs) {
         //暂停弹框
         $scope.stop = function (index, grid, row) {
 
-            //console.log(index);
-            //console.log(grid);
-            //console.log(row);
             $scope.onPause = function () {
                 //关闭弹出窗
                 $scope.urlDialog.close();
 
                 //用户ID+url 确定该用户对某个网站是否进行配置
                 var query = "/config/site_list?type=search&query={\"_id\":\"" + row.entity._id + "\"}";
-                console.log("stop")
                 $http({
                     method: 'GET',
                     url: query
                 }).success(function (dataConfig, status) {
                     if (dataConfig != null) {//不存在配置 save
                         row.entity.site_pause = !row.entity.site_pause;
-                        var url = "/config/site_list?type=update&query={\"_id\":\"" + row.entity._id  + "\"}&updates={\"site_pause\":\"" + row.entity.site_pause + "\"}";
-                        console.log(url)
+                        var url = "/config/site_list?type=update&query={\"_id\":\"" + row.entity._id + "\"}&updates={\"site_pause\":\"" + row.entity.site_pause + "\"}";
                         $http({
                             method: 'GET',
                             url: url
@@ -316,13 +363,25 @@ define(["./module"], function (ctrs) {
             }).success(function (dataConfig, status) {
                 $scope.gridOptions.data = dataConfig;
                 $scope.gridOptions.data.forEach(function (data) {
-                    data.track_status = data.track_status ? "正常" : "异常"
+                    switch (data.track_status){
+                        case 0:
+                            data.track_status_ch="待测试"
+                            break;
+                        case 1:
+                            data.track_status_ch="正常"
+                            break;
+                        case -1:
+                            data.track_status_ch="异常"
+                            break;
+                        default :
+                            data.track_status_ch="未知"
+                            break;
+                    }
                 })
             });
         };
         refushGridData();
         var closeThisDialog = function (clicked) {
-            console.log("dfdfsdfd");
         };
 
 
@@ -333,10 +392,9 @@ define(["./module"], function (ctrs) {
         $scope.submit = function (cliecked) {
             //var site_id=$rootScope.userType;//从conf_sites中获取
             var model = angular.copy($scope.sites_model);
-            model.site_url = $scope.urlconfig.site_url;//网站URL 页面输入
-            model.site_name = $scope.urlconfig.site_name;//网站名称 页面输入
-            model.is_top = $scope.urlconfig.is_top;
-            console.log("is_top" + model.is_top);
+            model.site_url = $scope.dialog_model.site_url;//网站URL 页面输入
+            model.site_name = $scope.dialog_model.site_name;//网站名称 页面输入
+            model.is_top = $scope.dialog_model.is_top;
             model.uid = $cookieStore.get("uid");
 
             //用户ID+url 确定该用户对某个网站是否进行配置
@@ -376,33 +434,44 @@ define(["./module"], function (ctrs) {
                     });
                 }
                 else {//update
-                    alert("该站点配置已存在！");
-                    /* model.type_id = dataConfig.type_id;//更新传入不再重新生成
-                     model.track_id = dataConfig.track_id;
-                     if (dataConfig.site_name != model.site_name) {
-                     var url = "/config/site_list?type=update&query={\"uid\":\"" + model.uid + "\",\"site_url\":\"" + model.site_url + "\"}&updates=" + JSON.stringify(model);
-                     $http({
-                     method: 'GET',
-                     url: url
-                     }).success(function (dataConfig, status) {
-
-                     });
-                     }*/
+                    //alert("该站点配置已存在！");
+                    model.type_id = dataConfig.type_id;//更新传入不再重新生成
+                    model.track_id = dataConfig.track_id;
+                    if (dataConfig.site_name != model.site_name) {
+                        var url = "/config/site_list?type=update&query={\"uid\":\"" + model.uid + "\",\"site_url\":\"" + model.site_url + "\"}&updates=" + JSON.stringify(model);
+                        $http({
+                            method: 'GET',
+                            url: url
+                        }).success(function (dataConfig, status) {
+                            var uid = $cookieStore.get("uid");
+                            var site_id = $rootScope.userType;
+                            var url = "/config/site_list?index=site_list&type=search&query={\"uid\":\"" + uid + "\"}";
+                            $http({
+                                method: 'GET',
+                                url: url
+                            }).success(function (dataConfig, status) {
+                                if (model.is_top) {
+                                    dataConfig.forEach(function (item) {
+                                        if ((item.is_top && item.site_url != model.site_url) || item.is_top == null) {//置顶且非当前
+                                            item.is_top = false;
+                                            var url = "/config/site_list?type=update&query={\"uid\":\"" + item.uid + "\",\"site_url\":\"" + item.site_url + "\"}&updates=" + JSON.stringify(item);
+                                            $http({
+                                                method: 'GET',
+                                                url: url
+                                            }).success(function (dataConfig, status) {
+                                            });
+                                        }
+                                    })
+                                }
+                                $rootScope.gridOptions.data = dataConfig;
+                            });
+                        });
+                    }
                 }
             });
             $scope.urlDialog.close();
         };
-        var refushGridData = function () {
-            var uid = $cookieStore.get("uid");
-            var site_id = $rootScope.userType;
-            var url = "/config/site_list?index=site_list&type=search&query={\"uid\":\"" + uid + "\"}";
-            $http({
-                method: 'GET',
-                url: url
-            }).success(function (dataConfig, status) {
-                $rootScope.gridOptions.data = dataConfig;
-            });
-        };
+
         Custom.initCheckInfo();//页面check样式js调用
 
     });

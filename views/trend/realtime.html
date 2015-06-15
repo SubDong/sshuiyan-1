@@ -46,7 +46,10 @@
                                                 <span ng-bind-html="souce.name"></span>
                                             </ui-select-choices>
                                         </ui-select>
-                                        <ui-select ng-model="browser.selected" theme="select2" reset-search-input="false" class="fl" data-ng-change="searchEngine(browser.selected.value)" ng-hide="browserselect"
+                                        <ui-select ng-model="browser.selected" theme="select2"
+                                                   reset-search-input="false" class="fl"
+                                                   data-ng-change="searchEngine(browser.selected.value)"
+                                                   ng-hide="browserselect"
                                                    style="width: 90px; margin-left:10px;">
                                             <ui-select-match placeholder="全部">{{$select.selected.name}}
                                             </ui-select-match>
@@ -80,8 +83,8 @@
                                         <div role="group" class="btn-group">
                                             <ui-select ng-model="city.selected" theme="select2"
                                                        reset-search-input="false" class="fl"
-                                                       data-ng-change="setAreaFilter(city.selected.name)"
-                                                       style="width: 80px;">
+                                                       data-ng-change="searchEngine(city.selected.name)"
+                                                       style="width: 90px; margin-left:10px;">
                                                 <ui-select-match placeholder="全部">{{$select.selected.name}}
                                                 </ui-select-match>
                                                 <ui-select-choices repeat="city in citys">
@@ -121,8 +124,8 @@
                         </div>
                     </div>
                     <div class="custom_table">
-                        <div ui-grid="gridOptions" class="grid clearfix realtimegrid"  ui-grid-pagination
-                             ui-grid-exporter ui-grid-expandable ui-grid-auto-resize ></div>
+                        <div ui-grid="gridOptions" class="grid clearfix realtimegrid" ui-grid-pagination
+                             ui-grid-exporter ui-grid-expandable ui-grid-auto-resize></div>
                         <gridpage></gridpage>
                     </div>
                 </div>
