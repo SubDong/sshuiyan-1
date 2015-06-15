@@ -20,10 +20,10 @@ define(["../app"], function (app) {
             link: function (scope, element, attris, controller) {
                 Custom.initCheckInfo();
                 scope.$watch("opened", function () {
-                    if(scope.yesterdayClass){
+                    if (scope.yesterdayClass) {
                         $('#reportrange span').html(GetDateStr(-1));
                     }
-                    if(scope.monthClass){
+                    if (scope.monthClass) {
                         $('#reportrange span').html(GetDateStr(-29) + "至" + GetDateStr(0));
                     }
                 });
@@ -1077,9 +1077,9 @@ define(["../app"], function (app) {
                         if (e_r.sref == _path.substring(1, _path.substring(1).indexOf("/") + 1)) {
                             e_r.showText = true;
                             $rootScope.$broadcast("ssssss", index);
-                        }else if(e_r.sref == _path.split("/")[2]){
+                        } else if (e_r.sref == _path.split("/")[2]) {
                             e_r.showText = true;
-                        }else {
+                        } else {
                             e_r.showText = false;
                         }
                     });
@@ -1169,29 +1169,26 @@ define(["../app"], function (app) {
     /**
      * 复制。
      */
-    app.directive('sshClip', function ($rootScope) {
+    app.directive('sshClip', function ($rootScope, ngDialog) {
         "use strict";
         return {
             restrict: 'EA',
             link: function (scope, element, attris, controller) {
-                //console.log("!231231231231313123123123123");
 
-                var clip = new ZeroClipboard.Client(); // 新建一个对象
-                clip.setHandCursor(true); // 设置鼠标为手型
-                // 注册在元素上
-                clip.glue(element[0]); // 和上一句位置不可调换
+                var clip = new ZeroClipboard(element[0]); // 新建一个对象
 
-                clip.addEventListener("mouseOver", function (client) {
-                    //client.setText("玩儿玩儿额"); // 设置要复制的文本。
+                clip.on('ready', function () {
+                    this.on('aftercopy', function (event) {
+                        alert("复制成功");
+                    });
                 });
 
-                clip.addEventListener("load", function (client) {
-                    //console.log("加载完成");
-                    //clip.reposition();
+                clip.on('error', function (event) {
+                    ZeroClipboard.destroy();
                 });
 
-                clip.addEventListener('complete', function (client, text) {
-                    //alert("恭喜复制成功");
+                clip.on('mouseover', function (client, args) {
+                    //console.log(clip);
                 });
 
             }
