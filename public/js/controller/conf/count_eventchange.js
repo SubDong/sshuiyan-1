@@ -21,6 +21,7 @@ define(["./module"], function (ctrs) {
                 url: url
             }).success(function (dataConfig, status) {
                 //页面删除
+                console.log("删除成功 关闭窗口")
                 $scope.gridOptions.data.splice($scope.gridOptions.data.indexOf($scope.entity), 1);
                 $scope.urlDialog.close();
             });
