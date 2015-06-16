@@ -68,7 +68,7 @@ define(["./module"], function (ctrs) {
                         uv: data[0].uv,
                         path1: data[0].path1
                     };
-                    $scope.pathData = data[0].path1
+                    $scope.pathData = data[0].path1;
                     $scope.exchange_prefix = {
                         name: data[0].pathName,
                         id: data[0].id,
