@@ -803,10 +803,27 @@ define(["app"], function (app) {
                                 data.forEach(function (item, i) {
                                     item.period = util.getYearWeekState(item.period);
                                 });
-
-                                $scope.gridOptions.data = data;
+                                if(data.length == 0) {
+                                    var resultData = [];
+                                    var resultObj ={};
+                                    $rootScope.checkedArray.forEach(function (item, a) {
+                                        resultObj[item] = 0;
+                                    });
+                                    resultObj[$rootScope.tableSwitch.latitude.field] = "暂无数据";
+                                    resultData.push(resultObj)
+                                    $scope.gridOptions.data = resultData;
+                                }else $scope.gridOptions.data = data;
                             } else {
-                                $scope.gridOptions.data = data;
+                                if(data.length == 0){
+                                    var resultData = [];
+                                    var resultObj ={};
+                                    $rootScope.checkedArray.forEach(function (item, a) {
+                                        resultObj[item] = 0;
+                                    });
+                                    resultObj[$rootScope.tableSwitch.latitude.field] = "暂无数据";
+                                    resultData.push(resultObj)
+                                    $scope.gridOptions.data = resultData;
+                                }else $scope.gridOptions.data = data;
                             }
                         } else {
                             var result = [];
