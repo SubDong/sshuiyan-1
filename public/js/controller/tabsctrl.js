@@ -848,7 +848,6 @@ define(["app"], function (app) {
                                 }
                             }
                             if (jupey == 0) {
-                                console.log(111);
                                 var resultObj = {}
                                 $rootScope.checkedArray.forEach(function (item, a) {
                                     resultObj[item] = 0;

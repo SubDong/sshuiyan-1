@@ -220,7 +220,7 @@ define(["./module"], function (ctrs) {
                 site_id: $rootScope.siteId
             }
             var query = "/config/page_title?type=search&query=" + JSON.stringify(qryjson);
-            console.log(query);
+            //console.log(query);
             $http({
                 method: 'GET',
                 url: query
@@ -240,7 +240,7 @@ define(["./module"], function (ctrs) {
         $scope.dialog_page_title.uid = $cookieStore.get("uid");//uid 设置
         $scope.dialog_page_title.site_id = $rootScope.siteId;//site_id设置
         $scope.openAddDialog = function () {
-            console.log("打开窗口");
+            //console.log("打开窗口");
             $scope.dialog_page_title.page_url = "";
             $scope.dialog_page_title.icon_name = "";
             $scope.urlDialog = ngDialog.open({
@@ -284,15 +284,15 @@ define(["./module"], function (ctrs) {
                 page_url: $scope.dialog_page_title.page_url,
             }
             var query = "/config/page_title?type=search&query=" + JSON.stringify(qryjson);
-            console.log(query);
+            //console.log(query);
             $http({
                 method: 'GET',
                 url: query
             }).success(function (dataConfig, status) {
-                console.log(dataConfig )
+                //console.log(dataConfig )
                 if (dataConfig == null ||dataConfig == 0) {
                     var url = "/config/page_title?type=save&entity=" + JSON.stringify($scope.dialog_page_title);
-                    console.log(url);
+                    //console.log(url);
                     $http({
                         method: 'GET',
                         url: url

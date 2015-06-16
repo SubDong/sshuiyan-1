@@ -580,7 +580,7 @@ api.get("/exchange", function (req, res) {
     var address = Parameters[5].split("=")[1];
     var int = function () {
         access_request.exchangeSearch(req.es, indexString, type, pathUp, pathDown, address, function (result) {
-            console.log(result.toString().length);
+            //console.log(result.toString().length);
             if (result.toString().length == 17) {
                 var index = result;
                 var newIndexs = [];
@@ -681,7 +681,7 @@ api.get("/trafficmap", function (req, res) {
     }
     var int = function () {
         access_request.trafficmapSearch(req.es, indexString, targetPathName, function (result) {
-            console.log(result.toString().length);
+            //console.log(result.toString().length);
             if (result.toString().length == 17) {
                 var index = result;
                 var newIndexs = [];
@@ -717,7 +717,7 @@ api.get("/offsitelinks", function (req, res) {
     var pathName = parameters[2].split("=")[1];
     var int = function () {
         access_request.offsitelinksSearch(req.es, indexString, pathName, function (result) {
-            console.log(result.toString().length);
+            //console.log(result.toString().length);
             if (result.toString().length == 17) {
                 var index = result;
                 var newIndexs = [];

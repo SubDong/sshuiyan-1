@@ -64,9 +64,8 @@ define(["../app"], function (app) {
                 controller: ['$scope', '$http', '$compile', function ($scope, $http, $compile) {
                     $http({
                         method: 'GET',
-                        url: "/api/summary/?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.defaultType + "&quotas=pv&dimension=entrance" + "&filerInfo=" + filerInfo
+                        url: "/api/summary/?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.defaultType + "&quotas=pv&dimension=loc" + "&filerInfo=" + filerInfo
                     }).success(function (data, status) {
-                        console.log(data)
                         var obj = JSON.parse(eval('(' + data + ')').toString())
                         var contentHtml = "<div class='modal-body'><table class='table'><tr><th>排名</th><th>入口页链接</th></tr>";
                         obj.forEach(function (item, i) {
@@ -107,7 +106,6 @@ define(["../app"], function (app) {
                 controller: ['$scope', '$http', '$compile', function ($scope, $http, $compile) {
                     $scope.liexingClass = true;
                     $scope.showUrl = function () {
-                        console.log(11111)
                         $scope.liexingClass = false;
                         $scope.laiyuanClass = true;
                         $http({
@@ -139,7 +137,6 @@ define(["../app"], function (app) {
                     };
 
                     $scope.showCategory = function () {
-                        console.log(22221)
                         $scope.laiyuanClass = false;
                         $scope.liexingClass = true;
                         $http({

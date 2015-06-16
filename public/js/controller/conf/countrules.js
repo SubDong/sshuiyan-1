@@ -62,7 +62,7 @@ define(["./module"], function (ctrs) {
                 if(dataConfig==null||dataConfig.length==0){//不存在配置 save
                     var entity= "{\"uid\":\""+uid+"\",\"site_id\":\""+site_id+"\",\"rules\":"+ angular.toJson($scope.rules)+",\"ex_ips\":[\""+$scope.ex_ips_area.tText.replace(/\n/g,"\",\"")+"\"],\"ex_refer_urls\":[\""
                         + $scope.ex_refer_urls_area.tText.replace(/\n/g,"\",\"")+"\"],\"ex_urls\":[\""+ $scope.ex_urls_area.tText.replace(/\n/g,"\",\"")+"\"],\"cross_sites\":[\""+ $scope.cross_sites_area.tText.replace(/\n/g,"\",\"")+"\"]}";
-                    console.log(entity);
+                    //console.log(entity);
                     var url= "/config/conf?index=0&type=save&entity="+entity;
                     $http({
                         method: 'GET',
@@ -73,7 +73,7 @@ define(["./module"], function (ctrs) {
                 }else{//update
                     var updates= "{\"uid\":\""+uid+"\",\"site_id\":\""+site_id+"\",\"rules\":"+ angular.toJson($scope.rules)+",\"ex_ips\":[\""+$scope.ex_ips_area.tText.replace(/\n/g,"\",\"")+"\"],\"ex_refer_urls\":[\""
                         + $scope.ex_refer_urls_area.tText.replace(/\n/g,"\",\"")+"\"],\"ex_urls\":[\""+ $scope.ex_urls_area.tText.replace(/\n/g,"\",\"")+"\"],\"cross_sites\":[\""+ $scope.cross_sites_area.tText.replace(/\n/g,"\",\"")+"\"]}";
-                    console.log(updates);
+                    //console.log(updates);
                     var url= "/config/conf?index=0&type=update&query={\"uid\":\""+uid+"\",\"site_id\":\""+site_id+"\"}&updates="+updates;
                     $http({
                         method: 'GET',

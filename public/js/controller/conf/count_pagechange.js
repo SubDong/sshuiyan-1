@@ -44,7 +44,7 @@ define(["./module"], function (ctrs) {
 
         //跳转到修改界面
         $scope.onUpdate = function (entity) {
-            console.log("传递ID="+entity._id);
+            //console.log("传递ID="+entity._id);
             $state.go('pagechange_update',{ 'id':entity._id});
         }
 
@@ -93,12 +93,12 @@ define(["./module"], function (ctrs) {
             var uid = $cookieStore.get("uid");
             var site_id = $rootScope.siteId;
             var url = "/config/page_conv?type=search&query={\"uid\":\"" + uid + "\",\"site_id\":\"" + site_id + "\"}";
-            console.log(url)
+            //console.log(url)
             $http({
                 method: 'GET',
                 url: url
             }).success(function (dataConfig, status) {
-                console.log(dataConfig)
+                //console.log(dataConfig)
                 $rootScope.gridOptions.data=dataConfig;
                 //修改数据
                 dataConfig.forEach(function(item,i){

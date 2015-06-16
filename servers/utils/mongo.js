@@ -12,7 +12,7 @@ var mongo_module = {
         });
         var db = mongoose.connection;
         db.once('open', function (cb) {
-            console.log('db connection successed!')
+            //console.log('db connection successed!')
         })
         return mongoose;
     },

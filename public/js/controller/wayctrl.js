@@ -166,7 +166,7 @@ define(["app"], function (app) {
                     $scope.charts[0].config.chartType = "bar";
                     $scope.charts[0].config.bGap = true;
                     if ($scope.compareResult.length) {
-                        console.log($scope.compareResult);
+                        //console.log($scope.compareResult);
                     }
                     cf.renderChart(final_result, $scope.charts[0].config);
                 } else {

@@ -396,13 +396,13 @@ api.get("/time_conv", function (req, res) {
  * 包括PV转化
  */
 api.get("/page_title", function (req, res) {
-    console.log("page-title'")
+    //console.log("page-title'")
     var query = url.parse(req.url, true).query;
     var type = query['type'];
     var schema_name = "page_title_model";
     switch (type) {
         case "save":
-            console.log(query['entity'])
+            //console.log(query['entity'])
             var entity = JSON.parse(query['entity']);
             dao.save(schema_name, entity, function (ins) {
                 datautils.send(res, JSON.stringify(ins));
@@ -425,7 +425,7 @@ api.get("/page_title", function (req, res) {
             });
             break;
         case "search":
-            console.log(query['query'])
+            //console.log(query['query'])
             dao.find(schema_name, query['query'], null, {}, function (err, docs) {
                 datautils.send(res, docs);
             });

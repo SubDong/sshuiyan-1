@@ -46,9 +46,9 @@ var dateutils = {
         var endTime = Date.parse(endDay);
         var start = new Date(startTime);
         var end = new Date(endTime);
-        console.log(end - start);
+        //console.log(end - start);
         var number = Math.floor((end - start) / (24 * 60 * 60 * 1000));
-        console.log("==================" + number);
+        //console.log("==================" + number);
         var dates = [prefix + startDay];
         for (var i = 1; i <= number; i++) {
             start.setDate(start.getDate() + 1);

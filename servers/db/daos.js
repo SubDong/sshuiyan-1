@@ -27,7 +27,7 @@ var daos = {
         });
     },
     remove: function (schema, obj, cb) {
-        console.log("remove 1");
+        //console.log("remove 1");
         if (obj.uid) {
             return this.uiderror();
         }
@@ -110,7 +110,7 @@ var daos = {
             var Model = mongodb.service().model(schemas[schema].model_name, dbschema, schemas[schema].collection_name);
             return Model;
         } catch (err) {
-            console.log("Model " + schemas[schema].model_name + " has been created!Just need get it!");
+            //console.log("Model " + schemas[schema].model_name + " has been created!Just need get it!");
             var Model = mongodb.service().model(schemas[schema].model_name);
             return Model;
         }
