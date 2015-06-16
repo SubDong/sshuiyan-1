@@ -751,11 +751,17 @@ define(["../app"], function (app) {
                     var semRequest = $http.get(SEM_API_URL + "search_word/" + $rootScope.userType
                     + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd);
                     $q.all([semRequest]).then(function (final_result) {
+                        var count = 0;
                         angular.forEach(final_result[0].data, function (r) {
+                            var infokey = r.word;
+                            if (infokey != undefined && (infokey == "-" || infokey == "" || infokey == "www" || infokey == "null" || infokey.length >= 40)) {
+                                return;
+                            };
+                            count++;
                             angular.forEach(scope.dateShowArray, function (q_r) {
                                 var temp = q_r.label;
                                 q_r.value += temp != "freq" ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
-                                q_r.count = final_result[0].data.length;
+                                q_r.count = count;
                             });
                         });
                     });
@@ -765,10 +771,15 @@ define(["../app"], function (app) {
                     + "/?startOffset=" + startTime + "&endOffset=" + endTime);
                     $q.all([semRequest]).then(function (final_result) {
                         angular.forEach(final_result[0].data, function (r) {
+                            var infokey = r.word;
+                            if (infokey != undefined && (infokey == "-" || infokey == "" || infokey == "www" || infokey == "null" || infokey.length >= 40)) {
+                                return;
+                            };
+                            count++;
                             angular.forEach(scope.dateShowArray, function (q_r) {
                                 var temp = q_r.label;
                                 q_r.cValue += temp != "freq" ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
-                                q_r.cCount = final_result[0].data.length;
+                                q_r.cCount = count;
                             });
                         });
                     });
@@ -1176,10 +1187,11 @@ define(["../app"], function (app) {
             link: function (scope, element, attris, controller) {
 
                 var clip = new ZeroClipboard(element[0]); // 新建一个对象
-
+                scope.tooltipText = "复制到剪贴板";
                 clip.on('ready', function () {
+                    $(element[0]).attr("title", "复制到剪贴板").tooltip();
                     this.on('aftercopy', function (event) {
-                        alert("复制成功");
+                        $(element[0]).attr("title", "完成复制！").tooltip("fixTitle").tooltip("show").attr("title", "复制到剪贴板").tooltip("fixTitle");
                     });
                 });
 

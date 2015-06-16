@@ -176,34 +176,37 @@ var access_request = {
                     "match_all": {}
                 }
             } else {
-                if (pathDown == "path1") {
-                    return {
-                        "match": {
-                            "path1": address
-                        }
-                    }
-                } else if (pathDown == "path2") {
-                    return {
-                        "match": {
-                            "path2": address
-                        }
-                    }
-                } else if (pathDown == "path3") {
-                    return {
-                        "match": {
-                            "path3": address
-                        }
-                    }
-                } else if (pathDown == "path4") {
-                    return {
-                        "match": {
-                            "path4": address
-                        }
-                    }
-                } else {
-                    return {
-                        "match_all": {}
-                    };
+                switch (pathDown) {
+                    case "path1":
+                        return {
+                            "match": {
+                                "path1": address
+                            }
+                        };
+                    case "path2":
+                        return {
+                            "match": {
+                                "path2": address
+                            }
+                        };
+                    case "path3":
+                        return {
+                            "match": {
+                                "path3": address
+                            }
+                        };
+                    case "path4":
+                        return {
+                            "match": {
+                                "path4": address
+                            }
+                        };
+                    default :
+                        return {
+                            "match_all": {}
+                        };
+
+
                 }
             }
         };
@@ -262,6 +265,9 @@ var access_request = {
         es.search(request, function (error, response) {
             var data = [];
             var path1Data = [];
+            if (response.status == 404) {
+                callbackFn(response.error.split("[")[2].split("]")[0]);
+            }
             if (response != undefined && response.aggregations != undefined) {
                 var result = response.aggregations.pv_uv.buckets;
                 for (var i = 0; i < result.length; i++) {
@@ -424,7 +430,9 @@ var access_request = {
             } else
                 callbackFn(results);
         });
-    },
+    }
+
+    ,
     // TODO 为什么不按照指标来进行统一处理
     offsitelinksSearch: function (es, indexs, targetPathName, callbackFn) {
         var request = {
@@ -530,7 +538,7 @@ var access_request = {
             var out_data = [];//流经监控目标的pv
             var out_site = [];//离站占比
             if (response.status == 404) {
-                callbackFn([]);
+                callbackFn(response.error.split("[")[2].split("]")[0]);
             }
             if (response != undefined && response.aggregations != undefined) {
                 var result = response.aggregations;
@@ -589,64 +597,8 @@ var access_request = {
             } else
                 callbackFn(data);
         });
-    },
-    // TODO 为什么不按照指标来进行统一处理
-    offsitelinksSearchForPathName: function (es, indexs, pathName, callbackFn) {
-        var request = {
-            index: indexs,
-            type: null,
-            body: {
-                "size": 0,
-                "query": {
-                    "bool": {
-                        "should": requestBodyBoolForPathName(pathName)
-                    }
-                },
-                "aggs": {
-                    "pv_uv": {
-                        "terms": {
-                            "field": "loc"
-                        },
-                        "aggs": {
-                            "uv": {
-                                "cardinality": {
-                                    "field": "tt"
-                                }
-                            },
-                            "pv": {
-                                "value_count": {
-                                    "field": "loc"
-                                }
-                            }
-                        }
-                    },
-                    "uv": {
-                        "cardinality": {
-                            "field": "tt"
-                        }
-                    }
-                }
-            }
-        };
-        es.search(request, function (error, response) {
-            var data = [];
-            var path1Data = [];
-            if (response != undefined && response.aggregations != undefined) {
-                var result = response.aggregations;
-                for (var i = 0; i < result.pv_uv.buckets.length; i++) {
-                    data.push({
-                        name: result.pv_uv.buckets[i].key,
-                        count: result.pv_uv.buckets[i].pv.value,
-                        ratio: ((Number(result.pv_uv.buckets[i].uv.value) / Number(result.uv.value)) * 100).toFixed(2) + "%"
-                    });
-
-                }
-                callbackFn(data);
-            } else
-                callbackFn(data);
-        });
-
-    },
+    }
+    ,
     modalInstanceSearch: function (es, type, callbackFn) {
         var request = {
             index: null,

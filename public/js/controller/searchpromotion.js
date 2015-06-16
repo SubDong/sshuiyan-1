@@ -411,7 +411,7 @@ define(["./module"], function (ctrs) {
                     } else {
                         dataArray.push({kw: "无"})
                     }
-                    row.entity.subGridOptions.expandableRowHeight = (row.entity.subGridOptions.data.length == 0?1 * 60: row.entity.subGridOptions.data.length * 60)+1;
+                    row.entity.subGridOptions.expandableRowHeight = (row.entity.subGridOptions.data.length == 0 ? 1 * 60 : row.entity.subGridOptions.data.length * 60) + 1;
                     row.entity.subGridOptions.data = dataArray;
 
                 })
@@ -597,8 +597,8 @@ define(["./module"], function (ctrs) {
                 /**
                  * TODO  ...
                  */
-                if (a.col.field == "cpc") {
-                    returnData = (returnData+"").substring(0,(returnData+"").indexOf(".")+3);
+                if (a.col.field == "cpc" || a.col.field == "cost") {
+                    returnData = (returnData + "").substring(0, (returnData + "").indexOf(".") + 3);
                 }
             }
             return returnData;
