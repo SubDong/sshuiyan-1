@@ -282,7 +282,7 @@ define(["./module"], function (ctrs) {
                     method: 'GET',
                     url: query
                 }).success(function (dataConfig, status) {
-                    if (dataConfig == "success") {
+                    if (dataConfig == "\"success\"") {
                         refushGridData();
                     }
 
