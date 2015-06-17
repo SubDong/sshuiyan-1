@@ -97,8 +97,8 @@ define(["../app"], function (app) {
         function showSourceDistributionData(entrance) {
             ngDialog.open({
                 template: "<div style=\'overflow: hidden\' class=\'pop_title\'><ul>" +
-                "<li ng-click=\'showCategory()\' ng-class=\"{'bottom_line':liexingClass;}\">来源类型</li>" +
-                "<li ng-click=\'showUrl()\' ng-class=\"{'bottom_line':laiyuanClass}\">来源URL</li>" +
+                "<li ng-click=\'showCategory()\' ng-class=\"{'current':liexingClass}\">来源类型</li>" +
+                "<li ng-click=\'showUrl()\' ng-class=\"{'current':laiyuanClass}\">来源URL</li>" +
                 "</ul><div id=\"source_box\"></div></div>",
                 plain: true,
                 className: 'ngdialog-theme-default',
@@ -139,7 +139,6 @@ define(["../app"], function (app) {
                     $scope.showCategory = function () {
                         $scope.laiyuanClass = false;
                         $scope.liexingClass = true;
-                        console.log($scope.liexingClass);
                         $http({
                             method: 'GET',
                             url: "/api/indextable/?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.defaultType + "&indic=contribution&dimension=rf_type&popup=1" + "&filerInfo=[{\"entrance\":[\"" + entrance + "\"]}]"
