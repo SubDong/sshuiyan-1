@@ -144,6 +144,8 @@ define(["./module"], function (ctrs) {
 
         //图表数据
         $scope.doSearchAreas = function (start, end, type, chartConfig) {
+            var dataValueSum = 0;
+            var title_name;
             var chart = echarts.init(document.getElementById(chartConfig.chartId));
             var jupName = "";
             chart.on("hover", function (param) {
@@ -157,16 +159,18 @@ define(["./module"], function (ctrs) {
                     jupName = param.name;
                     for (var p = 0, len = mapSeries.data.length; p < len; p++) {
                         var name = mapSeries.data[p].name;
-
                         if (mapSeries.data[p].name == param.name) {
                             data.push({
                                 name: name,
                                 value: option.series[0].data[p].value,
-                                tooltip: {
-                                    show: true,
-                                    trigger: 'item',
-                                    formatter: "<p>{b}</p><p>{a}: {c}</p> <p>占比:{d}%</p>"
-                                },
+                                /*tooltip: function (params) {
+                                    var returnValue = 0
+                                    if (parseInt(params.value) != 0 && !isNaN(params.value)) {
+                                        returnValue = ((parseInt(params.value) / dataValueSum) * 100).toFixed(2)
+                                    }
+                                    var value = "<p>" + params.name + "</p><p>" + title_name + " : " + params.value + "</p><p>占比：" + returnValue + "%</p>";
+                                    return value;
+                                },*/
                                 selected: true
                             });
                         } else {
@@ -186,7 +190,6 @@ define(["./module"], function (ctrs) {
                 method: 'GET',
                 url: '/api/provincemap/?start=' + start + "&end=" + end + "&type=" + type + "&areas=" + $scope.areas + "&property=" + $scope.property
             }).success(function (data, status) {
-                var title_name;
                 switch ($scope.property) {
                     case "loc":
                         title_name = "浏览量(PV)";
@@ -204,9 +207,15 @@ define(["./module"], function (ctrs) {
                         title_name = "IP数";
                         break;
                 }
+                if (data != undefined) {
+                    data.chart_data.forEach(function (item, i) {
+                        dataValueSum += item["value"]
+                    });
+                }
+
                 data["title_name"] = title_name;
                 chart.quota = title_name;
-                mixingMap.mapOrPie(data, chart);
+                mixingMap.mapOrPie(data, chart, dataValueSum, title_name);
 
             }).error(function (error) {
                 console.log(error);

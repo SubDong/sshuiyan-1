@@ -15,7 +15,7 @@ var schemas = require('../db/schemas');
 var csvApi = require('json-2-csv');
 var iconv = require('iconv-lite');
 var uuid = require("node-uuid");
-
+var async = require("async");
 var es_position = require('../services/es_position');
 
 
@@ -578,27 +578,9 @@ api.get("/exchange", function (req, res) {
     pathUp = Parameters[3].split("=")[1];
     pathDown = Parameters[4].split("=")[1];
     var address = Parameters[5].split("=")[1];
-    var int = function () {
-        access_request.exchangeSearch(req.es, indexString, type, pathUp, pathDown, address, function (result) {
-            //console.log(result.toString().length);
-            if (result.toString().length == 17) {
-                var index = result;
-                var newIndexs = [];
-                for (var i = 0; i < indexString.length; i++) {
-                    if (indexString[i] == index) {
-                        continue;
-                    }
-                    newIndexs.push(indexString[i]);
-                }
-                indexString = newIndexs;
-                int();
-            } else {
-                datautils.send(res, result);
-            }
-        });
-    };
-    int();
-
+    access_request.exchangeSearch(req.es, indexString, type, pathUp, pathDown, address, function (result) {
+        datautils.send(res, result);
+    });
 });
 
 api.get("/heatmap", function (req, res) {
@@ -679,26 +661,10 @@ api.get("/trafficmap", function (req, res) {
     } else {
         indexString = date.createIndexes(start, end, "access-");
     }
-    var int = function () {
-        access_request.trafficmapSearch(req.es, indexString, targetPathName, function (result) {
-            //console.log(result.toString().length);
-            if (result.toString().length == 17) {
-                var index = result;
-                var newIndexs = [];
-                for (var i = 0; i < indexString.length; i++) {
-                    if (indexString[i] == index) {
-                        continue;
-                    }
-                    newIndexs.push(indexString[i]);
-                }
-                indexString = newIndexs;
-                int();
-            } else {
-                datautils.send(res, result);
-            }
-        });
-    };
-    int();
+    access_request.trafficmapSearch(req.es, indexString, targetPathName, function (result) {
+        datautils.send(res, result);
+
+    });
 });
 api.get("/offsitelinks", function (req, res) {
     var parameterString = req.url.split("?");//获取url的？号以后的字符串
@@ -715,26 +681,10 @@ api.get("/offsitelinks", function (req, res) {
         indexString = date.createIndexes(start, end, "access-");
     }
     var pathName = parameters[2].split("=")[1];
-    var int = function () {
-        access_request.offsitelinksSearch(req.es, indexString, pathName, function (result) {
-            //console.log(result.toString().length);
-            if (result.toString().length == 17) {
-                var index = result;
-                var newIndexs = [];
-                for (var i = 0; i < indexString.length; i++) {
-                    if (indexString[i] == index) {
-                        continue;
-                    }
-                    newIndexs.push(indexString[i]);
-                }
-                indexString = newIndexs;
-                int();
-            } else {
-                datautils.send(res, result);
-            }
-        });
-    };
-    int();
+    access_request.offsitelinksSearch(req.es, indexString, pathName, function (result) {
+        datautils.send(res, result);
+
+    });
 });
 // ================================= Config  ==============================
 api.get("/modalInstance", function (req, res) {

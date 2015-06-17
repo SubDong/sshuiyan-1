@@ -219,6 +219,10 @@ define(["./module"], function (ctrs) {
                                     datas[x] = item[x] != undefined ? item[x] : data[0][x];
                                 });
                                 datas[fieldQuery] = item[fieldQuery] + getTableTitle(fieldQuery, item);
+                                item["impression"] != undefined ? datas["impression"] = item["impression"] : "";
+                                item["click"] != undefined ? datas["click"] = item["click"] : "";
+                                item["cost"] != undefined ? datas["cost"] = item["cost"] : "";
+                                item["cpc"] != undefined ? datas["cpc"] = item["cpc"] : "";
                                 dataArray.push(datas);
                                 if ((dataSEM.length - 1) == i) {
                                     $scope.gridOptions.data = dataArray;
@@ -230,7 +234,12 @@ define(["./module"], function (ctrs) {
                             });
                             var field = $rootScope.tableSwitch.latitude.field;
                             datas[field] = item[field] + getTableTitle(field, item);
+                            alert(1);
                             datas["id"] = item[searchId + "Id"];
+                            item["impression"] != undefined ? datas["impression"] = item["impression"] : "";
+                            item["click"] != undefined ? datas["click"] = item["click"] : "";
+                            item["cost"] != undefined ? datas["cost"] = item["cost"] : "";
+                            item["cpc"] != undefined ? datas["cpc"] = item["cpc"] : "";
                             dataArray.push(datas);
                             if ((dataSEM.length - 1) == i) {
                                 if (field == "adgroupName" || field == "keywordName") {
@@ -288,6 +297,10 @@ define(["./module"], function (ctrs) {
                                     }
                                 });
                                 datas[fieldQuery] = item[fieldQuery] + getTableTitle(fieldQuery, item);
+                                item["impression"] != undefined ? datas["impression"] = item["impression"] : "";
+                                item["click"] != undefined ? datas["click"] = item["click"] : "";
+                                item["cost"] != undefined ? datas["cost"] = item["cost"] : "";
+                                item["cpc"] != undefined ? datas["cpc"] = item["cpc"] : "";
                                 dataArray.push(datas);
                                 if ((dataSEM.length - 1) == i) {
                                     $scope.gridOptions.data = dataArray;
@@ -303,6 +316,10 @@ define(["./module"], function (ctrs) {
                             var field = $rootScope.tableSwitch.latitude.field;
                             datas[field] = item[field] + getTableTitle(field, item);
                             datas["id"] = item[searchId + "Id"];
+                            item["impression"] != undefined ? datas["impression"] = item["impression"] : "";
+                            item["click"] != undefined ? datas["click"] = item["click"] : "";
+                            item["cost"] != undefined ? datas["cost"] = item["cost"] : "";
+                            item["cpc"] != undefined ? datas["cpc"] = item["cpc"] : "";
                             dataArray.push(datas);
                             if ((dataSEM.length - 1) == i) {
                                 if (field == "adgroupName" || field == "keywordName") {
@@ -582,6 +599,22 @@ define(["./module"], function (ctrs) {
                         }
                     }
                 });
+                if (a.col.field == "ctr") {
+                    var dataInfoClick = 0;
+                    var dataInfoIpmr = 0;
+                    var page = option[0].grid.options.paginationCurrentPage;
+                    var pageSize = option[0].grid.options.paginationPageSize
+                    var maxIndex = (page * pageSize) - 1
+                    var minIndex = (page - 1) * pageSize
+                    for (var i = minIndex; i <= maxIndex; i++) {
+                        if (i < option.length) {
+                            dataInfoClick += option[i].entity["click"];
+                            dataInfoIpmr += option[i].entity["impression"];
+                        }
+                    }
+                    var returnCtr = (dataInfoIpmr == 0 ? "0%" : ((dataInfoClick / dataInfoIpmr) * 100).toFixed(2) + "%");
+                    return returnCtr;
+                }
                 if ((option[0].entity[a.col.field] + "").indexOf("%") != -1) {
                     returnData = (returnData / option.length).toFixed(2) + "%";
                 }

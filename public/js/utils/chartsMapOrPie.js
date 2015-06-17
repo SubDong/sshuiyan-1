@@ -2,7 +2,7 @@
  * Created by SubDong on 2015/4/14.
  */
 var mixingMap = {
-    mapOrPie: function (data, chart) {
+    mapOrPie: function (data, chart, dataValueSum, dataValueName) {
         var max = 200;
         if (data) {
             if (data.chart_data.length) {
@@ -30,7 +30,6 @@ var mixingMap = {
                 orient: 'vertical',
                 data: data.data_name
             },
-            calculable: true,
             dataRange: {
                 orient: 'horizontal',
                 min: 0,
@@ -47,7 +46,14 @@ var mixingMap = {
                     },
                     tooltip: {
                         trigger: 'item',
-                        formatter: "<p>{b}</p><p>{a} : {c}</p><p>占比:{d}%</p> "
+                        formatter: function (params) {
+                            var returnValue = 0
+                            if (parseInt(params.value) != 0 && !isNaN(params.value)) {
+                                returnValue = ((parseInt(params.value) / dataValueSum) * 100).toFixed(2)
+                            }
+                            var value = "<p>" + params.name + "</p><p>" + dataValueName + " : " + params.value + "</p><p>占比：" + returnValue + "%</p>";
+                            return value;
+                        }
                     },
                     itemStyle: {
                         emphasis: {label: {show: true}},
