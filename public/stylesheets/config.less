@@ -15,6 +15,7 @@
   border: 1px solid #ccc;
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
   transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+  padding: 3px 5px;
 }
 .adtrack_add p{
   color: #aaabab;
@@ -34,6 +35,7 @@
   color: red;
   input{
     margin-left: 3px;
+    padding: 3px 5px;
   }
 }
 .adtrack_add_tz{
@@ -124,19 +126,29 @@
 #web_list_nav_input {
   width: 180px;
   display: inline-block;
-  margin-top: -8px;
-  height: 30px;
+  height: 26px;
   border-radius: 2px;
   line-height: 17px;
-  margin-left: 10px;
+  margin: -8px -10px 0 10px;
 }
 
 .nav_btn {
-  margin-top: -8px;
-  height: 30px;
-  border-radius: 2px;
+  margin-top: -6px;
+  height: 26px;
+  border-radius: 4px;
   line-height: 10px;
   background-color: #2FABE7;
+}
+
+.nav_btn:hover,
+.nav_btn:focus,
+.nav_btn.focus,
+.nav_btn:active,
+.nav_btn .active,
+.open > .dropdown-toggle.btn-info {
+  color: #fff;
+  background-color: #01aeef;
+  border-color: #01aeef;
 }
 
 .web_list_up {
@@ -237,7 +249,10 @@
   }
 }
 .table_box {
+  .custom_table{
   .table_admin {
+
+  }
     margin-top: -2px;
     ul li {
       height: 100px;
@@ -247,7 +262,16 @@
   }
 }
 
+.ui-grid-row:hover {
+  .ui-grid-cell {
+    background-color: #bcedfe;
+  }
+}
+
 .table_admin {
+  .ui-grid-cell-contents{
+    cursor: pointer;
+  }
   height: 32px;
   line-height: 32px;
   color: #2fabe7;
@@ -277,4 +301,8 @@
  .custom_table{
    overflow:visible;
 }
+}
+.ng-button{
+  background: #2FABE7;
+  color: #fff;
 }

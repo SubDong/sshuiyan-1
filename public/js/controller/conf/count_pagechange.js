@@ -133,7 +133,7 @@ define(["./module"], function (ctrs) {
                 template: '' +
                 '<div class="ngdialog-buttons" ><ui><li> 确认删除吗？<span style=" color: red " >（要测试自己新建条删哈！）<span></li></ui>' +
                 '<button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
-                    <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="sureonDelete()">确定</button></div>',
+                    <button type="button" class="ngdialog-button ng-button" ng-click="sureonDelete()">确定</button></div>',
 
                 className: 'ngdialog-theme-default',
                 plain: true,

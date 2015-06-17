@@ -85,7 +85,7 @@ define(["./module"], function (ctrs) {
                 cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
                 maxWidth: 5
             },
-            {name: "网站域名", displayName: "网站域名", field: "site_url", maxWidth: '', cellClass: 'table_admin'},
+            {name: "网站域名", displayName: "网站域名", field: "site_url", maxWidth: '', cellClass: 'table_admin' },
 
             {name: "网站名称", displayName: "网站名称", field: "site_name", maxWidth: '', cellClass: 'table_admin_color'},
             {
@@ -202,7 +202,7 @@ define(["./module"], function (ctrs) {
                     <li>4.wap站域名（如：wap.baidu.com）</li>\
                     </ul>\
                     <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
-                    <button type="button" ng-disabled="adminmainctrForm.$invalid" class="ngdialog-button ngdialog-button-primary" ng-click="submit()">确定</button>\
+                    <button type="button" ng-disabled="adminmainctrForm.$invalid" class="ngdialog-button  ng-button" ng-click="submit()">确定</button>\
                 </div></form>',
                 className: 'ngdialog-theme-default',
                 plain: true,
@@ -235,7 +235,7 @@ define(["./module"], function (ctrs) {
                     <li>4.wap站域名（如：wap.baidu.com）</li>\
                     </ul>\
                     <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
-                    <button type="button" ng-disabled="adminmainctrForm.$invalid" class="ngdialog-button ngdialog-button-primary" ng-click="submit()">确定</button>\
+                    <button type="button" ng-disabled="adminmainctrForm.$invalid" class="ngdialog-button ng-button" ng-click="submit()">确定</button>\
                 </div></form>',
                 className: 'ngdialog-theme-default',
                 plain: true,
@@ -269,7 +269,7 @@ define(["./module"], function (ctrs) {
                 template: '' +
                 '<div class="ngdialog-buttons" ><ui><li> 确认删除吗？<span style=" color: red " >（要测试自己新建条删哈！）<span></li></ui>' +
                 '<button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
-                  <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="sureonDelete()">确定</button></div>',
+                  <button type="button" class="ngdialog-button ng-button" ng-click="sureonDelete()">确定</button></div>',
                 className: 'ngdialog-theme-default',
                 plain: true,
                 scope: $scope
@@ -328,7 +328,7 @@ define(["./module"], function (ctrs) {
                   <div class="ngdialog-buttons" >\
                             <ul>' + tip + '</ul>   \
                         <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
-                        <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="onPause()">确定</button>\
+                        <button type="button" class="ngdialog-button ng-button" ng-click="onPause()">确定</button>\
                   </div>',
                 className: 'ngdialog-theme-default',
                 plain: true,
