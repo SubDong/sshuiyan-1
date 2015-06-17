@@ -9,7 +9,7 @@ define(["../app"], function (app) {
         // 获取指定url的来源分布情况
         function showSourceData(kw) {
             ngDialog.open({
-                template: '<div id="url-source-distribution"  style="overflow: hidden"><div class="modal-header">查看  <font color="red">' + kw + '</font>' + '  的搜索来路URL</div></div>',
+                template: '<div id="url-source-distribution"  style="overflow: hidden"><div class="modal-header source-modal-header">查看  <font color="red">' + kw + '</font>' + '  的搜索来路URL</div></div>',
                 plain: true,
                 className: 'ngdialog-theme-default',
                 scope: $rootScope,
@@ -18,7 +18,7 @@ define(["../app"], function (app) {
                         method: 'GET',
                         url: "/api/indextable/?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.defaultType + "&indic=vc&dimension=rf&popup=1" + "&filerInfo=[{\"kw\":[\"" + kw + "\"]}]"
                     }).success(function (data, status) {
-                        var contentHtml = "<div class='modal-body'><table class='table'><tr><th>次数</th><th>搜索链接</th></tr>";
+                        var contentHtml = "<div class='modal-body source_modal_body'><table class='table'><tr><th>次数</th><th>搜索链接</th></tr>";
                         data.forEach(function (item, i) {
                             if (i == 10) {
                                 return false;
@@ -57,7 +57,7 @@ define(["../app"], function (app) {
                 filerInfo = "[{\"se\": [\"" + rf + "\"]}]";
             }
             ngDialog.open({
-                template: '<div id="url-source-distribution"  style="overflow: hidden"><div class="modal-header">查看以  <font color="red">' + rf + '</font>' + '  为来源的入口页面</div></div>',
+                template: '<div id="url-source-distribution"  style="overflow: hidden"><div class="modal-header source_modal_header">查看以  <font color="red">' + rf + '</font>' + '  为来源的入口页面</div></div>',
                 plain: true,
                 className: 'ngdialog-theme-default',
                 scope: $rootScope,
@@ -67,7 +67,7 @@ define(["../app"], function (app) {
                         url: "/api/summary/?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.defaultType + "&quotas=pv&dimension=loc" + "&filerInfo=" + filerInfo
                     }).success(function (data, status) {
                         var obj = JSON.parse(eval('(' + data + ')').toString())
-                        var contentHtml = "<div class='modal-body'><table class='table'><tr><th>排名</th><th>入口页链接</th></tr>";
+                        var contentHtml = "<div class='modal-body source_modal_body'><table class='table'><tr><th>排名</th><th>入口页链接</th></tr>";
                         obj.forEach(function (item, i) {
                             item.key.forEach(function (ik_r, _i) {
                                 if (_i == 10) {
@@ -97,8 +97,8 @@ define(["../app"], function (app) {
         function showSourceDistributionData(entrance) {
             ngDialog.open({
                 template: "<div style=\'overflow: hidden\' class=\'pop_title\'><ul>" +
-                "<li ng-click=\'showCategory()\' ng-class=\"{'current':liexingClass}\">来源类型</li>" +
-                "<li ng-click=\'showUrl()\' ng-class=\"{'current':laiyuanClass}\">来源URL</li>" +
+                "<li ng-click=\'showCategory()\' ng-class=\"{'bottom_line':liexingClass;}\">来源类型</li>" +
+                "<li ng-click=\'showUrl()\' ng-class=\"{'bottom_line':laiyuanClass}\">来源URL</li>" +
                 "</ul><div id=\"source_box\"></div></div>",
                 plain: true,
                 className: 'ngdialog-theme-default',
@@ -139,6 +139,7 @@ define(["../app"], function (app) {
                     $scope.showCategory = function () {
                         $scope.laiyuanClass = false;
                         $scope.liexingClass = true;
+                        console.log($scope.liexingClass);
                         $http({
                             method: 'GET',
                             url: "/api/indextable/?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.defaultType + "&indic=contribution&dimension=rf_type&popup=1" + "&filerInfo=[{\"entrance\":[\"" + entrance + "\"]}]"
