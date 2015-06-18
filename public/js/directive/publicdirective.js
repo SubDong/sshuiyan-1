@@ -73,6 +73,8 @@ define(["../app"], function (app) {
                     $rootScope.end = 0;
                     scope.reloadByCalendar("today");
                     $('#reportrange span').html(GetDateStr(0));
+                    $('#reportrange').data('daterangepicker').setStartDate(GetDateStr(0));
+                    $('#reportrange').data('daterangepicker').setEndDate(GetDateStr(0));
                 };
                 scope.yesterday = function () {
                     scope.isShowCalendar = false;
@@ -93,6 +95,8 @@ define(["../app"], function (app) {
                     $rootScope.end = -1;
                     scope.reloadByCalendar("yesterday");
                     $('#reportrange span').html(GetDateStr(-1));
+                    $('#reportrange').data('daterangepicker').setStartDate(GetDateStr(-1));
+                    $('#reportrange').data('daterangepicker').setEndDate(GetDateStr(-1));
                 };
                 scope.sevenDay = function () {
                     scope.isShowCalendar = false;
@@ -110,6 +114,8 @@ define(["../app"], function (app) {
                     $rootScope.end = 0;
                     scope.reloadByCalendar("seven");
                     $('#reportrange span').html(GetDateStr(-6) + "至" + GetDateStr(0));
+                    $('#reportrange').data('daterangepicker').setStartDate(GetDateStr(-6));
+                    $('#reportrange').data('daterangepicker').setEndDate(GetDateStr(0));
                 };
                 scope.month = function () {
                     scope.isShowCalendar = false;
@@ -126,13 +132,15 @@ define(["../app"], function (app) {
                     $rootScope.end = 0;
                     scope.reloadByCalendar("month");
                     $('#reportrange span').html(GetDateStr(-29) + "至" + GetDateStr(0));
+                    $('#reportrange').data('daterangepicker').setStartDate(GetDateStr(-29));
+                    $('#reportrange').data('daterangepicker').setEndDate(GetDateStr(0));
                 };
                 scope.timeclick = function () {
                     scope.isShowCalendar = false;
                     scope.hiddenSeven = true;
                     scope.reset();
                     scope.timeClass = true;
-                    $('#reportrange span').html(GetDateStr(0))
+                   // $('#reportrange span').html(GetDateStr(0))
                 }
                 scope.open = function ($event) {
                     scope.reset();
