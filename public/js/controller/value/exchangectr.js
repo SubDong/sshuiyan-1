@@ -68,7 +68,7 @@ define(["./module"], function (ctrs) {
                         uv: data[0].uv,
                         path1: data[0].path1
                     };
-                    $scope.pathData = data[0].path1
+                    $scope.pathData = data[0].path1;
                     $scope.exchange_prefix = {
                         name: data[0].pathName,
                         id: data[0].id,
@@ -87,17 +87,17 @@ define(["./module"], function (ctrs) {
                     }else {
 
                         var text = "";
-                        for (var i = 0; i < data[0].path1.length; i++) {
+                        for (var i = 0; i < result[0].path1.length; i++) {
                             text += "<li ng-repeat='path in pathData'>"
                                 + "<div class='exchange_list_level2'>"
                                 + "<div class='exchange_list1 fl'>"
                                 + "<div class='exchange_list1_name exchange_page fl'>"
-                                + data[0].path1[i].pathName + "</div>"
+                                + result[0].path1[i].pathName + "</div>"
                                 + "<div class='exchange_list1_text fr'>"
                                 + "<span>"
-                                + data[0].path1[i].pv + "</span>"
+                                + result[0].path1[i].pv + "</span>"
                                 + "<span>"
-                                + data[0].path1[i].uv + "</span>"
+                                + result[0].path1[i].uv + "</span>"
                                 + "</div>"
                                 + "</div>"
                                 + "<a class='exchange_list1_more fl' ng-bind-html = 'htmlStr'>"
@@ -105,29 +105,7 @@ define(["./module"], function (ctrs) {
                                 + "</div>"
                                 + "</li>";
                         }
-                        $scope.htmlStr = "<ul>" + text + "</ul>"
-                        //$scope.htmlStr = ("<ul><li ng-repeat='path in pathData'>"
-                        //+ "<div class='exchange_list_level2'>"
-                        //+ "<div class='exchange_list1 fl'>"
-                        //+ "<div class='exchange_list1_name exchange_page fl'>"
-                        //+ " {{path.pathName}}"
-                        //+ "</div>"
-                        //+ "<div class='exchange_list1_text fr'>"
-                        //+ "<span>"
-                        //+ "PV:{{path.pv}}"
-                        //+ "</span>"
-                        //+ "<span>"
-                        //+ "UV:{{path.uv}}"
-                        //+ "</span>"
-                        //+ "</div>"
-                        //+ "</div>"
-                        //+ "<a class='exchange_list1_more fl' click='queryPathData(path)'　ng-bind-html = 'htmlStr'>"
-                        //+ "</a>"
-                        //+ "</div>"
-                        //+ "</li>"
-                        //+ "</ul>");
-                        //$("#1 span").html();
-                        //}
+                        $scope.htmlStr = "<ul>" + text + "</ul>";
                         $scope.toggle(context.order_id);
                     }
                 });

@@ -39,7 +39,7 @@ define(["./module"], function (ctrs) {
                         <ul>\
                         <li> 你确定删除这个子目录吗？</li></ul>   \
                     <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click=closeThisDialog(0)>返回</button>\
-                    <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click=deleteGridData()>确定</button>\
+                    <button type="button" class="ngdialog-button ng-button" ng-click=deleteGridData()>确定</button>\
                 </div>',
                 className: 'ngdialog-theme-default',
                 plain: true,
@@ -63,10 +63,10 @@ define(["./module"], function (ctrs) {
                 cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
                 maxWidth: 5
             },
-            {name: "子目录名称", displayName: "子目录名称", field: "subdirectory_url",cellClass: 'table_admin'},
-            {name: "包含的页面或目录", displayName: "包含的页面或目录", field: "analysis_url",cellClass: 'table_admin'},
-            {name: "不包含的页面或目录", displayName: "不包含的页面或目录", field: "not_analysis_url",cellClass: 'table_admin'},
-            {name: "创建时间", displayName: "创建时间", field: "create_date",cellClass: 'table_admin'},
+            {name: "子目录名称", displayName: "子目录名称", field: "subdirectory_url",cellClass: 'table_admin_color'},
+            {name: "包含的页面或目录", displayName: "包含的页面或目录", field: "analysis_url",cellClass: 'table_admin_color'},
+            {name: "不包含的页面或目录", displayName: "不包含的页面或目录", field: "not_analysis_url",cellClass: 'table_admin_color'},
+            {name: "创建时间", displayName: "创建时间", field: "create_date",cellClass: 'table_admin_color'},
             {
                 name: "x2",
                 displayName: "",

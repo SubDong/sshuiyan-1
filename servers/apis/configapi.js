@@ -80,6 +80,7 @@ api.get("/eventchnage_list", function (req, res) {
                                         };
                                         confs.push(event_config);
                                     });
+
                                     req.redisclient.multi().set(sres[0].root_url + ":e:" + sres[0].event_page, JSON.stringify(confs)).exec();
                                 }
                                 datautils.send(res, docs);
@@ -92,9 +93,19 @@ api.get("/eventchnage_list", function (req, res) {
             break;
         case "delete":
             var qry = query['query'];
-            dao.remove(schema_name, qry, function (docs) {
-                datautils.send(res, "success");
+            dao.find(schema_name, query['query'], null, {}, function (err, docs) {
+                if (docs != null && docs.length > 0) {
+                    docs.forEach(function (item) {
+                        console.log("delete event="+item.root_url + ":e:"+item.event_page);
+                        req.redisclient.del(item.root_url + ":e:"+item.event_page);
+                    });
+                    //查询 删除级联 删除本身
+                    dao.remove(schema_name, qry, function (del) {
+                        datautils.send(res, "success");
+                    });
+                }
             });
+
             break;
         case "findById":
             var qry = query['query'];
@@ -195,7 +206,7 @@ api.get("/site_list", function (req, res) {
                     .set("tsj:" + ins.track_id, JSON.stringify(siteconfig))
                     //.set(ins._id + ":mouse:" + ins.site_url, JSON.stringify(config_mouse))//目前无具体URL配置 暂时设置在站点上
                     .set("duration:" + ins._id, JSON.stringify(time_config))//站点级别设置
-                    .set("visit:" +ins._id, JSON.stringify(pv_config)).exec();
+                    .set("visit:" + ins._id, JSON.stringify(pv_config)).exec();
             });
             break;
         case "search":
@@ -226,10 +237,41 @@ api.get("/site_list", function (req, res) {
             break;
         case "delete":
             var qry = query['query'];
-            dao.remove(schema_name, qry, function (docs) {
-                if (docs != null) {
+            dao.find(schema_name, query['query'], null, {}, function (err, docs) {
+                if (docs != null && docs.length > 0) {
+                    docs.forEach(function (item) {
+                        //删除Redis
+                        req.redisclient.del("typeid:" + item.track_id);
+                        req.redisclient.del("ts:" + item.track_id);
+                        req.redisclient.del("tsj:" + item.track_id);
+                        req.redisclient.del("st:" + item.type_id);
+                        req.redisclient.del("duration:" + item._id);
+                        req.redisclient.del("visit:" + item._id);
+                        req.redisclient.del(item._id + ":mouse:*");
+                        req.redisclient.del(item._id + ":e:*");
+                        //删除级联表
+                        var del_qry1 = {
+                            site_id: item._id,
+                            uid: item.uid
+                        };
+                        console.log("remove query=" + del_qry1);
+                        dao.remove("siterules_model", JSON.stringify(del_qry1) ,function(){});//统计规则
+                        dao.remove("page_conv_model", JSON.stringify(del_qry1),function(){});//页面转化
+                        dao.remove("converts_model", JSON.stringify(del_qry1),function(){});//时长转化
+                        dao.remove("page_title_model", JSON.stringify(del_qry1),function(){});//页面标题
+                        dao.remove("adtrack_model", JSON.stringify(del_qry1),function(){});//广告
+                        var del_qry2 = {
+                            root_url: item._id,
+                            uid: item.uid
+                        };
+                        dao.remove("subdirectories_model", JSON.stringify(del_qry2),function(){});//子目录管理
+                        dao.remove("event_change_model", JSON.stringify(del_qry2),function(){});//事件转化
+                    });
+                    //查询 删除级联 删除本身
+                    dao.remove(schema_name, qry, function (del) {
+                        datautils.send(res, "success");
+                    });
                 }
-                res.send("success");
             });
             break;
         default :
@@ -381,8 +423,18 @@ api.get("/time_conv", function (req, res) {
             break;
         case "delete":
             //先删除Redis 查询到要删除的数据
-            dao.remove(schema_name, query['query'], function () {
-                datautils.send(res, "success");
+            var qry = query['query'];
+            dao.find(schema_name, query['query'], null, {}, function (err, docs) {
+                if (docs != null && docs.length > 0) {
+                    docs.forEach(function (item) {
+                        req.redisclient.del("duration:" +item.site_id );
+                        req.redisclient.del("visit:" +item.site_id );
+                    });
+                    //查询 删除级联 删除本身
+                    dao.remove(schema_name, qry, function (del) {
+                        datautils.send(res, "success");
+                    });
+                }
             });
             break;
         default :
@@ -396,13 +448,13 @@ api.get("/time_conv", function (req, res) {
  * 包括PV转化
  */
 api.get("/page_title", function (req, res) {
-    console.log("page-title'")
+    //console.log("page-title'")
     var query = url.parse(req.url, true).query;
     var type = query['type'];
     var schema_name = "page_title_model";
     switch (type) {
         case "save":
-            console.log(query['entity'])
+            //console.log(query['entity'])
             var entity = JSON.parse(query['entity']);
             dao.save(schema_name, entity, function (ins) {
                 datautils.send(res, JSON.stringify(ins));
@@ -411,21 +463,21 @@ api.get("/page_title", function (req, res) {
                 var page_title = {//默认状态下存储
                     page_url: "",
                     icon_name: "",
-                    is_open:false
+                    is_open: false
                 }
-                if(ins!=null){
+                if (ins != null) {
                     page_title.page_url = ins.page_url;
                     page_title.icon_name = ins.icon_name;
                     page_title.is_open = ins.is_open;
                 }
                 //通过site_id 去获取track_id
-                if(entity.site_id!=null&&entity.page_url!=null){
-                    req.redisclient.multi().set(entity.site_id+":mouse:" + entity.page_url, JSON.stringify(page_title)) .exec();//站点级别设置
+                if (entity.site_id != null && entity.page_url != null) {
+                    req.redisclient.multi().set(entity.site_id + ":mouse:" + entity.page_url, JSON.stringify(page_title)).exec();//站点级别设置
                 }
             });
             break;
         case "search":
-            console.log(query['query'])
+            //console.log(query['query'])
             dao.find(schema_name, query['query'], null, {}, function (err, docs) {
                 datautils.send(res, docs);
             });
@@ -437,8 +489,17 @@ api.get("/page_title", function (req, res) {
             break;
         case "delete":
             //先删除Redis 查询到要删除的数据
-            dao.remove(schema_name, query['query'], function () {
-                datautils.send(res, "success");
+            var qry = query['query'];
+            dao.find(schema_name, query['query'], null, {}, function (err, docs) {
+                if (docs != null && docs.length > 0) {
+                    docs.forEach(function (item) {
+                        req.redisclient.del(item.site_id + ":mouse:" + item.page_url );
+                    });
+                    //查询 删除级联 删除本身
+                    dao.remove(schema_name, qry, function (del) {
+                        datautils.send(res, "success");
+                    });
+                }
             });
             break;
         default :

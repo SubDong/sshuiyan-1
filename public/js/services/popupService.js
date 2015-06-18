@@ -9,7 +9,7 @@ define(["../app"], function (app) {
         // 获取指定url的来源分布情况
         function showSourceData(kw) {
             ngDialog.open({
-                template: '<div id="url-source-distribution"  style="overflow: hidden"><div class="modal-header">查看  <font color="red">' + kw + '</font>' + '  的搜索来路URL</div></div>',
+                template: '<div id="url-source-distribution"  style="overflow: hidden"><div class="modal-header source-modal-header">查看  <font color="red">' + kw + '</font>' + '  的搜索来路URL</div></div>',
                 plain: true,
                 className: 'ngdialog-theme-default',
                 scope: $rootScope,
@@ -18,7 +18,7 @@ define(["../app"], function (app) {
                         method: 'GET',
                         url: "/api/indextable/?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.defaultType + "&indic=vc&dimension=rf&popup=1" + "&filerInfo=[{\"kw\":[\"" + kw + "\"]}]"
                     }).success(function (data, status) {
-                        var contentHtml = "<div class='modal-body'><table class='table'><tr><th>次数</th><th>搜索链接</th></tr>";
+                        var contentHtml = "<div class='modal-body source_modal_body'><table class='table'><tr><th>次数</th><th>搜索链接</th></tr>";
                         data.forEach(function (item, i) {
                             if (i == 10) {
                                 return false;
@@ -57,18 +57,17 @@ define(["../app"], function (app) {
                 filerInfo = "[{\"se\": [\"" + rf + "\"]}]";
             }
             ngDialog.open({
-                template: '<div id="url-source-distribution"  style="overflow: hidden"><div class="modal-header">查看以  <font color="red">' + rf + '</font>' + '  为来源的入口页面</div></div>',
+                template: '<div id="url-source-distribution"  style="overflow: hidden"><div class="modal-header source_modal_header">查看以  <font color="red">' + rf + '</font>' + '  为来源的入口页面</div></div>',
                 plain: true,
                 className: 'ngdialog-theme-default',
                 scope: $rootScope,
                 controller: ['$scope', '$http', '$compile', function ($scope, $http, $compile) {
                     $http({
                         method: 'GET',
-                        url: "/api/summary/?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.defaultType + "&quotas=pv&dimension=entrance" + "&filerInfo=" + filerInfo
+                        url: "/api/summary/?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.defaultType + "&quotas=pv&dimension=loc" + "&filerInfo=" + filerInfo
                     }).success(function (data, status) {
-                        console.log(data)
                         var obj = JSON.parse(eval('(' + data + ')').toString())
-                        var contentHtml = "<div class='modal-body'><table class='table'><tr><th>排名</th><th>入口页链接</th></tr>";
+                        var contentHtml = "<div class='modal-body source_modal_body'><table class='table'><tr><th>排名</th><th>入口页链接</th></tr>";
                         obj.forEach(function (item, i) {
                             item.key.forEach(function (ik_r, _i) {
                                 if (_i == 10) {
@@ -107,7 +106,6 @@ define(["../app"], function (app) {
                 controller: ['$scope', '$http', '$compile', function ($scope, $http, $compile) {
                     $scope.liexingClass = true;
                     $scope.showUrl = function () {
-                        console.log(11111)
                         $scope.liexingClass = false;
                         $scope.laiyuanClass = true;
                         $http({
@@ -139,7 +137,6 @@ define(["../app"], function (app) {
                     };
 
                     $scope.showCategory = function () {
-                        console.log(22221)
                         $scope.laiyuanClass = false;
                         $scope.liexingClass = true;
                         $http({

@@ -56,7 +56,7 @@ define(["./module"], function (ctrs) {
             add_update: ""
         };
         //table配置
-        $rootScope.adminSetHtml = "<div class='mid_left'><div class='mid_left_code'>" +
+        $rootScope.adminSetHtml = "<div class='mid_left'><div id='base_code' class='mid_left_code'>" +
             "&lt;script&gt;\<br\>" +
             "var _pct= _pct|| [];\<br\>" +
             " (function() {\<br\>" +
@@ -66,9 +66,13 @@ define(["./module"], function (ctrs) {
             "    s.parentNode.insertBefore(hm, s);\<br\>" +
             " })();\<br\>" +
             "&lt;/script&gt;" +
-            "</div> </div><div class='mid_right'><button type='button' class='btn btn-default navbar-btn'>复制代码</button><ul type='disc'>" +
+            "</div> </div><div class='mid_right'><button type='button' class='btn btn-default navbar-btn' ssh-clip=''  data-clipboard-target='base_code'>复制</div></button><ul type='disc'>" +
             "  <li>请将代码添加至网站全部页面的&lt;/head&gt;标签前；</li><li>建议在header.htm类似的页头模板页面中安装，以达到一处安装，全站皆有的效果；</li><li>如需在JS文件中调用统计分析代码，请直接去掉以下代码首尾的&lt;script type='text/javascript' &gt;与&lt;/script&gt;后，放入JS文件中即可；</li>" +
             "<li> 如果代码安装正确，一般20分钟 后,可以查看网站分析数据；</li></ul></div>";
+
+
+
+
         //配置默认指标
         $rootScope.checkedArray = ["_uid", "uid", "type_id", "track_id", "site_url", "site_name", "site_pause", "track_status_ch"];
 
@@ -81,7 +85,7 @@ define(["./module"], function (ctrs) {
                 cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
                 maxWidth: 5
             },
-            {name: "网站域名", displayName: "网站域名", field: "site_url", maxWidth: '', cellClass: 'table_admin'},
+            {name: "网站域名", displayName: "网站域名", field: "site_url", maxWidth: '', cellClass: 'table_admin' },
 
             {name: "网站名称", displayName: "网站名称", field: "site_name", maxWidth: '', cellClass: 'table_admin_color'},
             {
@@ -95,7 +99,7 @@ define(["./module"], function (ctrs) {
                 name: "x7",
                 displayName: "",
                 cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.gain(index,grid,row)'>" +
-                "获取代码</a><span class='glyphicon glyphicon-file'></span></div>",
+                "获取代码<span class='glyphicon glyphicon-file'></span></a></div>",
                 maxWidth: 100
             },
             {
@@ -108,7 +112,7 @@ define(["./module"], function (ctrs) {
                 name: "x3",
                 displayName: "",
                 cellTemplate: "<div class='btn-group table_admin' dropdown='' is-open='status.isopen'>" +
-                "<span class='glyphicon glyphicon-cog'></span><a type='button' dropdown-toggle='' ng-disabled='disabled' aria-haspopup='true' aria-expanded='false'>设置 </a> <ul class='dropdown-menu' role='menu'>" +
+                "<a type='button' dropdown-toggle='' ng-disabled='disabled' aria-haspopup='true' aria-expanded='false'><span class='glyphicon glyphicon-cog'></span>设置 </a> <ul class='dropdown-menu' role='menu'>" +
                 "<li><a href='#conf/webcountsite/countrules'>设置统计规则</a></li>" +
                 "<li><a href='#conf/webcountsite/childlist'>设置子目录</a></li>" +
                 "<li><a href='#conf/webcountsite/pagechange'>设置页面转化目标</a></li>" +
@@ -198,7 +202,7 @@ define(["./module"], function (ctrs) {
                     <li>4.wap站域名（如：wap.baidu.com）</li>\
                     </ul>\
                     <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
-                    <button type="button" ng-disabled="adminmainctrForm.$invalid" class="ngdialog-button ngdialog-button-primary" ng-click="submit()">确定</button>\
+                    <button type="button" ng-disabled="adminmainctrForm.$invalid" class="ngdialog-button  ng-button" ng-click="submit()">确定</button>\
                 </div></form>',
                 className: 'ngdialog-theme-default',
                 plain: true,
@@ -231,7 +235,7 @@ define(["./module"], function (ctrs) {
                     <li>4.wap站域名（如：wap.baidu.com）</li>\
                     </ul>\
                     <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
-                    <button type="button" ng-disabled="adminmainctrForm.$invalid" class="ngdialog-button ngdialog-button-primary" ng-click="submit()">确定</button>\
+                    <button type="button" ng-disabled="adminmainctrForm.$invalid" class="ngdialog-button ng-button" ng-click="submit()">确定</button>\
                 </div></form>',
                 className: 'ngdialog-theme-default',
                 plain: true,
@@ -265,7 +269,7 @@ define(["./module"], function (ctrs) {
                 template: '' +
                 '<div class="ngdialog-buttons" ><ui><li> 确认删除吗？<span style=" color: red " >（要测试自己新建条删哈！）<span></li></ui>' +
                 '<button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
-                  <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="sureonDelete()">确定</button></div>',
+                  <button type="button" class="ngdialog-button ng-button" ng-click="sureonDelete()">确定</button></div>',
                 className: 'ngdialog-theme-default',
                 plain: true,
                 scope: $scope
@@ -278,7 +282,7 @@ define(["./module"], function (ctrs) {
                     method: 'GET',
                     url: query
                 }).success(function (dataConfig, status) {
-                    if (dataConfig == "success") {
+                    if (dataConfig == "\"success\"") {
                         refushGridData();
                     }
 
@@ -324,7 +328,7 @@ define(["./module"], function (ctrs) {
                   <div class="ngdialog-buttons" >\
                             <ul>' + tip + '</ul>   \
                         <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
-                        <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="onPause()">确定</button>\
+                        <button type="button" class="ngdialog-button ng-button" ng-click="onPause()">确定</button>\
                   </div>',
                 className: 'ngdialog-theme-default',
                 plain: true,

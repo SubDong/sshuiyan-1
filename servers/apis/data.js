@@ -15,7 +15,7 @@ var schemas = require('../db/schemas');
 var csvApi = require('json-2-csv');
 var iconv = require('iconv-lite');
 var uuid = require("node-uuid");
-
+var async = require("async");
 var es_position = require('../services/es_position');
 
 
@@ -259,7 +259,7 @@ api.get('/indextable', function (req, res) {
             var dimensionInfo;
             var infoKey;
             var maps = {};
-            var valueData = ["arrivedRate", "outRate", "nuvRate", "ct", "period", "se", "pm", "rf", "ja", "ck","isp"];
+            var valueData = ["arrivedRate", "outRate", "nuvRate", "ct", "period", "se", "pm", "rf", "ja", "ck", "isp"];
             try {
                 data.forEach(function (info, x) {
                     for (var i = 0; i < info.key.length; i++) {
@@ -269,8 +269,8 @@ api.get('/indextable', function (req, res) {
                             infoKey = info.key[i]
                         }
                         if (popFlag != 1) {
-                            if(_lati == "rf" && _filter != null && _filter[0]["rf_type"][0] && infoKey == "-") continue
-                            if(_promotion == "ssc" || _lati=="kw"){
+                            if (_lati == "rf" && _filter != null && _filter[0]["rf_type"][0] && infoKey == "-") continue
+                            if (_promotion == "ssc" || _lati == "kw") {
                                 if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null" || infoKey.length >= 40)) continue;
                             }
                         }
@@ -581,7 +581,6 @@ api.get("/exchange", function (req, res) {
     access_request.exchangeSearch(req.es, indexString, type, pathUp, pathDown, address, function (result) {
         datautils.send(res, result);
     });
-
 });
 
 api.get("/heatmap", function (req, res) {
@@ -664,9 +663,8 @@ api.get("/trafficmap", function (req, res) {
     }
     access_request.trafficmapSearch(req.es, indexString, targetPathName, function (result) {
         datautils.send(res, result);
+
     });
-
-
 });
 api.get("/offsitelinks", function (req, res) {
     var parameterString = req.url.split("?");//获取url的？号以后的字符串
@@ -683,18 +681,17 @@ api.get("/offsitelinks", function (req, res) {
         indexString = date.createIndexes(start, end, "access-");
     }
     var pathName = parameters[2].split("=")[1];
-
     access_request.offsitelinksSearch(req.es, indexString, pathName, function (result) {
         datautils.send(res, result);
-    });
 
+    });
 });
 // ================================= Config  ==============================
 api.get("/modalInstance", function (req, res) {
     var parameterString = req.url.split("?");//获取url的？号以后的字符串
     var type = parameterString[1].split("=")[1];
-    access_request.modalInstanceSearch(req.es,type,function(result){
-        datautils.send(res,result);
+    access_request.modalInstanceSearch(req.es, type, function (result) {
+        datautils.send(res, result);
     });
 });
 module.exports = api;

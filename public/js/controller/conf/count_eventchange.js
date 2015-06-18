@@ -21,6 +21,7 @@ define(["./module"], function (ctrs) {
                 url: url
             }).success(function (dataConfig, status) {
                 //页面删除
+                console.log("删除成功 关闭窗口")
                 $scope.gridOptions.data.splice($scope.gridOptions.data.indexOf($scope.entity), 1);
                 $scope.urlDialog.close();
             });
@@ -37,7 +38,7 @@ define(["./module"], function (ctrs) {
                         <ul>\
                         <li> 你确定删除这个事件转化吗？</li></ul>   \
                     <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click=closeThisDialog(0)>返回</button>\
-                    <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click=deleteGridData()>确定</button>\
+                    <button type="button" class="ngdialog-button ng-button" ng-click=deleteGridData()>确定</button>\
                 </div>',
                 className: 'ngdialog-theme-default',
                 plain: true,
@@ -73,11 +74,16 @@ define(["./module"], function (ctrs) {
         $rootScope.checkArray = ["", "", ""];
 
         $rootScope.gridArray = [
-
-            {name: "事件目标事件名称", displayName: "事件目标事件名称", field: "event_name",cellClass: 'table_admin'},
-            {name: "事件元素ID", displayName: "事件元素ID", field: "event_id",cellClass: 'table_admin'},
-            {name: "事件作用或目录", displayName: "事件作用或目录", field: "event_page",cellClass: 'table_admin'},
-            {name: "记录方式", displayName: "记录方式", field: "event_method",cellClass: 'table_admin'},
+            {
+                name: "xl",
+                displayName: "",
+                cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
+                maxWidth: 5
+            },
+            {name: "事件目标事件名称", displayName: "事件目标事件名称", field: "event_name",cellClass: 'table_admin_color'},
+            {name: "事件元素ID", displayName: "事件元素ID", field: "event_id",cellClass: 'table_admin_color'},
+            {name: "事件作用或目录", displayName: "事件作用或目录", field: "event_page",cellClass: 'table_admin_color'},
+            {name: "记录方式", displayName: "记录方式", field: "event_method",cellClass: 'table_admin_color'},
             {
                 name: "x4",
                 displayName: "",

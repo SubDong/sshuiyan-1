@@ -772,11 +772,18 @@ define(["app"], function (app) {
                                         }
                                     }
                                 });
-                                data.forEach(function (es, i) {
+                                if (data.length > 0) {
+                                    data.forEach(function (es, i) {
+                                        if (isNaN(dataObj[item]) || dataObj[item] == undefined) {
+                                            dataObj[item] = es[item] != undefined ? es[item] : 0
+                                        }
+                                    });
+                                } else {
                                     if (isNaN(dataObj[item]) || dataObj[item] == undefined) {
-                                        dataObj[item] = es[item]
+                                        dataObj[item] = 0
                                     }
-                                })
+                                }
+
                             });
                             dataArray.push(dataObj);
                             $scope.gridOptions.data = dataArray;
@@ -796,9 +803,27 @@ define(["app"], function (app) {
                                 data.forEach(function (item, i) {
                                     item.period = util.getYearWeekState(item.period);
                                 });
-                                $scope.gridOptions.data = data;
+                                if(data.length == 0) {
+                                    var resultData = [];
+                                    var resultObj ={};
+                                    $rootScope.checkedArray.forEach(function (item, a) {
+                                        resultObj[item] = 0;
+                                    });
+                                    resultObj[$rootScope.tableSwitch.latitude.field] = "暂无数据";
+                                    resultData.push(resultObj)
+                                    $scope.gridOptions.data = resultData;
+                                }else $scope.gridOptions.data = data;
                             } else {
-                                $scope.gridOptions.data = data;
+                                if(data.length == 0){
+                                    var resultData = [];
+                                    var resultObj ={};
+                                    $rootScope.checkedArray.forEach(function (item, a) {
+                                        resultObj[item] = 0;
+                                    });
+                                    resultObj[$rootScope.tableSwitch.latitude.field] = "暂无数据";
+                                    resultData.push(resultObj)
+                                    $scope.gridOptions.data = resultData;
+                                }else $scope.gridOptions.data = data;
                             }
                         } else {
                             var result = [];
@@ -832,10 +857,20 @@ define(["app"], function (app) {
                                     maps[infoKey] = obj;
                                 }
                             });
+                            var jupey = 0
                             for (var key in maps) {
+                                jupey = 1;
                                 if (key != null) {
                                     result.push(maps[key]);
                                 }
+                            }
+                            if (jupey == 0) {
+                                var resultObj = {}
+                                $rootScope.checkedArray.forEach(function (item, a) {
+                                    resultObj[item] = 0;
+                                })
+                                resultObj[$rootScope.tableSwitch.latitude.field] = "暂无数据";
+                                result.push(resultObj)
                             }
                             $scope.gridOptions.data = result;
                         }
@@ -1169,7 +1204,6 @@ define(["app"], function (app) {
         };
         //得到表格底部数据
         $scope.getFooterData = function (a, option, number) {
-
             var returnData = [0, 0, 0, 0];
             var spl = 0;
             var newSpl = [0, 0, 0];
