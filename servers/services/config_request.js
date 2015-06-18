@@ -129,16 +129,17 @@ var config_request = {
                         //存储时长转化和PV转化到Redsi
                         if (edocs != null && edocs.length > 0) {//存在配置
                             var confs = [];
-                            edocs.forEach(function (item) {
+                            edocs.forEach(function (ev) {
                                 var event_config = {
-                                    eid: item.event_id,//事件ID
-                                    evttag: item.event_name,//事件名称
-                                    evpage: event_page//事件页面
+                                    eid: ev.event_id,//事件ID
+                                    evttag: ev.event_name,//事件名称
+                                    evpage: ev.event_page//事件页面
                                 };
                                 confs.push(event_config);
                             });
-                            //console.log("重写"+(item.root_url + ":e:" + event_page)+"-->"+JSON.stringify(confs))
-                            redisClient.multi().set(item.root_url + ":e:" + event_page, JSON.stringify(confs)).exec();
+                            console.log(item)
+                            console.log("重写"+(item._id + ":e:" + event_page)+"-->"+JSON.stringify(confs))
+                            redisClient.multi().set(item._id + ":e:" + event_page, JSON.stringify(confs)).exec();
                         }
 
                     });
