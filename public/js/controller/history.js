@@ -3,19 +3,23 @@
  */
 define(['./module'], function (ctrs) {
     'use strict';
-    ctrs.controller('history', function ($scope, $window, $location, $rootScope, requestService, areaService, $http, SEM_API_URL) {
+    ctrs.controller('history', function ($scope, $window, $location, $rootScope, requestService, areaService, $http, SEM_API_URL,$cookieStore) {
+
+        $scope.SELECT_PAGE = 0;
+        $scope.SELECT_EVENT = 1;
 
 
+        $scope.extendway;
 
         $scope.extendwayChange = function (extendway) {
-
+            $scope.extendway = extendway;
             var uid = $cookieStore.get("uid");
             var site_id = $rootScope.siteId;
             var url = "";
 
-            if(extendway.id == 0) { //页面
+            if(extendway.selected.id == $scope.SELECT_PAGE) { //页面
                 url = "/config/page_conv?type=search&query={\"uid\":\"" + uid + "\",\"site_id\":\"" + site_id + "\"}";
-            } else if(extendway.id == 1) { //事件
+            } else if(extendway.selected.id == $scope.SELECT_EVENT) { //事件
                 url = "/config/eventchnage_list?type=search&query={\"uid\":\"" + uid + "\",\"root_url\":\"" + site_id + "\"}";
             }
 
@@ -23,19 +27,46 @@ define(['./module'], function (ctrs) {
                 method: 'GET',
                 url: url
             }).success(function (dataConfig, status) {
-                $scope.gridOptions.data = dataConfig;
-
-                if(extendway.id == 0) {
-
-                } else if(extendway.id == 1) {
-
+                var childrenExtendways = [];
+                if(extendway.selected.id == $scope.SELECT_PAGE) { //页面
+                    angular.forEach(dataConfig, function(data){
+                        angular.forEach(data.target_url,function(thisv1) {
+                            var obj = {};
+                            obj.name = data.target_name;
+                            obj.id = thisv1.url;
+                            childrenExtendways.push(obj);
+                        });
+                    });
+                } else if(extendway.selected.id == $scope.SELECT_EVENT) {//事件
+                    angular.forEach(dataConfig, function(data){
+                        var obj = {};
+                        obj.name = data.event_name;
+                        obj.id = data.event_id;
+                        childrenExtendways.push(obj);
+                    });
                 }
-
+                $scope.childrenExtendways = childrenExtendways;
             });
-
-
         }
 
+
+        $scope.childrenExtendwayChange = function (childrenExtendway) {
+
+
+
+            if($scope.extendway.selected.id == $scope.SELECT_PAGE) {
+                $rootScope.tableSwitch.tableFilter = "[{\"loc\":[\"" + childrenExtendway.selected.id + "\"]}]";
+            } else if($scope.extendway.selected.id == $scope.SELECT_EVENT) {
+                $rootScope.tableSwitch.tableFilter = "[{\"et_category\":[\"" + childrenExtendway.selected.id + "\"]}]";
+            }
+
+
+            $rootScope.$broadcast("ssh_refresh_charts");
+            $rootScope.$broadcast("ssh_dateShow_options_time_change", type);
+            $rootScope.$broadcast("ssh_data_show_refresh");
+            $scope.targetSearch();
+
+        }
 
 
 
