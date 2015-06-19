@@ -318,7 +318,7 @@ define(["../app"], function (app) {
                             var dateString = dateTime.Format("yyyyMdhmsS");
                             hiddenElement.href = 'data:attachment/csv;charset=utf-8,' + encodeURI(data);
                             hiddenElement.target = '_blank';
-                            hiddenElement.download = "down-" + dateString;
+                            hiddenElement.download = "down-" + dateString+".csv";
                             hiddenElement.click();
                         })
 
@@ -332,7 +332,7 @@ define(["../app"], function (app) {
                         if (scope.flag) {
                             $rootScope.gridApi2.exporter.pdfExport("all", "visible", angular.element());
                         } else {
-                            $rootScope.gridApi.exporter.pdfExport("all", "visible", angular.element());
+                            $rootScope.gridApi2.exporter.pdfExport("all", "visible", angular.element());
                         }
 
                     }

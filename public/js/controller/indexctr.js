@@ -23,13 +23,14 @@ define(['./module'], function (ctrs) {
             enableGridMenu: false,
             enableHorizontalScrollbar: 0,
             enableVerticalScrollbar: 0,
+
             columnDefs: [
 
                 {name: 'name', displayName: "搜索词"},
                 {name: 'value', displayName: "浏览量(PV)", headerCellClass: 'ui_text', cellClass: 'ui_text'}
             ],
             onRegisterApi: function (gridApi) {
-                $rootScope.gridApi = gridApi;
+                $rootScope.gridApi2 = gridApi;
             }
 
         };
