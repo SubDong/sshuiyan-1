@@ -1214,4 +1214,27 @@ define(["../app"], function (app) {
             }
         };
     });
+
+    /**
+     * 自定义URL验证
+     */
+    app.directive('sshUrl', function($rootScope){
+        "use strict";
+        return {
+            require: "ngModel",
+            link: function (scope, element, attr, ngModel) {
+                if (ngModel) {
+                    var strRegex = /^((https|HTTPS|http|HTTP|ftp|FTP|rtsp|RTSP|mms|MMS)?:\/\/)?(([0-9a-zA-Z_!~*'().&=+$%-]+: )?[0-9a-zA-Z_!~*'().&=+$%-]+@)?((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5]$)|([0-9a-zA-Z_!~*'()-]+\.)*([0-9a-zA-Z][0-9a-zA-Z-]{0,61})?[0-9a-zA-Z]\.[a-zA-Z]{2,6})(:[0-9]{1,4})?((\/?)|(\/[0-9a-zA-Z_!~*'().;?:@&=+$,%#-]+)+\/?)$/;
+                }
+
+                var customerUrlCheck = function (value) {
+                    var validity = ngModel.$isEmpty(value) || strRegex.test(value);
+                    ngModel.$setValidity("sshUrl", validity);
+                    return validity ? value : undefined;
+                };
+                ngModel.$formatters.push(customerUrlCheck);
+                ngModel.$parsers.push(customerUrlCheck);
+            }
+        };
+    });
 });
