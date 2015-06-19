@@ -3,6 +3,7 @@
  */
 
 var dao = require('../db/daos');
+ var  redis = require('../utils/redis');
 var config_request = {
 
 
@@ -12,14 +13,14 @@ var config_request = {
      * @param track_id
      */
 
-     refreshSiteRedis : function (redisClient, track_id) {
+    refreshSiteRedis: function (redis_client, trackid) {
         //由track_id查询站点配置
         var qry = {
-            track_id: track_id
+            track_id: trackid
         }
         dao.find("sites_model", JSON.stringify(qry), null, {}, function (err, docs) {
             if (docs != null && docs.length > 0) {
-                console.log("查询到站点结果");
+                //console.log("查询到站点结果");
                 docs.forEach(function (item) {
                     var siteconfig = {
                         siteid: item._id.toString(),//站点ID 对应MongoDb _id
@@ -35,18 +36,26 @@ var config_request = {
                         pvpause: false,
                         pvtimes: 3
                     }
-                    redisClient.multi().set("typeid:".concat(item.track_id), item.type_id)//
+                    reut = {};//返回值
+                    redis_client.multi().set("typeid:".concat(item.track_id), item.type_id)//
                         .set("ts:" + item.track_id, item._id)//
                         .set("st:" + item._id, item.track_id)//
                         .set("tsj:" + item.track_id, JSON.stringify(siteconfig))
                         //.set(ins._id + ":mouse:" + ins.site_url, JSON.stringify(config_mouse))//目前无具体URL配置 暂时设置在站点上
                         .set("duration:" + item._id, JSON.stringify(time_config))//站点级别设置
                         .set("visit:" + item._id, JSON.stringify(pv_config)).exec();
+                    reut["typeid:".concat(item.track_id)] = item.type_id;
+                    reut["ts:" + item.track_id] = item.type_id;
+                    reut["st:" + item._id] = item.track_id;
+                    reut["tsj:" + item.track_id] = JSON.stringify(siteconfig);
+                    reut["duration:" + item._id] = JSON.stringify(time_config);
+                    reut["visit:" + item._id] = JSON.stringify(pv_config);
+
                     var cqry = {
                         uid: item.uid,
                         site_id: item._id
                     }
-                    console.log("查询时长转化");
+                    //console.log("查询时长转化");
                     dao.find("converts_model", JSON.stringify(cqry), null, {}, function (err, docs) {
                         if (docs != null && docs.length > 0) {//有更新 刷新配置
                             if (docs != null && docs.length > 0) {
@@ -60,11 +69,15 @@ var config_request = {
                                     pvtimes: docs[0].pv_conv.val
                                 }
                                 //通过site_id 去获取track_id
-                                redisClient.multi().set("duration:" + docs[0].site_id, JSON.stringify(time_config))//站点级别设置
+                                redis_client.multi().set("duration:" + docs[0].site_id, JSON.stringify(time_config))//站点级别设置
                                     .set("visit:" + docs[0].site_id, JSON.stringify(pv_config)).exec();
+                                reut["duration:" + item._id] = JSON.stringify(time_config);
+                                reut["visit:" + item._id] = JSON.stringify(pv_config);
                             }
                         }
                     });
+                    //return reut;
+
                 });
             }
             // TODO 为什么要去差redis
@@ -73,10 +86,10 @@ var config_request = {
 
     },
 
-     refreshPageTileRedis : function (redisClient, track_id, page_url) {
+    refreshPageTileRedis: function (redis_client, trackid, page_url) {
         //由track_id查询站点配置
         var qry = {
-            track_id: track_id,
+            track_id: trackid
         }
         dao.find("sites_model", JSON.stringify(qry), null, {}, function (err, docs) {
             if (docs != null && docs.length > 0) {
@@ -88,20 +101,21 @@ var config_request = {
                     }
                     dao.find("page_title_model", JSON.stringify(pqry), null, {}, function (err, pdocs) {
                         //存储时长转化和PV转化到Redsi
-
+                        reut = {};//返回值
                         if (pdocs != null && pdocs.length == 1) {
                             var page_title = {
                                 page_url: pdocs[0].page_url,
                                 icon_name: pdocs[0].icon_name,
                                 is_open: pdocs[0].is_open
                             }
-                            //通过site_id 去获取track_id
+                            //通过site_id trackid
                             if (pdocs[0].site_id != null && pdocs[0].page_url != null) {
                                 //console.log("重写"+(pdocs[0].site_id + ":mouse:" + pdocs[0].page_url)+"-->"+JSON.stringify(page_title))
-                                redisClient.multi().set(pdocs[0].site_id + ":mouse:" + pdocs[0].page_url, JSON.stringify(page_title)).exec();//站点级别设置
+                                redis_client.multi().set(pdocs[0].site_id + ":mouse:" + pdocs[0].page_url, JSON.stringify(page_title)).exec();//站点级别设置
+                                reut[pdocs[0].site_id + ":mouse:" + pdocs[0].page_url] = JSON.stringify(page_title);
                             }
                         }
-
+                        return reut;
                     });
                 });
             }
@@ -111,14 +125,14 @@ var config_request = {
 
     },
 
-     refreshEventRedis : function (redisClient, track_id, event_page) {
+    refreshEventRedis: function (redis_client, trackid, event_page) {
         //由track_id查询站点配置
         var qry = {
-            track_id: track_id,
+            track_id: trackid,
         }
         dao.find("sites_model", JSON.stringify(qry), null, {}, function (err, docs) {
             if (docs != null && docs.length > 0) {
-                console.log("重写")
+                //console.log("重写")
                 docs.forEach(function (item) {
                     var pqry = {
                         root_url: item.site_id,
@@ -129,6 +143,7 @@ var config_request = {
                         //存储时长转化和PV转化到Redsi
                         if (edocs != null && edocs.length > 0) {//存在配置
                             var confs = [];
+                            reut = {};//返回值
                             edocs.forEach(function (ev) {
                                 var event_config = {
                                     eid: ev.event_id,//事件ID
@@ -137,9 +152,11 @@ var config_request = {
                                 };
                                 confs.push(event_config);
                             });
-                            console.log(item)
-                            console.log("重写"+(item._id + ":e:" + event_page)+"-->"+JSON.stringify(confs))
-                            redisClient.multi().set(item._id + ":e:" + event_page, JSON.stringify(confs)).exec();
+                            //console.log(item)
+                            //console.log("重写"+(item._id + ":e:" + event_page)+"-->"+JSON.stringify(confs))
+                            redis_client.multi().set(item._id + ":e:" + event_page, JSON.stringify(confs)).exec();
+                            reut[item._id + ":e:" + event_page]=JSON.stringify(confs);
+                            //return reut;
                         }
 
                     });
