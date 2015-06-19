@@ -45,8 +45,7 @@ define(["./module"], function (ctrs) {
             adTypes: "",
             planName: "",
             keywords: "",
-            creative: "",
-            produceUrl: ""
+            creative: ""
         };
 
         //去重
@@ -109,28 +108,34 @@ define(["./module"], function (ctrs) {
             model.site_id = $rootScope.siteId;
             model.uid = $cookieStore.get("uid");
 
-            //保存
+           //保存
             var url = "/config/adtrack?type=save&entity=" + JSON.stringify(model);
-            if(model.targetUrl == undefined || model.targetUrl == ""){
-                return alert("请输入目标URL");
-            }else if(model.mediaPlatform == undefined || model.mediaPlatform == ""){
-                return alert("请输入媒介平台");
-            }else{
-                $http({method: 'GET', url: url}).success(function (dataConfig, status) {
-                    $scope.urlDialog = ngDialog.open({
-                        preCloseCallback: function() {
-                            $state.go('adtrack');
-                        },
-                        template: '\
+            $http({method: 'GET', url: url}).success(function (dataConfig, status) {
+                $scope.urlDialog = ngDialog.open({
+                    preCloseCallback: function() {
+                        $state.go('adtrack');
+                    },
+                    template: '\
                         <div class="ngdialog-buttons" >\
-                            <span><h4>保存成功</h4></span>\
+                            <div class="row">\
+                                <div class="col-md-4 col-md-offset-4">\
+                                    <span><h4>保存成功</h4></span>\
+                                </div>\
+                            </div>\
+                            <div class="row">\
+                                <div class="col-md-3 col-md-offset-6">\
+                                    <a class="glyphicon glyphicon-plus" href="#conf/webcountsite/adtrack_add" ng-click=closeThisDialog(0)>继续添加</a>\
+                                </div>\
+                                <div class="col-md-3">\
+                                    <a class="glyphicon glyphicon-menu-hamburger" href="#conf/webcountsite/adtrack" ng-click=closeThisDialog(0)>返回列表</a>\
+                                </div>\
+                            </div>\
                         </div>',
-                        className: 'ngdialog-theme-default',
-                        plain: true,
-                        scope: $scope
-                    });
+                    className: 'ngdialog-theme-default',
+                    plain: true,
+                    scope: $scope
                 });
-            }
+            });
         };
     });
 });
