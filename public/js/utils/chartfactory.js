@@ -89,6 +89,7 @@ var init = {
 }
 var op = {
     lineChart: function (data, chartConfig) {
+        util.chartResize(chartConfig);//charts 自适应
         var _legendTmp = [];
         if (!data.length) {
             def.defData(chartConfig);
@@ -391,10 +392,12 @@ var op = {
         chartConfig.instance.hideLoading();
     },
     barChart: function (data, chartConfig) {
+        util.chartResize(chartConfig);//charts 自适应
         chartConfig.interval = 0;
         this.lineChart(data, chartConfig);
     },
     pieChart: function (data, chartConfig) {
+        util.chartResize(chartConfig);//charts 自适应
         if (!chartConfig.instance)return;
         var chartObj = chartConfig.instance;
         if (chartConfig.onHover) {
@@ -543,6 +546,7 @@ var op = {
         chartConfig.instance.hideLoading();
     },
     mapChart: function (data, chartConfig) {
+        util.chartResize(chartConfig);//charts 自适应
         if (!chartConfig.instance)return;
         var chartObj = chartConfig.instance
         var option = {
@@ -1318,6 +1322,11 @@ var util = {
             });
         });
         return final_result;
+    },
+    chartResize:function(chartConfig){
+        chartConfig.instance = echarts.init(document.getElementById(chartConfig.id));
+        window.addEventListener("resize", function () {
+            chartConfig.instance.resize()
+        })
     }
-
 }
