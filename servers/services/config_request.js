@@ -44,12 +44,12 @@ var config_request = {
                         //.set(ins._id + ":mouse:" + ins.site_url, JSON.stringify(config_mouse))//目前无具体URL配置 暂时设置在站点上
                         .set("duration:" + item._id, JSON.stringify(time_config))//站点级别设置
                         .set("visit:" + item._id, JSON.stringify(pv_config)).exec();
-                    reut["typeid:".concat(item.track_id)] = item.type_id;
-                    reut["ts:" + item.track_id] = item.type_id;
-                    reut["st:" + item._id] = item.track_id;
-                    reut["tsj:" + item.track_id] = JSON.stringify(siteconfig);
-                    reut["duration:" + item._id] = JSON.stringify(time_config);
-                    reut["visit:" + item._id] = JSON.stringify(pv_config);
+                    reut["typeid:".concat(item.track_id)] = item.type_id;//track_id 对应type_id
+                    reut["ts:" + item.track_id] = item.type_id;//track_id 对应 站点site_id
+                    reut["st:" + item._id] = item.track_id;//站点site_id 对应 track_id
+                    reut["tsj:" + item.track_id] = JSON.stringify(siteconfig);//track_id 对应站点JSON
+                    reut["duration:" + item._id] = JSON.stringify(time_config);//track_id对应时长转化
+                    reut["visit:" + item._id] = JSON.stringify(pv_config);//track_id 对应页面访问次数转化
 
                     var cqry = {
                         uid: item.uid,
@@ -71,12 +71,12 @@ var config_request = {
                                 //通过site_id 去获取track_id
                                 redis_client.multi().set("duration:" + docs[0].site_id, JSON.stringify(time_config))//站点级别设置
                                     .set("visit:" + docs[0].site_id, JSON.stringify(pv_config)).exec();
-                                reut["duration:" + item._id] = JSON.stringify(time_config);
-                                reut["visit:" + item._id] = JSON.stringify(pv_config);
+                                reut["duration:" + item._id] = JSON.stringify(time_config);//track_id对应时长转化 使用已有配置覆盖
+                                reut["visit:" + item._id] = JSON.stringify(pv_config);//track_id 对应页面访问次数转化 使用已有配置覆盖
                             }
                         }
                     });
-                    //return reut;
+                    return reut;
 
                 });
             }
@@ -112,7 +112,7 @@ var config_request = {
                             if (pdocs[0].site_id != null && pdocs[0].page_url != null) {
                                 //console.log("重写"+(pdocs[0].site_id + ":mouse:" + pdocs[0].page_url)+"-->"+JSON.stringify(page_title))
                                 redis_client.multi().set(pdocs[0].site_id + ":mouse:" + pdocs[0].page_url, JSON.stringify(page_title)).exec();//站点级别设置
-                                reut[pdocs[0].site_id + ":mouse:" + pdocs[0].page_url] = JSON.stringify(page_title);
+                                reut[pdocs[0].site_id + ":mouse:" + pdocs[0].page_url] = JSON.stringify(page_title);//热力图
                             }
                         }
                         return reut;
@@ -155,8 +155,8 @@ var config_request = {
                             //console.log(item)
                             //console.log("重写"+(item._id + ":e:" + event_page)+"-->"+JSON.stringify(confs))
                             redis_client.multi().set(item._id + ":e:" + event_page, JSON.stringify(confs)).exec();
-                            reut[item._id + ":e:" + event_page]=JSON.stringify(confs);
-                            //return reut;
+                            reut[item._id + ":e:" + event_page]=JSON.stringify(confs);//事件配置刷新
+                            return reut;
                         }
 
                     });
