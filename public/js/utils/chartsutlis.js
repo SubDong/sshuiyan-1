@@ -779,7 +779,11 @@ var chartUtils = {
         var esDate = !esJson.length ? null : esJson[0].key[0];
         //console.log(esJson);
         if (final_result[0].data.length) {
-            tmp.push(final_result[0].data[0][quota]);
+            if (quota == "impression") {
+                tmp.push(final_result[0].data[0][quota]);
+            } else {
+                tmp.push(parseFloat(final_result[0].data[0][quota]).toFixed(2));
+            }
             _semData["label"] = chartUtils.convertChinese(quota);
             _semData["quota"] = tmp;
             _semData["key"] = [final_result[0].data[0].date];

@@ -5,8 +5,8 @@ var daos = require('../db/daos'),
     dateutils = require('../utils/date');
 var security = {
     login: function (req, res, next) {
-        res.cookie('uname', JSON.stringify(req.session.user.userName), {maxAge: 60000});
-        res.cookie('uid', JSON.stringify(req.session.user.id), {maxAge: 60000});
+        res.cookie('uname', JSON.stringify(req.session.user.userName), {maxAge: 60*60});
+        res.cookie('uid', JSON.stringify(req.session.user.id), {maxAge: 60*60});
         var promise = daos.findSync("sites_model", JSON.stringify({uid: req.session.user.id}), null, {});
 
         promise.then(function (docs) {
@@ -38,7 +38,7 @@ var security = {
                 })
             }
             usites.sort(dateutils.by('site_top'));
-            res.cookie('usites', '' + JSON.stringify(usites) + '', {maxAge: 60000});
+            res.cookie('usites', '' + JSON.stringify(usites) + '', {maxAge: 60*60});
             next();
         });
     }
