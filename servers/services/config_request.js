@@ -3,7 +3,7 @@
  */
 
 var dao = require('../db/daos');
- var  redis = require('../utils/redis');
+var redis = require('../utils/redis');
 var config_request = {
 
 
@@ -13,7 +13,7 @@ var config_request = {
      * @param track_id
      */
 
-    refreshSiteRedis: function (redis_client, trackid) {
+    refreshSiteRedis: function (redis_client, trackid,cb) {
         //由track_id查询站点配置
         var qry = {
             track_id: trackid
@@ -75,9 +75,8 @@ var config_request = {
                                 reut["visit:" + item._id] = JSON.stringify(pv_config);//track_id 对应页面访问次数转化 使用已有配置覆盖
                             }
                         }
+                        cb(err,reut);
                     });
-                    return reut;
-
                 });
             }
             // TODO 为什么要去差redis
@@ -128,7 +127,7 @@ var config_request = {
     refreshEventRedis: function (redis_client, trackid, event_page) {
         //由track_id查询站点配置
         var qry = {
-            track_id: trackid,
+            track_id: trackid
         }
         dao.find("sites_model", JSON.stringify(qry), null, {}, function (err, docs) {
             if (docs != null && docs.length > 0) {
@@ -154,8 +153,8 @@ var config_request = {
                             });
                             //console.log(item)
                             //console.log("重写"+(item._id + ":e:" + event_page)+"-->"+JSON.stringify(confs))
-                            redis_client.multi().set(item._id + ":e:" + event_page, JSON.stringify(confs)).exec();
-                            reut[item._id + ":e:" + event_page]=JSON.stringify(confs);//事件配置刷新
+                            redis_client.multi().set(item._id + ":evt:" + event_page, JSON.stringify(confs)).exec();
+                            reut[item._id + ":evt:" + event_page] = JSON.stringify(confs);
                             return reut;
                         }
 
