@@ -147,6 +147,7 @@ define(["./module"], function (ctrs) {
             var dataValueSum = 0;
             var title_name;
             var chart = echarts.init(document.getElementById(chartConfig.chartId));
+            window.onresize = chart.resize;//charts 自适应
             var jupName = "";
             chart.on("hover", function (param) {
                 var option = this.getOption();

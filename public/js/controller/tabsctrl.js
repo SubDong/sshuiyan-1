@@ -1233,19 +1233,23 @@ define(["app"], function (app) {
                     //var itemSplData = (s.entity[a.col.field] + "").split(",");
                     if (a.col.field == "outRate") {
                         newitemSplData.forEach(function (tts, i) {
-                            newitemSplData[i] = (tts / option.length).toFixed(2) + "%"
+//                            newitemSplData[i] = (tts / option.length).toFixed(2) + "%"
+                            newitemSplData[0] = newitemSplData[0] == "0" ? "0%" : (newitemSplData[0] / option.length).toFixed(2) + "%";
                         })
                     }
-                    if (a.col.field == "avgPage") {
-                        newitemSplData[0] = (newitemSplData[0] / option.length).toFixed(2);
+                    if (a.col.field == "avgPage" || a.col.field == "click") {
+//                        newitemSplData[0] = (newitemSplData[0] / option.length).toFixed(2);
+                        newitemSplData[0] = newitemSplData[0] == "0" ? "0" : (newitemSplData[0] / option.length).toFixed(2);
                     }
                     returnData = newitemSplData;
                 } else {
                     if ((option[0].entity[a.col.field] + "").indexOf("%") != -1) {
-                        returnData[0] = (returnData[0] / option.length).toFixed(2) + "%";
+//                        returnData[0] = (returnData[0] / option.length).toFixed(2) + "%";
+                        returnData[0] = returnData[0] == "0"? "0%" : (returnData[0] / option.length).toFixed(2) + "%";
                     }
-                    if (a.col.field == "avgPage") {
-                        returnData[0] = (returnData[0] / option.length).toFixed(2);
+                    if (a.col.field == "avgPage" || a.col.field == "click") {
+//                        returnData[0] = (returnData[0] / option.length).toFixed(2);
+                        returnData[0] = returnData[0] == "0"? "0" : (returnData[0] / option.length).toFixed(2);
                     }
                     if (a.col.field == "avgTime") {
                         var atime1 = parseInt(newSpl[0] / option.length) + "";
