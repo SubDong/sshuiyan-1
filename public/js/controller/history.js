@@ -32,7 +32,7 @@ define(['./module'], function (ctrs) {
                 url: url
             }).success(function (dataConfig, status) {
                 $scope.childrenExtendways = [];
-                var childrenExtendways = [];
+                var childrenExtendways = [{selected:{name:"请选择",id:$scope.SELECT_ALL}}];
                 if(extendway.selected.id == $scope.SELECT_PAGE) { //页面
                     angular.forEach(dataConfig, function(data){
                         angular.forEach(data.target_url,function(thisv1) {
@@ -202,7 +202,7 @@ define(['./module'], function (ctrs) {
                             $rootScope.tableSwitch.tableFilter = "[{\"loc\":[\"" + $scope.childrenExtendway.selected.id + "\"]}]";
                         }
                         } else if($scope.extendway.selected.id == $scope.SELECT_EVENT) { //事件转化
-                            esType = $rootScope.userEventType; //查询类型 1_event
+                            esType = "1_event"; //查询类型 1_event
                             if($scope.childrenExtendway.selected.id == $scope.SELECT_ALL) {//是否查询所有
                                 $rootScope.tableSwitch.tableFilter = "null";
 
