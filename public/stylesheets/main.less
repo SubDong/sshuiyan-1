@@ -1421,6 +1421,8 @@ nav, .navbar-default {
   .trend_top {
     width: 100%;
     border-bottom: 1px solid #eeeeee;
+    border-top: 1px solid #eeeeee;
+    border-right: 1px solid #eeeeee;
     overflow: hidden;
   }
   .trend_left {
@@ -2212,12 +2214,12 @@ nav, .navbar-default {
 }
 
 .pin_chart {
-  width: 40%;
+  width: 30%;
   float: left;
 }
 
 .line_chart {
-  width: 60%;
+  width: 70%;
   float: right;
   .echarts-tooltip {
     li:nth-of-type(2) {
@@ -2256,35 +2258,16 @@ nav, .navbar-default {
 }
 
 .pin_charts {
-  width: 50%;
+  width: 30%;
   height: 400px;
   float: left;
 }
 
 .line_charts {
-  width: 50%;
+  width: 70%;
   float: right;
   height: 400px;
 }
-
-@media screen and (min-width: 1023px) and (max-width: 1180px) {
-  .pin_chart {
-    width: 60%;;
-  }
-
-  .line_chart {
-    width: 40%;
-  }
-
-  .pin_charts {
-    width: 65%;
-  }
-
-  .line_charts {
-    width: 35%;
-  }
-}
-
 .trend_img {
   span {
     display: block;
@@ -3591,4 +3574,7 @@ textarea.tNum {
 }
 .modal-header{
   border-bottom:none;
+}
+.chart_noborder{
+  padding-bottom:10px;
 }

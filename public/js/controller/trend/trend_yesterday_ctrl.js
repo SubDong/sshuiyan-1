@@ -162,7 +162,7 @@ define(["./module"], function (ctrs) {
                     legendId: "yesterday_charts_legend",
                     legendAllowCheckCount: 2,
                     legendClickListener: $scope.onLegendClickListener,
-                    legendData: ["浏览量(PV)", "访客数(UV)", "访问次数", "新访客数", "新访客比率", "IP数", "跳出率", "平均访问时长", "平均访问页数", "转化次数", "转化率"],//显示几种数据
+                    legendData: ["浏览量(PV)", "访客数(UV)", "访问次数", "新访客数", "新访客比率", "IP数", "跳出率", "平均访问时长", "平均访问页数"],//显示几种数据
                     legendDefaultChecked: [0, 1],
                     id: "yesterday_charts",
                     min_max: false,

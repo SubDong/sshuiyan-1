@@ -73,6 +73,8 @@ define(["../app"], function (app) {
                     $rootScope.end = 0;
                     scope.reloadByCalendar("today");
                     $('#reportrange span').html(GetDateStr(0));
+                    $('#reportrange').data('daterangepicker').setStartDate(GetDateStr(0));
+                    $('#reportrange').data('daterangepicker').setEndDate(GetDateStr(0));
                 };
                 scope.yesterday = function () {
                     scope.isShowCalendar = false;
@@ -93,6 +95,8 @@ define(["../app"], function (app) {
                     $rootScope.end = -1;
                     scope.reloadByCalendar("yesterday");
                     $('#reportrange span').html(GetDateStr(-1));
+                    $('#reportrange').data('daterangepicker').setStartDate(GetDateStr(-1));
+                    $('#reportrange').data('daterangepicker').setEndDate(GetDateStr(-1));
                 };
                 scope.sevenDay = function () {
                     scope.isShowCalendar = false;
@@ -110,6 +114,8 @@ define(["../app"], function (app) {
                     $rootScope.end = 0;
                     scope.reloadByCalendar("seven");
                     $('#reportrange span').html(GetDateStr(-6) + "至" + GetDateStr(0));
+                    $('#reportrange').data('daterangepicker').setStartDate(GetDateStr(-6));
+                    $('#reportrange').data('daterangepicker').setEndDate(GetDateStr(0));
                 };
                 scope.month = function () {
                     scope.isShowCalendar = false;
@@ -126,13 +132,15 @@ define(["../app"], function (app) {
                     $rootScope.end = 0;
                     scope.reloadByCalendar("month");
                     $('#reportrange span').html(GetDateStr(-29) + "至" + GetDateStr(0));
+                    $('#reportrange').data('daterangepicker').setStartDate(GetDateStr(-29));
+                    $('#reportrange').data('daterangepicker').setEndDate(GetDateStr(0));
                 };
                 scope.timeclick = function () {
                     scope.isShowCalendar = false;
                     scope.hiddenSeven = true;
                     scope.reset();
                     scope.timeClass = true;
-                    $('#reportrange span').html(GetDateStr(0))
+                   // $('#reportrange span').html(GetDateStr(0))
                 }
                 scope.open = function ($event) {
                     scope.reset();
@@ -310,7 +318,7 @@ define(["../app"], function (app) {
                             var dateString = dateTime.Format("yyyyMdhmsS");
                             hiddenElement.href = 'data:attachment/csv;charset=utf-8,' + encodeURI(data);
                             hiddenElement.target = '_blank';
-                            hiddenElement.download = "down-" + dateString;
+                            hiddenElement.download = "down-" + dateString+".csv";
                             hiddenElement.click();
                         })
 
@@ -324,7 +332,7 @@ define(["../app"], function (app) {
                         if (scope.flag) {
                             $rootScope.gridApi2.exporter.pdfExport("all", "visible", angular.element());
                         } else {
-                            $rootScope.gridApi.exporter.pdfExport("all", "visible", angular.element());
+                            $rootScope.gridApi2.exporter.pdfExport("all", "visible", angular.element());
                         }
 
                     }
@@ -1204,6 +1212,29 @@ define(["../app"], function (app) {
                     //console.log(clip);
                 });
 
+            }
+        };
+    });
+
+    /**
+     * 自定义URL验证
+     */
+    app.directive('sshUrl', function($rootScope){
+        "use strict";
+        return {
+            require: "ngModel",
+            link: function (scope, element, attr, ngModel) {
+                if (ngModel) {
+                    var strRegex = /^((https|HTTPS|http|HTTP|ftp|FTP|rtsp|RTSP|mms|MMS)?:\/\/)?(([0-9a-zA-Z_!~*'().&=+$%-]+: )?[0-9a-zA-Z_!~*'().&=+$%-]+@)?((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5]$)|([0-9a-zA-Z_!~*'()-]+\.)*([0-9a-zA-Z][0-9a-zA-Z-]{0,61})?[0-9a-zA-Z]\.[a-zA-Z]{2,6})(:[0-9]{1,4})?((\/?)|(\/[0-9a-zA-Z_!~*'().;?:@&=+$,%#-]+)+\/?)$/;
+                }
+
+                var customerUrlCheck = function (value) {
+                    var validity = ngModel.$isEmpty(value) || strRegex.test(value);
+                    ngModel.$setValidity("sshUrl", validity);
+                    return validity ? value : undefined;
+                };
+                ngModel.$formatters.push(customerUrlCheck);
+                ngModel.$parsers.push(customerUrlCheck);
             }
         };
     });

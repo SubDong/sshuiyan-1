@@ -49,7 +49,7 @@ define(["./module"], function (ctrs) {
                 template: '' +
                 '<div class="ngdialog-buttons" ><ui><li> 确认删除吗？</li></ui>' +
                 '<button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
-                  <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="sureonDelete()">确定</button></div>',
+                  <button type="button" class="ngdialog-button ng-button" ng-click="sureonDelete()">确定</button></div>',
                 className: 'ngdialog-theme-default',
                 plain: true,
                 scope: $scope
@@ -92,8 +92,8 @@ define(["./module"], function (ctrs) {
                 scope : $scope
             });
         };
-        $rootScope.urlDialogHtml = "<div class='mid_left'>生成URL<div class='mid_left_code'>produceUrl</div> " +
-        "</div><div class='mid_right'><button type='button' class='btn btn-default navbar-btn'>复制</button><ul type='disc'>" +
+        $rootScope.urlDialogHtml = "<div class='mid_left'>生成URL<div id='base_code' class='mid_left_code'>produceUrl</div> " +
+        "</div><div class='mid_right'><button type='button' class='btn btn-default navbar-btn' ssh-clip='' data-clipboard-target='base_code'>复制</button><ul type='disc'>" +
             "  <li style='color：red；'>请将生成的URL复制到你的其他媒介的推广目标URL位置</li></ul></div>";
 
     });

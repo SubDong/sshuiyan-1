@@ -1338,7 +1338,7 @@ div.ui-grid-cell input.ng-valid {
 */
 /*-- END VARIABLES (DO NOT REMOVE THESE COMMENTS) --*/
 .ui-grid-row-selected > [ui-grid-row] > .ui-grid-cell {
-    background-color: #c9dde1 !important;
+    background-color: #bcedfe !important;
 }
 
 .ui-grid-disable-selection {

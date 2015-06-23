@@ -263,7 +263,7 @@ define(["./module"], function (ctrs) {
                     <li><strong>注意：</strong>请在所有想统计的页面上都安装百度统计代码。</li>\
                     </ul>\
                     <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
-                    <button type="button" ng-disabled="pagetitleForm.$invalid" class="ngdialog-button ngdialog-button-primary" ng-click="submit(0)">确定</button>\
+                    <button type="button" ng-disabled="pagetitleForm.$invalid" class="ngdialog-button ng-button" ng-click="submit(0)">确定</button>\
                 </div></form>',
                 className: 'ngdialog-theme-default',
                 plain: true,
