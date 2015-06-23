@@ -107,7 +107,7 @@ require.config({
         "angularjs/vfs_fonts": ["angularjs/pdfmake", "angularjs/csv"],
         "angularjs/ui-bootstrap-tpls": ["angular", "angularjs/ui-bootstrap.min"],
         "angularjs/ui-bootstrap.min": ["angular"],
-        "angularjs/tooltip": ["angular"],
+        "angularjs/tooltip": ["angular", "js001"],
         "angularjs/csv": ["angular"],
         "angularjs/pdfmake": ["angular"],
         "angularjs/ui-grid-unstable.min": ["angular"],
@@ -119,11 +119,8 @@ require.config({
 });
 
 require([
-    "angular",
-    'js004',
-    "./app",
     "js001",
-    "js007",
+    "./angular-bootstrap",
     "./utils/chartfactory",
     "./utils/chartsMapOrPie",
     "./utils/chartsutlis",
@@ -132,17 +129,7 @@ require([
     "./utils/arrayUtil",
     "./angularjs/checkbox",
     "./angularjs/daterangepicker",
-    "./angularjs/tooltip",
-    "./directive/publicdirective",
-    "./services/dateservice",
-    "./services/messageService",
-    "./services/popupService",
-    "./services/areaselect",
-    "./services/defaultQuotaService",
-    "./controller/tabsctrl"
-], function (angular) {
+    "./angularjs/tooltip"
+], function () {
     "use strict";
-    angular.module('all', ['ui.router', 'myApp']); // 注意：app 模块只能放在最后一个，因为它依赖前面的第三方模块！
-    angular.module('bootstrap', ['all']); // 单独加一个 all 模块的原因见 test/protractor.conf.js 的 onPrepare 事件
-    angular.bootstrap(document, ['bootstrap']);
 });
