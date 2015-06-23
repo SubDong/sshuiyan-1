@@ -670,7 +670,8 @@ define(["./module"], function (ctrs) {
                             _val = 0;
                         }
                     }
-                    _obj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? parseFloat(_val).toFixed(2) + "%" : parseFloat(_val).toFixed(2);
+                    _obj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? parseFloat(_val).toFixed(2) + "%" : (_val == 0 ? 0:parseFloat(_val).toFixed(2));
+//                    _obj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? parseFloat(_val).toFixed(2) + "%" : parseFloat(_val).toFixed(2);
                     $scope.gridOptions1Data = [];
                     $scope.gridOptions1Data.push(_obj);
 
@@ -738,7 +739,7 @@ define(["./module"], function (ctrs) {
                             _val = 0;
                         }
                     }
-                    _obj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? parseFloat(_val).toFixed(2) + "%" : parseFloat(_val).toFixed(2);
+                    _obj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? parseFloat(_val).toFixed(2) + "%" : (_val == 0 ? 0:parseFloat(_val).toFixed(2));
                     $scope.gridOptions2Data = [];
                     $scope.gridOptions2Data.push(_obj);
 
@@ -809,7 +810,8 @@ define(["./module"], function (ctrs) {
                         }
                     }
                     pcObj[$scope.outQuota_] = parseFloat(_val).toFixed(2);
-                    pcObj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? pcObj[$scope.outQuota_] + "%" : pcObj[$scope.outQuota_];
+                    pcObj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? pcObj[$scope.outQuota_] + "%" : (_val == 0 ? 0:parseFloat(_val).toFixed(2));
+//                    pcObj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? pcObj[$scope.outQuota_] + "%" : pcObj[$scope.outQuota_];
                     pcObj[$scope.effectQuota_] = tmpResult[2][0] + "" == "undefined" ? 0 : tmpResult[2][0].quota[0];
                     pcObj[$scope.effectQuota_] = ($scope.effectQuota_ == "outRate" || $scope.effectQuota_ == "arrivedRate") ? pcObj[$scope.effectQuota_] + "%" : pcObj[$scope.effectQuota_];
                     $scope.gridOptions3Data = [];
@@ -832,7 +834,8 @@ define(["./module"], function (ctrs) {
                         }
                     }
                     mobileObj[$scope.outQuota_] = _val.toFixed(2);
-                    mobileObj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? mobileObj[$scope.outQuota_] + "%" : mobileObj[$scope.outQuota_];
+                    mobileObj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? mobileObj[$scope.outQuota_] + "%" : (_val == 0 ? 0:parseFloat(_val).toFixed(2));
+//                    mobileObj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? mobileObj[$scope.outQuota_] + "%" : mobileObj[$scope.outQuota_];
                     mobileObj[$scope.effectQuota_] = tmpResult[3][0] + "" == "undefined" ? 0 : tmpResult[3][0].quota[0];
                     mobileObj[$scope.effectQuota_] = ($scope.effectQuota_ == "outRate" || $scope.effectQuota_ == "arrivedRate") ? mobileObj[$scope.effectQuota_] + "%" : mobileObj[$scope.effectQuota_];
                     $scope.gridOptions3Data.push(mobileObj);
@@ -889,7 +892,8 @@ define(["./module"], function (ctrs) {
                         } else {
                             var _obj = {};
                             _obj["region"] = item.regionName;
-                            _obj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? item[$scope.outQuota_] + "%" : item[$scope.outQuota_];
+                            _obj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? item[$scope.outQuota_] + "%" : (item[$scope.outQuota_] == 0 ? 0:parseFloat(item[$scope.outQuota_]).toFixed(2));
+//                            _obj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? item[$scope.outQuota_] + "%" : item[$scope.outQuota_];
                             _obj[$scope.effectQuota_] = 0;
                             $scope.gridOptions4Data.push(_obj);
                         }

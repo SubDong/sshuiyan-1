@@ -904,7 +904,7 @@ define(["../app"], function (app) {
                 case "bing":
                 case "other":
                 {
-                    return count ? (value / count).toFixed(2) + "%" : "0%";
+                    return count ? (value == 0 ? "0%":(value / count).toFixed(2) + "%") : "0%";
                 }
                 case "avgTime":
                 {
@@ -927,7 +927,8 @@ define(["../app"], function (app) {
                 case "avgPage":
                 case "cpc":
                 {
-                    return count ? (value / count).toFixed(2) : "0";
+                    return count ? (value == 0 ? "0":(value / count).toFixed(2)) : "0";
+//                    return count ? (value / count).toFixed(2) : "0";
                 }
                 default :
                 {
