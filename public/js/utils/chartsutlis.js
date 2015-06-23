@@ -18,8 +18,8 @@ var chartUtils = {
             case "页面转化":
                 return "pageConversion";
                 break;
-            case "转化":
-                return "conversion";
+            case "转化次数":
+                return "conversions";
                 break;
             case "IP数":
                 return "ip";
@@ -69,8 +69,8 @@ var chartUtils = {
                 break;
             case "pageConversion":
                 return "页面转化";
-            case "conversion":
-                return "转化";
+            case "conversions":
+                return "转化次数";
             case "ip":
                 return "IP数";
             case "vc":

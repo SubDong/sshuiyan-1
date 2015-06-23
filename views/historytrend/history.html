@@ -6,12 +6,12 @@
         <datecontrast></datecontrast>
         <refresh></refresh>
     </div>
-        <div class="my_concent">
-            <ssh-date-show type="today" dimension="region"></ssh-date-show>
-            <div class="index_chart">
-                <div id="VistorMap_charts_legend" style="position:relative;"></div>
-                <div id="VistorMap_charts" style="width:98%;height:400px;"></div>
-            </div>
+    <div class="my_concent">
+        <ssh-date-show type="today" dimension="region"></ssh-date-show>
+        <div class="index_chart">
+            <div id="VistorMap_charts_legend" style="position:relative;"></div>
+            <div id="VistorMap_charts" style="width:98%;height:400px;"></div>
+        </div>
         <div class="table_content" ng-controller="TabsCtrl">
             <ul ng-init="tab = 1" class="nav nav-tabs nav-justified">
                 <li class="ng-isolate-scope" ng-class="{active:tab===1}" ng-click="tab = 1">
@@ -64,7 +64,7 @@
 
 
 
-                            <ui-select  ng-change="childrenExtendwayChange(childrenExtendway)" ng-model="childrenExtendway.selected" theme="select2" reset-search-input="false"
+                            <ui-select  ng-change="childrenExtendwayChange(extendway)" ng-model="childrenExtendway.selected" theme="select2" reset-search-input="false"
                                        class="fl"
                                        style="width: 120px;">
                                 <ui-select-match placeholder="请选择">{{$select.selected.name}}</ui-select-match>
