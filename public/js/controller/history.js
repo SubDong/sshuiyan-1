@@ -37,7 +37,7 @@ define(['./module'], function (ctrs) {
                 url: url
             }).success(function (dataConfig, status) {
                 $scope.childrenExtendways = [];
-                var childrenExtendways = [{selected:{name:"请选择",id:$scope.SELECT_ALL}}];
+                var childrenExtendways = [{name:"查询所有",id:$scope.SELECT_ALL}];
                 if(extendway.selected.id == $scope.SELECT_PAGE) { //页面
                     angular.forEach(dataConfig, function(data){
                         angular.forEach(data.target_url,function(thisv1) {
