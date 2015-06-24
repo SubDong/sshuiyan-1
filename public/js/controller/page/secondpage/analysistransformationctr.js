@@ -158,6 +158,7 @@ define(["./../module"], function (ctrs) {
         $scope.init();
 
         $scope.$on("ssh_refresh_charts", function (e, msg) {
+            $rootScope.targetSearch();
             var chart = echarts.init(document.getElementById($scope.charts[1].config.id));
             $scope.charts[1].config.instance = chart;
             var arrayChart = [$scope.charts[1]]
