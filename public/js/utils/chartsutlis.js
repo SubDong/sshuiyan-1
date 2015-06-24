@@ -266,6 +266,12 @@ var chartUtils = {
             case "nuv":
                 return buc.new_visitor_aggs.nuv_aggs.value;
                 break;
+            case "uv":
+                return buc.uv_filter.uv_aggs.value;
+                break;
+            case "vc":
+                return buc.vc_aggs.vc_aggs.value;
+                break;
             default :
                 if (buc[aggs + "_aggs"]) {
                     return buc[aggs + "_aggs"].value;

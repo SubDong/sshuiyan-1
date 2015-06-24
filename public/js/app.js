@@ -282,17 +282,19 @@ define([
             $rootScope.perfectUser = userObj;
             $rootScope.user = userObj;
             $rootScope.usites = $cookieStore.get('usites');
-            $rootScope.default = $rootScope.usites[0].site_name;     // default site
-            $rootScope.defaultType = $rootScope.usites[0].type_id;   // default site id
+            $rootScope.default = $rootScope.usites ? $rootScope.usites[0].site_name : '网速过慢，请重新加载！';     // default site
+            $rootScope.defaultType = $rootScope.usites ? $rootScope.usites[0].type_id : '暂无';   // default site id
         }
         $scope.initPerfectAccount();
         $scope.siteselect = {};
         $scope.siteselects = $rootScope.usites;
-        $rootScope.baiduAccount = $rootScope.usites[0].bd_name;//baidu-perfect2151880
-        $rootScope.userType = $rootScope.usites[0].type_id;//www.perfect-cn.cn
-        $rootScope.siteId = $rootScope.usites[0].site_id;
-        $rootScope.userTypeName = $rootScope.usites[0].site_name;
-        $rootScope.siteUrl = $rootScope.usites[0].site_url;
+        if ($rootScope.usites) {
+            $rootScope.baiduAccount = $rootScope.usites[0].bd_name;//baidu-perfect2151880
+            $rootScope.userType = $rootScope.usites[0].type_id;//www.perfect-cn.cn
+            $rootScope.siteId = $rootScope.usites[0].site_id;
+            $rootScope.userTypeName = $rootScope.usites[0].site_name;
+            $rootScope.siteUrl = $rootScope.usites[0].site_url;
+        }
         $scope.changeUrl = function (select) {
             $rootScope.user = $rootScope.perfectUser;
             $rootScope.baiduAccount = select.bd_name;

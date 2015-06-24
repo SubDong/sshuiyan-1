@@ -4,7 +4,7 @@
 define(["./module"], function (ctrs) {
     "use strict";
 
-    ctrs.controller('trend_realtime_ctrl', function ($scope, $rootScope, $http, requestService, messageService, $log, areaService,SEM_API_URL) {
+    ctrs.controller('trend_realtime_ctrl', function ($scope, $rootScope, $http, requestService, messageService, $log, areaService, SEM_API_URL) {
         $scope.visitorCount = 0;
         //table配置
         $rootScope.tableTimeStart = 0;
@@ -16,7 +16,7 @@ define(["./module"], function (ctrs) {
         $scope.city.selected = {"name": "全部"};
         $rootScope.tableSwitch = {
             dimen: true,
-            latitude: {name:"地域", displayName: "地域", field: "region"},
+            latitude: {name: "地域", displayName: "地域", field: "region"},
             tableFilter: null,
             // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
             number: 0,
@@ -25,7 +25,7 @@ define(["./module"], function (ctrs) {
             //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
             arrayClear: false //是否清空指标array
         };
-        $scope.getTableHeight = function() {
+        $scope.getTableHeight = function () {
             var rowHeight = 30; // your row height
             var headerHeight = 30; // your header height
             return {
@@ -63,7 +63,7 @@ define(["./module"], function (ctrs) {
                         var _quota = [];
                         result.buckets.forEach(function (e) {
                             _key.push(new Date(e.key).toUTCString().substring(17, 22));
-                            _quota.push(e.uv_aggs.value);
+                            _quota.push(e.uv_filter.uv_aggs.value);
                         });
                         final_result.push({label: chartUtils.convertChinese('uv'), key: _key, quota: _quota})
                         break;
@@ -151,23 +151,23 @@ define(["./module"], function (ctrs) {
             $scope.souce.selected = undefined;
         };
         //刷新
-            $scope.page_refresh = function(){
-                $rootScope.start = 0;
-                $rootScope.end = 0;
-                $rootScope.tableTimeStart = 0;
-                $rootScope.tableTimeEnd = 0;
-                $scope.charts.forEach(function (e) {
-                    var chart = echarts.init(document.getElementById(e.config.id));
-                    e.config.instance = chart;
-                });
-                //图表
-                requestService.refresh($scope.charts);
-                //其他页面表格
-                $rootScope.targetSearch(true);
-                //classcurrent
+        $scope.page_refresh = function () {
+            $rootScope.start = 0;
+            $rootScope.end = 0;
+            $rootScope.tableTimeStart = 0;
+            $rootScope.tableTimeEnd = 0;
+            $scope.charts.forEach(function (e) {
+                var chart = echarts.init(document.getElementById(e.config.id));
+                e.config.instance = chart;
+            });
+            //图表
+            requestService.refresh($scope.charts);
+            //其他页面表格
+            $rootScope.targetSearch(true);
+            //classcurrent
 //                $scope.reset();
 //                $scope.todayClass = true;
-            };
+        };
     });
 
 });

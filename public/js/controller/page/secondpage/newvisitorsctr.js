@@ -156,6 +156,8 @@ define(["./../module"], function (ctrs) {
                     id: "indicators_charts",
                     chartType: "line",
                     auotHidex: true,
+                    qingXie:true,
+                    qxv:18,
                     tt: "item",
                     itemHover: $scope.itemHover,
                     lineType: false,

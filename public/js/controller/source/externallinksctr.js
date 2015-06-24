@@ -160,6 +160,8 @@ define(["./module"], function (ctrs) {
                     chartType: "line",
                     lineType: false,
                     auotHidex: true,
+                    qingXie:true,
+                    qxv:18,
                     tt: "item",
                     itemHover: $scope.itemHover,
                     dataKey: "key",

@@ -271,7 +271,7 @@ var op = {
         if (chartConfig.qingXie) {
             option.xAxis[0]["axisLabel"] = {
                 interval: 0,
-                rotate: 30,
+                rotate: chartConfig.qxv?chartConfig.qxv:25,
                 textStyle: {
                     color: '#0D0D0D',
                     fontFamily: '微软雅黑'

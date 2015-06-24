@@ -18,7 +18,8 @@ var express = require('express'),
     redis_module = require("./servers/utils/redis"),
     RedisStore = require('connect-redis')(session),
     mongoose = require('./servers/utils/mongo'),
-    security = require('./servers/services/security');
+    security = require('./servers/services/security'),
+    cdApi=require('./servers/apis/test/crossDomain');
 
 
 var env = "dev";
@@ -102,6 +103,8 @@ app.use('/api', api);
 app.use('/config', configapi);
 
 app.use('/token', token);
+
+app.use('/cdapi',cdApi);
 
 // catch 404 and forward to error handler
 app.use(function (err, req, res, next) {

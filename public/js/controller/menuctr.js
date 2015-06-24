@@ -242,7 +242,8 @@ define(["./module"], function (ctrs) {
             $rootScope.perfectUser = userObj;
             $rootScope.user = userObj;
             $rootScope.usites = $cookieStore.get('usites');
-            $rootScope.default = $rootScope.usites[0].site_name;     // default site
+            console.log($rootScope.usites);
+            $rootScope.default = $rootScope.usites[0]?$rootScope.usites[0].site_name:'重新刷新以加载用户名';     // default site
             $rootScope.defaultType = $rootScope.usites[0].type_id;   // default site id
         }
         $scope.initPerfectAccount();

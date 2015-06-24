@@ -146,6 +146,8 @@ define(["./../module"], function (ctrs) {
                         bGap: false,
                         chartType: "line",
                         auotHidex: true,
+                        qingXie:true,
+                        qxv:18,
                         tt: "item",
                         itemHover: $scope.itemHover,
                         lineType: false,
