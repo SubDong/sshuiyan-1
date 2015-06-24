@@ -3,7 +3,7 @@
  */
 define(['./module'], function (ctrs) {
     'use strict';
-    ctrs.controller('history', function ($scope, $window, $location, $rootScope, requestService, areaService, $http, SEM_API_URL,$cookieStore) {
+    ctrs.controller('history', function ($cookieStore,$scope, $window, $location, $rootScope, requestService, areaService, $http, SEM_API_URL) {
 
 
         $scope.SELECT_PAGE = 0;
@@ -14,11 +14,16 @@ define(['./module'], function (ctrs) {
         $scope.extendway = {selected:{name:"全部事件目标",id:$scope.SELECT_EVENT}};
         $scope.childrenExtendway={selected:{name:"请选择",id:$scope.SELECT_ALL}};
 
+
+
+
+        var uid = $cookieStore.get("uid");
+        var site_id = $rootScope.siteId;
+
+
         //转化目标-父级别切换
         $scope.extendwayChange = function (extendway) {
             $scope.extendway = extendway;
-            var uid = $cookieStore.get("uid");
-            var site_id = $rootScope.siteId;
             var url = "";
 
             if(extendway.selected.id == $scope.SELECT_PAGE) { //页面
