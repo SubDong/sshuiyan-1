@@ -1,323 +1,718 @@
 /**
  * Created by weims on 2015/5/15.
  */
-define(["angular", "app"], function (ng, app) {
+define(["angular", "./app"], function (angular, myApp) {
     'use strict';
 
-    app.config(function ($locationProvider, $stateProvider, $urlRouterProvider) {
+    myApp.config(['$stateProvider', '$urlRouterProvider',
+        function ($stateProvider, $urlRouterProvider) {
+            // 设置路由
+            $stateProvider
+                .state('index', {
+                    url: '/index',
+                    templateUrl: 'home/main.html',
+                    //controller: 'indexctr',
+                    resolve: {
+                        load: loadDeps([
+                            'controller/indexctr'
+                        ])
+                    }
+                });
 
-        //$locationProvider.html5Mode(true);
+            // extension百度推广
+            $stateProvider
+                .state('survey', {
+                    url: "/extension/survey",
+                    templateUrl: "../extension/survey.html",
+                    resolve: {
+                        load: loadDeps([
+                            'controller/surveryctrl'
+                        ])
+                    }
+                })
+                .state('search', {
+                    url: "/extension/search",
+                    templateUrl: "../extension/search.html",
+                    resolve: {
+                        load: loadDeps([
+                            'controller/searchctr',
+                            'controller/searchpromotion'
+                        ])
+                    }
+                })
+                .state('search_dy', {
+                    url: "/extension/search_dy",
+                    templateUrl: "../extension/search_dy.html",
+                    resolve: {
+                        load: loadDeps([
+                            'controller/search_dy_ctr',
+                            'controller/searchpromotion'
+                        ])
+                    }
+                })
+                .state('search_gjc', {
+                    url: "/extension/search_gjc",
+                    templateUrl: "../extension/search_gjc.html",
+                    resolve: {
+                        load: loadDeps([
+                            'controller/search_gjc_ctr',
+                            'controller/searchpromotion'
+                        ])
+                    }
+                })
+                .state('search_cy', {
+                    url: "/extension/search_cy",
+                    templateUrl: "../extension/search_cy.html",
+                    resolve: {
+                        load: loadDeps([
+                            'controller/search_cy_ctr',
+                            'controller/searchpromotion'
+                        ])
+                    }
+                })
+                .state('search_ssc', {
+                    url: "/extension/search_ssc",
+                    templateUrl: "../extension/search_ssc.html",
+                    resolve: {
+                        load: loadDeps([
+                            'controller/search_ssc_ctr',
+                            'controller/searchpromotion'
+                        ])
+                    }
+                })
+                .state('search_tg_url', {
+                    url: "/extension/search_tg_url",
+                    templateUrl: "../extension/search_tg_url.html",
+                    resolve: {
+                        load: loadDeps([
+                            'controller/search_tg_ctr',
+                            'controller/searchpromotion'
+                        ])
+                    }
+                })
+                .state('way', {
+                    url: "/extension/way",
+                    templateUrl: "../extension/way.html",
+                    resolve: {
+                        load: loadDeps([
+                            'controller/wayctrl'
+                        ])
+                    }
+                })
+                .state('urlspeed', {
+                    url: "/extension/urlspeed",
+                    templateUrl: "../extension/urlspeed.html"
+                })
+                .state('urlspeed_m', {
+                    url: "/extension/urlspeed_m",
+                    templateUrl: "../extension/urlspeed_m.html"
+                })
+                .state('urlspeed_w', {
+                    url: "/extension/urlspeed_w",
+                    templateUrl: "../extension/urlspeed_w.html"
+                })
+                .state('alliance', {
+                    url: "/extension/alliance",
+                    templateUrl: "../extension/alliance.html"
+                });
 
-        $urlRouterProvider.when('', '/index');
+            // trend趋向分析
+            $stateProvider
+                .state('realtime', {
+                    url: "/trend/realtime",
+                    templateUrl: "trend/realtime.html",
+                    //controller: 'trend_realtime_ctrl',
+                    resolve: {
+                        load: loadDeps([
+                            'controller/trend/trend_realtime_ctrl'
+                        ])
+                    }
+                })
+                .state('today', {
+                    url: "/trend/today",
+                    templateUrl: "trend/today.html",
+                    //controller: 'trend_today_ctrl',
+                    resolve: {
+                        load: loadDeps([
+                            'controller/trend/trend_today_ctrl'
+                        ])
+                    }
+                })
+                .state('yesterday', {
+                    url: "/trend/yesterday",
+                    templateUrl: "trend/yesterday.html",
+                    //controller: 'trend_yesterday_ctrl',
+                    resolve: {
+                        load: loadDeps([
+                            'controller/trend/trend_yesterday_ctrl'
+                        ])
+                    }
+                })
+                .state('month', {
+                    url: "/trend/month",
+                    templateUrl: "trend/month.html",
+                    //controller: 'trend_month_ctrl',
+                    resolve: {
+                        load: loadDeps([
+                            'controller/trend/trend_month_ctrl'
+                        ])
+                    }
+                });
 
-        $stateProvider
-            .state('index', {
-                url: '/index',
-                templateUrl: '../home/main.html'
-            })
+            // transform转化分析
+            $stateProvider
             .state('transformAnalysis', {
                 url: '/transform/transformAnalysis',
-                templateUrl: '../transform/transformAnalysis.html'
-            })
-            .state('realtime', {
-                url: "/trend/realtime",
-                templateUrl: "../trend/realtime.html"
-            })
-            .state('today', {
-                url: "/trend/today",
-                templateUrl: "../trend/today.html"
-            })
-            .state('yesterday', {
-                url: "/trend/yesterday",
-                templateUrl: "../trend/yesterday.html"
-            })
-            .state('month', {
-                url: "/trend/month",
-                templateUrl: "../trend/month.html"
-            })
-            .state('source', {
-                url: "/source/source",
-                templateUrl: "../source/source.html"
-            })
-            .state('searchengine', {
-                url: "/source/searchengine",
-                templateUrl: "../source/searchengine.html"
-            })
-            .state('searchterm', {
-                url: "/source/searchterm",
-                templateUrl: "../source/searchterm.html"
-            })
-            .state('searchterm_yq', {
-                url: "/source/searchterm_yq",
-                templateUrl: "../source/searchterm_yq.html"
-            })
-            .state('externallinks', {
-                url: "/source/externallinks",
-                templateUrl: "../source/externallinks.html"
-            })
-            .state('changelist', {
-                url: "/source/changelist",
-                templateUrl: "../source/changelist.html"
-            })
-            .state('visitedpages', {
-                url: "/page/visitedpages",
-                templateUrl: "../page/visitedpages.html"
-            })
-            .state('offsitelinks', {
-                url: "/page/offsitelinks",
-                templateUrl: "../page/offsitelinks.html"
-            })
-            .state('entrancepage', {
-                url: "/page/entrancepage",
-                templateUrl: "../page/entrancepage.html"
-            })
-            .state('entrancepage_fa', {
-                url: "/page/entrancepage_fa",
-                templateUrl: "../page/entrancepage_fa.html"
-            })
-            .state('entrancepage_nv', {
-                url: "/page/entrancepage_nv",
-                templateUrl: "../page/entrancepage_nv.html"
-            })
-            .state('entrancepage_as', {
-                url: "/page/entrancepage_as",
-                templateUrl: "../page/entrancepage_as.html"
-            })
-            .state('entrancepage_af', {
-                url: "/page/entrancepage_af",
-                templateUrl: "../page/entrancepage_af.html"
-            })
-            .state('pagetitle', {
-                url: "/page/pagetitle",
-                templateUrl: "../page/pagetitle.html"
-            })
-            .state('heatmap', {
-                url: "/page/heatmap",
-                templateUrl: "../page/heatmap.html"
-            })
-            .state('indexoverview', {
-                url: "/page/indexoverview",
-                templateUrl: "../page/indexoverview.html"
-            })
-            .state('indexoverview_pv', {
-                url: "/page/indexoverview_pv",
-                templateUrl: "../page/indexoverview_pv.html"
-            })
-            .state('indexoverview_pg', {
-                url: "/page/indexoverview_pg",
-                templateUrl: "../page/indexoverview_pg.html"
-            })
-            .state('indexoverview_ep', {
-                url: "/page/indexoverview_ep",
-                templateUrl: "../page/indexoverview_ep.html"
-            })
-            .state('provincemap/1', {
-                url: "/visitor/visitormap",
-                templateUrl: "../visitor/visitormap.html"
-            })
-            .state('provincemap', {
-                url: "/visitor/provincemap",
-                templateUrl: "../visitor/provincemap.html"
-            })
-            .state('equipment', {
-                url: "/visitor/equipment",
-                templateUrl: "../visitor/equipment.html"
-            })
-            .state('novisitors', {
-                url: "/visitor/novisitors",
-                templateUrl: "../visitor/novisitors.html"
-            })
-            .state('visitorfeature', {
-                url: "/visitor/visitorfeature",
-                templateUrl: "../visitor/visitorfeature.html"
-            })
-            .state('survey', {
-                url: "/extension/survey",
-                templateUrl: "../extension/survey.html"
-            })
-            .state('search', {
-                url: "/extension/search",
-                templateUrl: "../extension/search.html"
-            })
-            .state('search_dy', {
-                url: "/extension/search_dy",
-                templateUrl: "../extension/search_dy.html"
-            })
-            .state('search_gjc', {
-                url: "/extension/search_gjc",
-                templateUrl: "../extension/search_gjc.html"
-            })
-            .state('search_cy', {
-                url: "/extension/search_cy",
-                templateUrl: "../extension/search_cy.html"
-            })
-            .state('search_ssc', {
-                url: "/extension/search_ssc",
-                templateUrl: "../extension/search_ssc.html"
-            })
-            .state('search_tg_url', {
-                url: "/extension/search_tg_url",
-                templateUrl: "../extension/search_tg_url.html"
-            })
-            .state('way', {
-                url: "/extension/way",
-                templateUrl: "../extension/way.html"
-            })
-            .state('urlspeed', {
-                url: "/extension/urlspeed",
-                templateUrl: "../extension/urlspeed.html"
-            })
-            .state('urlspeed_m', {
-                url: "/extension/urlspeed_m",
-                templateUrl: "../extension/urlspeed_m.html"
-            })
-            .state('urlspeed_w', {
-                url: "/extension/urlspeed_w",
-                templateUrl: "../extension/urlspeed_w.html"
-            })
-            .state('alliance', {
-                url: "/extension/alliance",
-                templateUrl: "../extension/alliance.html"
-            })
-            .state('exchange', {
-                url: "/value/exchange",
-                templateUrl: "../value/exchange.html"
-            })
-            .state('trafficmap', {
-                url: "/value/trafficmap",
-                templateUrl: "../value/trafficmap.html"
-            })
-            .state('history', {
-                url: "/source/source/history",
-                templateUrl: "../historytrend/history.html"
-            })
-            .state('history1', {
-                url: "/visitor/provincemap/history",
-                templateUrl: "../historytrend/history.html"
-            })
-            .state('history2', {
-                url: "/visitor/novisitors/history",
-                templateUrl: "../historytrend/history.html"
-            })
-            .state('history3', {
-                url: "/page/indexoverview/history",
-                templateUrl: "../historytrend/history.html"
-            })
-            .state('history4', {
-                url: "/page/entrancepage/history",
-                templateUrl: "../historytrend/history.html"
-            })
-            .state('history5', {
-                url: "/source/searchengine/history",
-                templateUrl: "../historytrend/history.html"
-            })
-            .state('history6', {
-                url: "/source/searchterm/history",
-                templateUrl: "../historytrend/history.html"
-            })
-            .state('history7', {
-                url: "/source/externallinks/history",
-                templateUrl: "../historytrend/history.html"
-            })
-            .state('history8', {
-                url: "/page/entrancepage_fa/history",
-                templateUrl: "../historytrend/history.html"
-            })
-            .state('history9', {
-                url: "/page/entrancepage_nv/history",
-                templateUrl: "../historytrend/history.html"
-            })
-            .state('history10', {
-                url: "/page/entrancepage_as/history",
-                templateUrl: "../historytrend/history.html"
-            })
-            .state('history11', {
-                url: "/page/entrancepage_af/history",
-                templateUrl: "../historytrend/history.html"
-            })
-        $urlRouterProvider.when('', '/conf');
-        $stateProvider
-            .state('conf', {
-                url: '/conf',
-                templateUrl: '../conf/weblist/main.html',
-                current: 'current'
-            })
-            .state('rule', {
-                url: '/conf/webcountsite/countrules',
-                templateUrl: '../conf/webcountsite/countrules.html'
-            })
-            .state('web_add', {
-                url: '/conf/weblist/web_add',
-                templateUrl: '../conf/weblist/web_add.html'
-            })
-            .state('childlist', {
-                url: '/conf/webcountsite/childlist',
-                templateUrl: '../conf/webcountsite/childlist.html'
-            })
-            .state('childlist_add', {
-                url: '/conf/webcountsite/childlist_add',
-                templateUrl: '../conf/webcountsite/childlist_add.html'
-            })
-            .state('childlist_update', {
-                url: '/conf/webcountsite/childlist_update',
-                params:      {'id': null},
-                templateUrl: '../conf/webcountsite/childlist_update.html'
-            })
+                templateUrl: '../transform/transformAnalysis.html',
+                resolve: {
+                    load: loadDeps([
+                        "controller/transform/transformAnalysis",
+                        "controller/searchpromotion"
+                    ])
+                }
+            });
 
-            .state('pagechange', {
-                url: '/conf/webcountsite/pagechange',
-                templateUrl: '../conf/webcountsite/pagechange.html'
-            })
-            .state('eventchange', {
-                url: '/conf/webcountsite/eventchange',
-                templateUrl: '../conf/webcountsite/eventchange.html'
-            })
-            .state('eventchange_add', {
-                url: '/conf/webcountsite/eventchange_add',
-                templateUrl: '../conf/webcountsite/eventchange_add.html'
-            })
-            .state('eventchange_update', {
-                url: '/conf/webcountsite/eventchange_update',
-                params:      {'id': null},
-                templateUrl: '../conf/webcountsite/eventchange_update.html'
-            })
-            .state('pagechange_add', {
-                url: '/conf/webcountsite/pagechange_add',
-                templateUrl: '../conf/webcountsite/pagechange_add.html'
-            })
+            // source来源分析
+            $stateProvider
+                .state('source', {
+                    url: "/source/source",
+                    templateUrl: "./source/source.html",
+                    //controller: 'sourcectr',
+                    resolve: {
+                        load: loadDeps([
+                            'controller/source/sourcectr'
+                        ])
+                    }
+                })
+                .state('searchengine', {
+                    url: "/source/searchengine",
+                    templateUrl: "./source/searchengine.html",
+                    //controller: 'searchenginectr',
+                    resolve: {
+                        load: loadDeps([
+                            'controller/source/searchenginectr'
+                        ])
+                    }
+                })
+                .state('searchterm', {
+                    url: "/source/searchterm",
+                    templateUrl: "./source/searchterm.html",
+                    //controller: 'searchtermctr',
+                    resolve: {
+                        load: loadDeps([
+                            'controller/source/searchtermctr'
+                        ])
+                    }
+                })
+                .state('searchterm_yq', {
+                    url: "/source/searchterm_yq",
+                    templateUrl: "./source/searchterm_yq.html",
+                    //controller: 'searchtermctr_yq',
+                    resolve: {
+                        load: loadDeps([
+                            'controller/source/searchtermctr_yq'
+                        ])
+                    }
+                })
+                .state('externallinks', {
+                    url: "/source/externallinks",
+                    templateUrl: "../source/externallinks.html",
+                    //controller: 'externallinksctr',
+                    resolve: {
+                        load: loadDeps([
+                            'controller/source/externallinksctr'
+                        ])
+                    }
+                })
+                .state('changelist', {
+                    url: "/source/changelist",
+                    templateUrl: "../source/changelist.html",
+                    resolve: {
+                        load: loadDeps([
+                            'controller/source/changelistctr'
+                        ])
+                    }
+                });
+
+            // page页面分析
+            $stateProvider
+                .state('indexoverview', {
+                    url: "/page/indexoverview",
+                    templateUrl: "./page/indexoverview.html",
+                    //controller: 'indexoverview',
+                    resolve: {
+                        load: loadDeps([
+                            'controller/page/indexoverview'
+                        ])
+                    }
+                })
+                .state('indexoverview_pv', {
+                    url: "/page/indexoverview_pv",
+                    templateUrl: "../page/indexoverview_pv.html",
+                    //controller: 'pagevaluectr',
+                    resolve: {
+                        load: loadDeps([
+                            'controller/page/pagevaluectr'
+                        ])
+                    }
+                })
+                .state('indexoverview_pg', {
+                    url: "/page/indexoverview_pg",
+                    templateUrl: "../page/indexoverview_pg.html",
+                    //controller: 'visitepagesctr',
+                    resolve: {
+                        load: loadDeps([
+                            'controller/page/visitepagesctr'
+                        ])
+                    }
+                })
+                .state('indexoverview_ep', {
+                    url: "/page/indexoverview_ep",
+                    templateUrl: "../page/indexoverview_ep.html",
+                    //controller: 'exitpagesctr',
+                    resolve: {
+                        load: loadDeps([
+                            'controller/page/exitpagesctr'
+                        ])
+                    }
+                })
+                .state('entrancepage', {
+                    url: "/page/entrancepage",
+                    templateUrl: "../page/entrancepage.html",
+                    resolve: {
+                        load: loadDeps([
+                            "controller/page/entrancepagectr"
+                        ])
+                    }
+                })
+                .state('entrancepage_fa', {
+                    url: "/page/entrancepage_fa",
+                    templateUrl: "../page/entrancepage_fa.html",
+                    resolve: {
+                        load: loadDeps([
+                            "controller/page/secondpage/flowanalysisctr"
+                        ])
+                    }
+                })
+                .state('entrancepage_nv', {
+                    url: "/page/entrancepage_nv",
+                    templateUrl: "../page/entrancepage_nv.html",
+                    resolve: {
+                        load: loadDeps([
+                            "controller/page/secondpage/newvisitorsctr"
+                        ])
+                    }
+                })
+                .state('entrancepage_as', {
+                    url: "/page/entrancepage_as",
+                    templateUrl: "../page/entrancepage_as.html",
+                    resolve: {
+                        load: loadDeps([
+                            "controller/page/secondpage/attractivenessanalysisctr"
+                        ])
+                    }
+                })
+                .state('entrancepage_af', {
+                    url: "/page/entrancepage_af",
+                    templateUrl: "../page/entrancepage_af.html",
+                    resolve: {
+                        load: loadDeps([
+                            "controller/page/secondpage/analysistransformationctr"
+                        ])
+                    }
+                })
+                .state('pagetitle', {
+                    url: "/page/pagetitle",
+                    templateUrl: "../page/pagetitle.html",
+                    resolve: {
+                        load: loadDeps([
+                            "controller/page/pagetitlectr"
+                        ])
+                    }
+                })
+                .state('heatmap', {
+                    url: "/page/heatmap",
+                    templateUrl: "../page/heatmap.html",
+                    resolve: {
+                        load: loadDeps([
+                            "controller/page/heatmapctr",
+                            "heatmap/heatmap"
+                        ])
+                    }
+                })
+                .state('offsitelinks', {
+                    url: "/page/offsitelinks",
+                    templateUrl: "../page/offsitelinks.html",
+                    resolve: {
+                        load: loadDeps([
+                            "controller/page/linksctrl"
+                        ])
+                    }
+                });
+
+            // visitor访客分析
+            $stateProvider
+                .state('provincemap/1', {
+                    url: "/visitor/visitormap",
+                    templateUrl: "../visitor/visitormap.html",
+                    resolve: {
+                        load: loadDeps([
+                            "controller/vistiorctr"
+                        ])
+                    }
+                })
+                .state('provincemap', {
+                    url: "/visitor/provincemap",
+                    templateUrl: "../visitor/provincemap.html",
+                    resolve: {
+                        load: loadDeps([
+                            "controller/visitor/provincemapctr"
+                        ])
+                    }
+                })
+                .state('equipment', {
+                    url: "/visitor/equipment",
+                    templateUrl: "../visitor/equipment.html",
+                    resolve: {
+                        load: loadDeps([
+                            "controller/visitor/equipmentctr"
+                        ])
+                    }
+                })
+                .state('novisitors', {
+                    url: "/visitor/novisitors",
+                    templateUrl: "../visitor/novisitors.html",
+                    resolve: {
+                        load: loadDeps([
+                            "controller/visitor/novisitors"
+                        ])
+                    }
+                });
+
+            // value价值透析
+            $stateProvider
+                .state('exchange', {
+                    url: "/value/exchange",
+                    templateUrl: "../value/exchange.html",
+                    resolve: {
+                        load: loadDeps([
+                            "controller/value/exchangectr"
+                        ])
+                    }
+                })
+                .state('trafficmap', {
+                    url: "/value/trafficmap",
+                    templateUrl: "../value/trafficmap.html",
+                    resolve: {
+                        load: loadDeps([
+                            "controller/value/trafficmapctr"
+                        ])
+                    }
+                });
+
+            // 历史趋势
+            $stateProvider
+                .state('history', {
+                    url: "/source/source/history",
+                    templateUrl: "../historytrend/history.html",
+                    resolve: {
+                        load: loadDeps([
+                            "controller/history"
+                        ])
+                    }
+                })
+                .state('history1', {
+                    url: "/visitor/provincemap/history",
+                    templateUrl: "../historytrend/history.html",
+                    resolve: {
+                        load: loadDeps([
+                            "controller/history"
+                        ])
+                    }
+                })
+                .state('history2', {
+                    url: "/visitor/novisitors/history",
+                    templateUrl: "../historytrend/history.html",
+                    resolve: {
+                        load: loadDeps([
+                            "controller/history"
+                        ])
+                    }
+                })
+                .state('history3', {
+                    url: "/page/indexoverview/history",
+                    templateUrl: "../historytrend/history.html",
+                    resolve: {
+                        load: loadDeps([
+                            "controller/history"
+                        ])
+                    }
+                })
+                .state('history4', {
+                    url: "/page/entrancepage/history",
+                    templateUrl: "../historytrend/history.html",
+                    resolve: {
+                        load: loadDeps([
+                            "controller/history"
+                        ])
+                    }
+                })
+                .state('history5', {
+                    url: "/source/searchengine/history",
+                    templateUrl: "../historytrend/history.html",
+                    resolve: {
+                        load: loadDeps([
+                            "controller/history"
+                        ])
+                    }
+                })
+                .state('history6', {
+                    url: "/source/searchterm/history",
+                    templateUrl: "../historytrend/history.html",
+                    resolve: {
+                        load: loadDeps([
+                            "controller/history"
+                        ])
+                    }
+                })
+                .state('history7', {
+                    url: "/source/externallinks/history",
+                    templateUrl: "../historytrend/history.html",
+                    resolve: {
+                        load: loadDeps([
+                            "controller/history"
+                        ])
+                    }
+                })
+                .state('history8', {
+                    url: "/page/entrancepage_fa/history",
+                    templateUrl: "../historytrend/history.html",
+                    resolve: {
+                        load: loadDeps([
+                            "controller/history"
+                        ])
+                    }
+                })
+                .state('history9', {
+                    url: "/page/entrancepage_nv/history",
+                    templateUrl: "../historytrend/history.html",
+                    resolve: {
+                        load: loadDeps([
+                            "controller/history"
+                        ])
+                    }
+                })
+                .state('history10', {
+                    url: "/page/entrancepage_as/history",
+                    templateUrl: "../historytrend/history.html",
+                    resolve: {
+                        load: loadDeps([
+                            "controller/history"
+                        ])
+                    }
+                })
+                .state('history11', {
+                    url: "/page/entrancepage_af/history",
+                    templateUrl: "../historytrend/history.html",
+                    resolve: {
+                        load: loadDeps([
+                            "controller/history"
+                        ])
+                    }
+                });
+
+            // 管理设置
+            //$urlRouterProvider.when('', '/conf');
+            $stateProvider
+                .state('conf', {
+                    url: '/conf',
+                    templateUrl: '../conf/weblist/main.html',
+                    current: 'current',
+                    resolve: {
+                        load: loadDeps([
+                            "controller/conf/adminmainctr",
+                            "controller/conf/admintablectr"
+                        ])
+                    }
+                })
+                .state('rule', {
+                    url: '/conf/webcountsite/countrules',
+                    templateUrl: '../conf/webcountsite/countrules.html',
+                    resolve: {
+                        load: loadDeps([
+                            "controller/conf/countrules"
+                        ])
+                    }
+                })
+                .state('web_add', {
+                    url: '/conf/weblist/web_add',
+                    templateUrl: '../conf/weblist/web_add.html'
+                })
+                .state('childlist', {
+                    url: '/conf/webcountsite/childlist',
+                    templateUrl: '../conf/webcountsite/childlist.html',
+                    resolve: {
+                        load: loadDeps([
+                            "controller/conf/count_childlist"
+                        ])
+                    }
+                })
+                .state('childlist_add', {
+                    url: '/conf/webcountsite/childlist_add',
+                    templateUrl: '../conf/webcountsite/childlist_add.html',
+                    resolve: {
+                        load: loadDeps([
+                            "controller/conf/childlist_add"
+                        ])
+                    }
+                })
+                .state('childlist_update', {
+                    url: '/conf/webcountsite/childlist_update',
+                    params: {'id': null},
+                    templateUrl: '../conf/webcountsite/childlist_update.html',
+                    resolve: {
+                        load: loadDeps([
+                            "controller/conf/childlist_update"
+                        ])
+                    }
+                })
+                .state('pagechange', {
+                    url: '/conf/webcountsite/pagechange',
+                    templateUrl: '../conf/webcountsite/pagechange.html',
+                    resolve: {
+                        load: loadDeps([
+                            "controller/conf/count_pagechange",
+                            "controller/conf/admintablectr"
+                        ])
+                    }
+                })
+                .state('pagechange_add', {
+                    url: '/conf/webcountsite/pagechange_add',
+                    templateUrl: '../conf/webcountsite/pagechange_add.html',
+                    resolve: {
+                        load: loadDeps([
+                            "controller/conf/pagechange_addctr"
+                        ])
+                    }
+                })
+                .state('pagechange_update', {
+                    url: '/conf/webcountsite/pagechange_update',
+                    params: {'id': null},
+                    templateUrl: '../conf/webcountsite/pagechange_update.html',
+                    resolve: {
+                        load: loadDeps([
+                            "controller/conf/pagechange_updatectr"
+                        ])
+                    }
+                })
+                .state('eventchange', {
+                    url: '/conf/webcountsite/eventchange',
+                    templateUrl: '../conf/webcountsite/eventchange.html',
+                    resolve: {
+                        load: loadDeps([
+                            "controller/conf/count_eventchange"
+                        ])
+                    }
+                })
+                .state('eventchange_add', {
+                    url: '/conf/webcountsite/eventchange_add',
+                    templateUrl: '../conf/webcountsite/eventchange_add.html',
+                    resolve: {
+                        load: loadDeps([
+                            "controller/conf/eventchange_addctr"
+                        ])
+                    }
+                })
+                .state('eventchange_update', {
+                    url: '/conf/webcountsite/eventchange_update',
+                    params: {'id': null},
+                    templateUrl: '../conf/webcountsite/eventchange_update.html',
+                    resolve: {
+                        load: loadDeps([
+                            "controller/conf/eventchange_updatectr"
+                        ])
+                    }
+                })
 //            获取代码
-            .state('main_getcode', {
-                url: '/conf/weblist/main_getcode',
-                templateUrl: '../conf/weblist/main_getcode.html'
-            })
-            .state('timechange', {
-                url: '/conf/webcountsite/timechange',
-                templateUrl: '../conf/webcountsite/timechange.html'
-            })
-            .state('adtrack', {
-                url: '/conf/webcountsite/adtrack',
-                templateUrl: '../conf/webcountsite/adtrack.html'
-            })
-            .state('adtrack_add', {
-                url: '/conf/webcountsite/adtrack_add',
-                templateUrl: '../conf/webcountsite/adtrack_add.html'
-            })
-            .state('root', {
-                url: '/conf/admin/root',
-                templateUrl: '../conf/admin/root.html'
-            })
-            .state('counticon', {
-                url: '/conf/admin/counticon',
-                templateUrl: '../conf/admin/counticon.html'
-            })
-            .state('reportsite', {
-                url: '/conf/admin/reportsite',
-                templateUrl: '../conf/admin/reportsite.html'
-            }).state('pagechange_update', {
-                url: '/conf/webcountsite/pagechange_update',
-                params:      {'id': null},
-                templateUrl: '../conf/webcountsite/pagechange_update.html'
-            })
-    });
+                .state('main_getcode', {
+                    url: '/conf/weblist/main_getcode',
+                    templateUrl: '../conf/weblist/main_getcode.html'
+                })
+                .state('timechange', {
+                    url: '/conf/webcountsite/timechange',
+                    templateUrl: '../conf/webcountsite/timechange.html',
+                    resolve: {
+                        load: loadDeps([
+                            "controller/conf/count_timechange"
+                        ])
+                    }
+                })
+                .state('adtrack', {
+                    url: '/conf/webcountsite/adtrack',
+                    templateUrl: '../conf/webcountsite/adtrack.html',
+                    resolve: {
+                        load: loadDeps([
+                            "controller/conf/ad_track",
+                            "controller/conf/admintablectr"
+                        ])
+                    }
+                })
+                .state('adtrack_add', {
+                    url: '/conf/webcountsite/adtrack_add',
+                    templateUrl: '../conf/webcountsite/adtrack_add.html',
+                    resolve: {
+                        load: loadDeps([
+                            "controller/conf/adtrack_add"
+                        ])
+                    }
+                })
+                .state('root', {
+                    url: '/conf/admin/root',
+                    templateUrl: '../conf/admin/root.html'
+                })
+                .state('counticon', {
+                    url: '/conf/admin/counticon',
+                    templateUrl: '../conf/admin/counticon.html'
+                })
+                .state('reportsite', {
+                    url: '/conf/admin/reportsite',
+                    templateUrl: '../conf/admin/reportsite.html'
+                });
+
+            // 不能使用下面这句代码：
+            // $urlRouterProvider.otherwise( '/index' );
+            // 见 http://stackoverflow.com/questions/25065699/why-does-angularjs-with-ui-router-keep-firing-the-statechangestart-event
+            // 另外，这段代码必须放在最后一个路由，否则直接在链接中到 #/路由 会无效
+            $stateProvider
+                .state('otherwise', {
+                    url: '*path',
+                    template: '',
+                    controller: [
+                        '$state',
+                        function ($state) {
+                            $state.go('index');
+                        }
+                    ]
+                });
+
+            /**
+             * 加载依赖的辅助函数
+             * @param deps
+             * @returns {*[]}
+             */
+            function loadDeps(deps) {
+                return [
+                    '$q', function ($q) {
+                        var def = $q.defer();
+                        require(deps, function () {
+                            def.resolve();
+                        });
+                        return def.promise;
+                    }
+                ];
+            }
+
+        }
+    ]);
 
 });

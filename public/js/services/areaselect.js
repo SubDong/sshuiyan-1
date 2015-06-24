@@ -64,13 +64,10 @@ define(["../app"], function (app) {
         ];
         $rootScope.extendway = {};
         $rootScope.extendways = [
-            {name: '全部页面目标'},
-            {name: '公告'},
-            {name: '全部事件目标'},
-            {name: '完整下载'},
-            {name: '在线下载'},
-            {name: '时长目标'},
-            {name: '访问页数目标'}
+            {name: '全部页面目标',id:0},
+            {name: '全部事件目标',id:1},
+            {name: '时长目标',id:2},
+            {name: '访问页数目标',id:3},
         ];
 
         $rootScope.souce = {};

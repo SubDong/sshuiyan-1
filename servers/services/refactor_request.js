@@ -146,9 +146,9 @@ var es_aggs = {
     "arrivedRate": {
         "vc_aggs": _vc_aggs
     },
-    // TODO 页面转化
-    "pageConversion": {},
-    // TODO 事件转化
+    // TODO 转化次数
+    "conversions": {},
+    // TODO 转化率
     "eventConversion": {}
 };
 
@@ -666,15 +666,23 @@ var arrivedRateFn = function (result, dimension) {
     };
 };
 
-var pageConversionFn = function (result, dimension) {
+var conversions = function (result, dimension) {
     var keyArr = [];
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
+        var doc_count = result[i].doc_count;
+        if (dimension == "period") {
+            var dateStr = result[i].key_as_string + "";
+            keyArr.push(dateStr);
+        } else
+            keyArr.push(result[i].key);
+
+        quotaArr.push(doc_count);
     }
 
     return {
-        "label": "pageConversion",
+        "label": "conversions",
         "key": keyArr,
         "quota": quotaArr
     };
@@ -791,6 +799,9 @@ var es_request = {
                 break;
             default :
                 request = buildRequest(indexes, type, quotas, dimension, filters, start, end, interval);
+                console.log(123);
+
+                console.log(JSON.stringify(request));
                 break;
         }
 
@@ -798,7 +809,7 @@ var es_request = {
             var data = [];
             if (response != undefined && response.aggregations != undefined && response.aggregations.result != undefined) {
                 var result = response.aggregations.result.buckets;
-                //console.log(JSON.stringify(result));
+                console.log(JSON.stringify(result));
 
                 if (!result) {
                     result = [];
@@ -837,8 +848,8 @@ var es_request = {
                                 case "avgPage":
                                     data.push(avgPageFn(result, dimension));
                                     break;
-                                case "pageConversion":
-                                    data.push(pageConversionFn(result, dimension));
+                                case "conversions":
+                                    data.push(conversions(result, dimension));
                                     break;
                                 case "eventConversion":
                                     data.push(eventConversionFn(result, dimension));

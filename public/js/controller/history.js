@@ -3,7 +3,80 @@
  */
 define(['./module'], function (ctrs) {
     'use strict';
-    ctrs.controller('history', function ($scope, $window, $location, $rootScope, requestService, areaService, $http, SEM_API_URL) {
+    ctrs.controller('history', function ($cookieStore,$scope, $window, $location, $rootScope, requestService, areaService, $http, SEM_API_URL) {
+
+
+        $scope.SELECT_PAGE = 0;
+        $scope.SELECT_EVENT = 1;
+        $scope.SELECT_ALL = -1;
+
+
+        $scope.extendway = {selected:{name:"全部事件目标",id:$scope.SELECT_EVENT}};
+        $scope.childrenExtendway={selected:{name:"请选择",id:$scope.SELECT_ALL}};
+
+
+
+
+        var uid = $cookieStore.get("uid");
+        var site_id = $rootScope.siteId;
+
+
+        //转化目标-父级别切换
+        $scope.extendwayChange = function (extendway) {
+            $scope.extendway = extendway;
+            var url = "";
+
+            if(extendway.selected.id == $scope.SELECT_PAGE) { //页面
+                url = "/config/page_conv?type=search&query={\"uid\":\"" + uid + "\",\"site_id\":\"" + site_id + "\"}";
+            } else if(extendway.selected.id == $scope.SELECT_EVENT) { //事件
+                url = "/config/eventchnage_list?type=search&query={\"uid\":\"" + uid + "\",\"root_url\":\"" + site_id + "\"}";
+            }
+
+            $http({
+                method: 'GET',
+                url: url
+            }).success(function (dataConfig, status) {
+                $scope.childrenExtendways = [];
+                var childrenExtendways = [{selected:{name:"请选择",id:$scope.SELECT_ALL}}];
+                if(extendway.selected.id == $scope.SELECT_PAGE) { //页面
+                    angular.forEach(dataConfig, function(data){
+                        angular.forEach(data.target_url,function(thisv1) {
+                            var obj = {};
+                            obj.name = data.target_name;
+                            obj.id = thisv1.url;
+                            childrenExtendways.push(obj);
+                        });
+                    });
+                } else if(extendway.selected.id == $scope.SELECT_EVENT) {//事件
+                    angular.forEach(dataConfig, function(data){
+                        var obj = {};
+                        obj.name = data.event_name;
+                        obj.id = data.event_id;
+                        childrenExtendways.push(obj);
+                    });
+                }
+                $scope.childrenExtendways = childrenExtendways;
+                $scope.childrenExtendway={selected:{name:"请选择",id:$scope.SELECT_ALL}};
+            });
+        }
+
+        //转化目标-子级别切换
+        $scope.childrenExtendwayChange = function (childrenExtendway) {
+
+            $scope.childrenExtendway=childrenExtendway;
+
+            if($scope.extendway.selected.id == $scope.SELECT_PAGE) {
+                $rootScope.tableSwitch.tableFilter = "[{\"loc\":[\"" + childrenExtendway.selected.id + "\"]}]";
+            } else if($scope.extendway.selected.id == $scope.SELECT_EVENT) {
+                $rootScope.tableSwitch.tableFilter = "[{\"et_category\":[\"" + childrenExtendway.selected.id + "\"]}]";
+            }
+
+            $scope.radioCheckVal = ["conversions"];
+            $scope.refreshChart(["conversions"]);
+        }
+
+
+
         if ($rootScope.gridArray == undefined || $rootScope.tableSwitch == undefined) {
             $rootScope.gridArray = [];
             var temp_path = $location.path();
@@ -124,8 +197,31 @@ define(['./module'], function (ctrs) {
         $scope.refreshChart = function (types) {
             var quota = $scope.radioCheckVal;
             if (types) {
+                esType = $rootScope.userType;
                 quota = types;
+                if(types=="conversions") {  //转化次数
+                    if($scope.extendway.selected.id == $scope.SELECT_PAGE) { //页面转化
+                        if($scope.childrenExtendway.selected.id == $scope.SELECT_ALL) {//是否查询所有
+                            $rootScope.tableSwitch.tableFilter = "null";
+                        } else {
+                            $rootScope.tableSwitch.tableFilter = "[{\"loc\":[\"" + $scope.childrenExtendway.selected.id + "\"]}]";
+                        }
+                        } else if($scope.extendway.selected.id == $scope.SELECT_EVENT) { //事件转化
+                            esType = "1_event"; //查询类型 1_event
+                            if($scope.childrenExtendway.selected.id == $scope.SELECT_ALL) {//是否查询所有
+                                $rootScope.tableSwitch.tableFilter = "null";
+
+                        } else {
+                            $rootScope.tableSwitch.tableFilter = "[{\"et_category\":[\"" + $scope.childrenExtendway.selected.id + "\"]}]";
+                        }
+                    }
+                } else {
+                    $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[\"" + 1 + "\"]}]";
+                }
             }
+
+
+
             if ($rootScope.end - $rootScope.start == 0) {
                 $scope.charts[0].config.keyFormat = "none";
             } else {
@@ -178,6 +274,9 @@ define(['./module'], function (ctrs) {
         ];
         $scope.init = function () {
             var customLegendData = [];
+
+            $rootScope.checkedArray.push("conversions"); //转化次数
+
             $rootScope.checkedArray.forEach(function (item) {
                 customLegendData.push(chartUtils.convertChinese(item));
             });

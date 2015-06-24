@@ -1,4 +1,4 @@
-if (!config.open) {
+if (config != undefined && !config.open) {
     (function () {
         var points = [], h = {}, md = {}, c = {
             id: config.trackid,
@@ -517,14 +517,13 @@ if (!config.open) {
                 setTimeout(ut, 400);
             })
         })();
-        if (config.duration.ttpause) {
+        if (config.duration != undefined && config.duration.ttpause) {
             //时长转化
             (function () {
                 var ck = md.cookie;
                 ck.get("PFT_DTNJ") === null ? ck.set("PFT_DTNJ", true) : "";
                 if (ck.get("PFT_DTNJ") == "true") {
                     var dur = function () {
-
                         var dtn = ck.get("PFT_DTN") == null ? ck.set("PFT_DTN", new Date().getTime()) : ck.get("PFT_DTN");
                         var dateTime = new Date().getTime();
                         if (parseInt((dateTime - dtn) / 1000) >= config.duration.tttime) {
@@ -539,7 +538,7 @@ if (!config.open) {
                 var timer = setInterval(dur, 1000);
             }());
         }
-        if (config.visit.pvpause) {
+        if (config.visit != undefined && config.visit.pvpause) {
             //问页数转化
             (function () {
                 var ck = md.cookie;
@@ -557,7 +556,7 @@ if (!config.open) {
                 }
             }());
         }
-        if (config.mouse != null && config.mouse) {
+        if (config.mouse != undefined && config.mouse) {
             //获取热力图点击坐标
             (function () {
                 document.onclick = function (event) {
