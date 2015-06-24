@@ -11,6 +11,7 @@ define([
     "./controller/value/module",
     "./controller/conf/module",
     "./controller/transform/module",
+    "./controller/ads/module",
     "js002",
     "js003",
     "js006",
@@ -29,6 +30,7 @@ define([
         "value.controllers",
         "conf.controllers",
         "transform.controllers",
+        "ads.controllers",
         'ui.grid',
         'ui.grid.autoResize',
         'ui.grid.grouping',
@@ -45,7 +47,7 @@ define([
     myApp.controller('menuctr', function ($scope, $location) {
         $scope.oneAtATime = true;
         // 项目导航模块。用于页面刷新时，当前选中模块index的获取
-        $scope.array = ["index", "extension", "trend", "source", "page", "visitor", "value"];
+        $scope.array = ["index", "extension", "trend", "source", "page", "visitor", "value","transform","ads"];
         $scope.selectRestaurant = function (row) {
             $scope.selectedRow = row;
         };
@@ -207,6 +209,11 @@ define([
                 icon: 'glyphicon glyphicon-sort',
                 stype: 0,
                 sref: '#transform/transformAnalysis'
+            },{
+                title: '指定广告跟踪',
+                icon: 'glyphicon glyphicon-map-marker',
+                stype: 0,
+                sref: '#ads/adsSource'
             }
         ];
         $scope.adminmenus = [

@@ -204,10 +204,10 @@ define(["../app"], function (app) {
         var option = {
             restrict: "EA",
             template: "<div role=\"group\" class=\"btn-group fl\">" +
-            "<button id=\"choicetrange\"  class=\"btn btn-default pull-right date-picker my_picker fl\" ng-class=\"{'current':choiceClass}\"  max=\"max\" ng-model=\"date\"> " +
+            "<button id=\"choicetrange\"  class=\"btn btn-default pull-right date-picker my_picker fl\" ng-class=\"{'current':choiceClass}\"  max=\"max\" ng-model=\"date\">" +
             "<i class=\"glyphicon glyphicon-calendar fa fa-calendar\"></i><span data-ng-bind='date'></span></button>" +
-            "<button class=\"btn btn-default\" type=\"button\" ng-hide=\"dateshows\" >前一日</button>" +
-            " <button class=\"btn btn-default\" type=\"button\"  ng-hide=\"dateshows\" >上周同期</button></div>",
+            "<button class=\"btn btn-default\" type=\"button\" ng-show=\"dateshows\" >前一日</button>" +
+            " <button class=\"btn btn-default\" type=\"button\"  ng-show=\"dateshows\" >上周同期</button></div>",
             replace: true,
             //transclude: true,
             link: function (scope, element, attris, controller) {
@@ -221,7 +221,7 @@ define(["../app"], function (app) {
                 }
 
                 scope.date = "与其他时间段对比";
-                scope.dateshows = true;
+//                scope.dateshows = true;
                 $('#choicetrange').daterangepicker({
                     format: 'YYYY-MM-DD',
                     maxDate: GetDateStr(0),
@@ -281,7 +281,7 @@ define(["../app"], function (app) {
     app.directive("refresh", function ($rootScope, requestService, $location, $http) {
         var option = {
             restrict: "EA",
-            template: "<div class=\"right_refresh fr\"><button class=\"btn btn-default btn-Refresh fl\" ng-click=\"page_refresh()\"  type=\"button\"><span aria-hidden=\"true\" class=\"glyphicon glyphicon-refresh\"></span></button><ui-select ng-model=\"export.selected\"   ng-change='fileSave(export.selected)' theme=\"select2\" ng-hide=\"menu_select\" reset-search-input=\"false\" class=\"fl\"style=\"min-width: 90px;background-color: #fff;\"> <ui-select-match placeholder=\"保存\">{{$select.selected.name}} </ui-select-match> <ui-select-choices repeat=\"export in exportsaa\"> <span ng-bind-html=\"export.name\"></span></ui-select-choices></ui-select></div>",
+            template: "<div class=\"right_refresh fr\"><button class=\"btn btn-default btn-Refresh fl\" ng-click=\"page_refresh()\"  type=\"button\"><span aria-hidden=\"true\" class=\"glyphicon glyphicon-refresh\"></span></button><button class=\"btn btn-default btn-Refresh fl\" type=\"button\" ng-show=\"send\" >发送</button><ui-select ng-model=\"export.selected\" ng-change='fileSave(export.selected)' theme=\"select2\" ng-hide=\"menu_select\" reset-search-input=\"false\" class=\"fl\"style=\"min-width: 90px;background-color: #fff;\"> <ui-select-match placeholder=\"保存\">{{$select.selected.name}} </ui-select-match> <ui-select-choices repeat=\"export in exportsaa\"> <span ng-bind-html=\"export.name\"></span></ui-select-choices></ui-select></div>",
             transclude: true,
             replace: true,
             link: function (scope) {

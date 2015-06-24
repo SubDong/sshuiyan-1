@@ -9,7 +9,8 @@ define(["./module"], function (ctrs) {
           $scope.lastWeek = true;
           $scope.lastMonth = true;
           $scope.visible = true;
-
+          $scope.send = true;//显示发送
+          $scope.dateshows = true;
             $rootScope.gridArray = [
                 {
                     name: "xl",

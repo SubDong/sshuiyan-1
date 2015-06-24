@@ -170,7 +170,28 @@ define(["angular", "./app"], function (angular, myApp) {
                         "controller/searchpromotion"
                     ])
                 }
+            })
+            .state('pageTransform', {
+                url: "/transform/pageTransform",
+                templateUrl: "./transform/pageTransform.html",
+                resolve: {
+                    load: loadDeps([
+                        'controller/transform/pageTransformCtr'
+                    ])
+                }
             });
+//            指定广告跟踪
+            $stateProvider
+                .state('adsSource', {
+                    url: '/ads/adsSource',
+                    templateUrl: '../ads/adsSource.html',
+                    resolve: {
+                        load: loadDeps([
+                            "controller/ads/adsSourceCtr",
+                            "controller/TabsCtrl"
+                        ])
+                    }
+                })
 
             // source来源分析
             $stateProvider

@@ -8,12 +8,15 @@ define(["./module"], function (ctrs) {
     ctrs.controller('menuctr', function ($scope, $location) {
         $scope.oneAtATime = true;
         // 项目导航模块。用于页面刷新时，当前选中模块index的获取
-        $scope.array = ["index", "extension", "trend", "source", "page", "visitor", "value"];
+        $scope.array = ["index", "extension", "trend", "source", "page", "visitor", "value","transform"];
         $scope.selectRestaurant = function (row) {
             $scope.selectedRow = row;
         };
         var menu = $location.path();
         $scope.menuClass = function (menu, hrefs, i) {
+            console.log(menu);
+            console.log(hrefs);
+            console.log(i);
             if ("" === menu) {
                 return 0;
             } else if ("/conf" === menu) {
