@@ -1,3 +1,4 @@
+
 //app.controller('DateChartController', function ($scope,requestService) {
 //    $scope.today = function () {
 //        var start = today_start(), end = today_end();

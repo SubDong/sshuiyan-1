@@ -1,0 +1,163 @@
+<div class="middle_containers" ng-controller="transformAnalysisctr">
+    <div class="date_select">
+        <div aria-label="First group" role="group" class="btn-group fl">
+            <a class="btn btn-default current" data-ng-href="#transform/transformAnalysis" type="button">事件转化</a>
+            <a class="btn btn-default" data-ng-href="" type="button">页面转化</a>
+        </div>
+        <div>
+            <calendar></calendar>
+            <dateother></dateother>
+            <refresh></refresh>
+        </div>
+    </div>
+    <div class="my_concent">
+        <ssh-date-show type="yesterday" dimension="region" sem-type="campaign"></ssh-date-show>
+        <div class="index_chart">
+            <div id="indicators_charts_legend"></div>
+            <div id="indicators_charts" style="height:400px;"></div>
+        </div>
+        <div class="table_content" ng-controller="SearchPromotion">
+            <ul ng-init="tab = 1" class="nav nav-tabs nav-justified">
+                <li class="ng-isolate-scope"  ng-class="{active:tab===1}" ng-click="tab = 1">
+                    <a class="ng-binding">自定义指标</a></li>
+                <li class="ng-isolate-scope" ng-class="{active:tab===2}" ng-click="tab = 2">
+                    <a class="ng-binding">高级筛选</a></li>
+            </ul>
+            <div class="tabs_content">
+                <div class="custom_title" ng-show="tab === 1">
+                    <p class="chart_top_title">
+
+                    <div class="chart_top chart_default">
+                        <ul>
+                            <li><a href="javascript:void(0)" data-ssh-default-quota="search_campaign">系统默认指标</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="chart_top">
+                        <span>基础指标 :</span>
+                        <ul>
+                            <li ng-repeat="item in bases" data-sshy-default defvalue="{{item.name}}"
+                                class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                ng-click='searchIndicators(item,target,6)'>{{item.consumption_name}}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="chart_top">
+                        <span>转化指标 :</span>
+                        <ul>
+                            <li ng-repeat="item in transform" data-sshy-default defvalue="{{item.name}}"
+                                class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                ng-click='searchIndicators(item,Webbased,6)'>{{item.consumption_name}}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="chart_top">
+                        <span>订单转化:</span>
+                        <ul>
+                            <li ng-repeat="item in order" data-sshy-default defvalue="{{item.name}}"
+                                class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                ng-click='searchIndicators(item,flow,6)'>{{item.consumption_name}}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="chart_top">
+                        <span>事件参数:</span>
+                        <ul>
+                            <li ng-repeat="item in eventParameter" data-sshy-default defvalue="{{item.name}}"
+                                class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                ng-click='searchIndicators(item,flow,6)'>{{item.consumption_name}}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="chart_top chart_noborder">
+                        <button class="btn btn-primary" type="button" ng-click="targetSearchSpread(true)">确定
+                        </button>
+                        * 可同时选择6项
+                    </div>
+
+                </div>
+                <div class="custom_title" ng-show="tab === 2">
+                    <div class="chart_top2">
+                        <ul>
+                            <li><span>来源过滤 :</span></li>
+                            <li>
+                                <div role="group" class="btn-group">
+                                    <ui-select ng-model="souce.selected" theme="select2" reset-search-input="false"
+                                               class="fl"
+                                               style="width: 90px;" ng-change="setSource(souce.selected.value)">
+                                        <ui-select-match placeholder="全部">{{$select.selected.name}}
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="souce in souces">
+                                            <span ng-bind-html="souce.name"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                    <ui-select ng-model="browser.selected" theme="select2" reset-search-input="false" class="fl" data-ng-change="searchEngine(browser.selected.value)" ng-hide="browserselect"
+                                               style="width: 90px; margin-left:10px;">
+                                        <ui-select-match placeholder="全部">{{$select.selected.name}}
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="browser in browsers">
+                                            <span ng-bind-html="browser.name"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </li>
+                            <li><a href="javascript:void(0)">百度</a></li>
+                            <li><a href="javascript:void(0)">Google</a></li>
+                        </ul>
+                    </div>
+                    <div class="chart_top2">
+                        <ul>
+                            <li><span>访客过滤 :</span></li>
+                            <li><label ng-click="setVisitors(0)"><input type="radio" checked="checked" class="styled" name="radio0"/>全部</label></li>
+                            <li><label ng-click="setVisitors(1)"><input type="radio" name="radio0"  class="styled" />新访客</label></li>
+                            <li><label ng-click="setVisitors(2)"><input type="radio" name="radio0"  class="styled"/>老访客</label></li>
+                        </ul>
+                    </div>
+                    <div class="chart_top2">
+                        <ul>
+                            <li><span>地域过滤:</span></li>
+                            <li>
+                                <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
+                                    <div role="group" class="btn-group">
+                                        <ui-select ng-model="city.selected" theme="select2" reset-search-input="false" class="fl btn-pv" data-ng-change="setAreaFilter(city.selected.name)"
+                                                   style="width: 120px;">
+                                            <ui-select-match placeholder="全部">{{$select.selected.name}}
+                                            </ui-select-match>
+                                            <ui-select-choices repeat="city in citys">
+                                                <span ng-bind-html="city.name"></span>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                </div>
+                            </li>
+                            <li><a href="javascript:void(0)">北京</a></li>
+                            <li><a href="javascript:void(0)">上海</a></li>
+                            <li><a href="javascript:void(0)">广州</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="custom_secendtitle">
+                <div class="custom_secendtitle">
+                    <div class="custom_select">
+                        <div class="input-group fl">
+                            <input type="text" placeholder="关键词/搜索词…" data-ng-model="searchGjcText" class="form-control fl"
+                                   onfocus="this.setAttribute('placeholder','')"
+                                   onblur="this.setAttribute('placeholder','关键词/搜索词…')">
+                                   <span class="input-group-btn fl">
+                                         <button type="button" class="btn btn-default"
+                                                 data-ng-click="setGjcFilter(searchGjcText)"><span aria-hidden="true" class="glyphicon glyphicon-search"></span>
+                                         </button>
+                                   </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="custom_table">
+                    <div ui-grid="gridOptions" class="grid clearfix"  ui-grid-pagination
+                         ui-grid-exporter ui-grid-auto-resize></div>
+                    <gridpage></gridpage>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

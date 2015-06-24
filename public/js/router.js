@@ -15,6 +15,10 @@ define(["angular", "app"], function (ng, app) {
                 url: '/index',
                 templateUrl: '../home/main.html'
             })
+            .state('transformAnalysis', {
+                url: '/transform/transformAnalysis',
+                templateUrl: '../transform/transformAnalysis.html'
+            })
             .state('realtime', {
                 url: "/trend/realtime",
                 templateUrl: "../trend/realtime.html"
@@ -50,6 +54,10 @@ define(["angular", "app"], function (ng, app) {
             .state('externallinks', {
                 url: "/source/externallinks",
                 templateUrl: "../source/externallinks.html"
+            })
+            .state('changelist', {
+                url: "/source/changelist",
+                templateUrl: "../source/changelist.html"
             })
             .state('visitedpages', {
                 url: "/page/visitedpages",

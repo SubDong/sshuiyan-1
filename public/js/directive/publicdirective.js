@@ -10,8 +10,8 @@ define(["../app"], function (app) {
             restrict: "EA",
             template: "<div  role=\"group\" class=\"btn-group fl\"><button class=\"btn btn-default\" type=\"button\" ng-click=\"today()\" ng-hide=\"visible\" ng-class=\"{'current':todayClass,'disabled':todaySelect}\">今天</button>" +
             "<button class=\"btn btn-default\" type=\"button\" ng-click=\"yesterday()\" ng-class=\"{'current':yesterdayClass}\">昨天</button>" +
-            "<button class=\"btn btn-default\" type=\"button\" ng-click=\"sevenDay()\" ng-class=\"{'current':sevenDayClass}\">最近7天</button>" +
-            "<button class=\"btn btn-default\" type=\"button\" ng-click=\"month()\" ng-class=\"{'current':monthClass}\">最近30天</button>" +
+            "<button class=\"btn btn-default\" type=\"button\" ng-click=\"sevenDay()\" ng-hide=\"lastWeek\" ng-class=\"{'current':sevenDayClass}\">最近7天</button>" +
+            "<button class=\"btn btn-default\" type=\"button\" ng-click=\"month()\" ng-hide=\"lastMonth\" ng-class=\"{'current':monthClass}\">最近30天</button>" +
             "<button id=\"reportrange\"  class=\"btn btn-default pull-right date-picker my_picker\" ng-click=\'timeclick()\' ng-hide=\"datechoice\" ng-class=\"{'current':timeClass}\" max=\"max\" ng-model=\"date\"> " +
             "<i class=\"glyphicon glyphicon-calendar fa fa-calendar\"></i><span></span></button>" +
             "</div>",

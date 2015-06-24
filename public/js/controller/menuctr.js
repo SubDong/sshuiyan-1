@@ -113,7 +113,11 @@ define(["./module"], function (ctrs) {
                 }, {
                     text: '外部链接',
                     sref: '#source/externallinks'
-                }]
+                },
+                    {
+                        text: '来源变化榜',
+                        sref: '#source/changelist'
+                    }]
             }, {
                 title: '页面分析',
                 icon: 'glyphicon glyphicon-blackboard',
@@ -162,6 +166,11 @@ define(["./module"], function (ctrs) {
                     text: '频道流转',
                     sref: '#value/trafficmap'
                 }]
+            }, {
+                title: '转化分析',
+                icon: 'glyphicon glyphicon-sort',
+                stype: 0,
+                sref: '#transform/transformAnalysis'
             }
         ];
         $scope.adminmenus = [
