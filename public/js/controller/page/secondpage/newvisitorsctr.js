@@ -58,8 +58,8 @@ define(["./../module"], function (ctrs) {
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
             },
             {
-                name: "访问贡献量",
-                displayName: "访问贡献量",
+                name: "贡献浏览量",
+                displayName: "贡献浏览量",
                 field: "contribution",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
             }
@@ -185,6 +185,7 @@ define(["./../module"], function (ctrs) {
         $scope.init();
 
         $scope.$on("ssh_refresh_charts", function (e, msg) {
+            $rootScope.targetSearch();
             var chart = echarts.init(document.getElementById($scope.charts[1].config.id));
             $scope.charts[1].config.instance = chart;
             var arrayChart = [$scope.charts[1]]

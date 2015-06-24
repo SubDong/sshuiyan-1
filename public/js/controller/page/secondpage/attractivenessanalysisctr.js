@@ -31,9 +31,9 @@ define(["./../module"], function (ctrs) {
                     cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history10' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a ng-click='grid.appScope.showSourceDistribution(row)'>查看来源分布</a></li></ul></div></div>"
                 },
                 {
-                    name: "贡献量",
-                    displayName: "贡献量",
-                    field: "outRate",
+                    name: "贡献浏览量",
+                    displayName: "贡献浏览量",
+                    field: "contribution",
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
                 },
                 {
@@ -173,6 +173,7 @@ define(["./../module"], function (ctrs) {
             $scope.init();
 
             $scope.$on("ssh_refresh_charts", function (e, msg) {
+                $rootScope.targetSearch();
                 var chart = echarts.init(document.getElementById($scope.charts[1].config.id));
                 $scope.charts[1].config.instance = chart;
                 var arrayChart = [$scope.charts[1]]
