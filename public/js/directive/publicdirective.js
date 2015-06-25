@@ -204,10 +204,11 @@ define(["../app"], function (app) {
         var option = {
             restrict: "EA",
             template: "<div role=\"group\" class=\"btn-group fl\">" +
+                "<button class=\"btn btn-default\" type=\"button\" ng-class=\"{'current':lastDayClass}\"  ng-show=\"dateshows\" >前一日</button>" +
+                " <button class=\"btn btn-default\" type=\"button\" ng-class=\"{'current':lastWeekClass}\"   ng-show=\"dateshows\" >上周同期</button>" +
             "<button id=\"choicetrange\"  class=\"btn btn-default pull-right date-picker my_picker fl\" ng-class=\"{'current':choiceClass}\"  max=\"max\" ng-model=\"date\">" +
             "<i class=\"glyphicon glyphicon-calendar fa fa-calendar\"></i><span data-ng-bind='date'></span></button>" +
-            "<button class=\"btn btn-default\" type=\"button\" ng-show=\"dateshows\" >前一日</button>" +
-            " <button class=\"btn btn-default\" type=\"button\"  ng-show=\"dateshows\" >上周同期</button></div>",
+            "</div>",
             replace: true,
             //transclude: true,
             link: function (scope, element, attris, controller) {

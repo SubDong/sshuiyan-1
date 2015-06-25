@@ -192,6 +192,15 @@ define(["angular", "./app"], function (angular, myApp) {
                         ])
                     }
                 })
+                .state('noData', {
+                    url: '/ads/noData',
+                    templateUrl: '../ads/noData.html',
+                    resolve: {
+                        load: loadDeps([
+                            "controller/ads/noDataCtr"
+                        ])
+                    }
+                })
 
             // source来源分析
             $stateProvider
