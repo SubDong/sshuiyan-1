@@ -1095,6 +1095,11 @@ define(["../app"], function (app) {
                 $rootScope.$on("$locationChangeSuccess", function (e, n, o) {
                     var _path = $location.path();
                     angular.forEach(expanders, function (e_r, index) {
+                        if (_path == "/index" && e_r.sref == "#index") {
+                            e_r.showText = true;
+                            $rootScope.$broadcast("ssssss", index);
+                            return;
+                        }
                         if (e_r.sref == _path.substring(1, _path.substring(1).indexOf("/") + 1)) {
                             e_r.showText = true;
                             $rootScope.$broadcast("ssssss", index);
