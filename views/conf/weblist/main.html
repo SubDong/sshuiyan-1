@@ -14,9 +14,9 @@
                 <ul>
                     <li><input type="checkbox" class="styled web_list_nav_input1" /> <b>其他首页</b></li>
                     <li><input type="checkbox" class="styled web_list_nav_input1" /> <b>网站首页</b></li>
-                    <li><input type="text" class="form-control " id="web_list_nav_input" placeholder="请输入网址…" onfocus="this.setAttribute('placeholder','')"
+                    <li><input type="text" class="form-control " id="web_list_nav_input" placeholder="请输入网址…" onfocus="$('#web_list_nav_input').prop('value','');$('#web_list_nav_input').css('color', 'black');this.setAttribute('placeholder','')"
                                onblur="this.setAttribute('placeholder','请输入网址...')"/></li>
-                    <li><button class="btn btn-info nav_btn ">代码安装检查</button></li>
+                    <li><button class="btn btn-info nav_btn " data-ng-click="codeCheck()">代码安装检查</button></li>
                 </ul>
             </div>
         </div>
