@@ -1,0 +1,29 @@
+<!--广告来源-->
+<div class="middle_containers" ng-controller="noDataCtr">
+    <div class="date_select">
+        <div aria-label="First group " role="group" class="btn-group fl">
+            <a class="btn btn-default" data-ng-href="#ads/adsSource" type="button">来源</a>
+            <a class="btn btn-default" data-ng-href="" type="button">媒介</a>
+            <a class="btn btn-default current" data-ng-href="#ads/noData" type="button">计划</a>
+            <a class="btn btn-default" data-ng-href="" type="button">关键词</a>
+            <a class="btn btn-default" data-ng-href="" type="button">创意</a>
+        </div>
+        <calendar></calendar>
+        <dateother></dateother>
+        <refresh></refresh>
+        <div aria-label="First group" role="group" class="btn-group fr">
+            <a class="btn btn-default current" style="line-height: 24px" data-ng-href="#conf/webcountsite/adtrack_add" type="button">新增指定广告跟踪</a>
+        </div>
+    </div>
+    <div class="my_concent">
+        <div class="no_data_modal">
+            <div class="warning_img fl">
+                <img src="img/warning.png">
+            </div>
+            <div class="warning_word fl">
+                <p>暂无数据，请先设置有关<span>"计划"</span>的跟踪代码，</p>
+                <p>再进行查看，请点击&nbsp;&nbsp;<a class="btn" data-ng-href="#conf/webcountsite/adtrack_add" type="button">新增指定广告跟踪</a>&nbsp;&nbsp;进行代码url设计。</p>
+            </div>
+        </div>
+    </div>
+</div>

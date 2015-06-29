@@ -71,8 +71,6 @@ define(["./module"], function (ctrs) {
             "<li> 如果代码安装正确，一般20分钟 后,可以查看网站分析数据；</li></ul></div>";
 
 
-
-
         //配置默认指标
         $rootScope.checkedArray = ["_uid", "uid", "type_id", "track_id", "site_url", "site_name", "site_pause", "track_status_ch"];
 
@@ -85,7 +83,7 @@ define(["./module"], function (ctrs) {
                 cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
                 maxWidth: 5
             },
-            {name: "网站域名", displayName: "网站域名", field: "site_url", maxWidth: '', cellClass: 'table_admin' },
+            {name: "网站域名", displayName: "网站域名", field: "site_url", maxWidth: '', cellClass: 'table_admin'},
 
             {name: "网站名称", displayName: "网站名称", field: "site_name", maxWidth: '', cellClass: 'table_admin_color'},
             {
@@ -366,18 +364,18 @@ define(["./module"], function (ctrs) {
             }).success(function (dataConfig, status) {
                 $scope.gridOptions.data = dataConfig;
                 $scope.gridOptions.data.forEach(function (data) {
-                    switch (data.track_status){
+                    switch (data.track_status) {
                         case 0:
-                            data.track_status_ch="待测试"
+                            data.track_status_ch = "待测试"
                             break;
                         case 1:
-                            data.track_status_ch="正常"
+                            data.track_status_ch = "正常"
                             break;
                         case -1:
-                            data.track_status_ch="异常"
+                            data.track_status_ch = "异常"
                             break;
                         default :
-                            data.track_status_ch="未知"
+                            data.track_status_ch = "未知"
                             break;
                     }
                 })
@@ -472,7 +470,104 @@ define(["./module"], function (ctrs) {
             });
             $scope.urlDialog.close();
         };
+        var status_ch = function (status) {
+            switch (status) {
+                case 1:
+                    return "正常";
+                case -1:
+                    return "异常";
+                default :
+                    return "未知";
+            }
+        };
+        //修改mongodb中状态值与页面上的值
+        var changeStatus = function (path, uid, statusNumber) {
+            for (var i = 0; i < $scope.gridOptions.data.length; i++) {
+                if ($scope.gridOptions.data[i].site_url == path.split("/")[0]) {
+                    $scope.gridOptions.data[i].track_status_ch = status_ch(statusNumber);
+                    var model = angular.copy($scope.sites_model);
+                    model.site_url = $scope.gridOptions.data[i].site_url;//网站URL 页面输入
+                    model.site_name = $scope.gridOptions.data[i].site_name;//网站名称 页面输入
+                    model.is_top = $scope.dialog_model.is_top;
+                    model.uid = uid;
+                    model.type_id = $scope.gridOptions.data[i].type_id;//更新传入
+                    model.track_id = $scope.gridOptions.data[i].track_id;
+                    model.track_status = statusNumber;//0，１状态值
+                    var url = "/config/site_list?type=update&query={\"uid\":\"" + model.uid + "\",\"site_url\":\"" + model.site_url + "\"}&updates=" + JSON.stringify(model);
+                    $http({method: 'GET', url: url}).
+                        success(function (data, status) {
+                            if (status == "200") {
+                                createDialog(status_ch(statusNumber),"成功");
+                            } else {
+                                createDialog(status_ch(statusNumber),"失败");
+                            }
+                        }).
+                        error(function (data, status, headers, config) {
+                        });
+                }
+            }
+        };
+        //输入框的提示
+        function changeCss(value) {
+            $("#web_list_nav_input").css("color", "red");
+            $("#web_list_nav_input").prop("value", value);
+        }
+        function createDialog(value,checkStatus){
+            $scope.urlDialog = ngDialog.open({
+                template: '\
+              <div class="ngdialog-buttons" >\
+              <span style="text-align: center">代码状态：'+value+'</span>\
+              <br>\
+              <span style="text-align: center">更新'+checkStatus+'</span>\
+                </div>',
+                className: 'ngdialog-theme-default',
+                plain: true,
+                scope: $scope
+            });
 
+        }
+        var userID =  $cookieStore.get("uid");
+        //代码检查方法
+        $scope.codeCheck = function () {
+            var path = $("#web_list_nav_input").prop("value");//输入框获取的path
+            var uid = userID;
+            if (path != null && path.trim().length > 0) {
+                $http.get("cdapi/link?path=" + path).success(function (data) {
+                    if (data == "error") {
+                        changeCss("网址输入失误");
+                    } else {
+                        if (data != null || data != "") {
+                            if(data.match("404 Not Found")==null){
+                                var k = Number((data.toString().split('tid=')[0].split('\"').length));
+                                if (data.toString().split("tid=")[0].split("\"")[k - 1].split("/").length == 4) {
+                                    if (data.toString().split("tid=").length > 1) {
+                                        var tid = data.toString().split("tid=")[1].split("\"")[0];
+                                        if (tid == uid) {
+                                            changeStatus(path, uid, 1);
+                                        } else {
+                                            changeStatus(path, uid, -1);
+                                        }
+                                    } else {
+                                        changeStatus(path, uid, -1);
+                                    }
+                                } else {
+                                    changeStatus(path, uid, -1);
+                                }
+                            }else{
+                                changeCss("网址不存在");
+                            }
+
+                        } else {
+                            changeCss("网址不存在");
+                        }
+                    }
+
+
+                });
+            } else {
+                changeCss("不能为空");
+            }
+        };
         Custom.initCheckInfo();//页面check样式js调用
 
     });

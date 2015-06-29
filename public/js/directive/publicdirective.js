@@ -204,10 +204,11 @@ define(["../app"], function (app) {
         var option = {
             restrict: "EA",
             template: "<div role=\"group\" class=\"btn-group fl\">" +
+                "<button class=\"btn btn-default\" type=\"button\" ng-class=\"{'current':lastDayClass}\"  ng-show=\"dateshows\" >前一日</button>" +
+                " <button class=\"btn btn-default\" type=\"button\" ng-class=\"{'current':lastWeekClass}\"   ng-show=\"dateshows\" >上周同期</button>" +
             "<button id=\"choicetrange\"  class=\"btn btn-default pull-right date-picker my_picker fl\" ng-class=\"{'current':choiceClass}\"  max=\"max\" ng-model=\"date\">" +
             "<i class=\"glyphicon glyphicon-calendar fa fa-calendar\"></i><span data-ng-bind='date'></span></button>" +
-            "<button class=\"btn btn-default\" type=\"button\" ng-show=\"dateshows\" >前一日</button>" +
-            " <button class=\"btn btn-default\" type=\"button\"  ng-show=\"dateshows\" >上周同期</button></div>",
+            "</div>",
             replace: true,
             //transclude: true,
             link: function (scope, element, attris, controller) {
@@ -1094,6 +1095,11 @@ define(["../app"], function (app) {
                 $rootScope.$on("$locationChangeSuccess", function (e, n, o) {
                     var _path = $location.path();
                     angular.forEach(expanders, function (e_r, index) {
+                        if (_path == "/index" && e_r.sref == "#index") {
+                            e_r.showText = true;
+                            $rootScope.$broadcast("ssssss", index);
+                            return;
+                        }
                         if (e_r.sref == _path.substring(1, _path.substring(1).indexOf("/") + 1)) {
                             e_r.showText = true;
                             $rootScope.$broadcast("ssssss", index);

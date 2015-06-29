@@ -14,9 +14,6 @@ define(["./module"], function (ctrs) {
         };
         var menu = $location.path();
         $scope.menuClass = function (menu, hrefs, i) {
-            console.log(menu);
-            console.log(hrefs);
-            console.log(i);
             if ("" === menu) {
                 return 0;
             } else if ("/conf" === menu) {

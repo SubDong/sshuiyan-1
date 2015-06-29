@@ -11,6 +11,7 @@ define(["./module"], function (ctrs) {
           $scope.visible = true;
           $scope.send = true;//显示发送
           $scope.dateshows = true;
+          $scope.lastDayClass = true;
             $rootScope.gridArray = [
                 {
                     name: "xl",

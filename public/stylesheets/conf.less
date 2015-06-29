@@ -410,7 +410,6 @@
 .change_list .all{
   color: #565656;
 }
-//来源变化榜
 .visit_num{
   background-color: #01aef0;
   color: #fff;
@@ -429,5 +428,33 @@
       font-weight: bold;
       padding-bottom: 10px;
     }
+  }
+}
+//没有数据的显示modal
+.no_data_modal{
+  width: 540px;
+  height: 140px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -270px;
+  margin-top: -105px;
+  .warning_word{
+    text-align: center;
+    margin-top: 20px;
+    line-height: 30px;
+    a{
+      background: #01aeef;
+      color: #fff;
+    }
+  }
+}
+@media screen and (max-width: 1285px) {
+  //新增指定广告跟踪
+  .add_ads_title{
+    width: 57px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
   }
 }
