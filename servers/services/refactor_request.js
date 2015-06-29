@@ -146,9 +146,11 @@ var es_aggs = {
     "arrivedRate": {
         "vc_aggs": _vc_aggs
     },
-    // TODO 转化次数
+    // 转化次数
     "conversions": {},
-    // TODO 转化率
+    // TODO 页面转化
+    "pageConversion":{},
+    // TODO 事件转化
     "eventConversion": {}
 };
 
@@ -703,6 +705,21 @@ var eventConversionFn = function (result, dimension) {
 };
 
 
+
+var pageConversionFn = function (result, dimension) {
+    var keyArr = [];
+    var quotaArr = [];
+
+    for (var i = 0, l = result.length; i < l; i++) {
+    }
+
+    return {
+        "label": "pageConversion",
+        "key": keyArr,
+        "quota": quotaArr
+    };
+};
+
 var es_request = {
     search: function (es, indexes, type, quotas, dimension, topN, filters, start, end, interval, callbackFn) {
         var request = null;
@@ -799,9 +816,8 @@ var es_request = {
                 break;
             default :
                 request = buildRequest(indexes, type, quotas, dimension, filters, start, end, interval);
-                console.log(123);
-
-                console.log(JSON.stringify(request));
+                //console.log(123);
+                //console.log(JSON.stringify(request));
                 break;
         }
 
@@ -809,8 +825,7 @@ var es_request = {
             var data = [];
             if (response != undefined && response.aggregations != undefined && response.aggregations.result != undefined) {
                 var result = response.aggregations.result.buckets;
-                console.log(JSON.stringify(result));
-
+               // console.log(JSON.stringify(result));
                 if (!result) {
                     result = [];
                     result.push(response.aggregations.result);
@@ -850,6 +865,9 @@ var es_request = {
                                     break;
                                 case "conversions":
                                     data.push(conversions(result, dimension));
+                                    break;
+                                case "pageConversion" :
+                                    data.push(pageConversionFn(result, dimension));
                                     break;
                                 case "eventConversion":
                                     data.push(eventConversionFn(result, dimension));
