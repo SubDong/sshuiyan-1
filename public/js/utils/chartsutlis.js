@@ -519,7 +519,7 @@ var chartUtils = {
         var _tmp = {};
         var _value = [];
         //console.log(semJson.data.length);
-        if (semJson.data.length > 0) {
+        if (semJson.data.length > 0&&esJson.length) {
             esJson[0].key.forEach(function (esItem, index) {
                 _value.push(semJson.data[index][semType]);
             });
