@@ -13,7 +13,7 @@ cdApi.get("/link", function (req, res, next) {
         var html = '';
         var options = {
             hostname: option[0],
-            path: "/"+option[1]
+            path: "/"+option
         };
         http.get(options, function (re) {
             re.on('data', function (data) {
@@ -27,7 +27,21 @@ cdApi.get("/link", function (req, res, next) {
         });
 
     }else{
-        res.end("error");
+        var html = '';
+        var options = {
+            hostname: option[0],
+            path: "/"
+        };
+        http.get(options, function (re) {
+            re.on('data', function (data) {
+                html += data;
+            }).on('end', function () {
+                res.end(html);
+                next();
+            });
+        }).on("error",function(e){
+            res.end("error");
+        });
     }
 });
 module.exports = cdApi;
