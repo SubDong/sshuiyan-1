@@ -53,7 +53,7 @@ define([
         };
         var menu = $location.path();
         $scope.menuClass = function (menu, hrefs, i) {
-            if ("" === menu || "/conf" === menu) {
+            if ("" === menu || menu === "/conf") {
                 return 0;
             }
             if ((menu.indexOf(hrefs[i]) != -1 & menu.indexOf(hrefs[i]) < 3) || i > hrefs.length) {
