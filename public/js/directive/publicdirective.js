@@ -2,7 +2,7 @@
  * Created by weims on 2015/5/15.
  */
 
-define(["../app", "../ZeroClipboard/ZeroClipboard-CMD"], function (app, ZeroClipboard) {
+define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClipboard) {
     'use strict';
 
     app.directive("calendar", function ($rootScope, requestService) {
