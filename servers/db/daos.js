@@ -71,6 +71,10 @@ var daos = {
             return this.uiderror();
         }
         var instance = this.createmodel(schema);
+        if(cb){
+            instance.find(JSON.parse(qry), fields, options,cb);
+            return null;
+        }
         var promise = instance.find(JSON.parse(qry), fields, options).exec()
 
         return promise;
