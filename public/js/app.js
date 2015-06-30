@@ -280,7 +280,7 @@ define([
             $rootScope.perfectUser = userObj;
             $rootScope.user = userObj;
             $rootScope.usites = $cookieStore.get('usites');
-            $rootScope.default = $rootScope.usites ? $rootScope.usites[0].site_name : '网速过慢，请重新加载！';     // default site
+            $rootScope.default = $rootScope.usites ? $rootScope.usites[0].site_name : '用户信息加载失败，请重新刷新页面！';     // default site
             $rootScope.defaultType = $rootScope.usites ? $rootScope.usites[0].type_id : '暂无';   // default site id
         }
         $scope.initPerfectAccount();
@@ -292,6 +292,7 @@ define([
             $rootScope.siteId = $rootScope.usites[0].site_id;
             $rootScope.userTypeName = $rootScope.usites[0].site_name;
             $rootScope.siteUrl = $rootScope.usites[0].site_url;
+            $rootScope.siteTrackId=$rootScope.usites[0].site_track_id;
         }
         $scope.changeUrl = function (select) {
             $rootScope.user = $rootScope.perfectUser;
@@ -300,6 +301,7 @@ define([
             $rootScope.siteId = select.site_id;
             $rootScope.siteUrl = select.site_url;
             $rootScope.userTypeName = select.site_name;
+            $rootScope.siteTrackId=select.site_track_id;
             if ($location.path().indexOf("conf") > -1) {
                 $state.go("conf");
             } else {
