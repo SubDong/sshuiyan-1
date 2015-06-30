@@ -282,7 +282,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
     app.directive("refresh", function ($rootScope, requestService, $location, $http) {
         var option = {
             restrict: "EA",
-            template: "<div class=\"right_refresh fr\"><button class=\"btn btn-default btn-Refresh fl\" ng-click=\"page_refresh()\"  type=\"button\"><span aria-hidden=\"true\" class=\"glyphicon glyphicon-refresh\"></span></button><button class=\"btn btn-default btn-Refresh fl\" type=\"button\" ng-show=\"send\" >发送</button><ui-select ng-model=\"export.selected\" ng-change='fileSave(export.selected)' theme=\"select2\" ng-hide=\"menu_select\" reset-search-input=\"false\" class=\"fl\"style=\"min-width: 90px;background-color: #fff;\"> <ui-select-match placeholder=\"保存\">{{$select.selected.name}} </ui-select-match> <ui-select-choices repeat=\"export in exportsaa\"> <span ng-bind-html=\"export.name\"></span></ui-select-choices></ui-select></div>",
+            template: "<div class=\"right_refresh fr\"><button class=\"btn btn-default btn-Refresh fl\" ng-click=\"page_refresh()\"  type=\"button\"><span aria-hidden=\"true\" class=\"glyphicon glyphicon-refresh\"></span></button><button class=\"btn btn-default btn-Refresh fl\" type=\"button\" ng-show=\"send\" >发送</button><ui-select ng-model=\"export.selected\" ng-change='fileSave(export.selected)' theme=\"select2\" ng-hide=\"menu_select\" reset-search-input=\"false\" class=\"fl\"style=\"min-width: 90px;background-color: #fff;\"> <ui-select-match placeholder=\"下载\">{{$select.selected.name}} </ui-select-match> <ui-select-choices repeat=\"export in exportsaa\"> <span ng-bind-html=\"export.name\"></span></ui-select-choices></ui-select></div>",
             transclude: true,
             replace: true,
             link: function (scope) {
@@ -987,7 +987,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                             return;
                         }
                         if (scope.sumPv == 0) {
-                            scope._visitor.percent = "0.00%";
+                            scope._visitor.percent = "0%";
                         } else if (scope._visitor.pv == 0) {
                             scope._visitor.percent = "100%";
                         } else {
@@ -1091,30 +1091,46 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                 }
 
                 this.addExpander = function (e) {
+                    if (e.sref == "#index" || e.sref == "#conf") {
+                        expanders = [];
+                    }
                     expanders.push(e);
+                    if (e.sref == "webcountsite" || e.sref == "#ads/adsSource") {
+                        $rootScope.$broadcast("expanderLoadFinish");
+                    }
                 }
 
-                $rootScope.$on("$locationChangeSuccess", function (e, n, o) {
+                $rootScope.$on("expanderLoadFinish", function (e, n, o) {
                     var _path = $location.path();
+                    var isIndex = function (a, b) {// 网站概览
+                        return a == "/index" && b == "#index";
+                    }
+
+                    var isConf = function (a, b) {// 网站设置
+                        return a == "/conf" && b == "#conf";
+                    }
                     angular.forEach(expanders, function (e_r, index) {
-                        if (_path == "/index" && e_r.sref == "#index") {
+                        if (isIndex(_path, e_r.sref) || isConf(_path, e_r.sref)) {
                             e_r.showText = true;
-                            $rootScope.$broadcast("ssssss", index);
+                            $rootScope.$broadcast("updateSelectRowIndex", index);
                             return;
                         }
+
                         if (e_r.sref == _path.substring(1, _path.substring(1).indexOf("/") + 1)) {
                             e_r.showText = true;
-                            $rootScope.$broadcast("ssssss", index);
+                            $rootScope.$broadcast("updateSelectRowIndex", index);
                         } else if (e_r.sref == _path.split("/")[2]) {
                             e_r.showText = true;
+                            console.log(123)
                         } else {
                             e_r.showText = false;
                         }
                     });
                 });
+
             },
             link: function (scope) {
-                scope.$on("ssssss", function (e, msg) {
+                scope.$on("updateSelectRowIndex", function (e, msg) {
                     scope.selectedRow = msg;
                 });
             }
