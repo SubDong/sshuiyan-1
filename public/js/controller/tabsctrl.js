@@ -719,6 +719,7 @@ define(["app"], function (app) {
                     method: 'GET',
                     url: searchUrl
                 }).success(function (data, status) {
+                    $rootScope.$broadcast("LoadDateShowDataFinish", data);
                     var result = [];
                     data.forEach(function (item, i) {
                         var infoKey = item["word"];
@@ -735,12 +736,14 @@ define(["app"], function (app) {
                     url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field)
                     + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
                 }).success(function (data, status) {
+                    $rootScope.$broadcast("LoadDateShowDataFinish", data);
                     if ($rootScope.tableSwitch.promotionSearch != undefined && $rootScope.tableSwitch.promotionSearch) {
                         var url = SEM_API_URL + user + "/" + baiduAccount + "/account/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1"
                         $http({
                             method: 'GET',
                             url: url
                         }).success(function (dataSEM, status) {
+                            $rootScope.$broadcast("LoadDateShowSEMDataFinish", dataSEM);
                             var dataArray = []
                             var dataObj = {};
                             var semDataArray = [];

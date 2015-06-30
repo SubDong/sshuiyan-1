@@ -106,7 +106,7 @@ require.config({
         "js005": ["angular"],
         "angularjs/vfs_fonts": ["angularjs/pdfmake", "angularjs/csv"],
         "angularjs/ui-bootstrap-tpls": ["angular", "angularjs/ui-bootstrap.min"],
-        "angularjs/ui-bootstrap.min": ["angular"],
+        "angularjs/ui-bootstrap.min": ["angular", "js001"],
         "angularjs/tooltip": ["angular", "js001"],
         "angularjs/csv": ["angular"],
         "angularjs/pdfmake": ["angular"],

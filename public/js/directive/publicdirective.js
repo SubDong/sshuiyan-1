@@ -415,10 +415,12 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     scope.ds_keyData = [];
                     scope.dateShowArray = $rootScope.copy(tempArray);
                 };
+                // 刷新加载时设置默认指标
+                scope.setDefaultShowArray();
+
                 // 获取数据
                 scope.loadDataShow = function () {
                     scope.setDefaultShowArray();
-                    //var esRequest = $http.get("/api/summary?type=" + $rootScope.userType + "&dimension=" + $rootScope.tableSwitch.dimen + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&quotas=" + scope.ds_dateShowQuotasOption + "&start=" + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd);
                     var esRequest = $http.get('/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field) + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
                     var seoQuotas = scope.getSEOQuotas();
                     if (seoQuotas.length > 0) {
@@ -432,7 +434,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     });
                 };
                 scope.loadCompareDataShow = function (startTime, endTime) {
-                    //var esRequest = $http.get("/api/summary?type=" + $rootScope.userType + "&dimension=" + $rootScope.tableSwitch.dimen + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&quotas=" + scope.ds_dateShowQuotasOption + "&start=" + startTime + "&end=" + endTime);
                     var esRequest = $http.get('/api/indextable/?start=' + startTime + "&end=" + endTime + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field) + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
                     var seoQuotas = scope.getSEOQuotas();
                     if (seoQuotas.length > 0) {
@@ -554,21 +555,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     scope.dateShowArray = $rootScope.copy(_array);
                 };
 
-                // 第一种方式。通过用户点击时发出的事件进行监听，此方法需要在每个controller方法内部添加代码实现
-                scope.$on("ssh_dateShow_options_time_change", function (e, msg) {
-                    scope.isCompared = false;
-                    scope.loadDataShow();
-                });
-                // 指标
-                scope.$on("ssh_dateShow_options_quotas_change", function (e, msg) {
-                    scope.isCompared = false;
-                    var temp = $rootScope.copy(msg);
-                    if (temp.length > 0) {
-                        scope.ds_dateShowQuotasOption = temp;
-                    }
-                    scope.loadDataShow();
-                });
-                scope.loadDataShow();
                 // 对比
                 scope.$on("ssh_load_compare_datashow", function (e, startTime, endTime) {
                     scope.isCompared = true;
@@ -577,10 +563,16 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     });
                     scope.loadCompareDataShow(startTime, endTime);
                 });
-                // 设备环境
-                scope.$on("ssh_data_show_refresh", function (e) {
+
+                scope.$on("LoadDateShowDataFinish", function (e, msg) {
                     scope.isCompared = false;
-                    scope.loadDataShow();
+                    scope.setDefaultShowArray();
+                    scope.pushESData(msg);
+                });
+
+                scope.$on("LoadDateShowSEMDataFinish", function (e, msg) {
+                    scope.isCompared = false;
+                    scope.pushSEOData(msg);
                 });
             }
         };
@@ -608,14 +600,8 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     scope.ds_keyData = [];
                     scope.dateShowArray = $rootScope.copy(tempArray);
                 };
-                // 获取数据
-                scope.loadDataShow = function () {
-                    scope.setDefaultShowArray();
-                    var esRequest = $http.get('/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field) + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
-                    $q.all([esRequest]).then(function (final_result) {
-                        scope.pushESData(final_result[0].data);
-                    });
-                };
+                scope.setDefaultShowArray();
+                // 获取对比数据
                 scope.loadCompareDataShow = function (startTime, endTime) {
                     var esRequest = $http.get('/api/indextable/?start=' + startTime + "&end=" + endTime + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field) + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
                     $q.all([esRequest]).then(function (final_result) {
@@ -707,21 +693,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     scope.dateShowArray = $rootScope.copy(_array);
                 };
 
-                // 第一种方式。通过用户点击时发出的事件进行监听，此方法需要在每个controller方法内部添加代码实现
-                scope.$on("ssh_dateShow_options_time_change", function (e, msg) {
-                    scope.isCompared = false;
-                    scope.loadDataShow();
-                });
-                // 指标
-                scope.$on("ssh_dateShow_options_quotas_change", function (e, msg) {
-                    scope.isCompared = false;
-                    var temp = $rootScope.copy(msg);
-                    if (temp.length > 0) {
-                        scope.ds_dateShowQuotasOption = temp;
-                    }
-                    scope.loadDataShow();
-                });
-                scope.loadDataShow();
                 // 对比
                 scope.$on("ssh_load_compare_datashow", function (e, startTime, endTime) {
                     scope.isCompared = true;
@@ -731,9 +702,10 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     scope.loadCompareDataShow(startTime, endTime);
                 });
 
-                scope.$on("ssh_data_show_refresh", function (e) {
+                scope.$on("LoadDateShowDataFinish", function (e, msg) {
                     scope.isCompared = false;
-                    scope.loadDataShow();
+                    scope.setDefaultShowArray();
+                    scope.pushESData(msg);
                 });
             }
         };
@@ -756,36 +728,35 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     });
                     scope.dateShowArray = $rootScope.copy(t_a);
                 };
-                scope.loadDataShow = function () {
-                    var semRequest = $http.get(SEM_API_URL + "search_word/" + $rootScope.userType
-                    + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd);
-                    $q.all([semRequest]).then(function (final_result) {
-                        var count = 0;
-                        angular.forEach(final_result[0].data, function (r) {
-                            var infokey = r.word;
-                            if (infokey != undefined && (infokey == "-" || infokey == "" || infokey == "www" || infokey == "null" || infokey.length >= 40)) {
-                                return;
-                            }
-                            ;
-                            count++;
-                            angular.forEach(scope.dateShowArray, function (q_r) {
-                                var temp = q_r.label;
-                                q_r.value += temp != "freq" ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
-                                q_r.count = count;
-                            });
+
+                scope.initDefaultShowArray();
+
+                scope.pushESData = function (data) {
+                    var count = 0;
+                    angular.forEach(data, function (r) {
+                        var infokey = r.word;
+                        if (infokey != undefined && (infokey == "-" || infokey == "" || infokey == "www" || infokey == "null" || infokey.length >= 40)) {
+                            return;
+                        }
+                        count++;
+                        angular.forEach(scope.dateShowArray, function (q_r) {
+                            var temp = q_r.label;
+                            q_r.value += temp != "freq" ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
+                            q_r.count = count;
                         });
                     });
                 };
+
                 scope.loadCompareDataShow = function (startTime, endTime) {
                     var semRequest = $http.get(SEM_API_URL + "search_word/" + $rootScope.userType
                     + "/?startOffset=" + startTime + "&endOffset=" + endTime);
+                    var count = 0;
                     $q.all([semRequest]).then(function (final_result) {
                         angular.forEach(final_result[0].data, function (r) {
                             var infokey = r.word;
                             if (infokey != undefined && (infokey == "-" || infokey == "" || infokey == "www" || infokey == "null" || infokey.length >= 40)) {
                                 return;
                             }
-                            ;
                             count++;
                             angular.forEach(scope.dateShowArray, function (q_r) {
                                 var temp = q_r.label;
@@ -795,18 +766,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                         });
                     });
                 };
-                scope.initData = function () {
-                    scope.isCompared = false;
-                    scope.initDefaultShowArray();
-                    scope.loadDataShow();
-                };
-
-                // 时间刷新
-                scope.$on("ssh_dateShow_options_time_change", function (e, msg) {
-                    scope.initData();
-                });
-
-                scope.initData();
 
                 // 对比刷新
                 scope.$on("ssh_load_compare_datashow", function (e, startTime, endTime) {
@@ -818,8 +777,10 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     scope.loadCompareDataShow(startTime, endTime);
                 });
 
-                scope.$on("ssh_data_show_refresh", function (e) {
-                    scope.initData();
+                scope.$on("LoadDateShowDataFinish", function (e, msg) {
+                    scope.isCompared = false;
+                    scope.initDefaultShowArray();
+                    scope.pushESData(msg);
                 });
             }
         }
