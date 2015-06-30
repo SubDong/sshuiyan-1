@@ -4,7 +4,7 @@
 define(["./module"], function (ctrs) {
     "use strict";
 
-    ctrs.controller('eventchange', function ($scope, $q, $rootScope,$cookieStore,$http,ngDialog, $state) {
+    ctrs.controller('eventchange', function ($cookieStore,$scope, $q, $rootScope,$http,ngDialog, $state) {
 
         //对象-对话框
         $scope.urlDialog = null;
@@ -58,16 +58,12 @@ define(["./module"], function (ctrs) {
 
             entity.event_status = entity.event_status == '0' ? '1':'0';
 
-
             var url = "/config/eventchnage_list?type=update&query={\"_id\":\"" + entity._id + "\"}&updates={\"event_status\":\"" + entity.event_status + "\"}";
 
             $http({
                 method: 'GET',
                 url: url
             }).success(function (dataConfig, status) {});
-
-
-
         }
 
         //配置默认指标

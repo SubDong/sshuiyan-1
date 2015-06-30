@@ -25,6 +25,7 @@ var security = {
                         var site = {};
                         site['site_id'] = item._id.toString();
                         site["site_name"] = item.site_name;
+                        site['site_track_id']=item.track_id;
                         if (item.is_top)
                             site["site_top"] = 1;
                         else
@@ -42,7 +43,8 @@ var security = {
                         'site_id': -1,
                         'site_name': '<无>',
                         'type_id': -1,
-                        'site_top': 1
+                        'site_top': 1,
+                        site_track_id:1
                     })
                 }
                 usites.sort(dateutils.by('site_top'));

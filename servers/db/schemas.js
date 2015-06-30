@@ -148,6 +148,7 @@ var schemas = {
             site_id: String,    //站点ID
             page_url: String,//点击图页面
             icon_name: String,//点击图名称
+            create_date:String,//创建日期
             is_open: Boolean//是否开启
         },
 
