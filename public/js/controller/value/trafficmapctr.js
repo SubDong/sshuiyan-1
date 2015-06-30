@@ -80,20 +80,22 @@ define(["./module"], function (ctrs) {
                     if (data.data.length <= 3) {
                         document.getElementById("linkstree_top").style.top = "14%";
                         document.getElementById("linkstree_right").style.top = "14%";
+                        $(".linkstree_left").css("margin-top", "0px")
                     }
-
                     if (data.data.length == 1) {
-                        document.getElementById("linkstree_top").style.top = "0";
-                        document.getElementById("linkstree_right").style.top = "0";
-                        $(".linkstree_left").css("margin-top", "14px")
+                        document.getElementById("linkstree_top").style.top = "50px";
+                        document.getElementById("linkstree_right").style.top = "50px";
+                        $(".linkstree_left").css("margin-top", "64px")
                     }
                     if (data.data.length == 4) {
                         document.getElementById("linkstree_top").style.top = "20%";
                         document.getElementById("linkstree_right").style.top = "20%";
+                        $(".linkstree_left").css("margin-top", "0px")
                     }
                     if (data.data.length >= 5) {
                         document.getElementById("linkstree_top").style.top = "35%";
                         document.getElementById("linkstree_right").style.top = "35%";
+                        $(".linkstree_left").css("margin-top", "0px")
                     }
                 }
 

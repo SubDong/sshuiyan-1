@@ -129,7 +129,8 @@ require([
     "./utils/arrayUtil",
     "./angularjs/checkbox",
     "./angularjs/daterangepicker",
-    "./angularjs/tooltip"
+    "./angularjs/tooltip",
+    "./utils/dataPicker"
 ], function () {
     "use strict";
 });

@@ -30,6 +30,19 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                 scope.weekselected = true;
                 scope.mothselected = true;
                 scope.maxDate = new Date();
+                if (scope.todayClass === true) {
+                    dataPicker.picker("choicetrange", 0);
+                }
+                if (scope.yesterdayClass === true) {
+                    dataPicker.picker("choicetrange", 0);
+                }
+
+                if (scope.sevenDayClass === true) {
+                    dataPicker.picker("choicetrange", 6);
+                }
+                if (scope.monthClass === true) {
+                    dataPicker.picker("choicetrange", 29);
+                }
                 scope.reset = function () {
                     scope.todayClass = false;
                     scope.yesterdayClass = false;
@@ -39,13 +52,11 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     scope.btnchecked = true;
                     scope.weekcheckClass = false;
                     scope.mothcheckClass = false;
-                    scope.timeClass = false;
                     scope.lastDaySelect = false;
                     scope.lastWeekSelect = false;
                     scope.compareLastDayClass = false;
                     scope.compareLastWeekClass = false;
                     scope.clearCompareSelect = false;
-                    scope.choiceClass = false;
                 };
                 scope.reloadByCalendar = function (type) {
                     //console.info("info: now user click the " + type + " button");
@@ -60,21 +71,28 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     scope.dayselect = false;
                     scope.weekselected = true;
                     scope.mothselected = true;
+                    scope.choiceClass = false;
                     scope.reset();
                     scope.lastDaySelect = true;
                     scope.lastWeekSelect = true;
                     scope.clearCompareSelect = true;
                     scope.todayClass = true;
+                    scope.timeClass = false;
                     // table 参数配置
                     $rootScope.tableTimeStart = 0;
                     $rootScope.tableTimeEnd = 0;
                     $rootScope.keyFormat = "hour";
-                    $rootScope.start = 0;
                     $rootScope.end = 0;
                     scope.reloadByCalendar("today");
                     $('#reportrange span').html(GetDateStr(0));
                     $('#reportrange').data('daterangepicker').setStartDate(GetDateStr(0));
                     $('#reportrange').data('daterangepicker').setEndDate(GetDateStr(0));
+                    $('#choicetrange span').html("与其他时间段对比");
+                    $('#choicetrange').data('daterangepicker').setStartDate(GetDateStr(0));
+                    $('#choicetrange').data('daterangepicker').setEndDate(GetDateStr(0));
+                    if (scope.todayClass === true) {
+                        dataPicker.picker("choicetrange", 0);
+                    }
                 };
                 scope.yesterday = function () {
                     scope.isShowCalendar = false;
@@ -84,6 +102,8 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     scope.dayselect = false;
                     scope.weekselected = true;
                     scope.mothselected = true;
+                    scope.timeClass = false;
+                    scope.choiceClass = false;
                     scope.reset();
                     scope.lastDaySelect = true;
                     scope.lastWeekSelect = true;
@@ -97,6 +117,12 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     $('#reportrange span').html(GetDateStr(-1));
                     $('#reportrange').data('daterangepicker').setStartDate(GetDateStr(-1));
                     $('#reportrange').data('daterangepicker').setEndDate(GetDateStr(-1));
+                    $('#choicetrange span').html("与其他时间段对比");
+                    $('#choicetrange').data('daterangepicker').setStartDate(GetDateStr(0));
+                    $('#choicetrange').data('daterangepicker').setEndDate(GetDateStr(0));
+                    if (scope.yesterdayClass === true) {
+                        dataPicker.picker("choicetrange", 0);
+                    }
                 };
                 scope.sevenDay = function () {
                     scope.isShowCalendar = false;
@@ -106,8 +132,10 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     scope.dayselect = false;
                     scope.weekselected = true;
                     scope.mothselected = true;
+                    scope.choiceClass = false;
                     scope.reset();
                     scope.sevenDayClass = true;
+                    scope.timeClass = false;
                     $rootScope.tableTimeStart = -6;
                     $rootScope.tableTimeEnd = 0;
                     $rootScope.start = -6;
@@ -116,6 +144,12 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     $('#reportrange span').html(GetDateStr(-6) + "至" + GetDateStr(0));
                     $('#reportrange').data('daterangepicker').setStartDate(GetDateStr(-6));
                     $('#reportrange').data('daterangepicker').setEndDate(GetDateStr(0));
+                    $('#choicetrange span').html("与其他时间段对比");
+                    $('#choicetrange').data('daterangepicker').setStartDate(GetDateStr(0));
+                    $('#choicetrange').data('daterangepicker').setEndDate(GetDateStr(0));
+                    if (scope.sevenDayClass === true) {
+                        dataPicker.picker("choicetrange", 6);
+                    }
                 };
                 scope.month = function () {
                     scope.isShowCalendar = false;
@@ -124,8 +158,10 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     scope.dayselect = false;
                     scope.weekselected = false;
                     scope.mothselected = true;
+                    scope.choiceClass = false;
                     scope.reset();
                     scope.monthClass = true;
+                    scope.timeClass = false;
                     $rootScope.tableTimeStart = -29;
                     $rootScope.tableTimeEnd = 0;
                     $rootScope.start = -29;
@@ -134,13 +170,44 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     $('#reportrange span').html(GetDateStr(-29) + "至" + GetDateStr(0));
                     $('#reportrange').data('daterangepicker').setStartDate(GetDateStr(-29));
                     $('#reportrange').data('daterangepicker').setEndDate(GetDateStr(0));
+                    $('#choicetrange span').html("与其他时间段对比");
+                    $('#choicetrange').data('daterangepicker').setStartDate(GetDateStr(0));
+                    $('#choicetrange').data('daterangepicker').setEndDate(GetDateStr(0));
+                    if (scope.monthClass === true) {
+                        dataPicker.picker("choicetrange", 29);
+                    }
                 };
-                scope.timeclick = function () {
+                scope.timeclick = function (ev, picker) {
+                    var times = 0;
+                    scope.reset();
                     scope.isShowCalendar = false;
                     scope.hiddenSeven = true;
-                    scope.reset();
                     scope.timeClass = true;
+                    $('#choicetrange span').html("与其他时间段对比");
+                    $('#choicetrange').data('daterangepicker').setStartDate(GetDateStr(0));
+                    $('#choicetrange').data('daterangepicker').setEndDate(GetDateStr(0));
+                    if (scope.timeClass === true) {
+                        $('#reportrange').on('apply.daterangepicker', function (ev, picker) {
+                            times = chartUtils.getTimeOffset(picker.startDate.format('YYYY-MM-DD'), picker.endDate.format('YYYY-MM-DD'));
+                        });
+                        $('#choicetrange').on('apply.daterangepicker', function (ev, picker) {
+                            var time = chartUtils.getTimeOffset(picker.startDate.format('YYYY-MM-DD'), picker.endDate.format('YYYY-MM-DD'));
+                            var startTime = time[0];
+                            var endTime = time[0] + Math.abs(times[0]) + 1;
+                            var dateTime = chartUtils.getSetOffTime(startTime, endTime);
+                            $('#choicetrange span').html(dateTime[0] + "至" + dateTime[1]);
+                            $('#choicetrange').data('daterangepicker').setStartDate(dateTime[0]);
+                            $('#choicetrange').data('daterangepicker').setEndDate(dateTime[1]);
+                        });
+                    }
                     // $('#reportrange span').html(GetDateStr(0))
+
+                }
+                scope.compareReset = function () {
+                    scope.choiceClass = false;
+                }
+                $rootScope.datePickerCompare = function (start, end, label) {
+                    scope.choiceClass = true;
                 }
                 scope.open = function ($event) {
                     scope.reset();
@@ -186,7 +253,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                 }, function (start, end, label) {
                     $rootScope.datepickerClick(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
                     $rootScope.startString = (start.format('YYYY-MM-DD') + ' 至 ' + end.format('YYYY-MM-DD'));
-
                     if (start.format('YYYY-MM-DD') == end.format('YYYY-MM-DD')) {
                         $('#reportrange span').html(start.format('YYYY-MM-DD'));
                         $rootScope.startString = (start.format('YYYY-MM-DD'));
@@ -196,6 +262,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     }
                     //$('#reportrange span').html(start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD'));
                 });
+
             }
         };
         return option;
@@ -206,8 +273,8 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
             template: "<div role=\"group\" class=\"btn-group fl\">" +
             "<button class=\"btn btn-default\" type=\"button\" ng-class=\"{'current':lastDayClass}\"  ng-show=\"dateshows\" >前一日</button>" +
             " <button class=\"btn btn-default\" type=\"button\" ng-class=\"{'current':lastWeekClass}\"   ng-show=\"dateshows\" >上周同期</button>" +
-            "<button id=\"choicetrange\"  class=\"btn btn-default pull-right date-picker my_picker fl\" ng-class=\"{'current':choiceClass}\"  max=\"max\" ng-model=\"date\">" +
-            "<i class=\"glyphicon glyphicon-calendar fa fa-calendar\"></i><span data-ng-bind='date'></span></button>" +
+            "<button id=\"choicetrange\"  class=\"btn btn-default pull-right date-picker my_picker fl\" ng-click=\'choicedate\' ng-class=\"{'current':choiceClass}\"  max=\"max\" ng-model=\"date\">" +
+            "<i class=\"glyphicon glyphicon-calendar fa fa-calendar\"></i><span></span></button>" +
             "</div>",
             replace: true,
             //transclude: true,
@@ -221,48 +288,47 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     return y + "-" + m + "-" + d;
                 }
 
-                scope.date = "与其他时间段对比";
+                $('#choicetrange span').html("与其他时间段对比");
 //                scope.dateshows = true;
                 $('#choicetrange').daterangepicker({
-                    format: 'YYYY-MM-DD',
-                    maxDate: GetDateStr(0),
-                    minDate: GetDateStr(-43),
-                    showDropdowns: true,
-                    showWeekNumbers: false,
-                    timePicker: false,
-                    timePickerIncrement: 1,
-                    timePicker12Hour: false,
-                    opens: 'left',
-                    drops: 'down',
-                    timeZone: true,
-                    buttonClasses: ['btn', 'btn-sm'],
-                    applyClass: 'btn-primary',
-                    cancelClass: 'btn-default',
-                    separator: ' to '
-                }, function (start, end, label) {
-                    //if(){
-                    $rootScope.datepickerClickTow(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
-                    if (!$rootScope.datePickerCompare) {
-                        $rootScope.datePickerCompare = function (a, b, c) {
+                        format: 'YYYY-MM-DD',
+                        maxDate: GetDateStr(0),
+                        minDate: GetDateStr(-43),
+                        showDropdowns: true,
+                        showWeekNumbers: false,
+                        timePicker: false,
+                        timePickerIncrement: 1,
+                        timePicker12Hour: false,
+                        opens: 'left',
+                        drops: 'down',
+                        timeZone: true,
+                        buttonClasses: ['btn', 'btn-sm'],
+                        applyClass: 'btn-primary',
+                        cancelClass: 'btn-default',
+                        separator: ' to '
+                    },
+                    function (start, end, label) {
+                        //if(){
+                        $rootScope.datepickerClickTow(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
+                        if (!$rootScope.datePickerCompare) {
+                            $rootScope.datePickerCompare = function (a, b, c) {
+                            }
+                        } else {
+                            $rootScope.datePickerCompare(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
                         }
-                    } else {
-                        $rootScope.datePickerCompare(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
-                    }
-                    if (start.format('YYYY-MM-DD') == end.format('YYYY-MM-DD')) {
-                        scope.date = start.format('YYYY-MM-DD');
-                    }
-                    else {
-                        scope.date = start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD');
-
-                    }
-                    //console.log(scope.date)
-                    //$('#choicetrange span').html(start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD'));
-                });
+                        if (start.format('YYYY-MM-DD') == end.format('YYYY-MM-DD')) {
+                            $('#choicetrange span').html(start.format('YYYY-MM-DD'));
+                        }
+                        else {
+                            $('#choicetrange span').html(start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD'));
+                        }
+                    });
             }
             //,
             //controller: function($scope, $element) {
             //    $scope.ctrl = !!$element.controller('ngModel');
             //}
+
         };
         return option;
     });
@@ -382,10 +448,10 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
     });
 
 //grid_page
-    app.directive("gridpage", function () {
+    app.directive("gridpage", function ($rootScope) {
         var option = {
             restrict: "EA",
-            template: "<div class=\"page\"><a ng-click=\"gridApi2.pagination.previousPage()\">上一页</a> <button type=\"button\" class=\"btn\"> {{ gridApi2.pagination.getPage() }}</button><a ng-click=\"gridApi2.pagination.nextPage()\">下一页 </a> <input type=\"text\" ng-model=\"page\" value=\"\"><span> /{{ gridApi2.pagination.getTotalPages() }}</span> <button type=\"button\" class=\"btn\" ng-click=\"pagego(gridApi2)\">跳转</button> </div>",
+            template: "<div class=\"page\"><a ng-click=\"gridApi2.pagination.previousPage()\">上一页</a> <button type=\"button\" class=\"btn\"> {{ gridApi2.pagination.getPage() }}</button><a ng-click=\"gridApi2.pagination.nextPage()\"  >下一页 </a> <input type=\"text\" ng-model=\"page\" value=\"\"><span> /{{ gridApi2.pagination.getTotalPages() }}</span> <button type=\"button\" class=\"btn\" ng-click=\"pagego(gridApi2)\">跳转</button> </div>",
             transclude: true
         };
         return option;
