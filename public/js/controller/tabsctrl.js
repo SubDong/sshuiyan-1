@@ -1340,6 +1340,9 @@ define(["app"], function (app) {
         };
 
         $scope.$on('parrentData', function(d,data) {
+            $scope.initTime = data.initTime;
+            $rootScope.startString = data.initTime.time;
+            $rootScope.contrastStartString = data.initTime.contrastTime
             $scope.init(data);
         });
         $scope.$emit("Ctr1NameChange", '');
