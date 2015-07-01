@@ -42,7 +42,7 @@ define([
         'ui.select'
     ]);
 
-    myApp.constant('SEM_API_URL', 'http://182.92.227.79:9080/');
+    myApp.constant('SEM_API_URL', 'http://api.hy.best-ad.cn');
 
     myApp.controller('menuctr', function ($scope, $rootScope, $location) {
         $scope.oneAtATime = true;

@@ -11,6 +11,7 @@ define(["app"], function (app) {
         var user = $rootScope.user
         var baiduAccount = $rootScope.baiduAccount;
         var esType = $rootScope.userType;
+        var trackid = $rootScope.siteTrackId;
 
         $scope.tabs = [
             {title: 'Dynamic Title 1', content: 'Dynamic content 1'},
@@ -117,14 +118,15 @@ define(["app"], function (app) {
         //实时访问
         //TODO item["searchWord"] == ""?"百思" 为捕获到暂为  百思
         var getHtmlTableData = function () {
-            var fi = $rootScope.tableSwitch.tableFilter != undefined && $rootScope.tableSwitch.tableFilter != null ? "?q=" + $rootScope.tableSwitch.tableFilter : "";
-            var searchUrl = SEM_API_URL + "real_time/" + esType + fi;
+            var fi = $rootScope.tableSwitch.tableFilter != undefined && $rootScope.tableSwitch.tableFilter != null ? "q=" + $rootScope.tableSwitch.tableFilter : "";
+            var searchUrl = SEM_API_URL + "/es/real_time?tid=" + trackid + fi;
             $http({
                 method: 'GET',
                 url: searchUrl
             }).success(function (data, status) {
                 if (data != undefined) {
                     data.forEach(function (item, i) {
+                        item["city"] = item["city"] == "-" ? "国外" : item["city"];
                         item["visitTime"] = new Date(item["visitTime"]).Format("yyyy-MM-dd hh:mm:ss");
                         var reere = item["searchEngine"] != "-" ? (item["referrer"] + "," + item["searchEngine"]) : item["referrer"] == "-" ? "-,直接访问" : item["referrer"] + "," + item["referrer"].substring(0, 40) + (item["referrer"].length > 40 ? "..." : "")
                         item["referrer"] = reere;
@@ -715,7 +717,7 @@ define(["app"], function (app) {
             if ($rootScope.tableSwitch.isJudge == undefined) $scope.isJudge = true;
             if ($rootScope.tableSwitch.isJudge) $rootScope.tableSwitch.tableFilter = undefined;
             if ($rootScope.tableSwitch.number == 4) {
-                var searchUrl = SEM_API_URL + "search_word/" + esType + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd;
+                var searchUrl = SEM_API_URL + "/es/search_word?tid=" + trackid + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd;
                 $http({
                     method: 'GET',
                     url: searchUrl
@@ -739,7 +741,7 @@ define(["app"], function (app) {
                 }).success(function (data, status) {
                     $rootScope.$broadcast("LoadDateShowDataFinish", data);
                     if ($rootScope.tableSwitch.promotionSearch != undefined && $rootScope.tableSwitch.promotionSearch) {
-                        var url = SEM_API_URL + user + "/" + baiduAccount + "/account/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1"
+                        var url = SEM_API_URL +"/sem/report/account?a=" + user + "&b=" + baiduAccount + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1"
                         $http({
                             method: 'GET',
                             url: url
@@ -807,27 +809,27 @@ define(["app"], function (app) {
                                 data.forEach(function (item, i) {
                                     item.period = util.getYearWeekState(item.period);
                                 });
-                                if(data.length == 0) {
+                                if (data.length == 0) {
                                     var resultData = [];
-                                    var resultObj ={};
+                                    var resultObj = {};
                                     $rootScope.checkedArray.forEach(function (item, a) {
                                         resultObj[item] = 0;
                                     });
                                     resultObj[$rootScope.tableSwitch.latitude.field] = "暂无数据";
                                     resultData.push(resultObj)
                                     $scope.gridOptions.data = resultData;
-                                }else $scope.gridOptions.data = data;
+                                } else $scope.gridOptions.data = data;
                             } else {
-                                if(data.length == 0){
+                                if (data.length == 0) {
                                     var resultData = [];
-                                    var resultObj ={};
+                                    var resultObj = {};
                                     $rootScope.checkedArray.forEach(function (item, a) {
                                         resultObj[item] = 0;
                                     });
                                     resultObj[$rootScope.tableSwitch.latitude.field] = "暂无数据";
                                     resultData.push(resultObj)
                                     $scope.gridOptions.data = resultData;
-                                }else $scope.gridOptions.data = data;
+                                } else $scope.gridOptions.data = data;
                             }
                         } else {
                             var result = [];
@@ -907,7 +909,7 @@ define(["app"], function (app) {
             $scope.gridOptions.rowHeight = 95;
             var time = chartUtils.getTimeOffset(start, end);
             var startTime = time[0];
-            var endTime = time[0] + ($rootScope.tableTimeEnd - $rootScope.tableTimeStart)+1;
+            var endTime = time[0] + ($rootScope.tableTimeEnd - $rootScope.tableTimeStart) + 1;
             $rootScope.$broadcast("ssh_load_compare_datashow", startTime, endTime);
             var dateTime1 = chartUtils.getSetOffTime($rootScope.tableTimeStart, $rootScope.tableTimeEnd);
             var dateTime2 = chartUtils.getSetOffTime(startTime, endTime);
@@ -1249,11 +1251,11 @@ define(["app"], function (app) {
                 } else {
                     if ((option[0].entity[a.col.field] + "").indexOf("%") != -1) {
 //                        returnData[0] = (returnData[0] / option.length).toFixed(2) + "%";
-                        returnData[0] = returnData[0] == "0"? "0%" : (returnData[0] / option.length).toFixed(2) + "%";
+                        returnData[0] = returnData[0] == "0" ? "0%" : (returnData[0] / option.length).toFixed(2) + "%";
                     }
                     if (a.col.field == "avgPage" || a.col.field == "click") {
 //                        returnData[0] = (returnData[0] / option.length).toFixed(2);
-                        returnData[0] = returnData[0] == "0"? "0" : (returnData[0] / option.length).toFixed(2);
+                        returnData[0] = returnData[0] == "0" ? "0" : (returnData[0] / option.length).toFixed(2);
                     }
                     if (a.col.field == "avgTime") {
                         var atime1 = parseInt(newSpl[0] / option.length) + "";

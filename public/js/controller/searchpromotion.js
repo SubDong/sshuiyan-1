@@ -10,6 +10,7 @@ define(["./module"], function (ctrs) {
         var user = $rootScope.user
         var baiduAccount = $rootScope.baiduAccount;
         var esType = $rootScope.userType;
+        var trackid = $rootScope.siteTrackId;
 
         //sem
         $scope.target = [
@@ -195,7 +196,7 @@ define(["./module"], function (ctrs) {
             $scope.gridOptions.data = [];
             $scope.gridOpArray = angular.copy($rootScope.searchGridArray);
             $scope.gridOptions.columnDefs = $scope.gridOpArray;
-            var url = SEM_API_URL + user + "/" + baiduAccount + "/" + (area == "全部" ? $rootScope.tableSwitch.promotionSearch.SEMData : "region") + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1" + (area == "全部" ? "" : "&rgna=" + area);
+            var url = SEM_API_URL + "/sem/report/" + (area == "全部" ? $rootScope.tableSwitch.promotionSearch.SEMData : "region") + "?a=" + user + "&b=" + baiduAccount + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1" + (area == "全部" ? "" : "&rgna=" + area);
 
             $http({
                 method: 'GET',
@@ -268,7 +269,8 @@ define(["./module"], function (ctrs) {
             if (isClicked) {
                 $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
             }
-            var url = SEM_API_URL + user + "/" + baiduAccount + "/" + $rootScope.tableSwitch.promotionSearch.SEMData + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=" + $scope.device + ($scope.searchId != undefined || $scope.searchId != "undefined" ? "&" + $scope.searchId : "")
+            console.log($scope.searchId)
+            var url = SEM_API_URL + "/sem/report/" + $rootScope.tableSwitch.promotionSearch.SEMData + "?a=" + user + "&b=" + baiduAccount + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=" + $scope.device + ($scope.searchId != undefined && $scope.searchId != "undefined" ? "&" + $scope.searchId : "")
             $http({
                 method: 'GET',
                 url: url
@@ -358,7 +360,7 @@ define(["./module"], function (ctrs) {
                     data.forEach(function (item, i) {
                         var variousId = item.kw.split(",");
                         item.kw = variousId[0];
-                        var url = SEM_API_URL + user + "/" + baiduAccount + "/" + $rootScope.tableSwitch.promotionSearch.SEMData + "/" + variousId[3] + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1"
+                        var url = SEM_API_URL + "/sem/report/" + $rootScope.tableSwitch.promotionSearch.SEMData + "?a=" + user + "&b=" + baiduAccount + "&kwid=" + variousId[3] + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1"
                         $http({
                             method: 'GET',
                             url: url
@@ -621,8 +623,8 @@ define(["./module"], function (ctrs) {
                 if (a.col.field == "avgPage") {
                     returnData = (returnData / option.length).toFixed(2);
                 }
-                if(a.col.field == "outRate" || a.col.field == "nuvRate"){
-                    returnData = returnData == "0.00%" ? "0%" : (returnData / option.length).toFixed(2)+"%";
+                if (a.col.field == "outRate" || a.col.field == "nuvRate") {
+                    returnData = returnData == "0.00%" ? "0%" : (returnData / option.length).toFixed(2) + "%";
                 }
                 if (a.col.field == "avgTime") {
                     var atime1 = parseInt(newSpl[0] / option.length) + "";
