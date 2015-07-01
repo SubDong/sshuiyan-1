@@ -1,12 +1,30 @@
 <div class="middle_containers" ng-controller="changelistctr">
     <div class="date_select">
-        <calendar></calendar>
+        <div role="group" class="btn-group fl">
+            <button class="btn btn-default" type="button" ng-click="yesterday()" ng-class="{'current':yesterdayClass}">
+                昨天
+            </button>
+            <button id="reportrange" class="btn btn-default pull-right date-picker my_picker"
+                    ng-hide="datechoice" ng-class="{'current':timeClass}" max="max" ng-model="date"
+                    data-ng-click="timeClick()">
+                <i class="glyphicon glyphicon-calendar fa fa-calendar"></i><span></span></button>
+        </div>
         <div role="group" class="btn-group fl">
             <span class="fl">对比：</span>
         </div>
-        <dateother></dateother>
         <div role="group" class="btn-group fl">
-            <button class="btn btn-default current" type="button">确定</button>
+            <button class="btn btn-default" type="button" ng-class="{'current':lastDayClass}" ng-show="dateshows"
+                    data-ng-click="lastDay()">前一日
+            </button>
+            <button class="btn btn-default" type="button" ng-class="{'current':lastWeekClass}" ng-show="dateshows"
+                    data-ng-click="lastWeek()">上周同期
+            </button>
+            <button id="choicetrange" class="btn btn-default pull-right date-picker my_picker"
+                    data-ng-click="contrastTimeClick()" ng-class="{'current':choiceClass}" max="max" ng-model="date">
+                <i class="glyphicon glyphicon-calendar fa fa-calendar"></i><span></span></button>
+        </div>
+        <div role="group" class="btn-group fl">
+            <button class="btn btn-default current" data-ng-click="changeTime()" type="button">确定</button>
         </div>
         <refresh></refresh>
     </div>
@@ -15,15 +33,17 @@
             <table>
                 <tr>
                     <td></td>
-                    <td>2015-06-11</td>
-                    <td>2015-06-10</td>
+                    <td>{{initTime.time}}</td>
+                    <td>{{initTime.contrastTime}}</td>
                     <td>变化情况</td>
                 </tr>
                 <tr>
                     <th>来访次数</th>
-                    <th>1200</th>
-                    <th>1100</th>
-                    <th>+100(9.92%)</th>
+                    <th>{{sum_pv_count||'0'}}</th>
+                    <th>{{contrast_sum_pv_count||'0'}}</th>
+                    <th>
+                        {{all_percentage||'0(0%)'}}
+                    </th>
                 </tr>
             </table>
         </div>
@@ -31,7 +51,7 @@
         </div>
         <div class="table_content" ng-controller="TabsCtrl">
             <div class="custom_table">
-                <div ui-grid="gridOptions" class="grid clearfix"  ui-grid-pagination
+                <div ui-grid="gridOptions" class="grid clearfix" ui-grid-pagination
                      ui-grid-exporter ui-grid-auto-resize></div>
                 <gridpage></gridpage>
             </div>
