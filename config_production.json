@@ -15,12 +15,12 @@
     "host": "server1",
     "port": 16379,
     "options": {
-      "auth_pass": "3edcvxsw2"
+      "auth_pass": "3edcxsw2"
     },
     "sessiondb": 10
   },
   "mongo": {
-    "url": "mongodb://server1:37017/conf"
+    "url": "mongodb://server1:27017/conf"
   },
   "app":{
     "tuiguang_url": "http://server1:19082/",
