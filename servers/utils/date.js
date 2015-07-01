@@ -33,7 +33,6 @@ var dateutils = {
 
         var dates = [prefix + fmt("%F", start)];
 
-
         for (var i = 1; i <= number; i++) {
             start.setDate(start.getDate() + 1);
             dates.push(prefix + fmt("%F", start))
@@ -53,6 +52,36 @@ var dateutils = {
             dates.push(prefix + fmt("%F", start))
         }
         return dates;
+    }, getConvertTimeByTime: function (startDay, endDay) {//将时间字符串转化为毫秒为单位的数值
+        var startTime = Date.parse(startDay);
+        var endTime = Date.parse(endDay);
+        var start = new Date(startTime);
+        var end = new Date(endTime);
+        var convertTime = [];
+        convertTime.push(start);
+        convertTime.push(end);
+        return convertTime;
+    }, getConvertTimeByNumber: function (startDay, endDay) {//将时间偏移量转化为毫秒为单位的数值
+        var dayMills = 24 * 60 * 60 * 1000;
+        var date = new Date();
+        date.setHours(0);
+        date.setMinutes(0);
+        date.setSeconds(0);
+        date.setMilliseconds(0);
+        var startTime = date.getTime();
+        date.setHours(23);
+        date.setMinutes(59);
+        date.setSeconds(59);
+        date.setMilliseconds(999);
+        var endTime = date.getTime();
+        var start_offset = parseInt(startDay);
+        var end_offset = parseInt(endDay);
+        startTime = startTime + start_offset * dayMills;
+        endTime = endTime + end_offset * dayMills;
+        var convertTime = [];
+        convertTime.push(startTime);
+        convertTime.push(endTime);
+        return convertTime;
     },
     period: function (startDay, endDay) {
         var dayMills = 24 * 60 * 60 * 1000;

@@ -200,8 +200,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                             $('#choicetrange').data('daterangepicker').setEndDate(dateTime[1]);
                         });
                     }
-                    // $('#reportrange span').html(GetDateStr(0))
-
                 }
                 scope.compareReset = function () {
                     scope.choiceClass = false;

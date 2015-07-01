@@ -1332,6 +1332,17 @@ define(["app"], function (app) {
             title: "访问页数目标"
         }
         ];
+        $scope.init = function(timeData){
+            $scope.gridOptions.data = [];
+            $http.get("api/changeList?start=" + timeData.start + ",end=" + timeData.end+",contrastStart="+timeData.contrastStart+",contrastEnd="+timeData.contrastEnd).success(function (data) {
+                $scope.gridOptions.data = data.pv;
+            });
+        };
+
+        $scope.$on('parrentData', function(d,data) {
+            $scope.init(data);
+        });
+        $scope.$emit("Ctr1NameChange", '');
     })
     ;
 })
