@@ -121,9 +121,9 @@ define(["./module"], function (ctrs) {
             if (quotas.length) {
                 var semRequest = "";
                 if (quotas.length == 1) {
-                    semRequest = $http.get(SEM_API_URL + user + "/" + baiduAccount + "/" + semType + "/" + quotas[0] + "-?startOffset=" + start + "&endOffset=" + end);
+                    semRequest = $http.get(SEM_API_URL + "/sem/report/" + semType + "?a=" + user + "&b=" + baiduAccount + "&startOffset=" + start + "&endOffset=" + end + "&q=" + quotas[0]);
                 } else {
-                    semRequest = $http.get(SEM_API_URL + user + "/" + baiduAccount + "/" + semType + "/" + quotas[0] + "-" + quotas[1] + "-?startOffset=" + start + "&endOffset=" + end);
+                    semRequest = $http.get(SEM_API_URL + "/sem/report/" + semType + "?a=" + user + "&b=" + baiduAccount + "&startOffset=" + start + "&endOffset=" + end + "&q=" + quotas[0]+","+ quotas[1]);
                 }
                 $q.all([semRequest]).then(function (final_result) {
                     final_result[0].data.sort(chartUtils.by(quotas[0]));
