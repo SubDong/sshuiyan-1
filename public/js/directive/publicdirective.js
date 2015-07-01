@@ -638,6 +638,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
 
                 scope.$on("LoadDateShowSEMDataFinish", function (e, msg) {
                     scope.isCompared = false;
+                    scope.setDefaultShowArray();
                     scope.pushSEOData(msg);
                 });
             }
@@ -953,6 +954,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     return count ? value : "0";
                 }
                 case "cost":
+                case "cpc":
                 {
                     return value ? value.toFixed(2) : value;
                 }
@@ -963,7 +965,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     return count ? value : "0";
                 }
                 case "avgPage":
-                case "cpc":
                 {
                     return count ? (value == 0 ? "0" : (value / count).toFixed(2)) : "0";
 //                    return count ? (value / count).toFixed(2) : "0";
