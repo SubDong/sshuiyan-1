@@ -1340,9 +1340,8 @@ define(["app"], function (app) {
         };
 
         $scope.$on('parrentData', function(d,data) {
-            $scope.initTime = data.initTime;
-            $rootScope.startString = data.initTime.time;
-            $rootScope.contrastStartString = data.initTime.contrastTime
+            $scope.gridOpArray = angular.copy(data.gridArray);
+            $scope.gridOptions.columnDefs = $scope.gridOpArray;
             $scope.init(data);
         });
         $scope.$emit("Ctr1NameChange", '');
