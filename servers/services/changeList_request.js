@@ -3,6 +3,12 @@
  */
 var async = require("async");
 var changeList_request = {
+    /**
+     * @param es
+     * @param indexs　索引数组
+     * @param times　毫秒为单位的时间数组
+     * @param callbackFn　回调函数
+     */
     search: function (es, indexs, times, callbackFn) {
         //var requests = [];
         //for (var i = 0; i < 1; i++) {
@@ -188,24 +194,11 @@ var changeList_request = {
                     sum_pv: result.data.pv.value,
                     contrast_sum_pv: result.contrastData.pv.value,
                     pv: pv_data,
-                    percentage: (result.data.pv.value > result.contrastData.pv.value ? "+" + (result.data.pv.value - result.contrastData.pv.value) : result.data.pv.value - result.contrastData.pv.value) + "(" + (result.data.pv.value > result.contrastData.pv.value ? "+" + ((result.data.pv.value - result.contrastData.pv.value) / result.contrastData.pv.value > 1 ? 1 : (result.data.pv.value - result.contrastData.pv.value) / result.contrastData.pv.value).toFixed(2) + "%)" : ((result.data.pv.value - result.contrastData.pv.value) / result.contrastData.pv.value > 1 ? 1 : (result.data.pv.value - result.contrastData.pv.value) / result.contrastData.pv.value).toFixed(2) + "%)")
+                    percentage: (result.data.pv.value > result.contrastData.pv.value ? "+" + (result.data.pv.value - result.contrastData.pv.value) : result.data.pv.value - result.contrastData.pv.value) + "(" + (result.contrastData.pv.value==0?0+"%)":(result.data.pv.value > result.contrastData.pv.value ? "+" + ((result.data.pv.value - result.contrastData.pv.value) / result.contrastData.pv.value > 1 ? 1 : (result.data.pv.value - result.contrastData.pv.value) / result.contrastData.pv.value).toFixed(2) + "%)" : ((result.data.pv.value - result.contrastData.pv.value) / result.contrastData.pv.value > 1 ? 1 : (result.data.pv.value - result.contrastData.pv.value) / result.contrastData.pv.value).toFixed(2) + "%)"))
                 };
                 callbackFn(data);
             } else
                 callbackFn(data);
-        });
-    },
-    search1: function (es, indexs, times, callbackFn) {
-        //var index1 = [];
-        var time1 = [];
-        //index1.push(index1);
-        async.map(requests, function (item, callback) {
-            changeList_request.search();
-            es.indices.exists(item, function (error, exists) {
-                callback(null, exists);
-            });
-        }, function (error, results) {
-
         });
     }
 };
