@@ -5,7 +5,7 @@ define(["app"], function (app) {
 
     "use strict";
 
-    app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, requestService, SEM_API_URL, $cookieStore, popupService) {
+    app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, requestService, SEM_API_URL, $cookieStore,$location, popupService) {
         $scope.todayClass = true;
         $scope.browserselect = true;
         var user = $rootScope.user
@@ -267,10 +267,14 @@ define(["app"], function (app) {
             });
             //$rootScope.$broadcast("ssh_reload_datashow");
         };
+        var temp_path = $location.path();
+        var today = temp_path.indexOf("/today");
+        var yesterday = temp_path.indexOf("/yesterday");
+        var month = temp_path.indexOf("/month");
         // 通用表格配置项
         if (typeof($rootScope.checkedArray) != undefined && $scope.tableJu == "html") {
             $scope.gridOptions = {
-                paginationPageSize: 20,
+                paginationPageSize: today != -1 || yesterday != -1 || month != -1 ? 24 : 20,
                 expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
                 //expandableRowHeight: 360,
                 enableColumnMenus: false,
@@ -287,7 +291,7 @@ define(["app"], function (app) {
             };
         } else {
             $scope.gridOptions = {
-                paginationPageSize: 20,
+                paginationPageSize: today != -1 || yesterday != -1 || month != -1 ? 24 : 20,
                 expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
                 //expandableRowHeight: 360,
                 enableColumnMenus: false,

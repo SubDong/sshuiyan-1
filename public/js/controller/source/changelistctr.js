@@ -6,6 +6,8 @@ define(["./module"], function (ctrs) {
     'use strict';
     ctrs.controller('changelistctr', function ($scope, $rootScope, $q, $http, requestService, messageService, areaService, uiGridConstants, popupService) {
             //初始化时间
+            $rootScope.tableTimeStart = 0;
+            $rootScope.tableTimeEnd = 0;
             $rootScope.start = -1;
             $rootScope.end = -1;
             $rootScope.contrastStart = -2;
