@@ -5,7 +5,7 @@
 define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClipboard) {
     'use strict';
 
-    app.directive("calendar", function ($rootScope, requestService) {
+    app.directive("calendar", function ($rootScope, requestService, $location) {
         var option = {
             restrict: "EA",
             template: "<div  role=\"group\" class=\"btn-group fl\"><button class=\"btn btn-default\" type=\"button\" ng-click=\"today()\" ng-hide=\"visible\" ng-class=\"{'current':todayClass,'disabled':todaySelect}\">今天</button>" +
@@ -20,11 +20,20 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
             link: function (scope, element, attris, controller) {
                 Custom.initCheckInfo();
                 scope.$watch("opened", function () {
-                    if (scope.yesterdayClass) {
-                        $('#reportrange span').html(GetDateStr(-1));
-                    }
-                    if (scope.monthClass) {
-                        $('#reportrange span').html(GetDateStr(-29) + "至" + GetDateStr(0));
+                    if (scope.todayClass) {
+                        scope.today();
+                    }else if (scope.sevenDayClass) {
+                        scope.sevenDay();
+                    }else if (scope.yesterdayClass) {
+                        scope.yesterday();
+                    }else if (scope.monthClass) {
+                        scope.month();
+                    }else if($location.url().split("?").length>1){
+                        var param = $location.url().split("?")[1];
+                        if(param != 1 && param != 2 && param != 3 && param != 4){
+                            var newParam = param.replace("#", "至");
+                            $('#reportrange span').html(newParam);
+                        }
                     }
                 });
                 scope.weekselected = true;
@@ -385,7 +394,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
     app.directive("gridpage", function () {
         var option = {
             restrict: "EA",
-            template: "<div class=\"page\"><a ng-click=\"gridApi2.pagination.previousPage()\">上一页</a> <button type=\"button\" class=\"btn\"> {{ gridApi2.pagination.getPage() }}</button><a ng-click=\"gridApi2.pagination.nextPage()\">下一页 </a> <input type=\"text\" ng-model=\"page\" value=\"\"><span> /{{ gridApi2.pagination.getTotalPages() }}</span> <button type=\"button\" class=\"btn\" ng-click=\"pagego(gridApi2)\">跳转</button> </div>",
+            template: "<div class=\"page\"><a ng-click=\"gridApi2.pagination.previousPage()\" ng-hide=\"gridApi2.pagination.getTotalPages()<=1\">上一页</a> <button type=\"button\" class=\"btn\"> {{ gridApi2.pagination.getPage() }}</button><a ng-click=\"gridApi2.pagination.nextPage()\" ng-hide=\"gridApi2.pagination.getTotalPages()<=1\">下一页 </a> <input type=\"text\" ng-model=\"page\" value=\"\"><span> /{{ gridApi2.pagination.getTotalPages() }}</span> <button type=\"button\" class=\"btn\" ng-click=\"pagego(gridApi2)\">跳转</button> </div>",
             transclude: true
         };
         return option;
@@ -1121,7 +1130,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                             $rootScope.$broadcast("updateSelectRowIndex", index);
                         } else if (e_r.sref == _path.split("/")[2]) {
                             e_r.showText = true;
-                            console.log(123)
+                            $rootScope.$broadcast("updateSelectRowIndex", index);
                         } else {
                             e_r.showText = false;
                         }
