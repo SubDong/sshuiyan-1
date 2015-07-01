@@ -39,7 +39,9 @@ define([
         'ui.bootstrap',
         'ngDialog',
         'ngSanitize',
-        'ui.select'
+        'ui.select',
+        'ui.grid.selection'
+
     ]);
 
     myApp.constant('SEM_API_URL', 'http://182.92.227.79:9080/');

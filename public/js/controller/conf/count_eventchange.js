@@ -1,7 +1,7 @@
 /**
  * Created by john on 2015/4/1.
  */
-define(["./module"], function (ctrs) {
+define(["./module"], function (ctrs ) {
     "use strict";
 
     ctrs.controller('eventchange', function ($cookieStore,$scope, $q, $rootScope,$http,ngDialog, $state) {
@@ -21,11 +21,11 @@ define(["./module"], function (ctrs) {
                 url: url
             }).success(function (dataConfig, status) {
                 //页面删除
-                console.log("删除成功 关闭窗口")
+                console.log("删除成功 关闭窗口");
                 $scope.gridOptions.data.splice($scope.gridOptions.data.indexOf($scope.entity), 1);
                 $scope.urlDialog.close();
             });
-        }
+        };
 
         //显示-删除对话框
         $scope.deleteDialog=function(entity){
@@ -34,13 +34,13 @@ define(["./module"], function (ctrs) {
 
             $scope.urlDialog = ngDialog.open({
                 template:'\
-              <div class="ngdialog-buttons" >\
-                        <ul>\
-                        <li> 你确定删除这个事件转化吗？</li></ul>   \
-                    <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click=closeThisDialog(0)>返回</button>\
-                    <button type="button" class="ngdialog-button ng-button" ng-click=deleteGridData()>确定</button>\
+              <div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div>\
+                        <ul class="admin-ng-content">\
+                        <li> 你确定删除这个事件转化目标吗？</li></ul>   \
+                   <div class="ng-button-div"> <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
+                    <button type="button" class="ngdialog-button ng-button" ng-click=" deleteGridData()  ">确定</button></div>\
                 </div>',
-                className: 'ngdialog-theme-default',
+                className: 'ngdialog-theme-default admin_ngdialog',
                 plain: true,
                 scope : $scope
             });
@@ -48,11 +48,19 @@ define(["./module"], function (ctrs) {
 
 
         //跳转-修改界面
-        $scope.toUpdate = function (entity) {
-
-            $state.go('eventchange_update',{ 'id':entity._id});
-
-        }
+        $scope.toUpdate= function (entity) {
+            $scope._id = entity._id;
+            $scope.urlDialog = ngDialog.open({
+                template:'../conf/webcountsite/eventchange_update.html',
+                className:'ngdialog-theme-default admin_ngdialog ',
+                scope: $scope
+            });
+        };
+        //$scope.toUpdate = function (entity) {
+        //
+        //    $state.go('eventchange_update',{ 'id':entity._id});
+        //
+        //};
 
         $scope.operationStatus = function (entity) {
 
@@ -64,7 +72,9 @@ define(["./module"], function (ctrs) {
                 method: 'GET',
                 url: url
             }).success(function (dataConfig, status) {});
-        }
+
+        };
+
 
         //配置默认指标
         $rootScope.checkArray = ["", "", ""];
@@ -98,6 +108,7 @@ define(["./module"], function (ctrs) {
                 cellTemplate: "<div class='table_admin'><a ng-click='grid.appScope.deleteDialog(row.entity)' >删除</a></div>",
                 maxWidth: 80
             }
+
         ];
 
 
@@ -123,7 +134,10 @@ define(["./module"], function (ctrs) {
             enableSorting: true,
             enableGridMenu: false,
             enableHorizontalScrollbar: 0,
-            columnDefs: $rootScope.gridArray
+            columnDefs: $rootScope.gridArray,
+            onRegisterApi: function (girApi) {
+                $rootScope.gridApiAdmin = girApi;
+            }
         };
 
         //操作-初始化
@@ -141,6 +155,8 @@ define(["./module"], function (ctrs) {
             });
         };
         refushGridData();
+        //全选
+
 
     });
 });
