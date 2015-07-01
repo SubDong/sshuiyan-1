@@ -10,6 +10,8 @@ define(["./module"], function (ctrs) {
             $rootScope.end = -1;
             $rootScope.contrastStart = -2;
             $rootScope.contrastEnd = -2;
+            $rootScope.startString = GetDateStr(-1);
+            $rootScope.contrastStartString = GetDateStr(-2)
             $scope.initTime = {
                 time: GetDateStr(-1),
                 contrastTime: GetDateStr(-2)
@@ -37,13 +39,13 @@ define(["./module"], function (ctrs) {
                 },
                 {
                     name: "浏览量(PV)",
-                    displayName: "2015-06-11",
+                    displayName: $rootScope.startString,
                     field: "pv",
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
                 },
                 {
                     name: "访问次数",
-                    displayName: "2015-06-10",
+                    displayName: $rootScope.contrastStartString,
                     field: "contrastPv",
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
                 },
@@ -80,7 +82,11 @@ define(["./module"], function (ctrs) {
                     start: $rootScope.start,
                     end: $rootScope.end,
                     contrastStart: $rootScope.contrastStart,
-                    contrastEnd: $rootScope.contrastEnd
+                    contrastEnd: $rootScope.contrastEnd,
+                    initTime: {
+                        time: $rootScope.startString,
+                        contrastTime: $rootScope.contrastStartString
+                    }
                 });
             });
             //$scope.$broadcast("parrentData",  '7894561321564');
@@ -131,11 +137,11 @@ define(["./module"], function (ctrs) {
                 separator: ' to '
             }, function (start, end, label) {
                 $rootScope.datepickerClick1(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), false);
-                $rootScope.startString = (start.format('YYYY-MM-DD') + ' 至 ' + end.format('YYYY-MM-DD'));
+                $rootScope.contrastStartString = (start.format('YYYY-MM-DD') + ' 至 ' + end.format('YYYY-MM-DD'));
 
                 if (start.format('YYYY-MM-DD') == end.format('YYYY-MM-DD')) {
                     $('#choicetrange span').html(start.format('YYYY-MM-DD'));
-                    $rootScope.startString = (start.format('YYYY-MM-DD'));
+                    $rootScope.contrastStartString = (start.format('YYYY-MM-DD'));
                 }
                 else {
                     $('#choicetrange span').html(start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD'));
@@ -192,6 +198,7 @@ define(["./module"], function (ctrs) {
                 $rootScope.tableTimeEnd = -1;
                 $rootScope.start = -1;
                 $rootScope.end = -1;
+                $rootScope.startString = GetDateStr(-1);
                 $scope.reloadByCalendar("yesterday");
                 $('#reportrange span').html(GetDateStr(-1));
                 $('#reportrange').data('daterangepicker').setStartDate(GetDateStr(-1));
@@ -214,6 +221,7 @@ define(["./module"], function (ctrs) {
                 $rootScope.contrastEnd = -2;
                 contrastReset();
                 $scope.lastDayClass = true;
+                $rootScope.contrastStartString = GetDateStr(-2)
                 $('#choicetrange span').html(GetDateStr(-2));
                 $('#choicetrange').data('daterangepicker').setStartDate(GetDateStr(-2));
                 $('#choicetrange').data('daterangepicker').setEndDate(GetDateStr(-2));
@@ -223,6 +231,7 @@ define(["./module"], function (ctrs) {
                 $rootScope.contrastEnd = -6;
                 contrastReset();
                 $scope.lastWeekClass = true;
+                $rootScope.contrastStartString = GetDateStr(-8)
                 $('#choicetrange span').html(GetDateStr(-8));
                 $('#choicetrange').data('daterangepicker').setStartDate(GetDateStr(-8));
                 $('#choicetrange').data('daterangepicker').setEndDate(GetDateStr(-8));
@@ -232,12 +241,21 @@ define(["./module"], function (ctrs) {
                 $scope.choiceClass = true;
             };
             $scope.changeTime = function () {
+                $scope.initTime = {
+                    time: $rootScope.startString,
+                    contrastTime: $rootScope.contrastStartString
+                };
+                console.log($scope.initTime)
                 $scope.init();
                 $scope.$broadcast("parrentData", {
                     start: $rootScope.start,
                     end: $rootScope.end,
                     contrastStart: $rootScope.contrastStart,
-                    contrastEnd: $rootScope.contrastEnd
+                    contrastEnd: $rootScope.contrastEnd,
+                    initTime: {
+                        time: $rootScope.startString,
+                        contrastTime: $rootScope.contrastStartString
+                    }
                 });
             };
             $scope.init = function () {

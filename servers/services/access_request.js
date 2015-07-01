@@ -300,7 +300,7 @@ var access_request = {
                             }
                             data.push({
                                 "pv": result[i].path0.buckets[c].pv.value,
-                                "uv": result[i].path0.buckets[c].pv.value,
+                                "uv": result[i].path0.buckets[c].uv.value,
                                 "pathName": result[i].path0.buckets[c].key,
                                 "path1": path1Data,
                                 "id": result[i].key
