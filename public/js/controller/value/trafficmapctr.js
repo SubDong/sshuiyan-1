@@ -203,12 +203,12 @@ define(["./module"], function (ctrs) {
             $scope.weekselected = true;
             $scope.mothselected = true;
             $rootScope.tableTimeStart = -7;
-            $rootScope.tableTimeEnd = -1;
+            $rootScope.tableTimeEnd = 0;
             $scope.reloadByCalendar("seven");
             $('#reportrange span').html(GetDateStr(-6) + "至" + GetDateStr(0));
             $scope.sevenDayClass = true;
-            $rootScope.start = -7;
-            $rootScope.end = -1;
+            $rootScope.start = -6;
+            $rootScope.end = 0;
             $rootScope.interval = 7;
             $scope.init();
         };
@@ -225,8 +225,8 @@ define(["./module"], function (ctrs) {
             $scope.reloadByCalendar("month");
             $('#reportrange span').html(GetDateStr(-29) + "至" + GetDateStr(0));
             $scope.monthClass = true;
-            $rootScope.start = -30;
-            $rootScope.end = -1;
+            $rootScope.start = -29;
+            $rootScope.end = -0;
             $rootScope.interval = 30;
             $scope.init();
         };
