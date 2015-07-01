@@ -2,7 +2,7 @@
  * Created by weims on 2015/5/15.
  */
 
-define(["../app"], function (app) {
+define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClipboard) {
     'use strict';
 
     app.directive("calendar", function ($rootScope, requestService) {
@@ -140,7 +140,7 @@ define(["../app"], function (app) {
                     scope.hiddenSeven = true;
                     scope.reset();
                     scope.timeClass = true;
-                   // $('#reportrange span').html(GetDateStr(0))
+                    // $('#reportrange span').html(GetDateStr(0))
                 }
                 scope.open = function ($event) {
                     scope.reset();
@@ -204,9 +204,9 @@ define(["../app"], function (app) {
         var option = {
             restrict: "EA",
             template: "<div role=\"group\" class=\"btn-group fl\">" +
-                "<button class=\"btn btn-default\" type=\"button\" ng-class=\"{'current':lastDayClass}\"  ng-show=\"dateshows\" >前一日</button>" +
-                " <button class=\"btn btn-default\" type=\"button\" ng-class=\"{'current':lastWeekClass}\"   ng-show=\"dateshows\" >上周同期</button>" +
-            "<button id=\"choicetrange\"  class=\"btn btn-default pull-right date-picker my_picker fl\" ng-class=\"{'current':choiceClass}\"  max=\"max\" ng-model=\"date\">" +
+            "<button class=\"btn btn-default\" type=\"button\" ng-class=\"{'current':lastDayClass}\"  ng-show=\"dateshows\" data-ng-click=\"lastDay()\">前一日</button>" +
+            " <button class=\"btn btn-default\" type=\"button\" ng-class=\"{'current':lastWeekClass}\"   ng-show=\"dateshows\" data-ng-click=\"lastWeek()\">上周同期</button>" +
+            "<button id=\"choicetrange\"  class=\"btn btn-default pull-right date-picker my_picker fl\" data-ng-click=\"contrastTimeClick()\" ng-class=\"{'current':choiceClass}\"  max=\"max\" ng-model=\"date\">" +
             "<i class=\"glyphicon glyphicon-calendar fa fa-calendar\"></i><span data-ng-bind='date'></span></button>" +
             "</div>",
             replace: true,
@@ -319,7 +319,7 @@ define(["../app"], function (app) {
                             var dateString = dateTime.Format("yyyyMdhmsS");
                             hiddenElement.href = 'data:attachment/csv;charset=utf-8,' + encodeURI(data);
                             hiddenElement.target = '_blank';
-                            hiddenElement.download = "down-" + dateString+".csv";
+                            hiddenElement.download = "down-" + dateString + ".csv";
                             hiddenElement.click();
                         })
 
@@ -758,14 +758,15 @@ define(["../app"], function (app) {
                 };
                 scope.loadDataShow = function () {
                     var semRequest = $http.get(SEM_API_URL + "search_word/" + $rootScope.userType
-                    + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd);
+                        + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd);
                     $q.all([semRequest]).then(function (final_result) {
                         var count = 0;
                         angular.forEach(final_result[0].data, function (r) {
                             var infokey = r.word;
                             if (infokey != undefined && (infokey == "-" || infokey == "" || infokey == "www" || infokey == "null" || infokey.length >= 40)) {
                                 return;
-                            };
+                            }
+                            ;
                             count++;
                             angular.forEach(scope.dateShowArray, function (q_r) {
                                 var temp = q_r.label;
@@ -777,13 +778,14 @@ define(["../app"], function (app) {
                 };
                 scope.loadCompareDataShow = function (startTime, endTime) {
                     var semRequest = $http.get(SEM_API_URL + "search_word/" + $rootScope.userType
-                    + "/?startOffset=" + startTime + "&endOffset=" + endTime);
+                        + "/?startOffset=" + startTime + "&endOffset=" + endTime);
                     $q.all([semRequest]).then(function (final_result) {
                         angular.forEach(final_result[0].data, function (r) {
                             var infokey = r.word;
                             if (infokey != undefined && (infokey == "-" || infokey == "" || infokey == "www" || infokey == "null" || infokey.length >= 40)) {
                                 return;
-                            };
+                            }
+                            ;
                             count++;
                             angular.forEach(scope.dateShowArray, function (q_r) {
                                 var temp = q_r.label;
@@ -913,7 +915,7 @@ define(["../app"], function (app) {
                 case "bing":
                 case "other":
                 {
-                    return count ? (value == 0 ? "0%":(value / count).toFixed(2) + "%") : "0%";
+                    return count ? (value == 0 ? "0%" : (value / count).toFixed(2) + "%") : "0%";
                 }
                 case "avgTime":
                 {
@@ -936,7 +938,7 @@ define(["../app"], function (app) {
                 case "avgPage":
                 case "cpc":
                 {
-                    return count ? (value == 0 ? "0":(value / count).toFixed(2)) : "0";
+                    return count ? (value == 0 ? "0" : (value / count).toFixed(2)) : "0";
 //                    return count ? (value / count).toFixed(2) : "0";
                 }
                 default :
@@ -1195,18 +1197,29 @@ define(["../app"], function (app) {
     /**
      * 复制。
      */
-    app.directive('sshClip', function ($rootScope, ngDialog) {
+    app.directive('sshClip', function ($rootScope, $timeout, ngDialog) {
         "use strict";
         return {
             restrict: 'EA',
             link: function (scope, element, attris, controller) {
 
                 var clip = new ZeroClipboard(element[0]); // 新建一个对象
-                scope.tooltipText = "复制到剪贴板";
+
                 clip.on('ready', function () {
                     $(element[0]).attr("title", "复制到剪贴板").tooltip();
                     this.on('aftercopy', function (event) {
-                        $(element[0]).attr("title", "完成复制！").tooltip("fixTitle").tooltip("show").attr("title", "复制到剪贴板").tooltip("fixTitle");
+                        $(element[0]).attr("title", "完成复制！").tooltip("fixTitle").tooltip("show");
+
+                        //当timeout被定义时，它返回一个promise对象
+                        var timer = $timeout(function () {
+                            $(element[0]).attr("title", "复制到剪贴板").tooltip("fixTitle").tooltip("show");
+                        }, 600);
+
+                        //当DOM元素从页面中被移除时，AngularJS将会在scope中触发$destory事件。这让我们可以有机会来cancel任何潜在的定时器
+                        scope.$on("$destroy", function (event) {
+                            $timeout.cancel(timer);
+                        });
+
                     });
                 });
 
@@ -1215,7 +1228,7 @@ define(["../app"], function (app) {
                 });
 
                 clip.on('mouseover', function (client, args) {
-                    //console.log(clip);
+                    // console.log(clip);
                 });
 
             }
@@ -1225,7 +1238,7 @@ define(["../app"], function (app) {
     /**
      * 自定义URL验证
      */
-    app.directive('sshUrl', function($rootScope){
+    app.directive('sshUrl', function ($rootScope) {
         "use strict";
         return {
             require: "ngModel",
