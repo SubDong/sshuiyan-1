@@ -40,6 +40,12 @@ var dateutils = {
 
         return dates;
     },
+    /**
+     * @param startDay　开始时间字符串
+     * @param endDay　结束时间字符串
+     * @param prefix　索引前缀字符串
+     * @returns {*[]}　返回索引数组
+     */
     createIndexsByTime: function (startDay, endDay, prefix) {
         var startTime = Date.parse(startDay);
         var endTime = Date.parse(endDay);
@@ -52,7 +58,13 @@ var dateutils = {
             dates.push(prefix + fmt("%F", start))
         }
         return dates;
-    }, getConvertTimeByTime: function (startDay, endDay) {//将时间字符串转化为毫秒为单位的数值
+    },
+    /**
+     * @param startDay 开始时间
+     * @param endDay　结束时间
+     * @returns {Array}　将时间偏移量转化为毫秒为单位的数值，返回数组
+     */
+    getConvertTimeByTime: function (startDay, endDay) {//将时间字符串转化为毫秒为单位的数值
         var startTime = Date.parse(startDay);
         var endTime = Date.parse(endDay);
         var start = new Date(startTime);
@@ -61,7 +73,13 @@ var dateutils = {
         convertTime.push(start);
         convertTime.push(end);
         return convertTime;
-    }, getConvertTimeByNumber: function (startDay, endDay) {//将时间偏移量转化为毫秒为单位的数值
+    },
+    /**
+     * @param startDay 开始时间
+     * @param endDay　结束时间
+     * @returns {Array}　将时间偏移量转化为毫秒为单位的数值，返回数组
+     */
+    getConvertTimeByNumber: function (startDay, endDay) {//将时间偏移量转化为毫秒为单位的数值
         var dayMills = 24 * 60 * 60 * 1000;
         var date = new Date();
         date.setHours(0);
