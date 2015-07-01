@@ -5,12 +5,12 @@ define(["app"], function (app) {
 
     "use strict";
 
-    app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, requestService, SEM_API_URL, $cookieStore,$location, popupService) {
-        $scope.todayClass = true;
-        $scope.browserselect = true;
-        var user = $rootScope.user
-        var baiduAccount = $rootScope.baiduAccount;
-        var esType = $rootScope.userType;
+    app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, requestService, SEM_API_URL, $cookieStore, $location, popupService) {
+            $scope.todayClass = true;
+            $scope.browserselect = true;
+            var user = $rootScope.user
+            var baiduAccount = $rootScope.baiduAccount;
+            var esType = $rootScope.userType;
 
             $scope.tabs = [
                 {title: 'Dynamic Title 1', content: 'Dynamic content 1'},
@@ -260,51 +260,53 @@ define(["app"], function (app) {
                         $rootScope.gridArray.unshift($scope.gridObjButton);
                     }
                 }
-            });
-            //$rootScope.$broadcast("ssh_reload_datashow");
-        };
-        var temp_path = $location.path();
-        var today = temp_path.indexOf("/today");
-        var yesterday = temp_path.indexOf("/yesterday");
-        var month = temp_path.indexOf("/month");
-        // 通用表格配置项
-        if (typeof($rootScope.checkedArray) != undefined && $scope.tableJu == "html") {
-            $scope.gridOptions = {
-                paginationPageSize: today != -1 || yesterday != -1 || month != -1 ? 24 : 20,
-                expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
-                //expandableRowHeight: 360,
-                enableColumnMenus: false,
-                showColumnFooter: true,
-                enablePaginationControls: false,
-                enableSorting: true,
-                enableGridMenu: false,
-                enableHorizontalScrollbar: 0,
-                enableVerticalScrollbar: 0,
-                onRegisterApi: function (girApi) {
-                    $rootScope.gridApi2 = girApi;
-                    griApihtml(girApi);
-                }
-            };
-        } else {
-            $scope.gridOptions = {
-                paginationPageSize: today != -1 || yesterday != -1 || month != -1 ? 24 : 20,
-                expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
-                //expandableRowHeight: 360,
-                enableColumnMenus: false,
-                showColumnFooter: true,
-                enablePaginationControls: false,
-                enableSorting: true,
-                enableGridMenu: false,
-                enableHorizontalScrollbar: 0,
-                enableVerticalScrollbar: 0,
-                onRegisterApi: function (gridApi) {
-                    $rootScope.gridApi2 = gridApi;
-                    if ($rootScope.tableSwitch.dimen) {
-                        griApiInfo(gridApi);
+
+            }
+            var temp_path = $location.path();
+            var today = temp_path.indexOf("/today");
+            var yesterday = temp_path.indexOf("/yesterday");
+            var month = temp_path.indexOf("/month");
+            // 通用表格配置项
+            if (typeof($rootScope.checkedArray) != undefined && $scope.tableJu == "html") {
+                $scope.gridOptions = {
+                    paginationPageSize: today != -1 || yesterday != -1 || month != -1 ? 24 : 20,
+                    expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
+                    //expandableRowHeight: 360,
+                    enableColumnMenus: false,
+                    showColumnFooter: true,
+                    enablePaginationControls: false,
+                    enableSorting: true,
+                    enableGridMenu: false,
+                    enableHorizontalScrollbar: 0,
+                    enableVerticalScrollbar: 0,
+                    onRegisterApi: function (girApi) {
+                        $rootScope.gridApi2 = girApi;
+                        griApihtml(girApi);
                     }
-                });
+                };
+            } else {
+                $scope.gridOptions = {
+                    paginationPageSize: today != -1 || yesterday != -1 || month != -1 ? 24 : 20,
+                    expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
+                    //expandableRowHeight: 360,
+                    enableColumnMenus: false,
+                    showColumnFooter: true,
+                    enablePaginationControls: false,
+                    enableSorting: true,
+                    enableGridMenu: false,
+                    enableHorizontalScrollbar: 0,
+                    enableVerticalScrollbar: 0,
+                    onRegisterApi: function (gridApi) {
+                        $rootScope.gridApi2 = gridApi;
+                        if ($rootScope.tableSwitch.dimen) {
+                            griApiInfo(gridApi);
+                        }
+                    }
+
+                }
                 //$rootScope.$broadcast("ssh_reload_datashow");
-            };
+            }
+            ;
             // 通用表格配置项
             if (typeof($rootScope.checkedArray) != undefined && $scope.tableJu == "html") {
                 $scope.gridOptions = {
@@ -1375,12 +1377,12 @@ define(["app"], function (app) {
                 $http.get("api/changeList?start=" + timeData.start + ",end=" + timeData.end + ",contrastStart=" + timeData.contrastStart + ",contrastEnd=" + timeData.contrastEnd).success(function (data) {
                     $scope.gridOptions.data = data.pv;
                     $scope.gridOptions.enableSorting = true;
-                    $scope.gridOptions.columnDefs[4].cellClass = function(grid,row,col,rowRenderIndex,colRenderIndex){
-                        if(grid.getCellValue(row,col).toString().substring(0,1)=="+"){
+                    $scope.gridOptions.columnDefs[4].cellClass = function (grid, row, col, rowRenderIndex, colRenderIndex) {
+                        if (grid.getCellValue(row, col).toString().substring(0, 1) == "+") {
                             return "riseCell";
-                        }else if(grid.getCellValue(row,col).toString().substring(0,1)=="-"){
+                        } else if (grid.getCellValue(row, col).toString().substring(0, 1) == "-") {
                             return "descendCell";
-                        }else{
+                        } else {
                             return "flatCell";
                         }
                     }
