@@ -82,6 +82,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     $rootScope.tableTimeStart = 0;
                     $rootScope.tableTimeEnd = 0;
                     $rootScope.keyFormat = "hour";
+                    $rootScope.start=0;
                     $rootScope.end = 0;
                     scope.reloadByCalendar("today");
                     $('#reportrange span').html(GetDateStr(0));
@@ -306,7 +307,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                         separator: ' to '
                     },
                     function (start, end, label) {
-                        //if(){
                         $rootScope.datepickerClickTow(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
                         if (!$rootScope.datePickerCompare) {
                             $rootScope.datePickerCompare = function (a, b, c) {
@@ -322,10 +322,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                         }
                     });
             }
-            //,
-            //controller: function($scope, $element) {
-            //    $scope.ctrl = !!$element.controller('ngModel');
-            //}
 
         };
         return option;
