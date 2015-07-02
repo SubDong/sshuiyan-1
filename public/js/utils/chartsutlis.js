@@ -164,6 +164,24 @@ var chartUtils = {
             return "不支持";
         }
     },
+    convertType: function (str) {
+        switch (str) {
+            case "跳出率":
+                return {label: str, type: 'percent'}
+                break;
+            case "抵达率":
+                return {label: str, type: 'percent'}
+                break;
+            case "新访客比率":
+                return {label: str, type: 'percent'}
+                break;
+            case "平均访问时长":
+                return {label: str, type: 'time'}
+                break;
+            default:
+                return {label: str, type: 'number'}
+        }
+    },
     getObjectTime: function (json, _times, config) {
         if (config.keyFormat == "day") {
             var time = [];
@@ -353,7 +371,7 @@ var chartUtils = {
                         case "outRate":
                             _tmp.push(parseInt(data.quota[j] / length));
                             break;
-                        case "outRate":
+                        case "nuvRate":
                             _tmp.push(parseInt(data.quota[j] / length));
                             break;
                         default :
@@ -519,7 +537,7 @@ var chartUtils = {
         var _tmp = {};
         var _value = [];
         //console.log(semJson.data.length);
-        if (semJson.data.length > 0&&esJson.length) {
+        if (semJson.data.length > 0 && esJson.length) {
             esJson[0].key.forEach(function (esItem, index) {
                 _value.push(semJson.data[index][semType]);
             });
