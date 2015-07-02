@@ -29,8 +29,16 @@ define(["./module"], function (ctrs) {
             }
         };
     });
-    ctrs.controller('pagetitlectr', function ($cookieStore,$scope, areaService, $http, $rootScope, ngDialog) {
+    ctrs.controller('pagetitlectr', function ($cookieStore,$scope, areaService, $http, $rootScope, ngDialog, $state) {
 
+
+        $scope.load = function() {
+
+            $scope.dialog_page_title = angular.copy($scope.page_title_model);
+            $scope.dialog_page_title.uid = $cookieStore.get("uid");//uid 设置
+            $scope.dialog_page_title.site_id = $rootScope.siteId;//site_id设置
+
+        }
 
         //对象-对话框
         $scope.urlDialog = null;
@@ -48,9 +56,7 @@ define(["./module"], function (ctrs) {
         };
 
 
-        $scope.dialog_page_title = angular.copy($scope.page_title_model);
-        $scope.dialog_page_title.uid = $cookieStore.get("uid");//uid 设置
-        $scope.dialog_page_title.site_id = $rootScope.siteId;//site_id设置
+
 
         $rootScope.checkedArray = [""];
         $rootScope.gridArray = [
@@ -72,7 +78,16 @@ define(["./module"], function (ctrs) {
                 field: "icon_name",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>图标名称</div>"
             },
+
+
             {name: "创建时间", displayName: "创建时间", field: "create_date",cellClass: 'table_admin_color'},
+            {
+                name: "x1",
+                displayName: "",
+                cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.openHeatUrl(row.entity)'>查看链接点击图</a></div>",
+                maxWidth: 120
+            },
+
             {
                 name: "x2",
                 displayName: "",
@@ -116,7 +131,19 @@ define(["./module"], function (ctrs) {
 
 
 
-        /**修改状态*/
+
+        /**操作-新窗口下开启地址*/
+        $scope.openHeatUrl = function (entity) {
+
+            entity.page_url;
+
+            $state.go('heaturl',{ 'id':entity._id});
+
+            //window.open("http://www.jb51.net");
+        }
+
+
+        /**操作-修改状态*/
         $scope.operationStatus = function (entity) {
 
             entity.is_open = !entity.is_open;
@@ -199,8 +226,10 @@ define(["./module"], function (ctrs) {
 
             });
         };
+        $scope.load();
 
         $scope.refushGridData();
+
 
 
 
