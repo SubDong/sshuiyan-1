@@ -32,7 +32,7 @@ define(["./module"], function (ctrs) {
             visit_times: "访问次数",
             pv: "测量PV",
             order_conv: "订单转化"
-        }
+        };
 
         $scope.conv_tpye_cn = {
             regist: "注册",
@@ -46,7 +46,7 @@ define(["./module"], function (ctrs) {
         $scope.onUpdate = function (entity) {
             //console.log("传递ID="+entity._id);
             $state.go('pagechange_update',{ 'id':entity._id});
-        }
+        };
 
         //配置默认指标
         $rootScope.checkedArray = ["target_name", "target_url", "needPath","record_type","conv_tpye"  ,"_id" ];
@@ -114,7 +114,7 @@ define(["./module"], function (ctrs) {
                             if(i<item.target_url.length-1){
                                 url=url+"或";
                             }
-                        })
+                        });
                         $rootScope.gridOptions.data[i].target_url=url;
                     }
                     if(item.record_type!=null){
@@ -131,11 +131,11 @@ define(["./module"], function (ctrs) {
         $scope.onDelete = function (index,grid,row) {
             $scope.onDeleteDialog= ngDialog.open({
                 template: '' +
-                '<div class="ngdialog-buttons" ><ui><li> 确认删除吗？<span style=" color: red " >（要测试自己新建条删哈！）<span></li></ui>' +
-                '<button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
-                    <button type="button" class="ngdialog-button ng-button" ng-click="sureonDelete()">确定</button></div>',
+                '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div><ul class="admin-ng-content"><li> 您确定删除这个路径吗？</li></ul>' +
+                '<div class="ng-button-div"><button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
+                    <button type="button" class="ngdialog-button ng-button" ng-click="sureonDelete()">确定</button></div></div>',
 
-                className: 'ngdialog-theme-default',
+                className: 'ngdialog-theme-default admin_ngdialog',
                 plain: true,
                 scope: $scope
             });

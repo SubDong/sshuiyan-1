@@ -39,7 +39,9 @@ define([
         'ui.bootstrap',
         'ngDialog',
         'ngSanitize',
-        'ui.select'
+        'ui.select',
+        'ui.grid.selection'
+
     ]);
 
     myApp.constant('SEM_API_URL', 'http://api.hy.best-ad.cn');

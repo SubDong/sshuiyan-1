@@ -5,7 +5,7 @@ define(["app"], function (app) {
 
     "use strict";
 
-    app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, requestService, SEM_API_URL, $cookieStore, popupService) {
+    app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, requestService, SEM_API_URL, $cookieStore, $location, popupService) {
         $scope.todayClass = true;
         $scope.browserselect = true;
         var user = $rootScope.user
@@ -262,17 +262,16 @@ define(["app"], function (app) {
                     $rootScope.gridArray.unshift($scope.gridObjButton);
                 }
             }
-            angular.forEach(entities, function (subscription, index) {
-                if (subscription.name == item.name) {
-                    $scope.classInfo = 'current';
-                }
-            });
-            //$rootScope.$broadcast("ssh_reload_datashow");
-        };
+
+        }
+        var temp_path = $location.path();
+        var today = temp_path.indexOf("/today");
+        var yesterday = temp_path.indexOf("/yesterday");
+        var month = temp_path.indexOf("/month");
         // 通用表格配置项
         if (typeof($rootScope.checkedArray) != undefined && $scope.tableJu == "html") {
             $scope.gridOptions = {
-                paginationPageSize: 20,
+                paginationPageSize: today != -1 || yesterday != -1 || month != -1 ? 24 : 20,
                 expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
                 //expandableRowHeight: 360,
                 enableColumnMenus: false,
@@ -289,7 +288,7 @@ define(["app"], function (app) {
             };
         } else {
             $scope.gridOptions = {
-                paginationPageSize: 20,
+                paginationPageSize: today != -1 || yesterday != -1 || month != -1 ? 24 : 20,
                 expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
                 //expandableRowHeight: 360,
                 enableColumnMenus: false,
@@ -305,8 +304,12 @@ define(["app"], function (app) {
                         griApiInfo(gridApi);
                     }
                 }
-            };
+
+            }
+            //$rootScope.$broadcast("ssh_reload_datashow");
         }
+        ;
+
 
         $scope.page = "";
         $scope.pagego = function (pagevalue) {
@@ -694,6 +697,110 @@ define(["app"], function (app) {
             $scope.isJudge = false;
             getHtmlTableData();
         }
+        // 搜索词过滤
+        $scope.setGjcFilter = function (gjcText) {
+            if (!$rootScope.tableSwitch) {
+                return;
+            }
+            if (undefined == gjcText || "" == gjcText) {
+                $rootScope.tableSwitch.tableFilter = null;
+            } else {
+                $rootScope.tableSwitch.tableFilter = "[{\"kw\":[\"" + gjcText + "\"]}]";
+            }
+            $scope.isJudge = false;
+            $rootScope.$broadcast("ssh_data_show_refresh");
+            $scope.targetSearch();
+        };
+        // 输入URL过滤
+        $scope.searchURLFilter = function (urlText) {
+            if (!$rootScope.tableSwitch) {
+                return;
+            }
+            if (undefined == urlText || "" == urlText) {
+                $rootScope.tableSwitch.tableFilter = null;
+            } else {
+                $rootScope.tableSwitch.tableFilter = "[{\"loc\":[\"" + urlText + "\"]}]";
+            }
+            $scope.isJudge = false;
+            $rootScope.$broadcast("ssh_data_show_refresh");
+            $scope.targetSearch();
+        };
+        // 按url，按域名过滤
+        $scope.setURLDomain = function (urlText) {
+            var b = "";
+            if (urlText == "rf") {
+                b = 0;
+            } else {
+                b = 1;
+            }
+            var now = +new Date();
+            if (now - evTimeStamp < 100) {
+                return;
+            }
+            evTimeStamp = now;
+            var inputArray = $(".custom_select .styled");
+            inputArray.each(function (i, o) {
+                $(o).prev("span").css("background-position", "0px 0px");
+                $(o).prop("checked", false);
+            });
+            $(inputArray[b]).prev("span").css("background-position", "0px -51px");
+            if (undefined == urlText || "" == urlText) {
+                $rootScope.tableSwitch.latitude.field = null;
+            } else {
+                $rootScope.gridArray[1].field = urlText;
+                $rootScope.tableSwitch.latitude.field = urlText;
+            }
+            $scope.isJudge = false;
+            $rootScope.$broadcast("ssh_data_show_refresh");
+            $scope.targetSearch("rf_dm");
+        };
+        // 外部链接搜索
+        $scope.searchURLFilterBySourceEl = function (urlText) {
+            if (!$rootScope.tableSwitch) {
+                return;
+            }
+            if (undefined == urlText || "" == urlText) {
+                $rootScope.tableSwitch.tableFilter = "[{\"rf_type\": [\"3\"]}]";
+            } else {
+                $rootScope.tableSwitch.tableFilter = "[{\"rf_type\": [\"3\"]}, {\"rf\":[\"" + urlText + "\"]}]";
+            }
+            $scope.isJudge = false;
+            $rootScope.$broadcast("ssh_data_show_refresh");
+            $scope.targetSearch();
+        };
+        // 查看入口页链接
+        $scope.showEntryPageLink = function (row, _type) {
+            if (_type == 1) {// 搜索引擎
+                popupService.showEntryPageData(row.entity.rf_type);
+            } else if (_type == 2) {
+                popupService.showEntryPageData(row.entity.se);
+            } else {
+                popupService.showEntryPageData(row.entity.rf);
+            }
+        };
+        // 实时访问输入查询
+        $scope.input_gjc = "";
+        $scope.input_rky = "";
+        $scope.input_ip = "";
+        $scope.realTimeVisit = function () {
+            var visitFilert = [];
+            if ($scope.input_gjc != "") {
+                visitFilert.push("{\"kw\": \"" + $scope.input_gjc + "\"}")
+            }
+            if ($scope.input_rky != "") {
+                visitFilert.push("{\"entrance\": \"1\"},{\"loc\":\"" + $scope.input_rky + "\"}")
+            }
+            if ($scope.input_ip != "") {
+                visitFilert.push("{\"remote\": \"" + $scope.input_ip + "\"}")
+            }
+            if ($scope.input_ip == "" && $scope.input_rky == "" && $scope.input_gjc == "") {
+                $rootScope.tableSwitch.tableFilter = null;
+            } else {
+                $rootScope.tableSwitch.tableFilter = "[" + visitFilert + "]";
+            }
+            $scope.isJudge = false;
+            getHtmlTableData();
+        }
         //前端ui-grid通用查询方法
         $rootScope.targetSearch = function (isClicked) {
             $scope.gridOpArray = angular.copy($rootScope.gridArray);
@@ -741,7 +848,7 @@ define(["app"], function (app) {
                 }).success(function (data, status) {
                     $rootScope.$broadcast("LoadDateShowDataFinish", data);
                     if ($rootScope.tableSwitch.promotionSearch != undefined && $rootScope.tableSwitch.promotionSearch) {
-                        var url = SEM_API_URL +"/sem/report/account?a=" + user + "&b=" + baiduAccount + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1"
+                        var url = SEM_API_URL + "/sem/report/account?a=" + user + "&b=" + baiduAccount + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1"
                         $http({
                             method: 'GET',
                             url: url
@@ -804,6 +911,7 @@ define(["app"], function (app) {
                                 }
                             })
                         }
+
                         if ($rootScope.tableFormat != "hour") {
                             if ($rootScope.tableFormat == "week") {
                                 data.forEach(function (item, i) {
@@ -845,7 +953,6 @@ define(["app"], function (app) {
                                         var dataString = (infoKey.toString().length >= 2 ? "" : "0")
                                         obj["period"] = dataString + infoKey + ":00 - " + dataString + infoKey + ":59";
                                         maps[infoKey] = obj;
-
                                     }
                                     if (info.label == "平均访问时长") {
                                         obj["avgTime"] = ad.formatFunc(info.quota[i], "avgTime");
@@ -1334,21 +1441,45 @@ define(["app"], function (app) {
             title: "访问页数目标"
         }
         ];
-    })
-    ;
-})
-;
+        $scope.init = function (timeData) {
+            $scope.gridOptions.data = [];
+            $http.get("api/changeList?start=" + timeData.start + ",end=" + timeData.end + ",contrastStart=" + timeData.contrastStart + ",contrastEnd=" + timeData.contrastEnd).success(function (data) {
+                $scope.gridOptions.data = data.pv;
+                $scope.gridOptions.enableSorting = true;
+                $scope.gridOptions.columnDefs[4].cellClass = function (grid, row, col, rowRenderIndex, colRenderIndex) {
+                    if (grid.getCellValue(row, col).toString().substring(0, 1) == "+") {
+                        return "riseCell";
+                    } else if (grid.getCellValue(row, col).toString().substring(0, 1) == "-") {
+                        return "descendCell";
+                    } else {
+                        return "flatCell";
+                    }
+                }
+            });
+        };
+
+        $scope.$on('parrentData', function (d, data) {
+            $scope.gridOpArray = angular.copy(data.gridArray);
+            $scope.gridOptions.columnDefs = $scope.gridOpArray;
+            $scope.init(data);
+        });
+        $scope.$emit("Ctr1NameChange", '');
+    });
+});
 /**********************隐藏table中按钮的弹出层*******************************/
 var s = 1;
+
 function getMyButton(item) {
     var a = document.getElementsByClassName("table_win");
     theDisplay(a);
     item.nextSibling.style.display = "block";
     s = 1
 }
+
 function hiddenMyButton(item) {
     item.nextSibling.style.display = "none";
 }
+
 function theDisplay(a) {
     for (var i = 0; i < a.length; i++) {
         if (document.getElementsByClassName("table_win")[i].style.display == "block") {
@@ -1356,6 +1487,7 @@ function theDisplay(a) {
         }
     }
 }
+
 document.onclick = function () {
     var a = document.getElementsByClassName("table_win");
     if (a.length != 0) {

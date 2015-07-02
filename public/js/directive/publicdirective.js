@@ -82,6 +82,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     $rootScope.tableTimeStart = 0;
                     $rootScope.tableTimeEnd = 0;
                     $rootScope.keyFormat = "hour";
+                    $rootScope.start=0;
                     $rootScope.end = 0;
                     scope.reloadByCalendar("today");
                     $('#reportrange span').html(GetDateStr(0));
@@ -200,8 +201,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                             $('#choicetrange').data('daterangepicker').setEndDate(dateTime[1]);
                         });
                     }
-                    // $('#reportrange span').html(GetDateStr(0))
-
                 }
                 scope.compareReset = function () {
                     scope.choiceClass = false;
@@ -308,7 +307,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                         separator: ' to '
                     },
                     function (start, end, label) {
-                        //if(){
                         $rootScope.datepickerClickTow(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
                         if (!$rootScope.datePickerCompare) {
                             $rootScope.datePickerCompare = function (a, b, c) {
@@ -324,10 +322,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                         }
                     });
             }
-            //,
-            //controller: function($scope, $element) {
-            //    $scope.ctrl = !!$element.controller('ngModel');
-            //}
 
         };
         return option;
@@ -345,7 +339,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
         };
         return option;
     });
-    app.directive("refresh", function ($rootScope, requestService, $location, $http) {
+    app.directive("refresh", function ($rootScope, $location) {
         var option = {
             restrict: "EA",
             template: "<div class=\"right_refresh fr\"><button class=\"btn btn-default btn-Refresh fl\" ng-click=\"page_refresh()\"  type=\"button\"><span aria-hidden=\"true\" class=\"glyphicon glyphicon-refresh\"></span></button><button class=\"btn btn-default btn-Refresh fl\" type=\"button\" ng-show=\"send\" >发送</button><ui-select ng-model=\"export.selected\" ng-change='fileSave(export.selected)' theme=\"select2\" ng-hide=\"menu_select\" reset-search-input=\"false\" class=\"fl\"style=\"min-width: 90px;background-color: #fff;\"> <ui-select-match placeholder=\"下载\">{{$select.selected.name}} </ui-select-match> <ui-select-choices repeat=\"export in exportsaa\"> <span ng-bind-html=\"export.name\"></span></ui-select-choices></ui-select></div>",
@@ -456,7 +450,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
         };
         return option;
     });
-
     /**
      * Create by wms on 2015-04-22.合计信息显示
      */
@@ -638,6 +631,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
 
                 scope.$on("LoadDateShowSEMDataFinish", function (e, msg) {
                     scope.isCompared = false;
+                    scope.setDefaultShowArray();
                     scope.pushSEOData(msg);
                 });
             }
@@ -815,7 +809,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
 
                 scope.loadCompareDataShow = function (startTime, endTime) {
                     var semRequest = $http.get(SEM_API_URL + "search_word/" + $rootScope.userType
-                    + "/?startOffset=" + startTime + "&endOffset=" + endTime);
+                        + "/?startOffset=" + startTime + "&endOffset=" + endTime);
                     var count = 0;
                     $q.all([semRequest]).then(function (final_result) {
                         angular.forEach(final_result[0].data, function (r) {
@@ -953,6 +947,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     return count ? value : "0";
                 }
                 case "cost":
+                case "cpc":
                 {
                     return value ? value.toFixed(2) : value;
                 }
@@ -963,7 +958,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     return count ? value : "0";
                 }
                 case "avgPage":
-                case "cpc":
                 {
                     return count ? (value == 0 ? "0" : (value / count).toFixed(2)) : "0";
 //                    return count ? (value / count).toFixed(2) : "0";

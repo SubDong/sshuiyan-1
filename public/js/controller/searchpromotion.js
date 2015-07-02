@@ -275,6 +275,7 @@ define(["./module"], function (ctrs) {
                 method: 'GET',
                 url: url
             }).success(function (dataSEM, status) {
+                $rootScope.$broadcast("LoadDateShowSEMDataFinish", dataSEM);
                 var dataArray = [];
                 dataSEM.forEach(function (item, i) {
                     var searchId = $rootScope.tableSwitch.promotionSearch.SEMData;
@@ -355,6 +356,7 @@ define(["./module"], function (ctrs) {
                 + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=ssc&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
             }).success(function (data, status) {
                 var dataArray = [];
+                $rootScope.$broadcast("LoadDateShowDataFinish", data);
                 if (data != null && data.length > 0) {
 
                     data.forEach(function (item, i) {
@@ -384,7 +386,6 @@ define(["./module"], function (ctrs) {
                         });
                     });
                 }
-                ;
                 $scope.gridOptions.rowHeight = 55;
                 $scope.gridOptions.data = dataArray;
 
