@@ -100,6 +100,16 @@ define(['./module'], function (ctrs) {
                 }
             }
         }
+        $scope.legendData=[
+            {label:'浏览量(PV)',type:'number'},
+            {label:'访客数(UV)',type:'number'},
+            {label:'IP数',type:'number'},
+            {label:'跳出率',type:'percent'},
+            {label:'抵达率',type:'percent'},
+            {label:'平均访问时长',type:'time'},
+            {label:'访问次数',type:'number'},
+            {label:'平均访问页数',type:'number'},
+        ];
         $scope.charts = [
             {
                 config: {
