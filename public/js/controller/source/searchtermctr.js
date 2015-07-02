@@ -4,10 +4,23 @@
 define(["./module"], function (ctrs) {
 
     'use strict';
-    ctrs.controller('searchtermctr', function ($scope, $rootScope, $q, $http, requestService, messageService, areaService, uiGridConstants,popupService) {
+    ctrs.controller('searchtermctr', function ($scope, $rootScope, $q, $http, requestService, messageService, areaService, uiGridConstants,popupService,$location) {
             $scope.city.selected = {"name": "全部"};
             $scope.visible = false;
-            $scope.todayClass = true;
+            if($location.url().split("?").length>1) {
+                var param = $location.url().split("?")[1];
+               if(param == 1){
+                   $scope.todayClass = true;
+               }else if(param == 2){
+                   $scope.yesterdayClass = true;
+               }else if(param == 3){
+                   $scope.sevenDayClass = true;
+               }else if(param == 4){
+                   $scope.monthClass = true;
+               }
+            }else{
+                $scope.todayClass = true;
+            }
             //table默认信息配置
             $rootScope.tableTimeStart = 0;
             $rootScope.tableTimeEnd = 0;

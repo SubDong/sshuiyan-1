@@ -149,7 +149,8 @@ define(["app"], function (app) {
             var requestParams = chartUtils.qAll(quotas);
             var requestArray = [];
             if (requestParams[0] != "") {
-                var semRequest = $http.get(SEM_API_URL + user + "/" + baiduAccount + "/" + semType + "/" + requestParams[0] + "?startOffset=" + start + "&endOffset=" + end);
+                //var test = SEM_API_URL + "/sem/report/"+semType+"?a=" + user + "&b=" + baiduAccount + "&startOffset=" + start + "&endOffset=" + end+"&q="+requestParams[0];
+                var semRequest = $http.get(SEM_API_URL + "/sem/report/" + semType + "?a=" + user + "&b=" + baiduAccount + "&startOffset=" + start + "&endOffset=" + end + "&q=" + requestParams[0]);
                 semRequest.error(function (e) {
                     console.error(e);
                 })
@@ -277,7 +278,7 @@ define(["app"], function (app) {
         };
         $rootScope.datePickerCompare = function (start, end, label) {
             $scope.compareType = true;
-            $scope.reset();
+            // $scope.reset();
             $scope.choiceClass = true;
             var times = chartUtils.getTimeOffset(start, end);
             $rootScope.start = times[0];
@@ -308,10 +309,10 @@ define(["app"], function (app) {
             var requestParams = chartUtils.qAll(type);
             var requestArray = [];
             if (requestParams[0] != "") {
-                var semRequest = $http.get(SEM_API_URL + $rootScope.user + "/" + $rootScope.baiduAccount + "/" + semType + "/" + requestParams[0] + "?startOffset=" + times[0] + "&endOffset=" + times[0]);
+                var semRequest = $http.get(SEM_API_URL + "/sem/report/" + semType + "?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + times[0] + "&endOffset=" + times[0] + "&q=" + requestParams[0]);
                 requestArray.push(semRequest);
                 if (times[1] != 0) {
-                    var semRequestCompare = $http.get(SEM_API_URL + $rootScope.user + "/" + $rootScope.baiduAccount + "/" + semType + "/" + requestParams[0] + "?startOffset=" + times[1] + "&endOffset=" + times[1]);
+                    var semRequestCompare = $http.get(SEM_API_URL + "/sem/report/"+semType+"?a=" + $rootScope.user  + "&b=" + $rootScope.baiduAccount + "&startOffset=" + times[1] + "&endOffset=" + times[1]+"&q="+requestParams[0]);
                     requestArray.push(semRequestCompare);
                 }
             }

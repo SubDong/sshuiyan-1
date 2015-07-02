@@ -6,9 +6,6 @@ define(['./module'], function (ctrs) {
     'use strict';
 
     ctrs.controller("indexctr", ['$scope', '$rootScope', '$http', 'requestService', 'messageService', 'areaService', function ($scope, $rootScope, $http, requestService, messageService, areaService) {
-      $scope.menuselect=function($location){
-
-       }
         $scope.todayClass = true;
         $scope.hourcheckClass = true;
         $scope.menu_select = false;
@@ -16,6 +13,23 @@ define(['./module'], function (ctrs) {
         $scope.reset = function () {
             $scope.definClass = false;
         };
+//        查看更多中函数跳转传递参数
+        $scope.is_date_select = function(url) {
+            var a ;
+            if($scope.todayClass){
+               a = 1;
+            }else if($scope.yesterdayClass) {
+                a = 2;
+            }else if($scope.sevenDayClass) {
+                a = 3;
+            }else if($scope.monthClass) {
+                a = 4;
+            }else{
+                a =  $('#reportrange span').html().split('至');
+                a = a[0]+"#"+a[1];
+            }
+            window.location.href = url+"?"+a;
+        }
         $scope.gridOptions = {
             enableColumnMenus: false,
             enableSorting: true,

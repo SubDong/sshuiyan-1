@@ -1,28 +1,27 @@
-<div class="menu">
-    <div ng-controller="menuctr">
-        <ssh-accordion>
-            <ssh-expander ng-repeat="adminmenu in adminmenus"  ng-class='{current:$index==selectedRow}' ng-click='selectRestaurant($index)' class=""  etitle="adminmenu.title" etype="adminmenu.stype" esref="adminmenu.sref" eicon="adminmenu.icon" echildren="adminmenu.child" ></ssh-expander>
-        </ssh-accordion>
-    </div>
-</div>
 <div class="middle_containers" ng-controller="adtrack">
     <div class="web_list">
         <!--网站导航-->
         <div class="web_list_nav">
             <p><span ng-bind-html="userTypeName"></span> -指定广告跟踪</p>
+            <div  class="web_list_nav_right">
+                <ul>
+                    <li><a data-ng-href="#conf/webcountsite/adtrack_add" class="btn btn-info nav_btn ">新增指定广告目标</a></li>
+                    <li><button class="btn btn-info nav_btn ">查看报告 </button></li>
+                </ul>
+            </div>
         </div>
         <!--网站上部列表部分-->
         <div class="web_list_up">
-            <div class="table_content" ng-controller="admintablectr">
+            <div class="table_content">
                 <div class="custom_table">
                     <div ui-grid="gridArray"  class="grid grid_table clearfix secondary_table" ui-grid-selection ui-grid-pagination
                          ui-grid-exporter ui-grid-auto-resize></div>
+                    <gridpageht>
+                    </gridpageht>
                 </div>
             </div>
         </div>
         <!--网站底部列表-->
-        <div class="web_list_down">
-            <a data-ng-href="#conf/webcountsite/adtrack_add" class="btn btn-default">+&nbsp;新增指定广告跟踪</a>
-        </div>
+
     </div>
 </div>

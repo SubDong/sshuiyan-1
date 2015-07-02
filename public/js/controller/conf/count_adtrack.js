@@ -61,8 +61,8 @@ define(["./module"], function (ctrs) {
                 scope : $scope
             });
         };
-        $rootScope.urlDialogHtml = "<div class='mid_left'>生成URL<div class='mid_left_code'>   </div> </div><div class='mid_right'><button type='button' class='btn btn-default navbar-btn'>复制</button><ul type='disc'>" +
-            "  <li style='color：red；'>请将生成的URL复制到你的其他媒介的推广目标URL位置</li></ul></div>";
+        $rootScope.urlDialogHtml = "<div class='mid_left'><div class=\"ngdialog-tilte\">复制代码</div ><div class='copycode_content ngdialog-tilte'>生成URL<div class='mid_left_code'>   </div> </div><div class='mid_right'><button type='button' class='btn btn-default navbar-btn'>复制</button><ul type='disc'>" +
+            "  <li style='color：red；'>请将生成的URL复制到你的其他媒介的推广目标URL位置</li></ul></div></div>";
 
 
     });

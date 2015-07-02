@@ -81,11 +81,23 @@ define(["./module"], function (ctrs) {
             config["noFormat"] = "noFormat";
             config["twoYz"] = "twoYz";
             cf.renderChart(final_result, config);
-            $scope.initPeron();
+            //$scope.initPeron();
         }
         $scope.initPeron = function () {
-            $http.get(SEM_API_URL + "real_time/" + $rootScope.userType).success(function (data) {
-                $scope.visitorCount = data.length;
+            $http.get("api/halfhour?userType=" + $rootScope.userType + "&type=uv&start=0&end=0&dimension=period").success(function (data) {
+                var json = JSON.parse(eval("(" + data + ")").toString());
+                var result = json[0].result;
+                var count = 0;
+                if (result) {
+                    if (result.buckets) {
+                        if (result.buckets.length > 0) {
+                            result.buckets.forEach(function (e) {
+                                count += Number(e.uv_filter.uv_aggs.value);
+                            });
+                        }
+                    }
+                }
+                $scope.visitorCount = count;
             });
         }
         $scope.initPeron();

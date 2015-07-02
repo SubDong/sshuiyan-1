@@ -24,7 +24,7 @@ define(["./module"], function (ctrs) {
                 $scope.gridOptions.data.splice($scope.gridOptions.data.indexOf($scope.entity), 1);
                 $scope.urlDialog.close();
             });
-        }
+        };
 
 
 
@@ -35,13 +35,13 @@ define(["./module"], function (ctrs) {
 
             $scope.urlDialog = ngDialog.open({
                 template:'\
-              <div class="ngdialog-buttons" >\
-                        <ul>\
+              <div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div>\
+                        <ul class="admin-ng-content">\
                         <li> 你确定删除这个子目录吗？</li></ul>   \
-                    <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click=closeThisDialog(0)>返回</button>\
-                    <button type="button" class="ngdialog-button ng-button" ng-click=deleteGridData()>确定</button>\
+                    <div class="ng-button-div"><button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click=closeThisDialog(0)>返回</button>\
+                    <button type="button" class="ngdialog-button ng-button" ng-click=deleteGridData()>确定</button></div>\
                 </div>',
-                className: 'ngdialog-theme-default',
+                className: 'ngdialog-theme-default admin_ngdialog',
                 plain: true,
                 scope : $scope
             });
@@ -51,7 +51,7 @@ define(["./module"], function (ctrs) {
 
             $state.go('childlist_update',{ 'id':entity._id});
 
-        }
+        };
 
 
         //配置-表格

@@ -56,7 +56,7 @@ define(["./module"], function (ctrs) {
             add_update: ""
         };
         //table配置
-        $rootScope.adminSetHtml = "<div class='mid_left'><div id='base_code' class='mid_left_code'>" +
+        $rootScope.adminSetHtml = "<div class='mid_left'> <div class=\"ngdialog-tilte\">复制代码</div ><div class='copycode_content'><div id='base_code' class='mid_left_code'>" +
             "&lt;script&gt;\<br\>" +
             "var _pct= _pct|| [];\<br\>" +
             " (function() {\<br\>" +
@@ -66,9 +66,9 @@ define(["./module"], function (ctrs) {
             "    s.parentNode.insertBefore(hm, s);\<br\>" +
             " })();\<br\>" +
             "&lt;/script&gt;" +
-            "</div> </div><div class='mid_right'><button type='button' class='btn btn-default navbar-btn' ssh-clip=''  data-clipboard-target='base_code'>复制</div></button><ul type='disc'>" +
+            "</div> <div class='mid_right'><button type='button' class='btn btn-default navbar-btn' ssh-clip=''  data-clipboard-target='base_code'>复制</div></button><ul type='disc'>" +
             "  <li>请将代码添加至网站全部页面的&lt;/head&gt;标签前；</li><li>建议在header.htm类似的页头模板页面中安装，以达到一处安装，全站皆有的效果；</li><li>如需在JS文件中调用统计分析代码，请直接去掉以下代码首尾的&lt;script type='text/javascript' &gt;与&lt;/script&gt;后，放入JS文件中即可；</li>" +
-            "<li> 如果代码安装正确，一般20分钟 后,可以查看网站分析数据；</li></ul></div>";
+            "<li> 如果代码安装正确，一般20分钟 后,可以查看网站分析数据；</li></ul></div></div>";
 
 
         //配置默认指标
@@ -179,8 +179,8 @@ define(["./module"], function (ctrs) {
             $scope.urlDialog = ngDialog.open({
                 template: '\
                 <form role="form" name="adminmainctrForm" class="form-horizontal" novalidate>\
-              <div class="ngdialog-buttons" >\
-                   <ul> \
+              <div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div>\
+                   <ul class="admin-ng-content admin-ngeventchange"> \
                    <li>网站域名</li>\
                      <li><input type="text" name="remote" adminmainctr-remote-validation data-ng-focus="site_url_focus = true" data-ng-blur="site_name_focus = false" data-ng-model="dialog_model.site_url" class="form-control" required/></li> \
                     <li ng-show="adminmainctrForm.remote.$error.remote" style="color: red;">网站域名重复！</li> \
@@ -199,10 +199,10 @@ define(["./module"], function (ctrs) {
                     <li>3.子目录（如：www.baidu.com/sub）</li>\
                     <li>4.wap站域名（如：wap.baidu.com）</li>\
                     </ul>\
-                    <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
-                    <button type="button" ng-disabled="adminmainctrForm.$invalid" class="ngdialog-button  ng-button" ng-click="submit()">确定</button>\
+                    <div class="ng-button-div"><button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
+                    <button type="button" ng-disabled="adminmainctrForm.$invalid" class="ngdialog-button  ng-button" ng-click="submit()">确定</button></div>\
                 </div></form>',
-                className: 'ngdialog-theme-default',
+                className: 'ngdialog-theme-default admin_ngdialog',
                 plain: true,
                 scope: $scope
             });
@@ -212,8 +212,9 @@ define(["./module"], function (ctrs) {
             $scope.urlDialog = ngDialog.open({
                 template: '\
                 <form role="form" name="adminmainctrForm" class="form-horizontal" novalidate>\
-              <div class="ngdialog-buttons" >\
-                   <ul> \
+              <div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div>\
+              \
+                   <ul class="admin-ng-content"> \
                    <li>网站域名</li>\
                      <li><input type="text" name="remote" readOnly  adminmainctr-remote-validation data-ng-focus="site_url_focus = true" data-ng-blur="site_name_focus = false" data-ng-model="dialog_model.site_url" class="form-control" required/></li> \
                     <li ng-show="adminmainctrForm.remote.$error.remote" style="color: red;">网站域名重复！</li> \
@@ -232,10 +233,10 @@ define(["./module"], function (ctrs) {
                     <li>3.子目录（如：www.baidu.com/sub）</li>\
                     <li>4.wap站域名（如：wap.baidu.com）</li>\
                     </ul>\
-                    <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
+                    <div class="ng-button-div"><button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
                     <button type="button" ng-disabled="adminmainctrForm.$invalid" class="ngdialog-button ng-button" ng-click="submit()">确定</button>\
-                </div></form>',
-                className: 'ngdialog-theme-default',
+                </div></div></form>',
+                className: 'ngdialog-theme-default admin_ngdialog ',
                 plain: true,
                 scope: $scope
             });
@@ -247,7 +248,7 @@ define(["./module"], function (ctrs) {
             $scope.dialog_model.is_top = false;
             //$scope.dialog_model.add_update = "add";
             $scope.openAddDialog();
-        }
+        };
         $scope.onUpdate = function (index, grid, row) {
             $scope.dialog_model.readOnly = "readonly";
             $scope.dialog_model.site_url = row.entity.site_url;
@@ -255,7 +256,7 @@ define(["./module"], function (ctrs) {
             $scope.dialog_model.is_top = row.entity.is_top;
             $scope.dialog_model.add_update = "update";
             $scope.openUpdateDialog();
-        }
+        };
         /**
          * 删除按钮响应
          * @param index
@@ -265,10 +266,10 @@ define(["./module"], function (ctrs) {
         $scope.onDelete = function (index, grid, row) {
             $scope.onDeleteDialog = ngDialog.open({
                 template: '' +
-                '<div class="ngdialog-buttons" ><ui><li> 确认删除吗？<span style=" color: red " >（要测试自己新建条删哈！）<span></li></ui>' +
-                '<button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
-                  <button type="button" class="ngdialog-button ng-button" ng-click="sureonDelete()">确定</button></div>',
-                className: 'ngdialog-theme-default',
+                '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div><ul class="admin-ng-content"><li> 删除后，百思慧眼将不在跟踪统计该目标，该目标的\
+                历史数据会被删除且无法恢复。<br/><br/>您希望现在删除吗？</li></ul>' + '<div class="ng-button-div"><button type="button" class="ngdialog-button ng-button " ng-click="sureonDelete()">确认</button>\
+                  <button type="button" class="ngdialog-button ngdialog-button-secondary " ng-click="closeThisDialog(0)">取消</button></div></div>',
+                className: 'ngdialog-theme-default admin_ngdialog',
                 plain: true,
                 scope: $scope
             });
@@ -281,9 +282,8 @@ define(["./module"], function (ctrs) {
                     url: query
                 }).success(function (dataConfig, status) {
                     if (dataConfig == "\"success\"") {
-                        refushGridData();
                     }
-
+                    refushGridData();
                 });
             };
         };
@@ -323,12 +323,12 @@ define(["./module"], function (ctrs) {
             }
             $scope.urlDialog = ngDialog.open({
                 template: '\
-                  <div class="ngdialog-buttons" >\
-                            <ul>' + tip + '</ul>   \
-                        <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
-                        <button type="button" class="ngdialog-button ng-button" ng-click="onPause()">确定</button>\
+                  <div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div>\
+                            <ul class="admin-ng-content">' + tip + '</ul>   \
+                       <div class="ng-button-div"> <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
+                        <button type="button" class="ngdialog-button ng-button" ng-click="onPause()">确定</button></div>\
                   </div>',
-                className: 'ngdialog-theme-default',
+                className: 'ngdialog-theme-default admin_ngdialog',
                 plain: true,
                 scope: $scope
 
@@ -347,7 +347,7 @@ define(["./module"], function (ctrs) {
             var thtml = $rootScope.adminSetHtml.replace("ex_track_id", row.entity.track_id);
             $scope.urlDialog = ngDialog.open({
                 template: thtml,
-                className: 'ngdialog-theme-default',
+                className: 'ngdialog-theme-default admin_ngdialog',
                 plain: true,
                 scope: $scope
             });
@@ -366,16 +366,16 @@ define(["./module"], function (ctrs) {
                 $scope.gridOptions.data.forEach(function (data) {
                     switch (data.track_status) {
                         case 0:
-                            data.track_status_ch = "待测试"
+                            data.track_status_ch = "待测试";
                             break;
                         case 1:
-                            data.track_status_ch = "正常"
+                            data.track_status_ch = "正常";
                             break;
                         case -1:
-                            data.track_status_ch = "异常"
+                            data.track_status_ch = "异常";
                             break;
                         default :
-                            data.track_status_ch = "未知"
+                            data.track_status_ch = "未知";
                             break;
                     }
                 })
@@ -569,6 +569,7 @@ define(["./module"], function (ctrs) {
             }
         };
         Custom.initCheckInfo();//页面check样式js调用
+
 
     });
 })

@@ -93,7 +93,7 @@ define(["../module"], function (app) {
                 enableHorizontalScrollbar: 0,
                 columnDefs: $rootScope.gridArray,
                 onRegisterApi: function (girApi) {
-                    $rootScope.gridApi2 = girApi;
+                    $rootScope.gridApiAdmin = girApi;
                     adminGriApihtml(girApi);
                 }
             };
@@ -109,7 +109,7 @@ define(["../module"], function (app) {
                 enableHorizontalScrollbar: 0,
                 columnDefs: $rootScope.gridArray,
                 onRegisterApi: function (gridApi) {
-                    $rootScope.gridApi2 = gridApi;
+                    $rootScope.gridApiAdmin = gridApi;
                     adminGriApiInfo(gridApi);
                 }
             };
@@ -138,7 +138,7 @@ define(["../module"], function (app) {
                 })
             }
 
-        }
+        };
         ////
         var adminGriApihtml = function (gridApi) {
             if (typeof($rootScope.checkedArray) != undefined && $rootScope.tableJu == "html") {
@@ -158,6 +158,8 @@ define(["../module"], function (app) {
                 });
             }
         };
+
+
         ///////////
     });
 });

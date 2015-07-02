@@ -39,15 +39,17 @@ define([
         'ui.bootstrap',
         'ngDialog',
         'ngSanitize',
-        'ui.select'
+        'ui.select',
+        'ui.grid.selection'
+
     ]);
 
     myApp.constant('SEM_API_URL', 'http://182.92.227.79:9080/');
 
-    myApp.controller('menuctr', function ($scope, $location) {
+    myApp.controller('menuctr', function ($scope, $rootScope, $location) {
         $scope.oneAtATime = true;
         // 项目导航模块。用于页面刷新时，当前选中模块index的获取
-        $scope.array = ["index", "extension", "trend", "source", "page", "visitor", "value","transform","ads"];
+        $scope.array = ["index", "extension", "trend", "source", "page", "visitor", "value","transform", "ads"];
         $scope.selectRestaurant = function (row) {
             $scope.selectedRow = row;
         };
@@ -61,8 +63,11 @@ define([
             }
             return $scope.menuClass(menu, hrefs, i + 1);
         }
-
-        $scope.selectedRow = $scope.menuClass(menu, $scope.array, 0);
+        if (menu.indexOf("/conf") != -1) {
+            $scope.selectedRow  = menu.length > 6 ? 1 : 0;
+        } else {
+            $scope.selectedRow = $scope.menuClass(menu, $scope.array, 0);
+        }
         $scope.groups = [
             {
                 title: '趋向分析 ',
@@ -86,7 +91,15 @@ define([
             $scope.currentMenu = menu;
         }
 
-        $scope.expanders = [
+        $scope.$on("$locationChangeSuccess", function (e, n, o) {
+            if ($location.path().indexOf("/conf") != -1) {// 后台管理
+                $scope.expanders = angular.copy($scope.adminmenus);
+            } else {
+                $scope.expanders = angular.copy($scope.frontmenus);
+            }
+        });
+
+        $scope.frontmenus = [
             {
                 title: '网站概览',
                 icon: 'glyphicon glyphicon-th-large',
@@ -280,7 +293,7 @@ define([
             $rootScope.perfectUser = userObj;
             $rootScope.user = userObj;
             $rootScope.usites = $cookieStore.get('usites');
-            $rootScope.default = $rootScope.usites ? $rootScope.usites[0].site_name : '网速过慢，请重新加载！';     // default site
+            $rootScope.default = $rootScope.usites ? $rootScope.usites[0].site_name : '用户信息加载失败，请重新刷新页面！';     // default site
             $rootScope.defaultType = $rootScope.usites ? $rootScope.usites[0].type_id : '暂无';   // default site id
         }
         $scope.initPerfectAccount();
@@ -292,6 +305,7 @@ define([
             $rootScope.siteId = $rootScope.usites[0].site_id;
             $rootScope.userTypeName = $rootScope.usites[0].site_name;
             $rootScope.siteUrl = $rootScope.usites[0].site_url;
+            $rootScope.siteTrackId=$rootScope.usites[0].site_track_id;
         }
         $scope.changeUrl = function (select) {
             $rootScope.user = $rootScope.perfectUser;
@@ -300,6 +314,7 @@ define([
             $rootScope.siteId = select.site_id;
             $rootScope.siteUrl = select.site_url;
             $rootScope.userTypeName = select.site_name;
+            $rootScope.siteTrackId=select.site_track_id;
             if ($location.path().indexOf("conf") > -1) {
                 $state.go("conf");
             } else {

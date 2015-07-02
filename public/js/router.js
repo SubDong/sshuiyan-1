@@ -651,7 +651,9 @@ define(["angular", "./app"], function (angular, myApp) {
                     templateUrl: '../conf/webcountsite/eventchange.html',
                     resolve: {
                         load: loadDeps([
-                            "controller/conf/count_eventchange"
+                            "controller/conf/count_eventchange",
+                            "controller/conf/eventchange_updatectr",
+                            "controller/conf/admintablectr"
                         ])
                     }
                 })

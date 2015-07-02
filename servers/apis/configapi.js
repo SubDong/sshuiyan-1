@@ -96,8 +96,8 @@ api.get("/eventchnage_list", function (req, res) {
             dao.find(schema_name, query['query'], null, {}, function (err, docs) {
                 if (docs != null && docs.length > 0) {
                     docs.forEach(function (item) {
-                        console.log("delete event="+item.root_url + ":e:"+item.event_page);
-                        req.redisclient.del(item.root_url + ":e:"+item.event_page);
+                        console.log("delete event=" + item.root_url + ":e:" + item.event_page);
+                        req.redisclient.del(item.root_url + ":e:" + item.event_page);
                     });
                     //查询 删除级联 删除本身
                     dao.remove(schema_name, qry, function (del) {
@@ -203,6 +203,7 @@ api.get("/site_list", function (req, res) {
                 req.redisclient.multi().set("typeid:".concat(ins.track_id), ins.type_id)//
                     .set("ts:" + temp.track_id, ins._id)//
                     .set("st:" + ins._id, ins.track_id)//
+                    .set("tsu:" + ins.track_id, temp.site_url)
                     .set("tsj:" + ins.track_id, JSON.stringify(siteconfig))
                     //.set(ins._id + ":mouse:" + ins.site_url, JSON.stringify(config_mouse))//目前无具体URL配置 暂时设置在站点上
                     .set("duration:" + ins._id, JSON.stringify(time_config))//站点级别设置
@@ -229,6 +230,7 @@ api.get("/site_list", function (req, res) {
                                 sitepause: docs[0].site_pause//站点暂停状态，false启用，true暂停
                             }
                             req.redisclient.multi()
+                                .set("tsu:" + docs[0].track_id, docs[0].site_url)
                                 .set("tsj:" + docs[0].track_id, JSON.stringify(siteconfig)).exec();
                         }
                     });
@@ -243,6 +245,7 @@ api.get("/site_list", function (req, res) {
                         //删除Redis
                         req.redisclient.del("typeid:" + item.track_id);
                         req.redisclient.del("ts:" + item.track_id);
+                        req.redisclient.del("tsu:" + item.track_id);
                         req.redisclient.del("tsj:" + item.track_id);
                         req.redisclient.del("st:" + item.type_id);
                         req.redisclient.del("duration:" + item._id);
@@ -255,17 +258,24 @@ api.get("/site_list", function (req, res) {
                             uid: item.uid
                         };
                         console.log("remove query=" + del_qry1);
-                        dao.remove("siterules_model", JSON.stringify(del_qry1) ,function(){});//统计规则
-                        dao.remove("page_conv_model", JSON.stringify(del_qry1),function(){});//页面转化
-                        dao.remove("converts_model", JSON.stringify(del_qry1),function(){});//时长转化
-                        dao.remove("page_title_model", JSON.stringify(del_qry1),function(){});//页面标题
-                        dao.remove("adtrack_model", JSON.stringify(del_qry1),function(){});//广告
+                        dao.remove("siterules_model", JSON.stringify(del_qry1), function () {
+                        });//统计规则
+                        dao.remove("page_conv_model", JSON.stringify(del_qry1), function () {
+                        });//页面转化
+                        dao.remove("converts_model", JSON.stringify(del_qry1), function () {
+                        });//时长转化
+                        dao.remove("page_title_model", JSON.stringify(del_qry1), function () {
+                        });//页面标题
+                        dao.remove("adtrack_model", JSON.stringify(del_qry1), function () {
+                        });//广告
                         var del_qry2 = {
                             root_url: item._id,
                             uid: item.uid
                         };
-                        dao.remove("subdirectories_model", JSON.stringify(del_qry2),function(){});//子目录管理
-                        dao.remove("event_change_model", JSON.stringify(del_qry2),function(){});//事件转化
+                        dao.remove("subdirectories_model", JSON.stringify(del_qry2), function () {
+                        });//子目录管理
+                        dao.remove("event_change_model", JSON.stringify(del_qry2), function () {
+                        });//事件转化
                     });
                     //查询 删除级联 删除本身
                     dao.remove(schema_name, qry, function (del) {
@@ -427,8 +437,8 @@ api.get("/time_conv", function (req, res) {
             dao.find(schema_name, query['query'], null, {}, function (err, docs) {
                 if (docs != null && docs.length > 0) {
                     docs.forEach(function (item) {
-                        req.redisclient.del("duration:" +item.site_id );
-                        req.redisclient.del("visit:" +item.site_id );
+                        req.redisclient.del("duration:" + item.site_id);
+                        req.redisclient.del("visit:" + item.site_id);
                     });
                     //查询 删除级联 删除本身
                     dao.remove(schema_name, qry, function (del) {
@@ -493,7 +503,7 @@ api.get("/page_title", function (req, res) {
             dao.find(schema_name, query['query'], null, {}, function (err, docs) {
                 if (docs != null && docs.length > 0) {
                     docs.forEach(function (item) {
-                        req.redisclient.del(item.site_id + ":mouse:" + item.page_url );
+                        req.redisclient.del(item.site_id + ":mouse:" + item.page_url);
                     });
                     //查询 删除级联 删除本身
                     dao.remove(schema_name, qry, function (del) {
@@ -584,5 +594,20 @@ api.get("/adtrack", function (req, res) {
         default :
             break;
     }
+
+
+});
+//JS测试
+api.get("/select", function (req, res) {
+    console.log(1);
+    var ref = req.header('Referer');
+    /* if (ref == undefined || ref == '') {
+     res.end();
+     return;
+     }*/
+    var query = url.parse(req.url, true).query;
+    console.log(query);
+    res.write("crossDomainCallback({id: 1, name: 'shyman', age: 18, male:true},0);");
+    res.end();
 });
 module.exports = api;

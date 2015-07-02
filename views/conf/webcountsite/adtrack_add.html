@@ -1,12 +1,5 @@
-<div class="menu">
-    <div ng-controller="menuctr">
-        <ssh-accordion>
-            <ssh-expander ng-repeat="adminmenu in adminmenus"  ng-class='{current:$index==selectedRow}' ng-click='selectRestaurant($index)' class=""  etitle="adminmenu.title" etype="adminmenu.stype" esref="adminmenu.sref" eicon="adminmenu.icon" echildren="adminmenu.child" ></ssh-expander>
-        </ssh-accordion>
-    </div>
-</div>
 <div class="middle_containers" ng-controller="adtrack_add">
-        <!--网站导航-->
+    <!--网站导航-->
     <div class="web_list">
         <div class="web_list_nav">
             <p><span ng-bind-html="userTypeName"></span> - 新增指定广告跟踪</p>
@@ -18,57 +11,99 @@
                 <li><span>以下信息必须填写:</span></li>
                 <li>
                     <span>目标URL<p>（在其媒体投放广告时所指向的URL）</p></span>
-                    <div class="adtrack_add_input">*
-                        <input ssh-url id="targetUrl" name="targetUrl" ng-model="urlconfig.targetUrl" placeholder="www.mydomain/product.html" required/>
-                    </div>&nbsp;&nbsp;&nbsp;
-                    <span style="color:red" ng-show="(adTrackForm.targetUrl.$dirty && adTrackForm.targetUrl.$invalid) || adTrackForm.targetUrl.$pristine">
+
+                    <div class="">
+                        <input ssh-url id="targetUrl" name="targetUrl" ng-model="urlconfig.targetUrl"
+                               placeholder="www.mydomain/product.html" required/>
+                    </div>
+                    &nbsp;&nbsp;&nbsp;
+                    <span style="color:red"
+                          ng-show="(adTrackForm.targetUrl.$dirty && adTrackForm.targetUrl.$invalid) || adTrackForm.targetUrl.$pristine">
                         <span ng-show="adTrackForm.targetUrl.$error.required">请输入目标URL</span>
                         <span ng-show="adTrackForm.targetUrl.$error.sshUrl">您设置的目标URL格式错误</span>
                     </span>
                 </li>
                 <li>
                     <span>媒介平台<p>（广告所投放的平台，如：新浪,搜狐等）</p></span>
-                    <div class="adtrack_add_input">*
-                        <input type="text" id="mediaPlatform" name="mediaPlatform" data-ng-model="urlconfig.mediaPlatform" required/>
-                    </div>&nbsp;&nbsp;&nbsp;
-                    <span style="color:red" ng-show="(adTrackForm.mediaPlatform.$dirty && adTrackForm.mediaPlatform.$invalid) || adTrackForm.mediaPlatform.$pristine">
-                        <span ng-show="adTrackForm.mediaPlatform.$error.required">请输入媒介平台</span>
-                    </span>
+                    <div class="adtrack_add_input">
+                        <ul>
+                            <li><input type="radio" name="1"/>搜狐</li>
+                            <li><input type="radio" name="1"/>新浪</li>
+                            <li><input type="radio" name="1"/>网易</li>
+                            <li><input type="radio" name="1"/>博客</li>
+                            <li><input type="radio" name="1"/>微博</li>
+                            <li><input type="radio" name="1"/>微信</li>
+                            <li><input type="radio" name="1"/>贴吧</li>
+                            <li><input type="radio" name="1"/>论坛/BBS</li>
+                            <li><input type="radio" name="1"/>其他</li>
+                        </ul>
+                        <ul>
+                            <input type="text" name="mediaPlatform" data-ng-model="urlconfig.mediaPlatform"/>
+                        </ul>
+                    </div>
+                    &nbsp;&nbsp;&nbsp;
                 </li>
             </ul>
             <ul>
-                <li><span class="adtrack_add_tz">高级选项</span><p>（广告类型&gt;计划名称&gt;关键词&gt;创意，逐级填写，选填）</p></li>
-                <li>
-                    <span>广告类型<p>（广告所投放的具体形式，如：文字广告，图片广告等）</p></span>
+                <li><span class="adtrack_add_tz">高级选项</span>
 
-                    <div><input type="text" name="adTypes" data-ng-model="urlconfig.adTypes" ></div>
+                    <p>（广告类型&gt;计划名称&gt;关键词&gt;创意，逐级填写，选填）</p>
+
+                 <li>  <span>广告类型<p>（广告所投放的具体形式，如：文字广告，图片广告等）</p></span>
+
+                    <div class="adtrack_add_input">
+                        <ul>
+                            <li><input type="radio" name="1"/>文字广告</li>
+                            <li><input type="radio" name="1"/>图片广告</li>
+                            <li><input type="radio" name="1"/>多媒体广告</li>
+                            <li><input type="radio" name="1"/>其他</li>
+                        </ul>
+                        <ul>
+                            <input type="text" name="mediaPlatform" data-ng-model="urlconfig.mediaPlatform"/>
+                        </ul>
+                    </div>
+                        <!--<div><input type="text"  data-ng-model="urlconfig.planName"/></div>-->
                 </li>
-                <li>
-                    <span>计划名称<p>（广告所属的推广计划，如元旦促销）</p></span>
+                <li><span class="adtrack_add_tz">计划名称</span>
 
-                    <div><input type="text"  data-ng-model="urlconfig.planName"/></div>
+                    <p>（广告所属的推广计划，如：端午活动）</p>
+                    <div class="">
+                        <input ssh-url  required/>
+                    </div>
                 </li>
                 <li>
                     <span>关键词<p>（可填写多个，每行一个）</p></span>
 
                     <div class="">
                         <textarea data-ng-model="adtrack_add.tNum" class="tNum" disabled></textarea>
-                                <textarea data-ng-keyup="addIP($event, adtrack_add)" wrap="off" data-ng-model="urlconfig.keywords"
-                                         class="tText"></textarea>
+                                <textarea data-ng-keyup="addIP($event, adtrack_add)" wrap="off"
+                                          data-ng-model="urlconfig.keywords"
+                                          class="tText"></textarea>
                     </div>
                 </li>
                 <li>
-                <span>创意<p>（广告内容的简要描述信息）</p></span>
+                    <span>创意<p>（广告内容的简要描述信息）</p></span>
 
-                <div><input type="text" data-ng-model="urlconfig.creative"/></div>
-            </li>
+                    <div><input type="text" data-ng-model="urlconfig.creative"/></div>
+                </li>
             </ul>
 
-            <a class="btn btn-info timechange_button" ng-disabled="(adTrackForm.targetUrl.$dirty && adTrackForm.targetUrl.$invalid) || adTrackForm.targetUrl.$pristine
-                                                                   || (adTrackForm.mediaPlatform.$dirty && adTrackForm.mediaPlatform.$invalid) || adTrackForm.mediaPlatform.$pristine"
-                                                      ng-click="allSubmit()">确定拼生成URL</a>&nbsp;&nbsp;&nbsp;
-            <span class="adtrack_add_tz" data-ng-click="onCancel()" >取消</span>
+            <a class="btn btn-info timechange_button" ng-disabled="(adTrackForm.targetUrl.$dirty && adTrackForm.targetUrl.$invalid) || adTrackForm.targetUrl.$pristine|| (adTrackForm.mediaPlatform.$dirty && adTrackForm.mediaPlatform.$invalid) || adTrackForm.mediaPlatform.$pristine"
+               ng-click="allSubmit()">确定拼生成URL</a>&nbsp;&nbsp;&nbsp;
+            <span class="adtrack_add_tz" data-ng-click="onCancel()">取消</span>
+            <div class="">
+                <textarea data-ng-focus="myFocus(rules_area)"
+                          data-ng-blur="myBlur(rules_area)" data-ng-model="adtrack_add_gengzong.tNum" class="tNum" disabled></textarea>
+                                <textarea data-ng-keyup="addIP($event, adtrack_add)" wrap="off"
+                                          data-ng-model="urlconfig_gengzong.keywords"
+                                          class="tText"></textarea>
+            </div>
+            <span ng-show="daima">您的广告跟踪结果已保存成功，请将生成的URL复制到您在其他媒介的推广URL位置</span>
+            <div class="adtrack_add_button">
+            <button class="btn btn-info timechange_button">复制</button>
+            <button class="btn btn-info timechange_button">继续添加</button>
+            <a class="btn btn-info timechange_button" href="#conf/webcountsite/adtrack">返回列表</a>
+            </div>
         </div>
     </form>
-    </div>
 </div>

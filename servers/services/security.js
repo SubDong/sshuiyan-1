@@ -19,31 +19,34 @@ var security = {
                 next();
             } else {
                 var usites = [];
+                if (docs) {
+                    if (docs.length > 0) {
+                        docs.forEach(function (item) {
+                            var site = {};
+                            site['site_id'] = item._id.toString();
+                            site["site_name"] = item.site_name;
+                            site['site_track_id'] = item.track_id;
+                            if (item.is_top)
+                                site["site_top"] = 1;
+                            else
+                                site["site_top"] = 0;
 
-                if (docs.length > 0) {
-                    docs.forEach(function (item) {
-                        var site = {};
-                        site['site_id'] = item._id.toString();
-                        site["site_name"] = item.site_name;
-                        if (item.is_top)
-                            site["site_top"] = 1;
-                        else
-                            site["site_top"] = 0;
+                            site["type_id"] = item.type_id;
+                            site["site_url"] = item.site_url;
+                            if (!!req.session.user.baiduAccounts && req.session.user.baiduAccounts.length > 0)
+                                site["bd_name"] = req.session.user.baiduAccounts[0].baiduUserName;
 
-                        site["type_id"] = item.type_id;
-                        site["site_url"] = item.site_url;
-                        if (!!req.session.user.baiduAccounts && req.session.user.baiduAccounts.length > 0)
-                            site["bd_name"] = req.session.user.baiduAccounts[0].baiduUserName;
-
-                        usites.push(site);
-                    });
-                } else {
-                    usites.push({
-                        'site_id': -1,
-                        'site_name': '<无>',
-                        'type_id': -1,
-                        'site_top': 1
-                    })
+                            usites.push(site);
+                        });
+                    } else {
+                        usites.push({
+                            'site_id': -1,
+                            'site_name': '<无>',
+                            'type_id': -1,
+                            'site_top': 1,
+                            site_track_id: 1
+                        })
+                    }
                 }
                 usites.sort(dateutils.by('site_top'));
                 res.cookie('usites', '' + JSON.stringify(usites) + '', {maxAge: 60 * 60});

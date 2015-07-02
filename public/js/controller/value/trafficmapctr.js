@@ -30,7 +30,7 @@ define(["./module"], function (ctrs) {
                     $scope.offsite_links = {id: 1, name: "http://" + $rootScope.siteUrl + "/"};
                     shardD = "http://" + $rootScope.siteUrl + "/";
                     shard = "http://" + $rootScope.siteUrl + "/";
-                }else if(shard!=$rootScope.siteUrl){
+                } else if (shard != $rootScope.siteUrl) {
                     shardD = "http://" + $rootScope.siteUrl + "/";
                     shard = shardD;
                 }
@@ -38,10 +38,9 @@ define(["./module"], function (ctrs) {
             });
         };
         $scope.getAllAddress();
-
         $scope.init = function () {
             var linkData = [];
-            if(shardD==null){
+            if (shardD == null) {
                 shardD = "http://" + $rootScope.siteUrl + "/";
             }
             $http.get("api/trafficmap?start=" + $scope.start + ",end=" + $scope.end + ",targetPathName=" + shardD).success(function (data) {
@@ -70,30 +69,52 @@ define(["./module"], function (ctrs) {
                             count: data.data[i].pv
                         });
                     }
-                    $scope.links = linkData;
+                    if (linkData.length > 0) {
+                        if (linkData.length == 1) {
+                            $(".linkstree_left").css("margin-top", "64px")
+                            $scope.links = linkData;
+                        } else {
+                            $(".linkstree_left").css("margin-top", "0px")
+                            $scope.links = linkData;
+                        }
+                    } else {
+                        linkData.push({
+                            id: 1,
+                            name: "没有数据",
+                            ratio: 0,
+                            count: 0
+                        });
+                        document.getElementById("linkstree_top").style.top = "50px";
+                        document.getElementById("linkstree_right").style.top = "50px";
+                        $(".linkstree_left").css("margin-top", "64px")
+                        $(".linkstree_left_list").css("margin-top", "64px")
+                        $scope.links = linkData
+                    }
                     $scope.targetPathData = data.targetPathData;
                     $scope.offsite_links = {id: 1, name: data.targetPathData.pathname};
                     $scope.out_siteData = data.out_siteData;
                     linkData = [];
                 }
-                if (data.length != 0) {
+                if (data.length != 0 && data.length != undefined) {
                     if (data.data.length <= 3) {
                         document.getElementById("linkstree_top").style.top = "14%";
                         document.getElementById("linkstree_right").style.top = "14%";
+                        $(".linkstree_left").css("margin-top", "0px")
                     }
-
                     if (data.data.length == 1) {
-                        document.getElementById("linkstree_top").style.top = "0";
-                        document.getElementById("linkstree_right").style.top = "0";
-                        $(".linkstree_left").css("margin-top", "14px")
+                        document.getElementById("linkstree_top").style.top = "50px";
+                        document.getElementById("linkstree_right").style.top = "50px";
+                        $(".linkstree_left").css("margin-top", "64px")
                     }
                     if (data.data.length == 4) {
                         document.getElementById("linkstree_top").style.top = "20%";
                         document.getElementById("linkstree_right").style.top = "20%";
+                        $(".linkstree_left").css("margin-top", "0px")
                     }
                     if (data.data.length >= 5) {
                         document.getElementById("linkstree_top").style.top = "35%";
                         document.getElementById("linkstree_right").style.top = "35%";
+                        $(".linkstree_left").css("margin-top", "0px")
                     }
                 }
 
@@ -182,12 +203,12 @@ define(["./module"], function (ctrs) {
             $scope.weekselected = true;
             $scope.mothselected = true;
             $rootScope.tableTimeStart = -7;
-            $rootScope.tableTimeEnd = -1;
+            $rootScope.tableTimeEnd = 0;
             $scope.reloadByCalendar("seven");
             $('#reportrange span').html(GetDateStr(-6) + "至" + GetDateStr(0));
             $scope.sevenDayClass = true;
-            $rootScope.start = -7;
-            $rootScope.end = -1;
+            $rootScope.start = -6;
+            $rootScope.end = 0;
             $rootScope.interval = 7;
             $scope.init();
         };
@@ -204,8 +225,8 @@ define(["./module"], function (ctrs) {
             $scope.reloadByCalendar("month");
             $('#reportrange span').html(GetDateStr(-29) + "至" + GetDateStr(0));
             $scope.monthClass = true;
-            $rootScope.start = -30;
-            $rootScope.end = -1;
+            $rootScope.start = -29;
+            $rootScope.end = -0;
             $rootScope.interval = 30;
             $scope.init();
         };
@@ -247,8 +268,9 @@ define(["./module"], function (ctrs) {
         $rootScope.datepickerClick = function (start, end, label) {
             $scope.reset();
             $scope.timeClass = true;
-            $rootScope.start = start;
-            $rootScope.end = end;
+            var time = chartUtils.getTimeOffset(start, end);
+            $rootScope.start = time[0];
+            $rootScope.end = time[1];
             $scope.init();
         };
         $('#reportrange span').html(GetDateStr(0));

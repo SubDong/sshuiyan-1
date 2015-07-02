@@ -17,6 +17,10 @@ define(["./module"], function (ctrs) {
             enableSorting: true,
             enableGridMenu: false,
             enableHorizontalScrollbar: 0,
+            onRegisterApi: function (girApi) {
+                $rootScope.gridApiAdmin = girApi;
+                //adminGriApihtml(girApi);
+            },
             columnDefs: [
                 {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>", maxWidth: 5},
                 {name: "目标URL", displayName: "目标URL", field: "targetUrl"},
@@ -39,6 +43,7 @@ define(["./module"], function (ctrs) {
                     maxWidth: 80,
                     cellClass: 'table_admin'
                 }
+
             ],
             data: [{}]
         };
@@ -47,10 +52,10 @@ define(["./module"], function (ctrs) {
         $scope.onDelete = function (index,grid,row) {
             $scope.onDeleteDialog= ngDialog.open({
                 template: '' +
-                '<div class="ngdialog-buttons" ><ui><li> 确认删除吗？</li></ui>' +
-                '<button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
-                  <button type="button" class="ngdialog-button ng-button" ng-click="sureonDelete()">确定</button></div>',
-                className: 'ngdialog-theme-default',
+                '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div><ul class="admin-ng-content" ><li> 确认删除这条广告跟踪吗？</li></ul>' +
+                ' <div class="ng-button-div"><button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
+                  <button type="button" class="ngdialog-button ng-button" ng-click="sureonDelete()">确定</button></div></div>',
+                className: 'ngdialog-theme-default admin_ngdialog',
                 plain: true,
                 scope: $scope
             });
@@ -87,14 +92,14 @@ define(["./module"], function (ctrs) {
             //col
             $scope.urlDialog = ngDialog.open({
                 template:thtml,
-                className: 'ngdialog-theme-default',
+                className: 'ngdialog-theme-default admin_ngdialog',
                 plain: true,
                 scope : $scope
             });
         };
-        $rootScope.urlDialogHtml = "<div class='mid_left'>生成URL<div id='base_code' class='mid_left_code'>produceUrl</div> " +
-        "</div><div class='mid_right'><button type='button' class='btn btn-default navbar-btn' ssh-clip='' data-clipboard-target='base_code'>复制</button><ul type='disc'>" +
-            "  <li style='color：red；'>请将生成的URL复制到你的其他媒介的推广目标URL位置</li></ul></div>";
+        $rootScope.urlDialogHtml = "<div class='mid_left'><div class=\"ngdialog-tilte\">生成URL</div ><div class='admin-ng-content'><div id='base_code' class='mid_left_code'>produceUrl</div> " +
+        "<div class='mid_right'><button type='button' class='btn btn-default navbar-btn' ssh-clip='' data-clipboard-target='base_code'>复制</button><ul type='disc'>" +
+            "  <li style='color：red；'>请将生成的URL复制到你的其他媒介的推广目标URL位置</li></ul></div></div>";
 
     });
 });
