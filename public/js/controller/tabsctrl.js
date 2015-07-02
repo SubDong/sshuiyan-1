@@ -157,7 +157,7 @@ define(["app"], function (app) {
                     name: '来源',
                     displayName: "来源",
                     field: "referrer",
-                    cellTemplate: "<a href='{{grid.appScope.getDataUrlInfo(grid, row,1)}}' target='_blank' style='color:#0965b8;line-height:30px; display:block; padding:0 10px;'>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</a>"
+                    cellTemplate: "<a href='{{grid.appScope.getDataUrlInfo(grid, row,1)}}' target='_blank' style='color:#0965b8;line-height:30px; display:block; padding:0 10px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;}'>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</a>"
                 },
                 {name: '入口页面', displayName: "入口页面", field: "entrance"},
                 {name: '关键词', displayName: "关键词", field: "keyword"},
@@ -305,6 +305,7 @@ define(["app"], function (app) {
                 }
             };
         }
+
         $scope.page = "";
         $scope.pagego = function (pagevalue) {
             pagevalue.pagination.seek(Number($scope.page));
@@ -719,6 +720,7 @@ define(["app"], function (app) {
                     method: 'GET',
                     url: searchUrl
                 }).success(function (data, status) {
+                    $rootScope.$broadcast("LoadDateShowDataFinish", data);
                     var result = [];
                     data.forEach(function (item, i) {
                         var infoKey = item["word"];
@@ -735,12 +737,14 @@ define(["app"], function (app) {
                     url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field)
                     + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
                 }).success(function (data, status) {
+                    $rootScope.$broadcast("LoadDateShowDataFinish", data);
                     if ($rootScope.tableSwitch.promotionSearch != undefined && $rootScope.tableSwitch.promotionSearch) {
                         var url = SEM_API_URL + user + "/" + baiduAccount + "/account/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1"
                         $http({
                             method: 'GET',
                             url: url
                         }).success(function (dataSEM, status) {
+                            $rootScope.$broadcast("LoadDateShowSEMDataFinish", dataSEM);
                             var dataArray = []
                             var dataObj = {};
                             var semDataArray = [];
@@ -903,7 +907,7 @@ define(["app"], function (app) {
             $scope.gridOptions.rowHeight = 95;
             var time = chartUtils.getTimeOffset(start, end);
             var startTime = time[0];
-            var endTime = time[0] + ($rootScope.tableTimeEnd - $rootScope.tableTimeStart);
+            var endTime = time[0] + ($rootScope.tableTimeEnd - $rootScope.tableTimeStart)+1;
             $rootScope.$broadcast("ssh_load_compare_datashow", startTime, endTime);
             var dateTime1 = chartUtils.getSetOffTime($rootScope.tableTimeStart, $rootScope.tableTimeEnd);
             var dateTime2 = chartUtils.getSetOffTime(startTime, endTime);
@@ -1218,7 +1222,7 @@ define(["app"], function (app) {
                     } else {
                         returnData[0] += parseFloat((item.entity[a.col.field] + "").replace("%", ""));
                         if (a.col.field == "avgTime") {
-                            if (item.entity[a.col.field] != undefined) {
+                            if (item.entity[a.col.field] != undefined && item.entity[a.col.field] != 0) {
                                 spl = item.entity[a.col.field].split(":");
                                 newSpl[0] += parseInt(spl[0]);
                                 newSpl[1] += parseInt(spl[1]);
@@ -1328,6 +1332,20 @@ define(["app"], function (app) {
             title: "访问页数目标"
         }
         ];
+        $scope.init = function(timeData){
+            $scope.gridOptions.data = [];
+            $http.get("api/changeList?start=" + timeData.start + ",end=" + timeData.end+",contrastStart="+timeData.contrastStart+",contrastEnd="+timeData.contrastEnd).success(function (data) {
+                $scope.gridOptions.data = data.pv;
+            });
+        };
+
+        $scope.$on('parrentData', function(d,data) {
+            $scope.initTime = data.initTime;
+            $rootScope.startString = data.initTime.time;
+            $rootScope.contrastStartString = data.initTime.contrastTime
+            $scope.init(data);
+        });
+        $scope.$emit("Ctr1NameChange", '');
     })
     ;
 })

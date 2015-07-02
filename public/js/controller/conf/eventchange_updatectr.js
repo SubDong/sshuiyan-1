@@ -17,18 +17,13 @@ define(["./module"], function (ctrs) {
 
         $scope.eventChange.event_method ="手动方式";
 
-        $scope.eventChange.event_status;
+        $scope.eventChange.event_status = "";
 
         $scope.eventChange.uid =  "";
 
         $scope.eventChange.root_url =  "";
 
-        $scope.eventChange._id = $stateParams.id;
-
-
-        $scope.onCancel = function () {
-            $state.go('eventchange');
-        }
+        $scope.eventChange._id = $scope._id;
 
         $scope.onUpdateEvent = function () {
 
@@ -40,43 +35,35 @@ define(["./module"], function (ctrs) {
                 method: 'GET',
                 url: url
             }).success(function (dataConfig, status) {
-                $scope.urlDialog = ngDialog.open({
-                    preCloseCallback: function() {
-                        $state.go('eventchange');
-                    },
-                    template: '\
-              <div class="ngdialog-buttons" >\
-                        <ul>\
-                        <li> 保存成功</li></ul>   \
-                    <a href="#conf/webcountsite/eventchange" ng-click=closeThisDialog(0)>确认</a>\
-                </div>',
-                    className: 'ngdialog-theme-default',
-                    plain: true,
-                    scope: $scope
-                });
-
+                $scope.closeThisDialog(0);
+                refushGridData();
             });
 
         };
 
-        var loadData = function () {
-
+        $scope.loadData = function () {
             var url = "/config/eventchnage_list?type=findById&query={\"_id\":\"" + $scope.eventChange._id + "\"}";
 
             $http({
                 method: 'GET',
                 url: url
-            }).success(function (dataConfig, status) {
+            }).success(function (dataConfig) {
+
                 $scope.eventChange = dataConfig;
+            });
+        };
+        var refushGridData = function () {
+            var uid = $cookieStore.get("uid");
+            var root_url = $rootScope.siteId;
+            var url = "/config/eventchnage_list?type=search&query={\"uid\":\"" + uid + "\",\"root_url\":\"" + root_url + "\"}";
+            $http({
+                method: 'GET',
+                url: url
+            }).success(function (dataConfig, status) {
+
+                $scope.gridOptions.data = dataConfig;
 
             });
-        }
-
-        loadData();
-
-
-
-
-
+        };
     })
 });

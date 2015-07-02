@@ -277,7 +277,7 @@ define(["app"], function (app) {
         };
         $rootScope.datePickerCompare = function (start, end, label) {
             $scope.compareType = true;
-            $scope.reset();
+           // $scope.reset();
             $scope.choiceClass = true;
             var times = chartUtils.getTimeOffset(start, end);
             $rootScope.start = times[0];

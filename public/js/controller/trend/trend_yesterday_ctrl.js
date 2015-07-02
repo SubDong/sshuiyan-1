@@ -499,7 +499,7 @@ define(["./module"], function (ctrs) {
                 $scope.restCompare();
             }
             var times = chartUtils.getTimeOffset(start, end);
-            $scope.reset();
+           // $scope.reset();
             $scope.hourselect = true;
             $scope.dayselect = true;
             $scope.mothselected = true;
@@ -562,7 +562,7 @@ define(["./module"], function (ctrs) {
         $scope.compareReset = function () {
             $(".time_select").show();
             $scope.compareType = false;
-            $scope.reset();
+           // $scope.reset();
             $scope.choiceClass = false;
             $scope.dayselect = false;
             $scope.hourselect = false;

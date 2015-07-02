@@ -1,8 +1,13 @@
 //adtrack_add
-.adtrack_add{
-  padding:60px 0 0 10px;
+.adtrack_add_tiltle {
+  font-size: 16px;
 }
-.adtrack_add input{
+
+.adtrack_add {
+  padding: 60px 0 0 10px;
+}
+
+.adtrack_add input {
   display: inline-block;
   margin-top: 3px;
   width: 440px;
@@ -17,77 +22,111 @@
   transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
   padding: 3px 5px;
 }
-.adtrack_add p{
+
+.adtrack_add p {
   color: #aaabab;
   display: inline;
 }
-.adtrack_add ul li{
-  margin: 5px 0;
-  .chlidlist_add_input{
+
+.adtrack_add ul li {
+  margin: 7px 0;
+  .chlidlist_add_input {
     width: 12px;
     height: 12px;
     margin-left: 15px;
   }
 
 }
-.adtrack_add_input{
-  margin-left:5px;
+
+.adtrack_add_input {
+  width: 480px;
+  margin-left: 5px;
   color: red;
-  input{
+  ul {
+    input {
+      width: 146px;
+      padding: 0;
+      margin: 0;
+    }
+  }
+  ul li {
+    float: left;
+    color: rgba(161, 161, 161, 0.94);
+    margin-right: 16px;
+    input {
+      padding: 0;
+      margin: 0;
+      height: 12px;
+      width: 12px;
+
+    }
+  }
+  input {
     margin-left: 3px;
     padding: 3px 5px;
   }
 }
-.adtrack_add_tz{
-  color: #4093FA;
+
+.adtrack_add_tz {
+  font-size: 14px;
 }
+
+.adtrack_add_button {
+  margin-top: 10px;
+}
+
 //childlist_add
-.chlidlist_add{
+.chlidlist_add {
   width: 900px;
-  .count_content_right{
+  .count_content_right {
     margin: 0;
   }
-  input{
+  input {
     margin-right: 5px;
   }
 }
-.chlidlist_add ul{
+
+.chlidlist_add ul {
   margin-top: 15px;
 
-
 }
-.chlidlist_add ul li{
+
+.chlidlist_add ul li {
   margin-bottom: 20px;
 }
-.chlidlist_add button{
+
+.chlidlist_add button {
   padding: 10px;
   margin-right: 5px;
   border: none;
 }
 
 //childlist_update
-.chlidlist_update{
+.chlidlist_update {
   width: 900px;
-  .count_content_right{
+  .count_content_right {
     margin: 0;
   }
-  input{
+  input {
     margin-right: 5px;
   }
 }
-.chlidlist_update ul{
+
+.chlidlist_update ul {
   margin-top: 15px;
 
-
 }
-.chlidlist_update ul li{
+
+.chlidlist_update ul li {
   margin-bottom: 20px;
 }
-.chlidlist_update button{
+
+.chlidlist_update button {
   padding: 10px;
   margin-right: 5px;
   border: none;
 }
+
 /*ÍøÕ¾ÁÐ±í*/
 .web_list_nav {
   background-color: #f0f0f0;
@@ -200,7 +239,7 @@
   padding: 5px;
   margin-top: 20px;
   background-color: white;
-  word-wrap:break-word;
+  word-wrap: break-word;
 }
 
 .mid_right button {
@@ -230,29 +269,33 @@
   border-radius: 0;
   border: 1px solid #f0f0f0;
 }
-.timechange_button{
+
+.timechange_button {
   background-color: #40befb;
   height: 30px;
   line-height: 15px;
+  margin-bottom: 10px;
 }
-.table_admin ul{
-   line-height: 0px;
-   margin-left: 10px;
-  height:170px;
+
+.table_admin ul {
+  line-height: 0px;
+  margin-left: 10px;
+  height: 170px;
   font-weight: normal;
   margin-top: -5px;
   text-align: left;
   list-style: none;
 
-  li{
+  li {
     margin: 0;
   }
 }
-.table_box {
-  .custom_table{
-  .table_admin {
 
-  }
+.table_box {
+  .custom_table {
+    .table_admin {
+
+    }
     margin-top: -2px;
     ul li {
       height: 100px;
@@ -269,7 +312,7 @@
 }
 
 .table_admin {
-  .ui-grid-cell-contents{
+  .ui-grid-cell-contents {
     cursor: pointer;
   }
   height: 32px;
@@ -290,19 +333,131 @@
 .table_admin a {
   color: #2fabe7;
 }
-.table_admin:hover{
-  color:#fd641f;
+
+.table_admin:hover {
+  color: #fd641f;
 }
 
 .table_admin a:hover {
   color: #fd641f;
 }
-.table_content{
- .custom_table{
-   overflow:visible;
+
+.table_content {
+  .custom_table {
+    overflow: visible;
+  }
 }
+
+.countrules_button {
+  margin-left: 40px;
 }
-.ng-button{
-  background: #2FABE7;
-  color: #fff;
+
+#Selectall {
+  width: 15px;
+  height: 15px;
+  float: left;
+  margin: 14px 0 0 15px;
+
+}
+
+.page_ht {
+  height: 50px;
+  line-height: 50px;
+  width: 100%;
+  vertical-align: middle;
+  background-color: #eee;
+  text-align: center;
+  .btn_ht {
+    line-height: 10px;
+  }
+  p {
+    float: left;
+    line-height: 43px;
+  }
+
+  input {
+    width: 30px;
+    height: 26px;
+    vertical-align: middle;
+    text-align: center;
+    border-radius: 3px;
+    border: 1px solid #eee;
+    padding: 0 3px;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+  }
+
+  a {
+    cursor: pointer;
+  }
+
+  a, span {
+    margin: 0 5px;
+  }
+
+  button {
+    height: 24px;
+    margin-top: 0px;
+    background: #01adef;
+    color: #fff;
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 3px;
+    line-height: 45px;
+  }
+
+}
+
+//µ¯³ö¿ò-ngdialog
+.ngDialog_bg {
+  background-color: #2FABE7;
+  width: 100px;
+  height: 20px;
+}
+
+.ngdialog-tilte {
+  color: white;
+  background-color: #40befb;
+  height: 40px;
+  width: 100%;
+  padding: 10px 0 10px 20px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+
+}
+
+.ng-button-div {
+  background-color: #f8f8f8;
+  height: 50px;
+  width: 100%;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  padding: 10px;
+  margin-top: -10px;
+  .ng-button {
+    background: #2FABE7;
+    color: #fff;
+  }
+}
+
+.admin-ng-content {
+  padding: 30px;
+  overflow: hidden;
+}
+    .ngdialog.admin_ngdialog .ngdialog-content {
+      border-radius: 10px;
+      padding: 0px;
+    }
+
+.ngdialog.ngdialog-theme-default .ngdialog-close:before {
+  color: white;
+}
+.copycode_content{
+  padding: 10px 20px 20px 20px;
+}
+.admin-ngeventchange{
+  margin-top: 30px;
+  padding: 0;
+}
+.eventchange-button{
+  background-color: white;
 }

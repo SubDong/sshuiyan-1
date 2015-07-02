@@ -17,7 +17,7 @@ var iconv = require('iconv-lite');
 var uuid = require("node-uuid");
 var async = require("async");
 var es_position = require('../services/es_position');
-
+var changeList_request = require("../services/changeList_request");
 
 api.get('/charts', function (req, res) {
     var query = url.parse(req.url, true).query, quotas = [], type = query['type'], dimension = query.dimension, filter = null, topN = [], userType = query.userType;
@@ -691,6 +691,41 @@ api.get("/modalInstance", function (req, res) {
     var parameterString = req.url.split("?");//获取url的？号以后的字符串
     var type = parameterString[1].split("=")[1];
     access_request.modalInstanceSearch(req.es, type, function (result) {
+        datautils.send(res, result);
+    });
+});
+// ================================= changeList  ==============================
+api.get("/changeList", function (req, res) {
+    var parameters = req.url.split("?")[1].split(",");
+    var start = parameters[0].split("=")[1];
+    var end = parameters[1].split("=")[1];
+    var contrastStart = parameters[2].split("=")[1];
+    var contrastEnd = parameters[3].split("=")[1];
+    var indexString = [];
+    var contrastIndexString = [];
+    var time = [];
+    var contrastTime = [];
+    if (start.substring(1, start.length).match("-") != null && end.substring(1, start.length).match("-") != null) {
+        indexString = date.createIndexsByTime(start, end, "access-");
+        time = date.getConvertTimeByTime(start, end);
+    } else {
+        indexString = date.createIndexes(start, end, "access-");
+        time = date.getConvertTimeByNumber(start, end);
+    }
+    if (contrastStart.substring(1, start.length).match("-") != null && contrastEnd.substring(1, start.length).match("-") != null) {
+        contrastIndexString = date.createIndexsByTime(contrastStart, contrastEnd, "access-");
+        contrastTime = date.getConvertTimeByTime(contrastStart, contrastEnd);
+    } else {
+        contrastIndexString = date.createIndexes(contrastStart, contrastEnd, "access-");
+        contrastTime = date.getConvertTimeByNumber(contrastStart, contrastEnd);
+    }
+    for(var i = 0;i<contrastIndexString.length;i++){
+        indexString.push(contrastIndexString[i]);
+    }
+    for(var i = 0;i<contrastTime.length;i++){
+        time.push(contrastTime[i]);
+    }
+    changeList_request.search(req.es, indexString, time, function (result) {
         datautils.send(res, result);
     });
 });

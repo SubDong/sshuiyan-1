@@ -506,7 +506,7 @@ define(["./module"], function (ctrs) {
         $rootScope.datePickerCompare = function (start, end, label) {
             var time = chartUtils.getTimeOffset(start, end);
             var offset=time[1]-time[0];
-            if (offset == 0) {
+            if (offset < 0) {
                 alert("请选择正确的对比时间！");
                return ;
             }
@@ -514,7 +514,7 @@ define(["./module"], function (ctrs) {
                 $scope.restCompare();
             }
             var times = chartUtils.getTimeOffset(start, end);
-            $scope.reset();
+           // $scope.reset();
             $scope.hourselect = true;
             $scope.dayselect = true;
             $scope.mothselected = true;
@@ -577,7 +577,7 @@ define(["./module"], function (ctrs) {
         $scope.compareReset = function () {
             $(".time_select").show();
             $scope.compareType = false;
-            $scope.reset();
+           // $scope.reset();
             $scope.choiceClass = false;
             $scope.dayselect = false;
             $scope.hourselect = false;

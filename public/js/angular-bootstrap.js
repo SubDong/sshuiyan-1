@@ -13,7 +13,9 @@ require([
         "./services/popupService",
         "./services/areaselect",
         "./services/defaultQuotaService",
-        "./controller/tabsctrl"
+        "./controller/tabsctrl",
+        "./controller/public_bt_ctr"
+
     ],
     function (angular) {
         'use strict';
