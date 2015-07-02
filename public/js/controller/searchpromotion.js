@@ -235,7 +235,6 @@ define(["./module"], function (ctrs) {
                             });
                             var field = $rootScope.tableSwitch.latitude.field;
                             datas[field] = item[field] + getTableTitle(field, item);
-                            alert(1);
                             datas["id"] = item[searchId + "Id"];
                             item["impression"] != undefined ? datas["impression"] = item["impression"] : "";
                             item["click"] != undefined ? datas["click"] = item["click"] : "";
@@ -269,7 +268,6 @@ define(["./module"], function (ctrs) {
             if (isClicked) {
                 $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
             }
-            console.log($scope.searchId)
             var url = SEM_API_URL + "/sem/report/" + $rootScope.tableSwitch.promotionSearch.SEMData + "?a=" + user + "&b=" + baiduAccount + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=" + $scope.device + ($scope.searchId != undefined && $scope.searchId != "undefined" ? "&" + $scope.searchId : "")
             $http({
                 method: 'GET',

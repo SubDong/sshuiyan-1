@@ -116,15 +116,21 @@ define(["app"], function (app) {
             {consumption_name: "IP数", name: "ip"}
         ];
         //实时访问
-        //TODO item["searchWord"] == ""?"百思" 为捕获到暂为  百思
+        //TODO item["searchWord"] == ""?"--" 为捕获到暂为  --
         var getHtmlTableData = function () {
-            var fi = $rootScope.tableSwitch.tableFilter != undefined && $rootScope.tableSwitch.tableFilter != null ? "q=" + $rootScope.tableSwitch.tableFilter : "";
+            var fi = $rootScope.tableSwitch.tableFilter != undefined && $rootScope.tableSwitch.tableFilter != null ? "&q=" + encodeURIComponent($rootScope.tableSwitch.tableFilter) : "";
             var searchUrl = SEM_API_URL + "/es/real_time?tid=" + trackid + fi;
             $http({
                 method: 'GET',
                 url: searchUrl
             }).success(function (data, status) {
                 if (data != undefined) {
+                    try {
+                        JSON.stringify(data);
+                    } catch (e) {
+                        return;
+                    }
+
                     data.forEach(function (item, i) {
                         item["city"] = item["city"] == "-" ? "国外" : item["city"];
                         item["visitTime"] = new Date(item["visitTime"]).Format("yyyy-MM-dd hh:mm:ss");
@@ -1063,7 +1069,7 @@ define(["app"], function (app) {
             if ($rootScope.tableSwitch.isJudge == undefined) $scope.isJudge = true;
             if ($rootScope.tableSwitch.isJudge) $rootScope.tableSwitch.tableFilter = undefined;
             if ($rootScope.tableSwitch.number == 4) {
-                var searchUrl = SEM_API_URL + "search_word/" + esType + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd;
+                var searchUrl = SEM_API_URL + "/es/search_word?tid=" + trackid + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd;
                 $http({
                     method: 'GET',
                     url: searchUrl
@@ -1077,7 +1083,7 @@ define(["app"], function (app) {
                     + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + JSON.stringify($rootScope.tableSwitch.promotionSearch) + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
                 }).success(function (data, status) {
                     if ($rootScope.tableSwitch.promotionSearch != undefined && $rootScope.tableSwitch.promotionSearch) {
-                        var url = SEM_API_URL + user + "/" + baiduAccount + "/account/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1"
+                        var url = SEM_API_URL + "sem/report/account?a=" + user + "&b=" + baiduAccount + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1"
                         $http({
                             method: 'GET',
                             url: url
@@ -1243,7 +1249,7 @@ define(["app"], function (app) {
                     showHeader: false,
                     columnDefs: htmlData
                 };
-                var search = SEM_API_URL + "real_time/" + esType + "/" + row.entity.tt;
+                var search = SEM_API_URL + "/es/real_time?tid=" + trackid + "&tt=" + row.entity.tt;
                 $http({
                     method: 'GET',
                     url: search
