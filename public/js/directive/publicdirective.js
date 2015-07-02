@@ -5,7 +5,7 @@
 define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClipboard) {
     'use strict';
 
-    app.directive("calendar", function ($rootScope, requestService) {
+    app.directive("calendar", function ($rootScope, requestService, $location) {
         var option = {
             restrict: "EA",
             template: "<div  role=\"group\" class=\"btn-group fl\"><button class=\"btn btn-default\" type=\"button\" ng-click=\"today()\" ng-hide=\"visible\" ng-class=\"{'current':todayClass,'disabled':todaySelect}\">今天</button>" +
@@ -20,11 +20,45 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
             link: function (scope, element, attris, controller) {
                 Custom.initCheckInfo();
                 scope.$watch("opened", function () {
-                    if (scope.yesterdayClass) {
-                        $('#reportrange span').html(GetDateStr(-1));
-                    }
-                    if (scope.monthClass) {
-                        $('#reportrange span').html(GetDateStr(-29) + "至" + GetDateStr(0));
+                    if (scope.todayClass) {
+                        scope.today();
+                    }else if (scope.sevenDayClass) {
+                        scope.sevenDay();
+                    }else if (scope.yesterdayClass) {
+                        scope.yesterday();
+                    }else if (scope.monthClass) {
+                        scope.month();
+                    }else if($location.url().split("?").length>1){
+                        var param = $location.url().split("?")[1];
+                        var isChart = $location.url().split("?")[0];
+                        if(param != 1 && param != 2 && param != 3 && param != 4){
+                            scope.timeClass = true;
+                            var StartTimes = param.split("#")[0];
+                            var EndTimes = param.split("#")[1];
+                            var newParam = param.replace("#", "至");
+                            var time = chartUtils.getTimeOffset(StartTimes, EndTimes);
+                            $rootScope.start =time[0];
+                            $rootScope.end = time[1];
+                            $rootScope.tableTimeStart = time[0];
+                            $rootScope.tableTimeEnd =time[1];
+                            $('#reportrange span').html(newParam);
+                            $('#reportrange').data('daterangepicker').setStartDate(StartTimes);
+                            $('#reportrange').data('daterangepicker').setEndDate(EndTimes);
+                            $rootScope.targetSearch();
+                            scope.$broadcast("ssh_dateShow_options_time_change");
+                            if(isChart == "/visitor/equipment"){
+                                scope.charts.forEach(function (e) {
+                                    var chart = echarts.init(document.getElementById(e.config.id));
+                                    e.config.instance = chart;
+                                });
+                                //图表
+                                requestService.refresh(scope.charts);
+                            }
+                            if(isChart == "/visitor/provincemap"){
+                                scope.doSearch(time[0], time[1], $rootScope.userType);
+                                scope.doSearchAreas(time[0], time[1], $rootScope.userType, scope.mapOrPieConfig);
+                            }
+                        }
                     }
                 });
                 scope.weekselected = true;
@@ -82,7 +116,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     $rootScope.tableTimeStart = 0;
                     $rootScope.tableTimeEnd = 0;
                     $rootScope.keyFormat = "hour";
-                    $rootScope.start=0;
                     $rootScope.end = 0;
                     scope.reloadByCalendar("today");
                     $('#reportrange span').html(GetDateStr(0));
@@ -307,6 +340,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                         separator: ' to '
                     },
                     function (start, end, label) {
+                        //if(){
                         $rootScope.datepickerClickTow(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
                         if (!$rootScope.datePickerCompare) {
                             $rootScope.datePickerCompare = function (a, b, c) {
@@ -322,6 +356,10 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                         }
                     });
             }
+            //,
+            //controller: function($scope, $element) {
+            //    $scope.ctrl = !!$element.controller('ngModel');
+            //}
 
         };
         return option;
@@ -339,7 +377,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
         };
         return option;
     });
-    app.directive("refresh", function ($rootScope, $location) {
+    app.directive("refresh", function () {
         var option = {
             restrict: "EA",
             template: "<div class=\"right_refresh fr\"><button class=\"btn btn-default btn-Refresh fl\" ng-click=\"page_refresh()\"  type=\"button\"><span aria-hidden=\"true\" class=\"glyphicon glyphicon-refresh\"></span></button><button class=\"btn btn-default btn-Refresh fl\" type=\"button\" ng-show=\"send\" >发送</button><ui-select ng-model=\"export.selected\" ng-change='fileSave(export.selected)' theme=\"select2\" ng-hide=\"menu_select\" reset-search-input=\"false\" class=\"fl\"style=\"min-width: 90px;background-color: #fff;\"> <ui-select-match placeholder=\"下载\">{{$select.selected.name}} </ui-select-match> <ui-select-choices repeat=\"export in exportsaa\"> <span ng-bind-html=\"export.name\"></span></ui-select-choices></ui-select></div>",
@@ -445,7 +483,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
     app.directive("gridpage", function ($rootScope) {
         var option = {
             restrict: "EA",
-            template: "<div class=\"page\"><a ng-click=\"gridApi2.pagination.previousPage()\">上一页</a> <button type=\"button\" class=\"btn\"> {{ gridApi2.pagination.getPage() }}</button><a ng-click=\"gridApi2.pagination.nextPage()\"  >下一页 </a> <input type=\"text\" ng-model=\"page\" value=\"\"><span> /{{ gridApi2.pagination.getTotalPages() }}</span> <button type=\"button\" class=\"btn\" ng-click=\"pagego(gridApi2)\">跳转</button> </div>",
+            template: "<div class=\"page\"><a ng-click=\"gridApi2.pagination.previousPage()\" ng-hide=\"gridApi2.pagination.getTotalPages()<=1\">上一页</a> <button type=\"button\" class=\"btn\"> {{ gridApi2.pagination.getPage() }}</button><a ng-click=\"gridApi2.pagination.nextPage()\" ng-hide=\"gridApi2.pagination.getTotalPages()<=1\">下一页 </a> <input type=\"text\" ng-model=\"page\" value=\"\"><span> /{{ gridApi2.pagination.getTotalPages() }}</span> <button type=\"button\" class=\"btn\" ng-click=\"pagego(gridApi2)\">跳转</button> </div>",
             transclude: true
         };
         return option;
@@ -809,7 +847,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
 
                 scope.loadCompareDataShow = function (startTime, endTime) {
                     var semRequest = $http.get(SEM_API_URL + "search_word/" + $rootScope.userType
-                        + "/?startOffset=" + startTime + "&endOffset=" + endTime);
+                    + "/?startOffset=" + startTime + "&endOffset=" + endTime);
                     var count = 0;
                     $q.all([semRequest]).then(function (final_result) {
                         angular.forEach(final_result[0].data, function (r) {
@@ -1142,7 +1180,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                             $rootScope.$broadcast("updateSelectRowIndex", index);
                         } else if (e_r.sref == _path.split("/")[2]) {
                             e_r.showText = true;
-                            console.log(123)
+                            $rootScope.$broadcast("updateSelectRowIndex", index);
                         } else {
                             e_r.showText = false;
                         }

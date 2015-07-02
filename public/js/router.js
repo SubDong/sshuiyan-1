@@ -360,6 +360,17 @@ define(["angular", "./app"], function (angular, myApp) {
                         ])
                     }
                 })
+                .state('heaturl', {
+                    url: "/page/heaturl",
+                    params: {'id': null},
+                    templateUrl: "../page/heaturl.html",
+                    resolve: {
+                        load: loadDeps([
+                            "controller/page/heaturlctr",
+                            "heaturl/heaturl"
+                        ])
+                    }
+                })
                 .state('heatmap', {
                     url: "/page/heatmap",
                     templateUrl: "../page/heatmap.html",

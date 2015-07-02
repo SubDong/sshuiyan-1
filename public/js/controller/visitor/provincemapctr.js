@@ -3,8 +3,21 @@
  */
 define(["./module"], function (ctrs) {
 
-    ctrs.controller("provincemapctr", function ($scope, uiGridConstants, $rootScope, $http, areaService) {
-        $scope.todayClass = true;
+    ctrs.controller("provincemapctr", function ($scope, uiGridConstants, $rootScope, $http, areaService,$location) {
+        if($location.url().split("?").length>1) {
+            var param = $location.url().split("?")[1];
+            if(param == 1){
+                $scope.todayClass = true;
+            }else if(param == 2){
+                $scope.yesterdayClass = true;
+            }else if(param == 3){
+                $scope.sevenDayClass = true;
+            }else if(param == 4){
+                $scope.monthClass = true;
+            }
+        }else{
+            $scope.todayClass = true;
+        }
         $scope.souce.selected = {"name": "全部"};
         $scope.browser.selected = {"name": "全部"};
         $rootScope.tableTimeStart = 0;//开始时间
@@ -208,7 +221,7 @@ define(["./module"], function (ctrs) {
                         title_name = "IP数";
                         break;
                 }
-                if (data != undefined) {
+                if (data != 0) {
                     data.chart_data.forEach(function (item, i) {
                         dataValueSum += item["value"]
                     });
