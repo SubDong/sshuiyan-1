@@ -134,7 +134,7 @@ var schemas = {
             }],
             conv_tpye: String,//转换类型，regist,communicate,place_order,othre_order
             conv_text: String
-        },
+        }
 
     },
     /**
@@ -150,7 +150,7 @@ var schemas = {
             icon_name: String,//点击图名称
             create_date:String,//创建日期
             is_open: Boolean//是否开启
-        },
+        }
 
     },
     /**
@@ -170,7 +170,7 @@ var schemas = {
             creative: String,       //创意
             produceUrl: String      //产生后的URL
         }
-    },
+    }
 
 
 }

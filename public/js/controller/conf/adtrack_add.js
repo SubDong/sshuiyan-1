@@ -26,7 +26,10 @@ define(["./module"], function (ctrs) {
             $(f.previousElementSibling).scrollTop(f.scrollTop);
         };
 
-        //初始化 entity
+        /**
+         * 初始化 entity
+         * @type {{uid: string, site_id: string, targetUrl: string, mediaPlatform: string, adTypes: string, planName: string, keywords: string, creative: string, produceUrl: string}}
+         */
         $scope.adtrack_model = {
             uid: "",            //用户ID
             site_id: "",        //站点ID
@@ -38,8 +41,12 @@ define(["./module"], function (ctrs) {
             creative: "",       //创意
             produceUrl: ""      //生成的URL
         };
-        //接收页面输入的值
-        $scope.urlconfig = {
+
+        /**
+         * 接收页面输入的值
+         * @type {{targetUrl: string, mediaPlatform: string, adTypes: string, planName: string, keywords: string, creative: string}}
+         */
+        $scope.adTrack = {
             targetUrl: "",
             mediaPlatform: "",
             adTypes: "",
@@ -48,7 +55,10 @@ define(["./module"], function (ctrs) {
             creative: ""
         };
 
-        //去重
+        /**
+         * 去重
+         * @returns {Array}
+         */
         Array.prototype.unique = function(){
             var res = [];
             var json = {};
@@ -61,14 +71,16 @@ define(["./module"], function (ctrs) {
             return res;
         }
 
-        //根据 keywords 来进行回车符换行拆分
+        /**
+         * 根据 keywords 来进行回车符换行拆分
+         */
         $scope.allSubmit = function(){
-            var kVal = $scope.urlconfig.keywords;
+            var kVal = $scope.adTrack.keywords;
             var includeObj = kVal.indexOf("\\n");
             if( includeObj < -1) {
                 $scope.submit();
             } else {
-                var kVal2 = $scope.urlconfig.keywords;
+                var kVal2 = $scope.adTrack.keywords;
                 var splArray = kVal2.split("\n").unique();  //拆分回车换行符并去重
                 for (var i=0 ; i< splArray.length ; i++) {
                     var kwObj = splArray[i];
@@ -77,65 +89,63 @@ define(["./module"], function (ctrs) {
             }
         };
 
-        /*$scope.parseUrl = function() {
-            var strUrl = "http://" + $scope.urlconfig.targetUrl
-                + "?hmsr=" + $scope.urlconfig.mediaPlatform
-                + "&_hmmd=" + $scope.urlconfig.adTypes
-                + "&_hmpl=" + $scope.urlconfig.planName
-                + "&_hmkw=" + $scope.urlconfig.keywords
-                + "&_hmci=" + $scope.urlconfig.creative;
+        /**
+         * 转换URL
+         * @returns {string}
+         */
+        $scope.parseUrl = function() {
+            var strUrl = "http://" + $scope.adTrack.targetUrl
+                + "?hmsr=" + $scope.adTrack.mediaPlatform
+                + "&_hmmd=" + $scope.adTrack.adTypes
+                + "&_hmpl=" + $scope.adTrack.planName
+                + "&_hmkw=" + $scope.adTrack.keywords
+                + "&_hmci=" + $scope.adTrack.creative;
             return encodeURI(strUrl);
-        };*/
+        };
 
-        //返回列表
+        /**
+         * 返回列表
+         */
         $scope.onCancel = function () {
             $state.go('adtrack');
         }
-        //继续添加
-        $scope.onAdd = function () {
-            $state.go('adtrack_add');
+
+        /**
+         * 继续添加
+         */
+        $scope.addAdTrack = function () {
+            $state.go('#conf/webcountsite/adtrack_add');
         }
 
         $scope.submit = function (obj) {
             var model = angular.copy($scope.adtrack_model);
-            model.targetUrl = $scope.urlconfig.targetUrl;
-            model.mediaPlatform = $scope.urlconfig.mediaPlatform;
-            model.adTypes = $scope.urlconfig.adTypes;
-            model.planName = $scope.urlconfig.planName;
+            model.targetUrl = $scope.adTrack.targetUrl;
+            model.mediaPlatform = $scope.adTrack.mediaPlatform;
+            model.adTypes = $scope.adTrack.adTypes;
+            model.planName = $scope.adTrack.planName;
             model.keywords = obj;
-            model.creative = $scope.urlconfig.creative;
-            //model.produceUrl = $scope.parseUrl();
+            model.creative = $scope.adTrack.creative;
             model.site_id = $rootScope.siteId;
             model.uid = $cookieStore.get("uid");
 
            //保存
             var url = "/config/adtrack?type=save&entity=" + JSON.stringify(model);
             $http({method: 'GET', url: url}).success(function (dataConfig, status) {
-                $scope.urlDialog = ngDialog.open({
-                    preCloseCallback: function() {
-                        $state.go('adtrack');
-                    },
-                    template: '\
-                        <div class="ngdialog-buttons" >\
-                            <div class="row">\
-                                <div class="col-md-4 col-md-offset-4">\
-                                    <span><h4>保存成功</h4></span>\
-                                </div>\
-                            </div>\
-                            <div class="row">\
-                                <div class="col-md-3 col-md-offset-6">\
-                                    <a class="glyphicon glyphicon-plus" href="#conf/webcountsite/adtrack_add" ng-click=closeThisDialog(0)>继续添加</a>\
-                                </div>\
-                                <div class="col-md-3">\
-                                    <a class="glyphicon glyphicon-menu-hamburger" href="#conf/webcountsite/adtrack" ng-click=closeThisDialog(0)>返回列表</a>\
-                                </div>\
-                            </div>\
-                        </div>',
-                    className: 'ngdialog-theme-default',
-                    plain: true,
-                    scope: $scope
-                });
+
             });
         };
+
+        /**
+         * 清除 form 表单输入的内容
+         */
+        $scope.clear = function(){
+            var isNoClear = confirm("您确认要清空当前填写的内容吗？");
+            if(isNoClear == true){
+                document.getElementById('adTrackForm').reset();
+            } else {
+
+            }
+        };
+
     });
 });

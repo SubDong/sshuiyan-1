@@ -81,7 +81,7 @@ define(["./module"], function (ctrs) {
             var uid = $cookieStore.get("uid");
             var site_id = $rootScope.siteId;
             var url = "/config/adtrack?index=adtrack&type=search&query={\"uid\":\"" + uid + "\",\"site_id\":\"" + site_id + "\"}";
-            $http({method: 'GET', url: url}).success(function (dataConfig, status) {
+            $http({method: 'GET', url: url}).success(function (dataConfig) {
                 $scope.gridArray.data = dataConfig;
             });
         };
