@@ -221,7 +221,7 @@ define(["./module"], function (ctrs) {
                         title_name = "IP数";
                         break;
                 }
-                if (data != undefined) {
+                if (data != 0) {
                     data.chart_data.forEach(function (item, i) {
                         dataValueSum += item["value"]
                     });
