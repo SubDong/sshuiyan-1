@@ -95,7 +95,7 @@ var op = {
             def.defData(chartConfig);
             return;
         }
-        var json, labelData = [];
+        var json, labelData = [], labelDataText = [];
         if (chartConfig.noFormat) {
             json = data;
             _legendTmp = chartConfig.legendData;
@@ -127,7 +127,9 @@ var op = {
             return;
         }
         json.forEach(function (item) {
-            labelData.push(item.label);
+            var data = chartUtils.convertType(item.label);
+            labelData.push(data);
+            labelDataText.push(data.label);
         });
         if (!chartConfig.instance)return;
         var chartObj = chartConfig.instance;
@@ -137,7 +139,7 @@ var op = {
                 show: false,
                 selectedMode: false,
                 orient: !chartConfig.ledLayout ? "horizontal" : chartConfig.ledLayout,
-                data: !chartConfig.legendData ? labelData : chartConfig.legendData
+                data: !chartConfig.legendData ? labelDataText : chartConfig.legendData
             },
             tooltip: {
                 trigger: !chartConfig.tt ? "axis" : chartConfig.tt,
@@ -165,7 +167,7 @@ var op = {
                             }
                         }
                         for (var i = 0, l = params.length; i < l; i++) {
-                            var formatType = labelData[i];
+                            var formatType = labelDataText[i];
                             if (chartConfig.compare || chartConfig.compareCustom) {
                                 var baseSerieName = params[i].seriesName.split(":");
                                 var re = /[^\x00-\xff]/;//判断是否有中文
@@ -271,7 +273,7 @@ var op = {
         if (chartConfig.qingXie) {
             option.xAxis[0]["axisLabel"] = {
                 interval: 0,
-                rotate: chartConfig.qxv?chartConfig.qxv:25,
+                rotate: chartConfig.qxv ? chartConfig.qxv : 25,
                 textStyle: {
                     color: '#0D0D0D',
                     fontFamily: '微软雅黑'
@@ -317,9 +319,9 @@ var op = {
             if (chartConfig.lineType == undefined) {
                 serie.itemStyle = {
                     normal: {
-                        areaStyle: {
-                            type: 'default'
-                        },
+                        //areaStyle: {
+                        //    type: 'default'
+                        //},
                         lineStyle: {
                             width: 1
                         }
@@ -355,12 +357,22 @@ var op = {
         });
         //console.log(option);
         if (!chartConfig.twoYz) {
+            var legendType = false;
+            if (labelData.length > 1) {
+                if (labelData[0].type == labelData[1].type) {
+                    legendType = true;
+                }
+            }
             for (var i = 0; i < labelData.length; i++) {
                 //if (labelData[i] == "uv" || labelData[i] == "pv" || labelData[i] == "访客数(UV)" || labelData[i] == "浏览量(PV)") {
                 //    option.series[0]["yAxisIndex"] = 0;
                 //} else {
-                var formatType = labelData[i];
-                option.series[i]["yAxisIndex"] = i;
+                var formatType = labelData[i].label;
+                if (!legendType)
+                    option.series[i]["yAxisIndex"] = i;
+                else
+                    option.series[i]["yAxisIndex"] = 0;
+
                 option.yAxis[i]["axisLine"] = {
                     lineStyle: {
                         color: '#01AFEF',
@@ -1323,7 +1335,7 @@ var util = {
         });
         return final_result;
     },
-    chartResize:function(chartConfig){
+    chartResize: function (chartConfig) {
         chartConfig.instance = echarts.init(document.getElementById(chartConfig.id));
         window.addEventListener("resize", function () {
             chartConfig.instance.resize()
