@@ -8,7 +8,7 @@ define(["app"], function (app) {
     app.directive("gridpageht", function ($rootScope, requestService) {
         var option = {
             restrict: "EA",
-            template: "<div class=\"page_ht\"><div class=\"shishi\"><input class='select_checkbox' type='checkbox'  ng-click=\'Selectall()\' id='Selectall' name='Selectall'><p style='color: #000011;position: absolute; margin-left: 35px; '>本页全选</p><p><a href='' style='color:#46b8da;position: absolute;margin-left: 60px;  ng-click='deleteall'>批量删除</a></p></div> <a ng-click=\"gridApiAdmin.pagination.previousPage()\">上一页</a> <button type=\"button\" class=\"btn btn_ht\"> {{ gridApiAdmin.pagination.getPage() }}</button><a ng-click=\"gridApiAdmin.pagination.nextPage()\">下一页 </a> <input type=\"text\" ng-model=\"page\" value=\"\"><span> /{{ gridApiAdmin.pagination.getTotalPages() }}</span> <button type=\"button\" class=\"btn btn_ht\" ng-click=\"pagego(gridApi2)\">跳转</button> </div>",
+            template: "<div class=\"page_ht\"><div class=\"shishi\"><input class='select_checkbox' type='checkbox'  ng-click=\'Selectall()\' id='Selectall' name='Selectall'><p style='color: #000011;position: absolute; margin-left: 35px; '>本页全选</p><p><a href='' style='color:#46b8da;position: absolute;margin-left: 60px;'  ng-click='deleteall()'>批量删除</a></p></div> <a ng-click=\"gridApiAdmin.pagination.previousPage()\">上一页</a> <button type=\"button\" class=\"btn btn_ht\"> {{ gridApiAdmin.pagination.getPage() }}</button><a ng-click=\"gridApiAdmin.pagination.nextPage()\">下一页 </a> <input type=\"text\" ng-model=\"page\" value=\"\"><span> /{{ gridApiAdmin.pagination.getTotalPages() }}</span> <button type=\"button\" class=\"btn btn_ht\" ng-click=\"pagego(gridApi2)\">跳转</button> </div>",
             replace: true,
             transclude: true,
             link: function (scope, element, attris, controller) {
@@ -16,16 +16,19 @@ define(["app"], function (app) {
                 //    console.log(111);
                 //   // scope.gridApi2.selection.selectAllRows();
                 //};
-            scope.Selectall= function() {
+                scope.deleteall=function() {
+                    console.log(scope.entity.uid);
+                    console.log(scope.gridApiAdmin.selection.getSelectedRows());
+                };
+                scope.Selectall= function() {
                     if(Selectall.checked==true){
                         $rootScope.gridApiAdmin.selection.selectAllRows();
-                        $rootScope.deleteall=function() {
-                            $rootScope.gridApiAdmin.selection.deleteAllRows();
-                        }
+
 
                     }
                     else{
                         $rootScope.gridApiAdmin.selection.clearSelectedRows();
+
                     }
                 };
             }

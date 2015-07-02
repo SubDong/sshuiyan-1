@@ -141,6 +141,7 @@ define(["./module"], function (ctrs) {
             });
 
             $scope.sureonDelete= function(){
+                console.log(444);
                 $scope.onDeleteDialog.close();
                 var query = "/config/page_conv?type=delete&query={\"_id\":\"" + row.entity._id + "\"}";
                 $http({
@@ -152,6 +153,7 @@ define(["./module"], function (ctrs) {
                     }
                 });
             };
+
         };
 
 
