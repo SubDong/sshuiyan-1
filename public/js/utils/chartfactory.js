@@ -458,7 +458,7 @@ var op = {
                 x: 'left',
                 data: !chartConfig.legendData ? data.label : chartConfig.legendData
             },
-            calculable: true,
+            //calculable: true,
             series: []
         };
         chartConfig.toolShow = !chartConfig.toolShow ? false : true;

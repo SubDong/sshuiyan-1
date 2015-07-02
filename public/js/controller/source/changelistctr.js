@@ -6,6 +6,8 @@ define(["./module"], function (ctrs) {
     'use strict';
     ctrs.controller('changelistctr', function ($scope, $rootScope, $q, $http, requestService, messageService, areaService, uiGridConstants, popupService) {
             //初始化时间
+            $rootScope.tableTimeStart = 0;
+            $rootScope.tableTimeEnd = 0;
             $rootScope.start = -1;
             $rootScope.end = -1;
             $rootScope.contrastStart = -2;
@@ -39,13 +41,13 @@ define(["./module"], function (ctrs) {
                 },
                 {
                     name: "浏览量(PV)",
-                    displayName: $rootScope.startString,
+                    displayName: "",
                     field: "pv",
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
                 },
                 {
                     name: "访问次数",
-                    displayName: $rootScope.contrastStartString,
+                    displayName: "",
                     field: "contrastPv",
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
                 },
@@ -61,6 +63,7 @@ define(["./module"], function (ctrs) {
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
                 }
             ];
+            //alert($rootScope.contrastStartString)
             $scope.showSearchUrl = function (row) {
                 popupService.showSourceData(row.entity.kw);
             };
@@ -78,15 +81,14 @@ define(["./module"], function (ctrs) {
                 arrayClear: false //是否清空指标array
             };
             $scope.$on("Ctr1NameChange", function (event, msg) {
+                $rootScope.gridArray[2].displayName = $rootScope.startString;
+                $rootScope.gridArray[3].displayName = $rootScope.contrastStartString;
                 $scope.$broadcast("parrentData", {
                     start: $rootScope.start,
                     end: $rootScope.end,
                     contrastStart: $rootScope.contrastStart,
                     contrastEnd: $rootScope.contrastEnd,
-                    initTime: {
-                        time: $rootScope.startString,
-                        contrastTime: $rootScope.contrastStartString
-                    }
+                    gridArray:$rootScope.gridArray
                 });
             });
             //$scope.$broadcast("parrentData",  '7894561321564');
@@ -245,18 +247,17 @@ define(["./module"], function (ctrs) {
                     time: $rootScope.startString,
                     contrastTime: $rootScope.contrastStartString
                 };
-                console.log($scope.initTime)
                 $scope.init();
+                $rootScope.gridArray[2].displayName = $rootScope.startString;
+                $rootScope.gridArray[3].displayName = $rootScope.contrastStartString;
                 $scope.$broadcast("parrentData", {
                     start: $rootScope.start,
                     end: $rootScope.end,
                     contrastStart: $rootScope.contrastStart,
                     contrastEnd: $rootScope.contrastEnd,
-                    initTime: {
-                        time: $rootScope.startString,
-                        contrastTime: $rootScope.contrastStartString
-                    }
+                    gridArray:$rootScope.gridArray
                 });
+
             };
             $scope.init = function () {
                 $http.get("api/changeList?start=" + $rootScope.start + ",end=" + $rootScope.end + ",contrastStart=" + $rootScope.contrastStart + ",contrastEnd=" + $rootScope.contrastEnd).success(function (data) {
