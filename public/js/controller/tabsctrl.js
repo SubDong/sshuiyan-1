@@ -1272,6 +1272,7 @@ define(["app"], function (app) {
                         }
 
                     });
+
                     var itemSplDataTow = (option[0].entity[a.col.field] + "").split(",");
                     if (itemSplDataTow.length >= 4) {
                         //var itemSplData = (s.entity[a.col.field] + "").split(",");
@@ -1289,7 +1290,16 @@ define(["app"], function (app) {
                     } else {
                         if ((option[0].entity[a.col.field] + "").indexOf("%") != -1) {
 //                        returnData[0] = (returnData[0] / option.length).toFixed(2) + "%";
-                            returnData[0] = returnData[0] == "0" ? "0%" : (returnData[0] / option.length).toFixed(2) + "%";
+                            var contrastPv = 0;
+                            for(var c = 0;c<option.length;c++){
+                                contrastPv += option[c].entity["contrastPv"];
+                            }
+                            if(window.location.href.split("/")[window.location.href.split("/").length-1]=="changelist"){
+                                returnData[0] = returnData[0] == "0" ? "0%" : (returnData[0] / contrastPv).toFixed(2) + "%";
+                            }else{
+                                returnData[0] = returnData[0] == "0" ? "0%" : (returnData[0] / option.length).toFixed(2) + "%";
+                            }
+
                         }
                         if (a.col.field == "avgPage" || a.col.field == "click") {
 //                        returnData[0] = (returnData[0] / option.length).toFixed(2);
@@ -1302,6 +1312,7 @@ define(["app"], function (app) {
                             returnData[0] = (atime1.length == 1 ? "0" + atime1 : atime1) + ":" + (atime2.length == 1 ? "0" + atime2 : atime2) + ":" + (atime3.length == 1 ? "0" + atime3 : atime3);
                         }
                     }
+
                     switch (number) {
                         case 1:
                             return returnData[0];

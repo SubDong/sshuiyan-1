@@ -5,10 +5,24 @@ define(["./module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.controller('equipmentctr', function ($scope, $rootScope, $q, $http, requestService, areaService) {
+    ctrs.controller('equipmentctr', function ($scope, $rootScope, $q, $http, requestService, areaService, $location) {
         //客户端属性初始化
         $scope.equipment.selected = {"name": "网络设备类型", "field": "pm"};
-        $scope.todayClass = true;
+        if($location.url().split("?").length>1) {
+            var param = $location.url().split("?")[1];
+            if(param == 1){
+                $scope.todayClass = true;
+            }else if(param == 2){
+                $scope.yesterdayClass = true;
+            }else if(param == 3){
+                $scope.sevenDayClass = true;
+            }else if(param == 4){
+                $scope.monthClass = true;
+            }
+        }else{
+            $scope.todayClass = true;
+        }
+
         $scope.dt = new Date();
         //table配置
         $rootScope.tableTimeStart = 0;
