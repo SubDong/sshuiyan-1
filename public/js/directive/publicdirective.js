@@ -64,6 +64,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                 scope.weekselected = true;
                 scope.mothselected = true;
                 scope.maxDate = new Date();
+                var dateID=document.getElementById("choicetrange");
                 if (scope.todayClass === true) {
                     dataPicker.picker("choicetrange", 0);
                 }
@@ -121,11 +122,13 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     $('#reportrange span').html(GetDateStr(0));
                     $('#reportrange').data('daterangepicker').setStartDate(GetDateStr(0));
                     $('#reportrange').data('daterangepicker').setEndDate(GetDateStr(0));
-                    $('#choicetrange span').html("与其他时间段对比");
-                    $('#choicetrange').data('daterangepicker').setStartDate(GetDateStr(0));
-                    $('#choicetrange').data('daterangepicker').setEndDate(GetDateStr(0));
-                    if (scope.todayClass === true) {
-                        dataPicker.picker("choicetrange", 0);
+                    if(dateID){
+                        $('#choicetrange span').html("与其他时间段对比");
+                        $('#choicetrange').data('daterangepicker').setStartDate(GetDateStr(0));
+                        $('#choicetrange').data('daterangepicker').setEndDate(GetDateStr(0));
+                        if (scope.todayClass === true) {
+                            dataPicker.picker("choicetrange", 0);
+                        }
                     }
                 };
                 scope.yesterday = function () {
@@ -151,11 +154,13 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     $('#reportrange span').html(GetDateStr(-1));
                     $('#reportrange').data('daterangepicker').setStartDate(GetDateStr(-1));
                     $('#reportrange').data('daterangepicker').setEndDate(GetDateStr(-1));
-                    $('#choicetrange span').html("与其他时间段对比");
-                    $('#choicetrange').data('daterangepicker').setStartDate(GetDateStr(0));
-                    $('#choicetrange').data('daterangepicker').setEndDate(GetDateStr(0));
-                    if (scope.yesterdayClass === true) {
-                        dataPicker.picker("choicetrange", 0);
+                    if(dateID){
+                        $('#choicetrange span').html("与其他时间段对比");
+                        $('#choicetrange').data('daterangepicker').setStartDate(GetDateStr(-1));
+                        $('#choicetrange').data('daterangepicker').setEndDate(GetDateStr(-1));
+                        if (scope.yesterdayClass === true) {
+                            dataPicker.picker("choicetrange", 0);
+                        }
                     }
                 };
                 scope.sevenDay = function () {
@@ -178,11 +183,13 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     $('#reportrange span').html(GetDateStr(-6) + "至" + GetDateStr(0));
                     $('#reportrange').data('daterangepicker').setStartDate(GetDateStr(-6));
                     $('#reportrange').data('daterangepicker').setEndDate(GetDateStr(0));
-                    $('#choicetrange span').html("与其他时间段对比");
-                    $('#choicetrange').data('daterangepicker').setStartDate(GetDateStr(0));
-                    $('#choicetrange').data('daterangepicker').setEndDate(GetDateStr(0));
-                    if (scope.sevenDayClass === true) {
-                        dataPicker.picker("choicetrange", 6);
+                    if(dateID){
+                        $('#choicetrange span').html("与其他时间段对比");
+                        $('#choicetrange').data('daterangepicker').setStartDate(GetDateStr(-6));
+                        $('#choicetrange').data('daterangepicker').setEndDate(GetDateStr(0));
+                        if (scope.sevenDayClass === true) {
+                            dataPicker.picker("choicetrange", 6);
+                        }
                     }
                 };
                 scope.month = function () {
@@ -204,35 +211,40 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     $('#reportrange span').html(GetDateStr(-29) + "至" + GetDateStr(0));
                     $('#reportrange').data('daterangepicker').setStartDate(GetDateStr(-29));
                     $('#reportrange').data('daterangepicker').setEndDate(GetDateStr(0));
-                    $('#choicetrange span').html("与其他时间段对比");
-                    $('#choicetrange').data('daterangepicker').setStartDate(GetDateStr(0));
-                    $('#choicetrange').data('daterangepicker').setEndDate(GetDateStr(0));
-                    if (scope.monthClass === true) {
-                        dataPicker.picker("choicetrange", 29);
+                    if(dateID){
+                        $('#choicetrange span').html("与其他时间段对比");
+                        $('#choicetrange').data('daterangepicker').setStartDate(GetDateStr(-29));
+                        $('#choicetrange').data('daterangepicker').setEndDate(GetDateStr(0));
+                        if (scope.monthClass === true) {
+                            dataPicker.picker("choicetrange", 29);
+                        }
                     }
+
                 };
                 scope.timeclick = function (ev, picker) {
-                    var times = 0;
+                    var pickerTiemOne = 0;
                     scope.reset();
                     scope.isShowCalendar = false;
                     scope.hiddenSeven = true;
                     scope.timeClass = true;
-                    $('#choicetrange span').html("与其他时间段对比");
-                    $('#choicetrange').data('daterangepicker').setStartDate(GetDateStr(0));
-                    $('#choicetrange').data('daterangepicker').setEndDate(GetDateStr(0));
-                    if (scope.timeClass === true) {
-                        $('#reportrange').on('apply.daterangepicker', function (ev, picker) {
-                            times = chartUtils.getTimeOffset(picker.startDate.format('YYYY-MM-DD'), picker.endDate.format('YYYY-MM-DD'));
-                        });
-                        $('#choicetrange').on('apply.daterangepicker', function (ev, picker) {
-                            var time = chartUtils.getTimeOffset(picker.startDate.format('YYYY-MM-DD'), picker.endDate.format('YYYY-MM-DD'));
-                            var startTime = time[0];
-                            var endTime = time[0] + Math.abs(times[0]) + 1;
-                            var dateTime = chartUtils.getSetOffTime(startTime, endTime);
-                            $('#choicetrange span').html(dateTime[0] + "至" + dateTime[1]);
-                            $('#choicetrange').data('daterangepicker').setStartDate(dateTime[0]);
-                            $('#choicetrange').data('daterangepicker').setEndDate(dateTime[1]);
-                        });
+                    if(dateID){
+                        $('#choicetrange span').html("与其他时间段对比");
+                        $('#choicetrange').data('daterangepicker').setStartDate(GetDateStr(0));
+                        $('#choicetrange').data('daterangepicker').setEndDate(GetDateStr(0));
+                        if (scope.timeClass === true) {
+                            $('#reportrange').on('apply.daterangepicker', function (ev, picker) {
+                                pickerTiemOne = chartUtils.getTimeOffset(picker.startDate.format('YYYY-MM-DD'), picker.endDate.format('YYYY-MM-DD'));
+                            });
+                            $('#choicetrange').on('apply.daterangepicker', function (ev, picker) {
+                                var pickerTiemTow = chartUtils.getTimeOffset(picker.startDate.format('YYYY-MM-DD'), picker.endDate.format('YYYY-MM-DD'));
+                                var startTime = pickerTiemTow[0];
+                                var endTime = pickerTiemTow[0] + Math.abs(pickerTiemOne[1] - pickerTiemOne[0]);
+                                var dateTime = chartUtils.getSetOffTime(startTime, endTime);
+                                $('#choicetrange span').html(dateTime[0] + "至" + dateTime[1]);
+                                $('#choicetrange').data('daterangepicker').setStartDate(dateTime[0]);
+                                $('#choicetrange').data('daterangepicker').setEndDate(dateTime[1]);
+                            });
+                        }
                     }
                 }
                 scope.compareReset = function () {
@@ -377,7 +389,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
         };
         return option;
     });
-    app.directive("refresh", function () {
+    app.directive("refresh", function ($rootScope,$http, $location) {
         var option = {
             restrict: "EA",
             template: "<div class=\"right_refresh fr\"><button class=\"btn btn-default btn-Refresh fl\" ng-click=\"page_refresh()\"  type=\"button\"><span aria-hidden=\"true\" class=\"glyphicon glyphicon-refresh\"></span></button><button class=\"btn btn-default btn-Refresh fl\" type=\"button\" ng-show=\"send\" >发送</button><ui-select ng-model=\"export.selected\" ng-change='fileSave(export.selected)' theme=\"select2\" ng-hide=\"menu_select\" reset-search-input=\"false\" class=\"fl\"style=\"min-width: 90px;background-color: #fff;\"> <ui-select-match placeholder=\"下载\">{{$select.selected.name}} </ui-select-match> <ui-select-choices repeat=\"export in exportsaa\"> <span ng-bind-html=\"export.name\"></span></ui-select-choices></ui-select></div>",
