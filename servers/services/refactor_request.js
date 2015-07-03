@@ -149,7 +149,7 @@ var es_aggs = {
     // 转化次数
     "conversions": {},
     // TODO 页面转化
-    "pageConversion":{},
+    "pageConversion": {},
     // TODO 事件转化
     "eventConversion": {}
 };
@@ -206,8 +206,7 @@ var buildRequest = function (indexes, type, quotas, dimension, filters, start, e
                                     "date_histogram": {
                                         "field": "utime",
                                         "interval": "1m",
-                                        "pre_zone": "+08:00",
-                                        "post_zone": "+08:00",
+                                        "time_zone": "+08:00",
                                         "order": {
                                             "_key": "asc"
                                         },
@@ -261,9 +260,7 @@ var buildRequest = function (indexes, type, quotas, dimension, filters, start, e
                             "field": "utime",
                             "interval": interval / 1000 + "s",
                             "format": "yyyy-MM-dd HH:mm:ss",
-                            //"time_zone": "+08:00",    // pre_zone, post_zone are replaced by time_zone in 1.5.0.
-                            "pre_zone": "+08:00",
-                            "post_zone": "+08:00",
+                            "time_zone": "+08:00",
                             "order": {
                                 "_key": "asc"
                             },
@@ -302,9 +299,7 @@ var buildRequest = function (indexes, type, quotas, dimension, filters, start, e
                                 "field": "utime",
                                 "interval": interval + "h",
                                 "format": "HH",
-                                //"time_zone": "+08:00",    // pre_zone, post_zone are replaced by time_zone in 1.5.0.
-                                "pre_zone": "+08:00",
-                                "post_zone": "+08:00",
+                                "time_zone": "+08:00",
                                 "order": {
                                     "_key": "asc"
                                 },
@@ -340,9 +335,7 @@ var buildRequest = function (indexes, type, quotas, dimension, filters, start, e
                                 "field": "utime",
                                 "interval": inter,
                                 "format": "yyyy-MM-dd HH:mm:ss",
-                                //"time_zone": "+08:00",    // pre_zone, post_zone are replaced by time_zone in 1.5.0.
-                                "pre_zone": "+08:00",
-                                "post_zone": "+08:00",
+                                "time_zone": "+08:00",
                                 "order": {
                                     "_key": "asc"
                                 },
@@ -399,12 +392,7 @@ var pvFn = function (result, dimension) {
     for (var i = 0, l = result.length; i < l; i++) {
         try {
             var pv = result[i].pv_aggs.value;
-            if (dimension == "period") {
-                var dateStr = result[i].key_as_string + "";
-                Array.prototype.push.call(keyArr, dateStr);
-            } else
-                Array.prototype.push.call(keyArr, result[i].key);
-
+            Array.prototype.push.call(keyArr, result[i].key);
             Array.prototype.push.call(quotaArr, pv);
         } catch (e) {
             console.error(e);
@@ -425,11 +413,7 @@ var contributionFn = function (result, dimension) {
 
     for (var i = 0, l = result.length; i < l; i++) {
         var cpv = result[i].cpv_aggs.cpv_aggs.value;
-        if (dimension == "period") {
-            var dateStr = result[i].key_as_string + "";
-            Array.prototype.push.call(keyArr, dateStr);
-        } else
-            Array.prototype.push.call(keyArr, result[i].key);
+        Array.prototype.push.call(keyArr, result[i].key);
 
         Array.prototype.push.call(quotaArr, cpv);
     }
@@ -452,11 +436,7 @@ var uvFn = function (result, dimension) {
             uv = result[i].uv_filter.uv_aggs.value;
         }
 
-        if (dimension == "period") {
-            var dateStr = result[i].key_as_string + "";
-            keyArr.push(dateStr);
-        } else
-            keyArr.push(result[i].key);
+        keyArr.push(result[i].key);
 
         quotaArr.push(uv);
     }
@@ -474,11 +454,7 @@ var vcFn = function (result, dimension) {
 
     for (var i = 0, l = result.length; i < l; i++) {
         var vc = result[i].vc_aggs.vc_aggs.value;
-        if (dimension == "period") {
-            var dateStr = result[i].key_as_string + "";
-            keyArr.push(dateStr);
-        } else
-            keyArr.push(result[i].key);
+        keyArr.push(result[i].key);
 
         quotaArr.push(vc);
     }
@@ -501,11 +477,7 @@ var avgTimeFn = function (result, dimension) {
             tvt = parseInt(_tvt_aggs_result[0].max_aggs.value) - parseInt(_tvt_aggs_result[0].min_aggs.value);
 
         var vc = result[i].vc_aggs.value;
-        if (dimension == "period") {
-            var dateStr = result[i].key_as_string + "";
-            keyArr.push(dateStr);
-        } else
-            keyArr.push(result[i].key);
+        keyArr.push(result[i].key);
 
         var avgTime = 0;
         if (vc > 0)
@@ -528,11 +500,7 @@ var outRateFn = function (result, dimension) {
     for (var i = 0, l = result.length; i < l; i++) {
         var vc = result[i].vc_aggs.value;
         var svc = parseInt(vc) - result[i].single_visitor_aggs.buckets.length;
-        if (dimension == "period") {
-            var dateStr = result[i].key_as_string + "";
-            keyArr.push(dateStr);
-        } else
-            keyArr.push(result[i].key);
+        keyArr.push(result[i].key);
 
         var outRate = 0;
         if (vc > 0)
@@ -554,11 +522,7 @@ var nuvFn = function (result, dimension) {
 
     for (var i = 0, l = result.length; i < l; i++) {
         var nuv = result[i].new_visitor_aggs.nuv_aggs.value;
-        if (dimension == "period") {
-            var dateStr = result[i].key_as_string + "";
-            keyArr.push(dateStr);
-        } else
-            keyArr.push(result[i].key);
+        keyArr.push(result[i].key);
 
         quotaArr.push(nuv);
     }
@@ -577,11 +541,7 @@ var nuvRateFn = function (result, dimension) {
     for (var i = 0, l = result.length; i < l; i++) {
         var nuv = result[i].new_visitor_aggs.nuv_aggs.value;
         var uv = result[i].uv_aggs.value;
-        if (dimension == "period") {
-            var dateStr = result[i].key_as_string + "";
-            keyArr.push(dateStr);
-        } else
-            keyArr.push(result[i].key);
+        keyArr.push(result[i].key);
 
         var nuvRate = 0;
         if (uv > 0)
@@ -603,11 +563,7 @@ var ipFn = function (result, dimension) {
 
     for (var i = 0, l = result.length; i < l; i++) {
         var ip_count = result[i].ip_aggs.value;
-        if (dimension == "period") {
-            var dateStr = result[i].key_as_string + "";
-            keyArr.push(dateStr);
-        } else
-            keyArr.push(result[i].key);
+        keyArr.push(result[i].key);
 
         quotaArr.push(ip_count);
     }
@@ -626,11 +582,7 @@ var avgPageFn = function (result, dimension) {
     for (var i = 0, l = result.length; i < l; i++) {
         var pv = result[i].pv_aggs.value;
         var uv = result[i].vc_aggs.value;
-        if (dimension == "period") {
-            var dateStr = result[i].key_as_string + "";
-            keyArr.push(dateStr);
-        } else
-            keyArr.push(result[i].key);
+        keyArr.push(result[i].key);
 
         var avgPage = 0;
         if (uv > 0)
@@ -652,11 +604,7 @@ var arrivedRateFn = function (result, dimension) {
 
     for (var i = 0, l = result.length; i < l; i++) {
         var vc = result[i].vc_aggs.value;
-        if (dimension == "period") {
-            var dateStr = result[i].key_as_string + "";
-            keyArr.push(dateStr);
-        } else
-            keyArr.push(result[i].key);
+        keyArr.push(result[i].key);
 
         quotaArr.push(vc);
     }
@@ -674,11 +622,7 @@ var conversions = function (result, dimension) {
 
     for (var i = 0, l = result.length; i < l; i++) {
         var doc_count = result[i].doc_count;
-        if (dimension == "period") {
-            var dateStr = result[i].key_as_string + "";
-            keyArr.push(dateStr);
-        } else
-            keyArr.push(result[i].key);
+        keyArr.push(result[i].key);
 
         quotaArr.push(doc_count);
     }
@@ -703,7 +647,6 @@ var eventConversionFn = function (result, dimension) {
         "quota": quotaArr
     };
 };
-
 
 
 var pageConversionFn = function (result, dimension) {
@@ -786,8 +729,7 @@ var es_request = {
                                     "field": "utime",
                                     "interval": interval / 1000 + "s",
                                     "format": "yyyy-MM-dd HH:mm:ss",
-                                    "pre_zone": "+08:00",
-                                    "post_zone": "+08:00",
+                                    "time_zone": "+08:00",
                                     "order": {
                                         "_key": "asc"
                                     },
@@ -816,8 +758,6 @@ var es_request = {
                 break;
             default :
                 request = buildRequest(indexes, type, quotas, dimension, filters, start, end, interval);
-                //console.log(123);
-                //console.log(JSON.stringify(request));
                 break;
         }
 
@@ -825,7 +765,7 @@ var es_request = {
             var data = [];
             if (response != undefined && response.aggregations != undefined && response.aggregations.result != undefined) {
                 var result = response.aggregations.result.buckets;
-               // console.log(JSON.stringify(result));
+
                 if (!result) {
                     result = [];
                     result.push(response.aggregations.result);
@@ -1125,100 +1065,6 @@ var es_request = {
 
             }
         });
-    },
-    entranceSearch: function (es, indexes, type, quotas, dimension, filters, start, end, callbackFn) {
-        var mustQuery = [
-            {
-                "range": {
-                    "utime": {
-                        "gte": start,
-                        "lte": end,
-                        "time_zone": "+8:00"
-                    }
-                }
-            }
-        ];
-
-        if (filters != null) {
-            filters.forEach(function (filter) {
-                mustQuery.push({
-                    "terms": filter
-                });
-            });
-        }
-
-        var request = {
-            "index": indexes,
-            "type": type,
-            "body": {
-                "query": {
-                    "bool": {
-                        "must": mustQuery
-                    }
-                },
-                "size": 0,
-                "aggs": {
-                    "url_group": {
-                        "terms": {
-                            "field": "loc"
-                        },
-                        "aggs": {
-                            "pv_aggs": {
-                                "value_count": {
-                                    "field": "loc"
-                                }
-                            },
-                            "uv_aggs": {
-                                "cardinality": {
-                                    "field": "_ucv"
-                                }
-                            },
-                            "entrance_aggs": {
-                                "sum": {
-                                    "script": "e = 0; if (doc['entrance'].value == 1) {e = 1}; e"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        };
-
-        es.search(request, function (error, response) {
-            var data = [];
-            if (response != undefined && response.aggregations != undefined) {
-                var result = response.aggregations.url_group.buckets;
-
-                quotas.forEach(function (quota) {
-                    switch (quota) {
-                        case "pv":
-                            data.push(pvFn(result));
-                            break;
-                        case "uv":
-                            data.push(uvFn(result));
-                            break;
-                        case "entrance":
-                            var keyArr = [];
-                            var quotaArr = [];
-
-                            for (var i = 0, l = result.length; i < l; i++) {
-                                var uv = result[i].entrance_aggs.value;
-                                keyArr.push(result[i].key);
-                                quotaArr.push(uv);
-                            }
-
-                            data.push({"label": "entrance", "key": keyArr, "quota": quotaArr});
-                            break;
-                        default :
-                            break;
-                    }
-                });
-
-                callbackFn(data);
-            } else
-                callbackFn(data);
-        });
-
     }
 };
 
