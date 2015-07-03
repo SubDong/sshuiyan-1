@@ -16,7 +16,7 @@ var csvApi = require('json-2-csv');
 var iconv = require('iconv-lite');
 var uuid = require("node-uuid");
 var async = require("async");
-var es_position = require('../services/es_position');
+//var es_position = require('../services/es_position');
 var changeList_request = require("../services/changeList_request");
 
 api.get('/charts', function (req, res) {
@@ -589,9 +589,9 @@ api.get("/heatmap", function (req, res) {
     var _startTime = Number(query['start']);
     var _endTime = Number(query['end']);
     var indexes = date.createIndexes(_startTime, _endTime, "access-");//indexs
-    es_position.search(req.es, indexes, _type, function (result) {
-        datautils.send(res, result);
-    });
+    //es_position.search(req.es, indexes, _type, function (result) {
+    //    datautils.send(res, result);
+    //});
 });
 
 // ================================= Config  ===============================
