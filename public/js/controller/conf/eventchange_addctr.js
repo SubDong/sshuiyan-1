@@ -74,8 +74,7 @@ define(["./module"], function (ctrs) {
             function isContains(str, substr) {
                 return new RegExp(substr).test(str);
             }
-            //console.log("isContains(previewUrl, localURl)......."+isContains(previewUrl, localURl));
-           /* if(isContains(previewUrl, localURl) == true){
+           if(isContains(previewUrl, localURl) == true){
                 var url = "/config/site_list?type=search&query={\"uid\":\"" + uid + "\",\"site_url\":\"" + previewUrl + "\"}";
                 //console.log(url);
                 $http({method: 'GET', url: url}).success(function (dataConfig, status) {
@@ -120,8 +119,8 @@ define(["./module"], function (ctrs) {
             }
             if(isContains(previewUrl, localURl) == false){
                 alert("预览URL应该是本站或跨域内的URL");
-            }*/
-            $scope.urlDialog = ngDialog.open({
+            }
+            /*$scope.urlDialog = ngDialog.open({
                 preCloseCallback: function() {
                     $state.go('eventchange');
                 },
@@ -144,7 +143,7 @@ define(["./module"], function (ctrs) {
                 className: 'ngdialog-theme-default',
                 plain: true,
                 scope: $scope
-            });
+            });*/
         }
 
         /**
