@@ -90,17 +90,27 @@ define(["./module"], function (ctrs) {
         };
 
         /**
-         * 转换URL
-         * @returns {string}
+         * show URL
          */
-        $scope.parseUrl = function() {
-            var strUrl = "http://" + $scope.adTrack.targetUrl
-                + "?hmsr=" + $scope.adTrack.mediaPlatform
-                + "&_hmmd=" + $scope.adTrack.adTypes
-                + "&_hmpl=" + $scope.adTrack.planName
-                + "&_hmkw=" + $scope.adTrack.keywords
-                + "&_hmci=" + $scope.adTrack.creative;
-            return encodeURI(strUrl);
+        $scope.keywordsWrap = function(){
+            $scope.str = function(kw){
+                var strUrl = "http://" + $scope.adTrack.targetUrl
+                    + "?hmsr=" + $scope.adTrack.mediaPlatform
+                    + "&_hmmd=" + $scope.adTrack.adTypes
+                    + "&_hmpl=" + $scope.adTrack.planName
+                    + "&_hmkw=" + kw
+                    + "&_hmci=" + $scope.adTrack.creative;
+                return encodeURI(strUrl);
+            }
+
+            var kVal2 = $scope.adTrack.keywords;
+            var splArray = kVal2.split("\n").unique();  //拆分回车换行符并去重
+            $scope.ssssss = "";
+
+            for (var i=0 ; i< splArray.length ; i++) {
+                var kw = splArray[i];
+                $scope.ssssss += $scope.str(kw) + "\n";
+            }
         };
 
         /**
@@ -108,14 +118,14 @@ define(["./module"], function (ctrs) {
          */
         $scope.onCancel = function () {
             $state.go('adtrack');
-        }
+        };
 
         /**
          * 继续添加
          */
         $scope.addAdTrack = function () {
             $state.go('#conf/webcountsite/adtrack_add');
-        }
+        };
 
         $scope.submit = function (obj) {
             var model = angular.copy($scope.adtrack_model);

@@ -7,8 +7,8 @@ var daos = require('../db/daos'),
 
 var security = {
     login: function (req, res, next) {
-        res.cookie('uname', JSON.stringify(req.session.user.userName), {maxAge: 60 * 60});
-        res.cookie('uid', JSON.stringify(req.session.user.id), {maxAge: 60 * 60*1000000});
+        res.cookie('uname', JSON.stringify(req.session.user.userName), {maxAge: 60 * 60 * 1000});
+        res.cookie('uid', JSON.stringify(req.session.user.id), {maxAge: 60 * 60 * 1000});
         async.waterfall([function (cb) {
             daos.findSync("sites_model", JSON.stringify({uid: req.session.user.id}), null, {}, function (err, promise) {
                 cb(null, promise);
