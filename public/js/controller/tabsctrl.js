@@ -165,14 +165,22 @@ define(["app"], function (app) {
                     name: '来源',
                     displayName: "来源",
                     field: "referrer",
-                    cellTemplate: "<a href='{{grid.appScope.getDataUrlInfo(grid, row,1)}}' target='_blank' style='color:#0965b8;line-height:30px; display:block; padding:0 10px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;}'>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</a>"
+                    cellTemplate: "<a href='{{grid.appScope.getDataUrlInfo(grid, row,1)}}' title='{{grid.appScope.getDataUrlInfo(grid, row,1)}}' target='_blank' style='color:#0965b8;line-height:30px; display:block; padding:0 10px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;}'>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</a>"
                 },
-                {name: '入口页面', displayName: "入口页面", field: "entrance"},
+                {
+                    name: '入口页面', displayName: "入口页面", field: "entrance", cellTooltip: function (row, col) {
+                    return row.entity.entrance;
+                }
+                },
                 {name: '关键词', displayName: "关键词", field: "keyword"},
                 {name: '搜索词', displayName: "搜索词", field: "searchWord"},
                 {name: '搜索带来', displayName: "搜索带来", field: "isPromotion"},
                 {name: "访问IP", displayName: "访问IP", field: "ip"},
-                {name: '访客标识码', displayName: "访客标识码", field: "vid"},
+                {
+                    name: '访客标识码', displayName: "访客标识码", field: "vid", cellTooltip: function (row, col) {
+                    return row.entity.vid;
+                }
+                },
                 {name: "访问时长", displayName: "访问时长", field: "totalTime"},
                 {name: "访问页数", displayName: "访问页数", field: "viewPages"}];
             getHtmlTableData();
@@ -268,7 +276,12 @@ define(["app"], function (app) {
                     $rootScope.gridArray.unshift($scope.gridObjButton);
                 }
             }
-
+            angular.forEach(entities, function (subscription, index) {
+                if (subscription.name == item.name) {
+                    $scope.classInfo = 'current';
+                }
+            });
+            //$rootScope.$broadcast("ssh_reload_datashow");
         }
         var temp_path = $location.path();
         var today = temp_path.indexOf("/today");
@@ -830,7 +843,9 @@ define(["app"], function (app) {
             if ($rootScope.tableSwitch.isJudge == undefined) $scope.isJudge = true;
             if ($rootScope.tableSwitch.isJudge) $rootScope.tableSwitch.tableFilter = undefined;
             if ($rootScope.tableSwitch.number == 4) {
-                var searchUrl = SEM_API_URL + "/es/search_word?tid=" + trackid + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd;
+                console.log($rootScope.tableSwitch.tableFilter);
+                var fi = $rootScope.tableSwitch.tableFilter != undefined && $rootScope.tableSwitch.tableFilter != null ? "&q=" + encodeURIComponent($rootScope.tableSwitch.tableFilter) : "";
+                var searchUrl = SEM_API_URL + "/es/search_word?tid=" + trackid + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + fi;
                 $http({
                     method: 'GET',
                     url: searchUrl
