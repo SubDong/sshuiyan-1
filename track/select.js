@@ -158,8 +158,8 @@
     var h = "EventTarget" + randName(8);
     var s = "EventTarget" + randName(8);
     var Q = "EventSubmit" + randName(8);
-    var i = "EventCancel" + randName(8);
-    var V = "EventDelete" + randName(8);
+    var cancelBtn = "EventCancel" + randName(8);
+    var deleteBtn = "EventDelete" + randName(8);
     var S = "EventPanelTitle" + randName(8);
     var A = "EventPanelHelp" + randName(8);
     var y = "EventIdcontainer" + randName(8);
@@ -475,10 +475,11 @@
         }
         var scriptBlock = document.createElement("script");
         if (url.indexOf("?") < 0) {
-            scriptBlock.src = url + "?index=" + index;
+            scriptBlock.src = url + "?index=" + index+"&td="+params["td"]+"&cuid="+params["cuid"];
         } else {
-            scriptBlock.src = url + "&index=" + index;
+            scriptBlock.src = url + "&index=" + index+"&td="+params["td"]+"&cuid="+params["cuid"];
         }
+        console.log( scriptBlock.src)
         document.getElementsByTagName("head")[0].appendChild(scriptBlock);
         window.setTimeout(function () {
             if (resQueue[index].val == undefined) {
@@ -493,7 +494,7 @@
             resQueue[index].locked = 0;//归还队列
             resQueue[index].val = undefined;
             document.getElementsByTagName("head")[0].removeChild(scriptBlock);//删除临时script元素
-        }, 1000);//设置超时事件
+        }, 3000);//设置超时事件
     }
     //////////////////////////////////////公共方法
 
@@ -664,10 +665,10 @@
             panelcont.bindPanelEvent();
             panelcont.updateInfo(elem.id);
             if (Z) {
-                forcedoc(V).style.display = "block";
+                forcedoc(deleteBtn).style.display = "block";
                 forcedoc(S).innerHTML = "编辑事件目标"
             } else {
-                forcedoc(V).style.display = "none";
+                forcedoc(deleteBtn).style.display = "none";
                 forcedoc(S).innerHTML = "添加事件目标"
             }
         },
@@ -685,8 +686,8 @@
 
         bindPanelEvent: function () {
             attachEvent(Q, "click", panelcont.submitPanel);
-            attachEvent(i, "click", panelcont.canelPanel);
-            attachEvent(V, "click", panelcont.deletePanel)
+            attachEvent(cancelBtn, "click", panelcont.canelPanel);
+            attachEvent(deleteBtn, "click", panelcont.deletePanel)
         },
         updateInfo: function (ab) {
             var aa = forcedoc(ab);
@@ -830,7 +831,7 @@
             G.push('<td height="30" style="margin:0; padding:0; border:0; text-align:left; font-size:12px; color:#000">事件作用页面或目录：</td>');
             G.push('<td colspan="2">');
             G.push("<label>");
-            G.push('<input type="text"  size="40" id="' + s + '" value="' + document.location.href + '" />');
+            G.push('<input type="text"  size="40" id="' + s + '" value="' + params["srcUrl"] + '" />');
             G.push("</label>");
             G.push("</td>");
             G.push("</tr>");
@@ -842,10 +843,10 @@
             G.push('<input id="' + Q + '" type="button" value="保存"/>');
             G.push("</td>");
             G.push('<td height="30">');
-            G.push('<input id="' + i + '" type="button" value="取消" />');
+            G.push('<input id="' + cancelBtn + '" type="button" value="取消" />');
             G.push("</td>");
             G.push('<td height="30">');
-            G.push('<input id="' + V + '" type="button" value="删除" />');
+            G.push('<input id="' + deleteBtn + '" type="button" value="删除" />');
             G.push("</td>");
             G.push("</tr>");
             G.push("</table>");
@@ -872,7 +873,6 @@
             if (X) {
                 X.setAttribute("HY_transId", data.targetId);
                 X.setAttribute("HY_eventTargetName", decodeURIComponent(data.name));
-                console.log(data.name+"添加标签名称:"+ X.getAttribute("HY_eventTargetName"))
                 X.setAttribute("HY_eventType", data.eventType);
                 X.setAttribute("HY_eventDomain", data.monUrl);
                 tipContent.showTip(Y)
@@ -1079,8 +1079,6 @@
                         ttips[k] = tips[n];
                     }
                     tips = ttips;
-                    console.log("删除完后DOC")
-                    console.log(ab)
                 }
             }
         },
@@ -1101,10 +1099,25 @@
             panelcont.canelPanel()
         }
     }
-    //页面div插入
-    document.write('<div id="' + p.hyContent + '" style="position:absolute;width:1px;height:1px;"></div>');
-    //根Body初始化
-    rootBody.initRootBody();
-    //页面事件绑定
-    attachEvent(document.body, "onload", rootPage.init);
+
+    var params={};
+    var shref = document.location.href;
+    var tps = shref.substring(shref.indexOf('?')+1,shref.length).split("&");
+    for(var i = 0; i<tps.length;i++){
+        var kv=tps[i].split("=");
+        params[kv[0]]=kv[1];
+    }
+
+    params["srcUrl"]=shref.substring(0,shref.indexOf('?'));
+    console.log(params)
+    if(params!=null&&params.jn=="select"){
+        console.log("初始化使用Select.js 注入客户端代码 请求参数：")
+        console.log(params)
+        //页面div插入
+        document.write('<div id="' + p.hyContent + '" style="position:absolute;width:1px;height:1px;"></div>');
+        //根Body初始化
+        rootBody.initRootBody();
+        //页面事件绑定
+        attachEvent(document.body, "onload", rootPage.init);
+    }
 })();
