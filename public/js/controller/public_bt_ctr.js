@@ -17,14 +17,11 @@ define(["app"], function (app) {
                 //   // scope.gridApi2.selection.selectAllRows();
                 //};
                 scope.deleteall=function() {
-                    console.log(scope.entity.uid);
                     console.log(scope.gridApiAdmin.selection.getSelectedRows());
                 };
                 scope.Selectall= function() {
                     if(Selectall.checked==true){
                         $rootScope.gridApiAdmin.selection.selectAllRows();
-
-
                     }
                     else{
                         $rootScope.gridApiAdmin.selection.clearSelectedRows();

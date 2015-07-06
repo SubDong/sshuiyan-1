@@ -180,7 +180,7 @@ define(["./module"], function (ctrs) {
                 template: '\
                 <form role="form" name="adminmainctrForm" class="form-horizontal" novalidate>\
               <div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div>\
-                   <ul class="admin-ng-content admin-ngeventchange"> \
+                   <ul class="admin-ng-content "> \
                    <li>网站域名</li>\
                      <li><input type="text" name="remote" adminmainctr-remote-validation data-ng-focus="site_url_focus = true" data-ng-blur="site_name_focus = false" data-ng-model="dialog_model.site_url" class="form-control" required/></li> \
                     <li ng-show="adminmainctrForm.remote.$error.remote" style="color: red;">网站域名重复！</li> \
