@@ -107,6 +107,7 @@ define(["./module"], function (ctrls) {
             }
         }
         $scope.itemHover = function (params, typeTotal, allTotal) {
+            console.log(params);
             var type = chartUtils.convertChinese($scope.charts[1].types.toString())
             $(".chart_box").attr("style", "background:" + $rootScope.chartColors[params.seriesIndex]);
             $("#chartlink").html(params[0]);
@@ -154,7 +155,7 @@ define(["./module"], function (ctrls) {
                     auotHidex: true,
                     qingXie:true,
                     qxv:18,
-                    tt: "item",
+                    //tt: "item",
                     itemHover: $scope.itemHover,
                     keyFormat: "none",
                     dataKey: "key",

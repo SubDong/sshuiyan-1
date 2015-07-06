@@ -127,6 +127,13 @@ define(["./module"], function (ctrs) {
             var json = JSON.parse(eval("(" + data + ")").toString());
             config["noFormat"] = "noFormat";
             util.getEquipmentData(json, $scope.equipment.selected);
+
+            json.forEach(function(item){
+                if(item.key.length>10){
+                    item.key=item.key.slice(0,10);
+                    item.quota=item.quota.slice(0,10);
+                }
+            });
             cf.renderChart(json, config);
         }
         $scope.charts = [
