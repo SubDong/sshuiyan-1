@@ -117,6 +117,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     $rootScope.tableTimeStart = 0;
                     $rootScope.tableTimeEnd = 0;
                     $rootScope.keyFormat = "hour";
+                    $rootScope.start = 0;
                     $rootScope.end = 0;
                     scope.reloadByCalendar("today");
                     $('#reportrange span').html(GetDateStr(0));
