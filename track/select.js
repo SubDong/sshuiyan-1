@@ -479,11 +479,10 @@
         } else {
             scriptBlock.src = url + "&index=" + index+"&td="+params["td"]+"&cuid="+params["cuid"];
         }
-        console.log( scriptBlock.src)
         document.getElementsByTagName("head")[0].appendChild(scriptBlock);
         window.setTimeout(function () {
             if (resQueue[index].val == undefined) {
-                alert("超时，事件添加失败！")
+                console.log("超时，数据回写失败！")
             }
             else {
                 //刷新显示事件
@@ -494,7 +493,7 @@
             resQueue[index].locked = 0;//归还队列
             resQueue[index].val = undefined;
             document.getElementsByTagName("head")[0].removeChild(scriptBlock);//删除临时script元素
-        }, 3000);//设置超时事件
+        }, 2000);//设置超时时间
     }
     //////////////////////////////////////公共方法
 
@@ -560,7 +559,7 @@
             attachEvent(document, "mouseout", panelcont.hidePanelTip)
 
             //初始化已添加事件目标信息
-            var url = p.protocol + "//" + p.flashUrl + ":" + p.pock + "/" + p.urlPath + "?type=getTips&eventPage"+params["srcUrl"];
+            var url = p.protocol + "//" + p.flashUrl + ":" + p.pock + "/" + p.urlPath + "?type=getTips&eventPage="+params["srcUrl"];
             crossDomainSendData(url, rootBody.initTips);
         },
         initTips: function (index, resData) {
@@ -1109,10 +1108,9 @@
     }
 
     params["srcUrl"]=shref.substring(0,shref.indexOf('?'));
-    console.log(params)
     if(params!=null&&params.jn=="select"){
-        console.log("初始化使用Select.js 注入客户端代码 请求参数：")
-        console.log(params)
+        //console.log("初始化使用Select.js 注入客户端代码 请求参数：")
+        //console.log(params)
         //页面div插入
         document.write('<div id="' + p.hyContent + '" style="position:absolute;width:1px;height:1px;"></div>');
         //根Body初始化
