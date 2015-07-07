@@ -9,7 +9,7 @@ define(["./module"], function (ctrs) {
         //table默认信息配置
         $rootScope.tableTimeStart = 0;
         $rootScope.tableTimeEnd = 0;
-        $rootScope.tableFormat = null;
+        $rootScope.tableFormat = "[{\"entrance\":\"1\"}]";
         //配置默认指标
         $rootScope.checkedArray = ["uv", "nuv", "nuvRate"];
         $rootScope.gridArray = [

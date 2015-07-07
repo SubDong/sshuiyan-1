@@ -263,8 +263,8 @@ api.get('/indextable', function (req, res) {
             try {
                 data.forEach(function (info, x) {
                     for (var i = 0; i < info.key.length; i++) {
-                        if (info.key[i] != undefined && info.key[i].split(",").length > 1) {
-                            infoKey = info.key[i].split(",")[0]
+                        if (info.key[i] != undefined && info.key[i]+"".split(",").length > 1) {
+                            infoKey = info.key[i]+"".split(",")[0]
                         } else {
                             infoKey = info.key[i]
                         }
@@ -291,14 +291,15 @@ api.get('/indextable', function (req, res) {
                                     obj[dimensionInfo] = infoKey == 1 ? "直接访问" : infoKey == 2 ? "搜索引擎" : "外部链接";
                                     break;
                                 case "period":
+                                    var dateFormat = new Date(infoKey).format("yyyy-MM-dd hh:mm:ss");
                                     if (_formartInfo == "day") {
-                                        obj[dimensionInfo] = infoKey.substring(0, 10);
+                                        obj[dimensionInfo] = dateFormat.substring(0, 10);
                                     } else if (_formartInfo == "week") {
-                                        obj[dimensionInfo] = infoKey.substring(0, 10);
+                                        obj[dimensionInfo] = dateFormat.substring(0, 10);
                                     } else if (_formartInfo == "month") {
-                                        obj[dimensionInfo] = infoKey.substring(0, 7);
+                                        obj[dimensionInfo] = dateFormat.substring(0, 7);
                                     } else {
-                                        obj[dimensionInfo] = infoKey.substring(infoKey.indexOf(" "), infoKey.length - 3) + " - " + infoKey.substring(infoKey.indexOf(" "), infoKey.length - 5) + "59";
+                                        obj[dimensionInfo] = dateFormat.substring(dateFormat.indexOf(" "), dateFormat.length - 3) + " - " + dateFormat.substring(dateFormat.indexOf(" "), dateFormat.length - 5) + "59";
                                     }
                                     break;
                                 case "se":
@@ -351,42 +352,7 @@ api.get('/indextable', function (req, res) {
 
     })
 });
-/**
- * 实时访问
- */
-/*api.get('/realTimeAccess', function (req, res) {
- var query = url.parse(req.url, true).query;
- var _type = query["type"];
- var _filters = query["filerInfo"] != null && query["filerInfo"] != 'null' ? JSON.parse(query["filerInfo"]) : query["filerInfo"] == 'null' ? null : query["filerInfo"];//过滤器;
- var indexes = date.createIndexes(0, 0, "access-");
- es_request.realTimeSearch(req.es, indexes, _type, _filters, function (data) {
- var resultArray = new Array();
- try {
- data.forEach(function (item, i) {
- if (item._source != null && item._source.city != "-") {
- var result = {};
- result["city"] = item._source.city == "-" ? "国外" : item._source.city;
- var newDate = new Date(item._source.utime[0]).toString();
- result["utime"] = newDate.substring(newDate.indexOf(":") - 3, newDate.indexOf("G") - 1);
- result["source"] = item._source.rf + "," + (item._source.se != "-" ? (item._source.se === undefined ? item._source.rf : item._source.se) : item._source.rf);
- result["tt"] = item._source.tt;
- result["ip"] = item._source.remote;
- result["utimeAll"] = new Date(item._source.utime[item._source.utime.length - 1] - item._source.utime[0]).format("hh:mm:ss");
- result["pageNumber"] = item._source.loc.length;
- resultArray.push(result)
- }else{
- result["city"] = "暂无数据";result["city"] = "暂无数据";result["utime"] = "暂无数据"
- result["source"] = "暂无数据";result["tt"] = "暂无数据";result["ip"] = "暂无数据"
- result["utimeAll"] = "暂无数据";result["pageNumber"] = "暂无数据"
- resultArray.push(result)
- }
- });
- } catch (e) {
- console.error(e.stack);
- }
- datautils.send(res, resultArray);
- });
- });*/
+
 /**
  * 实时访问 HTML数据
  */
