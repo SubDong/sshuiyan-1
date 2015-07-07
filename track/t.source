@@ -2,7 +2,7 @@ if (config != undefined && !config.open) {
     (function () {
         var points = [], h = {}, md = {}, c = {
             id: config.trackid,
-            version: "1.0.15",
+            version: "1.0.20",
             q: null
         };
 
@@ -447,7 +447,7 @@ if (config != undefined && !config.open) {
                     md.g.vid = this.getData("vid");
                 },
                 par: function () {
-                    var a = "", b = h.I.Q, _c = md.g;
+                    var a = "", b = h.I.Q, _c = md.g, ck = md.cookie;
                     for (var i = 0; i < b.length; i++) {
                         _c[b[i]] != undefined && _c[b[i]] != "" && _c[b[i]] != null ? a = a + b[i] + "\=" + _c[b[i]] + ((b[i] == "v") ? "" : "\&") : "";
                     }
