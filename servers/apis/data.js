@@ -18,6 +18,7 @@ var uuid = require("node-uuid");
 var async = require("async");
 //var es_position = require('../services/es_position');
 var changeList_request = require("../services/changeList_request");
+var transform = require("../services/transform-request");
 
 api.get('/charts', function (req, res) {
     var query = url.parse(req.url, true).query, quotas = [], type = query['type'], dimension = query.dimension, filter = null, topN = [], userType = query.userType;
@@ -719,14 +720,51 @@ api.get("/changeList", function (req, res) {
         contrastIndexString = date.createIndexes(contrastStart, contrastEnd, "access-");
         contrastTime = date.getConvertTimeByNumber(contrastStart, contrastEnd);
     }
-    for(var i = 0;i<contrastIndexString.length;i++){
+    for (var i = 0; i < contrastIndexString.length; i++) {
         indexString.push(contrastIndexString[i]);
     }
-    for(var i = 0;i<contrastTime.length;i++){
+    for (var i = 0; i < contrastTime.length; i++) {
         time.push(contrastTime[i]);
     }
     changeList_request.search(req.es, indexString, time, function (result) {
         datautils.send(res, result);
     });
+});
+//==================================== transform ===============================================
+api.get("/transform/transformAnalysis", function (req, res) {
+    var parameters = req.url.split("?")[1].split("&");
+    var start = parameters[0].split("=")[1];
+    var end = parameters[1].split("=")[1];
+    var action = parameters[2].split("=")[1];
+    var type = parameters[3].split("=")[1];
+    var indexString = [];
+    var time = [];
+    if (start.substring(1, start.length).match("-") != null && end.substring(1, start.length).match("-") != null) {
+        indexString = date.createIndexsByTime(start, end, "access-");
+        time = date.getConvertTimeByTime(start, end);
+    } else {
+        indexString = date.createIndexes(start, end, "access-");
+        time = date.getConvertTimeByNumber(start, end);
+    }
+    if (parameters.length <= 4) {
+        console.log(end);
+        transform.search(req.es, indexString, type, action, function (result) {
+            datautils.send(res, result);
+        })
+    } else {
+        var showType = parameters[4].split("=")[1];
+        var queryOptions = parameters[5].split("=")[1];
+        console.log(end);
+        var querys = [];
+        var query = queryOptions.split(",");
+        for (var i = 0; i < query.length; i++) {
+            querys.push(queryOptions.split(",")[i]);
+        }
+        console.log(querys.length)
+        transform.searchByShowTypeAndQueryOption(req.es, indexString, type, action, showType, querys, function (result) {
+            datautils.send(res, result);
+        });
+    }
+
 });
 module.exports = api;
