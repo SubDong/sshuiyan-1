@@ -4,16 +4,17 @@
 define(["./module"], function (ctrs) {
     "use strict";
 
-    ctrs.controller('adtrack', function ($scope, $rootScope, $cookieStore, $http,ngDialog) {
+    ctrs.controller('ad_track', function ($scope, $rootScope, $cookieStore, $http,ngDialog) {
 
         //配置默认指标
         $rootScope.checkedArray = ["_uid","uid", "type_id", "track_id", "targetUrl", "mediaPlatform", "adTypes", "planName", "keywords", "creative","produceUrl"];
         $rootScope.gridArray = {
-            paginationPageSize: 25,
+            paginationPageSize: 20,
+            paginationPageSizes: [20, 50, 100],
             expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
             expandableRowHeight: 360,
             enableColumnMenus: false,
-            enablePaginationControls: false,
+            enablePaginationControls: true,
             enableSorting: true,
             enableGridMenu: false,
             enableHorizontalScrollbar: 0,
@@ -40,7 +41,7 @@ define(["./module"], function (ctrs) {
                     name: "x2",
                     displayName: "",
                     cellTemplate: "<div ng-click='grid.appScope.onDelete(index,grid,row)'><a href='' ng-click='onDelete()'>删除</a></div>",
-                    maxWidth: 80,
+                    maxWidth: 50,
                     cellClass: 'table_admin'
                 }
 

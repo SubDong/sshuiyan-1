@@ -4,7 +4,9 @@
 define(["./module"], function (ctrs) {
     "use strict";
 
-    ctrs.controller('pagechange', function ($http,$scope, $q, $rootScope,$cookieStore,ngDialog, $state) {
+    ctrs.controller('count_pagechange', function ($http,$scope, $q, $rootScope,$cookieStore,ngDialog, $state) {
+
+
         $scope.page_schema_model = {
             //id: String,
             uid: "",//用户ID
@@ -68,7 +70,7 @@ define(["./module"], function (ctrs) {
                 displayName: "",
                 // grid.appScope.Delete(row, grid.options.data)
                 cellTemplate: "<div class='table_admin'><a href='' ng-click='grid.appScope.onDelete(index,grid,row)' >删除</a></div>",
-                maxWidth: 150
+                maxWidth: 50
             }
 
 

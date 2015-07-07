@@ -53,7 +53,7 @@ define(["./module"], function (ctrs) {
                         var _key = [];
                         var _quota = [];
                         result.buckets.forEach(function (e) {
-                            _key.push(new Date(e.key).toUTCString().substring(17, 22));
+                            _key.push(new Date(e.key).Format("yyyy-MM-dd hh:mm:ss").substring(10,16));
                             _quota.push(e.pv_aggs.value);
                         });
                         final_result.push({label: chartUtils.convertChinese('pv'), key: _key, quota: _quota})
@@ -62,7 +62,7 @@ define(["./module"], function (ctrs) {
                         var _key = [];
                         var _quota = [];
                         result.buckets.forEach(function (e) {
-                            _key.push(new Date(e.key).toUTCString().substring(17, 22));
+                            _key.push(new Date(e.key).Format("yyyy-MM-dd hh:mm:ss").substring(10,16));
                             _quota.push(e.uv_filter.uv_aggs.value);
                         });
                         final_result.push({label: chartUtils.convertChinese('uv'), key: _key, quota: _quota})
@@ -71,7 +71,7 @@ define(["./module"], function (ctrs) {
                         var _key = [];
                         var _quota = [];
                         result.buckets.forEach(function (e) {
-                            _key.push(new Date(e.key).toUTCString().substring(17, 22));
+                            _key.push(new Date(e.key).Format("yyyy-MM-dd hh:mm:ss").substring(10,16));
                             _quota.push(e.ip_aggs.value);
                         });
                         final_result.push({label: chartUtils.convertChinese('ip'), key: _key, quota: _quota})

@@ -177,67 +177,16 @@ define(["./module"], function (ctrs) {
 
         $scope.openAddDialog = function () {
             $scope.urlDialog = ngDialog.open({
-                template: '\
-                <form role="form" name="adminmainctrForm" class="form-horizontal" novalidate>\
-              <div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div>\
-                   <ul class="admin-ng-content admin-ngeventchange"> \
-                   <li>网站域名</li>\
-                     <li><input type="text" name="remote" adminmainctr-remote-validation data-ng-focus="site_url_focus = true" data-ng-blur="site_name_focus = false" data-ng-model="dialog_model.site_url" class="form-control" required/></li> \
-                    <li ng-show="adminmainctrForm.remote.$error.remote" style="color: red;">网站域名重复！</li> \
-                    <li data-ng-show="site_url_focus && !dialog_model.site_url" style="color: red;">不能为空</li>\
-                    <br>\
-                    <li>网站名称</li>\
-                    <li><input type="text" data-ng-focus="site_name_focus=true" data-ng-blur="site_name_focus =false" data-ng-model="dialog_model.site_name" class="form-control"/></li> \
-                    <li data-ng-show="site_name_focus && !dialog_model.site_name" style="color: red;">不能为空</li>\
-                    <br>\
-                    <li style="color: black;"><input type="checkbox"  name="置顶" data-ng-model="dialog_model.is_top"/>\
-                    <span>设置站点是否置顶</span></li>\
-                    <br>\
-                    <li>可输入如下4种域名形式</li>\
-                    <li>1.主域名（如：www.baidu.com）</li>\
-                    <li>2.二级域名（如：sub.baidu.com)</li>\
-                    <li>3.子目录（如：www.baidu.com/sub）</li>\
-                    <li>4.wap站域名（如：wap.baidu.com）</li>\
-                    </ul>\
-                    <div class="ng-button-div"><button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
-                    <button type="button" ng-disabled="adminmainctrForm.$invalid" class="ngdialog-button  ng-button" ng-click="submit()">确定</button></div>\
-                </div></form>',
+                template:'../conf/Dialog/main_addDialog.html',
                 className: 'ngdialog-theme-default admin_ngdialog',
-                plain: true,
                 scope: $scope
             });
         };
 
         $scope.openUpdateDialog = function () {
             $scope.urlDialog = ngDialog.open({
-                template: '\
-                <form role="form" name="adminmainctrForm" class="form-horizontal" novalidate>\
-              <div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div>\
-              \
-                   <ul class="admin-ng-content"> \
-                   <li>网站域名</li>\
-                     <li><input type="text" name="remote" readOnly  adminmainctr-remote-validation data-ng-focus="site_url_focus = true" data-ng-blur="site_name_focus = false" data-ng-model="dialog_model.site_url" class="form-control" required/></li> \
-                    <li ng-show="adminmainctrForm.remote.$error.remote" style="color: red;">网站域名重复！</li> \
-                    <li data-ng-show="site_url_focus && !dialog_model.site_url" style="color: red;">不能为空</li>\
-                    <br>\
-                    <li>网站名称</li>\
-                    <li><input type="text" data-ng-focus="site_name_focus=true" data-ng-blur="site_name_focus =false" data-ng-model="dialog_model.site_name" class="form-control"/></li> \
-                    <li data-ng-show="site_name_focus && !dialog_model.site_name" style="color: red;">不能为空</li>\
-                    <br>\
-                    <li style="color: black;"><input type="checkbox"  name="置顶" data-ng-model="dialog_model.is_top"/>\
-                    <span>设置站点是否置顶</span></li>\
-                    <br>\
-                    <li>可输入如下4种域名形式</li>\
-                    <li>1.主域名（如：www.baidu.com）</li>\
-                    <li>2.二级域名（如：sub.baidu.com)</li>\
-                    <li>3.子目录（如：www.baidu.com/sub）</li>\
-                    <li>4.wap站域名（如：wap.baidu.com）</li>\
-                    </ul>\
-                    <div class="ng-button-div"><button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
-                    <button type="button" ng-disabled="adminmainctrForm.$invalid" class="ngdialog-button ng-button" ng-click="submit()">确定</button>\
-                </div></div></form>',
+                template:'../conf/Dialog/main_UpdateDialog.html',
                 className: 'ngdialog-theme-default admin_ngdialog ',
-                plain: true,
                 scope: $scope
             });
         };

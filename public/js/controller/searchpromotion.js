@@ -130,12 +130,13 @@ define(["./module"], function (ctrs) {
         };
         // 百度推广表格配置项
         $scope.gridOptions = {
-            paginationPageSize: 25,
+            paginationPageSize: 20,
+            paginationPageSizes: [20, 50, 100],
             expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions' style='height:150px;'></div>",
             expandableRowHeight: 150,
             enableColumnMenus: false,
             showColumnFooter: true,
-            enablePaginationControls: false,
+            enablePaginationControls: true,
             enableSorting: true,
             enableGridMenu: false,
             enableHorizontalScrollbar: 0,
