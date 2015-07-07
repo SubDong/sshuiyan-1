@@ -630,13 +630,13 @@ api.get("/select", function (req, res) {
                                 root_url: sitejson.siteid
                             }
                             if (docs == null || docs.length == 0) {//存在配置
-                                console.log("*******该事件配置不存在 插入********")
+                                //console.log("*******该事件配置不存在 插入********")
                                 dao.save(schema_name, eventData, function (ins) {
                                     if (ins != null) {
                                     }
                                 });
                             }else{
-                                console.log("*******该事件配置已存在 更新********")
+                                //console.log("*******该事件配置已存在 更新********")
                                 dao.update(schema_name,JSON.stringify(existQry), eventData, function (ins) {
                                     if (ins != null) {
 
@@ -648,15 +648,16 @@ api.get("/select", function (req, res) {
                         res.end();
                         break;
                     case "getTips"://获取
+
                         var existQry = {//用户 站点 页面 为查询条件
                             uid: uid,
-                            //event_page: dataJson["eventPage"],
+                            event_page: query["eventPage"],
                             root_url: sitejson.siteid
                         }
                         dao.find(schema_name, JSON.stringify(existQry), null, {}, function (err, docs) {//查询所有配置
-                            console.log(docs)
-                            if (docs == null || docs.length == 0) {//存在配置
-                                //res.write("crossDomainCallback(" + JSON.stringify(resEvents) + "," + query["index"] + ");");
+                            if (docs!= null && docs.length >0) {//存在配置
+                                console.log("回写")
+                                res.write("crossDomainCallback(" + JSON.stringify(docs) + "," + query["index"] + ");");
                                 res.end();
                             }
                         });
