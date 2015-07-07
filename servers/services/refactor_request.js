@@ -27,7 +27,7 @@ var _vc_aggs = {
     },
     "aggs": {
         "vc_aggs": {
-            "cardinality": {
+            "value_count": {
                 "field": "tt"
             }
         }
@@ -161,7 +161,7 @@ var es_aggs = {
             },
             "aggs": {
                 "ip_aggs1": {
-                    "cardinality": {
+                    "value_count": {
                         "field": "remote"
                     }
                 }
