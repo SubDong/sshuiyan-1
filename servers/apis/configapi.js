@@ -606,78 +606,60 @@ api.get("/select", function (req, res) {
     var type = query["type"];
     var td = query["td"];
     var uid = query["cuid"]
-    console.log(query)
-    console.log(type);
-    console.log(td);
-    console.log(uid);
     if (td != null && uid != null) {
         req.redisclient.get("tsj:" + td, function (error, sitejsons) {
-            console.log(sitejsons)
             var sitejson = sitejsons == null ? null : JSON.parse(sitejsons);
-            console.log(sitejson)
-            console.log(sitejson != null && ref != undefined && ref.indexOf(sitejson.siteurl) > -1)
             if (sitejson != null && ref != undefined && ref.indexOf(sitejson.siteurl) > -1) {
+                var schema_name = "event_change_model";//设置选择schemas Model名称
                 switch (type) {
                     case "saveTips":
-                        //var data = query["data"];
-                        //console.log(data);
                         var dataJson = JSON.parse(query["data"]);
-                        var eventData = {
+                        var existQry = {
                             uid: uid,
                             event_id: dataJson["id"],
-                            event_name: dataJson["name"],
                             event_page: dataJson["monUrl"],
-                            event_method:"自动",
                             root_url: sitejson.siteid
                         }
-                        console.log(eventData)
-                        var schema_name = "event_change_model";//设置选择schemas Model名称
-                        dao.save(schema_name, eventData, function (ins) {
-                            datautils.send(res, JSON.stringify(ins));
-                            if (ins != null) {
-                                var qry = {//用户ID+站点ID+页面URL
-                                    uid: ins.uid,
-                                    root_url: ins.root_url,
-                                    event_page: ins.event_page
-                                }
-                                dao.find(schema_name, JSON.stringify(qry), null, {}, function (err, docs) {//查询所有配置
-                                    if (docs != null && docs.length > 0) {//存在配置
-                                        var confs = [];
-                                        docs.forEach(function (item) {
-                                            var event_config = {
-                                                eid: item.event_id,//事件ID
-                                                evttag: item.event_name,//事件名称
-                                                evpage: item.event_page//事件页面
-                                            };
-                                            confs.push(event_config);
-                                        });
-                                        req.redisclient.multi().set(ins.root_url + ":e:" + ins.event_page, JSON.stringify(confs)).exec();
+                        dao.find(schema_name, JSON.stringify(existQry), null, {}, function (err, docs) {//查询所有配置
+                            var eventData = {
+                                uid: uid,
+                                event_id: dataJson["id"],
+                                event_name: dataJson["name"],
+                                event_page: dataJson["monUrl"],
+                                event_method:"自动",
+                                root_url: sitejson.siteid
+                            }
+                            if (docs == null || docs.length == 0) {//存在配置
+                                console.log("*******该事件配置不存在 插入********")
+                                dao.save(schema_name, eventData, function (ins) {
+                                    if (ins != null) {
                                     }
                                 });
+                            }else{
+                                console.log("*******该事件配置已存在 更新********")
+                                dao.update(schema_name,JSON.stringify(existQry), eventData, function (ins) {
+                                    if (ins != null) {
 
+                                    }
+                                });
                             }
                         });
-                        res.write("crossDomainCallback({id: 1, name: 'shyman', eventType: 'eventType', monUrl:'127.0.0.1'}," + query["index"] + ");");
+                        res.write("crossDomainCallback({state:'SUCCESS'}," + query["index"] + ");");
                         res.end();
                         break;
                     case "getTips"://获取
-                        var resEvents = [];
-                        resEvents.push({
-                            id: 1,
-                            event_id: 'btn1',
-                            event_name: '按钮1',
-                            event_page: '127.0.0.1/1',
-                            event_method: '自动'
-                        })
-                        resEvents.push({
-                            id: 2,
-                            event_id: 'xxx',
-                            event_name: 'text1',
-                            event_page: '127.0.0.1/2',
-                            event_method: '自动'
-                        })
-                        res.write("crossDomainCallback(" + JSON.stringify(resEvents) + "," + query["index"] + ");");
-                        res.end();
+                        var existQry = {//用户 站点 页面 为查询条件
+                            uid: uid,
+                            //event_page: dataJson["eventPage"],
+                            root_url: sitejson.siteid
+                        }
+                        dao.find(schema_name, JSON.stringify(existQry), null, {}, function (err, docs) {//查询所有配置
+                            console.log(docs)
+                            if (docs == null || docs.length == 0) {//存在配置
+                                //res.write("crossDomainCallback(" + JSON.stringify(resEvents) + "," + query["index"] + ");");
+                                res.end();
+                            }
+                        });
                         break;
                     case "delTip"://删除
                         break;
