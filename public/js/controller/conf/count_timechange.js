@@ -4,7 +4,7 @@
 define(["./module"], function (ctrs) {
     "use strict";
 
-    ctrs.controller('timechange', function ($scope, $http,$rootScope,$cookieStore,ngDialog  ) {
+    ctrs.controller('count_timechange', function ($scope, $http,$rootScope,$cookieStore,ngDialog  ) {
        //$scope.
         $scope.time_conv={
             status: false,
