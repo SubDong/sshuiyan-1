@@ -560,7 +560,7 @@
             attachEvent(document, "mouseout", panelcont.hidePanelTip)
 
             //初始化已添加事件目标信息
-            var url = p.protocol + "//" + p.flashUrl + ":" + p.pock + "/" + p.urlPath + "?type=getTips";
+            var url = p.protocol + "//" + p.flashUrl + ":" + p.pock + "/" + p.urlPath + "?type=getTips&eventPage"+params["srcUrl"];
             crossDomainSendData(url, rootBody.initTips);
         },
         initTips: function (index, resData) {
