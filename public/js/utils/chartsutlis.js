@@ -186,9 +186,9 @@ var chartUtils = {
         if (config.keyFormat == "day") {
             var time = [];
             json.forEach(function (e) {
+                var _time=new Date(e.key).Format("yyyy-MM-dd hh:mm:ss");
                 if ((_times[1] - _times[0]) == 0) {
                     config.keyFormat = "none";
-                    var _time=new Date(e.key).Format("yyyy-MM-dd hh:mm:ss");
                     time.push(Number(_time.substring(10, 13)));
                 } else {
                     time.push(_time.substr(0, 10));
