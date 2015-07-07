@@ -16,7 +16,7 @@
                         <input type="text" ssh-url id="targetUrl" name="targetUrl" ng-model="adTrack.targetUrl"
                                placeholder="www.mydomain/product.html" required/>
                     </div>
-                    <span style="color:red" ng-show="(adTrackForm.targetUrl.$dirty && adTrackForm.targetUrl.$invalid) || adTrackForm.targetUrl.$pristine">
+                    <span style="color:red" ng-show="adTrackForm.targetUrl.$invalid">
                         <span ng-show="adTrackForm.targetUrl.$error.required">请输入目标URL</span>
                         <span ng-show="adTrackForm.targetUrl.$error.sshUrl">您设置的目标URL格式错误</span>
                     </span>
@@ -25,19 +25,19 @@
                     <span>媒介平台<p>（广告所投放的平台，如：新浪,搜狐等）</p></span>
                     <div class="adtrack_add_input">
                         <ul>
-                            <li><input type="radio" name="mediaPlatform" ng-model="adTrack.mediaPlatform" value="搜狐"/>搜狐</li>
-                            <li><input type="radio" name="mediaPlatform" ng-model="adTrack.mediaPlatform" value="新浪"/>新浪</li>
-                            <li><input type="radio" name="mediaPlatform" ng-model="adTrack.mediaPlatform" value="网易"/>网易</li>
-                            <li><input type="radio" name="mediaPlatform" ng-model="adTrack.mediaPlatform" value="博客"/>博客</li>
-                            <li><input type="radio" name="mediaPlatform" ng-model="adTrack.mediaPlatform" value="微博"/>微博</li>
-                            <li><input type="radio" name="mediaPlatform" ng-model="adTrack.mediaPlatform" value="微信"/>微信</li>
-                            <li><input type="radio" name="mediaPlatform" ng-model="adTrack.mediaPlatform" value="贴吧"/>贴吧</li>
-                            <li><input type="radio" name="mediaPlatform" ng-model="adTrack.mediaPlatform" value="论坛"/>论坛/BBS</li>
-                            <li><input type="radio" name="mediaPlatform" ng-model="adTrack.mediaPlatform" value="其他"/>其他</li>
+                            <li><input type="radio" name="mediaPlatform" ng-model="adTrack.mediaPlatform" ng-click="advancedOpt()" value="搜狐" />搜狐</li>
+                            <li><input type="radio" name="mediaPlatform" ng-model="adTrack.mediaPlatform" ng-click="advancedOpt()" value="新浪" />新浪</li>
+                            <li><input type="radio" name="mediaPlatform" ng-model="adTrack.mediaPlatform" ng-click="advancedOpt()" value="网易" />网易</li>
+                            <li><input type="radio" name="mediaPlatform" ng-model="adTrack.mediaPlatform" ng-click="advancedOpt()" value="博客" />博客</li>
+                            <li><input type="radio" name="mediaPlatform" ng-model="adTrack.mediaPlatform" ng-click="advancedOpt()" value="微博" />微博</li>
+                            <li><input type="radio" name="mediaPlatform" ng-model="adTrack.mediaPlatform" ng-click="advancedOpt()" value="微信" />微信</li>
+                            <li><input type="radio" name="mediaPlatform" ng-model="adTrack.mediaPlatform" ng-click="advancedOpt()" value="贴吧" />贴吧</li>
+                            <li><input type="radio" name="mediaPlatform" ng-model="adTrack.mediaPlatform" ng-click="advancedOpt()" value="论坛" />论坛/BBS</li>
+                            <li><input type="radio" name="mediaPlatform" ng-model="adTrack.mediaPlatform" ng-click="advancedOpt()" value="其他" />其他</li>
                         </ul>
                         <ul>
-                            <input type="text" name="mediaPlatform" ng-model="adTrack.mediaPlatform" required/>
-                            <span style="color:red" ng-show="(adTrackForm.mediaPlatform.$dirty && adTrackForm.mediaPlatform.$invalid) || adTrackForm.mediaPlatform.$pristine">
+                            <input type="text" id="mediaPlatform" name="mediaPlatform"  ng-model="adTrack.mediaPlatform" ng-click="advancedOpt()" placeholder="请输入" required/>
+                            <span style="color:red" ng-show="adTrackForm.mediaPlatform.$invalid">
                                 <span ng-show="adTrackForm.mediaPlatform.$error.required">媒介平台必填</span>
                             </span>
                         </ul>
@@ -49,40 +49,39 @@
                 <li><span>广告类型<p>（广告所投放的具体形式，如：文字广告，图片广告等）</p></span>
                     <div class="adtrack_add_input">
                         <ul>
-                            <li><input type="radio" name="adTypes" ng-model="adTrack.adTypes" value="文字广告"/>文字广告</li>
-                            <li><input type="radio" name="adTypes" ng-model="adTrack.adTypes" value="图片广告"/>图片广告</li>
-                            <li><input type="radio" name="adTypes" ng-model="adTrack.adTypes" value="多媒体广告"/>多媒体广告</li>
-                            <li><input type="radio" name="adTypes" ng-model="adTrack.adTypes" value="其他"/>其他</li>
+                            <li><input type="radio" name="adTypes" ng-model="adTrack.adTypes" ng-click="advancedOpt()" value="文字广告"/>文字广告</li>
+                            <li><input type="radio" name="adTypes" ng-model="adTrack.adTypes" ng-click="advancedOpt()" value="图片广告"/>图片广告</li>
+                            <li><input type="radio" name="adTypes" ng-model="adTrack.adTypes" ng-click="advancedOpt()" value="多媒体广告"/>多媒体广告</li>
+                            <li><input type="radio" name="adTypes" ng-model="adTrack.adTypes" ng-click="advancedOpt()" value="其他"/>其他</li>
                         </ul>
                         <ul>
-                            <input type="text" name="urlconfig.adTypes" ng-model="adTrack.adTypes"/>
+                            <input type="text" id="adTypes" name="adTypes" ng-model="adTrack.adTypes" ng-click="advancedOpt()"/>
                         </ul>
                     </div>
                 </li>
                 <li><span class="adtrack_add_tz">计划名称</span>
                     <p>（广告所属的推广计划，如：端午活动）</p>
                     <div class="">
-                        <input type="text" name="planName" ng-model="adTrack.planName"/>
+                        <input type="text" id="planName" name="planName" ng-model="adTrack.planName" ng-click="advancedOpt()"/>
                     </div>
                 </li>
                 <li>
                     <span>关键词<p>（可填写多个，每行一个）</p></span>
                     <div class="">
                         <textarea ng-model="adtrack_add.tNum" class="tNum" disabled></textarea>
-                                <textarea data-ng-keyup="addIP($event, adtrack_add)" wrap="off"
+                                <textarea id="keywords" ng-click="advancedOpt()" data-ng-keyup="addIP($event, adtrack_add)" wrap="off"
                                           data-ng-model="adTrack.keywords"
                                           class="tText"></textarea>
                     </div>
                 </li>
                 <li>
                     <span>创意<p>（广告内容的简要描述信息）</p></span>
-                    <div><input type="text" ng-model="adTrack.creative"/></div>
+                    <div><input type="text" id="creative" ng-model="adTrack.creative" ng-click="advancedOpt()"/></div>
                 </li>
             </ul>
 
-            <button class="btn btn-info timechange_button" ng-disabled="(adTrackForm.targetUrl.$dirty && adTrackForm.targetUrl.$invalid) || adTrackForm.targetUrl.$pristine
-                                                            || (adTrackForm.mediaPlatform.$dirty && adTrackForm.mediaPlatform.$invalid)"
-               ng-click="allSubmit();isNoHide = true">确定拼生成URL</button>&nbsp;&nbsp;&nbsp;
+            <button class="btn btn-info timechange_button" ng-disabled="adTrackForm.targetUrl.$invalid || adTrackForm.mediaPlatform.$invalid"
+                                                           ng-click="allSubmit();isNoHide = true">确定拼生成URL</button>&nbsp;&nbsp;&nbsp;
 
             <button class="btn clear_button" ng-click="clear();isNoHide = false">取消</button>
             <div class="" ng-show="isNoHide">
@@ -93,7 +92,7 @@
             <span style="color: #ff0000" ng-show="isNoHide">您的广告跟踪结果已保存成功，请将生成的URL复制到您在其他媒介的推广URL位置</span>
             <div class="adtrack_add_button" ng-show="isNoHide">
                 <button class="btn btn-info timechange_button" ssh-clip='' data-clipboard-target="base_code">复制</button>
-                <a class="btn btn-info timechange_button" href="#conf/webcountsite/adtrack_add">继续添加</a>
+                <a class="btn btn-info timechange_button" ng-click="addAdTrack()">继续添加</a>
                 <a class="btn btn-info timechange_button" href="#conf/webcountsite/adtrack">返回列表</a>
             </div>
         </div>

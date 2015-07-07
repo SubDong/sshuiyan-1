@@ -99,7 +99,7 @@ define(["./module"], function (ctrs) {
                                                 <div>关闭</div>\
                                             </div>\
                                             <div class="overlay-content">\
-                                                <iframe id="" name="" marginwidth="0" marginheight="0" width="100%" height="100%" frameborder="0" src="http://'+previewUrl+'#domain='+previewUrl+'&amp;td='+track_id+'&amp;jn=select&amp;type=event"></iframe>\
+                                                <iframe id="" name="" marginwidth="0" marginheight="0" width="100%" height="100%" frameborder="0" src="http://'+previewUrl+'?domain='+previewUrl+'&amp;td='+track_id+'&amp;jn=select&amp;type=event&amp;cuid='+uid+'"></iframe>\
                                             </div>\
                                             <div class="overlay-bottom">\
                                                 <input id="overlaySubmitBtn" type="button" value="关闭"/>\
