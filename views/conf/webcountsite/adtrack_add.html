@@ -81,14 +81,14 @@
             </ul>
 
             <button class="btn btn-info timechange_button" ng-disabled="(adTrackForm.targetUrl.$dirty && adTrackForm.targetUrl.$invalid) || adTrackForm.targetUrl.$pristine
-                                                            || (adTrackForm.mediaPlatform.$dirty && adTrackForm.mediaPlatform.$invalid) || adTrackForm.mediaPlatform.$pristine"
+                                                            || (adTrackForm.mediaPlatform.$dirty && adTrackForm.mediaPlatform.$invalid)"
                ng-click="allSubmit();isNoHide = true">确定拼生成URL</button>&nbsp;&nbsp;&nbsp;
 
             <button class="btn clear_button" ng-click="clear();isNoHide = false">取消</button>
             <div class="" ng-show="isNoHide">
-                <textarea data-ng-focus="myFocus(rules_area)"
-                          data-ng-blur="myBlur(rules_area)"  class="tNum" disabled></textarea>
-                                <textarea id="base_code" data-ng-keyup="addIP($event, adtrack_add)" wrap="off" ng-bind="parseUrl()" class="tText"></textarea>
+                <textarea class="tNum" disabled></textarea>
+                <input type="hidden" data-ng-bind="keywordsWrap()">
+                                <textarea id="base_code"  wrap="off" ng-bind="ssssss" class="tText"></textarea>
             </div>
             <span style="color: #ff0000" ng-show="isNoHide">您的广告跟踪结果已保存成功，请将生成的URL复制到您在其他媒介的推广URL位置</span>
             <div class="adtrack_add_button" ng-show="isNoHide">

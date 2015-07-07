@@ -48,7 +48,12 @@ define(["./module"], function (ctrs) {
             data: [{}]
         };
 
-        //删除按钮
+        /**
+         * 刪除
+         * @param index
+         * @param grid
+         * @param row
+         */
         $scope.onDelete = function (index,grid,row) {
             $scope.onDeleteDialog= ngDialog.open({
                 template: '' +
@@ -60,23 +65,52 @@ define(["./module"], function (ctrs) {
                 scope: $scope
             });
 
+            //刪除
             $scope.sureonDelete= function(){
                 $scope.onDeleteDialog.close();
                 var query = "/config/adtrack?type=delete&query={\"_id\":\"" + row.entity._id +  "\"}";
-                $http({
-                    method: 'GET',
-                    url: query
-                }).success(function (dataConfig, status) {
-                    //console.log(dataConfig);
+                $http({method: 'GET', url: query}).success(function (dataConfig, status) {
                     if (dataConfig == "\"remove\"") {
-
                         $scope.refushGridData();
                     }
-
                 });
             };
         };
 
+        /**
+         * 批量刪除
+         */
+        $scope.deleteAll = function (index,grid,row) {
+
+            $scope.onDeleteDialog= ngDialog.open({
+                template: '' +
+                '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div><ul class="admin-ng-content" ><li>您想批量删除已选择的指定广告跟踪吗？</li></ul>' +
+                ' <div class="ng-button-div"><button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
+                  <button type="button" class="ngdialog-button ng-button" ng-click="batchDelete()">确定</button></div></div>',
+                className: 'ngdialog-theme-default admin_ngdialog',
+                plain: true,
+                scope: $scope
+            });
+
+            $scope.batchDelete = function(){
+                var choiceAll = $scope.gridApiAdmin.selection.getSelectedRows();
+                for(var i=0; i<choiceAll.length; i++){
+                    var val = choiceAll[i]._id;
+                    $scope.onDeleteDialog.close();
+                    var query = "/config/adtrack?type=delete&query={\"_id\":\"" + val +  "\"}";
+                    $http({method: 'GET', url: query}).success(function (dataConfig, status) {
+                        if (dataConfig == "\"remove\"") {
+                            $scope.refushGridData();
+                        }
+                    });
+                }
+            }
+
+        };
+
+        /**
+         * 刷新
+         */
         $scope.refushGridData = function () {
             var uid = $cookieStore.get("uid");
             var site_id = $rootScope.siteId;
@@ -87,6 +121,12 @@ define(["./module"], function (ctrs) {
         };
         $scope.refushGridData();
 
+        /**
+         * 查看生成的URL
+         * @param index
+         * @param grid
+         * @param row
+         */
         $scope.onViewUrl=function(index,grid,row){
            var thtml= $rootScope.urlDialogHtml.replace("produceUrl", row.entity.produceUrl);
             //col
