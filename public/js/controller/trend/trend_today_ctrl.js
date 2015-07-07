@@ -13,6 +13,13 @@ define(["./module"], function (ctrs) {
         $scope.souce.selected = {"name": "全部"};
         $scope.city.selected = {"name": "全部"};
         $scope.browser.selected = {"name": "全部"};
+//        高级搜索提示
+        $scope.advancedSearches=[];
+//        取消显示的高级搜索的条件
+        $scope.removeSearch = function(_index){
+            $scope.advancedSearches.splice(_index, 1);
+        }
+//        console.log($scope.advancedSearches.length);
         $scope.reset = function () {
             $scope.todayClass = false;
             $scope.yesterdayClass = false;

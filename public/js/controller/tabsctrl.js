@@ -358,9 +358,18 @@ define(["app"], function (app) {
                 $(o).prop("checked", false);
             });
             $(inputArray[a]).prev("span").css("background-position", "0px -51px");
-            if (a == 0) $rootScope.tableSwitch.tableFilter = null;
-            if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[0]}]";
-            if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[1]}]";
+            if (a == 0) {
+                $rootScope.tableSwitch.tableFilter = null;
+                $scope.advancedSearches[1]="全部设备";
+            };
+            if (a == 1) {
+                $rootScope.tableSwitch.tableFilter = "[{\"pm\":[0]}]";
+                $scope.advancedSearches[1]="计算机";
+            }
+            if (a == 2) {
+                $rootScope.tableSwitch.tableFilter = "[{\"pm\":[1]}]";
+                $scope.advancedSearches[1]="移动设备";
+            };
             $scope.isJudge = false;
             if ($scope.tableJu == "html") {
                 if (a == 0) $rootScope.tableSwitch.tableFilter = null;
@@ -429,7 +438,10 @@ define(["app"], function (app) {
         };
         //设置来源过滤
         $scope.setSource = function (a) {
-            if (a == 0) $rootScope.tableSwitch.tableFilter = null;
+            if (a == 0) {
+                $rootScope.tableSwitch.tableFilter = null
+                $scope.advancedSearches[0] = "全部来源";
+            };
             if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[1]}]";
             if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[2]}]";
             if (a == 2) {
@@ -517,6 +529,13 @@ define(["app"], function (app) {
         };
         //设置地域过滤
         $scope.setAreaFilter = function (area) {
+            if(area == "全部"){
+                area = "全部地域";
+            }
+            if($scope.advancedSearches[0] == undefined){
+                $scope.advancedSearches[0] = "";
+            }
+            $scope.advancedSearches[2] = area;
             if (area == "北京" || area == "上海" || area == "广州") {
                 if ($scope.city.selected != undefined) {
                     $scope.city.selected.name = area;
@@ -572,11 +591,12 @@ define(["app"], function (app) {
         };
         //设置搜索引擎过滤
         $scope.searchEngine = function (info) {
-
             if (info === '全部') {
                 $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[2]}]";
+                $scope.advancedSearches[0] = info+"搜索引擎";
             } else {
                 $rootScope.tableSwitch.tableFilter = "[{\"se\":[\"" + info + "\"]}]";
+                $scope.advancedSearches[0] = info;
             }
             $scope.isJudge = false;
             if ($scope.tableJu == "html") {
