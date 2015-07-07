@@ -601,7 +601,7 @@ if (config != undefined && !config.open) {
             })();
         }
 
-        if(config != undefined && config.evt.length>0){
+        if(config != undefined &&config.evt!=undefined && config.evt.length>0){
             window.onload = function(){
                 //自动添加客户转化时间配置
                 config.evt.forEach(function (item, i) {
