@@ -122,36 +122,42 @@ var transform = {
         }
         async.map(requests, function (item, callback) {
             es.search(item, function (error, result) {
-                callback(null, result.aggregations);
+                if (result != undefined && result.aggregations != undefined) {
+                    callback(null, result.aggregations);
+                }else{
+                    callback(null, null);
+                }
             });
         }, function (error, results) {
             var data = [];
             var data1 = {};
             var data2 = {};
             var keyArr = [];
-            for (var i = 0; i < indexs.length; i++) {
-                keyArr.push(indexs[i].substring(7, indexs[i].length));
+            if(results[0]!=null){
+                for (var i = 0; i < indexs.length; i++) {
+                    keyArr.push(indexs[i].substring(7, indexs[i].length));
+                }
+                var quotaArry = [];
+                for (var i = 0; i < results.length; i++) {
+                    quotaArry.push(results[i].pv.value);
+                }
+                data1 = {
+                    "label": "pv",
+                    "key": keyArr,
+                    "quota": quotaArry
+                };
+                quotaArry = [];
+                for (var i = 0; i < results.length; i++) {
+                    quotaArry.push(results[i].uv.value);
+                }
+                data2 = {
+                    "label": "uv",
+                    "key": keyArr,
+                    "quota": quotaArry
+                };
+                data.push(data1);
+                data.push(data2);
             }
-            var quotaArry = [];
-            for (var i = 0; i < results.length; i++) {
-                quotaArry.push(results[i].pv.value);
-            }
-            data1 = {
-                "label": "pv",
-                "key": keyArr,
-                "quota": quotaArry
-            };
-            quotaArry = [];
-            for (var i = 0; i < results.length; i++) {
-                quotaArry.push(results[i].uv.value);
-            }
-            data2 = {
-                "label": "uv",
-                "key": keyArr,
-                "quota": quotaArry
-            };
-            data.push(data1);
-            data.push(data2);
             callbackFn(data);
         });
     }

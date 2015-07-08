@@ -108,13 +108,15 @@ define(["./module"], function (ctrs) {
 
             $scope.selectedQuota = ["click", "impression"];
             $scope.onLegendClickListener = function (radio, chartInstance, config, checkedVal) {
-                alert(checkedVal.length);
+                alert(radio+"   "+ chartInstance + "   "+config+"   "+checkedVal);
                 if (checkedVal.length) {
                     $scope.init($rootScope.user, $rootScope.baiduAccount, "campaign", checkedVal, $rootScope.start, $rootScope.end);
                 } else {
                     def.defData($scope.charts[0].config);
                 }
-            }
+            };
+            $scope.queryOption_all = ["pv","uv","transformCount","orderCount","orderMoney","percentOrderTransform","transformCost"];
+            $scope.queryOptions = ["pv","uv",null,null,null,null,null];
             $scope.charts = [
                 {
                     config: {
@@ -318,25 +320,19 @@ define(["./module"], function (ctrs) {
              * @param queryOption　查询条件指标　事件转化：指标："浏览量(pv)", "访客数(uv)", "转化次数(transformCount)", "订单数(orderCount)", "订单金额(orderMoney)", "订单转化率(percentOrderTransform)", "平均转化成本(transformCost)"
              */
             $scope.dataTable = function (isContrastTime, showType, queryOptions) {
-                var j = [];
-                j.push("pv");
-                j.push("uv");
                 $http.get("/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&action=event&type=1&showType=" + showType + "&queryOptions=" + queryOptions).success(function (data) {
                     var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
                     chart.showLoading({
                         text: "正在努力的读取数据中..."
                     });
-                    $scope.charts[0].config.chartType = "bar";
+                    $scope.charts[0].config.chartType = "line";
                     $scope.charts[0].config.bGap = true;
                     console.log($scope.charts[0].config);
                     $scope.charts[0].config.instance = chart;
-                    //if (renderLegend) {
                     util.renderLegend(chart, $scope.charts[0].config);
-
-                    //}
                     cf.renderChart(data, $scope.charts[0].config);
                     Custom.initCheckInfo();
-                    console.log(data)
+                    console.log(data);
                 });
 
             };

@@ -177,7 +177,7 @@ define(["./module"], function (ctrs) {
 
         $scope.openAddDialog = function () {
             $scope.urlDialog = ngDialog.open({
-                template:'../conf/Dialog/main_addDialog.html',
+                template: '../conf/Dialog/main_addDialog.html',
                 className: 'ngdialog-theme-default admin_ngdialog',
                 scope: $scope
             });
@@ -185,7 +185,7 @@ define(["./module"], function (ctrs) {
 
         $scope.openUpdateDialog = function () {
             $scope.urlDialog = ngDialog.open({
-                template:'../conf/Dialog/main_UpdateDialog.html',
+                template: '../conf/Dialog/main_UpdateDialog.html',
                 className: 'ngdialog-theme-default admin_ngdialog ',
                 scope: $scope
             });
@@ -442,13 +442,13 @@ define(["./module"], function (ctrs) {
                     model.type_id = $scope.gridOptions.data[i].type_id;//更新传入
                     model.track_id = $scope.gridOptions.data[i].track_id;
                     model.track_status = statusNumber;//0，１状态值
-                    var url = "/config/site_list?type=update&query={\"uid\":\"" + model.uid + "\",\"site_url\":\"" + model.site_url + "\"}&updates=" + JSON.stringify(model);
+                    var url = "/config/site_list?type=update&query={\"uid\":\"" + model.uid + "\",\"site_url\":\"" + path + "\"}&updates=" + JSON.stringify(model);
                     $http({method: 'GET', url: url}).
                         success(function (data, status) {
                             if (status == "200") {
-                                createDialog(status_ch(statusNumber),"成功");
+                                createDialog(status_ch(statusNumber), "成功");
                             } else {
-                                createDialog(status_ch(statusNumber),"失败");
+                                createDialog(status_ch(statusNumber), "失败");
                             }
                         }).
                         error(function (data, status, headers, config) {
@@ -461,13 +461,14 @@ define(["./module"], function (ctrs) {
             $("#web_list_nav_input").css("color", "red");
             $("#web_list_nav_input").prop("value", value);
         }
-        function createDialog(value,checkStatus){
+
+        function createDialog(value, checkStatus) {
             $scope.urlDialog = ngDialog.open({
                 template: '\
               <div class="ngdialog-buttons" >\
-              <span style="text-align: center">代码状态：'+value+'</span>\
+              <span style="text-align: center">代码状态：' + value + '</span>\
               <br>\
-              <span style="text-align: center">更新'+checkStatus+'</span>\
+              <span style="text-align: center">更新' + checkStatus + '</span>\
                 </div>',
                 className: 'ngdialog-theme-default',
                 plain: true,
@@ -475,7 +476,8 @@ define(["./module"], function (ctrs) {
             });
 
         }
-        var userID =  $cookieStore.get("uid");
+
+        var userID = $cookieStore.get("uid");
         //代码检查方法
         $scope.codeCheck = function () {
             var path = $("#web_list_nav_input").prop("value");//输入框获取的path
@@ -486,23 +488,33 @@ define(["./module"], function (ctrs) {
                         changeCss("网址输入失误");
                     } else {
                         if (data != null || data != "") {
-                            if(data.match("404 Not Found")==null){
+                            if (data.match("404 Not Found") == null) {
                                 var k = Number((data.toString().split('tid=')[0].split('\"').length));
                                 if (data.toString().split("tid=")[0].split("\"")[k - 1].split("/").length == 4) {
                                     if (data.toString().split("tid=").length > 1) {
                                         var tid = data.toString().split("tid=")[1].split("\"")[0];
-                                        if (tid == uid) {
-                                            changeStatus(path, uid, 1);
-                                        } else {
-                                            changeStatus(path, uid, -1);
-                                        }
+                                        $http.get("/config/searchByUID?uid=" + uid + "&track_id=" + tid).success(function (result) {
+                                            if (result=="null" || result == "") {
+                                                $scope.urlDialog = ngDialog.open({
+                                                    template: '\
+                                                    <div class="ngdialog-buttons" >\
+                                                    <span style="text-align: center">该账户下不存在该路径</span>\
+                                                    </div>',
+                                                    className: 'ngdialog-theme-default',
+                                                    plain: true,
+                                                    scope: $scope
+                                                });
+                                            }else{
+                                                changeStatus(path, uid, 1);
+                                            }
+                                        });
                                     } else {
                                         changeStatus(path, uid, -1);
                                     }
                                 } else {
                                     changeStatus(path, uid, -1);
                                 }
-                            }else{
+                            } else {
                                 changeCss("网址不存在");
                             }
 

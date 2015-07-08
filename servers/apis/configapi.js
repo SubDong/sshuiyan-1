@@ -671,4 +671,16 @@ api.get("/select", function (req, res) {
         });
     }
 });
+api.get("/searchByUID", function (req, res) {
+    //判断refer 和track_id对应的站点匹配
+    var query = url.parse(req.url, true).query;
+    var uid = query["uid"];
+    var track_id = query["track_id"];
+    if (uid != null) {
+        dao.findSync("sites_model",JSON.stringify({uid:uid,track_id:track_id}),null,{},function(data){
+            datautils.send(res, data);
+        });
+
+    }
+});
 module.exports = api;
