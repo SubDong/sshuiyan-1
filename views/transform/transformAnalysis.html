@@ -70,15 +70,6 @@
                         </ul>
                     </div>
                     <div class="chart_top">
-                        <span>订单转化:</span>
-                        <ul>
-                            <li ng-repeat="item in order" data-sshy-default defvalue="{{item.name}}"
-                                class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
-                                ng-click='searchIndicators(item,flow,6)'>{{item.consumption_name}}
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="chart_top">
                         <span>事件参数:</span>
                         <ul>
                             <li ng-repeat="item in eventParameter" data-sshy-default defvalue="{{item.name}}"
