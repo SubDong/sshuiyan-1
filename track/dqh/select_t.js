@@ -10,15 +10,23 @@
          *  引入select.js
          */
         getSelectJS:function(){
-            //ccz.ref 判断来源
-            console.log("getSelectJS")
-            var _c = h.I;
-            var a = document.createElement("script");
-            a.setAttribute("type", "text/javascript");
-            a.setAttribute("src","http://127.0.0.1:8001/t.js/select?tid="+ c.id);//tid=b6dccb905b3003f75e40f79cc6786200 为trackid
-            var f = document.getElementsByTagName("script")[0];
-            f.parentNode.insertBefore(a, f);
+            var refJS = document.referrer;
+            var jupy = refJS.substring(0,refJS.lastIndexOf("/"));
+            if(jupy ===  (h.I.protocol + "//" + "192.168.1.102:8000")){
+                var a = document.createElement("script");
+                a.setAttribute("type", "text/javascript");
+                a.setAttribute("src", "http://192.168.1.102:8001/t.js/select?tid=b6dccb905b3003f75e40f79cc6786200");
+                var f = document.getElementsByTagName("script")[0];
+                f.parentNode.insertBefore(a, f);
+            }
+        },
+        init: function () {
+            h.b = this;
+            this.na();
+            this.sm();
+            this.custor();
+            this.getSelectJS();
+            //this.heartBeat("");
         }
-
     }
 })();

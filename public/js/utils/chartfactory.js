@@ -154,7 +154,7 @@ var op = {
                 },
                 formatter: function (params, ticket, callback) {
                     if (option.tooltip.trigger == "axis") {
-                        console.log("axis");
+                        //console.log("test");
                         //if (chartConfig.itemHover) {
                         //    return chartConfig.itemHover(params, 0, 1);
                         //}

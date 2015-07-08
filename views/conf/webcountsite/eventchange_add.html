@@ -20,12 +20,11 @@
                                 <input type="text" name="previewUrl" ssh-url data-ng-model="preview.url" class="form-control" placeholder="请输入..." required>
                             </div>
                             <div class="col-sm-4">
-                                <button ng-disabled="(previewForm.previewUrl.$dirty && previewForm.previewUrl.$invalid) || previewForm.previewUrl.$pristine"
-                                        type="submit" class="btn btn-info" data-ng-click="sshUrlEvent()">保 存</button>
+                                <button ng-disabled="previewForm.previewUrl.$invalid" type="submit" class="btn btn-info" data-ng-click="sshUrlEvent()">保 存</button>
                                 <button type="submit" class="btn btn-default"><a href="#conf/webcountsite/eventchange">取消</a></button>
                             </div>
                         </div>
-                        <span style="color:red" ng-show="(previewForm.previewUrl.$dirty && previewForm.previewUrl.$invalid)">
+                        <span style="color:red" ng-show="previewForm.previewUrl.$invalid">
                                 <span ng-show="previewForm.previewUrl.$error.sshUrl">您输入的预览URL格式错误，请输入正确的URL！</span>
                         </span>
                     </form>

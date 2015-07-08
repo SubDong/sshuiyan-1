@@ -14,7 +14,7 @@ cdApi.get("/link", function (req, res, next) {
         var html = '';
         var options = {
             hostname: option[0],
-            path: "/"+option
+            path: path.substring(option[0].length,path.length)
         };
         http.get(options, function (re) {
             re.on('data', function (data) {

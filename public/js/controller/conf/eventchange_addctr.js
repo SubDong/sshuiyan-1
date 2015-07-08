@@ -70,14 +70,16 @@ define(["./module"], function (ctrs) {
             var uid = $cookieStore.get("uid");
             var previewUrl = $scope.preview.url;
             var localURl = $rootScope.siteUrl;
-
+            var cuid = $cookieStore.get("uid");
             function isContains(str, substr) {
                 return new RegExp(substr).test(str);
             }
            if(isContains(previewUrl, localURl) == true){
                 var url = "/config/site_list?type=search&query={\"uid\":\"" + uid + "\",\"site_url\":\"" + previewUrl + "\"}";
-                //console.log(url);
+                console.log(url);
+
                 $http({method: 'GET', url: url}).success(function (dataConfig, status) {
+                    console.log(dataConfig)
                     if(dataConfig == undefined || dataConfig.length == 0){
                         alert("预览URL应该是本站或跨域内的URL");
                     }else{
@@ -92,23 +94,22 @@ define(["./module"], function (ctrs) {
                                         $state.go('eventchange');
                                     },
                                     template: '\
-                                    <div class="container" style="width: 980px"">\
+                                    <div class="ngdialog-content" style="width:100%">\
                                         <div id="previewControlPanel">\
-                                            <div class="overlay-top">\
+                                            <div class="ngdialog-tilte">\
                                                 <div>事件目标预览URL：</div>\
-                                                <div>关闭</div>\
                                             </div>\
                                             <div class="overlay-content">\
-                                                <iframe id="" name="" marginwidth="0" marginheight="0" width="100%" height="100%" frameborder="0" src="http://'+previewUrl+'#domain='+previewUrl+'&amp;td='+track_id+'&amp;jn=select&amp;type=event"></iframe>\
+                                        <iframe id="" name="" marginwidth="0" marginheight="0" width="100%" height=600 frameborder="0" src="http://'+previewUrl+'?domain='+localURl+'&amp;td='+track_id+'&amp;cuid='+cuid+'&amp;jn=select&amp;type=event"></iframe>\
                                             </div>\
-                                            <div class="overlay-bottom">\
-                                                <input id="overlaySubmitBtn" type="button" value="关闭"/>\
-                                                <input id="overlayCancelBtn" type="button" value="取消"/>\
+                                            <div class="ng-button-div">\
+                                            <button id="overlaySubmitBtn" class="ngdialog-button ngdialog-button-secondary">确定</button>\
+                                            <button id="overlayCancelBtn" class="ngdialog-button ng-button">取消</button>\
                                             </div>\
                                         </div>\
                                     </div>',
 
-                                    className: 'ngdialog-theme-default',
+                                    className: 'ngdialog-theme-default admin_ngdialog iframeBox ',
                                     plain: true,
                                     scope: $scope
                                 });
@@ -128,6 +129,7 @@ define(["./module"], function (ctrs) {
                     <div class="container" style="width: 980px">\
                         <div id="previewControlPanel">\
                             <div class="overlay-top">\
+                            +
                                 <div>事件目标预览URL：</div>\
                                 <div>关闭</div>\
                             </div>\

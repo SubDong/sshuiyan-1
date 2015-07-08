@@ -8,10 +8,11 @@ define(["./module"], function (ctrs) {
     ctrs.controller('transformAnalysisctr', function ($scope, $rootScope, $q, requestService, areaService, $http, SEM_API_URL) {
             $scope.city.selected = {"name": "全部"};
             $scope.todayClass = true;
-            $rootScope.tableTimeStart = -1;//开始时间
-            $rootScope.tableTimeEnd = -1;//结束时间、
+            $rootScope.start = 0;
+            $rootScope.end = 0;
             $rootScope.tableFormat = null;
             $scope.send = true;//显示发送
+            $scope.isCompared = false;
             //sem
             $scope.bases = [
                 {consumption_name: "浏览量(PV)", name: "pv"},
@@ -32,9 +33,9 @@ define(["./module"], function (ctrs) {
                 {consumption_name: '利润', name: 'profit'}
             ];
             $scope.order = [
-                {consumption_name:"订单转化",name:"orderNum"},
-                {consumption_name:"订单金额",name:"orderMoney"},
-                {consumption_name:"订单转化率",name:"orderNumRate"}
+                {consumption_name: "订单转化", name: "orderNum"},
+                {consumption_name: "订单金额", name: "orderMoney"},
+                {consumption_name: "订单转化率", name: "orderNumRate"}
             ];
             $scope.eventParameter = [
                 {consumption_name:"事件点击总数",name:"clickTotal"},
@@ -107,17 +108,20 @@ define(["./module"], function (ctrs) {
 
             $scope.selectedQuota = ["click", "impression"];
             $scope.onLegendClickListener = function (radio, chartInstance, config, checkedVal) {
+                alert(radio+"   "+ chartInstance + "   "+config+"   "+checkedVal);
                 if (checkedVal.length) {
                     $scope.init($rootScope.user, $rootScope.baiduAccount, "campaign", checkedVal, $rootScope.start, $rootScope.end);
                 } else {
                     def.defData($scope.charts[0].config);
                 }
-            }
+            };
+            $scope.queryOption_all = ["pv","uv","transformCount","orderCount","orderMoney","percentOrderTransform","transformCost"];
+            $scope.queryOptions = ["pv","uv",null,null,null,null,null];
             $scope.charts = [
                 {
                     config: {
                         legendId: "indicators_charts_legend",
-                        legendData: ["浏览量(PV)", "访客数", "转化次数", "订单数", "订单金额", "订单转化率", "平均转化成本", "平均访问时长"],//显示几种数据
+                        legendData: ["浏览量", "访客数", "转化次数", "订单数", "订单金额", "订单转化率", "平均转化成本"],//显示几种数据
                         //legendMultiData: $rootScope.lagerMulti,
                         legendAllowCheckCount: 2,
                         legendClickListener: $scope.onLegendClickListener,
@@ -128,11 +132,13 @@ define(["./module"], function (ctrs) {
                         autoInput: 20,
                         auotHidex: true,
                         id: "indicators_charts",
-                        chartType: "bar",//图表类型
+                        chartType: "line",//图表类型
                         keyFormat: 'eq',
                         noFormat: true,
                         dataKey: "key",//传入数据的key值
-                        dataValue: "quota"//传入数据的value值
+                        dataValue: "quota",//传入数据的value值
+                        qingXie: true,
+                        qxv: 18
                     }
                 }
             ];
@@ -142,12 +148,13 @@ define(["./module"], function (ctrs) {
                 $scope.init(user, baiduAccount, semType, quotas, start, end, renderLegend);
             }
             $scope.init = function (user, baiduAccount, semType, quotas, start, end, renderLegend) {
+                console.log(renderLegend)
                 if (quotas.length) {
                     var semRequest = "";
                     if (quotas.length == 1) {
-                        semRequest = $http.get(SEM_API_URL + user + "/" + baiduAccount + "/" + semType + "/" + quotas[0] + "-?startOffset=" + start + "&endOffset=" + end);
+                        semRequest = $http.get(SEM_API_URL + "/" + user + "/" + baiduAccount + "/" + semType + "/" + quotas[0] + "-?startOffset=" + start + "&endOffset=" + end);
                     } else {
-                        semRequest = $http.get(SEM_API_URL + user + "/" + baiduAccount + "/" + semType + "/" + quotas[0] + "-" + quotas[1] + "-?startOffset=" + start + "&endOffset=" + end)
+                        semRequest = $http.get(SEM_API_URL + "/" + user + "/" + baiduAccount + "/" + semType + "/" + quotas[0] + "-" + quotas[1] + "-?startOffset=" + start + "&endOffset=" + end)
                     }
                     $q.all([semRequest]).then(function (final_result) {
                         final_result[0].data.sort(chartUtils.by(quotas[0]));
@@ -168,8 +175,10 @@ define(["./module"], function (ctrs) {
             $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "campaign", $scope.selectedQuota, -1, -1, true);
 
             $scope.$on("ssh_refresh_charts", function (e, msg) {
-                $rootScope.targetSearchSpread();
-                $scope.init($rootScope.user, $rootScope.baiduAccount, "campaign", $scope.selectedQuota, $rootScope.start, $rootScope.end);
+                //$rootScope.targetSearchSpread();
+                //$scope.init($rootScope.user, $rootScope.baiduAccount, "campaign", $scope.selectedQuota, $rootScope.start, $rootScope.end);
+                //接受时间改变后的广播执行数据查询
+                $scope.my_init(false);
             });
 
 
@@ -217,8 +226,16 @@ define(["./module"], function (ctrs) {
                 $scope.reset();
                 $rootScope.start = time[0];
                 $rootScope.end = time[1];
-                $scope.init($rootScope.user, $rootScope.baiduAccount, "campaign", $scope.selectedQuota, $rootScope.start, $rootScope.end);
-            }
+                //$scope.init($rootScope.user, $rootScope.baiduAccount, "campaign", $scope.selectedQuota, $rootScope.start, $rootScope.end);
+                //时间段选择执行数据查询
+                $scope.my_init(false);
+            };
+            $rootScope.datepickerClickTow = function (start, end, label) {
+                var time = chartUtils.getTimeOffset(start, end);
+                $rootScope.start = time[0];
+                $rootScope.end = time[1];
+                $scope.my_init(true);
+            };
             function GetDateStr(AddDayCount) {
                 var dd = new Date();
                 dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
@@ -246,6 +263,85 @@ define(["./module"], function (ctrs) {
                 $scope.reset();
                 $scope.yesterdayClass = true;
             };
+            $scope.ds_defaultQuotasOption = ["pv", "uv", "ip", "nuv"];
+            $scope.setShowArray = function () {
+                var tempArray = [];
+                angular.forEach($scope.ds_defaultQuotasOption, function (q_r) {
+                    tempArray.push({"label": q_r, "value": 0, "cValue": 0, "count": 0, "cCount": 0});
+                });
+                $scope.dateShowArray = $rootScope.copy(tempArray);
+            };
+            $scope.setShowArray();
+            $scope.my_init = function (isContrastDataByTime) {
+                $scope.dataTable(null, "day", ["pv", "uv",null,null,null,null]);
+                $scope.isCompared = isContrastDataByTime;
+                $http.get("/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&action=event&type=1").success(function (data) {
+                    console.log(data)
+                    if (data != null || data != "") {
+                        for (var i = 0; i < $scope.dateShowArray.length; i++) {
+                            switch ($scope.dateShowArray[i].label) {
+                                case "pv":
+                                    if (isContrastDataByTime) {
+                                        $scope.dateShowArray[i].cValue = data.pv;
+                                    } else {
+                                        $scope.dateShowArray[i].value = data.pv;
+                                    }
+                                    break;
+                                case "uv":
+                                    if (isContrastDataByTime) {
+                                        $scope.dateShowArray[i].cValue = data.uv;
+                                    } else {
+                                        $scope.dateShowArray[i].value = data.uv;
+                                    }
+                                    break;
+                                case "ip":
+                                    if (isContrastDataByTime) {
+                                        $scope.dateShowArray[i].cValue = data.ip;
+                                    } else {
+                                        $scope.dateShowArray[i].value = data.ip;
+                                    }
+                                    break;
+                                case "nuv":
+                                    if (isContrastDataByTime) {
+                                        $scope.dateShowArray[i].cValue = data.newUser;
+                                    } else {
+                                        $scope.dateShowArray[i].value = data.newUser;
+                                    }
+                                    break;
+                            }
+                        }
+                    }
+
+                });
+            };
+            /**
+             * @param isContrastTime　是否为对比数据
+             * @param showType　显示横轴方式　有四种：hour小时为单位，显示一天24小时的数据；day天为单位，显示数天的数据，week周为单位，显示数周的数据；month月为单位，显示数月的数据
+             * @param queryOption　查询条件指标　事件转化：指标："浏览量(pv)", "访客数(uv)", "转化次数(transformCount)", "订单数(orderCount)", "订单金额(orderMoney)", "订单转化率(percentOrderTransform)", "平均转化成本(transformCost)"
+             */
+            $scope.dataTable = function (isContrastTime, showType, queryOptions) {
+                $http.get("/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&action=event&type=1&showType=" + showType + "&queryOptions=" + queryOptions).success(function (data) {
+                    var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
+                    chart.showLoading({
+                        text: "正在努力的读取数据中..."
+                    });
+                    $scope.charts[0].config.chartType = "line";
+                    $scope.charts[0].config.bGap = true;
+                    console.log($scope.charts[0].config);
+                    $scope.charts[0].config.instance = chart;
+                    util.renderLegend(chart, $scope.charts[0].config);
+                    cf.renderChart(data, $scope.charts[0].config);
+                    Custom.initCheckInfo();
+                    console.log(data);
+                });
+
+            };
+
+            $scope.my_init(false);
+
         }
     );
+    ctrs.controller('SearchTransform', function ($scope, $modalInstance, $http, $rootScope) {
+
+    });
 });

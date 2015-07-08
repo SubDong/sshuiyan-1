@@ -124,7 +124,7 @@ define(["./module"], function (ctrs) {
          * 继续添加
          */
         $scope.addAdTrack = function () {
-            $state.go('#conf/webcountsite/adtrack_add');
+            window.location.reload();
         };
 
         $scope.submit = function (obj) {
@@ -151,9 +151,36 @@ define(["./module"], function (ctrs) {
         $scope.clear = function(){
             var isNoClear = confirm("您确认要清空当前填写的内容吗？");
             if(isNoClear == true){
-                document.getElementById('adTrackForm').reset();
+                //document.getElementById('adTrackForm').reset();
+                window.location.reload();
             } else {
 
+            }
+        };
+
+        /**
+         * 高级选项
+         */
+        $scope.advancedOpt = function(){
+            if($scope.adTrack.mediaPlatform == null || $scope.adTrack.mediaPlatform == ""){
+                document.getElementById("adTypes").disabled = "disabled";
+            }else{
+                document.getElementById("adTypes").disabled = "";
+            }
+            if($scope.adTrack.adTypes == null || $scope.adTrack.adTypes == ""){
+                document.getElementById("planName").disabled = "disabled";
+            }else{
+                document.getElementById("planName").disabled = "";
+            }
+            if($scope.adTrack.planName == null || $scope.adTrack.planName == ""){
+                document.getElementById("keywords").disabled = "disabled";
+            }else{
+                document.getElementById("keywords").disabled = "";
+            }
+            if($scope.adTrack.keywords == null || $scope.adTrack.keywords == ""){
+                document.getElementById("creative").disabled = "disabled";
+            }else{
+                document.getElementById("creative").disabled = "";
             }
         };
 

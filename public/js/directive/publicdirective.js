@@ -503,7 +503,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
     app.directive("gridpage", function ($rootScope) {
         var option = {
             restrict: "EA",
-            template: "<div class=\"page\"><a ng-click=\"gridApi2.pagination.previousPage()\" ng-hide=\"gridApi2.pagination.getTotalPages()<=1\">上一页</a> <button type=\"button\" class=\"btn\"> {{ gridApi2.pagination.getPage() }}</button><a ng-click=\"gridApi2.pagination.nextPage()\" ng-hide=\"gridApi2.pagination.getTotalPages()<=1\">下一页 </a> <input type=\"text\" ng-model=\"page\" value=\"\"><span> /{{ gridApi2.pagination.getTotalPages() }}</span> <button type=\"button\" class=\"btn\" ng-click=\"pagego(gridApi2)\">跳转</button> </div>",
+            template: "<div class=\"page\"><a ng-click=\"gridApi2.pagination.previousPage()\" ng-hide=\"gridApi2.pagination.getTotalPages()<=1\">上一页</a> <button type=\"button\" class=\"btn\"> {{ gridApi2.pagination.getPage() }}</button><a ng-click=\"gridApi2.pagination.nextPage()\" ng-hide=\"gridApi2.pagination.getTotalPages()<=1\">下一页 </a> <input type=\"text\" ng-model=\"page\" value=\"\"><span> /{{ gridApi2.pagination.getTotalPages() }}</span> <button type=\"button\" class=\"btn\" ng-click=\"pagego(gridApi2)\">跳转</button><span class='pageshow'>每页显示：</span> </div>",
             transclude: true
         };
         return option;
