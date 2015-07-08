@@ -17,7 +17,7 @@
                     <form class="form-horizontal" id="previewForm" name="previewForm" novalidate>
                         <div class="form-group">
                             <div class="col-sm-4">
-                                <input type="text" name="previewUrl" ssh-url data-ng-model="preview.url" class="form-control" placeholder="请输入..." required>
+                                <input type="text" id="previewUrl" name="previewUrl" ssh-url="" data-ng-model="preview.url" class="form-control" placeholder="请输入..." required>
                             </div>
                             <div class="col-sm-4">
                                 <button ng-disabled="previewForm.previewUrl.$invalid" type="submit" class="btn btn-info" data-ng-click="sshUrlEvent()">保 存</button>
