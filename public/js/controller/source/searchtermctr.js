@@ -5,6 +5,19 @@ define(["./module"], function (ctrs) {
 
     'use strict';
     ctrs.controller('searchtermctr', function ($scope, $rootScope, $q, $http, requestService, messageService, areaService, uiGridConstants,popupService,$location) {
+            //        高级搜索提示显示
+            $scope.terminalSearch = "";
+//        取消显示的高级搜索的条件
+            $scope.removeTerminalSearch = function(obj){
+                obj.terminalSearch = "";
+                var inputArray = $(".chart_top2 .styled");
+                inputArray.each(function (i, o) {
+                    $(o).prev("span").css("background-position", "0px 0px");
+                    $(o).prop("checked", false);
+                });
+                $(inputArray[0]).prev("span").css("background-position", "0px -51px");
+                $rootScope.tableSwitch.tableFilter = null;
+            }
             $scope.city.selected = {"name": "全部"};
             $scope.visible = false;
             if($location.url().split("?").length>1) {

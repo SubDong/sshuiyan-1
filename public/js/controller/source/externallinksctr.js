@@ -5,7 +5,29 @@ define(["./module"], function (ctrs) {
     "use strict";
     ctrs.controller("externallinksctr", function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
         $scope.todayClass = true;
-
+//        高级搜索提示
+        $scope.exTerminalSearch = "";
+        $scope.webTypeSearch = "";
+//        取消显示的高级搜索的条件
+        $scope.removeTerminalSearch = function(obj){
+            obj.exTerminalSearch = "";
+            var inputArray = $(".chart_top2_1 .styled");
+            inputArray.each(function (i, o) {
+                $(o).prev("span").css("background-position", "0px 0px");
+                $(o).prop("checked", false);
+            });
+            $(inputArray[0]).prev("span").css("background-position", "0px -51px");
+            $rootScope.tableSwitch.tableFilter = null;
+        }
+        $scope.removeWebTypeSearch = function(obj){
+            var inputArray = $(".chart_top2_2 .styled");
+            inputArray.each(function (i, o) {
+                $(o).prev("span").css("background-position", "0px 0px");
+                $(o).prop("checked", false);
+            });
+            $(inputArray[0]).prev("span").css("background-position", "0px -51px");
+            obj.webTypeSearch = "";
+        }
         //table默认信息配置
         $rootScope.tableTimeStart = 0;
         $rootScope.tableTimeEnd = 0;

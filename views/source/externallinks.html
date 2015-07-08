@@ -29,7 +29,19 @@
                 <li class="ng-isolate-scope" ng-class="{active:tab===1}" ng-click="tab = 1">
                     <a class="ng-binding">自定义指标</a></li>
                 <li class="ng-isolate-scope" ng-class="{active:tab===2}" ng-click="tab = 2">
-                    <a class="ng-binding">高级筛选</a></li>
+                    <a class="ng-binding">高级筛选
+                        <span>
+                            <span ng-show="webTypeSearch || exTerminalSearch">（</span>
+                            <span ng-show="exTerminalSearch" class="advanceSearch">
+                                {{exTerminalSearch}}<i class="glyphicon glyphicon-remove" data-ng-click="removeTerminalSearch(this);" ng-show="exTerminalSearch"></i>
+                            </span>
+                            <span ng-show="webTypeSearch">
+                                {{webTypeSearch}}<i class="glyphicon glyphicon-remove" data-ng-click="removeWebTypeSearch(this);" ng-show="webTypeSearch"></i>
+                            </span>
+                            <span ng-show="webTypeSearch || exTerminalSearch">）</span>
+                        </span>
+                    </a>
+                </li>
             </ul>
             <div class="tabs_content">
                 <div class="custom_title" ng-show="tab === 1">

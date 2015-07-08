@@ -17,12 +17,21 @@
 
         </div>
         <div class="table_content" ng-controller="TabsCtrl">
-            <ul role="tablist" class="nav nav-tabs" id="myTab">
-                <li class="active" role="presentation"><a aria-expanded="true" aria-controls="home"
-                                                          data-toggle="tab" role="tab" id="home-tab"
-                                                          href="#home">高级筛选</a></li>
-
-
+            <ul role="tablist" class="nav nav-tabs nav-justified" id="myTab">
+                <li class="active" role="presentation" style="min-width: 108px;">
+                    <a class="ng-binding">高级筛选
+                        <span>
+                            <span ng-show="sourceSearch || visitorSearch">（</span>
+                            <span ng-show="sourceSearch">
+                                {{sourceSearch}}<i class="glyphicon glyphicon-remove" data-ng-click="removeSourceSearch(this);" ng-show="sourceSearch"></i>
+                            </span>
+                            <span ng-show="visitorSearch">
+                                {{visitorSearch}}<i class="glyphicon glyphicon-remove" data-ng-click="removeVisitorSearch(this);" ng-show="visitorSearch"></i>
+                            </span>
+                            <span ng-show="sourceSearch || visitorSearch">）</span>
+                        </span>
+                    </a>
+                </li>
             </ul>
             <div class="tab-content" id="myTabContent">
                 <div aria-labelledby="home-tab" id="home" class="tab-pane fade active in" role="tabpanel">
