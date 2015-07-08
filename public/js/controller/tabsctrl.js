@@ -851,9 +851,9 @@ define(["app"], function (app) {
             $scope.gridOpArray = angular.copy($rootScope.gridArray);
             $scope.gridOptions.columnDefs = $scope.gridOpArray;
             $scope.gridOptions.rowHeight = 32;
-            if (isClicked) {
+            //if (isClicked) {
                 $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
-            }
+            //}
             if ($rootScope.tableSwitch.latitude != null && $rootScope.tableSwitch.latitude == undefined) {
                 console.error("error: latitude is not defined,Please check whether the parameter the configuration.");
                 return;
