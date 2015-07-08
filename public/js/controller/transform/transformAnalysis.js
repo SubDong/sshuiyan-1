@@ -136,9 +136,9 @@ define(["./module"], function (ctrs) {
                 $rootScope.start = -1;
                 $rootScope.end = -1;
                 $scope.init(user, baiduAccount, semType, quotas, start, end, renderLegend);
-            }
+            };
             $scope.init = function (user, baiduAccount, semType, quotas, start, end, renderLegend) {
-                console.log(renderLegend)
+                //console.log(renderLegend)
                 if (quotas.length) {
                     var semRequest = "";
                     if (quotas.length == 1) {
@@ -266,7 +266,7 @@ define(["./module"], function (ctrs) {
                 $scope.dataTable(null, "day", ["pv", "uv",null,null,null,null]);
                 $scope.isCompared = isContrastDataByTime;
                 $http.get("/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&action=event&type=1").success(function (data) {
-                    console.log(data)
+                   /* console.log(data);*/
                     if (data != null || data != "") {
                         for (var i = 0; i < $scope.dateShowArray.length; i++) {
                             switch ($scope.dateShowArray[i].label) {
@@ -317,12 +317,14 @@ define(["./module"], function (ctrs) {
                     });
                     $scope.charts[0].config.chartType = "line";
                     $scope.charts[0].config.bGap = true;
-                    console.log($scope.charts[0].config);
+                    //console.log($scope.charts[0].config);
                     $scope.charts[0].config.instance = chart;
                     util.renderLegend(chart, $scope.charts[0].config);
                     cf.renderChart(data, $scope.charts[0].config);
                     Custom.initCheckInfo();
-                    console.log(data);
+
+                    //console.log(data)
+
                 });
 
             };

@@ -501,13 +501,19 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
 
 //grid_page
     app.directive("gridpage", function ($rootScope) {
+
         var option = {
             restrict: "EA",
-            template: "<div class=\"page\"><a ng-click=\"gridApi2.pagination.previousPage()\" ng-hide=\"gridApi2.pagination.getTotalPages()<=1\">上一页</a> <button type=\"button\" class=\"btn\"> {{ gridApi2.pagination.getPage() }}</button><a ng-click=\"gridApi2.pagination.nextPage()\" ng-hide=\"gridApi2.pagination.getTotalPages()<=1\">下一页 </a> <input type=\"text\" ng-model=\"page\" value=\"\"><span> /{{ gridApi2.pagination.getTotalPages() }}</span> <button type=\"button\" class=\"btn\" ng-click=\"pagego(gridApi2)\">跳转</button><span class='pageshow'>每页显示：</span> </div>",
-            transclude: true
+            templateUrl:'./grid_page/grid_page_qiantai.html',
+            transclude: true,
+            link: function (scope, element, attris, controller) {
+                scope.gridpages=[0,1,2,3,4,5,6,7,8];
+            }
         };
+        //console.log(gridApi2.pagination.seek);
         return option;
     });
+
     /**
      * Create by wms on 2015-04-22.合计信息显示
      */
@@ -1345,14 +1351,18 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                             $rootScope.$broadcast("updateSelectRowIndex", index);
                             return;
                         }
-
+                        if(e_r.sref=="#/transform/transformAnalysis"){
+                            e_r.showText = true;
+                            $rootScope.$broadcast("updateSelectRowIndex", index);
+                        }
                         if (e_r.sref == _path.substring(1, _path.substring(1).indexOf("/") + 1)) {
                             e_r.showText = true;
                             $rootScope.$broadcast("updateSelectRowIndex", index);
                         } else if (e_r.sref == _path.split("/")[2]) {
                             e_r.showText = true;
                             $rootScope.$broadcast("updateSelectRowIndex", index);
-                        } else {
+                        }
+                        else {
                             e_r.showText = false;
                         }
                     });

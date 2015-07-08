@@ -31,7 +31,7 @@
                             <li><label><input type="radio" name="record" ng-checked="radio_record.visit_times"
                                               data-ng-click="chooseRecordType('visit_times')">访问次数</label></li>
                             <li><label><input type="radio" name="record" data-ng-click="chooseRecordType('pv')"
-                                              ng-checked="radio_record.pv">测量PV</label></li>
+                                              ng-checked="radio_record.pv">浏览量PV</label></li>
                             <li><label><input type="radio" name="record"
                                               data-ng-click="chooseRecordType('order_conv')"
                                               ng-checked="radio_record.order_conv">订单转化</label>&nbsp;&nbsp;&nbsp;&nbsp;<a
@@ -64,13 +64,14 @@
                 <table>
                     <tr>
                         <td>预期每次转化收益</td>
-                        <td><input type="text" class="input_name form-control" data-ng-model="page_schema.expected_yield">元<a
-                                href="javascript:void(0)"></a></td>
+                        <td><input type="text" class="input_name form-control" data-ng-model="page_schema.expected_yield"></td>
+                        <td>元</td>
                         <td>（精确到两位小数）</td>
                     </tr>
                     <tr>
                         <td>预期转化率</td>
-                        <td><input type="text" class="input_name form-control" data-ng-model="page_schema.pecent_yield">%<a href="javascript:void(0)"></a>
+                        <td><input type="text" class="input_name form-control" data-ng-model="page_schema.pecent_yield">
+                        <td>%</td>
                         </td>
                     </tr>
                 </table>
