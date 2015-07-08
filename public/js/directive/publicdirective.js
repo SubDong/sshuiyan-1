@@ -240,8 +240,16 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                                 var pickerTiemTow = chartUtils.getTimeOffset(picker.startDate.format('YYYY-MM-DD'), picker.endDate.format('YYYY-MM-DD'));
                                 var startTime = pickerTiemTow[0];
                                 var endTime = pickerTiemTow[0] + Math.abs(pickerTiemOne[1] - pickerTiemOne[0]);
+                                if(endTime > 0){
+                                    endTime = 0;
+                                    startTime = endTime - Math.abs(pickerTiemOne[1] - pickerTiemOne[0]);
+                                }
                                 var dateTime = chartUtils.getSetOffTime(startTime, endTime);
-                                $('#choicetrange span').html(dateTime[0] + "至" + dateTime[1]);
+                                if(pickerTiemOne == 0){
+                                    $('#choicetrange span').html(dateTime[0]);
+                                }else{
+                                    $('#choicetrange span').html(dateTime[0] + "至" + dateTime[1]);
+                                }
                                 $('#choicetrange').data('daterangepicker').setStartDate(dateTime[0]);
                                 $('#choicetrange').data('daterangepicker').setEndDate(dateTime[1]);
                             });
@@ -361,12 +369,11 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                         } else {
                             $rootScope.datePickerCompare(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
                         }
-                        if (start.format('YYYY-MM-DD') == end.format('YYYY-MM-DD')) {
+                        /*if (start.format('YYYY-MM-DD') == end.format('YYYY-MM-DD')) {
                             $('#choicetrange span').html(start.format('YYYY-MM-DD'));
-                        }
-                        else {
+                        }else {
                             $('#choicetrange span').html(start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD'));
-                        }
+                        }*/
                     });
             }
             //,

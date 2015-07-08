@@ -37,7 +37,7 @@ define(["./module"], function (ctrs) {
                 {consumption_name:"订单转化率",name:"orderNumRate"}
             ];
             //配置默认指标
-            $rootScope.checkedArray = ["pv", "uv", "ip", "avgPage", "avgTime", "convert"];
+            $rootScope.checkedArray = ["pv", "uv", "ip", "convert", "avgTime", "avgPage"];
             $rootScope.searchGridArray = [
                 {
                     name: "xl",

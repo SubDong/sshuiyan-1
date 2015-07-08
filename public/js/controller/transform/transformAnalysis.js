@@ -38,10 +38,10 @@ define(["./module"], function (ctrs) {
             ];
             $scope.eventParameter = [
                 {consumption_name:"事件点击总数",name:"clickTotal"},
-                {consumption_name:"唯一事件访客数",name:"visitNum"}
+                {consumption_name:"唯一访客事件数",name:"visitNum"}
             ];
             //配置默认指标
-            $rootScope.checkedArray = ["pv", "uv", "ip", "outRate", "avgTime", "convert"];
+            $rootScope.checkedArray = [ "clickTotal","pv", "uv", "ip","convert","avgTime"];
             $rootScope.searchGridArray = [
                 {
                     name: "xl",

@@ -27,11 +27,17 @@
                 <li class="ng-isolate-scope" ng-class="{active:tab===2}" ng-click="tab = 2">
                     <a class="ng-binding">高级筛选
                         <span>
-                            <span ng-show="advancedSearches.length!=0">（</span>
-                        <span ng-repeat="advancedSearch in advancedSearches">&nbsp;&nbsp;&nbsp;&nbsp;
-                            {{advancedSearch}}<i class="glyphicon glyphicon-remove" data-ng-click="removeSearch($index);" ng-show="advancedSearch"></i>
-                        </span>
-                            <span ng-show="advancedSearches.length!=0">）</span>
+                            <span ng-show="sourceSearch || terminalSearch || areaSearch">（</span>
+                            <span ng-show="sourceSearch">
+                                {{sourceSearch}}<i class="glyphicon glyphicon-remove" data-ng-click="removeSourceSearch(this);" ng-show="sourceSearch"></i>
+                            </span>
+                            <span ng-show="terminalSearch" class="advanceSearch">
+                                {{terminalSearch}}<i class="glyphicon glyphicon-remove" data-ng-click="removeTerminalSearch(this);" ng-show="terminalSearch"></i>
+                            </span>
+                            <span ng-show="areaSearch">
+                                {{areaSearch}}<i class="glyphicon glyphicon-remove" data-ng-click="removeAreaSearch(this);" ng-show="areaSearch"></i>
+                            </span>
+                            <span ng-show="sourceSearch || terminalSearch || areaSearch">）</span>
                         </span>
                     </a>
                 </li>

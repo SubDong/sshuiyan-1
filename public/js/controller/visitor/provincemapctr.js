@@ -4,6 +4,24 @@
 define(["./module"], function (ctrs) {
 
     ctrs.controller("provincemapctr", function ($scope, uiGridConstants, $rootScope, $http, areaService,$location) {
+        //        高级搜索提示
+        $scope.sourceSearch = "";
+        $scope.visitorSearch = "";
+//        取消显示的高级搜索的条件
+        $scope.removeSourceSearch = function(obj){
+            $rootScope.tableSwitch.tableFilter = null;
+            obj.sourceSearch = "";
+        }
+        $scope.removeVisitorSearch = function(obj){
+            obj.visitorSearch = "";
+            var inputArray = $(".chart_top2 .styled");
+            inputArray.each(function (i, o) {
+                $(o).prev("span").css("background-position", "0px 0px");
+                $(o).prop("checked", false);
+            });
+            $(inputArray[0]).prev("span").css("background-position", "0px -51px");
+            $rootScope.tableSwitch.tableFilter = null;
+        }
         if($location.url().split("?").length>1) {
             var param = $location.url().split("?")[1];
             if(param == 1){

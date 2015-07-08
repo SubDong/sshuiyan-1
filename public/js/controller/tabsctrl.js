@@ -373,15 +373,15 @@ define(["app"], function (app) {
             $(inputArray[a]).prev("span").css("background-position", "0px -51px");
             if (a == 0) {
                 $rootScope.tableSwitch.tableFilter = null;
-                $scope.advancedSearches[1]="全部设备";
+                $scope.terminalSearch="全部设备";
             };
             if (a == 1) {
                 $rootScope.tableSwitch.tableFilter = "[{\"pm\":[0]}]";
-                $scope.advancedSearches[1]="计算机";
+                $scope.terminalSearch="计算机";
             }
             if (a == 2) {
                 $rootScope.tableSwitch.tableFilter = "[{\"pm\":[1]}]";
-                $scope.advancedSearches[1]="移动设备";
+                $scope.terminalSearch="移动设备";
             };
             $scope.isJudge = false;
             if ($scope.tableJu == "html") {
@@ -407,9 +407,9 @@ define(["app"], function (app) {
                 $(o).prop("checked", false);
             });
             $(inputArray[a]).prev("span").css("background-position", "0px -51px");
-            if (a == 0) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[3]}]";
-            if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[0]},{\"rf_type\":[3]}]";
-            if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[1]},{\"rf_type\":[3]}]";
+            if (a == 0) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[3]}]" ,$scope.exTerminalSearch = "全部";
+            if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[0]},{\"rf_type\":[3]}]" ,$scope.exTerminalSearch = "计算机";
+            if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[1]},{\"rf_type\":[3]}]" ,$scope.exTerminalSearch = "移动设备";
             $scope.isJudge = false;
             $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.targetSearch();
@@ -426,6 +426,10 @@ define(["app"], function (app) {
                 $(o).prop("checked", false);
             });
             $(inputArray[a]).prev("span").css("background-position", "0px -51px");
+            if(a == 0){$scope.webTypeSearch = "全部"}
+            if(a == 1){$scope.webTypeSearch = "社会化媒体"}
+            if(a == 2){$scope.webTypeSearch = "导航网站"}
+            if(a == 3){$scope.webTypeSearch = "电子邮箱"}
         }
         $scope.urlDomain = function (a) {
             var now = +new Date();
@@ -452,18 +456,18 @@ define(["app"], function (app) {
         //设置来源过滤
         $scope.setSource = function (a) {
             if (a == 0) {
-                $rootScope.tableSwitch.tableFilter = null
-                $scope.advancedSearches[0] = "全部来源";
+                $rootScope.tableSwitch.tableFilter = null;
+                $scope.sourceSearch = "全部来源";
             };
-            if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[1]}]";
-            if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[2]}]";
+            if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[1]}]",$scope.sourceSearch = "直接访问";
+            if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[2]}]",$scope.sourceSearch = "搜索引擎";
             if (a == 2) {
                 $scope.browserselect = false;
             }
             else {
                 $scope.browserselect = true;
             }
-            if (a == 3) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[3]}]";
+            if (a == 3) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[3]}]",$scope.sourceSearch = "外部链接";
 
             if ($scope.tableJu == "html") {
                 if (a == 0) $rootScope.tableSwitch.tableFilter = null;
@@ -489,9 +493,9 @@ define(["app"], function (app) {
                 $(o).prop("checked", false);
             });
             $(inputArray[a]).prev("span").css("background-position", "0px -51px");
-            if (a == 0) $rootScope.tableSwitch.tableFilter = null;
-            if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"ct\":[0]}]";
-            if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"ct\":[1]}]";
+            if (a == 0) $rootScope.tableSwitch.tableFilter = null,$scope.visitorSearch = "全部";
+            if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"ct\":[0]}]",$scope.visitorSearch = "新访客";
+            if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"ct\":[1]}]",$scope.visitorSearch = "老访客";
             //$scope.isJudge = false;
             $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.targetSearch();
@@ -543,12 +547,10 @@ define(["app"], function (app) {
         //设置地域过滤
         $scope.setAreaFilter = function (area) {
             if(area == "全部"){
-                area = "全部地域";
+                $scope.areaSearch = area+"地域";
+            }else{
+                $scope.areaSearch = area;
             }
-            if($scope.advancedSearches[0] == undefined){
-                $scope.advancedSearches[0] = "";
-            }
-            $scope.advancedSearches[2] = area;
             if (area == "北京" || area == "上海" || area == "广州") {
                 if ($scope.city.selected != undefined) {
                     $scope.city.selected.name = area;
@@ -586,8 +588,10 @@ define(["app"], function (app) {
                 return;
             }
             if ("全部" == area) {
+                $scope.areaSearch = area+"地域";
                 $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[2]}]";
             } else {
+                $scope.areaSearch = area;
                 $rootScope.tableSwitch.tableFilter = "[{\"region\":[\"" + area + "\"]},{\"rf_type\":[2]}]";
             }
             if (area == "北京" || area == "上海" || area == "广州") {
@@ -606,10 +610,10 @@ define(["app"], function (app) {
         $scope.searchEngine = function (info) {
             if (info === '全部') {
                 $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[2]}]";
-                $scope.advancedSearches[0] = info+"搜索引擎";
+                $scope.sourceSearch = info+"搜索引擎";
             } else {
                 $rootScope.tableSwitch.tableFilter = "[{\"se\":[\"" + info + "\"]}]";
-                $scope.advancedSearches[0] = info;
+                $scope.sourceSearch = info;
             }
             $scope.isJudge = false;
             if ($scope.tableJu == "html") {
