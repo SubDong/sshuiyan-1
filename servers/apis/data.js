@@ -495,20 +495,22 @@ api.get("/downCSV", function (req, res) {
 /**
  * summary.by wms
  */
-api.get("/summary", function (req, res) {
+api.get("/index_summary", function (req, res) {
     var query = url.parse(req.url, true).query;
     var dimension = query['dimension'] == "null" ? null : query['dimension'];
+    if (dimension == "period") {
+        dimension = null;
+    }
     var type = query['type'];
     var startOffset = Number(query['start']);
     var endOffset = Number(query['end']);
     var indexes = date.createIndexes(startOffset, endOffset, "access-");
-    var quotas = query['quotas'];
+    var quotas = query['indic'];
     var period = date.period(startOffset, endOffset);
-    var interval = date.interval(startOffset, endOffset);
     var _filter = query["filerInfo"] != null && query["filerInfo"] != 'null' ? JSON.parse(query["filerInfo"]) : query["filerInfo"] == 'null' ? null : query["filerInfo"];//过滤器
     // 指标数组
     var quotasArray = quotas.split(",");
-    es_request.search(req.es, indexes, type, quotasArray, dimension, [0], _filter, period[0], period[1], interval, function (result) {
+    es_request.search(req.es, indexes, type, quotasArray, dimension, [0], _filter, period[0], period[1], -1, function (result) {
         datautils.send(res, JSON.stringify(result));
     });
 });

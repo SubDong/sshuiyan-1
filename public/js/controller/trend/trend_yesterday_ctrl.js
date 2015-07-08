@@ -22,7 +22,29 @@ define(["./module"], function (ctrs) {
             $scope.definClass = false;
             $scope.hourcheckClass = false;
         };
-
+//        高级搜索提示显示
+        $scope.sourceSearch = "";
+        $scope.terminalSearch = "";
+        $scope.areaSearch = "";
+//        取消显示的高级搜索的条件
+        $scope.removeSourceSearch = function(obj){
+            $rootScope.tableSwitch.tableFilter = null;
+            obj.sourceSearch = "";
+        }
+        $scope.removeTerminalSearch = function(obj){
+            obj.terminalSearch = "";
+            var inputArray = $(".chart_top2 .styled");
+            inputArray.each(function (i, o) {
+                $(o).prev("span").css("background-position", "0px 0px");
+                $(o).prop("checked", false);
+            });
+            $(inputArray[0]).prev("span").css("background-position", "0px -51px");
+            $rootScope.tableSwitch.tableFilter = null;
+        }
+        $scope.removeAreaSearch = function(obj){
+            $rootScope.tableSwitch.tableFilter = null;
+            obj.areaSearch = "";
+        }
         //table配置
         $rootScope.tableTimeStart = -1;
         $rootScope.tableTimeEnd = -1;

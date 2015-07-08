@@ -20,29 +20,19 @@ define(["./module"], function (ctrs) {
                 {consumption_name: "访问次数", name: "vc"},
                 {consumption_name: "IP数", name: "ip"},
                 {consumption_name: "新访客数", name: "nuv"},
-                {consumption_name: "新访客比率", name: "nuvRate"},
-                {consumption_name: "平均访问页数", name: "avgPage"},
-                {consumption_name: "平均访问时长", name: "avgTime"},
-                {consumption_name: "跳出率", name: "outRate"}
+                {consumption_name: "新访客比率", name: "nuvRate"}
             ];
             $scope.transform = [
                 {consumption_name: '转化次数', name: 'convert'},
                 {consumption_name: '转化率', name: 'convertRate'},
-                {consumption_name: '平均转化成本', name: 'avgCost'},
-                {consumption_name: '收益', name: 'benefit'},
-                {consumption_name: '利润', name: 'profit'}
-            ];
-            $scope.order = [
-                {consumption_name: "订单转化", name: "orderNum"},
-                {consumption_name: "订单金额", name: "orderMoney"},
-                {consumption_name: "订单转化率", name: "orderNumRate"}
+                {consumption_name: '平均转化成本', name: 'avgCost'}
             ];
             $scope.eventParameter = [
-                {consumption_name: "事件点击总数", name: "clickTotal"},
-                {consumption_name: "唯一事件访客数", name: "visitNum"}
+                {consumption_name:"事件点击总数",name:"clickTotal"},
+                {consumption_name:"唯一访客事件数",name:"visitNum"}
             ];
             //配置默认指标
-            $rootScope.checkedArray = ["pv", "uv", "ip", "outRate", "avgTime", "convert"];
+            $rootScope.checkedArray = [ "clickTotal","pv", "uv", "ip","convert"];
             $rootScope.searchGridArray = [
                 {
                     name: "xl",
@@ -146,9 +136,9 @@ define(["./module"], function (ctrs) {
                 $rootScope.start = -1;
                 $rootScope.end = -1;
                 $scope.init(user, baiduAccount, semType, quotas, start, end, renderLegend);
-            }
+            };
             $scope.init = function (user, baiduAccount, semType, quotas, start, end, renderLegend) {
-                console.log(renderLegend)
+                //console.log(renderLegend)
                 if (quotas.length) {
                     var semRequest = "";
                     if (quotas.length == 1) {
@@ -276,7 +266,7 @@ define(["./module"], function (ctrs) {
                 $scope.dataTable(null, "day", ["pv", "uv",null,null,null,null]);
                 $scope.isCompared = isContrastDataByTime;
                 $http.get("/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&action=event&type=1").success(function (data) {
-                    console.log(data)
+                   /* console.log(data);*/
                     if (data != null || data != "") {
                         for (var i = 0; i < $scope.dateShowArray.length; i++) {
                             switch ($scope.dateShowArray[i].label) {
@@ -327,12 +317,14 @@ define(["./module"], function (ctrs) {
                     });
                     $scope.charts[0].config.chartType = "line";
                     $scope.charts[0].config.bGap = true;
-                    console.log($scope.charts[0].config);
+                    //console.log($scope.charts[0].config);
                     $scope.charts[0].config.instance = chart;
                     util.renderLegend(chart, $scope.charts[0].config);
                     cf.renderChart(data, $scope.charts[0].config);
                     Custom.initCheckInfo();
-                    console.log(data);
+
+                    //console.log(data)
+
                 });
 
             };

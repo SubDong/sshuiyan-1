@@ -32,7 +32,7 @@
         </div>
         <div class="index_chart">
             <div id="indicators_charts_legend"></div>
-            <div id="indicators_charts" style="height:400px;"></div>
+            <div id="indicators_charts" class="gesture" style="height:400px;"></div>
         </div>
         <div class="table_content" ng-controller="SearchPromotion">
             <ul ng-init="tab = 1" class="nav nav-tabs nav-justified">
@@ -66,15 +66,6 @@
                             <li ng-repeat="item in transform" data-sshy-default defvalue="{{item.name}}"
                                 class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
                                 ng-click='searchIndicators(item,Webbased,6)'>{{item.consumption_name}}
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="chart_top">
-                        <span>订单转化:</span>
-                        <ul>
-                            <li ng-repeat="item in order" data-sshy-default defvalue="{{item.name}}"
-                                class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
-                                ng-click='searchIndicators(item,flow,6)'>{{item.consumption_name}}
                             </li>
                         </ul>
                     </div>
@@ -158,9 +149,9 @@
             <div class="custom_secendtitle">
                 <div class="custom_select">
                     <div class="input-group fl">
-                        <input type="text" placeholder="关键词/搜索词…" data-ng-model="searchGjcText" class="form-control fl"
+                        <input type="text" placeholder="事件转化" data-ng-model="searchGjcText" class="form-control fl"
                                onfocus="this.setAttribute('placeholder','')"
-                               onblur="this.setAttribute('placeholder','关键词/搜索词…')">
+                               onblur="this.setAttribute('placeholder','事件转化')">
                                <span class="input-group-btn fl">
                                      <button type="button" class="btn btn-default"
                                              data-ng-click="setGjcFilter(searchGjcText)"><span aria-hidden="true" class="glyphicon glyphicon-search"></span>

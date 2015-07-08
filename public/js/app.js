@@ -56,13 +56,14 @@ define([
         var menu = $location.path();
         $scope.menuClass = function (menu, hrefs, i) {
             if ("" === menu || menu === "/conf") {
+
                 return 0;
             }
             if ((menu.indexOf(hrefs[i]) != -1 & menu.indexOf(hrefs[i]) < 3) || i > hrefs.length) {
                 return i;
             }
             return $scope.menuClass(menu, hrefs, i + 1);
-        }
+        };
         if (menu.indexOf("/conf") != -1) {
             $scope.selectedRow  = menu.length > 6 ? 1 : 0;
         } else {

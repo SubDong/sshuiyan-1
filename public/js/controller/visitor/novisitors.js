@@ -6,7 +6,16 @@ define(["./module"], function (ctrs) {
     "use strict";
 
     ctrs.controller('novisitors', function ($scope, $rootScope, $http, areaService) {
-
+//        高级搜索提示
+        $scope.sourceSearch = "";
+        $scope.areaSearch = "";
+//        取消显示的高级搜索的条件
+        $scope.removeSourceSearch = function(obj){
+            obj.sourceSearch = "";
+        }
+        $scope.removeAreaSearch = function(obj){
+            obj.areaSearch = "";
+        }
         //客户端属性初始化
         $scope.equipment.selected = {"name": "网络供应商", "field": "isp"};
         $scope.souce.selected = {"name": "全部"};

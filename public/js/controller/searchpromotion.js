@@ -173,19 +173,23 @@ define(["./module"], function (ctrs) {
             if (a == 0) {
                 $scope.es_filter = null;
                 $scope.device = -1;
+                $scope.terminalSearch ="全部";
             }
             if (a == 1) {
                 $scope.es_filter = "[{\"pm\":[0]}]";
                 $scope.device = 0;
+                $scope.terminalSearch ="计算机";
             }
             if (a == 2) {
                 $scope.es_filter = "[{\"pm\":[1]}]";
                 $scope.device = 1;
+                $scope.terminalSearch ="移动设备";
             }
             $scope.targetSearchSpread();
         };
         //搜索推广地域过滤
         $scope.setAreaFilter = function (area, id) {
+            $scope.areaSearch = area;
             if (area == "北京" || area == "上海" || area == "广州") {
                 if ($scope.city.selected != undefined) {
                     $scope.city.selected.name = area;

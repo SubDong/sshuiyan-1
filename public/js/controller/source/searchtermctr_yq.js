@@ -6,6 +6,24 @@ define(["./module"], function (ctrs) {
     'use strict';
 
     ctrs.controller('searchtermctr_yq', function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants,popupService) {
+            //        高级搜索提示显示
+            $scope.terminalSearch = "";
+            $scope.areaSearch = "";
+//        取消显示的高级搜索的条件
+            $scope.removeTerminalSearch = function(obj){
+                obj.terminalSearch = "";
+                var inputArray = $(".chart_top2 .styled");
+                inputArray.each(function (i, o) {
+                    $(o).prev("span").css("background-position", "0px 0px");
+                    $(o).prop("checked", false);
+                });
+                $(inputArray[0]).prev("span").css("background-position", "0px -51px");
+                $rootScope.tableSwitch.tableFilter = null;
+            }
+            $scope.removeAreaSearch = function(obj){
+                $rootScope.tableSwitch.tableFilter = null;
+                obj.areaSearch = "";
+            }
             $scope.city.selected = {"name": "全部"};
             $scope.todayClass = true;
             $scope.visible = false;
