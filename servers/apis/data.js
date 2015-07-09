@@ -19,6 +19,7 @@ var async = require("async");
 //var es_position = require('../services/es_position');
 var changeList_request = require("../services/changeList_request");
 var transform = require("../services/transform-request");
+var heaturl_request = require("../services/heaturl_request");
 
 api.get('/charts', function (req, res) {
     var query = url.parse(req.url, true).query, quotas = [], type = query['type'], dimension = query.dimension, filter = null, topN = [], userType = query.userType;
@@ -561,6 +562,67 @@ api.get("/heatmap", function (req, res) {
     //es_position.search(req.es, indexes, _type, function (result) {
     //    datautils.send(res, result);
     //});
+});
+
+/**
+ * 跨域访问-获取热力图-表头数据
+ */
+api.get("/getHeatUrlDetailData", function (req, res) {
+
+    var _type =req.session.type;
+    var _rf = req.session.rf;
+    var _startTime = req.session.startTime;;
+    var _endTime = req.session.endTime;
+
+    var indexes = date.createIndexes(_startTime, _endTime, "access-");//indexs
+
+    res.write("disposeDetailDataCallback()");
+    res.end();
+
+});
+
+/**
+ * 跨域访问-获取热力图-表头数据
+ */
+api.get("/getHeatUrlHeaderData", function (req, res) {
+
+    var _type =req.session.type;
+    var _rf = req.session.rf;
+    var _startTime = req.session.startTime;;
+    var _endTime = req.session.endTime;
+
+    var indexes = date.createIndexes(_startTime, _endTime, "access-");//indexs
+
+    heaturl_request.searchPV(req.es, indexes, _type,_rf,function (result) {
+
+        res.write("disposeHeaderDataCallback("+JSON.stringify(result)+");");
+        res.end();
+    });
+});
+
+/**
+ * 热力图首页
+ */
+api.get("/heaturl", function (req, res) {
+
+    var query = url.parse(req.url, true).query;
+    var _type = query['type'];
+    var _rf = query['rf'];
+    var _startTime = Number(query['start']);
+    var _endTime = Number(query['end']);
+
+    req.session.startTime = _startTime;
+    req.session.endTime = _endTime;
+    req.session.type = _type;
+    req.session.rf = _rf;
+
+    var indexes = date.createIndexes(_startTime, _endTime, "access-");
+    heaturl_request.searchPV(req.es, indexes, _type,_rf,function (result) {
+
+        console.log(result);
+        datautils.send(res, result);
+    });
+
 });
 
 // ================================= Config  ===============================
