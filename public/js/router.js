@@ -362,12 +362,11 @@ define(["angular", "./app"], function (angular, myApp) {
                 })
                 .state('heaturl', {
                     url: "/page/heaturl",
-                    params: {'id': null},
+                    params: {'rf': null},
                     templateUrl: "../page/heaturl.html",
                     resolve: {
                         load: loadDeps([
-                            "controller/page/heaturlctr",
-                            "heaturl/heaturl"
+                            "controller/page/heaturlctr"
                         ])
                     }
                 })
