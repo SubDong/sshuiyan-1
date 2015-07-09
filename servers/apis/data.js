@@ -703,6 +703,7 @@ api.get("/transform/transformAnalysis", function (req, res) {
     var end = parameters[1].split("=")[1];
     var action = parameters[2].split("=")[1];
     var type = parameters[3].split("=")[1];
+    var searchType = parameters[4].split("=")[1];
     var indexString = [];
     var time = [];
     if (start.substring(1, start.length).match("-") != null && end.substring(1, start.length).match("-") != null) {
@@ -712,22 +713,31 @@ api.get("/transform/transformAnalysis", function (req, res) {
         indexString = date.createIndexes(start, end, "access-");
         time = date.getConvertTimeByNumber(start, end);
     }
-    if (parameters.length <= 4) {
-        console.log(end);
+    if (searchType == "initAll") {
         transform.search(req.es, indexString, type, action, function (result) {
             datautils.send(res, result);
         })
-    } else {
-        var showType = parameters[4].split("=")[1];
-        var queryOptions = parameters[5].split("=")[1];
-        console.log(end);
+    } else if(searchType == "dataTable"){
+        var showType = parameters[5].split("=")[1];
+        var queryOptions = parameters[6].split("=")[1];
         var querys = [];
         var query = queryOptions.split(",");
         for (var i = 0; i < query.length; i++) {
             querys.push(queryOptions.split(",")[i]);
         }
-        console.log(querys.length)
+
         transform.searchByShowTypeAndQueryOption(req.es, indexString, type, action, showType, querys, function (result) {
+            datautils.send(res, result);
+        });
+    }else{
+        var queryOptions = parameters[5].split("=")[1];
+        var querys = [];
+        var query = queryOptions.split(",");
+        for (var i = 0; i < query.length; i++) {
+            querys.push(queryOptions.split(",")[i]);
+        }
+        console.log(querys)
+        transform.SearchPromotion(req.es, indexString, type, action, querys, function (result) {
             datautils.send(res, result);
         });
     }

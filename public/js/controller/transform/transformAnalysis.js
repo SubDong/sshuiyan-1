@@ -21,9 +21,9 @@ define(["./module"], function (ctrs) {
                 {consumption_name: "IP数", name: "ip"},
                 {consumption_name: "新访客数", name: "nuv"},
                 {consumption_name: "新访客比率", name: "nuvRate"},
-                {consumption_name: "平均访问页数", name: "avgPage"},
-                {consumption_name: "平均访问时长", name: "avgTime"},
-                {consumption_name: "跳出率", name: "outRate"}
+                //{consumption_name: "平均访问页数", name: "avgPage"},
+                //{consumption_name: "平均访问时长", name: "avgTime"},
+                //{consumption_name: "跳出率", name: "outRate"}
             ];
             $scope.transform = [
                 {consumption_name: '转化次数', name: 'convert'},
@@ -32,17 +32,17 @@ define(["./module"], function (ctrs) {
                 {consumption_name: '收益', name: 'benefit'},
                 {consumption_name: '利润', name: 'profit'}
             ];
-            $scope.order = [
-                {consumption_name: "订单转化", name: "orderNum"},
-                {consumption_name: "订单金额", name: "orderMoney"},
-                {consumption_name: "订单转化率", name: "orderNumRate"}
-            ];
+            //$scope.order = [
+            //    {consumption_name: "订单转化", name: "orderNum"},
+            //    {consumption_name: "订单金额", name: "orderMoney"},
+            //    {consumption_name: "订单转化率", name: "orderNumRate"}
+            //];
             $scope.eventParameter = [
                 {consumption_name: "事件点击总数", name: "clickTotal"},
                 {consumption_name: "唯一事件访客数", name: "visitNum"}
             ];
             //配置默认指标
-            $rootScope.checkedArray = ["pv", "uv", "ip", "outRate", "avgTime", "convert"];
+            $rootScope.checkedArray = ["pv", "uv", "ip", "convert", "convertRate", "benefit"];
             $rootScope.searchGridArray = [
                 {
                     name: "xl",
@@ -58,27 +58,27 @@ define(["./module"], function (ctrs) {
                     , footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"
                 },
                 {
-                    name: "事件点击总数",
-                    displayName: "事件点击总数",
-                    field: "impression",
+                    name: "访问次数",
+                    displayName: "访问次数",
+                    field: "vc",
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
                 },
                 {
                     name: "浏览量",
                     displayName: "浏览量",
-                    field: "cost",
+                    field: "pv",
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
                 },
                 {
                     name: "访客数",
                     displayName: "访客数",
-                    field: "cpc",
+                    field: "uv",
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
                 },
                 {
                     name: "IP数",
                     displayName: "IP数",
-                    field: "outRate",
+                    field: "ip",
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
                 },
                 {
@@ -108,20 +108,23 @@ define(["./module"], function (ctrs) {
 
             $scope.selectedQuota = ["click", "impression"];
             $scope.onLegendClickListener = function (radio, chartInstance, config, checkedVal) {
-                alert(radio+"   "+ chartInstance + "   "+config+"   "+checkedVal);
+                console.log(radio);
+                console.log(chartInstance);
+                console.log(config);
+                console.log(checkedVal);
                 if (checkedVal.length) {
                     $scope.init($rootScope.user, $rootScope.baiduAccount, "campaign", checkedVal, $rootScope.start, $rootScope.end);
                 } else {
                     def.defData($scope.charts[0].config);
                 }
             };
-            $scope.queryOption_all = ["pv","uv","transformCount","orderCount","orderMoney","percentOrderTransform","transformCost"];
-            $scope.queryOptions = ["pv","uv",null,null,null,null,null];
+            $scope.queryOption_all = ["pv", "uv", "ip",  "vc","conversions", "crate", "transformCost"];
+            $scope.queryOptions = ["pv", "uv", null, null, null, null, null];
             $scope.charts = [
                 {
                     config: {
                         legendId: "indicators_charts_legend",
-                        legendData: ["浏览量", "访客数", "转化次数", "订单数", "订单金额", "订单转化率", "平均转化成本"],//显示几种数据
+                        legendData: ["浏览量(PV)", "访客数(UV)", "ip数", "访问次数", "转化次数", "转化率", "平均转化成本"],//显示几种数据
                         //legendMultiData: $rootScope.lagerMulti,
                         legendAllowCheckCount: 2,
                         legendClickListener: $scope.onLegendClickListener,
@@ -145,7 +148,7 @@ define(["./module"], function (ctrs) {
             $scope.initGrid = function (user, baiduAccount, semType, quotas, start, end, renderLegend) {
                 $rootScope.start = -1;
                 $rootScope.end = -1;
-                $scope.init(user, baiduAccount, semType, quotas, start, end, renderLegend);
+                //$scope.init(user, baiduAccount, semType, quotas, start, end, renderLegend);
             }
             $scope.init = function (user, baiduAccount, semType, quotas, start, end, renderLegend) {
                 console.log(renderLegend)
@@ -180,7 +183,6 @@ define(["./module"], function (ctrs) {
                 //接受时间改变后的广播执行数据查询
                 $scope.my_init(false);
             });
-
 
             //$scope.initMap();
             //点击显示指标
@@ -273,9 +275,13 @@ define(["./module"], function (ctrs) {
             };
             $scope.setShowArray();
             $scope.my_init = function (isContrastDataByTime) {
-                $scope.dataTable(null, "day", ["pv", "uv",null,null,null,null]);
+                $scope.$broadcast("transformData", {
+                    start: $rootScope.start,
+                    end: $rootScope.end
+                });
+                $scope.dataTable(null, "day", ["pv", "uv", null, null, null, null]);
                 $scope.isCompared = isContrastDataByTime;
-                $http.get("/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&action=event&type=1").success(function (data) {
+                $http.get("/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&action=event&type=1&searchType=initAll").success(function (data) {
                     console.log(data)
                     if (data != null || data != "") {
                         for (var i = 0; i < $scope.dateShowArray.length; i++) {
@@ -317,10 +323,10 @@ define(["./module"], function (ctrs) {
             /**
              * @param isContrastTime　是否为对比数据
              * @param showType　显示横轴方式　有四种：hour小时为单位，显示一天24小时的数据；day天为单位，显示数天的数据，week周为单位，显示数周的数据；month月为单位，显示数月的数据
-             * @param queryOption　查询条件指标　事件转化：指标："浏览量(pv)", "访客数(uv)", "转化次数(transformCount)", "订单数(orderCount)", "订单金额(orderMoney)", "订单转化率(percentOrderTransform)", "平均转化成本(transformCost)"
+             * @param queryOption　查询条件指标　事件转化：指标："浏览量(pv)", "访客数(uv)", "转化次数(conversions)", "转化率(crate)", "平均转化成本(transformCost)"
              */
             $scope.dataTable = function (isContrastTime, showType, queryOptions) {
-                $http.get("/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&action=event&type=1&showType=" + showType + "&queryOptions=" + queryOptions).success(function (data) {
+                $http.get("/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&action=event&type=1&searchType=dataTable&showType=" + showType + "&queryOptions=" + queryOptions).success(function (data) {
                     var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
                     chart.showLoading({
                         text: "正在努力的读取数据中..."
@@ -337,11 +343,8 @@ define(["./module"], function (ctrs) {
 
             };
 
-            $scope.my_init(false);
+            //$scope.my_init(false);
 
         }
     );
-    ctrs.controller('SearchTransform', function ($scope, $modalInstance, $http, $rootScope) {
-
-    });
 });
