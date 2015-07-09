@@ -2,7 +2,7 @@ if (config != undefined && !config.open) {
     (function () {
         var points = [], h = {}, md = {}, c = {
             id: config.trackid,
-            version: "1.0.20",
+            version: "1.0.21",
             q: null
         };
 
@@ -80,8 +80,11 @@ if (config != undefined && !config.open) {
         md.cookie = {};
         md.getDomain = function () {
             var a = document.location.hostname;
-            var b = a.substring(a.indexOf(".") + 1);
-            return b;
+            var b = h.I.u;
+            a = "." + a.replace(/:\d+/, "");
+            b = "." + b.replace(/:\d+/, "");
+            var d = a.indexOf(b);
+            return (-1 < d && d + b.length == a.length) ? b.replace(/(:\d+)?[\/\?#].*/) : "";
         };
         md.cookie.set = function (a, b, c) {
             document.cookie = a + "=" + escape(b) + "; path=/";
@@ -152,6 +155,7 @@ if (config != undefined && !config.open) {
         // cv      _setCustomVar自定义方法参数      自定变量
         // tmc     移动转化工具监控方法参数         移动转化工具监控
         // tod     电商订单数据监控方法参数         电商订单数据监控
+
 
         md.event = {};
         md.event.e = function (a, b, f) {
@@ -415,11 +419,11 @@ if (config != undefined && !config.open) {
                     var a, b, d;
                     var as = decodeURIComponent(md.g.rf).replace("http://", "");
                     as = (as == "-" ? as : as.substring(as.indexOf(".") + 1, as.indexOf("/")));
-                    var ab = md.g.loc.replace("http://", "");
-                    ab = ab.substring(ab.indexOf(".") + 1, ab.indexOf("/"));
+                    //var ab = md.g.loc.replace("http://", "");
+                    //ab = ab.substring(ab.indexOf(".") + 1, ab.indexOf("/"));
                     md.g.tt = a = this.getData("PFT_" + c.id);
                     var Judge = (this.getData("PFT_COOKIE_RF") == null || this.getData("PFT_COOKIE_RF") != decodeURIComponent(md.g.rf));
-                    if (null == a || undefined == a || "" == a || (as != "-" && as != ab && Judge)) {
+                    if (null == a || undefined == a || "" == a || as != "-" && Judge) {
                         this.setData("PFT_" + c.id);
                         cookie.set("PFT_COOKIE_RF", decodeURIComponent(md.g.rf));
                         md.g.tt = this.getData("PFT_" + c.id);
@@ -430,10 +434,10 @@ if (config != undefined && !config.open) {
                         md.g.n = "1";
                         md.cookie.remove("PFT_DTNJ");
                         md.cookie.remove("PFT_DTNP");
-                    }else {
+                    } else {
                         var ckDay = this.getData("PFT_SJKD");
                         var newDay = new Date().getDate();
-                        if(ckDay != undefined && ckDay < newDay){
+                        if (ckDay != undefined && ckDay < newDay) {
                             this.setData("PFT_" + c.id);
                             md.g.n = "1"
                         }
@@ -601,8 +605,8 @@ if (config != undefined && !config.open) {
             })();
         }
 
-        if(config != undefined &&config.evt!=undefined && config.evt.length>0){
-            window.onload = function(){
+        if (config != undefined && config.evt.length > 0) {
+            window.onload = function () {
                 //自动添加客户转化时间配置
                 config.evt.forEach(function (item, i) {
                     var loc = h.I.protocol + "//" + document.location.hostname;
@@ -611,14 +615,14 @@ if (config != undefined && !config.open) {
                         var pd = eidTree.attributes.getNamedItem("onclick");
                         console.log(pd)
                         if (eidTree != undefined && eidTree != null) {
-                            if(pd == null){
-                                eidTree.onclick = function(){
-                                    _pct.putPar(["_trackEvent",item.eid,item.evttag]);
+                            if (pd == null) {
+                                eidTree.onclick = function () {
+                                    _pct.putPar(["_trackEvent", item.eid, item.evttag]);
                                 }
-                            }else{
-                                if(pd.nodeValue.indexOf("_pct.putPar") == -1){
-                                    eidTree.onclick = function(){
-                                        _pct.putPar(["_trackEvent",item.eid,item.evttag]);
+                            } else {
+                                if (pd.nodeValue.indexOf("_pct.putPar") == -1) {
+                                    eidTree.onclick = function () {
+                                        _pct.putPar(["_trackEvent", item.eid, item.evttag]);
                                     }
                                 }
                             }
