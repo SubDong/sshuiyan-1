@@ -489,8 +489,7 @@ if (config != undefined && !config.open) {
                 },
                 getSelectJS: function () {
                     var refJS = document.referrer;
-                    var jupy = refJS.substring(0, refJS.lastIndexOf("/"));
-                    if (jupy === (h.I.protocol + "//" + h.I.R)) {
+                    if (refJS.indexOf("http://" + d.I.R) === 0 || refJS.indexOf("https://" + d.I.R) === 0) {
                         var a = document.createElement("script");
                         a.setAttribute("type", "text/javascript");
                         a.setAttribute("src", h.I.protocol + "//" + h.I.P + "/t.js/select?tid=" + c.id);
