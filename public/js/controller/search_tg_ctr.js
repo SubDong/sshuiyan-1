@@ -5,7 +5,7 @@ define(["./module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.controller('search_tg_ctr', function ($scope, $rootScope, requestService, areaService, $http) {
+    ctrs.controller('search_tg_ctr', function ($scope, $rootScope, requestService, areaService, $http, uiGridConstants) {
         $scope.yesterdayClass = true;
         $scope.city.selected = {"name": "全部"};
         $rootScope.tableTimeStart = -1;//开始时间
@@ -18,13 +18,15 @@ define(["./module"], function (ctrs) {
                 name: "xl",
                 displayName: "",
                 cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
-                maxWidth: 10
+                maxWidth: 10,
+                enableSorting: false
             },
             {
                 name: "关键词对应的URL",
                 displayName: "关键词对应的URL",
                 field: "des_url"
-                , footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"
+                , footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                enableSorting: false
             }, /*
              {
              name: " ",
@@ -35,7 +37,11 @@ define(["./module"], function (ctrs) {
                 name: "展现",
                 displayName: "展现",
                 field: "impression",
-                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>",
+                sort: {
+                    direction: uiGridConstants.DESC,
+                    priority: 1
+                }
             },
             {
                 name: "消费",
@@ -181,7 +187,7 @@ define(["./module"], function (ctrs) {
          * @param start
          * @param end
          */
-        $rootScope.datepickerClick=function(start,end){
+        $rootScope.datepickerClick = function (start, end) {
             var time = chartUtils.getTimeOffset(start, end);
             var offest = time[1] - time[0];
             $scope.reset();

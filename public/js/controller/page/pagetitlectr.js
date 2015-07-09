@@ -5,7 +5,7 @@ define(["./module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.directive('pagetitlectrRemoteValidation', function ( $cookieStore,$http) {
+    ctrs.directive('pagetitlectrRemoteValidation', function ( $cookieStore,$http,uiGridConstants) {
         return {
             require: 'ngModel',
             link: function (scope, elm, attrs, ctrl) {
@@ -62,19 +62,22 @@ define(["./module"], function (ctrs) {
                 name: "xl",
                 displayName: "",
                 cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
-                maxWidth: 5
+                maxWidth: 5,
+                enableSorting: false
             },
             {
                 name: "热力图URL",
                 displayName: "热力图URL",
                 field: "page_url",
-                footerCellTemplate: "<div class='ui-grid-cell-contents'>热力图URL</div>"
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>热力图URL</div>",
+                enableSorting: false
             },
             {
                 name: "图标名称",
                 displayName: "图标名称",
                 field: "icon_name",
-                footerCellTemplate: "<div class='ui-grid-cell-contents'>图标名称</div>"
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>图标名称</div>",
+                enableSorting: false
             },
 
 
@@ -83,21 +86,24 @@ define(["./module"], function (ctrs) {
                 name: "x1",
                 displayName: "",
                 cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.openHeatUrl(row.entity)'>查看链接点击图</a></div>",
-                maxWidth: 120
+                maxWidth: 120,
+                enableSorting: false
             },
 
             {
                 name: "x2",
                 displayName: "",
                 cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.operationStatus(row.entity)'>{{row.entity.is_open == true ? '启动':'暂停' }}</a></div>",
-                maxWidth: 80
+                maxWidth: 80,
+                enableSorting: false
             },
             {
                 name: "x3",
                 displayName: "",
                 // grid.appScope.Delete(row, grid.options.data)
                 cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.deleteDialog(row.entity)'>删除</a></div>",
-                maxWidth: 150
+                maxWidth: 150,
+                enableSorting: false
             }
         ];
 
@@ -285,7 +291,7 @@ define(["./module"], function (ctrs) {
             var qryjson = {
                 uid: $scope.dialog_page_title.uid,
                 site_id: $scope.dialog_page_title.site_id,
-                page_url: $scope.dialog_page_title.page_url,
+                page_url: $scope.dialog_page_title.page_url
             }
             var query = "/config/page_title?type=search&query=" + JSON.stringify(qryjson);
             //console.log(query);
@@ -355,7 +361,7 @@ define(["./module"], function (ctrs) {
             var qryjson = {
                 uid: $scope.dialog_page_title.uid,
                 site_id: $scope.dialog_page_title.site_id,
-                page_url: $scope.dialog_page_title.page_url,
+                page_url: $scope.dialog_page_title.page_url
             }
             var query = "/config/page_title?type=search&query=" + JSON.stringify(qryjson);
             //console.log(query);

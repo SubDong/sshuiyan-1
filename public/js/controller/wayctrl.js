@@ -5,9 +5,9 @@ define(["app"], function (app) {
 
     "use strict";
 
-    app.controller('wayctrl', function ($timeout, $scope, $rootScope, $q, $http, requestService, areaService, SEM_API_URL) {
+    app.controller('wayctrl', function ($timeout, $scope, $rootScope, $q, $http, requestService, areaService, SEM_API_URL, uiGridConstants) {
         $scope.areaSearch = "";
-        $scope.removeAreaSearch = function(obj){
+        $scope.removeAreaSearch = function (obj) {
             $rootScope.tableSwitch.tableFilter = null;
             obj.areaSearch = "";
         }
@@ -24,25 +24,32 @@ define(["app"], function (app) {
                 name: "xl",
                 displayName: "",
                 cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
-                maxWidth: 10
+                maxWidth: 10,
+                enableSorting: false
             },
             {
                 name: "推广方式",
                 displayName: "推广方式",
                 field: "accountName",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
-                minWidth: 200
+                minWidth: 200,
+                enableSorting: false
             },
             {
                 name: " ",
-                cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn' title='查看历史趋势'></a></div>"
+                cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn' title='查看历史趋势'></a></div>",
+                enableSorting: false
 
             },
             {
                 name: "点击量",
                 displayName: "点击量",
                 field: "click",
-                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>",
+                sort: {
+                    direction: uiGridConstants.DESC,
+                    priority: 1
+                }
             },
             {
                 name: "消费",
@@ -317,7 +324,7 @@ define(["app"], function (app) {
                 var semRequest = $http.get(SEM_API_URL + "/sem/report/" + semType + "?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + times[0] + "&endOffset=" + times[0] + "&q=" + requestParams[0]);
                 requestArray.push(semRequest);
                 if (times[1] != 0) {
-                    var semRequestCompare = $http.get(SEM_API_URL + "/sem/report/"+semType+"?a=" + $rootScope.user  + "&b=" + $rootScope.baiduAccount + "&startOffset=" + times[1] + "&endOffset=" + times[1]+"&q="+requestParams[0]);
+                    var semRequestCompare = $http.get(SEM_API_URL + "/sem/report/" + semType + "?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + times[1] + "&endOffset=" + times[1] + "&q=" + requestParams[0]);
                     requestArray.push(semRequestCompare);
                 }
             }

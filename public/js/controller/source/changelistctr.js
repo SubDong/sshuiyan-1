@@ -31,19 +31,25 @@ define(["./module"], function (ctrs) {
                     name: "xl",
                     displayName: "",
                     cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
-                    maxWidth: 10
+                    maxWidth: 10,
+                    enableSorting: false
                 },
                 {
                     name: "来源域名",
                     displayName: "来源域名",
                     field: "pathName",
-                    footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"
+                    footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                    enableSorting: false
                 },
                 {
                     name: "浏览量(PV)",
                     displayName: "",
                     field: "pv",
-                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>",
+                    sort: {
+                        direction: uiGridConstants.DESC,
+                        priority: 1
+                    }
                 },
                 {
                     name: "访问次数",
@@ -60,7 +66,8 @@ define(["./module"], function (ctrs) {
                     '<a href="javascript:void(0)" class="all">全部</a>' +
                     '</div>',
                     field: "percentage",
-                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>",
+                    enableSorting: false
                 }
             ];
             //alert($rootScope.contrastStartString)

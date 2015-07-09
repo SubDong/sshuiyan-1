@@ -2,7 +2,7 @@
  * Created by john on 2015/4/2.
  */
 define(["./module"], function (ctrs) {
-    ctrs.controller('searchctr', function ($scope, $rootScope, $q, requestService, areaService, $http, SEM_API_URL) {
+    ctrs.controller('searchctr', function ($scope, $rootScope, $q, requestService, areaService, $http, SEM_API_URL,uiGridConstants) {
 //        高级搜索提示
             $scope.terminalSearch = "";
             $scope.areaSearch = "";
@@ -34,14 +34,16 @@ define(["./module"], function (ctrs) {
                     name: "xl",
                     displayName: "",
                     cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
-                    maxWidth: 10
+                    maxWidth: 10,
+                    enableSorting: false
                 },
                 {
                     name: "计划",
                     displayName: "计划",
                     field: "campaignName",
                     cellTemplate: "<div><a href='javascript:void(0)' style='color:#0965b8;line-height:30px' ng-click='grid.appScope.getHistoricalTrend(this)'>{{grid.appScope.getDataUrlInfo(grid, row,3)}}</a></div>"
-                    , footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"
+                    , footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                    enableSorting: false
                 }, /*
                  {
                  name: " ",
@@ -52,7 +54,11 @@ define(["./module"], function (ctrs) {
                     name: "展现量",
                     displayName: "展现量",
                     field: "impression",
-                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>",
+                    sort: {
+                        direction: uiGridConstants.DESC,
+                        priority: 1
+                    }
                 },
                 {
                     name: "消费",

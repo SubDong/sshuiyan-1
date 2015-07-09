@@ -402,7 +402,7 @@ define(["angular", "./app"], function (angular, myApp) {
                     }
                 })
                 .state('provincemap', {
-                    url: "/visitor/provincemap",
+                    url:'/visitor/provincemap:data',
                     templateUrl: "../visitor/provincemap.html",
                     resolve: {
                         load: loadDeps([

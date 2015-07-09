@@ -2,8 +2,7 @@
  * Created by john on 2015/3/31.
  */
 define(["./module"], function (ctrs) {
-
-    ctrs.controller("provincemapctr", function ($scope, uiGridConstants, $rootScope, $http, areaService,$location) {
+    ctrs.controller("provincemapctr", function ($scope, uiGridConstants, $rootScope, $http, areaService,$location, $stateParams, $state) {
         //        高级搜索提示
         $scope.sourceSearch = "";
         $scope.visitorSearch = "";
@@ -22,12 +21,14 @@ define(["./module"], function (ctrs) {
             $(inputArray[0]).prev("span").css("background-position", "0px -51px");
             $rootScope.tableSwitch.tableFilter = null;
         }
+
         if($location.url().split("?").length>1) {
             var param = $location.url().split("?")[1];
             if(param == 1){
                 $scope.todayClass = true;
             }else if(param == 2){
                 $scope.yesterdayClass = true;
+
             }else if(param == 3){
                 $scope.sevenDayClass = true;
             }else if(param == 4){
@@ -48,22 +49,29 @@ define(["./module"], function (ctrs) {
                 name: "a",
                 displayName: "",
                 cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
-                maxWidth: 10
+                maxWidth: 10,
+                enableSorting: false
             },
             {
                 name: "地域",
                 displayName: "地域",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
-                field: "region"
+                field: "region",
+                enableSorting: false
             },
             {
                 name: " ",
-                cellTemplate: "<div class='table_box'><a ui-sref='history1' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn' title='查看历史趋势'></a></div>"
+                cellTemplate: "<div class='table_box'><a ui-sref='history1' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn' title='查看历史趋势'></a></div>",
+                enableSorting: false
             },
             {
                 name: "浏览量(PV)",
                 displayName: "浏览量(PV)",
                 footerCellTemplate: "<div class='ui-grid-cell-contents' style='height: 100px'>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),2)}}<br/>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),3)}}<br/>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),4)}}</div>",
+                sort: {
+                    direction: uiGridConstants.DESC,
+                    priority: 1
+                },
                 field: "pv"
             },
             {

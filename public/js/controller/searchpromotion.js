@@ -5,7 +5,7 @@ define(["./module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.controller("SearchPromotion", function ($timeout, $scope, $rootScope, $http, $q, requestService, SEM_API_URL, $cookieStore) {
+    ctrs.controller("SearchPromotion", function ($timeout, $scope, $rootScope, $http, $q, requestService, SEM_API_URL, $cookieStore,uiGridConstants) {
         $scope.todayClass = true;
         var user = $rootScope.user
         var baiduAccount = $rootScope.baiduAccount;
@@ -451,20 +451,26 @@ define(["./module"], function (ctrs) {
                         name: "xl",
                         displayName: "",
                         cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
-                        maxWidth: 10
+                        maxWidth: 10,
+                        enableSorting: false
                     },
                     {
                         name: "单元",
                         displayName: "单元",
                         field: "adgroupName",
                         cellTemplate: "<div><a href='javascript:void(0)' target='_blank' style='color:#0965b8;line-height:30px;' ng-click='grid.appScope.getHistoricalTrend(this)'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</div>",
-                        footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"
+                        footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                        enableSorting: false
                     },
                     {
                         name: "展现",
                         displayName: "展现",
                         field: "impression",
-                        footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                        footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>",
+                        sort: {
+                            direction: uiGridConstants.DESC,
+                            priority: 1
+                        }
                     },
                     {
                         name: "消费",

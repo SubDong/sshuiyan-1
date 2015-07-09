@@ -133,6 +133,11 @@ var op = {
         });
         if (!chartConfig.instance)return;
         var chartObj = chartConfig.instance;
+        if(chartConfig.chartType=="bar"){
+            if(chartConfig.barClick){
+                chartObj.on("click", chartConfig.barClick);
+            }
+        }
         chartObj.xAxis = [];
         var option = {
             legend: {

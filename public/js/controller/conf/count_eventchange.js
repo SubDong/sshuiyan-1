@@ -84,29 +84,33 @@ define(["./module"], function (ctrs ) {
                 name: "xl",
                 displayName: "",
                 cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
-                maxWidth: 5
+                maxWidth: 5,
+                enableSorting: false
             },
-            {name: "事件目标事件名称", displayName: "事件目标事件名称", field: "event_name",cellClass: 'table_admin_color'},
-            {name: "事件元素ID", displayName: "事件元素ID", field: "event_id",cellClass: 'table_admin_color'},
-            {name: "事件作用或目录", displayName: "事件作用或目录", field: "event_page",cellClass: 'table_admin_color'},
-            {name: "记录方式", displayName: "记录方式", field: "event_method",cellClass: 'table_admin_color'},
+            {name: "事件目标事件名称", displayName: "事件目标事件名称", field: "event_name",cellClass: 'table_admin_color', enableSorting: false},
+            {name: "事件元素ID", displayName: "事件元素ID", field: "event_id",cellClass: 'table_admin_color', enableSorting: false},
+            {name: "事件作用或目录", displayName: "事件作用或目录", field: "event_page",cellClass: 'table_admin_color', enableSorting: false},
+            {name: "记录方式", displayName: "记录方式", field: "event_method",cellClass: 'table_admin_color',enableSorting: false},
             {
                 name: "x4",
                 displayName: "",
                 cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.operationStatus(row.entity)'>{{row.entity.event_status == '0' ? '启动':'暂停' }}</a></div>",
-                maxWidth: 80
+                maxWidth: 80,
+                enableSorting: false
             },
             {
                 name: "x5",
                 displayName: "",
                 cellTemplate: "<div class='table_admin'><a  ng-click='grid.appScope.toUpdate(row.entity)' >修改</a></div>",
-                maxWidth: 80
+                maxWidth: 80,
+                enableSorting: false
             },
             {
                 name: "x6",
                 displayName: "",
                 cellTemplate: "<div class='table_admin'><a ng-click='grid.appScope.deleteDialog(row.entity)' >删除</a></div>",
-                maxWidth: 50
+                maxWidth: 50,
+                enableSorting: false
             }
 
         ];

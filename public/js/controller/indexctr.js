@@ -5,7 +5,7 @@
 define(['./module'], function (ctrs) {
     'use strict';
 
-    ctrs.controller("indexctr", ['$scope', '$rootScope', '$http', 'requestService', 'messageService', 'areaService', function ($scope, $rootScope, $http, requestService, messageService, areaService) {
+    ctrs.controller("indexctr", ['$scope', '$rootScope', '$http', '$state', 'requestService', 'messageService', 'areaService','uiGridConstants', function ($scope, $rootScope, $http, $state, requestService, messageService, areaService,uiGridConstants) {
         $scope.todayClass = true;
         $scope.hourcheckClass = true;
         $scope.menu_select = false;
@@ -14,21 +14,21 @@ define(['./module'], function (ctrs) {
             $scope.definClass = false;
         };
 //        查看更多中函数跳转传递参数
-        $scope.is_date_select = function(url) {
-            var a ;
-            if($scope.todayClass){
-               a = 1;
-            }else if($scope.yesterdayClass) {
+        $scope.is_date_select = function (url) {
+            var a;
+            if ($scope.todayClass) {
+                a = 1;
+            } else if ($scope.yesterdayClass) {
                 a = 2;
-            }else if($scope.sevenDayClass) {
+            } else if ($scope.sevenDayClass) {
                 a = 3;
-            }else if($scope.monthClass) {
+            } else if ($scope.monthClass) {
                 a = 4;
-            }else{
-                a =  $('#reportrange span').html().split('至');
-                a = a[0]+"#"+a[1];
+            } else {
+                a = $('#reportrange span').html().split('至');
+                a = a[0] + "#" + a[1];
             }
-            window.location.href = url+"?"+a;
+            window.location.href = url + "?" + a;
         }
         $scope.gridOptions = {
             enableColumnMenus: false,
@@ -39,9 +39,14 @@ define(['./module'], function (ctrs) {
             enableVerticalScrollbar: 0,
 
             columnDefs: [
-
-                {name: 'name', displayName: "搜索词"},
-                {name: 'value', displayName: "浏览量(PV)", headerCellClass: 'ui_text', cellClass: 'ui_text'}
+                {name: 'name', displayName: "搜索词",enableSorting: false},
+                {
+                    name: 'value', displayName: "浏览量(PV)", headerCellClass: 'ui_text', cellClass: 'ui_text',
+                    sort: {
+                        direction: uiGridConstants.DESC,
+                        priority: 1
+                    }
+                }
             ],
             onRegisterApi: function (gridApi) {
                 $rootScope.gridApi2 = gridApi;
@@ -117,15 +122,15 @@ define(['./module'], function (ctrs) {
                 }
             }
         }
-        $scope.legendData=[
-            {label:'浏览量(PV)',type:'number'},
-            {label:'访客数(UV)',type:'number'},
-            {label:'IP数',type:'number'},
-            {label:'跳出率',type:'percent'},
-            {label:'抵达率',type:'percent'},
-            {label:'平均访问时长',type:'time'},
-            {label:'访问次数',type:'number'},
-            {label:'平均访问页数',type:'number'},
+        $scope.legendData = [
+            {label: '浏览量(PV)', type: 'number'},
+            {label: '访客数(UV)', type: 'number'},
+            {label: 'IP数', type: 'number'},
+            {label: '跳出率', type: 'percent'},
+            {label: '抵达率', type: 'percent'},
+            {label: '平均访问时长', type: 'time'},
+            {label: '访问次数', type: 'number'},
+            {label: '平均访问页数', type: 'number'},
         ];
         $scope.charts = [
             {
@@ -159,8 +164,10 @@ define(['./module'], function (ctrs) {
                     dataKey: "key",
                     autoInput: 10,
                     keyFormat: 'eq',
-                    dataValue: "quota"
-
+                    dataValue: "quota",
+                    barClick: function (params) {
+                        $state.go('provincemap', {data: params.name});
+                    }
                 },
                 types: ["pv"],
                 dimension: ["region"],

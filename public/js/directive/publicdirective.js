@@ -703,6 +703,8 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                 });
 
                 scope.$on("LoadDateShowSEMDataFinish", function (e, msg) {
+                    scope.DateNumber = true;
+                    scope.DateLoading = true;
                     scope.isCompared = false;
                     scope.setDefaultShowArray();
                     scope.pushSEOData(msg);
@@ -944,19 +946,27 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                 scope.setDefaultShowArray();
                 // 获取数据
                 scope.loadDataShow = function () {
+                    scope.DateNumber = false;
+                    scope.DateLoading = false;
                     scope.setDefaultShowArray();
                     var esRequest = $http.get('/api/index_summary/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field) + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
                     $q.all([esRequest]).then(function (final_result) {
                         // 初始化对比数据
                         scope.pushESData(final_result[0].data);
+                        scope.DateNumber = true;
+                        scope.DateLoading = true;
                     });
                 };
                 // 获取对比数据
                 scope.loadCompareDataShow = function (startTime, endTime) {
+                    scope.DateNumbertwo = false;
+                    scope.DateLoading = false;
                     var esRequest = $http.get('/api/index_summary/?start=' + startTime + "&end=" + endTime + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field) + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
                     $q.all([esRequest]).then(function (final_result) {
                         // 初始化对比数据
                         scope.pushESData(final_result[0].data, true);
+                        scope.DateNumbertwo = true;
+                        scope.DateLoading = true;
                     });
                 };
 
