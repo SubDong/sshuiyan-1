@@ -89,7 +89,7 @@ var init = {
 }
 var op = {
     lineChart: function (data, chartConfig) {
-        util.chartResize(chartConfig);//charts 自适应
+        //util.chartResize(chartConfig);//charts 自适应
         var _legendTmp = [];
         if (!data.length) {
             def.defData(chartConfig);
@@ -154,6 +154,10 @@ var op = {
                 },
                 formatter: function (params, ticket, callback) {
                     if (option.tooltip.trigger == "axis") {
+                        //console.log("test");
+                        //if (chartConfig.itemHover) {
+                        //    return chartConfig.itemHover(params, 0, 1);
+                        //}
                         var xName = params[0].name.toString();
                         var res = '<li>' + xName + '</li>';
                         if (xName.indexOf("/点") > -1) {
@@ -323,7 +327,7 @@ var op = {
                         //    type: 'default'
                         //},
                         lineStyle: {
-                            width: 1
+                            width: 2
                         }
                     }
                 }
@@ -339,8 +343,8 @@ var op = {
             if (chartConfig.min_max == undefined) {
                 serie["markPoint"] = {
                     data: [
-                        {type: 'max', name: '最大值'},
-                        {type: 'min', name: '最小值'}
+                        {type: 'max', name: '最大'},
+                        {type: 'min', name: '最小'}
                     ]
                 }
             }
@@ -951,6 +955,7 @@ var util = {
             if (chartConfig.keyFormat == "day") {
                 var _time = [];
                 key.forEach(function (time) {
+                    var time=new Date(time).Format("yyyy-MM-dd hh:mm:ss")
                     _time.push(time.toString().substr(0, 10));
                 });
             } else if (chartConfig.keyFormat == "week") {

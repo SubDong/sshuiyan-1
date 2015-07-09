@@ -16,8 +16,9 @@ var csvApi = require('json-2-csv');
 var iconv = require('iconv-lite');
 var uuid = require("node-uuid");
 var async = require("async");
-var es_position = require('../services/es_position');
+//var es_position = require('../services/es_position');
 var changeList_request = require("../services/changeList_request");
+var transform = require("../services/transform-request");
 
 api.get('/charts', function (req, res) {
     var query = url.parse(req.url, true).query, quotas = [], type = query['type'], dimension = query.dimension, filter = null, topN = [], userType = query.userType;
@@ -263,8 +264,8 @@ api.get('/indextable', function (req, res) {
             try {
                 data.forEach(function (info, x) {
                     for (var i = 0; i < info.key.length; i++) {
-                        if (info.key[i] != undefined && info.key[i].split(",").length > 1) {
-                            infoKey = info.key[i].split(",")[0]
+                        if (info.key[i] != undefined && info.key[i]+"".split(",").length > 1) {
+                            infoKey = info.key[i]+"".split(",")[0]
                         } else {
                             infoKey = info.key[i]
                         }
@@ -291,14 +292,15 @@ api.get('/indextable', function (req, res) {
                                     obj[dimensionInfo] = infoKey == 1 ? "直接访问" : infoKey == 2 ? "搜索引擎" : "外部链接";
                                     break;
                                 case "period":
+                                    var dateFormat = new Date(infoKey).format("yyyy-MM-dd hh:mm:ss");
                                     if (_formartInfo == "day") {
-                                        obj[dimensionInfo] = infoKey.substring(0, 10);
+                                        obj[dimensionInfo] = dateFormat.substring(0, 10);
                                     } else if (_formartInfo == "week") {
-                                        obj[dimensionInfo] = infoKey.substring(0, 10);
+                                        obj[dimensionInfo] = dateFormat.substring(0, 10);
                                     } else if (_formartInfo == "month") {
-                                        obj[dimensionInfo] = infoKey.substring(0, 7);
+                                        obj[dimensionInfo] = dateFormat.substring(0, 7);
                                     } else {
-                                        obj[dimensionInfo] = infoKey.substring(infoKey.indexOf(" "), infoKey.length - 3) + " - " + infoKey.substring(infoKey.indexOf(" "), infoKey.length - 5) + "59";
+                                        obj[dimensionInfo] = dateFormat.substring(dateFormat.indexOf(" "), dateFormat.length - 3) + " - " + dateFormat.substring(dateFormat.indexOf(" "), dateFormat.length - 5) + "59";
                                     }
                                     break;
                                 case "se":
@@ -351,42 +353,7 @@ api.get('/indextable', function (req, res) {
 
     })
 });
-/**
- * 实时访问
- */
-/*api.get('/realTimeAccess', function (req, res) {
- var query = url.parse(req.url, true).query;
- var _type = query["type"];
- var _filters = query["filerInfo"] != null && query["filerInfo"] != 'null' ? JSON.parse(query["filerInfo"]) : query["filerInfo"] == 'null' ? null : query["filerInfo"];//过滤器;
- var indexes = date.createIndexes(0, 0, "access-");
- es_request.realTimeSearch(req.es, indexes, _type, _filters, function (data) {
- var resultArray = new Array();
- try {
- data.forEach(function (item, i) {
- if (item._source != null && item._source.city != "-") {
- var result = {};
- result["city"] = item._source.city == "-" ? "国外" : item._source.city;
- var newDate = new Date(item._source.utime[0]).toString();
- result["utime"] = newDate.substring(newDate.indexOf(":") - 3, newDate.indexOf("G") - 1);
- result["source"] = item._source.rf + "," + (item._source.se != "-" ? (item._source.se === undefined ? item._source.rf : item._source.se) : item._source.rf);
- result["tt"] = item._source.tt;
- result["ip"] = item._source.remote;
- result["utimeAll"] = new Date(item._source.utime[item._source.utime.length - 1] - item._source.utime[0]).format("hh:mm:ss");
- result["pageNumber"] = item._source.loc.length;
- resultArray.push(result)
- }else{
- result["city"] = "暂无数据";result["city"] = "暂无数据";result["utime"] = "暂无数据"
- result["source"] = "暂无数据";result["tt"] = "暂无数据";result["ip"] = "暂无数据"
- result["utimeAll"] = "暂无数据";result["pageNumber"] = "暂无数据"
- resultArray.push(result)
- }
- });
- } catch (e) {
- console.error(e.stack);
- }
- datautils.send(res, resultArray);
- });
- });*/
+
 /**
  * 实时访问 HTML数据
  */
@@ -528,20 +495,22 @@ api.get("/downCSV", function (req, res) {
 /**
  * summary.by wms
  */
-api.get("/summary", function (req, res) {
+api.get("/index_summary", function (req, res) {
     var query = url.parse(req.url, true).query;
     var dimension = query['dimension'] == "null" ? null : query['dimension'];
+    if (dimension == "period") {
+        dimension = null;
+    }
     var type = query['type'];
     var startOffset = Number(query['start']);
     var endOffset = Number(query['end']);
     var indexes = date.createIndexes(startOffset, endOffset, "access-");
-    var quotas = query['quotas'];
+    var quotas = query['indic'];
     var period = date.period(startOffset, endOffset);
-    var interval = date.interval(startOffset, endOffset);
     var _filter = query["filerInfo"] != null && query["filerInfo"] != 'null' ? JSON.parse(query["filerInfo"]) : query["filerInfo"] == 'null' ? null : query["filerInfo"];//过滤器
     // 指标数组
     var quotasArray = quotas.split(",");
-    es_request.search(req.es, indexes, type, quotasArray, dimension, [0], _filter, period[0], period[1], interval, function (result) {
+    es_request.search(req.es, indexes, type, quotasArray, dimension, [0], _filter, period[0], period[1], -1, function (result) {
         datautils.send(res, JSON.stringify(result));
     });
 });
@@ -589,9 +558,9 @@ api.get("/heatmap", function (req, res) {
     var _startTime = Number(query['start']);
     var _endTime = Number(query['end']);
     var indexes = date.createIndexes(_startTime, _endTime, "access-");//indexs
-    es_position.search(req.es, indexes, _type, function (result) {
-        datautils.send(res, result);
-    });
+    //es_position.search(req.es, indexes, _type, function (result) {
+    //    datautils.send(res, result);
+    //});
 });
 
 // ================================= Config  ===============================
@@ -719,14 +688,61 @@ api.get("/changeList", function (req, res) {
         contrastIndexString = date.createIndexes(contrastStart, contrastEnd, "access-");
         contrastTime = date.getConvertTimeByNumber(contrastStart, contrastEnd);
     }
-    for(var i = 0;i<contrastIndexString.length;i++){
+    for (var i = 0; i < contrastIndexString.length; i++) {
         indexString.push(contrastIndexString[i]);
     }
-    for(var i = 0;i<contrastTime.length;i++){
+    for (var i = 0; i < contrastTime.length; i++) {
         time.push(contrastTime[i]);
     }
     changeList_request.search(req.es, indexString, time, function (result) {
         datautils.send(res, result);
     });
+});
+//==================================== transform ===============================================
+api.get("/transform/transformAnalysis", function (req, res) {
+    var parameters = req.url.split("?")[1].split("&");
+    var start = parameters[0].split("=")[1];
+    var end = parameters[1].split("=")[1];
+    var action = parameters[2].split("=")[1];
+    var type = parameters[3].split("=")[1];
+    var searchType = parameters[4].split("=")[1];
+    var indexString = [];
+    var time = [];
+    if (start.substring(1, start.length).match("-") != null && end.substring(1, start.length).match("-") != null) {
+        indexString = date.createIndexsByTime(start, end, "access-");
+        time = date.getConvertTimeByTime(start, end);
+    } else {
+        indexString = date.createIndexes(start, end, "access-");
+        time = date.getConvertTimeByNumber(start, end);
+    }
+    if (searchType == "initAll") {
+        transform.search(req.es, indexString, type, action, function (result) {
+            datautils.send(res, result);
+        })
+    } else if(searchType == "dataTable"){
+        var showType = parameters[5].split("=")[1];
+        var queryOptions = parameters[6].split("=")[1];
+        var querys = [];
+        var query = queryOptions.split(",");
+        for (var i = 0; i < query.length; i++) {
+            querys.push(queryOptions.split(",")[i]);
+        }
+
+        transform.searchByShowTypeAndQueryOption(req.es, indexString, type, action, showType, querys, function (result) {
+            datautils.send(res, result);
+        });
+    }else{
+        var queryOptions = parameters[5].split("=")[1];
+        var querys = [];
+        var query = queryOptions.split(",");
+        for (var i = 0; i < query.length; i++) {
+            querys.push(queryOptions.split(",")[i]);
+        }
+        console.log(querys)
+        transform.SearchPromotion(req.es, indexString, type, action, querys, function (result) {
+            datautils.send(res, result);
+        });
+    }
+
 });
 module.exports = api;

@@ -599,15 +599,88 @@ api.get("/adtrack", function (req, res) {
 });
 //JS测试
 api.get("/select", function (req, res) {
-    console.log(1);
     var ref = req.header('Referer');
-    /* if (ref == undefined || ref == '') {
-     res.end();
-     return;
-     }*/
+    console.log(ref)
+    //判断refer 和track_id对应的站点匹配
     var query = url.parse(req.url, true).query;
-    console.log(query);
-    res.write("crossDomainCallback({id: 1, name: 'shyman', age: 18, male:true},0);");
-    res.end();
+    var type = query["type"];
+    var td = query["td"];
+    var uid = query["cuid"]
+    if (td != null && uid != null) {
+        req.redisclient.get("tsj:" + td, function (error, sitejsons) {
+            var sitejson = sitejsons == null ? null : JSON.parse(sitejsons);
+            if (sitejson != null && ref != undefined && ref.indexOf(sitejson.siteurl) > -1) {
+                var schema_name = "event_change_model";//设置选择schemas Model名称
+                switch (type) {
+                    case "saveTips":
+                        var dataJson = JSON.parse(query["data"]);
+                        var existQry = {
+                            uid: uid,
+                            event_id: dataJson["id"],
+                            event_page: dataJson["monUrl"],
+                            root_url: sitejson.siteid
+                        }
+                        dao.find(schema_name, JSON.stringify(existQry), null, {}, function (err, docs) {//查询所有配置
+                            var eventData = {
+                                uid: uid,
+                                event_id: dataJson["id"],
+                                event_name: dataJson["name"],
+                                event_page: dataJson["monUrl"],
+                                event_method:"自动",
+                                root_url: sitejson.siteid
+                            }
+                            if (docs == null || docs.length == 0) {//存在配置
+                                //console.log("*******该事件配置不存在 插入********")
+                                dao.save(schema_name, eventData, function (ins) {
+                                    if (ins != null) {
+                                    }
+                                });
+                            }else{
+                                //console.log("*******该事件配置已存在 更新********")
+                                dao.update(schema_name,JSON.stringify(existQry), eventData, function (ins) {
+                                    if (ins != null) {
+
+                                    }
+                                });
+                            }
+                        });
+                        res.write("crossDomainCallback({state:'SUCCESS'}," + query["index"] + ");");
+                        res.end();
+                        break;
+                    case "getTips"://获取
+
+                        var existQry = {//用户 站点 页面 为查询条件
+                            uid: uid,
+                            event_page: query["eventPage"],
+                            root_url: sitejson.siteid
+                        }
+                        dao.find(schema_name, JSON.stringify(existQry), null, {}, function (err, docs) {//查询所有配置
+                            if (docs!= null && docs.length >0) {//存在配置
+                                console.log("回写")
+                                res.write("crossDomainCallback(" + JSON.stringify(docs) + "," + query["index"] + ");");
+                                res.end();
+                            }
+                        });
+                        break;
+                    case "delTip"://删除
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+    }
+});
+api.get("/searchByUID", function (req, res) {
+    //判断refer 和track_id对应的站点匹配
+    var query = url.parse(req.url, true).query;
+    var uid = query["uid"];
+    var track_id = query["track_id"];
+    if (uid != null) {
+        dao.findSync("sites_model",JSON.stringify({uid:uid,track_id:track_id}),null,{},function(data){
+            datautils.send(res, data);
+        });
+
+    }
 });
 module.exports = api;

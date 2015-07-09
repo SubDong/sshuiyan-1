@@ -1300,6 +1300,18 @@ nav, .navbar-default {
   width: 108px;
   a {
     border: none;
+    .advanceSearch{
+      margin: 0 5px 0 5px;
+    }
+  }
+}
+.nav-tabs.nav-justified > li:nth-child(2){
+  min-width: 108px;
+}
+//高级搜索中样式改变
+@media (min-width: 768px){
+  .nav-tabs.nav-justified > li:nth-child(2) {
+    width: auto;
   }
 }
 
@@ -3592,4 +3604,14 @@ textarea.tNum {
 }
 .flatCell{
   color: #01aeef;
+}
+.ngdialog.iframeBox .ngdialog-content{
+  width:auto;
+  max-width:900px;
+}
+.iframeBox{
+  .overlay-content{
+    padding:0 10px;
+  }
+
 }

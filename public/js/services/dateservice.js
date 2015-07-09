@@ -16,7 +16,7 @@ define(["../app"], function (app) {
         this.refresh = function (charts) {
             charts.forEach(function (chart) {
                 chart.config.instance.showLoading({
-                    effect:'whirling',
+                    effect: 'whirling',
                     text: "正在努力的读取数据中..."
                 });
             });
@@ -45,25 +45,26 @@ define(["../app"], function (app) {
                 $http.get(grid.url + "?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + grid.types + "&dimension=" + grid.dimension + "&userType=" + $rootScope.userType).success(function (data) {
                     var json = JSON.parse((eval("(" + data + ")").toString()));
                     grid.config.gridOptions.data = [];
-                    if (json[0].quota.length) {
-                        if (json[0].quota.length > 11) {
-                            json[0].key = json[0].key.slice(0, 11);
-                            json[0].quota = json[0].quota.slice(0, 11);
-                        }
-                    }
-                    json.forEach(function (item) {
-                        for (var i = 0; i < item["key"].length; i++) {
-                            var _val = {};
-                            if (item["key"][i] != "-" && item["key"][i] != "") {
-                                var formatType = grid.types.toString();
-                                _val["name"] = item["key"][i];
-                                _val["value"] = ad.formatFunc(parseInt(item["quota"][i]), formatType);
-                                grid.config.gridOptions.data.push(_val);
+                    if (json) {
+                        if (json[0].quota.length) {
+                            if (json[0].quota.length > 11) {
+                                json[0].key = json[0].key.slice(0, 11);
+                                json[0].quota = json[0].quota.slice(0, 11);
                             }
                         }
-                    })
+                        json.forEach(function (item) {
+                            for (var i = 0; i < item["key"].length; i++) {
+                                var _val = {};
+                                if (item["key"][i] != "-" && item["key"][i] != "") {
+                                    var formatType = grid.types.toString();
+                                    _val["name"] = item["key"][i];
+                                    _val["value"] = ad.formatFunc(parseInt(item["quota"][i]), formatType);
+                                    grid.config.gridOptions.data.push(_val);
+                                }
+                            }
+                        });
+                    }
                 });
-
             })
         }
     }]);

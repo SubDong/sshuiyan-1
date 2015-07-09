@@ -106,6 +106,7 @@ define(["./module"], function (ctrs) {
             requestService.refresh($scope.charts);
 
             $rootScope.tableSwitch.latitude = val;
+            val.footerCellTemplate = "<div class='ui-grid-cell-contents'>当页汇总</div>";
             val.field == "isp" ? $rootScope.tableSwitch.dimen = "region" : val.field == "pm" ? $rootScope.tableSwitch.dimen = "os" : $rootScope.tableSwitch.dimen = false;
             $rootScope.indicators(null, null, null, "refresh");
             $rootScope.$broadcast("ssh_data_show_refresh");
@@ -126,6 +127,13 @@ define(["./module"], function (ctrs) {
             var json = JSON.parse(eval("(" + data + ")").toString());
             config["noFormat"] = "noFormat";
             util.getEquipmentData(json, $scope.equipment.selected);
+
+            json.forEach(function(item){
+                if(item.key.length>10){
+                    item.key=item.key.slice(0,10);
+                    item.quota=item.quota.slice(0,10);
+                }
+            });
             cf.renderChart(json, config);
         }
         $scope.charts = [

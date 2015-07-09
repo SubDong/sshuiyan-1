@@ -4,7 +4,7 @@
 define(["./module"], function (ctrs ) {
     "use strict";
 
-    ctrs.controller('eventchange', function ($cookieStore,$scope, $q, $rootScope,$http,ngDialog, $state) {
+    ctrs.controller('count_eventchange', function ($cookieStore,$scope, $q, $rootScope,$http,ngDialog, $state) {
 
         //对象-对话框
         $scope.urlDialog = null;
@@ -106,7 +106,7 @@ define(["./module"], function (ctrs ) {
                 name: "x6",
                 displayName: "",
                 cellTemplate: "<div class='table_admin'><a ng-click='grid.appScope.deleteDialog(row.entity)' >删除</a></div>",
-                maxWidth: 80
+                maxWidth: 50
             }
 
         ];
@@ -126,15 +126,17 @@ define(["./module"], function (ctrs ) {
         };
 
         $scope.gridOptions = {
-            paginationPageSize: 25,
+            paginationPageSize:20,
+            paginationPageSizes: [2,20, 50, 100],
             expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
             expandableRowHeight: 360,
             enableColumnMenus: false,
-            enablePaginationControls: false,
+            enablePaginationControls: true,
             enableSorting: true,
             enableGridMenu: false,
             enableHorizontalScrollbar: 0,
             columnDefs: $rootScope.gridArray,
+
             onRegisterApi: function (girApi) {
                 $rootScope.gridApiAdmin = girApi;
             }
@@ -154,6 +156,7 @@ define(["./module"], function (ctrs ) {
 
             });
         };
+
         refushGridData();
         //全选
 

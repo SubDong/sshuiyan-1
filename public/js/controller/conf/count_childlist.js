@@ -4,7 +4,7 @@
 define(["./module"], function (ctrs) {
     "use strict";
 
-    ctrs.controller('childlist', function ($scope, $q, $rootScope,$cookieStore,$http,ngDialog, $state) {
+    ctrs.controller('count_childlist', function ($scope, $q, $rootScope,$cookieStore,$http,ngDialog, $state) {
 
         //对象-对话框
         $scope.urlDialog = null;

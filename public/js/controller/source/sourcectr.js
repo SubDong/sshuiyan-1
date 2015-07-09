@@ -7,7 +7,19 @@ define(["./module"], function (ctrls) {
 
     ctrls.controller("sourcectr", function ($scope, $rootScope, $http, requestService, areaService, messageService, uiGridConstants) {
         $scope.todayClass = true;
-
+        //        高级搜索提示显示
+        $scope.terminalSearch = "";
+//        取消显示的高级搜索的条件
+        $scope.removeTerminalSearch = function(obj){
+            obj.terminalSearch = "";
+            var inputArray = $(".chart_top2 .styled");
+            inputArray.each(function (i, o) {
+                $(o).prev("span").css("background-position", "0px 0px");
+                $(o).prop("checked", false);
+            });
+            $(inputArray[0]).prev("span").css("background-position", "0px -51px");
+            $rootScope.tableSwitch.tableFilter = null;
+        }
         //table 参数配置
         $rootScope.tableTimeStart = 0;
         $rootScope.tableTimeEnd = 0;
@@ -107,6 +119,7 @@ define(["./module"], function (ctrls) {
             }
         }
         $scope.itemHover = function (params, typeTotal, allTotal) {
+            console.log(params);
             var type = chartUtils.convertChinese($scope.charts[1].types.toString())
             $(".chart_box").attr("style", "background:" + $rootScope.chartColors[params.seriesIndex]);
             $("#chartlink").html(params[0]);
@@ -154,7 +167,7 @@ define(["./module"], function (ctrls) {
                     auotHidex: true,
                     qingXie:true,
                     qxv:18,
-                    tt: "item",
+                    //tt: "item",
                     itemHover: $scope.itemHover,
                     keyFormat: "none",
                     dataKey: "key",

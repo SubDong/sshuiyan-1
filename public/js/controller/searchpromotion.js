@@ -130,12 +130,13 @@ define(["./module"], function (ctrs) {
         };
         // 百度推广表格配置项
         $scope.gridOptions = {
-            paginationPageSize: 25,
+            paginationPageSize: 20,
+            paginationPageSizes: [20, 50, 100],
             expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions' style='height:150px;'></div>",
             expandableRowHeight: 150,
             enableColumnMenus: false,
             showColumnFooter: true,
-            enablePaginationControls: false,
+            enablePaginationControls: true,
             enableSorting: true,
             enableGridMenu: false,
             enableHorizontalScrollbar: 0,
@@ -172,19 +173,23 @@ define(["./module"], function (ctrs) {
             if (a == 0) {
                 $scope.es_filter = null;
                 $scope.device = -1;
+                $scope.terminalSearch ="全部";
             }
             if (a == 1) {
                 $scope.es_filter = "[{\"pm\":[0]}]";
                 $scope.device = 0;
+                $scope.terminalSearch ="计算机";
             }
             if (a == 2) {
                 $scope.es_filter = "[{\"pm\":[1]}]";
                 $scope.device = 1;
+                $scope.terminalSearch ="移动设备";
             }
             $scope.targetSearchSpread();
         };
         //搜索推广地域过滤
         $scope.setAreaFilter = function (area, id) {
+            $scope.areaSearch = area;
             if (area == "北京" || area == "上海" || area == "广州") {
                 if ($scope.city.selected != undefined) {
                     $scope.city.selected.name = area;
@@ -672,6 +677,15 @@ define(["./module"], function (ctrs) {
         $scope.getIndex = function (b) {
             return b.$parent.$parent.rowRenderIndex + 1
         };
+        $scope.init = function (timeData) {
+            $scope.gridOptions.data = [];
+            $http.get("/api/transform/transformAnalysis?start=" + timeData.start + "&end=" + timeData.end + "&action=event&type=1&searchType=table&queryOptions=" + ["pv", "uv", "ip", "vc"]).success(function (data) {
+                $scope.gridOptions.data = data;
+            });
+        };
+        $scope.$on("transformData", function (e, msg) {
+            $scope.init(msg)
+        });
     });
 
 //得到tableFilter key

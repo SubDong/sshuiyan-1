@@ -177,67 +177,16 @@ define(["./module"], function (ctrs) {
 
         $scope.openAddDialog = function () {
             $scope.urlDialog = ngDialog.open({
-                template: '\
-                <form role="form" name="adminmainctrForm" class="form-horizontal" novalidate>\
-              <div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div>\
-                   <ul class="admin-ng-content admin-ngeventchange"> \
-                   <li>网站域名</li>\
-                     <li><input type="text" name="remote" adminmainctr-remote-validation data-ng-focus="site_url_focus = true" data-ng-blur="site_name_focus = false" data-ng-model="dialog_model.site_url" class="form-control" required/></li> \
-                    <li ng-show="adminmainctrForm.remote.$error.remote" style="color: red;">网站域名重复！</li> \
-                    <li data-ng-show="site_url_focus && !dialog_model.site_url" style="color: red;">不能为空</li>\
-                    <br>\
-                    <li>网站名称</li>\
-                    <li><input type="text" data-ng-focus="site_name_focus=true" data-ng-blur="site_name_focus =false" data-ng-model="dialog_model.site_name" class="form-control"/></li> \
-                    <li data-ng-show="site_name_focus && !dialog_model.site_name" style="color: red;">不能为空</li>\
-                    <br>\
-                    <li style="color: black;"><input type="checkbox"  name="置顶" data-ng-model="dialog_model.is_top"/>\
-                    <span>设置站点是否置顶</span></li>\
-                    <br>\
-                    <li>可输入如下4种域名形式</li>\
-                    <li>1.主域名（如：www.baidu.com）</li>\
-                    <li>2.二级域名（如：sub.baidu.com)</li>\
-                    <li>3.子目录（如：www.baidu.com/sub）</li>\
-                    <li>4.wap站域名（如：wap.baidu.com）</li>\
-                    </ul>\
-                    <div class="ng-button-div"><button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
-                    <button type="button" ng-disabled="adminmainctrForm.$invalid" class="ngdialog-button  ng-button" ng-click="submit()">确定</button></div>\
-                </div></form>',
+                template: '../conf/Dialog/main_addDialog.html',
                 className: 'ngdialog-theme-default admin_ngdialog',
-                plain: true,
                 scope: $scope
             });
         };
 
         $scope.openUpdateDialog = function () {
             $scope.urlDialog = ngDialog.open({
-                template: '\
-                <form role="form" name="adminmainctrForm" class="form-horizontal" novalidate>\
-              <div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div>\
-              \
-                   <ul class="admin-ng-content"> \
-                   <li>网站域名</li>\
-                     <li><input type="text" name="remote" readOnly  adminmainctr-remote-validation data-ng-focus="site_url_focus = true" data-ng-blur="site_name_focus = false" data-ng-model="dialog_model.site_url" class="form-control" required/></li> \
-                    <li ng-show="adminmainctrForm.remote.$error.remote" style="color: red;">网站域名重复！</li> \
-                    <li data-ng-show="site_url_focus && !dialog_model.site_url" style="color: red;">不能为空</li>\
-                    <br>\
-                    <li>网站名称</li>\
-                    <li><input type="text" data-ng-focus="site_name_focus=true" data-ng-blur="site_name_focus =false" data-ng-model="dialog_model.site_name" class="form-control"/></li> \
-                    <li data-ng-show="site_name_focus && !dialog_model.site_name" style="color: red;">不能为空</li>\
-                    <br>\
-                    <li style="color: black;"><input type="checkbox"  name="置顶" data-ng-model="dialog_model.is_top"/>\
-                    <span>设置站点是否置顶</span></li>\
-                    <br>\
-                    <li>可输入如下4种域名形式</li>\
-                    <li>1.主域名（如：www.baidu.com）</li>\
-                    <li>2.二级域名（如：sub.baidu.com)</li>\
-                    <li>3.子目录（如：www.baidu.com/sub）</li>\
-                    <li>4.wap站域名（如：wap.baidu.com）</li>\
-                    </ul>\
-                    <div class="ng-button-div"><button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
-                    <button type="button" ng-disabled="adminmainctrForm.$invalid" class="ngdialog-button ng-button" ng-click="submit()">确定</button>\
-                </div></div></form>',
+                template: '../conf/Dialog/main_UpdateDialog.html',
                 className: 'ngdialog-theme-default admin_ngdialog ',
-                plain: true,
                 scope: $scope
             });
         };
@@ -493,13 +442,13 @@ define(["./module"], function (ctrs) {
                     model.type_id = $scope.gridOptions.data[i].type_id;//更新传入
                     model.track_id = $scope.gridOptions.data[i].track_id;
                     model.track_status = statusNumber;//0，１状态值
-                    var url = "/config/site_list?type=update&query={\"uid\":\"" + model.uid + "\",\"site_url\":\"" + model.site_url + "\"}&updates=" + JSON.stringify(model);
+                    var url = "/config/site_list?type=update&query={\"uid\":\"" + model.uid + "\",\"site_url\":\"" + path + "\"}&updates=" + JSON.stringify(model);
                     $http({method: 'GET', url: url}).
                         success(function (data, status) {
                             if (status == "200") {
-                                createDialog(status_ch(statusNumber),"成功");
+                                createDialog(status_ch(statusNumber), "成功");
                             } else {
-                                createDialog(status_ch(statusNumber),"失败");
+                                createDialog(status_ch(statusNumber), "失败");
                             }
                         }).
                         error(function (data, status, headers, config) {
@@ -512,13 +461,14 @@ define(["./module"], function (ctrs) {
             $("#web_list_nav_input").css("color", "red");
             $("#web_list_nav_input").prop("value", value);
         }
-        function createDialog(value,checkStatus){
+
+        function createDialog(value, checkStatus) {
             $scope.urlDialog = ngDialog.open({
                 template: '\
               <div class="ngdialog-buttons" >\
-              <span style="text-align: center">代码状态：'+value+'</span>\
+              <span style="text-align: center">代码状态：' + value + '</span>\
               <br>\
-              <span style="text-align: center">更新'+checkStatus+'</span>\
+              <span style="text-align: center">更新' + checkStatus + '</span>\
                 </div>',
                 className: 'ngdialog-theme-default',
                 plain: true,
@@ -526,7 +476,8 @@ define(["./module"], function (ctrs) {
             });
 
         }
-        var userID =  $cookieStore.get("uid");
+
+        var userID = $cookieStore.get("uid");
         //代码检查方法
         $scope.codeCheck = function () {
             var path = $("#web_list_nav_input").prop("value");//输入框获取的path
@@ -537,23 +488,33 @@ define(["./module"], function (ctrs) {
                         changeCss("网址输入失误");
                     } else {
                         if (data != null || data != "") {
-                            if(data.match("404 Not Found")==null){
+                            if (data.match("404 Not Found") == null) {
                                 var k = Number((data.toString().split('tid=')[0].split('\"').length));
                                 if (data.toString().split("tid=")[0].split("\"")[k - 1].split("/").length == 4) {
                                     if (data.toString().split("tid=").length > 1) {
                                         var tid = data.toString().split("tid=")[1].split("\"")[0];
-                                        if (tid == uid) {
-                                            changeStatus(path, uid, 1);
-                                        } else {
-                                            changeStatus(path, uid, -1);
-                                        }
+                                        $http.get("/config/searchByUID?uid=" + uid + "&track_id=" + tid).success(function (result) {
+                                            if (result=="null" || result == "") {
+                                                $scope.urlDialog = ngDialog.open({
+                                                    template: '\
+                                                    <div class="ngdialog-buttons" >\
+                                                    <span style="text-align: center">该账户下不存在该路径</span>\
+                                                    </div>',
+                                                    className: 'ngdialog-theme-default',
+                                                    plain: true,
+                                                    scope: $scope
+                                                });
+                                            }else{
+                                                changeStatus(path, uid, 1);
+                                            }
+                                        });
                                     } else {
                                         changeStatus(path, uid, -1);
                                     }
                                 } else {
                                     changeStatus(path, uid, -1);
                                 }
-                            }else{
+                            } else {
                                 changeCss("网址不存在");
                             }
 

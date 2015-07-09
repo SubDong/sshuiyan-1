@@ -51,6 +51,12 @@ var chartUtils = {
             case "平均访问页数":
                 return "avgPage";
                 break;
+            case "平均转化成本":
+                return "transformCost";
+                break;
+            case "转化率":
+                return "crate";
+                break;
             default :
                 return "pv";
         }
@@ -91,6 +97,12 @@ var chartUtils = {
                 return "平均点击价格";
             case "avgPage":
                 return "平均访问页数";
+                break;
+            case "transformCost":
+                return "平均转化成本";
+                break;
+            case "crate":
+                return "转化率";
                 break;
             default :
                 return "浏览量(PV)";
@@ -186,11 +198,12 @@ var chartUtils = {
         if (config.keyFormat == "day") {
             var time = [];
             json.forEach(function (e) {
+                var _time=new Date(e.key).Format("yyyy-MM-dd hh:mm:ss");
                 if ((_times[1] - _times[0]) == 0) {
                     config.keyFormat = "none";
-                    time.push(Number((e.key_as_string).toString().substring(10, 13)));
+                    time.push(Number(_time.substring(10, 13)));
                 } else {
-                    time.push((e.key_as_string).toString().substr(0, 10));
+                    time.push(_time.substr(0, 10));
                 }
             });
             return time
@@ -205,10 +218,11 @@ var chartUtils = {
         } else {
             var time = [];
             json.forEach(function (e) {
+                var _time=new Date(e.key).Format("yyyy-MM-dd hh:mm:ss");
                 if ((_times[1] - _times[0]) == 0) {
-                    time.push(Number((e.key_as_string).toString().substring(10, 13)));
+                    time.push(Number(_time.substring(10, 13)));
                 } else {
-                    time.push((e.key_as_string).toString().substr(0, 10));
+                    time.push(_time.substr(0, 10));
                 }
             });
             return time
@@ -409,6 +423,7 @@ var chartUtils = {
             _tmp["label"] = chartUtils.convertChinese(item.label);
             _tmp["quota"] = [count];
             if (item.key[0]) {
+                item.key[0] = new Date(item.key[0]).Format("yyyy-MM-dd hh:mm:ss")
                 _tmp["key"] = [item.key[0].substring(0, 10)];
             } else {
                 _tmp["key"] = [new Date().Format("yyyy-MM-dd")];
@@ -527,6 +542,7 @@ var chartUtils = {
         esJson.forEach(function (a) {
             var formatKey = [];
             a.key.forEach(function (e) {
+                e=new Date(e).Format("yyyy-MM-dd hh:mm:ss")
                 formatKey.push(e.substring(0, 10));
             });
             a.key = formatKey;
@@ -814,6 +830,7 @@ var chartUtils = {
             chart_result.push(_semData);
         } else {
             if (esDate) {
+                esDate=new Date(esDate).Format("yyyy-MM-dd hh:mm:ss")
                 chart_result.push({
                     label: chartUtils.convertChinese(quota),
                     quota: [0],

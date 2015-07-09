@@ -2,7 +2,7 @@ if (config != undefined && !config.open) {
     (function () {
         var points = [], h = {}, md = {}, c = {
             id: config.trackid,
-            version: "1.0.15",
+            version: "1.0.21",
             q: null
         };
 
@@ -80,8 +80,11 @@ if (config != undefined && !config.open) {
         md.cookie = {};
         md.getDomain = function () {
             var a = document.location.hostname;
-            var b = a.substring(a.indexOf(".") + 1);
-            return b;
+            var b = h.I.u;
+            a = "." + a.replace(/:\d+/, "");
+            b = "." + b.replace(/:\d+/, "");
+            var d = a.indexOf(b);
+            return (-1 < d && d + b.length == a.length) ? b.replace(/(:\d+)?[\/\?#].*/) : "";
         };
         md.cookie.set = function (a, b, c) {
             document.cookie = a + "=" + escape(b) + "; path=/";
@@ -152,6 +155,7 @@ if (config != undefined && !config.open) {
         // cv      _setCustomVar自定义方法参数      自定变量
         // tmc     移动转化工具监控方法参数         移动转化工具监控
         // tod     电商订单数据监控方法参数         电商订单数据监控
+
 
         md.event = {};
         md.event.e = function (a, b, f) {
@@ -261,6 +265,7 @@ if (config != undefined && !config.open) {
 
         //全局变量h.I 访问地址URL设置 如：http://best-ad.cn/pft.gif?query string parameters
         h.I = {
+            R: "hy.best-ad.cn",
             u: config.domain,
             P: "log.best-ad.cn",
             S: "pft.gif",
@@ -414,11 +419,11 @@ if (config != undefined && !config.open) {
                     var a, b, d;
                     var as = decodeURIComponent(md.g.rf).replace("http://", "");
                     as = (as == "-" ? as : as.substring(as.indexOf(".") + 1, as.indexOf("/")));
-                    var ab = md.g.loc.replace("http://", "");
-                    ab = ab.substring(ab.indexOf(".") + 1, ab.indexOf("/"));
+                    //var ab = md.g.loc.replace("http://", "");
+                    //ab = ab.substring(ab.indexOf(".") + 1, ab.indexOf("/"));
                     md.g.tt = a = this.getData("PFT_" + c.id);
                     var Judge = (this.getData("PFT_COOKIE_RF") == null || this.getData("PFT_COOKIE_RF") != decodeURIComponent(md.g.rf));
-                    if (null == a || undefined == a || "" == a || (as != "-" && as != ab && Judge)) {
+                    if (null == a || undefined == a || "" == a || as != "-" && Judge) {
                         this.setData("PFT_" + c.id);
                         cookie.set("PFT_COOKIE_RF", decodeURIComponent(md.g.rf));
                         md.g.tt = this.getData("PFT_" + c.id);
@@ -429,6 +434,13 @@ if (config != undefined && !config.open) {
                         md.g.n = "1";
                         md.cookie.remove("PFT_DTNJ");
                         md.cookie.remove("PFT_DTNP");
+                    } else {
+                        var ckDay = this.getData("PFT_SJKD");
+                        var newDay = new Date().getDate();
+                        if (ckDay != undefined && ckDay < newDay) {
+                            this.setData("PFT_" + c.id);
+                            md.g.n = "1"
+                        }
                     }
                     var cookie_pos = document.cookie.indexOf("vid");
                     if (cookie_pos == -1) {
@@ -439,16 +451,17 @@ if (config != undefined && !config.open) {
                     md.g.vid = this.getData("vid");
                 },
                 par: function () {
-                    var a = "", b = h.I.Q, _c = md.g;
+                    var a = "", b = h.I.Q, _c = md.g, ck = md.cookie;
                     for (var i = 0; i < b.length; i++) {
                         _c[b[i]] != undefined && _c[b[i]] != "" && _c[b[i]] != null ? a = a + b[i] + "\=" + _c[b[i]] + ((b[i] == "v") ? "" : "\&") : "";
                     }
+                    ck.set("PFT_SJKD", new Date().getDate());
                     return a;
                 },
                 custor: function () {
                     md.g.cv = md.cookie.get("PFT_CV_" + c.id);
                     md.g.api = md.cookie.get("PFT_API");
-                    if (md.g.cv != null || md.g.cv != undefined || md.g.cv != "") {
+                    if (md.g.cv != null && md.g.cv != undefined && md.g.cv != "") {
                         md.cookie.remove("PFT_CV_" + c.id);
                         md.cookie.remove("PFT_API");
                         this.sm();
@@ -474,11 +487,23 @@ if (config != undefined && !config.open) {
                     var e = a < c ? b : a
                     var d = setInterval(this.hbInfo, e);
                 },
+                getSelectJS: function () {
+                    var refJS = document.referrer;
+                    var jupy = refJS.substring(0, refJS.lastIndexOf("/"));
+                    if (jupy === (h.I.protocol + "//" + h.I.R)) {
+                        var a = document.createElement("script");
+                        a.setAttribute("type", "text/javascript");
+                        a.setAttribute("src", h.I.protocol + "//" + h.I.P + "/t.js/select?tid=" + c.id);
+                        var f = document.getElementsByTagName("script")[0];
+                        f.parentNode.insertBefore(a, f);
+                    }
+                },
                 init: function () {
                     h.b = this;
                     this.na();
                     this.sm();
                     this.custor();
+                    this.getSelectJS();
                     //this.heartBeat("");
                 }
 
@@ -578,6 +603,33 @@ if (config != undefined && !config.open) {
                     }
                 }
             })();
+        }
+
+        if (config != undefined && config.evt.length > 0) {
+            window.onload = function () {
+                //自动添加客户转化时间配置
+                config.evt.forEach(function (item, i) {
+                    var loc = h.I.protocol + "//" + document.location.hostname;
+                    if (loc === item.evpage) {
+                        var eidTree = document.getElementById(item.eid);
+                        var pd = eidTree.attributes.getNamedItem("onclick");
+                        console.log(pd)
+                        if (eidTree != undefined && eidTree != null) {
+                            if (pd == null) {
+                                eidTree.onclick = function () {
+                                    _pct.putPar(["_trackEvent", item.eid, item.evttag]);
+                                }
+                            } else {
+                                if (pd.nodeValue.indexOf("_pct.putPar") == -1) {
+                                    eidTree.onclick = function () {
+                                        _pct.putPar(["_trackEvent", item.eid, item.evttag]);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                })
+            }
         }
     })();
 }	

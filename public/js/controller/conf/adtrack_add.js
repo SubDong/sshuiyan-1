@@ -90,17 +90,27 @@ define(["./module"], function (ctrs) {
         };
 
         /**
-         * 转换URL
-         * @returns {string}
+         * show URL
          */
-        $scope.parseUrl = function() {
-            var strUrl = "http://" + $scope.adTrack.targetUrl
-                + "?hmsr=" + $scope.adTrack.mediaPlatform
-                + "&_hmmd=" + $scope.adTrack.adTypes
-                + "&_hmpl=" + $scope.adTrack.planName
-                + "&_hmkw=" + $scope.adTrack.keywords
-                + "&_hmci=" + $scope.adTrack.creative;
-            return encodeURI(strUrl);
+        $scope.keywordsWrap = function(){
+            $scope.str = function(kw){
+                var strUrl = "http://" + $scope.adTrack.targetUrl
+                    + "?hmsr=" + $scope.adTrack.mediaPlatform
+                    + "&_hmmd=" + $scope.adTrack.adTypes
+                    + "&_hmpl=" + $scope.adTrack.planName
+                    + "&_hmkw=" + kw
+                    + "&_hmci=" + $scope.adTrack.creative;
+                return encodeURI(strUrl);
+            }
+
+            var kVal2 = $scope.adTrack.keywords;
+            var splArray = kVal2.split("\n").unique();  //拆分回车换行符并去重
+            $scope.ssssss = "";
+
+            for (var i=0 ; i< splArray.length ; i++) {
+                var kw = splArray[i];
+                $scope.ssssss += $scope.str(kw) + "\n";
+            }
         };
 
         /**
@@ -108,14 +118,14 @@ define(["./module"], function (ctrs) {
          */
         $scope.onCancel = function () {
             $state.go('adtrack');
-        }
+        };
 
         /**
          * 继续添加
          */
         $scope.addAdTrack = function () {
-            $state.go('#conf/webcountsite/adtrack_add');
-        }
+            window.location.reload();
+        };
 
         $scope.submit = function (obj) {
             var model = angular.copy($scope.adtrack_model);
@@ -141,9 +151,36 @@ define(["./module"], function (ctrs) {
         $scope.clear = function(){
             var isNoClear = confirm("您确认要清空当前填写的内容吗？");
             if(isNoClear == true){
-                document.getElementById('adTrackForm').reset();
+                //document.getElementById('adTrackForm').reset();
+                window.location.reload();
             } else {
 
+            }
+        };
+
+        /**
+         * 高级选项
+         */
+        $scope.advancedOpt = function(){
+            if($scope.adTrack.mediaPlatform == null || $scope.adTrack.mediaPlatform == ""){
+                document.getElementById("adTypes").disabled = "disabled";
+            }else{
+                document.getElementById("adTypes").disabled = "";
+            }
+            if($scope.adTrack.adTypes == null || $scope.adTrack.adTypes == ""){
+                document.getElementById("planName").disabled = "disabled";
+            }else{
+                document.getElementById("planName").disabled = "";
+            }
+            if($scope.adTrack.planName == null || $scope.adTrack.planName == ""){
+                document.getElementById("keywords").disabled = "disabled";
+            }else{
+                document.getElementById("keywords").disabled = "";
+            }
+            if($scope.adTrack.keywords == null || $scope.adTrack.keywords == ""){
+                document.getElementById("creative").disabled = "disabled";
+            }else{
+                document.getElementById("creative").disabled = "";
             }
         };
 

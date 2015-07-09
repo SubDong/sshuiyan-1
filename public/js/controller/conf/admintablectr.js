@@ -84,10 +84,11 @@ define(["../module"], function (app) {
         //
         if (typeof($rootScope.checkedArray) != undefined && $rootScope.tableJu == "html") {
             $rootScope.gridOptions = {
-                paginationPageSize: 25,
+                paginationPageSize: 20,
+                paginationPageSizes: [2,20, 50, 100],
                 expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
                 enableColumnMenus: false,
-                enablePaginationControls: false,
+                enablePaginationControls: true,
                 enableSorting: true,
                 enableGridMenu: false,
                 enableHorizontalScrollbar: 0,
@@ -99,11 +100,12 @@ define(["../module"], function (app) {
             };
         } else {
             $rootScope.gridOptions = {
-                paginationPageSize: 25,
+                paginationPageSize: 20,
+                paginationPageSizes: [2,20, 50, 100],
                 expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
                 expandableRowHeight: 360,
                 enableColumnMenus: false,
-                enablePaginationControls: false,
+                enablePaginationControls: true,
                 enableSorting: true,
                 enableGridMenu: false,
                 enableHorizontalScrollbar: 0,
@@ -114,7 +116,7 @@ define(["../module"], function (app) {
                 }
             };
         }
-
+        console.log($rootScope.gridOptions.pagination);
         //////DENG
         //配置展开巷HTML
         var adminGriApiInfo = function (gridApi) {

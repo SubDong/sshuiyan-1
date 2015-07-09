@@ -4,7 +4,7 @@
 }
 
 .adtrack_add {
-  padding: 60px 0 0 10px;
+  padding: 60px 0 0 14px;
 }
 
 .adtrack_add input {
@@ -45,7 +45,6 @@
   ul {
     input {
       width: 146px;
-      padding: 0;
       margin: 0;
     }
   }
@@ -240,7 +239,6 @@
   list-style: decimal;
   min-width: 400px;
   padding: 5px;
-  margin-top: 20px;
   background-color: white;
   word-wrap: break-word;
 }
@@ -297,6 +295,8 @@
 
   li {
     margin: 0;
+    width: 100%;
+
   }
 }
 
@@ -327,6 +327,8 @@
   height: 32px;
   line-height: 32px;
   color: #2fabe7;
+
+
   cursor: pointer;
 
 }
@@ -343,12 +345,14 @@
   color: #2fabe7;
 }
 
+
 .table_admin:hover {
   color: #fd641f;
 }
 
 .table_admin a:hover {
   color: #fd641f;
+
 }
 
 .table_content {
@@ -376,6 +380,10 @@
   vertical-align: middle;
   background-color: #eee;
   text-align: center;
+  .pageshow{
+    float: right;
+    margin-right: 100px;
+  }
   .btn_ht {
     line-height: 10px;
   }
@@ -469,4 +477,58 @@
 }
 .eventchange-button{
   background-color: white;
+}
+//分页 每页显示
+.ui-grid-pager-panel{
+  background: none;
+  border-top: 0;
+  padding: 0;
+  margin-top: 12px;
+  margin-bottom: -38px;
+  width: 100px;
+  float: right;
+  position: relative;
+}
+.ui-grid-pager-count-container{
+  display: none;
+}
+.ui-grid-pager-control{
+  display: none;
+}
+.ui-grid-pager-row-count-picker .ui-grid-pager-row-count-label {
+  display: none;
+}
+.ui-grid-pager-container{
+  float: right;
+  margin-right: 30px;
+}
+//主页table
+.main_table{
+  .ui-grid-pager-panel{
+    display: none;
+  }
+}
+.page{
+  .pageshow{
+    float: right;
+    margin-right: 100px;
+  }
+}
+.gesture{
+  canvas{
+    cursor: default;
+  }
+}
+.page,.page_ht{
+  .current{
+    background-color: #51c7ff;
+  }
+  .current:visited,.current:active,.current:hover{
+    background-color: #51c7ff;
+    color:white;
+  }
+  button{
+    margin-left: 3px;
+  }
+
 }

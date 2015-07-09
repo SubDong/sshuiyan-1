@@ -7,6 +7,23 @@
 define(["./module"], function (ctrs) {
     "use strict";
     ctrs.controller("adsSourceCtr", function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
+        //        高级搜索提示
+        $scope.visitorSearch = "";
+        $scope.areaSearch = "";
+//        取消显示的高级搜索的条件
+        $scope.removeVisitorSearch = function(obj){
+            obj.visitorSearch = "";
+            var inputArray = $(".chart_top2 .styled");
+            inputArray.each(function (i, o) {
+                $(o).prev("span").css("background-position", "0px 0px");
+                $(o).prop("checked", false);
+            });
+            $(inputArray[0]).prev("span").css("background-position", "0px -51px");
+            $rootScope.tableSwitch.tableFilter = null;
+        }
+        $scope.removeAreaSearch = function(obj){
+            obj.areaSearch = "";
+        }
         $scope.todayClass = true;
         $scope.send = true;
         //table配置
