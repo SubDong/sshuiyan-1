@@ -51,6 +51,12 @@ var chartUtils = {
             case "平均访问页数":
                 return "avgPage";
                 break;
+            case "平均转化成本":
+                return "transformCost";
+                break;
+            case "转化率":
+                return "crate";
+                break;
             default :
                 return "pv";
         }
@@ -91,6 +97,12 @@ var chartUtils = {
                 return "平均点击价格";
             case "avgPage":
                 return "平均访问页数";
+                break;
+            case "transformCost":
+                return "平均转化成本";
+                break;
+            case "crate":
+                return "转化率";
                 break;
             default :
                 return "浏览量(PV)";

@@ -677,6 +677,15 @@ define(["./module"], function (ctrs) {
         $scope.getIndex = function (b) {
             return b.$parent.$parent.rowRenderIndex + 1
         };
+        $scope.init = function (timeData) {
+            $scope.gridOptions.data = [];
+            $http.get("/api/transform/transformAnalysis?start=" + timeData.start + "&end=" + timeData.end + "&action=event&type=1&searchType=table&queryOptions=" + ["pv", "uv", "ip", "vc"]).success(function (data) {
+                $scope.gridOptions.data = data;
+            });
+        };
+        $scope.$on("transformData", function (e, msg) {
+            $scope.init(msg)
+        });
     });
 
 //得到tableFilter key
