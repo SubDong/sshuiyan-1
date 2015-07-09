@@ -236,23 +236,19 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                             $('#reportrange').on('apply.daterangepicker', function (ev, picker) {
                                 pickerTiemOne = chartUtils.getTimeOffset(picker.startDate.format('YYYY-MM-DD'), picker.endDate.format('YYYY-MM-DD'));
                             });
-                            $('#choicetrange').on('apply.daterangepicker', function (ev, picker) {
-                                var pickerTiemTow = chartUtils.getTimeOffset(picker.startDate.format('YYYY-MM-DD'), picker.endDate.format('YYYY-MM-DD'));
-                                var startTime = pickerTiemTow[0];
-                                var endTime = pickerTiemTow[0] + Math.abs(pickerTiemOne[1] - pickerTiemOne[0]);
-                                if(endTime > 0){
-                                    endTime = 0;
-                                    startTime = endTime - Math.abs(pickerTiemOne[1] - pickerTiemOne[0]);
-                                }
-                                var dateTime = chartUtils.getSetOffTime(startTime, endTime);
-                                if(pickerTiemOne == 0){
-                                    $('#choicetrange span').html(dateTime[0]);
-                                }else{
-                                    $('#choicetrange span').html(dateTime[0] + "至" + dateTime[1]);
-                                }
-                                $('#choicetrange').data('daterangepicker').setStartDate(dateTime[0]);
-                                $('#choicetrange').data('daterangepicker').setEndDate(dateTime[1]);
-                            });
+//                            $('#choicetrange').on('apply.daterangepicker', function (ev, picker) {
+//                                var pickerTiemTow = chartUtils.getTimeOffset(picker.startDate.format('YYYY-MM-DD'), picker.endDate.format('YYYY-MM-DD'));
+//                                var startTime = pickerTiemTow[0];
+//                                var endTime = pickerTiemTow[0] + Math.abs(pickerTiemOne[1] - pickerTiemOne[0]);
+//                                var dateTime = chartUtils.getSetOffTime(startTime, endTime);
+//                                if(pickerTiemOne == 0){
+//                                    $('#choicetrange span').html(dateTime[0]);
+//                                }else{
+//                                    $('#choicetrange span').html(dateTime[0] + "至" + dateTime[1]);
+//                                }
+//                                $('#choicetrange').data('daterangepicker').setStartDate(dateTime[0]);
+//                                $('#choicetrange').data('daterangepicker').setEndDate(dateTime[1]);
+//                            });
                         }
                     }
                 }
@@ -326,7 +322,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
             template: "<div role=\"group\" class=\"btn-group fl\">" +
             "<button class=\"btn btn-default\" type=\"button\" ng-class=\"{'current':lastDayClass}\"  ng-show=\"dateshows\" >前一日</button>" +
             " <button class=\"btn btn-default\" type=\"button\" ng-class=\"{'current':lastWeekClass}\"   ng-show=\"dateshows\" >上周同期</button>" +
-            "<button id=\"choicetrange\"  class=\"btn btn-default pull-right date-picker my_picker fl\" ng-click=\'choicedate\' ng-class=\"{'current':choiceClass}\"  max=\"max\" ng-model=\"date\">" +
+            "<button id=\"choicetrange\"  class=\"btn btn-default pull-right date-picker my_picker fl\" ng-click=\'choicedate()\' ng-class=\"{'current':choiceClass}\"  max=\"max\" ng-model=\"date\">" +
             "<i class=\"glyphicon glyphicon-calendar fa fa-calendar\"></i><span></span></button>" +
             "</div>",
             replace: true,
@@ -340,9 +336,28 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     var d = dd.getDate();
                     return y + "-" + m + "-" + d;
                 }
-
+                scope.choicedate = function(ev, picker) {
+                    var pickerTiemOne = 0;
+                    var startDate = $('#reportrange span').html().split("至")[0];
+                    var endDate = $('#reportrange span').html().split("至")[1] == undefined ? startDate : $('#reportrange span').html().split("至")[1];
+                    pickerTiemOne = startDate == endDate ? 0 : chartUtils.getTimeOffset(startDate, endDate);
+                    $('#choicetrange').on('apply.daterangepicker', function (ev, picker) {
+                        var pickerTiemTow = chartUtils.getTimeOffset(picker.startDate.format('YYYY-MM-DD'), picker.endDate.format('YYYY-MM-DD'));
+                        var startTime = pickerTiemTow[0];
+                        var endTime = pickerTiemTow[0] + Math.abs(pickerTiemOne[1] - pickerTiemOne[0]);
+                        var dateTime = chartUtils.getSetOffTime(startTime, endTime);
+                        if(pickerTiemOne == 0){
+                            $('#choicetrange span').html(dateTime[0]);
+                            $('#choicetrange').data('daterangepicker').setStartDate(dateTime[0]);
+                            $('#choicetrange').data('daterangepicker').setEndDate(dateTime[0]);
+                        }else{
+                            $('#choicetrange span').html(dateTime[0] + "至" + dateTime[1]);
+                            $('#choicetrange').data('daterangepicker').setStartDate(dateTime[0]);
+                            $('#choicetrange').data('daterangepicker').setEndDate(dateTime[1]);
+                        }
+                    });
+                };
                 $('#choicetrange span').html("与其他时间段对比");
-//                scope.dateshows = true;
                 $('#choicetrange').daterangepicker({
                         format: 'YYYY-MM-DD',
                         maxDate: GetDateStr(0),
@@ -501,19 +516,13 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
 
 //grid_page
     app.directive("gridpage", function ($rootScope) {
-
         var option = {
             restrict: "EA",
-            templateUrl:'./grid_page/grid_page_qiantai.html',
-            transclude: true,
-            link: function (scope, element, attris, controller) {
-                scope.gridpages=[0,1,2,3,4,5,6,7,8];
-            }
+            template: "<div class=\"page\"><a ng-click=\"gridApi2.pagination.previousPage()\" ng-hide=\"gridApi2.pagination.getTotalPages()<=1\">上一页</a> <button type=\"button\" class=\"btn\"> {{ gridApi2.pagination.getPage() }}</button><a ng-click=\"gridApi2.pagination.nextPage()\" ng-hide=\"gridApi2.pagination.getTotalPages()<=1\">下一页 </a> <input type=\"text\" ng-model=\"page\" value=\"\"><span> /{{ gridApi2.pagination.getTotalPages() }}</span> <button type=\"button\" class=\"btn\" ng-click=\"pagego(gridApi2)\">跳转</button><span class='pageshow'>每页显示：</span> </div>",
+            transclude: true
         };
-        //console.log(gridApi2.pagination.seek);
         return option;
     });
-
     /**
      * Create by wms on 2015-04-22.合计信息显示
      */
@@ -1351,18 +1360,14 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                             $rootScope.$broadcast("updateSelectRowIndex", index);
                             return;
                         }
-                        if(e_r.sref=="#/transform/transformAnalysis"){
-                            e_r.showText = true;
-                            $rootScope.$broadcast("updateSelectRowIndex", index);
-                        }
+
                         if (e_r.sref == _path.substring(1, _path.substring(1).indexOf("/") + 1)) {
                             e_r.showText = true;
                             $rootScope.$broadcast("updateSelectRowIndex", index);
                         } else if (e_r.sref == _path.split("/")[2]) {
                             e_r.showText = true;
                             $rootScope.$broadcast("updateSelectRowIndex", index);
-                        }
-                        else {
+                        } else {
                             e_r.showText = false;
                         }
                     });
