@@ -60,13 +60,18 @@ define(["./module"], function (ctrs) {
                 name: "xl",
                 displayName: "",
                 cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
-                maxWidth: 10
+                maxWidth: 10,
+                enableSorting: false
             },
             {
-                name: "日期",
-                displayName: "日期",
+                name: "时间",
+                displayName: "时间",
                 field: "period",
-                footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                sort: {
+                    direction: uiGridConstants.ASC,
+                    priority: 0
+                }
             },
             {
                 name: "浏览量(PV)",

@@ -85,7 +85,7 @@ define(["../module"], function (app) {
         if (typeof($rootScope.checkedArray) != undefined && $rootScope.tableJu == "html") {
             $rootScope.gridOptions = {
                 paginationPageSize: 20,
-                paginationPageSizes: [2,20, 50, 100],
+                paginationPageSizes: [20, 50, 100],
                 expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
                 enableColumnMenus: false,
                 enablePaginationControls: true,
@@ -101,7 +101,7 @@ define(["../module"], function (app) {
         } else {
             $rootScope.gridOptions = {
                 paginationPageSize: 20,
-                paginationPageSizes: [2,20, 50, 100],
+                paginationPageSizes: [20, 50, 100],
                 expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
                 expandableRowHeight: 360,
                 enableColumnMenus: false,

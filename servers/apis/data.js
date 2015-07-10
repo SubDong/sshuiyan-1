@@ -19,6 +19,7 @@ var async = require("async");
 //var es_position = require('../services/es_position');
 var changeList_request = require("../services/changeList_request");
 var transform = require("../services/transform-request");
+var heaturl_request = require("../services/heaturl_request");
 
 api.get('/charts', function (req, res) {
     var query = url.parse(req.url, true).query, quotas = [], type = query['type'], dimension = query.dimension, filter = null, topN = [], userType = query.userType;
@@ -563,6 +564,67 @@ api.get("/heatmap", function (req, res) {
     //});
 });
 
+/**
+ * 跨域访问-获取热力图-表头数据
+ */
+api.get("/getHeatUrlDetailData", function (req, res) {
+
+    var _type =req.session.type;
+    var _rf = req.session.rf;
+    var _startTime = req.session.startTime;;
+    var _endTime = req.session.endTime;
+
+    var indexes = date.createIndexes(_startTime, _endTime, "access-");//indexs
+
+    res.write("disposeDetailDataCallback()");
+    res.end();
+
+});
+
+/**
+ * 跨域访问-获取热力图-表头数据
+ */
+api.get("/getHeatUrlHeaderData", function (req, res) {
+
+    var _type =req.session.type;
+    var _rf = req.session.rf;
+    var _startTime = req.session.startTime;;
+    var _endTime = req.session.endTime;
+
+    var indexes = date.createIndexes(_startTime, _endTime, "access-");//indexs
+
+    heaturl_request.searchPV(req.es, indexes, _type,_rf,function (result) {
+
+        res.write("disposeHeaderDataCallback("+JSON.stringify(result)+");");
+        res.end();
+    });
+});
+
+/**
+ * 热力图首页
+ */
+api.get("/heaturl", function (req, res) {
+
+    var query = url.parse(req.url, true).query;
+    var _type = query['type'];
+    var _rf = query['rf'];
+    var _startTime = Number(query['start']);
+    var _endTime = Number(query['end']);
+
+    req.session.startTime = _startTime;
+    req.session.endTime = _endTime;
+    req.session.type = _type;
+    req.session.rf = _rf;
+
+    var indexes = date.createIndexes(_startTime, _endTime, "access-");
+    heaturl_request.searchPV(req.es, indexes, _type,_rf,function (result) {
+
+        console.log(result);
+        datautils.send(res, result);
+    });
+
+});
+
 // ================================= Config  ===============================
 api.get("/config", function (req, res) {
 
@@ -705,6 +767,7 @@ api.get("/transform/transformAnalysis", function (req, res) {
     var end = parameters[1].split("=")[1];
     var action = parameters[2].split("=")[1];
     var type = parameters[3].split("=")[1];
+    var searchType = parameters[4].split("=")[1];
     var indexString = [];
     var time = [];
     if (start.substring(1, start.length).match("-") != null && end.substring(1, start.length).match("-") != null) {
@@ -714,22 +777,31 @@ api.get("/transform/transformAnalysis", function (req, res) {
         indexString = date.createIndexes(start, end, "access-");
         time = date.getConvertTimeByNumber(start, end);
     }
-    if (parameters.length <= 4) {
-        console.log(end);
+    if (searchType == "initAll") {
         transform.search(req.es, indexString, type, action, function (result) {
             datautils.send(res, result);
         })
-    } else {
-        var showType = parameters[4].split("=")[1];
-        var queryOptions = parameters[5].split("=")[1];
-        console.log(end);
+    } else if(searchType == "dataTable"){
+        var showType = parameters[5].split("=")[1];
+        var queryOptions = parameters[6].split("=")[1];
         var querys = [];
         var query = queryOptions.split(",");
         for (var i = 0; i < query.length; i++) {
             querys.push(queryOptions.split(",")[i]);
         }
-        console.log(querys.length)
+
         transform.searchByShowTypeAndQueryOption(req.es, indexString, type, action, showType, querys, function (result) {
+            datautils.send(res, result);
+        });
+    }else{
+        var queryOptions = parameters[5].split("=")[1];
+        var querys = [];
+        var query = queryOptions.split(",");
+        for (var i = 0; i < query.length; i++) {
+            querys.push(queryOptions.split(",")[i]);
+        }
+        console.log(querys)
+        transform.SearchPromotion(req.es, indexString, type, action, querys, function (result) {
             datautils.send(res, result);
         });
     }

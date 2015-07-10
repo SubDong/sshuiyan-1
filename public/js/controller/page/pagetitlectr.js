@@ -5,7 +5,7 @@ define(["./module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.directive('pagetitlectrRemoteValidation', function ( $cookieStore,$http) {
+    ctrs.directive('pagetitlectrRemoteValidation', function ( $cookieStore,$http,uiGridConstants) {
         return {
             require: 'ngModel',
             link: function (scope, elm, attrs, ctrl) {
@@ -32,19 +32,6 @@ define(["./module"], function (ctrs) {
     ctrs.controller('pagetitlectr', function ($cookieStore,$scope, areaService, $http, $rootScope, ngDialog, $state) {
 
 
-        $scope.load = function() {
-
-            $scope.dialog_page_title = angular.copy($scope.page_title_model);
-            $scope.dialog_page_title.uid = $cookieStore.get("uid");//uid 设置
-            $scope.dialog_page_title.site_id = $rootScope.siteId;//site_id设置
-
-        }
-
-        //对象-对话框
-        $scope.urlDialog = null;
-
-        //前台录入的路径
-        $scope.pageUrl = "";
 
         $scope.page_title_model = {
             uid: "",
@@ -54,6 +41,17 @@ define(["./module"], function (ctrs) {
             create_date: new Date().Format("yyyy-MM-dd hh:mm:ss"),
             is_open: true
         };
+        $scope.dialog_page_title = angular.copy($scope.page_title_model);
+        $scope.dialog_page_title.uid = $cookieStore.get("uid");//uid 设置
+        $scope.dialog_page_title.site_id = $rootScope.siteId;//site_id设置
+
+
+        //对象-对话框
+        $scope.urlDialog = null;
+
+        //前台录入的路径
+        $scope.pageUrl = "";
+
 
 
 
@@ -64,19 +62,22 @@ define(["./module"], function (ctrs) {
                 name: "xl",
                 displayName: "",
                 cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
-                maxWidth: 5
+                maxWidth: 5,
+                enableSorting: false
             },
             {
                 name: "热力图URL",
                 displayName: "热力图URL",
                 field: "page_url",
-                footerCellTemplate: "<div class='ui-grid-cell-contents'>热力图URL</div>"
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>热力图URL</div>",
+                enableSorting: false
             },
             {
                 name: "图标名称",
                 displayName: "图标名称",
                 field: "icon_name",
-                footerCellTemplate: "<div class='ui-grid-cell-contents'>图标名称</div>"
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>图标名称</div>",
+                enableSorting: false
             },
 
 
@@ -85,21 +86,24 @@ define(["./module"], function (ctrs) {
                 name: "x1",
                 displayName: "",
                 cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.openHeatUrl(row.entity)'>查看链接点击图</a></div>",
-                maxWidth: 120
+                maxWidth: 120,
+                enableSorting: false
             },
 
             {
                 name: "x2",
                 displayName: "",
                 cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.operationStatus(row.entity)'>{{row.entity.is_open == true ? '启动':'暂停' }}</a></div>",
-                maxWidth: 80
+                maxWidth: 80,
+                enableSorting: false
             },
             {
                 name: "x3",
                 displayName: "",
                 // grid.appScope.Delete(row, grid.options.data)
                 cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.deleteDialog(row.entity)'>删除</a></div>",
-                maxWidth: 150
+                maxWidth: 150,
+                enableSorting: false
             }
         ];
 
@@ -135,9 +139,11 @@ define(["./module"], function (ctrs) {
         /**操作-新窗口下开启地址*/
         $scope.openHeatUrl = function (entity) {
 
-            entity.page_url;
 
-            $state.go('heaturl',{ 'id':entity._id});
+
+            $state.go('heaturl',{ 'rf':entity.page_url});
+
+            //window.open("http://localhost:8000/page/heaturl.html");
 
             //window.open("http://www.jb51.net");
         }
@@ -193,6 +199,10 @@ define(["./module"], function (ctrs) {
 
         //操作-查询
         $scope.searchGridData = function () {
+
+            if($scope.dialog_page_title.uid == undefined) {
+                $scope.dialog_page_title.uid = $cookieStore.get("uid");//uid
+            }
             var uid = $scope.dialog_page_title.uid;
             var root_url = $scope.dialog_page_title.site_id;
             var page_url = $scope.pageUrl;
@@ -215,6 +225,11 @@ define(["./module"], function (ctrs) {
 
         //操作-初始化
         $scope.refushGridData = function () {
+
+            if($scope.dialog_page_title.uid == undefined) {
+                $scope.dialog_page_title.uid = $cookieStore.get("uid");//uid
+            }
+
             var uid = $scope.dialog_page_title.uid;
             var root_url = $scope.dialog_page_title.site_id;
             var url = "/config/page_title?type=search&query={\"uid\":\"" + uid + "\",\"site_id\":\"" + root_url + "\"}";
@@ -226,8 +241,6 @@ define(["./module"], function (ctrs) {
 
             });
         };
-        $scope.load();
-
         $scope.refushGridData();
 
 
@@ -278,7 +291,7 @@ define(["./module"], function (ctrs) {
             var qryjson = {
                 uid: $scope.dialog_page_title.uid,
                 site_id: $scope.dialog_page_title.site_id,
-                page_url: $scope.dialog_page_title.page_url,
+                page_url: $scope.dialog_page_title.page_url
             }
             var query = "/config/page_title?type=search&query=" + JSON.stringify(qryjson);
             //console.log(query);
@@ -348,7 +361,7 @@ define(["./module"], function (ctrs) {
             var qryjson = {
                 uid: $scope.dialog_page_title.uid,
                 site_id: $scope.dialog_page_title.site_id,
-                page_url: $scope.dialog_page_title.page_url,
+                page_url: $scope.dialog_page_title.page_url
             }
             var query = "/config/page_title?type=search&query=" + JSON.stringify(qryjson);
             //console.log(query);

@@ -607,16 +607,14 @@ var ipFn = function (result, dimension) {
 var avgPageFn = function (result, dimension) {
     var keyArr = [];
     var quotaArr = [];
-
     for (var i = 0, l = result.length; i < l; i++) {
         var pv = result[i].pv_aggs.value;
-        var uv = result[i].vc_aggs.value;
+        var uv = result[i].vc_aggs.vc_aggs.value;
         keyArr.push(result[i].key);
-
         var avgPage = 0;
-        if (uv > 0)
+        if (uv > 0) {
             avgPage = (parseFloat(pv) / parseFloat(uv)).toFixed(2);
-
+        }
         quotaArr.push(avgPage);
     }
 

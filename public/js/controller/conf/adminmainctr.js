@@ -57,18 +57,18 @@ define(["./module"], function (ctrs) {
         };
         //table配置
         $rootScope.adminSetHtml = "<div class='mid_left'> <div class=\"ngdialog-tilte\">复制代码</div ><div class='copycode_content'><div id='base_code' class='mid_left_code'>" +
-            "&lt;script&gt;\<br\>" +
-            "var _pct= _pct|| [];\<br\>" +
-            " (function() {\<br\>" +
-            "   var hm = document.createElement(\"script\");\<br\>" +
-            "   hm.src = \"//t.best-ad.cn/t.js?tid=ex_track_id\";\<br\>" +
-            "   var s = document.getElementsByTagName(\"script\")[0];\<br\>" +
-            "    s.parentNode.insertBefore(hm, s);\<br\>" +
-            " })();\<br\>" +
-            "&lt;/script&gt;" +
-            "</div> <div class='mid_right'><button type='button' class='btn btn-default navbar-btn' ssh-clip=''  data-clipboard-target='base_code'>复制</div></button><ul type='disc'>" +
-            "  <li>请将代码添加至网站全部页面的&lt;/head&gt;标签前；</li><li>建议在header.htm类似的页头模板页面中安装，以达到一处安装，全站皆有的效果；</li><li>如需在JS文件中调用统计分析代码，请直接去掉以下代码首尾的&lt;script type='text/javascript' &gt;与&lt;/script&gt;后，放入JS文件中即可；</li>" +
-            "<li> 如果代码安装正确，一般20分钟 后,可以查看网站分析数据；</li></ul></div></div>";
+        "&lt;script&gt;\<br\>" +
+        "var _pct= _pct|| [];\<br\>" +
+        " (function() {\<br\>" +
+        "   var hm = document.createElement(\"script\");\<br\>" +
+        "   hm.src = \"//t.best-ad.cn/t.js?tid=ex_track_id\";\<br\>" +
+        "   var s = document.getElementsByTagName(\"script\")[0];\<br\>" +
+        "    s.parentNode.insertBefore(hm, s);\<br\>" +
+        " })();\<br\>" +
+        "&lt;/script&gt;" +
+        "</div> <div class='mid_right'><button type='button' class='btn btn-default navbar-btn' ssh-clip=''  data-clipboard-target='base_code'>复制</div></button><ul type='disc'>" +
+        "  <li>请将代码添加至网站全部页面的&lt;/head&gt;标签前；</li><li>建议在header.htm类似的页头模板页面中安装，以达到一处安装，全站皆有的效果；</li><li>如需在JS文件中调用统计分析代码，请直接去掉以下代码首尾的&lt;script type='text/javascript' &gt;与&lt;/script&gt;后，放入JS文件中即可；</li>" +
+        "<li> 如果代码安装正确，一般20分钟 后,可以查看网站分析数据；</li></ul></div></div>";
 
 
         //配置默认指标
@@ -81,30 +81,34 @@ define(["./module"], function (ctrs) {
                 name: "xl",
                 displayName: "",
                 cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
-                maxWidth: 5
+                maxWidth: 5,
+                enableSorting: false
             },
-            {name: "网站域名", displayName: "网站域名", field: "site_url", maxWidth: '', cellClass: 'table_admin'},
+            {name: "网站域名", displayName: "网站域名", field: "site_url", maxWidth: '', cellClass: 'table_admin', enableSorting: false},
 
-            {name: "网站名称", displayName: "网站名称", field: "site_name", maxWidth: '', cellClass: 'table_admin_color'},
+            {name: "网站名称", displayName: "网站名称", field: "site_name", maxWidth: '', cellClass: 'table_admin_color', enableSorting: false},
             {
                 name: "首页代码状态",
                 displayName: "首页代码状态",
                 field: "track_status_ch",
                 maxWidth: 500,
-                cellClass: 'table_admin_color'
+                cellClass: 'table_admin_color',
+                enableSorting: false
             },
             {
                 name: "x7",
                 displayName: "",
                 cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.gain(index,grid,row)'>" +
                 "获取代码<span class='glyphicon glyphicon-file'></span></a></div>",
-                maxWidth: 100
+                maxWidth: 100,
+                enableSorting: false
             },
             {
                 name: "x2",
                 displayName: "",
                 cellTemplate: "<div class='table_admin'><a href='/#index'>查看网站概览</a></div>",
-                maxWidth: 100
+                maxWidth: 100,
+                enableSorting: false
             },
             {
                 name: "x3",
@@ -118,27 +122,31 @@ define(["./module"], function (ctrs) {
                 "<li><a href='#conf/webcountsite/timechange'>设置市场转化目标</a></li>" +
                 " <li><a href='#conf/webcountsite/adtrack'>设置指定广告跟踪</a></li>" +
                 "</ul> </div>",
-                maxWidth: 80
+                maxWidth: 80,
+                enableSorting: false
             },
             {
                 name: "x4",
                 displayName: "",
                 cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.stop(index,grid,row)'>{{grid.appScope.x4Text(row)}}</a></div>",
-                maxWidth: 80
+                maxWidth: 80,
+                enableSorting: false
             },
             {
                 name: "x5",
                 displayName: "",
                 // grid.appScope.Delete(row, grid.options.data)
                 cellTemplate: "<div class='table_admin'><a href='' ng-click='grid.appScope.onDelete(index,grid,row)' >删除</a></div>",
-                maxWidth: 80
+                maxWidth: 80,
+                enableSorting: false
             },
             {
                 name: "x6",
                 displayName: "",
                 // grid.appScope.Delete(row, grid.options.data)
                 cellTemplate: "<div class='table_admin'><a href='' ng-click='grid.appScope.onUpdate(index,grid,row)' >修改</a></div>",
-                maxWidth: 80
+                maxWidth: 80,
+                enableSorting: false
             }
 
         ];

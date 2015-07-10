@@ -5,7 +5,7 @@ define(["./module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.controller('pageTransformCtr', function ($scope, $rootScope, $q, requestService, areaService, $http, SEM_API_URL) {
+    ctrs.controller('pageTransformCtr', function ($scope, $rootScope, $q, requestService, areaService, $http, SEM_API_URL,uiGridConstants) {
             $scope.city.selected = {"name": "全部"};
             $scope.todayClass = true;
             $rootScope.tableTimeStart = -1;//开始时间
@@ -40,25 +40,32 @@ define(["./module"], function (ctrs) {
                     name: "xl",
                     displayName: "",
                     cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
-                    maxWidth: 10
+                    maxWidth: 10,
+                    enableSorting: false
                 },
                 {
                     name: "名称",
                     displayName: "名称",
                     field: "campaignName",
                     cellTemplate: "<div><a href='javascript:void(0)' style='color:#0965b8;line-height:30px' ng-click='grid.appScope.getHistoricalTrend(this)'>{{grid.appScope.getDataUrlInfo(grid, row,3)}}</a></div>"
-                    , footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"
+                    , footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                    enableSorting: false
                 },
                 {
                     name: " ",
-                    cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='javascript:void(0)' ng-click='grid.appScope.showEntryPageLink(row, 1)'>查看入口页链接</a></li></ul></div></div>"
+                    cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='javascript:void(0)' ng-click='grid.appScope.showEntryPageLink(row, 1)'>查看入口页链接</a></li></ul></div></div>",
+                    enableSorting: false
                     // cellTemplate:" <button popover-placement='right' popover='On the Right!' class='btn btn-default'>Right</button>"
                 },
                 {
                     name: "浏览量",
                     displayName: "浏览量",
                     field: "cost",
-                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>",
+                    sort: {
+                        direction: uiGridConstants.ASC,
+                        priority: 0
+                    }
                 },
                 {
                     name: "访客数",

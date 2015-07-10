@@ -4,10 +4,10 @@
 define(["./module"], function (ctrs) {
     "use strict";
 
-    ctrs.controller('ad_track', function ($scope, $rootScope, $cookieStore, $http,ngDialog) {
+    ctrs.controller('ad_track', function ($scope, $rootScope, $cookieStore, $http, ngDialog) {
 
         //配置默认指标
-        $rootScope.checkedArray = ["_uid","uid", "type_id", "track_id", "targetUrl", "mediaPlatform", "adTypes", "planName", "keywords", "creative","produceUrl"];
+        $rootScope.checkedArray = ["_uid", "uid", "type_id", "track_id", "targetUrl", "mediaPlatform", "adTypes", "planName", "keywords", "creative", "produceUrl"];
         $rootScope.gridArray = {
             paginationPageSize: 20,
             paginationPageSizes: [20, 50, 100],
@@ -15,7 +15,7 @@ define(["./module"], function (ctrs) {
             expandableRowHeight: 360,
             enableColumnMenus: false,
             enablePaginationControls: true,
-            enableSorting: true,
+            enableSorting: false,
             enableGridMenu: false,
             enableHorizontalScrollbar: 0,
             onRegisterApi: function (girApi) {
@@ -23,7 +23,12 @@ define(["./module"], function (ctrs) {
                 //adminGriApihtml(girApi);
             },
             columnDefs: [
-                {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>", maxWidth: 5},
+                {
+                    name: "xl",
+                    displayName: "",
+                    cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
+                    maxWidth: 5
+                },
                 {name: "目标URL", displayName: "目标URL", field: "targetUrl"},
                 {name: "媒体平台", displayName: "媒体平台", field: "mediaPlatform"},
                 {name: "广告类型", displayName: "广告类型", field: "adTypes"},
@@ -35,14 +40,16 @@ define(["./module"], function (ctrs) {
                     displayName: "",
                     cellTemplate: "<div ng-click='grid.appScope.onViewUrl(index,grid,row)'><a href=''>查看生成的URL</a></div>",
                     maxWidth: 110,
-                    cellClass: 'table_admin'
+                    cellClass: 'table_admin',
+                    enableSorting: false
                 },
                 {
                     name: "x2",
                     displayName: "",
                     cellTemplate: "<div ng-click='grid.appScope.onDelete(index,grid,row)'><a href='' ng-click='onDelete()'>删除</a></div>",
                     maxWidth: 50,
-                    cellClass: 'table_admin'
+                    cellClass: 'table_admin',
+                    enableSorting: false
                 }
 
             ],
@@ -55,8 +62,8 @@ define(["./module"], function (ctrs) {
          * @param grid
          * @param row
          */
-        $scope.onDelete = function (index,grid,row) {
-            $scope.onDeleteDialog= ngDialog.open({
+        $scope.onDelete = function (index, grid, row) {
+            $scope.onDeleteDialog = ngDialog.open({
                 template: '' +
                 '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div><ul class="admin-ng-content" ><li> 确认删除这条广告跟踪吗？</li></ul>' +
                 ' <div class="ng-button-div"><button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
@@ -67,9 +74,9 @@ define(["./module"], function (ctrs) {
             });
 
             //刪除
-            $scope.sureonDelete= function(){
+            $scope.sureonDelete = function () {
                 $scope.onDeleteDialog.close();
-                var query = "/config/adtrack?type=delete&query={\"_id\":\"" + row.entity._id +  "\"}";
+                var query = "/config/adtrack?type=delete&query={\"_id\":\"" + row.entity._id + "\"}";
                 $http({method: 'GET', url: query}).success(function (dataConfig, status) {
                     if (dataConfig == "\"remove\"") {
                         $scope.refushGridData();
@@ -81,9 +88,9 @@ define(["./module"], function (ctrs) {
         /**
          * 批量刪除
          */
-        $scope.deleteAll = function (index,grid,row) {
+        $scope.deleteAll = function (index, grid, row) {
 
-            $scope.onDeleteDialog= ngDialog.open({
+            $scope.onDeleteDialog = ngDialog.open({
                 template: '' +
                 '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div><ul class="admin-ng-content" ><li>您想批量删除已选择的指定广告跟踪吗？</li></ul>' +
                 ' <div class="ng-button-div"><button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
@@ -93,12 +100,12 @@ define(["./module"], function (ctrs) {
                 scope: $scope
             });
 
-            $scope.batchDelete = function(){
+            $scope.batchDelete = function () {
                 var choiceAll = $scope.gridApiAdmin.selection.getSelectedRows();
-                for(var i=0; i<choiceAll.length; i++){
+                for (var i = 0; i < choiceAll.length; i++) {
                     var val = choiceAll[i]._id;
                     $scope.onDeleteDialog.close();
-                    var query = "/config/adtrack?type=delete&query={\"_id\":\"" + val +  "\"}";
+                    var query = "/config/adtrack?type=delete&query={\"_id\":\"" + val + "\"}";
                     $http({method: 'GET', url: query}).success(function (dataConfig, status) {
                         if (dataConfig == "\"remove\"") {
                             $scope.refushGridData();
@@ -128,19 +135,19 @@ define(["./module"], function (ctrs) {
          * @param grid
          * @param row
          */
-        $scope.onViewUrl=function(index,grid,row){
-           var thtml= $rootScope.urlDialogHtml.replace("produceUrl", row.entity.produceUrl);
+        $scope.onViewUrl = function (index, grid, row) {
+            var thtml = $rootScope.urlDialogHtml.replace("produceUrl", row.entity.produceUrl);
             //col
             $scope.urlDialog = ngDialog.open({
-                template:thtml,
+                template: thtml,
                 className: 'ngdialog-theme-default admin_ngdialog',
                 plain: true,
-                scope : $scope
+                scope: $scope
             });
         };
         $rootScope.urlDialogHtml = "<div class='mid_left'><div class=\"ngdialog-tilte\">生成URL</div ><div class='admin-ng-content'><div id='base_code' class='mid_left_code'>produceUrl</div> " +
         "<div class='mid_right'><button type='button' class='btn btn-default navbar-btn' ssh-clip='' data-clipboard-target='base_code'>复制</button><ul type='disc'>" +
-            "  <li style='color：red；'>请将生成的URL复制到你的其他媒介的推广目标URL位置</li></ul></div></div>";
+        "  <li style='color：red；'>请将生成的URL复制到你的其他媒介的推广目标URL位置</li></ul></div></div>";
 
     });
 });

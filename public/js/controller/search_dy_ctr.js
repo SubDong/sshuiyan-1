@@ -5,7 +5,7 @@ define(["./module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.controller('search_dy_ctr', function ($scope, $rootScope, $q, requestService, areaService, $http, SEM_API_URL) {
+    ctrs.controller('search_dy_ctr', function ($scope, $rootScope, $q, requestService, areaService, $http, SEM_API_URL,uiGridConstants) {
         $scope.city.selected = {"name": "全部"};
         //        高级搜索提示
         $scope.areaSearch = "";
@@ -26,14 +26,16 @@ define(["./module"], function (ctrs) {
                 name: "xl",
                 displayName: "",
                 cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
-                maxWidth: 10
+                maxWidth: 10,
+                enableSorting: false
             },
             {
                 name: "单元",
                 displayName: "单元",
                 field: "adgroupName",
                 cellTemplate: "<div><a href='javascript:void(0)' style='color:#0965b8;line-height:30px;' ng-click='grid.appScope.getHistoricalTrend(this)'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</div>",
-                footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                enableSorting: false
             }, /*
              {
              name: " ",
@@ -44,7 +46,11 @@ define(["./module"], function (ctrs) {
                 name: "展现",
                 displayName: "展现",
                 field: "impression",
-                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>",
+                sort: {
+                    direction: uiGridConstants.DESC,
+                    priority: 1
+                }
             },
             {
                 name: "消费",

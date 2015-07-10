@@ -28,23 +28,30 @@ define(["./module"], function (ctrs) {
                 name: "xl",
                 displayName: "",
                 cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
-                maxWidth: 10
+                maxWidth: 10,
+                enableSorting: false
             },
             {
                 name: "外部连接",
                 displayName: "外部连接",
                 field: "rf",
-                footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                enableSorting: false
             },
             {
                 name: " ",
-                cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history7' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='javascript:void(0)' ng-click='grid.appScope.showEntryPageLink(row)'>查看入口页链接</a></li></ul></div></div>"
+                cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history7' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='javascript:void(0)' ng-click='grid.appScope.showEntryPageLink(row)'>查看入口页链接</a></li></ul></div></div>",
+                enableSorting: false
             },
             {
                 name: "访客数(UV)",
                 displayName: "访客数(UV)",
                 field: "uv",
-                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>",
+                sort: {
+                    direction: uiGridConstants.DESC,
+                    priority: 1
+                }
             },
             {
                 name: "新访客数",

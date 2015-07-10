@@ -5,7 +5,7 @@ define(["./module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.controller('equipmentctr', function ($scope, $rootScope, $q, $http, requestService, areaService, $location) {
+    ctrs.controller('equipmentctr', function ($scope, $rootScope, $q, $http, requestService, areaService, $location,uiGridConstants) {
         //客户端属性初始化
         $scope.equipment.selected = {"name": "网络设备类型", "field": "pm"};
         if($location.url().split("?").length>1) {
@@ -35,19 +35,25 @@ define(["./module"], function (ctrs) {
                 name: "xl",
                 displayName: "",
                 cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
-                maxWidth: 10
+                maxWidth: 10,
+                enableSorting: false
             },
             {
                 name: "网络设备类型",
                 displayName: "网络设备类型",
                 field: "pm",
-                footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                enableSorting: false
             },
             {
                 name: "浏览量(PV)",
                 displayName: "浏览量(PV)",
                 field: "pv",
-                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>",
+                sort: {
+                    direction: uiGridConstants.DESC,
+                    priority: 1
+                }
             },
             {
                 name: "访客数(UV)",
@@ -59,7 +65,8 @@ define(["./module"], function (ctrs) {
                 name: "IP数",
                 displayName: "IP数",
                 field: "ip",
-                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>",
+                enableSorting: false
             },
             {
                 name: "跳出率",

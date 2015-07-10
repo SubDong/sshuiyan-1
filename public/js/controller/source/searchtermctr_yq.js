@@ -5,12 +5,12 @@ define(["./module"], function (ctrs) {
 
     'use strict';
 
-    ctrs.controller('searchtermctr_yq', function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants,popupService) {
+    ctrs.controller('searchtermctr_yq', function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants, popupService) {
             //        高级搜索提示显示
             $scope.terminalSearch = "";
             $scope.areaSearch = "";
 //        取消显示的高级搜索的条件
-            $scope.removeTerminalSearch = function(obj){
+            $scope.removeTerminalSearch = function (obj) {
                 $rootScope.$broadcast("loadAllTerminal");
                 obj.terminalSearch = "";
             }
@@ -33,19 +33,25 @@ define(["./module"], function (ctrs) {
                     name: "xl",
                     displayName: "",
                     cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
-                    maxWidth: 10
+                    maxWidth: 10,
+                    enableSorting: false
                 },
                 {
                     name: "搜索词",
                     displayName: "搜索词",
                     field: "word",
-                    footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"
+                    footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                    enableSorting: false
                 },
                 {
                     name: "总搜索次数",
                     displayName: "总搜索次数",
                     field: "freq",
-                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>",
+                    sort: {
+                        direction: uiGridConstants.DESC,
+                        priority: 1
+                    }
                 },
                 {
                     name: "百度",
@@ -143,7 +149,7 @@ define(["./module"], function (ctrs) {
 
             //刷新
             $scope.page_refresh = function () {
-                $rootScope.start =0;
+                $rootScope.start = 0;
                 $rootScope.end = 0;
                 $rootScope.tableTimeStart = 0;
                 $rootScope.tableTimeEnd = 0;

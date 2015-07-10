@@ -1,5 +1,6 @@
 
 <script type="text/javascript" src="../js/heaturl/heaturl.js"></script>
+
 <div class="middle_containers" ng-controller="heaturlctr">
     <style type="text/css">
         .tab-content {
@@ -20,18 +21,37 @@
             height: 100%;
             width: 100%;
         }
-
-
-
     </style>
     <div class="date_select">
-        <p>热力图和链接点击图提供最近30天查询功能，数据从11月1日开始计算。</p>
+        <div class="btn-group fl" role="group" aria-label="First group">
+
+            <button class="btn btn-default" type="button" ng-click="yesterday()" ng-class="{'current':yesterdayClass}">
+                昨天
+            </button>
+            <button type="button" ng-click="beforeyesterday()" ng-class="{'current':beforeyesterdayClass}"
+                    class="btn btn-default">前天
+            </button>
+            <button class="btn btn-default" type="button" ng-click="sevenDay()" ng-class="{'current':sevenDayClass}">
+                最近7天
+            </button>
+            <button class="btn btn-default" type="button" ng-click="month()" ng-class="{'current':monthClass}">最近30天
+            </button>
+            <button id="reportrange" class="btn btn-default pull-right date-picker my_picker" ng-click='timeclick()'
+                    ng-hide="datechoice" ng-class="{'current':timeClass}" max="max" ng-model="date">
+                <i class="glyphicon glyphicon-calendar fa fa-calendar"></i><span></span></button>
+
+            &nbsp;&nbsp;
+                <span >浏览量：{{pv}}</span>&nbsp;&nbsp;|&nbsp;&nbsp;
+                <span >页面点击：{{hits}}</span>&nbsp;&nbsp;|&nbsp;&nbsp;
+
+        </div>
+
     </div>
 
     <div id="div_iframe" width="100%" height="100%" >
 
 
-        <iframe id="iframe111" frameborder="0"  height="1000px"  width="100%">
+        <iframe id="foreign_iframe" frameborder="0"  height="1000px"  width="100%">
         </iframe>
 
 

@@ -5,7 +5,7 @@ define(["./module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.controller('search_cy_ctr', function ($scope, $rootScope, $q, requestService, areaService, $http, SEM_API_URL) {
+    ctrs.controller('search_cy_ctr', function ($scope, $rootScope, $q, requestService, areaService, $http, SEM_API_URL,uiGridConstants) {
         $scope.city.selected = {"name": "全部"};
         //        高级搜索提示
         $scope.areaSearch = "";
@@ -26,20 +26,26 @@ define(["./module"], function (ctrs) {
                 name: "xl",
                 displayName: "",
                 cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
-                maxWidth: 10
+                maxWidth: 10,
+                enableSorting: false
             },
             {
                 name: "创意",
                 displayName: "创意",
                 field: "description1",
                 cellTemplate: "<div class='search_table_box'><a href='http://{{grid.appScope.getDataUrlInfo(grid, row, 6)}}' target='_blank' style='color:#0965b8;line-height:30px;'>{{grid.appScope.getDataUrlInfo(grid, row,5)}}</a><span>{{grid.appScope.getDataUrlInfo(grid, row,4)}}</span><span class='search_table_color'>{{grid.appScope.getDataUrlInfo(grid, row,6)}}</span>"
-                , footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"
+                , footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                enableSorting: false
             },
             {
                 name: "展现",
                 displayName: "展现",
                 field: "impression",
-                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>",
+                sort: {
+                    direction: uiGridConstants.DESC,
+                    priority: 1
+                }
             },
             {
                 name: "消费",

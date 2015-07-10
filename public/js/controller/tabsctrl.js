@@ -5,10 +5,11 @@ define(["app"], function (app) {
 
     "use strict";
 
-    app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, requestService, SEM_API_URL, $cookieStore, $location, popupService) {
+    app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, requestService, SEM_API_URL, $cookieStore, $location, popupService, uiGridConstants) {
         $scope.todayClass = true;
         $scope.browserselect = true;
         var user = $rootScope.user;
+        $scope.sortType = 'name';
         var baiduAccount = $rootScope.baiduAccount;
         var esType = $rootScope.userType;
         var trackid = $rootScope.siteTrackId;
@@ -30,14 +31,14 @@ define(["app"], function (app) {
             {consumption_name: "访问次数", name: "vc"},
             {consumption_name: "访客数(UV)", name: "uv"},
             {consumption_name: "新访客数", name: "nuv"},
-            {consumption_name: "新访客比率", name: "nuvRate"},
+            {consumption_name: "新访客比率", name: "nuvRate"}
             //{consumption_name: "页头访问次数", name: "o1"}
         ];
         $scope.flow = [
             {consumption_name: "跳出率", name: "outRate"},
             {consumption_name: "平均访问时长", name: "avgTime"},
             {consumption_name: "平均访问页数", name: "avgPage"},
-            {consumption_name: "抵达率", name: "arrivedRate"},
+            {consumption_name: "抵达率", name: "arrivedRate"}
         ];
         $scope.transform = [
             {consumption_name: "转化次数", name: "m1"},
@@ -45,7 +46,7 @@ define(["app"], function (app) {
             {consumption_name: "平均转化成本", name: "m3"},
             {consumption_name: "收益", name: "m4"},
             {consumption_name: "利润", name: "m5"},
-            {consumption_name: "投资回报率", name: "m6"},
+            {consumption_name: "投资回报率", name: "m6"}
         ];
         $scope.mobile = [
             {consumption_name: "搜索页直拨电话展现", name: "v1"},
@@ -59,7 +60,7 @@ define(["app"], function (app) {
             {consumption_name: "搜索页回呼电话消费", name: "v9"},
             {consumption_name: "搜索页APP下载展现", name: "b1"},
             {consumption_name: "搜索页APP下载点击", name: "b2"},
-            {consumption_name: "搜索页APP下载消费", name: "b3"},
+            {consumption_name: "搜索页APP下载消费", name: "b3"}
         ];
         $scope.recall = [
             {consumption_name: "电话量", name: "z7"},
@@ -82,7 +83,7 @@ define(["app"], function (app) {
         $scope.Todayfloweds = [
             {consumption_name: "跳出率", name: "outRate"},
             {consumption_name: "平均访问时长", name: "avgTime"},
-            {consumption_name: "平均访问页数", name: "avgPage"},
+            {consumption_name: "平均访问页数", name: "avgPage"}
         ];
         $scope.Order = [
             {consumption_name: "订单数", name: "q4"},
@@ -97,7 +98,7 @@ define(["app"], function (app) {
             //{consumption_name: "贡献浏览量", name: "q9"},
             {consumption_name: "跳出率", name: "outRate"},
             {consumption_name: "平均访问时长", name: "avgTime"},
-            {consumption_name: "平均访问页数", name: "avgPage"},
+            {consumption_name: "平均访问页数", name: "avgPage"}
         ];
         $scope.Mapwebbase = [
             {consumption_name: "浏览量(PV)", name: "pv"},
@@ -157,29 +158,42 @@ define(["app"], function (app) {
                     name: "xl",
                     displayName: "",
                     cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
-                    maxWidth: 10
+                    maxWidth: 10,
+                    enableSorting: false
                 },
-                {name: '地域', displayName: "地域", field: "city"},
-                {name: '访问时间', displayName: "访问时间", field: "visitTime"},
+                {
+                    name: '地域', displayName: "地域", field: "city",
+                    enableSorting: false
+                },
+                {
+                    name: '访问时间', displayName: "访问时间", field: "visitTime",
+                    sort: {
+                        direction: uiGridConstants.ASC,
+                        priority: 0
+                    }
+                },
                 {
                     name: '来源',
                     displayName: "来源",
                     field: "referrer",
-                    cellTemplate: "<a href='{{grid.appScope.getDataUrlInfo(grid, row,1)}}' title='{{grid.appScope.getDataUrlInfo(grid, row,1)}}' target='_blank' style='color:#0965b8;line-height:30px; display:block; padding:0 10px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;}'>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</a>"
+                    cellTemplate: "<a href='{{grid.appScope.getDataUrlInfo(grid, row,1)}}' title='{{grid.appScope.getDataUrlInfo(grid, row,1)}}' target='_blank' style='color:#0965b8;line-height:30px; display:block; padding:0 10px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;}'>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</a>",
+                    enableSorting: false
                 },
                 {
                     name: '入口页面', displayName: "入口页面", field: "entrance", cellTooltip: function (row, col) {
                     return row.entity.entrance;
-                }
                 },
-                {name: '关键词', displayName: "关键词", field: "keyword"},
-                {name: '搜索词', displayName: "搜索词", field: "searchWord"},
-                {name: '搜索带来', displayName: "搜索带来", field: "isPromotion"},
-                {name: "访问IP", displayName: "访问IP", field: "ip"},
+                    enableSorting: false
+                },
+                {name: '关键词', displayName: "关键词", field: "keyword", enableSorting: false},
+                {name: '搜索词', displayName: "搜索词", field: "searchWord", enableSorting: false},
+                {name: '搜索带来', displayName: "搜索带来", field: "isPromotion", enableSorting: false},
+                {name: "访问IP", displayName: "访问IP", field: "ip", enableSorting: false},
                 {
                     name: '访客标识码', displayName: "访客标识码", field: "vid", cellTooltip: function (row, col) {
                     return row.entity.vid;
-                }
+                },
+                    enableSorting: false
                 },
                 {name: "访问时长", displayName: "访问时长", field: "totalTime"},
                 {name: "访问页数", displayName: "访问页数", field: "viewPages"}];
@@ -293,7 +307,7 @@ define(["app"], function (app) {
                 paginationPageSize: today != -1 || yesterday != -1 || month != -1 ? 24 : 20,
                 expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
                 //expandableRowHeight: 360,
-                paginationPageSizes: [4,5,6, 50, 100],
+                paginationPageSizes: [20, 50, 100],
                 enableColumnMenus: false,
                 showColumnFooter: true,
                 enablePaginationControls: true,
@@ -311,7 +325,7 @@ define(["app"], function (app) {
                 paginationPageSize: today != -1 || yesterday != -1 || month != -1 ? 24 : 20,
                 expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
                 //expandableRowHeight: 360,
-                paginationPageSizes: [4,5,6, 50, 100],
+                paginationPageSizes: [20, 50, 100],
                 enableColumnMenus: false,
                 showColumnFooter: true,
                 enablePaginationControls: true,
@@ -382,12 +396,13 @@ define(["app"], function (app) {
             };
             if (a == 1) {
                 $rootScope.tableSwitch.tableFilter = "[{\"pm\":[0]}]";
-                $scope.terminalSearch="计算机";
+                $scope.terminalSearch = "计算机";
             }
             if (a == 2) {
                 $rootScope.tableSwitch.tableFilter = "[{\"pm\":[1]}]";
-                $scope.terminalSearch="移动设备";
-            };
+                $scope.terminalSearch = "移动设备";
+            }
+            ;
             $scope.isJudge = false;
             if ($scope.tableJu == "html") {
                 if (a == 0) $rootScope.tableSwitch.tableFilter = null;
@@ -473,15 +488,15 @@ define(["app"], function (app) {
                 $rootScope.tableSwitch.tableFilter = null;
                 $scope.sourceSearch = "";
             };
-            if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[1]}]",$scope.sourceSearch = "直接访问";
-            if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[2]}]",$scope.sourceSearch = "搜索引擎";
+            if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[1]}]", $scope.sourceSearch = "直接访问";
+            if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[2]}]", $scope.sourceSearch = "搜索引擎";
             if (a == 2) {
                 $scope.browserselect = false;
             }
             else {
                 $scope.browserselect = true;
             }
-            if (a == 3) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[3]}]",$scope.sourceSearch = "外部链接";
+            if (a == 3) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[3]}]", $scope.sourceSearch = "外部链接";
 
             if ($scope.tableJu == "html") {
                 if (a == 0) $rootScope.tableSwitch.tableFilter = null;
@@ -866,7 +881,7 @@ define(["app"], function (app) {
             $scope.gridOptions.columnDefs = $scope.gridOpArray;
             $scope.gridOptions.rowHeight = 32;
             //if (isClicked) {
-                $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
+            $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
             //}
             if ($rootScope.tableSwitch.latitude != null && $rootScope.tableSwitch.latitude == undefined) {
                 console.error("error: latitude is not defined,Please check whether the parameter the configuration.");
@@ -1530,7 +1545,28 @@ define(["app"], function (app) {
                 }
             });
         };
+        //排序
+        $rootScope.sortNumber = function (a, b) {
+            var nulls = $rootScope.gridApi2.core.sortHandleNulls(a, b);
+            if (nulls !== null) {
+                return nulls;
+            } else {
+                if (parseInt(a) === parseInt(b)) {
+                    console.log(0)
+                    return 0;
+                }
+                if (parseInt(a) < parseInt(b)) {
+                    console.log(1)
+                    return 1;
+                }
+                if (parseInt(a) > parseInt(b)) {
+                    console.log(2)
+                    return -1;
+                }
+                return 0;
+            }
 
+        }
         $scope.$on('parrentData', function (d, data) {
             $scope.gridOpArray = angular.copy(data.gridArray);
             $scope.gridOptions.columnDefs = $scope.gridOpArray;

@@ -5,7 +5,7 @@ define(["./module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.controller('SurveyCtrl', function ($scope, $http, $q, $rootScope, areaService, SEM_API_URL, requestService) {
+    ctrs.controller('SurveyCtrl', function ($scope, $http, $q, $rootScope, areaService, SEM_API_URL, requestService,uiGridConstants) {
             $scope.day_offset = 0;    // 默认是今天(值为0), 值为-1代表昨天, 值为-7代表最近7天, 值为-30代表最近30天
             $scope.yesterdayClass = true;
             $scope.todaySelect = true;
@@ -67,8 +67,14 @@ define(["./module"], function (ctrs) {
                 enableHorizontalScrollbar: 0,
                 enableVerticalScrollbar: 0,
                 columnDefs: [
-                    {name: ' ', field: 'category', cellClass: 'grid_padding'},
-                    {name: '消费', field: 'cost'},
+                    {name: ' ', field: 'category', cellClass: 'grid_padding', enableSorting: false},
+                    {
+                        name: '消费', field: 'cost',
+                        sort: {
+                            direction: uiGridConstants.DESC,
+                            priority: 1
+                        }
+                    },
                     {name: '展现量', field: 'impression'},
                     {name: '点击量', field: 'click'},
                     {name: '访问次数', field: 'vc'},
@@ -651,7 +657,7 @@ define(["./module"], function (ctrs) {
 
             $scope.loadGridOptions1Data = function (user, baiduAccount, type, startOffset, endOffset, device, esType) {
 
-                var url = SEM_API_URL+"/sem/report/"+type+"?a="+user+"&b="+baiduAccount+"&startOffset=" +  startOffset+ "&endOffset=" + endOffset+"&device="+device;
+                var url = SEM_API_URL + "/sem/report/" + type + "?a=" + user + "&b=" + baiduAccount + "&startOffset=" + startOffset + "&endOffset=" + endOffset + "&device=" + device;
                 $http({
                     method: 'GET',
                     url: url
@@ -719,7 +725,7 @@ define(["./module"], function (ctrs) {
             };
 
             $scope.loadGridOptions2Data = function (user, baiduAccount, type, startOffset, endOffset, device, esType) {
-                var url = SEM_API_URL+"/sem/report/"+type+"?a="+user+"&b="+baiduAccount+"&startOffset=" +  startOffset+ "&endOffset=" + endOffset+"&device="+device;
+                var url = SEM_API_URL + "/sem/report/" + type + "?a=" + user + "&b=" + baiduAccount + "&startOffset=" + startOffset + "&endOffset=" + endOffset + "&device=" + device;
                 $http({
                     method: 'GET',
                     url: url
@@ -787,8 +793,8 @@ define(["./module"], function (ctrs) {
             };
 
             $scope.loadGridOptions3Data = function (user, baiduAccount, type, startOffset, endOffset, esType) {
-                var semPCRequest = $http.get(SEM_API_URL+"/sem/report/"+type+"?a="+user+"&b="+baiduAccount+"&startOffset=" +  startOffset+ "&endOffset=" + endOffset+"&device=0");
-                var semMobileRequest = $http.get(SEM_API_URL+"/sem/report/"+type+"?a="+user+"&b="+baiduAccount+"&startOffset=" +  startOffset+ "&endOffset=" + endOffset+"&device=1");
+                var semPCRequest = $http.get(SEM_API_URL + "/sem/report/" + type + "?a=" + user + "&b=" + baiduAccount + "&startOffset=" + startOffset + "&endOffset=" + endOffset + "&device=0");
+                var semMobileRequest = $http.get(SEM_API_URL + "/sem/report/" + type + "?a=" + user + "&b=" + baiduAccount + "&startOffset=" + startOffset + "&endOffset=" + endOffset + "&device=1");
                 var esPCRequest = $http.get("/api/survey/2?start=" + startOffset + "&end=" + endOffset + "&type=" + esType + "&filter=" + JSON.stringify([{"pm": [0]}]));
                 var esMobileRequest = $http.get("/api/survey/2?start=" + startOffset + "&end=" + endOffset + "&type=" + esType + "&filter=" + JSON.stringify([{"pm": [1]}]));
 
@@ -866,7 +872,7 @@ define(["./module"], function (ctrs) {
             };
 
             $scope.loadGridOptions4Data = function (user, baiduAccount, type, startOffset, endOffset, device, esType) {
-                var semRegionRequest = $http.get(SEM_API_URL+"/sem/report/"+type+"?a="+user+"&b="+baiduAccount+"&startOffset=" +  startOffset+ "&endOffset=" + endOffset);
+                var semRegionRequest = $http.get(SEM_API_URL + "/sem/report/" + type + "?a=" + user + "&b=" + baiduAccount + "&startOffset=" + startOffset + "&endOffset=" + endOffset);
                 var esRegionRequest = $http.get("/api/survey/3?start=" + startOffset + "&end=" + endOffset + "&type=" + esType);
 
                 $q.all([semRegionRequest, esRegionRequest]).then(function (result) {

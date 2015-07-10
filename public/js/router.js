@@ -362,12 +362,11 @@ define(["angular", "./app"], function (angular, myApp) {
                 })
                 .state('heaturl', {
                     url: "/page/heaturl",
-                    params: {'id': null},
+                    params: {'rf': null},
                     templateUrl: "../page/heaturl.html",
                     resolve: {
                         load: loadDeps([
-                            "controller/page/heaturlctr",
-                            "heaturl/heaturl"
+                            "controller/page/heaturlctr"
                         ])
                     }
                 })
@@ -403,7 +402,7 @@ define(["angular", "./app"], function (angular, myApp) {
                     }
                 })
                 .state('provincemap', {
-                    url: "/visitor/provincemap",
+                    url:'/visitor/provincemap:data',
                     templateUrl: "../visitor/provincemap.html",
                     resolve: {
                         load: loadDeps([

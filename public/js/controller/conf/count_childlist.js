@@ -4,7 +4,7 @@
 define(["./module"], function (ctrs) {
     "use strict";
 
-    ctrs.controller('count_childlist', function ($scope, $q, $rootScope,$cookieStore,$http,ngDialog, $state) {
+    ctrs.controller('count_childlist', function ($scope, $q, $rootScope, $cookieStore, $http, ngDialog, $state,uiGridConstants) {
 
         //对象-对话框
         $scope.urlDialog = null;
@@ -12,10 +12,10 @@ define(["./module"], function (ctrs) {
         $scope.entity = null;
 
         //操作-删除
-        $scope.deleteGridData  = function () {
+        $scope.deleteGridData = function () {
 
             //后台删除
-            var url= "/config/subdirectory_list?type=delete&query={\"uid\":\"" + $scope.entity.uid + "\",\"_id\":\"" +  $scope.entity._id + "\"}";
+            var url = "/config/subdirectory_list?type=delete&query={\"uid\":\"" + $scope.entity.uid + "\",\"_id\":\"" + $scope.entity._id + "\"}";
             $http({
                 method: 'GET',
                 url: url
@@ -27,14 +27,13 @@ define(["./module"], function (ctrs) {
         };
 
 
-
         //显示-删除对话框
-        $scope.deleteDialog=function(entity){
+        $scope.deleteDialog = function (entity) {
 
             $scope.entity = entity;
 
             $scope.urlDialog = ngDialog.open({
-                template:'\
+                template: '\
               <div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div>\
                         <ul class="admin-ng-content">\
                         <li> 你确定删除这个子目录吗？</li></ul>   \
@@ -43,13 +42,13 @@ define(["./module"], function (ctrs) {
                 </div>',
                 className: 'ngdialog-theme-default admin_ngdialog',
                 plain: true,
-                scope : $scope
+                scope: $scope
             });
         };
         //跳转-修改界面
         $scope.toUpdate = function (entity) {
 
-            $state.go('childlist_update',{ 'id':entity._id});
+            $state.go('childlist_update', {'id': entity._id});
 
         };
 
@@ -61,29 +60,57 @@ define(["./module"], function (ctrs) {
                 name: "xl",
                 displayName: "",
                 cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
-                maxWidth: 5
+                maxWidth: 5,
+                enableSorting: false
             },
-            {name: "子目录名称", displayName: "子目录名称", field: "subdirectory_url",cellClass: 'table_admin_color'},
-            {name: "包含的页面或目录", displayName: "包含的页面或目录", field: "analysis_url",cellClass: 'table_admin_color'},
-            {name: "不包含的页面或目录", displayName: "不包含的页面或目录", field: "not_analysis_url",cellClass: 'table_admin_color'},
-            {name: "创建时间", displayName: "创建时间", field: "create_date",cellClass: 'table_admin_color'},
+            {
+                name: "子目录名称",
+                displayName: "子目录名称",
+                field: "subdirectory_url",
+                cellClass: 'table_admin_color',
+                enableSorting: false
+            },
+            {
+                name: "包含的页面或目录",
+                displayName: "包含的页面或目录",
+                field: "analysis_url",
+                cellClass: 'table_admin_color',
+                enableSorting: false
+            },
+            {
+                name: "不包含的页面或目录",
+                displayName: "不包含的页面或目录",
+                field: "not_analysis_url",
+                cellClass: 'table_admin_color',
+                enableSorting: false
+            },
+            {
+                name: "创建时间", displayName: "创建时间", field: "create_date", cellClass: 'table_admin_color',
+                sort: {
+                    direction: uiGridConstants.DESC,
+                    priority: 1
+                }
+            },
             {
                 name: "x2",
                 displayName: "",
                 cellTemplate: "<div class='table_admin'><a href='/#index'>查看网站概览</a></div>",
-                maxWidth: 150
+                maxWidth: 150,
+                enableSorting: false
             },
             {
                 name: "x5",
                 displayName: "",
                 cellTemplate: "<div class='table_admin'><a  ng-click='grid.appScope.toUpdate(row.entity)' >修改</a></div>",
-                maxWidth: 80
+                maxWidth: 80,
+                enableSorting: false
             },
             {
                 name: "x6",
                 displayName: "",
                 cellTemplate: "<div class='table_admin'><a ng-click='grid.appScope.deleteDialog(row.entity)' >删除</a></div>",
-                maxWidth: 80
+                maxWidth: 80,
+                enableSorting: false
             }
         ];
         $rootScope.tableSwitch = {
@@ -109,7 +136,6 @@ define(["./module"], function (ctrs) {
             enableHorizontalScrollbar: 0,
             columnDefs: $rootScope.gridArray
         };
-
 
 
         //操作-初始化

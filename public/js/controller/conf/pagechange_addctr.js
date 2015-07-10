@@ -58,23 +58,14 @@ define(["./module"], function (ctrs) {
 
         // 添加目标URL
         $scope.targetRemoves = [];
-        $scope.targetUrlAdd = function (targets, targetRemoves) {
-            if(targets.length == 4){
-                $("#addTargetUrl").html("");
-            }else {
-                $("#addTargetUrl").html("添加页面");
-            }
-            $scope.showRemove = true;
-            targets.push({url: ""});
-            targetRemoves.push({url: ""});
-        }
+        $scope.targetzons = [];
+
+        $scope.targetUrlAdd = function (targets, targetRemoves,targetzons) {
+            targetzons.push({url: ""});
+        };
         $scope.removeTargetUrl = function (targets, targetRemoves, _index) {
-            if(targets.length <= 5){
-                $("#addTargetUrl").text("添加页面");
-            }
-            targets.splice(_index + 1, 1);
-            targetRemoves.splice(_index, 1);
-        }
+            targets.splice(_index, 1);
+        };
         $scope.addPaths = function (paths) {
             paths.push({
                 path_name: "",//路径名称
@@ -95,6 +86,7 @@ define(["./module"], function (ctrs) {
                 step_name: "",//步骤名称
                 step_urls: [{url: ""}, {url: ""}]//步骤URL 最多三个
             });
+
         };
         $scope.removeStepUrls = function (step_urls, _index) {
             step_urls.splice(_index, 1);

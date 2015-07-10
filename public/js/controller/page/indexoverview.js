@@ -5,7 +5,7 @@ define(["./module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.controller('indexoverview', function ($scope, $rootScope,areaService) {
+    ctrs.controller('indexoverview', function ($scope, $rootScope, areaService, uiGridConstants) {
         //        高级搜索提示
         $scope.sourceSearch = "";
         $scope.visitorSearch = "";
@@ -15,7 +15,7 @@ define(["./module"], function (ctrs) {
             $rootScope.$broadcast("loadAllSource");
             obj.sourceSearch = "";
         }
-        $scope.removeVisitorSearch = function(obj){
+        $scope.removeVisitorSearch = function (obj) {
             $rootScope.$broadcast("loadAllVisitor");
             obj.visitorSearch = "";
         }
@@ -32,23 +32,30 @@ define(["./module"], function (ctrs) {
                 name: "xl",
                 displayName: "",
                 cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
-                maxWidth: 10
+                maxWidth: 10,
+                enableSorting: false
             },
             {
                 name: "页面url",
                 displayName: "页面url",
                 field: "loc",
-                footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                enableSorting: false
             },
             {
                 name: " ",
-                cellTemplate: "<div class='table_box'><a ui-sref='history3' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn' title='查看历史趋势'></a></div>"
+                cellTemplate: "<div class='table_box'><a ui-sref='history3' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn' title='查看历史趋势'></a></div>",
+                enableSorting: false
             },
             {
                 name: "访问次数",
                 displayName: "访问次数",
                 field: "vc",
-                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>",
+                sort: {
+                    direction: uiGridConstants.DESC,
+                    priority: 1
+                }
             },
             {
                 name: "访客数(UV)",
