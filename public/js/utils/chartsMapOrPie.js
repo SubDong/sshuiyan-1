@@ -28,13 +28,16 @@ var mixingMap = {
             legend: {
                 x: 'right',
                 orient: 'vertical',
-                data: data.data_name
+                data: data.data_name,
+                selectedMode:false
             },
             dataRange: {
                 orient: 'horizontal',
                 min: 0,
                 max: max,
-                text: [chart.quota + ":", '']     // 文本，默认为数值文本
+                text: [chart.quota + ":", '']  ,   // 文本，默认为数值文本
+                selectedMode:false,
+                splitNumber:0
             },
             series: [
                 {

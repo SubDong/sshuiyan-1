@@ -559,6 +559,8 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
 
                 // 获取数据
                 scope.loadDataShow = function () {
+                    scope.DateNumber = false;
+                    scope.DateLoading = false;
                     scope.setDefaultShowArray();
                     var esRequest = $http.get('/api/index_summary/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field) + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
                     var seoQuotas = scope.getSEOQuotas();
@@ -566,14 +568,17 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                         var seoRequest = $http.get(SEM_API_URL + "/sem/report/account?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&device=-1&" + "startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd);
                     }
                     $q.all([esRequest, seoRequest]).then(function (final_result) {
-                        console.log(final_result[0]);
                         scope.pushESData(final_result[0].data);
                         if (final_result[1] != undefined) {
                             scope.pushSEOData(final_result[1].data);
                         }
+                        scope.DateNumber = true;
+                        scope.DateLoading = true;
                     });
                 };
                 scope.loadCompareDataShow = function (startTime, endTime) {
+                    scope.DateNumber = false;
+                    scope.DateLoading = false;
                     var esRequest = $http.get('/api/index_summary/?start=' + startTime + "&end=" + endTime + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field) + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
                     var seoQuotas = scope.getSEOQuotas();
                     if (seoQuotas.length > 0) {
@@ -585,6 +590,8 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                         if (final_result[1] != undefined) {
                             scope.pushSEOData(final_result[1].data, true);
                         }
+                        scope.DateNumber = true;
+                        scope.DateLoading = true;
                     });
                 };
                 scope.getSEOQuotas = function () {
@@ -638,7 +645,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                             }
                         });
                     });
-                    console.log(_array);
                     scope.dateShowArray = $rootScope.copy(_array);
                 };
                 scope.pushSEOData = function (result, flag) {
@@ -688,7 +694,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                             }
                         }
                     });
-                    console.log(_array);
                     scope.dateShowArray = $rootScope.copy(_array);
                 };
 
@@ -716,8 +721,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                 // 根据表格请求一次进行datashow请求一次
                 scope.$on("ssh_dateShow_options_quotas_change", function (e, msg) {
                     scope.isCompared = false;
-                    scope.DateNumber = true;
-                    scope.DateLoading = true;
                     var temp = $rootScope.copy(msg);
                     if (temp.length > 0) {
                         scope.ds_dateShowQuotasOption = temp;

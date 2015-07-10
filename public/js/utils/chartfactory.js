@@ -474,6 +474,7 @@ var op = {
             //    '#6b8e23', '#ff00ff', '#3cb371', '#b8860b', '#30e0e0'
             //],
             legend: {
+                selectedMode:false,
                 show: chartConfig.legendShow ? chartConfig.legendShow : false,
                 orient: !chartConfig.ledLayout ? "vertical" : chartConfig.ledLayout,
                 x: 'left',
