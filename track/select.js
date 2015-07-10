@@ -10,15 +10,16 @@
     var tips = [];
 
     var p = {
-        flashUrl: "127.0.0.1",
-        pock: "8000",
+        flashUrl: "hy.best-ad.cn",
+        //pock: "8000",
         urlPath: "config/select",
         protocol: "https:" == document.location.protocol ? "https:" : "http:",
         webroot: "http://tongji.baidu.com/hm-web",
         hyContent: "TrackerSenderContent",
         eventPanelStyle: "position:absolute; color:#000; text-align:left;  margin:0; z-index:2147483584; width:400px; padding:0 10px 5px 10px; background:#EAEFF4 url(/img/event_add_bg.gif) repeat-x; border:1px solid #6990B3; font-size:12px;",
         disablePanelStyle: "position:absolute; text-align:left; font-size:13px; color:#000; line-height:150%; text-align:left; z-index:2147483583; width:200px; padding:5px 10px; background:#EAEFF4; border:1px solid #6990B3; font-size:12px;",
-        q: null
+        q: null,
+        v:"1.0.1"
     };
 
     //无ID元素或者元素ID不正确情况 点击提示内容
@@ -559,7 +560,7 @@
             attachEvent(document, "mouseout", panelcont.hidePanelTip)
 
             //初始化已添加事件目标信息
-            var url = p.protocol + "//" + p.flashUrl + ":" + p.pock + "/" + p.urlPath + "?type=getTips&eventPage="+params["srcUrl"];
+            var url = p.protocol + "//" + p.flashUrl + "/" + p.urlPath + "?type=getTips&eventPage="+params["srcUrl"];
             crossDomainSendData(url, rootBody.initTips);
         },
         initTips: function (index, resData) {
@@ -766,7 +767,7 @@
 
             var ac = Y ? Y : "";
             var evenData = {name: encodeURIComponent(G), id: ad, eventType: Z, targetId: ac, monUrl: ab};
-            var url = p.protocol + "//" + p.flashUrl + ":" + p.pock + "/" + p.urlPath+"?type=saveTips&data="+JSON.stringify(evenData);
+            var url = p.protocol + "//" + p.flashUrl  + "/" + p.urlPath+"?type=saveTips&data="+JSON.stringify(evenData);
             crossDomainSendData(url, function (index, resData) {
                 //刷新显示事件
                 panelcont.addCompleteController(evenData);
