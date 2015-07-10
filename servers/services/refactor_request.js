@@ -499,16 +499,15 @@ var avgTimeFn = function (result, dimension) {
     for (var i = 0, l = result.length; i < l; i++) {
         var _tvt_aggs_result = result[i].tvt_aggs.buckets;
         var tvt = 0;
-        if (_tvt_aggs_result.length > 0)
+        if (_tvt_aggs_result.length > 0) {
             tvt = parseInt(_tvt_aggs_result[0].max_aggs.value) - parseInt(_tvt_aggs_result[0].min_aggs.value);
-
-        var vc = result[i].vc_aggs.value;
+        }
+        var vc = result[i].vc_aggs.vc_aggs.value;
         keyArr.push(result[i].key);
-
         var avgTime = 0;
-        if (vc > 0)
+        if (vc > 0) {
             avgTime = Math.ceil(parseFloat(tvt) / 1000 / parseFloat((vc)));
-
+        }
         quotaArr.push(avgTime);
     }
 

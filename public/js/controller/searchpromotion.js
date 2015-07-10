@@ -276,9 +276,9 @@ define(["./module"], function (ctrs) {
         $rootScope.targetSearchSpread = function (isClicked) {
             $scope.gridOpArray = angular.copy($rootScope.searchGridArray);
             $scope.gridOptions.columnDefs = $scope.gridOpArray;
-            if (isClicked) {
+            //if (isClicked) {
                 $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
-            }
+            //}
             var url = SEM_API_URL + "/sem/report/" + $rootScope.tableSwitch.promotionSearch.SEMData + "?a=" + user + "&b=" + baiduAccount + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=" + $scope.device + ($scope.searchId != undefined && $scope.searchId != "undefined" ? "&" + $scope.searchId : "")
             $http({
                 method: 'GET',
@@ -691,12 +691,25 @@ define(["./module"], function (ctrs) {
         };
         $scope.init = function (timeData) {
             $scope.gridOptions.data = [];
-            $http.get("/api/transform/transformAnalysis?start=" + timeData.start + "&end=" + timeData.end + "&action=event&type=1&searchType=table&queryOptions=" + ["pv", "uv", "ip", "vc"]).success(function (data) {
+            $http.get("/api/transform/transformAnalysis?start=" + timeData.start + "&end=" + timeData.end + "&action=event&type=1&searchType=table&queryOptions=" + timeData.checkedArray).success(function (data) {
                 $scope.gridOptions.data = data;
             });
         };
         $scope.$on("transformData", function (e, msg) {
+            console.log($scope.gridOptions.columnDefs)
             $scope.init(msg)
+        });
+        $scope.$on("transformData_ui_grid", function (e, msg) {
+            console.log("890809809")
+            console.log(msg);
+            $scope.gridOpArray = angular.copy($rootScope.searchGridArray);
+            $scope.gridOptions.columnDefs = $scope.gridOpArray;
+            //for(var i = 0;i<msg.checkedArray.length;i++){
+            //    $scope.gridOptions.columnDefs[i+2].name=chartUtils.convertChinese(msg.checkedArray[i]);
+            //    $scope.gridOptions.columnDefs[i+2].displayName=chartUtils.convertChinese(msg.checkedArray[i]);
+            //    $scope.gridOptions.columnDefs[i+2].field=msg.checkedArray[i];
+            //};
+            console.log($scope.gridOptions.columnDefs)
         });
     });
 

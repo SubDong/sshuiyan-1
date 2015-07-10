@@ -453,6 +453,7 @@ define(["./module"], function (ctrs) {
                     var url = "/config/site_list?type=update&query={\"uid\":\"" + model.uid + "\",\"site_url\":\"" + path + "\"}&updates=" + JSON.stringify(model);
                     $http({method: 'GET', url: url}).
                         success(function (data, status) {
+                            console.log("test")
                             if (status == "200") {
                                 createDialog(status_ch(statusNumber), "成功");
                             } else {
@@ -491,48 +492,77 @@ define(["./module"], function (ctrs) {
             var path = $("#web_list_nav_input").prop("value");//输入框获取的path
             var uid = userID;
             if (path != null && path.trim().length > 0) {
-                $http.get("cdapi/link?path=" + path).success(function (data) {
-                    if (data == "error") {
-                        changeCss("网址输入失误");
-                    } else {
-                        if (data != null || data != "") {
-                            if (data.match("404 Not Found") == null) {
-                                var k = Number((data.toString().split('tid=')[0].split('\"').length));
-                                if (data.toString().split("tid=")[0].split("\"")[k - 1].split("/").length == 4) {
-                                    if (data.toString().split("tid=").length > 1) {
-                                        var tid = data.toString().split("tid=")[1].split("\"")[0];
-                                        $http.get("/config/searchByUID?uid=" + uid + "&track_id=" + tid).success(function (result) {
-                                            if (result=="null" || result == "") {
-                                                $scope.urlDialog = ngDialog.open({
-                                                    template: '\
+                if(uid==null){
+                    $scope.urlDialog = ngDialog.open({
+                        template: '\
+                                                    <div class="ngdialog-buttons" >\
+                                                    <span style="text-align: center">该账户错误</span>\
+                                                    </div>',
+                        className: 'ngdialog-theme-default',
+                        plain: true,
+                        scope: $scope
+                    });
+                }else{
+                    $http.get("/config/site_list?type=search&query={\"uid\":\"" + uid + "\",\"site_url\":\"" + path + "\"}").success(function (result) {
+                        if (result == "null" || result == "") {
+                            $scope.urlDialog = ngDialog.open({
+                                template: '\
                                                     <div class="ngdialog-buttons" >\
                                                     <span style="text-align: center">该账户下不存在该路径</span>\
                                                     </div>',
-                                                    className: 'ngdialog-theme-default',
-                                                    plain: true,
-                                                    scope: $scope
-                                                });
-                                            }else{
-                                                changeStatus(path, uid, 1);
-                                            }
-                                        });
-                                    } else {
-                                        changeStatus(path, uid, -1);
-                                    }
-                                } else {
-                                    changeStatus(path, uid, -1);
-                                }
-                            } else {
-                                changeCss("网址不存在");
-                            }
-
+                                className: 'ngdialog-theme-default',
+                                plain: true,
+                                scope: $scope
+                            });
                         } else {
-                            changeCss("网址不存在");
+                            $http.get("cdapi/link?path=" + path).success(function (data) {
+                                if (data == "error") {
+                                    changeCss("网址输入失误");
+                                } else {
+                                    if (data != null || data != "") {
+                                        if (data.match("404 Not Found") == null) {
+                                            var k = Number((data.toString().split('tid=')[0].split('\"').length));
+                                            console.log(data.toString().split("tid=")[0].split("\"")[k - 1].split("/").length)
+                                            if (data.toString().split("tid=")[0].split("\"")[k - 1].split("/").length == 4) {
+                                                if (data.toString().split("tid=").length > 1) {
+                                                    var tid = data.toString().split("tid=")[1].split("\"")[0];
+                                                    $http.get("/config/site_list?type=search&query={\"uid\":\"" + uid + "\",\"track_id\":\"" + tid + "\"}").success(function (result) {
+                                                        if (result == "null" || result == "") {
+                                                            $scope.urlDialog = ngDialog.open({
+                                                                template: '\
+                                                    <div class="ngdialog-buttons" >\
+                                                    <span style="text-align: center">该账户下不存在该路径</span>\
+                                                    </div>',
+                                                                className: 'ngdialog-theme-default',
+                                                                plain: true,
+                                                                scope: $scope
+                                                            });
+                                                        } else {
+                                                            changeStatus(path, uid, 1);
+                                                        }
+                                                    });
+                                                } else {
+                                                    changeStatus(path, uid, -1);
+                                                }
+                                            } else {
+                                                changeStatus(path, uid, -1);
+                                            }
+                                        } else {
+                                            changeCss("网址不存在");
+                                        }
+
+                                    } else {
+                                        changeCss("网址不存在");
+                                    }
+                                }
+
+
+                            });
                         }
-                    }
+                    });
+                }
+                
 
-
-                });
             } else {
                 changeCss("不能为空");
             }

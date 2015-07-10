@@ -44,43 +44,18 @@ router.get('/', function (req, resp) {
 });
 router.get('/select', function (req, resp) {
     var tid = req.query["tid"];
-    console.log("tid="+tid);
     redis.service().get('tsj:'.concat(tid), function (err, sitejson) {
         var ref = req.header('Referer');
-        //判断redis是否存在sitejson
-        if (err || sitejson == null) {
-            //初始化reids
-            async.waterfall([
-                function (cb) {
-                    config_request.refreshSiteRedis(redis.service(), tid, function (err, item) {
-                        cb(err, item)
-                    })
-                },
-                function (reds, cb1) {
-                    config_request.refreshPageTileRedis(redis.service(), tid, ref);
-                    cb1(err, reds)
-                },
-                function (res1, cb2) {
-                    config_request.refreshEventRedis(redis.service(), tid, ref);
-                    cb2(err, res1)
-                }
-            ], function (err, result) {
-                if (err || result == null) {
-                    resp.end();
-                    return;
-                }
-                var json = result["tsj:" + tid];
-                getData(req, resp, tid, json);
-            });
-        } else {
-            if (ref != null && ref.indexOf(JSON.parse(sitejson).siteurl) > -1) {//ref来源是站点下网站
-                fs.readFile('./track/select.js', function (err, data) {
-                    resp.set('Content-Type', 'application/javascript')
-                    resp.set('Cache-Control', 'max-age=0,must-revalidate');
-                    resp.send("var select = " + data);
-                })
-            }
+        if (ref == undefined || ref == '') {
+            resp.end();
+            return;
         }
+        fs.readFile('./track/select.js', function (err, data) {
+            resp.set('Content-Type', 'application/javascript')
+            resp.set('Cache-Control', 'max-age=0,must-revalidate');
+            resp.send("var select = " + data);
+        })
+
     });
 });
 /**
