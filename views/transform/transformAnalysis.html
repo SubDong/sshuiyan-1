@@ -56,7 +56,7 @@
                         <ul>
                             <li ng-repeat="item in bases" data-sshy-default defvalue="{{item.name}}"
                                 class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
-                                ng-click='searchIndicators(item,target,6)'>{{item.consumption_name}}
+                                ng-click='searchIndicators(item,bases,6)'>{{item.consumption_name}}
                             </li>
                         </ul>
                     </div>
@@ -65,7 +65,7 @@
                         <ul>
                             <li ng-repeat="item in transform" data-sshy-default defvalue="{{item.name}}"
                                 class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
-                                ng-click='searchIndicators(item,Webbased,6)'>{{item.consumption_name}}
+                                ng-click='searchIndicators(item,transform,6)'>{{item.consumption_name}}
                             </li>
                         </ul>
                     </div>
@@ -74,7 +74,7 @@
                         <ul>
                             <li ng-repeat="item in eventParameter" data-sshy-default defvalue="{{item.name}}"
                                 class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
-                                ng-click='searchIndicators(item,flow,6)'>{{item.consumption_name}}
+                                ng-click='searchIndicators(item,eventParameter,6)'>{{item.consumption_name}}
                             </li>
                         </ul>
                     </div>
