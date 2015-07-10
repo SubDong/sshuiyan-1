@@ -21,13 +21,13 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                 Custom.initCheckInfo();
                 scope.$watch("opened", function () {
                     if (scope.todayClass) {
-                        scope.today();
+                        //scope.today();
                     }else if (scope.sevenDayClass) {
-                        scope.sevenDay();
+                        //scope.sevenDay();
                     }else if (scope.yesterdayClass) {
-                        scope.yesterday();
+                        //scope.yesterday();
                     }else if (scope.monthClass) {
-                        scope.month();
+                        //scope.month();
                     }else if($location.url().split("?").length>1){
                         var param = $location.url().split("?")[1];
                         var isChart = $location.url().split("?")[0];
