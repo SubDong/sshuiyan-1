@@ -48,7 +48,7 @@ var schemas = {
             track_status: Number,// track code status
             //status: String, // enable or disable track
             is_top: Boolean,
-            is_use:Boolean
+            is_use:Number
         }
     },
 

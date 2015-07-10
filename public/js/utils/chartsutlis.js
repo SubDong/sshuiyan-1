@@ -792,6 +792,9 @@ var chartUtils = {
             case 2592000000:
                 config["keyFormat"] = "month";
                 break;
+            case -1:
+                config["keyFormat"] = "hour";
+                break;
             default :
                 config["keyFormat"] = "day";
         }

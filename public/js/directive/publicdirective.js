@@ -22,31 +22,31 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                 scope.$watch("opened", function () {
                     if (scope.todayClass) {
                         //scope.today();
-                    }else if (scope.sevenDayClass) {
+                    } else if (scope.sevenDayClass) {
                         //scope.sevenDay();
-                    }else if (scope.yesterdayClass) {
+                    } else if (scope.yesterdayClass) {
                         //scope.yesterday();
-                    }else if (scope.monthClass) {
+                    } else if (scope.monthClass) {
                         //scope.month();
-                    }else if($location.url().split("?").length>1){
+                    } else if ($location.url().split("?").length > 1) {
                         var param = $location.url().split("?")[1];
                         var isChart = $location.url().split("?")[0];
-                        if(param != 1 && param != 2 && param != 3 && param != 4){
+                        if (param != 1 && param != 2 && param != 3 && param != 4) {
                             scope.timeClass = true;
                             var StartTimes = param.split("#")[0];
                             var EndTimes = param.split("#")[1];
                             var newParam = param.replace("#", "至");
                             var time = chartUtils.getTimeOffset(StartTimes, EndTimes);
-                            $rootScope.start =time[0];
+                            $rootScope.start = time[0];
                             $rootScope.end = time[1];
                             $rootScope.tableTimeStart = time[0];
-                            $rootScope.tableTimeEnd =time[1];
+                            $rootScope.tableTimeEnd = time[1];
                             $('#reportrange span').html(newParam);
                             $('#reportrange').data('daterangepicker').setStartDate(StartTimes);
                             $('#reportrange').data('daterangepicker').setEndDate(EndTimes);
                             $rootScope.targetSearch();
                             scope.$broadcast("ssh_dateShow_options_time_change");
-                            if(isChart == "/visitor/equipment"){
+                            if (isChart == "/visitor/equipment") {
                                 scope.charts.forEach(function (e) {
                                     var chart = echarts.init(document.getElementById(e.config.id));
                                     e.config.instance = chart;
@@ -54,7 +54,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                                 //图表
                                 requestService.refresh(scope.charts);
                             }
-                            if(isChart == "/visitor/provincemap"){
+                            if (isChart == "/visitor/provincemap") {
                                 scope.doSearch(time[0], time[1], $rootScope.userType);
                                 scope.doSearchAreas(time[0], time[1], $rootScope.userType, scope.mapOrPieConfig);
                             }
@@ -64,7 +64,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                 scope.weekselected = true;
                 scope.mothselected = true;
                 scope.maxDate = new Date();
-                var dateID=document.getElementById("choicetrange");
+                var dateID = document.getElementById("choicetrange");
                 if (scope.todayClass === true) {
                     dataPicker.picker("choicetrange", 0);
                 }
@@ -123,7 +123,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     $('#reportrange span').html(GetDateStr(0));
                     $('#reportrange').data('daterangepicker').setStartDate(GetDateStr(0));
                     $('#reportrange').data('daterangepicker').setEndDate(GetDateStr(0));
-                    if(dateID){
+                    if (dateID) {
                         $('#choicetrange span').html("与其他时间段对比");
                         $('#choicetrange').data('daterangepicker').setStartDate(GetDateStr(0));
                         $('#choicetrange').data('daterangepicker').setEndDate(GetDateStr(0));
@@ -155,7 +155,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     $('#reportrange span').html(GetDateStr(-1));
                     $('#reportrange').data('daterangepicker').setStartDate(GetDateStr(-1));
                     $('#reportrange').data('daterangepicker').setEndDate(GetDateStr(-1));
-                    if(dateID){
+                    if (dateID) {
                         $('#choicetrange span').html("与其他时间段对比");
                         $('#choicetrange').data('daterangepicker').setStartDate(GetDateStr(-1));
                         $('#choicetrange').data('daterangepicker').setEndDate(GetDateStr(-1));
@@ -184,7 +184,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     $('#reportrange span').html(GetDateStr(-6) + "至" + GetDateStr(0));
                     $('#reportrange').data('daterangepicker').setStartDate(GetDateStr(-6));
                     $('#reportrange').data('daterangepicker').setEndDate(GetDateStr(0));
-                    if(dateID){
+                    if (dateID) {
                         $('#choicetrange span').html("与其他时间段对比");
                         $('#choicetrange').data('daterangepicker').setStartDate(GetDateStr(-6));
                         $('#choicetrange').data('daterangepicker').setEndDate(GetDateStr(0));
@@ -212,7 +212,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     $('#reportrange span').html(GetDateStr(-29) + "至" + GetDateStr(0));
                     $('#reportrange').data('daterangepicker').setStartDate(GetDateStr(-29));
                     $('#reportrange').data('daterangepicker').setEndDate(GetDateStr(0));
-                    if(dateID){
+                    if (dateID) {
                         $('#choicetrange span').html("与其他时间段对比");
                         $('#choicetrange').data('daterangepicker').setStartDate(GetDateStr(-29));
                         $('#choicetrange').data('daterangepicker').setEndDate(GetDateStr(0));
@@ -228,7 +228,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     scope.isShowCalendar = false;
                     scope.hiddenSeven = true;
                     scope.timeClass = true;
-                    if(dateID){
+                    if (dateID) {
                         $('#choicetrange span').html("与其他时间段对比");
                         $('#choicetrange').data('daterangepicker').setStartDate(GetDateStr(0));
                         $('#choicetrange').data('daterangepicker').setEndDate(GetDateStr(0));
@@ -336,7 +336,8 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     var d = dd.getDate();
                     return y + "-" + m + "-" + d;
                 }
-                scope.choicedate = function(ev, picker) {
+
+                scope.choicedate = function (ev, picker) {
                     var pickerTiemOne = 0;
                     var startDate = $('#reportrange span').html().split("至")[0];
                     var endDate = $('#reportrange span').html().split("至")[1] == undefined ? startDate : $('#reportrange span').html().split("至")[1];
@@ -346,11 +347,11 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                         var startTime = pickerTiemTow[0];
                         var endTime = pickerTiemTow[0] + Math.abs(pickerTiemOne[1] - pickerTiemOne[0]);
                         var dateTime = chartUtils.getSetOffTime(startTime, endTime);
-                        if(pickerTiemOne == 0){
+                        if (pickerTiemOne == 0) {
                             $('#choicetrange span').html(dateTime[0]);
                             $('#choicetrange').data('daterangepicker').setStartDate(dateTime[0]);
                             $('#choicetrange').data('daterangepicker').setEndDate(dateTime[0]);
-                        }else{
+                        } else {
                             $('#choicetrange span').html(dateTime[0] + "至" + dateTime[1]);
                             $('#choicetrange').data('daterangepicker').setStartDate(dateTime[0]);
                             $('#choicetrange').data('daterangepicker').setEndDate(dateTime[1]);
@@ -378,17 +379,26 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     function (start, end, label) {
                         //if(){
                         $rootScope.datepickerClickTow(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
-                        if (!$rootScope.datePickerCompare) {
-                            $rootScope.datePickerCompare = function (a, b, c) {
-                            }
-                        } else {
-                            $rootScope.datePickerCompare(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
-                        }
+                        scope.datePickerCompare(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
+                        //if (!$rootScope.datePickerCompare) {
+                        //    $rootScope.datePickerCompare = function (a, b, c) {
+                        //    }
+                        //} else {
+                        //    $rootScope.datePickerCompare(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
+                        //}
                         /*if (start.format('YYYY-MM-DD') == end.format('YYYY-MM-DD')) {
-                            $('#choicetrange span').html(start.format('YYYY-MM-DD'));
-                        }else {
-                            $('#choicetrange span').html(start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD'));
-                        }*/
+                         scope.datePickerCompare(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
+                         //if (!$rootScope.datePickerCompare) {
+                         //    $rootScope.datePickerCompare = function (a, b, c) {
+                         //    }
+                         //} else {
+                         //    $rootScope.datePickerCompare(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
+                         //}
+                         if (start.format('YYYY-MM-DD') == end.format('YYYY-MM-DD')) {
+                         $('#choicetrange span').html(start.format('YYYY-MM-DD'));
+                         }else {
+                         $('#choicetrange span').html(start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD'));
+                         }*/
                     });
             }
             //,
@@ -412,7 +422,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
         };
         return option;
     });
-    app.directive("refresh", function ($rootScope,$http, $location) {
+    app.directive("refresh", function ($rootScope, $http, $location) {
         var option = {
             restrict: "EA",
             template: "<div class=\"right_refresh fr\"><button class=\"btn btn-default btn-Refresh fl\" ng-click=\"page_refresh()\"  type=\"button\"><span aria-hidden=\"true\" class=\"glyphicon glyphicon-refresh\"></span></button><button class=\"btn btn-default btn-Refresh fl\" type=\"button\" ng-show=\"send\" >发送</button><ui-select ng-model=\"export.selected\" ng-change='fileSave(export.selected)' theme=\"select2\" ng-hide=\"menu_select\" reset-search-input=\"false\" class=\"fl\"style=\"min-width: 90px;background-color: #fff;\"> <ui-select-match placeholder=\"下载\">{{$select.selected.name}} </ui-select-match> <ui-select-choices repeat=\"export in exportsaa\"> <span ng-bind-html=\"export.name\"></span></ui-select-choices></ui-select></div>",
@@ -480,11 +490,21 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
             restrict: "EA",
             template: "<div ng-hide='hiddenSeven'>" +
             "<label>对比：</label>" +
-            "<label><span class='checkbox specialCheckbox'></span><input class=\"select2-search\" name=\"compareRadio\" type=\"checkBox\" ng-click=\"compareLastDay()\"><span>前一日</span></label>&nbsp;&nbsp;&nbsp;&nbsp;" +
-            "<label><span class='checkbox specialCheckbox'></span><input class=\"select2-search\" name=\"compareRadio\" type=\"checkBox\" ng-click=\"compareLastWeek()\"><span>上周同期</span></label>" +
+            "<label><input  name=\"compareRadio\" type=\"checkbox\" ng-click=\"compareLastDay()\"><span>前一日</span></label>&nbsp;&nbsp;&nbsp;&nbsp;" +
+            "<label><input  name=\"compareRadio\" type=\"checkbox\" ng-click=\"compareLastWeek()\"><span>上周同期</span></label>" +
 //            "<input class=\"styled\" type=\"checkbox\" ng-click=\"restCompare()\">取消对比" +
             "</div>",
-            transclude: true
+            transclude: true,
+            link: function (scope, ele, attr) {
+                $(ele).hide();
+                var checkBox = $(ele).find("input[type='checkbox']");
+                checkBox.each(function (i, o) {
+                    $(o).addClass("styled");
+                    var span = $("<span class=\"checkbox\"></span>");
+                    span.insertBefore($(o));
+                });
+
+            }
         }
     });
     /*
@@ -520,8 +540,8 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
             restrict: "EA",
             templateUrl: './grid_page/grid_page_qiantai.html',
             transclude: true,
-            link:function(scope){
-                scope.gridpages=[0,1,2,3,4,5,6,7,8];
+            link: function (scope) {
+                scope.gridpages = [0, 1, 2, 3, 4, 5, 6, 7, 8];
             }
         };
         return option;
@@ -640,7 +660,8 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                                 obj.cCount = r.quota.length;
                             } else {
                                 //obj.value += (r[temp].indexOf("%") != -1) ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
-                                obj.value += Number(r.quota[0]);;
+                                obj.value += Number(r.quota[0]);
+                                ;
                                 obj.count = r.quota.length;
                             }
                         });
@@ -684,6 +705,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                         }
                         return false;
                     }
+
                     // 设置_count
                     angular.forEach(_array, function (obj) {
                         if (isSeoLabel(obj.label)) {
@@ -904,7 +926,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
 
                 scope.loadCompareDataShow = function (startTime, endTime) {
                     var semRequest = $http.get(SEM_API_URL + "search_word/" + $rootScope.userType
-                    + "/?startOffset=" + startTime + "&endOffset=" + endTime);
+                        + "/?startOffset=" + startTime + "&endOffset=" + endTime);
                     var count = 0;
                     $q.all([semRequest]).then(function (final_result) {
                         angular.forEach(final_result[0].data, function (r) {
