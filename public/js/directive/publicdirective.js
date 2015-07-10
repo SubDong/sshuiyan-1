@@ -553,12 +553,13 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                 // 获取数据
                 scope.loadDataShow = function () {
                     scope.setDefaultShowArray();
-                    var esRequest = $http.get('/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field) + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
+                    var esRequest = $http.get('/api/index_summary/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field) + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
                     var seoQuotas = scope.getSEOQuotas();
                     if (seoQuotas.length > 0) {
-                        var seoRequest = $http.get(SEM_API_URL + $rootScope.user + "/" + $rootScope.baiduAccount + "/" + scope.ssh_seo_type + "?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd);
+                        var seoRequest = $http.get(SEM_API_URL + "/sem/report/account?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&device=-1&" + "startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd);
                     }
                     $q.all([esRequest, seoRequest]).then(function (final_result) {
+                        console.log(final_result[0]);
                         scope.pushESData(final_result[0].data);
                         if (final_result[1] != undefined) {
                             scope.pushSEOData(final_result[1].data);
@@ -566,7 +567,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     });
                 };
                 scope.loadCompareDataShow = function (startTime, endTime) {
-                    var esRequest = $http.get('/api/indextable/?start=' + startTime + "&end=" + endTime + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field) + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
+                    var esRequest = $http.get('/api/index_summary/?start=' + startTime + "&end=" + endTime + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field) + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
                     var seoQuotas = scope.getSEOQuotas();
                     if (seoQuotas.length > 0) {
                         var seoRequest = $http.get(SEM_API_URL + $rootScope.user + "/" + $rootScope.baiduAccount + "/" + scope.ssh_seo_type + "?startOffset=" + startTime + "&endOffset=" + endTime);
@@ -599,6 +600,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                 scope.pushESData = function (result, flag) {
                     var _array = $rootScope.copy(scope.dateShowArray);
                     var _count = 0;
+                    var result = JSON.parse(eval('(' + result + ')').toString())
                     angular.forEach(result, function (r) {
                         var infoKey = r[$rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field];
                         if (scope.filter) {
@@ -615,41 +617,21 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                         _count++;
                         angular.forEach(_array, function (obj) {
                             var temp = obj.label;
-                            if (r[temp] == undefined) {
+                            if (r.label != temp) {
                                 return false;
                             }
                             if (flag) {
-                                if (obj.label == "avgTime") {
-                                    var hour = Number(r[temp].split(":")[0]);
-                                    var min = Number(r[temp].split(":")[1]);
-                                    var sec = Number(r[temp].split(":")[2]);
-                                    var count = (((hour * 60) * 60) + (min * 60) + sec);
-                                    obj.cValue += count;
-                                } else {
-                                    obj.cValue += (r[temp].indexOf("%") != -1) ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
-                                }
+                                //obj.cValue += (r[temp].indexOf("%") != -1) ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
+                                obj.cValue += Number(r.quota[0]);
+                                obj.cCount = r.quota.length;
                             } else {
-                                if (obj.label == "avgTime") {
-                                    var hour = Number(r[temp].split(":")[0]);
-                                    var min = Number(r[temp].split(":")[1]);
-                                    var sec = Number(r[temp].split(":")[2]);
-                                    var count = (((hour * 60) * 60) + (min * 60) + sec);
-                                    obj.value += count;
-                                } else {
-                                    obj.value += (r[temp].indexOf("%") != -1) ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
-                                }
+                                //obj.value += (r[temp].indexOf("%") != -1) ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
+                                obj.value += Number(r.quota[0]);;
+                                obj.count = r.quota.length;
                             }
                         });
                     });
-                    // 设置_count
-                    angular.forEach(_array, function (obj) {
-                        if (flag) {
-                            obj.cCount = _count;
-                        } else {
-                            obj.count = _count;
-                        }
-                    });
-
+                    console.log(_array);
                     scope.dateShowArray = $rootScope.copy(_array);
                 };
                 scope.pushSEOData = function (result, flag) {
@@ -675,15 +657,31 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                             }
                         });
                     });
+                    // 判断是不是sem指标
+                    function isSeoLabel(_label) {
+                        switch (_label) {
+                            case "cost":
+                            case "impression":
+                            case "click":
+                            case "ctr":
+                            case "cpc":
+                            case "cpm":
+                            case "conversion":
+                                return true;
+                        }
+                        return false;
+                    }
                     // 设置_count
                     angular.forEach(_array, function (obj) {
-                        if (flag) {
-                            obj.cCount = _count;
-                        } else {
-                            obj.count = _count;
+                        if (isSeoLabel(obj.label)) {
+                            if (flag) {
+                                obj.cCount = _count;
+                            } else {
+                                obj.count = _count;
+                            }
                         }
                     });
-
+                    console.log(_array);
                     scope.dateShowArray = $rootScope.copy(_array);
                 };
 
@@ -696,19 +694,31 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     scope.loadCompareDataShow(startTime, endTime);
                 });
 
-                scope.$on("LoadDateShowDataFinish", function (e, msg) {
-                    scope.isCompared = false;
-                    scope.setDefaultShowArray();
-                    scope.pushESData(msg);
-                });
+                //scope.$on("LoadDateShowDataFinish", function (e, msg) {
+                //    scope.isCompared = false;
+                //    scope.setDefaultShowArray();
+                //    scope.pushESData(msg);
+                //});
+                //
+                //scope.$on("LoadDateShowSEMDataFinish", function (e, msg) {
+                //    scope.isCompared = false;
+                //    scope.setDefaultShowArray();
+                //    scope.pushSEOData(msg);
+                //});
 
-                scope.$on("LoadDateShowSEMDataFinish", function (e, msg) {
+                // 根据表格请求一次进行datashow请求一次
+                scope.$on("ssh_dateShow_options_quotas_change", function (e, msg) {
+                    scope.isCompared = false;
                     scope.DateNumber = true;
                     scope.DateLoading = true;
-                    scope.isCompared = false;
-                    scope.setDefaultShowArray();
-                    scope.pushSEOData(msg);
+                    var temp = $rootScope.copy(msg);
+                    if (temp.length > 0) {
+                        scope.ds_dateShowQuotasOption = temp;
+                    }
+                    scope.loadDataShow();
                 });
+                scope.loadDataShow();
+
             }
         };
     });
