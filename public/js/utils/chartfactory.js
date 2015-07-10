@@ -133,8 +133,8 @@ var op = {
         });
         if (!chartConfig.instance)return;
         var chartObj = chartConfig.instance;
-        if(chartConfig.chartType=="bar"){
-            if(chartConfig.barClick){
+        if (chartConfig.chartType == "bar") {
+            if (chartConfig.barClick) {
                 chartObj.on("click", chartConfig.barClick);
             }
         }
@@ -934,6 +934,7 @@ var def = {
 }
 var util = {
     getX: function (item, chartConfig, option) {
+        //console.log(chartConfig.keyFormat);
         var _time = [];
         var key = item[chartConfig.dataKey];
         if (chartConfig.keyFormat) {
@@ -949,10 +950,22 @@ var util = {
                     });
                     return xAxis;
                 } else {
-                    if (key[key.length - 1].toString().indexOf("/点") == -1) {
-                        key[key.length - 1] = key[key.length - 1] + "/点";
+                    var _time = [];
+                    if (key[0].toString().length == 13) {
+                        key.forEach(function (time) {
+                            var t = new Date(time).Format("yyyy-MM-dd hh:mm:ss");
+                            _time.push(t.toString().substring(10, 13));
+                        });
+                    } else {
+                        _time = key;
                     }
-                    return key;
+                    if (chartConfig.half == undefined) {
+                        if (_time[_time.length - 1].toString().indexOf("/点") == -1) {
+                            _time[_time.length - 1] = _time[_time.length - 1] + "/点";
+                        }
+                    }
+                    //console.log(key);
+                    return _time;
                 }
             }
             if (chartConfig.keyFormat == "eq") {
@@ -961,27 +974,31 @@ var util = {
             if (chartConfig.keyFormat == "day") {
                 var _time = [];
                 key.forEach(function (time) {
-                    var time=new Date(time).Format("yyyy-MM-dd hh:mm:ss")
-                    _time.push(time.toString().substr(0, 10));
+                    var t = new Date(time).Format("yyyy-MM-dd hh:mm:ss");
+                    _time.push(t.toString().substr(0, 10));
                 });
             } else if (chartConfig.keyFormat == "week") {
                 key.forEach(function (time) {
-                    _time.push(util.getYearWeekState(time.toString().substr(0, 10)));
+                    var t = new Date(time).Format("yyyy-MM-dd hh:mm:ss");
+                    _time.push(util.getYearWeekState(t.toString().substring(0, 10)));
                 });
             } else if (chartConfig.keyFormat == "month") {
                 key.forEach(function (time) {
-                    _time.push(time.toString().substr(0, 7));
+                    var t = new Date(time).Format("yyyy-MM-dd hh:mm:ss");
+                    _time.push(t.toString().substr(0, 7));
                 });
             } else {
                 var _time = [];
                 key.forEach(function (time) {
-                    _time.push(Number(time.toString().substring(10, 13)));
+                    var t = new Date(time).Format("yyyy-MM-dd hh:mm:ss");
+                    _time.push(Number(t.toString().substring(10, 13)));
                 });
             }
         } else {
             var _time = [];
             key.forEach(function (time) {
-                _time.push(Number(time.toString().substring(10, 13)));
+                var t = new Date(time).Format("yyyy-MM-dd hh:mm:ss");
+                _time.push(Number(t.toString().substring(10, 13)));
             });
             return _time;
         }
@@ -999,7 +1016,8 @@ var util = {
                 }
             }
         }
-    },
+    }
+    ,
     makeEvent: function (renderType, chartObj, c) {
         if (c.legendDefaultChecked) {
             checked = [];
@@ -1061,7 +1079,8 @@ var util = {
             legendDiv.append("<span>*可同时选择1项</span>");
         }
         chartDiv.append(legendDiv);
-    },
+    }
+    ,
     addEventMore: function (chartObj, c) {
         if (c.legendDefaultChecked) {
             checked = [];
@@ -1154,7 +1173,8 @@ var util = {
         legendDiv.append(checkBoxDiv);
         legendDiv.prepend(button);
 
-    },
+    }
+    ,
     allowItem: function (radioObj) {
         var checks = $("input[name='" + radioObj.name + "']");
         var row = parseInt(radioObj.getAttribute("index"))//获取选中下标
@@ -1198,7 +1218,8 @@ var util = {
             }
         });
         return checked;
-    },
+    }
+    ,
     radioBtn: function (radioObj) {
         var checks = $("input[name='" + radioObj.name + "']");
         checks.each(function (i, o) {
@@ -1207,7 +1228,8 @@ var util = {
         });
         $(radioObj).prev("span").css("background-position", "0px -51px");
 
-    },
+    }
+    ,
     legStr: function (radio) {
         var checkedVal = [];
         var type = radio.getAttribute("type");
@@ -1223,7 +1245,8 @@ var util = {
             return [radio.value];
         }
 
-    },
+    }
+    ,
     getYearWeekState: function (dateStr) {
         if (dateStr != "") {
             var dateArray = dateStr.split("-");
@@ -1247,20 +1270,23 @@ var util = {
         } else {
             return "";
         }
-    },
-    //获得本周的开端日期
+    }
+    ,
+//获得本周的开端日期
     getWeekStartDate: function (date) {
         var year = date.getYear();
         year += (year < 2000) ? 1900 : 0; //
         var weekStartDate = new Date(year, date.getMonth(), date.getDate() - date.getDay() + 1);
         return util.formatDate(weekStartDate);
-    },
+    }
+    ,
     getWeekEndDate: function (date) {
         var year = date.getYear();
         year += (year < 2000) ? 1900 : 0; //
         var weekEndDate = new Date(year, date.getMonth(), date.getDate() + (7 - date.getDay()));
         return util.formatDate(weekEndDate);
-    },
+    }
+    ,
     formatDate: function (date) {
         var myyear = date.getFullYear();
         var mymonth = date.getMonth() + 1;
@@ -1273,7 +1299,8 @@ var util = {
             myweekday = "0" + myweekday;
         }
         return (myyear + "/" + mymonth + "/" + myweekday);
-    },
+    }
+    ,
     chartEmpty: function (chartConfig) {
         var _emptyDiv = $("<div/>");
         _emptyDiv.attr({
@@ -1288,7 +1315,8 @@ var util = {
         _spn.html("暂无数据");
         _emptyDiv.append(_spn);
         $("#" + chartConfig.id).empty().append(_emptyDiv);
-    },
+    }
+    ,
     existData: function (final_result) {
         var count = false;
         if (final_result.length) {
@@ -1301,7 +1329,8 @@ var util = {
             });
         }
         return count;
-    },
+    }
+    ,
     getEquipmentData: function (json, selected) {
         var count = util.existData(json);
         if (count) {
@@ -1322,7 +1351,8 @@ var util = {
                 e.label = chartUtils.convertChinese(e.label);
             });
         }
-    },
+    }
+    ,
     getEquipmentDataCompare: function (data, selected, _dateTime) {
         var final_result = [];
         data.forEach(function (q, index) {
@@ -1345,7 +1375,8 @@ var util = {
             });
         });
         return final_result;
-    },
+    }
+    ,
     chartResize: function (chartConfig) {
         chartConfig.instance = echarts.init(document.getElementById(chartConfig.id));
         window.addEventListener("resize", function () {

@@ -411,7 +411,7 @@ define(["./module"], function (ctrs) {
                     e.config.chartType = "line";
                     util.renderLegend(chart, e.config);
                 });
-                Custom.initCheckInfo();
+                //Custom.initCheckInfo();
                 var todayData = $http.get("api/charts?type=" + chartUtils.convertEnglish($scope.charts[0].config.legendData[0]) + "&dimension=period&start=" + $rootScope.start + "&end=" + $rootScope.end + "&userType=" + $rootScope.userType + "&int=" + $rootScope.interval);
                 var lastDayData = $http.get("api/charts?type=" + chartUtils.convertEnglish($scope.charts[0].config.legendData[0]) + "&dimension=period&start=" + ($rootScope.start - 1) + "&end=" + ( $rootScope.end - 1) + "&userType=" + $rootScope.userType + "&int=" + $rootScope.interval);
                 $q.all([todayData, lastDayData]).then(function (res) {
