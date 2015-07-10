@@ -11,7 +11,6 @@
 
     var p = {
         flashUrl: "hy.best-ad.cn",
-        //pock: "8000",
         urlPath: "config/select",
         protocol: "https:" == document.location.protocol ? "https:" : "http:",
         webroot: "http://tongji.baidu.com/hm-web",

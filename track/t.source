@@ -489,7 +489,7 @@ if (config != undefined && !config.open) {
                 },
                 getSelectJS: function () {
                     var refJS = document.referrer;
-                    if (refJS.indexOf("http://" + d.I.R) === 0 || refJS.indexOf("https://" + d.I.R) === 0) {
+                    if (refJS.indexOf("http://" + h.I.R) === 0 || refJS.indexOf("https://" + h.I.R) === 0) {
                         var a = document.createElement("script");
                         a.setAttribute("type", "text/javascript");
                         a.setAttribute("src", h.I.protocol + "//" + h.I.P + "/t.js/select?tid=" + c.id);
@@ -604,7 +604,7 @@ if (config != undefined && !config.open) {
             })();
         }
 
-        if (config != undefined && config.evt.length > 0) {
+        if (config != undefined && config.evt != undefined && config.evt.length > 0) {
             window.onload = function () {
                 //自动添加客户转化时间配置
                 config.evt.forEach(function (item, i) {
