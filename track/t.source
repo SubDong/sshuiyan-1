@@ -266,6 +266,7 @@ if (config != undefined && !config.open) {
         //全局变量h.I 访问地址URL设置 如：http://best-ad.cn/pft.gif?query string parameters
         h.I = {
             R: "hy.best-ad.cn",
+            RS: "t.best-ad.cn",
             u: config.domain,
             P: "log.best-ad.cn",
             S: "pft.gif",
@@ -492,7 +493,7 @@ if (config != undefined && !config.open) {
                     if (refJS.indexOf("http://" + h.I.R) === 0 || refJS.indexOf("https://" + h.I.R) === 0) {
                         var a = document.createElement("script");
                         a.setAttribute("type", "text/javascript");
-                        a.setAttribute("src", h.I.protocol + "//" + h.I.P + "/t.js/select?tid=" + c.id);
+                        a.setAttribute("src", h.I.protocol + "//" + h.I.RS + "/t.js/select?tid=" + c.id);
                         var f = document.getElementsByTagName("script")[0];
                         f.parentNode.insertBefore(a, f);
                     }
