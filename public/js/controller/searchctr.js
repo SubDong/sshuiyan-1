@@ -8,17 +8,12 @@ define(["./module"], function (ctrs) {
             $scope.areaSearch = "";
 //        取消显示的高级搜索的条件
             $scope.removeTerminalSearch = function(obj){
+                $rootScope.$broadcast("searchLoadAllTerminal");
                 obj.terminalSearch = "";
-                var inputArray = $(".chart_top2 .styled");
-                inputArray.each(function (i, o) {
-                    $(o).prev("span").css("background-position", "0px 0px");
-                    $(o).prop("checked", false);
-                });
-                $(inputArray[0]).prev("span").css("background-position", "0px -51px");
-                $rootScope.tableSwitch.tableFilter = null;
             }
             $scope.removeAreaSearch = function(obj){
-                $rootScope.tableSwitch.tableFilter = null;
+                $scope.city.selected = {"name": "全部"};
+                $rootScope.$broadcast("searchLoadAllArea");
                 obj.areaSearch = "";
             }
             $scope.city.selected = {"name": "全部"};

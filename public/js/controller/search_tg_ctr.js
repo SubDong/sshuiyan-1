@@ -7,6 +7,13 @@ define(["./module"], function (ctrs) {
 
     ctrs.controller('search_tg_ctr', function ($scope, $rootScope, requestService, areaService, $http) {
         $scope.yesterdayClass = true;
+        //        高级搜索提示
+        $scope.areaSearch = "";
+        $scope.removeAreaSearch = function(obj){
+            $scope.city.selected = {"name": "全部"};
+            $rootScope.$broadcast("searchLoadAllArea");
+            obj.areaSearch = "";
+        }
         $scope.city.selected = {"name": "全部"};
         $rootScope.tableTimeStart = -1;//开始时间
         $rootScope.tableTimeEnd = -1;//结束时间、

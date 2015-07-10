@@ -156,6 +156,9 @@ define(["./module"], function (ctrs) {
         };
 
         //设置来源终端
+        $rootScope.$on("searchLoadAllTerminal", function (){
+            $scope.setSearchTerminalData(0);
+        });
         var evTimeStamp = 0;
         $scope.device = -1;
         $scope.setSearchTerminalData = function (a) {
@@ -173,7 +176,7 @@ define(["./module"], function (ctrs) {
             if (a == 0) {
                 $scope.es_filter = null;
                 $scope.device = -1;
-                $scope.terminalSearch ="全部";
+                $scope.terminalSearch ="";
             }
             if (a == 1) {
                 $scope.es_filter = "[{\"pm\":[0]}]";
@@ -188,8 +191,11 @@ define(["./module"], function (ctrs) {
             $scope.targetSearchSpread();
         };
         //搜索推广地域过滤
+        $rootScope.$on("searchLoadAllArea", function (){
+            $scope.setAreaFilter("全部",'plain');
+        })
         $scope.setAreaFilter = function (area, id) {
-            $scope.areaSearch = area;
+            $scope.areaSearch = area == "全部" ? "":area;
             if (area == "北京" || area == "上海" || area == "广州") {
                 if ($scope.city.selected != undefined) {
                     $scope.city.selected.name = area;

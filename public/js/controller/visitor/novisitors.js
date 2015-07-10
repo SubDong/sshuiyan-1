@@ -11,9 +11,13 @@ define(["./module"], function (ctrs) {
         $scope.areaSearch = "";
 //        取消显示的高级搜索的条件
         $scope.removeSourceSearch = function(obj){
+            $scope.souce.selected = {"name": "全部"};
+            $rootScope.$broadcast("loadAllSource");
             obj.sourceSearch = "";
         }
         $scope.removeAreaSearch = function(obj){
+            $scope.city.selected = {"name": "全部"};
+            $rootScope.$broadcast("loadAllArea");
             obj.areaSearch = "";
         }
         //客户端属性初始化

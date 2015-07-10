@@ -33,7 +33,10 @@
                         <span>
                             <span ng-show="sourceSearch || terminalSearch || areaSearch">（</span>
                             <span ng-show="terminalSearch" class="advanceSearch">
-                                {{terminalSearch}}<i class="glyphicon glyphicon-remove" data-ng-click="removeTerminalSearch(this);" ng-show="terminalSearch"></i>
+                                {{terminalSearch}}<i class="glyphicon glyphicon-remove" data-ng-click="removeTerminalSearch(this);"></i>
+                            </span>
+                            <span ng-show="areaSearch" class="advanceSearch">
+                                {{areaSearch}}<i class="glyphicon glyphicon-remove" data-ng-click="removeAreaSearch(this);"></i>
                             </span>
                             <span ng-show="sourceSearch || terminalSearch || areaSearch">）</span>
                         </span>

@@ -7,16 +7,16 @@ define(["./module"], function (ctrs) {
         $scope.todayClass = true;
         //        高级搜索提示显示
         $scope.terminalSearch = "";
+        $scope.areaSearch = "";
 //        取消显示的高级搜索的条件
         $scope.removeTerminalSearch = function(obj){
+            $rootScope.$broadcast("loadAllTerminal");
             obj.terminalSearch = "";
-            var inputArray = $(".chart_top2 .styled");
-            inputArray.each(function (i, o) {
-                $(o).prev("span").css("background-position", "0px 0px");
-                $(o).prop("checked", false);
-            });
-            $(inputArray[0]).prev("span").css("background-position", "0px -51px");
-            $rootScope.tableSwitch.tableFilter = null;
+        }
+        $scope.removeAreaSearch = function(obj){
+            $scope.city.selected = {"name": "全部"};
+            $rootScope.$broadcast("loadAllArea");
+            obj.areaSearch = "";
         }
         //table配置
         $rootScope.tableTimeStart = 0;

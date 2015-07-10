@@ -7,6 +7,14 @@ define(["./module"], function (ctrs) {
 
     ctrs.controller('search_gjc_ctr', function ($scope, $rootScope, $q, requestService, areaService, $http, SEM_API_URL) {
         $scope.city.selected = {"name": "全部"};
+        //        高级搜索提示
+        $scope.areaSearch = "";
+//        取消显示的高级搜索的条件
+        $scope.removeAreaSearch = function(obj){
+            $scope.city.selected = {"name": "全部"};
+            $rootScope.$broadcast("searchLoadAllArea");
+            obj.areaSearch = "";
+        }
         $scope.yesterdayClass = true;
         $rootScope.tableTimeStart = -1;//开始时间
         $rootScope.tableTimeEnd = -1;//结束时间、

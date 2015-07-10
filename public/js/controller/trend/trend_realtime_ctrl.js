@@ -14,6 +14,25 @@ define(["./module"], function (ctrs) {
         $scope.souce.selected = {"name": "全部"};
         $scope.browser.selected = {"name": "全部"};
         $scope.city.selected = {"name": "全部"};
+        //        高级搜索提示
+        $scope.sourceSearch = "";
+        $scope.terminalSearch = "";
+        $scope.areaSearch = "";
+//        取消显示的高级搜索的条件
+        $scope.removeSourceSearch = function(obj){
+            $scope.souce.selected = {"name": "全部"};
+            $rootScope.$broadcast("loadAllSource");
+            obj.sourceSearch = "";
+        }
+        $scope.removeTerminalSearch = function(obj){
+            $rootScope.$broadcast("loadAllTerminal");
+            obj.terminalSearch = "";
+        }
+        $scope.removeAreaSearch = function(obj){
+            $scope.city.selected = {"name": "全部"};
+            $rootScope.$broadcast("loadAllArea");
+            obj.areaSearch = "";
+        }
         $rootScope.tableSwitch = {
             dimen: true,
             latitude: {name: "地域", displayName: "地域", field: "region"},

@@ -10,22 +10,11 @@ define(["./module"], function (ctrs) {
         $scope.webTypeSearch = "";
 //        取消显示的高级搜索的条件
         $scope.removeTerminalSearch = function(obj){
+            $rootScope.$broadcast("ExLoadAllTerminal");
             obj.exTerminalSearch = "";
-            var inputArray = $(".chart_top2_1 .styled");
-            inputArray.each(function (i, o) {
-                $(o).prev("span").css("background-position", "0px 0px");
-                $(o).prop("checked", false);
-            });
-            $(inputArray[0]).prev("span").css("background-position", "0px -51px");
-            $rootScope.tableSwitch.tableFilter = null;
         }
         $scope.removeWebTypeSearch = function(obj){
-            var inputArray = $(".chart_top2_2 .styled");
-            inputArray.each(function (i, o) {
-                $(o).prev("span").css("background-position", "0px 0px");
-                $(o).prop("checked", false);
-            });
-            $(inputArray[0]).prev("span").css("background-position", "0px -51px");
+            $rootScope.$broadcast("ExLoadAllWeb");
             obj.webTypeSearch = "";
         }
         //table默认信息配置

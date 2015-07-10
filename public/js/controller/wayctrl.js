@@ -8,7 +8,8 @@ define(["app"], function (app) {
     app.controller('wayctrl', function ($timeout, $scope, $rootScope, $q, $http, requestService, areaService, SEM_API_URL) {
         $scope.areaSearch = "";
         $scope.removeAreaSearch = function(obj){
-            $rootScope.tableSwitch.tableFilter = null;
+            $scope.city.selected = {"name": "全部"};
+            $rootScope.$broadcast("loadAllArea");
             obj.areaSearch = "";
         }
         $scope.city.selected = {"name": "全部"};

@@ -6,6 +6,13 @@ define(["./module"], function (ctrs) {
     "use strict";
 
     ctrs.controller('search_ssc_ctr', function ($scope, $rootScope, requestService, areaService, $http) {
+        //        高级搜索提示
+        $scope.areaSearch = "";
+        $scope.removeAreaSearch = function(obj){
+            $scope.city.selected = {"name": "全部"};
+            $rootScope.$broadcast("searchLoadAllArea");
+            obj.areaSearch = "";
+        }
         $scope.yesterdayClass = true;
         $scope.city.selected = {"name": "全部"};
         $rootScope.tableTimeStart = -1;//开始时间
