@@ -6,8 +6,9 @@ var http = require('http');
 var util = require("util");
 var cdApi = require('express').Router();
 cdApi.get("/link", function (req, res, next) {
-    //路径解析
-    var path = req.url.split("?")[1].split("=")[1];
+    //路径解析;
+    var path = req.url.substring(11, req.url.length);
+    //var path = req.url.split("?")[1].split("=")[1];
     var option =path.split("/");
 
     if(option.length>1){//大于１，说明主域名后跟着网页名称

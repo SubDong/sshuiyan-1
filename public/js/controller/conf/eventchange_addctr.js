@@ -71,63 +71,69 @@ define(["./module"], function (ctrs) {
          */
         $scope.sshUrlEvent = function () {
             var uid = $cookieStore.get("uid");
-            //预览输入URL
+            //预览输入URL去空格
             var previewUrl = $scope.preview.url.trim();
             //去掉 www. 的预览URL
             var localURl = $rootScope.siteUrl.replace(/www./g, '');
             var cuid = $cookieStore.get("uid");
             var regex = new RegExp("(\\w.)?" + localURl + "/*");
-            //console.log(regex.test(previewUrl));
+            $scope.iframeobj = function (tid) {
+
+                var strSrc = "http://" + previewUrl + "?domain=" + localURl + "&amp;td=" + tid + "&amp;cuid=" + cuid + "&amp;jn=select&amp;type=event";
+
+                $scope.urlDialog = ngDialog.open({
+                    preCloseCallback: function () {
+                        $state.go('eventchange');
+                    },
+                    template: '\
+                        <div class="ngdialog-content" style="width:100%">\
+                            <div id="previewControlPanel">\
+                                <div class="ngdialog-tilte">\
+                                    <div>事件目标预览URL：' + previewUrl + '</div>\
+                                </div>\
+                                <div class="overlay-content">\
+                            <iframe id="" name="" marginwidth="0" marginheight="0" width="100%" height=600 frameborder="0" src=' + strSrc + '></iframe>\
+                                </div>\
+                                <div class="ng-button-div">\
+                                <button id="overlaySubmitBtn" class="ngdialog-button ngdialog-button-secondary">确定</button>\
+                                <button id="overlayCancelBtn" class="ngdialog-button ng-button">取消</button>\
+                                </div>\
+                            </div>\
+                        </div>',
+
+                    className: 'ngdialog-theme-default admin_ngdialog iframeBox ',
+                    plain: true,
+                    scope: $scope
+                });
+            };
             if (regex.test(previewUrl) == true) {
                 $http.get("cdapi/link?path=" + previewUrl).success(function (data) {
 
+                    console.log(data);
                     var k = Number((data.toString().split('tid=')[0].split('\"').length));
-
                     if (data.toString().split("tid=")[0].split("\"")[k - 1].split("/").length == 4) {
-                        //判断 tid 是否有值
+
                         if (data.toString().split("tid=").length > 1) {
+
                             var tid = data.toString().split("tid=")[1].split("\"")[0];
+
                             $http.get("/config/searchByUID?uid=" + uid + "&track_id=" + tid).success(function (result) {
+
                                 if (result == null || result == "") {
                                     alert("该账户下不存在该路径");
                                 } else {
-                                    var strSrc = "http://" + previewUrl + "?domain=" + localURl + "&amp;td=" + tid + "&amp;cuid=" + cuid + "&amp;jn=select&amp;type=event";
-
-                                    $scope.urlDialog = ngDialog.open({
-                                        preCloseCallback: function () {
-                                            $state.go('eventchange');
-                                        },
-                                        template: '\
-                                            <div class="ngdialog-content" style="width:100%">\
-                                                <div id="previewControlPanel">\
-                                                    <div class="ngdialog-tilte">\
-                                                        <div>事件目标预览URL：' + previewUrl + '</div>\
-                                                    </div>\
-                                                    <div class="overlay-content">\
-                                                <iframe id="" name="" marginwidth="0" marginheight="0" width="100%" height=600 frameborder="0" src=' + strSrc + '></iframe>\
-                                                    </div>\
-                                                    <div class="ng-button-div">\
-                                                    <button id="overlaySubmitBtn" class="ngdialog-button ngdialog-button-secondary">确定</button>\
-                                                    <button id="overlayCancelBtn" class="ngdialog-button ng-button">取消</button>\
-                                                    </div>\
-                                                </div>\
-                                            </div>',
-
-                                        className: 'ngdialog-theme-default admin_ngdialog iframeBox ',
-                                        plain: true,
-                                        scope: $scope
-                                    });
+                                    $scope.iframeobj(tid);
                                 }
                             });
                         } else {
-                            alert("a.未检测到代码安装");
+                            $scope.iframeobj();
+                            alert("b.未检测到代码安装");
                         }
                     } else {
                         alert("b.未检测到代码安装");
                     }
                 });
-            }
-            if (regex.test(previewUrl) == false) {
+            } else {
                 alert("预览URL应该是本站或跨域内的URL");
             }
         }
