@@ -56,47 +56,23 @@ var es_aggs = {
                 "field": "vid"
             }
         }
+    },
+    // 事件点击总数
+    "clickTotal":{
+        "clickTotal":{
+            "value_count": {
+                "field": "_type"
+            }
+        }
+    },
+    // 转化次数
+    "conversions":{
+        "conversions":{
+            "value_count": {
+                "field": "_type"
+            }
+        }
     }
-};
-//"浏览量", "访客数", "转化次数", "订单数", "订单金额", "订单转化率", "平均转化成本"
-var queryString = function (queryOption) {
-    var query = {};
-    switch (queryOption) {
-        case "pv":
-            query = {
-                "value_count": {
-                    "field": "_type"
-                }
-            };
-            break;
-        case "uv":
-            query = {
-                "cardinality": {
-                    "field": "tt"
-                }
-            };
-            break;
-        case "ip":
-            break;
-        case "vc":
-            break;
-        case "conversions":
-            break;
-        case "percentOrderTransform":
-            break;
-        case "transformCost":
-            break;
-        default :
-            query = {
-                "terms": {
-                    "field": ""
-                }
-            };
-            break;
-    }
-
-    return query;
-
 };
 var transform = {
     search: function (es, indexs, type, action, callbackFn) {
@@ -145,6 +121,13 @@ var transform = {
         });
     },
     searchByShowTypeAndQueryOption: function (es, indexs, type, action, showType, queryOptions, callbackFn) {
+        var _aggs = {};
+
+        queryOptions.forEach(function (queryOption) {
+            for (var key in es_aggs[queryOption]) {
+                _aggs[key] = es_aggs[queryOption][key];
+            }
+        });
         var requests = [];
         switch (showType) {
             case "hour":
@@ -156,15 +139,7 @@ var transform = {
                         type: type + "_" + action,
                         body: {
                             "size": 0,
-                            "aggs": {
-                                "pv": queryString(queryOptions[0]),
-                                "uv": queryString(queryOptions[1]),
-                                "ip": queryString(queryOptions[2]),
-                                "vc": queryString(queryOptions[3]),
-                                "conversions": queryString(queryOptions[4]),
-                                "percentOrderTransform": queryString(queryOptions[5]),
-                                "transformCost": queryString(queryOptions[6])
-                            }
+                            "aggs":_aggs
                         }
                     });
                 }
@@ -274,6 +249,22 @@ var transform = {
                             for (var i = 0; i < result.length; i++) {
                                 dataArry.push({
                                     ip: result[i].ip.value,
+                                    campaignName: result[i].key
+                                });
+                            }
+                            break;
+                        case "clickTotal":
+                            for (var i = 0; i < result.length; i++) {
+                                dataArry.push({
+                                    clickTotal: result[i].clickTotal.value,
+                                    campaignName: result[i].key
+                                });
+                            }
+                            break;
+                        case "conversions":
+                            for (var i = 0; i < result.length; i++) {
+                                dataArry.push({
+                                    conversions: result[i].conversions.value,
                                     campaignName: result[i].key
                                 });
                             }

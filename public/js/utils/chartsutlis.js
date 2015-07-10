@@ -57,6 +57,10 @@ var chartUtils = {
             case "转化率":
                 return "crate";
                 break;
+            case "事件点击总数":
+                return "clickTotal";
+            case "唯一访客事件数":
+                return "visitNum";
             default :
                 return "pv";
         }
@@ -104,6 +108,10 @@ var chartUtils = {
             case "crate":
                 return "转化率";
                 break;
+            case "clickTotal":
+                return "事件点击总数";
+            case "visitNum":
+                return "唯一访客事件数";
             default :
                 return "浏览量(PV)";
         }

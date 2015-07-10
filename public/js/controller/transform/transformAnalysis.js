@@ -23,16 +23,16 @@ define(["./module"], function (ctrs) {
                 {consumption_name: "新访客比率", name: "nuvRate"}
             ];
             $scope.transform = [
-                {consumption_name: '转化次数', name: 'convert'},
-                {consumption_name: '转化率', name: 'convertRate'},
-                {consumption_name: '平均转化成本', name: 'avgCost'}
+                {consumption_name: '转化次数', name: 'conversions'},
+                {consumption_name: '转化率', name: 'crate'},
+                {consumption_name: '平均转化成本', name: 'transformCost'}
             ];
             $scope.eventParameter = [
                 {consumption_name:"事件点击总数",name:"clickTotal"},
                 {consumption_name:"唯一访客事件数",name:"visitNum"}
             ];
             //配置默认指标
-            $rootScope.checkedArray = [ "clickTotal","pv", "uv", "ip","convert"];
+            $rootScope.checkedArray = [ "clickTotal","pv", "uv", "ip","conversions","vc"];
             $rootScope.searchGridArray = [
                 {
                     name: "xl",
@@ -48,20 +48,14 @@ define(["./module"], function (ctrs) {
                     , footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"
                 },
                 {
-                    name: "访问次数",
-                    displayName: "访问次数",
-                    field: "vc",
-                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
-                },
-                {
-                    name: "浏览量",
-                    displayName: "浏览量",
+                    name: "浏览量(PV)",
+                    displayName: "浏览量(PV)",
                     field: "pv",
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
                 },
                 {
-                    name: "访客数",
-                    displayName: "访客数",
+                    name: "访客数(UV)",
+                    displayName: "访客数(UV)",
                     field: "uv",
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
                 },
@@ -72,20 +66,26 @@ define(["./module"], function (ctrs) {
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
                 },
                 {
-                    name: "转化次数",
-                    displayName: "转化次数",
-                    field: "avgTime",
+                    name: "事件点击总数",
+                    displayName: "事件点击总数",
+                    field: "clickTotal",
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
                 },
                 {
-                    name: "平均访问时长",
-                    displayName: "平均访问时长",
-                    field: "nuvRate",
+                    name: "转化次数",
+                    displayName: "转化次数",
+                    field: "convert",
+                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                },
+                {
+                    name: "访问次数",
+                    displayName: "访问次数",
+                    field: "vc",
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
                 }
             ];
             $rootScope.tableSwitch = {
-                latitude: {name: "计划", displayName: "计划", field: "campaignName"},
+                latitude: {name: "事件名称", displayName: "事件名称", field: "campaignName"},
                 tableFilter: null,
                 dimen: false,
                 arrayClear: false, //是否清空指标array
@@ -94,7 +94,94 @@ define(["./module"], function (ctrs) {
                     SEMData: "campaign" //查询类型
                 }
             };
+            $scope.searchIndicators = function(item, entities, number){
+                $rootScope.searchGridArray.shift();
+                $rootScope.searchGridArray.shift();
+                //if (refresh == "refresh") {
+                //    $rootScope.searchGridArray.unshift($rootScope.tableSwitch.latitude);
+                //    return
+                //}
+                $rootScope.tableSwitch.number != 0 ? $scope.searchGridArray.shift() : "";
+                $scope.searchGridObj = {};
+                $scope.searchGridObjButton = {};
+                var a = $rootScope.checkedArray.indexOf(item.name);
+                if (a != -1) {
+                    $rootScope.checkedArray.splice(a, 1);
+                    $rootScope.searchGridArray.splice(a, 1);
 
+                    if ($rootScope.tableSwitch.number != 0) {
+                        $scope.searchGridObjButton["name"] = " ";
+                        $scope.searchGridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
+                        $rootScope.searchGridArray.unshift($scope.searchGridObjButton);
+                    }
+                    $rootScope.searchGridArray.unshift($rootScope.tableSwitch.latitude);
+                    $scope.gridObjButton = {};
+                    $scope.gridObjButton["name"] = "xl";
+                    $scope.gridObjButton["displayName"] = "";
+                    $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
+                    $scope.gridObjButton["maxWidth"] = 10;
+                    $rootScope.searchGridArray.unshift($scope.gridObjButton);
+                } else {
+                    if ($rootScope.checkedArray.length >= number) {
+                        $rootScope.checkedArray.shift();
+                        $rootScope.checkedArray.push(item.name);
+                        $rootScope.searchGridArray.shift();
+
+                        $scope.searchGridObj["name"] = item.consumption_name;
+                        $scope.searchGridObj["displayName"] = item.consumption_name;
+                        $scope.searchGridObj["footerCellTemplate"] = "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>";
+                        $scope.searchGridObj["field"] = item.name;
+
+                        $rootScope.searchGridArray.push($scope.searchGridObj);
+
+                        if ($rootScope.tableSwitch.number != 0) {
+                            $scope.searchGridObjButton["name"] = " ";
+                            $scope.searchGridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
+                            $rootScope.searchGridArray.unshift($scope.searchGridObjButton);
+                        }
+
+                        $rootScope.searchGridArray.unshift($rootScope.tableSwitch.latitude);
+                        $scope.gridObjButton = {};
+                        $scope.gridObjButton["name"] = "xl";
+                        $scope.gridObjButton["displayName"] = "";
+                        $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
+                        $scope.gridObjButton["maxWidth"] = 10;
+                        $rootScope.searchGridArray.unshift($scope.gridObjButton);
+                    } else {
+                        $rootScope.checkedArray.push(item.name);
+
+                        $scope.searchGridObj["name"] = item.consumption_name;
+                        $scope.searchGridObj["displayName"] = item.consumption_name;
+                        $scope.searchGridObj["footerCellTemplate"] = "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>";
+                        $scope.searchGridObj["field"] = item.name;
+                        $rootScope.searchGridArray.push($scope.searchGridObj);
+
+                        if ($rootScope.tableSwitch.number != 0) {
+                            console.log("78987986sd98f678sd6f87s6df7")
+                            $scope.searchGridObjButton["name"] = " ";
+                            $scope.searchGridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
+                            $rootScope.searchGridArray.unshift($scope.searchGridObjButton);
+                        }
+                        $rootScope.searchGridArray.unshift($rootScope.tableSwitch.latitude);
+                        $scope.gridObjButton = {};
+                        $scope.gridObjButton["name"] = "xl";
+                        $scope.gridObjButton["displayName"] = "";
+                        $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
+                        $scope.gridObjButton["maxWidth"] = 10;
+                        $rootScope.searchGridArray.unshift($scope.gridObjButton);
+                    }
+                }
+                angular.forEach(entities, function (subscription, index) {
+                    if (subscription.name == item.name) {
+                        $scope.classInfo = 'current';
+                    }
+                });
+                $scope.$broadcast("transformData", {
+                    start: $rootScope.start,
+                    end: $rootScope.end,
+                    checkedArray:$scope.checkedArray
+                });
+            };
 
             $scope.selectedQuota = ["click", "impression"];
             $scope.onLegendClickListener = function (radio, chartInstance, config, checkedVal) {
@@ -139,31 +226,6 @@ define(["./module"], function (ctrs) {
                 $rootScope.start = -1;
                 $rootScope.end = -1;
                 //$scope.init(user, baiduAccount, semType, quotas, start, end, renderLegend);
-            }
-            $scope.init = function (user, baiduAccount, semType, quotas, start, end, renderLegend) {
-                //console.log(renderLegend)
-                if (quotas.length) {
-                    var semRequest = "";
-                    if (quotas.length == 1) {
-                        semRequest = $http.get(SEM_API_URL + "/" + user + "/" + baiduAccount + "/" + semType + "/" + quotas[0] + "-?startOffset=" + start + "&endOffset=" + end);
-                    } else {
-                        semRequest = $http.get(SEM_API_URL + "/" + user + "/" + baiduAccount + "/" + semType + "/" + quotas[0] + "-" + quotas[1] + "-?startOffset=" + start + "&endOffset=" + end)
-                    }
-                    $q.all([semRequest]).then(function (final_result) {
-                        final_result[0].data.sort(chartUtils.by(quotas[0]));
-                        var total_result = chartUtils.getSemBaseData(quotas, final_result, "campaignName");
-                        var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
-                        chart.showLoading({
-                            text: "正在努力的读取数据中..."
-                        });
-                        $scope.charts[0].config.instance = chart;
-                        if (renderLegend) {
-                            util.renderLegend(chart, $scope.charts[0].config);
-                            Custom.initCheckInfo();
-                        }
-                        cf.renderChart(total_result, $scope.charts[0].config);
-                    });
-                }
             }
             $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "campaign", $scope.selectedQuota, -1, -1, true);
 
@@ -267,7 +329,8 @@ define(["./module"], function (ctrs) {
             $scope.my_init = function (isContrastDataByTime) {
                 $scope.$broadcast("transformData", {
                     start: $rootScope.start,
-                    end: $rootScope.end
+                    end: $rootScope.end,
+                    checkedArray:$scope.checkedArray
                 });
                 $scope.dataTable(null, "day", ["pv", "uv", null, null, null, null]);
                 $scope.isCompared = isContrastDataByTime;
@@ -334,7 +397,17 @@ define(["./module"], function (ctrs) {
                 });
 
             };
+            $scope.targetSearchSpread = function(isClicked){
+                console.log("test")
+                if (isClicked) {
+                    console.log("mohoi")
 
+                    $scope.$broadcast("transformData_ui_grid", {
+                        checkedArray:$scope.checkedArray
+                    });
+                }
+
+            };
             //$scope.my_init(false);
 
         }
