@@ -524,13 +524,14 @@ var outRateFn = function (result, dimension) {
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
-        var vc = result[i].vc_aggs.value;
+        var vc = result[i].vc_aggs.vc_aggs.value;
         var svc = parseInt(vc) - result[i].single_visitor_aggs.buckets.length;
         keyArr.push(result[i].key);
 
         var outRate = 0;
-        if (vc > 0)
+        if (vc > 0) {
             outRate = (parseFloat(svc) / parseFloat(vc) * 100).toFixed(2);
+        }
 
         quotaArr.push(outRate);
     }

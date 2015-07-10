@@ -423,7 +423,7 @@ if (config != undefined && !config.open) {
                     //ab = ab.substring(ab.indexOf(".") + 1, ab.indexOf("/"));
                     md.g.tt = a = this.getData("PFT_" + c.id);
                     var Judge = (this.getData("PFT_COOKIE_RF") == null || this.getData("PFT_COOKIE_RF") != decodeURIComponent(md.g.rf));
-                    if (null == a || undefined == a || "" == a || as != "-" && Judge) {
+                    if (null == a || undefined == a || "" == a || (as != "-" && Judge)) {
                         this.setData("PFT_" + c.id);
                         cookie.set("PFT_COOKIE_RF", decodeURIComponent(md.g.rf));
                         md.g.tt = this.getData("PFT_" + c.id);
