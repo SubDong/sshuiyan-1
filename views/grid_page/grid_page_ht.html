@@ -7,11 +7,11 @@
         <p><a href='' style='color:#46b8da;position: absolute;margin-left: 60px;' ng-click='deleteall()'>批量删除</a></p>
     </div>
     <a ng-click="gridApiAdmin.pagination.previousPage()" ng-hide="gridApiAdmin.pagination.getTotalPages()<=1">上一页</a>
-    <button type="button" class="btn btn_ht " data-ng-repeat="gridpage in gridpages"
+    <span  data-ng-repeat="gridpage in gridpages"
             ng-class="{'current':gridApiAdmin.pagination.getPage()=={{$index+1}}}"
             ng-click="gridApiAdmin.pagination.seek($index+1)" ng-hide="gridApiAdmin.pagination.getTotalPages()<={{$index}}">
         {{$index+1}}
-    </button>
+    </span>
     <span ng-hide="gridApiAdmin.pagination.getTotalPages()<=10">...</span>
     <button type="button" class="btn btn_ht" ng-click="gridApiAdmin.pagination.seek(gridApiAdmin.pagination.getTotalPages())"
             ng-class="{'current':gridApiAdmin.pagination.getPage()==gridApiAdmin.pagination.getTotalPages()}"

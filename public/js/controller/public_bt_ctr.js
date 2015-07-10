@@ -12,7 +12,7 @@ define(["app"], function (app) {
             templateUrl:'./grid_page/grid_page_ht.html',
             replace: true,
             transclude: true,
-            link: function (scope, element, attris, controller) {
+            link: function (scope) {
                 //scope.selectAll = function() {
                 //    console.log(111);
                 //   // scope.gridApi2.selection.selectAllRows();

@@ -518,11 +518,16 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
     app.directive("gridpage", function ($rootScope) {
         var option = {
             restrict: "EA",
-            template: "<div class=\"page\"><a ng-click=\"gridApi2.pagination.previousPage()\" ng-hide=\"gridApi2.pagination.getTotalPages()<=1\">上一页</a> <button type=\"button\" class=\"btn\"> {{ gridApi2.pagination.getPage() }}</button><a ng-click=\"gridApi2.pagination.nextPage()\" ng-hide=\"gridApi2.pagination.getTotalPages()<=1\">下一页 </a> <input type=\"text\" ng-model=\"page\" value=\"\"><span> /{{ gridApi2.pagination.getTotalPages() }}</span> <button type=\"button\" class=\"btn\" ng-click=\"pagego(gridApi2)\">跳转</button><span class='pageshow'>每页显示：</span> </div>",
-            transclude: true
+            templateUrl: './grid_page/grid_page_qiantai.html',
+            transclude: true,
+            link:function(scope){
+                scope.gridpages=[0,1,2,3,4,5,6,7,8];
+            }
         };
         return option;
+
     });
+
     /**
      * Create by wms on 2015-04-22.合计信息显示
      */
@@ -532,6 +537,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
             templateUrl: '../commons/date_show.html',
             link: function (scope, element, attris, controller) {
                 // 初始化参数
+
                 scope.isCompared = false;
                 scope.dateShowArray = [];
                 scope.ssh_seo_type = attris.semType;
@@ -546,6 +552,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     });
                     scope.ds_keyData = [];
                     scope.dateShowArray = $rootScope.copy(tempArray);
+
                 };
                 // 刷新加载时设置默认指标
                 scope.setDefaultShowArray();
