@@ -1,7 +1,7 @@
 
 
 var heaturl_request = {
-    searchPV: function (es, indexes, type, rf ,callbackFn) {
+    searchHeaderData: function (es, indexes, type, rf ,callbackFn) {
         //声明 请求参数 变量
         var request = null;
         request = {
@@ -74,6 +74,9 @@ var heaturl_request = {
                 }
             }
         };
+
+
+
 
         es.search(request, function (error, response) {
             var data = [];

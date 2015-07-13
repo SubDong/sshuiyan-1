@@ -565,19 +565,27 @@ api.get("/heatmap", function (req, res) {
 });
 
 /**
- * 跨域访问-获取热力图-表头数据
+ * 跨域访问-获取热力图-明细数据
  */
 api.get("/getHeatUrlDetailData", function (req, res) {
+
+    var query = url.parse(req.url, true).query;
+
 
     var _type =req.session.type;
     var _rf = req.session.rf;
     var _startTime = req.session.startTime;;
     var _endTime = req.session.endTime;
-
+    var _sourceUrl =   query['sourceUrl'];
     var indexes = date.createIndexes(_startTime, _endTime, "access-");//indexs
 
-    res.write("disposeDetailDataCallback()");
-    res.end();
+
+
+    heaturl_request.searchDetail(req.es, indexes, _type,_rf,function (result) {
+
+        res.write("disposeDetailDataCallback("+JSON.stringify(result)+");");
+        res.end();
+    });
 
 });
 
@@ -593,7 +601,7 @@ api.get("/getHeatUrlHeaderData", function (req, res) {
 
     var indexes = date.createIndexes(_startTime, _endTime, "access-");//indexs
 
-    heaturl_request.searchPV(req.es, indexes, _type,_rf,function (result) {
+    heaturl_request.searchHeaderData(req.es, indexes, _type,_rf,function (result) {
 
         res.write("disposeHeaderDataCallback("+JSON.stringify(result)+");");
         res.end();
@@ -617,7 +625,7 @@ api.get("/heaturl", function (req, res) {
     req.session.rf = _rf;
 
     var indexes = date.createIndexes(_startTime, _endTime, "access-");
-    heaturl_request.searchPV(req.es, indexes, _type,_rf,function (result) {
+    heaturl_request.searchHeaderData(req.es, indexes, _type,_rf,function (result) {
 
         console.log(result);
         datautils.send(res, result);
