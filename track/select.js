@@ -960,7 +960,7 @@
         },
         showTip: function (docId) {
             var doc = forcedoc(docId)//获取标签附着元素DOM
-            var ag = (g(doc, "position", "fixed") || g(doc, "position", "absolute")) && !v.forms.hasOwnProperty(doc.tagName.toLowerCase());
+            var ag = (g(doc, "position", "fixed") || g(doc, "position", "absolute"));
             var tipDiv = tipContent.creatTipContainer();//创建tip标签
             doc.setAttribute("HY_transId", docId);//设置所属ID
             doc.setAttribute("HY_EventId", tipDiv.id);
