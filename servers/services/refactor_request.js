@@ -62,16 +62,9 @@ var es_aggs = {
     },
     // 访客数
     "uv": {
-        "uv_filter": {
-            "filter": {
-                "term": {"entrance": "1"}
-            },
-            "aggs": {
-                "uv_aggs": {
-                    "cardinality": {
-                        "field": "_ucv"
-                    }
-                }
+        "uv_aggs": {
+            "cardinality": {
+                "field": "_ucv"
             }
         }
     },
@@ -119,11 +112,6 @@ var es_aggs = {
     // 新访客比率
     "nuvRate": {
         "new_visitor_aggs": _new_visitor_aggs,
-        //"uv_aggs": {
-        //    "cardinality": {
-        //        "field": "_ucv"
-        //    }
-        //}
         "uv_filter": {
             "filter": {
                 "term": {"entrance": "1"}
@@ -148,11 +136,6 @@ var es_aggs = {
     },
     // IP数
     "ip": {
-        //"ip_aggs": {
-        //    "cardinality": {
-        //        "field": "remote"
-        //    }
-        //}
         "ip_aggs": {
             "filter": {
                 "term": {
@@ -411,19 +394,13 @@ var buildRequest = function (indexes, type, quotas, dimension, filters, start, e
     }
 };
 
-var pvFn = function (result, dimension) {
+var pvFn = function (result) {
     var keyArr = [];
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
-        try {
-            var pv = result[i].pv_aggs.value;
-            Array.prototype.push.call(keyArr, result[i].key);
-            Array.prototype.push.call(quotaArr, pv);
-        } catch (e) {
-            console.error(e);
-        }
-
+        Array.prototype.push.call(keyArr, result[i].key);
+        Array.prototype.push.call(quotaArr, result[i].pv_aggs.value);
     }
 
     return {
@@ -433,15 +410,13 @@ var pvFn = function (result, dimension) {
     };
 };
 
-var contributionFn = function (result, dimension) {
+var contributionFn = function (result) {
     var keyArr = [];
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
-        var cpv = result[i].cpv_aggs.cpv_aggs.value;
         Array.prototype.push.call(keyArr, result[i].key);
-
-        Array.prototype.push.call(quotaArr, cpv);
+        Array.prototype.push.call(quotaArr, result[i].cpv_aggs.cpv_aggs.value);
     }
 
     return {
@@ -451,20 +426,13 @@ var contributionFn = function (result, dimension) {
     };
 };
 
-var uvFn = function (result, dimension) {
+var uvFn = function (result) {
     var keyArr = [];
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
-        var uv = 0;
-
-        if (result[i].uv_filter.uv_aggs != undefined) {
-            uv = result[i].uv_filter.uv_aggs.value;
-        }
-
         keyArr.push(result[i].key);
-
-        quotaArr.push(uv);
+        quotaArr.push(result[i].uv_aggs.value);
     }
 
     return {
@@ -474,7 +442,7 @@ var uvFn = function (result, dimension) {
     };
 };
 
-var vcFn = function (result, dimension) {
+var vcFn = function (result) {
     var keyArr = [];
     var quotaArr = [];
 
@@ -492,7 +460,7 @@ var vcFn = function (result, dimension) {
     };
 };
 
-var avgTimeFn = function (result, dimension) {
+var avgTimeFn = function (result) {
     var keyArr = [];
     var quotaArr = [];
 
@@ -518,7 +486,7 @@ var avgTimeFn = function (result, dimension) {
     };
 };
 
-var outRateFn = function (result, dimension) {
+var outRateFn = function (result) {
     var keyArr = [];
     var quotaArr = [];
 
@@ -542,7 +510,7 @@ var outRateFn = function (result, dimension) {
     };
 };
 
-var nuvFn = function (result, dimension) {
+var nuvFn = function (result) {
     var keyArr = [];
     var quotaArr = [];
 
@@ -560,7 +528,7 @@ var nuvFn = function (result, dimension) {
     };
 };
 
-var nuvRateFn = function (result, dimension) {
+var nuvRateFn = function (result) {
     var keyArr = [];
     var quotaArr = [];
 
@@ -585,7 +553,7 @@ var nuvRateFn = function (result, dimension) {
     };
 };
 
-var ipFn = function (result, dimension) {
+var ipFn = function (result) {
     var keyArr = [];
     var quotaArr = [];
 
@@ -604,7 +572,7 @@ var ipFn = function (result, dimension) {
     };
 };
 
-var avgPageFn = function (result, dimension) {
+var avgPageFn = function (result) {
     var keyArr = [];
     var quotaArr = [];
     for (var i = 0, l = result.length; i < l; i++) {
@@ -625,7 +593,7 @@ var avgPageFn = function (result, dimension) {
     };
 };
 
-var arrivedRateFn = function (result, dimension) {
+var arrivedRateFn = function (result) {
     var keyArr = [];
     var quotaArr = [];
 
@@ -643,7 +611,7 @@ var arrivedRateFn = function (result, dimension) {
     };
 };
 
-var conversions = function (result, dimension) {
+var conversions = function (result) {
     var keyArr = [];
     var quotaArr = [];
 
@@ -661,7 +629,7 @@ var conversions = function (result, dimension) {
     };
 };
 
-var eventConversionFn = function (result, dimension) {
+var eventConversionFn = function (result) {
     var keyArr = [];
     var quotaArr = [];
 
@@ -676,7 +644,7 @@ var eventConversionFn = function (result, dimension) {
 };
 
 
-var pageConversionFn = function (result, dimension) {
+var pageConversionFn = function (result) {
     var keyArr = [];
     var quotaArr = [];
 
@@ -807,46 +775,46 @@ var es_request = {
                         quotas.forEach(function (quota) {
                             switch (quota) {
                                 case "pv":
-                                    data.push(pvFn(result, dimension));
+                                    data.push(pvFn(result));
                                     break;
                                 case "contribution":
-                                    data.push(contributionFn(result, dimension));
+                                    data.push(contributionFn(result));
                                     break;
                                 case "uv":
-                                    data.push(uvFn(result, dimension));
+                                    data.push(uvFn(result));
                                     break;
                                 case "vc":
-                                    data.push(vcFn(result, dimension));
+                                    data.push(vcFn(result));
                                     break;
                                 case "avgTime":
-                                    data.push(avgTimeFn(result, dimension));
+                                    data.push(avgTimeFn(result));
                                     break;
                                 case "outRate":
-                                    data.push(outRateFn(result, dimension));
+                                    data.push(outRateFn(result));
                                     break;
                                 case "arrivedRate":
-                                    data.push(arrivedRateFn(result, dimension));
+                                    data.push(arrivedRateFn(result));
                                     break;
                                 case "avgPage":
-                                    data.push(avgPageFn(result, dimension));
+                                    data.push(avgPageFn(result));
                                     break;
                                 case "conversions":
-                                    data.push(conversions(result, dimension));
+                                    data.push(conversions(result));
                                     break;
                                 case "pageConversion" :
-                                    data.push(pageConversionFn(result, dimension));
+                                    data.push(pageConversionFn(result));
                                     break;
                                 case "eventConversion":
-                                    data.push(eventConversionFn(result, dimension));
+                                    data.push(eventConversionFn(result));
                                     break;
                                 case "ip":
-                                    data.push(ipFn(result, dimension));
+                                    data.push(ipFn(result));
                                     break;
                                 case "nuv":
-                                    data.push(nuvFn(result, dimension));
+                                    data.push(nuvFn(result));
                                     break;
                                 case "nuvRate":
-                                    data.push(nuvRateFn(result, dimension));
+                                    data.push(nuvRateFn(result));
                                     break;
                                 default :
                                     break;
@@ -885,9 +853,7 @@ var es_request = {
             "type": type,
             "body": {
                 "query": {
-                    "bool": {
-                        "must": []
-                    }
+                    "match_all": {}
                 },
                 "sort": {
                     "utime": {
@@ -1035,7 +1001,8 @@ var es_request = {
                         "aggs": {
                             "se_aggs": {
                                 "terms": {
-                                    "field": "se"
+                                    "field": "se",
+                                    "size": 0
                                 }
                             }
                         }
@@ -1049,7 +1016,8 @@ var es_request = {
                         "aggs": {
                             "chain_aggs": {
                                 "terms": {
-                                    "field": "dm"
+                                    "field": "dm",
+                                    "size": 0
                                 }
                             }
                         }
