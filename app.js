@@ -23,7 +23,7 @@ var express = require('express'),
 
 
 var env = "dev";
-var config = require("./config_dev.json");
+var config = require("./config.json");
 
 var es_client = es.init(config.es);
 
