@@ -133,6 +133,7 @@ define(["./module"], function (ctrs) {
                     min_max: false,
                     bGap: false,//首行缩进
                     chartType: "line",//图表类型
+                    half:true,
                     keyFormat: 'none',
                     dataKey: "key",//传入数据的key值
                     dataValue: "quota"//传入数据的value值

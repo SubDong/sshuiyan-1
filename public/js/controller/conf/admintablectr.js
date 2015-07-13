@@ -116,7 +116,6 @@ define(["../module"], function (app) {
                 }
             };
         }
-        console.log($rootScope.gridOptions.pagination);
         //////DENG
         //配置展开巷HTML
         var adminGriApiInfo = function (gridApi) {

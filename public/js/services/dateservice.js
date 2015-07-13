@@ -45,7 +45,7 @@ define(["../app"], function (app) {
                 $http.get(grid.url + "?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + grid.types + "&dimension=" + grid.dimension + "&userType=" + $rootScope.userType).success(function (data) {
                     var json = JSON.parse((eval("(" + data + ")").toString()));
                     grid.config.gridOptions.data = [];
-                    if (json) {
+                    if (json[0]) {
                         if (json[0].quota.length) {
                             if (json[0].quota.length > 11) {
                                 json[0].key = json[0].key.slice(0, 11);
