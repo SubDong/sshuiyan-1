@@ -582,7 +582,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     scope.DateNumber = false;
                     scope.DateLoading = false;
                     scope.setDefaultShowArray();
-                    var esRequest = $http.get('/api/index_summary/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field) + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
+                    var esRequest = $http.get('/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field) + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
                     var seoQuotas = scope.getSEOQuotas();
                     if (seoQuotas.length > 0) {
                         var seoRequest = $http.get(SEM_API_URL + "/sem/report/" + scope.ssh_seo_type + "?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&device=-1&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd);
@@ -634,7 +634,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                 scope.pushESData = function (result, flag) {
                     var _array = $rootScope.copy(scope.dateShowArray);
                     var _count = 0;
-                    var result = JSON.parse(eval('(' + result + ')').toString())
                     angular.forEach(result, function (r) {
                         var infoKey = r[$rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field];
                         if (scope.filter) {
@@ -651,17 +650,22 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                         _count++;
                         angular.forEach(_array, function (obj) {
                             var temp = obj.label;
-                            if (r.label != temp) {
+                            if (r[temp] == undefined) {
                                 return false;
                             }
                             if (flag) {
-                                //obj.cValue += (r[temp].indexOf("%") != -1) ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
-                                obj.cValue += Number(r.quota[0]);
-                                obj.cCount = r.quota.length;
+                                if (obj.label == "avgTime") {
+                                    var hour = Number(r[temp].split(":")[0]);
+                                    var min = Number(r[temp].split(":")[1]);
+                                    var sec = Number(r[temp].split(":")[2]);
+                                    var count = (((hour * 60) * 60) + (min * 60) + sec);
+                                    obj.cValue += count;
+                                } else {
+                                    obj.cValue += (r[temp].indexOf("%") != -1) ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
+                                }
                             } else {
                                 //obj.value += (r[temp].indexOf("%") != -1) ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
                                 obj.value += Number(r.quota[0]);
-                                ;
                                 obj.count = r.quota.length;
                             }
                         });
@@ -705,15 +709,12 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                         }
                         return false;
                     }
-
                     // 设置_count
                     angular.forEach(_array, function (obj) {
-                        if (isSeoLabel(obj.label)) {
-                            if (flag) {
-                                obj.cCount = _count;
-                            } else {
-                                obj.count = _count;
-                            }
+                        if (flag) {
+                            obj.cCount = _count;
+                        } else {
+                            obj.count = _count;
                         }
                     });
                     scope.dateShowArray = $rootScope.copy(_array);
@@ -728,20 +729,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     scope.loadCompareDataShow(startTime, endTime);
                 });
 
-                //scope.$on("LoadDateShowDataFinish", function (e, msg) {
-                //    scope.isCompared = false;
-                //    scope.setDefaultShowArray();
-                //    scope.pushESData(msg);
-                //});
-                //
-                //scope.$on("LoadDateShowSEMDataFinish", function (e, msg) {
-                //    scope.isCompared = false;
-                //    scope.setDefaultShowArray();
-                //    scope.pushSEOData(msg);
-                //});
-
-                // 根据表格请求一次进行datashow请求一次
-                scope.$on("ssh_dateShow_options_quotas_change", function (e, msg) {
+                scope.$on("LoadDateShowDataFinish", function (e, msg) {
                     scope.isCompared = false;
                     var temp = $rootScope.copy(msg);
                     if (temp.length > 0) {
@@ -749,8 +737,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     }
                     scope.loadDataShow();
                 });
-                scope.loadDataShow();
-
             }
         };
     });
@@ -1406,17 +1392,28 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     var isConf = function (a, b) {// 网站设置
                         return a == "/conf" && b == "#conf";
                     }
+
                     angular.forEach(expanders, function (e_r, index) {
+                        console.log(_path);
+                        if(_path=="/transform/pageTransform"){
+                            $rootScope.$broadcast("updateSelectRowIndex", 7 );
+                        }
+
                         if (isIndex(_path, e_r.sref) || isConf(_path, e_r.sref)) {
                             e_r.showText = true;
                             $rootScope.$broadcast("updateSelectRowIndex", index);
                             return;
                         }
-
+                        if (_path =="/transform/transformAnalysis") {
+                            $rootScope.$broadcast("updateSelectRowIndex", 7);
+                        }
                         if (e_r.sref == _path.substring(1, _path.substring(1).indexOf("/") + 1)) {
+
                             e_r.showText = true;
                             $rootScope.$broadcast("updateSelectRowIndex", index);
-                        } else if (e_r.sref == _path.split("/")[2]) {
+                        }
+
+                        else if (e_r.sref == _path.split("/")[2]) {
                             e_r.showText = true;
                             $rootScope.$broadcast("updateSelectRowIndex", index);
                         } else {
