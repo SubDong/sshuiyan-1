@@ -82,9 +82,7 @@ define(["./module"], function (ctrs) {
                 var strSrc = "http://" + previewUrl + "?domain=" + localURl + "&amp;td=" + tid + "&amp;cuid=" + cuid + "&amp;jn=select&amp;type=event";
 
                 $scope.urlDialog = ngDialog.open({
-                    preCloseCallback: function () {
-                        $state.go('eventchange');
-                    },
+
                     template: '\
                         <div class="ngdialog-content" style="width:100%">\
                             <div id="previewControlPanel">\
@@ -109,7 +107,6 @@ define(["./module"], function (ctrs) {
             if (regex.test(previewUrl) == true) {
                 $http.get("cdapi/link?path=" + previewUrl).success(function (data) {
 
-                    console.log(data);
                     var k = Number((data.toString().split('tid=')[0].split('\"').length));
                     if (data.toString().split("tid=")[0].split("\"")[k - 1].split("/").length == 4) {
 
@@ -127,10 +124,10 @@ define(["./module"], function (ctrs) {
                             });
                         } else {
                             $scope.iframeobj();
-                            alert("b.未检测到代码安装");
+                            alert("未检测到代码安装");
                         }
                     } else {
-                        alert("b.未检测到代码安装");
+                        alert("您输入的地址不存在");
                     }
                 });
             } else {
