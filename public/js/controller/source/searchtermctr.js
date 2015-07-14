@@ -154,10 +154,10 @@ define(["./module"], function (ctrs) {
 
             //刷新
             $scope.page_refresh = function () {
-                $rootScope.start = 0;
-                $rootScope.end = 0;
-                $rootScope.tableTimeStart = 0;
-                $rootScope.tableTimeEnd = 0;
+//                $rootScope.start = 0;
+//                $rootScope.end = 0;
+//                $rootScope.tableTimeStart = 0;
+//                $rootScope.tableTimeEnd = 0;
 //                $scope.charts.forEach(function (e) {
 //                    var chart = echarts.init(document.getElementById(e.config.id));
 //                    e.config.instance = chart;
@@ -169,7 +169,7 @@ define(["./module"], function (ctrs) {
                 $scope.reloadByCalendar("today");
                 $('#reportrange span').html(GetDateStr(0));
                 //其他页面表格
-                $rootScope.targetSearch();
+//                $rootScope.targetSearch();
                 //classcurrent
                 $scope.reset();
                 $scope.todayClass = true;

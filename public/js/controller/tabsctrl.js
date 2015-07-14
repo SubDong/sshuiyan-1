@@ -1072,7 +1072,10 @@ define(["app"], function (app) {
         };
         //init
         if ($scope.tableJu != 'html' && $rootScope.historyJu != "NO") {
-            $scope.targetSearch();
+            if($location.path() != "/source/searchterm" && $location.path() != "/visitor/equipment" && $location.path() != "/visitor/provincemap"){//防止多次访问
+                $scope.targetSearch();
+            }
+//            $scope.targetSearch();
         }
         $scope.$on("history", function (e, msg) {
             $scope.gridOpArray = angular.copy($rootScope.gridArray);
