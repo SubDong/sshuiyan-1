@@ -261,7 +261,7 @@ define(["./module"], function (ctrs) {
 
         // init
         $scope.doSearch($scope.dateTimeStart, $scope.dateTimeEnd, $rootScope.userType);
-        $scope.doSearchAreas($scope.dateTimeStart, $scope.dateTimeEnd, $rootScope.userType, $scope.mapOrPieConfig);
+//        $scope.doSearchAreas($scope.dateTimeStart, $scope.dateTimeEnd, $rootScope.userType, $scope.mapOrPieConfig);
         $scope.mapselect = [
             {consumption_name: "浏览量(PV)"},
             {consumption_name: "访问次数"},
@@ -299,16 +299,16 @@ define(["./module"], function (ctrs) {
 
         //刷新
         $scope.page_refresh = function () {
-            $rootScope.start = 0;
-            $rootScope.end = 0;
-            $rootScope.tableTimeStart = 0;
-            $rootScope.tableTimeEnd = 0;
-            $scope.doSearch($scope.dateTimeStart, $scope.dateTimeEnd, $rootScope.userType);
-            $scope.doSearchAreas($scope.dateTimeStart, $scope.dateTimeEnd, $rootScope.userType, $scope.mapOrPieConfig);
+//            $rootScope.start = 0;
+//            $rootScope.end = 0;
+//            $rootScope.tableTimeStart = 0;
+//            $rootScope.tableTimeEnd = 0;
+//            $scope.doSearch($scope.dateTimeStart, $scope.dateTimeEnd, $rootScope.userType);
+//            $scope.doSearchAreas($scope.dateTimeStart, $scope.dateTimeEnd, $rootScope.userType, $scope.mapOrPieConfig);
             $scope.reloadByCalendar("today");
             $('#reportrange span').html(GetDateStr(0));
             //其他页面表格
-            $rootScope.targetSearch();
+//            $rootScope.targetSearch();
             //classcurrent
             $scope.reset();
             $scope.todayClass = true;
