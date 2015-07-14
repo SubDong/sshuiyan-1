@@ -7,6 +7,7 @@ var schemas = {
         model_name: "TrendYesterdayTable",
         collection_name: "cache_trend_yesterday_table",
         schema: {
+            uid: String, // user id 用户ID
             date:String,//日期
             timeFrame:String,//时间范围
             pv: String, // 浏览量
@@ -26,6 +27,7 @@ var schemas = {
         model_name: "TrendYesterdaySummary",
         collection_name: "cache_trend_yesterday_summary",
         schema: {
+            uid: String, // user id 用户ID
             date:String,//日期
             pv: String, // 浏览量
             vc: String,//访问次数
