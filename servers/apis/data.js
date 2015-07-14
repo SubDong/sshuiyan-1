@@ -432,6 +432,8 @@ api.get('/visitormap', function (req, res) {
         datautils.send(res, result);
     })
 });
+//首页设备环境图表
+
 //访客地图 图标
 api.get('/provincemap', function (req, res) {
     var query = url.parse(req.url, true).query;
@@ -440,12 +442,13 @@ api.get('/provincemap', function (req, res) {
     var _endTime = Number(query['end']);
     var areas = query['areas'];
     var property = query['property'];
+    var chartFilter = query['chartFilter'];
     if (property == "ct") {
         var indexes = date.createIndexes(_startTime, _endTime, "access-");
     } else {
         var indexes = date.createIndexes(_startTime, _endTime, "access-");
     }
-    initial.chartData(req.es, indexes, type, areas, property, function (data) {
+    initial.chartData(req.es, indexes, type, areas, property, chartFilter, function (data) {
         var result = {};
         var chart_data_array = new Array();
         var data_name = new Array();

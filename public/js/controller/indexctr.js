@@ -166,7 +166,6 @@ define(['./module'], function (ctrs) {
                     keyFormat: 'eq',
                     dataValue: "quota",
                     barClick: function (params) {
-
                         $state.go('provincemap', {data: params.name});
                     }
                 },
