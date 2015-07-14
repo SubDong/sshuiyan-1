@@ -5,7 +5,7 @@ define(["./module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.controller("SearchPromotion", function ($timeout, $scope, $rootScope, $http, $q, requestService, SEM_API_URL, $cookieStore,uiGridConstants) {
+    ctrs.controller("SearchPromotion", function ($timeout, $scope, $rootScope, $http, $q, requestService, SEM_API_URL, $cookieStore, uiGridConstants) {
         $scope.todayClass = true;
         var user = $rootScope.user
         var baiduAccount = $rootScope.baiduAccount;
@@ -156,7 +156,7 @@ define(["./module"], function (ctrs) {
         };
 
         //设置来源终端
-        $rootScope.$on("searchLoadAllTerminal", function (){
+        $rootScope.$on("searchLoadAllTerminal", function () {
             $scope.setSearchTerminalData(0);
         });
         var evTimeStamp = 0;
@@ -176,26 +176,26 @@ define(["./module"], function (ctrs) {
             if (a == 0) {
                 $scope.es_filter = null;
                 $scope.device = -1;
-                $scope.terminalSearch ="";
+                $scope.terminalSearch = "";
             }
             if (a == 1) {
                 $scope.es_filter = "[{\"pm\":[0]}]";
                 $scope.device = 0;
-                $scope.terminalSearch ="计算机";
+                $scope.terminalSearch = "计算机";
             }
             if (a == 2) {
                 $scope.es_filter = "[{\"pm\":[1]}]";
                 $scope.device = 1;
-                $scope.terminalSearch ="移动设备";
+                $scope.terminalSearch = "移动设备";
             }
             $scope.targetSearchSpread();
         };
         //搜索推广地域过滤
-        $rootScope.$on("searchLoadAllArea", function (){
-            $scope.setAreaFilter("全部",'plain');
+        $rootScope.$on("searchLoadAllArea", function () {
+            $scope.setAreaFilter("全部", 'plain');
         })
         $scope.setAreaFilter = function (area, id) {
-            $scope.areaSearch = area == "全部" ? "":area;
+            $scope.areaSearch = area == "全部" ? "" : area;
             if (area == "北京" || area == "上海" || area == "广州") {
                 if ($scope.city.selected != undefined) {
                     $scope.city.selected.name = area;
@@ -692,25 +692,95 @@ define(["./module"], function (ctrs) {
         $scope.init = function (timeData) {
             $scope.gridOptions.data = [];
             $http.get("/api/transform/transformAnalysis?start=" + timeData.start + "&end=" + timeData.end + "&action=event&type=1&searchType=table&queryOptions=" + timeData.checkedArray).success(function (data) {
+                //console.log(data)
+                //$http.get(SEM_API_URL+"/sem/report/campaign?a="+$rootScope.user+"&b="+$rootScope.baiduAccount+"&cid=&startOffset="+timeData.start+"&endOffset="+timeData.end+"&device=0&q=cost").success(function(data1){
+                //    console.log(data1)
+                //});
                 $scope.gridOptions.data = data;
             });
         };
         $scope.$on("transformData", function (e, msg) {
-            console.log($scope.gridOptions.columnDefs)
             $scope.init(msg)
         });
         $scope.$on("transformData_ui_grid", function (e, msg) {
-            console.log("890809809")
-            console.log(msg);
+            $rootScope.searchGridArray[2].displayName = chartUtils.convertChinese(msg.checkedArray[0]);
+            $rootScope.searchGridArray[2].field = msg.checkedArray[0];
+            $rootScope.searchGridArray[2].footerCellTemplate = "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>";
+            $rootScope.searchGridArray[2].name = chartUtils.convertChinese(msg.checkedArray[0]);
             $scope.gridOpArray = angular.copy($rootScope.searchGridArray);
             $scope.gridOptions.columnDefs = $scope.gridOpArray;
-            //for(var i = 0;i<msg.checkedArray.length;i++){
-            //    $scope.gridOptions.columnDefs[i+2].name=chartUtils.convertChinese(msg.checkedArray[i]);
-            //    $scope.gridOptions.columnDefs[i+2].displayName=chartUtils.convertChinese(msg.checkedArray[i]);
-            //    $scope.gridOptions.columnDefs[i+2].field=msg.checkedArray[i];
-            //};
-            console.log($scope.gridOptions.columnDefs)
+            $scope.init(msg)
         });
+        $scope.$on("transformAdvancedData_ui_grid", function (e, msg) {
+            $scope.advancedInit(msg)
+        });
+        $scope.advancedInit = function (msg) {
+            var query = "";
+            for (var i = 0; i < msg.checkedData.length; i++) {
+                switch (msg.checkedData[i].field) {
+                    case "all_rf":
+                        query += msg.checkedData[i].field + ":all,";
+                        break;
+                    case "souce":
+                        switch (msg.checkedData[i].name) {
+                            case "直接访问":
+                                query += "souce:3,";
+                                break;
+                            case "搜索引擎":
+                                query += "souce:2,";
+                                break;
+                            case "外部链接":
+                                query += "souce:1,";
+                                break;
+                        }
+                        break;
+                    case "browser":
+                        switch (msg.checkedData[i].name) {
+                            case "其他":
+                                query += "browser:other,";
+                                break;
+                            case "全部":
+                                break;
+                            default :
+                                query += "browser:" + msg.checkedData[i].name + ",";
+                                break;
+                        }
+                        break;
+                    case "uv_type":
+                        switch (msg.checkedData[i].name) {
+                            case "新访客":
+                                query += "uv_type:0,";
+                                break;
+                            case "老访客":
+                                query += "uv_type:1,";
+                                break;
+                            default :
+                                query += "uv_type:all,";
+                                break;
+                        }
+                        break;
+                    case "city":
+                        switch (msg.checkedData[i].name) {
+                            case "所有地域":
+                                query += "city:all,";
+                                break;
+                            case "全部":
+                                query += "city:all,";
+                                break;
+                            default :
+                                query += "city:" + msg.checkedData[i].name + ",";
+                                break;
+                        }
+                        break;
+                }
+
+            }
+            query = query.substring(0, query.length - 1);
+            $scope.gridOptions.data = [];
+            $http.get("/api/transform/transformAnalysis?start=" + msg.start + "&end=" + msg.end + "&action=event&type=1&searchType=advancedTable&queryOptions={" + query + "}&aggsOptions=" + msg.checkedArray).success(function (data) {
+                $scope.gridOptions.data = data;
+            });
+        };
     });
 
 //得到tableFilter key

@@ -265,8 +265,8 @@ api.get('/indextable', function (req, res) {
             try {
                 data.forEach(function (info, x) {
                     for (var i = 0; i < info.key.length; i++) {
-                        if (info.key[i] != undefined && info.key[i]+"".split(",").length > 1) {
-                            infoKey = info.key[i]+"".split(",")[0]
+                        if (info.key[i] != undefined && info.key[i] + "".split(",").length > 1) {
+                            infoKey = info.key[i] + "".split(",")[0]
                         } else {
                             infoKey = info.key[i]
                         }
@@ -572,18 +572,18 @@ api.get("/getHeatUrlDetailData", function (req, res) {
     var query = url.parse(req.url, true).query;
 
 
-    var _type =req.session.type;
+    var _type = req.session.type;
     var _rf = req.session.rf;
-    var _startTime = req.session.startTime;;
+    var _startTime = req.session.startTime;
+    ;
     var _endTime = req.session.endTime;
-    var _sourceUrl =   query['sourceUrl'];
+    var _sourceUrl = query['sourceUrl'];
     var indexes = date.createIndexes(_startTime, _endTime, "access-");//indexs
 
 
+    heaturl_request.searchDetail(req.es, indexes, _type, _rf, function (result) {
 
-    heaturl_request.searchDetail(req.es, indexes, _type,_rf,function (result) {
-
-        res.write("disposeDetailDataCallback("+JSON.stringify(result)+");");
+        res.write("disposeDetailDataCallback(" + JSON.stringify(result) + ");");
         res.end();
     });
 
@@ -594,16 +594,17 @@ api.get("/getHeatUrlDetailData", function (req, res) {
  */
 api.get("/getHeatUrlHeaderData", function (req, res) {
 
-    var _type =req.session.type;
+    var _type = req.session.type;
     var _rf = req.session.rf;
-    var _startTime = req.session.startTime;;
+    var _startTime = req.session.startTime;
+    ;
     var _endTime = req.session.endTime;
 
     var indexes = date.createIndexes(_startTime, _endTime, "access-");//indexs
 
-    heaturl_request.searchHeaderData(req.es, indexes, _type,_rf,function (result) {
+    heaturl_request.searchHeaderData(req.es, indexes, _type, _rf, function (result) {
 
-        res.write("disposeHeaderDataCallback("+JSON.stringify(result)+");");
+        res.write("disposeHeaderDataCallback(" + JSON.stringify(result) + ");");
         res.end();
     });
 });
@@ -625,7 +626,7 @@ api.get("/heaturl", function (req, res) {
     req.session.rf = _rf;
 
     var indexes = date.createIndexes(_startTime, _endTime, "access-");
-    heaturl_request.searchHeaderData(req.es, indexes, _type,_rf,function (result) {
+    heaturl_request.searchHeaderData(req.es, indexes, _type, _rf, function (result) {
 
         console.log(result);
         datautils.send(res, result);
@@ -778,6 +779,7 @@ api.get("/transform/transformAnalysis", function (req, res) {
     var searchType = parameters[4].split("=")[1];
     var indexString = [];
     var time = [];
+    var queryOptions = [];
     if (start.substring(1, start.length).match("-") != null && end.substring(1, start.length).match("-") != null) {
         indexString = date.createIndexsByTime(start, end, "access-");
         time = date.getConvertTimeByTime(start, end);
@@ -789,27 +791,61 @@ api.get("/transform/transformAnalysis", function (req, res) {
         transform.search(req.es, indexString, type, action, function (result) {
             datautils.send(res, result);
         })
-    } else if(searchType == "dataTable"){
+    } else if (searchType == "dataTable") {
         var showType = parameters[5].split("=")[1];
-        var queryOptions = parameters[6].split("=")[1];
+        queryOptions = parameters[6].split("=")[1];
         var querys = [];
-        var query = queryOptions.split(",");
-        for (var i = 0; i < query.length; i++) {
+        for (var i = 0; i < queryOptions.split(",").length; i++) {
             querys.push(queryOptions.split(",")[i]);
         }
-
         transform.searchByShowTypeAndQueryOption(req.es, indexString, type, action, showType, querys, function (result) {
             datautils.send(res, result);
         });
-    }else{
-        var queryOptions = parameters[5].split("=")[1];
+    } else if (searchType == "table") {
+        queryOptions = parameters[5].split("=")[1];
         var querys = [];
         var query = queryOptions.split(",");
         for (var i = 0; i < query.length; i++) {
             querys.push(queryOptions.split(",")[i]);
         }
-        console.log(querys)
         transform.SearchPromotion(req.es, indexString, type, action, querys, function (result) {
+            datautils.send(res, result);
+        });
+    } else if (searchType = "contrastData") {
+        var showType = parameters[5].split("=")[1];
+        queryOptions = parameters[6].split("=")[1];
+        var contrastStart = parameters[7].split("=")[1];
+        var contrastEnd = parameters[8].split("=")[1];
+        var contrast_indexString = [];
+        if (contrastStart.substring(1, start.length).match("-") != null && contrastEnd.substring(1, start.length).match("-") != null) {
+            contrast_indexString = date.createIndexsByTime(contrastStart, contrastEnd, "access-");
+            time = date.getConvertTimeByTime(contrastStart, contrastEnd);
+        } else {
+            contrast_indexString = date.createIndexes(contrastStart, contrastEnd, "access-");
+            time = date.getConvertTimeByNumber(contrastStart, contrastEnd);
+        }
+        transform.SearchContrast(req.es, indexString,contrast_indexString, type, action,showType, queryOptions, function (result) {
+            datautils.send(res, result);
+        });
+    } else {
+        var query = "";
+        query = parameters[5].split("=")[1];
+        var querys = [];
+        query = query.substring(1, query.length - 1);
+        var queryString = {};
+        if (query != "") {
+            for (var i = 0; i < query.split(",").length; i++) {
+                queryString = {};
+                queryString[query.split(",")[i].split(":")[0]] = query.split(",")[i].split(":")[1];
+                querys.push(queryString);
+            }
+        }
+        var aggString = parameters[6].split("=")[1];
+        var aggs = [];
+        for (var i = 0; i < aggString.split(",").length; i++) {
+            aggs.push(aggString.split(",")[i]);
+        }
+        transform.searchAdvancedData(req.es, indexString, type, action, querys, aggs, function (result) {
             datautils.send(res, result);
         });
     }

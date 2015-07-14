@@ -20,43 +20,46 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
             link: function (scope, element, attris, controller) {
                 Custom.initCheckInfo();
                 scope.$watch("opened", function () {
-                    if (scope.todayClass) {
-                        //scope.today();
-                    } else if (scope.sevenDayClass) {
-                        //scope.sevenDay();
-                    } else if (scope.yesterdayClass) {
-                        //scope.yesterday();
-                    } else if (scope.monthClass) {
-                        //scope.month();
-                    } else if ($location.url().split("?").length > 1) {
-                        var param = $location.url().split("?")[1];
-                        var isChart = $location.url().split("?")[0];
-                        if (param != 1 && param != 2 && param != 3 && param != 4) {
-                            scope.timeClass = true;
-                            var StartTimes = param.split("#")[0];
-                            var EndTimes = param.split("#")[1];
-                            var newParam = param.replace("#", "至");
-                            var time = chartUtils.getTimeOffset(StartTimes, EndTimes);
-                            $rootScope.start = time[0];
-                            $rootScope.end = time[1];
-                            $rootScope.tableTimeStart = time[0];
-                            $rootScope.tableTimeEnd = time[1];
-                            $('#reportrange span').html(newParam);
-                            $('#reportrange').data('daterangepicker').setStartDate(StartTimes);
-                            $('#reportrange').data('daterangepicker').setEndDate(EndTimes);
-                            $rootScope.targetSearch();
-                            scope.$broadcast("ssh_dateShow_options_time_change");
-                            if (isChart == "/visitor/equipment") {
-                                scope.charts.forEach(function (e) {
-                                    var chart = echarts.init(document.getElementById(e.config.id));
-                                    e.config.instance = chart;
-                                });
-                                //图表
-                                requestService.refresh(scope.charts);
-                            }
-                            if (isChart == "/visitor/provincemap") {
-                                scope.doSearch(time[0], time[1], $rootScope.userType);
-                                scope.doSearchAreas(time[0], time[1], $rootScope.userType, scope.mapOrPieConfig);
+                    var _path = $location.path();
+                    if(_path == "/source/searchterm" || _path == "/visitor/equipment" || _path == "/visitor/provincemap"){
+                        if (scope.todayClass) {
+                            scope.today();
+                        } else if (scope.sevenDayClass) {
+                            scope.sevenDay();
+                        } else if (scope.yesterdayClass) {
+                            scope.yesterday();
+                        } else if (scope.monthClass) {
+                            scope.month();
+                        } else if ($location.url().split("?").length > 1) {
+                            var param = $location.url().split("?")[1];
+                            var isChart = $location.url().split("?")[0];
+                            if (param != 1 && param != 2 && param != 3 && param != 4) {
+                                scope.timeClass = true;
+                                var StartTimes = param.split("#")[0];
+                                var EndTimes = param.split("#")[1];
+                                var newParam = param.replace("#", "至");
+                                var time = chartUtils.getTimeOffset(StartTimes, EndTimes);
+                                $rootScope.start = time[0];
+                                $rootScope.end = time[1];
+                                $rootScope.tableTimeStart = time[0];
+                                $rootScope.tableTimeEnd = time[1];
+                                $('#reportrange span').html(newParam);
+                                $('#reportrange').data('daterangepicker').setStartDate(StartTimes);
+                                $('#reportrange').data('daterangepicker').setEndDate(EndTimes);
+                                $rootScope.targetSearch();
+                                scope.$broadcast("ssh_dateShow_options_time_change");
+                                if (isChart == "/visitor/equipment") {
+                                    scope.charts.forEach(function (e) {
+                                        var chart = echarts.init(document.getElementById(e.config.id));
+                                        e.config.instance = chart;
+                                    });
+                                    //图表
+                                    requestService.refresh(scope.charts);
+                                }
+                                if (isChart == "/visitor/provincemap") {
+                                    scope.doSearch(time[0], time[1], $rootScope.userType);
+                                    scope.doSearchAreas(time[0], time[1], $rootScope.userType, scope.mapOrPieConfig);
+                                }
                             }
                         }
                     }
@@ -575,7 +578,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
 
                 };
                 // 刷新加载时设置默认指标
-                scope.setDefaultShowArray();
+//                scope.setDefaultShowArray();
 
                 // 获取数据
                 scope.loadDataShow = function () {
@@ -633,40 +636,25 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                 };
                 scope.pushESData = function (result, flag) {
                     var _array = $rootScope.copy(scope.dateShowArray);
-                    var _count = 0;
-                    angular.forEach(result, function (r) {
-                        var infoKey = r[$rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field];
-                        if (scope.filter) {
-                            if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null")) {
-                                return false;
-                            }
-                        }
-                        if (!flag) {
-                            scope.ds_keyData.push(infoKey);
-                        }
-                        if (flag && scope.ds_keyData.targetIndexOf(infoKey) == -1) {
-                            return false;
-                        }
-                        _count++;
-                        angular.forEach(_array, function (obj) {
-                            var temp = obj.label;
-                            if (r[temp] == undefined) {
-                                return false;
-                            }
-                            if (flag) {
-                                if (obj.label == "avgTime") {
-                                    var hour = Number(r[temp].split(":")[0]);
-                                    var min = Number(r[temp].split(":")[1]);
-                                    var sec = Number(r[temp].split(":")[2]);
-                                    var count = (((hour * 60) * 60) + (min * 60) + sec);
-                                    obj.cValue += count;
+                    var obj = JSON.parse(eval('(' + result + ')').toString()); //由JSON字符串转换为JSON对象
+                    angular.forEach(obj, function (r) {
+                        var dateShowObject = {};
+                        dateShowObject.label = r.label;
+                        var temp = 0;
+                        var count = 0;
+                        angular.forEach(r.quota, function (qo, _i) {
+                            temp += Number(qo);
+                            count++;
+                        });
+                        angular.forEach(_array, function (_array_r) {
+                            if (_array_r.label == dateShowObject.label) {
+                                if (flag) {
+                                    _array_r.cCount = count;
+                                    _array_r.cValue = temp
                                 } else {
-                                    obj.cValue += (r[temp].indexOf("%") != -1) ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
+                                    _array_r.count = count;
+                                    _array_r.value = temp
                                 }
-                            } else {
-                                //obj.value += (r[temp].indexOf("%") != -1) ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
-                                obj.value += Number(r.quota[0]);
-                                obj.count = r.quota.length;
                             }
                         });
                     });
@@ -729,7 +717,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     scope.loadCompareDataShow(startTime, endTime);
                 });
 
-                scope.$on("LoadDateShowDataFinish", function (e, msg) {
+                scope.$on("ssh_dateShow_options_quotas_change", function (e, msg) {
                     scope.isCompared = false;
                     var temp = $rootScope.copy(msg);
                     if (temp.length > 0) {
@@ -737,6 +725,8 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     }
                     scope.loadDataShow();
                 });
+
+                scope.loadDataShow();
             }
         };
     });
@@ -952,7 +942,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
     /**
      * Create by wms on 2015-07-08.合计信息显示ES请求通用
      */
-    app.directive("sshESDateShow", function ($http, $rootScope, $q) {
+    app.directive("sshESDateShow", function ($http, $rootScope, $q, $location) {
         return {
             restrict: 'E',
             templateUrl: '../commons/date_show.html',
@@ -971,7 +961,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     scope.ds_keyData = [];
                     scope.dateShowArray = $rootScope.copy(tempArray);
                 };
-                scope.setDefaultShowArray();
+//                scope.setDefaultShowArray();
                 // 获取数据
                 scope.loadDataShow = function () {
                     scope.DateNumber = false;
@@ -1090,7 +1080,9 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     }
                     scope.loadDataShow();
                 });
-                scope.loadDataShow();
+                if($location.path() != "/source/searchterm" && $location.path() != "/visitor/equipment" && $location.path() != "/visitor/provincemap"){
+                    scope.loadDataShow();
+                }
 
                 // 对比
                 scope.$on("ssh_load_compare_datashow", function (e, startTime, endTime) {
@@ -1394,7 +1386,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     }
 
                     angular.forEach(expanders, function (e_r, index) {
-                        console.log(_path);
                         if(_path=="/transform/pageTransform"){
                             $rootScope.$broadcast("updateSelectRowIndex", 7 );
                         }

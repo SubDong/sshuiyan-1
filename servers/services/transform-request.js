@@ -30,7 +30,7 @@ var es_aggs = {
     },
     // 新访客数
     "nuv": {
-        "new_visitor_aggs": {
+        "nuv": {
             "sum": {
                 "script": "c = 0; if (doc['ct'].value == 0) { c = 1 }; c"
             }
@@ -45,7 +45,7 @@ var es_aggs = {
         },
         "uv_aggs": {
             "cardinality": {
-                "field": "_ucv"
+                "field": "tt"
             }
         }
     },
@@ -58,18 +58,31 @@ var es_aggs = {
         }
     },
     // 事件点击总数
-    "clickTotal":{
-        "clickTotal":{
+    "clickTotal": {
+        "clickTotal": {
             "value_count": {
                 "field": "_type"
             }
         }
     },
     // 转化次数
-    "conversions":{
-        "conversions":{
+    "conversions": {
+        "conversions": {
             "value_count": {
                 "field": "_type"
+            }
+        }
+    },
+    //转化率
+    "crate": {
+        "conversions_crate": {
+            "value_count": {
+                "field": "_type"
+            }
+        },
+        "vc_crate": {
+            "value_count": {
+                "field": "tt"
             }
         }
     }
@@ -122,7 +135,6 @@ var transform = {
     },
     searchByShowTypeAndQueryOption: function (es, indexs, type, action, showType, queryOptions, callbackFn) {
         var _aggs = {};
-
         queryOptions.forEach(function (queryOption) {
             for (var key in es_aggs[queryOption]) {
                 _aggs[key] = es_aggs[queryOption][key];
@@ -139,7 +151,7 @@ var transform = {
                         type: type + "_" + action,
                         body: {
                             "size": 0,
-                            "aggs":_aggs
+                            "aggs": _aggs
                         }
                     });
                 }
@@ -159,33 +171,120 @@ var transform = {
             });
         }, function (error, results) {
             var data = [];
-            var data1 = {};
-            var data2 = {};
+            var quota_data = {};
             var keyArr = [];
+            var quotaArry = [];
             if (results[0] != null) {
                 for (var i = 0; i < indexs.length; i++) {
                     keyArr.push(indexs[i].substring(7, indexs[i].length));
                 }
-                var quotaArry = [];
-                for (var i = 0; i < results.length; i++) {
-                    quotaArry.push(results[i].pv.value);
-                }
-                data1 = {
-                    "label": "pv",
-                    "key": keyArr,
-                    "quota": quotaArry
-                };
-                quotaArry = [];
-                for (var i = 0; i < results.length; i++) {
-                    quotaArry.push(results[i].uv.value);
-                }
-                data2 = {
-                    "label": "uv",
-                    "key": keyArr,
-                    "quota": quotaArry
-                };
-                data.push(data1);
-                data.push(data2);
+                queryOptions.forEach(function (queryOption) {
+                    quota_data = {};
+                    quotaArry = [];
+                    switch (queryOption) {
+                        case "pv":
+                            for (var i = 0; i < results.length; i++) {
+                                quotaArry.push(results[i].pv.value);
+                            }
+                            quota_data = {
+                                label: "pv",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "uv":
+                            for (var i = 0; i < results.length; i++) {
+                                quotaArry.push(results[i].uv.value);
+                            }
+                            quota_data = {
+                                label: "uv",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "vc":
+                            for (var i = 0; i < results.length; i++) {
+                                quotaArry.push(results[i].vc.value);
+                            }
+                            quota_data = {
+                                label: "vc",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+
+                        case "ip":
+                            for (var i = 0; i < results.length; i++) {
+                                quotaArry.push(results[i].ip.value);
+                            }
+                            quota_data = {
+                                label: "ip",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "clickTotal":
+                            for (var i = 0; i < results.length; i++) {
+                                quotaArry.push(results[i].clickTotal.value);
+                            }
+                            quota_data = {
+                                label: "clickTotal",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "conversions":
+                            for (var i = 0; i < results.length; i++) {
+                                quotaArry.push(results[i].conversions.value);
+                            }
+                            quota_data = {
+                                label: "conversions",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "nuv":
+                            for (var i = 0; i < results.length; i++) {
+                                quotaArry.push(results[i].nuv.value);
+                            }
+                            quota_data = {
+                                label: "nuv",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "nuvRate":
+                            for (var i = 0; i < results.length; i++) {
+                                quotaArry.push(results[i].nuvRate.value);
+                            }
+                            quota_data = {
+                                label: "nuvRate",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "crate":
+                            for (var i = 0; i < results.length; i++) {
+                                if (results[i].conversions_crate.value != "0") {
+                                    quotaArry.push((results[i].conversions_crate.value / results[i].conversions_crate.value).toFixed(2));
+                                } else {
+                                    quotaArry.push(0);
+                                }
+                            }
+                            quota_data = {
+                                label: "crate",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        default :
+                            break;
+                    }
+                    if (quota_data != null || quota_data != []) {
+                        data.push(quota_data);
+                    }
+
+                });
             }
             callbackFn(data);
         });
@@ -269,6 +368,30 @@ var transform = {
                                 });
                             }
                             break;
+                        case "nuv":
+                            for (var i = 0; i < result.length; i++) {
+                                dataArry.push({
+                                    nuv: result[i].nuv.value,
+                                    campaignName: result[i].key
+                                });
+                            }
+                            break;
+                        case "nuvRate":
+                            for (var i = 0; i < result.length; i++) {
+                                dataArry.push({
+                                    nuvRate: (result[i].uv_aggs.value / result[i].new_visitor_aggs.value).toFixed(2) + "%",
+                                    campaignName: result[i].key
+                                });
+                            }
+                            break;
+                        case "crate":
+                            for (var i = 0; i < result.length; i++) {
+                                dataArry.push({
+                                    crate: (result[i].conversions_crate.value / result[i].vc_crate.value).toFixed(2) + "%",
+                                    campaignName: result[i].key
+                                });
+                            }
+                            break;
                         default :
                             break;
                     }
@@ -284,19 +407,19 @@ var transform = {
                     }
 
                 });
-                for(var i = 0;i<result.length;i++){
+                for (var i = 0; i < result.length; i++) {
                     var data_Arrying = [];
                     dataArry.forEach(function (data) {
-                        if(result[i].key == data["campaignName"]){
+                        if (result[i].key == data["campaignName"]) {
                             data_Arrying.push(data);
                         }
                     });
                     data_Arried.push(data_Arrying);
                 }
-                for(var i = 0;i<data_Arried.length;i++){
+                for (var i = 0; i < data_Arried.length; i++) {
                     var data_success = {};
-                    for(var keyNumber in data_Arried[i]){
-                        for(var keyString in data_Arried[i][keyNumber]){
+                    for (var keyNumber in data_Arried[i]) {
+                        for (var keyString in data_Arried[i][keyNumber]) {
                             data_success[keyString] = data_Arried[i][keyNumber][keyString];
                         }
                     }
@@ -307,7 +430,465 @@ var transform = {
             } else
                 callbackFn(data);
         });
+    },
+    searchAdvancedData: function (es, indexs, type, action, queryOptions, aggs, callbackFn) {
+        var _aggs = {};
+        aggs.forEach(function (agg) {
+            for (var key in es_aggs[agg]) {
+                _aggs[key] = es_aggs[agg][key];
+            }
+        });
+        var request = {
+            "index": indexs,
+            "type": type + "_" + action,
+            "body": {
+                "size": 0,
+                "query": createQuery(queryOptions),
+                "aggs": {
+                    "eventName": {
+                        "terms": {
+                            "field": "et_label"
+                        },
+                        "aggs": _aggs
+                    }
+                }
+            }
+        };
+        es.search(request, function (error, response) {
+            var data = [];
+            var dataArry = [];
+            if (response != undefined && response.aggregations != undefined) {
+                var result = response.aggregations.eventName.buckets;
+                aggs.forEach(function (agg) {
+                    switch (agg) {
+                        case "pv":
+                            for (var i = 0; i < result.length; i++) {
+                                dataArry.push({
+                                    pv: result[i].pv.value,
+                                    campaignName: result[i].key
+                                });
+                            }
+                            break;
+                        case "uv":
+                            for (var i = 0; i < result.length; i++) {
+                                dataArry.push({
+                                    uv: result[i].uv.value,
+                                    campaignName: result[i].key
+                                });
+                            }
+                            break;
+                        case "vc":
+                            for (var i = 0; i < result.length; i++) {
+                                dataArry.push({
+                                    vc: result[i].vc.value,
+                                    campaignName: result[i].key
+                                });
+                            }
+                            break;
+
+                        case "ip":
+                            for (var i = 0; i < result.length; i++) {
+                                dataArry.push({
+                                    ip: result[i].ip.value,
+                                    campaignName: result[i].key
+                                });
+                            }
+                            break;
+                        case "clickTotal":
+                            for (var i = 0; i < result.length; i++) {
+                                dataArry.push({
+                                    clickTotal: result[i].clickTotal.value,
+                                    campaignName: result[i].key
+                                });
+                            }
+                            break;
+                        case "conversions":
+                            for (var i = 0; i < result.length; i++) {
+                                dataArry.push({
+                                    conversions: result[i].conversions.value,
+                                    campaignName: result[i].key
+                                });
+                            }
+                            break;
+                        case "nuv":
+                            for (var i = 0; i < result.length; i++) {
+                                dataArry.push({
+                                    nuv: result[i].nuv.value,
+                                    campaignName: result[i].key
+                                });
+                            }
+                            break;
+                        case "nuvRate":
+                            for (var i = 0; i < result.length; i++) {
+                                dataArry.push({
+                                    nuvRate: (result[i].uv_aggs.value / result[i].new_visitor_aggs.value).toFixed(2) + "%",
+                                    campaignName: result[i].key
+                                });
+                            }
+                            break;
+                        case "crate":
+                            for (var i = 0; i < result.length; i++) {
+                                dataArry.push({
+                                    crate: (result[i].conversions_crate.value / result[i].vc_crate.value).toFixed(2) + "%",
+                                    campaignName: result[i].key
+                                });
+                            }
+                            break;
+                        default :
+                            break;
+                    }
+                });
+                //================================ 数据算法 ==========================================
+                var data_Arried = [];
+                dataArry.forEach(function (data) {
+                    var data_Arrying = [];
+                    for (var i = 0; i < result.length; i++) {
+                        if (result[i].key == data["campaignName"]) {
+                            data_Arrying.push(data)
+                        }
+                    }
+
+                });
+                for (var i = 0; i < result.length; i++) {
+                    var data_Arrying = [];
+                    dataArry.forEach(function (data) {
+                        if (result[i].key == data["campaignName"]) {
+                            data_Arrying.push(data);
+                        }
+                    });
+                    data_Arried.push(data_Arrying);
+                }
+                for (var i = 0; i < data_Arried.length; i++) {
+                    var data_success = {};
+                    for (var keyNumber in data_Arried[i]) {
+                        for (var keyString in data_Arried[i][keyNumber]) {
+                            data_success[keyString] = data_Arried[i][keyNumber][keyString];
+                        }
+                    }
+                    data.push(data_success);
+                }
+                //==================================================================================
+                callbackFn(data);
+            } else {
+                callbackFn(data);
+            }
+        });
+    },
+    SearchContrast: function (es, indexString, contrast_indexString, type, action, showType, queryOptions, callbackFn) {
+        var requests = [];
+        var _aggs = {};
+        var contrast_aggs = {};
+        _aggs[queryOptions] = es_aggs[queryOptions][queryOptions];
+        contrast_aggs[queryOptions+"_contrast"] = es_aggs[queryOptions][queryOptions];
+        var options = [queryOptions+"_contrast",queryOptions];
+        switch (showType) {
+            case "hour":
+                break;
+            case "day":
+                for (var i = 0; i < indexString.length; i++) {
+                    requests.push({
+                        "index": indexString[i],
+                        "type": type + "_" + action,
+                        "body": {
+                            "size": 0,
+                            "aggs": _aggs
+                        }
+                    });
+                }
+                for (var i = 0; i < contrast_indexString.length; i++) {
+                    requests.push({
+                        "index": contrast_indexString[i],
+                        "type": type + "_" + action,
+                        "body": {
+                            "size": 0,
+                            "aggs": contrast_aggs
+                        }
+                    });
+                }
+                break;
+            case "week":
+                break;
+            case "month":
+                break;
+        }
+        async.map(requests, function (item, callback) {
+            es.search(item, function (error, result) {
+                if (result != undefined && result.aggregations != undefined) {
+                    callback(null, result.aggregations);
+                } else {
+                    callback(null, null);
+                }
+            });
+        }, function (error, results) {
+            var data = [];
+            var quota_data = {};
+            var keyArr = [];
+            var keyArr_contrast = [];
+            var quotaArry = [];
+            if (results[0] != null) {
+                for (var i = 0; i < indexString.length; i++) {
+                    keyArr.push(indexString[i].substring(7, indexString[i].length));
+                }
+                for (var i = 0; i < contrast_indexString.length; i++) {
+                    keyArr_contrast.push(contrast_indexString[i].substring(7, contrast_indexString[i].length));
+                }
+                options.forEach(function (option) {
+                    quota_data = {};
+                    quotaArry = [];
+                    switch (option) {
+                        case "pv":
+                            for (var i = 0; i < keyArr.length; i++) {
+                                quotaArry.push(results[i].pv.value);
+                            }
+                            quota_data = {
+                                label: "pv",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "uv":
+                            for (var i = 0; i < keyArr.length; i++) {
+                                quotaArry.push(results[i].uv.value);
+                            }
+                            quota_data = {
+                                label: "uv",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "vc":
+                            for (var i = 0; i < keyArr.length; i++) {
+                                quotaArry.push(results[i].vc.value);
+                            }
+                            quota_data = {
+                                label: "vc",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+
+                        case "ip":
+                            for (var i = 0; i < keyArr.length; i++) {
+                                quotaArry.push(results[i].ip.value);
+                            }
+                            quota_data = {
+                                label: "ip",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "clickTotal":
+                            for (var i = 0; i < keyArr.length; i++) {
+                                quotaArry.push(results[i].clickTotal.value);
+                            }
+                            quota_data = {
+                                label: "clickTotal",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "conversions":
+                            for (var i = 0; i < keyArr.length; i++) {
+                                quotaArry.push(results[i].conversions.value);
+                            }
+                            quota_data = {
+                                label: "conversions",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "nuv":
+                            for (var i = 0; i < keyArr.length; i++) {
+                                quotaArry.push(results[i].nuv.value);
+                            }
+                            quota_data = {
+                                label: "nuv",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "nuvRate":
+                            for (var i = 0; i < keyArr.length; i++) {
+                                quotaArry.push(results[i].nuvRate.value);
+                            }
+                            quota_data = {
+                                label: "nuvRate",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "crate":
+                            for (var i = 0; i < keyArr.length; i++) {
+                                if (results[i].conversions_crate.value != "0") {
+                                    quotaArry.push((results[i].conversions_crate.value / results[i].conversions_crate.value).toFixed(2));
+                                } else {
+                                    quotaArry.push(0);
+                                }
+                            }
+                            quota_data = {
+                                label: "crate",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "pv_contrast":
+                            for (var i = keyArr.length; i < results.length; i++) {
+                                quotaArry.push(results[i].pv_contrast.value);
+                            }
+                            quota_data = {
+                                label: "pv_contrast",
+                                key: keyArr_contrast,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "uv_contrast":
+                            for (var i = keyArr.length; i < results.length; i++) {
+                                quotaArry.push(results[i].uv_contrast.value);
+                            }
+                            quota_data = {
+                                label: "uv_contrast",
+                                key: keyArr_contrast,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "vc_contrast":
+                            for (var i = keyArr.length; i < results.length; i++) {
+                                quotaArry.push(results[i].vc_contrast.value);
+                            }
+                            quota_data = {
+                                label: "vc_contrast",
+                                key: keyArr_contrast,
+                                quota: quotaArry
+                            };
+                            break;
+
+                        case "ip_contrast":
+                            for (var i = keyArr.length; i < results.length; i++) {
+                                quotaArry.push(results[i].ip_contrast.value);
+                            }
+                            quota_data = {
+                                label: "ip_contrast",
+                                key: keyArr_contrast,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "clickTotal_contrast":
+                            for (var i = keyArr.length; i < results.length; i++) {
+                                quotaArry.push(results[i].clickTotal_contrast.value);
+                            }
+                            quota_data = {
+                                label: "clickTotal_contrast",
+                                key: keyArr_contrast,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "conversions_contrast":
+                            for (var i = keyArr.length; i < results.length; i++) {
+                                quotaArry.push(results[i].conversions_contrast.value);
+                            }
+                            quota_data = {
+                                label: "conversions_contrast",
+                                key: keyArr_contrast,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "nuv_contrast":
+                            for (var i = keyArr.length; i < results.length; i++) {
+                                quotaArry.push(results[i].nuv_contrast.value);
+                            }
+                            quota_data = {
+                                label: "nuv_contrast",
+                                key: keyArr_contrast,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "nuvRate_contrast":
+                            for (var i = keyArr.length; i < results.length; i++) {
+                                quotaArry.push(results[i].nuvRate_contrast.value);
+                            }
+                            quota_data = {
+                                label: "nuvRate_contrast",
+                                key: keyArr_contrast,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "crate_contrast":
+                            for (var i = keyArr.length; i < results.length; i++) {
+                                if (results[i].conversions_crate.value != "0") {
+                                    quotaArry.push((results[i].conversions_crate.value / results[i].conversions_crate.value).toFixed(2));
+                                } else {
+                                    quotaArry.push(0);
+                                }
+                            }
+                            quota_data = {
+                                label: "crate_contrast",
+                                key: keyArr_contrast,
+                                quota: quotaArry
+                            };
+                            break;
+                        default :
+                            break;
+                    }
+                    if (quota_data != null || quota_data != []) {
+
+                        data.push(quota_data);
+                    }
+
+                });
+            }
+            callbackFn(data);
+        });
     }
 };
-
+var createQuery = function (querys) {
+    var queryString = [];
+    querys.forEach(function (query) {
+        for (var key in query) {
+            if (query[key] != "all") {
+                queryString.push({
+                    "term": createQueryMap(key, query[key])
+                });
+            }
+        }
+    });
+    var queryText = {
+        "bool": {
+            "must": queryString
+        }
+    };
+    return queryText;
+};
+var createQueryMap = function (key, value) {
+    var queryMap = {};
+    switch (key) {
+        case "souce":
+            queryMap = {"rf_type": value};
+            break;
+        case "browser":
+            queryMap = {"se": value};
+            break;
+        case "all_rf":
+            queryMap = {};
+            break;
+        case "uv_type":
+            if (value == "all") {
+                queryMap = {};
+            } else {
+                queryMap = {
+                    ct: value
+                };
+            }
+            break;
+        case "city":
+            if (value == "all") {
+                queryMap = {};
+            } else {
+                queryMap = {
+                    city: value
+                };
+            }
+            break;
+    }
+    return queryMap;
+};
 module.exports = transform;
