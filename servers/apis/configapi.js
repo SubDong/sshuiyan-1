@@ -286,42 +286,41 @@ api.get("/site_list", function (req, res) {
             var qry = query['query'];
             dao.find(schema_name, query['query'], null, {}, function (err, docs) {
                 if (docs != null && docs.length > 0) {
-                    //docs.forEach(function (item) {
-                    //    //删除Redis
-                    //    req.redisclient.del("typeid:" + item.track_id);
-                    //    req.redisclient.del("ts:" + item.track_id);
-                    //    req.redisclient.del("tsu:" + item.track_id);
-                    //    req.redisclient.del("tsj:" + item.track_id);
-                    //    req.redisclient.del("st:" + item.type_id);
-                    //    req.redisclient.del("duration:" + item._id);
-                    //    req.redisclient.del("visit:" + item._id);
-                    //    req.redisclient.del(item._id + ":mouse:*");
-                    //    req.redisclient.del(item._id + ":e:*");
-                    //    //删除级联表
-                    //    var del_qry1 = {
-                    //        site_id: item._id,
-                    //        uid: item.uid
-                    //    };
-                    //    console.log("remove query=" + del_qry1);
-                    //    dao.remove("siterules_model", JSON.stringify(del_qry1), function () {
-                    //    });//统计规则
-                    //    dao.remove("page_conv_model", JSON.stringify(del_qry1), function () {
-                    //    });//页面转化
-                    //    dao.remove("converts_model", JSON.stringify(del_qry1), function () {
-                    //    });//时长转化
-                    //    dao.remove("page_title_model", JSON.stringify(del_qry1), function () {
-                    //    });//页面标题
-                    //    dao.remove("adtrack_model", JSON.stringify(del_qry1), function () {
-                    //    });//广告
-                    //    var del_qry2 = {
-                    //        root_url: item._id,
-                    //        uid: item.uid
-                    //    };
-                    //    dao.remove("subdirectories_model", JSON.stringify(del_qry2), function () {
-                    //    });//子目录管理
-                    //    dao.remove("event_change_model", JSON.stringify(del_qry2), function () {
-                    //    });//事件转化
-                    //});
+                    docs.forEach(function (item) {
+                        //删除Redis
+                        req.redisclient.del("typeid:" + item.track_id);
+                        req.redisclient.del("ts:" + item.track_id);
+                        req.redisclient.del("tsu:" + item.track_id);
+                        req.redisclient.del("tsj:" + item.track_id);
+                        req.redisclient.del("st:" + item.type_id);
+                        req.redisclient.del("duration:" + item._id);
+                        req.redisclient.del("visit:" + item._id);
+                        req.redisclient.del(item._id + ":mouse:*");
+                        req.redisclient.del(item._id + ":e:*");
+                        //删除级联表
+                        var del_qry1 = {
+                            site_id: item._id,
+                            uid: item.uid
+                        };
+                        //dao.remove("siterules_model", JSON.stringify(del_qry1), function () {
+                        //});//统计规则
+                        //dao.remove("page_conv_model", JSON.stringify(del_qry1), function () {
+                        //});//页面转化
+                        //dao.remove("converts_model", JSON.stringify(del_qry1), function () {
+                        //});//时长转化
+                        //dao.remove("page_title_model", JSON.stringify(del_qry1), function () {
+                        //});//页面标题
+                        //dao.remove("adtrack_model", JSON.stringify(del_qry1), function () {
+                        //});//广告
+                        //var del_qry2 = {
+                        //    root_url: item._id,
+                        //    uid: item.uid
+                        //};
+                        //dao.remove("subdirectories_model", JSON.stringify(del_qry2), function () {
+                        //});//子目录管理
+                        //dao.remove("event_change_model", JSON.stringify(del_qry2), function () {
+                        //});//事件转化
+                    });
                     //查询 删除级联 删除本身
                     dao.update(schema_name, query['query'], JSON.stringify({is_use:0}),function (err,up) {//逻辑删除置is_use=0
                         datautils.send(res, "success");

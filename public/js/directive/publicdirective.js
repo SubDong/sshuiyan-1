@@ -633,36 +633,25 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                 };
                 scope.pushESData = function (result, flag) {
                     var _array = $rootScope.copy(scope.dateShowArray);
-                    var _count = 0;
-                    var result = JSON.parse(eval('(' + result + ')').toString())
-                    angular.forEach(result, function (r) {
-                        var infoKey = r[$rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field];
-                        if (scope.filter) {
-                            if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null")) {
-                                return false;
-                            }
-                        }
-                        if (!flag) {
-                            scope.ds_keyData.push(infoKey);
-                        }
-                        if (flag && scope.ds_keyData.targetIndexOf(infoKey) == -1) {
-                            return false;
-                        }
-                        _count++;
-                        angular.forEach(_array, function (obj) {
-                            var temp = obj.label;
-                            if (r.label != temp) {
-                                return false;
-                            }
-                            if (flag) {
-                                //obj.cValue += (r[temp].indexOf("%") != -1) ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
-                                obj.cValue += Number(r.quota[0]);
-                                obj.cCount = r.quota.length;
-                            } else {
-                                //obj.value += (r[temp].indexOf("%") != -1) ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
-                                obj.value += Number(r.quota[0]);
-                                ;
-                                obj.count = r.quota.length;
+                    var obj = JSON.parse(eval('(' + result + ')').toString()); //由JSON字符串转换为JSON对象
+                    angular.forEach(obj, function (r) {
+                        var dateShowObject = {};
+                        dateShowObject.label = r.label;
+                        var temp = 0;
+                        var count = 0;
+                        angular.forEach(r.quota, function (qo, _i) {
+                            temp += Number(qo);
+                            count++;
+                        });
+                        angular.forEach(_array, function (_array_r) {
+                            if (_array_r.label == dateShowObject.label) {
+                                if (flag) {
+                                    _array_r.cCount = count;
+                                    _array_r.cValue = temp
+                                } else {
+                                    _array_r.count = count;
+                                    _array_r.value = temp
+                                }
                             }
                         });
                     });
@@ -705,15 +694,12 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                         }
                         return false;
                     }
-
                     // 设置_count
                     angular.forEach(_array, function (obj) {
-                        if (isSeoLabel(obj.label)) {
-                            if (flag) {
-                                obj.cCount = _count;
-                            } else {
-                                obj.count = _count;
-                            }
+                        if (flag) {
+                            obj.cCount = _count;
+                        } else {
+                            obj.count = _count;
                         }
                     });
                     scope.dateShowArray = $rootScope.copy(_array);
@@ -728,19 +714,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     scope.loadCompareDataShow(startTime, endTime);
                 });
 
-                //scope.$on("LoadDateShowDataFinish", function (e, msg) {
-                //    scope.isCompared = false;
-                //    scope.setDefaultShowArray();
-                //    scope.pushESData(msg);
-                //});
-                //
-                //scope.$on("LoadDateShowSEMDataFinish", function (e, msg) {
-                //    scope.isCompared = false;
-                //    scope.setDefaultShowArray();
-                //    scope.pushSEOData(msg);
-                //});
-
-                // 根据表格请求一次进行datashow请求一次
                 scope.$on("ssh_dateShow_options_quotas_change", function (e, msg) {
                     scope.isCompared = false;
                     var temp = $rootScope.copy(msg);
@@ -749,8 +722,8 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     }
                     scope.loadDataShow();
                 });
-                scope.loadDataShow();
 
+                scope.loadDataShow();
             }
         };
     });
@@ -1406,17 +1379,28 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     var isConf = function (a, b) {// 网站设置
                         return a == "/conf" && b == "#conf";
                     }
+
                     angular.forEach(expanders, function (e_r, index) {
+                        console.log(_path);
+                        if(_path=="/transform/pageTransform"){
+                            $rootScope.$broadcast("updateSelectRowIndex", 7 );
+                        }
+
                         if (isIndex(_path, e_r.sref) || isConf(_path, e_r.sref)) {
                             e_r.showText = true;
                             $rootScope.$broadcast("updateSelectRowIndex", index);
                             return;
                         }
-
+                        if (_path =="/transform/transformAnalysis") {
+                            $rootScope.$broadcast("updateSelectRowIndex", 7);
+                        }
                         if (e_r.sref == _path.substring(1, _path.substring(1).indexOf("/") + 1)) {
+
                             e_r.showText = true;
                             $rootScope.$broadcast("updateSelectRowIndex", index);
-                        } else if (e_r.sref == _path.split("/")[2]) {
+                        }
+
+                        else if (e_r.sref == _path.split("/")[2]) {
                             e_r.showText = true;
                             $rootScope.$broadcast("updateSelectRowIndex", index);
                         } else {
