@@ -2,6 +2,42 @@
 
 var schemas = {
 
+    //趋向分析-昨日统计-表格
+    trend_yesterday_table_model: {
+        model_name: "TrendYesterdayTable",
+        collection_name: "cache_trend_yesterday_table",
+        schema: {
+            date:String,//日期
+            timeFrame:String,//时间范围
+            pv: String, // 浏览量
+            vc: String,//访问次数
+            uv: String, //访客数
+            nuv:String, //新访客数
+            nuvRate:String,//新访客比率
+            ip: String,//IP
+            outRate: String,//跳出率
+            avgTime: String, //平均访问时长
+            avgPage: String //平均访问页数
+        }
+    },
+
+    //趋向分析-昨日统计-聚合
+    trend_yesterday_summary_model: {
+        model_name: "TrendYesterdaySummary",
+        collection_name: "cache_trend_yesterday_summary",
+        schema: {
+            date:String,//日期
+            pv: String, // 浏览量
+            vc: String,//访问次数
+            uv: String, //访客数
+            nuv:String, //新访客数
+            nuvRate:String,//新访客比率
+            ip: String,//IP
+            outRate: String,//跳出率
+            avgTime: String, //平均访问时长
+            avgPage: String //平均访问页数
+        }
+    },
     //事件转化目标
     event_change_model: {
         model_name: "EventChange",
@@ -15,7 +51,6 @@ var schemas = {
             event_page: String, //事件作用页面
             event_method: String, //事件设置方式
             event_status: String //事件状态 1：启动  0：暂停
-
         }
     },
     //子目录管理
