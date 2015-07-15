@@ -179,7 +179,7 @@ define(["./module"], function (ctrs) {
             })
             requestService.refresh($scope.charts);
         }
-//        $scope.init();
+        $scope.init();
         $scope.$on("ssh_refresh_charts", function (e, msg) {
             if ($scope.compareType) {
                 $scope.compareReset();

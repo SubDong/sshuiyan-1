@@ -261,6 +261,7 @@ define(["./module"], function (ctrs) {
 
         // init
         $scope.doSearch($scope.dateTimeStart, $scope.dateTimeEnd, $rootScope.userType);
+        $scope.doSearchAreas($scope.dateTimeStart, $scope.dateTimeEnd, $rootScope.userType, $scope.mapOrPieConfig);
         if ($stateParams.data != undefined && $stateParams.data != null && $stateParams.data != "") {
             $scope.doSearchAreas($scope.dateTimeStart, $scope.dateTimeEnd, $rootScope.userType, $scope.mapOrPieConfig);
         }
