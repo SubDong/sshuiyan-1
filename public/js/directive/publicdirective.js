@@ -20,49 +20,63 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
             link: function (scope, element, attris, controller) {
                 Custom.initCheckInfo();
                 scope.$watch("opened", function () {
-                    var _path = $location.path();
-                    if(_path == "/source/searchterm" || _path == "/visitor/equipment" || _path == "/visitor/provincemap"){
-                        if (scope.todayClass) {
-                            scope.today();
-                        } else if (scope.sevenDayClass) {
-                            scope.sevenDay();
-                        } else if (scope.yesterdayClass) {
-                            scope.yesterday();
-                        } else if (scope.monthClass) {
-                            scope.month();
-                        } else if ($location.url().split("?").length > 1) {
-                            var param = $location.url().split("?")[1];
-                            var isChart = $location.url().split("?")[0];
-                            if (param != 1 && param != 2 && param != 3 && param != 4) {
-                                scope.timeClass = true;
-                                var StartTimes = param.split("#")[0];
-                                var EndTimes = param.split("#")[1];
-                                var newParam = param.replace("#", "至");
-                                var time = chartUtils.getTimeOffset(StartTimes, EndTimes);
-                                $rootScope.start = time[0];
-                                $rootScope.end = time[1];
-                                $rootScope.tableTimeStart = time[0];
-                                $rootScope.tableTimeEnd = time[1];
-                                $('#reportrange span').html(newParam);
-                                $('#reportrange').data('daterangepicker').setStartDate(StartTimes);
-                                $('#reportrange').data('daterangepicker').setEndDate(EndTimes);
-                                $rootScope.targetSearch();
-                                scope.$broadcast("ssh_dateShow_options_time_change");
-                                if (isChart == "/visitor/equipment") {
-                                    scope.charts.forEach(function (e) {
-                                        var chart = echarts.init(document.getElementById(e.config.id));
-                                        e.config.instance = chart;
-                                    });
-                                    //图表
-                                    requestService.refresh(scope.charts);
-                                }
-                                if (isChart == "/visitor/provincemap") {
-                                    scope.doSearch(time[0], time[1], $rootScope.userType);
-                                    scope.doSearchAreas(time[0], time[1], $rootScope.userType, scope.mapOrPieConfig);
-                                }
-                            }
-                        }
-                    }
+//                    var _path = $location.path();
+//                    if(_path == "/source/searchterm" || _path == "/visitor/equipment" || _path == "/visitor/provincemap"){
+//                        if (scope.todayClass) {
+//                            scope.today();
+//                        } else if (scope.sevenDayClass) {
+//                            scope.isShowCalendar = false;
+//                            scope.hiddenSeven = true;//今日统计和昨日统计中，点击7、30天时隐藏对比
+//                            scope.todayCalendar = GetDateStr(-6);
+//                            scope.hourselect = false;
+//                            scope.dayselect = false;
+//                            scope.weekselected = true;
+//                            scope.mothselected = true;
+//                            scope.choiceClass = false;
+//                            scope.reset();
+//                            scope.sevenDayClass = true;
+//                            scope.timeClass = false;
+//                            $rootScope.tableTimeStart = -6;
+//                            $rootScope.tableTimeEnd = 0;
+//                            $rootScope.start = -6;
+//                            $rootScope.end = 0;
+//                        } else if (scope.yesterdayClass) {
+//                            scope.yesterday();
+//                        } else if (scope.monthClass) {
+//                            scope.month();
+//                        } else if ($location.url().split("?").length > 1) {
+//                            var param = $location.url().split("?")[1];
+//                            var isChart = $location.url().split("?")[0];
+//                            if (param != 1 && param != 2 && param != 3 && param != 4) {
+//                                scope.timeClass = true;
+//                                var StartTimes = param.split("#")[0];
+//                                var EndTimes = param.split("#")[1];
+//                                var newParam = param.replace("#", "至");
+//                                var time = chartUtils.getTimeOffset(StartTimes, EndTimes);
+//                                $rootScope.start = time[0];
+//                                $rootScope.end = time[1];
+//                                $rootScope.tableTimeStart = time[0];
+//                                $rootScope.tableTimeEnd = time[1];
+//                                $('#reportrange span').html(newParam);
+//                                $('#reportrange').data('daterangepicker').setStartDate(StartTimes);
+//                                $('#reportrange').data('daterangepicker').setEndDate(EndTimes);
+//                                $rootScope.targetSearch();
+//                                scope.$broadcast("ssh_dateShow_options_time_change");
+//                                if (isChart == "/visitor/equipment") {
+//                                    scope.charts.forEach(function (e) {
+//                                        var chart = echarts.init(document.getElementById(e.config.id));
+//                                        e.config.instance = chart;
+//                                    });
+//                                    //图表
+//                                    requestService.refresh(scope.charts);
+//                                }
+//                                if (isChart == "/visitor/provincemap") {
+//                                    scope.doSearch(time[0], time[1], $rootScope.userType);
+//                                    scope.doSearchAreas(time[0], time[1], $rootScope.userType, scope.mapOrPieConfig);
+//                                }
+//                            }
+//                        }
+//                    }
                     if (scope.todayClass === true) {
                         $('#reportrange span').html(GetDateStr(0));
                     }
@@ -332,6 +346,128 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     //$('#reportrange span').html(start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD'));
                 });
 
+                var _path = $location.path();
+                if(_path == "/source/searchterm" || _path == "/visitor/equipment" || _path == "/visitor/provincemap") {
+                    if (scope.todayClass) {
+                        scope.isShowCalendar = false;
+                        scope.hiddenSeven = false;
+                        scope.todayCalendar = GetDateStr(0);
+                        scope.hourselect = false;
+                        scope.dayselect = false;
+                        scope.weekselected = true;
+                        scope.mothselected = true;
+                        scope.choiceClass = false;
+                        scope.reset();
+                        scope.lastDaySelect = true;
+                        scope.lastWeekSelect = true;
+                        scope.clearCompareSelect = true;
+                        scope.todayClass = true;
+                        scope.timeClass = false;
+                        // table 参数配置
+                        $rootScope.tableTimeStart = 0;
+                        $rootScope.tableTimeEnd = 0;
+                        $rootScope.keyFormat = "hour";
+                        $rootScope.start = 0;
+                        $rootScope.end = 0;
+                    } else if (scope.sevenDayClass) {
+                        scope.isShowCalendar = false;
+                        scope.hiddenSeven = true;//今日统计和昨日统计中，点击7、30天时隐藏对比
+                        scope.todayCalendar = GetDateStr(-6);
+                        scope.hourselect = false;
+                        scope.dayselect = false;
+                        scope.weekselected = true;
+                        scope.mothselected = true;
+                        scope.choiceClass = false;
+                        scope.reset();
+                        scope.sevenDayClass = true;
+                        scope.timeClass = false;
+                        $rootScope.tableTimeStart = -6;
+                        $rootScope.tableTimeEnd = 0;
+                        $rootScope.start = -6;
+                        $rootScope.end = 0;
+                    }else if (scope.yesterdayClass) {
+                        scope.isShowCalendar = false;
+                        scope.hiddenSeven = false;
+                        scope.todayCalendar = GetDateStr(-1);
+                        scope.hourselect = false;
+                        scope.dayselect = false;
+                        scope.weekselected = true;
+                        scope.mothselected = true;
+                        scope.timeClass = false;
+                        scope.choiceClass = false;
+                        scope.reset();
+                        scope.lastDaySelect = true;
+                        scope.lastWeekSelect = true;
+                        scope.clearCompareSelect = true;
+                        scope.yesterdayClass = true;
+                        $rootScope.tableTimeStart = -1;
+                        $rootScope.tableTimeEnd = -1;
+                        $rootScope.start = -1;
+                        $rootScope.end = -1;
+                    } else if (scope.monthClass) {
+                        scope.isShowCalendar = false;
+                        scope.hiddenSeven = true;
+                        scope.hourselect = false;
+                        scope.dayselect = false;
+                        scope.weekselected = false;
+                        scope.mothselected = true;
+                        scope.choiceClass = false;
+                        scope.reset();
+                        scope.monthClass = true;
+                        scope.timeClass = false;
+                        $rootScope.tableTimeStart = -29;
+                        $rootScope.tableTimeEnd = 0;
+                        $rootScope.start = -29;
+                        $rootScope.end = 0;
+                    } else if ($location.url().split("?").length > 1) {
+                        var param = $location.url().split("?")[1];
+                        var isChart = $location.url().split("?")[0];
+                        if (param != 1 && param != 2 && param != 3 && param != 4) {
+                            scope.isShowCalendar = false;
+                            scope.hiddenSeven = true;
+                            scope.hourselect = false;
+                            scope.dayselect = false;
+                            scope.weekselected = false;
+                            scope.mothselected = true;
+                            scope.choiceClass = false;
+                            scope.reset();
+                            scope.monthClass = false;
+                            scope.timeClass = true;
+//                            $rootScope.tableTimeStart = -29;
+//                            $rootScope.tableTimeEnd = 0;
+//                            $rootScope.start = -29;
+//                            $rootScope.end = 0;
+
+
+                            scope.timeClass = true;
+                            var StartTimes = param.split("#")[0];
+                            var EndTimes = param.split("#")[1];
+                            var newParam = param.replace("#", "至");
+                            var time = chartUtils.getTimeOffset(StartTimes, EndTimes);
+                            $rootScope.start = time[0];
+                            $rootScope.end = time[1];
+                            $rootScope.tableTimeStart = time[0];
+                            $rootScope.tableTimeEnd = time[1];
+                            $('#reportrange span').html(newParam);
+                            $('#reportrange').data('daterangepicker').setStartDate(StartTimes);
+                            $('#reportrange').data('daterangepicker').setEndDate(EndTimes);
+//                            $rootScope.targetSearch();
+//                            scope.$broadcast("ssh_dateShow_options_time_change");
+//                            if (isChart == "/visitor/equipment") {
+//                                scope.charts.forEach(function (e) {
+//                                    var chart = echarts.init(document.getElementById(e.config.id));
+//                                    e.config.instance = chart;
+//                                });
+//                                //图表
+//                                requestService.refresh(scope.charts);
+//                            }
+//                            if (isChart == "/visitor/provincemap") {
+//                                scope.doSearch(time[0], time[1], $rootScope.userType);
+//                                scope.doSearchAreas(time[0], time[1], $rootScope.userType, scope.mapOrPieConfig);
+//                            }
+                        }
+                    }
+                }
             }
         };
         return option;
@@ -996,18 +1132,26 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
 
                 // 对比刷新
                 scope.$on("ssh_load_compare_datashow", function (e, startTime, endTime) {
+                    scope.DateNumber = false;
+                    scope.DateLoading = false;
                     scope.isCompared = true;
                     // 初始化对比数据
                     angular.forEach(scope.dateShowArray, function (q_r) {
                         q_r.cValue = q_r.cCount = 0;
                     });
                     scope.loadCompareDataShow(startTime, endTime);
+                    scope.DateNumber = true;
+                    scope.DateLoading = true;
                 });
 
                 scope.$on("LoadDateShowDataFinish", function (e, msg) {
+                    scope.DateNumber = false;
+                    scope.DateLoading = false;
                     scope.isCompared = false;
                     scope.initDefaultShowArray();
                     scope.pushESData(msg);
+                    scope.DateNumber = true;
+                    scope.DateLoading = true;
                 });
             }
         }
@@ -1154,9 +1298,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     }
                     scope.loadDataShow();
                 });
-                if($location.path() != "/source/searchterm" && $location.path() != "/visitor/equipment" && $location.path() != "/visitor/provincemap"){
-                    scope.loadDataShow();
-                }
+                scope.loadDataShow();
 
                 // 对比
                 scope.$on("ssh_load_compare_datashow", function (e, startTime, endTime) {

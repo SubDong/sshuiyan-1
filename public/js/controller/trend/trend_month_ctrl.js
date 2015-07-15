@@ -489,6 +489,7 @@ define(["./module"], function (ctrs) {
             $scope.monthClass = true;
             $('#reportrange span').html(GetDateStr(-29) + "至" + GetDateStr(0));
         };
+
     });
 
 });

@@ -57,10 +57,75 @@ define(["../app"], function (app) {
             {name: '港澳台'}
 
         ];
+        $rootScope.time = {};
+        $rootScope.times = [
+            {name: '全部'},
+            {name: '工作时段'},
+            {name: '非工作时段'},
+            {name: '自定义时段'}
+
+
+        ];
+        $rootScope.hour = {};
+        $rootScope.hours = [
+            {name: '0:00'},
+            {name: '1:00'},
+            {name: '2:00'},
+            {name: '3:00'},
+            {name: '4:00'},
+            {name: '5:00'},
+            {name: '6:00'},
+            {name: '7:00'},
+            {name: '8:00'},
+            {name: '9:00'},
+            {name: '10:00'},
+            {name: '11:00'},
+            {name: '12:00'},
+            {name: '13:00'},
+            {name: '14:00'},
+            {name: '15:00'},
+            {name: '16:00'},
+            {name: '17:00'},
+            {name: '18:00'},
+            {name: '19:00'},
+            {name: '20:00'},
+            {name: '21:00'},
+            {name: '22:00'},
+            {name: '23:00'},
+            {name: '24:00'},
+        ];
+        $rootScope.hour1 = {};
+        $rootScope.hours1 = [
+            {name: '0:59'},
+            {name: '1:59'},
+            {name: '2:59'},
+            {name: '3:59'},
+            {name: '4:59'},
+            {name: '5:59'},
+            {name: '6:59'},
+            {name: '7:59'},
+            {name: '8:59'},
+            {name: '9:59'},
+            {name: '10:59'},
+            {name: '11:59'},
+            {name: '12:59'},
+            {name: '13:59'},
+            {name: '14:59'},
+            {name: '15:59'},
+            {name: '16:59'},
+            {name: '17:59'},
+            {name: '18:59'},
+            {name: '19:59'},
+            {name: '20:59'},
+            {name: '21:59'},
+            {name: '22:59'},
+            {name: '23:59'},
+
+        ];
         $rootScope.continent = {};
         $rootScope.continents = [
             {name: '亚洲'},
-            {name: '美洲 '},
+            {name: '美洲 '}
         ];
         $rootScope.extendway = {};
         $rootScope.extendways = [

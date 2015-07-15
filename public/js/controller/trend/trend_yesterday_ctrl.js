@@ -373,8 +373,8 @@ define(["./module"], function (ctrs) {
         $scope.cancelChecked = function () {
             $scope.isCancelYesterdayCompare = false;
             $scope.isCancelWeekCompare = false;
-            $(".specialCheckbox")[0].style.backgroundPosition = "0 0";
-            $(".specialCheckbox")[1].style.backgroundPosition = "0 0";
+//            $(".specialCheckbox")[0].style.backgroundPosition = "0 0";
+//            $(".specialCheckbox")[1].style.backgroundPosition = "0 0";
         }
         //前一日
         $scope.isCancelYesterdayCompare = false;
@@ -393,8 +393,8 @@ define(["./module"], function (ctrs) {
                 var lastDate = todayCalendarArray[2] - 1;
                 $scope.dayOrWeek = todayCalendarArray[0] + "-" + todayCalendarArray[1] + "-" + lastDate;
                 $scope.isShowCalendar = true;
-                $(".specialCheckbox")[0].style.backgroundPosition = "0 -" + 50 + "px";
-                $(".specialCheckbox")[1].style.backgroundPosition = "0 0";
+//                $(".specialCheckbox")[0].style.backgroundPosition = "0 -" + 50 + "px";
+//                $(".specialCheckbox")[1].style.backgroundPosition = "0 0";
                 $scope.isCancelYesterdayCompare = true;
                 $scope.compareType = 1;
                 $scope.compareLastDayClass = true;
@@ -422,7 +422,7 @@ define(["./module"], function (ctrs) {
                     cf.renderChart(final_result, $scope.charts[0].config);
                 });
             } else {
-                $(".specialCheckbox")[0].style.backgroundPosition = "0 0";
+//                $(".specialCheckbox")[0].style.backgroundPosition = "0 0";
                 $scope.isShowCalendar = false;
                 $scope.isCancelYesterdayCompare = false;
                 $scope.restCompare();
@@ -443,8 +443,8 @@ define(["./module"], function (ctrs) {
                 var todayCalendarArray = $scope.todayCalendar.split("-");
                 var lastDate = todayCalendarArray[2] - 7;
                 $scope.dayOrWeek = todayCalendarArray[0] + "-" + todayCalendarArray[1] + "-" + lastDate;
-                $(".specialCheckbox")[1].style.backgroundPosition = "0 -" + 75 + "px";
-                $(".specialCheckbox")[0].style.backgroundPosition = "0 0";
+//                $(".specialCheckbox")[1].style.backgroundPosition = "0 -" + 75 + "px";
+//                $(".specialCheckbox")[0].style.backgroundPosition = "0 0";
                 $scope.isShowCalendar = true;
                 $scope.compareType = 2;
                 $scope.compareArray = ["上周今日", "上周昨日"];
@@ -478,7 +478,7 @@ define(["./module"], function (ctrs) {
                 });
             } else {
                 $scope.isCancelWeekCompare = false;
-                $(".specialCheckbox")[1].style.backgroundPosition = "0 0";
+//                $(".specialCheckbox")[1].style.backgroundPosition = "0 0";
                 $scope.restCompare();
             }
         }
