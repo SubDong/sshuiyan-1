@@ -94,12 +94,23 @@ define(["./module"], function (ctrs) {
          */
         $scope.keywordsWrap = function(){
             $scope.str = function(kw){
-                var strUrl = "http://" + $scope.adTrack.targetUrl
+                var strUrl = "";
+                if($scope.adTrack.targetUrl.indexOf("?") == -1){
+                    strUrl = "http://" + $scope.adTrack.targetUrl
                     + "?hmsr=" + $scope.adTrack.mediaPlatform
-                    + "&_hmmd=" + $scope.adTrack.adTypes
-                    + "&_hmpl=" + $scope.adTrack.planName
-                    + "&_hmkw=" + kw
-                    + "&_hmci=" + $scope.adTrack.creative;
+                    + "&hmmd=" + $scope.adTrack.adTypes
+                    + "&hmpl=" + $scope.adTrack.planName
+                    + "&hmkw=" + kw
+                    + "&hmci=" + $scope.adTrack.creative;
+                } else {
+                    strUrl = "http://" + $scope.adTrack.targetUrl
+                    + "&hmsr=" + $scope.adTrack.mediaPlatform
+                    + "&hmmd=" + $scope.adTrack.adTypes
+                    + "&hmpl=" + $scope.adTrack.planName
+                    + "&hmkw=" + kw
+                    + "&hmci=" + $scope.adTrack.creative;
+                }
+
                 return encodeURI(strUrl);
             }
 
