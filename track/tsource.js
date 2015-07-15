@@ -498,14 +498,12 @@ if (config != undefined && !config.open) {
                             md.cookie.remove("PFT_DTNJ");
                             md.cookie.remove("PFT_DTNP");
                         }else if(b =="-" || b == undefined || b == "" || b == null){
-                            if(this.matchUrl(md.g.rf) == document.location.hostname){
                                 cookie.set("PFT_COOKIE_RF",md.g.rf)
                                 this.setData("PFT_" + c.id);
                                 md.g.tt = this.getData("PFT_" + c.id);
                                 md.g.n = "1";
                                 md.cookie.remove("PFT_DTNJ");
                                 md.cookie.remove("PFT_DTNP");
-                            }
                         }
 
                     } else {
