@@ -646,13 +646,14 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
             restrict: "EA",
             template: "<div ng-hide='hiddenSeven'>" +
             "<label>对比：</label>" +
-            "<label><input  name=\"compareRadio\" type=\"checkbox\" ng-click=\"compareLastDay()\"><span>前一日</span></label>&nbsp;&nbsp;&nbsp;&nbsp;" +
-            "<label><input  name=\"compareRadio\" type=\"checkbox\" ng-click=\"compareLastWeek()\"><span>上周同期</span></label>" +
+            "<label><input  name=\"compareRadio\" type=\"checkbox\" ng-click=\"compareLastDay()\" value='lday' index='0' /><span>前一日</span></label>&nbsp;&nbsp;&nbsp;&nbsp;" +
+            "<label><input  name=\"compareRadio\" type=\"checkbox\" ng-click=\"compareLastWeek()\" value='lweek' index='1' /><span>上周同期</span></label>" +
 //            "<input class=\"styled\" type=\"checkbox\" ng-click=\"restCompare()\">取消对比" +
             "</div>",
             transclude: true,
             link: function (scope, ele, attr) {
                 $(ele).hide();
+                Custom.initCheckInfo();
                 var checkBox = $(ele).find("input[type='checkbox']");
                 checkBox.each(function (i, o) {
                     $(o).addClass("styled");
@@ -660,6 +661,61 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     span.insertBefore($(o));
                 });
 
+                var checked = [];
+                $("input[name='compareRadio']").change(function () {
+                    var index = Number($(this).attr('index'));
+                    checked=[];
+                    checkBox.each(function (i, o) {
+                        $(o).prop("checked", false);
+                    });
+                    $(checkBox[index]).prop("checked", true);
+                    checked.push(index);
+                    //checkBox.each(function (i, o) {
+                    //});
+                    console.log(checked);
+                    //var row = Number($(this).attr("index"));
+                    //var a = checked.indexOf(row);
+                    //var checks = $("input[name='compareRadio']");
+                    //if (a != -1) {
+                    //    checked.slice(a, 1);
+                    //} else {
+                    //    if (checked.length > 0) {
+                    //        var _shift = checked.shift();
+                    //        $(checks[_shift]).prev("span").css("background-position", "0px 0px");
+                    //        checked.push(row);
+                    //    } else {
+                    //        checked.push(row);
+                    //    }
+                    //}
+                    //checkBox.each(function (i, o) {
+                    //    $(o).prev("span").css("background-position", "0px 0px");
+                    //    $(o).prop("checked", false);
+                    //});
+                    //var position = ["0px -77px", "0px -51px"];
+                    //checked.forEach(function (c) {
+                    //    $(checkBox[c]).prop("checked", true);
+                    //});
+
+                    //var customCheck = [];
+                    //checks.each(function (i, check) {
+                    //    if ($(check).prop("checked")) {
+                    //        var c = Number($(check).attr("index"));
+                    //        customCheck.push(c);
+                    //    }
+                    //});
+                    //console.log(customCheck);
+                    //checked.forEach(function (c, i) {
+                    //    switch (i) {
+                    //        case 0:
+                    //            $(checkBox[c]).prev("span").css("background-position", "0px -77px");
+                    //            break;
+                    //        case 1:
+                    //            $(checkBox[c]).prev("span").css("background-position", "0px -51px");
+                    //            break;
+                    //    }
+                    //});
+                    //scope.checkBoxCompare(checked);
+                });
             }
         }
     });
@@ -850,6 +906,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                         }
                         return false;
                     }
+
                     // 设置_count
                     angular.forEach(_array, function (obj) {
                         if (flag) {
@@ -1545,8 +1602,9 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     }
 
                     angular.forEach(expanders, function (e_r, index) {
-                        if(_path=="/transform/pageTransform"){
-                            $rootScope.$broadcast("updateSelectRowIndex", 7 );
+                        //console.log(_path);
+                        if (_path == "/transform/pageTransform") {
+                            $rootScope.$broadcast("updateSelectRowIndex", 7);
                         }
 
                         if (isIndex(_path, e_r.sref) || isConf(_path, e_r.sref)) {
@@ -1554,7 +1612,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                             $rootScope.$broadcast("updateSelectRowIndex", index);
                             return;
                         }
-                        if (_path =="/transform/transformAnalysis") {
+                        if (_path == "/transform/transformAnalysis") {
                             $rootScope.$broadcast("updateSelectRowIndex", 7);
                         }
                         if (e_r.sref == _path.substring(1, _path.substring(1).indexOf("/") + 1)) {

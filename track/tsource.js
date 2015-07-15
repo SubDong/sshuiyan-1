@@ -441,7 +441,7 @@ if (config != undefined && !config.open) {
                      }*/
                     var a, b = this.getData("PFT_COOKIE_RF");
                     md.g.tt = a = this.getData("PFT_" + c.id);
-                    var Judge = (b != "-" && (b == c.q || this.matchUrl(b) != this.matchUrl(md.g.rf)));
+                    var Judge = (this.matchUrl(md.g.rf) != "-" && (b == c.q || this.matchUrl(b) != this.matchUrl(md.g.rf)));
 
                     if(null == a || undefined == a || "" == a || Judge){
                         if(this.matchUrl(md.g.rf) != document.location.hostname){

@@ -398,12 +398,15 @@ define(["./module"], function (ctrs) {
             //$(".specialCheckbox")[0].style.backgroundPosition = "0 0";
             //$(".specialCheckbox")[1].style.backgroundPosition = "0 0";
         }
+
+        $scope.checkBoxCompare=function(checked){
+            console.log(checked);
+        }
         //前一日
         $scope.isCancelYesterdayCompare = false;
         $scope.isCancelWeekCompare = false;
         $scope.isShowCalendar = false;
         $scope.compareLastDay = function () {
-            console.log("昨日");
             //if ($scope.isCancelYesterdayCompare == false) {
             //    $scope.isCancelWeekCompare = false;
             //    if (!$scope.todayCalendar) {
@@ -469,7 +472,6 @@ define(["./module"], function (ctrs) {
         $scope.compareType = 1;
         //上周同期
         $scope.compareLastWeek = function () {
-            console.log("上周");
             //if ($scope.compareType) {
             //    $scope.compareReset();
             //}

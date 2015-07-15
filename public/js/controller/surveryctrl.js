@@ -245,10 +245,13 @@ define(["./module"], function (ctrs) {
             $rootScope.chartTmp = [];
             $scope.initGrid = function (quota, estype, cb) {
                 $rootScope.chartTmp = [];
-                //var test = SEM_API_URL + "/sem/report/account?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end;
-                //console.log(test + "<<<<<<<<<<");
                 var semRegionRequest = $http.get(SEM_API_URL + "/sem/report/account?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end);
                 var esRequest = $http.get("/api/charts?start=" + $rootScope.start + "&end=" + $rootScope.end + "&dimension=period&userType=" + $rootScope.userType + "&type=" + estype);
+                $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
+                $scope.charts[0].config.instance.showLoading({
+                    effect: 'whirling',
+                    text: "正在努力的读取数据中..."
+                });
                 $q.all([semRegionRequest, esRequest]).then(function (final_result) {
                     if ($rootScope.start == -1 && $rootScope.end == -1) {
 
@@ -256,7 +259,6 @@ define(["./module"], function (ctrs) {
 
                         $scope.charts[0].config.chartType = "bar";
                         $scope.charts[0].config.bGap = true;
-                        $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
                         //chartUtils.addStep(chart_result, 24);
                         $rootScope.chartTmp = chart_result;
                         //console.log($rootScope.chartTmp)
@@ -270,7 +272,6 @@ define(["./module"], function (ctrs) {
                         chartUtils.addSemData(esJson, final_result[0], quota);
                         $scope.charts[0].config.chartType = "line";
                         $scope.charts[0].config.bGap = false;//首行缩进
-                        $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
                         cf.renderChart(esJson, $scope.charts[0].config);
                     }
                 });

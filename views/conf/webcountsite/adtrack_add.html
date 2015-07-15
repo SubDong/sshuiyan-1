@@ -8,21 +8,22 @@
     <form id="adTrackForm" name="adTrackForm" novalidate>
         <div class="adtrack_add">
             <ul>
-                <li><span>以下信息必须填写:</span></li>
+                <li><span class="adtrack_add_tiltle">以下信息必须填写:</span></li>
                 <li>
                     <span>目标URL<p>（在其媒体投放广告时所指向的URL）</p></span>
 
                     <div class="">
                         <input type="text" ssh-url id="targetUrl" name="targetUrl" ng-model="adTrack.targetUrl"
-                               placeholder="www.mydomain/product.html" required/>
+                               data-ng-focus="addfocus(targetUrlHelp)"
+                               data-ng-blur="addblur(targetUrlHelp)"    placeholder="www.mydomain/product.html" required/>
                     </div>
                     <span style="color:red" ng-show="adTrackForm.targetUrl.$invalid">
-                        <span ng-show="adTrackForm.targetUrl.$error.required">请输入目标URL</span>
+                        <span   ng-show="adTrackForm.targetUrl.$error.required && targetUrlHelp.help ">请输入目标URL</span>
                         <span ng-show="adTrackForm.targetUrl.$error.sshUrl">您设置的目标URL格式错误</span>
                     </span>
                 </li>
                 <li>
-                    <span>媒介平台<p>（广告所投放的平台，如：新浪,搜狐等）</p></span>
+                    <span>媒介平台<p>（（广告所投放的平台，如：新浪、搜狐、贴吧、论坛）</p></span>
                     <div class="adtrack_add_input">
                         <ul>
                             <li><input type="radio" name="mediaPlatform" ng-model="adTrack.mediaPlatform" ng-click="advancedOpt()" value="搜狐" />搜狐</li>
@@ -36,16 +37,16 @@
                             <li><input type="radio" name="mediaPlatform" ng-model="adTrack.mediaPlatform" ng-click="advancedOpt()" value="其他" />其他</li>
                         </ul>
                         <ul>
-                            <input type="text" id="mediaPlatform" name="mediaPlatform"  ng-model="adTrack.mediaPlatform" ng-click="advancedOpt()" placeholder="请输入" required/>
+                            <input type="text"  data-ng-focus="addfocus(mediaPlatformhelp)" data-ng-blur="addblur(mediaPlatformhelp)" id="mediaPlatform" name="mediaPlatform"  ng-model="adTrack.mediaPlatform" ng-click="advancedOpt()" placeholder="请输入" required/>
                             <span style="color:red" ng-show="adTrackForm.mediaPlatform.$invalid">
-                                <span ng-show="adTrackForm.mediaPlatform.$error.required">媒介平台必填</span>
+                                <span ng-show="adTrackForm.mediaPlatform.$error.required && mediaPlatformhelp.help">媒介平台必填</span>
                             </span>
                         </ul>
                     </div>
                 </li>
             </ul>
-            <ul>
-                <li><span class="adtrack_add_tz">高级选项</span><p>（广告类型&gt;计划名称&gt;关键词&gt;创意，逐级填写，选填）</p></li>
+            <ul class="adtrack_add_gjxx">
+                <li ><span class="adtrack_add_tiltle">高级选项</span><p>（广告类型&gt;计划名称&gt;关键词&gt;创意，逐级填写，选填）</p></li>
                 <li><span>广告类型<p>（广告所投放的具体形式，如：文字广告，图片广告等）</p></span>
                     <div class="adtrack_add_input">
                         <ul>

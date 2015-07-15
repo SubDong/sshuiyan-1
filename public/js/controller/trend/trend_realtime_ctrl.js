@@ -19,16 +19,16 @@ define(["./module"], function (ctrs) {
         $scope.terminalSearch = "";
         $scope.areaSearch = "";
 //        取消显示的高级搜索的条件
-        $scope.removeSourceSearch = function(obj){
+        $scope.removeSourceSearch = function (obj) {
             $scope.souce.selected = {"name": "全部"};
             $rootScope.$broadcast("loadAllSource");
             obj.sourceSearch = "";
         }
-        $scope.removeTerminalSearch = function(obj){
+        $scope.removeTerminalSearch = function (obj) {
             $rootScope.$broadcast("loadAllTerminal");
             obj.terminalSearch = "";
         }
-        $scope.removeAreaSearch = function(obj){
+        $scope.removeAreaSearch = function (obj) {
             $scope.city.selected = {"name": "全部"};
             $rootScope.$broadcast("loadAllArea");
             obj.areaSearch = "";
@@ -63,40 +63,42 @@ define(["./module"], function (ctrs) {
         }
 
         $scope.realTimeFormat = function (data, config, e) {
-            var json = JSON.parse(eval("(" + data + ")").toString());
-            var result = json[0].result;
             var final_result = [];
-            e.types.forEach(function (qtype) {
-                switch (qtype) {
-                    case "pv":
-                        var _key = [];
-                        var _quota = [];
-                        result.buckets.forEach(function (e) {
-                            _key.push(new Date(e.key).Format("yyyy-MM-dd hh:mm:ss").substring(10,16));
-                            _quota.push(e.pv_aggs.value);
-                        });
-                        final_result.push({label: chartUtils.convertChinese('pv'), key: _key, quota: _quota})
-                        break;
-                    case "uv":
-                        var _key = [];
-                        var _quota = [];
-                        result.buckets.forEach(function (e) {
-                            _key.push(new Date(e.key).Format("yyyy-MM-dd hh:mm:ss").substring(10,16));
-                            _quota.push(e.uv_filter.uv_aggs.value);
-                        });
-                        final_result.push({label: chartUtils.convertChinese('uv'), key: _key, quota: _quota})
-                        break;
-                    case "ip":
-                        var _key = [];
-                        var _quota = [];
-                        result.buckets.forEach(function (e) {
-                            _key.push(new Date(e.key).Format("yyyy-MM-dd hh:mm:ss").substring(10,16));
-                            _quota.push(e.ip_aggs.value);
-                        });
-                        final_result.push({label: chartUtils.convertChinese('ip'), key: _key, quota: _quota})
-                        break;
-                }
-            });
+            if (data != "[]") {
+                var json = JSON.parse(eval("(" + data + ")").toString());
+                var result = json[0].result;
+                e.types.forEach(function (qtype) {
+                    switch (qtype) {
+                        case "pv":
+                            var _key = [];
+                            var _quota = [];
+                            result.buckets.forEach(function (e) {
+                                _key.push(new Date(e.key).Format("yyyy-MM-dd hh:mm:ss").substring(10, 16));
+                                _quota.push(e.pv_aggs.value);
+                            });
+                            final_result.push({label: chartUtils.convertChinese('pv'), key: _key, quota: _quota})
+                            break;
+                        case "uv":
+                            var _key = [];
+                            var _quota = [];
+                            result.buckets.forEach(function (e) {
+                                _key.push(new Date(e.key).Format("yyyy-MM-dd hh:mm:ss").substring(10, 16));
+                                _quota.push(e.uv_aggs.value);
+                            });
+                            final_result.push({label: chartUtils.convertChinese('uv'), key: _key, quota: _quota})
+                            break;
+                        case "ip":
+                            var _key = [];
+                            var _quota = [];
+                            result.buckets.forEach(function (e) {
+                                _key.push(new Date(e.key).Format("yyyy-MM-dd hh:mm:ss").substring(10, 16));
+                                _quota.push(e.ip_aggs.value);
+                            });
+                            final_result.push({label: chartUtils.convertChinese('ip'), key: _key, quota: _quota})
+                            break;
+                    }
+                });
+            }
             config["noFormat"] = "noFormat";
             config["twoYz"] = "twoYz";
             cf.renderChart(final_result, config);
@@ -104,15 +106,17 @@ define(["./module"], function (ctrs) {
         }
         $scope.initPeron = function () {
             $http.get("api/halfhour?userType=" + $rootScope.userType + "&type=uv&start=0&end=0&dimension=period").success(function (data) {
-                var json = JSON.parse(eval("(" + data + ")").toString());
-                var result = json[0].result;
                 var count = 0;
-                if (result) {
-                    if (result.buckets) {
-                        if (result.buckets.length > 0) {
-                            result.buckets.forEach(function (e) {
-                                count += Number(e.uv_filter.uv_aggs.value);
-                            });
+                if (data != "[]") {
+                    var json = JSON.parse(eval("(" + data + ")").toString());
+                    var result = json[0].result;
+                    if (result) {
+                        if (result.buckets) {
+                            if (result.buckets.length > 0) {
+                                result.buckets.forEach(function (e) {
+                                    count += Number(e.uv_aggs.value);
+                                });
+                            }
                         }
                     }
                 }
@@ -133,7 +137,7 @@ define(["./module"], function (ctrs) {
                     min_max: false,
                     bGap: false,//首行缩进
                     chartType: "line",//图表类型
-                    half:true,
+                    half: true,
                     keyFormat: 'none',
                     dataKey: "key",//传入数据的key值
                     dataValue: "quota"//传入数据的value值
