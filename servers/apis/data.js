@@ -97,7 +97,9 @@ api.get('/halfhour', function (req, res) {
     if (!userType) {
         userType = 1;
     }
-
+    //es_request.search(req.es, indexes, userType, quotas, null, topN, null, 1436749200000, 1436751000000, 0, function (result) {
+    //    datautils.send(res, JSON.stringify(result));
+    //});
     es_request.search(req.es, indexes, userType, quotas, null, topN, null, new Date().getTime() - 1800000, new Date().getTime(), 0, function (result) {
         datautils.send(res, JSON.stringify(result));
     });
@@ -432,6 +434,8 @@ api.get('/visitormap', function (req, res) {
         datautils.send(res, result);
     })
 });
+//首页设备环境图表
+
 //访客地图 图标
 api.get('/provincemap', function (req, res) {
     var query = url.parse(req.url, true).query;
@@ -440,12 +444,13 @@ api.get('/provincemap', function (req, res) {
     var _endTime = Number(query['end']);
     var areas = query['areas'];
     var property = query['property'];
+    var chartFilter = query['chartFilter'];
     if (property == "ct") {
         var indexes = date.createIndexes(_startTime, _endTime, "access-");
     } else {
         var indexes = date.createIndexes(_startTime, _endTime, "access-");
     }
-    initial.chartData(req.es, indexes, type, areas, property, function (data) {
+    initial.chartData(req.es, indexes, type, areas, property, chartFilter, function (data) {
         var result = {};
         var chart_data_array = new Array();
         var data_name = new Array();
@@ -572,19 +577,18 @@ api.get("/getHeatUrlDetailData", function (req, res) {
     var query = url.parse(req.url, true).query;
 
 
-    var _type =req.session.type;
+    var _type = req.session.type;
     var _rf = req.session.rf;
     var _startTime = req.session.startTime;
     ;
     var _endTime = req.session.endTime;
-    var _sourceUrl =   query['sourceUrl'];
+    var _sourceUrl = query['sourceUrl'];
     var indexes = date.createIndexes(_startTime, _endTime, "access-");//indexs
 
 
+    heaturl_request.searchDetail(req.es, indexes, _type, _rf, function (result) {
 
-    heaturl_request.searchDetail(req.es, indexes, _type,_rf,function (result) {
-
-        res.write("disposeDetailDataCallback("+JSON.stringify(result)+");");
+        res.write("disposeDetailDataCallback(" + JSON.stringify(result) + ");");
         res.end();
     });
 
@@ -603,7 +607,7 @@ api.get("/getHeatUrlHeaderData", function (req, res) {
 
     var indexes = date.createIndexes(_startTime, _endTime, "access-");//indexs
 
-    heaturl_request.searchHeaderData(req.es, indexes, _type,_rf,function (result) {
+    heaturl_request.searchHeaderData(req.es, indexes, _type, _rf, function (result) {
 
         res.write("disposeHeaderDataCallback(" + JSON.stringify(result) + ");");
         res.end();
@@ -627,7 +631,7 @@ api.get("/heaturl", function (req, res) {
     req.session.rf = _rf;
 
     var indexes = date.createIndexes(_startTime, _endTime, "access-");
-    heaturl_request.searchHeaderData(req.es, indexes, _type,_rf,function (result) {
+    heaturl_request.searchHeaderData(req.es, indexes, _type, _rf, function (result) {
 
         console.log(result);
         datautils.send(res, result);
@@ -810,6 +814,22 @@ api.get("/transform/transformAnalysis", function (req, res) {
             querys.push(queryOptions.split(",")[i]);
         }
         transform.SearchPromotion(req.es, indexString, type, action, querys, function (result) {
+            datautils.send(res, result);
+        });
+    } else if (searchType = "contrastData") {
+        var showType = parameters[5].split("=")[1];
+        queryOptions = parameters[6].split("=")[1];
+        var contrastStart = parameters[7].split("=")[1];
+        var contrastEnd = parameters[8].split("=")[1];
+        var contrast_indexString = [];
+        if (contrastStart.substring(1, start.length).match("-") != null && contrastEnd.substring(1, start.length).match("-") != null) {
+            contrast_indexString = date.createIndexsByTime(contrastStart, contrastEnd, "access-");
+            time = date.getConvertTimeByTime(contrastStart, contrastEnd);
+        } else {
+            contrast_indexString = date.createIndexes(contrastStart, contrastEnd, "access-");
+            time = date.getConvertTimeByNumber(contrastStart, contrastEnd);
+        }
+        transform.SearchContrast(req.es, indexString,contrast_indexString, type, action,showType, queryOptions, function (result) {
             datautils.send(res, result);
         });
     } else {

@@ -139,8 +139,8 @@ define(["./module"], function (ctrs) {
             //图表
 //            requestService.refresh($scope.charts);
             //其他页面表格
-            $rootScope.targetSearch(true);
-            $scope.$broadcast("ssh_dateShow_options_time_change");
+//            $rootScope.targetSearch(true);
+//            $scope.$broadcast("ssh_dateShow_options_time_change");
             //classcurrent
             $scope.reset();
             $scope.todayClass = true;

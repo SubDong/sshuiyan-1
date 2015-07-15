@@ -89,7 +89,7 @@ var init = {
 }
 var op = {
     lineChart: function (data, chartConfig) {
-        //util.chartResize(chartConfig);//charts 自适应
+        util.chartResize(chartConfig);//charts 自适应
         var _legendTmp = [];
         if (!data.length) {
             def.defData(chartConfig);
@@ -172,7 +172,9 @@ var op = {
                             res = '<li>' + xName + ':00-' + xName + ':59</li>';
                         } else {
                             if (chartConfig.keyFormat == "none") {
-                                res = '<li>' + xName + ':00-' + xName + ':59</li>';
+                                if (!chartConfig.half) {
+                                    res = '<li>' + xName + ':00-' + xName + ':59</li>';
+                                } 
                             }
                         }
                         for (var i = 0, l = params.length; i < l; i++) {
@@ -474,7 +476,7 @@ var op = {
             //    '#6b8e23', '#ff00ff', '#3cb371', '#b8860b', '#30e0e0'
             //],
             legend: {
-                selectedMode:false,
+                selectedMode: false,
                 show: chartConfig.legendShow ? chartConfig.legendShow : false,
                 orient: !chartConfig.ledLayout ? "vertical" : chartConfig.ledLayout,
                 x: 'left',

@@ -152,10 +152,10 @@ define(["./../module"], function (ctrs) {
                         min_max: false,
                         bGap: false,
                         chartType: "line",
-                        auotHidex: true,
-                        qingXie:true,
+                        //auotHidex: true,
+                       //qingXie:true,
                         qxv:18,
-                        tt: "item",
+                      //  tt: "item",
                         itemHover: $scope.itemHover,
                         lineType: false,
                         keyFormat: 'none',
@@ -233,16 +233,16 @@ define(["./../module"], function (ctrs) {
                 $rootScope.end = 0;
                 $rootScope.tableTimeStart = 0;
                 $rootScope.tableTimeEnd = 0;
-                $scope.charts.forEach(function (e) {
-                    var chart = echarts.init(document.getElementById(e.config.id));
-                    e.config.instance = chart;
-                });
+//                $scope.charts.forEach(function (e) {
+//                    var chart = echarts.init(document.getElementById(e.config.id));
+//                    e.config.instance = chart;
+//                });
                 //图表
-                requestService.refresh($scope.charts);
+//                requestService.refresh($scope.charts);
                 $scope.reloadByCalendar("today");
                 $('#reportrange span').html(GetDateStr(0));
                 //其他页面表格
-                $rootScope.targetSearch();
+//                $rootScope.targetSearch();
                 //classcurrent
                 $scope.reset();
                 $scope.todayClass = true;

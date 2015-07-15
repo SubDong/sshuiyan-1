@@ -74,7 +74,7 @@ define(["./module"], function (ctrs) {
             {
                 name: "平均访问时长",
                 displayName: "平均访问时长",
-                field: "avgPage",
+                field: "avgTime",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
             }
         ];
@@ -242,16 +242,16 @@ define(["./module"], function (ctrs) {
             $rootScope.end = 0;
             $rootScope.tableTimeStart = 0;
             $rootScope.tableTimeEnd = 0;
-            $scope.charts.forEach(function (e) {
-                var chart = echarts.init(document.getElementById(e.config.id));
-                e.config.instance = chart;
-            });
+//            $scope.charts.forEach(function (e) {
+//                var chart = echarts.init(document.getElementById(e.config.id));
+//                e.config.instance = chart;
+//            });
             //图表
-            requestService.refresh($scope.charts);
+//            requestService.refresh($scope.charts);
             //首页表格
             //requestService.gridRefresh(scope.grids);
             //其他页面表格
-            $rootScope.targetSearch();
+//            $rootScope.targetSearch();
             $scope.reloadByCalendar("today");
             $('#reportrange span').html(GetDateStr(0));
             //classcurrent

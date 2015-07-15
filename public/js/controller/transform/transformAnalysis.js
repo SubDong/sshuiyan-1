@@ -189,7 +189,7 @@ define(["./module"], function (ctrs) {
                     }
                 }
                 if (checkedVal.length) {
-                    $scope.dataTable(null, "day", checkedVal);
+                    $scope.dataTable($scope.isCompared, "day", checkedVal,false);
                 } else {
                     def.defData($scope.charts[0].config);
                 }
@@ -221,12 +221,12 @@ define(["./module"], function (ctrs) {
                     }
                 }
             ];
-            $scope.initGrid = function (user, baiduAccount, semType, quotas, start, end, renderLegend) {
-                $rootScope.start = -1;
-                $rootScope.end = -1;
-                //$scope.init(user, baiduAccount, semType, quotas, start, end, renderLegend);
-            }
-            $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "campaign", $scope.selectedQuota, -1, -1, true);
+            //$scope.initGrid = function (user, baiduAccount, semType, quotas, start, end, renderLegend) {
+            //    $rootScope.start = -1;
+            //    $rootScope.end = -1;
+            //    //$scope.init(user, baiduAccount, semType, quotas, start, end, renderLegend);
+            //}
+            //$scope.initGrid($rootScope.user, $rootScope.baiduAccount, "campaign", $scope.selectedQuota, -1, -1, true);
             $scope.advancedQuery = function () {
                 //来源过滤样式初始化
                 $scope.souce.selected = "";
@@ -307,8 +307,8 @@ define(["./module"], function (ctrs) {
             };
             $rootScope.datepickerClickTow = function (start, end, label) {
                 var time = chartUtils.getTimeOffset(start, end);
-                $rootScope.start = time[0];
-                $rootScope.end = time[1];
+                $scope.start = time[0];
+                $scope.end = time[1];
                 $scope.my_init(true);
             };
             function GetDateStr(AddDayCount) {
@@ -322,21 +322,21 @@ define(["./module"], function (ctrs) {
 
             //刷新
             $scope.page_refresh = function () {
-                $rootScope.start = -1;
-                $rootScope.end = -1;
-                $rootScope.tableTimeStart = -1;//开始时间
-                $rootScope.tableTimeEnd = -1;//结束时间、
+                $rootScope.start = 0;
+                $rootScope.end = 0;
+                $rootScope.tableTimeStart = 0;//开始时间
+                $rootScope.tableTimeEnd = 0;//结束时间、
                 $rootScope.tableFormat = null;
                 //$rootScope.targetSearchSpread();
                 //$scope.init($rootScope.user, $rootScope.baiduAccount, "campaign", $scope.selectedQuota, $rootScope.start, $rootScope.end);
                 //图表
-                requestService.refresh($scope.charts);
+//                requestService.refresh($scope.charts);
                 $scope.reloadByCalendar("today");
                 $('#reportrange span').html(GetDateStr(-1));
                 //其他页面表格
                 //classcurrent
                 $scope.reset();
-                $scope.yesterdayClass = true;
+                $scope.todayClass = true;
             };
             $scope.ds_defaultQuotasOption = ["pv", "uv", "ip", "nuv"];
             $scope.setShowArray = function () {
@@ -353,7 +353,16 @@ define(["./module"], function (ctrs) {
                     end: $rootScope.end,
                     checkedArray: $scope.checkedArray
                 });
-                $scope.dataTable(null, "day", ["pv", "uv"]);
+                if(isContrastDataByTime){
+                    $scope.charts[0].config.legendDefaultChecked = [0];
+                    $scope.charts[0].config.legendAllowCheckCount = 1;
+                    $scope.dataTable(isContrastDataByTime, "day", ["pv"],true);
+                }else{
+                    $scope.charts[0].config.legendDefaultChecked = [0,1];
+                    $scope.charts[0].config.legendAllowCheckCount = 2;
+                    $scope.dataTable(isContrastDataByTime, "day", ["pv","uv"]);
+                }
+
                 $scope.isCompared = isContrastDataByTime;
                 $http.get("/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&action=event&type=1&searchType=initAll").success(function (data) {
                     if (data != null || data != "") {
@@ -398,22 +407,50 @@ define(["./module"], function (ctrs) {
              * @param showType　显示横轴方式　有四种：hour小时为单位，显示一天24小时的数据；day天为单位，显示数天的数据，week周为单位，显示数周的数据；month月为单位，显示数月的数据
              * @param queryOption　查询条件指标　事件转化：指标："浏览量(pv)", "访客数(uv)", "转化次数(conversions)", "转化率(crate)", "平均转化成本(transformCost)"
              */
-            $scope.dataTable = function (isContrastTime, showType, queryOptions) {
-                $http.get("/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&action=event&type=1&searchType=dataTable&showType=" + showType + "&queryOptions=" + queryOptions).success(function (data) {
-                    var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
-                    chart.showLoading({
-                        text: "正在努力的读取数据中..."
+            $scope.dataTable = function (isContrastTime, showType, queryOptions,renderLegend) {
+                if(isContrastTime){
+                    $http.get("/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&action=event&type=1&searchType=contrastData&showType=" + showType + "&queryOptions=" + queryOptions+"&contrastStart="+$scope.start+"&contrastEnd=0"+$scope.end).success(function (contrastData) {
+                        var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
+                        chart.showLoading({
+                            text: "正在努力的读取数据中..."
+                        });
+                        $scope.charts[0].config.chartType = "line";
+                        $scope.charts[0].config.bGap = true;
+                        $scope.charts[0].config.instance = chart;
+                        if(renderLegend)
+                        util.renderLegend(chart, $scope.charts[0].config);
+
+
+                        for (var i = 0; i < contrastData.length; i++) {
+                            if(contrastData[i].label.split("_").length>1){
+                                contrastData[i].label = "对比数据";
+                            }else{
+                                contrastData[i].label = chartUtils.convertChinese(contrastData[i].label);
+                            }
+                        }
+                        cf.renderChart(contrastData, $scope.charts[0].config);
+                        Custom.initCheckInfo();
                     });
-                    $scope.charts[0].config.chartType = "line";
-                    $scope.charts[0].config.bGap = true;
-                    $scope.charts[0].config.instance = chart;
-                    util.renderLegend(chart, $scope.charts[0].config);
-                    for (var i = 0; i < data.length; i++) {
-                        data[i].label = chartUtils.convertChinese(data[i].label);
-                    }
-                    cf.renderChart(data, $scope.charts[0].config);
-                    Custom.initCheckInfo();
-                });
+                }else{
+                    //$scope.charts[0].config.legendDefaultChecked = [0,1];
+                    //$scope.charts[0].config.legendAllowCheckCount = 2;
+                    $http.get("/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&action=event&type=1&searchType=dataTable&showType=" + showType + "&queryOptions=" + queryOptions).success(function (data) {
+                        var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
+                        chart.showLoading({
+                            text: "正在努力的读取数据中..."
+                        });
+                        $scope.charts[0].config.chartType = "line";
+                        $scope.charts[0].config.bGap = true;
+                        $scope.charts[0].config.instance = chart;
+                            util.renderLegend(chart, $scope.charts[0].config);
+                        for (var i = 0; i < data.length; i++) {
+                            data[i].label = chartUtils.convertChinese(data[i].label);
+                        }
+                        cf.renderChart(data, $scope.charts[0].config);
+                        Custom.initCheckInfo();
+                    });
+                }
+
 
             };
             $scope.targetSearchSpread = function (isClicked,text) {

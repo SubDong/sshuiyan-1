@@ -1,3 +1,4 @@
+
 /**
  * Created by john on 2015/3/30.
  */
@@ -168,8 +169,8 @@ define(["app"], function (app) {
                 {
                     name: '访问时间', displayName: "访问时间", field: "visitTime",
                     sort: {
-                        direction: uiGridConstants.ASC,
-                        priority: 0
+                        direction: uiGridConstants.DESC,
+                        priority: 1
                     }
                 },
                 {
@@ -1072,7 +1073,10 @@ define(["app"], function (app) {
         };
         //init
         if ($scope.tableJu != 'html' && $rootScope.historyJu != "NO") {
-            $scope.targetSearch();
+            if($location.path() != "/source/searchterm" && $location.path() != "/visitor/equipment" && $location.path() != "/visitor/provincemap"){//防止多次访问
+                $scope.targetSearch();
+            }
+//            $scope.targetSearch();
         }
         $scope.$on("history", function (e, msg) {
             $scope.gridOpArray = angular.copy($rootScope.gridArray);

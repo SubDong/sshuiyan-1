@@ -184,7 +184,12 @@ var transform = {
                     switch (queryOption) {
                         case "pv":
                             for (var i = 0; i < results.length; i++) {
-                                quotaArry.push(results[i].pv.value);
+                                for (var key in results[i]) {
+                                    if (key == queryOption) {
+                                    }
+                                    quotaArry.push(results[i].pv.value);
+                                }
+
                             }
                             quota_data = {
                                 label: "pv",
@@ -194,7 +199,11 @@ var transform = {
                             break;
                         case "uv":
                             for (var i = 0; i < results.length; i++) {
-                                quotaArry.push(results[i].uv.value);
+                                for (var key in results[i]) {
+                                    if (key == queryOption) {
+                                        quotaArry.push(results[i].uv.value);
+                                    }
+                                }
                             }
                             quota_data = {
                                 label: "uv",
@@ -204,7 +213,11 @@ var transform = {
                             break;
                         case "vc":
                             for (var i = 0; i < results.length; i++) {
-                                quotaArry.push(results[i].vc.value);
+                                for (var key in results[i]) {
+                                    if (key == queryOption) {
+                                        quotaArry.push(results[i].vc.value);
+                                    }
+                                }
                             }
                             quota_data = {
                                 label: "vc",
@@ -215,7 +228,11 @@ var transform = {
 
                         case "ip":
                             for (var i = 0; i < results.length; i++) {
-                                quotaArry.push(results[i].ip.value);
+                                for (var key in results[i]) {
+                                    if (key == queryOption) {
+                                        quotaArry.push(results[i].ip.value);
+                                    }
+                                }
                             }
                             quota_data = {
                                 label: "ip",
@@ -225,7 +242,11 @@ var transform = {
                             break;
                         case "clickTotal":
                             for (var i = 0; i < results.length; i++) {
-                                quotaArry.push(results[i].clickTotal.value);
+                                for (var key in results[i]) {
+                                    if (key == queryOption) {
+                                        quotaArry.push(results[i].clickTotal.value);
+                                    }
+                                }
                             }
                             quota_data = {
                                 label: "clickTotal",
@@ -235,7 +256,11 @@ var transform = {
                             break;
                         case "conversions":
                             for (var i = 0; i < results.length; i++) {
-                                quotaArry.push(results[i].conversions.value);
+                                for (var key in results[i]) {
+                                    if (key == queryOption) {
+                                        quotaArry.push(results[i].conversions.value);
+                                    }
+                                }
                             }
                             quota_data = {
                                 label: "conversions",
@@ -245,7 +270,11 @@ var transform = {
                             break;
                         case "nuv":
                             for (var i = 0; i < results.length; i++) {
-                                quotaArry.push(results[i].nuv.value);
+                                for (var key in results[i]) {
+                                    if (key == queryOption) {
+                                        quotaArry.push(results[i].nuv.value);
+                                    }
+                                }
                             }
                             quota_data = {
                                 label: "nuv",
@@ -255,7 +284,11 @@ var transform = {
                             break;
                         case "nuvRate":
                             for (var i = 0; i < results.length; i++) {
-                                quotaArry.push(results[i].nuvRate.value);
+                                for (var key in results[i]) {
+                                    if (key == queryOption) {
+                                        quotaArry.push(results[i].nuvRate.value);
+                                    }
+                                }
                             }
                             quota_data = {
                                 label: "nuvRate",
@@ -265,10 +298,14 @@ var transform = {
                             break;
                         case "crate":
                             for (var i = 0; i < results.length; i++) {
-                                if (results[i].conversions_crate.value != "0") {
-                                    quotaArry.push((results[i].conversions_crate.value / results[i].conversions_crate.value).toFixed(2));
-                                } else {
-                                    quotaArry.push(0);
+                                for (var key in results[i]) {
+                                    if (key == queryOption) {
+                                        if (results[i].conversions_crate.value != "0") {
+                                            quotaArry.push((results[i].conversions_crate.value / results[i].conversions_crate.value).toFixed(2));
+                                        } else {
+                                            quotaArry.push(0);
+                                        }
+                                    }
                                 }
                             }
                             quota_data = {
@@ -569,9 +606,274 @@ var transform = {
                 }
                 //==================================================================================
                 callbackFn(data);
-            } else{
+            } else {
                 callbackFn(data);
             }
+        });
+    },
+    SearchContrast: function (es, indexString, contrast_indexString, type, action, showType, queryOptions, callbackFn) {
+        var requests = [];
+        var _aggs = {};
+        var contrast_aggs = {};
+        _aggs[queryOptions] = es_aggs[queryOptions][queryOptions];
+        contrast_aggs[queryOptions + "_contrast"] = es_aggs[queryOptions][queryOptions];
+        var options = [queryOptions + "_contrast", queryOptions];
+        switch (showType) {
+            case "hour":
+                break;
+            case "day":
+                for (var i = 0; i < indexString.length; i++) {
+                    requests.push({
+                        "index": indexString[i],
+                        "type": type + "_" + action,
+                        "body": {
+                            "size": 0,
+                            "aggs": _aggs
+                        }
+                    });
+                }
+                for (var i = 0; i < contrast_indexString.length; i++) {
+                    requests.push({
+                        "index": contrast_indexString[i],
+                        "type": type + "_" + action,
+                        "body": {
+                            "size": 0,
+                            "aggs": contrast_aggs
+                        }
+                    });
+                }
+                break;
+            case "week":
+                break;
+            case "month":
+                break;
+        }
+        async.map(requests, function (item, callback) {
+            es.search(item, function (error, result) {
+                if (result != undefined && result.aggregations != undefined) {
+                    callback(null, result.aggregations);
+                } else {
+                    callback(null, null);
+                }
+            });
+        }, function (error, results) {
+            var data = [];
+            var quota_data = {};
+            var keyArr = [];
+            var keyArr_contrast = [];
+            var quotaArry = [];
+            if (results[0] != null) {
+                for (var i = 0; i < indexString.length; i++) {
+                    keyArr.push(indexString[i].substring(7, indexString[i].length));
+                }
+                for (var i = 0; i < contrast_indexString.length; i++) {
+                    keyArr_contrast.push(contrast_indexString[i].substring(7, contrast_indexString[i].length));
+                }
+                options.forEach(function (option) {
+                    quota_data = {};
+                    quotaArry = [];
+                    switch (option) {
+                        case "pv":
+                            for (var i = 0; i < keyArr.length; i++) {
+                                quotaArry.push(results[i].pv.value);
+                            }
+                            quota_data = {
+                                label: "pv",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "uv":
+                            for (var i = 0; i < keyArr.length; i++) {
+                                quotaArry.push(results[i].uv.value);
+                            }
+                            quota_data = {
+                                label: "uv",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "vc":
+                            for (var i = 0; i < keyArr.length; i++) {
+                                quotaArry.push(results[i].vc.value);
+                            }
+                            quota_data = {
+                                label: "vc",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+
+                        case "ip":
+                            for (var i = 0; i < keyArr.length; i++) {
+                                quotaArry.push(results[i].ip.value);
+                            }
+                            quota_data = {
+                                label: "ip",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "clickTotal":
+                            for (var i = 0; i < keyArr.length; i++) {
+                                quotaArry.push(results[i].clickTotal.value);
+                            }
+                            quota_data = {
+                                label: "clickTotal",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "conversions":
+                            for (var i = 0; i < keyArr.length; i++) {
+                                quotaArry.push(results[i].conversions.value);
+                            }
+                            quota_data = {
+                                label: "conversions",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "nuv":
+                            for (var i = 0; i < keyArr.length; i++) {
+                                quotaArry.push(results[i].nuv.value);
+                            }
+                            quota_data = {
+                                label: "nuv",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "nuvRate":
+                            for (var i = 0; i < keyArr.length; i++) {
+                                quotaArry.push(results[i].nuvRate.value);
+                            }
+                            quota_data = {
+                                label: "nuvRate",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "crate":
+                            for (var i = 0; i < keyArr.length; i++) {
+                                if (results[i].conversions_crate.value != "0") {
+                                    quotaArry.push((results[i].conversions_crate.value / results[i].conversions_crate.value).toFixed(2));
+                                } else {
+                                    quotaArry.push(0);
+                                }
+                            }
+                            quota_data = {
+                                label: "crate",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "pv_contrast":
+                            for (var i = keyArr.length; i < results.length; i++) {
+                                quotaArry.push(results[i].pv_contrast.value);
+                            }
+                            quota_data = {
+                                label: "pv_contrast",
+                                key: keyArr_contrast,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "uv_contrast":
+                            for (var i = keyArr.length; i < results.length; i++) {
+                                quotaArry.push(results[i].uv_contrast.value);
+                            }
+                            quota_data = {
+                                label: "uv_contrast",
+                                key: keyArr_contrast,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "vc_contrast":
+                            for (var i = keyArr.length; i < results.length; i++) {
+                                quotaArry.push(results[i].vc_contrast.value);
+                            }
+                            quota_data = {
+                                label: "vc_contrast",
+                                key: keyArr_contrast,
+                                quota: quotaArry
+                            };
+                            break;
+
+                        case "ip_contrast":
+                            for (var i = keyArr.length; i < results.length; i++) {
+                                quotaArry.push(results[i].ip_contrast.value);
+                            }
+                            quota_data = {
+                                label: "ip_contrast",
+                                key: keyArr_contrast,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "clickTotal_contrast":
+                            for (var i = keyArr.length; i < results.length; i++) {
+                                quotaArry.push(results[i].clickTotal_contrast.value);
+                            }
+                            quota_data = {
+                                label: "clickTotal_contrast",
+                                key: keyArr_contrast,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "conversions_contrast":
+                            for (var i = keyArr.length; i < results.length; i++) {
+                                quotaArry.push(results[i].conversions_contrast.value);
+                            }
+                            quota_data = {
+                                label: "conversions_contrast",
+                                key: keyArr_contrast,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "nuv_contrast":
+                            for (var i = keyArr.length; i < results.length; i++) {
+                                quotaArry.push(results[i].nuv_contrast.value);
+                            }
+                            quota_data = {
+                                label: "nuv_contrast",
+                                key: keyArr_contrast,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "nuvRate_contrast":
+                            for (var i = keyArr.length; i < results.length; i++) {
+                                quotaArry.push(results[i].nuvRate_contrast.value);
+                            }
+                            quota_data = {
+                                label: "nuvRate_contrast",
+                                key: keyArr_contrast,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "crate_contrast":
+                            for (var i = keyArr.length; i < results.length; i++) {
+                                if (results[i].conversions_crate.value != "0") {
+                                    quotaArry.push((results[i].conversions_crate.value / results[i].conversions_crate.value).toFixed(2));
+                                } else {
+                                    quotaArry.push(0);
+                                }
+                            }
+                            quota_data = {
+                                label: "crate_contrast",
+                                key: keyArr_contrast,
+                                quota: quotaArry
+                            };
+                            break;
+                        default :
+                            break;
+                    }
+                    if (quota_data != null || quota_data != []) {
+
+                        data.push(quota_data);
+                    }
+
+                });
+            }
+            callbackFn(data);
         });
     }
 };

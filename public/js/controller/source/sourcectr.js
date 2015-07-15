@@ -165,8 +165,8 @@ define(["./module"], function (ctrls) {
                     bGap: false,
                     chartType: "line",
                     lineType: false,
-                    auotHidex: true,
-                    qingXie:true,
+                //    auotHidex: true,
+                 //   qingXie:true,
                     qxv:18,
                     //tt: "item",
                     itemHover: $scope.itemHover,
@@ -259,16 +259,16 @@ define(["./module"], function (ctrls) {
             $rootScope.end = 0;
             $rootScope.tableTimeStart = 0;
             $rootScope.tableTimeEnd = 0;
-            $scope.charts.forEach(function (e) {
-                var chart = echarts.init(document.getElementById(e.config.id));
-                e.config.instance = chart;
-            });
+//            $scope.charts.forEach(function (e) {
+//                var chart = echarts.init(document.getElementById(e.config.id));
+//                e.config.instance = chart;
+//            });
             //图表
-            requestService.refresh($scope.charts);
+//            requestService.refresh($scope.charts);
             //首页表格
             //requestService.gridRefresh(scope.grids);
             //其他页面表格
-            $rootScope.targetSearch();
+//            $rootScope.targetSearch();
             $scope.reloadByCalendar("today");
             $('#reportrange span').html(GetDateStr(0));
             //classcurrent

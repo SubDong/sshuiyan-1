@@ -5,7 +5,19 @@ define(['./module'], function (ctrs) {
     'use strict';
     ctrs.controller('history', function ($cookieStore,$scope, $window, $location, $rootScope, requestService, areaService, $http, SEM_API_URL) {
 
-
+        //        高级搜索提示
+        $scope.sourceSearch = "";
+        $scope.visitorSearch = "";
+//        取消显示的高级搜索的条件
+        $scope.removeSourceSearch = function(obj){
+            $scope.souce.selected = {"name": "全部"};
+            $rootScope.$broadcast("loadAllSource");
+            obj.sourceSearch = "";
+        }
+        $scope.removeVisitorSearch = function(obj){
+            $rootScope.$broadcast("loadAllVisitor");
+            obj.visitorSearch = "";
+        }
         $scope.SELECT_PAGE = 0;
         $scope.SELECT_EVENT = 1;
         $scope.SELECT_ALL = -1;

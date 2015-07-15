@@ -171,8 +171,8 @@ define(["./module"], function (ctrs) {
                     bGap: false,
                     id: "indicators_charts",
                     keyFormat: "none",//设置不需要chart工厂处理x轴数据
-                    auotHidex: true,
-                    tt: "item",
+                    //auotHidex: true,
+                   // tt: "item",
                     itemHover: $scope.itemHover,
                     chartType: "line",
                     lineType: false,
@@ -232,16 +232,16 @@ define(["./module"], function (ctrs) {
             $rootScope.end = 0;
             $rootScope.tableTimeStart = 0;
             $rootScope.tableTimeEnd = 0;
-            $scope.charts.forEach(function (e) {
-                var chart = echarts.init(document.getElementById(e.config.id));
-                e.config.instance = chart;
-            });
+//            $scope.charts.forEach(function (e) {
+//                var chart = echarts.init(document.getElementById(e.config.id));
+//                e.config.instance = chart;
+//            });
             //图表
-            requestService.refresh($scope.charts);
+//            requestService.refresh($scope.charts);
             //首页表格
             //requestService.gridRefresh(scope.grids);
             //其他页面表格
-            $rootScope.targetSearch();
+//            $rootScope.targetSearch();
             $scope.reloadByCalendar("today");
             $('#reportrange span').html(GetDateStr(0));
             //classcurrent

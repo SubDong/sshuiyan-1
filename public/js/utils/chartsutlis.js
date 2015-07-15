@@ -792,9 +792,6 @@ var chartUtils = {
             case 2592000000:
                 config["keyFormat"] = "month";
                 break;
-            case -1:
-                config["keyFormat"] = "hour";
-                break;
             default :
                 config["keyFormat"] = "day";
         }
@@ -869,6 +866,7 @@ var chartUtils = {
         _esData["label"] = chartUtils.convertChinese(estype);
         _esData["quota"] = [totalCount];
         if (esDate) {
+            esDate= new Date(esDate).Format("yyyy-MM-dd hh:mm:ss");
             _esData["key"] = [esDate.substring(0, 10)];
         } else {
             _esData["key"] = [''];
