@@ -689,19 +689,19 @@ define(["./module"], function (ctrs) {
             $rootScope.tableTimeStart = 0;
             $rootScope.tableTimeEnd = 0;
             $scope.reloadByCalendar("today");
-            $scope.charts.forEach(function (e) {
-                var chart = echarts.init(document.getElementById(e.config.id));
-                e.config.instance = chart;
-            });
-            //图表
-            requestService.refresh($scope.charts);
-            $scope.reloadByCalendar("today");
+//            $scope.charts.forEach(function (e) {
+//                var chart = echarts.init(document.getElementById(e.config.id));
+//                e.config.instance = chart;
+//            });
+//            //图表
+//            requestService.refresh($scope.charts);
+//            $scope.reloadByCalendar("today");
             $('#reportrange span').html(GetDateStr(0));
             //首页表格
             //requestService.gridRefresh(scope.grids);
             //其他页面表格
-            $rootScope.targetSearch(true);
-            $scope.$broadcast("ssh_dateShow_options_time_change");
+//            $rootScope.targetSearch(true);
+//            $scope.$broadcast("ssh_dateShow_options_time_change");
             //classcurrent
             $scope.reset();
             $scope.todayClass = true;

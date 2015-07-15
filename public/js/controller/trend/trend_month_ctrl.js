@@ -474,16 +474,16 @@ define(["./module"], function (ctrs) {
             $rootScope.tableTimeStart = -29;
             $rootScope.tableTimeEnd = 0;
             $scope.reloadByCalendar("month");
-            $scope.charts.forEach(function (e) {
-                var chart = echarts.init(document.getElementById(e.config.id));
-                e.config.instance = chart;
-                util.renderLegend(chart, e.config);
-            })
+//            $scope.charts.forEach(function (e) {
+//                var chart = echarts.init(document.getElementById(e.config.id));
+//                e.config.instance = chart;
+//                util.renderLegend(chart, e.config);
+//            })
             //图表
-            requestService.refresh($scope.charts);
+//            requestService.refresh($scope.charts);
             //其他页面表格
             // $rootScope.targetSearch(true);
-            $scope.$broadcast("ssh_dateShow_options_time_change");
+//            $scope.$broadcast("ssh_dateShow_options_time_change");
             //classcurrent
             $scope.reset();
             $scope.monthClass = true;

@@ -192,6 +192,46 @@ define(["angular", "./app"], function (angular, myApp) {
                         ])
                     }
                 })
+                .state('adsPlan', {
+                    url: '/ads/adsPlan',
+                    templateUrl: '../ads/adsPlan.html',
+                    resolve: {
+                        load: loadDeps([
+                            "controller/ads/adsPlanCtr",
+                            "controller/TabsCtrl"
+                        ])
+                    }
+                })
+                .state('adsKeyWord', {
+                    url: '/ads/adsKeyWord',
+                    templateUrl: '../ads/adsKeyWord.html',
+                    resolve: {
+                        load: loadDeps([
+                            "controller/ads/adsKeyWordCtr",
+                            "controller/SearchPromotion"
+                        ])
+                    }
+                })
+                .state('adsCreative', {
+                    url: '/ads/adsCreative',
+                    templateUrl: '../ads/adsCreative.html',
+                    resolve: {
+                        load: loadDeps([
+                            "controller/ads/adsCreativeCtr",
+                            "controller/SearchPromotion"
+                        ])
+                    }
+                })
+                .state('adsMedium', {
+                    url: '/ads/adsMedium',
+                    templateUrl: '../ads/adsMedium.html',
+                    resolve: {
+                        load: loadDeps([
+                            "controller/ads/adsMediumCtr",
+                            "controller/SearchPromotion"
+                        ])
+                    }
+                })
                 .state('noData', {
                     url: '/ads/noData',
                     templateUrl: '../ads/noData.html',
