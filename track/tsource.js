@@ -416,41 +416,22 @@ if (config != undefined && !config.open) {
                 uv: function () {
                     var date = new Date().getTime();
                 },
-                matchUrl: function (a) {
-                    return (a = a.match(/^(https?:\/\/)?([^\/\?#]*)/)) ? a[2].replace(/.*@/, "") : null
-                },
                 na: function () {
-                    /*var a, b, d;
-                     var as = decodeURIComponent(md.g.rf).replace("http://", "");
-                     as = (as == "-" ? as : as.substring(0, as.indexOf("/")));
-                     //var ab = md.g.loc.replace("http://", "");
-                     //ab = ab.substring(ab.indexOf(".") + 1, ab.indexOf("/"));
-                     md.g.tt = a = this.getData("PFT_" + c.id);
-                     var Judge = (this.getData("PFT_COOKIE_RF") == null || this.getData("PFT_COOKIE_RF") != decodeURIComponent(md.g.rf));
-                     if (null == a || undefined == a || "" == a || (as != "-" && Judge)) {
-                     this.setData("PFT_" + c.id);
-                     cookie.set("PFT_COOKIE_RF", decodeURIComponent(md.g.rf));
-                     md.g.tt = this.getData("PFT_" + c.id);
-                     if (md.g.tt == null || md.g.tt == "") {
-                     md.cookie.setNull("PFT_" + c.id, u.createUUID());
-                     md.g.tt = this.getData("PFT_" + c.id);
-                     }
-                     md.g.n = "1";
-                     md.cookie.remove("PFT_DTNJ");
-                     md.cookie.remove("PFT_DTNP");
-                     }*/
-                    var a, b = this.getData("PFT_COOKIE_RF");
-                    md.g.tt = a = this.getData("PFT_" + c.id);
+                    var a, b, d;
                     var as = decodeURIComponent(md.g.rf).replace("http://", "");
-                    as = (as == "-" ? as : as.substring(0, as.indexOf("/")));
-                    var Judge = (b == c.q || this.matchUrl(b) != this.matchUrl(md.g.rf));
-
-                    if(null == a || undefined == a || "" == a || as != "-" && Judge){
-                        if(this.matchUrl(md.g.rf) != document.location.hostname){
-                            cookie.set("PFT_COOKIE_RF",md.g.rf)
-                        }
+                    as = (as == "-" ? as : as.substring(as.indexOf(".") + 1, as.indexOf("/")));
+                    //var ab = md.g.loc.replace("http://", "");
+                    //ab = ab.substring(ab.indexOf(".") + 1, ab.indexOf("/"));
+                    md.g.tt = a = this.getData("PFT_" + c.id);
+                    var Judge = (this.getData("PFT_COOKIE_RF") == null || this.getData("PFT_COOKIE_RF") != decodeURIComponent(md.g.rf));
+                    if (null == a || undefined == a || "" == a || (as != "-" && Judge)) {
                         this.setData("PFT_" + c.id);
-                        md.g.tt = this.getData("PFT_" + c.id)
+                        cookie.set("PFT_COOKIE_RF", decodeURIComponent(md.g.rf));
+                        md.g.tt = this.getData("PFT_" + c.id);
+                        if (md.g.tt == null || md.g.tt == "") {
+                            md.cookie.setNull("PFT_" + c.id, u.createUUID());
+                            md.g.tt = this.getData("PFT_" + c.id);
+                        }
                         md.g.n = "1";
                         md.cookie.remove("PFT_DTNJ");
                         md.cookie.remove("PFT_DTNP");
