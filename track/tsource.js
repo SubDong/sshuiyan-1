@@ -443,8 +443,37 @@ if (config != undefined && !config.open) {
                     md.g.tt = a = this.getData("PFT_" + c.id);
                     var Judge = (this.matchUrl(md.g.rf) != "-" && (b == c.q || this.matchUrl(b) != this.matchUrl(md.g.rf)));
 
-                    if(null == a || undefined == a || "" == a || Judge){
-                        if(this.matchUrl(md.g.rf) != document.location.hostname){
+                    var isEmpty = (null == a || undefined == a || "" == a);
+
+                    //
+                    /*if(isEmpty){
+                        //外部
+                        if(!Judge){
+                            // direct
+                            if(b/!*Cookie中的refer为"-"*!/){
+                                if(this.matchUrl(md.g.rf) == document.location.hostname){
+                                    // 一次新的直接访问,
+                                    /!*
+                                     * 1)外链进入a（但进入的页面没有统计代码）后进入b（b有）
+                                     * 2)直接输入网址进入a（a没有统计代码）后进入b（b有）
+                                     *
+                                     * *!/
+                                }else if(md.g.rf == "-"){
+                                    // 一次新的直接访问,直接输入网址
+                                }
+                            }else if(!b/!*Cookie中的refer不为空*!/&&(this.matchUrl(md.g.rf) == document.location.hostname)){
+                                // internal
+                            }
+                        }
+
+                    }
+                    else if(!isEmpty && Judge){
+                        // out
+                    }
+                    //*/
+
+                    if(isEmpty || Judge){//当前页面的rf 和cookie中的rf对比-----外部连接对比
+                        if(this.matchUrl(md.g.rf) != document.location.hostname){//当前页面的url和当前页面的rf对比------
                             cookie.set("PFT_COOKIE_RF",md.g.rf)
                         }
                         this.setData("PFT_" + c.id);
@@ -452,6 +481,7 @@ if (config != undefined && !config.open) {
                         md.g.n = "1";
                         md.cookie.remove("PFT_DTNJ");
                         md.cookie.remove("PFT_DTNP");
+
                     } else {
                         var ckDay = this.getData("PFT_SJKD");
                         var newDay = new Date().getDate();
