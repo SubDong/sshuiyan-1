@@ -171,8 +171,8 @@ define(["./module"], function (ctrs) {
                     bGap: false,
                     id: "indicators_charts",
                     keyFormat: "none",//设置不需要chart工厂处理x轴数据
-                    auotHidex: true,
-                    tt: "item",
+                    //auotHidex: true,
+                   // tt: "item",
                     itemHover: $scope.itemHover,
                     chartType: "line",
                     lineType: false,

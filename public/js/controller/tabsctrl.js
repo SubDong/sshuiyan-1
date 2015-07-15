@@ -169,8 +169,8 @@ define(["app"], function (app) {
                 {
                     name: '访问时间', displayName: "访问时间", field: "visitTime",
                     sort: {
-                        direction: uiGridConstants.ASC,
-                        priority: 0
+                        direction: uiGridConstants.DESC,
+                        priority: 1
                     }
                 },
                 {
