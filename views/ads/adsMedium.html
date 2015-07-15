@@ -1,0 +1,131 @@
+<div class="middle_containers" ng-controller="adsMediumCtr">
+    <div class="date_select">
+        <div aria-label="First group " role="group" class="btn-group fl">
+            <a class="btn btn-default" data-ng-href="#ads/adsSource" type="button">来源</a>
+            <a class="btn btn-default current" data-ng-href="#ads/adsMedium" type="button">媒介</a>
+            <a class="btn btn-default" data-ng-href="#ads/adsPlan" type="button">计划</a>
+            <a class="btn btn-default" data-ng-href="#ads/adsKeyWord" type="button">关键词</a>
+            <a class="btn btn-default" data-ng-href="#ads/adsCreative" type="button">创意</a>
+        </div>
+        <calendar></calendar>
+        <dateother></dateother>
+        <refresh></refresh>
+        <div aria-label="First group" role="group" class="btn-group fr">
+            <a class="btn btn-default current add_ads_title" style="line-height: 24px" data-ng-href="#conf/webcountsite/adtrack_add" type="button">新增指定广告跟踪</a>
+        </div>
+    </div>
+    <div class="my_concent">
+        <ssh-date-show type="yesterday" dimension="br" sem-type="keyworld"></ssh-date-show>
+        <div class="index_chart">
+            <div id="indicators_charts_legend"></div>
+            <div id="indicators_charts" class="gesture" style="height:400px;"></div>
+        </div>
+        <div class="table_content" ng-controller="SearchPromotion">
+            <ul ng-init="tab = 1" class="nav nav-tabs nav-justified">
+                <li class="ng-isolate-scope"  ng-class="{active:tab===1}" ng-click="tab = 1">
+                    <a class="ng-binding">自定义指标</a></li>
+                <li class="ng-isolate-scope" ng-class="{active:tab===2}" ng-click="tab = 2">
+                    <a class="ng-binding">高级筛选
+                         <span>
+                            <span ng-show="areaSearch">（</span>
+                            <span ng-show="areaSearch">
+                                {{areaSearch}}<i class="glyphicon glyphicon-remove" data-ng-click="removeAreaSearch(this);"></i>
+                            </span>
+                            <span ng-show="areaSearch">）</span>
+                        </span>
+                    </a>
+                </li>
+            </ul>
+            <div class="tabs_content">
+                <div class="custom_title" ng-show="tab === 1">
+                    <p class="chart_top_title">
+
+                    <div class="chart_top chart_default">
+                        <ul>
+                            <li><a href="javascript:void(0)" data-ssh-default-quota="search_campaign">系统默认指标</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="chart_top">
+                        <span>消费指标 :</span>
+                        <ul>
+                            <li ng-repeat="item in target" data-sshy-default defvalue="{{item.name}}"
+                                class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                ng-click='searchIndicators(item,target,6)'>{{item.consumption_name}}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="chart_top">
+                        <span>网站基础指标 :</span>
+                        <ul>
+                            <li ng-repeat="item in Webbased" data-sshy-default defvalue="{{item.name}}"
+                                class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                ng-click='searchIndicators(item,Webbased,6)'>{{item.consumption_name}}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="chart_top">
+                        <span>流量质量指标:</span>
+                        <ul>
+                            <li ng-repeat="item in flow" data-sshy-default defvalue="{{item.name}}"
+                                class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                ng-click='searchIndicators(item,flow,6)'>{{item.consumption_name}}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="chart_top chart_noborder">
+                        <button class="btn btn-primary" type="button" ng-click="targetSearchSpread(true)">确定
+                        </button>
+                        * 可同时选择6项
+                    </div>
+
+                </div>
+                <div class="custom_title" ng-show="tab === 2">
+                    <div class="chart_top2"  id="areadiv">
+                        <ul>
+                            <li><span>地域过滤:</span></li>
+                            <li>
+                                <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
+                                    <div role="group" class="btn-group">
+                                        <ui-select ng-model="city.selected" theme="select2"
+                                                   reset-search-input="false" class="fl btn-pv"
+                                                   data-ng-change="setAreaFilter(city.selected.name,'plain')"
+                                                   style="width: 80px;">
+                                            <ui-select-match placeholder="全部">{{$select.selected.name}}
+                                            </ui-select-match>
+                                            <ui-select-choices repeat="city in citys">
+                                                <span ng-bind-html="city.name"></span>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                </div>
+                            </li>
+                            <li><a href="javascript:void(0)" data-ng-click="setAreaFilter('北京','plain')">北京</a></li>
+                            <li><a href="javascript:void(0)" data-ng-click="setAreaFilter('上海','plain')">上海</a></li>
+                            <li><a href="javascript:void(0)" data-ng-click="setAreaFilter('广州','plain')">广州</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="custom_secendtitle">
+                <div class="custom_select custom_select_way">
+                    转化目标
+                    <div role="group" class="btn-group">
+                        <ui-select ng-model="page.selected" theme="select2" reset-search-input="false" class="fl"
+                                   style="min-width: 120px;">
+                            <ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices repeat="page in pages">
+                                <span ng-bind-html="page.name"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+                <div class="custom_table">
+                    <div ui-grid="gridOptions" class="grid clearfix" ui-grid-pagination
+                         ui-grid-exporter ui-grid-auto-resize></div>
+                    <gridpage></gridpage>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

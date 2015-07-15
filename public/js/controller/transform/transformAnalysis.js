@@ -322,21 +322,21 @@ define(["./module"], function (ctrs) {
 
             //刷新
             $scope.page_refresh = function () {
-                $rootScope.start = -1;
-                $rootScope.end = -1;
-                $rootScope.tableTimeStart = -1;//开始时间
-                $rootScope.tableTimeEnd = -1;//结束时间、
+                $rootScope.start = 0;
+                $rootScope.end = 0;
+                $rootScope.tableTimeStart = 0;//开始时间
+                $rootScope.tableTimeEnd = 0;//结束时间、
                 $rootScope.tableFormat = null;
                 //$rootScope.targetSearchSpread();
                 //$scope.init($rootScope.user, $rootScope.baiduAccount, "campaign", $scope.selectedQuota, $rootScope.start, $rootScope.end);
                 //图表
-                requestService.refresh($scope.charts);
+//                requestService.refresh($scope.charts);
                 $scope.reloadByCalendar("today");
                 $('#reportrange span').html(GetDateStr(-1));
                 //其他页面表格
                 //classcurrent
                 $scope.reset();
-                $scope.yesterdayClass = true;
+                $scope.todayClass = true;
             };
             $scope.ds_defaultQuotasOption = ["pv", "uv", "ip", "nuv"];
             $scope.setShowArray = function () {

@@ -278,12 +278,12 @@ define(["app"], function (app) {
         $scope.page_refresh = function () {
             $rootScope.start = -1;
             $rootScope.end = -1;
-            $scope.init($rootScope.user, $rootScope.baiduAccount, "account", $scope.selectedQuota, $rootScope.start, $rootScope.end, true);
+//            $scope.init($rootScope.user, $rootScope.baiduAccount, "account", $scope.selectedQuota, $rootScope.start, $rootScope.end, true);
             $rootScope.tableTimeStart = -1;
             $rootScope.tableTimeEnd = -1;
-            //图表
-            requestService.refresh($scope.charts);
-            $scope.reloadByCalendar("today");
+//            //图表
+//            requestService.refresh($scope.charts);
+            $scope.reloadByCalendar("yesterday");
             $('#reportrange span').html(GetDateStr(0));
             //classcurrent
             $scope.reset();

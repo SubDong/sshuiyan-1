@@ -1,0 +1,127 @@
+<!--指定广告跟踪-计划-->
+<div class="middle_containers" ng-controller="adsPlanCtr">
+    <div class="date_select">
+        <div aria-label="First group " role="group" class="btn-group fl">
+            <a class="btn btn-default" data-ng-href="#ads/adsSource" type="button">来源</a>
+            <a class="btn btn-default" data-ng-href="#ads/adsMedium" type="button">媒介</a>
+            <a class="btn btn-default current" data-ng-href="#ads/adsPlan" type="button">计划</a>
+            <a class="btn btn-default" data-ng-href="#ads/adsKeyWord" type="button">关键词</a>
+            <a class="btn btn-default" data-ng-href="#ads/adsCreative" type="button">创意</a>
+        </div>
+        <calendar></calendar>
+        <dateother></dateother>
+        <refresh></refresh>
+        <div aria-label="First group" role="group" class="btn-group fr">
+            <a class="btn btn-default current add_ads_title" style="line-height: 24px" data-ng-href="#conf/webcountsite/adtrack_add" type="button">新增指定广告跟踪</a>
+        </div>
+    </div>
+    <div class="my_concent">
+        <!--<ssh-date-show type="today" dimension="rf_type"></ssh-date-show>-->
+        <ssh-e-s-date-show></ssh-e-s-date-show>
+        <div class="index_chart">
+            <div id="source_charts_legend"></div>
+            <div class="pin_chart">
+                <div id="sourse_charts" class="chart_height" ></div>
+            </div>
+            <div  class="line_chart">
+                <div id="indicators_charts" class="chart_height"></div>
+                <div class="chart-bottom">
+                    <ul>
+                        <li><span class="chart_box" style="background:#2fabe9;"></span><b id="chartlink"></b></li>
+                        <li>总<b id="chartname"></b>：<span id="chartnumber"></span></li>
+                        <li>占比：<span id="chartpointe"></span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="table_content" ng-controller="TabsCtrl">
+            <ul ng-init="tab = 1" class="nav nav-tabs nav-justified">
+                <li class="ng-isolate-scope" ng-class="{active:tab===1}" ng-click="tab = 1">
+                    <a class="ng-binding">自定义指标</a></li>
+                <li class="ng-isolate-scope" ng-class="{active:tab===2}" ng-click="tab = 2">
+                    <a class="ng-binding">高级筛选
+                        <span>
+                            <span ng-show="sourceSearch || terminalSearch || areaSearch">（</span>
+                            <span ng-show="terminalSearch" class="advanceSearch">
+                                {{terminalSearch}}<i class="glyphicon glyphicon-remove" data-ng-click="removeTerminalSearch(this);" ng-show="terminalSearch"></i>
+                            </span>
+                            <span ng-show="sourceSearch || terminalSearch || areaSearch">）</span>
+                        </span>
+                    </a>
+                </li>
+            </ul>
+            <div class="tabs_content">
+                <div class="custom_title" ng-show="tab === 1">
+                    <div class="chart_top chart_default">
+                        <ul>
+                            <li><a href="javascript:void(0)" data-ssh-default-quota="source_source">系统默认指标</a></li>
+                            <!--     <li><a href="javascript:void(0)">订单默认指标</a></li>-->
+                        </ul>
+                    </div>
+                    <div class="chart_top">
+                        <span>网站基础指标 :</span>
+                        <ul>
+                            <li ng-repeat="item in TodayWeb" data-sshy-default defvalue="{{item.name}}"
+                                class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                ng-click='indicators(item,TodayWeb,6)'>{{item.consumption_name}}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="chart_top">
+                        <span>流量质量指标:</span>
+                        <ul>
+                            <li ng-repeat="item in Todayfloweds" data-sshy-default defvalue="{{item.name}}"
+                                class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                ng-click='indicators(item,Todayfloweds,6)'>{{item.consumption_name}}
+                            </li>
+                        </ul>
+                    </div>
+                    <!--<div class="chart_top">
+                        <span>转化指标:</span>
+                        <ul>
+                            <li ng-repeat="item in Todytransform" class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                ng-click='indicators(item,Todytransform,6)'>{{item.consumption_name}}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="chart_top">
+                        <span>订单转化指标:</span>
+                        <ul>
+                            <li ng-repeat="item in Order" class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                ng-click='indicators(item,Order,6)'>{{item.consumption_name}}
+                            </li>
+                        </ul>
+                    </div>-->
+                    <div class="chart_top chart_noborder">
+                        <button class="btn btn-primary" type="button" ng-click="targetSearch(true)">确定</button>
+                        * 可同时选择6项
+                    </div>
+
+                </div>
+                <div class="custom_title" ng-show="tab === 2">
+                    <div class="chart_top2">
+                        <ul>
+                            <li><span>设备过滤:</span></li>
+                            <li><label ng-click="setTerminal(0)"><input type="radio" checked="checked" name="radio0" class="styled"/>全部</label></li>
+                            <li><label ng-click="setTerminal(1)"><input type="radio" name="radio0" class="styled"/>计算机</label></li>
+                            <li><label ng-click="setTerminal(2)"><input type="radio" name="radio0" class="styled"/>移动设备</label></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="custom_secendtitle ">
+                <div class="custom_select custom_height">
+                    <ul>
+                        <li><label ng-click="setWebSite(0)"><input type="radio" checked="checked" name="radio1" class="styled"/>按来源类型</label></li>
+                        <li><label ng-click="setWebSite(1)"><input type="radio" name="radio1" class="styled"/>按来源网站</label></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="custom_table">
+                <div ui-grid="gridOptions" class="grid clearfix secondary_table" style="min-height:30px;" ui-grid-auto-resize ui-grid-pagination
+                     ui-grid-exporter ui-grid-expandable ></div>
+                <gridpage></gridpage>
+            </div>
+        </div>
+    </div>
+</div>

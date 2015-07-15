@@ -63,22 +63,39 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                             }
                         }
                     }
+                    if (scope.todayClass === true) {
+                        $('#reportrange span').html(GetDateStr(0));
+                    }
+                    if (scope.yesterdayClass === true) {
+                        $('#reportrange span').html(GetDateStr(-1));
+                    }
+
+                    if (scope.sevenDayClass === true) {
+                        $('#reportrange span').html(GetDateStr(-6) + "至" + GetDateStr(0));
+                    }
+                    if (scope.monthClass === true) {
+                        $('#reportrange span').html(GetDateStr(-29) + "至" + GetDateStr(0));
+                    }
                 });
                 scope.weekselected = true;
                 scope.mothselected = true;
                 scope.maxDate = new Date();
                 var dateID = document.getElementById("choicetrange");
                 if (scope.todayClass === true) {
+                    $('#reportrange span').html(GetDateStr(0));
                     dataPicker.picker("choicetrange", 0);
                 }
                 if (scope.yesterdayClass === true) {
+                    $('#reportrange span').html(GetDateStr(-1));
                     dataPicker.picker("choicetrange", 0);
                 }
 
                 if (scope.sevenDayClass === true) {
+                    $('#reportrange span').html(GetDateStr(-6) + "至" + GetDateStr(0));
                     dataPicker.picker("choicetrange", 6);
                 }
                 if (scope.monthClass === true) {
+                    $('#reportrange span').html(GetDateStr(-29) + "至" + GetDateStr(0));
                     dataPicker.picker("choicetrange", 29);
                 }
                 scope.reset = function () {

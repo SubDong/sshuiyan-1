@@ -106,7 +106,7 @@ define(["./module"], function (ctrs) {
             //其他页面表格
             $scope.reloadByCalendar("today");
             $('#reportrange span').html(GetDateStr(0));
-            $rootScope.targetSearch();
+//            $rootScope.targetSearch();
             //classcurrent
             $scope.reset();
             $scope.todayClass = true;

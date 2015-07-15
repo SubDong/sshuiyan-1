@@ -274,6 +274,20 @@ define(["./module"], function (ctrs) {
                 });
             };
             $scope.init();
+            //刷新
+//            $scope.page_refresh = function () {
+//                $rootScope.start = -1;
+//                $rootScope.end = -1;
+//                $rootScope.tableTimeStart = -1;
+//                $rootScope.tableTimeEnd = -1;
+//                $scope.reloadByCalendar("yesterday");
+//                $('#reportrange span').html(GetDateStr(-1));
+//                //其他页面表格
+////            $rootScope.targetSearch();
+//                //classcurrent
+//                $scope.reset();
+//                $scope.yesterdayClass = true;
+//            };
         }
     );
 
