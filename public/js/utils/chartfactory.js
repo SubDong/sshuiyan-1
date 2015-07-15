@@ -169,7 +169,9 @@ var op = {
                             xName = xName.split("/点")[0];
                         }
                         if (chartConfig.compare || chartConfig.compareCustom) {
-                            res = '<li>' + xName + ':00-' + xName + ':59</li>';
+                            if (chartConfig.chartType == "line") {
+                                res = '<li>' + xName + ':00-' + xName + ':59</li>';
+                            }
                         } else {
                             if (chartConfig.keyFormat == "none") {
                                 res = '<li>' + xName + ':00-' + xName + ':59</li>';
@@ -474,7 +476,7 @@ var op = {
             //    '#6b8e23', '#ff00ff', '#3cb371', '#b8860b', '#30e0e0'
             //],
             legend: {
-                selectedMode:false,
+                selectedMode: false,
                 show: chartConfig.legendShow ? chartConfig.legendShow : false,
                 orient: !chartConfig.ledLayout ? "vertical" : chartConfig.ledLayout,
                 x: 'left',
@@ -934,7 +936,6 @@ var def = {
 }
 var util = {
     getX: function (item, chartConfig, option) {
-        //console.log(chartConfig.keyFormat);
         var _time = [];
         var key = item[chartConfig.dataKey];
         if (chartConfig.keyFormat) {
@@ -972,11 +973,16 @@ var util = {
                 return key;
             }
             if (chartConfig.keyFormat == "day") {
-                var _time = [];
-                key.forEach(function (time) {
-                    var t = new Date(time).Format("yyyy-MM-dd hh:mm:ss");
-                    _time.push(t.toString().substr(0, 10));
-                });
+                if (chartConfig.compareCustom) {
+                    var _time = [];
+                    _time = key;
+                } else {
+                    var _time = [];
+                    key.forEach(function (time) {
+                        var t = new Date(time).Format("yyyy-MM-dd hh:mm:ss");
+                        _time.push(t.toString().substr(0, 10));
+                    });
+                }
             } else if (chartConfig.keyFormat == "week") {
                 key.forEach(function (time) {
                     var t = new Date(time).Format("yyyy-MM-dd hh:mm:ss");

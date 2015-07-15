@@ -21,7 +21,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                 Custom.initCheckInfo();
                 scope.$watch("opened", function () {
                     var _path = $location.path();
-                    if(_path == "/source/searchterm" || _path == "/visitor/equipment" || _path == "/visitor/provincemap"){
+                    if (_path == "/source/searchterm" || _path == "/visitor/equipment" || _path == "/visitor/provincemap") {
                         if (scope.todayClass) {
                             scope.today();
                         } else if (scope.sevenDayClass) {
@@ -491,7 +491,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
     app.directive("compare", function () {
         return {
             restrict: "EA",
-            template: "<div ng-hide='hiddenSeven'>" +
+            template: "<div ng-hide='hiddenSeven' id='cm'>" +
             "<label>对比：</label>" +
             "<label><input  name=\"compareRadio\" type=\"checkbox\" ng-click=\"compareLastDay()\" value='lday' index='0' /><span>前一日</span></label>&nbsp;&nbsp;&nbsp;&nbsp;" +
             "<label><input  name=\"compareRadio\" type=\"checkbox\" ng-click=\"compareLastWeek()\" value='lweek' index='1' /><span>上周同期</span></label>" +
@@ -499,8 +499,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
             "</div>",
             transclude: true,
             link: function (scope, ele, attr) {
-                $(ele).hide();
-                Custom.initCheckInfo();
+                //$(ele).hide();
                 var checkBox = $(ele).find("input[type='checkbox']");
                 checkBox.each(function (i, o) {
                     $(o).addClass("styled");
@@ -511,15 +510,30 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                 var checked = [];
                 $("input[name='compareRadio']").change(function () {
                     var index = Number($(this).attr('index'));
-                    checked=[];
+                    var _this = $(this);
+                    checked = [];
+                    if (_this.prop('checked')) {
+                        var exist = true;
+                        checked.forEach(function (item) {
+                            if (index == item) {
+                                exist = false;
+                            }
+                        });
+                        if (exist) {
+                            checked.push(index);
+                        }
+                    }
                     checkBox.each(function (i, o) {
-                        $(o).prop("checked", false);
+                        $(o).prev("span").css("background-position", "0px 0px");
+                        $(o).prop('checked', false);
                     });
-                    $(checkBox[index]).prop("checked", true);
-                    checked.push(index);
+                    checked.forEach(function (c) {
+                        $(checkBox[c]).prev("span").css("background-position", "0px -51px");
+                        $(checkBox[c]).prop('checked',true);
+                    });
+
                     //checkBox.each(function (i, o) {
                     //});
-                    console.log(checked);
                     //var row = Number($(this).attr("index"));
                     //var a = checked.indexOf(row);
                     //var checks = $("input[name='compareRadio']");
@@ -561,7 +575,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     //            break;
                     //    }
                     //});
-                    //scope.checkBoxCompare(checked);
+                    scope.checkBoxCompare(checked);
                 });
             }
         }
@@ -1137,7 +1151,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     }
                     scope.loadDataShow();
                 });
-                if($location.path() != "/source/searchterm" && $location.path() != "/visitor/equipment" && $location.path() != "/visitor/provincemap"){
+                if ($location.path() != "/source/searchterm" && $location.path() != "/visitor/equipment" && $location.path() != "/visitor/provincemap") {
                     scope.loadDataShow();
                 }
 
