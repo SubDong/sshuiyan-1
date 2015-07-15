@@ -191,9 +191,24 @@ define(["./module"], function (ctrs) {
             if($scope.adTrack.keywords == null || $scope.adTrack.keywords == ""){
                 document.getElementById("creative").disabled = "disabled";
             }else{
-                document.getElementById("creative").disabled = "";
+                document.getElementById("creative   ").disabled = "";
             }
         };
-
+        //提示
+        $scope.fzk = {
+            "help": false//是否显示帮组信息
+        };
+        $scope.targetUrlHelp = {
+            "help": false//是否显示帮组信息
+        };
+        $scope.mediaPlatformhelp = {
+            "help": false//是否显示帮组信息
+        };
+        $scope.addblur= function (obj) {
+            obj.help=   false;
+        };
+        $scope.addfocus= function (obj) {
+            obj.help = true;
+        }
     });
 });

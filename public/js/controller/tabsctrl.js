@@ -583,25 +583,36 @@ define(["app"], function (app) {
         })
         $scope.setAreaFilter = function (area) {
             $scope.areaSearch = area == "全部" ? "" : area;
+            //console.log(1);
             if (area == "北京" || area == "上海" || area == "广州") {
+                //console.log(2);
                 if ($scope.city.selected != undefined) {
                     $scope.city.selected.name = area;
+                    //console.log(3);
                 } else {
+                    //console.log(4);
                     $scope.city.selected = {};
                     $scope.city.selected["name"] = area;
+                    //console.log(2);
+                    //console.log(area);
                 }
             }
             if (!$rootScope.tableSwitch) {
+                //console.log(5);
                 return;
             }
 
             if ("全部" == area) {
+                //console.log(6);
                 $rootScope.tableSwitch.tableFilter = null;
             } else {
+                //console.log(7);
                 area = (area == "北京" ? area + "市" : area);
                 if ($scope.tableJu == "html") {
+                    //console.log(8);
                     $rootScope.tableSwitch.tableFilter = "[{\"region\":\"" + area + "\"}]";
                 } else {
+                    //console.log(9);
                     $rootScope.tableSwitch.tableFilter = "[{\"region\":[\"" + area + "\"]}]";
                 }
             }
@@ -614,7 +625,57 @@ define(["app"], function (app) {
             }
 
         };
-        //设置（搜索引擎）地域过滤
+        //自定义时间设置
+        $scope.sitetimes=[{"hour":{"selected":{"name":"0:00"}},"hour1":{"selected":{"name":"0:59"}}}];
+        $scope.sitetimesadd=function(){
+            $scope.sitetimes.push({"hour":{"selected":{"name":"0:00"}},"hour1":{"selected":{"name":"0:59"}}});
+        };
+
+        $scope.sitetimesclear = function () {
+            $scope.sitetimes=[{"hour":{"selected":{"name":"0:00"}},"hour1":{"selected":{"name":"0:59"}}}];
+        };
+        //设置时段过滤
+
+        $scope.setTimeFilter = function (time) {
+            $scope.sitetimesclear();
+            $scope.timeSearch = time == "全部" ? "" : time;
+            console.log(time);
+            if (time == "00:00 - 00:59" ) {
+                if ($scope.time.selected != undefined) {
+                    //console.log(44);
+                    $scope.time.selected.name = time;
+                } else {
+                    //console.log(33);
+                    $scope.time.selected = {};
+                    $scope.time.selected["name"] = time;
+                }
+            }
+            if (!$rootScope.tableSwitch) {
+                return;
+            }
+            if ("全部" == time) {
+                $rootScope.tableSwitch.tableFilter = null;
+                //console.log(77);
+            } else {
+                time = (time == "00:00 - 00:59" ? time + "" : time);
+                //console.log(55);
+                if ($scope.tableJu == "html") {
+                    //console.log(22);
+                    $rootScope.tableSwitch.tableFilter = "[{\"period\":\"" + time + "\"}]";
+                } else {
+                    //console.log(66);
+                    $rootScope.tableSwitch.tableFilter = "[{\"period\":[\"" + time + "\"]}]";
+                }
+            }
+            $scope.isJudge = false;
+            if ($scope.tableJu == "html") {
+                getHtmlTableData();
+            } else {
+                $rootScope.$broadcast("ssh_data_show_refresh");
+                $scope.targetSearch();
+            }
+        };
+        //设置（搜 索引擎）地域过滤
         $scope.setSearchEngineAreaFilter = function (area) {
             if (!$rootScope.tableSwitch) {
                 return;
@@ -638,6 +699,7 @@ define(["app"], function (app) {
             $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.targetSearch();
         };
+
         //设置搜索引擎过滤
         $scope.searchEngine = function (info) {
             if (info === '全部') {
@@ -965,8 +1027,7 @@ define(["app"], function (app) {
                                 if (data.length > 0) {
                                     data.forEach(function (es, i) {
                                         if (isNaN(dataObj[item]) || dataObj[item] == undefined) {
-                                            dataObj[item] = es[item] != undefined ? es[item] : 0
-                                        }
+                                            dataObj[item] = es[item] != undefined ? es[item] : 0}
                                     });
                                 } else {
                                     if (isNaN(dataObj[item]) || dataObj[item] == undefined) {
@@ -1021,6 +1082,7 @@ define(["app"], function (app) {
                             var vaNumber = 0;
                             var maps = {}
                             var newData = chartUtils.getByHourByDayData(data);
+
                             newData.forEach(function (info, x) {
                                 for (var i = 0; i < info.key.length; i++) {
                                     var infoKey = info.key[i];
@@ -1029,7 +1091,9 @@ define(["app"], function (app) {
                                         obj = {};
                                         var dataString = (infoKey.toString().length >= 2 ? "" : "0")
                                         obj["period"] = dataString + infoKey + ":00 - " + dataString + infoKey + ":59";
+                                        //console.log(obj["period"]);
                                         maps[infoKey] = obj;
+
                                     }
                                     if (info.label == "平均访问时长") {
                                         obj["avgTime"] = ad.formatFunc(info.quota[i], "avgTime");
@@ -1047,6 +1111,7 @@ define(["app"], function (app) {
                                     maps[infoKey] = obj;
                                 }
                             });
+
                             var jupey = 0
                             for (var key in maps) {
                                 jupey = 1;
@@ -1067,7 +1132,6 @@ define(["app"], function (app) {
                     }
 
                 }).error(function (error) {
-                    console.log(error);
                 });
             }
         };
