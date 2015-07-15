@@ -499,7 +499,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
             "</div>",
             transclude: true,
             link: function (scope, ele, attr) {
-                //$(ele).hide();
+                $(ele).hide();
                 Custom.initCheckInfo();
                 var checkBox = $(ele).find("input[type='checkbox']");
                 checkBox.each(function (i, o) {
