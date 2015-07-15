@@ -97,10 +97,12 @@ api.get('/halfhour', function (req, res) {
     if (!userType) {
         userType = 1;
     }
-
-    es_request.search(req.es, indexes, userType, quotas, null, topN, null, new Date().getTime() - 1800000, new Date().getTime(), 0, function (result) {
+    es_request.search(req.es, indexes, userType, quotas, null, topN, null, 1436749200000, 1436751000000, 0, function (result) {
         datautils.send(res, JSON.stringify(result));
     });
+    //es_request.search(req.es, indexes, userType, quotas, null, topN, null, new Date().getTime() - 1800000, new Date().getTime(), 0, function (result) {
+    //    datautils.send(res, JSON.stringify(result));
+    //});
 });
 api.get('/map', function (req, res) {
     var query = url.parse(req.url, true).query, quotas = [], type = query['type'], dimension = query.dimension, topN = [], userType = query.userType;
