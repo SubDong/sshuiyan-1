@@ -1344,6 +1344,9 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
         quotaObject.sougou = "搜狗";
         quotaObject.haosou = "好搜";
         quotaObject.bing = "必应";
+        quotaObject.clickTotal = "事件点击总数";
+        quotaObject.conversions = "转化次数";
+        quotaObject.crate = "转化率";
         quotaObject.other = "其他";
         return function (key) {
             return quotaObject[key] || "未定义的指标KEY";
@@ -1382,6 +1385,9 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
         quotaObject.haosou = "来自搜索引擎好搜的搜索次数占比";
         quotaObject.bing = "来自搜索引擎必应的搜索次数占比";
         quotaObject.other = "来自其他搜索引擎的搜索次数占比";
+        quotaObject.conversions = "转化次数";
+        quotaObject.clickTotal = "事件点击总数";
+        quotaObject.crate = "转化率";
         return function (key) {
             return quotaObject[key] || "未定义的指标KEY";
         };

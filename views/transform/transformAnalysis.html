@@ -15,23 +15,24 @@
         </div>
     </div>
     <div class="my_concent">
-        <div class="date_show"
-             data-ng-class="{'dateshow0': dateShowArray.length == 0, 'dateshow1': dateShowArray.length == 1, 'datelatshow': dateShowArray.length == 2, 'dateshow3': dateShowArray.length == 3, 'dateshow4': dateShowArray.length == 4}">
-            <ul>
-                <li data-ng-repeat="obj in dateShowArray"
-                    data-ng-class="{'date_secend2': obj.label == 'baidu', 'date_four2': obj.label == 'sougou', 'date_five2': obj.label == 'haosou', 'date_six2': obj.label == 'bing', 'date_seven2': obj.label == 'other', 'date_first': $index == 0, 'date_secend': $index == 1, 'date_third': $index == 2, 'date_four': $index == 3, 'date_five': $index == 4}">
-                    <h4><b>{{obj.label | quotaFormat}}</b>&nbsp;<span class="badge" tooltip-placement="right"
-                                                                      tooltip="{{obj.label | quotaHelpFormat}}"
-                                                                      style="font-size: 12px;cursor: pointer;"><img
-                            src="../img/zhibiao.png"></span></h4>
-                    <span>{{obj.value | quotaDataFormat:obj.label:obj.count}}</span>
-                    <br>
-                    <!-- 显示对比数据 -->
-            <span style="color: #999"
-                  data-ng-if="isCompared">{{obj.cValue}}</span>
-                </li>
-            </ul>
-        </div>
+        <!--<div class="date_show"-->
+             <!--data-ng-class="{'dateshow0': dateShowArray.length == 0, 'dateshow1': dateShowArray.length == 1, 'datelatshow': dateShowArray.length == 2, 'dateshow3': dateShowArray.length == 3, 'dateshow4': dateShowArray.length == 4}">-->
+            <!--<ul>-->
+                <!--<li data-ng-repeat="obj in dateShowArray"-->
+                    <!--data-ng-class="{'date_secend2': obj.label == 'baidu', 'date_four2': obj.label == 'sougou', 'date_five2': obj.label == 'haosou', 'date_six2': obj.label == 'bing', 'date_seven2': obj.label == 'other', 'date_first': $index == 0, 'date_secend': $index == 1, 'date_third': $index == 2, 'date_four': $index == 3, 'date_five': $index == 4}">-->
+                    <!--<h4><b>{{obj.label | quotaFormat}}</b>&nbsp;<span class="badge" tooltip-placement="right"-->
+                                                                      <!--tooltip="{{obj.label | quotaHelpFormat}}"-->
+                                                                      <!--style="font-size: 12px;cursor: pointer;"><img-->
+                            <!--src="../img/zhibiao.png"></span></h4>-->
+                    <!--<span>{{obj.value | quotaDataFormat:obj.label:obj.count}}</span>-->
+                    <!--<br>-->
+                    <!--&lt;!&ndash; 显示对比数据 &ndash;&gt;-->
+            <!--<span style="color: #999"-->
+                  <!--data-ng-if="isCompared">{{obj.cValue}}</span>-->
+                <!--</li>-->
+            <!--</ul>-->
+        <!--</div>-->
+        <ssh-date-show type="today" dimension="null" sem-type="account"></ssh-date-show>
         <div class="index_chart">
             <div id="indicators_charts_legend"></div>
             <div id="indicators_charts" class="gesture" style="height:400px;"></div>
@@ -172,8 +173,9 @@
                     </div>
                 </div>
                 <div class="custom_table">
-                    <div ui-grid="gridOptions" class="grid clearfix" ui-grid-pagination
-                         ui-grid-exporter ui-grid-auto-resize></div>
+                    <!--<div ui-grid="gridOptions" class="grid clearfix" ui-grid-pagination ui-grid-exporter ui-grid-auto-resize></div>-->
+                    <div ui-grid="gridOptions" class="grid clearfix secondary_table" style="min-height:30px;" ui-grid-auto-resize ui-grid-pagination
+                         ui-grid-exporter ui-grid-expandable ></div>
                     <gridpage></gridpage>
                 </div>
             </div>

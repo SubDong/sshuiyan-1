@@ -32,7 +32,7 @@ define(["./module"], function (ctrs) {
                 {consumption_name: "唯一访客事件数", name: "visitNum"}
             ];
             //配置默认指标
-            $rootScope.checkedArray = ["pv", "uv", "ip", "clickTotal", "conversions", "vc"];
+            $rootScope.checkedArray = ["clickTotal","pv", "uv", "ip", "conversions", "crate"];
             $rootScope.searchGridArray = [
                 {
                     name: "xl",
@@ -194,7 +194,8 @@ define(["./module"], function (ctrs) {
                     def.defData($scope.charts[0].config);
                 }
             };
-            $scope.queryOption_all = ["pv", "uv", "ip", "vc", "conversions", "crate", "transformCost"];
+            $scope.queryOption_all = ["clickTotal","pv", "uv", "ip", "conversions", "crate"];
+//            $scope.queryOption_all = ["pv", "uv", "ip", "vc", "conversions", "crate", "transformCost"];
             $scope.queryOptions = ["pv", "uv"];
             $scope.charts = [
                 {

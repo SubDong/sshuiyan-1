@@ -22,8 +22,8 @@ define(["./module"], function (ctrs) {
                 {consumption_name: "新访客比率", name: "nuvRate"}
             ];
             $scope.transform = [
-                {consumption_name: '转化次数', name: 'convert'},
-                {consumption_name: '转化率', name: 'convertRate'},
+                {consumption_name: '转化次数', name: 'conversions'},
+                {consumption_name: '转化率', name: 'crate'},
                 {consumption_name: '平均转化成本', name: 'avgCost'},
                 {consumption_name: '收益', name: 'benefit'},
                 {consumption_name: '利润', name: 'profit'}
@@ -34,7 +34,7 @@ define(["./module"], function (ctrs) {
                 {consumption_name:"订单转化率",name:"orderNumRate"}
             ];
             //配置默认指标
-            $rootScope.checkedArray = ["pv", "uv", "ip", "convert"];
+            $rootScope.checkedArray = ["pv", "uv", "ip", "conversions","vc","crate"];
             $rootScope.searchGridArray = [
                 {
                     name: "xl",

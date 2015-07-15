@@ -27,7 +27,7 @@ define(["./module"], function (ctrs) {
         $rootScope.tableTimeEnd = 0;
         $rootScope.tableFormat = null;
         //配置默认指标
-        $rootScope.checkedArray = ["vc", "uv", "nuvRate", "avgPage", "ip"];
+        $rootScope.checkedArray = ["pv", "uv", "ip", "outRate", "avgTime"];
         $rootScope.gridArray = [
             {
                 name: "xl",
