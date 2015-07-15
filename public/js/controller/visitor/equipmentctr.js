@@ -179,7 +179,7 @@ define(["./module"], function (ctrs) {
             })
             requestService.refresh($scope.charts);
         }
-        $scope.init();
+//        $scope.init();
         $scope.$on("ssh_refresh_charts", function (e, msg) {
             if ($scope.compareType) {
                 $scope.compareReset();
@@ -294,20 +294,20 @@ define(["./module"], function (ctrs) {
 
         //刷新
         $scope.page_refresh = function () {
-            $rootScope.start = 0;
-            $rootScope.end = 0;
-            $rootScope.tableTimeStart = 0;
-            $rootScope.tableTimeEnd = 0;
-            $scope.charts.forEach(function (e) {
-                var chart = echarts.init(document.getElementById(e.config.id));
-                e.config.instance = chart;
-            });
+//            $rootScope.start = 0;
+//            $rootScope.end = 0;
+//            $rootScope.tableTimeStart = 0;
+//            $rootScope.tableTimeEnd = 0;
+//            $scope.charts.forEach(function (e) {
+//                var chart = echarts.init(document.getElementById(e.config.id));
+//                e.config.instance = chart;
+//            });
             $scope.reloadByCalendar("today");
             $('#reportrange span').html(GetDateStr(0));
             //图表
-            requestService.refresh($scope.charts);
+//            requestService.refresh($scope.charts);
             //其他页面表格
-            $rootScope.targetSearch();
+//            $rootScope.targetSearch();
             //classcurrent
             $scope.reset();
             $scope.todayClass = true;

@@ -34,7 +34,7 @@ define(["./module"], function (ctrs) {
         };
     });
 
-    ctrs.controller('adminmainctr', function ($scope, $q, $rootScope, $http, requestService, ngDialog, $cookieStore) {
+    ctrs.controller('adminmainctr', function ($scope, $q, $rootScope, $http, requestService, ngDialog, $cookieStore, $state) {
         /**
          * 对应Mongo
          * @type {{uid: string, type_id: string, track_id: string, site_url: string, site_name: string, site_pause: boolean, track_status: string}}
@@ -125,7 +125,7 @@ define(["./module"], function (ctrs) {
             {
                 name: "x2",
                 displayName: "",
-                cellTemplate: "<div class='table_admin'><a href='/#index'>查看网站概览</a></div>",
+                cellTemplate: "<div class='table_admin'><a href='' ng-click='grid.appScope.viewSite(this,grid,row)' >查看网站概览</a></div>",
                 maxWidth: 100,
                 enableSorting: false
             },
@@ -182,6 +182,18 @@ define(["./module"], function (ctrs) {
             //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
             arrayClear: false //是否清空指标array
         };
+
+
+        $scope.viewSite = function (rootGrid,grid,row) {
+            $rootScope.default = row.entity.site_name;     // default site
+            //$rootScope.defaultType =row.entity.type_id;   // default site id
+            $rootScope.siteId = row.entity.site_id;
+            $rootScope.siteUrl = row.entity.site_url;
+            $rootScope.userType = row.entity.type_id;
+            $rootScope.userTypeName = row.entity.site_name;
+            $rootScope.siteTrackId=row.entity.site_track_id;
+            $state.go("index");
+        }
         $scope.openAddDialog = function () {
             $scope.urlDialog = ngDialog.open({
                 template: '../conf/Dialog/main_addDialog.html',
@@ -417,9 +429,11 @@ define(["./module"], function (ctrs) {
                             }
                         })
                     }
-                }else{
-                    var upurl = "/config/site_list?type=update&query=" + JSON.stringify({_id: dataConfig[0]._id})+ "&updates=" + JSON.stringify({  site_name: $scope.dialog_model.site_name,
-                            is_top: $scope.dialog_model.is_top,is_use:1});
+                } else {
+                    var upurl = "/config/site_list?type=update&query=" + JSON.stringify({_id: dataConfig[0]._id}) + "&updates=" + JSON.stringify({
+                            site_name: $scope.dialog_model.site_name,
+                            is_top: $scope.dialog_model.is_top, is_use: 1
+                        });
                     dataConfig[0].is_use = 1;
                     if (model.is_top) {//若置顶 先使原来置顶变为False
                         var url = "/config/site_list?type=update&query=" + JSON.stringify({
@@ -432,7 +446,7 @@ define(["./module"], function (ctrs) {
                         }).success(function (up, status) {
                             $http({method: 'GET', url: upurl}).success(function (upuse, status) {
                                 if (status == 200) {
-                                    $scope.gridOptions.data.push( dataConfig[0]);
+                                    $scope.gridOptions.data.push(dataConfig[0]);
                                     forceRowData($scope.gridOptions.data[$scope.gridOptions.data.length - 1], $scope.gridOptions.data.length - 1);
                                 }
                             })
@@ -440,7 +454,7 @@ define(["./module"], function (ctrs) {
                     } else {
                         $http({method: 'GET', url: upurl}).success(function (upuse, status) {
                             if (status == 200) {
-                                $scope.gridOptions.data.push( dataConfig[0]);
+                                $scope.gridOptions.data.push(dataConfig[0]);
                                 forceRowData($scope.gridOptions.data[$scope.gridOptions.data.length - 1], $scope.gridOptions.data.length - 1);
                             }
                         })
@@ -514,7 +528,7 @@ define(["./module"], function (ctrs) {
             var path = $("#web_list_nav_input").prop("value");//输入框获取的path
             var uid = userID;
             if (path != null && path.trim().length > 0) {
-                if(uid==null){
+                if (uid == null) {
                     $scope.urlDialog = ngDialog.open({
                         template: '\
                                                     <div class="ngdialog-buttons" >\
@@ -524,7 +538,7 @@ define(["./module"], function (ctrs) {
                         plain: true,
                         scope: $scope
                     });
-                }else{
+                } else {
                     $http.get("/config/site_list?type=search&query={\"uid\":\"" + uid + "\",\"site_url\":\"" + path + "\"}").success(function (result) {
                         if (result == "null" || result == "") {
                             $scope.urlDialog = ngDialog.open({

@@ -89,7 +89,7 @@ var init = {
 }
 var op = {
     lineChart: function (data, chartConfig) {
-        //util.chartResize(chartConfig);//charts 自适应
+        util.chartResize(chartConfig);//charts 自适应
         var _legendTmp = [];
         if (!data.length) {
             def.defData(chartConfig);

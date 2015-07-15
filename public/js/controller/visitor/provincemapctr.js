@@ -2,34 +2,34 @@
  * Created by john on 2015/3/31.
  */
 define(["./module"], function (ctrs) {
-    ctrs.controller("provincemapctr", function ($scope, uiGridConstants, $rootScope, $http, areaService,$location, $stateParams, $state) {
+    ctrs.controller("provincemapctr", function ($scope, uiGridConstants, $rootScope, $http, areaService, $location, $stateParams, $state) {
         //        高级搜索提示
         $scope.sourceSearch = "";
         $scope.visitorSearch = "";
 //        取消显示的高级搜索的条件
-        $scope.removeSourceSearch = function(obj){
+        $scope.removeSourceSearch = function (obj) {
             $scope.souce.selected = {"name": "全部"};
             $rootScope.$broadcast("loadAllSource");
             obj.sourceSearch = "";
         }
-        $scope.removeVisitorSearch = function(obj){
+        $scope.removeVisitorSearch = function (obj) {
             $rootScope.$broadcast("loadAllVisitor");
             obj.visitorSearch = "";
         }
 
-        if($location.url().split("?").length>1) {
+        if ($location.url().split("?").length > 1) {
             var param = $location.url().split("?")[1];
-            if(param == 1){
+            if (param == 1) {
                 $scope.todayClass = true;
-            }else if(param == 2){
+            } else if (param == 2) {
                 $scope.yesterdayClass = true;
 
-            }else if(param == 3){
+            } else if (param == 3) {
                 $scope.sevenDayClass = true;
-            }else if(param == 4){
+            } else if (param == 4) {
                 $scope.monthClass = true;
             }
-        }else{
+        } else {
             $scope.todayClass = true;
         }
         $scope.souce.selected = {"name": "全部"};
@@ -84,7 +84,7 @@ define(["./module"], function (ctrs) {
         ];
         $rootScope.tableSwitch = {
             latitude: {name: "地域", displayName: "地域", field: "region"},
-            tableFilter: null,
+            tableFilter: $stateParams.data != undefined && $stateParams.data != null && $stateParams.data != "" ? "[{\"region\":[\"" + $stateParams.data + "\"]}]" : null,
             dimen: "city",
             // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
             number: 1,
@@ -199,13 +199,13 @@ define(["./module"], function (ctrs) {
                                 name: name,
                                 value: option.series[0].data[p].value,
                                 /*tooltip: function (params) {
-                                    var returnValue = 0
-                                    if (parseInt(params.value) != 0 && !isNaN(params.value)) {
-                                        returnValue = ((parseInt(params.value) / dataValueSum) * 100).toFixed(2)
-                                    }
-                                    var value = "<p>" + params.name + "</p><p>" + title_name + " : " + params.value + "</p><p>占比：" + returnValue + "%</p>";
-                                    return value;
-                                },*/
+                                 var returnValue = 0
+                                 if (parseInt(params.value) != 0 && !isNaN(params.value)) {
+                                 returnValue = ((parseInt(params.value) / dataValueSum) * 100).toFixed(2)
+                                 }
+                                 var value = "<p>" + params.name + "</p><p>" + title_name + " : " + params.value + "</p><p>占比：" + returnValue + "%</p>";
+                                 return value;
+                                 },*/
                                 selected: true
                             });
                         } else {
@@ -220,10 +220,10 @@ define(["./module"], function (ctrs) {
                     chart.setOption(option, true);
                 }
             });
-
+            var chartOrMapFilter = $stateParams.data != undefined && $stateParams.data != null && $stateParams.data != "" ? $stateParams.data : null;
             $http({
                 method: 'GET',
-                url: '/api/provincemap/?start=' + start + "&end=" + end + "&type=" + type + "&areas=" + $scope.areas + "&property=" + $scope.property
+                url: '/api/provincemap/?start=' + start + "&end=" + end + "&type=" + type + "&areas=" + $scope.areas + "&property=" + $scope.property + "&chartFilter=" + chartOrMapFilter
             }).success(function (data, status) {
                 switch ($scope.property) {
                     case "loc":
@@ -261,7 +261,9 @@ define(["./module"], function (ctrs) {
 
         // init
         $scope.doSearch($scope.dateTimeStart, $scope.dateTimeEnd, $rootScope.userType);
-        $scope.doSearchAreas($scope.dateTimeStart, $scope.dateTimeEnd, $rootScope.userType, $scope.mapOrPieConfig);
+        if ($stateParams.data != undefined && $stateParams.data != null && $stateParams.data != "") {
+            $scope.doSearchAreas($scope.dateTimeStart, $scope.dateTimeEnd, $rootScope.userType, $scope.mapOrPieConfig);
+        }
         $scope.mapselect = [
             {consumption_name: "浏览量(PV)"},
             {consumption_name: "访问次数"},
@@ -299,16 +301,16 @@ define(["./module"], function (ctrs) {
 
         //刷新
         $scope.page_refresh = function () {
-            $rootScope.start = 0;
-            $rootScope.end = 0;
-            $rootScope.tableTimeStart = 0;
-            $rootScope.tableTimeEnd = 0;
-            $scope.doSearch($scope.dateTimeStart, $scope.dateTimeEnd, $rootScope.userType);
-            $scope.doSearchAreas($scope.dateTimeStart, $scope.dateTimeEnd, $rootScope.userType, $scope.mapOrPieConfig);
+//            $rootScope.start = 0;
+//            $rootScope.end = 0;
+//            $rootScope.tableTimeStart = 0;
+//            $rootScope.tableTimeEnd = 0;
+//            $scope.doSearch($scope.dateTimeStart, $scope.dateTimeEnd, $rootScope.userType);
+//            $scope.doSearchAreas($scope.dateTimeStart, $scope.dateTimeEnd, $rootScope.userType, $scope.mapOrPieConfig);
             $scope.reloadByCalendar("today");
             $('#reportrange span').html(GetDateStr(0));
             //其他页面表格
-            $rootScope.targetSearch();
+//            $rootScope.targetSearch();
             //classcurrent
             $scope.reset();
             $scope.todayClass = true;
