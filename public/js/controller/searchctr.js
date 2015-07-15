@@ -239,15 +239,15 @@ define(["./module"], function (ctrs) {
 
             //刷新
             $scope.page_refresh = function () {
-                $rootScope.start = -1;
-                $rootScope.end = -1;
-                $rootScope.tableTimeStart = -1;//开始时间
-                $rootScope.tableTimeEnd = -1;//结束时间、
-                $rootScope.tableFormat = null;
-                //$rootScope.targetSearchSpread();
-                $scope.init($rootScope.user, $rootScope.baiduAccount, "campaign", $scope.selectedQuota, $rootScope.start, $rootScope.end);
-                //图表
-                requestService.refresh($scope.charts);
+//                $rootScope.start = -1;
+//                $rootScope.end = -1;
+//                $rootScope.tableTimeStart = -1;//开始时间
+//                $rootScope.tableTimeEnd = -1;//结束时间、
+//                $rootScope.tableFormat = null;
+//                //$rootScope.targetSearchSpread();
+//                $scope.init($rootScope.user, $rootScope.baiduAccount, "campaign", $scope.selectedQuota, $rootScope.start, $rootScope.end);
+//                //图表
+//                requestService.refresh($scope.charts);
                 $scope.reloadByCalendar("today");
                 $('#reportrange span').html(GetDateStr(-1));
                 //其他页面表格

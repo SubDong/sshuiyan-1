@@ -174,7 +174,9 @@ var op = {
                             }
                         } else {
                             if (chartConfig.keyFormat == "none") {
-                                res = '<li>' + xName + ':00-' + xName + ':59</li>';
+                                if (!chartConfig.half) {
+                                    res = '<li>' + xName + ':00-' + xName + ':59</li>';
+                                } 
                             }
                         }
                         for (var i = 0, l = params.length; i < l; i++) {

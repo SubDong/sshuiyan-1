@@ -184,7 +184,12 @@ var transform = {
                     switch (queryOption) {
                         case "pv":
                             for (var i = 0; i < results.length; i++) {
-                                quotaArry.push(results[i].pv.value);
+                                for (var key in results[i]) {
+                                    if (key == queryOption) {
+                                    }
+                                    quotaArry.push(results[i].pv.value);
+                                }
+
                             }
                             quota_data = {
                                 label: "pv",
@@ -194,7 +199,11 @@ var transform = {
                             break;
                         case "uv":
                             for (var i = 0; i < results.length; i++) {
-                                quotaArry.push(results[i].uv.value);
+                                for (var key in results[i]) {
+                                    if (key == queryOption) {
+                                        quotaArry.push(results[i].uv.value);
+                                    }
+                                }
                             }
                             quota_data = {
                                 label: "uv",
@@ -204,7 +213,11 @@ var transform = {
                             break;
                         case "vc":
                             for (var i = 0; i < results.length; i++) {
-                                quotaArry.push(results[i].vc.value);
+                                for (var key in results[i]) {
+                                    if (key == queryOption) {
+                                        quotaArry.push(results[i].vc.value);
+                                    }
+                                }
                             }
                             quota_data = {
                                 label: "vc",
@@ -215,7 +228,11 @@ var transform = {
 
                         case "ip":
                             for (var i = 0; i < results.length; i++) {
-                                quotaArry.push(results[i].ip.value);
+                                for (var key in results[i]) {
+                                    if (key == queryOption) {
+                                        quotaArry.push(results[i].ip.value);
+                                    }
+                                }
                             }
                             quota_data = {
                                 label: "ip",
@@ -225,7 +242,11 @@ var transform = {
                             break;
                         case "clickTotal":
                             for (var i = 0; i < results.length; i++) {
-                                quotaArry.push(results[i].clickTotal.value);
+                                for (var key in results[i]) {
+                                    if (key == queryOption) {
+                                        quotaArry.push(results[i].clickTotal.value);
+                                    }
+                                }
                             }
                             quota_data = {
                                 label: "clickTotal",
@@ -235,7 +256,11 @@ var transform = {
                             break;
                         case "conversions":
                             for (var i = 0; i < results.length; i++) {
-                                quotaArry.push(results[i].conversions.value);
+                                for (var key in results[i]) {
+                                    if (key == queryOption) {
+                                        quotaArry.push(results[i].conversions.value);
+                                    }
+                                }
                             }
                             quota_data = {
                                 label: "conversions",
@@ -245,7 +270,11 @@ var transform = {
                             break;
                         case "nuv":
                             for (var i = 0; i < results.length; i++) {
-                                quotaArry.push(results[i].nuv.value);
+                                for (var key in results[i]) {
+                                    if (key == queryOption) {
+                                        quotaArry.push(results[i].nuv.value);
+                                    }
+                                }
                             }
                             quota_data = {
                                 label: "nuv",
@@ -255,7 +284,11 @@ var transform = {
                             break;
                         case "nuvRate":
                             for (var i = 0; i < results.length; i++) {
-                                quotaArry.push(results[i].nuvRate.value);
+                                for (var key in results[i]) {
+                                    if (key == queryOption) {
+                                        quotaArry.push(results[i].nuvRate.value);
+                                    }
+                                }
                             }
                             quota_data = {
                                 label: "nuvRate",
@@ -265,10 +298,14 @@ var transform = {
                             break;
                         case "crate":
                             for (var i = 0; i < results.length; i++) {
-                                if (results[i].conversions_crate.value != "0") {
-                                    quotaArry.push((results[i].conversions_crate.value / results[i].conversions_crate.value).toFixed(2));
-                                } else {
-                                    quotaArry.push(0);
+                                for (var key in results[i]) {
+                                    if (key == queryOption) {
+                                        if (results[i].conversions_crate.value != "0") {
+                                            quotaArry.push((results[i].conversions_crate.value / results[i].conversions_crate.value).toFixed(2));
+                                        } else {
+                                            quotaArry.push(0);
+                                        }
+                                    }
                                 }
                             }
                             quota_data = {
@@ -579,8 +616,8 @@ var transform = {
         var _aggs = {};
         var contrast_aggs = {};
         _aggs[queryOptions] = es_aggs[queryOptions][queryOptions];
-        contrast_aggs[queryOptions+"_contrast"] = es_aggs[queryOptions][queryOptions];
-        var options = [queryOptions+"_contrast",queryOptions];
+        contrast_aggs[queryOptions + "_contrast"] = es_aggs[queryOptions][queryOptions];
+        var options = [queryOptions + "_contrast", queryOptions];
         switch (showType) {
             case "hour":
                 break;

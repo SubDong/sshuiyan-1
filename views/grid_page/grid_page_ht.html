@@ -4,7 +4,7 @@
 
         <p style='color: #000011;position: absolute; margin-left: 35px; '>本页全选</p>
 
-        <p><a href='' style='color:#46b8da;position: absolute;margin-left: 60px;' ng-click='deleteall()'>批量删除</a></p>
+        <p><a href='' style='color:#46b8da;position: absolute;margin-left: 60px;' ng-click='deleteall();deleteAll()'>批量删除</a></p>
     </div>
     <a ng-click="gridApiAdmin.pagination.previousPage()" ng-hide="gridApiAdmin.pagination.getTotalPages()<=1">上一页</a>
     <span  data-ng-repeat="gridpage in gridpages"

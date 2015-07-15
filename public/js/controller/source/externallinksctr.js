@@ -9,11 +9,11 @@ define(["./module"], function (ctrs) {
         $scope.exTerminalSearch = "";
         $scope.webTypeSearch = "";
 //        取消显示的高级搜索的条件
-        $scope.removeTerminalSearch = function(obj){
+        $scope.removeTerminalSearch = function (obj) {
             $rootScope.$broadcast("ExLoadAllTerminal");
             obj.exTerminalSearch = "";
         }
-        $scope.removeWebTypeSearch = function(obj){
+        $scope.removeWebTypeSearch = function (obj) {
             $rootScope.$broadcast("ExLoadAllWeb");
             obj.webTypeSearch = "";
         }
@@ -36,6 +36,9 @@ define(["./module"], function (ctrs) {
                 displayName: "外部连接",
                 field: "rf",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                cellTooltip: function (row, col) {
+                    return row.entity.rf;
+                },
                 enableSorting: false
             },
             {
@@ -177,10 +180,10 @@ define(["./module"], function (ctrs) {
                     id: "indicators_charts",
                     chartType: "line",
                     lineType: false,
-                   // auotHidex: true,
+                    // auotHidex: true,
                     //qingXie:true,
-                    qxv:18,
-                   // tt: "item",
+                    qxv: 18,
+                    // tt: "item",
                     itemHover: $scope.itemHover,
                     dataKey: "key",
                     keyFormat: "none",
@@ -263,16 +266,16 @@ define(["./module"], function (ctrs) {
             $rootScope.end = 0;
             $rootScope.tableTimeStart = 0;
             $rootScope.tableTimeEnd = 0;
-            $scope.charts.forEach(function (e) {
-                var chart = echarts.init(document.getElementById(e.config.id));
-                e.config.instance = chart;
-            });
-            //图表
-            requestService.refresh($scope.charts);
+//            $scope.charts.forEach(function (e) {
+//                var chart = echarts.init(document.getElementById(e.config.id));
+//                e.config.instance = chart;
+//            });
+//            //图表
+//            requestService.refresh($scope.charts);
             $scope.reloadByCalendar("yesterday");
             $('#reportrange span').html(GetDateStr(-1));
             //其他页面表格
-            $rootScope.targetSearch();
+//            $rootScope.targetSearch();
             //classcurrent
             $scope.reset();
             $scope.todayClass = true;

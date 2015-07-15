@@ -494,7 +494,7 @@ var outRateFn = function (result) {
         var vc = result[i].vc_aggs.vc_aggs.value;
         var svc = parseInt(vc) - result[i].single_visitor_aggs.buckets.length;
         keyArr.push(result[i].key);
-
+        
         var outRate = 0;
         if (vc > 0) {
             outRate = (parseFloat(svc) / parseFloat(vc) * 100).toFixed(2);
@@ -611,7 +611,7 @@ var arrivedRateFn = function (result) {
     };
 };
 
-var conversions = function (result) {
+var conversionsFn = function (result) {
     var keyArr = [];
     var quotaArr = [];
 
@@ -799,7 +799,7 @@ var es_request = {
                                     data.push(avgPageFn(result));
                                     break;
                                 case "conversions":
-                                    data.push(conversions(result));
+                                    data.push(conversionsFn(result));
                                     break;
                                 case "pageConversion" :
                                     data.push(pageConversionFn(result));

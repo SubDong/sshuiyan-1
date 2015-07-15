@@ -22,8 +22,8 @@ define(["./module"], function (ctrs) {
                 {consumption_name: "新访客比率", name: "nuvRate"}
             ];
             $scope.transform = [
-                {consumption_name: '转化次数', name: 'convert'},
-                {consumption_name: '转化率', name: 'convertRate'},
+                {consumption_name: '转化次数', name: 'conversions'},
+                {consumption_name: '转化率', name: 'crate'},
                 {consumption_name: '平均转化成本', name: 'avgCost'},
                 {consumption_name: '收益', name: 'benefit'},
                 {consumption_name: '利润', name: 'profit'}
@@ -34,7 +34,7 @@ define(["./module"], function (ctrs) {
                 {consumption_name:"订单转化率",name:"orderNumRate"}
             ];
             //配置默认指标
-            $rootScope.checkedArray = ["pv", "uv", "ip", "convert"];
+            $rootScope.checkedArray = ["pv", "uv", "ip", "conversions","vc","crate"];
             $rootScope.searchGridArray = [
                 {
                     name: "xl",
@@ -235,21 +235,21 @@ define(["./module"], function (ctrs) {
 
             //刷新
             $scope.page_refresh = function () {
-                $rootScope.start = -1;
-                $rootScope.end = -1;
-                $rootScope.tableTimeStart = -1;//开始时间
-                $rootScope.tableTimeEnd = -1;//结束时间、
-                $rootScope.tableFormat = null;
+                $rootScope.start = 0;
+                $rootScope.end = 0;
+                $rootScope.tableTimeStart = 0;//开始时间
+                $rootScope.tableTimeEnd = 0;//结束时间、
+//                $rootScope.tableFormat = null;
                 //$rootScope.targetSearchSpread();
-                $scope.init($rootScope.user, $rootScope.baiduAccount, "campaign", $scope.selectedQuota, $rootScope.start, $rootScope.end);
+//                $scope.init($rootScope.user, $rootScope.baiduAccount, "campaign", $scope.selectedQuota, $rootScope.start, $rootScope.end);
                 //图表
-                requestService.refresh($scope.charts);
+//                requestService.refresh($scope.charts);
                 $scope.reloadByCalendar("today");
                 $('#reportrange span').html(GetDateStr(-1));
                 //其他页面表格
                 //classcurrent
                 $scope.reset();
-                $scope.yesterdayClass = true;
+                $scope.todayClass = true;
             };
         }
     );

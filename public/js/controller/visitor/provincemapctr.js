@@ -261,6 +261,7 @@ define(["./module"], function (ctrs) {
 
         // init
         $scope.doSearch($scope.dateTimeStart, $scope.dateTimeEnd, $rootScope.userType);
+        $scope.doSearchAreas($scope.dateTimeStart, $scope.dateTimeEnd, $rootScope.userType, $scope.mapOrPieConfig);
         if ($stateParams.data != undefined && $stateParams.data != null && $stateParams.data != "") {
             $scope.doSearchAreas($scope.dateTimeStart, $scope.dateTimeEnd, $rootScope.userType, $scope.mapOrPieConfig);
         }
@@ -301,10 +302,10 @@ define(["./module"], function (ctrs) {
 
         //刷新
         $scope.page_refresh = function () {
-//            $rootScope.start = 0;
-//            $rootScope.end = 0;
-//            $rootScope.tableTimeStart = 0;
-//            $rootScope.tableTimeEnd = 0;
+            $rootScope.start = 0;
+            $rootScope.end = 0;
+            $rootScope.tableTimeStart = 0;
+            $rootScope.tableTimeEnd = 0;
 //            $scope.doSearch($scope.dateTimeStart, $scope.dateTimeEnd, $rootScope.userType);
 //            $scope.doSearchAreas($scope.dateTimeStart, $scope.dateTimeEnd, $rootScope.userType, $scope.mapOrPieConfig);
             $scope.reloadByCalendar("today");

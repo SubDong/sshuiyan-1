@@ -154,10 +154,10 @@ define(["./module"], function (ctrs) {
 
             //刷新
             $scope.page_refresh = function () {
-//                $rootScope.start = 0;
-//                $rootScope.end = 0;
-//                $rootScope.tableTimeStart = 0;
-//                $rootScope.tableTimeEnd = 0;
+                $rootScope.start = 0;
+                $rootScope.end = 0;
+                $rootScope.tableTimeStart = 0;
+                $rootScope.tableTimeEnd = 0;
 //                $scope.charts.forEach(function (e) {
 //                    var chart = echarts.init(document.getElementById(e.config.id));
 //                    e.config.instance = chart;

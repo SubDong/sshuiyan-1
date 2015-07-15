@@ -1,11 +1,11 @@
 /**
- * Created by XiaoWei on 2015/4/13.
+ * Created by ss on 2015/7/14.
  */
 define(["./module"], function (ctrls) {
 
     'use strict';
 
-    ctrls.controller("sourcectr", function ($scope, $rootScope, $http, requestService, areaService, messageService, uiGridConstants) {
+    ctrls.controller("adsPlanCtr", function ($scope, $rootScope, $http, requestService, areaService, messageService, uiGridConstants) {
         $scope.todayClass = true;
         //        高级搜索提示显示
         $scope.terminalSearch = "";
@@ -165,8 +165,8 @@ define(["./module"], function (ctrls) {
                     bGap: false,
                     chartType: "line",
                     lineType: false,
-                   // auotHidex: true,
-                   // qingXie:true,
+                    auotHidex: true,
+                    qingXie:true,
                     qxv:18,
                     //tt: "item",
                     itemHover: $scope.itemHover,

@@ -607,12 +607,24 @@ api.get("/adtrack", function (req, res) {
             var planName = entity.planName;
             var keywords = entity.keywords;
             var creative = entity.creative;
-            var strUrl = "http://" + targetUrl
+
+            var strUrl = "";
+
+            if(targetUrl.indexOf("?") == -1){
+                strUrl = "http://" + targetUrl
                 + "?hmsr=" + mediaPlatform
-                + "&_hmmd=" + adTypes
-                + "&_hmpl=" + planName
-                + "&_hmkw=" + keywords
-                + "&_hmci=" + creative;
+                + "&hmmd=" + adTypes
+                + "&hmpl=" + planName
+                + "&hmkw=" + keywords
+                + "&hmci=" + creative;
+            } else {
+                strUrl = "http://" + targetUrl
+                + "&hmsr=" + mediaPlatform
+                + "&hmmd=" + adTypes
+                + "&hmpl=" + planName
+                + "&hmkw=" + keywords
+                + "&hmci=" + creative;
+            }
             entity.produceUrl = encodeURI(strUrl);
 
             dao.save(schema_name, entity, function (ins) {

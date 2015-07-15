@@ -35,7 +35,10 @@ define(["./../module"], function (ctrs) {
                 displayName: "页面url",
                 field: "loc",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
-                enableSorting: false
+                enableSorting: false,
+                cellTooltip: function (row, col) {
+                    return row.entity.loc;
+                }
             },
             {
                 name: " ",
@@ -241,16 +244,16 @@ define(["./../module"], function (ctrs) {
             $rootScope.end = 0;
             $rootScope.tableTimeStart = 0;
             $rootScope.tableTimeEnd = 0;
-            $scope.charts.forEach(function (e) {
-                var chart = echarts.init(document.getElementById(e.config.id));
-                e.config.instance = chart;
-            });
+//            $scope.charts.forEach(function (e) {
+//                var chart = echarts.init(document.getElementById(e.config.id));
+//                e.config.instance = chart;
+//            });
             $scope.reloadByCalendar("today");
             $('#reportrange span').html(GetDateStr(0));
             //图表
-            requestService.refresh($scope.charts);
+//            requestService.refresh($scope.charts);
             //其他页面表格
-            $rootScope.targetSearch();
+//            $rootScope.targetSearch();
             //classcurrent
             $scope.reset();
             $scope.todayClass = true;

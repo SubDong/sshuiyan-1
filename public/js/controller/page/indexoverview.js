@@ -40,6 +40,9 @@ define(["./module"], function (ctrs) {
                 displayName: "页面url",
                 field: "loc",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                cellTooltip: function (row, col) {
+                    return row.entity.loc;
+                },
                 enableSorting: false
             },
             {
@@ -119,7 +122,7 @@ define(["./module"], function (ctrs) {
             $scope.reloadByCalendar("today");
             $('#reportrange span').html(GetDateStr(0));
             //其他页面表格
-            $rootScope.targetSearch();
+//            $rootScope.targetSearch();
             //classcurrent
             $scope.reset();
             $scope.todayClass = true;
