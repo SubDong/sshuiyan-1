@@ -441,75 +441,19 @@ if (config != undefined && !config.open) {
                      }*/
                     var a, b = this.getData("PFT_COOKIE_RF");
                     md.g.tt = a = this.getData("PFT_" + c.id);
-                    var Judge = (this.matchUrl(md.g.rf) != "-" && (b == c.q || this.matchUrl(b) != this.matchUrl(md.g.rf)));
+                    var as = decodeURIComponent(md.g.rf).replace("http://", "");
+                    as = (as == "-" ? as : as.substring(0, as.indexOf("/")));
+                    var Judge = (b == c.q || this.matchUrl(b) != this.matchUrl(md.g.rf));
 
-                    var isEmpty = (null == a || undefined == a || "" == a);
-
-                    //
-                    /*if(isEmpty){
-                     if(!Judge){
-                     // direct
-                     if(b =="-" || b == undefined || b == "" || b == null/!*Cookie中的refer为"-"*!/){
-                     if(this.matchUrl(md.g.rf) == document.location.hostname){
-                     // 一次新的直接访问,
-                     /!*
-                     * 1)外链进入a（但进入的页面没有统计代码）后进入b（b有）
-                     * 2)直接输入网址进入a（a没有统计代码）后进入b（b有）
-                     *
-                     * *!/
-                     cookie.set("PFT_COOKIE_RF",md.g.rf)
-                     this.setData("PFT_" + c.id);
-                     md.g.tt = this.getData("PFT_" + c.id);
-                     md.g.n = "1";
-                     md.cookie.remove("PFT_DTNJ");
-                     md.cookie.remove("PFT_DTNP");
-                     }else if(md.g.rf == "-"){
-                     // 一次新的直接访问,直接输入网址cookie.set("PFT_COOKIE_RF",md.g.rf)
-                     cookie.set("PFT_COOKIE_RF",md.g.rf)
-                     this.setData("PFT_" + c.id);
-                     md.g.tt = this.getData("PFT_" + c.id);
-                     md.g.n = "1";
-                     md.cookie.remove("PFT_DTNJ");
-                     md.cookie.remove("PFT_DTNP");
-
-                     }
-                     }/!*else if(!b/!*Cookie中的refer不为空*!/&&(this.matchUrl(md.g.rf) == document.location.hostname)){
-                     // internal
-                     }*!/
-                     }
-                     }
-                     else if(!isEmpty && Judge){
-                     // out
-                     cookie.set("PFT_COOKIE_RF",md.g.rf)
-                     this.setData("PFT_" + c.id);
-                     md.g.tt = this.getData("PFT_" + c.id);
-                     md.g.n = "1";
-                     md.cookie.remove("PFT_DTNJ");
-                     md.cookie.remove("PFT_DTNP");
-                     }*/
-                    //
-
-                    if (isEmpty || Judge) {//当前页面的rf 和cookie中的rf对比-----外部连接对比
-                        var matUrl = md.g.rf.replace("http://","").replace("https://","");
-                        if(matUrl.indexOf("/") != -1){
-                            matUrl = matUrl.substring(0,matUrl.indexOf("/"))
+                    if(null == a || undefined == a || "" == a || as != "-" && Judge){
+                        if(this.matchUrl(md.g.rf) != document.location.hostname){
+                            cookie.set("PFT_COOKIE_RF",md.g.rf)
                         }
-                        if (matUrl != document.location.hostname) {//当前页面的url和当前页面的rf对比------
-                            cookie.set("PFT_COOKIE_RF", md.g.rf)
-                            this.setData("PFT_" + c.id);
-                            md.g.tt = this.getData("PFT_" + c.id);
-                            md.g.n = "1";
-                            md.cookie.remove("PFT_DTNJ");
-                            md.cookie.remove("PFT_DTNP");
-                        } else if (b == "-" || b == undefined || b == "" || b == null) {
-                            cookie.set("PFT_COOKIE_RF", md.g.rf)
-                            this.setData("PFT_" + c.id);
-                            md.g.tt = this.getData("PFT_" + c.id);
-                            md.g.n = "1";
-                            md.cookie.remove("PFT_DTNJ");
-                            md.cookie.remove("PFT_DTNP");
-                        }
-
+                        this.setData("PFT_" + c.id);
+                        md.g.tt = this.getData("PFT_" + c.id)
+                        md.g.n = "1";
+                        md.cookie.remove("PFT_DTNJ");
+                        md.cookie.remove("PFT_DTNP");
                     } else {
                         var ckDay = this.getData("PFT_SJKD");
                         var newDay = new Date().getDate();
