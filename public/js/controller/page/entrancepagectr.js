@@ -26,7 +26,10 @@ define(["./module"], function (ctrs) {
                 displayName: "页面url",
                 field: "loc",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
-                enableSorting: false
+                enableSorting: false,
+                cellTooltip: function (row, col) {
+                    return row.entity.loc;
+                }
             },
             {
                 name: " ",
@@ -158,10 +161,10 @@ define(["./module"], function (ctrs) {
                     bGap: false,
                     min_max: false,
                     chartType: "line",
-                   // auotHidex: true,
-                  //  qingXie:true,
-                    qxv:18,
-                  //  tt: "item",
+                    // auotHidex: true,
+                    //  qingXie:true,
+                    qxv: 18,
+                    //  tt: "item",
                     itemHover: $scope.itemHover,
                     lineType: false,
                     keyFormat: 'none',

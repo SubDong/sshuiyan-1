@@ -9,11 +9,11 @@ define(["./module"], function (ctrs) {
         $scope.exTerminalSearch = "";
         $scope.webTypeSearch = "";
 //        取消显示的高级搜索的条件
-        $scope.removeTerminalSearch = function(obj){
+        $scope.removeTerminalSearch = function (obj) {
             $rootScope.$broadcast("ExLoadAllTerminal");
             obj.exTerminalSearch = "";
         }
-        $scope.removeWebTypeSearch = function(obj){
+        $scope.removeWebTypeSearch = function (obj) {
             $rootScope.$broadcast("ExLoadAllWeb");
             obj.webTypeSearch = "";
         }
@@ -36,6 +36,9 @@ define(["./module"], function (ctrs) {
                 displayName: "外部连接",
                 field: "rf",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                cellTooltip: function (row, col) {
+                    return row.entity.rf;
+                },
                 enableSorting: false
             },
             {
@@ -177,10 +180,10 @@ define(["./module"], function (ctrs) {
                     id: "indicators_charts",
                     chartType: "line",
                     lineType: false,
-                   // auotHidex: true,
+                    // auotHidex: true,
                     //qingXie:true,
-                    qxv:18,
-                   // tt: "item",
+                    qxv: 18,
+                    // tt: "item",
                     itemHover: $scope.itemHover,
                     dataKey: "key",
                     keyFormat: "none",

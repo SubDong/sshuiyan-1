@@ -26,7 +26,10 @@ define(["./../module"], function (ctrs) {
                     displayName: "页面url",
                     field: "loc",
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
-                    enableSorting: false
+                    enableSorting: false,
+                    cellTooltip: function (row, col) {
+                        return row.entity.loc;
+                    }
                 },
                 {
                     name: " ",

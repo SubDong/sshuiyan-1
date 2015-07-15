@@ -7,7 +7,7 @@ define(["app"], function (app) {
 
     app.controller('wayctrl', function ($timeout, $scope, $rootScope, $q, $http, requestService, areaService, SEM_API_URL, uiGridConstants) {
         $scope.areaSearch = "";
-        $scope.removeAreaSearch = function(obj){
+        $scope.removeAreaSearch = function (obj) {
             $scope.city.selected = {"name": "全部"};
             $rootScope.$broadcast("loadAllArea");
             obj.areaSearch = "";
@@ -34,7 +34,10 @@ define(["app"], function (app) {
                 field: "accountName",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
                 minWidth: 200,
-                enableSorting: false
+                enableSorting: false,
+                cellTooltip: function (row, col) {
+                    return row.entity.accountName;
+                }
             },
             {
                 name: " ",

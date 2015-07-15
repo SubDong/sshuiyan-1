@@ -10,12 +10,12 @@ define(["./module"], function (ctrs) {
         $scope.sourceSearch = "";
         $scope.visitorSearch = "";
 //        取消显示的高级搜索的条件
-        $scope.removeSourceSearch = function(obj){
+        $scope.removeSourceSearch = function (obj) {
             $scope.souce.selected = {"name": "全部"};
             $rootScope.$broadcast("loadAllSource");
             obj.sourceSearch = "";
         }
-        $scope.removeVisitorSearch = function(obj){
+        $scope.removeVisitorSearch = function (obj) {
             $rootScope.$broadcast("loadAllVisitor");
             obj.visitorSearch = "";
         }
@@ -33,7 +33,14 @@ define(["./module"], function (ctrs) {
                 maxWidth: 10,
                 enableSorting: false
             },
-            {name: "页面url", field: "loc", footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"},
+            {
+                name: "页面url",
+                field: "loc",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                cellTooltip: function (row, col) {
+                    return row.entity.loc;
+                }
+            },
             {
                 name: " ",
                 cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn' title='查看历史趋势'></a></div>",
