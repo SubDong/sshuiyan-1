@@ -439,7 +439,7 @@ if (config != undefined && !config.open) {
                      md.cookie.remove("PFT_DTNJ");
                      md.cookie.remove("PFT_DTNP");
                      }*/
-                    var a, b = this.getData("PFT_COOKIE_RF");
+                    var a, b = this.getData("PFT_COOKIE_RF") == null?"-":this.getData("PFT_COOKIE_RF");
                     md.g.tt = a = this.getData("PFT_" + c.id);
                     var rf = decodeURIComponent(md.g.rf).replace("http://", "");
                     if(rf.indexOf("/") != -1){
@@ -449,9 +449,9 @@ if (config != undefined && !config.open) {
                     if(loc.indexOf("/") != -1){
                         loc = (loc == "-" ? loc : loc.substring(0, loc.indexOf("/")));
                     }
-                    var Judge = (b != "-" && (b == c.q || rf != loc));
+                    var Judge = (rf != "-" && (b == c.q || rf != loc));
                     if (null == a || undefined == a || "" == a) {
-                        if (this.matchUrl(md.g.rf) != document.location.hostname) {
+                        if (rf != document.location.hostname) {
                             cookie.set("PFT_COOKIE_RF", md.g.rf)
                         }
                         this.setData("PFT_" + c.id);
