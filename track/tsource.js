@@ -416,8 +416,8 @@ if (config != undefined && !config.open) {
                 uv: function () {
                     var date = new Date().getTime();
                 },
-                matchUrl:function(a){
-                   return (a = a.match(/^(https?:\/\/)?([^\/\?#]*)/)) ? a[2].replace(/.*@/, "") : null
+                matchUrl: function (a) {
+                    return (a = a.match(/^(https?:\/\/)?([^\/\?#]*)/)) ? a[2].replace(/.*@/, "") : null
                 },
                 na: function () {
                     /*var a, b, d;
@@ -441,17 +441,33 @@ if (config != undefined && !config.open) {
                      }*/
                     var a, b = this.getData("PFT_COOKIE_RF");
                     md.g.tt = a = this.getData("PFT_" + c.id);
-                    var Judge = (b != "-" && (b == c.q || this.matchUrl(b) != this.matchUrl(md.g.rf)));
-
-                    if(null == a || undefined == a || "" == a || Judge){
-                        if(this.matchUrl(md.g.rf) != document.location.hostname){
-                            cookie.set("PFT_COOKIE_RF",md.g.rf)
+                    var rf = decodeURIComponent(md.g.rf).replace("http://", "");
+                    if(rf.indexOf("/") != -1){
+                        rf = (rf == "-" ? rf : rf.substring(0, rf.indexOf("/")));
+                    }
+                    var loc = decodeURIComponent(md.g.loc).replace("http://", "");
+                    if(loc.indexOf("/") != -1){
+                        loc = (loc == "-" ? loc : loc.substring(0, loc.indexOf("/")));
+                    }
+                    var Judge = (b != "-" && (b == c.q || rf != loc));
+                    if (null == a || undefined == a || "" == a) {
+                        if (this.matchUrl(md.g.rf) != document.location.hostname) {
+                            cookie.set("PFT_COOKIE_RF", md.g.rf)
                         }
                         this.setData("PFT_" + c.id);
                         md.g.tt = this.getData("PFT_" + c.id)
                         md.g.n = "1";
                         md.cookie.remove("PFT_DTNJ");
                         md.cookie.remove("PFT_DTNP");
+                    } else if (Judge) {
+                        if (rf != document.location.hostname) {
+                            cookie.set("PFT_COOKIE_RF", md.g.rf)
+                            this.setData("PFT_" + c.id);
+                            md.g.tt = this.getData("PFT_" + c.id)
+                            md.g.n = "1";
+                            md.cookie.remove("PFT_DTNJ");
+                            md.cookie.remove("PFT_DTNP");
+                        }
                     } else {
                         var ckDay = this.getData("PFT_SJKD");
                         var newDay = new Date().getDate();
