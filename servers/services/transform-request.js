@@ -76,17 +76,30 @@ var es_aggs = {
     //转化率
     "crate": {
 
-            "conversions_crate": {
-                "value_count": {
-                    "field": "_type"
-                }
-            },
-            "vc_crate": {
-                "value_count": {
-                    "field": "tt"
-                }
+        "conversions_crate": {
+            "value_count": {
+                "field": "_type"
             }
-
+        },
+        "vc_crate": {
+            "value_count": {
+                "field": "tt"
+            }
+        }
+    },
+    "visitNum": {
+        "visitNum": {
+            "value_count": {
+                "field": "tt"
+            }
+        }
+    },
+    "transformCost":{
+        "transformCost": {
+            "value_count": {
+                "field": "tt"
+            }
+        }
     }
 };
 var transform = {
@@ -282,6 +295,20 @@ var transform = {
                                 quota: quotaArry
                             };
                             break;
+                        case "visitNum":
+                            for (var i = 0; i < results.length; i++) {
+                                for (var key in results[i]) {
+                                    if (key == queryOption) {
+                                        quotaArry.push(results[i].visitNum.value);
+                                    }
+                                }
+                            }
+                            quota_data = {
+                                label: "visitNum",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
                         case "nuvRate":
                             for (var i = 0; i < results.length; i++) {
                                 for (var key in results[i]) {
@@ -314,6 +341,20 @@ var transform = {
                             }
                             quota_data = {
                                 label: "crate",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "transformCost":
+                            for (var i = 0; i < results.length; i++) {
+                                for (var key in results[i]) {
+                                    if (key == queryOption) {
+                                        quotaArry.push(results[i].transformCost.value);
+                                    }
+                                }
+                            }
+                            quota_data = {
+                                label: "transformCost",
                                 key: keyArr,
                                 quota: quotaArry
                             };
@@ -429,6 +470,22 @@ var transform = {
                             for (var i = 0; i < result.length; i++) {
                                 dataArry.push({
                                     crate: (result[i].conversions_crate.value / result[i].vc_crate.value).toFixed(2) + "%",
+                                    campaignName: result[i].key
+                                });
+                            }
+                            break;
+                        case "transformCost":
+                            for (var i = 0; i < result.length; i++) {
+                                dataArry.push({
+                                    transformCost: result[i].transformCost.value,
+                                    campaignName: result[i].key
+                                });
+                            }
+                            break;
+                        case "visitNum":
+                            for (var i = 0; i < result.length; i++) {
+                                dataArry.push({
+                                    visitNum: result[i].visitNum.value,
                                     campaignName: result[i].key
                                 });
                             }
@@ -571,6 +628,22 @@ var transform = {
                             for (var i = 0; i < result.length; i++) {
                                 dataArry.push({
                                     crate: (result[i].conversions_crate.value / result[i].vc_crate.value).toFixed(2) + "%",
+                                    campaignName: result[i].key
+                                });
+                            }
+                            break;
+                        case "visitNum":
+                            for (var i = 0; i < result.length; i++) {
+                                dataArry.push({
+                                    visitNum: result[i].visitNum.value,
+                                    campaignName: result[i].key
+                                });
+                            }
+                            break;
+                        case "transformCost":
+                            for (var i = 0; i < result.length; i++) {
+                                dataArry.push({
+                                    transformCost: result[i].transformCost.value,
                                     campaignName: result[i].key
                                 });
                             }
@@ -772,6 +845,46 @@ var transform = {
                             }
                             quota_data = {
                                 label: "crate",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "visitNum":
+                            for (var i = 0; i < keyArr.length; i++) {
+                                quotaArry.push(results[i].visitNum.value);
+                            }
+                            quota_data = {
+                                label: "visitNum",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "transformCost":
+                            for (var i = 0; i < keyArr.length; i++) {
+                                quotaArry.push(results[i].transformCost.value);
+                            }
+                            quota_data = {
+                                label: "transformCost",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "transformCost_contrast":
+                            for (var i = keyArr.length; i < results.length; i++) {
+                                quotaArry.push(results[i].transformCost_contrast.value);
+                            }
+                            quota_data = {
+                                label: "transformCost_contrast",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "visitNum_contrast":
+                            for (var i = keyArr.length; i < results.length; i++) {
+                                quotaArry.push(results[i].visitNum_contrast.value);
+                            }
+                            quota_data = {
+                                label: "_contrast",
                                 key: keyArr,
                                 quota: quotaArry
                             };
