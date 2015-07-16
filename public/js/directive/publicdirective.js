@@ -1336,6 +1336,8 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
         quotaObject.conversions = "转化次数";
         quotaObject.crate = "转化率";
         quotaObject.other = "其他";
+        quotaObject.transformCost = "平均转化成本";
+        quotaObject.visitNum = "唯一访客事件数";
         return function (key) {
             return quotaObject[key] || "未定义的指标KEY";
         };
