@@ -88,46 +88,43 @@ var es_aggs = {
     }
 };
 var transform = {
-    search: function (es, indexs, type, action, callbackFn) {
+    search: function (es, indexs, type, action, querys, callbackFn) {
+        var _aggs = {};
+        querys.forEach(function (queryOption) {
+            for (var key in es_aggs[queryOption]) {
+                _aggs[key] = es_aggs[queryOption][key];
+            }
+        });
         var request = {
             "index": indexs,
             "type": type + "_" + action,
             "body": {
                 "size": 0,
-                "aggs": {
-                    "pv": {
-                        "value_count": {
-                            "field": "_type"
-                        }
-                    },
-                    "uv": {
-                        "cardinality": {
-                            "field": "tt"
-                        }
-                    },
-                    "ip": {
-                        "cardinality": {
-                            "field": "vid"
-                        }
-                    },
-                    "newUser": {
-                        "value_count": {
-                            "field": "ct"
-                        }
-                    }
-                }
+                "aggs": _aggs
             }
         };
         es.search(request, function (error, response) {
             var data = {};
             if (response != undefined && response.aggregations != undefined) {
                 var result = response.aggregations;
-                data = {
-                    pv: result.pv.value,
-                    uv: result.uv.value,
-                    ip: result.ip.value,
-                    newUser: result.newUser.value
-                };
+                querys.forEach(function (queryOption) {
+                    if (queryOption == "crate") {
+                        if (result.new_visitor_aggs.value == "0") {
+                            data[queryOption] = "0";
+                        } else {
+                            data[queryOption] = (result.uv_aggs.value / result.new_visitor_aggs.value).toFixed(2);
+                        }
+                    } else if (queryOption == "nuvRate") {
+                        if (result.conversions_crate.value == "0") {
+                            data[queryOption] = 0;
+                        } else {
+                            data[queryOption] = (result.conversions_crate.value / result.conversions_crate.value).toFixed(2);
+                        }
+                    }
+                    else {
+                        data[queryOption] = result[queryOption].value
+                    }
+                });
                 callbackFn(data);
             } else
                 callbackFn(data);
@@ -286,7 +283,11 @@ var transform = {
                             for (var i = 0; i < results.length; i++) {
                                 for (var key in results[i]) {
                                     if (key == queryOption) {
-                                        quotaArry.push(results[i].nuvRate.value);
+                                        if (results[i].new_visitor_aggs.value == "0") {
+                                            quotaArry.push(0);
+                                        } else {
+                                            quotaArry.push((results[i].uv_aggs.value / results[i].new_visitor_aggs.value).toFixed(2));
+                                        }
                                     }
                                 }
                             }
@@ -746,7 +747,11 @@ var transform = {
                             break;
                         case "nuvRate":
                             for (var i = 0; i < keyArr.length; i++) {
-                                quotaArry.push(results[i].nuvRate.value);
+                                if (result[i].new_visitor_aggs.value) {
+                                    quotaArry.push(0);
+                                } else {
+                                    quotaArry.push((result[i].uv_aggs.value / result[i].new_visitor_aggs.value).toFixed(2));
+                                }
                             }
                             quota_data = {
                                 label: "nuvRate",

@@ -793,7 +793,13 @@ api.get("/transform/transformAnalysis", function (req, res) {
         time = date.getConvertTimeByNumber(start, end);
     }
     if (searchType == "initAll") {
-        transform.search(req.es, indexString, type, action, function (result) {
+        queryOptions = parameters[5].split("=")[1];
+        var querys = [];
+        var query = queryOptions.split(",");
+        for (var i = 0; i < query.length; i++) {
+            querys.push(queryOptions.split(",")[i]);
+        }
+        transform.search(req.es, indexString, type, action, querys, function (result) {
             datautils.send(res, result);
         })
     } else if (searchType == "dataTable") {
@@ -829,7 +835,7 @@ api.get("/transform/transformAnalysis", function (req, res) {
             contrast_indexString = date.createIndexes(contrastStart, contrastEnd, "access-");
             time = date.getConvertTimeByNumber(contrastStart, contrastEnd);
         }
-        transform.SearchContrast(req.es, indexString,contrast_indexString, type, action,showType, queryOptions, function (result) {
+        transform.SearchContrast(req.es, indexString, contrast_indexString, type, action, showType, queryOptions, function (result) {
             datautils.send(res, result);
         });
     } else {
