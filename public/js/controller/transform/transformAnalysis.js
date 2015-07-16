@@ -32,7 +32,7 @@ define(["./module"], function (ctrs) {
                 {consumption_name: "唯一访客事件数", name: "visitNum"}
             ];
             //配置默认指标
-            $rootScope.checkedArray = ["clickTotal","pv", "uv", "ip", "conversions", "vc"];
+            $rootScope.checkedArray = ["clickTotal", "pv", "uv", "ip", "conversions", "vc"];
             $rootScope.searchGridArray = [
                 {
                     name: "xl",
@@ -189,12 +189,12 @@ define(["./module"], function (ctrs) {
                     }
                 }
                 if (checkedVal.length) {
-                    $scope.dataTable($scope.isCompared, "day", checkedVal,false);
+                    $scope.dataTable($scope.isCompared, "day", checkedVal, false);
                 } else {
                     def.defData($scope.charts[0].config);
                 }
             };
-            $scope.queryOption_all = ["clickTotal","pv", "uv", "ip", "conversions", "crate"];
+            $scope.queryOption_all = ["clickTotal", "pv", "uv", "ip", "conversions", "crate"];
 //            $scope.queryOption_all = ["pv", "uv", "ip", "vc", "conversions", "crate", "transformCost"];
             $scope.queryOptions = ["pv", "uv"];
             $scope.charts = [
@@ -354,49 +354,28 @@ define(["./module"], function (ctrs) {
                     end: $rootScope.end,
                     checkedArray: $scope.checkedArray
                 });
-                if(isContrastDataByTime){
+                if (isContrastDataByTime) {
                     $scope.charts[0].config.legendDefaultChecked = [0];
                     $scope.charts[0].config.legendAllowCheckCount = 1;
-                    $scope.dataTable(isContrastDataByTime, "day", ["pv"],true);
-                }else{
-                    $scope.charts[0].config.legendDefaultChecked = [0,1];
+                    $scope.dataTable(isContrastDataByTime, "day", ["pv"], true);
+                } else {
+                    $scope.charts[0].config.legendDefaultChecked = [0, 1];
                     $scope.charts[0].config.legendAllowCheckCount = 2;
-                    $scope.dataTable(isContrastDataByTime, "day", ["pv","uv"]);
+                    $scope.dataTable(isContrastDataByTime, "day", ["pv", "uv"]);
                 }
 
                 $scope.isCompared = isContrastDataByTime;
-                $http.get("/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&action=event&type=1&searchType=initAll").success(function (data) {
+                $http.get("/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&action=event&type=1&searchType=initAll&queryOptions=" + $rootScope.checkedArray).success(function (data) {
                     if (data != null || data != "") {
                         for (var i = 0; i < $scope.dateShowArray.length; i++) {
-                            switch ($scope.dateShowArray[i].label) {
-                                case "pv":
+                            for (var key in data) {
+                                if ($scope.dateShowArray[i].label == key) {
                                     if (isContrastDataByTime) {
-                                        $scope.dateShowArray[i].cValue = data.pv;
+                                        $scope.dateShowArray[i].cValue = data[key];
                                     } else {
-                                        $scope.dateShowArray[i].value = data.pv;
+                                        $scope.dateShowArray[i].value = data[key];
                                     }
-                                    break;
-                                case "uv":
-                                    if (isContrastDataByTime) {
-                                        $scope.dateShowArray[i].cValue = data.uv;
-                                    } else {
-                                        $scope.dateShowArray[i].value = data.uv;
-                                    }
-                                    break;
-                                case "ip":
-                                    if (isContrastDataByTime) {
-                                        $scope.dateShowArray[i].cValue = data.ip;
-                                    } else {
-                                        $scope.dateShowArray[i].value = data.ip;
-                                    }
-                                    break;
-                                case "nuv":
-                                    if (isContrastDataByTime) {
-                                        $scope.dateShowArray[i].cValue = data.newUser;
-                                    } else {
-                                        $scope.dateShowArray[i].value = data.newUser;
-                                    }
-                                    break;
+                                }
                             }
                         }
                     }
@@ -408,9 +387,10 @@ define(["./module"], function (ctrs) {
              * @param showType　显示横轴方式　有四种：hour小时为单位，显示一天24小时的数据；day天为单位，显示数天的数据，week周为单位，显示数周的数据；month月为单位，显示数月的数据
              * @param queryOption　查询条件指标　事件转化：指标："浏览量(pv)", "访客数(uv)", "转化次数(conversions)", "转化率(crate)", "平均转化成本(transformCost)"
              */
-            $scope.dataTable = function (isContrastTime, showType, queryOptions,renderLegend) {
-                if(isContrastTime){
-                    $http.get("/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&action=event&type=1&searchType=contrastData&showType=" + showType + "&queryOptions=" + queryOptions+"&contrastStart="+$scope.start+"&contrastEnd=0"+$scope.end).success(function (contrastData) {
+            $scope.dataTable = function (isContrastTime, showType, queryOptions, renderLegend) {
+                console.log("数据加载成功")
+                if (isContrastTime) {
+                    $http.get("/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&action=event&type=1&searchType=contrastData&showType=" + showType + "&queryOptions=" + queryOptions + "&contrastStart=" + $scope.start + "&contrastEnd=0" + $scope.end).success(function (contrastData) {
                         var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
                         chart.showLoading({
                             text: "正在努力的读取数据中..."
@@ -418,21 +398,21 @@ define(["./module"], function (ctrs) {
                         $scope.charts[0].config.chartType = "line";
                         $scope.charts[0].config.bGap = true;
                         $scope.charts[0].config.instance = chart;
-                        if(renderLegend)
-                        util.renderLegend(chart, $scope.charts[0].config);
+                        if (renderLegend)
+                            util.renderLegend(chart, $scope.charts[0].config);
 
 
                         for (var i = 0; i < contrastData.length; i++) {
-                            if(contrastData[i].label.split("_").length>1){
+                            if (contrastData[i].label.split("_").length > 1) {
                                 contrastData[i].label = "对比数据";
-                            }else{
+                            } else {
                                 contrastData[i].label = chartUtils.convertChinese(contrastData[i].label);
                             }
                         }
                         cf.renderChart(contrastData, $scope.charts[0].config);
                         Custom.initCheckInfo();
                     });
-                }else{
+                } else {
                     //$scope.charts[0].config.legendDefaultChecked = [0,1];
                     //$scope.charts[0].config.legendAllowCheckCount = 2;
                     $http.get("/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&action=event&type=1&searchType=dataTable&showType=" + showType + "&queryOptions=" + queryOptions).success(function (data) {
@@ -443,7 +423,7 @@ define(["./module"], function (ctrs) {
                         $scope.charts[0].config.chartType = "line";
                         $scope.charts[0].config.bGap = true;
                         $scope.charts[0].config.instance = chart;
-                            util.renderLegend(chart, $scope.charts[0].config);
+                        util.renderLegend(chart, $scope.charts[0].config);
                         for (var i = 0; i < data.length; i++) {
                             data[i].label = chartUtils.convertChinese(data[i].label);
                         }
@@ -454,7 +434,7 @@ define(["./module"], function (ctrs) {
 
 
             };
-            $scope.targetSearchSpread = function (isClicked,text) {
+            $scope.targetSearchSpread = function (isClicked, text) {
                 if (isClicked) {
                     $scope.$broadcast("transformData_ui_grid", {
                         start: $rootScope.start,
@@ -523,7 +503,7 @@ define(["./module"], function (ctrs) {
                 }
             };
             $scope.my_init(false);
-
+            $scope.my_init(false);
         }
     );
 });
