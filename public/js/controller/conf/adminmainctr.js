@@ -527,7 +527,7 @@ define(["./module"], function (ctrs) {
         $scope.codeCheck = function () {
             var path = $("#web_list_nav_input").prop("value");//输入框获取的path
             var uid = userID;
-            if (path != null && path.trim().length > 0) {
+            if (path.trim().length > 0 && path.trim() != "不能为空") {
                 if (uid == null) {
                     $scope.urlDialog = ngDialog.open({
                         template: '\
