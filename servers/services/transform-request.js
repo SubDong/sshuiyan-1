@@ -75,16 +75,18 @@ var es_aggs = {
     },
     //转化率
     "crate": {
-        "conversions_crate": {
-            "value_count": {
-                "field": "_type"
+
+            "conversions_crate": {
+                "value_count": {
+                    "field": "_type"
+                }
+            },
+            "vc_crate": {
+                "value_count": {
+                    "field": "tt"
+                }
             }
-        },
-        "vc_crate": {
-            "value_count": {
-                "field": "tt"
-            }
-        }
+
     }
 };
 var transform = {
@@ -109,16 +111,17 @@ var transform = {
                 var result = response.aggregations;
                 querys.forEach(function (queryOption) {
                     if (queryOption == "crate") {
-                        if (result.new_visitor_aggs.value == "0") {
+                        if (result.conversions_crate.value == "0") {
                             data[queryOption] = "0";
                         } else {
-                            data[queryOption] = (result.uv_aggs.value / result.new_visitor_aggs.value).toFixed(2);
+                            data[queryOption] = (result.conversions_crate.value / result.conversions_crate.value).toFixed(2) + "%";
                         }
                     } else if (queryOption == "nuvRate") {
-                        if (result.conversions_crate.value == "0") {
+                        if (result.new_visitor_aggs.value == "0") {
                             data[queryOption] = 0;
                         } else {
-                            data[queryOption] = (result.conversions_crate.value / result.conversions_crate.value).toFixed(2);
+                            data[queryOption] = (result.uv_aggs.value / result.new_visitor_aggs.value).toFixed(2) + "%";
+
                         }
                     }
                     else {
@@ -286,7 +289,7 @@ var transform = {
                                         if (results[i].new_visitor_aggs.value == "0") {
                                             quotaArry.push(0);
                                         } else {
-                                            quotaArry.push((results[i].uv_aggs.value / results[i].new_visitor_aggs.value).toFixed(2));
+                                            quotaArry.push((results[i].uv_aggs.value / results[i].new_visitor_aggs.value).toFixed(2) + "%");
                                         }
                                     }
                                 }
@@ -302,7 +305,7 @@ var transform = {
                                 for (var key in results[i]) {
                                     if (key == queryOption) {
                                         if (results[i].conversions_crate.value != "0") {
-                                            quotaArry.push((results[i].conversions_crate.value / results[i].conversions_crate.value).toFixed(2));
+                                            quotaArry.push((results[i].conversions_crate.value / results[i].conversions_crate.value).toFixed(2) + "%");
                                         } else {
                                             quotaArry.push(0);
                                         }
@@ -750,7 +753,7 @@ var transform = {
                                 if (result[i].new_visitor_aggs.value) {
                                     quotaArry.push(0);
                                 } else {
-                                    quotaArry.push((result[i].uv_aggs.value / result[i].new_visitor_aggs.value).toFixed(2));
+                                    quotaArry.push((result[i].uv_aggs.value / result[i].new_visitor_aggs.value).toFixed(2) + "%");
                                 }
                             }
                             quota_data = {
@@ -762,7 +765,7 @@ var transform = {
                         case "crate":
                             for (var i = 0; i < keyArr.length; i++) {
                                 if (results[i].conversions_crate.value != "0") {
-                                    quotaArry.push((results[i].conversions_crate.value / results[i].conversions_crate.value).toFixed(2));
+                                    quotaArry.push((results[i].conversions_crate.value / results[i].conversions_crate.value).toFixed(2) + "%");
                                 } else {
                                     quotaArry.push(0);
                                 }

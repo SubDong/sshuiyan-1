@@ -339,10 +339,10 @@ define(["./module"], function (ctrs) {
                 $scope.reset();
                 $scope.todayClass = true;
             };
-            $scope.ds_defaultQuotasOption = ["pv", "uv", "ip", "nuv"];
+            //$scope.ds_defaultQuotasOption = ["pv", "uv", "ip", "nuv"];
             $scope.setShowArray = function () {
                 var tempArray = [];
-                angular.forEach($scope.ds_defaultQuotasOption, function (q_r) {
+                angular.forEach($scope.checkedArray, function (q_r) {
                     tempArray.push({"label": q_r, "value": 0, "cValue": 0, "count": 0, "cCount": 0});
                 });
                 $scope.dateShowArray = $rootScope.copy(tempArray);
@@ -435,6 +435,8 @@ define(["./module"], function (ctrs) {
 
             };
             $scope.targetSearchSpread = function (isClicked, text) {
+                $scope.setShowArray();
+                $scope.my_init(false);
                 if (isClicked) {
                     $scope.$broadcast("transformData_ui_grid", {
                         start: $rootScope.start,
@@ -502,7 +504,6 @@ define(["./module"], function (ctrs) {
                     });
                 }
             };
-            $scope.my_init(false);
             $scope.my_init(false);
         }
     );

@@ -277,7 +277,7 @@ define(["./module"], function (ctrs) {
             $scope.gridOpArray = angular.copy($rootScope.searchGridArray);
             $scope.gridOptions.columnDefs = $scope.gridOpArray;
             //if (isClicked) {
-                $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
+            $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
             //}
             var url = SEM_API_URL + "/sem/report/" + $rootScope.tableSwitch.promotionSearch.SEMData + "?a=" + user + "&b=" + baiduAccount + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=" + $scope.device + ($scope.searchId != undefined && $scope.searchId != "undefined" ? "&" + $scope.searchId : "")
             $http({
@@ -703,10 +703,12 @@ define(["./module"], function (ctrs) {
             $scope.init(msg)
         });
         $scope.$on("transformData_ui_grid", function (e, msg) {
-            $rootScope.searchGridArray[2].displayName = chartUtils.convertChinese(msg.checkedArray[0]);
-            $rootScope.searchGridArray[2].field = msg.checkedArray[0];
-            $rootScope.searchGridArray[2].footerCellTemplate = "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>";
-            $rootScope.searchGridArray[2].name = chartUtils.convertChinese(msg.checkedArray[0]);
+            for (var i = 0; i < msg.checkedArray.length; i++) {
+                $rootScope.searchGridArray[i + 2].displayName = chartUtils.convertChinese(msg.checkedArray[i]);
+                $rootScope.searchGridArray[i + 2].field = msg.checkedArray[i];
+                $rootScope.searchGridArray[i + 2].footerCellTemplate = "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>";
+                $rootScope.searchGridArray[i + 2].name = chartUtils.convertChinese(msg.checkedArray[i]);
+            }
             $scope.gridOpArray = angular.copy($rootScope.searchGridArray);
             $scope.gridOptions.columnDefs = $scope.gridOpArray;
             $scope.init(msg)
