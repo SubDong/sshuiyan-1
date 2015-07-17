@@ -16,7 +16,7 @@
             <ul ng-init="tab = 1" class="nav nav-tabs nav-justified">
                 <li class="ng-isolate-scope" ng-class="{active:tab===1}" ng-click="tab = 1" style="width: auto;">
                     <a class="ng-binding">高级筛选
-                        <span>
+                        <span class="impliedCondition">
                             <span ng-show="sourceSearch || terminalSearch || areaSearch">（</span>
                             <span ng-show="terminalSearch" class="advanceSearch">
                                 {{terminalSearch}}<i class="glyphicon glyphicon-remove" data-ng-click="removeTerminalSearch(this);" ng-show="terminalSearch"></i>

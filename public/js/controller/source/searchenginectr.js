@@ -115,7 +115,19 @@ define(["./module"], function (ctrs) {
             var e0 = $scope.charts[0];
             e0.config.instance = echarts.init(document.getElementById(e0.config.id));
             cf.renderChart(pieData, e0.config);
-
+            var firstCount=0;
+            pieData.forEach(function(i){
+                i.quota.forEach(function(q){
+                    firstCount+=q;
+                });
+            });
+            if(firstCount){
+                $(".chart_box").attr("style", "background:" + $rootScope.chartColors[0]);
+                $("#chartlink").html(pieData[0].key[0]);
+                $("#chartnumber").html(pieData[0].quota[0]);
+                $("#chartpointe").html(parseFloat(pieData[0].quota[0]/firstCount*100).toFixed(2)+"%");
+            }
+            $("#chartname").html(chartUtils.convertChinese(e.types[0]));
         }
         $scope.extPieHover = function (params, type) {
             if (params.dataIndex != -1) {
