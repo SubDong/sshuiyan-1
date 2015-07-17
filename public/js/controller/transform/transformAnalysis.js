@@ -32,7 +32,7 @@ define(["./module"], function (ctrs) {
                 {consumption_name: "唯一访客事件数", name: "visitNum"}
             ];
             //配置默认指标
-            $rootScope.checkedArray = ["clickTotal", "pv", "uv", "ip", "conversions", "vc"];
+            $rootScope.checkedArray = ["clickTotal", "pv", "uv", "ip", "conversions", "crate"];
             $rootScope.searchGridArray = [
                 {
                     name: "xl",
@@ -80,9 +80,9 @@ define(["./module"], function (ctrs) {
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
                 },
                 {
-                    name: "访问次数",
-                    displayName: "访问次数",
-                    field: "vc",
+                    name: "转化率",
+                    displayName: "转化率",
+                    field: "crate",
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
                 }
             ];
@@ -210,14 +210,14 @@ define(["./module"], function (ctrs) {
                         min_max: false,
                         bGap: true,
                         autoInput: 20,
-                        auotHidex: true,
+                        //auotHidex: true,
                         id: "indicators_charts",
                         chartType: "line",//图表类型
                         keyFormat: 'eq',
                         noFormat: true,
                         dataKey: "key",//传入数据的key值
                         dataValue: "quota",//传入数据的value值
-                        qingXie: true,
+                       // qingXie: true,
                         qxv: 18
                     }
                 }
