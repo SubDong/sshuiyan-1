@@ -517,6 +517,9 @@ var op = {
             type: "pie",
             radius: '55%',
             center: ['50%', '60%'],
+            selectedMode: 'single',
+            selectedOffset:30,
+            legendHoverLink:true,
             data: []
         };
         if (chartConfig.status) {
