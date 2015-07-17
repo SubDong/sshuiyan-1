@@ -45,6 +45,7 @@ define(["../app"], function (app) {
                 $http.get(grid.url + "?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + grid.types + "&dimension=" + grid.dimension + "&userType=" + $rootScope.userType).success(function (data) {
                     var json = JSON.parse((eval("(" + data + ")").toString()));
                     grid.config.gridOptions.data = [];
+                    var _data = [];
                     if (json[0]) {
                         if (json[0].quota.length) {
                             if (json[0].quota.length > 11) {
@@ -59,11 +60,18 @@ define(["../app"], function (app) {
                                     var formatType = grid.types.toString();
                                     _val["name"] = item["key"][i];
                                     _val["value"] = ad.formatFunc(parseInt(item["quota"][i]), formatType);
-                                    grid.config.gridOptions.data.push(_val);
+                                    _data.push(_val);
                                 }
                             }
                         });
                     }
+                    //if (grid.types == "avgTime") {
+                    //    grid.config.gridOptions.columnDefs[1].type = 'string';
+                    //} else {
+                    //    grid.config.gridOptions.columnDefs[1].type = 'number';
+                    //}
+                    //console.log(grid.config.gridOptions.columnDefs[1]);
+                    grid.config.gridOptions.data = _data;
                 });
             })
         }

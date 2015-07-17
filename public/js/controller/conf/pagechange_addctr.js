@@ -115,7 +115,7 @@ define(["./module"], function (ctrs) {
             }else{
                 $scope.t_conv_text= $scope.page_schema.conv_text;
             }
-        }
+        };
         Custom.initCheckInfo();//页面check样式js调用
 
         /**

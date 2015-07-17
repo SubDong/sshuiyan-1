@@ -449,6 +449,7 @@ var op = {
             labelData.push(item.label);
         });
         var option = {
+            animation :false,
             tooltip: {
                 trigger: !chartConfig.tt ? "item" : chartConfig.tt,
                 backgroundColor: 'rgba(255,255,255,0.8)',

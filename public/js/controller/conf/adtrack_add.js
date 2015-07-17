@@ -160,12 +160,17 @@ define(["./module"], function (ctrs) {
          * 清除 form 表单输入的内容
          */
         $scope.clear = function(){
-            var isNoClear = confirm("您确认要清空当前填写的内容吗？");
-            if(isNoClear == true){
+            $scope.urlDialog = ngDialog.open({
+                template:  '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div><ul class="admin-ng-content"><li>  您确认要清空当前填写的内容吗？</li></ul>' + '<div class="ng-button-div"><button type="button" class="ngdialog-button ng-button " ng-click="sureClear()">确认</button>\
+                  <button type="button" class="ngdialog-button ngdialog-button-secondary " ng-click="closeThisDialog(0)">取消</button></div></div>',
+                className: 'ngdialog-theme-default admin_ngdialog',
+                plain: true,
+                scope: $scope
+            });
+            //var isNoClear = confirm("您确认要清空当前填写的内容吗？");
+          $scope.sureClear=function(){
                 //document.getElementById('adTrackForm').reset();
                 window.location.reload();
-            } else {
-
             }
         };
 
@@ -209,6 +214,11 @@ define(["./module"], function (ctrs) {
         };
         $scope.addfocus= function (obj) {
             obj.help = true;
-        }
+        };
+        Custom.initCheckInfo();//页面check样式js调用
+        $scope.adtrack_checked={};
+        $scope.adtrack_checkeds=[ {name: '搜狐'},{name: '新浪'},{name: '网易'},{name: '博客'},{name: '微博'},{name: '微信'},{name: '贴吧 '},{name: '论坛/BBS'},{name: '其他'}];
+        //$scope.adtrack_checkeds=[  'fzk1', 'fzk2'];
+
     });
 });
