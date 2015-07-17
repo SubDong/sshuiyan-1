@@ -37,6 +37,7 @@ var mixingMap = {
                 data: data.data_name,
                 selectedMode:false
             },
+            animation :false,
             dataRange: {
                 orient: 'horizontal',
                 min: 0,
