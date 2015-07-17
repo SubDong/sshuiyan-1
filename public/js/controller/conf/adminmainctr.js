@@ -204,7 +204,7 @@ define(["./module"], function (ctrs) {
 
         $scope.openUpdateDialog = function (index, row) {
             $scope.urlDialog = ngDialog.open({
-                template: '../conf/Dialog/main_UpdateDialog.html',
+                template: './conf/Dialog/main_UpdateDialog.html',
                 className: 'ngdialog-theme-default admin_ngdialog ',
                 scope: $scope
             });

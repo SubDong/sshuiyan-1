@@ -35,15 +35,15 @@ var mixingMap = {
                 x: 'right',
                 orient: 'vertical',
                 data: data.data_name,
-                selectedMode:false
+                selectedMode: false
             },
-            animation :false,
+            animation: false,
             dataRange: {
                 orient: 'horizontal',
                 min: 0,
                 max: max,
                 text: [chart.quota + ":", ''],
-                selectedMode:false
+                selectedMode: false
             },
             series: [
                 {
@@ -88,7 +88,13 @@ var mixingMap = {
                     radius: ["0", "50%"],
                     selectedMode: false,
                     selected: true,
-                    data: data.chart_data
+                    data: data.chart_data,
+                    itemStyle: {
+                        emphasis: {
+                            borderWidth: 2,
+                            borderColor: "#fff"
+                        }
+                    }
                 }
             ]
         };

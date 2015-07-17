@@ -176,7 +176,7 @@ var op = {
                             if (chartConfig.keyFormat == "none") {
                                 if (!chartConfig.half) {
                                     res = '<li>' + xName + ':00-' + xName + ':59</li>';
-                                } 
+                                }
                             }
                         }
                         for (var i = 0, l = params.length; i < l; i++) {
@@ -450,7 +450,7 @@ var op = {
             labelData.push(item.label);
         });
         var option = {
-            animation :false,
+            //  animation :false,
             tooltip: {
                 trigger: !chartConfig.tt ? "item" : chartConfig.tt,
                 backgroundColor: 'rgba(255,255,255,0.8)',
@@ -518,10 +518,14 @@ var op = {
             type: "pie",
             radius: '55%',
             center: ['50%', '60%'],
-            selectedMode: 'single',
-            selectedOffset:30,
-            legendHoverLink:true,
-            data: []
+            data: [],
+            legendHoverLink: true,
+            itemStyle: {
+                emphasis: {
+                    borderWidth: 2,
+                    borderColor: "#fff"
+                }
+            }
         };
         if (chartConfig.status) {
             switch (chartConfig.status) {
@@ -559,7 +563,6 @@ var op = {
                         formatter: "{d}%"
                     }
                 }
-
             };
         }
         chartConfig.dataKey = !chartConfig.dataKey ? "key" : chartConfig.dataKey;
