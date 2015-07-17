@@ -42,9 +42,8 @@ var mixingMap = {
                 orient: 'horizontal',
                 min: 0,
                 max: max,
-                text: [chart.quota + ":", '']  ,   // 文本，默认为数值文本
-                selectedMode:false,
-                splitNumber:0
+                text: [chart.quota + ":", ''],
+                selectedMode:false
             },
             series: [
                 {

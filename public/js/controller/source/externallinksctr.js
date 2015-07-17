@@ -122,6 +122,19 @@ define(["./module"], function (ctrs) {
             $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
             //$scope.charts[0].config.instance.on("hover", $scope.pieListener);
             cf.renderChart(pieData, $scope.charts[0].config);
+            var firstCount=0;
+            pieData.forEach(function(i){
+                i.quota.forEach(function(q){
+                    firstCount+=q;
+                });
+            });
+            if(firstCount){
+                $(".chart_box").attr("style", "background:" + $rootScope.chartColors[0]);
+                $("#chartlink").html(pieData[0].key[0]);
+                $("#chartname").html(chartUtils.convertChinese('pv'));
+                $("#chartnumber").html(pieData[0].quota[0]);
+                $("#chartpointe").html(parseFloat(pieData[0].quota[0]/firstCount*100).toFixed(2)+"%");
+            }
         }
         $scope.extPieHover = function (params, type) {
             if (params.dataIndex != -1) {
