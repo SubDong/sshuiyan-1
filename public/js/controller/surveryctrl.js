@@ -231,7 +231,7 @@ define(["./module"], function (ctrs) {
                         //legendClickListener: $scope.onLegendClickListener,
                         //legendDefaultChecked: [0, 1],
                         id: "index_charts",
-                        min_max: false,
+                        //min_max: false,
                         chartType: "line",//图表类型
                         keyFormat: 'eq',
                         noFormat: true,
@@ -813,7 +813,7 @@ define(["./module"], function (ctrs) {
                         tmpResult[0].forEach(function (item) {
                             _val += parseFloat(item[$scope.outQuota_]);
                         });
-                        if ($scope.outQuota_ == "cpc" || $scope.outQuota_ == "ctr")_val = parseFloat(_val / data.length).toFixed(2);
+                        if ($scope.outQuota_ == "cpc" || $scope.outQuota_ == "ctr")_val = parseFloat(_val / tmpResult[0].length).toFixed(2);
                     } else {
                         if (tmpResult[0][0]) {
                             _val = tmpResult[0][0][$scope.outQuota_];
@@ -837,7 +837,7 @@ define(["./module"], function (ctrs) {
                         tmpResult[1].forEach(function (item) {
                             _val += parseFloat(item[$scope.outQuota_]);
                         });
-                        if ($scope.outQuota_ == "cpc" || $scope.outQuota_ == "ctr")_val = parseFloat(_val / data.length).toFixed(2);
+                        if ($scope.outQuota_ == "cpc" || $scope.outQuota_ == "ctr")_val = parseFloat(_val / tmpResult[1].length).toFixed(2);
                     } else {
                         if (tmpResult[1][0]) {
                             _val = tmpResult[1][0][$scope.outQuota_];
@@ -845,7 +845,7 @@ define(["./module"], function (ctrs) {
                             _val = 0;
                         }
                     }
-                    mobileObj[$scope.outQuota_] = _val.toFixed(2);
+                    mobileObj[$scope.outQuota_] = parseFloat(_val).toFixed(2);
                     mobileObj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? mobileObj[$scope.outQuota_] + "%" : (_val == 0 ? 0 : parseFloat(_val).toFixed(2));
 //                    mobileObj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? mobileObj[$scope.outQuota_] + "%" : mobileObj[$scope.outQuota_];
                     mobileObj[$scope.effectQuota_] = tmpResult[3][0] + "" == "undefined" ? 0 : tmpResult[3][0].quota[0];

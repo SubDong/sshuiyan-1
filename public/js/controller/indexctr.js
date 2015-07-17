@@ -146,7 +146,7 @@ define(['./module'], function (ctrs) {
                     legendDefaultChecked: [0, 1],
                     id: "index_charts",
                     bGap: false,//首行缩进
-                    min_max: false,
+                    //min_max: true,
                     chartType: "line",//图表类型
                     dataKey: "key",//传入数据的key值
                     dataValue: "quota"//传入数据的value值

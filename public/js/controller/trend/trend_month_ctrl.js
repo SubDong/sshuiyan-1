@@ -170,7 +170,7 @@ define(["./module"], function (ctrs) {
                     legendClickListener: $scope.onLegendClickListener,
                     legendDefaultChecked: [0, 1],
                     id: "moth_charts",
-                    min_max: false,
+                    //min_max: false,
                     bGap: false,//首行缩进
                     chartType: "line",//图表类型
                     dataKey: "key",//传入数据的key值

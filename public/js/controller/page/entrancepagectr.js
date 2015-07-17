@@ -172,7 +172,7 @@ define(["./module"], function (ctrs) {
                     legendAllowCheckCount: 1,
                     id: "indicators_charts",
                     bGap: false,
-                    min_max: false,
+                    //min_max: false,
                     chartType: "line",
                     // auotHidex: true,
                     //  qingXie:true,

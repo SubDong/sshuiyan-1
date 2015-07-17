@@ -349,8 +349,9 @@ var op = {
                     }
                 }
             }
-            if (chartConfig.min_max == undefined) {
+            if (chartConfig.min_max == undefined&&chartConfig.chartType=='line') {
                 serie["markPoint"] = {
+                    large:true,
                     data: [
                         {type: 'max', name: '最大'},
                         {type: 'min', name: '最小'}
