@@ -131,7 +131,7 @@ define(["./module"], function (ctrs ) {
 
         $scope.gridOptions = {
             paginationPageSize:20,
-            paginationPageSizes: [2,20, 50, 100],
+            paginationPageSizes: [20, 50, 100],
             expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
             expandableRowHeight: 360,
             enableColumnMenus: false,
