@@ -322,7 +322,7 @@ api.get("/site_list", function (req, res) {
                         //});//事件转化
                     });
                     //查询 删除级联 删除本身
-                    dao.update(schema_name, query['query'], JSON.stringify({is_use:0}),function (err,up) {//逻辑删除置is_use=0
+                    dao.update(schema_name, query['query'], JSON.stringify({is_use: 0}), function (err, up) {//逻辑删除置is_use=0
                         datautils.send(res, "success");
                     });
                 }
@@ -393,8 +393,97 @@ api.get("/page_conv", function (req, res) {
         case "save":
             var entity = JSON.parse(query['entity']);
             dao.save(schema_name, entity, function (ins) {
+                //console.log("dddddddddddddd")
+                datautils.send(res, ins);
+                //console.log("st:" + ins.site_id)
+                req.redisclient.get("st:" + ins.site_id, function (error, redis_track_id) {//取Track_id
+                    //console.log("pc:" + redis_track_id)
+                    req.redisclient.get("pc:" + redis_track_id, function (error, page_convs) {
+                        //console.log(page_convs)
+                        var arr = [];
+                        if (page_convs != null && page_convs == undefined) {
+                            arr = JSON.parse(page_convs);
+                        }
+                        arr.push(ins)
+                        //console.log(arr)
+                        req.redisclient.multi().set("pc:" + redis_track_id, arr).exec();
+                    });
+                })
+            });
+            break;
+        case "search":
+            dao.find(schema_name, query['query'], null, {}, function (err, docs) {
+                datautils.send(res, docs);
+            });
+            break;
+        case "update":
+            dao.update(schema_name, query['query'], query['updates'], function (err, docs) {
+                datautils.send(res, docs);
+            });
+            break;
+        case "delete":
+            dao.remove(schema_name, query['query'], function () {
+                datautils.send(res, "success");
+            });
+            break;
+        default :
+            break;
+    }
+
+});
+
+/**
+ * 页面转化规则单独剥离 路由
+ */
+api.get("/page_conv_urls", function (req, res) {
+
+    var query = url.parse(req.url, true).query;
+    var type = query['type'];
+    var schema_name = "page_conv_urls_model";
+    switch (type) {
+        case "save":
+            var entity = JSON.parse(query['entity']);
+            dao.save(schema_name, entity, function (ins) {
                 datautils.send(res, JSON.stringify(ins));
             });
+            break;
+        case "saveAll":
+            var entitys = JSON.parse(query['entitys']);
+
+            //console.log(entitys.length)
+            if (entitys.length > 0) {
+                dao.saveAll(schema_name, entitys, function () {
+                    datautils.send(res, "SUCCESS");
+                    //Redis存放以Path为单位
+                    var tempPathMark = entitys[0];
+                    var redisPageUrls = [];
+                    var bulk = req.redisclient.multi();
+                    //console.log("1")
+                    for (var index = 0; index < entitys.length; index++) {
+                        //console.log("1")
+                        //console.log(tempPathMark + "--->" + entitys[index].path)
+                        if (entitys[index].path == tempPathMark.path) {
+                            //console.log("if")
+                            redisPageUrls.push(entitys[index]);
+                            if (index == (entitys.length - 1)) {
+                                var key = tempPathMark.page_conv_id + ":pcu:" + tempPathMark.path;
+                                //console.log("key-====" + key)
+                                bulk.set(key, JSON.stringify(redisPageUrls));
+                                break;
+                            }
+                        } else {
+                            //console.log("else")
+                            //存Redis
+                            var key = tempPathMark.page_conv_id + ":pcu:" + tempPathMark.path;
+                            //console.log("key" + key)
+                            bulk.set(key, JSON.stringify(redisPageUrls));
+                            redisPageUrls = [];
+                            tempPathMark = entitys[index]
+                        }
+                    }
+                    bulk.exec();
+                })
+            }
             break;
         case "search":
             dao.find(schema_name, query['query'], null, {}, function (err, docs) {
@@ -586,8 +675,9 @@ api.get("/redis", function (req, res) {
         //    }
         //
         //}else{
-        datautils.send(res, redis_conf);
+        //datautils.send(res, redis_conf);
         //}
+        datautils.send(res,JSON.parse( redis_conf));
     });
 });
 
@@ -610,20 +700,20 @@ api.get("/adtrack", function (req, res) {
 
             var strUrl = "";
 
-            if(targetUrl.indexOf("?") == -1){
+            if (targetUrl.indexOf("?") == -1) {
                 strUrl = "http://" + targetUrl
-                + "?hmsr=" + mediaPlatform
-                + "&hmmd=" + adTypes
-                + "&hmpl=" + planName
-                + "&hmkw=" + keywords
-                + "&hmci=" + creative;
+                    + "?hmsr=" + mediaPlatform
+                    + "&hmmd=" + adTypes
+                    + "&hmpl=" + planName
+                    + "&hmkw=" + keywords
+                    + "&hmci=" + creative;
             } else {
                 strUrl = "http://" + targetUrl
-                + "&hmsr=" + mediaPlatform
-                + "&hmmd=" + adTypes
-                + "&hmpl=" + planName
-                + "&hmkw=" + keywords
-                + "&hmci=" + creative;
+                    + "&hmsr=" + mediaPlatform
+                    + "&hmmd=" + adTypes
+                    + "&hmpl=" + planName
+                    + "&hmkw=" + keywords
+                    + "&hmci=" + creative;
             }
             entity.produceUrl = encodeURI(strUrl);
 
@@ -680,7 +770,7 @@ api.get("/select", function (req, res) {
                                 event_id: dataJson["id"],
                                 event_name: dataJson["name"],
                                 event_page: dataJson["monUrl"],
-                                event_method:"自动",
+                                event_method: "自动",
                                 root_url: sitejson.siteid
                             }
                             if (docs == null || docs.length == 0) {//存在配置
@@ -689,9 +779,9 @@ api.get("/select", function (req, res) {
                                     if (ins != null) {
                                     }
                                 });
-                            }else{
+                            } else {
                                 //console.log("*******该事件配置已存在 更新********")
-                                dao.update(schema_name,JSON.stringify(existQry), eventData, function (ins) {
+                                dao.update(schema_name, JSON.stringify(existQry), eventData, function (ins) {
                                     if (ins != null) {
 
                                     }
@@ -709,7 +799,7 @@ api.get("/select", function (req, res) {
                             root_url: sitejson.siteid
                         }
                         dao.find(schema_name, JSON.stringify(existQry), null, {}, function (err, docs) {//查询所有配置
-                            if (docs!= null && docs.length >0) {//存在配置
+                            if (docs != null && docs.length > 0) {//存在配置
                                 res.write("crossDomainCallback(" + JSON.stringify(docs) + "," + query["index"] + ");");
                                 res.end();
                             }
@@ -730,7 +820,7 @@ api.get("/searchByUID", function (req, res) {
     var uid = query["uid"];
     var track_id = query["track_id"];
     if (uid != null) {
-        dao.findSync("sites_model",JSON.stringify({uid:uid,track_id:track_id}),null,{},function(data){
+        dao.findSync("sites_model", JSON.stringify({uid: uid, track_id: track_id}), null, {}, function (data) {
             datautils.send(res, data);
         });
 

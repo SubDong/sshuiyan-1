@@ -104,35 +104,36 @@ define(["./module"], function (ctrs) {
                     scope: $scope
                 });
             };
-            if (regex.test(previewUrl) == true) {
-                $http.get("cdapi/link?path=" + previewUrl).success(function (data) {
-
-                    var k = Number((data.toString().split('tid=')[0].split('\"').length));
-                    if (data.toString().split("tid=")[0].split("\"")[k - 1].split("/").length == 4) {
-
-                        if (data.toString().split("tid=").length > 1) {
-
-                            var tid = data.toString().split("tid=")[1].split("\"")[0];
-
-                            $http.get("/config/searchByUID?uid=" + uid + "&track_id=" + tid).success(function (result) {
-
-                                if (result == null || result == "") {
-                                    alert("该账户下不存在该路径");
-                                } else {
-                                    $scope.iframeobj(tid);
-                                }
-                            });
-                        } else {
-                            $scope.iframeobj();
-                            alert("未检测到代码安装");
-                        }
-                    } else {
-                        alert("您输入的地址不存在");
-                    }
-                });
-            } else {
-                alert("预览URL应该是本站或跨域内的URL");
-            }
+            $scope.iframeobj();
+            //if (regex.test(previewUrl) == true) {
+            //    $http.get("cdapi/link?path=" + previewUrl).success(function (data) {
+            //
+            //        var k = Number((data.toString().split('tid=')[0].split('\"').length));
+            //        if (data.toString().split("tid=")[0].split("\"")[k - 1].split("/").length == 4) {
+            //
+            //            if (data.toString().split("tid=").length > 1) {
+            //
+            //                var tid = data.toString().split("tid=")[1].split("\"")[0];
+            //
+            //                $http.get("/config/searchByUID?uid=" + uid + "&track_id=" + tid).success(function (result) {
+            //
+            //                    if (result == null || result == "") {
+            //                        alert("该账户下不存在该路径");
+            //                    } else {
+            //                        $scope.iframeobj(tid);
+            //                    }
+            //                });
+            //            } else {
+            //                $scope.iframeobj();
+            //                alert("未检测到代码安装");
+            //            }
+            //        } else {
+            //            alert("您输入的地址不存在");
+            //        }
+            //    });
+            //} else {
+            //    alert("预览URL应该是本站或跨域内的URL");
+            //}
         }
 
         /**

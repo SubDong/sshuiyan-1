@@ -121,7 +121,7 @@ define(["./module"], function (ctrs) {
         Custom.initCheckInfo();//页面check样式js调用
         $scope.urlname = "";
         var init = function () {
-            var url = "/config/page_conv?type=search&query={\"_id\":\"" + $scope.id + "\"}";
+            var url = "/config/page_conv?type=search&query="+JSON.stringify({_id: $scope.id});
             $http({
                 method: 'GET',
                 url: url
@@ -154,28 +154,29 @@ define(["./module"], function (ctrs) {
          * 提交
          */
         $scope.submit = function () {
-            var url = "/config/page_conv?type=search&query={\"_id\":\"" + $scope.id + "\"}";
-            $http({
-                method: 'GET',
-                url: url
-            }).success(function (dataConfig, status) {
-                if (dataConfig != null || dataConfig.length == 1) {//不存在配置 保存
-
-                    //存在配置 更新
-                   if(!$scope.radio_conv.other){//去掉非其他情况时conv_text的值
-                       $scope.page_schema.conv_text = "";
-                   }else{
-                      $scope.page_schema.conv_text= $scope.t_conv_text;
-                   }
-                    var url = "/config/page_conv?type=update&query={\"_id\":\"" + $scope.id + "\"}&updates=" + JSON.stringify($scope.page_schema);
-                    $http({
-                        method: 'GET',
-                        url: url
-                    }).success(function (dataConfig, status) {
-                    });
-                }
-                $state.go('pagechange');
-            });
+            console.log($scope.page_schema)
+            //var url = "/config/page_conv?type=search&query={\"_id\":\"" + $scope.id + "\"}";
+            //$http({
+            //    method: 'GET',
+            //    url: url
+            //}).success(function (dataConfig, status) {
+            //    if (dataConfig != null || dataConfig.length == 1) {//不存在配置 保存
+            //
+            //        //存在配置 更新
+            //       if(!$scope.radio_conv.other){//去掉非其他情况时conv_text的值
+            //           $scope.page_schema.conv_text = "";
+            //       }else{
+            //          $scope.page_schema.conv_text= $scope.t_conv_text;
+            //       }
+            //        var url = "/config/page_conv?type=update&query={\"_id\":\"" + $scope.id + "\"}&updates=" + JSON.stringify($scope.page_schema);
+            //        $http({
+            //            method: 'GET',
+            //            url: url
+            //        }).success(function (dataConfig, status) {
+            //        });
+            //    }
+            //    $state.go('pagechange');
+            //});
         }
 
     })
