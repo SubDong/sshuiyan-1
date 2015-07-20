@@ -1012,7 +1012,7 @@ define(["app"], function (app) {
                                     if (dataSEM[0]) {
                                         dataObj["accountName"] = "搜索推广 (" + dataSEM[0].accountName + ")";
                                     } else {
-                                        dataObj["accountName"] = "搜索推广 ()";
+                                        dataObj["accountName"] = "搜索推广 (--)";
                                     }
                                 }
                                 semDataArray.forEach(function (sem, i) {
@@ -1027,11 +1027,11 @@ define(["app"], function (app) {
                                 if (data.length > 0) {
                                     data.forEach(function (es, i) {
                                         if (isNaN(dataObj[item]) || dataObj[item] == undefined) {
-                                            dataObj[item] = es[item] != undefined ? es[item] : 0}
+                                            dataObj[item] = es[item] != undefined ? es[item] : "--"}
                                     });
                                 } else {
                                     if (isNaN(dataObj[item]) || dataObj[item] == undefined) {
-                                        dataObj[item] = 0
+                                        dataObj[item] = "--"
                                     }
                                 }
 
@@ -1059,7 +1059,7 @@ define(["app"], function (app) {
                                     var resultData = [];
                                     var resultObj = {};
                                     $rootScope.checkedArray.forEach(function (item, a) {
-                                        resultObj[item] = 0;
+                                        resultObj[item] = "--";
                                     });
                                     resultObj[$rootScope.tableSwitch.latitude.field] = "暂无数据";
                                     resultData.push(resultObj)
@@ -1070,11 +1070,11 @@ define(["app"], function (app) {
                                     var resultData = [];
                                     var resultObj = {};
                                     $rootScope.checkedArray.forEach(function (item, a) {
-                                        resultObj[item] = 0;
+                                        resultObj[item] = "--";
                                     });
                                     resultObj[$rootScope.tableSwitch.latitude.field] = "暂无数据";
                                     resultData.push(resultObj)
-                                    $scope.gridOptions.data = resultData;
+                                    $scope.gridOptions.data = resultDatan;
                                 } else $scope.gridOptions.data = data;
                             }
                         } else {
@@ -1122,7 +1122,7 @@ define(["app"], function (app) {
                             if (jupey == 0) {
                                 var resultObj = {}
                                 $rootScope.checkedArray.forEach(function (item, a) {
-                                    resultObj[item] = 0;
+                                    resultObj[item] = "--";
                                 })
                                 resultObj[$rootScope.tableSwitch.latitude.field] = "暂无数据";
                                 result.push(resultObj)
@@ -1470,9 +1470,15 @@ define(["app"], function (app) {
                             newitemSplData[index] += ((itemSplData[index] + "").replace("%", "") == "--" || (itemSplData[index] + "").replace("%", "") == "　" ? 0.0 : parseFloat(((itemSplData[index] + "").replace("%", ""))));
                         })
                     } else {
-                        returnData[0] += parseFloat((item.entity[a.col.field] + "").replace("%", ""));
+                        var tmp = 0;
+                        if(item.entity[a.col.field] == "--"){
+                            tmp = 0;
+                        }else{
+                            tmp = item.entity[a.col.field];
+                        }
+                        returnData[0] += parseFloat((tmp + "").replace("%", ""));
                         if (a.col.field == "avgTime") {
-                            if (item.entity[a.col.field] != undefined && item.entity[a.col.field] != 0) {
+                            if (item.entity[a.col.field] != undefined && item.entity[a.col.field] != 0 && item.entity[a.col.field] != "--") {
                                 spl = item.entity[a.col.field].split(":");
                                 newSpl[0] += parseInt(spl[0] / option.length) + "";
                                 newSpl[1] += parseInt(spl[1] / option.length) + "";

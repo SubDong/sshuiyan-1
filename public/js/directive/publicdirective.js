@@ -20,7 +20,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
             link: function (scope, element, attris, controller) {
                 Custom.initCheckInfo();
                 scope.$watch("opened", function () {
-                    var _path = $location.path();
+                   /* var _path = $location.path();
                     if (_path == "/source/searchterm" || _path == "/visitor/equipment" || _path == "/visitor/provincemap") {
                         if (scope.todayClass) {
                             scope.today();
@@ -62,7 +62,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                                 }
                             }
                         }
-                    }
+                    }*/
                 });
                 scope.weekselected = true;
                 scope.mothselected = true;
@@ -568,7 +568,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     console.log(123);
                    scope.urlDialog = ngDialog.open({
                        template: '../conf/Dialog/transformAnalysis_send.html',
-                       className: 'ngdialog-theme-default admin_ngdialog ',
+                       className: 'ngdialog-theme-default admin_ngdialog '
                    });
                };
                 scope.flag = $location.path() != "/index";

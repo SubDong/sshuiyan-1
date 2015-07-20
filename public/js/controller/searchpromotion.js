@@ -303,8 +303,9 @@ define(["./module"], function (ctrs) {
                         if ($rootScope.tableSwitch.number == 5) {
                             data.forEach(function (item, i) {
                                 $rootScope.checkedArray.forEach(function (x, y) {
-                                    datas[x] = item[x] != undefined ? item[x] : (data[0] == undefined ? (x == "avgTime" ? "00:00:00" : 0) : data[0][x]);
-                                    if (x == "ctr" || x == "arrivedRate") {
+//                                    datas[x] = item[x] != undefined ? item[x] : (data[0] == undefined ? (x == "avgTime" ? "00:00:00" : 0) : data[0][x]);
+                                    datas[x] = item[x] != undefined ? item[x] : (data[0] == undefined ? "--" : data[0][x]);
+                                    if ((x == "ctr" || x == "arrivedRate") && datas[x] != "--") {
                                         datas[x] += "%";
                                     }
                                 });
@@ -320,8 +321,9 @@ define(["./module"], function (ctrs) {
                             })
                         } else {
                             $rootScope.checkedArray.forEach(function (x, y) {
-                                datas[x] = item[x] != undefined ? item[x] : (data[0] == undefined ? (x == "avgTime" ? "00:00:00" : 0) : data[0][x]);
-                                if (x == "ctr" || x == "arrivedRate") {
+//                                datas[x] = item[x] != undefined ? item[x] : (data[0] == undefined ? (x == "avgTime" ? "00:00:00" : 0) : data[0][x]);
+                                datas[x] = item[x] != undefined ? item[x] : (data[0] == undefined ? "--" : data[0][x]);
+                                if ((x == "ctr" || x == "arrivedRate") && datas[x] != "--") {
                                     datas[x] += "%";
                                 }
                             });
@@ -379,7 +381,7 @@ define(["./module"], function (ctrs) {
                             var datas = {};
                             if (variousId[3] == 0) {
                                 $rootScope.checkedArray.forEach(function (x, y) {
-                                    datas[x] = (item[x] != undefined ? item[x] : 0);
+                                    datas[x] = (item[x] != undefined ? item[x] : "--");
                                     var field = $rootScope.tableSwitch.latitude.field
                                     datas[field] = item[field] + ",";
                                 })

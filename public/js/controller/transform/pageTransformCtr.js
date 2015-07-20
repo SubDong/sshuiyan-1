@@ -60,7 +60,7 @@ define(["./module"], function (ctrs) {
                 {
                     name: "浏览量(PV)",
                     displayName: "浏览量(PV)",
-                    field: "cost",
+                    field: "pv",
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>",
                     sort: {
                         direction: uiGridConstants.ASC,
@@ -70,31 +70,31 @@ define(["./module"], function (ctrs) {
                 {
                     name: "访客数(UV)",
                     displayName: "访客数(UV)",
-                    field: "cpc",
+                    field: "uv",
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
                 },
                 {
                     name: "IP数",
                     displayName: "IP数",
-                    field: "outRate",
+                    field: "ip",
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
                 },
                 {
                     name: "转化次数",
                     displayName: "转化次数",
-                    field: "avgTime",
-                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
-                },
-                {
-                    name: "转化率",
-                    displayName: "转化率",
-                    field: "crate",
+                    field: "conversions",
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
                 },
                 {
                     name: "访问次数",
                     displayName: "访问次数",
                     field: "vc",
+                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                },
+                {
+                    name: "转化率",
+                    displayName: "转化率",
+                    field: "crate",
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
                 }
             ];
