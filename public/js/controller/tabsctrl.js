@@ -188,7 +188,7 @@ define(["app"], function (app) {
                 },
                 {name: '关键词', displayName: "关键词", field: "keyword", enableSorting: false},
                 {name: '搜索词', displayName: "搜索词", field: "searchWord", enableSorting: false},
-                {name: '搜索带来', displayName: "搜索带来", field: "isPromotion", enableSorting: false},
+                {name: '推广带来', displayName: "推广带来", field: "isPromotion", enableSorting: false},
                 {name: "访问IP", displayName: "访问IP", field: "ip", enableSorting: false},
                 {
                     name: '访客标识码', displayName: "访客标识码", field: "vid", cellTooltip: function (row, col) {
