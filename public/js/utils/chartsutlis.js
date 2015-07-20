@@ -307,7 +307,7 @@ var chartUtils = {
                 return buc.new_visitor_aggs.nuv_aggs.value;
                 break;
             case "uv":
-                return buc.uv_filter.uv_aggs.value;
+                return buc.uv_aggs.value;
                 break;
             case "vc":
                 return buc.vc_aggs.vc_aggs.value;

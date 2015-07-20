@@ -5,15 +5,15 @@
         <dateweek></dateweek>
         <refresh></refresh>
     </div>
-    <div class="chart_color" style="position: absolute;top: 278px;width: 90%" ng-show="isShowCalendar">
-        <ul>
-            <li><span class="color_first"></span><b>{{todayCalendar}}</b></li>
-            <li><span class="color_selcend"></span><b>{{dayOrWeek}}</b></li>
-        </ul>
-    </div>
     <div class="my_concent">
         <ssh-e-s-date-show></ssh-e-s-date-show>
         <div class="index_chart">
+            <div class="chart_color" style="position: absolute;top:40px;width: 90%;z-index: 999;" ng-show="isShowCalendar">
+                <ul>
+                    <li><span class="color_first"></span><b>{{todayCalendar}}</b></li>
+                    <li><span class="color_selcend"></span><b>{{dayOrWeek}}</b></li>
+                </ul>
+            </div>
             <div id="today_charts_legend" style="position:relative;"></div>
             <div id="today_charts" style="height:400px;margin-top: 20px"></div>
         </div>
@@ -26,7 +26,7 @@
                     <a class="ng-binding">自定义指标</a></li>
                 <li class="ng-isolate-scope" ng-class="{active:tab===2}" ng-click="tab = 2">
                     <a class="ng-binding">高级筛选
-                        <span>
+                        <span class="impliedCondition">
                             <span ng-show="sourceSearch || terminalSearch || areaSearch">（</span>
                             <span ng-show="sourceSearch">
                                 {{sourceSearch}}<i class="glyphicon glyphicon-remove" data-ng-click="removeSourceSearch(this);" ng-show="sourceSearch"></i>

@@ -5,7 +5,7 @@
 define(['./module'], function (ctrs) {
     'use strict';
 
-    ctrs.controller("indexctr", ['$scope', '$rootScope', '$http', '$state', 'requestService', 'messageService', 'areaService','uiGridConstants', function ($scope, $rootScope, $http, $state, requestService, messageService, areaService,uiGridConstants) {
+    ctrs.controller("indexctr", ['$scope', '$rootScope', '$http', '$state', 'requestService', 'messageService', 'areaService', 'uiGridConstants', function ($scope, $rootScope, $http, $state, requestService, messageService, areaService, uiGridConstants) {
         $scope.todayClass = true;
         $scope.hourcheckClass = true;
         $scope.menu_select = false;
@@ -39,15 +39,27 @@ define(['./module'], function (ctrs) {
             enableVerticalScrollbar: 0,
 
             columnDefs: [
-                {name: 'name', displayName: "搜索词",enableSorting: false},
                 {
-                    name: 'value', displayName: "浏览量(PV)", headerCellClass: 'ui_text', cellClass: 'ui_text',
+                    name: 'name', displayName: "搜索词", enableSorting: false, cellTooltip: function (row, col) {
+                    return row.entity.name;
+                }
+                },
+                {
+                    name: 'value',
+                    displayName: "浏览量(PV)",
+                    headerCellClass: 'ui_text',
+                    cellClass: 'ui_text',
+                    type: 'number',
                     sort: {
                         direction: uiGridConstants.DESC,
                         priority: 1
                     }
                 }
             ],
+            sortInfo: {
+                fields: ["value"],
+                directions: ["desc"]
+            },
             onRegisterApi: function (gridApi) {
                 $rootScope.gridApi2 = gridApi;
             }
@@ -142,7 +154,7 @@ define(['./module'], function (ctrs) {
                     legendDefaultChecked: [0, 1],
                     id: "index_charts",
                     bGap: false,//首行缩进
-                    min_max: false,
+                    //min_max: true,
                     chartType: "line",//图表类型
                     dataKey: "key",//传入数据的key值
                     dataValue: "quota"//传入数据的value值

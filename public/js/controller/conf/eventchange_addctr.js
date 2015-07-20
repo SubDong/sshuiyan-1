@@ -44,16 +44,11 @@ define(["./module"], function (ctrs) {
                     preCloseCallback: function () {
                         $state.go('eventchange');
                     },
-                    template: '\
-              <div class="ngdialog-buttons">\
-                        <ul>\
-                        <li> 保存成功</li></ul>   \
-                    <a href="#conf/webcountsite/eventchange" ng-click=closeThisDialog(0)>确认</a>\
-                </div>',
-                    className: 'ngdialog-theme-default',
+                    template: '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div><ul class="admin-ng-content"><li>保存成功</li></ul>' + '<div class="ng-button-div">\
+                  <button type="button" class="ngdialog-button ng-button " ng-click="closeThisDialog(0)">确定</button></div></div>',
+                    className: 'ngdialog-theme-default admin_ngdialog',
                     plain: true,
                     scope: $scope
-
                 });
             });
         };
@@ -94,7 +89,7 @@ define(["./module"], function (ctrs) {
                                     <div>事件目标预览URL：' + previewUrl + '</div>\
                                 </div>\
                                 <div class="overlay-content">\
-                            <iframe id="" name="" marginwidth="0" marginheight="0" width="100%" height=600 frameborder="0" src=' + strSrc + '></iframe>\
+                            <iframe id="" name="" marginwidth="0" marginheight="0" width="100%" height=700 frameborder="0" src=' + strSrc + '></iframe>\
                                 </div>\
                                 <div class="ng-button-div">\
                                 <button id="overlaySubmitBtn" class="ngdialog-button ngdialog-button-secondary">确定</button>\
@@ -103,40 +98,42 @@ define(["./module"], function (ctrs) {
                             </div>\
                         </div>',
 
-                    className: 'ngdialog-theme-default admin_ngdialog iframeBox ',
+                    className: 'ngdialog-theme-default admin_ngdialog iframeBox',
                     plain: true,
+                    closeByDocument: false,
                     scope: $scope
                 });
             };
-            if (regex.test(previewUrl) == true) {
-                $http.get("cdapi/link?path=" + previewUrl).success(function (data) {
-
-                    var k = Number((data.toString().split('tid=')[0].split('\"').length));
-                    if (data.toString().split("tid=")[0].split("\"")[k - 1].split("/").length == 4) {
-
-                        if (data.toString().split("tid=").length > 1) {
-
-                            var tid = data.toString().split("tid=")[1].split("\"")[0];
-
-                            $http.get("/config/searchByUID?uid=" + uid + "&track_id=" + tid).success(function (result) {
-
-                                if (result == null || result == "") {
-                                    alert("该账户下不存在该路径");
-                                } else {
-                                    $scope.iframeobj(tid);
-                                }
-                            });
-                        } else {
-                            $scope.iframeobj();
-                            alert("未检测到代码安装");
-                        }
-                    } else {
-                        alert("您输入的地址不存在");
-                    }
-                });
-            } else {
-                alert("预览URL应该是本站或跨域内的URL");
-            }
+            $scope.iframeobj();
+            //if (regex.test(previewUrl) == true) {
+            //    $http.get("cdapi/link?path=" + previewUrl).success(function (data) {
+            //
+            //        var k = Number((data.toString().split('tid=')[0].split('\"').length));
+            //        if (data.toString().split("tid=")[0].split("\"")[k - 1].split("/").length == 4) {
+            //
+            //            if (data.toString().split("tid=").length > 1) {
+            //
+            //                var tid = data.toString().split("tid=")[1].split("\"")[0];
+            //
+            //                $http.get("/config/searchByUID?uid=" + uid + "&track_id=" + tid).success(function (result) {
+            //
+            //                    if (result == null || result == "") {
+            //                        alert("该账户下不存在该路径");
+            //                    } else {
+            //                        $scope.iframeobj(tid);
+            //                    }
+            //                });
+            //            } else {
+            //                $scope.iframeobj();
+            //                alert("未检测到代码安装");
+            //            }
+            //        } else {
+            //            alert("您输入的地址不存在");
+            //        }
+            //    });
+            //} else {
+            //    alert("预览URL应该是本站或跨域内的URL");
+            //}
         }
 
         /**

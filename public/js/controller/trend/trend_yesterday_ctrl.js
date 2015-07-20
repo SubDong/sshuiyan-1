@@ -183,7 +183,7 @@ define(["./module"], function (ctrs) {
                     legendData: ["浏览量(PV)", "访客数(UV)", "访问次数", "新访客数", "新访客比率", "IP数", "跳出率", "平均访问时长", "平均访问页数"],//显示几种数据
                     legendDefaultChecked: [0, 1],
                     id: "yesterday_charts",
-                    min_max: false,
+                    //min_max: false,
                     bGap: false,//首行缩进
                     chartType: "line",//图表类型
                     dataKey: "key",//传入数据的key值
@@ -419,34 +419,6 @@ define(["./module"], function (ctrs) {
         //前一日
         //上周同期
 
-        $scope.restCompare = function () {
-            $scope.dayselect = false;
-            $scope.dayClass = false;
-            $scope.hourcheckClass = true;
-            $scope.compareLastDayClass = false;
-            $scope.compareLastWeekClass = false;
-            $scope.charts.forEach(function (e) {
-                var chart = echarts.init(document.getElementById(e.config.id));
-                e.config.instance = chart;
-                e.config.legendAllowCheckCount = 2;
-                e.config.legendDefaultChecked = [0, 1];
-                e.config.compare = undefined;
-                e.types = [chartUtils.convertEnglish(e.config.legendData[0]), chartUtils.convertEnglish(e.config.legendData[1])];
-                util.renderLegend(chart, e.config);
-                Custom.initCheckInfo();
-
-            })
-            var refreshCompare = false;
-            $("input[name='compareRadio']").each(function (i, o) {
-                if ($(o).prev("span")) {
-                    refreshCompare = true;
-                }
-            });
-            if (refreshCompare) {
-                requestService.refresh($scope.charts);
-            }
-
-        }
         $scope.compareType = false;
         $scope.datePickerCompare = function (start, end, label) {
             var time = chartUtils.getTimeOffset(start, end);
@@ -455,13 +427,9 @@ define(["./module"], function (ctrs) {
                 alert("请选择正确的对比时间！");
                 return;
             }
-            if ($scope.charts[0].config.compare) {
-                $scope.restCompare();
-            }
             var times = chartUtils.getTimeOffset(start, end);
-            // $scope.reset();
-            //$scope.hourselect = true;
-            //$scope.dayselect = true;
+            $scope.todayCalendar = start;
+            $scope.dayOrWeek = end;
             $scope.mothselected = true;
             $scope.weekselected = true;
             $scope.choiceClass = true;
@@ -470,10 +438,11 @@ define(["./module"], function (ctrs) {
             $rootScope.start = times[0];
             $rootScope.end = times[1];
             $rootScope.interval = -1;
-            $scope.isShowCalendar=false;
+            $scope.isShowCalendar=true;
             $scope.compareType = true;
             var type = [chartUtils.convertEnglish($scope.charts[0].config.legendData[0])];
             $scope.compare(times, type, true);
+            $scope.cancelCheckbox();
         }
         $scope.compare = function (times, type, legendRender) {
             $scope.charts.forEach(function (e) {

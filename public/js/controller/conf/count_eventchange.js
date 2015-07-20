@@ -91,6 +91,7 @@ define(["./module"], function (ctrs ) {
             {name: "事件元素ID", displayName: "事件元素ID", field: "event_id",cellClass: 'table_admin_color', enableSorting: false},
             {name: "事件作用或目录", displayName: "事件作用或目录", field: "event_page",cellClass: 'table_admin_color', enableSorting: false},
             {name: "记录方式", displayName: "记录方式", field: "event_method",cellClass: 'table_admin_color',enableSorting: false},
+            {name: "是否为事件转化目标", displayName: "是否为事件转化目标", field: "event_target",cellClass: 'table_admin_color',enableSorting: false},
             {
                 name: "x4",
                 displayName: "",
@@ -131,7 +132,7 @@ define(["./module"], function (ctrs ) {
 
         $scope.gridOptions = {
             paginationPageSize:20,
-            paginationPageSizes: [2,20, 50, 100],
+            paginationPageSizes: [20, 50, 100],
             expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
             expandableRowHeight: 360,
             enableColumnMenus: false,

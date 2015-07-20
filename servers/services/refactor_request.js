@@ -231,6 +231,34 @@ var buildRequest = function (indexes, type, quotas, dimension, filters, start, e
                     }
                 }
             };
+        else if (interval == -1) //  summary趋向分析按日
+            return {
+                "index": indexes.toString(),
+                "type": type,
+                "body": {
+                    "query": buildQuery(filters),
+                    "size": 0,
+                    "aggs": {
+                        "result": {
+                            "date_histogram": {
+                                "field": "utime",
+                                "interval": "86400s",
+                                "format": "yyyy-MM-dd HH:mm:ss",
+                                "time_zone": "+08:00",
+                                "order": {
+                                    "_key": "asc"
+                                },
+                                "min_doc_count": 0,
+                                "extended_bounds": {
+                                    "min": 1436976000000,
+                                    "max": 1437062399999
+                                }
+                            },
+                            "aggs": _aggs
+                        }
+                    }
+                }
+            };
         else
             return {
                 "index": indexes.toString(),

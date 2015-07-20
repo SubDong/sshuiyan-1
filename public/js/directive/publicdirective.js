@@ -551,10 +551,11 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
         };
         return option;
     });
-    app.directive("refresh", function ($rootScope, $http, $location) {
+
+    app.directive("refresh", function ($rootScope, $http, $location,ngDialog) {
         var option = {
             restrict: "EA",
-            template: "<div class=\"right_refresh fr\"><button class=\"btn btn-default btn-Refresh fl\" ng-click=\"page_refresh()\"  type=\"button\"><span aria-hidden=\"true\" class=\"glyphicon glyphicon-refresh\"></span></button><button class=\"btn btn-default btn-Refresh fl\" type=\"button\" ng-show=\"send\" >发送</button><ui-select ng-model=\"export.selected\" ng-change='fileSave(export.selected)' theme=\"select2\" ng-hide=\"menu_select\" reset-search-input=\"false\" class=\"fl\"style=\"min-width: 90px;background-color: #fff;\"> <ui-select-match placeholder=\"下载\">{{$select.selected.name}} </ui-select-match> <ui-select-choices repeat=\"export in exportsaa\"> <span ng-bind-html=\"export.name\"></span></ui-select-choices></ui-select></div>",
+            template: "<div class=\"right_refresh fr\"><button class=\"btn btn-default btn-Refresh fl\" ng-click=\"page_refresh()\"  type=\"button\"><span aria-hidden=\"true\" class=\"glyphicon glyphicon-refresh\"></span></button><button data-ng-click='send()' class=\"btn btn-default btn-Refresh fl\" type=\"button\" ng-show=\"send\" >发送</button><ui-select ng-model=\"export.selected\" ng-change='fileSave(export.selected)' theme=\"select2\" ng-hide=\"menu_select\" reset-search-input=\"false\" class=\"fl\"style=\"min-width: 90px;background-color: #fff;\"> <ui-select-match placeholder=\"下载\">{{$select.selected.name}} </ui-select-match> <ui-select-choices repeat=\"export in exportsaa\"> <span ng-bind-html=\"export.name\"></span></ui-select-choices></ui-select></div>",
             transclude: true,
             replace: true,
             link: function (scope) {
@@ -563,7 +564,15 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     {name: 'CSV', value: 'csv'},
                     {name: 'PDF（含图） ', value: 'pdf'}
                 ];
+               scope.send=function(){
+                    console.log(123);
+                   scope.urlDialog = ngDialog.open({
+                       template: '../conf/Dialog/transformAnalysis_send.html',
+                       className: 'ngdialog-theme-default admin_ngdialog ',
+                   });
+               };
                 scope.flag = $location.path() != "/index";
+
                 //导出功能
                 scope.fileSave = function (obj) {
                     if (obj.value == "csv") {
@@ -1336,6 +1345,8 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
         quotaObject.conversions = "转化次数";
         quotaObject.crate = "转化率";
         quotaObject.other = "其他";
+        quotaObject.transformCost = "平均转化成本";
+        quotaObject.visitNum = "唯一访客事件数";
         return function (key) {
             return quotaObject[key] || "未定义的指标KEY";
         };
