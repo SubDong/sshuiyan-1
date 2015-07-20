@@ -81,13 +81,9 @@ define(["./module"], function (ctrs) {
             }).success(function (dataConfig, status) {
 
                 $scope.urlDialog = ngDialog.open({
-                    template: '\
-              <div class="ngdialog-buttons" >\
-                        <ul>\
-                        <li> 修改成功</li></ul>   \
-                    <a data-ng-href="#conf/webcountsite/childlist"  type="button" class="ngdialog-button ngdialog-button-secondary" ng-click=closeThisDialog(0)>确定</a>\
-                </div>',
-                    className: 'ngdialog-theme-default',
+                    template: '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div><ul class="admin-ng-content"><li>保存成功</li></ul>' + '<div class="ng-button-div">\
+                  <button type="button" class="ngdialog-button ng-button " ng-click="closeThisDialog(0)">确定</button></div></div>',
+                    className: 'ngdialog-theme-default admin_ngdialog',
                     plain: true,
                     scope: $scope
                 });

@@ -179,7 +179,7 @@ define(["./module"], function (ctrs) {
                     legendData: ["浏览量(PV)", "访客数(UV)", "访问次数", "新访客数", "IP数", "页面转化"],
                     legendClickListener: $scope.onLegendClick,
                     legendAllowCheckCount: 1,
-                    min_max: false,
+                    //min_max: false,
                     bGap: false,
                     id: "indicators_charts",
                     keyFormat: "none",//设置不需要chart工厂处理x轴数据

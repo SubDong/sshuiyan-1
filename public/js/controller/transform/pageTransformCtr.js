@@ -251,6 +251,7 @@ define(["./module"], function (ctrs) {
                 $scope.reset();
                 $scope.todayClass = true;
             };
+            Custom.initCheckInfo();//页面check样式js调用
         }
     );
 });

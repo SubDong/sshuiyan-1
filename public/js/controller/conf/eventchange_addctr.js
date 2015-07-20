@@ -44,16 +44,11 @@ define(["./module"], function (ctrs) {
                     preCloseCallback: function () {
                         $state.go('eventchange');
                     },
-                    template: '\
-              <div class="ngdialog-buttons">\
-                        <ul>\
-                        <li> 保存成功</li></ul>   \
-                    <a href="#conf/webcountsite/eventchange" ng-click=closeThisDialog(0)>确认</a>\
-                </div>',
-                    className: 'ngdialog-theme-default',
+                    template: '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div><ul class="admin-ng-content"><li>保存成功</li></ul>' + '<div class="ng-button-div">\
+                  <button type="button" class="ngdialog-button ng-button " ng-click="closeThisDialog(0)">确定</button></div></div>',
+                    className: 'ngdialog-theme-default admin_ngdialog',
                     plain: true,
                     scope: $scope
-
                 });
             });
         };
@@ -94,7 +89,7 @@ define(["./module"], function (ctrs) {
                                     <div>事件目标预览URL：' + previewUrl + '</div>\
                                 </div>\
                                 <div class="overlay-content">\
-                            <iframe id="" name="" marginwidth="0" marginheight="0" width="100%" height=600 frameborder="0" src=' + strSrc + '></iframe>\
+                            <iframe id="" name="" marginwidth="0" marginheight="0" width="100%" height=700 frameborder="0" src=' + strSrc + '></iframe>\
                                 </div>\
                                 <div class="ng-button-div">\
                                 <button id="overlaySubmitBtn" class="ngdialog-button ngdialog-button-secondary">确定</button>\
@@ -103,8 +98,9 @@ define(["./module"], function (ctrs) {
                             </div>\
                         </div>',
 
-                    className: 'ngdialog-theme-default admin_ngdialog iframeBox ',
+                    className: 'ngdialog-theme-default admin_ngdialog iframeBox',
                     plain: true,
+                    closeByDocument: false,
                     scope: $scope
                 });
             };
