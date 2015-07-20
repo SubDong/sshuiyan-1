@@ -199,19 +199,19 @@ define(["./module"], function (ctrs) {
                 for (var level = 0; level < $scope.paths[pathIndex].steps.length; level++) {
                     var purlArr = (level == 0) ? [] : forceUrlsToArray($scope.paths[pathIndex].steps[level - 1].step_urls);
                     var curlArr = (level == ($scope.paths[pathIndex].steps.length - 1)) ? [] : forceUrlsToArray($scope.paths[pathIndex].steps[level + 1].step_urls)
-                    for (var i = 0; i < $scope.paths[pathIndex].steps[level].step_urls.length; i++) {
+                    //for (var i = 0; i < $scope.paths[pathIndex].steps[level].step_urls.length; i++) {
                         var page_conv_step_url = {
                             page_conv_id: pcid,
                             path: pathIndex + 1,//路径 编号
                             step_level: level + 1, //步骤 编号 等于层次
-                            url: $scope.paths[pathIndex].steps[level].step_urls[i].url, //url
+                            urls: forceUrlsToArray($scope.paths[pathIndex].steps[level].step_urls), //urls
                             is_leaf: level == ($scope.paths[pathIndex].steps.length - 1) ? true : false,//是否未叶子
                             purls: purlArr,//父步骤Url
                             curls: curlArr//子步骤Url
                         }
                         page_conv_step_urls.push(page_conv_step_url);
                         console.log(page_conv_step_url);
-                    }
+                    //}
                 }
             }
 
@@ -266,7 +266,6 @@ define(["./module"], function (ctrs) {
                             console.log('保存失败');
                             return;
                         }
-
                     });
                 }
                 $state.go('pagechange');

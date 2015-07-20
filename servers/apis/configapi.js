@@ -462,12 +462,14 @@ api.get("/page_conv_urls", function (req, res) {
                     for (var index = 0; index < entitys.length; index++) {
                         //console.log("1")
                         //console.log(tempPathMark + "--->" + entitys[index].path)
+                        //console.log(JSON.stringify(entitys[index]))
                         if (entitys[index].path == tempPathMark.path) {
                             //console.log("if")
                             redisPageUrls.push(entitys[index]);
                             if (index == (entitys.length - 1)) {
                                 var key = tempPathMark.page_conv_id + ":pcu:" + tempPathMark.path;
                                 //console.log("key-====" + key)
+                                //console.log(JSON.stringify(redisPageUrls))
                                 bulk.set(key, JSON.stringify(redisPageUrls));
                                 break;
                             }
@@ -478,7 +480,15 @@ api.get("/page_conv_urls", function (req, res) {
                             //console.log("key" + key)
                             bulk.set(key, JSON.stringify(redisPageUrls));
                             redisPageUrls = [];
+                            redisPageUrls.push(entitys[index]);
                             tempPathMark = entitys[index]
+                            if (index == (entitys.length - 1)) {
+                                var key = tempPathMark.page_conv_id + ":pcu:" + tempPathMark.path;
+                                //console.log("key-====" + key)
+                                //console.log(JSON.stringify(redisPageUrls))
+                                bulk.set(key, JSON.stringify(redisPageUrls));
+                                break;
+                            }
                         }
                     }
                     bulk.exec();

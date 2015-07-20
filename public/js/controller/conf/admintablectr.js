@@ -112,7 +112,8 @@ define(["../module"], function (app) {
                 columnDefs: $rootScope.gridArray,
                 onRegisterApi: function (gridApi) {
                     $rootScope.gridApiAdmin = gridApi;
-                    adminGriApiInfo(gridApi);
+                    //adminGriApiInfo(gridApi);
+                    expandGrid(gridApi)
                 }
             };
         }
@@ -160,7 +161,39 @@ define(["../module"], function (app) {
             }
         };
 
-
         ///////////
+
+        ///////////////////////////////////展开项处理///////////////////////////////////////////////
+        //子表格方法通用
+        $scope.subGridScope = {
+            getHistoricalTrend: function (b) {
+                $scope.getHistoricalTrend(b, true);
+            }
+        }
+        var expandGrid = function (gridApi) {
+            console.log($rootScope.tableSwitch);
+            //$rootScope.tableSwitch 路由展开项具体操作
+            gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
+                console.log(row)
+                var htmlData = [];
+                row.entity.subGridOptions = {
+                    appScopeProvider: $scope.subGridScope,
+                    showHeader: false,
+                    enableHorizontalScrollbar: 0,
+                    enableVerticalScrollbar: 0,
+                    expandableRowHeight: 30,
+                    columnDefs: htmlData
+                };
+
+                var result = "<div class='trendbox' style='height:360px; overflow:hidden;'></div>"
+
+                var res = {};
+                res["name"] = "test";
+                res["field"] = "info";
+                res["cellTemplate"] = result;
+                htmlData.push(res);
+                row.entity.subGridOptions.data = [{"info": ""}];
+            })
+        }
     });
 });

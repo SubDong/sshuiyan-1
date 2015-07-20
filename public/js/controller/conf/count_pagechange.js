@@ -12,7 +12,7 @@ define(["./module"], function (ctrs) {
             uid: "",//用户ID
             site_id: "", // 站点ID
             target_name: "",//目标名称
-            target_url: [{url:""}],//目标URL
+            target_urls: [{url:""}],//目标URL
             record_type: "",//记录方式
             //收益设置
             expected_yield: null,//预期收益
@@ -46,16 +46,22 @@ define(["./module"], function (ctrs) {
 
         //跳转到修改界面
         $scope.onUpdate = function (entity) {
-            //console.log("传递ID="+entity._id);
             $state.go('pagechange_update',{ 'id':entity._id});
         };
 
         //配置默认指标
-        $rootScope.checkedArray = ["target_name", "target_url", "needPath","record_type","conv_tpye"  ,"_id" ];
+        $rootScope.checkedArray = ["target_name", "target_urls", "needPath","record_type","conv_tpye"  ,"_id" ];
         $rootScope.gridArray = [
             {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>", maxWidth: 5,  enableSorting: false},
             {name: "目标名称", displayName: "目标名称", field: "target_name", enableSorting: false},
-            {name: "路径", displayName: "目标路径", field: "target_url", enableSorting: false},
+            {
+                name: "路径",
+                displayName: "目标URL",
+                field: "target_urls",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>目标URL</div>",
+                cellClass: "table_list_color",
+                enableSorting: false
+            },
             {name: "是否需要经过路径", displayName: "是否需要经过路径", field: "needPath", enableSorting: false},
             {name: "记录方式", displayName: "记录方式", field: "record_type", enableSorting: false},
             {name: "转化类型", displayName: "转化类型", field: "conv_tpye", enableSorting: false},
@@ -79,15 +85,7 @@ define(["./module"], function (ctrs) {
         ];
 
         $rootScope.tableSwitch = {
-            latitude: {name: "网站域名", displayName: "网站域名", field: ""},
-            tableFilter: null,
-            dimen: false,
-            // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
-            number: 0,
-            //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
-            coding: false,
-            //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
-            arrayClear: false //是否清空指标array
+            latitude: {name: "页面转化", displayName: "页面转化", field: ""},
         };
 
         /**
@@ -96,7 +94,7 @@ define(["./module"], function (ctrs) {
         var refushGridData = function () {
             var uid = $cookieStore.get("uid");
             var site_id = $rootScope.siteId;
-            var url = "/config/page_conv?type=search&query={\"uid\":\"" + uid + "\",\"site_id\":\"" + site_id + "\"}";
+            var url = "/config/page_conv?type=search&query="+JSON.stringify({uid: uid ,site_id: site_id});
             //console.log(url)
             $http({
                 method: 'GET',
@@ -111,15 +109,15 @@ define(["./module"], function (ctrs) {
                     }else{
                         $rootScope.gridOptions.data[i].needPath="是";
                     }
-                    if(item.target_url!=null&&item.target_url.length>0){
+                    if(item.target_urls!=null&&item.target_urls.length>0){
                         var url="";
-                        item.target_url.forEach(function(u,i){
+                        item.target_urls.forEach(function(u,i){
                             url=url+u.url;
-                            if(i<item.target_url.length-1){
+                            if(i<item.target_urls.length-1){
                                 url=url+"或";
                             }
                         });
-                        $rootScope.gridOptions.data[i].target_url=url;
+                        $rootScope.gridOptions.data[i].target_urls=url;
                     }
                     if(item.record_type!=null){
                         $rootScope.gridOptions.data[i].record_type = $scope.record_type_cn[item.record_type]

@@ -185,7 +185,7 @@ var schemas = {
             page_conv_id: String,
             path: Number,//路径 编号
             step_level: Number, //步骤 编号 等于层次
-            url: String, //url
+            urls: [String], //url
             is_leaf: Boolean,//是否未叶子
             purls: [String],//父步骤Url
             curls: [String]//子步骤Url
