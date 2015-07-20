@@ -25,7 +25,7 @@
     var errIdMsg = {
         defaultTargetName: "事件目标",
         disable: "该对象没有ID，无法监控，请修改网页源代码，为该对象添加ID.",
-        Delete: "删除后，百度统计将不再跟踪统计该目标，该目标的历史数据会被删除且无法恢复。您希望现在删除么？",
+        Delete: "删除后，将不再跟踪统计该目标，该目标的历史数据会被删除且无法恢复。是否立即删除？",
         DUPLICATE_ID: function (G) {
             return "该网页中有该对象重复的ID，请修改网页源代码保证ID唯一。"
         },
@@ -133,23 +133,22 @@
     }
 
     //随机名称生成
-    var randName = function (G) {
-        function Z() {
+    var randName = function (length) {
+        function randChar() {
             var ab = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
             var aa = ab.length;
             return ab.charAt(Math.floor(Math.random() * aa))
         }
-
-        var X = G || 8;
-        var Y = "";
-        while (X--) {
-            Y += Z()
+        var len = length || 8;
+        var tempName = "";
+        while (len--) {
+            tempName += randChar()
         }
-        if (randName.uniqueIdMap[Y]) {
-            return randName(X)
+        if (randName.uniqueIdMap[tempName]) {
+            return randName(len)
         } else {
-            randName.uniqueIdMap[Y] = 1;
-            return Y
+            randName.uniqueIdMap[tempName] = 1;
+            return tempName
         }
     };
     randName.uniqueIdMap = {};
@@ -474,7 +473,7 @@
             return;
         }
         var scriptBlock = document.createElement("script");
-        if (url.indexOf("?") < 0) {
+        if (url.indexOf("?") < 0) {//请求附加uid和trackid信息
             scriptBlock.src = url + "?index=" + index+"&td="+params["td"]+"&cuid="+params["cuid"];
         } else {
             scriptBlock.src = url + "&index=" + index+"&td="+params["td"]+"&cuid="+params["cuid"];
@@ -785,19 +784,19 @@
             }
         },
         deletePanel: function () {
-            var G = createElem();
-            G.style.display = "none";
-            var Z = G.getAttribute("HY_panelTarget");
-            var Y = forcedoc(Z);
-            var X = Y.getAttribute("HY_EventId");
-            if (X) {
-                tipContent.deleteTip(X)
+            var elm = createElem();
+            elm.style.display = "none";
+            var targetPanel = elm.getAttribute("HY_panelTarget");
+            var doc = forcedoc(targetPanel);
+            var eventId = doc.getAttribute("HY_EventId");
+            if (eventId) {
+                tipContent.deleteTip(eventId)
             }
         },
         //隐藏弹出层
-        hideRect: function (X) {
-            var G = forcedoc(X);
-            if (!G) {
+        hideRect: function (docId) {
+            var doc = forcedoc(docId);
+            if (!doc) {
                 return
             }
             if (H > 0 && H < 8) {
@@ -1051,33 +1050,40 @@
                 tipContent.deleteTip(G)
             }
         },
-        deleteTip: function (ac) {
-            var aa = forcedoc(ac);
-            var Y = aa.getAttribute("MapTarget");
-            if (Y) {
-                var ab = forcedoc(Y);
-                if (ab) {
-                    var Z = ab.getAttribute("HY_transId");
-                    if (Z) {
-                        var G = window.confirm(errIdMsg.Delete);
-                        if (!G) {
+        deleteTip: function (docId) {
+            var doc = forcedoc(docId);
+            var targetMap = doc.getAttribute("MapTarget");
+            if (targetMap) {
+                var targetMapDoc = forcedoc(targetMap);
+                if (targetMapDoc) {
+                    var transId = targetMapDoc.getAttribute("HY_transId");
+                    if (transId) {
+                        var msgWind = window.confirm(errIdMsg.Delete);
+                        if (!msgWind) {
                             return false
                         }
                     }
-                    var my = document.getElementById(ac);
-                    if (my != null)
-                        my.parentNode.removeChild(my);
+                    var elem = document.getElementById(docId);
+                    if (elem != null)
+                        elem.parentNode.removeChild(elem);
                     var ttips = [];
                     for (var n = 0, k = 0; n < tips.length; n++, k++) {
                         if (ab.id == tips[n].id) {
                             k--;
                             tipContent.deleteComplete(aa);
-                            //ab.setAttribute("HY_EventId",null);
                             continue
                         }
                         ttips[k] = tips[n];
                     }
                     tips = ttips;
+                    //物理删除
+                    var ad = doc.getAttribute("HY_panelTarget");
+                    console.log("event id="+ad);
+                    //var url = p.protocol + "//" + p.flashUrl  + "/" + p.urlPath+"?type=deleteTips&data="+JSON.stringify(eventId);
+                    //crossDomainSendData(url, function (index, resData) {
+                    //    //刷新显示事件
+                    //    panelcont.addCompleteController(evenData);
+                    //});//==sendData 分不同情况
                 }
             }
         },

@@ -4,34 +4,34 @@
 define(["./module"], function (ctrs) {
 
     'use strict';
-    ctrs.controller('searchtermctr', function ($scope, $rootScope, $q, $http, requestService, messageService, areaService, uiGridConstants,popupService,$location) {
+    ctrs.controller('searchtermctr', function ($scope, $rootScope, $q, $http, requestService, messageService, areaService, uiGridConstants, popupService, $location) {
             //        高级搜索提示显示
             $scope.terminalSearch = "";
             $scope.areaSearch = "";
 //        取消显示的高级搜索的条件
-            $scope.removeTerminalSearch = function(obj){
+            $scope.removeTerminalSearch = function (obj) {
                 $rootScope.$broadcast("loadAllTerminal");
                 obj.terminalSearch = "";
             }
-            $scope.removeAreaSearch = function(obj){
+            $scope.removeAreaSearch = function (obj) {
                 $scope.city.selected = {"name": "全部"};
                 $rootScope.$broadcast("loadAllArea");
                 obj.areaSearch = "";
             }
             $scope.city.selected = {"name": "全部"};
             $scope.visible = false;
-            if($location.url().split("?").length>1) {
+            if ($location.url().split("?").length > 1) {
                 var param = $location.url().split("?")[1];
-               if(param == 1){
-                   $scope.todayClass = true;
-               }else if(param == 2){
-                   $scope.yesterdayClass = true;
-               }else if(param == 3){
-                   $scope.sevenDayClass = true;
-               }else if(param == 4){
-                   $scope.monthClass = true;
-               }
-            }else{
+                if (param == 1) {
+                    $scope.todayClass = true;
+                } else if (param == 2) {
+                    $scope.yesterdayClass = true;
+                } else if (param == 3) {
+                    $scope.sevenDayClass = true;
+                } else if (param == 4) {
+                    $scope.monthClass = true;
+                }
+            } else {
                 $scope.todayClass = true;
             }
             //table默认信息配置
@@ -53,7 +53,10 @@ define(["./module"], function (ctrs) {
                     displayName: "搜索词",
                     field: "kw",
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
-                    enableSorting: false
+                    enableSorting: false,
+                    cellTooltip: function (row, col) {
+                        return row.entity.kw;
+                    }
                 },
                 {
                     name: " ",

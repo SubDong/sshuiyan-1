@@ -7,8 +7,9 @@ var schemas = {
         model_name: "TrendYesterdayTable",
         collection_name: "cache_trend_yesterday_table",
         schema: {
-            uid: String, // user id 用户ID
+            typeId: String, // $rootScope.userType
             date:String,//日期
+            filterKey:String,//通过过滤条件计算的KEY
             timeFrame:String,//时间范围
             pv: String, // 浏览量
             vc: String,//访问次数
@@ -27,7 +28,8 @@ var schemas = {
         model_name: "TrendYesterdaySummary",
         collection_name: "cache_trend_yesterday_summary",
         schema: {
-            uid: String, // user id 用户ID
+            typeId: String, //  $rootScope.userType
+            filterKey:String,//通过过滤条件计算的KEY
             date:String,//日期
             pv: String, // 浏览量
             vc: String,//访问次数
@@ -55,6 +57,7 @@ var schemas = {
             event_status: String //事件状态 1：启动  0：暂停
         }
     },
+
     //子目录管理
     subdirectories_model: {
         model_name: "Subdirectories",
@@ -155,7 +158,7 @@ var schemas = {
             uid: String,//用户ID
             site_id: String, // 站点ID
             target_name: String,//目标名称
-            target_url: [{url: String}],//目标URL
+            target_urls: [{url: String}],//目标URL
             record_type: String,//记录方式
             //收益设置
             expected_yield: Number,//预期收益
@@ -174,6 +177,19 @@ var schemas = {
             conv_text: String
         }
 
+    },
+    page_conv_urls_model: {
+        model_name: "EventConvUrls",
+        collection_name: "conf_page_conv_urls",
+        schema: {
+            page_conv_id: String,
+            path: Number,//路径 编号
+            step_level: Number, //步骤 编号 等于层次
+            url: String, //url
+            is_leaf: Boolean,//是否未叶子
+            purls: [String],//父步骤Url
+            curls: [String]//子步骤Url
+        }
     },
     /**
      * 页面转化
