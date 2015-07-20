@@ -58,8 +58,8 @@ define(["./module"], function (ctrs) {
                     // cellTemplate:" <button popover-placement='right' popover='On the Right!' class='btn btn-default'>Right</button>"
                 },
                 {
-                    name: "浏览量",
-                    displayName: "浏览量",
+                    name: "浏览量(PV)",
+                    displayName: "浏览量(PV)",
                     field: "cost",
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>",
                     sort: {
@@ -68,8 +68,8 @@ define(["./module"], function (ctrs) {
                     }
                 },
                 {
-                    name: "访客数",
-                    displayName: "访客数",
+                    name: "访客数(UV)",
+                    displayName: "访客数(UV)",
                     field: "cpc",
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
                 },
@@ -86,15 +86,15 @@ define(["./module"], function (ctrs) {
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
                 },
                 {
-                    name: "平均访问时长",
-                    displayName: "平均访问时长",
-                    field: "nuvRate",
+                    name: "转化率",
+                    displayName: "转化率",
+                    field: "crate",
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
                 },
                 {
-                    name: "平均访问页数",
-                    displayName: "平均访问页数",
-                    field: "nuvRate",
+                    name: "访问次数",
+                    displayName: "访问次数",
+                    field: "vc",
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
                 }
             ];
@@ -122,7 +122,7 @@ define(["./module"], function (ctrs) {
                 {
                     config: {
                         legendId: "indicators_charts_legend",
-                        legendData: ["浏览量(PV)", "访客数", "转化次数", "订单数", "订单金额", "订单转化率", "平均转化成本", "平均访问时长"],//显示几种数据
+                        legendData: ["浏览量(PV)", "访客数(UV)","访问次数","新访客数", "转化次数","转化率", "平均转化成本", "收益", "利润", "订单数", "订单金额","订单转化率"],//显示几种数据
                         //legendMultiData: $rootScope.lagerMulti,
                         legendAllowCheckCount: 2,
                         legendClickListener: $scope.onLegendClickListener,
