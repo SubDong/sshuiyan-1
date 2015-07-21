@@ -182,6 +182,13 @@ define(["./module"], function (ctrs) {
             var title_name;
             var chart = echarts.init(document.getElementById(chartConfig.chartId));
             window.onresize = chart.resize;//charts 自适应
+            chart.showLoading({
+                text: "正在努力的读取数据中...",
+                effect: 'whirling',
+                textStyle: {
+                    fontSize: 12
+                }
+            });
             var jupName = "";
             chart.on("hover", function (param) {
                 var option = this.getOption();

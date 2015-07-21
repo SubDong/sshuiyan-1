@@ -77,7 +77,16 @@ define(["./module"], function (ctrs) {
             steps.splice(_index, 1);
         };
 
+        $scope.insertOrder = function(){
+           $scope.target_urls[$scope.target_urls.length-1].url = "目标URL[[[*]]]";
+        }
 
+        var menu_conv_type = {
+            regist: "注册",
+            communicate: "沟通",
+            place_order: "下单",
+            other:"其他"
+        }
         $scope.chooseRecordType = function (curType) {
             //console.
             $scope.radio_record.visit_times = false;
@@ -95,12 +104,11 @@ define(["./module"], function (ctrs) {
             $scope.radio_conv[curType] = true;
             $scope.conv_tpye = curType;
             if (!$scope.radio_conv.other) {//去掉非其他情况时conv_text的值
-                $scope.conv_text = $scope.t_conv_text;
-                $scope.t_conv_text = "";
+                document.getElementById("convTypeText").readOnly = true;
             } else {
-                $scope.t_conv_text = $scope.conv_text;
+                document.getElementById("convTypeText").readOnly = false;
             }
-            console.log($scope.radio_conv);
+            $scope.t_conv_text = menu_conv_type[curType];
         };
         Custom.initCheckInfo();//页面check样式js调用
 
@@ -276,40 +284,41 @@ define(["./module"], function (ctrs) {
                 //路径类型
                 paths: $scope.paths,
                 conv_tpye: $scope.conv_tpye,//转换类型，regist,communicate,place_order,othre_order
-                conv_text: $scope.conv_text
+                conv_text:$scope.conv_tpye=="other"?($scope.t_conv_text.trim()==""?menu_conv_type["other"]:$scope.t_conv_text.trim()):menu_conv_type[$scope.conv_tpye]
             }
 
-            var updatePageConv = "/config/page_conv?type=update&query="+JSON.stringify({_id:$stateParams.id})+"&updates=" + angular.toJson(page_conv_entity);
-            console.log("更新 页面转换 配置" + updatePageConv)
-            $http({
-                method: 'GET',
-                url: updatePageConv
-            }).success(function (upd, status) {
-                if (status == 200) {
-                    var page_conv_urls = forcePathStepUrls($stateParams.id);
-                    var deleteUrl = "/config/page_conv_urls?type=delete&query=" + JSON.stringify({page_conv_id: $stateParams.id});
-                    console.log("删除 urls 配置" + deleteUrl)
-                    $http({
-                        method: 'GET',
-                        url: deleteUrl
-                    }).success(function (data, status) {
-                        if (status == 200) {
-                            var saveUrls = "/config/page_conv_urls?type=saveAll&entitys=" + JSON.stringify(page_conv_urls);
-                            console.log("重新插入 urls 配置" + saveUrls)
-                            $http({
-                                method: 'GET',
-                                url: saveUrls
-                            }).success(function (data, status) {
-                                if (status != 200) {
-                                    console.log('保存失败');
-                                }
-                            });
-                        }
-
-                    });
-                }
-                $state.go('pagechange');
-            });
+            console.log(page_conv_entity)
+            //var updatePageConv = "/config/page_conv?type=update&query="+JSON.stringify({_id:$stateParams.id})+"&updates=" + angular.toJson(page_conv_entity);
+            //console.log("更新 页面转换 配置" + updatePageConv)
+            //$http({
+            //    method: 'GET',
+            //    url: updatePageConv
+            //}).success(function (upd, status) {
+            //    if (status == 200) {
+            //        var page_conv_urls = forcePathStepUrls($stateParams.id);
+            //        var deleteUrl = "/config/page_conv_urls?type=delete&query=" + JSON.stringify({page_conv_id: $stateParams.id});
+            //        console.log("删除 urls 配置" + deleteUrl)
+            //        $http({
+            //            method: 'GET',
+            //            url: deleteUrl
+            //        }).success(function (data, status) {
+            //            if (status == 200) {
+            //                var saveUrls = "/config/page_conv_urls?type=saveAll&entitys=" + JSON.stringify(page_conv_urls);
+            //                console.log("重新插入 urls 配置" + saveUrls)
+            //                $http({
+            //                    method: 'GET',
+            //                    url: saveUrls
+            //                }).success(function (data, status) {
+            //                    if (status != 200) {
+            //                        console.log('保存失败');
+            //                    }
+            //                });
+            //            }
+            //
+            //        });
+            //    }
+            //    $state.go('pagechange');
+            //});
         }
 
     })

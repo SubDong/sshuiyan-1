@@ -43,8 +43,8 @@
                                                   ng-checked="radio_record.pv">浏览量PV</label></li>
                                 <li><label><input class="styled" type="radio" name="record"
                                                   data-ng-click="chooseRecordType('order_conv')"
-                                                  ng-checked="radio_record.order_conv">订单转化</label>&nbsp;&nbsp;&nbsp;&nbsp;<a
-                                        href="javascript:void(0)">插入订单号</a>
+                                                  ng-checked="radio_record.order_conv">订单转化</label>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<a href="" data-ng-click="insertOrder()">插入订单号</a>
                                 </li>
                             </ul>
                         </div>
@@ -148,7 +148,7 @@
                                   data-ng-click="chooseConvType('place_order')">下单</label>
                     <label><input type="radio" class="styled" name="type" ng-checked="radio_conv.other"
                                   data-ng-click="chooseConvType('other')">其他</label>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <input type="text" class="input_text " data-ng-model="t_conv_text">
+                    <input id="convTypeText" type="text" class="input_text " data-ng-model="t_conv_text">
                 </div>
             </div>
         </div>
