@@ -120,10 +120,10 @@ function MillisecondToDate(msd) {
         }else if (time > 0 && time <= 60) {
             time = "00:00:" + myParseInt(time);
         } else {
-            time = "00:00:00";
+            time = "--";
         }
     } else {
-        time = "00:00:00";
+        time = "--";
     }
     return time;
 }

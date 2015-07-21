@@ -1170,7 +1170,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                 scope.setDefaultShowArray = function () {
                     var tempArray = [];
                     angular.forEach(scope.ds_dateShowQuotasOption, function (q_r) {
-                        tempArray.push({"label": q_r, "value": 0, "cValue": 0, "count": 0, "cCount": 0});
+                        tempArray.push({"label": q_r, "value": "--", "cValue": "", "count": 0, "cCount": 0});
                     });
                     scope.ds_keyData = [];
                     scope.dateShowArray = $rootScope.copy(tempArray);
@@ -1281,7 +1281,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                             });
                         });
                     }
-
                     scope.dateShowArray = $rootScope.copy(_array);
                 };
 
@@ -1294,9 +1293,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     }
                     scope.loadDataShow();
                 });
-                if ($location.path() != "/source/searchterm" && $location.path() != "/visitor/equipment" && $location.path() != "/visitor/provincemap") {
-                    scope.loadDataShow();
-                }
+                scope.loadDataShow();
                 // 对比
                 scope.$on("ssh_load_compare_datashow", function (e, startTime, endTime) {
                     scope.isCompared = true;
@@ -1430,7 +1427,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                 case "ctr":
                 case "outRate":
                 {
-                    return count ? (value == 0 ? "0" : (value / count).toFixed(2) + "%") : "0";
+                    return count ? (value == 0 ? "0" : (value / count).toFixed(2) + "%") : "--";
                 }
                 case "avgPage":
                 {
@@ -1457,12 +1454,12 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                 scope._ctValue = attris.myScope === "nv" ? "0" : "1";
                 scope._ctText = attris.myScope === "nv" ? "新访客" : "老访客";
                 scope.defaultObject = {
-                    percent: "0%",
-                    pv: 0,
-                    uv: 0,
-                    outRate: 0,
-                    avgTime: "00:00:00",
-                    avgPage: 0
+                    percent: "--",
+                    pv: "--",
+                    uv: "--",
+                    outRate: "--",
+                    avgTime: "--",
+                    avgPage: "--"
                 };
                 // 读取基础数据
                 scope.loadBaseData = function () {

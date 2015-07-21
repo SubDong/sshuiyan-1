@@ -609,9 +609,15 @@ define(["./module"], function (ctrs) {
             var newSpl = [0, 0, 0];
             if (option.length > 0) {
                 option.forEach(function (item, i) {
-                    returnData += parseFloat((item.entity[a.col.field] + "").replace("%", ""));
+                    var tmp = 0;
+                    if(item.entity[a.col.field] == "--"){
+                        tmp = 0;
+                    }else{
+                        tmp = item.entity[a.col.field];
+                    }
+                    returnData += parseFloat((tmp + "").replace("%", ""));
                     if (a.col.field == "avgTime") {
-                        if (item.entity[a.col.field] != undefined) {
+                        if (item.entity[a.col.field] != undefined && item.entity[a.col.field] != "--") {
                             spl = (item.entity[a.col.field] + "").split(":");
                             newSpl[0] += parseInt(spl[0]);
                             newSpl[1] += parseInt(spl[1]);
@@ -642,7 +648,7 @@ define(["./module"], function (ctrs) {
                     returnData = (returnData / option.length).toFixed(2);
                 }
                 if (a.col.field == "outRate" || a.col.field == "nuvRate") {
-                    returnData = returnData == "0.00%" ? "0%" : (returnData / option.length).toFixed(2) + "%";
+                    returnData = returnData == "0.00%" ? "0%" : (parseInt(returnData) / option.length).toFixed(2) + "%";
                 }
                 if (a.col.field == "avgTime") {
                     var atime1 = parseInt(newSpl[0] / option.length) + "";
