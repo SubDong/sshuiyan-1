@@ -79,7 +79,16 @@ define(["./module"], function (ctrs) {
             steps.splice(_index, 1);
         };
 
+        $scope.insertOrder = function(){
+            $scope.target_urls[$scope.target_urls.length-1].url = "目标URL[[[*]]]";
+        }
 
+        var menu_conv_type = {
+            regist: "注册",
+            communicate: "沟通",
+            place_order: "下单",
+            other:"其他"
+        }
         $scope.chooseRecordType = function (curType) {
             //console.
             $scope.radio_record.visit_times = false;
@@ -96,11 +105,11 @@ define(["./module"], function (ctrs) {
             $scope.radio_conv[curType] = true;
             $scope.conv_tpye = curType;
             if (!$scope.radio_conv.other) {//去掉非其他情况时conv_text的值
-                $scope.conv_text = $scope.t_conv_text;
-                $scope.t_conv_text = "";
+                document.getElementById("convTypeText").readOnly = true;
             } else {
-                $scope.t_conv_text = $scope.conv_text;
+                document.getElementById("convTypeText").readOnly = false;
             }
+            $scope.t_conv_text = menu_conv_type[curType];
         };
         Custom.initCheckInfo();//页面check样式js调用
 
@@ -193,24 +202,24 @@ define(["./module"], function (ctrs) {
             return true;
         }
 
-        var forcePathStepUrls = function ( pcid) {
+        var forcePathStepUrls = function (pcid) {
             var page_conv_step_urls = [];
             for (var pathIndex = 0; pathIndex < $scope.paths.length; pathIndex++) {
                 for (var level = 0; level < $scope.paths[pathIndex].steps.length; level++) {
                     var purlArr = (level == 0) ? [] : forceUrlsToArray($scope.paths[pathIndex].steps[level - 1].step_urls);
                     var curlArr = (level == ($scope.paths[pathIndex].steps.length - 1)) ? [] : forceUrlsToArray($scope.paths[pathIndex].steps[level + 1].step_urls)
                     //for (var i = 0; i < $scope.paths[pathIndex].steps[level].step_urls.length; i++) {
-                        var page_conv_step_url = {
-                            page_conv_id: pcid,
-                            path: pathIndex + 1,//路径 编号
-                            step_level: level + 1, //步骤 编号 等于层次
-                            urls: forceUrlsToArray($scope.paths[pathIndex].steps[level].step_urls), //urls
-                            is_leaf: level == ($scope.paths[pathIndex].steps.length - 1) ? true : false,//是否未叶子
-                            purls: purlArr,//父步骤Url
-                            curls: curlArr//子步骤Url
-                        }
-                        page_conv_step_urls.push(page_conv_step_url);
-                        console.log(page_conv_step_url);
+                    var page_conv_step_url = {
+                        page_conv_id: pcid,
+                        path: pathIndex + 1,//路径 编号
+                        step_level: level + 1, //步骤 编号 等于层次
+                        urls: forceUrlsToArray($scope.paths[pathIndex].steps[level].step_urls), //urls
+                        is_leaf: level == ($scope.paths[pathIndex].steps.length - 1) ? true : false,//是否未叶子
+                        purls: purlArr,//父步骤Url
+                        curls: curlArr//子步骤Url
+                    }
+                    page_conv_step_urls.push(page_conv_step_url);
+                    console.log(page_conv_step_url);
                     //}
                 }
             }
@@ -247,22 +256,23 @@ define(["./module"], function (ctrs) {
                 //路径类型
                 paths: $scope.paths,
                 conv_tpye: $scope.conv_tpye,//转换类型，regist,communicate,place_order,othre_order
-                conv_text: $scope.conv_text
+                conv_text:$scope.conv_tpye=="other"?($scope.t_conv_text.trim()==""?menu_conv_type["other"]:$scope.t_conv_text.trim()):menu_conv_type[$scope.conv_tpye]
             }
+            console.log(page_conv_entity)
             var savePageConv = "/config/page_conv?type=save&entity=" + JSON.stringify(page_conv_entity);
             $http({
                 method: 'GET',
                 url: savePageConv
             }).success(function (ins, status) {
-                if(status==200){
+                if (status == 200) {
                     console.log(ins._id)
-                    var page_conv_urls= forcePathStepUrls(ins._id);
+                    var page_conv_urls = forcePathStepUrls(ins._id);
                     var saveUrls = "/config/page_conv_urls?type=saveAll&entitys=" + JSON.stringify(page_conv_urls);
                     $http({
                         method: 'GET',
                         url: saveUrls
                     }).success(function (data, status) {
-                        if(status!=200){
+                        if (status != 200) {
                             console.log('保存失败');
                             return;
                         }

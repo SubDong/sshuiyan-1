@@ -228,9 +228,27 @@ api.get("/site_list", function (req, res) {
                                 siteurl: docs[0].site_url,//站点URL
                                 sitepause: docs[0].site_pause//站点暂停状态，false启用，true暂停
                             }
-                            req.redisclient.multi()
+                            //默认存储时长转化和PV转化到Redis
+                            var time_config = {
+                                ttpause: false,
+                                tttime: 30
+                            }
+                            var pv_config = {
+                                pvpause: false,
+                                pvtimes: 3
+                            }
+                            //console.log("typeid:".concat(docs[0].track_id)+"===="+ docs[0].type_id)
+                            //console.log("ts:" + docs[0].track_id+"===="+docs[0]._id)
+                            //console.log("st:" + docs[0]._id+"===="+ docs[0].track_id)
+                            //console.log("tsu:" + docs[0].track_id+"===="+docs[0].site_url)
+                            req.redisclient.multi().set("typeid:".concat(docs[0].track_id), docs[0].type_id)//
+                                .set("ts:" + docs[0].track_id, docs[0]._id)//
+                                .set("st:" + docs[0]._id, docs[0].track_id)//
                                 .set("tsu:" + docs[0].track_id, docs[0].site_url)
-                                .set("tsj:" + docs[0].track_id, JSON.stringify(siteconfig)).exec();
+                                .set("tsj:" + docs[0].track_id, JSON.stringify(siteconfig))
+                                //.set(ins._id + ":mouse:" + ins.site_url, JSON.stringify(config_mouse))//目前无具体URL配置 暂时设置在站点上
+                                .set("duration:" + docs[0]._id, JSON.stringify(time_config))//站点级别设置
+                                .set("visit:" + docs[0]._id, JSON.stringify(pv_config)).exec();
                         }
                     });
                 }
@@ -687,7 +705,7 @@ api.get("/redis", function (req, res) {
         //}else{
         //datautils.send(res, redis_conf);
         //}
-        datautils.send(res,JSON.parse( redis_conf));
+        datautils.send(res, redis_conf);
     });
 });
 
