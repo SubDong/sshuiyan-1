@@ -1074,7 +1074,7 @@ define(["app"], function (app) {
                                     });
                                     resultObj[$rootScope.tableSwitch.latitude.field] = "暂无数据";
                                     resultData.push(resultObj)
-                                    $scope.gridOptions.data = resultDatan;
+                                    $scope.gridOptions.data = resultData;
                                 } else $scope.gridOptions.data = data;
                             }
                         } else {
