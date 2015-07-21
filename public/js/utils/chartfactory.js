@@ -327,7 +327,8 @@ var op = {
                 type: !chartConfig.chartType ? "line" : chartConfig.chartType,
                 data: item[chartConfig.dataValue],
                 barMaxWidth: 25,
-                barGap: "10%"
+                barGap: "10%",
+                symbolSize: 1.5
             };
             if (chartConfig.lineType == undefined) {
                 serie.itemStyle = {
@@ -344,16 +345,30 @@ var op = {
                 serie.itemStyle = {
                     normal: {
                         lineStyle: {
-                            width: 1
+                            width: 1.5
                         }
                     }
                 }
             }
-            if (chartConfig.min_max == undefined) {
+            if (chartConfig.min_max == undefined && chartConfig.chartType == 'line') {
                 serie["markPoint"] = {
+                    large: false,
                     data: [
-                        {type: 'max', name: '最大'},
-                        {type: 'min', name: '最小'}
+                        {
+                            type: 'max',
+                            name: '最大',
+                            width: 10,
+                            symbol: 'Circle',
+                            symbolSize: 5,
+                            itemStyle: {normal: {label: {show: false}}}
+                        },
+                        {
+                            type: 'min',
+                            name: '最小',
+                            symbol: 'emptyCircle',
+                            symbolSize: 4,
+                            itemStyle: {normal: {label: {show: false}}}
+                        }
                     ]
                 }
             }
@@ -650,7 +665,7 @@ var op = {
                 data.data.forEach(function (e) {
                     serie['name'] = data.label;
                     var push_data = {};
-                    push_data[chartConfig.dataKey] = e[chartConfig.dataKey]
+                    push_data[chartConfig.dataKey] = e[chartConfig.dataKey];
                     push_data[chartConfig.dataValue] = e[chartConfig.dataValue];
                     push_data["value"]
                     serie.data.push(push_data);

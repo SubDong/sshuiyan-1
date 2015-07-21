@@ -10,7 +10,7 @@ define(["./module"], function (ctrls) {
         //        高级搜索提示显示
         $scope.terminalSearch = "";
 //        取消显示的高级搜索的条件
-        $scope.removeTerminalSearch = function(obj){
+        $scope.removeTerminalSearch = function (obj) {
             $rootScope.$broadcast("loadAllTerminal");
             obj.terminalSearch = "";
         }
@@ -34,7 +34,10 @@ define(["./module"], function (ctrls) {
                 field: "rf_type",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
                 cellClass: "table_list_color",
-                enableSorting: false
+                enableSorting: false,
+                cellTooltip: function (row, col) {
+                    return row.entity.rf_type;
+                }
             },
             {
                 name: " ",
@@ -108,17 +111,17 @@ define(["./module"], function (ctrls) {
             e0.config.instance = echarts.init(document.getElementById(e0.config.id));
             //$scope.charts[0].config.instance.on("hover", $scope.pieListener);
             cf.renderChart(pieData, e0.config);
-            var firstCount=0;
-            pieData.forEach(function(i){
-                i.quota.forEach(function(q){
-                    firstCount+=q;
+            var firstCount = 0;
+            pieData.forEach(function (i) {
+                i.quota.forEach(function (q) {
+                    firstCount += q;
                 });
             });
-            if(firstCount){
+            if (firstCount) {
                 $(".chart_box").attr("style", "background:" + $rootScope.chartColors[0]);
                 $("#chartlink").html(pieData[0].key[0]);
                 $("#chartnumber").html(pieData[0].quota[0]);
-                $("#chartpointe").html(parseFloat(pieData[0].quota[0]/firstCount*100).toFixed(2)+"%");
+                $("#chartpointe").html(parseFloat(pieData[0].quota[0] / firstCount * 100).toFixed(2) + "%");
             }
             $("#chartname").html(chartUtils.convertChinese(e.types[0]));
         }
@@ -173,13 +176,13 @@ define(["./module"], function (ctrls) {
                     legendClickListener: $scope.onLegendClick,
                     legendAllowCheckCount: 1,
                     id: "indicators_charts",
-                    min_max: false,
+                    //min_max: false,
                     bGap: false,
                     chartType: "line",
                     lineType: false,
-                   // auotHidex: true,
-                   // qingXie:true,
-                    qxv:18,
+                    // auotHidex: true,
+                    // qingXie:true,
+                    qxv: 18,
                     //tt: "item",
                     itemHover: $scope.itemHover,
                     keyFormat: "none",

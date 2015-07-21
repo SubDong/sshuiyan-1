@@ -44,9 +44,9 @@ define(["./module"], function (ctrs) {
                 enableSorting: false
             },
             {
-                name: "浏览量",
-                displayName: "浏览量",
-                field: "vc",
+                name: "浏览量(PV)",
+                displayName: "浏览量(PV)",
+                field: "pv",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>",
                 sort: {
                     direction: uiGridConstants.DESC,

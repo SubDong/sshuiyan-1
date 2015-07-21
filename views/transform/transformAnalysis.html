@@ -1,4 +1,4 @@
-<div class="middle_containers" ng-controller="transformAnalysisctr">
+ <div class="middle_containers" ng-controller="transformAnalysisctr">
     <div class="date_select">
         <div aria-label="First group" role="group" class="btn-group fl">
             <a class="btn btn-default current" data-ng-href="#transform/transformAnalysis" type="button">事件转化</a>
@@ -10,7 +10,7 @@
             <refresh></refresh>
             <div aria-label="First group" role="group" class="btn-group fr">
                 <a class="btn btn-default current" style="line-height: 24px"
-                   data-ng-href="#/conf/webcountsite/eventchange_add" type="button">添加页面转化目标</a>
+                   data-ng-href="#/conf/webcountsite/eventchange_add" type="button">新增事件转化目标</a>
             </div>
         </div>
     </div>
@@ -103,16 +103,7 @@
                                             <span ng-bind-html="souce.name"></span>
                                         </ui-select-choices>
                                     </ui-select>
-                                    <ui-select ng-model="browser.selected" theme="select2" reset-search-input="false"
-                                               class="fl" data-ng-change="searchEngine(browser.selected.value)"
-                                               ng-hide="browserselect"
-                                               style="width: 90px; margin-left:10px;">
-                                        <ui-select-match placeholder="全部">{{$select.selected.name}}
-                                        </ui-select-match>
-                                        <ui-select-choices repeat="browser_tran in browsers">
-                                            <span ng-bind-html="browser.name"></span>
-                                        </ui-select-choices>
-                                    </ui-select>
+
                                 </div>
                             </li>
                             <li><a href="javascript:void(0)">百度</a></li>
@@ -162,9 +153,9 @@
             <div class="custom_secendtitle">
                 <div class="custom_select">
                     <div class="input-group fl">
-                        <input type="text" placeholder="事件转化" data-ng-model="searchGjcText" class="form-control fl"
+                        <input type="text" placeholder="输入事件名称" data-ng-model="searchGjcText" class="form-control fl"
                                onfocus="this.setAttribute('placeholder','')"
-                               onblur="this.setAttribute('placeholder','事件转化')">
+                               onblur="this.setAttribute('placeholder','输入事件名称')">
                                <span class="input-group-btn fl">
                                      <button type="button" class="btn btn-default"
                                              ><span aria-hidden="true" class="glyphicon glyphicon-search"></span>

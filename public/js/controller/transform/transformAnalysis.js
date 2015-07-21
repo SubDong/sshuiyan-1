@@ -50,8 +50,8 @@ define(["./module"], function (ctrs) {
                     enableSorting: false
                 },
                 {
-                    name: "浏览量",
-                    displayName: "浏览量",
+                    name: "浏览量(PV)",
+                    displayName: "浏览量()PV",
                     field: "pv",
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
                 },

@@ -248,7 +248,7 @@ define(["./module"], function (ctrs) {
 //                $scope.init($rootScope.user, $rootScope.baiduAccount, "campaign", $scope.selectedQuota, $rootScope.start, $rootScope.end);
 //                //图表
 //                requestService.refresh($scope.charts);
-                $scope.reloadByCalendar("today");
+                $scope.reloadByCalendar("yesterday");
                 $('#reportrange span').html(GetDateStr(-1));
                 //其他页面表格
                 //classcurrent

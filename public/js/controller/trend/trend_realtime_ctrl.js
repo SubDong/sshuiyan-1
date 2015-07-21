@@ -134,7 +134,7 @@ define(["./module"], function (ctrs) {
                     legendDefaultChecked: [0, 1],
                     //显示几种数据
                     id: "realtime_charts",
-                    min_max: false,
+                    //min_max: false,
                     bGap: false,//首行缩进
                     chartType: "line",//图表类型
                     half: true,

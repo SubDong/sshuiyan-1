@@ -20,7 +20,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
             link: function (scope, element, attris, controller) {
                 Custom.initCheckInfo();
                 scope.$watch("opened", function () {
-                    var _path = $location.path();
+                   /* var _path = $location.path();
                     if (_path == "/source/searchterm" || _path == "/visitor/equipment" || _path == "/visitor/provincemap") {
                         if (scope.todayClass) {
                             scope.today();
@@ -62,7 +62,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                                 }
                             }
                         }
-                    }
+                    }*/
                 });
                 scope.weekselected = true;
                 scope.mothselected = true;
@@ -551,10 +551,11 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
         };
         return option;
     });
-    app.directive("refresh", function ($rootScope, $http, $location) {
+
+    app.directive("refresh", function ($rootScope, $http, $location,ngDialog) {
         var option = {
             restrict: "EA",
-            template: "<div class=\"right_refresh fr\"><button class=\"btn btn-default btn-Refresh fl\" ng-click=\"page_refresh()\"  type=\"button\"><span aria-hidden=\"true\" class=\"glyphicon glyphicon-refresh\"></span></button><button class=\"btn btn-default btn-Refresh fl\" type=\"button\" ng-show=\"send\" >发送</button><ui-select ng-model=\"export.selected\" ng-change='fileSave(export.selected)' theme=\"select2\" ng-hide=\"menu_select\" reset-search-input=\"false\" class=\"fl\"style=\"min-width: 90px;background-color: #fff;\"> <ui-select-match placeholder=\"下载\">{{$select.selected.name}} </ui-select-match> <ui-select-choices repeat=\"export in exportsaa\"> <span ng-bind-html=\"export.name\"></span></ui-select-choices></ui-select></div>",
+            template: "<div class=\"right_refresh fr\"><button class=\"btn btn-default btn-Refresh fl\" ng-click=\"page_refresh()\"  type=\"button\"><span aria-hidden=\"true\" class=\"glyphicon glyphicon-refresh\"></span></button><button data-ng-click='send()' class=\"btn btn-default btn-Refresh fl\" type=\"button\" ng-show=\"send\" >发送</button><ui-select ng-model=\"export.selected\" ng-change='fileSave(export.selected)' theme=\"select2\" ng-hide=\"menu_select\" reset-search-input=\"false\" class=\"fl\"style=\"min-width: 90px;background-color: #fff;\"> <ui-select-match placeholder=\"下载\">{{$select.selected.name}} </ui-select-match> <ui-select-choices repeat=\"export in exportsaa\"> <span ng-bind-html=\"export.name\"></span></ui-select-choices></ui-select></div>",
             transclude: true,
             replace: true,
             link: function (scope) {
@@ -563,7 +564,15 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     {name: 'CSV', value: 'csv'},
                     {name: 'PDF（含图） ', value: 'pdf'}
                 ];
+               scope.send=function(){
+                    console.log(123);
+                   scope.urlDialog = ngDialog.open({
+                       template: '../conf/Dialog/transformAnalysis_send.html',
+                       className: 'ngdialog-theme-default admin_ngdialog '
+                   });
+               };
                 scope.flag = $location.path() != "/index";
+
                 //导出功能
                 scope.fileSave = function (obj) {
                     if (obj.value == "csv") {
@@ -1161,7 +1170,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                 scope.setDefaultShowArray = function () {
                     var tempArray = [];
                     angular.forEach(scope.ds_dateShowQuotasOption, function (q_r) {
-                        tempArray.push({"label": q_r, "value": 0, "cValue": 0, "count": 0, "cCount": 0});
+                        tempArray.push({"label": q_r, "value": "--", "cValue": "", "count": 0, "cCount": 0});
                     });
                     scope.ds_keyData = [];
                     scope.dateShowArray = $rootScope.copy(tempArray);
@@ -1273,7 +1282,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                             });
                         });
                     }
-
                     scope.dateShowArray = $rootScope.copy(_array);
                 };
 
@@ -1286,9 +1294,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     }
                     scope.loadDataShow();
                 });
-                if ($location.path() != "/source/searchterm" && $location.path() != "/visitor/equipment" && $location.path() != "/visitor/provincemap") {
-                    scope.loadDataShow();
-                }
+                scope.loadDataShow();
                 // 对比
                 scope.$on("ssh_load_compare_datashow", function (e, startTime, endTime) {
                     scope.isCompared = true;
@@ -1422,7 +1428,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                 case "ctr":
                 case "outRate":
                 {
-                    return count ? (value == 0 ? "0" : (value / count).toFixed(2) + "%") : "0";
+                    return count ? (value == 0 ? "0" : (value / count).toFixed(2) + "%") : "--";
                 }
                 case "avgPage":
                 {
@@ -1449,12 +1455,12 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                 scope._ctValue = attris.myScope === "nv" ? "0" : "1";
                 scope._ctText = attris.myScope === "nv" ? "新访客" : "老访客";
                 scope.defaultObject = {
-                    percent: "0%",
-                    pv: 0,
-                    uv: 0,
-                    outRate: 0,
-                    avgTime: "00:00:00",
-                    avgPage: 0
+                    percent: "--",
+                    pv: "--",
+                    uv: "--",
+                    outRate: "--",
+                    avgTime: "--",
+                    avgPage: "--"
                 };
                 // 读取基础数据
                 scope.loadBaseData = function () {

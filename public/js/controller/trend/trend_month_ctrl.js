@@ -170,7 +170,7 @@ define(["./module"], function (ctrs) {
                     legendClickListener: $scope.onLegendClickListener,
                     legendDefaultChecked: [0, 1],
                     id: "moth_charts",
-                    min_max: false,
+                    //min_max: false,
                     bGap: false,//首行缩进
                     chartType: "line",//图表类型
                     dataKey: "key",//传入数据的key值
@@ -297,13 +297,13 @@ define(["./module"], function (ctrs) {
             {name: '时长目标'},
             {name: '访问页数目标'}
         ];
-        $scope.souce = {};
-        $scope.souces = [
-            {name: '全部'},
-            {name: '直接访问'},
-            {name: '搜索引擎'},
-            {name: '外部链接'}
-        ];
+//        $scope.souce = {};
+//        $scope.souces = [
+//            {name: '全部'},
+//            {name: '直接访问'},
+//            {name: '搜索引擎'},
+//            {name: '外部链接'}
+//        ];
         //日历
         $rootScope.datepickerClick = function (start, end, label) {
             if ($scope.compareType) {

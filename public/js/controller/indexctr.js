@@ -39,9 +39,17 @@ define(['./module'], function (ctrs) {
             enableVerticalScrollbar: 0,
 
             columnDefs: [
-                {name: 'name', displayName: "搜索词", enableSorting: false},
                 {
-                    name: 'value', displayName: "浏览量(PV)", headerCellClass: 'ui_text', cellClass: 'ui_text',type:'number',
+                    name: 'name', displayName: "搜索词", enableSorting: false, cellTooltip: function (row, col) {
+                    return row.entity.name;
+                }
+                },
+                {
+                    name: 'value',
+                    displayName: "浏览量(PV)",
+                    headerCellClass: 'ui_text',
+                    cellClass: 'ui_text',
+                    type: 'number',
                     sort: {
                         direction: uiGridConstants.DESC,
                         priority: 1
@@ -146,7 +154,7 @@ define(['./module'], function (ctrs) {
                     legendDefaultChecked: [0, 1],
                     id: "index_charts",
                     bGap: false,//首行缩进
-                    min_max: false,
+                    //min_max: true,
                     chartType: "line",//图表类型
                     dataKey: "key",//传入数据的key值
                     dataValue: "quota"//传入数据的value值

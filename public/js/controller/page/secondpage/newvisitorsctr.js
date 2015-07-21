@@ -184,7 +184,7 @@ define(["./../module"], function (ctrs) {
                    // tt: "item",
                     itemHover: $scope.itemHover,
                     lineType: false,
-                    min_max: false,
+                    //min_max: false,
                     bGap: false,
                     keyFormat: 'none',
                     dataKey: "key",

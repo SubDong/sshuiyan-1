@@ -150,7 +150,7 @@ define(["./../module"], function (ctrs) {
                     legendClickListener: $scope.onLegendClick,
                     legendAllowCheckCount: 1,
                     id: "indicators_charts",
-                    min_max: false,
+                    //min_max: false,
                     bGap: false,
                     keyFormat: 'none',
                     chartType: "line",

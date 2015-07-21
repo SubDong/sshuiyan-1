@@ -26,16 +26,21 @@ var daos = {
             cb(ins);
         });
     },
+    saveAll: function (schema, entitys, cb) {
+        var instance = this.createmodel(schema);
+        var bulk = instance.collection.initializeOrderedBulkOp();
+        for (var i in entitys) {
+            bulk.insert(entitys[i]);
+        }
+        bulk.execute(cb);
+    },
     remove: function (schema, obj, cb) {
         //console.log("remove 1");
         if (obj.uid) {
             return this.uiderror();
         }
-
         var instance = this.createmodel(schema);
-
         instance.remove(JSON.parse(obj), function (err, docs) {
-
             if (err)
                 return console.error(err);
             cb()
@@ -71,8 +76,8 @@ var daos = {
             return this.uiderror();
         }
         var instance = this.createmodel(schema);
-        if(cb){
-            instance.find(JSON.parse(qry), fields, options,cb);
+        if (cb) {
+            instance.find(JSON.parse(qry), fields, options, cb);
             return null;
         }
         var promise = instance.find(JSON.parse(qry), fields, options).exec()

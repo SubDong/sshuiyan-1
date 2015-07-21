@@ -172,7 +172,7 @@ define(["./module"], function (ctrs) {
                 {
                     name: '平均访问页数',
                     value: 'avgPage'
-                },
+                }
             ];
 
             // 默认投放指标
@@ -231,7 +231,7 @@ define(["./module"], function (ctrs) {
                         //legendClickListener: $scope.onLegendClickListener,
                         //legendDefaultChecked: [0, 1],
                         id: "index_charts",
-                        min_max: false,
+                        //min_max: false,
                         chartType: "line",//图表类型
                         keyFormat: 'eq',
                         noFormat: true,
@@ -515,12 +515,12 @@ define(["./module"], function (ctrs) {
                             obj[item.label] = ad.formatFunc(item.quota[0], "avgTime")
                         }
                     });
-                    obj["arrivedRate"] = obj["arrivedRate"] == undefined ? 0 : obj["arrivedRate"];
-                    obj["outRate"] = (obj["outRate"] == undefined ? 0 : obj["outRate"]) + "%";
-                    obj["pv"] = obj["pv"] == undefined ? 0 : obj["pv"];
-                    obj["avgTime"] = obj["avgTime"] == undefined ? "00:00:00" : obj["avgTime"];
-                    obj["avgPage"] = obj["avgPage"] == undefined ? 0 : obj["avgPage"];
-                    obj["vc"] = obj["vc"] == undefined ? 0 : obj["vc"];
+                    obj["arrivedRate"] = obj["arrivedRate"] == undefined ? "--" : obj["arrivedRate"];
+                    obj["outRate"] = (obj["outRate"] == undefined ? "--" : obj["outRate"] + "%");
+                    obj["pv"] = obj["pv"] == undefined ? "--" : obj["pv"];
+                    obj["avgTime"] = obj["avgTime"] == undefined ? "--" : obj["avgTime"];
+                    obj["avgPage"] = obj["avgPage"] == undefined ? "--" : obj["avgPage"];
+                    obj["vc"] = obj["vc"] == undefined ? "--" : obj["vc"];
 
                     $scope.surveyData1.push(obj);
 
@@ -697,9 +697,9 @@ define(["./module"], function (ctrs) {
                         });
 
                         if (data.length == 0)
-                            obj[$scope.effectQuota_] = 0;
+                            obj[$scope.effectQuota_] = "--";
 
-                        $scope.gridOptions1Data[0][$scope.effectQuota_] = ($scope.effectQuota_ == "outRate" || $scope.effectQuota_ == "arrivedRate") ? obj[$scope.effectQuota_] + "%" : obj[$scope.effectQuota_];
+                        $scope.gridOptions1Data[0][$scope.effectQuota_] = (($scope.effectQuota_ == "outRate" || $scope.effectQuota_ == "arrivedRate") && obj[$scope.effectQuota_] != "--") ? obj[$scope.effectQuota_] + "%" : obj[$scope.effectQuota_];
                         $scope.gridOptions1.data = $scope.gridOptions1Data;
                     }).error(function (error) {
                         console.log(error);
@@ -765,9 +765,9 @@ define(["./module"], function (ctrs) {
                         });
 
                         if (data.length == 0)
-                            obj[$scope.effectQuota_] = 0;
+                            obj[$scope.effectQuota_] = "--";
 
-                        $scope.gridOptions2Data[0][$scope.effectQuota_] = ($scope.effectQuota_ == "outRate" || $scope.effectQuota_ == "arrivedRate") ? obj[$scope.effectQuota_] + "%" : obj[$scope.effectQuota_];
+                        $scope.gridOptions2Data[0][$scope.effectQuota_] = (($scope.effectQuota_ == "outRate" || $scope.effectQuota_ == "arrivedRate")&& obj[$scope.effectQuota_] != "--") ? obj[$scope.effectQuota_] + "%" : obj[$scope.effectQuota_];
                         $scope.gridOptions2.data = $scope.gridOptions2Data;
                     }).error(function (error) {
                         console.log(error);
@@ -813,7 +813,7 @@ define(["./module"], function (ctrs) {
                         tmpResult[0].forEach(function (item) {
                             _val += parseFloat(item[$scope.outQuota_]);
                         });
-                        if ($scope.outQuota_ == "cpc" || $scope.outQuota_ == "ctr")_val = parseFloat(_val / data.length).toFixed(2);
+                        if ($scope.outQuota_ == "cpc" || $scope.outQuota_ == "ctr")_val = parseFloat(_val / tmpResult[0].length).toFixed(2);
                     } else {
                         if (tmpResult[0][0]) {
                             _val = tmpResult[0][0][$scope.outQuota_];
@@ -824,7 +824,7 @@ define(["./module"], function (ctrs) {
                     pcObj[$scope.outQuota_] = parseFloat(_val).toFixed(2);
                     pcObj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? pcObj[$scope.outQuota_] + "%" : (_val == 0 ? 0 : parseFloat(_val).toFixed(2));
 //                    pcObj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? pcObj[$scope.outQuota_] + "%" : pcObj[$scope.outQuota_];
-                    pcObj[$scope.effectQuota_] = tmpResult[2][0] + "" == "undefined" ? 0 : tmpResult[2][0].quota[0];
+                    pcObj[$scope.effectQuota_] = tmpResult[2][0] + "" == "undefined" ? "--" : tmpResult[2][0].quota[0];
                     pcObj[$scope.effectQuota_] = ($scope.effectQuota_ == "outRate" || $scope.effectQuota_ == "arrivedRate") ? pcObj[$scope.effectQuota_] + "%" : pcObj[$scope.effectQuota_];
                     $scope.gridOptions3Data = [];
                     $scope.gridOptions3Data.push(pcObj);
@@ -837,7 +837,7 @@ define(["./module"], function (ctrs) {
                         tmpResult[1].forEach(function (item) {
                             _val += parseFloat(item[$scope.outQuota_]);
                         });
-                        if ($scope.outQuota_ == "cpc" || $scope.outQuota_ == "ctr")_val = parseFloat(_val / data.length).toFixed(2);
+                        if ($scope.outQuota_ == "cpc" || $scope.outQuota_ == "ctr")_val = parseFloat(_val / tmpResult[1].length).toFixed(2);
                     } else {
                         if (tmpResult[1][0]) {
                             _val = tmpResult[1][0][$scope.outQuota_];
@@ -845,10 +845,10 @@ define(["./module"], function (ctrs) {
                             _val = 0;
                         }
                     }
-                    mobileObj[$scope.outQuota_] = _val.toFixed(2);
+                    mobileObj[$scope.outQuota_] = parseFloat(_val).toFixed(2);
                     mobileObj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? mobileObj[$scope.outQuota_] + "%" : (_val == 0 ? 0 : parseFloat(_val).toFixed(2));
 //                    mobileObj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? mobileObj[$scope.outQuota_] + "%" : mobileObj[$scope.outQuota_];
-                    mobileObj[$scope.effectQuota_] = tmpResult[3][0] + "" == "undefined" ? 0 : tmpResult[3][0].quota[0];
+                    mobileObj[$scope.effectQuota_] = tmpResult[3][0] + "" == "undefined" ? "--" : tmpResult[3][0].quota[0];
                     mobileObj[$scope.effectQuota_] = ($scope.effectQuota_ == "outRate" || $scope.effectQuota_ == "arrivedRate") ? mobileObj[$scope.effectQuota_] + "%" : mobileObj[$scope.effectQuota_];
                     $scope.gridOptions3Data.push(mobileObj);
                     $scope.gridOptions3.data = $scope.gridOptions3Data;
