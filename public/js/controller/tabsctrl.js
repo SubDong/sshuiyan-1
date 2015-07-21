@@ -1,4 +1,3 @@
-
 /**
  * Created by john on 2015/3/30.
  */
@@ -376,7 +375,7 @@ define(["app"], function (app) {
         }
         //设置来源终端
         var evTimeStamp = 0;
-        $rootScope.$on("loadAllTerminal", function (){
+        $rootScope.$on("loadAllTerminal", function () {
             $scope.setTerminal(0);
         })
         $scope.setTerminal = function (a) {
@@ -393,8 +392,9 @@ define(["app"], function (app) {
             $(inputArray[a]).prev("span").css("background-position", "0px -51px");
             if (a == 0) {
                 $rootScope.tableSwitch.tableFilter = null;
-                $scope.terminalSearch="";
-            };
+                $scope.terminalSearch = "";
+            }
+            ;
             if (a == 1) {
                 $rootScope.tableSwitch.tableFilter = "[{\"pm\":[0]}]";
                 $scope.terminalSearch = "计算机";
@@ -416,7 +416,7 @@ define(["app"], function (app) {
             }
         };
         //设置（外部链接）设备过滤
-        $rootScope.$on("ExLoadAllTerminal", function (){
+        $rootScope.$on("ExLoadAllTerminal", function () {
             $scope.setExLinkTerminal(0);
         })
         $scope.setExLinkTerminal = function (a) {
@@ -431,14 +431,14 @@ define(["app"], function (app) {
                 $(o).prop("checked", false);
             });
             $(inputArray[a]).prev("span").css("background-position", "0px -51px");
-            if (a == 0) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[3]}]" ,$scope.exTerminalSearch = "";
-            if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[0]},{\"rf_type\":[3]}]" ,$scope.exTerminalSearch = "计算机";
-            if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[1]},{\"rf_type\":[3]}]" ,$scope.exTerminalSearch = "移动设备";
+            if (a == 0) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[3]}]" , $scope.exTerminalSearch = "";
+            if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[0]},{\"rf_type\":[3]}]" , $scope.exTerminalSearch = "计算机";
+            if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[1]},{\"rf_type\":[3]}]" , $scope.exTerminalSearch = "移动设备";
             $scope.isJudge = false;
             $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.targetSearch();
         };
-        $rootScope.$on("ExLoadAllWeb", function (){
+        $rootScope.$on("ExLoadAllWeb", function () {
             $scope.webClass(0);
         })
         $scope.webClass = function (a) {
@@ -453,10 +453,18 @@ define(["app"], function (app) {
                 $(o).prop("checked", false);
             });
             $(inputArray[a]).prev("span").css("background-position", "0px -51px");
-            if(a == 0){$scope.webTypeSearch = ""}
-            if(a == 1){$scope.webTypeSearch = "社会化媒体"}
-            if(a == 2){$scope.webTypeSearch = "导航网站"}
-            if(a == 3){$scope.webTypeSearch = "电子邮箱"}
+            if (a == 0) {
+                $scope.webTypeSearch = ""
+            }
+            if (a == 1) {
+                $scope.webTypeSearch = "社会化媒体"
+            }
+            if (a == 2) {
+                $scope.webTypeSearch = "导航网站"
+            }
+            if (a == 3) {
+                $scope.webTypeSearch = "电子邮箱"
+            }
         }
         $scope.urlDomain = function (a) {
             var now = +new Date();
@@ -481,14 +489,15 @@ define(["app"], function (app) {
             $scope.targetSearch();
         };
         //设置来源过滤
-        $rootScope.$on("loadAllSource", function (){
+        $rootScope.$on("loadAllSource", function () {
             $scope.setSource(0);
         })
         $scope.setSource = function (a) {
             if (a == 0) {
                 $rootScope.tableSwitch.tableFilter = null;
                 $scope.sourceSearch = "";
-            };
+            }
+            ;
             if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[1]}]", $scope.sourceSearch = "直接访问";
             if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[2]}]", $scope.sourceSearch = "搜索引擎";
             if (a == 2) {
@@ -511,7 +520,7 @@ define(["app"], function (app) {
             }
         };
         //设置访客来源
-        $rootScope.$on("loadAllVisitor", function (){
+        $rootScope.$on("loadAllVisitor", function () {
             $scope.setVisitors(0);
         })
         $scope.setVisitors = function (a) {
@@ -526,9 +535,9 @@ define(["app"], function (app) {
                 $(o).prop("checked", false);
             });
             $(inputArray[a]).prev("span").css("background-position", "0px -51px");
-            if (a == 0) $rootScope.tableSwitch.tableFilter = null,$scope.visitorSearch = "";
-            if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"ct\":[0]}]",$scope.visitorSearch = "新访客";
-            if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"ct\":[1]}]",$scope.visitorSearch = "老访客";
+            if (a == 0) $rootScope.tableSwitch.tableFilter = null, $scope.visitorSearch = "";
+            if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"ct\":[0]}]", $scope.visitorSearch = "新访客";
+            if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"ct\":[1]}]", $scope.visitorSearch = "老访客";
             //$scope.isJudge = false;
             $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.targetSearch();
@@ -578,7 +587,7 @@ define(["app"], function (app) {
             $scope.targetSearch();
         };
         //设置地域过滤
-        $rootScope.$on("loadAllArea", function (){
+        $rootScope.$on("loadAllArea", function () {
             $scope.setAreaFilter("全部");
         })
         $scope.setAreaFilter = function (area) {
@@ -626,13 +635,13 @@ define(["app"], function (app) {
 
         };
         //自定义时间设置
-        $scope.sitetimes=[{"hour":{"selected":{"name":"0:00"}},"hour1":{"selected":{"name":"0:59"}}}];
-        $scope.sitetimesadd=function(){
-            $scope.sitetimes.push({"hour":{"selected":{"name":"0:00"}},"hour1":{"selected":{"name":"0:59"}}});
+        $scope.sitetimes = [{"hour": {"selected": {"name": "0:00"}}, "hour1": {"selected": {"name": "0:59"}}}];
+        $scope.sitetimesadd = function () {
+            $scope.sitetimes.push({"hour": {"selected": {"name": "0:00"}}, "hour1": {"selected": {"name": "0:59"}}});
         };
 
         $scope.sitetimesclear = function () {
-            $scope.sitetimes=[{"hour":{"selected":{"name":"0:00"}},"hour1":{"selected":{"name":"0:59"}}}];
+            $scope.sitetimes = [{"hour": {"selected": {"name": "0:00"}}, "hour1": {"selected": {"name": "0:59"}}}];
         };
         //设置时段过滤
 
@@ -640,7 +649,7 @@ define(["app"], function (app) {
             $scope.sitetimesclear();
             $scope.timeSearch = time == "全部" ? "" : time;
             console.log(time);
-            if (time == "00:00 - 00:59" ) {
+            if (time == "00:00 - 00:59") {
                 if ($scope.time.selected != undefined) {
                     //console.log(44);
                     $scope.time.selected.name = time;
@@ -1027,7 +1036,8 @@ define(["app"], function (app) {
                                 if (data.length > 0) {
                                     data.forEach(function (es, i) {
                                         if (isNaN(dataObj[item]) || dataObj[item] == undefined) {
-                                            dataObj[item] = es[item] != undefined ? es[item] : "--"}
+                                            dataObj[item] = es[item] != undefined ? es[item] : "--"
+                                        }
                                     });
                                 } else {
                                     if (isNaN(dataObj[item]) || dataObj[item] == undefined) {
@@ -1331,6 +1341,7 @@ define(["app"], function (app) {
                         }
                         row.entity.subGridOptions.columnDefs = $scope.gridOpArray;
                         row.entity.subGridOptions.data = data;
+                        row.entity.subGridOptions.virtualizationThreshold = data.length;
                         if (data.length == 0) {
                             row.isExpanded = false
                         }
@@ -1471,9 +1482,9 @@ define(["app"], function (app) {
                         })
                     } else {
                         var tmp = 0;
-                        if(item.entity[a.col.field] == "--"){
+                        if (item.entity[a.col.field] == "--") {
                             tmp = 0;
-                        }else{
+                        } else {
                             tmp = item.entity[a.col.field];
                         }
                         returnData[0] += parseFloat((tmp + "").replace("%", ""));
@@ -1483,7 +1494,7 @@ define(["app"], function (app) {
                                 newSpl[0] += parseInt(spl[0] / option.length) + "";
                                 newSpl[1] += parseInt(spl[1] / option.length) + "";
                                 newSpl[2] += parseInt(spl[2] / option.length) + "";
-                            }else if(item.entity[a.col.field] == 0){
+                            } else if (item.entity[a.col.field] == 0) {
                                 item.entity[a.col.field] = "00:00:00"
                             }
                         }
