@@ -28,8 +28,8 @@ define(["./module"], function (ctrs) {
                 enableSorting: false
             },
             {
-                name: "触发关键词的搜索词",
-                displayName: "触发关键词的搜索词",
+                name: "媒介",
+                displayName: "媒介",
                 field: "kw",
                 cellTemplate: "<div><a href='http://www.baidu.com/s?wd={{grid.appScope.getDataUrlInfo(grid, row,1)}}' style='color:#0965b8;line-height:30px;' target='_blank'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</div>"
                 , footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",

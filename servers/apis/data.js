@@ -20,6 +20,7 @@ var async = require("async");
 var changeList_request = require("../services/changeList_request");
 var transform = require("../services/transform-request");
 var heaturl_request = require("../services/heaturl_request");
+var ad_request = require("../services/ad_request");
 
 api.get('/charts', function (req, res) {
     var query = url.parse(req.url, true).query, quotas = [], type = query['type'], dimension = query.dimension, filter = null, topN = [], userType = query.userType;
@@ -861,5 +862,105 @@ api.get("/transform/transformAnalysis", function (req, res) {
         });
     }
 
+});
+//==================================== ad_track by icepros ===============================================
+/**
+ * adsSource
+ */
+api.get("/adsSource", function(req, res){
+    var queryUrl = url.parse(req.url, true).query;                      //URL请求对象
+    var type = queryUrl['type'];                                        //类型
+    var startTime = Number(queryUrl['start']);                          //开始时间
+    var endTime = Number(queryUrl['end']);                              //结束时间
+    var quotas = queryUrl["quotas"].split(",");                         //指标
+    var dimension = queryUrl["dimension"];                              //维度
+    var filters = queryUrl["filters"];                                  //过滤字段
+    var indexes = date.createIndexes(startTime, endTime, "access-");    //索引
+    var period = date.period(startTime, endTime);                       //时间轴维度
+    var interval = date.interval(startTime, endTime);                   //时间分割
+
+    es_request.search(req.es, indexes, type, quotas, dimension, [0], filters, period[0], period[1], interval, function (data) {
+        /*var result = {};
+         data.forEach(function (item, i) {
+            result[item.label] = item.label == "outRate" ? item.quota[0] + "%" : item.label == "avgTime" ? new Date(item.quota[0]).format("hh:mm:ss") : item.quota[0];
+        });*/
+        datautils.send(res, data);
+    })
+});
+/**
+ * adsMedium
+ */
+api.get("/adsMedium", function(req, res){
+    var queryUrl = url.parse(req.url, true).query;                      //URL请求对象
+    var type = queryUrl['type'];                                        //类型
+    var startTime = Number(queryUrl['start']);                          //开始时间
+    var endTime = Number(queryUrl['end']);                              //结束时间
+    var quotas = queryUrl["quotas"].split(",");                         //指标
+    var dimension = queryUrl["dimension"];                              //维度
+    var filters = queryUrl["filters"];                                  //过滤字段
+    var indexes = date.createIndexes(startTime, endTime, "access-");    //索引
+    var period = date.period(startTime, endTime);                       //时间轴维度
+    var interval = date.interval(startTime, endTime);                   //时间分割
+
+    es_request.search(req.es, indexes, type, quotas, dimension, [0], filters, period[0], period[1], interval, function (data) {
+        datautils.send(res, data);
+    })
+});
+/**
+ * adsPlan
+ */
+api.get("/adsPlan", function(req, res){
+    var queryUrl = url.parse(req.url, true).query;                      //URL请求对象
+    var type = queryUrl['type'];                                        //类型
+    var startTime = Number(queryUrl['start']);                          //开始时间
+    var endTime = Number(queryUrl['end']);                              //结束时间
+    var quotas = queryUrl["quotas"].split(",");                         //指标
+    var dimension = queryUrl["dimension"];                              //维度
+    var filters = queryUrl["filters"];                                  //过滤字段
+    var indexes = date.createIndexes(startTime, endTime, "access-");    //索引
+    var period = date.period(startTime, endTime);                       //时间轴维度
+    var interval = date.interval(startTime, endTime);                   //时间分割
+
+    es_request.search(req.es, indexes, type, quotas, dimension, [0], filters, period[0], period[1], interval, function (data) {
+        datautils.send(res, data);
+    })
+});
+/**
+ * adsKeyWord
+ */
+api.get("/adsKeyWord", function(req, res){
+    var queryUrl = url.parse(req.url, true).query;                      //URL请求对象
+    var type = queryUrl['type'];                                        //类型
+    var startTime = Number(queryUrl['start']);                          //开始时间
+    var endTime = Number(queryUrl['end']);                              //结束时间
+    var quotas = queryUrl["quotas"].split(",");                         //指标
+    var dimension = queryUrl["dimension"];                              //维度
+    var filters = queryUrl["filters"];                                  //过滤字段
+    var indexes = date.createIndexes(startTime, endTime, "access-");    //索引
+    var period = date.period(startTime, endTime);                       //时间轴维度
+    var interval = date.interval(startTime, endTime);                   //时间分割
+
+    es_request.search(req.es, indexes, type, quotas, dimension, [0], filters, period[0], period[1], interval, function (data) {
+        datautils.send(res, data);
+    })
+});
+/**
+ * adsCreative
+ */
+api.get("/adsCreative", function(req, res){
+    var queryUrl = url.parse(req.url, true).query;                      //URL请求对象
+    var type = queryUrl['type'];                                        //类型
+    var startTime = Number(queryUrl['start']);                          //开始时间
+    var endTime = Number(queryUrl['end']);                              //结束时间
+    var quotas = queryUrl["quotas"].split(",");                         //指标
+    var dimension = queryUrl["dimension"];                              //维度
+    var filters = queryUrl["filters"];                                  //过滤字段
+    var indexes = date.createIndexes(startTime, endTime, "access-");    //索引
+    var period = date.period(startTime, endTime);                       //时间轴维度
+    var interval = date.interval(startTime, endTime);                   //时间分割
+
+    es_request.search(req.es, indexes, type, quotas, dimension, [0], filters, period[0], period[1], interval, function (data) {
+        datautils.send(res, data);
+    })
 });
 module.exports = api;

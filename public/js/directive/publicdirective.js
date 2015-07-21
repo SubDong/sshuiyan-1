@@ -1195,6 +1195,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
 
                 scope.pushESData = function (result, flag) {
                     var _array = $rootScope.copy(scope.dateShowArray);
+
                     if (Object.prototype.toString.call(result) === '[object Array]') {
                         var _count = 0;
                         angular.forEach(result, function (r) {
@@ -1771,4 +1772,510 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
             }
         };
     });
+
+    /**
+     * 指定广告追踪 来源 指标显示指令 by icepros
+     */
+    app.directive("sshEsAdsSourceShow", function ($http, $rootScope, $q) {
+        return {
+            restrict: 'E',
+            templateUrl: '../commons/date_show.html',
+            link: function (scope, element, attris, controller) {
+                // 初始化参数 默认不比较数据
+                scope.isCompared = false;
+                // 展现统计指标数据数组
+                scope.dateShowArray = [];
+                // 默认指标
+                scope.ds_defaultQuotasOption = ["pv", "uv", "ip", "outRate", "avgTime"];
+                // 自定义指标
+                scope.ds_dateShowQuotasOption = scope.checkedArray ? scope.checkedArray : scope.ds_defaultQuotasOption;
+                // 默认统计指标值
+                scope.setDefaultShowArray = function () {
+                    var tempArray = [];
+                    angular.forEach(scope.ds_dateShowQuotasOption, function (quota) {
+                        tempArray.push({"label": quota, "value": 0, "cValue": 0, "count": 0, "cCount": 0});
+                    });
+                    scope.dateShowArray = $rootScope.copy(tempArray);
+                };
+                // 根据请求的 URL 获取数据
+                scope.loadDataShow = function () {
+                    scope.DateNumber = false;
+                    scope.DateLoading = false;
+                    scope.setDefaultShowArray();
+                    var esRequest = $http.get('/api/adsSource/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&quotas=" + $rootScope.checkedArray + "&dimension=" + $rootScope.tableSwitch.latitude.field + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
+                    $q.all([esRequest]).then(function (finalResult) {
+                        // 初始化对比数据
+                        scope.pushESData(finalResult[0].data);
+                        scope.DateNumber = true;
+                        scope.DateLoading = true;
+                    });
+                };
+                // 根据 选择的日期进行 URL 传参 获取对比的数据
+                scope.loadCompareDataShow = function (startTime, endTime) {
+                    scope.DateNumbertwo = false;
+                    scope.DateLoading = false;
+                    var esRequest = $http.get('/api/adsSource/?start=' + startTime + "&end=" + endTime + "&quotas=" + $rootScope.checkedArray + "&dimension=" + $rootScope.tableSwitch.latitude.field + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
+                    $q.all([esRequest]).then(function (finalResult) {
+                        // 初始化对比数据
+                        scope.pushESData(finalResult[0].data, true);
+                        scope.DateNumbertwo = true;
+                        scope.DateLoading = true;
+                    });
+                };
+                // 把 es 返回的数据以对象的方式存到 dateShowArray 数组中
+                scope.pushESData = function (result, flag) {
+                    var _array = $rootScope.copy(scope.dateShowArray);
+                    angular.forEach(result, function (r) {
+                        var dateShowObject = {};
+                        dateShowObject.label = r.label;
+                        var temp = 0;
+                        var count = 0;
+                        angular.forEach(r.quota, function (qo) {
+                            temp += Number(qo);
+                            count++;
+                        });
+                        angular.forEach(_array, function (_array_r) {
+                            if (_array_r.label == dateShowObject.label) {
+                                if (flag) {
+                                    _array_r.cCount = count;
+                                    _array_r.cValue = temp
+                                } else {
+                                    _array_r.count = count;
+                                    _array_r.value = temp
+                                }
+                            }
+                        });
+                    });
+
+                    scope.dateShowArray = $rootScope.copy(_array);
+                }
+
+                // 根据表格请求一次进行datashow请求一次
+                scope.$on("ssh_dateShow_options_quotas_change", function (e, msg) {
+                    scope.isCompared = false;
+                    var temp = $rootScope.copy(msg);
+                    if (temp.length > 0) {
+                        scope.ds_dateShowQuotasOption = temp;
+                    }
+                    scope.loadDataShow();
+                });
+
+                scope.loadDataShow();
+
+                // 对比
+                scope.$on("ssh_load_compare_datashow", function (e, startTime, endTime) {
+                    scope.isCompared = true;
+                    angular.forEach(scope.dateShowArray, function (dsa) {
+                        dsa.cValue = 0;
+                    });
+                    scope.loadCompareDataShow(startTime, endTime);
+                });
+            }
+        }
+    });
+
+    /**
+     * 指定广告追踪 媒介 指标显示指令 by icepros
+     */
+    app.directive("sshEsAdsMediumShow", function($http, $rootScope, $q){
+        return {
+            restrict: 'E',
+            templateUrl: '../commons/date_show.html',
+            link: function (scope, element, attris, controller) {
+                // 初始化参数 默认不比较数据
+                scope.isCompared = false;
+                // 展现统计指标数据数组
+                scope.dateShowArray = [];
+                // 默认指标
+                scope.ds_defaultQuotasOption = ["pv", "uv", "ip", "outRate", "avgTime"];
+                // 自定义指标
+                scope.ds_dateShowQuotasOption = scope.checkedArray ? scope.checkedArray : scope.ds_defaultQuotasOption;
+                // 默认统计指标值
+                scope.setDefaultShowArray = function () {
+                    var tempArray = [];
+                    angular.forEach(scope.ds_dateShowQuotasOption, function (quota) {
+                        tempArray.push({"label": quota, "value": 0, "cValue": 0, "count": 0, "cCount": 0});
+                    });
+                    scope.dateShowArray = $rootScope.copy(tempArray);
+                };
+                // 根据请求的 URL 获取数据
+                scope.loadDataShow = function () {
+                    scope.DateNumber = false;
+                    scope.DateLoading = false;
+                    scope.setDefaultShowArray();
+                    var esRequest = $http.get('/api/adsMedium/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&quotas=" + $rootScope.checkedArray + "&dimension=" + $rootScope.tableSwitch.latitude.field + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
+                    $q.all([esRequest]).then(function (finalResult) {
+                        // 初始化对比数据
+                        scope.pushESData(finalResult[0].data);
+                        scope.DateNumber = true;
+                        scope.DateLoading = true;
+                    });
+                };
+                // 根据 选择的日期进行 URL 传参 获取对比的数据
+                scope.loadCompareDataShow = function (startTime, endTime) {
+                    scope.DateNumbertwo = false;
+                    scope.DateLoading = false;
+                    var esRequest = $http.get('/api/adsMedium/?start=' + startTime + "&end=" + endTime + "&quotas=" + $rootScope.checkedArray + "&dimension=" + $rootScope.tableSwitch.latitude.field + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
+                    $q.all([esRequest]).then(function (finalResult) {
+                        // 初始化对比数据
+                        scope.pushESData(finalResult[0].data, true);
+                        scope.DateNumbertwo = true;
+                        scope.DateLoading = true;
+                    });
+                };
+                // 把 es 返回的数据以对象的方式存到 dateShowArray 数组中
+                scope.pushESData = function (result, flag) {
+                    var _array = $rootScope.copy(scope.dateShowArray);
+                    angular.forEach(result, function (r) {
+                        var dateShowObject = {};
+                        dateShowObject.label = r.label;
+                        var temp = 0;
+                        var count = 0;
+                        angular.forEach(r.quota, function (qo) {
+                            temp += Number(qo);
+                            count++;
+                        });
+                        angular.forEach(_array, function (_array_r) {
+                            if (_array_r.label == dateShowObject.label) {
+                                if (flag) {
+                                    _array_r.cCount = count;
+                                    _array_r.cValue = temp
+                                } else {
+                                    _array_r.count = count;
+                                    _array_r.value = temp
+                                }
+                            }
+                        });
+                    });
+
+                    scope.dateShowArray = $rootScope.copy(_array);
+                }
+
+                // 根据表格请求一次进行datashow请求一次
+                scope.$on("ssh_dateShow_options_quotas_change", function (e, msg) {
+                    scope.isCompared = false;
+                    var temp = $rootScope.copy(msg);
+                    if (temp.length > 0) {
+                        scope.ds_dateShowQuotasOption = temp;
+                    }
+                    scope.loadDataShow();
+                });
+
+                scope.loadDataShow();
+
+                // 对比
+                scope.$on("ssh_load_compare_datashow", function (e, startTime, endTime) {
+                    scope.isCompared = true;
+                    angular.forEach(scope.dateShowArray, function (dsa) {
+                        dsa.cValue = 0;
+                    });
+                    scope.loadCompareDataShow(startTime, endTime);
+                });
+            }
+        }
+    });
+
+    /**
+     * 指定广告追踪 计划 指标显示指令 by icepros
+     */
+    app.directive("sshEsAdsPlanShow", function($http, $rootScope, $q){
+        return {
+            restrict: 'E',
+            templateUrl: '../commons/date_show.html',
+            link: function (scope, element, attris, controller) {
+                // 初始化参数 默认不比较数据
+                scope.isCompared = false;
+                // 展现统计指标数据数组
+                scope.dateShowArray = [];
+                // 默认指标
+                scope.ds_defaultQuotasOption = ["pv", "uv", "ip", "outRate", "avgTime"];
+                // 自定义指标
+                scope.ds_dateShowQuotasOption = scope.checkedArray ? scope.checkedArray : scope.ds_defaultQuotasOption;
+                // 默认统计指标值
+                scope.setDefaultShowArray = function () {
+                    var tempArray = [];
+                    angular.forEach(scope.ds_dateShowQuotasOption, function (quota) {
+                        tempArray.push({"label": quota, "value": 0, "cValue": 0, "count": 0, "cCount": 0});
+                    });
+                    scope.dateShowArray = $rootScope.copy(tempArray);
+                };
+                // 根据请求的 URL 获取数据
+                scope.loadDataShow = function () {
+                    scope.DateNumber = false;
+                    scope.DateLoading = false;
+                    scope.setDefaultShowArray();
+                    var esRequest = $http.get('/api/adsPlan/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&quotas=" + $rootScope.checkedArray + "&dimension=" + $rootScope.tableSwitch.latitude.field + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
+                    $q.all([esRequest]).then(function (finalResult) {
+                        // 初始化对比数据
+                        scope.pushESData(finalResult[0].data);
+                        scope.DateNumber = true;
+                        scope.DateLoading = true;
+                    });
+                };
+                // 根据 选择的日期进行 URL 传参 获取对比的数据
+                scope.loadCompareDataShow = function (startTime, endTime) {
+                    scope.DateNumbertwo = false;
+                    scope.DateLoading = false;
+                    var esRequest = $http.get('/api/adsPlan/?start=' + startTime + "&end=" + endTime + "&quotas=" + $rootScope.checkedArray + "&dimension=" + $rootScope.tableSwitch.latitude.field + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
+                    $q.all([esRequest]).then(function (finalResult) {
+                        // 初始化对比数据
+                        scope.pushESData(finalResult[0].data, true);
+                        scope.DateNumbertwo = true;
+                        scope.DateLoading = true;
+                    });
+                };
+                // 把 es 返回的数据以对象的方式存到 dateShowArray 数组中
+                scope.pushESData = function (result, flag) {
+                    var _array = $rootScope.copy(scope.dateShowArray);
+                    angular.forEach(result, function (r) {
+                        var dateShowObject = {};
+                        dateShowObject.label = r.label;
+                        var temp = 0;
+                        var count = 0;
+                        angular.forEach(r.quota, function (qo) {
+                            temp += Number(qo);
+                            count++;
+                        });
+                        angular.forEach(_array, function (_array_r) {
+                            if (_array_r.label == dateShowObject.label) {
+                                if (flag) {
+                                    _array_r.cCount = count;
+                                    _array_r.cValue = temp
+                                } else {
+                                    _array_r.count = count;
+                                    _array_r.value = temp
+                                }
+                            }
+                        });
+                    });
+
+                    scope.dateShowArray = $rootScope.copy(_array);
+                }
+
+                // 根据表格请求一次进行datashow请求一次
+                scope.$on("ssh_dateShow_options_quotas_change", function (e, msg) {
+                    scope.isCompared = false;
+                    var temp = $rootScope.copy(msg);
+                    if (temp.length > 0) {
+                        scope.ds_dateShowQuotasOption = temp;
+                    }
+                    scope.loadDataShow();
+                });
+
+                scope.loadDataShow();
+
+                // 对比
+                scope.$on("ssh_load_compare_datashow", function (e, startTime, endTime) {
+                    scope.isCompared = true;
+                    angular.forEach(scope.dateShowArray, function (dsa) {
+                        dsa.cValue = 0;
+                    });
+                    scope.loadCompareDataShow(startTime, endTime);
+                });
+            }
+        }
+    });
+
+    /**
+     * 指定广告追踪 关键词 指标显示指令 by icepros
+     */
+    app.directive("sshEsAdsKeywordShow", function($http, $rootScope, $q){
+        return {
+            restrict: 'E',
+            templateUrl: '../commons/date_show.html',
+            link: function (scope, element, attris, controller) {
+                // 初始化参数 默认不比较数据
+                scope.isCompared = false;
+                // 展现统计指标数据数组
+                scope.dateShowArray = [];
+                // 默认指标
+                scope.ds_defaultQuotasOption = ["pv", "uv", "ip", "outRate", "avgTime"];
+                // 自定义指标
+                scope.ds_dateShowQuotasOption = scope.checkedArray ? scope.checkedArray : scope.ds_defaultQuotasOption;
+                // 默认统计指标值
+                scope.setDefaultShowArray = function () {
+                    var tempArray = [];
+                    angular.forEach(scope.ds_dateShowQuotasOption, function (quota) {
+                        tempArray.push({"label": quota, "value": 0, "cValue": 0, "count": 0, "cCount": 0});
+                    });
+                    scope.dateShowArray = $rootScope.copy(tempArray);
+                };
+                // 根据请求的 URL 获取数据
+                scope.loadDataShow = function () {
+                    scope.DateNumber = false;
+                    scope.DateLoading = false;
+                    scope.setDefaultShowArray();
+                    var esRequest = $http.get('/api/adsKeyWord/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&quotas=" + $rootScope.checkedArray + "&dimension=" + $rootScope.tableSwitch.latitude.field + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
+                    $q.all([esRequest]).then(function (finalResult) {
+                        // 初始化对比数据
+                        scope.pushESData(finalResult[0].data);
+                        scope.DateNumber = true;
+                        scope.DateLoading = true;
+                    });
+                };
+                // 根据 选择的日期进行 URL 传参 获取对比的数据
+                scope.loadCompareDataShow = function (startTime, endTime) {
+                    scope.DateNumbertwo = false;
+                    scope.DateLoading = false;
+                    var esRequest = $http.get('/api/adsKeyWord/?start=' + startTime + "&end=" + endTime + "&quotas=" + $rootScope.checkedArray + "&dimension=" + $rootScope.tableSwitch.latitude.field + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
+                    $q.all([esRequest]).then(function (finalResult) {
+                        // 初始化对比数据
+                        scope.pushESData(finalResult[0].data, true);
+                        scope.DateNumbertwo = true;
+                        scope.DateLoading = true;
+                    });
+                };
+                // 把 es 返回的数据以对象的方式存到 dateShowArray 数组中
+                scope.pushESData = function (result, flag) {
+                    var _array = $rootScope.copy(scope.dateShowArray);
+                    angular.forEach(result, function (r) {
+                        var dateShowObject = {};
+                        dateShowObject.label = r.label;
+                        var temp = 0;
+                        var count = 0;
+                        angular.forEach(r.quota, function (qo) {
+                            temp += Number(qo);
+                            count++;
+                        });
+                        angular.forEach(_array, function (_array_r) {
+                            if (_array_r.label == dateShowObject.label) {
+                                if (flag) {
+                                    _array_r.cCount = count;
+                                    _array_r.cValue = temp
+                                } else {
+                                    _array_r.count = count;
+                                    _array_r.value = temp
+                                }
+                            }
+                        });
+                    });
+
+                    scope.dateShowArray = $rootScope.copy(_array);
+                }
+
+                // 根据表格请求一次进行datashow请求一次
+                scope.$on("ssh_dateShow_options_quotas_change", function (e, msg) {
+                    scope.isCompared = false;
+                    var temp = $rootScope.copy(msg);
+                    if (temp.length > 0) {
+                        scope.ds_dateShowQuotasOption = temp;
+                    }
+                    scope.loadDataShow();
+                });
+
+                scope.loadDataShow();
+
+                // 对比
+                scope.$on("ssh_load_compare_datashow", function (e, startTime, endTime) {
+                    scope.isCompared = true;
+                    angular.forEach(scope.dateShowArray, function (dsa) {
+                        dsa.cValue = 0;
+                    });
+                    scope.loadCompareDataShow(startTime, endTime);
+                });
+            }
+        }
+    });
+
+    /**
+     * 指定广告追踪 创意 指标显示指令 by icepros
+     */
+    app.directive("sshEsAdsCreativeShow", function($http, $rootScope, $q){
+        return {
+            restrict: 'E',
+            templateUrl: '../commons/date_show.html',
+            link: function (scope, element, attris, controller) {
+                // 初始化参数 默认不比较数据
+                scope.isCompared = false;
+                // 展现统计指标数据数组
+                scope.dateShowArray = [];
+                // 默认指标
+                scope.ds_defaultQuotasOption = ["pv", "uv", "ip", "outRate", "avgTime"];
+                // 自定义指标
+                scope.ds_dateShowQuotasOption = scope.checkedArray ? scope.checkedArray : scope.ds_defaultQuotasOption;
+                // 默认统计指标值
+                scope.setDefaultShowArray = function () {
+                    var tempArray = [];
+                    angular.forEach(scope.ds_dateShowQuotasOption, function (quota) {
+                        tempArray.push({"label": quota, "value": 0, "cValue": 0, "count": 0, "cCount": 0});
+                    });
+                    scope.dateShowArray = $rootScope.copy(tempArray);
+                };
+                // 根据请求的 URL 获取数据
+                scope.loadDataShow = function () {
+                    scope.DateNumber = false;
+                    scope.DateLoading = false;
+                    scope.setDefaultShowArray();
+                    var esRequest = $http.get('/api/adsCreative/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&quotas=" + $rootScope.checkedArray + "&dimension=" + $rootScope.tableSwitch.latitude.field + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
+                    $q.all([esRequest]).then(function (finalResult) {
+                        // 初始化对比数据
+                        scope.pushESData(finalResult[0].data);
+                        scope.DateNumber = true;
+                        scope.DateLoading = true;
+                    });
+                };
+                // 根据 选择的日期进行 URL 传参 获取对比的数据
+                scope.loadCompareDataShow = function (startTime, endTime) {
+                    scope.DateNumbertwo = false;
+                    scope.DateLoading = false;
+                    var esRequest = $http.get('/api/adsCreative/?start=' + startTime + "&end=" + endTime + "&quotas=" + $rootScope.checkedArray + "&dimension=" + $rootScope.tableSwitch.latitude.field + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
+                    $q.all([esRequest]).then(function (finalResult) {
+                        // 初始化对比数据
+                        scope.pushESData(finalResult[0].data, true);
+                        scope.DateNumbertwo = true;
+                        scope.DateLoading = true;
+                    });
+                };
+                // 把 es 返回的数据以对象的方式存到 dateShowArray 数组中
+                scope.pushESData = function (result, flag) {
+                    var _array = $rootScope.copy(scope.dateShowArray);
+                    angular.forEach(result, function (r) {
+                        var dateShowObject = {};
+                        dateShowObject.label = r.label;
+                        var temp = 0;
+                        var count = 0;
+                        angular.forEach(r.quota, function (qo) {
+                            temp += Number(qo);
+                            count++;
+                        });
+                        angular.forEach(_array, function (_array_r) {
+                            if (_array_r.label == dateShowObject.label) {
+                                if (flag) {
+                                    _array_r.cCount = count;
+                                    _array_r.cValue = temp
+                                } else {
+                                    _array_r.count = count;
+                                    _array_r.value = temp
+                                }
+                            }
+                        });
+                    });
+
+                    scope.dateShowArray = $rootScope.copy(_array);
+                }
+
+                // 根据表格请求一次进行datashow请求一次
+                scope.$on("ssh_dateShow_options_quotas_change", function (e, msg) {
+                    scope.isCompared = false;
+                    var temp = $rootScope.copy(msg);
+                    if (temp.length > 0) {
+                        scope.ds_dateShowQuotasOption = temp;
+                    }
+                    scope.loadDataShow();
+                });
+
+                scope.loadDataShow();
+
+                // 对比
+                scope.$on("ssh_load_compare_datashow", function (e, startTime, endTime) {
+                    scope.isCompared = true;
+                    angular.forEach(scope.dateShowArray, function (dsa) {
+                        dsa.cValue = 0;
+                    });
+                    scope.loadCompareDataShow(startTime, endTime);
+                });
+            }
+        }
+    });
+
 });

@@ -29,8 +29,8 @@ define(["./module"], function (ctrls) {
                 enableSorting: false
             },
             {
-                name: "来源类型",
-                displayName: "来源类型",
+                name: "推广计划",
+                displayName: "推广计划",
                 field: "rf_type",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
                 cellClass: "table_list_color",

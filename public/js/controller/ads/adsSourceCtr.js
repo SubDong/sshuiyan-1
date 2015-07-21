@@ -7,10 +7,10 @@
 define(["./module"], function (ctrs) {
     "use strict";
     ctrs.controller("adsSourceCtr", function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
-        //        高级搜索提示
+        //高级搜索提示
         $scope.visitorSearch = "";
         $scope.areaSearch = "";
-//        取消显示的高级搜索的条件
+        //取消显示的高级搜索的条件
         $scope.removeVisitorSearch = function(obj){
             $rootScope.$broadcast("loadAllVisitor");
             obj.visitorSearch = "";
@@ -37,9 +37,9 @@ define(["./module"], function (ctrs) {
                 enableSorting: false
             },
             {
-                name: "事件名称",
-                displayName: "事件名称",
-                field: "se",
+                name: "来源",
+                displayName: "来源",
+                field: "city",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
                 enableSorting: false
             },
@@ -68,7 +68,7 @@ define(["./module"], function (ctrs) {
             {
                 name: "跳出率",
                 displayName: "跳出率",
-                field: "nuvRate",
+                field: "outRate",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
             },
             {
@@ -79,8 +79,10 @@ define(["./module"], function (ctrs) {
             }
         ];
         $rootScope.tableSwitch = {
-            latitude: {name: "搜索引擎", displayName: "搜索引擎", field: "se"},
-            tableFilter: "[{\"rf_type\": [\"2\"]}]",
+            //维度字段
+            latitude: {name: "来源", displayName: "来源", field: "city"},
+            //过滤字段值
+            tableFilter: null,
             dimen: false,
             // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
             number: 2,
@@ -91,75 +93,30 @@ define(["./module"], function (ctrs) {
             isJudge: false //是否清空filter 默认为清空
         };
 
-
-        $scope.pieFormat = function (data, config) {
-            var json = JSON.parse(eval("(" + data + ")").toString());
-            cf.renderChart(json, config);
-        }
         $scope.onLegendClick = function (radio, chartInstance, config, checkedVal) {
             clear.lineChart(config, checkedVal);
-            var chart = $scope.charts[1];
+            var chart = $scope.charts[0];
             chart.config.instance = echarts.init(document.getElementById(chart.config.id));
             chart.types = checkedVal;
             requestService.refresh([chart]);
-        }
-        $scope.searchengineFormat = function (data, config, e) {
-            var json = JSON.parse(eval("(" + data + ")").toString());
+        };
+
+        // 数据转化
+        $scope.dataFormat = function (data, chartConfig, e) {
+            var dataObj = JSON.parse(eval("(" + data + ")").toString());
             var times = [$rootScope.start, $rootScope.end];
-            var result_json = chartUtils.getRf_type(json, times, "serverLabel", e.types, config);
-            config['noFormat'] = true;
-            config['twoYz'] = "none"
-            cf.renderChart(result_json, config);
-            var pieData = chartUtils.getEnginePie(result_json, null, e);
+            var resultObj = chartUtils.getRf_type(dataObj, times, "serverLabel", e.types, chartConfig);
+            chartConfig['noFormat'] = true;
+            chartConfig['twoYz'] = "none"
+            cf.renderChart(resultObj, chartConfig);
+            var pieData = chartUtils.getEnginePie(resultObj, null, e);
             var e0 = $scope.charts[0];
             e0.config.instance = echarts.init(document.getElementById(e0.config.id));
             cf.renderChart(pieData, e0.config);
 
-        }
-        $scope.extPieHover = function (params, type) {
-            if (params.dataIndex != -1) {
-                var colorIndex = Number(params.dataIndex);
-                $(".chart_box").attr("style", "background:" + $rootScope.chartColors[colorIndex]);
-                $("#chartlink").html(params.name);
-                $("#chartname").html(chartUtils.convertChinese(type));
-                $("#chartnumber").html(params.data.value);
-                $("#chartpointe").html(params.special + "%");
-            }
-        }
-        $scope.itemHover = function (params, typeTotal, allTotal) {
-            var type = chartUtils.convertChinese($scope.charts[1].types.toString())
-            $(".chart_box").attr("style", "background:" + $rootScope.chartColors[params.seriesIndex]);
-            $("#chartlink").html(params[0]);
-            $("#chartname").html(type);
-            $("#chartnumber").html(typeTotal);
-            $("#chartpointe").html(parseFloat(typeTotal / allTotal * 100).toFixed(2) + "%");
-            var xName = params[1].toString();
-            var res = '<li>' + type + '</li>';
-            if ($rootScope.start - $rootScope.end == 0) {
-                res += '<li>' + xName + ':00-' + xName + ':59</li>';
-            } else {
-                res += '<li>' + xName + '</li>';
-            }
-            res += '<li  class=chartstyle' + params.seriesIndex + '>' + params[0] + '：' + params[2] + '</li>';
-            return res;
-        }
-        $scope.charts = [{
-            config: {
-                legendData: [],
-                id: "sourse_charts",
-                pieStyle: true,
-                serieName: "搜索引擎",
-                chartType: "pie",
-                dataKey: "key",
-                dataValue: "quota",
-                onHover: $scope.extPieHover
-            },
-            types: ["pv"],
-            dimension: ["se"],
-            filter: "[{\"rf_type\":[\"2\"]}]",
-            url: "/api/map",
-            cb: $scope.pieFormat
-        },
+        };
+
+        $scope.charts = [
             {
                 config: {
                     legendId: "indicators_charts_legend",
@@ -180,25 +137,26 @@ define(["./module"], function (ctrs) {
                     dataValue: "quota"//传入数据的value值
                 },
                 types: ["pv"],
-                dimension: ["period,se"],
-                filter: "[{\"rf_type\":[\"2\"]}]",
+                dimension: ["period,city"],
+                //filter: "[{\"rf_type\":[\"2\"]}]",
                 interval: $rootScope.interval,
                 url: "/api/charts",
-                cb: $scope.searchengineFormat
-            }]
+                cb: $scope.dataFormat
+            }
+        ];
         $scope.init = function () {
             $rootScope.start = 0;
             $rootScope.end = 0;
             $rootScope.interval = undefined;
-            var chart = $scope.charts[1];
+            var chart = $scope.charts[0];
             chart.config.instance = echarts.init(document.getElementById(chart.config.id));
             util.renderLegend(chart, chart.config);
-            requestService.refresh([$scope.charts[1]]);
-        }
+            requestService.refresh([$scope.charts[0]]);
+        };
         $scope.init();
         $scope.$on("ssh_refresh_charts", function (e, msg) {
             $rootScope.targetSearch();
-            var chart = $scope.charts[1];
+            var chart = $scope.charts[0];
             chart.config.instance = echarts.init(document.getElementById(chart.config.id));
             requestService.refresh([chart]);
         });
@@ -212,21 +170,7 @@ define(["./module"], function (ctrs) {
             {name: '时长目标'},
             {name: '访问页数目标'}
         ];
-        //日历
-        $rootScope.datepickerClick = function (start, end, label) {
-            var time = chartUtils.getTimeOffset(start, end);
-            $rootScope.start = time[0];
-            $rootScope.end = time[1];
-            var e = $scope.charts[1];
-            e.config.keyFormat = "day";
-            var chart = echarts.init(document.getElementById(e.config.id));
-            e.config.instance = chart;
-            requestService.refresh([e]);
-            $rootScope.tableTimeStart = time[0];
-            $rootScope.tableTimeEnd = time[1];
-            $rootScope.targetSearch();
-            $scope.$broadcast("ssh_dateShow_options_time_change");
-        }
+
         function GetDateStr(AddDayCount) {
             var dd = new Date();
             dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
@@ -234,9 +178,11 @@ define(["./module"], function (ctrs) {
             var m = dd.getMonth() + 1;//获取当前月份的日期
             var d = dd.getDate();
             return y + "-" + m + "-" + d;
-        }
+        };
 
-        //刷新
+        /**
+         * 刷新
+         */
         $scope.page_refresh = function () {
             $rootScope.start = 0;
             $rootScope.end = 0;
@@ -258,5 +204,6 @@ define(["./module"], function (ctrs) {
             $scope.reset();
             $scope.todayClass = true;
         };
+
     });
 });
