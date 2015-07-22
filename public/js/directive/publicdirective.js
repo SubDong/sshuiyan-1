@@ -1888,6 +1888,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
             restrict: 'E',
             templateUrl: '../commons/date_show.html',
             link: function (scope, element, attris, controller) {
+<<<<<<< HEAD
                 // 初始化参数 默认不比较数据
                 scope.isCompared = false;
                 // 展现统计指标数据数组
@@ -1964,6 +1965,31 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     if (temp.length > 0) {
                         scope.ds_dateShowQuotasOption = temp;
                     }
+                    scope.loadDataShow();
+                });
+
+                scope.loadDataShow();
+
+                // 对比
+                scope.$on("ssh_load_compare_datashow", function (e, startTime, endTime) {
+                    scope.isCompared = true;
+                    angular.forEach(scope.dateShowArray, function (dsa) {
+                        dsa.cValue = 0;
+                    });
+                    scope.loadCompareDataShow(startTime, endTime);
+                });
+            }
+        }
+    });
+
+    /**
+     * 指定广告追踪 计划 指标显示指令 by icepros
+     */
+    app.directive("sshEsAdsPlanShow", function($http, $rootScope, $q){
+        return {
+            restrict: 'E',
+            templateUrl: '../commons/date_show.html',
+            link: function (scope, element, attris, controller) {
                     scope.loadDataShow();
                 });
 
@@ -2283,5 +2309,32 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
             }
         }
     });
+app.directive("sshDateShowPage", function ($rootScope) {
+        return {
+            restrict: 'E',
+            templateUrl: '../commons/date_show.html',
+            link: function (scope, element, attris, controller) {
+                // 初始化参数
 
+                scope.isCompared = false;
+                scope.dateShowArray = [];
+                scope.ssh_seo_type = attris.semType;
+                scope.filter = attris.filter;
+                scope.ds_defaultQuotasOption = ["pv", "uv", "ip", "conversions","vc","crate"];
+                scope.ds_keyData = [];
+                scope.ds_dateShowQuotasOption = scope.checkedArray ? scope.checkedArray : scope.ds_defaultQuotasOption;
+                scope.setDefaultShowArray = function () {
+                    var tempArray = [];
+                    angular.forEach(scope.ds_dateShowQuotasOption, function (q_r) {
+                        tempArray.push({"label": q_r, "value": 0, "cValue": 0, "count": 0, "cCount": 0});
+                    });
+                    scope.ds_keyData = [];
+                    scope.dateShowArray = $rootScope.copy(tempArray);
+
+                };
+                // 刷新加载时设置默认指标
+                scope.setDefaultShowArray();
+            }
+        };
+    });
 });
