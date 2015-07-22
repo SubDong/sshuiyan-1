@@ -122,7 +122,7 @@ define(["./module"], function (ctrs) {
                         min_max: false,
                         bGap: true,
                         autoInput: 20,
-                        auotHidex: true,
+                        //auotHidex: true,
                         id: "indicators_charts",
                         chartType: "bar",//图表类型
                         keyFormat: 'eq',

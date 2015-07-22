@@ -777,92 +777,94 @@ api.get("/changeList", function (req, res) {
 });
 //==================================== transform ===============================================
 api.get("/transform/transformAnalysis", function (req, res) {
-    var parameters = req.url.split("?")[1].split("&");
-    var start = parameters[0].split("=")[1];
-    var end = parameters[1].split("=")[1];
-    var action = parameters[2].split("=")[1];
-    var type = parameters[3].split("=")[1];
-    var searchType = parameters[4].split("=")[1];
-    var indexString = [];
-    var time = [];
-    var queryOptions = [];
-    if (start.substring(1, start.length).match("-") != null && end.substring(1, start.length).match("-") != null) {
-        indexString = date.createIndexsByTime(start, end, "access-");
-        time = date.getConvertTimeByTime(start, end);
-    } else {
-        indexString = date.createIndexes(start, end, "access-");
-        time = date.getConvertTimeByNumber(start, end);
-    }
-    if (searchType == "initAll") {
-        queryOptions = parameters[5].split("=")[1];
-        var querys = [];
-        var query = queryOptions.split(",");
-        for (var i = 0; i < query.length; i++) {
-            querys.push(queryOptions.split(",")[i]);
-        }
-        transform.search(req.es, indexString, type, action, querys, function (result) {
-            datautils.send(res, result);
-        })
-    } else if (searchType == "dataTable") {
-        var showType = parameters[5].split("=")[1];
-        queryOptions = parameters[6].split("=")[1];
-        var querys = [];
-        for (var i = 0; i < queryOptions.split(",").length; i++) {
-            querys.push(queryOptions.split(",")[i]);
-        }
-        transform.searchByShowTypeAndQueryOption(req.es, indexString, type, action, showType, querys, function (result) {
-            datautils.send(res, result);
-        });
-    } else if (searchType == "table") {
-        queryOptions = parameters[5].split("=")[1];
-        var querys = [];
-        var query = queryOptions.split(",");
-        for (var i = 0; i < query.length; i++) {
-            querys.push(queryOptions.split(",")[i]);
-        }
-        transform.SearchPromotion(req.es, indexString, type, action, querys, function (result) {
-            datautils.send(res, result);
-        });
-    } else if (searchType = "contrastData") {
-        var showType = parameters[5].split("=")[1];
-        queryOptions = parameters[6].split("=")[1];
-        var contrastStart = parameters[7].split("=")[1];
-        var contrastEnd = parameters[8].split("=")[1];
-        var contrast_indexString = [];
-        if (contrastStart.substring(1, start.length).match("-") != null && contrastEnd.substring(1, start.length).match("-") != null) {
-            contrast_indexString = date.createIndexsByTime(contrastStart, contrastEnd, "access-");
-            time = date.getConvertTimeByTime(contrastStart, contrastEnd);
+        var parameters = req.url.split("?")[1].split("&");
+        var start = parameters[0].split("=")[1];
+        var end = parameters[1].split("=")[1];
+        var action = parameters[2].split("=")[1];
+        var type = parameters[3].split("=")[1];
+        var searchType = parameters[4].split("=")[1];
+        var indexString = [];
+        var time = [];
+        var queryOptions = [];
+        if (start.substring(1, start.length).match("-") != null && end.substring(1, start.length).match("-") != null) {
+            indexString = date.createIndexsByTime(start, end, "access-");
+            time = date.getConvertTimeByTime(start, end);
         } else {
-            contrast_indexString = date.createIndexes(contrastStart, contrastEnd, "access-");
-            time = date.getConvertTimeByNumber(contrastStart, contrastEnd);
+            indexString = date.createIndexes(start, end, "access-");
+            time = date.getConvertTimeByNumber(start, end);
         }
-        transform.SearchContrast(req.es, indexString, contrast_indexString, type, action, showType, queryOptions, function (result) {
-            datautils.send(res, result);
-        });
-    } else {
-        var query = "";
-        query = parameters[5].split("=")[1];
-        var querys = [];
-        query = query.substring(1, query.length - 1);
-        var queryString = {};
-        if (query != "") {
-            for (var i = 0; i < query.split(",").length; i++) {
-                queryString = {};
-                queryString[query.split(",")[i].split(":")[0]] = query.split(",")[i].split(":")[1];
-                querys.push(queryString);
+        if (searchType == "initAll") {
+            queryOptions = parameters[5].split("=")[1];
+            var querys = [];
+            var query = queryOptions.split(",");
+            for (var i = 0; i < query.length; i++) {
+                querys.push(queryOptions.split(",")[i]);
             }
+            transform.search(req.es, indexString, type, action, querys, function (result) {
+                datautils.send(res, result);
+            })
+        } else if (searchType == "dataTable") {
+            var showType = parameters[5].split("=")[1];
+            queryOptions = parameters[6].split("=")[1];
+            var querys = [];
+            for (var i = 0; i < queryOptions.split(",").length; i++) {
+                querys.push(queryOptions.split(",")[i]);
+            }
+            transform.searchByShowTypeAndQueryOption(req.es, indexString, type, action, showType, querys, function (result) {
+                datautils.send(res, result);
+            });
+        } else if (searchType == "table") {
+            queryOptions = parameters[5].split("=")[1];
+            var querys = [];
+            var query = queryOptions.split(",");
+            for (var i = 0; i < query.length; i++) {
+                querys.push(queryOptions.split(",")[i]);
+            }
+            transform.SearchPromotion(req.es, indexString, type, action, querys, function (result) {
+                datautils.send(res, result);
+            });
+        } else if (searchType == "contrastData") {
+            var showType = parameters[5].split("=")[1];
+            queryOptions = parameters[6].split("=")[1];
+            var contrastStart = parameters[7].split("=")[1];
+            var contrastEnd = parameters[8].split("=")[1];
+            var contrast_indexString = [];
+            if (contrastStart.substring(1, start.length).match("-") != null && contrastEnd.substring(1, start.length).match("-") != null) {
+                contrast_indexString = date.createIndexsByTime(contrastStart, contrastEnd, "access-");
+                time = date.getConvertTimeByTime(contrastStart, contrastEnd);
+            } else {
+                contrast_indexString = date.createIndexes(contrastStart, contrastEnd, "access-");
+                time = date.getConvertTimeByNumber(contrastStart, contrastEnd);
+            }
+            transform.SearchContrast(req.es, indexString, contrast_indexString, type, action, showType, queryOptions, function (result) {
+                datautils.send(res, result);
+            });
+        } else {
+            var query = "";
+            query = parameters[5].split("=")[1];
+            var querys = [];
+            query = query.substring(1, query.length - 1);
+            var queryString = {};
+            if (query != "") {
+                for (var i = 0; i < query.split(",").length; i++) {
+                    queryString = {};
+                    queryString[query.split(",")[i].split(":")[0]] = query.split(",")[i].split(":")[1];
+                    querys.push(queryString);
+                }
+            }
+            var aggString = parameters[6].split("=")[1];
+            var aggs = [];
+            for (var i = 0; i < aggString.split(",").length; i++) {
+                aggs.push(aggString.split(",")[i]);
+            }
+            transform.searchAdvancedData(req.es, indexString, type, action, querys, aggs, function (result) {
+                datautils.send(res, result);
+            });
         }
-        var aggString = parameters[6].split("=")[1];
-        var aggs = [];
-        for (var i = 0; i < aggString.split(",").length; i++) {
-            aggs.push(aggString.split(",")[i]);
-        }
-        transform.searchAdvancedData(req.es, indexString, type, action, querys, aggs, function (result) {
-            datautils.send(res, result);
-        });
-    }
 
-});
+    }
+)
+;
 api.get("/transform/pageTransformCtr", function (req, res) {
     var parameters = req.url.split("?")[1].split("&");
     var start = parameters[0].split("=")[1];
@@ -872,7 +874,7 @@ api.get("/transform/pageTransformCtr", function (req, res) {
 /**
  * adsSource
  */
-api.get("/adsSource", function(req, res){
+api.get("/adsSource", function (req, res) {
     var queryUrl = url.parse(req.url, true).query;                      //URL请求对象
     var type = queryUrl['type'];                                        //类型
     var startTime = Number(queryUrl['start']);                          //开始时间
@@ -887,15 +889,15 @@ api.get("/adsSource", function(req, res){
     es_request.search(req.es, indexes, type, quotas, dimension, [0], filters, period[0], period[1], interval, function (data) {
         /*var result = {};
          data.forEach(function (item, i) {
-            result[item.label] = item.label == "outRate" ? item.quota[0] + "%" : item.label == "avgTime" ? new Date(item.quota[0]).format("hh:mm:ss") : item.quota[0];
-        });*/
+         result[item.label] = item.label == "outRate" ? item.quota[0] + "%" : item.label == "avgTime" ? new Date(item.quota[0]).format("hh:mm:ss") : item.quota[0];
+         });*/
         datautils.send(res, data);
     })
 });
 /**
  * adsMedium
  */
-api.get("/adsMedium", function(req, res){
+api.get("/adsMedium", function (req, res) {
     var queryUrl = url.parse(req.url, true).query;                      //URL请求对象
     var type = queryUrl['type'];                                        //类型
     var startTime = Number(queryUrl['start']);                          //开始时间
@@ -914,7 +916,7 @@ api.get("/adsMedium", function(req, res){
 /**
  * adsPlan
  */
-api.get("/adsPlan", function(req, res){
+api.get("/adsPlan", function (req, res) {
     var queryUrl = url.parse(req.url, true).query;                      //URL请求对象
     var type = queryUrl['type'];                                        //类型
     var startTime = Number(queryUrl['start']);                          //开始时间
@@ -933,7 +935,7 @@ api.get("/adsPlan", function(req, res){
 /**
  * adsKeyWord
  */
-api.get("/adsKeyWord", function(req, res){
+api.get("/adsKeyWord", function (req, res) {
     var queryUrl = url.parse(req.url, true).query;                      //URL请求对象
     var type = queryUrl['type'];                                        //类型
     var startTime = Number(queryUrl['start']);                          //开始时间
@@ -952,7 +954,7 @@ api.get("/adsKeyWord", function(req, res){
 /**
  * adsCreative
  */
-api.get("/adsCreative", function(req, res){
+api.get("/adsCreative", function (req, res) {
     var queryUrl = url.parse(req.url, true).query;                      //URL请求对象
     var type = queryUrl['type'];                                        //类型
     var startTime = Number(queryUrl['start']);                          //开始时间
