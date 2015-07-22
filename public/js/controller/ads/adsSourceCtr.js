@@ -93,57 +93,73 @@ define(["./module"], function (ctrs) {
             isJudge: false //是否清空filter 默认为清空
         };
 
-        $scope.onLegendClick = function (radio, chartInstance, config, checkedVal) {
-            clear.lineChart(config, checkedVal);
-            var chart = $scope.charts[0];
+        // 图例勾选监听事件
+        $scope.onLegendClickListener = function (radio, chartObj, chartConfig, checkValue) {
+            clear.lineChart(chartConfig, checkValue);
+            var chart  =$scope.charts[0];
+            chart.types = checkValue;
             chart.config.instance = echarts.init(document.getElementById(chart.config.id));
-            chart.types = checkedVal;
             requestService.refresh([chart]);
         };
-
         // 数据转化
         $scope.dataFormat = function (data, chartConfig, e) {
+            // 将json格式的字符串data转为json对象
             var dataObj = JSON.parse(eval("(" + data + ")").toString());
-            var times = [$rootScope.start, $rootScope.end];
-            var resultObj = chartUtils.getRf_type(dataObj, times, "serverLabel", e.types, chartConfig);
+            var topData = [];
+            angular.forEach(dataObj, function(item){
+                var key = item.key;
+                var label = item.label;
+                var quota = item.quota;
+                var topKey = key.slice(0,10);
+                var topQuota = quota.slice(0,10);
+                topData.push({key:topKey, label:label, quota:topQuota});
+            });
+            // 是否转化
             chartConfig['noFormat'] = true;
-            chartConfig['twoYz'] = "none"
-            cf.renderChart(resultObj, chartConfig);
-            var pieData = chartUtils.getEnginePie(resultObj, null, e);
-            var e0 = $scope.charts[0];
-            e0.config.instance = echarts.init(document.getElementById(e0.config.id));
-            cf.renderChart(pieData, e0.config);
-
+            // 是否为双轴
+            chartConfig['twoYz'] = "none";
+            // 图表渲染
+            cf.renderChart(topData, chartConfig);
         };
 
+        // echarts 图例配置
         $scope.charts = [
             {
                 config: {
+                    // 图例id
                     legendId: "indicators_charts_legend",
+                    // 图例说明
                     legendData: ["浏览量(PV)", "访问次数", "访客数(UV)", "新访客数", "新访客比率", "IP数", "转化次数", "跳出率", "平均访问时长", "平均访问页数"],
-                    legendClickListener: $scope.onLegendClick,
+                    // 监听图例勾选点击事件
+                    legendClickListener: $scope.onLegendClickListener,
+                    // 最多允许勾选项数
                     legendAllowCheckCount: 2,
-                    legendDefaultChecked: [2, 8],
-                    allShowChart: 4,
+                    // 图例默认勾选项数
+                    legendDefaultChecked: [0, 1],
+                    // 是否显示最大最小值
                     min_max: false,
+                    // 图表首行缩进
                     bGap: true,
-                    autoInput: 20,
-                    auotHidex: true,
+                    // 要渲染的图表元素id
                     id: "indicators_charts",
-                    chartType: "bar",//图表类型
+                    // 图表类型
+                    chartType: "bar",
                     keyFormat: 'eq',
-                    noFormat: true,
-                    dataKey: "key",//传入数据的key值
-                    dataValue: "quota"//传入数据的value值
+                    // 传入数据的key值
+                    dataKey: "key",
+                    // 传入数据的value值
+                    dataValue: "quota"
                 },
-                types: ["pv"],
-                dimension: ["period,city"],
-                //filter: "[{\"rf_type\":[\"2\"]}]",
+                // 默认图例勾选的指标值
+                types: ["pv", "vc"],
+                // 图例过滤的值
+                dimension: ["city"],
                 interval: $rootScope.interval,
                 url: "/api/charts",
                 cb: $scope.dataFormat
             }
         ];
+        // echart 数据初始化
         $scope.init = function () {
             $rootScope.start = 0;
             $rootScope.end = 0;
