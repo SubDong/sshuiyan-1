@@ -51,7 +51,7 @@ define(["./module"], function (ctrs) {
                 },
                 {
                     name: "浏览量(PV)",
-                    displayName: "浏览量()PV",
+                    displayName: "浏览量(PV)",
                     field: "pv",
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
                 },
@@ -90,6 +90,7 @@ define(["./module"], function (ctrs) {
                 latitude: {name: "事件名称", displayName: "事件名称", field: "campaignName"},
                 tableFilter: null,
                 dimen: false,
+                number: 1,
                 arrayClear: false, //是否清空指标array
                 promotionSearch: {
                     turnOn: true, //是否开启推广中sem数据
@@ -378,6 +379,8 @@ define(["./module"], function (ctrs) {
                                 }
                             }
                         }
+                        $scope.DateNumber = true;
+                        $scope.DateLoading = true;
                     }
 
                 });
@@ -434,7 +437,7 @@ define(["./module"], function (ctrs) {
 
 
             };
-            $scope.targetSearchSpread = function (isClicked, text) {
+            $scope.targetSearchSpreadTransform = function (isClicked) {
                 $scope.setShowArray();
                 $scope.my_init(false);
                 if (isClicked) {

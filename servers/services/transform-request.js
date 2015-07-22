@@ -4,7 +4,7 @@
 
 var async = require("async");
 var es_aggs = {
-    // 浏览量
+    // 浏览量　事件和页面转化通用
     "pv": {
         "pv": {
             "value_count": {
@@ -12,7 +12,7 @@ var es_aggs = {
             }
         }
     },
-    // 访客数
+    // 访客数　事件和页面转化通用
     "uv": {
         "uv": {
             "cardinality": {
@@ -20,7 +20,7 @@ var es_aggs = {
             }
         }
     },
-    // 访问次数
+    // 访问次数　事件和页面转化通用
     "vc": {
         "vc": {
             "value_count": {
@@ -28,7 +28,7 @@ var es_aggs = {
             }
         }
     },
-    // 新访客数
+    // 新访客数　事件和页面转化通用
     "nuv": {
         "nuv": {
             "sum": {
@@ -36,7 +36,7 @@ var es_aggs = {
             }
         }
     },
-    // 新访客比率
+    // 新访客比率　事件和页面转化通用
     "nuvRate": {
         "new_visitor_aggs": {
             "sum": {
@@ -49,15 +49,15 @@ var es_aggs = {
             }
         }
     },
-    // IP数
+    // IP数 事件和页面转化通用
     "ip": {
         "ip": {
             "cardinality": {
-                "field": "vid"
+                "field": "remote"
             }
         }
     },
-    // 事件点击总数
+    // 事件点击总数　事件转化
     "clickTotal": {
         "clickTotal": {
             "value_count": {
@@ -65,7 +65,7 @@ var es_aggs = {
             }
         }
     },
-    // 转化次数
+    // 转化次数　事件和页面转化通用
     "conversions": {
         "conversions": {
             "value_count": {
@@ -73,7 +73,7 @@ var es_aggs = {
             }
         }
     },
-    //转化率
+    //转化率　事件转化
     "crate": {
 
         "conversions_crate": {
@@ -87,6 +87,7 @@ var es_aggs = {
             }
         }
     },
+    //唯一访客事件数　事件转化
     "visitNum": {
         "visitNum": {
             "value_count": {
@@ -94,6 +95,7 @@ var es_aggs = {
             }
         }
     },
+    //平均转化成本 事件转化
     "transformCost":{
         "transformCost": {
             "value_count": {

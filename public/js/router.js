@@ -167,7 +167,7 @@ define(["angular", "./app"], function (angular, myApp) {
                 resolve: {
                     load: loadDeps([
                         "controller/transform/transformAnalysis",
-                        "controller/searchpromotion"
+                        "controller/transform/transformSearchPromotion"
                     ])
                 }
             })

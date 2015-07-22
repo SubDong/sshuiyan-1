@@ -1780,4 +1780,32 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
             }
         };
     });
+    app.directive("sshDateShowPage", function ($rootScope) {
+        return {
+            restrict: 'E',
+            templateUrl: '../commons/date_show.html',
+            link: function (scope, element, attris, controller) {
+                // 初始化参数
+
+                scope.isCompared = false;
+                scope.dateShowArray = [];
+                scope.ssh_seo_type = attris.semType;
+                scope.filter = attris.filter;
+                scope.ds_defaultQuotasOption = ["pv", "uv", "ip", "conversions","vc","crate"];
+                scope.ds_keyData = [];
+                scope.ds_dateShowQuotasOption = scope.checkedArray ? scope.checkedArray : scope.ds_defaultQuotasOption;
+                scope.setDefaultShowArray = function () {
+                    var tempArray = [];
+                    angular.forEach(scope.ds_dateShowQuotasOption, function (q_r) {
+                        tempArray.push({"label": q_r, "value": 0, "cValue": 0, "count": 0, "cCount": 0});
+                    });
+                    scope.ds_keyData = [];
+                    scope.dateShowArray = $rootScope.copy(tempArray);
+
+                };
+                // 刷新加载时设置默认指标
+                scope.setDefaultShowArray();
+            }
+        };
+    });
 });
