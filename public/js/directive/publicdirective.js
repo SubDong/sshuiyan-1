@@ -1175,7 +1175,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     scope.ds_keyData = [];
                     scope.dateShowArray = $rootScope.copy(tempArray);
                 };
-//                scope.setDefaultShowArray();
+                // scope.setDefaultShowArray();
                 // 获取数据
                 scope.loadDataShow = function () {
                     scope.DateNumber = false;
@@ -1404,10 +1404,16 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                 case "bing":
                 case "other":
                 {
+                    if (value.indexOf && value.indexOf("%") != -1) {// 缓存中的数据使用
+                        return value;
+                    }
                     return count ? (value == 0 ? "0%" : (value / count).toFixed(2) + "%") : "0%";
                 }
                 case "avgTime":
                 {
+                    if (value.indexOf && value.indexOf(":") != -1) {// 缓存中的数据使用
+                        return value;
+                    }
                     return MillisecondToDate(value / count);
                 }
                 case "freq":
@@ -1428,6 +1434,9 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                 case "ctr":
                 case "outRate":
                 {
+                    if (value.indexOf && value.indexOf("%") != -1) {// 字符串且存在符号%
+                        return value;
+                    }
                     return count ? (value == 0 ? "0" : (value / count).toFixed(2) + "%") : "--";
                 }
                 case "avgPage":

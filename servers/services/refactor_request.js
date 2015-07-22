@@ -81,7 +81,11 @@ var es_aggs = {
                 "min_doc_count": 2
             }
         },
-        "vc_aggs": _vc_aggs
+        "out_vc_aggs": {
+            "cardinality": {
+                "field": "tt"
+            }
+        }
     },
     // 平均访问时长
     "avgTime": {
@@ -242,7 +246,7 @@ var buildRequest = function (indexes, type, quotas, dimension, filters, start, e
                         "result": {
                             "date_histogram": {
                                 "field": "utime",
-                                "interval": "86400s",
+                                "interval": "1d",
                                 "format": "yyyy-MM-dd HH:mm:ss",
                                 "time_zone": "+08:00",
                                 "order": {
@@ -250,8 +254,8 @@ var buildRequest = function (indexes, type, quotas, dimension, filters, start, e
                                 },
                                 "min_doc_count": 0,
                                 "extended_bounds": {
-                                    "min": 1436976000000,
-                                    "max": 1437062399999
+                                    "min": start,
+                                    "max": end
                                 }
                             },
                             "aggs": _aggs
@@ -519,7 +523,7 @@ var outRateFn = function (result) {
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
-        var vc = result[i].vc_aggs.vc_aggs.value;
+        var vc = result[i].out_vc_aggs.value;
         var svc = parseInt(vc) - result[i].single_visitor_aggs.buckets.length;
         keyArr.push(result[i].key);
         
@@ -527,10 +531,8 @@ var outRateFn = function (result) {
         if (vc > 0) {
             outRate = (parseFloat(svc) / parseFloat(vc) * 100).toFixed(2);
         }
-
         quotaArr.push(outRate);
     }
-
     return {
         "label": "outRate",
         "key": keyArr,
