@@ -1,10 +1,8 @@
 /**
- * Created by ss on 2015/6/23.
+ * Created by perfection on 15-7-07.
  */
 define(["./module"], function (ctrs) {
-
     "use strict";
-
     ctrs.controller('transformAnalysisctr', function ($scope, $rootScope, $q, requestService, areaService, $http, SEM_API_URL, uiGridConstants) {
             $scope.city.selected = {"name": "全部"};
             $scope.todayClass = true;
@@ -51,7 +49,7 @@ define(["./module"], function (ctrs) {
                 },
                 {
                     name: "浏览量(PV)",
-                    displayName: "浏览量()PV",
+                    displayName: "浏览量(PV)",
                     field: "pv",
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
                 },
@@ -90,6 +88,7 @@ define(["./module"], function (ctrs) {
                 latitude: {name: "事件名称", displayName: "事件名称", field: "campaignName"},
                 tableFilter: null,
                 dimen: false,
+                number: 1,
                 arrayClear: false, //是否清空指标array
                 promotionSearch: {
                     turnOn: true, //是否开启推广中sem数据
@@ -99,10 +98,6 @@ define(["./module"], function (ctrs) {
             $scope.searchIndicators = function (item, entities, number) {
                 $rootScope.searchGridArray.shift();
                 $rootScope.searchGridArray.shift();
-                //if (refresh == "refresh") {
-                //    $rootScope.searchGridArray.unshift($rootScope.tableSwitch.latitude);
-                //    return
-                //}
                 $rootScope.tableSwitch.number != 0 ? $scope.searchGridArray.shift() : "";
                 $scope.searchGridObj = {};
                 $scope.searchGridObjButton = {};
@@ -195,7 +190,6 @@ define(["./module"], function (ctrs) {
                 }
             };
             $scope.queryOption_all = ["clickTotal", "pv", "uv", "ip", "conversions", "crate"];
-//            $scope.queryOption_all = ["pv", "uv", "ip", "vc", "conversions", "crate", "transformCost"];
             $scope.queryOptions = ["pv", "uv"];
             $scope.charts = [
                 {
@@ -217,17 +211,11 @@ define(["./module"], function (ctrs) {
                         noFormat: true,
                         dataKey: "key",//传入数据的key值
                         dataValue: "quota",//传入数据的value值
-                       // qingXie: true,
+                        // qingXie: true,
                         qxv: 18
                     }
                 }
             ];
-            //$scope.initGrid = function (user, baiduAccount, semType, quotas, start, end, renderLegend) {
-            //    $rootScope.start = -1;
-            //    $rootScope.end = -1;
-            //    //$scope.init(user, baiduAccount, semType, quotas, start, end, renderLegend);
-            //}
-            //$scope.initGrid($rootScope.user, $rootScope.baiduAccount, "campaign", $scope.selectedQuota, -1, -1, true);
             $scope.advancedQuery = function () {
                 //来源过滤样式初始化
                 $scope.souce.selected = "";
@@ -283,9 +271,6 @@ define(["./module"], function (ctrs) {
             //日历
 
             this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
-            //this.type = 'range';
-            /*      this.identity = angular.identity;*/
-            //$scope.$broadcast("update", "msg");
             $scope.$on("update", function (e, datas) {
                 // 选择时间段后接收的事件
                 datas.sort();
@@ -302,7 +287,6 @@ define(["./module"], function (ctrs) {
                 $scope.reset();
                 $rootScope.start = time[0];
                 $rootScope.end = time[1];
-                //$scope.init($rootScope.user, $rootScope.baiduAccount, "campaign", $scope.selectedQuota, $rootScope.start, $rootScope.end);
                 //时间段选择执行数据查询
                 $scope.my_init(false);
             };
@@ -328,10 +312,6 @@ define(["./module"], function (ctrs) {
                 $rootScope.tableTimeStart = 0;//开始时间
                 $rootScope.tableTimeEnd = 0;//结束时间、
                 $rootScope.tableFormat = null;
-                //$rootScope.targetSearchSpread();
-                //$scope.init($rootScope.user, $rootScope.baiduAccount, "campaign", $scope.selectedQuota, $rootScope.start, $rootScope.end);
-                //图表
-//                requestService.refresh($scope.charts);
                 $scope.reloadByCalendar("today");
                 $('#reportrange span').html(GetDateStr(-1));
                 //其他页面表格
@@ -339,7 +319,6 @@ define(["./module"], function (ctrs) {
                 $scope.reset();
                 $scope.todayClass = true;
             };
-            //$scope.ds_defaultQuotasOption = ["pv", "uv", "ip", "nuv"];
             $scope.setShowArray = function () {
                 var tempArray = [];
                 angular.forEach($scope.checkedArray, function (q_r) {
@@ -378,6 +357,8 @@ define(["./module"], function (ctrs) {
                                 }
                             }
                         }
+                        $scope.DateNumber = true;
+                        $scope.DateLoading = true;
                     }
 
                 });
@@ -413,8 +394,6 @@ define(["./module"], function (ctrs) {
                         Custom.initCheckInfo();
                     });
                 } else {
-                    //$scope.charts[0].config.legendDefaultChecked = [0,1];
-                    //$scope.charts[0].config.legendAllowCheckCount = 2;
                     $http.get("/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&action=event&type=1&searchType=dataTable&showType=" + showType + "&queryOptions=" + queryOptions).success(function (data) {
                         var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
                         chart.showLoading({
@@ -434,7 +413,7 @@ define(["./module"], function (ctrs) {
 
 
             };
-            $scope.targetSearchSpread = function (isClicked, text) {
+            $scope.targetSearchSpreadTransform = function (isClicked) {
                 $scope.setShowArray();
                 $scope.my_init(false);
                 if (isClicked) {

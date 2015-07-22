@@ -6,21 +6,20 @@ define(["./module"], function (ctrs) {
     "use strict";
 
     ctrs.controller('adsKeyWordCtr', function ($scope, $rootScope, $q, requestService, areaService, $http, SEM_API_URL,uiGridConstants) {
-        $scope.city.selected = {"name": "全部"};
         //        高级搜索提示
         $scope.areaSearch = "";
-//        取消显示的高级搜索的条件
         $scope.removeAreaSearch = function(obj){
             $scope.city.selected = {"name": "全部"};
             $rootScope.$broadcast("searchLoadAllArea");
             obj.areaSearch = "";
         }
         $scope.yesterdayClass = true;
+        $scope.city.selected = {"name": "全部"};
         $rootScope.tableTimeStart = -1;//开始时间
         $rootScope.tableTimeEnd = -1;//结束时间、
         $rootScope.tableFormat = null;
         //配置默认指标
-        $rootScope.checkedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
+        $rootScope.checkedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"];
         $rootScope.searchGridArray = [
             {
                 name: "xl",
@@ -30,12 +29,13 @@ define(["./module"], function (ctrs) {
                 enableSorting: false
             },
             {
-                name: "关键词",
-                displayName: "关键词",
-                field: "keywordName",
-                cellTemplate: "<div><a href='http://www.baidu.com/s?wd={{grid.appScope.getDataUrlInfo(grid, row,1)}}' target='_blank' style='color:#0965b8;line-height:30px;margin-left: 10px'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</div>"
+                name: "媒介",
+                displayName: "媒介",
+                field: "kw",
+                cellTemplate: "<div><a href='http://www.baidu.com/s?wd={{grid.appScope.getDataUrlInfo(grid, row,1)}}' style='color:#0965b8;line-height:30px;' target='_blank'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</div>"
                 , footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
                 enableSorting: false
+
             }, /*
              {
              name: " ",
@@ -84,9 +84,9 @@ define(["./module"], function (ctrs) {
             }
         ];
         $rootScope.tableSwitch = {
-            latitude: {name: "关键词", displayName: "关键词", field: "keywordName"},
+            latitude: {name: "触发关键词的搜索词", displayName: "触发关键词的搜索词", field: "kw"},
             tableFilter: null,
-            dimen: "city",
+            dimen: false,
             // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
             number: 0,
             //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
@@ -94,80 +94,114 @@ define(["./module"], function (ctrs) {
             //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
             arrayClear: false, //是否清空指标array
             promotionSearch: {
-                turnOn: true, //是否开始推广中sem数据
+                turnOn: "ssc", //是否开始推广中sem数据
                 SEMData: "keyword" //查询类型
             }
         };
-
-        $scope.selectedQuota = ["click", "impression"];
-        $scope.onLegendClickListener = function (radio, chartInstance, config, checkedVal) {
-            $scope.init($rootScope.user, $rootScope.baiduAccount, "keyword", checkedVal, $rootScope.start, $rootScope.end);
+        $scope.onLegendClickListener = function (radio, chartObj, chartConfig, checkValue) {
+            $scope.charts[0].types = checkValue;
+            $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
+            requestService.refresh($scope.charts);
+        };
+        /**
+         * 数据展示前处理
+         * @param data
+         * @param chartConfig
+         */
+        $scope.customFormat = function (data, chartConfig) {
+            var final_result = JSON.parse(eval("(" + data + ")").toString());
+            //删除key为"-"数据对
+            final_result.forEach(function (item, i) {
+                var tempKey=[];
+                var tempQuata=[];
+                item.key.forEach(function (k, j) {
+                    if (k != "-"&&k.length<30) {
+                        tempKey.push(item.key[j]);
+                        tempQuata.push(item.quota[j]);
+                    }
+                });
+                item.key=tempKey;
+                item.quato=tempQuata;
+                item.label=chartUtils.convertChinese(item.label);
+            });
+            $scope.charts[0].config.noFormat = "none";
+            cf.renderChart(final_result, chartConfig);
         }
         $scope.charts = [
             {
                 config: {
                     legendId: "indicators_charts_legend",
-                    legendData: ["点击量", "展现量", "消费", "点击率", "平均点击价格", "浏览量(PV)", "访问次数", "访客数(UV)", "新访客数", "新访客比率", "跳出率", '平均访问时长', "平均访问页数", "抵达率"],//显示几种数据
+                    legendData: ["浏览量(PV)", "访客数(UV)", "跳出率", "抵达率", "平均访问时长", "页面转化"],//显示几种数据
                     //legendMultiData: $rootScope.lagerMulti,
                     legendAllowCheckCount: 2,
                     legendClickListener: $scope.onLegendClickListener,
                     legendDefaultChecked: [0, 1],
                     min_max: false,
-                    bGap: true,
                     id: "indicators_charts",
+                    bGap: true,//首行缩进
                     chartType: "bar",//图表类型
                     keyFormat: 'eq',
-                    noFormat: true,
-                    autoInput: 20,
-                    auotHidex: true,
-                    qingXie: true,
                     dataKey: "key",//传入数据的key值
                     dataValue: "quota"//传入数据的value值
-                }
+                },
+                types: ["pv", "uv"],
+                dimension: ["kw"],
+                url: "/api/charts",
+                cb: $scope.customFormat
             }
         ];
-        $scope.initGrid = function (user, baiduAccount, semType, quotas, start, end, renderLegend) {
+        $scope.init = function () {
             $rootScope.start = -1;
             $rootScope.end = -1;
-            $scope.init(user, baiduAccount, semType, quotas, start, end, renderLegend);
+            $rootScope.interval = undefined;
+            $scope.charts.forEach(function (e) {
+                var chart = echarts.init(document.getElementById(e.config.id));
+                e.config.instance = chart;
+                util.renderLegend(chart, e.config);
+            })
+            requestService.refresh($scope.charts);
         }
-        $scope.init = function (user, baiduAccount, semType, quotas, start, end, renderLegend) {
-            if (quotas.length) {
-                var semRequest = "";
-                if (quotas.length == 1) {
-                    semRequest = $http.get(SEM_API_URL + "/sem/report/" + semType + "?a=" + user + "&b=" + baiduAccount + "&startOffset=" + start + "&endOffset=" + end + "&q=" + quotas[0]);
-                } else {
-                    semRequest = $http.get(SEM_API_URL + "/sem/report/" + semType + "?a=" + user + "&b=" + baiduAccount + "&startOffset=" + start + "&endOffset=" + end + "&q=" + quotas[0]+","+ quotas[1]);
-                }
-                $q.all([semRequest]).then(function (final_result) {
-                    final_result[0].data.sort(chartUtils.by(quotas[0]));
-                    final_result[0].data = final_result[0].data.slice(0, 20);
-                    var total_result = chartUtils.getSemBaseData(quotas, final_result, "keywordName");
-                    var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
-                    chart.showLoading({
-                        text: "正在努力的读取数据中..."
-                    });
-                    $scope.charts[0].config.instance = chart;
-                    if (renderLegend) {
-                        util.renderLegend(chart, $scope.charts[0].config);
-                        Custom.initCheckInfo();
-                    }
-                    cf.renderChart(total_result, $scope.charts[0].config);
-                    //if (final_result.length) {
-                    //    if (final_result[0].data.length) {
-                    //        chart.hideLoading();
-                    //    }
-                    //}
-                });
-            }
-        }
-        $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "keyword", $scope.selectedQuota, -1, -1, true);
-
+        $scope.init();
 
         $scope.$on("ssh_refresh_charts", function (e, msg) {
-            $rootScope.targetSearchSpread();
-            $scope.init($rootScope.user, $rootScope.baiduAccount, "keyword", $scope.selectedQuota, $rootScope.start, $rootScope.end);
+            $rootScope.targetSearchSSC();
+            $scope.charts.forEach(function (e) {
+                var chart = echarts.init(document.getElementById(e.config.id));
+                e.config.instance = chart;
+            })
+            requestService.refresh($scope.charts);
         });
+
+        /**
+         * 自定义日期刷新
+         * @param start
+         * @param end
+         */
+        $rootScope.datepickerClick=function(start,end){
+            var time = chartUtils.getTimeOffset(start, end);
+            var offest = time[1] - time[0];
+            $scope.reset();
+            if (offest >= 31) {
+                $scope.mothselected = false;
+                $scope.weekselected = false;
+            } else {
+                if (offest >= 7) {
+                    $scope.weekselected = false;
+                } else {
+                    $scope.weekselected = true;
+                }
+                $scope.mothselected = true;
+            }
+            $rootScope.start = time[0];
+            $rootScope.end = time[1];
+            $rootScope.interval = -1;
+            $rootScope.targetSearchSSC();
+            $scope.charts.forEach(function (e) {
+                var chart = echarts.init(document.getElementById(e.config.id));
+                e.config.instance = chart;
+            })
+            requestService.refresh($scope.charts);
+        }
 
         //点击显示指标
         $scope.visible = true;
@@ -191,7 +225,40 @@ define(["./module"], function (ctrs) {
             {name: '访问页数目标'}
         ];
         //日历
+        $scope.dateClosed = function () {
+            $rootScope.start = $scope.startOffset;
+            $rootScope.end = $scope.endOffset;
+            $scope.charts.forEach(function (e) {
+                var chart = echarts.init(document.getElementById(e.config.id));
+                e.config.instance = chart;
+            })
+            if ($rootScope.start <= -1) {
+                $scope.charts[0].config.keyFormat = "day";
+            } else {
+                $scope.charts[0].config.keyFormat = "hour";
+            }
+            requestService.refresh($scope.charts);
+            $rootScope.targetSearch();
+            $rootScope.tableTimeStart = $scope.startOffset;
+            $rootScope.tableTimeEnd = $scope.endOffset;
+            $scope.$broadcast("ssh_dateShow_options_time_change");
+        };
+        //
+
         this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
+        //this.type = 'range';
+        /*      this.identity = angular.identity;*/
+        //$scope.$broadcast("update", "msg");
+        $scope.$on("update", function (e, datas) {
+            // 选择时间段后接收的事件
+            datas.sort();
+            //console.log(datas);
+            var startTime = datas[0];
+            var endTime = datas[datas.length - 1];
+            $scope.startOffset = (startTime - today_start()) / 86400000;
+            $scope.endOffset = (endTime - today_start()) / 86400000;
+            //console.log("startOffset=" + startOffset + ", " + "endOffset=" + endOffset);
+        });
         function GetDateStr(AddDayCount) {
             var dd = new Date();
             dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
@@ -208,7 +275,7 @@ define(["./module"], function (ctrs) {
             $rootScope.tableTimeStart = -1;//开始时间
             $rootScope.tableTimeEnd = -1;//结束时间、
             $rootScope.tableFormat = null;
-            $scope.init($rootScope.user, $rootScope.baiduAccount, "keyword", $scope.selectedQuota, $rootScope.start, $rootScope.end);
+            $scope.init($rootScope.user, $rootScope.baiduAccount, "creative", $scope.selectedQuota, $rootScope.start, $rootScope.end);
             //图表
             requestService.refresh($scope.charts);
             $scope.reloadByCalendar("yesterday");

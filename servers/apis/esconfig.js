@@ -12,7 +12,7 @@ var config = {
         avgTime: "Math.ceil(parseFloat(tvt) / 1000 / parseFloat((vc)))"
     },
     outRate: {
-        vc: "vc_aggs.vc_aggs.value",
+        vc: "out_vc_aggs.value",
         sv: "single_visitor_aggs.buckets.length",
         svc: "parseInt(vc) - sv",
         outRate: "(parseFloat(svc) / parseFloat(vc) * 100).toFixed(2)"
