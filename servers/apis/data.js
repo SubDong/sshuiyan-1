@@ -863,6 +863,11 @@ api.get("/transform/transformAnalysis", function (req, res) {
     }
 
 });
+api.get("/transform/pageTransformCtr", function (req, res) {
+    var parameters = req.url.split("?")[1].split("&");
+    var start = parameters[0].split("=")[1];
+    var end = parameters[1].split("=")[1];
+});
 //==================================== ad_track by icepros ===============================================
 /**
  * adsSource

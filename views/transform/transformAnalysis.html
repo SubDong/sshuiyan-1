@@ -15,29 +15,12 @@
         </div>
     </div>
     <div class="my_concent">
-        <!--<div class="date_show"-->
-             <!--data-ng-class="{'dateshow0': dateShowArray.length == 0, 'dateshow1': dateShowArray.length == 1, 'datelatshow': dateShowArray.length == 2, 'dateshow3': dateShowArray.length == 3, 'dateshow4': dateShowArray.length == 4}">-->
-            <!--<ul>-->
-                <!--<li data-ng-repeat="obj in dateShowArray"-->
-                    <!--data-ng-class="{'date_secend2': obj.label == 'baidu', 'date_four2': obj.label == 'sougou', 'date_five2': obj.label == 'haosou', 'date_six2': obj.label == 'bing', 'date_seven2': obj.label == 'other', 'date_first': $index == 0, 'date_secend': $index == 1, 'date_third': $index == 2, 'date_four': $index == 3, 'date_five': $index == 4}">-->
-                    <!--<h4><b>{{obj.label | quotaFormat}}</b>&nbsp;<span class="badge" tooltip-placement="right"-->
-                                                                      <!--tooltip="{{obj.label | quotaHelpFormat}}"-->
-                                                                      <!--style="font-size: 12px;cursor: pointer;"><img-->
-                            <!--src="../img/zhibiao.png"></span></h4>-->
-                    <!--<span>{{obj.value | quotaDataFormat:obj.label:obj.count}}</span>-->
-                    <!--<br>-->
-                    <!--&lt;!&ndash; 显示对比数据 &ndash;&gt;-->
-            <!--<span style="color: #999"-->
-                  <!--data-ng-if="isCompared">{{obj.cValue}}</span>-->
-                <!--</li>-->
-            <!--</ul>-->
-        <!--</div>-->
-        <ssh-date-show type="today" dimension="null" sem-type="account"></ssh-date-show>
+        <ssh-date-show-page type="today"></ssh-date-show-page>
         <div class="index_chart">
             <div id="indicators_charts_legend"></div>
             <div id="indicators_charts" class="gesture" style="height:400px;"></div>
         </div>
-        <div class="table_content" ng-controller="SearchPromotion">
+        <div class="table_content" ng-controller="transformSearchPromotion">
             <ul ng-init="tab = 1" class="nav nav-tabs nav-justified">
                 <li class="ng-isolate-scope" ng-class="{active:tab===1}" ng-click="tab = 1">
                     <a class="ng-binding">自定义指标</a></li>
@@ -82,7 +65,7 @@
                         </ul>
                     </div>
                     <div class="chart_top chart_noborder">
-                        <button class="btn btn-primary" type="button" ng-click="targetSearchSpread(true,'transform')">确定
+                        <button class="btn btn-primary" type="button" ng-click="targetSearchSpreadTransform(true)">确定
                         </button>
                         * 可同时选择6项
                     </div>
@@ -145,7 +128,7 @@
                         </ul>
                     </div>
                     <div class="chart_top chart_noborder">
-                        <button class="btn btn-primary" type="button" ng-click="targetSearchSpread(false,'transform')">确定
+                        <button class="btn btn-primary" type="button" ng-click="targetSearchSpreadTransform(false)">确定
                         </button>
                     </div>
                 </div>

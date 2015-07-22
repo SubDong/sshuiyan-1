@@ -8,6 +8,8 @@ define(["./module"], function (ctrs) {
     ctrs.controller('pageTransformCtr', function ($scope, $rootScope, $q, requestService, areaService, $http, SEM_API_URL,uiGridConstants) {
             $scope.city.selected = {"name": "全部"};
             $scope.todayClass = true;
+            $rootScope.start = 0;
+            $rootScope.end = 0;
             $rootScope.tableTimeStart = -1;//开始时间
             $rootScope.tableTimeEnd = -1;//结束时间、
             $rootScope.tableFormat = null;
@@ -51,12 +53,12 @@ define(["./module"], function (ctrs) {
                     , footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
                     enableSorting: false
                 },
-                {
-                    name: " ",
-                    cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='javascript:void(0)' ng-click='grid.appScope.showEntryPageLink(row, 1)'>查看入口页链接</a></li></ul></div></div>",
-                    enableSorting: false
-                    // cellTemplate:" <button popover-placement='right' popover='On the Right!' class='btn btn-default'>Right</button>"
-                },
+                //{
+                //    name: " ",
+                //    cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='javascript:void(0)' ng-click='grid.appScope.showEntryPageLink(row, 1)'>查看入口页链接</a></li></ul></div></div>",
+                //    enableSorting: false
+                //    // cellTemplate:" <button popover-placement='right' popover='On the Right!' class='btn btn-default'>Right</button>"
+                //},
                 {
                     name: "浏览量(PV)",
                     displayName: "浏览量(PV)",
@@ -113,7 +115,7 @@ define(["./module"], function (ctrs) {
             $scope.selectedQuota = ["click", "impression"];
             $scope.onLegendClickListener = function (radio, chartInstance, config, checkedVal) {
                 if (checkedVal.length) {
-                    $scope.init($rootScope.user, $rootScope.baiduAccount, "campaign", checkedVal, $rootScope.start, $rootScope.end);
+                    //$scope.init($rootScope.user, $rootScope.baiduAccount, "campaign", checkedVal, $rootScope.start, $rootScope.end);
                 } else {
                     def.defData($scope.charts[0].config);
                 }
@@ -141,40 +143,9 @@ define(["./module"], function (ctrs) {
                     }
                 }
             ];
-            $scope.initGrid = function (user, baiduAccount, semType, quotas, start, end, renderLegend) {
-                $rootScope.start = -1;
-                $rootScope.end = -1;
-                $scope.init(user, baiduAccount, semType, quotas, start, end, renderLegend);
-            }
-            $scope.init = function (user, baiduAccount, semType, quotas, start, end, renderLegend) {
-                if (quotas.length) {
-                    var semRequest = "";
-                    if (quotas.length == 1) {
-                        semRequest = $http.get(SEM_API_URL + user + "/" + baiduAccount + "/" + semType + "/" + quotas[0] + "-?startOffset=" + start + "&endOffset=" + end);
-                    } else {
-                        semRequest = $http.get(SEM_API_URL + user + "/" + baiduAccount + "/" + semType + "/" + quotas[0] + "-" + quotas[1] + "-?startOffset=" + start + "&endOffset=" + end)
-                    }
-                    $q.all([semRequest]).then(function (final_result) {
-                        final_result[0].data.sort(chartUtils.by(quotas[0]));
-                        var total_result = chartUtils.getSemBaseData(quotas, final_result, "campaignName");
-                        var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
-                        chart.showLoading({
-                            text: "正在努力的读取数据中..."
-                        });
-                        $scope.charts[0].config.instance = chart;
-                        if (renderLegend) {
-                            util.renderLegend(chart, $scope.charts[0].config);
-                            Custom.initCheckInfo();
-                        }
-                        cf.renderChart(total_result, $scope.charts[0].config);
-                    });
-                }
-            }
-            $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "campaign", $scope.selectedQuota, -1, -1, true);
 
             $scope.$on("ssh_refresh_charts", function (e, msg) {
-                $rootScope.targetSearchSpread();
-                $scope.init($rootScope.user, $rootScope.baiduAccount, "campaign", $scope.selectedQuota, $rootScope.start, $rootScope.end);
+                $scope.page_init(false);
             });
 
 
@@ -222,7 +193,6 @@ define(["./module"], function (ctrs) {
                 $scope.reset();
                 $rootScope.start = time[0];
                 $rootScope.end = time[1];
-                $scope.init($rootScope.user, $rootScope.baiduAccount, "campaign", $scope.selectedQuota, $rootScope.start, $rootScope.end);
             }
             function GetDateStr(AddDayCount) {
                 var dd = new Date();
@@ -251,7 +221,170 @@ define(["./module"], function (ctrs) {
                 $scope.reset();
                 $scope.todayClass = true;
             };
-            Custom.initCheckInfo();//页面check样式js调用
+            $scope.setShowArray = function () {
+                var tempArray = [];
+                angular.forEach($scope.checkedArray, function (q_r) {
+                    tempArray.push({"label": q_r, "value": 0, "cValue": 0, "count": 0, "cCount": 0});
+                });
+                $scope.dateShowArray = $rootScope.copy(tempArray);
+            };
+            $scope.setShowArray();
+            $scope.page_init = function(isContrastDataByTime){
+                console.log("test")
+                if (isContrastDataByTime) {
+                    $scope.charts[0].config.legendDefaultChecked = [0];
+                    $scope.charts[0].config.legendAllowCheckCount = 1;
+                    $scope.dataTable(isContrastDataByTime, "day", ["pv"], true);
+                } else {
+                    $scope.charts[0].config.legendDefaultChecked = [0, 1];
+                    $scope.charts[0].config.legendAllowCheckCount = 2;
+                    $scope.dataTable(isContrastDataByTime, "day", ["pv", "uv"]);
+                }
+                $scope.isCompared = isContrastDataByTime;
+                $http.get("/api/transform/transformAnalysis?start=-30&end=0&action=event&type=1&searchType=initAll&queryOptions=" + $rootScope.checkedArray).success(function (data) {
+                    console.log(data)
+                    if (data != null || data != "") {
+                        for (var i = 0; i < $scope.dateShowArray.length; i++) {
+                            for (var key in data) {
+                                if ($scope.dateShowArray[i].label == key) {
+                                    if (isContrastDataByTime) {
+                                        $scope.dateShowArray[i].cValue = data[key];
+                                    } else {
+                                        $scope.dateShowArray[i].value = data[key];
+                                    }
+                                }
+                            }
+                        }
+                        $scope.DateNumber = true;
+                        $scope.DateLoading = true;
+                    }
+
+                });
+            };
+            /**
+             * @param isContrastTime　是否为对比数据
+             * @param showType　显示横轴方式　有四种：hour小时为单位，显示一天24小时的数据；day天为单位，显示数天的数据，week周为单位，显示数周的数据；month月为单位，显示数月的数据
+             * @param queryOption　查询条件指标　事件转化：指标："浏览量(pv)", "访客数(uv)", "转化次数(conversions)", "转化率(crate)", "平均转化成本(transformCost)"
+             */
+            $scope.dataTable = function (isContrastTime, showType, queryOptions, renderLegend) {
+                console.log("数据加载成功")
+                if (isContrastTime) {
+                    $http.get("/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&action=event&type=1&searchType=contrastData&showType=" + showType + "&queryOptions=" + queryOptions + "&contrastStart=" + $scope.start + "&contrastEnd=0" + $scope.end).success(function (contrastData) {
+                        var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
+                        chart.showLoading({
+                            text: "正在努力的读取数据中..."
+                        });
+                        $scope.charts[0].config.chartType = "line";
+                        $scope.charts[0].config.bGap = true;
+                        $scope.charts[0].config.instance = chart;
+                        if (renderLegend)
+                            util.renderLegend(chart, $scope.charts[0].config);
+
+
+                        for (var i = 0; i < contrastData.length; i++) {
+                            if (contrastData[i].label.split("_").length > 1) {
+                                contrastData[i].label = "对比数据";
+                            } else {
+                                contrastData[i].label = chartUtils.convertChinese(contrastData[i].label);
+                            }
+                        }
+                        cf.renderChart(contrastData, $scope.charts[0].config);
+                        Custom.initCheckInfo();
+                    });
+                } else {
+                    //$scope.charts[0].config.legendDefaultChecked = [0,1];
+                    //$scope.charts[0].config.legendAllowCheckCount = 2;
+                    $http.get("/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&action=event&type=1&searchType=dataTable&showType=" + showType + "&queryOptions=" + queryOptions).success(function (data) {
+                        var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
+                        chart.showLoading({
+                            text: "正在努力的读取数据中..."
+                        });
+                        $scope.charts[0].config.chartType = "line";
+                        $scope.charts[0].config.bGap = true;
+                        $scope.charts[0].config.instance = chart;
+                        util.renderLegend(chart, $scope.charts[0].config);
+                        for (var i = 0; i < data.length; i++) {
+                            data[i].label = chartUtils.convertChinese(data[i].label);
+                        }
+                        cf.renderChart(data, $scope.charts[0].config);
+                        Custom.initCheckInfo();
+                    });
+                }
+
+
+            };
+            $scope.targetSearchSpreadPage = function (isClicked) {
+                $scope.setShowArray();
+                $scope.my_init(false);
+                if (isClicked) {
+                    $scope.$broadcast("transformData_ui_grid", {
+                        start: $rootScope.start,
+                        end: $rootScope.end,
+                        checkedArray: $scope.checkedArray
+                    });
+                } else {
+                    //访客过滤数据获取
+                    var inputArray = $(".chart_top2 .styled");
+                    inputArray.each(function (i, o) {
+                        if ($(o).prop("checked")) {
+                            $scope.uv_selected = $(o).prop("value");
+                        }
+                    });
+                    var checkedData = [];
+                    if (($scope.souce.selected == "" && $scope.browser.selected == "") || ($scope.souce.selected.name == "全部" && $scope.browser.selected.name == "全部")) {
+                        checkedData.push({
+                            field: "all_rf",
+                            name: "所有来源"
+                        });
+                    }
+                    if ($scope.souce.selected != "") {
+                        if ($scope.souce.selected.name != "全部") {
+                            checkedData.push({
+                                field: "souce",
+                                name: $scope.souce.selected.name
+                            });
+                        }
+                    }
+                    if ($scope.browser.selected != "") {
+                        if ($scope.browser.selected.name != "全部") {
+                            checkedData.push({
+                                field: "browser",
+                                name: $scope.browser.selected.name
+                            });
+                        }
+                    }
+                    if ($scope.uv_selected != "全部") {
+                        checkedData.push({
+                            field: "uv_type",
+                            name: $scope.uv_selected
+                        });
+                    } else {
+                        checkedData.push({
+                            field: "uv_type",
+                            name: "所有访客"
+                        });
+                    }
+                    if ($scope.city.selected != "") {
+                        checkedData.push({
+                            field: "city",
+                            name: $scope.city.selected.name
+                        });
+                    } else {
+                        checkedData.push({
+                            field: "city",
+                            name: "所有地域"
+                        });
+                    }
+                    $scope.$broadcast("transformAdvancedData_ui_grid", {
+                        start: $rootScope.start,
+                        end: $rootScope.end,
+                        checkedData: checkedData,
+                        checkedArray: $scope.checkedArray
+                    });
+                }
+            };
+            $scope.page_init(false);
+            //Custom.initCheckInfo();//页面check样式js调用
         }
     );
 });
