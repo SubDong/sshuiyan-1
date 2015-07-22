@@ -44,7 +44,7 @@
                             <li><label><input class="styled" type="radio" name="record"
                                               data-ng-click="chooseRecordType('order_conv')"
                                               ng-checked="radio_record.order_conv">订单转化</label>&nbsp;&nbsp;&nbsp;&nbsp;<a
-                                    href="" data-ng-click="insertOrder()">插入订单号</a>
+                                    href="javascript:void(0)">插入订单号</a>
                             </li>
                         </ul>
                     </div>
@@ -131,7 +131,7 @@
                     <a href="javascript:void(0)" data-ng-if="path.steps.length<10"
                        data-ng-click="addSteps(path.steps)">添加步骤</a>
                 </div>
-                <button class="btn btn-info btn-color" data-ng-if="paths.length<4"
+                <button class="btn btn-info btn-default btn-color" data-ng-if="paths.length<4"
                         data-ng-click="addPaths(paths)">添加路径
                 </button>
             </div>
@@ -142,7 +142,7 @@
             <div class="small_title">
                 <p>转化类型</p> (选填)
             </div>
-           <div class="benefit_content">
+            <div class="benefit_content">
                 <label><input type="radio" class="styled" name="type" ng-checked="radio_conv.regist"
                               data-ng-click="chooseConvType('regist')">注册</label>
                 <label><input type="radio" class="styled" name="type" ng-checked="radio_conv.communicate"
@@ -151,11 +151,11 @@
                               data-ng-click="chooseConvType('place_order')">下单</label>
                 <label><input type="radio" class="styled" name="type" ng-checked="radio_conv.other"
                               data-ng-click="chooseConvType('other')">其他</label>&nbsp;&nbsp;&nbsp;&nbsp;
-                <input id="convTypeText" readOnly=false type="text" class="input_text " data-ng-model="t_conv_text">
+                <input type="text" class="input_text " data-ng-model="t_conv_text">
             </div>
         </div>
     </div>
     <div class="footer-btn" ng-click="submit()">
-        <button class="btn btn-info">确 定</button>
+        <button class="btn btn-default btn-info">确 定</button>
     </div>
 </div>

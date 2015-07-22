@@ -1,4 +1,4 @@
-<div class="ngdialog-buttons">
+<div class="ngdialog-buttons" >
     <div class="ngdialog-tilte">发送报告</div>
     <ul class="admin-ng-content transformAnalysis_send">
         <li>
@@ -6,16 +6,17 @@
             <input type="text "  class="form-control send_input " placeholder="多个邮箱请用分号隔开" onfocus="this.setAttribute('placeholder','')"
                    onblur="this.setAttribute('placeholder','多个邮箱请用分号隔开')" />
         </li>
-        <li>
-            <label>发送周期：</label>
-            <input name="send_day " class="" type="radio"/>每天
-           <input name="send_day " class="send_day_left " type="radio"/>每周一
-          <input name="send_day " class="send_day_left " type="radio"/>每月一号
+        <li >
+            <label >发送周期：</label>
+            <input name="send_day" class="" type="radio"/><b>每天</b>
+           <input name="send_day" class="send_day_left " type="radio"/><b>每周一</b>
+          <input name="send_day" class="send_day_left " type="radio"/><b>每月一号</b>
 
         </li>
-        <li>
-            <label >发送时间：</label>
-            <input type="time" class="form-control send_input_time"/>
+        <li style="margin: 0">
+            <label class="ngdialog_label">发送时间：</label>
+            <timepicker ng-model="mytime" ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="meridian"></timepicker>
+
             <!--<div role="group" class="btn-group">-->
                 <!--<ui-select ng-model="sitetime.hour1.selected" theme="select2" reset-search-input="false"  class="fl btn-pv"-->
                            <!--style="width: 120px;">-->
@@ -29,14 +30,14 @@
         </li>
         <li>
             <label>文件格式：
-            <input name="send_layout "   type="radio"/>CSV
-            <input name="send_layout " class="send_day_left " type="radio"/>PDF
+            <input name="send_layout"   type="radio"/><b></b>CSV
+            <input name="send_layout" class="send_day_left " type="radio"/><b>PDF</b>
                 <p>    本格式不含图示，支持较大量数据，便于后期数据处理。</p>
         </li>
 
     </ul>
     <div class="ng-button-div">
-        <button type="button" class="ngdialog-button ng-button " ng-click="sureonDelete()">确认</button>
+        <button type="button" class="ngdialog-button btn btn-default ng-button " ng-click="sure()">确认</button>
         <button type="button" class="ngdialog-button ngdialog-button-secondary " ng-click="closeThisDialog(0)">取消
         </button>
     </div>

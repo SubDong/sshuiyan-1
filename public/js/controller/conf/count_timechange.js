@@ -37,14 +37,9 @@ define(["./module"], function (ctrs) {
         Custom.initCheckInfo();//页面check样式js调用
         $scope.onSubmitClickListener = function (){
             $scope.urlDialog = ngDialog.open({
-                template: '\
-                  <div class="ngdialog-buttons" >\
-                            <ul>设置保存成功</ul>   \
-                  </div>',
-                className: 'ngdialog-theme-default',
-                plain: true,
+                template: './conf/Dialog/site_succuss.html',
+                className: 'ngdialog-theme-default admin_ngdialog',
                 scope: $scope
-
             });
             var uid= $cookieStore.get("uid");
             var site_id=$rootScope.siteId;//从conf_sites中获取

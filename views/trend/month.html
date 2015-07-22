@@ -141,7 +141,7 @@
                         </ul>
                     </div><div class="chart_top2">
                     <ul>
-                        <li><span>时段过滤:</span></li>
+                        <li><span>时段过滤: </span></li>
                         <li>
                             <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
                                 <div role="group" class="btn-group">
@@ -158,7 +158,10 @@
                                 </div>
                             </div>
                         </li>
-                        <li data-ng-if="time.selected.name=='工作时段'">
+
+                        <li data-ng-if="time.selected.name==null || time.selected.name=='全部'">
+                            00:00-23:59
+                        </li> <li data-ng-if="time.selected.name=='工作时段'">
                             9:00-11:59 13:00-17:59
                         </li><li data-ng-if="time.selected.name=='非工作时段'">
                              0:00-08:59 12:00-12:59 18:00-23:59
@@ -167,7 +170,7 @@
                             <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
                                 <div role="group" class="btn-group">
                                     <ui-select ng-model="sitetime.hour.selected" theme="select2" reset-search-input="false"  class="fl btn-pv"
-                                               style="width: 120px;">
+                                               style="width: 80px;">
                                         <ui-select-match placeholder="00:00">{{$select.selected.name}}
                                         </ui-select-match>
                                         <ui-select-choices repeat="hour in hours">
@@ -179,7 +182,7 @@
                             <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
                                 <div role="group" class="btn-group">
                                     <ui-select ng-model="sitetime.hour1.selected" theme="select2" reset-search-input="false"  class="fl btn-pv"
-                                               style="width: 120px;">
+                                               style="width: 80px;">
                                         <ui-select-match placeholder="00:59">{{$select.selected.name}}
                                         </ui-select-match>
                                         <ui-select-choices repeat="hour1 in hours1">

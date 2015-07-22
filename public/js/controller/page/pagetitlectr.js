@@ -1,4 +1,5 @@
 /**
+/**
  * Created by john on 2015/4/2.
  */
 define(["./module"], function (ctrs) {
@@ -254,29 +255,8 @@ define(["./module"], function (ctrs) {
             $scope.dialog_page_title.page_url = "";
             $scope.dialog_page_title.icon_name = "";
             $scope.urlDialog = ngDialog.open({
-                template: '\
-                <form role="form" name="pagetitleForm" class="form-horizontal" novalidate>\
-                <div>\
-                <li>新增点击图</li><br>\
-                </div>\
-              <div class="ngdialog-buttons" >\
-                   <ul> \
-                   <li>点击图名称</li>\
-                    <li><input type="text" data-ng-focus="icon_name_focus=true" data-ng-blur="site_name_focus =false" data-ng-model="dialog_page_title.icon_name" class="form-control"/></li> \
-                    <li data-ng-show="icon_name_focus && !dialog_page_title.icon_name" style="color: red;">不能为空</li>\
-                   <li>您想统计的页面</li>\
-                     <li><input type="text" name="remote" pagetitlectr-remote-validation data-ng-focus="page_url_focus = true" data-ng-blur="page_url_focus = false" data-ng-model="dialog_page_title.page_url" class="form-control" required/></li> \
-                     <li ng-show="pagetitleForm.remote.$error.remote" style="color: red;">网站域名重复！</li> \
-                    <li data-ng-show="page_url_focus && !dialog_page_title.page_url" style="color: red;">不能为空</li>\
-                    <br>\
-                    <br>\
-                    <li><strong>注意：</strong>请在所有想统计的页面上都安装百度统计代码。</li>\
-                    </ul>\
-                    <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
-                    <button type="button" ng-disabled="pagetitleForm.$invalid" class="ngdialog-button ng-button" ng-click="submit(0)">确定</button>\
-                </div></form>',
-                className: 'ngdialog-theme-default',
-                plain: true,
+                template: './conf/Dialog/pagetitle_dialog.html',
+                className: 'ngdialog-theme-default admin_ngdialog',
                 scope: $scope
             });
         };
@@ -324,29 +304,8 @@ define(["./module"], function (ctrs) {
             $scope.dialog_page_title.page_url = "";
             $scope.dialog_page_title.icon_name = "";
             $scope.urlDialog = ngDialog.open({
-                template: '\
-                <form role="form" name="pagetitleForm" class="form-horizontal" novalidate>\
-                <div>\
-                <li>新增点击图</li><br>\
-                </div>\
-              <div class="ngdialog-buttons" >\
-                   <ul> \
-                   <li>点击图名称</li>\
-                    <li><input type="text" data-ng-focus="icon_name_focus=true" data-ng-blur="site_name_focus =false" data-ng-model="dialog_page_title.icon_name" class="form-control"/></li> \
-                    <li data-ng-show="icon_name_focus && !dialog_page_title.icon_name" style="color: red;">不能为空</li>\
-                   <li>您想统计的页面</li>\
-                     <li><input type="text" name="remote" pagetitlectr-remote-validation data-ng-focus="page_url_focus = true" data-ng-blur="page_url_focus = false" data-ng-model="dialog_page_title.page_url" class="form-control" required/></li> \
-                     <li ng-show="pagetitleForm.remote.$error.remote" style="color: red;">网站域名重复！</li> \
-                    <li data-ng-show="page_url_focus && !dialog_page_title.page_url" style="color: red;">不能为空</li>\
-                    <br>\
-                    <br>\
-                    <li><strong>注意：</strong>请在所有想统计的页面上都安装百度统计代码。</li>\
-                    </ul>\
-                    <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
-                    <button type="button" ng-disabled="pagetitleForm.$invalid" class="ngdialog-button ng-button" ng-click="submit(0)">确定</button>\
-                </div></form>',
-                className: 'ngdialog-theme-default',
-                plain: true,
+                template: './conf/Dialog/pagetitle_dialog.html',
+                className: 'ngdialog-theme-default admin_ngdialog',
                 scope: $scope
             });
         };

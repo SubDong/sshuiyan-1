@@ -26,7 +26,7 @@
                     <span>媒介平台<p>（广告所投放的平台，如：新浪、搜狐、贴吧、论坛）</p></span>
                     <div class="adtrack_add_input">
                         <ul>
-                            <li data-ng-repeat="adtrack_checked in adtrack_checkeds "><input type="radio"  name="mediaPlatform" ng-model="adTrack.mediaPlatform" ng-click="advancedOpt()" value="{{adtrack_checked.name}}" />{{adtrack_checked.name}}</li>
+                            <li data-ng-repeat="adtrack_checked in adtrack_checkeds "><input type="radio"  name="mediaPlatform" ng-model="adTrack.mediaPlatform" ng-click="advancedOpt()" value="{{adtrack_checked.name}}" /><span>&nbsp;{{adtrack_checked.name}}</span></li>
 
                         </ul>
                         <ul>
@@ -43,10 +43,10 @@
                 <li><span>广告类型<p>（广告所投放的具体形式，如：文字广告，图片广告等）</p></span>
                     <div class="adtrack_add_input">
                         <ul>
-                            <li><input type="radio"  name="adTypes" ng-model="adTrack.adTypes" ng-click="advancedOpt()" value="文字广告"/>文字广告</li>
-                            <li><input type="radio"  name="adTypes" ng-model="adTrack.adTypes" ng-click="advancedOpt()" value="图片广告"/>图片广告</li>
-                            <li><input type="radio"  name="adTypes" ng-model="adTrack.adTypes" ng-click="advancedOpt()" value="多媒体广告"/>多媒体广告</li>
-                            <li><input type="radio"  name="adTypes" ng-model="adTrack.adTypes" ng-click="advancedOpt()" value="其他"/>其他</li>
+                            <li><input type="radio"  name="adTypes" ng-model="adTrack.adTypes" ng-click="advancedOpt()" value="文字广告"/><span>&nbsp;文字广告</span></li>
+                            <li><input type="radio"  name="adTypes" ng-model="adTrack.adTypes" ng-click="advancedOpt()" value="图片广告"/><span>&nbsp;图片广告</span></li>
+                            <li><input type="radio"  name="adTypes" ng-model="adTrack.adTypes" ng-click="advancedOpt()" value="多媒体广告"/><span>&nbsp多媒体广告</span></li>
+                            <li><input type="radio"  name="adTypes" ng-model="adTrack.adTypes" ng-click="advancedOpt()" value="其他"/><span>&nbsp;其他</span></li>
                         </ul>
                         <ul>
                             <input type="text" id="adTypes" name="adTypes" ng-model="adTrack.adTypes" ng-click="advancedOpt()"/>

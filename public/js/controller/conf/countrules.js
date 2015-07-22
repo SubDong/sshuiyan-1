@@ -86,14 +86,9 @@ define(["./module"], function (ctrs) {
 
             });
             $scope.urlDialog = ngDialog.open({
-                template: '\
-                  <div class="ngdialog-buttons" >\
-                            <ul>设置保存成功</ul>   \
-                  </div>',
-                className: 'ngdialog-theme-default',
-                plain: true,
+                template: './conf/Dialog/site_succuss.html',
+                className: 'ngdialog-theme-default admin_ngdialog',
                 scope: $scope
-
             });
 
         };

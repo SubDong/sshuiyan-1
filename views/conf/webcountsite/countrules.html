@@ -21,7 +21,7 @@
                         <button data-ng-focus="myFocus(rules_area)"   data-ng-blur="myBlur(rules_area)" class="btn btn-default" data-ng-if="rules.length<10" data-ng-click="addRule(rules)">+&nbsp;新增网站</button>
                     </div>
 
-                    <div data-ng-show="rules_area.helpFlag"  class="count_content_right">
+                    <div  data-ng-show="rules_area.helpFlag" class="count_content_right">
                         <!--提示:网站与域名不同提示 右-->
                         <div class="popover right box " style="display: block;">
                             <div class="arrow"></div>
@@ -169,8 +169,8 @@
     </div>
     <!--底部 按钮-->
     <div class="countrules_button" style="height: 100px; width: 300px;">
-        <button class="btn btn-info count_content_button" ng-click="onSubmitClickListener()">确定</button>
-        <button class="btn btn-info count_content_button ">取消</button>
+        <button class="btn btn-default count_content_button" ng-click="onSubmitClickListener()">确定</button>
+        <button class="btn btn-default count_content_button ">取消</button>
     </div>
 
 </div>

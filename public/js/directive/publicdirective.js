@@ -568,9 +568,23 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     console.log(123);
                    scope.urlDialog = ngDialog.open({
                        template: '../conf/Dialog/transformAnalysis_send.html',
-                       className: 'ngdialog-theme-default admin_ngdialog '
+                       className: 'ngdialog-theme-default admin_ngdialog ',
+                       scope:scope
                    });
                };
+                scope.mytime = new Date();
+                scope.hstep = 1;
+                scope.mstep = 15;
+                scope.options = {
+                    hstep: [1, 2, 3],
+                    mstep: [1, 5, 10, 15, 25, 30]
+                };
+
+                scope.ismeridian = true;
+                scope.sure=function(){
+                    console.log(111);
+                };
+
                 scope.flag = $location.path() != "/index";
 
                 //导出功能
@@ -621,6 +635,16 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                 }
             }
         }
+        return option;
+    });
+    app.directive("refreshexchange", function ($rootScope, $http, $location,ngDialog) {
+        var option = {
+            restrict: "EA",
+            template: "<div class=\"right_refresh fr right_refresh_exchange \"><button class=\"btn btn-default btn-Refresh fl\" ng-click=\"page_refresh()\"  type=\"button\"><span aria-hidden=\"true\" class=\"glyphicon glyphicon-refresh\"></span></button></div>",
+            transclude: true,
+            replace: true
+
+        };
         return option;
     });
     app.directive("compare", function () {
