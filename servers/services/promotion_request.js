@@ -54,7 +54,11 @@ var es_aggs = {
                 "min_doc_count": 2
             }
         },
-        "vc_aggs": vc_aggs
+        "out_vc_aggs": {
+            "cardinality": {
+                "field": "tt"
+            }
+        }
     },
     // 平均访问时长
     "avgTime": {
@@ -152,7 +156,7 @@ var outRateFn = function (result, dimension) {
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
-        var vc = result[i].vc_aggs.value;
+        var vc = result[i].out_vc_aggs.value;
         var svc = parseInt(vc) - result[i].single_visitor_aggs.buckets.length;
         keyArr.push(result[i].key);
 
