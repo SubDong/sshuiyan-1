@@ -1888,7 +1888,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
             restrict: 'E',
             templateUrl: '../commons/date_show.html',
             link: function (scope, element, attris, controller) {
-<<<<<<< HEAD
                 // 初始化参数 默认不比较数据
                 scope.isCompared = false;
                 // 展现统计指标数据数组
@@ -1965,31 +1964,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     if (temp.length > 0) {
                         scope.ds_dateShowQuotasOption = temp;
                     }
-                    scope.loadDataShow();
-                });
-
-                scope.loadDataShow();
-
-                // 对比
-                scope.$on("ssh_load_compare_datashow", function (e, startTime, endTime) {
-                    scope.isCompared = true;
-                    angular.forEach(scope.dateShowArray, function (dsa) {
-                        dsa.cValue = 0;
-                    });
-                    scope.loadCompareDataShow(startTime, endTime);
-                });
-            }
-        }
-    });
-
-    /**
-     * 指定广告追踪 计划 指标显示指令 by icepros
-     */
-    app.directive("sshEsAdsPlanShow", function($http, $rootScope, $q){
-        return {
-            restrict: 'E',
-            templateUrl: '../commons/date_show.html',
-            link: function (scope, element, attris, controller) {
                     scope.loadDataShow();
                 });
 
@@ -2315,7 +2289,6 @@ app.directive("sshDateShowPage", function ($rootScope) {
             templateUrl: '../commons/date_show.html',
             link: function (scope, element, attris, controller) {
                 // 初始化参数
-
                 scope.isCompared = false;
                 scope.dateShowArray = [];
                 scope.ssh_seo_type = attris.semType;
