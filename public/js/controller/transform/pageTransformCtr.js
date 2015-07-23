@@ -10,7 +10,7 @@ define(["./module"], function (ctrs) {
             $rootScope.end = 0;
             $rootScope.tableFormat = null;
             $scope.send = true;//显示发送
-
+            $scope.isCompared = false;
             //自定义指标显示
             $scope.bases = [
                 {consumption_name: "浏览量(PV)", name: "pv"},
@@ -28,7 +28,7 @@ define(["./module"], function (ctrs) {
                 {consumption_name: '利润', name: 'profit'}
             ];
             $scope.order = [
-                {consumption_name: "订单转化", name: "orderNum"},
+                {consumption_name: "订单数", name: "orderNum"},
                 {consumption_name: "订单金额", name: "orderMoney"},
                 {consumption_name: "订单转化率", name: "orderNumRate"}
             ];
@@ -103,12 +103,24 @@ define(["./module"], function (ctrs) {
             };
             $scope.selectedQuota = ["click", "impression"];
             $scope.onLegendClickListener = function (radio, chartInstance, config, checkedVal) {
+                $scope.charts[0].config.legendDefaultChecked = [];
+                var checkData = [];
+                for (var k = 0; k < checkedVal.length; k++) {
+                    for (var i = 0; i < $scope.queryOption_all.length; i++) {
+                        if ($scope.queryOption_all[i] == checkedVal[k]) {
+                            checkData.push(i)
+                        }
+                    }
+                }
+                $scope.charts[0].config.legendDefaultChecked = checkData;
                 if (checkedVal.length) {
-                    //$scope.init($rootScope.user, $rootScope.baiduAccount, "campaign", checkedVal, $rootScope.start, $rootScope.end);
+                    $scope.dataTable($scope.isCompared, "day", checkedVal, false);
                 } else {
                     def.defData($scope.charts[0].config);
                 }
             };
+            
+            $scope.queryOption_all = ["pv", "uv", "vc", "nuv", "conversions", "crate", "avgCost", "benefit", "profit", "orderNum", "orderMoney", "orderNumRate"];
             $scope.charts = [
                 {
                     config: {
