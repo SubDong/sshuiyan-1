@@ -2353,7 +2353,6 @@ app.directive("sshDateShowPage", function ($rootScope) {
                 };
                 scope.pushESData = function (result, flag) {
                     var _array = $rootScope.copy(scope.dateShowArray);
-                    if (Object.prototype.toString.call(result) === '[object Array]') {
                         var _count = 0;
                         angular.forEach(result, function (r) {
                             var infoKey = r[$rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field];
@@ -2406,31 +2405,6 @@ app.directive("sshDateShowPage", function ($rootScope) {
                                 obj.count = _count;
                             }
                         });
-                    } else {
-                        var obj = JSON.parse(eval('(' + result + ')').toString()); //由JSON字符串转换为JSON对象
-                        angular.forEach(obj, function (r) {
-                            var dateShowObject = {};
-                            dateShowObject.label = r.label;
-                            var temp = 0;
-                            var count = 0;
-                            angular.forEach(r.quota, function (qo, _i) {
-                                temp += Number(qo);
-                                count++;
-                            });
-                            angular.forEach(_array, function (_array_r) {
-                                if (_array_r.label == dateShowObject.label) {
-                                    if (flag) {
-                                        _array_r.cCount = count;
-                                        _array_r.cValue = temp
-                                    } else {
-                                        _array_r.count = count;
-                                        _array_r.value = temp
-                                    }
-                                }
-                            });
-                        });
-                    }
-
                     scope.dateShowArray = $rootScope.copy(_array);
                 };
             }
