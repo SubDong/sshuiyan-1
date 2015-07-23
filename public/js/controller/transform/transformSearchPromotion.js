@@ -216,6 +216,19 @@ define(["./module"], function (ctrs) {
                                 break;
                         }
                         break;
+                    case "terminal_type":
+                        switch (msg.checkedData[i].name) {
+                            case "计算机":
+                                query += "terminal_type:0,";
+                                break;
+                            case "移动设备":
+                                query += "terminal_type:1,";
+                                break;
+                            default :
+                                query += "terminal_type:all,";
+                                break;
+                        }
+                        break;
                 }
 
             }

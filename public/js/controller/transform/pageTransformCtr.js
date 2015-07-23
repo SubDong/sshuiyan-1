@@ -211,6 +211,37 @@ define(["./module"], function (ctrs) {
                 $scope.dateShowArray = $rootScope.copy(tempArray);
             };
             $scope.setShowArray();
+            $scope.setAreaFilterTran = function (area) {
+                $scope.areaSearch = area == "全部" ? "" : area;
+                if (area == "北京" || area == "上海" || area == "广州") {
+                    if ($scope.city.selected != undefined) {
+                        $scope.city.selected.name = area;
+                    } else {
+                        $scope.city.selected = {};
+                        $scope.city.selected["name"] = area;
+                    }
+                }
+            };
+            $scope.advancedQuery = function () {
+                //设备过滤样式初始化
+                var input_terminal_Array = $(".chart_top2 .terminal_class");
+                input_terminal_Array.each(function (i, o) {
+                    $(o).prev("span").css("background-position", "0px 0px");
+                    $(o).prop("checked", false);
+                });
+                $(input_terminal_Array[0]).prev("span").css("background-position", "0px -51px");
+                $(".chart_top2 .terminal:eq(" + 0 + ")").prop("checked", true);
+                //访客过滤样式初始化
+                var input_uv_Array = $(".chart_top2 .uv_class");
+                input_uv_Array.each(function (i, o) {
+                    $(o).prev("span").css("background-position", "0px 0px");
+                    $(o).prop("checked", false);
+                });
+                $(input_uv_Array[0]).prev("span").css("background-position", "0px -51px");
+                $(".chart_top2 .uv_class:eq(" + 0 + ")").prop("checked", true);
+                //地狱过滤样式数据初始化
+                $scope.city.selected = "";
+            };
             $scope.page_init = function (isContrastDataByTime) {
                 $scope.$broadcast("transformData", {
                     start: $rootScope.start,
@@ -313,7 +344,7 @@ define(["./module"], function (ctrs) {
             };
             $scope.targetSearchSpreadPage = function (isClicked) {
                 $scope.setShowArray();
-                $scope.my_init(false);
+                //$scope.my_init(false);
                 if (isClicked) {
                     $scope.$broadcast("transformData_ui_grid", {
                         start: $rootScope.start,
@@ -322,34 +353,51 @@ define(["./module"], function (ctrs) {
                     });
                 } else {
                     //访客过滤数据获取
-                    var inputArray = $(".chart_top2 .styled");
-                    inputArray.each(function (i, o) {
+                    var input_uv_Array = $(".chart_top2 .uv_class");
+                    input_uv_Array.each(function (i, o) {
                         if ($(o).prop("checked")) {
                             $scope.uv_selected = $(o).prop("value");
                         }
                     });
+                    var input_terminal_Array = $(".chart_top2 .terminal_class");
+                    input_terminal_Array.each(function (i, o) {
+                        if ($(o).prop("checked")) {
+                            $scope.terminal_selected = $(o).prop("value");
+                        }
+                    });
                     var checkedData = [];
-                    if (($scope.souce.selected == "" && $scope.browser.selected == "") || ($scope.souce.selected.name == "全部" && $scope.browser.selected.name == "全部")) {
+                    //if (($scope.souce.selected == "" && $scope.browser.selected == "") || ($scope.souce.selected.name == "全部" && $scope.browser.selected.name == "全部")) {
+                    //    checkedData.push({
+                    //        field: "all_rf",
+                    //        name: "所有来源"
+                    //    });
+                    //}
+                    //if ($scope.souce.selected != "") {
+                    //    if ($scope.souce.selected.name != "全部") {
+                    //        checkedData.push({
+                    //            field: "souce",
+                    //            name: $scope.souce.selected.name
+                    //        });
+                    //    }
+                    //}
+                    //if ($scope.browser.selected != "") {
+                    //    if ($scope.browser.selected.name != "全部") {
+                    //        checkedData.push({
+                    //            field: "browser",
+                    //            name: $scope.browser.selected.name
+                    //        });
+                    //    }
+                    //}
+                    if ($scope.terminal_selected != "全部") {
                         checkedData.push({
-                            field: "all_rf",
-                            name: "所有来源"
+                            field: "terminal_type",
+                            name: $scope.terminal_selected
                         });
-                    }
-                    if ($scope.souce.selected != "") {
-                        if ($scope.souce.selected.name != "全部") {
-                            checkedData.push({
-                                field: "souce",
-                                name: $scope.souce.selected.name
-                            });
-                        }
-                    }
-                    if ($scope.browser.selected != "") {
-                        if ($scope.browser.selected.name != "全部") {
-                            checkedData.push({
-                                field: "browser",
-                                name: $scope.browser.selected.name
-                            });
-                        }
+                    } else {
+                        checkedData.push({
+                            field: "terminal_type",
+                            name: "所有设备"
+                        });
                     }
                     if ($scope.uv_selected != "全部") {
                         checkedData.push({

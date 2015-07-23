@@ -1091,6 +1091,15 @@ var createQueryMap = function (key, value) {
                 };
             }
             break;
+        case "terminal_type":
+            if (value == "all") {
+                queryMap = {};
+            } else {
+                queryMap = {
+                    pm: value
+                };
+            }
+            break;
     }
     return queryMap;
 };
