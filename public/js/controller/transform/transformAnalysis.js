@@ -325,6 +325,7 @@ define(["./module"], function (ctrs) {
                     tempArray.push({"label": q_r, "value": 0, "cValue": 0, "count": 0, "cCount": 0});
                 });
                 $scope.dateShowArray = $rootScope.copy(tempArray);
+
             };
             $scope.setShowArray();
             $scope.my_init = function (isContrastDataByTime) {
@@ -343,7 +344,7 @@ define(["./module"], function (ctrs) {
                     $scope.dataTable(isContrastDataByTime, "day", ["pv", "uv"]);
                 }
 
-                $scope.isCompared = isContrastDataByTime;
+                $scope.isCompared = true;
                 $http.get("/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&action=event&type=1&searchType=initAll&queryOptions=" + $rootScope.checkedArray).success(function (data) {
                     if (data != null || data != "") {
                         for (var i = 0; i < $scope.dateShowArray.length; i++) {
@@ -351,12 +352,25 @@ define(["./module"], function (ctrs) {
                                 if ($scope.dateShowArray[i].label == key) {
                                     if (isContrastDataByTime) {
                                         $scope.dateShowArray[i].cValue = data[key];
+
                                     } else {
                                         $scope.dateShowArray[i].value = data[key];
                                     }
                                 }
                             }
                         }
+                        if(isContrastDataByTime){
+                            //angular.forEach($scope.dateShowArray, function (dsa) {
+                            //    dsa.cValue = data[dsa.label];
+                            //});
+                            //console.log($scope.dateShowArray)
+                            //$scope.dateShowArray = $rootScope.copy($scope.dateShowArray);
+                            //$scope.load(true,data);
+                        }
+
+                        //if(isContrastDataByTime){
+                        //    $scope.load(isContrastDataByTime);
+                        //}
                         $scope.DateNumber = true;
                         $scope.DateLoading = true;
                     }
