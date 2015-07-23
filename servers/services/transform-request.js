@@ -106,46 +106,64 @@ var es_aggs = {
 };
 var transform = {
     search: function (es, indexs, type, action, querys, callbackFn) {
-        var _aggs = {};
-        querys.forEach(function (queryOption) {
-            for (var key in es_aggs[queryOption]) {
-                _aggs[key] = es_aggs[queryOption][key];
+        var requests = [];
+        for (var i = 0; i < indexs.length; i++) {
+            requests.push({
+                index: indexs[i]
+            });
+        }
+        async.map(requests, function (item, callback) {
+            es.indices.exists(item, function (error, exists) {
+                callback(null, exists);
+            });
+        }, function (error, results) {
+            var newIndexs = [];
+            for (var i = 0; i < indexs.length; i++) {
+                if (results[i] == true) {
+                    newIndexs.push(indexs[i]);
+                }
             }
-        });
-        var request = {
-            "index": indexs,
-            "type": type + "_" + action,
-            "body": {
-                "size": 0,
-                "aggs": _aggs
-            }
-        };
-        es.search(request, function (error, response) {
-            var data = {};
-            if (response != undefined && response.aggregations != undefined) {
-                var result = response.aggregations;
-                querys.forEach(function (queryOption) {
-                    if (queryOption == "crate") {
-                        if (result.conversions_crate.value == "0") {
-                            data[queryOption] = "0";
-                        } else {
-                            data[queryOption] = (result.conversions_crate.value / result.conversions_crate.value).toFixed(2) + "%";
-                        }
-                    } else if (queryOption == "nuvRate") {
-                        if (result.new_visitor_aggs.value == "0") {
-                            data[queryOption] = 0;
-                        } else {
-                            data[queryOption] = (result.uv_aggs.value / result.new_visitor_aggs.value).toFixed(2) + "%";
+            var _aggs = {};
+            querys.forEach(function (queryOption) {
+                for (var key in es_aggs[queryOption]) {
+                    _aggs[key] = es_aggs[queryOption][key];
+                }
+            });
+            var request = {
+                "index": newIndexs,
+                "type": type + "_" + action,
+                "body": {
+                    "size": 0,
+                    "aggs": _aggs
+                }
+            };
+            es.search(request, function (error, response) {
+                var data = {};
+                if (response != undefined && response.aggregations != undefined) {
+                    var result = response.aggregations;
+                    querys.forEach(function (queryOption) {
+                        if (queryOption == "crate") {
+                            if (result.conversions_crate.value == "0") {
+                                data[queryOption] = "0";
+                            } else {
+                                data[queryOption] = (result.conversions_crate.value / result.conversions_crate.value).toFixed(2) + "%";
+                            }
+                        } else if (queryOption == "nuvRate") {
+                            if (result.new_visitor_aggs.value == "0") {
+                                data[queryOption] = 0;
+                            } else {
+                                data[queryOption] = (result.uv_aggs.value / result.new_visitor_aggs.value).toFixed(2) + "%";
 
+                            }
                         }
-                    }
-                    else {
-                        data[queryOption] = result[queryOption].value
-                    }
-                });
-                callbackFn(data);
-            } else
-                callbackFn(data);
+                        else {
+                            data[queryOption] = result[queryOption].value
+                        }
+                    });
+                    callbackFn(data);
+                } else
+                    callbackFn(data);
+            });
         });
     },
     searchByShowTypeAndQueryOption: function (es, indexs, type, action, showType, queryOptions, callbackFn) {
