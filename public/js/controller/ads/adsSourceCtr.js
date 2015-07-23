@@ -7,26 +7,26 @@
 define(["./module"], function (ctrs) {
     "use strict";
     ctrs.controller("adsSourceCtr", function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
-        //高级搜索提示
+        // 高级搜索提示
         $scope.visitorSearch = "";
         $scope.areaSearch = "";
-        //取消显示的高级搜索的条件
-        $scope.removeVisitorSearch = function(obj){
+        // 取消显示的高级搜索的条件
+        $scope.removeVisitorSearch = function (obj) {
             $rootScope.$broadcast("loadAllVisitor");
             obj.visitorSearch = "";
         }
-        $scope.removeAreaSearch = function(obj){
+        $scope.removeAreaSearch = function (obj) {
             $scope.city.selected = {"name": "全部"};
             $rootScope.$broadcast("loadAllArea");
             obj.areaSearch = "";
         }
         $scope.todayClass = true;
         $scope.send = true;
-        //table配置
+        // table配置
         $rootScope.tableTimeStart = 0;
         $rootScope.tableTimeEnd = 0;
         $rootScope.tableFormat = null;
-        //配置默认指标
+        // 配置默认指标
         $rootScope.checkedArray = ["pv", "uv", "ip", "outRate", "avgTime"];
         $rootScope.gridArray = [
             {
@@ -41,6 +41,20 @@ define(["./module"], function (ctrs) {
                 displayName: "来源",
                 field: "city",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                enableSorting: false
+            },
+            {
+                name: " ",
+                cellTemplate: "<div class='table_box'>" +
+                "<button onmousemove='getMyButton(this)' class='table_btn'></button>" +
+                "<div class='table_win'>" +
+                "<ul style='color: #45b1ec'>" +
+                "<li><a>查看相关热门搜索词</a></li>" +
+                "<li><a ng-click='grid.appScope.showSearchUrl(row)'>查看搜索来路URL</a></li>" +
+                "<li><a ui-sref='history6' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li>" +
+                "</ul>" +
+                "</div>" +
+                "</div>",
                 enableSorting: false
             },
             {
@@ -79,24 +93,25 @@ define(["./module"], function (ctrs) {
             }
         ];
         $rootScope.tableSwitch = {
-            //维度字段
+            // 维度字段
             latitude: {name: "来源", displayName: "来源", field: "city"},
-            //过滤字段值
+            // 过滤字段值
             tableFilter: null,
             dimen: false,
             // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
             number: 2,
-            //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
-            coding: "<li><a ui-sref='history5' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>",
-            //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
-            arrayClear: false, //是否清空指标array
-            isJudge: false //是否清空filter 默认为清空
+            // 当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
+            coding: "<li><a ui-sref='history6' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>",
+            // 是否清空指标array
+            arrayClear: false,
+            // 是否清空filter 默认为清空
+            isJudge: false
         };
 
         // 图例勾选监听事件
         $scope.onLegendClickListener = function (radio, chartObj, chartConfig, checkValue) {
             clear.lineChart(chartConfig, checkValue);
-            var chart  =$scope.charts[0];
+            var chart = $scope.charts[0];
             chart.types = checkValue;
             chart.config.instance = echarts.init(document.getElementById(chart.config.id));
             requestService.refresh([chart]);
@@ -106,13 +121,13 @@ define(["./module"], function (ctrs) {
             // 将json格式的字符串data转为json对象
             var dataObj = JSON.parse(eval("(" + data + ")").toString());
             var topData = [];
-            angular.forEach(dataObj, function(item){
+            angular.forEach(dataObj, function (item) {
                 var key = item.key;
                 var label = item.label;
                 var quota = item.quota;
-                var topKey = key.slice(0,10);
-                var topQuota = quota.slice(0,10);
-                topData.push({key:topKey, label:label, quota:topQuota});
+                var topKey = key.slice(0, 10);
+                var topQuota = quota.slice(0, 10);
+                topData.push({key: topKey, label: label, quota: topQuota});
             });
             // 是否转化
             chartConfig['noFormat'] = true;
@@ -174,6 +189,7 @@ define(["./module"], function (ctrs) {
             $rootScope.targetSearch();
             var chart = $scope.charts[0];
             chart.config.instance = echarts.init(document.getElementById(chart.config.id));
+            // 实际请求在 requestService 中
             requestService.refresh([chart]);
         });
         $scope.page = {};
@@ -204,19 +220,8 @@ define(["./module"], function (ctrs) {
             $rootScope.end = 0;
             $rootScope.tableTimeStart = 0;
             $rootScope.tableTimeEnd = 0;
-//            $scope.charts.forEach(function (e) {
-//                var chart = echarts.init(document.getElementById(e.config.id));
-//                e.config.instance = chart;
-//            });
-            //图表
-//            requestService.refresh($scope.charts);
-            //首页表格
-            //requestService.gridRefresh(scope.grids);
-            //其他页面表格
-//            $rootScope.targetSearch();
             $scope.reloadByCalendar("today");
             $('#reportrange span').html(GetDateStr(0));
-            //classcurrent
             $scope.reset();
             $scope.todayClass = true;
         };

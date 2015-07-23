@@ -887,10 +887,6 @@ api.get("/adsSource", function (req, res) {
     var interval = date.interval(startTime, endTime);                   //时间分割
 
     es_request.search(req.es, indexes, type, quotas, dimension, [0], filters, period[0], period[1], interval, function (data) {
-        /*var result = {};
-         data.forEach(function (item, i) {
-         result[item.label] = item.label == "outRate" ? item.quota[0] + "%" : item.label == "avgTime" ? new Date(item.quota[0]).format("hh:mm:ss") : item.quota[0];
-         });*/
         datautils.send(res, data);
     })
 });
