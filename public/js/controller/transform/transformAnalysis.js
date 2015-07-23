@@ -428,7 +428,7 @@ define(["./module"], function (ctrs) {
             };
             $scope.targetSearchSpreadTransform = function (isClicked) {
                 $scope.setShowArray();
-                $scope.my_init(false);
+                //$scope.my_init(false);
                 if (isClicked) {
                     $scope.$broadcast("transformData_ui_grid", {
                         start: $rootScope.start,

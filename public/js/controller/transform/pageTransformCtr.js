@@ -189,6 +189,7 @@ define(["./module"], function (ctrs) {
                 var d = dd.getDate();
                 return y + "-" + m + "-" + d;
             }
+
             //刷新
             $scope.page_refresh = function () {
                 $rootScope.start = 0;
@@ -211,36 +212,47 @@ define(["./module"], function (ctrs) {
             };
             $scope.setShowArray();
             $scope.page_init = function (isContrastDataByTime) {
-                console.log(isContrastDataByTime)
                 $scope.$broadcast("transformData", {
                     start: $rootScope.start,
                     end: $rootScope.end,
                     checkedArray: $scope.checkedArray
                 });
+                var start = 0;
+                var end = 0;
                 if (isContrastDataByTime) {
+                    start = $scope.start;
+                    end = $scope.end;
+                    $scope.DateNumbertwo = false;
+                    $scope.DateLoading = false;
                     $scope.charts[0].config.legendDefaultChecked = [0];
                     $scope.charts[0].config.legendAllowCheckCount = 1;
                     $scope.dataTable(isContrastDataByTime, "day", ["pv"], true);
                 } else {
+                    start = $rootScope.start;
+                    end = $rootScope.end;
                     $scope.charts[0].config.legendDefaultChecked = [0, 1];
                     $scope.charts[0].config.legendAllowCheckCount = 2;
                     $scope.dataTable(isContrastDataByTime, "day", ["pv", "uv"]);
                 }
-                $scope.load(isContrastDataByTime);
-                //$scope.isCompared = isContrastDataByTime;
-                $http.get("/api/transform/transformAnalysis?start=-30&end=0&action=event&type=1&searchType=initAll&queryOptions=" + $rootScope.checkedArray).success(function (data) {
-                    console.log(data)
+
+                $scope.isCompared = isContrastDataByTime;
+                $http.get("/api/transform/transformAnalysis?start=" + start + "&end=" + end + "&action=event&type=1&searchType=initAll&queryOptions=" + $rootScope.checkedArray).success(function (data) {
                     if (data != null || data != "") {
                         for (var i = 0; i < $scope.dateShowArray.length; i++) {
                             for (var key in data) {
                                 if ($scope.dateShowArray[i].label == key) {
                                     if (isContrastDataByTime) {
                                         $scope.dateShowArray[i].cValue = data[key];
+
                                     } else {
                                         $scope.dateShowArray[i].value = data[key];
                                     }
                                 }
                             }
+                        }
+                        if (isContrastDataByTime) {
+                            $scope.DateNumbertwo = true;
+                            $scope.DateLoading = true;
                         }
                         $scope.DateNumber = true;
                         $scope.DateLoading = true;
@@ -254,7 +266,6 @@ define(["./module"], function (ctrs) {
              * @param queryOption　查询条件指标　事件转化：指标："浏览量(pv)", "访客数(uv)", "转化次数(conversions)", "转化率(crate)", "平均转化成本(transformCost)"
              */
             $scope.dataTable = function (isContrastTime, showType, queryOptions, renderLegend) {
-                console.log("数据加载成功")
                 if (isContrastTime) {
                     $http.get("/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&action=event&type=1&searchType=contrastData&showType=" + showType + "&queryOptions=" + queryOptions + "&contrastStart=" + $scope.start + "&contrastEnd=0" + $scope.end).success(function (contrastData) {
                         var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
