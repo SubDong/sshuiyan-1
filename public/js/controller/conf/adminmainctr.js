@@ -148,7 +148,7 @@ define(["./module"], function (ctrs) {
                 name: "x4",
                 displayName: "",
                 cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.stop(this,grid,row)'>{{grid.appScope.x4Text(row)}}</a></div>",
-                maxWidth: 80,
+                maxWidth: 50,
                 enableSorting: false
             },
             {
@@ -156,7 +156,7 @@ define(["./module"], function (ctrs) {
                 displayName: "",
                 // grid.appScope.Delete(row, grid.options.data)
                 cellTemplate: "<div class='table_admin'><a href='' ng-click='grid.appScope.onDelete(this,grid,row)' >删除</a></div>",
-                maxWidth: 80,
+                maxWidth: 50,
                 enableSorting: false
             },
             {
@@ -164,7 +164,7 @@ define(["./module"], function (ctrs) {
                 displayName: "",
                 // grid.appScope.Delete(row, grid.options.data)
                 cellTemplate: "<div class='table_admin'><a href='' ng-click='grid.appScope.onUpdate(this,grid,row)' >修改</a></div>",
-                maxWidth: 80,
+                maxWidth: 50,
                 enableSorting: false
             }
 
@@ -255,17 +255,14 @@ define(["./module"], function (ctrs) {
          * @param row
          */
         $scope.onDelete = function (rootGrid, grid, row) {
+            $scope.tip='<li> 删除后，百思慧眼将不在跟踪统计该目标，该目标的  历史数据会被删除且无法恢复。<br/><br/>您希望现在删除吗？</li>';
             $scope.onDeleteDialog = ngDialog.open({
-                template: '' +
-                '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div><ul class="admin-ng-content"><li> 删除后，百思慧眼将不在跟踪统计该目标，该目标的\
-                历史数据会被删除且无法恢复。<br/><br/>您希望现在删除吗？</li></ul>' + '<div class="ng-button-div"><button type="button" class="ngdialog-button ng-button " ng-click="sureonDelete()">确认</button>\
-                  <button type="button" class="ngdialog-button ngdialog-button-secondary " ng-click="closeThisDialog(0)">取消</button></div></div>',
+                template: './conf/Dialog/common_diaolg.html',
                 className: 'ngdialog-theme-default admin_ngdialog',
-                plain: true,
                 scope: $scope
             });
 
-            $scope.sureonDelete = function () {
+            $scope.sure = function () {
                 $scope.onDeleteDialog.close();
                 var query = "/config/site_list?type=logicdelete&query=" + JSON.stringify({_id: row.entity._id});
                 $http({
@@ -281,7 +278,7 @@ define(["./module"], function (ctrs) {
         //暂停弹框
         $scope.stop = function (index, grid, row) {
 
-            $scope.onPause = function () {
+            $scope.sure = function () {
                 //关闭弹出窗
                 $scope.urlDialog.close();
 
@@ -304,21 +301,16 @@ define(["./module"], function (ctrs) {
                     }
                 });
             };
-            var tip = "";
+             $scope.tip = "";
             if (row.entity.site_pause) {
-                tip = "确定重新启用？";
+                $scope.tip = "确定重新启用？";
             } else {
-                tip = "<li>注意</li><li>暂停后，您将不再分析该网站，直至您重新启用，你确定现在暂停使用吗？</li>"
+                $scope.tip = "<li>注意</li><li>暂停后，您将不再分析该网站，直至您重新启用，你确定现在暂停使用吗？</li>"
             }
+
             $scope.urlDialog = ngDialog.open({
-                template: '\
-                  <div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div>\
-                            <ul class="admin-ng-content">' + tip + '</ul>   \
-                       <div class="ng-button-div"> <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
-                        <button type="button" class="ngdialog-button ng-button" ng-click="onPause()">确定</button></div>\
-                  </div>',
+                template: './conf/Dialog/common_diaolg.html',
                 className: 'ngdialog-theme-default admin_ngdialog',
-                plain: true,
                 scope: $scope
 
             });

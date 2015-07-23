@@ -96,7 +96,7 @@ var es_aggs = {
         }
     },
     //平均转化成本 事件转化
-    "transformCost":{
+    "transformCost": {
         "transformCost": {
             "value_count": {
                 "field": "tt"
@@ -106,46 +106,64 @@ var es_aggs = {
 };
 var transform = {
     search: function (es, indexs, type, action, querys, callbackFn) {
-        var _aggs = {};
-        querys.forEach(function (queryOption) {
-            for (var key in es_aggs[queryOption]) {
-                _aggs[key] = es_aggs[queryOption][key];
+        var requests = [];
+        for (var i = 0; i < indexs.length; i++) {
+            requests.push({
+                index: indexs[i]
+            });
+        }
+        async.map(requests, function (item, callback) {
+            es.indices.exists(item, function (error, exists) {
+                callback(null, exists);
+            });
+        }, function (error, results) {
+            var newIndexs = [];
+            for (var i = 0; i < indexs.length; i++) {
+                if (results[i] == true) {
+                    newIndexs.push(indexs[i]);
+                }
             }
-        });
-        var request = {
-            "index": indexs,
-            "type": type + "_" + action,
-            "body": {
-                "size": 0,
-                "aggs": _aggs
-            }
-        };
-        es.search(request, function (error, response) {
-            var data = {};
-            if (response != undefined && response.aggregations != undefined) {
-                var result = response.aggregations;
-                querys.forEach(function (queryOption) {
-                    if (queryOption == "crate") {
-                        if (result.conversions_crate.value == "0") {
-                            data[queryOption] = "0";
-                        } else {
-                            data[queryOption] = (result.conversions_crate.value / result.conversions_crate.value).toFixed(2) + "%";
-                        }
-                    } else if (queryOption == "nuvRate") {
-                        if (result.new_visitor_aggs.value == "0") {
-                            data[queryOption] = 0;
-                        } else {
-                            data[queryOption] = (result.uv_aggs.value / result.new_visitor_aggs.value).toFixed(2) + "%";
+            var _aggs = {};
+            querys.forEach(function (queryOption) {
+                for (var key in es_aggs[queryOption]) {
+                    _aggs[key] = es_aggs[queryOption][key];
+                }
+            });
+            var request = {
+                "index": newIndexs,
+                "type": type + "_" + action,
+                "body": {
+                    "size": 0,
+                    "aggs": _aggs
+                }
+            };
+            es.search(request, function (error, response) {
+                var data = {};
+                if (response != undefined && response.aggregations != undefined) {
+                    var result = response.aggregations;
+                    querys.forEach(function (queryOption) {
+                        if (queryOption == "crate") {
+                            if (result.conversions_crate.value == "0") {
+                                data[queryOption] = "0";
+                            } else {
+                                data[queryOption] = (result.conversions_crate.value / result.conversions_crate.value).toFixed(2) + "%";
+                            }
+                        } else if (queryOption == "nuvRate") {
+                            if (result.new_visitor_aggs.value == "0") {
+                                data[queryOption] = 0;
+                            } else {
+                                data[queryOption] = (result.uv_aggs.value / result.new_visitor_aggs.value).toFixed(2) + "%";
 
+                            }
                         }
-                    }
-                    else {
-                        data[queryOption] = result[queryOption].value
-                    }
-                });
-                callbackFn(data);
-            } else
-                callbackFn(data);
+                        else {
+                            data[queryOption] = result[queryOption].value
+                        }
+                    });
+                    callbackFn(data);
+                } else
+                    callbackFn(data);
+            });
         });
     },
     searchByShowTypeAndQueryOption: function (es, indexs, type, action, showType, queryOptions, callbackFn) {
@@ -196,9 +214,10 @@ var transform = {
                 queryOptions.forEach(function (queryOption) {
                     quota_data = {};
                     quotaArry = [];
+                    var i = 0;
                     switch (queryOption) {
                         case "pv":
-                            for (var i = 0; i < results.length; i++) {
+                            for (i = 0; i < results.length; i++) {
                                 for (var key in results[i]) {
                                     if (key == queryOption) {
                                     }
@@ -213,7 +232,7 @@ var transform = {
                             };
                             break;
                         case "uv":
-                            for (var i = 0; i < results.length; i++) {
+                            for (i = 0; i < results.length; i++) {
                                 for (var key in results[i]) {
                                     if (key == queryOption) {
                                         quotaArry.push(results[i].uv.value);
@@ -227,7 +246,7 @@ var transform = {
                             };
                             break;
                         case "vc":
-                            for (var i = 0; i < results.length; i++) {
+                            for (i = 0; i < results.length; i++) {
                                 for (var key in results[i]) {
                                     if (key == queryOption) {
                                         quotaArry.push(results[i].vc.value);
@@ -242,7 +261,7 @@ var transform = {
                             break;
 
                         case "ip":
-                            for (var i = 0; i < results.length; i++) {
+                            for (i = 0; i < results.length; i++) {
                                 for (var key in results[i]) {
                                     if (key == queryOption) {
                                         quotaArry.push(results[i].ip.value);
@@ -256,7 +275,7 @@ var transform = {
                             };
                             break;
                         case "clickTotal":
-                            for (var i = 0; i < results.length; i++) {
+                            for (i = 0; i < results.length; i++) {
                                 for (var key in results[i]) {
                                     if (key == queryOption) {
                                         quotaArry.push(results[i].clickTotal.value);
@@ -270,7 +289,7 @@ var transform = {
                             };
                             break;
                         case "conversions":
-                            for (var i = 0; i < results.length; i++) {
+                            for (i = 0; i < results.length; i++) {
                                 for (var key in results[i]) {
                                     if (key == queryOption) {
                                         quotaArry.push(results[i].conversions.value);
@@ -284,7 +303,7 @@ var transform = {
                             };
                             break;
                         case "nuv":
-                            for (var i = 0; i < results.length; i++) {
+                            for (i = 0; i < results.length; i++) {
                                 for (var key in results[i]) {
                                     if (key == queryOption) {
                                         quotaArry.push(results[i].nuv.value);
@@ -298,7 +317,7 @@ var transform = {
                             };
                             break;
                         case "visitNum":
-                            for (var i = 0; i < results.length; i++) {
+                            for (i = 0; i < results.length; i++) {
                                 for (var key in results[i]) {
                                     if (key == queryOption) {
                                         quotaArry.push(results[i].visitNum.value);
@@ -312,7 +331,7 @@ var transform = {
                             };
                             break;
                         case "nuvRate":
-                            for (var i = 0; i < results.length; i++) {
+                            for (i = 0; i < results.length; i++) {
                                 for (var key in results[i]) {
                                     if (key == queryOption) {
                                         if (results[i].new_visitor_aggs.value == "0") {
@@ -330,7 +349,7 @@ var transform = {
                             };
                             break;
                         case "crate":
-                            for (var i = 0; i < results.length; i++) {
+                            for (i = 0; i < results.length; i++) {
                                 for (var key in results[i]) {
                                     if (key == queryOption) {
                                         if (results[i].conversions_crate.value != "0") {
@@ -348,7 +367,7 @@ var transform = {
                             };
                             break;
                         case "transformCost":
-                            for (var i = 0; i < results.length; i++) {
+                            for (i = 0; i < results.length; i++) {
                                 for (var key in results[i]) {
                                     if (key == queryOption) {
                                         quotaArry.push(results[i].transformCost.value);
@@ -374,161 +393,181 @@ var transform = {
         });
     },
     SearchPromotion: function (es, indexs, type, action, queryOptions, callbackFn) {
-        var _aggs = {};
-
-        queryOptions.forEach(function (queryOption) {
-            for (var key in es_aggs[queryOption]) {
-                _aggs[key] = es_aggs[queryOption][key];
-            }
-        });
-        var request = {
-            "index": indexs,
-            "type": type + "_" + action,
-            "body": {
-                "size": 0,
-                "aggs": {
-                    "eventName": {
-                        "terms": {
-                            "field": "et_label"
-                        },
-                        "aggs": _aggs
-                    }
+        var requests = [];
+        for (var i = 0; i < indexs.length; i++) {
+            requests.push({
+                index: indexs[i]
+            });
+        }
+        async.map(requests, function (item, callback) {
+            es.indices.exists(item, function (error, exists) {
+                callback(null, exists);
+            });
+        }, function (error, results) {
+            var newIndexs = [];
+            for (var i = 0; i < indexs.length; i++) {
+                if (results[i] == true) {
+                    newIndexs.push(indexs[i]);
                 }
             }
-        };
-        es.search(request, function (error, response) {
-            var data = [];
-            var dataArry = [];
-            if (response != undefined && response.aggregations != undefined) {
-                var result = response.aggregations.eventName.buckets;
-                queryOptions.forEach(function (queryOption) {
-                    switch (queryOption) {
-                        case "pv":
-                            for (var i = 0; i < result.length; i++) {
-                                dataArry.push({
-                                    pv: result[i].pv.value,
-                                    campaignName: result[i].key
-                                });
-                            }
-                            break;
-                        case "uv":
-                            for (var i = 0; i < result.length; i++) {
-                                dataArry.push({
-                                    uv: result[i].uv.value,
-                                    campaignName: result[i].key
-                                });
-                            }
-                            break;
-                        case "vc":
-                            for (var i = 0; i < result.length; i++) {
-                                dataArry.push({
-                                    vc: result[i].vc.value,
-                                    campaignName: result[i].key
-                                });
-                            }
-                            break;
+            var _aggs = {};
 
-                        case "ip":
-                            for (var i = 0; i < result.length; i++) {
-                                dataArry.push({
-                                    ip: result[i].ip.value,
-                                    campaignName: result[i].key
-                                });
-                            }
-                            break;
-                        case "clickTotal":
-                            for (var i = 0; i < result.length; i++) {
-                                dataArry.push({
-                                    clickTotal: result[i].clickTotal.value,
-                                    campaignName: result[i].key
-                                });
-                            }
-                            break;
-                        case "conversions":
-                            for (var i = 0; i < result.length; i++) {
-                                dataArry.push({
-                                    conversions: result[i].conversions.value,
-                                    campaignName: result[i].key
-                                });
-                            }
-                            break;
-                        case "nuv":
-                            for (var i = 0; i < result.length; i++) {
-                                dataArry.push({
-                                    nuv: result[i].nuv.value,
-                                    campaignName: result[i].key
-                                });
-                            }
-                            break;
-                        case "nuvRate":
-                            for (var i = 0; i < result.length; i++) {
-                                dataArry.push({
-                                    nuvRate: (result[i].uv_aggs.value / result[i].new_visitor_aggs.value).toFixed(2) + "%",
-                                    campaignName: result[i].key
-                                });
-                            }
-                            break;
-                        case "crate":
-                            for (var i = 0; i < result.length; i++) {
-                                dataArry.push({
-                                    crate: (result[i].conversions_crate.value / result[i].vc_crate.value).toFixed(2) + "%",
-                                    campaignName: result[i].key
-                                });
-                            }
-                            break;
-                        case "transformCost":
-                            for (var i = 0; i < result.length; i++) {
-                                dataArry.push({
-                                    transformCost: result[i].transformCost.value,
-                                    campaignName: result[i].key
-                                });
-                            }
-                            break;
-                        case "visitNum":
-                            for (var i = 0; i < result.length; i++) {
-                                dataArry.push({
-                                    visitNum: result[i].visitNum.value,
-                                    campaignName: result[i].key
-                                });
-                            }
-                            break;
-                        default :
-                            break;
-                    }
-                });
-                //================================ 数据算法 ==========================================
-                var data_Arried = [];
-                dataArry.forEach(function (data) {
-                    var data_Arrying = [];
-                    for (var i = 0; i < result.length; i++) {
-                        if (result[i].key == data["campaignName"]) {
-                            data_Arrying.push(data)
+            queryOptions.forEach(function (queryOption) {
+                for (var key in es_aggs[queryOption]) {
+                    _aggs[key] = es_aggs[queryOption][key];
+                }
+            });
+            var request = {
+                "index": newIndexs,
+                "type": type + "_" + action,
+                "body": {
+                    "size": 0,
+                    "aggs": {
+                        "eventName": {
+                            "terms": {
+                                "field": "et_label"
+                            },
+                            "aggs": _aggs
                         }
                     }
+                }
+            };
+            es.search(request, function (error, response) {
+                var data = [];
+                var dataArry = [];
+                if (response != undefined && response.aggregations != undefined) {
+                    var result = response.aggregations.eventName.buckets;
+                    queryOptions.forEach(function (queryOption) {
+                        var i = 0;
+                        switch (queryOption) {
+                            case "pv":
+                                for (i = 0; i < result.length; i++) {
+                                    dataArry.push({
+                                        pv: result[i].pv.value,
+                                        campaignName: result[i].key
+                                    });
+                                }
+                                break;
+                            case "uv":
+                                for (i = 0; i < result.length; i++) {
+                                    dataArry.push({
+                                        uv: result[i].uv.value,
+                                        campaignName: result[i].key
+                                    });
+                                }
+                                break;
+                            case "vc":
+                                for (i = 0; i < result.length; i++) {
+                                    dataArry.push({
+                                        vc: result[i].vc.value,
+                                        campaignName: result[i].key
+                                    });
+                                }
+                                break;
 
-                });
-                for (var i = 0; i < result.length; i++) {
-                    var data_Arrying = [];
-                    dataArry.forEach(function (data) {
-                        if (result[i].key == data["campaignName"]) {
-                            data_Arrying.push(data);
+                            case "ip":
+                                for (i = 0; i < result.length; i++) {
+                                    dataArry.push({
+                                        ip: result[i].ip.value,
+                                        campaignName: result[i].key
+                                    });
+                                }
+                                break;
+                            case "clickTotal":
+                                for (i = 0; i < result.length; i++) {
+                                    dataArry.push({
+                                        clickTotal: result[i].clickTotal.value,
+                                        campaignName: result[i].key
+                                    });
+                                }
+                                break;
+                            case "conversions":
+                                for (i = 0; i < result.length; i++) {
+                                    dataArry.push({
+                                        conversions: result[i].conversions.value,
+                                        campaignName: result[i].key
+                                    });
+                                }
+                                break;
+                            case "nuv":
+                                for (i = 0; i < result.length; i++) {
+                                    dataArry.push({
+                                        nuv: result[i].nuv.value,
+                                        campaignName: result[i].key
+                                    });
+                                }
+                                break;
+                            case "nuvRate":
+                                for (i = 0; i < result.length; i++) {
+                                    dataArry.push({
+                                        nuvRate: (result[i].uv_aggs.value / result[i].new_visitor_aggs.value).toFixed(2) + "%",
+                                        campaignName: result[i].key
+                                    });
+                                }
+                                break;
+                            case "crate":
+                                for (i = 0; i < result.length; i++) {
+                                    dataArry.push({
+                                        crate: (result[i].conversions_crate.value / result[i].vc_crate.value).toFixed(2) + "%",
+                                        campaignName: result[i].key
+                                    });
+                                }
+                                break;
+                            case "transformCost":
+                                for (i = 0; i < result.length; i++) {
+                                    dataArry.push({
+                                        transformCost: result[i].transformCost.value,
+                                        campaignName: result[i].key
+                                    });
+                                }
+                                break;
+                            case "visitNum":
+                                for (i = 0; i < result.length; i++) {
+                                    dataArry.push({
+                                        visitNum: result[i].visitNum.value,
+                                        campaignName: result[i].key
+                                    });
+                                }
+                                break;
+                            default :
+                                break;
                         }
                     });
-                    data_Arried.push(data_Arrying);
-                }
-                for (var i = 0; i < data_Arried.length; i++) {
-                    var data_success = {};
-                    for (var keyNumber in data_Arried[i]) {
-                        for (var keyString in data_Arried[i][keyNumber]) {
-                            data_success[keyString] = data_Arried[i][keyNumber][keyString];
+                    //================================ 数据算法 ==========================================
+                    var data_Arried = [];
+                    dataArry.forEach(function (data) {
+                        var data_Arrying = [];
+                        for (var i = 0; i < result.length; i++) {
+                            if (result[i].key == data["campaignName"]) {
+                                data_Arrying.push(data)
+                            }
                         }
+
+                    });
+                    var i = 0;
+                    for (i = 0; i < result.length; i++) {
+                        var data_Arrying = [];
+                        dataArry.forEach(function (data) {
+                            if (result[i].key == data["campaignName"]) {
+                                data_Arrying.push(data);
+                            }
+                        });
+                        data_Arried.push(data_Arrying);
                     }
-                    data.push(data_success);
-                }
-                //==================================================================================
-                callbackFn(data);
-            } else
-                callbackFn(data);
+                    for (i = 0; i < data_Arried.length; i++) {
+                        var data_success = {};
+                        for (var keyNumber in data_Arried[i]) {
+                            for (var keyString in data_Arried[i][keyNumber]) {
+                                data_success[keyString] = data_Arried[i][keyNumber][keyString];
+                            }
+                        }
+                        data.push(data_success);
+                    }
+                    //==================================================================================
+                    callbackFn(data);
+                } else
+                    callbackFn(data);
+            });
         });
     },
     searchAdvancedData: function (es, indexs, type, action, queryOptions, aggs, callbackFn) {
@@ -560,9 +599,10 @@ var transform = {
             if (response != undefined && response.aggregations != undefined) {
                 var result = response.aggregations.eventName.buckets;
                 aggs.forEach(function (agg) {
+                    var i = 0;
                     switch (agg) {
                         case "pv":
-                            for (var i = 0; i < result.length; i++) {
+                            for (i = 0; i < result.length; i++) {
                                 dataArry.push({
                                     pv: result[i].pv.value,
                                     campaignName: result[i].key
@@ -570,7 +610,7 @@ var transform = {
                             }
                             break;
                         case "uv":
-                            for (var i = 0; i < result.length; i++) {
+                            for (i = 0; i < result.length; i++) {
                                 dataArry.push({
                                     uv: result[i].uv.value,
                                     campaignName: result[i].key
@@ -578,7 +618,7 @@ var transform = {
                             }
                             break;
                         case "vc":
-                            for (var i = 0; i < result.length; i++) {
+                            for (i = 0; i < result.length; i++) {
                                 dataArry.push({
                                     vc: result[i].vc.value,
                                     campaignName: result[i].key
@@ -587,7 +627,7 @@ var transform = {
                             break;
 
                         case "ip":
-                            for (var i = 0; i < result.length; i++) {
+                            for (i = 0; i < result.length; i++) {
                                 dataArry.push({
                                     ip: result[i].ip.value,
                                     campaignName: result[i].key
@@ -595,7 +635,7 @@ var transform = {
                             }
                             break;
                         case "clickTotal":
-                            for (var i = 0; i < result.length; i++) {
+                            for (i = 0; i < result.length; i++) {
                                 dataArry.push({
                                     clickTotal: result[i].clickTotal.value,
                                     campaignName: result[i].key
@@ -603,7 +643,7 @@ var transform = {
                             }
                             break;
                         case "conversions":
-                            for (var i = 0; i < result.length; i++) {
+                            for (i = 0; i < result.length; i++) {
                                 dataArry.push({
                                     conversions: result[i].conversions.value,
                                     campaignName: result[i].key
@@ -611,7 +651,7 @@ var transform = {
                             }
                             break;
                         case "nuv":
-                            for (var i = 0; i < result.length; i++) {
+                            for (i = 0; i < result.length; i++) {
                                 dataArry.push({
                                     nuv: result[i].nuv.value,
                                     campaignName: result[i].key
@@ -619,7 +659,7 @@ var transform = {
                             }
                             break;
                         case "nuvRate":
-                            for (var i = 0; i < result.length; i++) {
+                            for (i = 0; i < result.length; i++) {
                                 dataArry.push({
                                     nuvRate: (result[i].uv_aggs.value / result[i].new_visitor_aggs.value).toFixed(2) + "%",
                                     campaignName: result[i].key
@@ -627,7 +667,7 @@ var transform = {
                             }
                             break;
                         case "crate":
-                            for (var i = 0; i < result.length; i++) {
+                            for (i = 0; i < result.length; i++) {
                                 dataArry.push({
                                     crate: (result[i].conversions_crate.value / result[i].vc_crate.value).toFixed(2) + "%",
                                     campaignName: result[i].key
@@ -635,7 +675,7 @@ var transform = {
                             }
                             break;
                         case "visitNum":
-                            for (var i = 0; i < result.length; i++) {
+                            for (i = 0; i < result.length; i++) {
                                 dataArry.push({
                                     visitNum: result[i].visitNum.value,
                                     campaignName: result[i].key
@@ -643,7 +683,7 @@ var transform = {
                             }
                             break;
                         case "transformCost":
-                            for (var i = 0; i < result.length; i++) {
+                            for (i = 0; i < result.length; i++) {
                                 dataArry.push({
                                     transformCost: result[i].transformCost.value,
                                     campaignName: result[i].key
@@ -665,7 +705,8 @@ var transform = {
                     }
 
                 });
-                for (var i = 0; i < result.length; i++) {
+                var i = 0;
+                for (i = 0; i < result.length; i++) {
                     var data_Arrying = [];
                     dataArry.forEach(function (data) {
                         if (result[i].key == data["campaignName"]) {
@@ -674,7 +715,7 @@ var transform = {
                     });
                     data_Arried.push(data_Arrying);
                 }
-                for (var i = 0; i < data_Arried.length; i++) {
+                for (i = 0; i < data_Arried.length; i++) {
                     var data_success = {};
                     for (var keyNumber in data_Arried[i]) {
                         for (var keyString in data_Arried[i][keyNumber]) {
@@ -701,7 +742,8 @@ var transform = {
             case "hour":
                 break;
             case "day":
-                for (var i = 0; i < indexString.length; i++) {
+                var i = 0;
+                for (i = 0; i < indexString.length; i++) {
                     requests.push({
                         "index": indexString[i],
                         "type": type + "_" + action,
@@ -711,7 +753,7 @@ var transform = {
                         }
                     });
                 }
-                for (var i = 0; i < contrast_indexString.length; i++) {
+                for (i = 0; i < contrast_indexString.length; i++) {
                     requests.push({
                         "index": contrast_indexString[i],
                         "type": type + "_" + action,
@@ -742,8 +784,8 @@ var transform = {
             var keyArr_contrast = [];
             var quotaArry = [];
             if (results[0] != null) {
-                for (var i = 0; i < indexString.length; i++) {
-                    keyArr.push(indexString[i].substring(7, indexString[i].length));
+                for (var k = 0; k < indexString.length; k++) {
+                    keyArr.push(indexString[k].substring(7, indexString[k].length));
                 }
                 for (var i = 0; i < contrast_indexString.length; i++) {
                     keyArr_contrast.push(contrast_indexString[i].substring(7, contrast_indexString[i].length));
@@ -751,9 +793,10 @@ var transform = {
                 options.forEach(function (option) {
                     quota_data = {};
                     quotaArry = [];
+                    var i;
                     switch (option) {
                         case "pv":
-                            for (var i = 0; i < keyArr.length; i++) {
+                            for (i = 0; i < keyArr.length; i++) {
                                 quotaArry.push(results[i].pv.value);
                             }
                             quota_data = {
@@ -763,7 +806,7 @@ var transform = {
                             };
                             break;
                         case "uv":
-                            for (var i = 0; i < keyArr.length; i++) {
+                            for (i = 0; i < keyArr.length; i++) {
                                 quotaArry.push(results[i].uv.value);
                             }
                             quota_data = {
@@ -773,7 +816,7 @@ var transform = {
                             };
                             break;
                         case "vc":
-                            for (var i = 0; i < keyArr.length; i++) {
+                            for (i = 0; i < keyArr.length; i++) {
                                 quotaArry.push(results[i].vc.value);
                             }
                             quota_data = {
@@ -784,7 +827,7 @@ var transform = {
                             break;
 
                         case "ip":
-                            for (var i = 0; i < keyArr.length; i++) {
+                            for (i = 0; i < keyArr.length; i++) {
                                 quotaArry.push(results[i].ip.value);
                             }
                             quota_data = {
@@ -794,7 +837,7 @@ var transform = {
                             };
                             break;
                         case "clickTotal":
-                            for (var i = 0; i < keyArr.length; i++) {
+                            for (i = 0; i < keyArr.length; i++) {
                                 quotaArry.push(results[i].clickTotal.value);
                             }
                             quota_data = {
@@ -804,7 +847,7 @@ var transform = {
                             };
                             break;
                         case "conversions":
-                            for (var i = 0; i < keyArr.length; i++) {
+                            for (i = 0; i < keyArr.length; i++) {
                                 quotaArry.push(results[i].conversions.value);
                             }
                             quota_data = {
@@ -814,7 +857,7 @@ var transform = {
                             };
                             break;
                         case "nuv":
-                            for (var i = 0; i < keyArr.length; i++) {
+                            for (i = 0; i < keyArr.length; i++) {
                                 quotaArry.push(results[i].nuv.value);
                             }
                             quota_data = {
@@ -824,7 +867,7 @@ var transform = {
                             };
                             break;
                         case "nuvRate":
-                            for (var i = 0; i < keyArr.length; i++) {
+                            for (i = 0; i < keyArr.length; i++) {
                                 if (result[i].new_visitor_aggs.value) {
                                     quotaArry.push(0);
                                 } else {
@@ -838,7 +881,7 @@ var transform = {
                             };
                             break;
                         case "crate":
-                            for (var i = 0; i < keyArr.length; i++) {
+                            for (i = 0; i < keyArr.length; i++) {
                                 if (results[i].conversions_crate.value != "0") {
                                     quotaArry.push((results[i].conversions_crate.value / results[i].conversions_crate.value).toFixed(2) + "%");
                                 } else {
@@ -852,7 +895,7 @@ var transform = {
                             };
                             break;
                         case "visitNum":
-                            for (var i = 0; i < keyArr.length; i++) {
+                            for (i = 0; i < keyArr.length; i++) {
                                 quotaArry.push(results[i].visitNum.value);
                             }
                             quota_data = {
@@ -862,7 +905,7 @@ var transform = {
                             };
                             break;
                         case "transformCost":
-                            for (var i = 0; i < keyArr.length; i++) {
+                            for (i = 0; i < keyArr.length; i++) {
                                 quotaArry.push(results[i].transformCost.value);
                             }
                             quota_data = {
@@ -872,7 +915,7 @@ var transform = {
                             };
                             break;
                         case "transformCost_contrast":
-                            for (var i = keyArr.length; i < results.length; i++) {
+                            for (i = keyArr.length; i < results.length; i++) {
                                 quotaArry.push(results[i].transformCost_contrast.value);
                             }
                             quota_data = {
@@ -882,7 +925,7 @@ var transform = {
                             };
                             break;
                         case "visitNum_contrast":
-                            for (var i = keyArr.length; i < results.length; i++) {
+                            for (i = keyArr.length; i < results.length; i++) {
                                 quotaArry.push(results[i].visitNum_contrast.value);
                             }
                             quota_data = {
@@ -892,7 +935,7 @@ var transform = {
                             };
                             break;
                         case "pv_contrast":
-                            for (var i = keyArr.length; i < results.length; i++) {
+                            for (i = keyArr.length; i < results.length; i++) {
                                 quotaArry.push(results[i].pv_contrast.value);
                             }
                             quota_data = {
@@ -902,7 +945,7 @@ var transform = {
                             };
                             break;
                         case "uv_contrast":
-                            for (var i = keyArr.length; i < results.length; i++) {
+                            for (i = keyArr.length; i < results.length; i++) {
                                 quotaArry.push(results[i].uv_contrast.value);
                             }
                             quota_data = {
@@ -912,7 +955,7 @@ var transform = {
                             };
                             break;
                         case "vc_contrast":
-                            for (var i = keyArr.length; i < results.length; i++) {
+                            for (i = keyArr.length; i < results.length; i++) {
                                 quotaArry.push(results[i].vc_contrast.value);
                             }
                             quota_data = {
@@ -923,7 +966,7 @@ var transform = {
                             break;
 
                         case "ip_contrast":
-                            for (var i = keyArr.length; i < results.length; i++) {
+                            for (i = keyArr.length; i < results.length; i++) {
                                 quotaArry.push(results[i].ip_contrast.value);
                             }
                             quota_data = {
@@ -933,7 +976,7 @@ var transform = {
                             };
                             break;
                         case "clickTotal_contrast":
-                            for (var i = keyArr.length; i < results.length; i++) {
+                            for (i = keyArr.length; i < results.length; i++) {
                                 quotaArry.push(results[i].clickTotal_contrast.value);
                             }
                             quota_data = {
@@ -943,7 +986,7 @@ var transform = {
                             };
                             break;
                         case "conversions_contrast":
-                            for (var i = keyArr.length; i < results.length; i++) {
+                            for (i = keyArr.length; i < results.length; i++) {
                                 quotaArry.push(results[i].conversions_contrast.value);
                             }
                             quota_data = {
@@ -953,7 +996,7 @@ var transform = {
                             };
                             break;
                         case "nuv_contrast":
-                            for (var i = keyArr.length; i < results.length; i++) {
+                            for (i = keyArr.length; i < results.length; i++) {
                                 quotaArry.push(results[i].nuv_contrast.value);
                             }
                             quota_data = {
@@ -963,7 +1006,7 @@ var transform = {
                             };
                             break;
                         case "nuvRate_contrast":
-                            for (var i = keyArr.length; i < results.length; i++) {
+                            for (i = keyArr.length; i < results.length; i++) {
                                 quotaArry.push(results[i].nuvRate_contrast.value);
                             }
                             quota_data = {
@@ -973,7 +1016,7 @@ var transform = {
                             };
                             break;
                         case "crate_contrast":
-                            for (var i = keyArr.length; i < results.length; i++) {
+                            for (i = keyArr.length; i < results.length; i++) {
                                 if (results[i].conversions_crate.value != "0") {
                                     quotaArry.push((results[i].conversions_crate.value / results[i].conversions_crate.value).toFixed(2));
                                 } else {
