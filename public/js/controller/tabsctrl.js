@@ -952,6 +952,7 @@ define(["app"], function (app) {
             $scope.gridOpArray = angular.copy($rootScope.gridArray);
             $scope.gridOptions.columnDefs = $scope.gridOpArray;
             $scope.gridOptions.rowHeight = 32;
+            $scope.gridOptions.columnFooterHeight = 32;
             //if (isClicked) {
             $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
             //}
@@ -1157,14 +1158,18 @@ define(["app"], function (app) {
         });
         //数据对比
         $rootScope.datepickerClickTow = function (start, end, label) {
+            $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
             var gridArrayOld = angular.copy($rootScope.gridArray);
             $rootScope.gridArray.forEach(function (item, i) {
                 var a = item["field"];
                 if (item["cellTemplate"] == undefined) {
-                    item["cellTemplate"] = "<ul class='contrastlist'><li>{{grid.appScope.getContrastInfo(grid, row,0,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,1,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,2,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,3,'" + a + "')}}</li></ul>"
+                    item["cellTemplate"] = "<ul class='contrastlist'><li>{{grid.appScope.getContrastInfo(grid, row,0,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,1,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,2,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,3,'" + a + "')}}</li></ul>";
+
+                    item["footerCellTemplate"] = "<ul class='contrastlist'><li>当页汇总</li></ul>"
                 }
             });
             $scope.gridOptions.rowHeight = 95;
+            $scope.gridOptions.columnFooterHeight = 95;
             var time = chartUtils.getTimeOffset(start, end);
             var startTime = time[0];
             var endTime = time[0] + ($rootScope.tableTimeEnd - $rootScope.tableTimeStart) + 1;
@@ -1185,7 +1190,7 @@ define(["app"], function (app) {
                                     dataObj[tt] = (isNaN(bili) ? 0 : bili) + "%";
                                     a[tt] = "　" + "," + a[tt] + "," + contrast[i][tt] + "," + dataObj[tt]
                                 });
-                                a[target] = a[target] + "," + ($rootScope.startString != undefined ? $rootScope.startString : dateTime1[0] + " 至 " + dateTime1[1]) + "," + (dateTime2[0] + " 至 " + dateTime2[1]) + "," + "变化率"
+                                a[target] = a[target] + "," + ($rootScope.startString != undefined ? $rootScope.startString : dateTime1[0] + " 至 " + dateTime1[1]) + "," + (dateTime2[0] + " 至 " + dateTime2[1]) + "," + "变化率";
                                 dataArray.push(a);
                                 is = 0;
                                 return;
@@ -1195,13 +1200,14 @@ define(["app"], function (app) {
                         }
                         if (is == 1) {
                             $rootScope.checkedArray.forEach(function (tt, aa) {
-                                dataObj[tt] = "--"
+                                dataObj[tt] = "--";
                                 a[tt] = "　" + "," + a[tt] + "," + "--" + "," + "--"
                             });
                             a[target] = a[target] + "," + ($rootScope.startString != undefined ? $rootScope.startString : dateTime1[0] + " 至 " + dateTime1[1]) + "," + (dateTime2[0] + " 至 " + dateTime2[1]) + "," + "变化率"
                             dataArray.push(a);
                         }
-                    })
+                    });
+                    $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
                 });
                 $scope.gridOptions.data = dataArray;
                 $rootScope.gridArray = gridArrayOld;
@@ -1228,12 +1234,12 @@ define(["app"], function (app) {
                     + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + JSON.stringify($rootScope.tableSwitch.promotionSearch) + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
                 }).success(function (data, status) {
                     if ($rootScope.tableSwitch.promotionSearch != undefined && $rootScope.tableSwitch.promotionSearch) {
-                        var url = SEM_API_URL + "sem/report/account?a=" + user + "&b=" + baiduAccount + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1"
+                        var url = SEM_API_URL + "sem/report/account?a=" + user + "&b=" + baiduAccount + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1";
                         $http({
                             method: 'GET',
                             url: url
                         }).success(function (dataSEM, status) {
-                            var dataArray = []
+                            var dataArray = [];
                             var dataObj = {};
                             if (dataSEM.length == 1) {
                                 $rootScope.checkedArray.forEach(function (item, i) {
@@ -1370,6 +1376,8 @@ define(["app"], function (app) {
         };
         //数据对比分割数据
         $scope.getContrastInfo = function (grid, row, number, fieldData) {
+            console.log(row.entity[fieldData] + "");
+            console.log((row.entity[fieldData] + "").split(","));
             if (fieldData != undefined || fieldData != "undefined") {
                 var a = (row.entity[fieldData] + "").split(",");
                 if (number == 0) {
