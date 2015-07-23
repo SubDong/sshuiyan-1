@@ -43,8 +43,8 @@ define(["./module"], function (ctrs) {
                     enableSorting: false
                 },
                 {
-                    name: "名称",
-                    displayName: "名称",
+                    name: "页面转化目标名称",
+                    displayName: "页面转化目标名称",
                     field: "campaignName",
                     cellTemplate: "<div><a href='javascript:void(0)' style='color:#0965b8;line-height:30px' ng-click='grid.appScope.getHistoricalTrend(this)'>{{grid.appScope.getDataUrlInfo(grid, row,3)}}</a></div>"
                     , footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
@@ -92,7 +92,7 @@ define(["./module"], function (ctrs) {
                 }
             ];
             $rootScope.tableSwitch = {
-                latitude: {name: "计划", displayName: "计划", field: "campaignName"},
+                latitude: {name: "页面转化目标", displayName: "页面转化目标", field: "campaignName"},
                 tableFilter: null,
                 dimen: false,
                 arrayClear: false, //是否清空指标array
@@ -166,11 +166,20 @@ define(["./module"], function (ctrs) {
                 $scope.endOffset = (endTime - today_start()) / 86400000;
             });
             $rootScope.datepickerClick = function (start, end, label) {
+                $scope.charts[0].config.legendDefaultChecked = [0, 1];
                 var time = chartUtils.getTimeOffset(start, end);
                 var offest = time[1] - time[0];
                 $scope.reset();
                 $rootScope.start = time[0];
                 $rootScope.end = time[1];
+                //时间段选择执行数据查询
+                $scope.page_init(false);
+            };
+            $rootScope.datepickerClickTow = function (start, end, label) {
+                var time = chartUtils.getTimeOffset(start, end);
+                $scope.start = time[0];
+                $scope.end = time[1];
+                $scope.page_init(true);
             };
             function GetDateStr(AddDayCount) {
                 var dd = new Date();
@@ -202,7 +211,12 @@ define(["./module"], function (ctrs) {
             };
             $scope.setShowArray();
             $scope.page_init = function (isContrastDataByTime) {
-                console.log("test")
+                console.log(isContrastDataByTime)
+                $scope.$broadcast("transformData", {
+                    start: $rootScope.start,
+                    end: $rootScope.end,
+                    checkedArray: $scope.checkedArray
+                });
                 if (isContrastDataByTime) {
                     $scope.charts[0].config.legendDefaultChecked = [0];
                     $scope.charts[0].config.legendAllowCheckCount = 1;
@@ -212,7 +226,8 @@ define(["./module"], function (ctrs) {
                     $scope.charts[0].config.legendAllowCheckCount = 2;
                     $scope.dataTable(isContrastDataByTime, "day", ["pv", "uv"]);
                 }
-                $scope.isCompared = isContrastDataByTime;
+                $scope.load(isContrastDataByTime);
+                //$scope.isCompared = isContrastDataByTime;
                 $http.get("/api/transform/transformAnalysis?start=-30&end=0&action=event&type=1&searchType=initAll&queryOptions=" + $rootScope.checkedArray).success(function (data) {
                     console.log(data)
                     if (data != null || data != "") {

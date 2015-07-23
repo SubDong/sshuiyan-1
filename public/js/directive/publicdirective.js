@@ -2316,6 +2316,99 @@ app.directive("sshDateShowPage", function ($rootScope) {
                 };
                 // 刷新加载时设置默认指标
                 scope.setDefaultShowArray();
+                scope.load = function(isCompared,data){
+                    console.log(scope.isCompared);
+                    //scope.isCompared = true;
+                    //var i = 0;
+                    //angular.forEach(scope.dateShowArray, function (dsa) {
+                    //    dsa.cValue = i++;
+                    //    dsa.cCount = i++;
+                    //});
+                    //scope.dateShowArray = $rootScope.copy(scope.dateShowArray);
+                    scope.pushESData(data,true);
+                };
+                scope.pushESData = function (result, flag) {
+                    var _array = $rootScope.copy(scope.dateShowArray);
+                    if (Object.prototype.toString.call(result) === '[object Array]') {
+                        var _count = 0;
+                        angular.forEach(result, function (r) {
+                            var infoKey = r[$rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field];
+                            //if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null")) {
+                            //    return false;
+                            //}
+                            if (infoKey == undefined) {
+                                return false;
+                            }
+                            if (!flag) {
+                                scope.ds_keyData.push(infoKey);
+                            }
+                            if (flag && scope.ds_keyData.targetIndexOf(infoKey) == -1) {
+                                return false;
+                            }
+                            _count++;
+                            angular.forEach(_array, function (obj) {
+                                var temp = obj.label;
+                                if (r[temp] == undefined) {
+                                    return false;
+                                }
+                                if (flag) {
+                                    if (obj.label == "avgTime") {
+                                        var hour = Number(r[temp].split(":")[0]);
+                                        var min = Number(r[temp].split(":")[1]);
+                                        var sec = Number(r[temp].split(":")[2]);
+                                        var count = (((hour * 60) * 60) + (min * 60) + sec);
+                                        obj.cValue += count;
+                                    } else {
+                                        obj.cValue += (r[temp].indexOf("%") != -1) ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
+                                    }
+                                } else {
+                                    if (obj.label == "avgTime") {
+                                        var hour = Number(r[temp].split(":")[0]);
+                                        var min = Number(r[temp].split(":")[1]);
+                                        var sec = Number(r[temp].split(":")[2]);
+                                        var count = (((hour * 60) * 60) + (min * 60) + sec);
+                                        obj.value += count;
+                                    } else {
+                                        obj.value += (r[temp].indexOf("%") != -1) ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
+                                    }
+                                }
+                            });
+                        });
+                        // 设置_count
+                        angular.forEach(_array, function (obj) {
+                            if (flag) {
+                                obj.cCount = _count;
+                            } else {
+                                obj.count = _count;
+                            }
+                        });
+                    } else {
+                        var obj = JSON.parse(eval('(' + result + ')').toString()); //由JSON字符串转换为JSON对象
+                        angular.forEach(obj, function (r) {
+                            var dateShowObject = {};
+                            dateShowObject.label = r.label;
+                            var temp = 0;
+                            var count = 0;
+                            angular.forEach(r.quota, function (qo, _i) {
+                                temp += Number(qo);
+                                count++;
+                            });
+                            angular.forEach(_array, function (_array_r) {
+                                if (_array_r.label == dateShowObject.label) {
+                                    if (flag) {
+                                        _array_r.cCount = count;
+                                        _array_r.cValue = temp
+                                    } else {
+                                        _array_r.count = count;
+                                        _array_r.value = temp
+                                    }
+                                }
+                            });
+                        });
+                    }
+
+                    scope.dateShowArray = $rootScope.copy(_array);
+                };
             }
         };
     });
