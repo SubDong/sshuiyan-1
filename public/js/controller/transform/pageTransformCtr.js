@@ -43,8 +43,8 @@ define(["./module"], function (ctrs) {
                     enableSorting: false
                 },
                 {
-                    name: "名称",
-                    displayName: "名称",
+                    name: "页面转化目标名称",
+                    displayName: "页面转化目标名称",
                     field: "campaignName",
                     cellTemplate: "<div><a href='javascript:void(0)' style='color:#0965b8;line-height:30px' ng-click='grid.appScope.getHistoricalTrend(this)'>{{grid.appScope.getDataUrlInfo(grid, row,3)}}</a></div>"
                     , footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
@@ -92,7 +92,7 @@ define(["./module"], function (ctrs) {
                 }
             ];
             $rootScope.tableSwitch = {
-                latitude: {name: "计划", displayName: "计划", field: "campaignName"},
+                latitude: {name: "页面转化目标", displayName: "页面转化目标", field: "campaignName"},
                 tableFilter: null,
                 dimen: false,
                 arrayClear: false, //是否清空指标array
@@ -166,11 +166,20 @@ define(["./module"], function (ctrs) {
                 $scope.endOffset = (endTime - today_start()) / 86400000;
             });
             $rootScope.datepickerClick = function (start, end, label) {
+                $scope.charts[0].config.legendDefaultChecked = [0, 1];
                 var time = chartUtils.getTimeOffset(start, end);
                 var offest = time[1] - time[0];
                 $scope.reset();
                 $rootScope.start = time[0];
                 $rootScope.end = time[1];
+                //时间段选择执行数据查询
+                $scope.page_init(false);
+            };
+            $rootScope.datepickerClickTow = function (start, end, label) {
+                var time = chartUtils.getTimeOffset(start, end);
+                $scope.start = time[0];
+                $scope.end = time[1];
+                $scope.page_init(true);
             };
             function GetDateStr(AddDayCount) {
                 var dd = new Date();
@@ -180,6 +189,7 @@ define(["./module"], function (ctrs) {
                 var d = dd.getDate();
                 return y + "-" + m + "-" + d;
             }
+
             //刷新
             $scope.page_refresh = function () {
                 $rootScope.start = 0;
@@ -201,31 +211,79 @@ define(["./module"], function (ctrs) {
                 $scope.dateShowArray = $rootScope.copy(tempArray);
             };
             $scope.setShowArray();
+            $scope.setAreaFilterTran = function (area) {
+                $scope.areaSearch = area == "全部" ? "" : area;
+                if (area == "北京" || area == "上海" || area == "广州") {
+                    if ($scope.city.selected != undefined) {
+                        $scope.city.selected.name = area;
+                    } else {
+                        $scope.city.selected = {};
+                        $scope.city.selected["name"] = area;
+                    }
+                }
+            };
+            $scope.advancedQuery = function () {
+                //设备过滤样式初始化
+                var input_terminal_Array = $(".chart_top2 .terminal_class");
+                input_terminal_Array.each(function (i, o) {
+                    $(o).prev("span").css("background-position", "0px 0px");
+                    $(o).prop("checked", false);
+                });
+                $(input_terminal_Array[0]).prev("span").css("background-position", "0px -51px");
+                $(".chart_top2 .terminal:eq(" + 0 + ")").prop("checked", true);
+                //访客过滤样式初始化
+                var input_uv_Array = $(".chart_top2 .uv_class");
+                input_uv_Array.each(function (i, o) {
+                    $(o).prev("span").css("background-position", "0px 0px");
+                    $(o).prop("checked", false);
+                });
+                $(input_uv_Array[0]).prev("span").css("background-position", "0px -51px");
+                $(".chart_top2 .uv_class:eq(" + 0 + ")").prop("checked", true);
+                //地狱过滤样式数据初始化
+                $scope.city.selected = "";
+            };
             $scope.page_init = function (isContrastDataByTime) {
-                console.log("test")
+                $scope.$broadcast("transformData", {
+                    start: $rootScope.start,
+                    end: $rootScope.end,
+                    checkedArray: $scope.checkedArray
+                });
+                var start = 0;
+                var end = 0;
                 if (isContrastDataByTime) {
+                    start = $scope.start;
+                    end = $scope.end;
+                    $scope.DateNumbertwo = false;
+                    $scope.DateLoading = false;
                     $scope.charts[0].config.legendDefaultChecked = [0];
                     $scope.charts[0].config.legendAllowCheckCount = 1;
                     $scope.dataTable(isContrastDataByTime, "day", ["pv"], true);
                 } else {
+                    start = $rootScope.start;
+                    end = $rootScope.end;
                     $scope.charts[0].config.legendDefaultChecked = [0, 1];
                     $scope.charts[0].config.legendAllowCheckCount = 2;
                     $scope.dataTable(isContrastDataByTime, "day", ["pv", "uv"]);
                 }
+
                 $scope.isCompared = isContrastDataByTime;
-                $http.get("/api/transform/transformAnalysis?start=-30&end=0&action=event&type=1&searchType=initAll&queryOptions=" + $rootScope.checkedArray).success(function (data) {
-                    console.log(data)
+                $http.get("/api/transform/transformAnalysis?start=" + start + "&end=" + end + "&action=event&type=1&searchType=initAll&queryOptions=" + $rootScope.checkedArray).success(function (data) {
                     if (data != null || data != "") {
                         for (var i = 0; i < $scope.dateShowArray.length; i++) {
                             for (var key in data) {
                                 if ($scope.dateShowArray[i].label == key) {
                                     if (isContrastDataByTime) {
                                         $scope.dateShowArray[i].cValue = data[key];
+
                                     } else {
                                         $scope.dateShowArray[i].value = data[key];
                                     }
                                 }
                             }
+                        }
+                        if (isContrastDataByTime) {
+                            $scope.DateNumbertwo = true;
+                            $scope.DateLoading = true;
                         }
                         $scope.DateNumber = true;
                         $scope.DateLoading = true;
@@ -239,7 +297,6 @@ define(["./module"], function (ctrs) {
              * @param queryOption　查询条件指标　事件转化：指标："浏览量(pv)", "访客数(uv)", "转化次数(conversions)", "转化率(crate)", "平均转化成本(transformCost)"
              */
             $scope.dataTable = function (isContrastTime, showType, queryOptions, renderLegend) {
-                console.log("数据加载成功")
                 if (isContrastTime) {
                     $http.get("/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&action=event&type=1&searchType=contrastData&showType=" + showType + "&queryOptions=" + queryOptions + "&contrastStart=" + $scope.start + "&contrastEnd=0" + $scope.end).success(function (contrastData) {
                         var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
@@ -287,7 +344,7 @@ define(["./module"], function (ctrs) {
             };
             $scope.targetSearchSpreadPage = function (isClicked) {
                 $scope.setShowArray();
-                $scope.my_init(false);
+                //$scope.my_init(false);
                 if (isClicked) {
                     $scope.$broadcast("transformData_ui_grid", {
                         start: $rootScope.start,
@@ -296,34 +353,51 @@ define(["./module"], function (ctrs) {
                     });
                 } else {
                     //访客过滤数据获取
-                    var inputArray = $(".chart_top2 .styled");
-                    inputArray.each(function (i, o) {
+                    var input_uv_Array = $(".chart_top2 .uv_class");
+                    input_uv_Array.each(function (i, o) {
                         if ($(o).prop("checked")) {
                             $scope.uv_selected = $(o).prop("value");
                         }
                     });
+                    var input_terminal_Array = $(".chart_top2 .terminal_class");
+                    input_terminal_Array.each(function (i, o) {
+                        if ($(o).prop("checked")) {
+                            $scope.terminal_selected = $(o).prop("value");
+                        }
+                    });
                     var checkedData = [];
-                    if (($scope.souce.selected == "" && $scope.browser.selected == "") || ($scope.souce.selected.name == "全部" && $scope.browser.selected.name == "全部")) {
+                    //if (($scope.souce.selected == "" && $scope.browser.selected == "") || ($scope.souce.selected.name == "全部" && $scope.browser.selected.name == "全部")) {
+                    //    checkedData.push({
+                    //        field: "all_rf",
+                    //        name: "所有来源"
+                    //    });
+                    //}
+                    //if ($scope.souce.selected != "") {
+                    //    if ($scope.souce.selected.name != "全部") {
+                    //        checkedData.push({
+                    //            field: "souce",
+                    //            name: $scope.souce.selected.name
+                    //        });
+                    //    }
+                    //}
+                    //if ($scope.browser.selected != "") {
+                    //    if ($scope.browser.selected.name != "全部") {
+                    //        checkedData.push({
+                    //            field: "browser",
+                    //            name: $scope.browser.selected.name
+                    //        });
+                    //    }
+                    //}
+                    if ($scope.terminal_selected != "全部") {
                         checkedData.push({
-                            field: "all_rf",
-                            name: "所有来源"
+                            field: "terminal_type",
+                            name: $scope.terminal_selected
                         });
-                    }
-                    if ($scope.souce.selected != "") {
-                        if ($scope.souce.selected.name != "全部") {
-                            checkedData.push({
-                                field: "souce",
-                                name: $scope.souce.selected.name
-                            });
-                        }
-                    }
-                    if ($scope.browser.selected != "") {
-                        if ($scope.browser.selected.name != "全部") {
-                            checkedData.push({
-                                field: "browser",
-                                name: $scope.browser.selected.name
-                            });
-                        }
+                    } else {
+                        checkedData.push({
+                            field: "terminal_type",
+                            name: "所有设备"
+                        });
                     }
                     if ($scope.uv_selected != "全部") {
                         checkedData.push({

@@ -134,7 +134,7 @@ define(["./module"], function (ctrs) {
         $scope.init = function (timeData) {
             $scope.gridOptions.data = [];
             $http.get("/api/transform/transformAnalysis?start=" + timeData.start + "&end=" + timeData.end + "&action=event&type=1&searchType=table&queryOptions=" + timeData.checkedArray).success(function (data) {
-                //console.log(data)
+                console.log(data)
                 //$http.get(SEM_API_URL+"/sem/report/campaign?a="+$rootScope.user+"&b="+$rootScope.baiduAccount+"&cid=&startOffset="+timeData.start+"&endOffset="+timeData.end+"&device=0&q=cost").success(function(data1){
                 //    console.log(data1)
                 //});
@@ -213,6 +213,19 @@ define(["./module"], function (ctrs) {
                                 break;
                             default :
                                 query += "city:" + msg.checkedData[i].name + ",";
+                                break;
+                        }
+                        break;
+                    case "terminal_type":
+                        switch (msg.checkedData[i].name) {
+                            case "计算机":
+                                query += "terminal_type:0,";
+                                break;
+                            case "移动设备":
+                                query += "terminal_type:1,";
+                                break;
+                            default :
+                                query += "terminal_type:all,";
                                 break;
                         }
                         break;
