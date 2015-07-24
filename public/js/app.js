@@ -36,11 +36,13 @@ define([
         'ui.grid.grouping',
         'ui.grid.expandable',
         'ui.grid.pagination',
+        'ui.grid.treeView',
         'ui.bootstrap',
         'ngDialog',
         'ngSanitize',
         'ui.select',
         'ui.grid.selection'
+
 
     ]);
 
