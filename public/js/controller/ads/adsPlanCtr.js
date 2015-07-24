@@ -1,26 +1,28 @@
-/**
- * Created by ss on 2015/7/14.
- */
-define(["./module"], function (ctrls) {
-
-    'use strict';
-
-    ctrls.controller("adsPlanCtr", function ($scope, $rootScope, $http, requestService, areaService, messageService, uiGridConstants) {
-        //        高级搜索提示
+define(["./module"], function (ctrs) {
+    "use strict";
+    ctrs.controller("adsPlanCtr", function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
+        // 高级搜索提示
+        $scope.visitorSearch = "";
         $scope.areaSearch = "";
-        $scope.removeAreaSearch = function(obj){
+        // 取消显示的高级搜索的条件
+        $scope.removeVisitorSearch = function (obj) {
+            $rootScope.$broadcast("loadAllVisitor");
+            obj.visitorSearch = "";
+        }
+        $scope.removeAreaSearch = function (obj) {
             $scope.city.selected = {"name": "全部"};
-            $rootScope.$broadcast("searchLoadAllArea");
+            $rootScope.$broadcast("loadAllArea");
             obj.areaSearch = "";
         }
-        $scope.yesterdayClass = true;
-        $scope.city.selected = {"name": "全部"};
-        $rootScope.tableTimeStart = -1;//开始时间
-        $rootScope.tableTimeEnd = -1;//结束时间、
+        $scope.todayClass = true;
+        $scope.send = true;
+        // table配置
+        $rootScope.tableTimeStart = 0;
+        $rootScope.tableTimeEnd = 0;
         $rootScope.tableFormat = null;
-        //配置默认指标
-        $rootScope.checkedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"];
-        $rootScope.searchGridArray = [
+        // 配置默认指标
+        $rootScope.checkedArray = ["pv", "uv", "ip", "outRate", "avgTime"];
+        $rootScope.gridArray = [
             {
                 name: "xl",
                 displayName: "",
@@ -29,191 +31,161 @@ define(["./module"], function (ctrls) {
                 enableSorting: false
             },
             {
-                name: "媒介",
-                displayName: "媒介",
-                field: "kw",
-                cellTemplate: "<div><a href='http://www.baidu.com/s?wd={{grid.appScope.getDataUrlInfo(grid, row,1)}}' style='color:#0965b8;line-height:30px;' target='_blank'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</div>"
-                , footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                name: "推广计划",
+                displayName: "推广计划",
+                field: "region",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
                 enableSorting: false
-
-            }, /*
-             {
-             name: " ",
-             displayName: " ",
-             cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
-             },*/
+            },
             {
-                name: "展现",
-                displayName: "展现",
-                field: "impression",
-                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>",
+                name: " ",
+                cellTemplate: "<div class='table_box'>" +
+                "<button onmousemove='getMyButton(this)' class='table_btn'></button>" +
+                "<div class='table_win'>" +
+                "<ul style='color: #45b1ec'>" +
+                "<li><a>查看相关热门搜索词</a></li>" +
+                "<li><a ng-click='grid.appScope.showSearchUrl(row)'>查看搜索来路URL</a></li>" +
+                "<li><a ui-sref='history6' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li>" +
+                "</ul>" +
+                "</div>" +
+                "</div>",
+                enableSorting: false
+            },
+            {
+                name: "浏览量(PV)",
+                displayName: "浏览量(PV)",
+                field: "pv",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>",
                 sort: {
                     direction: uiGridConstants.DESC,
                     priority: 1
                 }
             },
             {
-                name: "消费",
-                displayName: "消费",
-                field: "cost",
-                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                name: "访客数(UV)",
+                displayName: "访客数(UV)",
+                field: "uv",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
             },
             {
-                name: "平均点击价格",
-                displayName: "平均点击价格",
-                field: "cpc",
-                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                name: "IP数",
+                displayName: "IP数",
+                field: "ip",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
             },
             {
                 name: "跳出率",
                 displayName: "跳出率",
                 field: "outRate",
-                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
             },
             {
                 name: "平均访问时长",
                 displayName: "平均访问时长",
                 field: "avgTime",
-                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
-            },
-            {
-                name: "新访客比率",
-                displayName: "新访客比率",
-                field: "nuvRate",
-                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
             }
         ];
         $rootScope.tableSwitch = {
-            latitude: {name: "触发关键词的搜索词", displayName: "触发关键词的搜索词", field: "kw"},
+            // 维度字段
+            latitude: {name: "推广计划", displayName: "推广计划", field: "region"},
+            // 过滤字段值
             tableFilter: null,
             dimen: false,
             // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
-            number: 0,
-            //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
-            coding: false,
-            //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
-            arrayClear: false, //是否清空指标array
-            promotionSearch: {
-                turnOn: "ssc", //是否开始推广中sem数据
-                SEMData: "keyword" //查询类型
-            }
+            number: 2,
+            // 当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
+            coding: "<li><a ui-sref='history6' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>",
+            // 是否清空指标array
+            arrayClear: false,
+            // 是否清空filter 默认为清空
+            isJudge: false
         };
+
+        // 图例勾选监听事件
         $scope.onLegendClickListener = function (radio, chartObj, chartConfig, checkValue) {
-            $scope.charts[0].types = checkValue;
-            $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
-            requestService.refresh($scope.charts);
+            clear.lineChart(chartConfig, checkValue);
+            var chart = $scope.charts[0];
+            chart.types = checkValue;
+            chart.config.instance = echarts.init(document.getElementById(chart.config.id));
+            requestService.refresh([chart]);
         };
-        /**
-         * 数据展示前处理
-         * @param data
-         * @param chartConfig
-         */
-        $scope.customFormat = function (data, chartConfig) {
-            var final_result = JSON.parse(eval("(" + data + ")").toString());
-            //删除key为"-"数据对
-            final_result.forEach(function (item, i) {
-                var tempKey=[];
-                var tempQuata=[];
-                item.key.forEach(function (k, j) {
-                    if (k != "-"&&k.length<30) {
-                        tempKey.push(item.key[j]);
-                        tempQuata.push(item.quota[j]);
-                    }
-                });
-                item.key=tempKey;
-                item.quato=tempQuata;
-                item.label=chartUtils.convertChinese(item.label);
+        // 数据转化
+        $scope.dataFormat = function (data, chartConfig, e) {
+            // 将json格式的字符串data转为json对象
+            var dataObj = JSON.parse(eval("(" + data + ")").toString());
+            var topData = [];
+            angular.forEach(dataObj, function (item) {
+                var key = item.key;
+                var label = item.label;
+                var quota = item.quota;
+                var topKey = key.slice(0, 10);
+                var topQuota = quota.slice(0, 10);
+                topData.push({key: topKey, label: label, quota: topQuota});
             });
-            $scope.charts[0].config.noFormat = "none";
-            cf.renderChart(final_result, chartConfig);
-        }
+            // 是否转化
+            chartConfig['noFormat'] = true;
+            // 是否为双轴
+            chartConfig['twoYz'] = "none";
+            // 图表渲染
+            cf.renderChart(topData, chartConfig);
+        };
+
+        // echarts 图例配置
         $scope.charts = [
             {
                 config: {
+                    // 图例id
                     legendId: "indicators_charts_legend",
-                    legendData: ["浏览量(PV)", "访客数(UV)", "跳出率", "抵达率", "平均访问时长", "页面转化"],//显示几种数据
-                    //legendMultiData: $rootScope.lagerMulti,
-                    legendAllowCheckCount: 2,
+                    // 图例说明
+                    legendData: ["浏览量(PV)", "访问次数", "访客数(UV)", "新访客数", "新访客比率", "IP数", "转化次数", "跳出率", "平均访问时长", "平均访问页数"],
+                    // 监听图例勾选点击事件
                     legendClickListener: $scope.onLegendClickListener,
+                    // 最多允许勾选项数
+                    legendAllowCheckCount: 2,
+                    // 图例默认勾选项数
                     legendDefaultChecked: [0, 1],
+                    // 是否显示最大最小值
                     min_max: false,
+                    // 图表首行缩进
+                    bGap: true,
+                    // 要渲染的图表元素id
                     id: "indicators_charts",
-                    bGap: true,//首行缩进
-                    chartType: "bar",//图表类型
+                    // 图表类型
+                    chartType: "bar",
                     keyFormat: 'eq',
-                    dataKey: "key",//传入数据的key值
-                    dataValue: "quota"//传入数据的value值
+                    // 传入数据的key值
+                    dataKey: "key",
+                    // 传入数据的value值
+                    dataValue: "quota"
                 },
-                types: ["pv", "uv"],
-                dimension: ["kw"],
+                // 默认图例勾选的指标值
+                types: ["pv", "vc"],
+                // 图例过滤的值
+                dimension: ["region"],
+                interval: $rootScope.interval,
                 url: "/api/charts",
-                cb: $scope.customFormat
+                cb: $scope.dataFormat
             }
         ];
+        // echart 数据初始化
         $scope.init = function () {
-            $rootScope.start = -1;
-            $rootScope.end = -1;
+            $rootScope.start = 0;
+            $rootScope.end = 0;
             $rootScope.interval = undefined;
-            $scope.charts.forEach(function (e) {
-                var chart = echarts.init(document.getElementById(e.config.id));
-                e.config.instance = chart;
-                util.renderLegend(chart, e.config);
-            })
-            requestService.refresh($scope.charts);
-        }
+            var chart = $scope.charts[0];
+            chart.config.instance = echarts.init(document.getElementById(chart.config.id));
+            util.renderLegend(chart, chart.config);
+            requestService.refresh([$scope.charts[0]]);
+        };
         $scope.init();
-
         $scope.$on("ssh_refresh_charts", function (e, msg) {
-            $rootScope.targetSearchSSC();
-            $scope.charts.forEach(function (e) {
-                var chart = echarts.init(document.getElementById(e.config.id));
-                e.config.instance = chart;
-            })
-            requestService.refresh($scope.charts);
+            $rootScope.targetSearch();
+            var chart = $scope.charts[0];
+            chart.config.instance = echarts.init(document.getElementById(chart.config.id));
+            // 实际请求在 requestService 中
+            requestService.refresh([chart]);
         });
-
-        /**
-         * 自定义日期刷新
-         * @param start
-         * @param end
-         */
-        $rootScope.datepickerClick=function(start,end){
-            var time = chartUtils.getTimeOffset(start, end);
-            var offest = time[1] - time[0];
-            $scope.reset();
-            if (offest >= 31) {
-                $scope.mothselected = false;
-                $scope.weekselected = false;
-            } else {
-                if (offest >= 7) {
-                    $scope.weekselected = false;
-                } else {
-                    $scope.weekselected = true;
-                }
-                $scope.mothselected = true;
-            }
-            $rootScope.start = time[0];
-            $rootScope.end = time[1];
-            $rootScope.interval = -1;
-            $rootScope.targetSearchSSC();
-            $scope.charts.forEach(function (e) {
-                var chart = echarts.init(document.getElementById(e.config.id));
-                e.config.instance = chart;
-            })
-            requestService.refresh($scope.charts);
-        }
-
-        //点击显示指标
-        $scope.visible = true;
-        $scope.select = function () {
-            $scope.visible = false;
-        };
-        $scope.clear = function () {
-            $scope.page.selected = undefined;
-            $scope.city.selected = undefined;
-            $scope.country.selected = undefined;
-            $scope.continent.selected = undefined;
-        };
         $scope.page = {};
         $scope.pages = [
             {name: '全部页面目标'},
@@ -224,41 +196,7 @@ define(["./module"], function (ctrls) {
             {name: '时长目标'},
             {name: '访问页数目标'}
         ];
-        //日历
-        $scope.dateClosed = function () {
-            $rootScope.start = $scope.startOffset;
-            $rootScope.end = $scope.endOffset;
-            $scope.charts.forEach(function (e) {
-                var chart = echarts.init(document.getElementById(e.config.id));
-                e.config.instance = chart;
-            })
-            if ($rootScope.start <= -1) {
-                $scope.charts[0].config.keyFormat = "day";
-            } else {
-                $scope.charts[0].config.keyFormat = "hour";
-            }
-            requestService.refresh($scope.charts);
-            $rootScope.targetSearch();
-            $rootScope.tableTimeStart = $scope.startOffset;
-            $rootScope.tableTimeEnd = $scope.endOffset;
-            $scope.$broadcast("ssh_dateShow_options_time_change");
-        };
-        //
 
-        this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
-        //this.type = 'range';
-        /*      this.identity = angular.identity;*/
-        //$scope.$broadcast("update", "msg");
-        $scope.$on("update", function (e, datas) {
-            // 选择时间段后接收的事件
-            datas.sort();
-            //console.log(datas);
-            var startTime = datas[0];
-            var endTime = datas[datas.length - 1];
-            $scope.startOffset = (startTime - today_start()) / 86400000;
-            $scope.endOffset = (endTime - today_start()) / 86400000;
-            //console.log("startOffset=" + startOffset + ", " + "endOffset=" + endOffset);
-        });
         function GetDateStr(AddDayCount) {
             var dd = new Date();
             dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
@@ -266,25 +204,21 @@ define(["./module"], function (ctrls) {
             var m = dd.getMonth() + 1;//获取当前月份的日期
             var d = dd.getDate();
             return y + "-" + m + "-" + d;
-        }
-
-        //刷新
-        $scope.page_refresh = function () {
-            $rootScope.start = -1;
-            $rootScope.end = -1;
-            $rootScope.tableTimeStart = -1;//开始时间
-            $rootScope.tableTimeEnd = -1;//结束时间、
-            $rootScope.tableFormat = null;
-            $scope.init($rootScope.user, $rootScope.baiduAccount, "creative", $scope.selectedQuota, $rootScope.start, $rootScope.end);
-            //图表
-            requestService.refresh($scope.charts);
-            $scope.reloadByCalendar("yesterday");
-            $('#reportrange span').html(GetDateStr(-1));
-            //其他页面表格
-            //classcurrent
-            $scope.reset();
-            $scope.yesterdayClass = true;
         };
-    });
 
+        /**
+         * 刷新
+         */
+        $scope.page_refresh = function () {
+            $rootScope.start = 0;
+            $rootScope.end = 0;
+            $rootScope.tableTimeStart = 0;
+            $rootScope.tableTimeEnd = 0;
+            $scope.reloadByCalendar("today");
+            $('#reportrange span').html(GetDateStr(0));
+            $scope.reset();
+            $scope.todayClass = true;
+        };
+
+    });
 });

@@ -1,9 +1,3 @@
-/**
- * Created by ss on 2015/6/24.
- */
-/**
- * Created by XiaoWei on 2015/4/22.
- */
 define(["./module"], function (ctrs) {
     "use strict";
     ctrs.controller("adsSourceCtr", function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
