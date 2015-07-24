@@ -176,20 +176,22 @@ define(["./module"], function (ctrs) {
             $scope.selectedQuota = ["click", "impression"];
             $scope.onLegendClickListener = function (radio, chartInstance, config, checkedVal) {
                 $scope.charts[0].config.legendDefaultChecked = [];
+                var checkData = [];
                 for (var k = 0; k < checkedVal.length; k++) {
                     for (var i = 0; i < $scope.queryOption_all.length; i++) {
                         if ($scope.queryOption_all[i] == checkedVal[k]) {
-                            $scope.charts[0].config.legendDefaultChecked.push(i);
+                            checkData.push(i)
                         }
                     }
                 }
+                $scope.charts[0].config.legendDefaultChecked = checkData;
                 if (checkedVal.length) {
                     $scope.dataTable($scope.isCompared, "day", checkedVal, false);
                 } else {
                     def.defData($scope.charts[0].config);
                 }
             };
-            $scope.queryOption_all = ["clickTotal", "pv", "uv", "ip", "conversions", "crate"];
+            $scope.queryOption_all = ["pv", "uv", "ip","vc","conversions", "crate","transformCost"];
             $scope.queryOptions = ["pv", "uv"];
             $scope.charts = [
                 {

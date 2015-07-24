@@ -10,7 +10,7 @@ define(["./module"], function (ctrs) {
             $rootScope.end = 0;
             $rootScope.tableFormat = null;
             $scope.send = true;//显示发送
-
+            $scope.isCompared = false;
             //自定义指标显示
             $scope.bases = [
                 {consumption_name: "浏览量(PV)", name: "pv"},
@@ -28,7 +28,7 @@ define(["./module"], function (ctrs) {
                 {consumption_name: '利润', name: 'profit'}
             ];
             $scope.order = [
-                {consumption_name: "订单转化", name: "orderNum"},
+                {consumption_name: "订单数", name: "orderNum"},
                 {consumption_name: "订单金额", name: "orderMoney"},
                 {consumption_name: "订单转化率", name: "orderNumRate"}
             ];
@@ -91,6 +91,7 @@ define(["./module"], function (ctrs) {
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
                 }
             ];
+
             $rootScope.tableSwitch = {
                 latitude: {name: "页面转化目标", displayName: "页面转化目标", field: "campaignName"},
                 tableFilter: null,
@@ -101,14 +102,104 @@ define(["./module"], function (ctrs) {
                     SEMData: "campaign" //查询类型
                 }
             };
+            $scope.searchIndicators = function (item, entities, number) {
+                $rootScope.searchGridArray.shift();
+                $rootScope.searchGridArray.shift();
+                $rootScope.tableSwitch.number != 0 ? $scope.searchGridArray.shift() : "";
+                $scope.searchGridObj = {};
+                $scope.searchGridObjButton = {};
+                var a = $rootScope.checkedArray.indexOf(item.name);
+                if (a != -1) {
+                    $rootScope.checkedArray.splice(a, 1);
+                    $rootScope.searchGridArray.splice(a, 1);
+
+                    if ($rootScope.tableSwitch.number != 0) {
+                        $scope.searchGridObjButton["name"] = " ";
+                        $scope.searchGridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
+                        $rootScope.searchGridArray.unshift($scope.searchGridObjButton);
+                    }
+                    $rootScope.searchGridArray.unshift($rootScope.tableSwitch.latitude);
+                    $scope.gridObjButton = {};
+                    $scope.gridObjButton["name"] = "xl";
+                    $scope.gridObjButton["displayName"] = "";
+                    $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
+                    $scope.gridObjButton["maxWidth"] = 10;
+                    $rootScope.searchGridArray.unshift($scope.gridObjButton);
+                } else {
+                    if ($rootScope.checkedArray.length >= number) {
+                        $rootScope.checkedArray.shift();
+                        $rootScope.checkedArray.push(item.name);
+                        $rootScope.searchGridArray.shift();
+
+                        $scope.searchGridObj["name"] = item.consumption_name;
+                        $scope.searchGridObj["displayName"] = item.consumption_name;
+                        $scope.searchGridObj["footerCellTemplate"] = "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>";
+                        $scope.searchGridObj["field"] = item.name;
+
+                        $rootScope.searchGridArray.push($scope.searchGridObj);
+
+                        if ($rootScope.tableSwitch.number != 0) {
+                            $scope.searchGridObjButton["name"] = " ";
+                            $scope.searchGridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
+                            $rootScope.searchGridArray.unshift($scope.searchGridObjButton);
+                        }
+
+                        $rootScope.searchGridArray.unshift($rootScope.tableSwitch.latitude);
+                        $scope.gridObjButton = {};
+                        $scope.gridObjButton["name"] = "xl";
+                        $scope.gridObjButton["displayName"] = "";
+                        $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
+                        $scope.gridObjButton["maxWidth"] = 10;
+                        $rootScope.searchGridArray.unshift($scope.gridObjButton);
+                    } else {
+                        $rootScope.checkedArray.push(item.name);
+
+                        $scope.searchGridObj["name"] = item.consumption_name;
+                        $scope.searchGridObj["displayName"] = item.consumption_name;
+                        $scope.searchGridObj["footerCellTemplate"] = "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>";
+                        $scope.searchGridObj["field"] = item.name;
+                        $rootScope.searchGridArray.push($scope.searchGridObj);
+
+                        if ($rootScope.tableSwitch.number != 0) {
+                            $scope.searchGridObjButton["name"] = " ";
+                            $scope.searchGridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
+                            $rootScope.searchGridArray.unshift($scope.searchGridObjButton);
+                        }
+                        $rootScope.searchGridArray.unshift($rootScope.tableSwitch.latitude);
+                        $scope.gridObjButton = {};
+                        $scope.gridObjButton["name"] = "xl";
+                        $scope.gridObjButton["displayName"] = "";
+                        $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
+                        $scope.gridObjButton["maxWidth"] = 10;
+                        $rootScope.searchGridArray.unshift($scope.gridObjButton);
+                    }
+                }
+                angular.forEach(entities, function (subscription, index) {
+                    if (subscription.name == item.name) {
+                        $scope.classInfo = 'current';
+                    }
+                });
+            };
             $scope.selectedQuota = ["click", "impression"];
             $scope.onLegendClickListener = function (radio, chartInstance, config, checkedVal) {
+                $scope.charts[0].config.legendDefaultChecked = [];
+                var checkData = [];
+                for (var k = 0; k < checkedVal.length; k++) {
+                    for (var i = 0; i < $scope.queryOption_all.length; i++) {
+                        if ($scope.queryOption_all[i] == checkedVal[k]) {
+                            checkData.push(i)
+                        }
+                    }
+                }
+                $scope.charts[0].config.legendDefaultChecked = checkData;
                 if (checkedVal.length) {
-                    //$scope.init($rootScope.user, $rootScope.baiduAccount, "campaign", checkedVal, $rootScope.start, $rootScope.end);
+                    $scope.dataTable($scope.isCompared, "day", checkedVal, false);
                 } else {
                     def.defData($scope.charts[0].config);
                 }
             };
+            
+            $scope.queryOption_all = ["pv", "uv", "vc", "nuv", "conversions", "crate", "avgCost", "benefit", "profit", "orderNum", "orderMoney", "orderNumRate"];
             $scope.charts = [
                 {
                     config: {
@@ -140,10 +231,10 @@ define(["./module"], function (ctrs) {
                 $scope.visible = false;
             };
             $scope.clear = function () {
-                $scope.page.selected = undefined;
-                $scope.city.selected = undefined;
-                $scope.country.selected = undefined;
-                $scope.continent.selected = undefined;
+                $scope.page.selected = "";
+                $scope.city.selected = "";
+                $scope.country.selected = "";
+                $scope.continent.selected = "";
             };
             $scope.page = {};
             $scope.pages = [
@@ -211,6 +302,37 @@ define(["./module"], function (ctrs) {
                 $scope.dateShowArray = $rootScope.copy(tempArray);
             };
             $scope.setShowArray();
+            $scope.setAreaFilterTran = function (area) {
+                $scope.areaSearch = area == "全部" ? "" : area;
+                if (area == "北京" || area == "上海" || area == "广州") {
+                    if ($scope.city.selected != undefined) {
+                        $scope.city.selected.name = area;
+                    } else {
+                        $scope.city.selected = {};
+                        $scope.city.selected["name"] = area;
+                    }
+                }
+            };
+            $scope.advancedQuery = function () {
+                //设备过滤样式初始化
+                var input_terminal_Array = $(".chart_top2 .terminal_class");
+                input_terminal_Array.each(function (i, o) {
+                    $(o).prev("span").css("background-position", "0px 0px");
+                    $(o).prop("checked", false);
+                });
+                $(input_terminal_Array[0]).prev("span").css("background-position", "0px -51px");
+                $(".chart_top2 .terminal:eq(" + 0 + ")").prop("checked", true);
+                //访客过滤样式初始化
+                var input_uv_Array = $(".chart_top2 .uv_class");
+                input_uv_Array.each(function (i, o) {
+                    $(o).prev("span").css("background-position", "0px 0px");
+                    $(o).prop("checked", false);
+                });
+                $(input_uv_Array[0]).prev("span").css("background-position", "0px -51px");
+                $(".chart_top2 .uv_class:eq(" + 0 + ")").prop("checked", true);
+                //地狱过滤样式数据初始化
+                $scope.city.selected = "";
+            };
             $scope.page_init = function (isContrastDataByTime) {
                 $scope.$broadcast("transformData", {
                     start: $rootScope.start,
@@ -313,7 +435,7 @@ define(["./module"], function (ctrs) {
             };
             $scope.targetSearchSpreadPage = function (isClicked) {
                 $scope.setShowArray();
-                $scope.my_init(false);
+                //$scope.my_init(false);
                 if (isClicked) {
                     $scope.$broadcast("transformData_ui_grid", {
                         start: $rootScope.start,
@@ -322,34 +444,29 @@ define(["./module"], function (ctrs) {
                     });
                 } else {
                     //访客过滤数据获取
-                    var inputArray = $(".chart_top2 .styled");
-                    inputArray.each(function (i, o) {
+                    var input_uv_Array = $(".chart_top2 .uv_class");
+                    input_uv_Array.each(function (i, o) {
                         if ($(o).prop("checked")) {
                             $scope.uv_selected = $(o).prop("value");
                         }
                     });
+                    var input_terminal_Array = $(".chart_top2 .terminal_class");
+                    input_terminal_Array.each(function (i, o) {
+                        if ($(o).prop("checked")) {
+                            $scope.terminal_selected = $(o).prop("value");
+                        }
+                    });
                     var checkedData = [];
-                    if (($scope.souce.selected == "" && $scope.browser.selected == "") || ($scope.souce.selected.name == "全部" && $scope.browser.selected.name == "全部")) {
+                    if ($scope.terminal_selected != "全部") {
                         checkedData.push({
-                            field: "all_rf",
-                            name: "所有来源"
+                            field: "terminal_type",
+                            name: $scope.terminal_selected
                         });
-                    }
-                    if ($scope.souce.selected != "") {
-                        if ($scope.souce.selected.name != "全部") {
-                            checkedData.push({
-                                field: "souce",
-                                name: $scope.souce.selected.name
-                            });
-                        }
-                    }
-                    if ($scope.browser.selected != "") {
-                        if ($scope.browser.selected.name != "全部") {
-                            checkedData.push({
-                                field: "browser",
-                                name: $scope.browser.selected.name
-                            });
-                        }
+                    } else {
+                        checkedData.push({
+                            field: "terminal_type",
+                            name: "所有设备"
+                        });
                     }
                     if ($scope.uv_selected != "全部") {
                         checkedData.push({

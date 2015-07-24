@@ -24,7 +24,7 @@
                 <li class="ng-isolate-scope"  ng-class="{active:tab===1}" ng-click="tab = 1">
                     <a class="ng-binding">自定义指标</a></li>
                 <li class="ng-isolate-scope" ng-class="{active:tab===2}" ng-click="tab = 2">
-                    <a class="ng-binding">高级筛选</a></li>
+                    <a class="ng-binding" data-ng-click="advancedQuery()">高级筛选</a></li>
             </ul>
             <div class="tabs_content">
                 <div class="custom_title" ng-show="tab === 1">
@@ -41,7 +41,7 @@
                         <ul>
                             <li ng-repeat="item in bases" data-sshy-default defvalue="{{item.name}}"
                                 class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
-                                ng-click='searchIndicators(item,target,6)'>{{item.consumption_name}}
+                                ng-click='searchIndicators(item,bases,6)'>{{item.consumption_name}}
                             </li>
                         </ul>
                     </div>
@@ -50,7 +50,7 @@
                         <ul>
                             <li ng-repeat="item in transform" data-sshy-default defvalue="{{item.name}}"
                                 class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
-                                ng-click='searchIndicators(item,Webbased,6)'>{{item.consumption_name}}
+                                ng-click='searchIndicators(item,transform,6)'>{{item.consumption_name}}
                             </li>
                         </ul>
                     </div>
@@ -59,7 +59,7 @@
                         <ul>
                             <li ng-repeat="item in order" data-sshy-default defvalue="{{item.name}}"
                                 class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
-                                ng-click='searchIndicators(item,flow,6)'>{{item.consumption_name}}
+                                ng-click='searchIndicators(item,order,6)'>{{item.consumption_name}}
                             </li>
                         </ul>
                     </div>
@@ -74,9 +74,9 @@
                     <div class="chart_top2">
                         <ul>
                             <li><span>设备过滤:</span></li>
-                            <li><label ng-click="setTerminal(0)"><input type="radio" checked="checked" name="radio1" class="styled"/>全部</label></li>
-                            <li><label ng-click="setTerminal(1)"><input type="radio" name="radio1" class="styled"/>计算机</label></li>
-                            <li><label ng-click="setTerminal(2)"><input type="radio" name="radio1" class="styled"/>移动设备</label></li>
+                            <li><label ng-click="setTerminal(0)"><input type="radio" checked="checked" name="radio1" class="styled terminal_class" value="全部"/>全部</label></li>
+                            <li><label ng-click="setTerminal(1)"><input type="radio" name="radio1" class="styled terminal_class" value="计算机"/>计算机</label></li>
+                            <li><label ng-click="setTerminal(2)"><input type="radio" name="radio1" class="styled terminal_class" value="移动设备"/>移动设备</label></li>
                         </ul>
                     </div>
                     <div class="chart_top2">
@@ -85,7 +85,8 @@
                             <li>
                                 <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
                                     <div role="group" class="btn-group">
-                                        <ui-select ng-model="city.selected" theme="select2" reset-search-input="false" class="fl btn-pv" data-ng-change="setAreaFilter(city.selected.name)"
+                                        <ui-select ng-model="city.selected" theme="select2" reset-search-input="false"
+                                                   class="fl btn-pv" data-ng-change="setAreaFilterTran(city.selected.name)"
                                                    style="width: 120px;">
                                             <ui-select-match placeholder="全部">{{$select.selected.name}}
                                             </ui-select-match>
@@ -104,12 +105,20 @@
                     <div class="chart_top2">
                         <ul>
                             <li><span>访客过滤 :</span></li>
-                            <li><label ng-click="setVisitors(0)"><input type="radio" checked="checked" class="styled" name="radio0"/>全部</label></li>
-                            <li><label ng-click="setVisitors(1)"><input type="radio" name="radio0"  class="styled" />新访客</label></li>
-                            <li><label ng-click="setVisitors(2)"><input type="radio" name="radio0"  class="styled"/>老访客</label></li>
+                            <li><label ng-click="setVisitors(0)"><input type="radio" checked="checked" class="styled uv_class"
+                                                                        name="radio0" value="全部"/>全部</label></li>
+                            <li><label ng-click="setVisitors(1)"><input type="radio" name="radio0" class="styled uv_class"
+                                                                        value="新访客"/>新访客</label></li>
+                            <li><label ng-click="setVisitors(2)"><input type="radio" name="radio0" class="styled uv_class"
+                                                                        value="老访客"/>老访客</label></li>
                         </ul>
                     </div>
+                    <div class="chart_top2 chart_noborder">
+                        <button class="btn btn-primary" type="button" ng-click="targetSearchSpreadPage(false)">确定
+                        </button>
+                    </div>
                 </div>
+
             </div>
             <div class="custom_secendtitle">
                 <div class="custom_select custom_select_way">

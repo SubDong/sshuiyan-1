@@ -456,7 +456,7 @@ api.get('/provincemap', function (req, res) {
         var chart_data_array = new Array();
         var data_name = new Array();
 
-        var areas = data.aggregations.areas.buckets;
+        var areas = data;
         for (var i = 0; i < 10; i++) {
             if (areas[i] != undefined) {
                 if (areas[i].key == "国外")continue;

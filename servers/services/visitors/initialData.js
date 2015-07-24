@@ -61,7 +61,8 @@ var initial = {
             }
         };
         es.search(request, function (err, response) {
-            if (response != undefined) {
+            var data = []
+            if (response != undefined && response.aggregations != undefined && response.aggregations.result != undefined) {
                 var result = {};
                 //平均访问时间
                 var calAvgTime = response.aggregations.avgTime.value / response.aggregations.pv.value;
@@ -88,6 +89,7 @@ var initial = {
                 callbackFn(result)
             } else {
                 console.log(err);
+                callbackFn(data);
             }
         });
     },
@@ -175,11 +177,15 @@ var initial = {
             };
         }
         es.search(mapRequest, function (err, response) {
-            if (response != undefined) {
-                callbackFn(response);
+            var data = [];
+            if (response != undefined && response.aggregations != undefined && response.aggregations.areas != undefined) {
+                data = response.aggregations.areas.buckets;
+                callbackFn(data);
             } else {
                 console.log(err)
+                callbackFn(data);
             }
+
         });
     },
 
@@ -247,10 +253,11 @@ var initial = {
             }
         }
         es.search(request, function (err, response) {
-            if (response != undefined) {
+            var data = [];
+            if (response != undefined && response.aggregations != undefined && response.aggregations.result != undefined) {
                 callbackFn(response);
             } else {
-                console.log(err)
+                callbackFn(data);
             }
         });
     }
