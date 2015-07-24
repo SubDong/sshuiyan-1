@@ -91,6 +91,7 @@ define(["./module"], function (ctrs) {
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
                 }
             ];
+
             $rootScope.tableSwitch = {
                 latitude: {name: "页面转化目标", displayName: "页面转化目标", field: "campaignName"},
                 tableFilter: null,
@@ -100,6 +101,84 @@ define(["./module"], function (ctrs) {
                     turnOn: true, //是否开启推广中sem数据
                     SEMData: "campaign" //查询类型
                 }
+            };
+            $scope.searchIndicators = function (item, entities, number) {
+                $rootScope.searchGridArray.shift();
+                $rootScope.searchGridArray.shift();
+                $rootScope.tableSwitch.number != 0 ? $scope.searchGridArray.shift() : "";
+                $scope.searchGridObj = {};
+                $scope.searchGridObjButton = {};
+                var a = $rootScope.checkedArray.indexOf(item.name);
+                if (a != -1) {
+                    $rootScope.checkedArray.splice(a, 1);
+                    $rootScope.searchGridArray.splice(a, 1);
+
+                    if ($rootScope.tableSwitch.number != 0) {
+                        $scope.searchGridObjButton["name"] = " ";
+                        $scope.searchGridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
+                        $rootScope.searchGridArray.unshift($scope.searchGridObjButton);
+                    }
+                    $rootScope.searchGridArray.unshift($rootScope.tableSwitch.latitude);
+                    $scope.gridObjButton = {};
+                    $scope.gridObjButton["name"] = "xl";
+                    $scope.gridObjButton["displayName"] = "";
+                    $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
+                    $scope.gridObjButton["maxWidth"] = 10;
+                    $rootScope.searchGridArray.unshift($scope.gridObjButton);
+                } else {
+                    if ($rootScope.checkedArray.length >= number) {
+                        $rootScope.checkedArray.shift();
+                        $rootScope.checkedArray.push(item.name);
+                        $rootScope.searchGridArray.shift();
+
+                        $scope.searchGridObj["name"] = item.consumption_name;
+                        $scope.searchGridObj["displayName"] = item.consumption_name;
+                        $scope.searchGridObj["footerCellTemplate"] = "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>";
+                        $scope.searchGridObj["field"] = item.name;
+
+                        $rootScope.searchGridArray.push($scope.searchGridObj);
+
+                        if ($rootScope.tableSwitch.number != 0) {
+                            $scope.searchGridObjButton["name"] = " ";
+                            $scope.searchGridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
+                            $rootScope.searchGridArray.unshift($scope.searchGridObjButton);
+                        }
+
+                        $rootScope.searchGridArray.unshift($rootScope.tableSwitch.latitude);
+                        $scope.gridObjButton = {};
+                        $scope.gridObjButton["name"] = "xl";
+                        $scope.gridObjButton["displayName"] = "";
+                        $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
+                        $scope.gridObjButton["maxWidth"] = 10;
+                        $rootScope.searchGridArray.unshift($scope.gridObjButton);
+                    } else {
+                        $rootScope.checkedArray.push(item.name);
+
+                        $scope.searchGridObj["name"] = item.consumption_name;
+                        $scope.searchGridObj["displayName"] = item.consumption_name;
+                        $scope.searchGridObj["footerCellTemplate"] = "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>";
+                        $scope.searchGridObj["field"] = item.name;
+                        $rootScope.searchGridArray.push($scope.searchGridObj);
+
+                        if ($rootScope.tableSwitch.number != 0) {
+                            $scope.searchGridObjButton["name"] = " ";
+                            $scope.searchGridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
+                            $rootScope.searchGridArray.unshift($scope.searchGridObjButton);
+                        }
+                        $rootScope.searchGridArray.unshift($rootScope.tableSwitch.latitude);
+                        $scope.gridObjButton = {};
+                        $scope.gridObjButton["name"] = "xl";
+                        $scope.gridObjButton["displayName"] = "";
+                        $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
+                        $scope.gridObjButton["maxWidth"] = 10;
+                        $rootScope.searchGridArray.unshift($scope.gridObjButton);
+                    }
+                }
+                angular.forEach(entities, function (subscription, index) {
+                    if (subscription.name == item.name) {
+                        $scope.classInfo = 'current';
+                    }
+                });
             };
             $scope.selectedQuota = ["click", "impression"];
             $scope.onLegendClickListener = function (radio, chartInstance, config, checkedVal) {
@@ -152,10 +231,10 @@ define(["./module"], function (ctrs) {
                 $scope.visible = false;
             };
             $scope.clear = function () {
-                $scope.page.selected = undefined;
-                $scope.city.selected = undefined;
-                $scope.country.selected = undefined;
-                $scope.continent.selected = undefined;
+                $scope.page.selected = "";
+                $scope.city.selected = "";
+                $scope.country.selected = "";
+                $scope.continent.selected = "";
             };
             $scope.page = {};
             $scope.pages = [
@@ -378,28 +457,6 @@ define(["./module"], function (ctrs) {
                         }
                     });
                     var checkedData = [];
-                    //if (($scope.souce.selected == "" && $scope.browser.selected == "") || ($scope.souce.selected.name == "全部" && $scope.browser.selected.name == "全部")) {
-                    //    checkedData.push({
-                    //        field: "all_rf",
-                    //        name: "所有来源"
-                    //    });
-                    //}
-                    //if ($scope.souce.selected != "") {
-                    //    if ($scope.souce.selected.name != "全部") {
-                    //        checkedData.push({
-                    //            field: "souce",
-                    //            name: $scope.souce.selected.name
-                    //        });
-                    //    }
-                    //}
-                    //if ($scope.browser.selected != "") {
-                    //    if ($scope.browser.selected.name != "全部") {
-                    //        checkedData.push({
-                    //            field: "browser",
-                    //            name: $scope.browser.selected.name
-                    //        });
-                    //    }
-                    //}
                     if ($scope.terminal_selected != "全部") {
                         checkedData.push({
                             field: "terminal_type",
