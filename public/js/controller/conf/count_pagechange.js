@@ -52,13 +52,13 @@ define(["./module"], function (ctrs) {
         //配置默认指标
         $rootScope.checkedArray = ["target_name", "target_urls", "needPath","record_type","conv_tpye"  ,"_id" ];
         $rootScope.gridArray = [
-            {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>", maxWidth: 5,  enableSorting: false},
+            //{name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>", maxWidth: 5,  enableSorting: false},
             {name: "目标名称", displayName: "目标名称", field: "target_name", enableSorting: false},
             {
                 name: "路径",
                 displayName: "目标URL",
                 field: "target_urls",
-                footerCellTemplate: "<div class='ui-grid-cell-contents'>目标URL</div>",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>URL</div>",
                 cellClass: "table_list_color",
                 enableSorting: false
             },
@@ -88,6 +88,13 @@ define(["./module"], function (ctrs) {
             latitude: {name: "页面转化", displayName: "页面转化", field: ""},
         };
 
+        var forceUrlsToArray = function (urls) {
+            var arr = [];
+            for (var i = 0; i < urls.length; i++) {
+                arr.push(urls[i].url);
+            }
+            return arr;
+        }
         /**
          * 初始化数据
          */
@@ -95,19 +102,18 @@ define(["./module"], function (ctrs) {
             var uid = $cookieStore.get("uid");
             var site_id = $rootScope.siteId;
             var url = "/config/page_conv?type=search&query="+JSON.stringify({uid: uid ,site_id: site_id});
-            //console.log(url)
             $http({
                 method: 'GET',
                 url: url
             }).success(function (dataConfig, status) {
-                //console.log(dataConfig)
                 $rootScope.gridOptions.data=dataConfig;
+                var tempData = [];
                 //修改数据
                 dataConfig.forEach(function(item,i){
                     if(item.paths==null||item.paths.length==0){
-                        $rootScope.gridOptions.data[i].needPath="否";
+                        item.needPath="否";
                     }else{
-                        $rootScope.gridOptions.data[i].needPath="是";
+                        item.needPath="是";
                     }
                     if(item.target_urls!=null&&item.target_urls.length>0){
                         var url="";
@@ -120,12 +126,40 @@ define(["./module"], function (ctrs) {
                         $rootScope.gridOptions.data[i].target_urls=url;
                     }
                     if(item.record_type!=null){
-                        $rootScope.gridOptions.data[i].record_type = $scope.record_type_cn[item.record_type]
+                        item.record_type = $scope.record_type_cn[item.record_type]
                     }
                     if(item.conv_tpye!=null){
-                        $rootScope.gridOptions.data[i].conv_tpye = $scope.conv_tpye_cn[item.conv_tpye]
+                        item.conv_tpye = $scope.conv_tpye_cn[item.conv_tpye]
                     }
+
+                    item.$$treeLevel = 0;
+                    tempData.push(item);
+                    item.paths.forEach(function(path,pindex){
+                        var tpath = {target_name:path.path_name}
+                        tpath.$$treeLevel = 2;
+                        tempData.push(tpath)
+                        path.steps.forEach(function(step,sindex){
+                            var url="";
+                            //url = step.step_urls.join("或")
+                            if(step.step_urls!=null&&step.step_urls.length>0){
+                                step.step_urls.forEach(function(u,i){
+                                    url=url+u.url;
+                                    if(i<step.step_urls.length-1){
+                                        url=url+"或";
+                                    }
+                                });
+                            }else{
+                                url = "未配置URL"
+                            }
+                            var tstep = {target_name:step.step_name,target_urls:url}
+                            tstep.$$treeLevel = 3;
+                            tempData.push(tstep)
+                        })
+                    })
+
+
                 });
+                $rootScope.gridOptions.data = tempData;
 
             });
         };
@@ -143,7 +177,6 @@ define(["./module"], function (ctrs) {
             });
 
             $scope.sureonDelete= function(){
-                console.log(444);
                 $scope.onDeleteDialog.close();
                 var query = "/config/page_conv?type=delete&query={\"_id\":\"" + row.entity._id + "\"}";
                 $http({

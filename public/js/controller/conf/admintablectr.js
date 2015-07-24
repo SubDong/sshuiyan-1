@@ -5,7 +5,7 @@ define(["../module"], function (app) {
 
     "use strict";
 
-    app.controller("admintablectr", function ($timeout, $scope, $rootScope, $http, $cookieStore) {
+    app.controller("admintablectr", function ($timeout, $scope, $rootScope, $http, $cookieStore,uiGridTreeBaseConstants) {
         $rootScope.adminIndicators = function (item, entities, number, refresh) {
             $rootScope.gridArray.shift();
             $rootScope.gridArray.shift();
@@ -93,29 +93,54 @@ define(["../module"], function (app) {
                 enableGridMenu: false,
                 enableHorizontalScrollbar: 0,
                 columnDefs: $rootScope.gridArray,
-                onRegisterApi: function (girApi) {
-                    $rootScope.gridApiAdmin = girApi;
-                    adminGriApihtml(girApi);
+                showTreeExpandNoChildren: true,
+                onRegisterApi: function (gridApi) {
+                    $rootScope.gridApiAdmin = gridApi;
+                    adminGriApihtml(gridApi);
                 }
             };
         } else {
-            $rootScope.gridOptions = {
-                paginationPageSize: 20,
-                paginationPageSizes: [20, 50, 100],
-                expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
-                expandableRowHeight: 360,
-                enableColumnMenus: false,
-                enablePaginationControls: true,
-                enableSorting: true,
-                enableGridMenu: false,
-                enableHorizontalScrollbar: 0,
-                columnDefs: $rootScope.gridArray,
-                onRegisterApi: function (gridApi) {
-                    $rootScope.gridApiAdmin = gridApi;
-                    //adminGriApiInfo(gridApi);
-                    expandGrid(gridApi)
-                }
-            };
+            if ($rootScope.tableSwitch.latitude.name != "页面转化") {
+                $rootScope.gridOptions = {
+                    paginationPageSize: 20,
+                    paginationPageSizes: [20, 50, 100],
+                    expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
+                    expandableRowHeight: 360,
+                    enableColumnMenus: false,
+                    enablePaginationControls: true,
+                    enableSorting: true,
+                    enableGridMenu: false,
+                    enableHorizontalScrollbar: 0,
+                    columnDefs: $rootScope.gridArray,
+                    onRegisterApi: function (gridApi) {
+                        $rootScope.gridApiAdmin = gridApi;
+                        adminGriApihtml(gridApi);
+                    }
+                };
+            }else{
+                $rootScope.gridOptions = {
+                    paginationPageSize: 20,
+                    paginationPageSizes: [20, 50, 100],
+                    expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
+                    expandableRowHeight: 360,
+                    enableColumnMenus: false,
+                    enablePaginationControls: true,
+                    enableGridMenu: false,
+                    enableHorizontalScrollbar: 0,
+                    enableSorting: true,
+                    //enableFiltering: true,
+                    showTreeExpandNoChildren: true,
+                    columnDefs: $rootScope.gridArray,
+                    onRegisterApi: function( gridApi ) {
+                        gridApi.treeBase.on.rowExpanded($scope, function(row) {
+                        });
+                        //$rootScope.gridOptions.data[0]["$$treeLevel"] = 0;
+                        //$rootScope.gridOptions.data = [{]
+                    }
+                };
+
+            }
+
         }
         //////DENG
         //配置展开巷HTML
@@ -139,7 +164,6 @@ define(["../module"], function (app) {
                     row.entity.subGridOptions.data = [{"info": " "}];
                 })
             }
-
         };
         ////
         var adminGriApihtml = function (gridApi) {
@@ -164,36 +188,23 @@ define(["../module"], function (app) {
         ///////////
 
         ///////////////////////////////////展开项处理///////////////////////////////////////////////
-        //子表格方法通用
-        $scope.subGridScope = {
-            getHistoricalTrend: function (b) {
-                $scope.getHistoricalTrend(b, true);
-            }
-        }
+
         var expandGrid = function (gridApi) {
-            console.log($rootScope.tableSwitch);
-            //$rootScope.tableSwitch 路由展开项具体操作
-            gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
-                console.log(row)
-                var htmlData = [];
-                row.entity.subGridOptions = {
-                    appScopeProvider: $scope.subGridScope,
-                    showHeader: false,
-                    enableHorizontalScrollbar: 0,
-                    enableVerticalScrollbar: 0,
-                    expandableRowHeight: 30,
-                    columnDefs: htmlData
-                };
+            if ($rootScope.tableSwitch.latitude.name != "页面转化") {
+                adminGriApihtml(gridApi);
+                return;
+            }
+            gridApi.treeBase.on.rowExpanded($scope, function(row) {
+                row.entity.paths.forEach(function(item,i){
+                    //item[i].state = item[i].address.state;
+                    //item[i].balance = Number( data[i].balance.slice(1).replace(/,/,'') );
+                    item[0].$$treeLevel = 0;
+                    item[1].$$treeLevel = 1;
+                    item[10].$$treeLevel = 1;
+                })
+            });
 
-                var result = "<div class='trendbox' style='height:360px; overflow:hidden;'></div>"
-
-                var res = {};
-                res["name"] = "test";
-                res["field"] = "info";
-                res["cellTemplate"] = result;
-                htmlData.push(res);
-                row.entity.subGridOptions.data = [{"info": ""}];
-            })
         }
     });
-});
+})
+;

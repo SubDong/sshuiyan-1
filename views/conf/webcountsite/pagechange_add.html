@@ -151,7 +151,7 @@
                               data-ng-click="chooseConvType('place_order')">下单</label>
                 <label><input type="radio" class="styled" name="type" ng-checked="radio_conv.other"
                               data-ng-click="chooseConvType('other')">其他</label>&nbsp;&nbsp;&nbsp;&nbsp;
-                <input type="text" class="input_text " data-ng-model="t_conv_text">
+                <input id="convTypeText" readOnly=false type="text" class="input_text " data-ng-model="t_conv_text">
             </div>
         </div>
     </div>
