@@ -236,16 +236,6 @@ define(["./module"], function (ctrs) {
                 $scope.country.selected = "";
                 $scope.continent.selected = "";
             };
-            $scope.page = {};
-            $scope.pages = [
-                {name: '全部页面目标'},
-                {name: '全部事件目标'},
-                {name: '所有页面右上角按钮'},
-                {name: '所有页面底部400按钮'},
-                {name: '详情页右侧按钮'},
-                {name: '时长目标'},
-                {name: '访问页数目标'}
-            ];
             //日历
             this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
             $scope.$on("update", function (e, datas) {

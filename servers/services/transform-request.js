@@ -102,6 +102,13 @@ var es_aggs = {
                 "field": "tt"
             }
         }
+    },
+    "orderNum":{
+        "orderNum":{
+            "value_count":{
+                "field":"p_record"
+            }
+        }
     }
 };
 var transform = {
@@ -380,6 +387,20 @@ var transform = {
                                 quota: quotaArry
                             };
                             break;
+                        case "orderNum":
+                            for (i = 0; i < results.length; i++) {
+                                for (var key in results[i]) {
+                                    if (key == queryOption) {
+                                        quotaArry.push(results[i].orderNum.value);
+                                    }
+                                }
+                            }
+                            quota_data = {
+                                label: "orderNum",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
                         default :
                             break;
                     }
@@ -525,6 +546,14 @@ var transform = {
                                 for (i = 0; i < result.length; i++) {
                                     dataArry.push({
                                         visitNum: result[i].visitNum.value,
+                                        campaignName: result[i].key
+                                    });
+                                }
+                                break;
+                            case "orderNum":
+                                for (i = 0; i < result.length; i++) {
+                                    dataArry.push({
+                                        orderNum: result[i].orderNum.value,
                                         campaignName: result[i].key
                                     });
                                 }
@@ -686,6 +715,14 @@ var transform = {
                             for (i = 0; i < result.length; i++) {
                                 dataArry.push({
                                     transformCost: result[i].transformCost.value,
+                                    campaignName: result[i].key
+                                });
+                            }
+                            break;
+                        case "orderNum":
+                            for (i = 0; i < result.length; i++) {
+                                dataArry.push({
+                                    orderNum: result[i].orderNum.value,
                                     campaignName: result[i].key
                                 });
                             }
@@ -910,6 +947,26 @@ var transform = {
                             }
                             quota_data = {
                                 label: "transformCost",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "orderNum":
+                            for (i = 0; i < keyArr.length; i++) {
+                                quotaArry.push(results[i].orderNum.value);
+                            }
+                            quota_data = {
+                                label: "orderNum",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "orderNum_contrast":
+                            for (i = keyArr.length; i < results.length; i++) {
+                                quotaArry.push(results[i].orderNum_contrast.value);
+                            }
+                            quota_data = {
+                                label: "orderNum_contrast",
                                 key: keyArr,
                                 quota: quotaArry
                             };
