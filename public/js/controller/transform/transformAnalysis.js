@@ -191,7 +191,7 @@ define(["./module"], function (ctrs) {
                     def.defData($scope.charts[0].config);
                 }
             };
-            $scope.queryOption_all = ["pv", "uv", "ip","vc","conversions", "crate","transformCost"];
+            $scope.queryOption_all = ["pv", "uv", "ip", "vc", "conversions", "crate", "transformCost"];
             $scope.queryOptions = ["pv", "uv"];
             $scope.charts = [
                 {
@@ -430,8 +430,9 @@ define(["./module"], function (ctrs) {
             };
             $scope.targetSearchSpreadTransform = function (isClicked) {
                 $scope.setShowArray();
-                //$scope.my_init(false);
+
                 if (isClicked) {
+                    $scope.my_init(false);
                     $scope.$broadcast("transformData_ui_grid", {
                         start: $rootScope.start,
                         end: $rootScope.end,

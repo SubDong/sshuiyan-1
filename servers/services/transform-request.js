@@ -1087,7 +1087,7 @@ var createQueryMap = function (key, value) {
                 queryMap = {};
             } else {
                 queryMap = {
-                    city: value
+                    remote: value
                 };
             }
             break;

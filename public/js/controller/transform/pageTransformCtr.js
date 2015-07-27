@@ -198,7 +198,7 @@ define(["./module"], function (ctrs) {
                     def.defData($scope.charts[0].config);
                 }
             };
-            
+
             $scope.queryOption_all = ["pv", "uv", "vc", "nuv", "conversions", "crate", "avgCost", "benefit", "profit", "orderNum", "orderMoney", "orderNumRate"];
             $scope.charts = [
                 {
@@ -365,7 +365,6 @@ define(["./module"], function (ctrs) {
                                 if ($scope.dateShowArray[i].label == key) {
                                     if (isContrastDataByTime) {
                                         $scope.dateShowArray[i].cValue = data[key];
-
                                     } else {
                                         $scope.dateShowArray[i].value = data[key];
                                     }
@@ -435,8 +434,9 @@ define(["./module"], function (ctrs) {
             };
             $scope.targetSearchSpreadPage = function (isClicked) {
                 $scope.setShowArray();
-                //$scope.my_init(false);
+
                 if (isClicked) {
+                    $scope.page_init(false);
                     $scope.$broadcast("transformData_ui_grid", {
                         start: $rootScope.start,
                         end: $rootScope.end,
