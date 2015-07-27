@@ -29,6 +29,8 @@ define(["./module"], function (ctrs) {
                 {consumption_name: "事件点击总数", name: "clickTotal"},
                 {consumption_name: "唯一访客事件数", name: "visitNum"}
             ];
+            $scope.es_checkArray = ["pv", "uv", "vc", "ip", "nuv", "nuvRate", "conversions", "crate", "transformCost", "clickTotal", "visitNum"];
+            $scope.sem_checkArray = ["transformCost"];
             //配置默认指标
             $rootScope.checkedArray = ["clickTotal", "pv", "uv", "ip", "conversions", "crate"];
             $rootScope.searchGridArray = [
@@ -324,7 +326,7 @@ define(["./module"], function (ctrs) {
                 $scope.$broadcast("transformData", {
                     start: $rootScope.start,
                     end: $rootScope.end,
-                    checkedArray: $scope.checkedArray
+                    checkedArray: $scope.checkedArray,
                 });
                 var start = 0;
                 var end = 0;
@@ -350,11 +352,39 @@ define(["./module"], function (ctrs) {
                         for (var i = 0; i < $scope.dateShowArray.length; i++) {
                             for (var key in data) {
                                 if ($scope.dateShowArray[i].label == key) {
-                                    if (isContrastDataByTime) {
-                                        $scope.dateShowArray[i].cValue = data[key];
+                                    if ($scope.dateShowArray[i].label == "transformCost" && Number(data[key]) != 0) {
+                                        var add_i = i;
+                                        var semRequest = "";
+                                        semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + start + "&endOffset=" + end + "&q=cost");
+                                        $q.all([semRequest]).then(function (sem_data) {
+                                            var cost = 0;
+                                            for (var k = 0; k < sem_data.length; k++) {
+                                                for (var c = 0; c < sem_data[k].data.length; c++) {
+                                                    cost += Number(sem_data[k].data[c].cost);
+                                                }
+                                            }
+                                            if (isContrastDataByTime) {
+                                                $scope.dateShowArray[add_i].cValue = (cost / Number(data[key])).toFixed(2).toString() + "元";
 
+                                            } else {
+                                                $scope.dateShowArray[add_i].value = (cost / Number(data[key])).toFixed(2).toString() + "元";
+                                            }
+                                            $scope.transformCost_avg = (cost / Number(data[key])).toFixed(2).toString() + "元";
+                                        });
+                                    } else if ($scope.dateShowArray[i].label == "transformCost" && Number(data[key]) == 0) {
+                                        if (isContrastDataByTime) {
+                                            $scope.dateShowArray[i].cValue = 0;
+
+                                        } else {
+                                            $scope.dateShowArray[i].value = 0;
+                                        }
                                     } else {
-                                        $scope.dateShowArray[i].value = data[key];
+                                        if (isContrastDataByTime) {
+                                            $scope.dateShowArray[i].cValue = data[key];
+
+                                        } else {
+                                            $scope.dateShowArray[i].value = data[key];
+                                        }
                                     }
                                 }
                             }
