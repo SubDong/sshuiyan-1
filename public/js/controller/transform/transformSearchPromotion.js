@@ -156,6 +156,10 @@ define(["./module"], function (ctrs) {
                             }
                         });
                     }
+                    var request = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + timeData.start + "&endOffset=" + timeData.end + "&q=" + timeData.sem_checkedArray.toString().substring(1, timeData.sem_checkedArray.toString().length - 1));
+                    $q.all([request]).then(function (sem_data) {
+
+                    });
                 }
 
                 $scope.gridOptions.data = data;
