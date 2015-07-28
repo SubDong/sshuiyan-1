@@ -43,8 +43,6 @@ define(["./module"], function (ctrs) {
                 "<button onmousemove='getMyButton(this)' class='table_btn'></button>" +
                 "<div class='table_win'>" +
                 "<ul style='color: #45b1ec'>" +
-                "<li><a>查看相关热门搜索词</a></li>" +
-                "<li><a ng-click='grid.appScope.showSearchUrl(row)'>查看搜索来路URL</a></li>" +
                 "<li><a ui-sref='history6' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li>" +
                 "</ul>" +
                 "</div>" +
@@ -186,22 +184,6 @@ define(["./module"], function (ctrs) {
             // 实际请求在 requestService 中
             requestService.refresh([chart]);
         });
-
-        /**
-         * 去重
-         * @returns {Array}
-         */
-        Array.prototype.unique = function(){
-            var res = [];
-            var json = {};
-            for(var i = 0; i < this.length; i++){
-                if(!json[this[i]]){
-                    res.push(this[i]);
-                    json[this[i]] = 1;
-                }
-            }
-            return res;
-        }
 
         $scope.page = {};
         $scope.pages = [];
