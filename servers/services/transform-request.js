@@ -103,10 +103,49 @@ var es_aggs = {
             }
         }
     },
-    "orderNum":{
-        "orderNum":{
-            "value_count":{
-                "field":"p_record"
+    //订单数
+    "orderNum": {
+        "orderNum": {
+            "value_count": {
+                "field": "p_record"
+            }
+        }
+    },
+    //收益　预期每次转化收益*转化次数
+    "benefit": {
+        "benefit": {
+            "term": {
+                "field": "p_income"
+            }
+        },
+        "convertTime": {
+            "value_count": {
+                "field": "_type"
+            }
+        }
+    },
+    //利润　暂时查询出收益
+    "profit": {
+        "profit_benefit": {
+            "term": {
+                "field": "p_income"
+            }
+        },
+        "profit_convertTime": {
+            "value_count": {
+                "field": "_type"
+            }
+        }
+    },
+    "orderNumRate": {
+        "orderNumRate_orderNum": {
+            "value_count": {
+                "field": "p_record"
+            }
+        },
+        "orderNumRate_convertTime": {
+            "value_count": {
+                "field": "_type"
             }
         }
     }
@@ -162,6 +201,12 @@ var transform = {
                                 data[queryOption] = (result.uv_aggs.value / result.new_visitor_aggs.value).toFixed(2) + "%";
 
                             }
+                        } else if (queryOption == "benefit") {
+                            data[queryOption] = Number(result.benefit.buckets[0].key) * Number(results.convertTime.value);
+                        } else if (queryOption == "profit") {
+                            data[queryOption] = Number(result.profit_benefit.buckets[0].key) * Number(results.profit_convertTime.value);
+                        } else if (queryOption == "orderNumRate") {
+                            data[queryOption] = (Number(result.orderNumRate_orderNum.value) / Number(result.orderNumRate_convertTime.value)).toFixed(2) + "%";
                         }
                         else {
                             data[queryOption] = result[queryOption].value
@@ -401,6 +446,48 @@ var transform = {
                                 quota: quotaArry
                             };
                             break;
+                        case "benefit":
+                            for (i = 0; i < results.length; i++) {
+                                for (var key in results[i]) {
+                                    if (key == queryOption) {
+                                        quotaArry.push(Number(results[i].benefit.buckets[0].key) * Number(results[i].convertTime.value));
+                                    }
+                                }
+                            }
+                            quota_data = {
+                                label: "benefit",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "profit":
+                            for (i = 0; i < results.length; i++) {
+                                for (var key in results[i]) {
+                                    if (key == queryOption) {
+                                        quotaArry.push(Number(results[i].profit_benefit.buckets[0].key) * Number(results[i].profit_convertTime.value));
+                                    }
+                                }
+                            }
+                            quota_data = {
+                                label: "profit",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "orderNumRate":
+                            for (i = 0; i < results.length; i++) {
+                                for (var key in results[i]) {
+                                    if (key == queryOption) {
+                                        quotaArry.push(Number(results[i].orderNumRate_orderNum.value) / Number(results[i].orderNumRate_convertTime.value));
+                                    }
+                                }
+                            }
+                            quota_data = {
+                                label: "orderNumRate",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
                         default :
                             break;
                     }
@@ -554,6 +641,30 @@ var transform = {
                                 for (i = 0; i < result.length; i++) {
                                     dataArry.push({
                                         orderNum: result[i].orderNum.value,
+                                        campaignName: result[i].key
+                                    });
+                                }
+                                break;
+                            case "benefit":
+                                for (i = 0; i < result.length; i++) {
+                                    dataArry.push({
+                                        benefit: Number(result[i].benefit.buckets[0].key) * Number(results[i].convertTime.value),
+                                        campaignName: result[i].key
+                                    });
+                                }
+                                break;
+                            case "profit":
+                                for (i = 0; i < result.length; i++) {
+                                    dataArry.push({
+                                        benefit: Number(result[i].profit_benefit.buckets[0].key) * Number(results[i].profit_convertTime.value),
+                                        campaignName: result[i].key
+                                    });
+                                }
+                                break;
+                            case "orderNumRate":
+                                for (i = 0; i < result.length; i++) {
+                                    dataArry.push({
+                                        benefit: Number(result[i].orderNumRate_orderNum.value) / Number(results[i].orderNumRate_convertTime.value),
                                         campaignName: result[i].key
                                     });
                                 }
@@ -723,6 +834,30 @@ var transform = {
                             for (i = 0; i < result.length; i++) {
                                 dataArry.push({
                                     orderNum: result[i].orderNum.value,
+                                    campaignName: result[i].key
+                                });
+                            }
+                            break;
+                        case "benefit":
+                            for (i = 0; i < result.length; i++) {
+                                dataArry.push({
+                                    benefit: Number(result[i].benefit.buckets[0].key) * Number(results[i].convertTime.value),
+                                    campaignName: result[i].key
+                                });
+                            }
+                            break;
+                        case "profit":
+                            for (i = 0; i < result.length; i++) {
+                                dataArry.push({
+                                    profit: Number(result[i].profit_benefit.buckets[0].key) * Number(results[i].profit_convertTime.value),
+                                    campaignName: result[i].key
+                                });
+                            }
+                            break;
+                        case "orderNumRate":
+                            for (i = 0; i < result.length; i++) {
+                                dataArry.push({
+                                    orderNumRate: Number(result[i].orderNumRate_orderNum.value) / Number(results[i].orderNumRate_convertTime.value),
                                     campaignName: result[i].key
                                 });
                             }
@@ -957,6 +1092,66 @@ var transform = {
                             }
                             quota_data = {
                                 label: "orderNum",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "benefit":
+                            for (i = 0; i < keyArr.length; i++) {
+                                quotaArry.push(Number(results[i].benefit.buckets[0].key) * Number(results[i].convertTime.value));
+                            }
+                            quota_data = {
+                                label: "benefit",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "profit":
+                            for (i = 0; i < keyArr.length; i++) {
+                                quotaArry.push(Number(results[i].profit_benefit.buckets[0].key) * Number(results[i].profit_convertTime.value));
+                            }
+                            quota_data = {
+                                label: "profit",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "orderNumRate":
+                            for (i = 0; i < keyArr.length; i++) {
+                                quotaArry.push(Number(results[i].orderNumRate_orderNum.value) / Number(results[i].orderNumRate_convertTime.value));
+                            }
+                            quota_data = {
+                                label: "orderNumRate",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "orderNumRate_contrast":
+                            for (i = keyArr.length; i < results.length; i++) {
+                                quotaArry.push(Number(results[i].orderNumRate_contrast.value) / Number(results[i].orderNumRate_convertTime.value));
+                            }
+                            quota_data = {
+                                label: "orderNumRate_contrast",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "profit_contrast":
+                            for (i = keyArr.length; i < results.length; i++) {
+                                quotaArry.push(Number(results[i].profit_benefit_contrast.buckets[0].key) * Number(results[i].profit_convertTime.value));
+                            }
+                            quota_data = {
+                                label: "profit_contrast",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "benefit_contrast":
+                            for (i = keyArr.length; i < results.length; i++) {
+                                quotaArry.push(Number(results[i].benefit_contrast.buckets[0].key) * Number(results[i].convertTime.value));
+                            }
+                            quota_data = {
+                                label: "benefit_contrast",
                                 key: keyArr,
                                 quota: quotaArry
                             };
