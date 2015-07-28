@@ -326,7 +326,7 @@ define(["./module"], function (ctrs) {
                 $scope.$broadcast("transformData", {
                     start: $rootScope.start,
                     end: $rootScope.end,
-                    checkedArray: $scope.checkedArray,
+                    checkedArray: $scope.checkedArray
                 });
                 var start = 0;
                 var end = 0;
