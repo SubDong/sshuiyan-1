@@ -1,6 +1,6 @@
 define(["./module"], function (ctrs) {
     "use strict";
-    ctrs.controller("adsSourceCtr", function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
+    ctrs.controller("adsSourceCtr", function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants, $cookieStore) {
         // 高级搜索提示
         $scope.visitorSearch = "";
         $scope.areaSearch = "";
@@ -186,16 +186,51 @@ define(["./module"], function (ctrs) {
             // 实际请求在 requestService 中
             requestService.refresh([chart]);
         });
+
+        /**
+         * 去重
+         * @returns {Array}
+         */
+        Array.prototype.unique = function(){
+            var res = [];
+            var json = {};
+            for(var i = 0; i < this.length; i++){
+                if(!json[this[i]]){
+                    res.push(this[i]);
+                    json[this[i]] = 1;
+                }
+            }
+            return res;
+        }
+
         $scope.page = {};
-        $scope.pages = [
-            {name: '全部页面目标'},
-            {name: '全部事件目标'},
-            {name: '所有页面右上角按钮'},
-            {name: '所有页面底部400按钮'},
-            {name: '详情页右侧按钮'},
-            {name: '时长目标'},
-            {name: '访问页数目标'}
-        ];
+        $scope.pages = [];
+        $scope.events = [];
+        $scope.times = [];
+        $scope.convertData = function () {
+            var uid = $cookieStore.get("uid");
+            var event_url = "/config/eventchnage_list?type=search&query={\"uid\":\"" + uid + "\"}";
+            var page_url = "/config/page_conv?type=search&query="+JSON.stringify({uid: uid});
+            //var time_url= "/config/time_conv?type=search&query={\"uid\":\""+uid+"\"}";
+
+            $http({method: 'GET', url: page_url}).success(function (dataConfig) {
+                dataConfig.forEach(function(item){
+                    $scope.pages.push({name: item.target_name});
+                });
+            });
+
+            $http({method: 'GET', url: event_url}).success(function (dataConfig) {
+                dataConfig.forEach(function(item){
+                    $scope.events.push({name: item.event_name});
+                });
+            });
+           /* $http({method: 'GET', url: time_url}).success(function (dataConfig) {
+                dataConfig.forEach(function(item){
+                    $scope.pages.push({time: item._id});
+                });
+            });*/
+        };
+        $scope.convertData();
 
         function GetDateStr(AddDayCount) {
             var dd = new Date();

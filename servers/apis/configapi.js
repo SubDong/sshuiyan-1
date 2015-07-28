@@ -171,7 +171,7 @@ api.get("/site_list", function (req, res) {
 
     //config 鼠标点击配置
     var config_mouse = {
-        mouse_ckick: false,
+        mouse_ckick: false
     };
     var query = url.parse(req.url, true).query;
     var type = query['type'];
