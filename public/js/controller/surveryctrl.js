@@ -42,6 +42,10 @@ define(["./module"], function (ctrs) {
                 $scope.compareArray = [];
                 //$scope.reloadGrid();
                 $scope.initGrid($scope.selectedQuota[0], $scope.selectedQuota[1]);
+                $scope.clickFirst = true;
+                $scope.clickSecond = true;
+                $scope.sevenFirst = false;
+                $scope.sevenSecond = false;
             };
             $scope.open = function ($event) {
                 $scope.reset();

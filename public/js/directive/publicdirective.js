@@ -158,6 +158,10 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     $rootScope.tableTimeEnd = -1;
                     $rootScope.start = -1;
                     $rootScope.end = -1;
+                    scope.clickFirst = true;
+                    scope.clickSecond = true;
+                    scope.sevenFirst = false;
+                    scope.sevenSecond = false;
                     scope.reloadByCalendar("yesterday");
                     $('#reportrange span').html(GetDateStr(-1));
                     $('#reportrange').data('daterangepicker').setStartDate(GetDateStr(-1));
@@ -188,6 +192,10 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     $rootScope.start = -6;
                     $rootScope.end = 0;
                     scope.reloadByCalendar("seven");
+                    scope.clickFirst = false;
+                    scope.clickSecond = false;
+                    scope.sevenFirst = true;
+                    scope.sevenSecond = true;
                     $('#reportrange span').html(GetDateStr(-6) + "至" + GetDateStr(0));
                     $('#reportrange').data('daterangepicker').setStartDate(GetDateStr(-6));
                     $('#reportrange').data('daterangepicker').setEndDate(GetDateStr(0));
