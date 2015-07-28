@@ -29,6 +29,8 @@ define(["./module"], function (ctrs) {
                 {consumption_name: "事件点击总数", name: "clickTotal"},
                 {consumption_name: "唯一访客事件数", name: "visitNum"}
             ];
+            $scope.es_checkArray = ["pv", "uv", "vc", "ip", "nuv", "nuvRate", "conversions", "crate", "transformCost", "clickTotal", "visitNum"];
+            $scope.sem_checkArray = ["transformCost"];
             //配置默认指标
             $rootScope.checkedArray = ["clickTotal", "pv", "uv", "ip", "conversions", "crate"];
             $rootScope.searchGridArray = [
@@ -191,7 +193,7 @@ define(["./module"], function (ctrs) {
                     def.defData($scope.charts[0].config);
                 }
             };
-            $scope.queryOption_all = ["pv", "uv", "ip","vc","conversions", "crate","transformCost"];
+            $scope.queryOption_all = ["pv", "uv", "ip", "vc", "conversions", "crate", "transformCost"];
             $scope.queryOptions = ["pv", "uv"];
             $scope.charts = [
                 {
@@ -260,16 +262,6 @@ define(["./module"], function (ctrs) {
                 $scope.country.selected = "";
                 $scope.continent.selected = "";
             };
-            $scope.page = {};
-            $scope.pages = [
-                {name: '全部页面目标'},
-                {name: '全部事件目标'},
-                {name: '所有页面右上角按钮'},
-                {name: '所有页面底部400按钮'},
-                {name: '详情页右侧按钮'},
-                {name: '时长目标'},
-                {name: '访问页数目标'}
-            ];
             //日历
 
             this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
@@ -334,7 +326,7 @@ define(["./module"], function (ctrs) {
                 $scope.$broadcast("transformData", {
                     start: $rootScope.start,
                     end: $rootScope.end,
-                    checkedArray: $scope.checkedArray
+                    checkedArray: $scope.checkedArray,
                 });
                 var start = 0;
                 var end = 0;
@@ -360,11 +352,39 @@ define(["./module"], function (ctrs) {
                         for (var i = 0; i < $scope.dateShowArray.length; i++) {
                             for (var key in data) {
                                 if ($scope.dateShowArray[i].label == key) {
-                                    if (isContrastDataByTime) {
-                                        $scope.dateShowArray[i].cValue = data[key];
+                                    if ($scope.dateShowArray[i].label == "transformCost" && Number(data[key]) != 0) {
+                                        var add_i = i;
+                                        var semRequest = "";
+                                        semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + start + "&endOffset=" + end + "&q=cost");
+                                        $q.all([semRequest]).then(function (sem_data) {
+                                            var cost = 0;
+                                            for (var k = 0; k < sem_data.length; k++) {
+                                                for (var c = 0; c < sem_data[k].data.length; c++) {
+                                                    cost += Number(sem_data[k].data[c].cost);
+                                                }
+                                            }
+                                            if (isContrastDataByTime) {
+                                                $scope.dateShowArray[add_i].cValue = (cost / Number(data[key])).toFixed(2).toString() + "元";
 
+                                            } else {
+                                                $scope.dateShowArray[add_i].value = (cost / Number(data[key])).toFixed(2).toString() + "元";
+                                            }
+                                            $scope.transformCost_avg = (cost / Number(data[key])).toFixed(2).toString() + "元";
+                                        });
+                                    } else if ($scope.dateShowArray[i].label == "transformCost" && Number(data[key]) == 0) {
+                                        if (isContrastDataByTime) {
+                                            $scope.dateShowArray[i].cValue = 0;
+
+                                        } else {
+                                            $scope.dateShowArray[i].value = 0;
+                                        }
                                     } else {
-                                        $scope.dateShowArray[i].value = data[key];
+                                        if (isContrastDataByTime) {
+                                            $scope.dateShowArray[i].cValue = data[key];
+
+                                        } else {
+                                            $scope.dateShowArray[i].value = data[key];
+                                        }
                                     }
                                 }
                             }
@@ -430,8 +450,9 @@ define(["./module"], function (ctrs) {
             };
             $scope.targetSearchSpreadTransform = function (isClicked) {
                 $scope.setShowArray();
-                //$scope.my_init(false);
+
                 if (isClicked) {
+                    $scope.my_init(false);
                     $scope.$broadcast("transformData_ui_grid", {
                         start: $rootScope.start,
                         end: $rootScope.end,

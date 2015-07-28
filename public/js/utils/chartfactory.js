@@ -572,6 +572,8 @@ var op = {
                     }
                 },
                 emphasis: {
+                    borderWidth: 2,
+                    borderColor: "#fff",
                     label: {
                         show: true,
                         formatter: "{d}%"
