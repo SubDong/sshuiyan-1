@@ -142,7 +142,6 @@ define(["./module"], function (ctrs) {
         };
         refushGridData();
         $scope.onDelete = function (index, grid, row) {
-            console.log(row)
             if (row.treeLevel != 0) {
                 return;
             }
@@ -213,12 +212,12 @@ define(["./module"], function (ctrs) {
                 childData.push({
                     name: pRow.entity.paths[pindex].path_name, steps: pRow.entity.paths[pindex].steps,
                     subGridOptions: {
-                        paginationPageSize: 20,
-                        paginationPageSizes: [20, 50, 100],
+                        enableColumnMenus: false,
                         enablePaginationControls: false,
                         enableGridMenu: false,
-                        enableSorting: false,
                         enableHorizontalScrollbar: 0,
+                        enableSorting: false,
+                        expandableRowHeight: 30,
                         columnDefs: [{name: "步骤名称", field: "step_name", width: '30%'}, {
                             name: "URL",
                             field: "url",
@@ -229,22 +228,21 @@ define(["./module"], function (ctrs) {
                 })
             }
             pRow.entity.subGridOptions = {
-                paginationPageSize: 20,
-                paginationPageSizes: [20, 50, 100],
+                enableColumnMenus: false,
                 enablePaginationControls: false,
                 enableGridMenu: false,
-                enableSorting: false,
                 enableHorizontalScrollbar: 0,
-                expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions' class='grid clearfix secondary_table 'ui-grid-pagination ui-grid-exporter ui-grid-auto-resize></div>",
+                enableSorting: false,
                 expandableRowHeight: 30,
+                expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions' class='grid clearfix secondary_table' ui-grid-exporter ui-grid-auto-resize ></div>",
                 columnDefs: [{name: "路径名称", field: "name", width: '30%'}, {name: "", field: "url", width: '70%'}],
                 data: childData,
                 onRegisterApi: function (gridApi) {
                     $rootScope.gridApiAdmin = gridApi;
                     gridApi.expandable.on.rowExpandedStateChanged($scope, function (childRow) {//展开第二层操作
-                        //console.log(childRow.entity.subGridOptions.data.length+"    "+childRow.entity.steps.length)
-                        childRow.entity.subGridOptions.data.length = 5;
+                        //childRow.entity.subGridOptions.data.length = childRow.entity.steps.length + 1;
                         if (childRow.isExpanded) {
+                            childRow.entity.subGridOptions.data.length = childRow.entity.steps.length + 1;
                             pRow.entity.subGridOptions.data.length = pRow.entity.subGridOptions.data.length + childRow.entity.steps.length + 1;
                         } else {
                             pRow.entity.subGridOptions.data.length = pRow.entity.subGridOptions.data.length - childRow.entity.steps.length - 1;
