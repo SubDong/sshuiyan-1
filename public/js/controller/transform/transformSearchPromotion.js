@@ -134,34 +134,67 @@ define(["./module"], function (ctrs) {
         $scope.init = function (timeData) {
             $scope.gridOptions.data = [];
             $http.get("/api/transform/transformAnalysis?start=" + timeData.start + "&end=" + timeData.end + "&action=event&type=1&searchType=table&queryOptions=" + timeData.checkedArray).success(function (data) {
-                if(timeData.sem_checkedArray.length!=0){
-                    for(var i = 0;i<timeData.sem_checkedArray.length;i++){
-                        if (timeData.sem_checkedArray[i] == "transformCost") {
-                            var semRequest = "";
-                            semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + timeData.start + "&endOffset=" + timeData.end + "&q=cost");
-                            $q.all([semRequest]).then(function (sem_data) {
-                                var transformCost_all = 0;
-                                var k = 0;
-                                for (k = 0; k < data.length; k++) {
-                                    transformCost_all += data[k].transformCost;
-                                }
-                                var cost = 0;
-                                for (k = 0; k < sem_data.length; k++) {
-                                    for (var c = 0; c < sem_data[k].data.length; c++) {
-                                        cost += Number(sem_data[k].data[c].cost);
-                                    }
-                                }
-                                var transformCost_avg = (cost / transformCost_all).toFixed(2).toString() + "元";
-                                for (k = 0; k < data.length; k++) {
-                                    data[k].transformCost = transformCost_avg;
-                                }
-                            });
-                        }else{
-
+                if (timeData.sem_checkedArray.length != 0) {
+                    var semRequest = "";
+                    semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + timeData.start + "&endOffset=" + timeData.end + "&q=cost");
+                    $q.all([semRequest]).then(function (sem_data) {
+                        var cost = 0;
+                        for (var k = 0; k < sem_data.length; k++) {
+                            for (var c = 0; c < sem_data[k].data.length; c++) {
+                                cost += Number(sem_data[k].data[c].cost);
+                            }
                         }
-                    }
+                        timeData.sem_checkedArray.forEach(function (checked, index) {
+                            var k = 0;
+                            switch (timeData.sem_checkedArray[index]) {
+                                case "avgCost":
+                                    var avgCost_all = 0;
+                                    for (k = 0; k < data.length; k++) {
+                                        avgCost_all += data[k].avgCost;
+                                    }
+                                    if (avgCost_all != 0) {
+                                        for (k = 0; k < data.length; k++) {
+                                            data[k].avgCost = 0;
+                                        }
+                                    } else {
+                                        var avgCost_avg = (cost / avgCost_all).toFixed(2).toString();
+                                        for (k = 0; k < data.length; k++) {
+                                            data[k].avgCost = avgCost_avg;
+                                        }
+                                    }
+
+                                    $scope.gridOptions.data = data;
+                                    break;
+                                case "profit":
+                                    var profit_all = 0;
+                                    for (k = 0; k < data.length; k++) {
+                                        profit_all += Number(data[k].profit);
+                                    }
+                                    var profit_avg = (cost - profit_all).toFixed(2).toString();
+                                    for (k = 0; k < data.length; k++) {
+                                        data[k].profit = profit_avg;
+                                    }
+                                    $scope.gridOptions.data = data;
+                                    break;
+                                case "transformCost":
+                                    var transformCost_all = 0;
+                                    for (k = 0; k < data.length; k++) {
+                                        transformCost_all += data[k].transformCost;
+                                    }
+                                    var transformCost_avg = (cost / transformCost_all).toFixed(2).toString();
+                                    for (k = 0; k < data.length; k++) {
+                                        data[k].transformCost = transformCost_avg;
+                                    }
+                                    $scope.gridOptions.data = data;
+                                default :
+                                    $scope.gridOptions.data = data;
+                                    break;
+                            }
+                        });
+                    });
+                } else {
+                    $scope.gridOptions.data = data;
                 }
-                $scope.gridOptions.data = data;
             });
         };
         $scope.$on("transformData", function (e, msg) {
@@ -259,8 +292,8 @@ define(["./module"], function (ctrs) {
             query = query.substring(0, query.length - 1);
             $scope.gridOptions.data = [];
             $http.get("/api/transform/transformAnalysis?start=" + msg.start + "&end=" + msg.end + "&action=event&type=1&searchType=advancedTable&queryOptions={" + query + "}&aggsOptions=" + msg.checkedArray).success(function (data) {
-                if(msg.sem_checkedArray.length!=0){
-                    for(var i = 0;i<msg.sem_checkedArray.length;i++){
+                if (msg.sem_checkedArray.length != 0) {
+                    for (var i = 0; i < msg.sem_checkedArray.length; i++) {
                         if (msg.sem_checkedArray[i] == "transformCost") {
                             var semRequest = "";
                             semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + msg.start + "&endOffset=" + msg.end + "&q=cost");
@@ -281,7 +314,7 @@ define(["./module"], function (ctrs) {
                                     data[k].transformCost = transformCost_avg;
                                 }
                             });
-                        }else{
+                        } else {
 
                         }
                     }

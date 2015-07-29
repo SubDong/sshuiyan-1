@@ -51,7 +51,7 @@ var chartUtils = {
             case "平均访问页数":
                 return "avgPage";
                 break;
-            case "平均转化成本":
+            case "平均转化成本(事件)":
                 return "transformCost";
                 break;
             case "转化率":
@@ -61,6 +61,24 @@ var chartUtils = {
                 return "clickTotal";
             case "唯一访客事件数":
                 return "visitNum";
+            case "平均转化成本(页面)":
+                return "avgCost";
+                break;
+            case "收益":
+                return "benefit";
+                break;
+            case "利润":
+                return "profit";
+                break;
+            case "订单数":
+                return "orderNum";
+                break;
+            case "订单金额":
+                return "orderMoney";
+                break;
+            case "订单转化率":
+                return "orderNumRate";
+                break;
             default :
                 return "pv";
         }
@@ -103,7 +121,10 @@ var chartUtils = {
                 return "平均访问页数";
                 break;
             case "transformCost":
-                return "平均转化成本";
+                return "平均转化成本(事件)";
+                break;
+            case "avgCost":
+                return "平均转化成本(页面)";
                 break;
             case "crate":
                 return "转化率";
@@ -112,6 +133,21 @@ var chartUtils = {
                 return "事件点击总数";
             case "visitNum":
                 return "唯一访客事件数";
+            case "benefit":
+                return "收益";
+                break;
+            case "profit":
+                return "利润";
+                break;
+            case "orderNum":
+                return "订单数";
+                break;
+            case "orderMoney":
+                return "订单金额";
+                break;
+            case "orderNumRate":
+                return "订单转化率";
+                break;
             default :
                 return "浏览量(PV)";
         }
@@ -206,7 +242,7 @@ var chartUtils = {
         if (config.keyFormat == "day") {
             var time = [];
             json.forEach(function (e) {
-                var _time=new Date(e.key).Format("yyyy-MM-dd hh:mm:ss");
+                var _time = new Date(e.key).Format("yyyy-MM-dd hh:mm:ss");
                 if ((_times[1] - _times[0]) == 0) {
                     config.keyFormat = "none";
                     time.push(Number(_time.substring(10, 13)));
@@ -226,7 +262,7 @@ var chartUtils = {
         } else {
             var time = [];
             json.forEach(function (e) {
-                var _time=new Date(e.key).Format("yyyy-MM-dd hh:mm:ss");
+                var _time = new Date(e.key).Format("yyyy-MM-dd hh:mm:ss");
                 if ((_times[1] - _times[0]) == 0) {
                     time.push(Number(_time.substring(10, 13)));
                 } else {
@@ -550,7 +586,7 @@ var chartUtils = {
         esJson.forEach(function (a) {
             var formatKey = [];
             a.key.forEach(function (e) {
-                e=new Date(e).Format("yyyy-MM-dd hh:mm:ss")
+                e = new Date(e).Format("yyyy-MM-dd hh:mm:ss")
                 formatKey.push(e.substring(0, 10));
             });
             a.key = formatKey;
@@ -838,7 +874,7 @@ var chartUtils = {
             chart_result.push(_semData);
         } else {
             if (esDate) {
-                esDate=new Date(esDate).Format("yyyy-MM-dd hh:mm:ss")
+                esDate = new Date(esDate).Format("yyyy-MM-dd hh:mm:ss")
                 chart_result.push({
                     label: chartUtils.convertChinese(quota),
                     quota: [0],
@@ -866,7 +902,7 @@ var chartUtils = {
         _esData["label"] = chartUtils.convertChinese(estype);
         _esData["quota"] = [totalCount];
         if (esDate) {
-            esDate= new Date(esDate).Format("yyyy-MM-dd hh:mm:ss");
+            esDate = new Date(esDate).Format("yyyy-MM-dd hh:mm:ss");
             _esData["key"] = [esDate.substring(0, 10)];
         } else {
             _esData["key"] = [''];

@@ -23,7 +23,7 @@ define(["./module"], function (ctrs) {
             $scope.transform = [
                 {consumption_name: '转化次数', name: 'conversions'},
                 {consumption_name: '转化率', name: 'crate'},
-                {consumption_name: '平均转化成本', name: 'transformCost'}
+                {consumption_name: '平均转化成本(事件)', name: 'transformCost'}
             ];
             $scope.eventParameter = [
                 {consumption_name: "事件点击总数", name: "clickTotal"},
@@ -343,7 +343,8 @@ define(["./module"], function (ctrs) {
                     start: $rootScope.start,
                     end: $rootScope.end,
                     checkedArray: $scope.es_checkedArray,
-                    sem_checkedArray: $scope.sem_checkedArray
+                    sem_checkedArray: $scope.sem_checkedArray,
+                    all_checked:$rootScope.checkedArray
                 });
                 var start = 0;
                 var end = 0;
@@ -386,7 +387,6 @@ define(["./module"], function (ctrs) {
                                             } else {
                                                 $scope.dateShowArray[add_i].value = (cost / Number(data[key])).toFixed(2).toString() + "元";
                                             }
-                                            $scope.transformCost_avg = (cost / Number(data[key])).toFixed(2).toString() + "元";
                                         });
                                     } else if ($scope.dateShowArray[i].label == "transformCost" && Number(data[key]) == 0) {
                                         if (isContrastDataByTime) {
@@ -565,12 +565,14 @@ define(["./module"], function (ctrs) {
                     }
                 }
                 if (isClicked) {
+                    $scope.setShowArray();
                     $scope.my_init(false);
                     $scope.$broadcast("transformData_ui_grid", {
                         start: $rootScope.start,
                         end: $rootScope.end,
                         checkedArray: $scope.es_checkedArray,
-                        sem_checkedArray: $scope.sem_checkedArray
+                        sem_checkedArray: $scope.sem_checkedArray,
+                        all_checked:$rootScope.checkedArray
                     });
                 } else {
                     //访客过滤数据获取
@@ -630,7 +632,8 @@ define(["./module"], function (ctrs) {
                         end: $rootScope.end,
                         checkedData: checkedData,
                         checkedArray: $scope.es_checkedArray,
-                        sem_checkedArray: $scope.sem_checkedArray
+                        sem_checkedArray: $scope.sem_checkedArray,
+                        all_checked:$rootScope.checkedArray
                     });
                 }
             };

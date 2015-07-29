@@ -23,7 +23,7 @@ define(["./module"], function (ctrs) {
             $scope.transform = [
                 {consumption_name: '转化次数', name: 'conversions'},
                 {consumption_name: '转化率', name: 'crate'},
-                {consumption_name: '平均转化成本', name: 'avgCost'},
+                {consumption_name: '平均转化成本(页面)', name: 'avgCost'},
                 {consumption_name: '收益', name: 'benefit'},
                 {consumption_name: '利润', name: 'profit'}
             ];
@@ -32,8 +32,8 @@ define(["./module"], function (ctrs) {
                 {consumption_name: "订单金额", name: "orderMoney"},
                 {consumption_name: "订单转化率", name: "orderNumRate"}
             ];
-            $scope.es_checkArray = ["pv", "uv", "vc", "ip", "nuv", "nuvRate", "conversions", "crate", "avgCost", "orderNum", "benefit", "profit"];
-            $scope.sem_checkArray = ["avgCost", "benefit", "profit", "orderMoney"];
+            $scope.es_checkArray = ["pv", "uv", "vc", "ip", "nuv", "nuvRate", "conversions", "crate", "avgCost", "orderNum", "benefit", "profit", "orderNumRate"];
+            $scope.sem_checkArray = ["avgCost", "profit", "orderMoney"];
             //配置默认指标
             $rootScope.checkedArray = ["pv", "uv", "ip", "conversions", "vc", "crate"];
             $rootScope.searchGridArray = [
@@ -325,39 +325,15 @@ define(["./module"], function (ctrs) {
                 //地狱过滤样式数据初始化
                 $scope.city.selected = "";
             };
-            $scope.page_sem_init = function (start, end) {
-                console.log(SEM_API_URL);
-                console.log($rootScope.user);
-                console.log($rootScope.baiduAccount);
-                var semRequest = "";
-                semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + start + "&endOffset=" + end + "&q=cost,benefit,profit,orderMoney,orderNumRate");
-                $q.all([semRequest]).then(function (final_result) {
-                    console.log(final_result)
-                    //final_result[0].data.sort(chartUtils.by(quotas[0]));
-                    //var total_result = chartUtils.getSemBaseData(quotas, final_result, "campaignName");
-                    //var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
-                    //chart.showLoading({
-                    //    text: "正在努力的读取数据中..."
-                    //});
-                    //$scope.charts[0].config.instance = chart;
-                    //if (renderLegend) {
-                    //    util.renderLegend(chart, $scope.charts[0].config);
-                    //    Custom.initCheckInfo();
-                    //}
-                    //cf.renderChart(total_result, $scope.charts[0].config);
-                });
-            };
-            $scope.checkedArray = [];
-            $scope.sem_checkedArray = [];
             $scope.page_init = function (isContrastDataByTime) {
-                $scope.es_checkArray = ["pv", "uv", "vc", "ip", "nuv", "nuvRate", "conversions", "crate", "avgCost", "orderNum"];
-                $scope.sem_checkArray = ["avgCost", "benefit", "profit", "orderMoney", "orderNumRate"];
+                $scope.es_checkArray = ["pv", "uv", "vc", "ip", "nuv", "nuvRate", "conversions", "crate", "avgCost", "orderNum", "benefit", "profit", "orderNumRate"];
+                $scope.sem_checkArray = ["avgCost", "profit", "orderMoney"];
                 $scope.es_checkedArray = [];
                 $scope.sem_checkedArray = [];
                 for (var i = 0; i < $rootScope.checkedArray.length; i++) {
                     for (var k = 0; k < $scope.es_checkArray.length; k++) {
                         if ($rootScope.checkedArray[i] == $scope.es_checkArray[k]) {
-                            $scope.checkedArray.push($rootScope.checkedArray[i]);
+                            $scope.es_checkedArray.push($rootScope.checkedArray[i]);
                         }
                     }
                     for (var k = 0; k < $scope.sem_checkArray.length; k++) {
@@ -369,8 +345,9 @@ define(["./module"], function (ctrs) {
                 $scope.$broadcast("transformData", {
                     start: $rootScope.start,
                     end: $rootScope.end,
-                    checkedArray: $scope.checkedArray,
-                    sem_checkedArray: $scope.sem_checkedArray
+                    checkedArray: $scope.es_checkedArray,
+                    sem_checkedArray: $scope.sem_checkedArray,
+                    all_checked: $rootScope.checkedArray
                 });
                 var start = 0;
                 var end = 0;
@@ -389,17 +366,73 @@ define(["./module"], function (ctrs) {
                     $scope.charts[0].config.legendAllowCheckCount = 2;
                     $scope.dataTable(isContrastDataByTime, "day", ["pv", "uv"]);
                 }
-                $scope.page_sem_init(start, end);
                 $scope.isCompared = isContrastDataByTime;
                 $http.get("/api/transform/transformAnalysis?start=" + start + "&end=" + end + "&action=event&type=1&searchType=initAll&queryOptions=" + $scope.es_checkedArray).success(function (data) {
                     if (data != null || data != "") {
-                        for (var i = 0; i < $scope.dateShowArray.length; i++) {
-                            for (var key in data) {
-                                if ($scope.dateShowArray[i].label == key) {
-                                    if (isContrastDataByTime) {
-                                        $scope.dateShowArray[i].cValue = data[key];
-                                    } else {
-                                        $scope.dateShowArray[i].value = data[key];
+                        if ($scope.sem_checkedArray.length != 0) {
+                            var semRequest = "";
+                            semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + start + "&endOffset=" + end + "&q=cost");
+                            $q.all([semRequest]).then(function (sem_data) {
+                                var cost = 0;
+                                var k = 0;
+                                for (k = 0; k < sem_data.length; k++) {
+                                    for (var c = 0; c < sem_data[k].data.length; c++) {
+                                        cost += Number(sem_data[k].data[c].cost);
+                                    }
+                                }
+                                $scope.dateShowArray.forEach(function (checked, index) {
+                                    switch ($scope.dateShowArray[index].label) {
+                                        case "avgCost":
+                                            for (var key in data) {
+                                                if ("avgCost" == key) {
+                                                    if (isContrastDataByTime) {
+                                                        if (Number(data["avgCost"] != 0))
+                                                            $scope.dateShowArray[index].cValue = (cost / Number(data["avgCost"])).toFixed(2).toString();
+                                                        $scope.dateShowArray[index].cValue = "0";
+                                                    } else {
+                                                        if (Number(data["avgCost"] != 0))
+                                                            $scope.dateShowArray[index].value = (cost / Number(data["avgCost"])).toFixed(2).toString();
+                                                        $scope.dateShowArray[index].value = "0";
+                                                    }
+                                                }
+                                            }
+                                            break;
+                                        case "profit":
+                                            for (var key in data) {
+                                                if ("profit" == key) {
+                                                    if (isContrastDataByTime) {
+                                                        $scope.dateShowArray[index].cValue = (Number(data["profit"]) - cost);
+                                                    } else {
+                                                        $scope.dateShowArray[index].value = (Number(data["profit"]) - cost);
+                                                    }
+                                                }
+                                            }
+                                            break;
+                                        default :
+                                            for (var key in data) {
+                                                if ($scope.dateShowArray[index].label == key) {
+                                                    if (isContrastDataByTime) {
+                                                        $scope.dateShowArray[index].cValue = data[key];
+
+                                                    } else {
+                                                        $scope.dateShowArray[index].value = data[key];
+                                                    }
+                                                }
+                                            }
+                                            break;
+                                    }
+                                });
+
+                            });
+                        } else {
+                            for (var c = 0; c < $scope.dateShowArray.length; c++) {
+                                for (var key in data) {
+                                    if ($scope.dateShowArray[c].label == key) {
+                                        if (isContrastDataByTime) {
+                                            $scope.dateShowArray[c].cValue = data[key];
+                                        } else {
+                                            $scope.dateShowArray[c].value = data[key];
+                                        }
                                     }
                                 }
                             }
@@ -444,8 +477,6 @@ define(["./module"], function (ctrs) {
                         Custom.initCheckInfo();
                     });
                 } else {
-                    //$scope.charts[0].config.legendDefaultChecked = [0,1];
-                    //$scope.charts[0].config.legendAllowCheckCount = 2;
                     $http.get("/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&action=event&type=1&searchType=dataTable&showType=" + showType + "&queryOptions=" + queryOptions).success(function (data) {
                         var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
                         chart.showLoading({
@@ -466,14 +497,31 @@ define(["./module"], function (ctrs) {
 
             };
             $scope.targetSearchSpreadPage = function (isClicked) {
-                $scope.setShowArray();
-
+                $scope.es_checkArray = ["pv", "uv", "vc", "ip", "nuv", "nuvRate", "conversions", "crate", "avgCost", "orderNum", "benefit", "profit", "orderNumRate"];
+                $scope.sem_checkArray = ["avgCost", "benefit", "profit", "orderMoney"];
+                $scope.es_checkedArray = [];
+                $scope.sem_checkedArray = [];
+                for (var i = 0; i < $rootScope.checkedArray.length; i++) {
+                    for (var k = 0; k < $scope.es_checkArray.length; k++) {
+                        if ($rootScope.checkedArray[i] == $scope.es_checkArray[k]) {
+                            $scope.es_checkedArray.push($rootScope.checkedArray[i]);
+                        }
+                    }
+                    for (var k = 0; k < $scope.sem_checkArray.length; k++) {
+                        if ($rootScope.checkedArray[i] == $scope.sem_checkArray[k]) {
+                            $scope.sem_checkedArray.push($rootScope.checkedArray[i]);
+                        }
+                    }
+                }
                 if (isClicked) {
+                    $scope.setShowArray();
                     $scope.page_init(false);
                     $scope.$broadcast("transformData_ui_grid", {
                         start: $rootScope.start,
                         end: $rootScope.end,
-                        checkedArray: $scope.checkedArray
+                        checkedArray: $scope.es_checkedArray,
+                        sem_checkedArray: $scope.sem_checkedArray,
+                        all_checked: $rootScope.checkedArray
                     });
                 } else {
                     //访客过滤数据获取
@@ -527,14 +575,13 @@ define(["./module"], function (ctrs) {
                         start: $rootScope.start,
                         end: $rootScope.end,
                         checkedData: checkedData,
-                        checkedArray: $scope.checkedArray,
-                        sem_checkedArray: $scope.sem_checkedArray
+                        checkedArray: $scope.es_checkedArray,
+                        sem_checkedArray: $scope.sem_checkedArray,
+                        all_checked: $rootScope.checkedArray
                     });
                 }
             };
             $scope.page_init(false);
-            //Custom.initCheckInfo();//页面check样式js调用
-
         }
     );
 });

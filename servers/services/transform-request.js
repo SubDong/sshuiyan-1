@@ -114,7 +114,7 @@ var es_aggs = {
     //收益　预期每次转化收益*转化次数
     "benefit": {
         "benefit": {
-            "term": {
+            "terms": {
                 "field": "p_income"
             }
         },
@@ -127,7 +127,7 @@ var es_aggs = {
     //利润　暂时查询出收益
     "profit": {
         "profit_benefit": {
-            "term": {
+            "terms": {
                 "field": "p_income"
             }
         },
@@ -146,6 +146,13 @@ var es_aggs = {
         "orderNumRate_convertTime": {
             "value_count": {
                 "field": "_type"
+            }
+        }
+    },
+    "avgCost":{
+        "avgCost": {
+            "value_count": {
+                "field": "tt"
             }
         }
     }
@@ -690,6 +697,14 @@ var transform = {
                                     });
                                 }
                                 break;
+                            case "avgCost":
+                                for (i = 0; i < result.length; i++) {
+                                    dataArry.push({
+                                        avgCost: result[i].avgCost.value,
+                                        campaignName: result[i].key
+                                    });
+                                }
+                                break;
                             case "visitNum":
                                 for (i = 0; i < result.length; i++) {
                                     dataArry.push({
@@ -709,54 +724,54 @@ var transform = {
                             case "benefit":
                                 for (i = 0; i < result.length; i++) {
                                     isExit = false;
-                                    if(results[i].benefit.buckets.length==0){
+                                    if(result[i].benefit.buckets.length==0){
                                         dataArry.push({
                                             benefit: "0",
                                             campaignName: result[i].key
                                         });
                                     }else{
-                                        for(i = 0;i<results[i].benefit.buckets.length;i++){
-                                            if(results[i].benefit.buckets[i]!=""){
+                                        for(i = 0;i<result[i].benefit.buckets.length;i++){
+                                            if(result[i].benefit.buckets[i]!=""){
                                                 dataArry.push({
-                                                    benefit: Number(result[i].benefit.buckets[0].key) * Number(results[i].convertTime.value),
+                                                    benefit: Number(result[i].benefit.buckets[0].key) * Number(result[i].convertTime.value),
                                                     campaignName: result[i].key
                                                 });
                                                 isExit = true;
                                             }
                                         }
-                                        if(!isExit){
-                                            dataArry.push({
-                                                benefit: "-",
-                                                campaignName: result[i].key
-                                            });
-                                        }
+                                        //if(!isExit){
+                                        //    dataArry.push({
+                                        //        benefit: "-",
+                                        //        campaignName: result[i].key
+                                        //    });
+                                        //}
                                     }
                                 }
                                 break;
                             case "profit":
                                 for (i = 0; i < result.length; i++) {
                                     isExit = false;
-                                    if(results[i].profit_benefit.buckets.length==0){
+                                    if(result[i].profit_benefit.buckets.length==0){
                                         dataArry.push({
-                                            profit_benefit: "0",
+                                            profit: "0",
                                             campaignName: result[i].key
                                         });
                                     }else{
-                                        for(i = 0;i<results[i].profit_benefit.buckets.length;i++){
-                                            if(results[i].profit_benefit.buckets[i]!=""){
+                                        for(i = 0;i<result[i].profit_benefit.buckets.length;i++){
+                                            if(result[i].profit_benefit.buckets[i]!=""){
                                                 dataArry.push({
-                                                    profit_benefit: Number(result[i].profit_benefit.buckets[0].key) * Number(results[i].profit_convertTime.value),
+                                                    profit: Number(result[i].profit_benefit.buckets[0].key) * Number(result[i].profit_convertTime.value),
                                                     campaignName: result[i].key
                                                 });
                                                 isExit = true;
                                             }
                                         }
-                                        if(!isExit){
-                                            dataArry.push({
-                                                profit_benefit: "-",
-                                                campaignName: result[i].key
-                                            });
-                                        }
+                                        //if(!isExit){
+                                        //    dataArry.push({
+                                        //        profit_benefit: "-",
+                                        //        campaignName: result[i].key
+                                        //    });
+                                        //}
                                     }
                                 }
                                 break;
