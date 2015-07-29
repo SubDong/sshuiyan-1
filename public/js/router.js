@@ -101,7 +101,12 @@ define(["angular", "./app"], function (angular, myApp) {
                 })
                 .state('urlspeed', {
                     url: "/extension/urlspeed",
-                    templateUrl: "../extension/urlspeed.html"
+                    templateUrl: "../extension/urlspeed.html",
+                    resolve: {
+                        load: loadDeps([
+                            "controller/urlspeedctr"
+                        ])
+                    }
                 })
                 .state('urlspeed_m', {
                     url: "/extension/urlspeed_m",
@@ -161,25 +166,25 @@ define(["angular", "./app"], function (angular, myApp) {
 
             // transform转化分析
             $stateProvider
-            .state('transformAnalysis', {
-                url: '/transform/transformAnalysis',
-                templateUrl: '../transform/transformAnalysis.html',
-                resolve: {
-                    load: loadDeps([
-                        "controller/transform/transformAnalysis",
-                        "controller/transform/transformSearchPromotion"
-                    ])
-                }
-            })
-            .state('pageTransform', {
-                url: "/transform/pageTransform",
-                templateUrl: "./transform/pageTransform.html",
-                resolve: {
-                    load: loadDeps([
-                        'controller/transform/pageTransformCtr'
-                    ])
-                }
-            });
+                .state('transformAnalysis', {
+                    url: '/transform/transformAnalysis',
+                    templateUrl: '../transform/transformAnalysis.html',
+                    resolve: {
+                        load: loadDeps([
+                            "controller/transform/transformAnalysis",
+                            "controller/transform/transformSearchPromotion"
+                        ])
+                    }
+                })
+                .state('pageTransform', {
+                    url: "/transform/pageTransform",
+                    templateUrl: "./transform/pageTransform.html",
+                    resolve: {
+                        load: loadDeps([
+                            'controller/transform/pageTransformCtr'
+                        ])
+                    }
+                });
 //            指定广告跟踪
             $stateProvider
                 .state('adsSource', {
@@ -442,7 +447,7 @@ define(["angular", "./app"], function (angular, myApp) {
                     }
                 })
                 .state('provincemap', {
-                    url:'/visitor/provincemap:data',
+                    url: '/visitor/provincemap:data',
                     templateUrl: "../visitor/provincemap.html",
                     resolve: {
                         load: loadDeps([

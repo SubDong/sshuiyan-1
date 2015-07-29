@@ -251,11 +251,63 @@ var initial = {
                     }
                 }
             }
-        }
+        };
         es.search(request, function (err, response) {
             var data = [];
             if (response != undefined && response.aggregations != undefined && response.aggregations.result != undefined) {
                 callbackFn(response);
+            } else {
+                callbackFn(data);
+            }
+        });
+    },
+    popularizeURL: function (es, index, type, filters, trackId, callbackFn) {
+        var newfilter = [{
+            "terms": {
+                "Host": [trackId]
+            }
+        }];
+        if(filters != null){
+            filters.forEach(function(filter){
+                newfilter.push({"terms":filter})
+            });
+        }
+        var request = {
+            "index": index.toString(),
+            "type": type,
+            "body": {
+                "query": {
+                    "bool": {
+                        "must":newfilter
+                    }
+                },
+                "size": 0,
+                "aggs": {
+                    "result": {
+                        "terms": {
+                            "script": "doc['loc'].value",
+                            "size": 0
+                        },
+                        "aggs": {
+                            "ucv": {
+                                "cardinality": {
+                                    "field": "tt"
+                                }
+                            },
+                            "dms_time": {
+                                "sum": {
+                                    "field": "dms"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+        es.search(request, function (err, response) {
+            var data = [];
+            if (response != undefined && response.aggregations != undefined && response.aggregations.result != undefined) {
+                callbackFn(response.aggregations.result.buckets);
             } else {
                 callbackFn(data);
             }

@@ -970,8 +970,17 @@ define(["app"], function (app) {
             }
             if ($rootScope.tableSwitch.isJudge == undefined) $scope.isJudge = true;
             if ($rootScope.tableSwitch.isJudge) $rootScope.tableSwitch.tableFilter = undefined;
-            if ($rootScope.tableSwitch.number == 4) {
-                console.log($rootScope.tableSwitch.tableFilter);
+            if ($rootScope.tableSwitch.number == 5) {//推广URL速度
+                $http({
+                    method: 'GET',
+                    url: "/api/getUrlspeed/?start=" + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&trackId=" + $rootScope.siteTrackId
+                }).success(function (data, status) {
+                    if (data.length <= 0) {
+                        var result = [{"loc": "暂无数据"}];
+                        $scope.gridOptions.data = result;
+                    }
+                });
+            } else if ($rootScope.tableSwitch.number == 4) {//推广方式
                 var fi = $rootScope.tableSwitch.tableFilter != undefined && $rootScope.tableSwitch.tableFilter != null ? "&q=" + encodeURIComponent($rootScope.tableSwitch.tableFilter) : "";
                 var searchUrl = SEM_API_URL + "/es/search_word?tid=" + trackid + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + fi;
                 $http({
@@ -1164,15 +1173,14 @@ define(["app"], function (app) {
                 var a = item["field"];
                 if (item["cellTemplate"] == undefined) {
                     item["cellTemplate"] = "<ul class='contrastlist'><li>{{grid.appScope.getContrastInfo(grid, row,0,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,1,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,2,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,3,'" + a + "')}}</li></ul>";
-
-                    item["footerCellTemplate"] = "<ul class='contrastlist'><li>当页汇总</li></ul>"
+                    item["footerCellTemplate"] = "<ul class='contrastlist'><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),0)}}</li><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),1)}}</li><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),2)}}</li><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),3)}}</li></ul>";
                 }
             });
             $scope.gridOptions.rowHeight = 95;
             $scope.gridOptions.columnFooterHeight = 95;
             var time = chartUtils.getTimeOffset(start, end);
             var startTime = time[0];
-            var endTime = time[0] + ($rootScope.tableTimeEnd - $rootScope.tableTimeStart) + 1;
+            var endTime = time[0] + ($rootScope.tableTimeEnd - $rootScope.tableTimeStart);
             $rootScope.$broadcast("ssh_load_compare_datashow", startTime, endTime);
             var dateTime1 = chartUtils.getSetOffTime($rootScope.tableTimeStart, $rootScope.tableTimeEnd);
             var dateTime2 = chartUtils.getSetOffTime(startTime, endTime);
@@ -1190,7 +1198,7 @@ define(["app"], function (app) {
                                     dataObj[tt] = (isNaN(bili) ? 0 : bili) + "%";
                                     a[tt] = "　" + "," + a[tt] + "," + contrast[i][tt] + "," + dataObj[tt]
                                 });
-                                a[target] = a[target] + "," + ($rootScope.startString != undefined ? $rootScope.startString : dateTime1[0] + " 至 " + dateTime1[1]) + "," + (dateTime2[0] + " 至 " + dateTime2[1]) + "," + "变化率";
+                                a[target] = a[target] + "," + ($rootScope.startString != undefined ? $rootScope.startString : dateTime1[0] == dateTime1[1] ? dateTime1[0] + "," + dateTime2[0] + "," + "变化率" : dateTime1[0] + " 至 " + dateTime1[1]) + "," + (dateTime2[0] + " 至 " + dateTime2[1]) + "," + "变化率";
                                 dataArray.push(a);
                                 is = 0;
                                 return;
@@ -1203,7 +1211,7 @@ define(["app"], function (app) {
                                 dataObj[tt] = "--";
                                 a[tt] = "　" + "," + a[tt] + "," + "--" + "," + "--"
                             });
-                            a[target] = a[target] + "," + ($rootScope.startString != undefined ? $rootScope.startString : dateTime1[0] + " 至 " + dateTime1[1]) + "," + (dateTime2[0] + " 至 " + dateTime2[1]) + "," + "变化率"
+                            a[target] = a[target] + "," + ($rootScope.startString != undefined ? $rootScope.startString : dateTime1[0] == dateTime1[1] ? dateTime1[0] + "," + dateTime2[0] + "," + "变化率" : dateTime1[0] + " 至 " + dateTime1[1]) + "," + (dateTime2[0] + " 至 " + dateTime2[1]) + "," + "变化率"
                             dataArray.push(a);
                         }
                     });
@@ -1271,6 +1279,7 @@ define(["app"], function (app) {
                                 data.forEach(function (item, i) {
                                     item.period = util.getYearWeekState(item.period);
                                 });
+
                                 cabk(data);
                             } else {
                                 cabk(data);
@@ -1285,7 +1294,8 @@ define(["app"], function (app) {
                                     var obj = maps[infoKey];
                                     if (!obj) {
                                         obj = {};
-                                        var dataString = (infoKey.toString().length >= 2 ? "" : "0");
+                                        var dataString = (infoKey.toString()
+                                            .length >= 2 ? "" : "0");
                                         obj["period"] = dataString + infoKey + ":00 - " + dataString + infoKey + ":59";
                                         maps[infoKey] = obj;
                                     }
@@ -1315,7 +1325,8 @@ define(["app"], function (app) {
                 if (row.isExpanded && $rootScope.tableSwitch.dimen != false) {
                     if (row.entity[$rootScope.tableSwitch.latitude.field] == "搜索引擎" && $rootScope.tableSwitch.latitude.field == "rf_type")$rootScope.tableSwitch.dimen = "se";
                     if (row.entity[$rootScope.tableSwitch.latitude.field] == "外部链接" && $rootScope.tableSwitch.latitude.field == "rf_type")$rootScope.tableSwitch.dimen = "rf";
-                    if ($scope.webSite == 1)$rootScope.tableSwitch.dimen = "rf";
+                    if ($scope.webSite == 1)$rootScope.tableSwitch.dimen =
+                        "rf";
                     var returnFilter = angular.copy($rootScope.tableSwitch.tableFilter);
                     var entity = row.entity[$rootScope.tableSwitch.latitude.field];
                     var newEntity = row.entity[$rootScope.tableSwitch.latitude.field].split(",");
@@ -1376,8 +1387,6 @@ define(["app"], function (app) {
         };
         //数据对比分割数据
         $scope.getContrastInfo = function (grid, row, number, fieldData) {
-            console.log(row.entity[fieldData] + "");
-            console.log((row.entity[fieldData] + "").split(","));
             if (fieldData != undefined || fieldData != "undefined") {
                 var a = (row.entity[fieldData] + "").split(",");
                 if (number == 0) {
@@ -1475,13 +1484,55 @@ define(["app"], function (app) {
                 $rootScope.tableSwitch.tableFilter = "[{\"" + $rootScope.tableSwitch.latitude.field + "\":[\"" + getField(a, $rootScope.tableSwitch.latitude.field) + "\"]}" + newFileter + "]";
             }
         };
+        $scope.getCourFooterData = function (a, option, number) {
+            console.log(a);
+            var rast = [0.0, 0.0];
+            var rastString = ["", ""];
+            var bhlString = "";
+            option.forEach(function (items, x) {
+                var itemSplDatas = (items.entity[a.col.field] + "").split(",");
+                if (itemSplDatas[3] == "变化率") {
+                    rastString[0] = itemSplDatas[1];
+                    rastString[1] = itemSplDatas[2];
+                    bhlString = "变化率";
+                } else {
+                    rast[0] += ((itemSplDatas[1] + "").replace("%", "") == "--" || (itemSplDatas[1] + "").replace("%", "") == "　" ? 0.0 : parseFloat(((itemSplDatas[1] + "").replace("%", ""))));
+                    rast[1] += ((itemSplDatas[2] + "").replace("%", "") == "--" || (itemSplDatas[2] + "").replace("%", "") == "　" ? 0.0 : parseFloat(((itemSplDatas[2] + "").replace("%", ""))));
+                }
+            });
+            var str
+            if (a.renderIndex == 1) {
+                str = "当页汇总";
+            } else {
+                str = " ";
+            }
+            rast[0] = (rast[0] / option.length).toFixed(2) + (a.col.field == "outRate" || a.col.field == "nuvRate" || a.col.field == "arrivedRate" ? "%" : "");
+            rast[1] = (rast[1] / option.length).toFixed(2) + (a.col.field == "outRate" || a.col.field == "nuvRate" || a.col.field == "arrivedRate" ? "%" : "");
+
+            var bhl = (((parseFloat(((rast[0] + "").replace("%", ""))) - parseFloat(((rast[1] + "").replace("%", "")))) / parseFloat(((rast[1] + "").replace("%", "")))) * 100 ).toFixed(2) + "%";
+
+            switch (number) {
+                case 0:
+                    return str;
+                case 1:
+                    return rastString[0] != "" ? rastString[0] : rast[0];
+                case 2:
+                    return rastString[1] != "" ? rastString[1] : rast[1];
+                case 3:
+                    return bhlString != "" ? bhlString : bhl;
+                default :
+                    return "--";
+            }
+        }
         //得到表格底部数据
         $scope.getFooterData = function (a, option, number) {
+            console.log(a);
             var returnData = [0, 0, 0, 0];
             var spl = 0;
             var newSpl = [0, 0, 0];
             var newitemSplData = [0, 0, 0, 0];
             if (option.length > 0) {
+
                 option.forEach(function (item, i) {
                     var itemSplData = (item.entity[a.col.field] + "").split(",");
                     if (itemSplData.length >= 4) {
@@ -1499,9 +1550,9 @@ define(["app"], function (app) {
                         if (a.col.field == "avgTime") {
                             if (item.entity[a.col.field] != undefined && item.entity[a.col.field] != 0 && item.entity[a.col.field] != "--") {
                                 spl = item.entity[a.col.field].split(":");
-                                newSpl[0] += parseInt(spl[0] / option.length) + "";
-                                newSpl[1] += parseInt(spl[1] / option.length) + "";
-                                newSpl[2] += parseInt(spl[2] / option.length) + "";
+                                newSpl[0] += parseInt(spl[0]) + "";
+                                newSpl[1] += parseInt(spl[1]) + "";
+                                newSpl[2] += parseInt(spl[2]) + "";
                             } else if (item.entity[a.col.field] == 0) {
                                 item.entity[a.col.field] = "00:00:00"
                             }
@@ -1549,6 +1600,7 @@ define(["app"], function (app) {
 
                     }
                 }
+
                 switch (number) {
                     case 1:
                         return returnData[0];

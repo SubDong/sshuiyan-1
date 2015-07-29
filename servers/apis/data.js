@@ -3,6 +3,7 @@ var url = require('url');
 var date = require('../utils/date');
 var dateFormat = require('../utils/dateFormat')();
 var resutil = require('../utils/responseutils');
+var redis = require('../utils/redis');
 var datautils = require('../utils/datautils');
 var es_request = require('../services/refactor_request');
 var access_request = require('../services/access_request');
@@ -413,6 +414,31 @@ api.get('/realTimeHtml', function (req, res) {
             });
         });
     });
+});
+
+api.get('/getUrlspeed', function (req, res) {
+    var query = url.parse(req.url, true).query;
+    var _startTime = Number(query["start"]);//开始时间
+    var _endTime = Number(query["end"]);//结束时间query
+    var _filter = query["filerInfo"] != null && query["filerInfo"] != 'null' ? JSON.parse(query["filerInfo"]) : query["filerInfo"] == 'null' ? null : query["filerInfo"];//过滤器
+    var _index = date.createIndexes(_startTime, _endTime, "access-");//indexs
+    var _trackId = query["trackId"];
+    redis.service().get('typeid:'.concat(_trackId), function (err, typeId) {
+        var _type = typeId+"_promotion_url";
+        initial.popularizeURL(req.es, _index, _type, _filter, _trackId, function (data) {
+            datautils.send(res, data);
+            //consoile.log(data)
+        })
+    })
+
+
+
+
+
+
+
+
+
 });
 
 /**************************************************************/

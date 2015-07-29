@@ -101,7 +101,7 @@
                     <div class="chart_top">
                         <span>流量质量指标:</span>
                         <ul>
-                            <li ng-repeat="item in flow" data-sshy-default defvalue="{{item.name}}"
+                            <li ng-repeat="item in Todayfloweds" data-sshy-default defvalue="{{item.name}}"
                                 class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
                                 ng-click='indicators(item,flow,6)'>{{item.consumption_name}}
                             </li>
