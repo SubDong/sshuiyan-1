@@ -5,7 +5,7 @@ define(["../module"], function (app) {
 
     "use strict";
 
-    app.controller("admintablectr", function ($timeout, $scope, $rootScope, $http, $cookieStore,uiGridTreeBaseConstants) {
+    app.controller("admintablectr", function ($timeout, $scope, $rootScope, $http, $cookieStore, uiGridTreeBaseConstants) {
         $rootScope.adminIndicators = function (item, entities, number, refresh) {
             $rootScope.gridArray.shift();
             $rootScope.gridArray.shift();
@@ -81,6 +81,7 @@ define(["../module"], function (app) {
             });
             //$rootScope.$broadcast("ssh_reload_datashow");
         };
+
         //
         if (typeof($rootScope.checkedArray) != undefined && $rootScope.tableJu == "html") {
             $rootScope.gridOptions = {
@@ -117,30 +118,33 @@ define(["../module"], function (app) {
                         adminGriApihtml(gridApi);
                     }
                 };
-            }else{
+            } else {
                 $rootScope.gridOptions = {
                     paginationPageSize: 20,
                     paginationPageSizes: [20, 50, 100],
-                    expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
-                    expandableRowHeight: 360,
+                    expandableRowTemplate:"<div ui-grid='row.entity.subGridOptions' ui-grid-pagination ui-grid-exporter ui-grid-auto-resize ui-grid-expandable></div>",
                     enableColumnMenus: false,
                     enablePaginationControls: true,
                     enableGridMenu: false,
                     enableHorizontalScrollbar: 0,
                     enableSorting: true,
-                    //enableFiltering: true,
-                    showTreeExpandNoChildren: true,
+                    expandableRowHeight: 30,
+                    //showTreeExpandNoChildren: true,
                     columnDefs: $rootScope.gridArray,
-                    onRegisterApi: function( gridApi ) {
-                        gridApi.treeBase.on.rowExpanded($scope, function(row) {
-                        });
-                        //$rootScope.gridOptions.data[0]["$$treeLevel"] = 0;
-                        //$rootScope.gridOptions.data = [{]
+                    onRegisterApi: function (gridApi) {
+                        $rootScope.gridApiAdmin = gridApi;
+                        //adminGriApihtml(gridApi);
+                        $rootScope.expandRowData(gridApi)
+                        //console.log("页面转化")
                     }
                 };
 
             }
 
+        }
+
+        $rootScope.expandIcon = function () {
+            console.log("expandIcon")
         }
         //////DENG
         //配置展开巷HTML
@@ -186,25 +190,7 @@ define(["../module"], function (app) {
         };
 
         ///////////
-
         ///////////////////////////////////展开项处理///////////////////////////////////////////////
-
-        var expandGrid = function (gridApi) {
-            if ($rootScope.tableSwitch.latitude.name != "页面转化") {
-                adminGriApihtml(gridApi);
-                return;
-            }
-            gridApi.treeBase.on.rowExpanded($scope, function(row) {
-                row.entity.paths.forEach(function(item,i){
-                    //item[i].state = item[i].address.state;
-                    //item[i].balance = Number( data[i].balance.slice(1).replace(/,/,'') );
-                    item[0].$$treeLevel = 0;
-                    item[1].$$treeLevel = 1;
-                    item[10].$$treeLevel = 1;
-                })
-            });
-
-        }
     });
 })
 ;
