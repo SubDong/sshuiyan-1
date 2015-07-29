@@ -1,6 +1,6 @@
 define(["./module"], function (ctrs) {
     "use strict";
-    ctrs.controller("adsCreativeCtr", function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
+    ctrs.controller("adsCreativeCtr", function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants, $cookieStore) {
         // 高级搜索提示
         $scope.visitorSearch = "";
         $scope.areaSearch = "";
@@ -43,8 +43,6 @@ define(["./module"], function (ctrs) {
                 "<button onmousemove='getMyButton(this)' class='table_btn'></button>" +
                 "<div class='table_win'>" +
                 "<ul style='color: #45b1ec'>" +
-                "<li><a>查看相关热门搜索词</a></li>" +
-                "<li><a ng-click='grid.appScope.showSearchUrl(row)'>查看搜索来路URL</a></li>" +
                 "<li><a ui-sref='history6' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li>" +
                 "</ul>" +
                 "</div>" +
@@ -187,15 +185,33 @@ define(["./module"], function (ctrs) {
             requestService.refresh([chart]);
         });
         $scope.page = {};
-        $scope.pages = [
-            {name: '全部页面目标'},
-            {name: '全部事件目标'},
-            {name: '所有页面右上角按钮'},
-            {name: '所有页面底部400按钮'},
-            {name: '详情页右侧按钮'},
-            {name: '时长目标'},
-            {name: '访问页数目标'}
-        ];
+        $scope.pages = [];
+        $scope.events = [];
+        $scope.times = [];
+        $scope.convertData = function () {
+            var uid = $cookieStore.get("uid");
+            var event_url = "/config/eventchnage_list?type=search&query={\"uid\":\"" + uid + "\"}";
+            var page_url = "/config/page_conv?type=search&query="+JSON.stringify({uid: uid});
+            //var time_url= "/config/time_conv?type=search&query={\"uid\":\""+uid+"\"}";
+
+            $http({method: 'GET', url: page_url}).success(function (dataConfig) {
+                dataConfig.forEach(function(item){
+                    $scope.pages.push({name: item.target_name});
+                });
+            });
+
+            $http({method: 'GET', url: event_url}).success(function (dataConfig) {
+                dataConfig.forEach(function(item){
+                    $scope.events.push({name: item.event_name});
+                });
+            });
+            /* $http({method: 'GET', url: time_url}).success(function (dataConfig) {
+             dataConfig.forEach(function(item){
+             $scope.pages.push({time: item._id});
+             });
+             });*/
+        };
+        $scope.convertData();
 
         function GetDateStr(AddDayCount) {
             var dd = new Date();

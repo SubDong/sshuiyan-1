@@ -1089,9 +1089,11 @@ define(["app"], function (app) {
                                 if (data.length == 0) {
                                     var resultData = [];
                                     var resultObj = {};
-                                    $rootScope.checkedArray.forEach(function (item, a) {
-                                        resultObj[item] = "--";
-                                    });
+                                    if($rootScope.checkedArray != undefined){
+                                        $rootScope.checkedArray.forEach(function (item, a) {
+                                            resultObj[item] = "--";
+                                        });
+                                    }
                                     resultObj[$rootScope.tableSwitch.latitude.field] = "暂无数据";
                                     resultData.push(resultObj)
                                     $scope.gridOptions.data = resultData;
@@ -1167,17 +1169,18 @@ define(["app"], function (app) {
         });
         //数据对比
         $rootScope.datepickerClickTow = function (start, end, label) {
-            $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
+//            $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
             var gridArrayOld = angular.copy($rootScope.gridArray);
             $rootScope.gridArray.forEach(function (item, i) {
                 var a = item["field"];
                 if (item["cellTemplate"] == undefined) {
                     item["cellTemplate"] = "<ul class='contrastlist'><li>{{grid.appScope.getContrastInfo(grid, row,0,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,1,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,2,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,3,'" + a + "')}}</li></ul>";
                     item["footerCellTemplate"] = "<ul class='contrastlist'><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),0)}}</li><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),1)}}</li><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),2)}}</li><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),3)}}</li></ul>";
+
                 }
             });
             $scope.gridOptions.rowHeight = 95;
-            $scope.gridOptions.columnFooterHeight = 95;
+//            $scope.gridOptions.columnFooterHeight = 95;
             var time = chartUtils.getTimeOffset(start, end);
             var startTime = time[0];
             var endTime = time[0] + ($rootScope.tableTimeEnd - $rootScope.tableTimeStart);
@@ -1215,7 +1218,7 @@ define(["app"], function (app) {
                             dataArray.push(a);
                         }
                     });
-                    $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
+//                    $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
                 });
                 $scope.gridOptions.data = dataArray;
                 $rootScope.gridArray = gridArrayOld;

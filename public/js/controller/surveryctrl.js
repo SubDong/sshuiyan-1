@@ -42,6 +42,10 @@ define(["./module"], function (ctrs) {
                 $scope.compareArray = [];
                 //$scope.reloadGrid();
                 $scope.initGrid($scope.selectedQuota[0], $scope.selectedQuota[1]);
+                $scope.clickFirst = true;
+                $scope.clickSecond = true;
+                $scope.sevenFirst = false;
+                $scope.sevenSecond = false;
             };
             $scope.open = function ($event) {
                 $scope.reset();
@@ -825,7 +829,7 @@ define(["./module"], function (ctrs) {
                     pcObj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? pcObj[$scope.outQuota_] + "%" : (_val == 0 ? 0 : parseFloat(_val).toFixed(2));
 //                    pcObj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? pcObj[$scope.outQuota_] + "%" : pcObj[$scope.outQuota_];
                     pcObj[$scope.effectQuota_] = tmpResult[2][0] + "" == "undefined" ? "--" : tmpResult[2][0].quota[0];
-                    pcObj[$scope.effectQuota_] = ($scope.effectQuota_ == "outRate" || $scope.effectQuota_ == "arrivedRate") ? pcObj[$scope.effectQuota_] + "%" : pcObj[$scope.effectQuota_];
+                    pcObj[$scope.effectQuota_] = (($scope.effectQuota_ == "outRate" || $scope.effectQuota_ == "arrivedRate") && pcObj[$scope.effectQuota_] != "--") ? pcObj[$scope.effectQuota_] + "%" : pcObj[$scope.effectQuota_];
                     $scope.gridOptions3Data = [];
                     $scope.gridOptions3Data.push(pcObj);
 
@@ -849,7 +853,7 @@ define(["./module"], function (ctrs) {
                     mobileObj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? mobileObj[$scope.outQuota_] + "%" : (_val == 0 ? 0 : parseFloat(_val).toFixed(2));
 //                    mobileObj[$scope.outQuota_] = $scope.outQuota_ == "ctr" ? mobileObj[$scope.outQuota_] + "%" : mobileObj[$scope.outQuota_];
                     mobileObj[$scope.effectQuota_] = tmpResult[3][0] + "" == "undefined" ? "--" : tmpResult[3][0].quota[0];
-                    mobileObj[$scope.effectQuota_] = ($scope.effectQuota_ == "outRate" || $scope.effectQuota_ == "arrivedRate") ? mobileObj[$scope.effectQuota_] + "%" : mobileObj[$scope.effectQuota_];
+                    mobileObj[$scope.effectQuota_] = (($scope.effectQuota_ == "outRate" || $scope.effectQuota_ == "arrivedRate") && mobileObj[$scope.effectQuota_] != "--") ? mobileObj[$scope.effectQuota_] + "%" : mobileObj[$scope.effectQuota_];
                     $scope.gridOptions3Data.push(mobileObj);
                     $scope.gridOptions3.data = $scope.gridOptions3Data;
 

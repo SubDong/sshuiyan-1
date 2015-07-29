@@ -103,10 +103,49 @@ var es_aggs = {
             }
         }
     },
-    "orderNum":{
-        "orderNum":{
-            "value_count":{
-                "field":"p_record"
+    //订单数
+    "orderNum": {
+        "orderNum": {
+            "value_count": {
+                "field": "p_record"
+            }
+        }
+    },
+    //收益　预期每次转化收益*转化次数
+    "benefit": {
+        "benefit": {
+            "term": {
+                "field": "p_income"
+            }
+        },
+        "convertTime": {
+            "value_count": {
+                "field": "_type"
+            }
+        }
+    },
+    //利润　暂时查询出收益
+    "profit": {
+        "profit_benefit": {
+            "term": {
+                "field": "p_income"
+            }
+        },
+        "profit_convertTime": {
+            "value_count": {
+                "field": "_type"
+            }
+        }
+    },
+    "orderNumRate": {
+        "orderNumRate_orderNum": {
+            "value_count": {
+                "field": "p_record"
+            }
+        },
+        "orderNumRate_convertTime": {
+            "value_count": {
+                "field": "_type"
             }
         }
     }
@@ -149,22 +188,61 @@ var transform = {
                 if (response != undefined && response.aggregations != undefined) {
                     var result = response.aggregations;
                     querys.forEach(function (queryOption) {
-                        if (queryOption == "crate") {
-                            if (result.conversions_crate.value == "0") {
-                                data[queryOption] = "0";
-                            } else {
-                                data[queryOption] = (result.conversions_crate.value / result.conversions_crate.value).toFixed(2) + "%";
-                            }
-                        } else if (queryOption == "nuvRate") {
-                            if (result.new_visitor_aggs.value == "0") {
-                                data[queryOption] = 0;
-                            } else {
-                                data[queryOption] = (result.uv_aggs.value / result.new_visitor_aggs.value).toFixed(2) + "%";
+                        var isExit = false;
+                        var i = 0;
+                        switch (queryOption){
+                            case "crate":
+                                if (result.conversions_crate.value == "0") {
+                                    data[queryOption] = "0";
+                                } else {
+                                    data[queryOption] = (result.conversions_crate.value / result.conversions_crate.value).toFixed(2) + "%";
+                                }
+                                break;
+                            case "nuvRate":
+                                if (result.new_visitor_aggs.value == "0") {
+                                    data[queryOption] = 0;
+                                } else {
+                                    data[queryOption] = (result.uv_aggs.value / result.new_visitor_aggs.value).toFixed(2) + "%";
 
-                            }
-                        }
-                        else {
-                            data[queryOption] = result[queryOption].value
+                                }
+                                break;
+                            case "benefit":
+                                if(result.benefit.buckets.length==0){
+                                    data[queryOption] = 0;//不存在记录
+                                }else{
+
+                                    for(i = 0;i<result.benefit.buckets.length;i++){
+                                        if(result.benefit.buckets[i]!=""){
+                                            data[queryOption] = Number(result.benefit.buckets[0].key) * Number(results.convertTime.value);
+                                            isExit = true;
+                                        }
+                                    }
+                                    if(!isExit){
+                                        data[queryOption] = "-";//未定义预期收益
+                                    }
+                                }
+                                break;
+                            case "profit":
+                                if(result.profit_benefit.buckets.length==0){
+                                    data[queryOption] = 0;//不存在记录
+                                }else{
+                                    for(i = 0;i<result.profit_benefit.buckets.length;i++){
+                                        if(result.profit_benefit.buckets[i]!=""){
+                                            data[queryOption] = Number(result.profit_benefit.buckets[0].key) * Number(results.profit_convertTime.value);
+                                            isExit = true;
+                                        }
+                                    }
+                                    if(!isExit){
+                                        data[queryOption] = "-";//未定义预期收益
+                                    }
+                                }
+                                break;
+                            case "orderNumRate":
+                                data[queryOption] = (Number(result.orderNumRate_orderNum.value) / Number(result.orderNumRate_convertTime.value)).toFixed(2) + "%";
+                                break;
+                            default :
+                                data[queryOption] = result[queryOption].value;
+                                break;
                         }
                     });
                     callbackFn(data);
@@ -222,6 +300,7 @@ var transform = {
                     quota_data = {};
                     quotaArry = [];
                     var i = 0;
+                    var isExit = false;
                     switch (queryOption) {
                         case "pv":
                             for (i = 0; i < results.length; i++) {
@@ -401,6 +480,74 @@ var transform = {
                                 quota: quotaArry
                             };
                             break;
+                        case "benefit":
+                            for (i = 0; i < results.length; i++) {
+                                for (var key in results[i]) {
+                                    if (key == queryOption) {
+                                        if(results[i].benefit.buckets.length==0){
+                                            quotaArry.push("0");//不存在记录
+                                        }else{
+                                            for(i = 0;i<results[i].benefit.buckets.length;i++){
+                                                if(results[i].benefit.buckets[i]!=""){
+                                                    quotaArry.push(Number(results[i].benefit.buckets[0].key) * Number(results[i].convertTime.value));
+                                                    isExit = true;
+                                                }
+                                            }
+                                            if(!isExit){
+                                                quotaArry.push("-");//未定义预期收益
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            quota_data = {
+                                label: "benefit",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "profit":
+                            for (i = 0; i < results.length; i++) {
+                                for (var key in results[i]) {
+                                    if (key == queryOption) {
+                                        if (key == queryOption) {
+                                            if(results[i].profit_benefit.buckets.length==0){
+                                                quotaArry.push("0");//不存在记录
+                                            }else{
+                                                for(i = 0;i<results[i].profit_benefit.buckets.length;i++){
+                                                    if(results[i].profit_benefit.buckets[i]!=""){
+                                                        quotaArry.push(Number(results[i].profit_benefit.buckets[0].key) * Number(results[i].profit_convertTime.value));
+                                                        isExit = true;
+                                                    }
+                                                }
+                                                if(!isExit){
+                                                    quotaArry.push("-");//未定义预期收益
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            quota_data = {
+                                label: "profit",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "orderNumRate":
+                            for (i = 0; i < results.length; i++) {
+                                for (var key in results[i]) {
+                                    if (key == queryOption) {
+                                        quotaArry.push(Number(results[i].orderNumRate_orderNum.value) / Number(results[i].orderNumRate_convertTime.value));
+                                    }
+                                }
+                            }
+                            quota_data = {
+                                label: "orderNumRate",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
                         default :
                             break;
                     }
@@ -460,6 +607,7 @@ var transform = {
                     var result = response.aggregations.eventName.buckets;
                     queryOptions.forEach(function (queryOption) {
                         var i = 0;
+                        var isExit = false;
                         switch (queryOption) {
                             case "pv":
                                 for (i = 0; i < result.length; i++) {
@@ -558,6 +706,68 @@ var transform = {
                                     });
                                 }
                                 break;
+                            case "benefit":
+                                for (i = 0; i < result.length; i++) {
+                                    isExit = false;
+                                    if(results[i].benefit.buckets.length==0){
+                                        dataArry.push({
+                                            benefit: "0",
+                                            campaignName: result[i].key
+                                        });
+                                    }else{
+                                        for(i = 0;i<results[i].benefit.buckets.length;i++){
+                                            if(results[i].benefit.buckets[i]!=""){
+                                                dataArry.push({
+                                                    benefit: Number(result[i].benefit.buckets[0].key) * Number(results[i].convertTime.value),
+                                                    campaignName: result[i].key
+                                                });
+                                                isExit = true;
+                                            }
+                                        }
+                                        if(!isExit){
+                                            dataArry.push({
+                                                benefit: "-",
+                                                campaignName: result[i].key
+                                            });
+                                        }
+                                    }
+                                }
+                                break;
+                            case "profit":
+                                for (i = 0; i < result.length; i++) {
+                                    isExit = false;
+                                    if(results[i].profit_benefit.buckets.length==0){
+                                        dataArry.push({
+                                            profit_benefit: "0",
+                                            campaignName: result[i].key
+                                        });
+                                    }else{
+                                        for(i = 0;i<results[i].profit_benefit.buckets.length;i++){
+                                            if(results[i].profit_benefit.buckets[i]!=""){
+                                                dataArry.push({
+                                                    profit_benefit: Number(result[i].profit_benefit.buckets[0].key) * Number(results[i].profit_convertTime.value),
+                                                    campaignName: result[i].key
+                                                });
+                                                isExit = true;
+                                            }
+                                        }
+                                        if(!isExit){
+                                            dataArry.push({
+                                                profit_benefit: "-",
+                                                campaignName: result[i].key
+                                            });
+                                        }
+                                    }
+                                }
+                                break;
+                            case "orderNumRate":
+                                for (i = 0; i < result.length; i++) {
+                                    dataArry.push({
+                                        orderNumRate: Number(result[i].orderNumRate_orderNum.value) / Number(results[i].orderNumRate_convertTime.value),
+                                        campaignName: result[i].key
+                                    });
+                                }
+                                break;
                             default :
                                 break;
                         }
@@ -629,6 +839,7 @@ var transform = {
                 var result = response.aggregations.eventName.buckets;
                 aggs.forEach(function (agg) {
                     var i = 0;
+                    var isExit = false;
                     switch (agg) {
                         case "pv":
                             for (i = 0; i < result.length; i++) {
@@ -723,6 +934,68 @@ var transform = {
                             for (i = 0; i < result.length; i++) {
                                 dataArry.push({
                                     orderNum: result[i].orderNum.value,
+                                    campaignName: result[i].key
+                                });
+                            }
+                            break;
+                        case "benefit":
+                            for (i = 0; i < result.length; i++) {
+                                isExit = false;
+                                if(result[i].benefit.buckets.length==0){
+                                    dataArry.push({
+                                        benefit: "0",
+                                        campaignName: result[i].key
+                                    });
+                                }else{
+                                    for(i = 0;i<result[i].benefit.buckets.length;i++){
+                                        if(result[i].benefit.buckets[i]!=""){
+                                            dataArry.push({
+                                                benefit: Number(result[i].benefit.buckets[0].key) * Number(result[i].convertTime.value),
+                                                campaignName: result[i].key
+                                            });
+                                            isExit = true;
+                                        }
+                                    }
+                                    if(!isExit){
+                                        dataArry.push({
+                                            benefit: "-",
+                                            campaignName: result[i].key
+                                        });
+                                    }
+                                }
+                            }
+                            break;
+                        case "profit":
+                            for (i = 0; i < result.length; i++) {
+                                isExit = false;
+                                if(result[i].profit_benefit.buckets.length==0){
+                                    dataArry.push({
+                                        profit: "0",
+                                        campaignName: result[i].key
+                                    });
+                                }else{
+                                    for(i = 0;i<result[i].profit_benefit.buckets.length;i++){
+                                        if(result[i].benefit.buckets[i]!=""){
+                                            dataArry.push({
+                                                profit: Number(result[i].profit_benefit.buckets[0].key) * Number(result[i].profit_convertTime.value),
+                                                campaignName: result[i].key
+                                            });
+                                            isExit = true;
+                                        }
+                                    }
+                                    if(!isExit){
+                                        dataArry.push({
+                                            profit: "-",
+                                            campaignName: result[i].key
+                                        });
+                                    }
+                                }
+                            }
+                            break;
+                        case "orderNumRate":
+                            for (i = 0; i < result.length; i++) {
+                                dataArry.push({
+                                    orderNumRate: Number(result[i].orderNumRate_orderNum.value) / Number(result[i].orderNumRate_convertTime.value),
                                     campaignName: result[i].key
                                 });
                             }
@@ -831,11 +1104,16 @@ var transform = {
                     quota_data = {};
                     quotaArry = [];
                     var i;
+                    var isExit = false;
                     switch (option) {
                         case "pv":
-                            for (i = 0; i < keyArr.length; i++) {
-                                quotaArry.push(results[i].pv.value);
-                            }
+                            results.forEach(function(result){
+                                for(var key in result){
+                                    if(key == option){
+                                        quotaArry.push(result[key].value);
+                                    }
+                                }
+                            });
                             quota_data = {
                                 label: "pv",
                                 key: keyArr,
@@ -843,9 +1121,13 @@ var transform = {
                             };
                             break;
                         case "uv":
-                            for (i = 0; i < keyArr.length; i++) {
-                                quotaArry.push(results[i].uv.value);
-                            }
+                            results.forEach(function(result){
+                                for(var key in result){
+                                    if(key == option){
+                                        quotaArry.push(result[key].value);
+                                    }
+                                }
+                            });
                             quota_data = {
                                 label: "uv",
                                 key: keyArr,
@@ -853,9 +1135,13 @@ var transform = {
                             };
                             break;
                         case "vc":
-                            for (i = 0; i < keyArr.length; i++) {
-                                quotaArry.push(results[i].vc.value);
-                            }
+                            results.forEach(function(result){
+                                for(var key in result){
+                                    if(key == option){
+                                        quotaArry.push(result[key].value);
+                                    }
+                                }
+                            });
                             quota_data = {
                                 label: "vc",
                                 key: keyArr,
@@ -864,9 +1150,13 @@ var transform = {
                             break;
 
                         case "ip":
-                            for (i = 0; i < keyArr.length; i++) {
-                                quotaArry.push(results[i].ip.value);
-                            }
+                            results.forEach(function(result){
+                                for(var key in result){
+                                    if(key == option){
+                                        quotaArry.push(result[key].value);
+                                    }
+                                }
+                            });
                             quota_data = {
                                 label: "ip",
                                 key: keyArr,
@@ -874,9 +1164,13 @@ var transform = {
                             };
                             break;
                         case "clickTotal":
-                            for (i = 0; i < keyArr.length; i++) {
-                                quotaArry.push(results[i].clickTotal.value);
-                            }
+                            results.forEach(function(result){
+                                for(var key in result){
+                                    if(key == option){
+                                        quotaArry.push(result[key].value);
+                                    }
+                                }
+                            });
                             quota_data = {
                                 label: "clickTotal",
                                 key: keyArr,
@@ -884,9 +1178,13 @@ var transform = {
                             };
                             break;
                         case "conversions":
-                            for (i = 0; i < keyArr.length; i++) {
-                                quotaArry.push(results[i].conversions.value);
-                            }
+                            results.forEach(function(result){
+                                for(var key in result){
+                                    if(key == option){
+                                        quotaArry.push(result[key].value);
+                                    }
+                                }
+                            });
                             quota_data = {
                                 label: "conversions",
                                 key: keyArr,
@@ -894,9 +1192,13 @@ var transform = {
                             };
                             break;
                         case "nuv":
-                            for (i = 0; i < keyArr.length; i++) {
-                                quotaArry.push(results[i].nuv.value);
-                            }
+                            results.forEach(function(result){
+                                for(var key in result){
+                                    if(key == option){
+                                        quotaArry.push(result[key].value);
+                                    }
+                                }
+                            });
                             quota_data = {
                                 label: "nuv",
                                 key: keyArr,
@@ -904,13 +1206,17 @@ var transform = {
                             };
                             break;
                         case "nuvRate":
-                            for (i = 0; i < keyArr.length; i++) {
-                                if (result[i].new_visitor_aggs.value) {
-                                    quotaArry.push(0);
-                                } else {
-                                    quotaArry.push((result[i].uv_aggs.value / result[i].new_visitor_aggs.value).toFixed(2) + "%");
+                            results.forEach(function(result){
+                                for(var key in result){
+                                    if(key == option){
+                                        if (result.new_visitor_aggs.value) {
+                                            quotaArry.push(0);
+                                        } else {
+                                            quotaArry.push((result.uv_aggs.value / result.new_visitor_aggs.value).toFixed(2) + "%");
+                                        }
+                                    }
                                 }
-                            }
+                            });
                             quota_data = {
                                 label: "nuvRate",
                                 key: keyArr,
@@ -918,13 +1224,17 @@ var transform = {
                             };
                             break;
                         case "crate":
-                            for (i = 0; i < keyArr.length; i++) {
-                                if (results[i].conversions_crate.value != "0") {
-                                    quotaArry.push((results[i].conversions_crate.value / results[i].conversions_crate.value).toFixed(2) + "%");
-                                } else {
-                                    quotaArry.push(0);
+                            results.forEach(function(result){
+                                for(var key in result){
+                                    if(key == option){
+                                        if (result.conversions_crate.value != "0") {
+                                            quotaArry.push((result.conversions_crate.value / result.conversions_crate.value).toFixed(2) + "%");
+                                        } else {
+                                            quotaArry.push(0);
+                                        }
+                                    }
                                 }
-                            }
+                            });
                             quota_data = {
                                 label: "crate",
                                 key: keyArr,
@@ -932,9 +1242,13 @@ var transform = {
                             };
                             break;
                         case "visitNum":
-                            for (i = 0; i < keyArr.length; i++) {
-                                quotaArry.push(results[i].visitNum.value);
-                            }
+                            results.forEach(function(result){
+                                for(var key in result){
+                                    if(key == option){
+                                        quotaArry.push(result[key].value);
+                                    }
+                                }
+                            });
                             quota_data = {
                                 label: "visitNum",
                                 key: keyArr,
@@ -942,9 +1256,13 @@ var transform = {
                             };
                             break;
                         case "transformCost":
-                            for (i = 0; i < keyArr.length; i++) {
-                                quotaArry.push(results[i].transformCost.value);
-                            }
+                            results.forEach(function(result){
+                                for(var key in result){
+                                    if(key == option){
+                                        quotaArry.push(result[key].value);
+                                    }
+                                }
+                            });
                             quota_data = {
                                 label: "transformCost",
                                 key: keyArr,
@@ -952,19 +1270,166 @@ var transform = {
                             };
                             break;
                         case "orderNum":
-                            for (i = 0; i < keyArr.length; i++) {
-                                quotaArry.push(results[i].orderNum.value);
-                            }
+                            results.forEach(function(result){
+                                for(var key in result){
+                                    if(key == option){
+                                        quotaArry.push(result[key].value);
+                                    }
+                                }
+                            });
                             quota_data = {
                                 label: "orderNum",
                                 key: keyArr,
                                 quota: quotaArry
                             };
                             break;
-                        case "orderNum_contrast":
+                        case "benefit":
+                            results.forEach(function(result){
+                                for(var key in result){
+                                    if(key == option){
+                                        isExit = false;
+                                        if(result.benefit.buckets.length==0){
+                                            quotaArry.push("0");
+                                        }else{
+                                            for(i = 0;i<result.benefit.buckets.length;i++){
+                                                if(result.benefit.buckets[i]!=""){
+                                                    quotaArry.push(Number(result.benefit.buckets[0].key) * Number(result.convertTime.value));
+                                                    isExit = true;
+                                                }
+                                            }
+                                            if(!isExit){
+                                                quotaArry.push("-");
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                            quota_data = {
+                                label: "benefit",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "profit":
+                            results.forEach(function(result){
+                                for(var key in result){
+                                    if(key == option){
+                                        isExit = false;
+                                        if(result.profit_benefit.buckets.length==0){
+                                            quotaArry.push("0");
+                                        }else{
+                                            for(i = 0;i<result.profit_benefit.buckets.length;i++){
+                                                if(result.profit_benefit.buckets[i]!=""){
+                                                    quotaArry.push(Number(result.profit_benefit.buckets[0].key) * Number(result.profit_convertTime.value));
+                                                    isExit = true;
+                                                }
+                                            }
+                                            if(!isExit){
+                                                quotaArry.push("-");
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                            quota_data = {
+                                label: "profit",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "orderNumRate":
+                            results.forEach(function(result){
+                                for(var key in result){
+                                    if(key == option){
+                                        quotaArry.push(Number(result.orderNumRate_orderNum.value) / Number(result.orderNumRate_convertTime.value));
+                                    }
+                                }
+                            });
+                            quota_data = {
+                                label: "orderNumRate",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "orderNumRate_contrast":
+                            results.forEach(function(result){
+                                for(var key in result){
+                                    if(key == option){
+                                        quotaArry.push(result[key].value/ Number(result.orderNumRate_convertTime.value));
+                                    }
+                                }
+                            });
+                            quota_data = {
+                                label: "orderNumRate_contrast",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "profit_contrast":
+                            results.forEach(function(result){
+                                for(var key in result){
+                                    if(key == option){
+                                        isExit = false;
+                                        if(result.profit_benefit_contrast.buckets.length==0){
+                                            quotaArry.push("0");
+                                        }else{
+                                            for(i = 0;i<result.profit_benefit_contrast.buckets.length;i++){
+                                                if(result.profit_benefit_contrast.buckets[i]!=""){
+                                                    quotaArry.push(Number(result.profit_benefit_contrast.buckets[0].key) * Number(result.profit_convertTime.value));
+                                                    isExit = true;
+                                                }
+                                            }
+                                            if(!isExit){
+                                                quotaArry.push("-");
+                                            }
+                                        }
+                                    }
+                                }
+                            });
                             for (i = keyArr.length; i < results.length; i++) {
-                                quotaArry.push(results[i].orderNum_contrast.value);
+
                             }
+                            quota_data = {
+                                label: "profit_contrast",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "benefit_contrast":
+                            results.forEach(function(result){
+                                for(var key in result){
+                                    if(key == option){
+                                        isExit = false;
+                                        if(result.benefit_contrast.buckets.length==0){
+                                            quotaArry.push("0");
+                                        }else{
+                                            for(i = 0;i<result.benefit_contrast.buckets.length;i++){
+                                                if(result.benefit_contrast.buckets[i]!=""){
+                                                    quotaArry.push(Number(result.benefit_contrast.buckets[0].key) * Number(result.convertTime.value));
+                                                    isExit = true;
+                                                }
+                                            }
+                                            if(!isExit){
+                                                quotaArry.push("-");
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                            quota_data = {
+                                label: "benefit_contrast",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "orderNum_contrast":
+                            results.forEach(function(result){
+                                for(var key in result){
+                                    if(key == option){
+                                        quotaArry.push(result[key].value);
+                                    }
+                                }
+                            });
                             quota_data = {
                                 label: "orderNum_contrast",
                                 key: keyArr,
@@ -972,9 +1437,13 @@ var transform = {
                             };
                             break;
                         case "transformCost_contrast":
-                            for (i = keyArr.length; i < results.length; i++) {
-                                quotaArry.push(results[i].transformCost_contrast.value);
-                            }
+                            results.forEach(function(result){
+                                for(var key in result){
+                                    if(key == option){
+                                        quotaArry.push(result[key].value);
+                                    }
+                                }
+                            });
                             quota_data = {
                                 label: "transformCost_contrast",
                                 key: keyArr,
@@ -982,9 +1451,13 @@ var transform = {
                             };
                             break;
                         case "visitNum_contrast":
-                            for (i = keyArr.length; i < results.length; i++) {
-                                quotaArry.push(results[i].visitNum_contrast.value);
-                            }
+                            results.forEach(function(result){
+                                for(var key in result){
+                                    if(key == option){
+                                        quotaArry.push(result[key].value);
+                                    }
+                                }
+                            });
                             quota_data = {
                                 label: "_contrast",
                                 key: keyArr,
@@ -992,9 +1465,13 @@ var transform = {
                             };
                             break;
                         case "pv_contrast":
-                            for (i = keyArr.length; i < results.length; i++) {
-                                quotaArry.push(results[i].pv_contrast.value);
-                            }
+                            results.forEach(function(result){
+                                for(var key in result){
+                                    if(key == option){
+                                        quotaArry.push(result[key].value);
+                                    }
+                                }
+                            });
                             quota_data = {
                                 label: "pv_contrast",
                                 key: keyArr_contrast,
@@ -1002,9 +1479,13 @@ var transform = {
                             };
                             break;
                         case "uv_contrast":
-                            for (i = keyArr.length; i < results.length; i++) {
-                                quotaArry.push(results[i].uv_contrast.value);
-                            }
+                            results.forEach(function(result){
+                                for(var key in result){
+                                    if(key == option){
+                                        quotaArry.push(result[key].value);
+                                    }
+                                }
+                            });
                             quota_data = {
                                 label: "uv_contrast",
                                 key: keyArr_contrast,
@@ -1012,9 +1493,13 @@ var transform = {
                             };
                             break;
                         case "vc_contrast":
-                            for (i = keyArr.length; i < results.length; i++) {
-                                quotaArry.push(results[i].vc_contrast.value);
-                            }
+                            results.forEach(function(result){
+                                for(var key in result){
+                                    if(key == option){
+                                        quotaArry.push(result[key].value);
+                                    }
+                                }
+                            });
                             quota_data = {
                                 label: "vc_contrast",
                                 key: keyArr_contrast,
@@ -1023,9 +1508,13 @@ var transform = {
                             break;
 
                         case "ip_contrast":
-                            for (i = keyArr.length; i < results.length; i++) {
-                                quotaArry.push(results[i].ip_contrast.value);
-                            }
+                            results.forEach(function(result){
+                                for(var key in result){
+                                    if(key == option){
+                                        quotaArry.push(result[key].value);
+                                    }
+                                }
+                            });
                             quota_data = {
                                 label: "ip_contrast",
                                 key: keyArr_contrast,
@@ -1033,9 +1522,13 @@ var transform = {
                             };
                             break;
                         case "clickTotal_contrast":
-                            for (i = keyArr.length; i < results.length; i++) {
-                                quotaArry.push(results[i].clickTotal_contrast.value);
-                            }
+                            results.forEach(function(result){
+                                for(var key in result){
+                                    if(key == option){
+                                        quotaArry.push(result[key].value);
+                                    }
+                                }
+                            });
                             quota_data = {
                                 label: "clickTotal_contrast",
                                 key: keyArr_contrast,
@@ -1043,9 +1536,13 @@ var transform = {
                             };
                             break;
                         case "conversions_contrast":
-                            for (i = keyArr.length; i < results.length; i++) {
-                                quotaArry.push(results[i].conversions_contrast.value);
-                            }
+                            results.forEach(function(result){
+                                for(var key in result){
+                                    if(key == option){
+                                        quotaArry.push(result[key].value);
+                                    }
+                                }
+                            });
                             quota_data = {
                                 label: "conversions_contrast",
                                 key: keyArr_contrast,
@@ -1053,9 +1550,13 @@ var transform = {
                             };
                             break;
                         case "nuv_contrast":
-                            for (i = keyArr.length; i < results.length; i++) {
-                                quotaArry.push(results[i].nuv_contrast.value);
-                            }
+                            results.forEach(function(result){
+                                for(var key in result){
+                                    if(key == option){
+                                        quotaArry.push(result[key].value);
+                                    }
+                                }
+                            });
                             quota_data = {
                                 label: "nuv_contrast",
                                 key: keyArr_contrast,
@@ -1063,9 +1564,13 @@ var transform = {
                             };
                             break;
                         case "nuvRate_contrast":
-                            for (i = keyArr.length; i < results.length; i++) {
-                                quotaArry.push(results[i].nuvRate_contrast.value);
-                            }
+                            results.forEach(function(result){
+                                for(var key in result){
+                                    if(key == option){
+                                        quotaArry.push(result[key].value);
+                                    }
+                                }
+                            });
                             quota_data = {
                                 label: "nuvRate_contrast",
                                 key: keyArr_contrast,
@@ -1073,13 +1578,17 @@ var transform = {
                             };
                             break;
                         case "crate_contrast":
-                            for (i = keyArr.length; i < results.length; i++) {
-                                if (results[i].conversions_crate.value != "0") {
-                                    quotaArry.push((results[i].conversions_crate.value / results[i].conversions_crate.value).toFixed(2));
-                                } else {
-                                    quotaArry.push(0);
+                            results.forEach(function(result){
+                                for(var key in result){
+                                    if(key == option){
+                                        if (result.conversions_crate.value != "0") {
+                                        quotaArry.push((result[key].value/ result.conversions_crate.value).toFixed(2));
+                                        } else {
+                                            quotaArry.push(0);
+                                        }
+                                    }
                                 }
-                            }
+                            });
                             quota_data = {
                                 label: "crate_contrast",
                                 key: keyArr_contrast,

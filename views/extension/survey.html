@@ -33,8 +33,8 @@
             </div>
             <div class="chart_color">
                 <ul>
-                    <li><span class="color_first"></span><b>{{outQuotas.selected.name||"消费"}}</b></li>
-                    <li><span class="color_selcend"></span><b>{{effectQuotas.selected.name||"访问次数"}}</b></li>
+                    <li><span ng-class="{ color_first: clickFirst,color_selcend: sevenFirst}"></span><b>{{outQuotas.selected.name||"消费"}}</b></li>
+                    <li><span ng-class="{ color_selcend: clickSecond,color_first: sevenSecond}"></span><b>{{effectQuotas.selected.name||"访问次数"}}</b></li>
                 </ul>
             </div>
                 <div id="index_charts" class="gesture" style="height:400px;width:100%; overflow:hidden; "></div>
