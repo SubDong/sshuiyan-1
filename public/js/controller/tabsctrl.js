@@ -592,36 +592,25 @@ define(["app"], function (app) {
         })
         $scope.setAreaFilter = function (area) {
             $scope.areaSearch = area == "全部" ? "" : area;
-            //console.log(1);
             if (area == "北京" || area == "上海" || area == "广州") {
-                //console.log(2);
                 if ($scope.city.selected != undefined) {
                     $scope.city.selected.name = area;
-                    //console.log(3);
                 } else {
-                    //console.log(4);
                     $scope.city.selected = {};
                     $scope.city.selected["name"] = area;
-                    //console.log(2);
-                    //console.log(area);
                 }
             }
             if (!$rootScope.tableSwitch) {
-                //console.log(5);
                 return;
             }
 
             if ("全部" == area) {
-                //console.log(6);
                 $rootScope.tableSwitch.tableFilter = null;
             } else {
-                //console.log(7);
                 area = (area == "北京" ? area + "市" : area);
                 if ($scope.tableJu == "html") {
-                    //console.log(8);
                     $rootScope.tableSwitch.tableFilter = "[{\"region\":\"" + area + "\"}]";
                 } else {
-                    //console.log(9);
                     $rootScope.tableSwitch.tableFilter = "[{\"region\":[\"" + area + "\"]}]";
                 }
             }
@@ -648,13 +637,10 @@ define(["app"], function (app) {
         $scope.setTimeFilter = function (time) {
             $scope.sitetimesclear();
             $scope.timeSearch = time == "全部" ? "" : time;
-            console.log(time);
             if (time == "00:00 - 00:59") {
                 if ($scope.time.selected != undefined) {
-                    //console.log(44);
                     $scope.time.selected.name = time;
                 } else {
-                    //console.log(33);
                     $scope.time.selected = {};
                     $scope.time.selected["name"] = time;
                 }
@@ -664,15 +650,11 @@ define(["app"], function (app) {
             }
             if ("全部" == time) {
                 $rootScope.tableSwitch.tableFilter = null;
-                //console.log(77);
             } else {
                 time = (time == "00:00 - 00:59" ? time + "" : time);
-                //console.log(55);
                 if ($scope.tableJu == "html") {
-                    //console.log(22);
                     $rootScope.tableSwitch.tableFilter = "[{\"period\":\"" + time + "\"}]";
                 } else {
-                    //console.log(66);
                     $rootScope.tableSwitch.tableFilter = "[{\"period\":[\"" + time + "\"]}]";
                 }
             }
@@ -1113,7 +1095,6 @@ define(["app"], function (app) {
                                         obj = {};
                                         var dataString = (infoKey.toString().length >= 2 ? "" : "0")
                                         obj["period"] = dataString + infoKey + ":00 - " + dataString + infoKey + ":59";
-                                        //console.log(obj["period"]);
                                         maps[infoKey] = obj;
 
                                     }
@@ -1180,7 +1161,6 @@ define(["app"], function (app) {
                 }
             });
             $scope.gridOptions.rowHeight = 95;
-//            $scope.gridOptions.columnFooterHeight = 95;
             var time = chartUtils.getTimeOffset(start, end);
             var startTime = time[0];
             var endTime = time[0] + ($rootScope.tableTimeEnd - $rootScope.tableTimeStart);
@@ -1488,7 +1468,6 @@ define(["app"], function (app) {
             }
         };
         $scope.getCourFooterData = function (a, option, number) {
-            console.log(a);
             var rast = [0.0, 0.0];
             var rastString = ["", ""];
             var bhlString = "";
@@ -1529,7 +1508,6 @@ define(["app"], function (app) {
         }
         //得到表格底部数据
         $scope.getFooterData = function (a, option, number) {
-            console.log(a);
             var returnData = [0, 0, 0, 0];
             var spl = 0;
             var newSpl = [0, 0, 0];
@@ -1697,15 +1675,12 @@ define(["app"], function (app) {
                 return nulls;
             } else {
                 if (parseInt(a) === parseInt(b)) {
-                    console.log(0)
                     return 0;
                 }
                 if (parseInt(a) < parseInt(b)) {
-                    console.log(1)
                     return 1;
                 }
                 if (parseInt(a) > parseInt(b)) {
-                    console.log(2)
                     return -1;
                 }
                 return 0;
