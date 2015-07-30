@@ -118,7 +118,31 @@ define(["angular", "./app"], function (angular, myApp) {
                 })
                 .state('alliance', {
                     url: "/extension/alliance",
-                    templateUrl: "../extension/alliance.html"
+                    templateUrl: "../extension/alliance.html",
+                    resolve: {
+                        load: loadDeps([
+                            "controller/alliancectr",
+                            'controller/alliancepromotion'
+                        ])
+                    }
+                }).state('alliance_group', {
+                    url: "/extension/alliance_group",
+                    templateUrl: "../extension/alliance_group.html",
+                    resolve: {
+                        load: loadDeps([
+                            'controller/alliance_group_ctr',
+                            'controller/alliancepromotion'
+                        ])
+                    }
+                }).state('alliance_cy', {
+                    url: "/extension/alliance_cy",
+                    templateUrl: "../extension/alliance_cy.html",
+                    resolve: {
+                        load: loadDeps([
+                            'controller/alliance_cy_ctr',
+                            'controller/alliancepromotion'
+                        ])
+                    }
                 });
 
             // trend趋向分析
