@@ -199,7 +199,7 @@ define(["./module"], function (ctrs) {
                 {
                     config: {
                         legendId: "indicators_charts_legend",
-                        legendData: ["浏览量(PV)", "访客数(UV)", "IP数", "访问次数", "转化次数", "转化率", "平均转化成本"],//显示几种数据
+                        legendData: ["浏览量(PV)", "访客数(UV)", "IP数", "访问次数", "转化次数", "转化率", "平均转化成本(事件)"],//显示几种数据
                         //legendMultiData: $rootScope.lagerMulti,
                         legendAllowCheckCount: 2,
                         legendClickListener: $scope.onLegendClickListener,
@@ -449,6 +449,21 @@ define(["./module"], function (ctrs) {
                                             cost += Number(sem_data[k].data[c].cost);
                                         }
                                     }
+                                    $scope.sem_checkArray.forEach(function(key){
+                                        for(var i = 0;i<contrastData.length;i++){
+                                            if(key == contrastData[i].label){
+                                                var temporaryContrastData = [];
+                                                for(var l = 0;l<contrastData[i].quota.length;l++){
+                                                    if(Number(contrastData[i].quota[l])==0){
+                                                        temporaryContrastData.push(0);
+                                                    }else{
+                                                        temporaryContrastData.push((cost/Number(contrastData[i].quota[l])).toFixed(2));
+                                                    }
+                                                }
+                                                contrastData[i].quota = temporaryContrastData;
+                                            }
+                                        }
+                                    });
                                     for (var i = 0; i < contrastData.length; i++) {
                                         if (contrastData[i].label.split("_").length > 1) {
                                             contrastData[i].label = "对比数据";
@@ -463,17 +478,6 @@ define(["./module"], function (ctrs) {
                                             contrastData[i].quota = temporaryContrastData;
                                         } else {
                                             contrastData[i].label = chartUtils.convertChinese(contrastData[i].label);
-                                        }
-                                        if(contrastData[i].label=="平均转化成本"){
-                                            var temporaryContrastData = [];
-                                            for(var c = 0;c<contrastData[i].quota.length;c++){
-                                                if(Number(contrastData[i].quota[c])==0){
-                                                    temporaryContrastData.push(0);
-                                                }else{
-                                                    temporaryContrastData.push((cost/Number(contrastData[i].quota[c])).toFixed(2));
-                                                }
-                                            }
-                                            contrastData[i].quota = temporaryContrastData;
                                         }
                                     }
                                     cf.renderChart(contrastData, $scope.charts[0].config);
@@ -504,6 +508,7 @@ define(["./module"], function (ctrs) {
                         $scope.charts[0].config.instance = chart;
                         util.renderLegend(chart, $scope.charts[0].config);
                         var hasSem = false;
+
                         for(var k = 0;k<queryOptions.length;k++){
                             if(queryOptions[k] == "transformCost"){
                                 hasSem = true;
@@ -518,16 +523,19 @@ define(["./module"], function (ctrs) {
                                     }
                                     for (var i = 0; i < data.length; i++) {
                                         data[i].label = chartUtils.convertChinese(data[i].label);
-                                        if(data[i].label=="平均转化成本"){
+
+                                    }
+                                    for(var c = 0;c<data.length;c++){
+                                        if(data[c].label=="平均转化成本(事件)"){
                                             var temporaryContrastData = [];
-                                            for(var c = 0;c<data[i].quota.length;c++){
-                                                if(Number(data[i].quota[c])==0){
+                                            for(var l = 0;l<data[c].quota.length;l++){
+                                                if(Number(data[c].quota[l])==0){
                                                     temporaryContrastData.push(0);
                                                 }else{
-                                                    temporaryContrastData.push((cost/Number(data[i].quota[c])).toFixed(2));
+                                                    temporaryContrastData.push((cost/Number(data[c].quota[l])).toFixed(2));
                                                 }
                                             }
-                                            data[i].quota = temporaryContrastData;
+                                            data[c].quota = temporaryContrastData;
                                         }
                                     }
                                     cf.renderChart(data, $scope.charts[0].config);
