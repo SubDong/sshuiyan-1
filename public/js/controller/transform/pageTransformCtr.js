@@ -206,7 +206,7 @@ define(["./module"], function (ctrs) {
                 {
                     config: {
                         legendId: "indicators_charts_legend",
-                        legendData: ["浏览量(PV)", "访客数(UV)", "访问次数", "新访客数", "转化次数", "转化率", "平均转化成本", "收益", "利润", "订单数", "订单金额", "订单转化率"],//显示几种数据
+                        legendData: ["浏览量(PV)", "访客数(UV)", "访问次数", "新访客数", "转化次数", "转化率", "平均转化成本(页面)", "收益", "利润", "订单数", "订单金额", "订单转化率"],//显示几种数据
                         //legendMultiData: $rootScope.lagerMulti,
                         legendAllowCheckCount: 2,
                         legendClickListener: $scope.onLegendClickListener,
@@ -386,13 +386,17 @@ define(["./module"], function (ctrs) {
                                             for (var key in data) {
                                                 if ("avgCost" == key) {
                                                     if (isContrastDataByTime) {
-                                                        if (Number(data["avgCost"] != 0))
+                                                        if (Number(data["avgCost"] != 0)) {
                                                             $scope.dateShowArray[index].cValue = (cost / Number(data["avgCost"])).toFixed(2).toString();
-                                                        $scope.dateShowArray[index].cValue = "0";
+                                                        } else {
+                                                            $scope.dateShowArray[index].cValue = "0";
+                                                        }
                                                     } else {
-                                                        if (Number(data["avgCost"] != 0))
+                                                        if (Number(data["avgCost"] != 0)) {
                                                             $scope.dateShowArray[index].value = (cost / Number(data["avgCost"])).toFixed(2).toString();
-                                                        $scope.dateShowArray[index].value = "0";
+                                                        } else {
+                                                            $scope.dateShowArray[index].value = "0";
+                                                        }
                                                     }
                                                 }
                                             }
@@ -454,7 +458,7 @@ define(["./module"], function (ctrs) {
              */
             $scope.dataTable = function (isContrastTime, showType, queryOptions, renderLegend) {
                 if (isContrastTime) {
-                    $http.get("/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&action=event&type=1&searchType=contrastData&showType=" + showType + "&queryOptions=" + queryOptions + "&contrastStart=" + $scope.start + "&contrastEnd=0" + $scope.end).success(function (contrastData) {
+                    $http.get("/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&action=event&type=1&searchType=contrastData&showType=" + showType + "&queryOptions=" + queryOptions + "&contrastStart=" + $scope.start + "&contrastEnd=" + $scope.end).success(function (contrastData) {
                         var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
                         chart.showLoading({
                             text: "正在努力的读取数据中..."
@@ -464,17 +468,123 @@ define(["./module"], function (ctrs) {
                         $scope.charts[0].config.instance = chart;
                         if (renderLegend)
                             util.renderLegend(chart, $scope.charts[0].config);
-
-
-                        for (var i = 0; i < contrastData.length; i++) {
-                            if (contrastData[i].label.split("_").length > 1) {
-                                contrastData[i].label = "对比数据";
-                            } else {
-                                contrastData[i].label = chartUtils.convertChinese(contrastData[i].label);
+                        var hasSem = false;
+                        for (var t = 0; t < queryOptions.length; t++) {
+                            for (var k = 0; k < $scope.sem_checkArray.length; k++) {
+                                if (queryOptions[t] == $scope.sem_checkArray[k]) {
+                                    hasSem = true;
+                                    break;
+                                }
                             }
                         }
-                        cf.renderChart(contrastData, $scope.charts[0].config);
-                        Custom.initCheckInfo();
+                        if (hasSem) {
+                            var semRequest = "";
+                            semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end + "&q=cost");
+                            $q.all([semRequest]).then(function (sem_data) {
+                                var cost = 0;
+                                for (var k = 0; k < sem_data.length; k++) {
+                                    for (var c = 0; c < sem_data[k].data.length; c++) {
+                                        cost += Number(sem_data[k].data[c].cost);
+                                    }
+                                }
+                                $scope.sem_checkArray.forEach(function (key) {
+                                    for (var i = 0; i < contrastData.length; i++) {
+                                        if (key == contrastData[i].label) {
+                                            var temporaryContrastData = [];
+                                            var l = 0;
+                                            switch (key) {
+                                                case "avgCost":
+                                                    for (l = 0; l < contrastData[i].quota.length; l++) {
+                                                        if (Number(contrastData[i].quota[l]) == 0) {
+                                                            temporaryContrastData.push(0);
+                                                        } else {
+                                                            temporaryContrastData.push((cost / Number(contrastData[i].quota[l])).toFixed(2));
+                                                        }
+                                                    }
+                                                    contrastData[i].quota = temporaryContrastData;
+                                                    break;
+                                                case "profit":
+                                                    for (l = 0; l < contrastData[i].quota.length; l++) {
+                                                        if (Number(contrastData[i].quota[l]) == 0) {
+                                                            temporaryContrastData.push(0);
+                                                        } else {
+                                                            temporaryContrastData.push((cost / Number(contrastData[i].quota[l])).toFixed(2));
+                                                        }
+                                                    }
+                                                    contrastData[i].quota = temporaryContrastData;
+                                                    break;
+                                                case "orderMoney":
+                                                    //var temporaryContrastData = [];
+                                                    //for(var l = 0;l<contrastData[i].quota.length;l++){
+                                                    //    if(Number(contrastData[i].quota[l])==0){
+                                                    //        temporaryContrastData.push(0);
+                                                    //    }else{
+                                                    //        temporaryContrastData.push((cost/Number(contrastData[i].quota[l])).toFixed(2));
+                                                    //    }
+                                                    //}
+                                                    //contrastData[i].quota = temporaryContrastData;
+                                                    break;
+                                            }
+
+                                        }
+                                    }
+                                });
+                                for (var i = 0; i < contrastData.length; i++) {
+                                    if (contrastData[i].label.toString().split("_").length > 1) {
+                                        var temporaryContrastData = [];
+                                        var l = 0;
+                                        switch (contrastData[i].label) {
+                                            case "avgCost_contrast":
+                                                for (l = 0; l < contrastData[i].quota.length; l++) {
+                                                    if (Number(contrastData[i].quota[l]) == 0) {
+                                                        temporaryContrastData.push(0);
+                                                    } else {
+                                                        temporaryContrastData.push((cost / Number(contrastData[i].quota[l])).toFixed(2));
+                                                    }
+                                                }
+                                                contrastData[i].quota = temporaryContrastData;
+                                                break;
+                                            case "profit_contrast":
+                                                for (l = 0; l < contrastData[i].quota.length; l++) {
+                                                    if (Number(contrastData[i].quota[l]) == 0) {
+                                                        temporaryContrastData.push(0);
+                                                    } else {
+                                                        temporaryContrastData.push((Number(contrastData[i].quota[l]) - cost).toFixed(2));
+                                                    }
+                                                }
+                                                contrastData[i].quota = temporaryContrastData;
+                                                break;
+                                            case "orderMoney_contrast":
+                                                //var temporaryContrastData = [];
+                                                //for(var l = 0;l<contrastData[i].quota.length;l++){
+                                                //    if(Number(contrastData[i].quota[l])==0){
+                                                //        temporaryContrastData.push(0);
+                                                //    }else{
+                                                //        temporaryContrastData.push((cost/Number(contrastData[i].quota[l])).toFixed(2));
+                                                //    }
+                                                //}
+                                                //contrastData[i].quota = temporaryContrastData;
+                                                break;
+                                        }
+                                        contrastData[i].label = "对比数据";
+                                    } else {
+                                        contrastData[i].label = chartUtils.convertChinese(contrastData[i].label);
+                                    }
+                                }
+                                cf.renderChart(contrastData, $scope.charts[0].config);
+                                Custom.initCheckInfo();
+                            });
+                        } else {
+                            for (var i = 0; i < contrastData.length; i++) {
+                                if (contrastData[i].label.split("_").length > 1) {
+                                    contrastData[i].label = "对比数据";
+                                } else {
+                                    contrastData[i].label = chartUtils.convertChinese(contrastData[i].label);
+                                }
+                            }
+                            cf.renderChart(contrastData, $scope.charts[0].config);
+                            Custom.initCheckInfo();
+                        }
                     });
                 } else {
                     $http.get("/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&action=event&type=1&searchType=dataTable&showType=" + showType + "&queryOptions=" + queryOptions).success(function (data) {
@@ -486,11 +596,80 @@ define(["./module"], function (ctrs) {
                         $scope.charts[0].config.bGap = true;
                         $scope.charts[0].config.instance = chart;
                         util.renderLegend(chart, $scope.charts[0].config);
-                        for (var i = 0; i < data.length; i++) {
-                            data[i].label = chartUtils.convertChinese(data[i].label);
+                        var hasSem = false;
+                        for (var t = 0; t < queryOptions.length; t++) {
+                            for (var k = 0; k < $scope.sem_checkArray.length; k++) {
+                                if (queryOptions[t] == $scope.sem_checkArray[k]) {
+                                    hasSem = true;
+                                    break;
+                                }
+                            }
                         }
-                        cf.renderChart(data, $scope.charts[0].config);
-                        Custom.initCheckInfo();
+                        if (hasSem) {
+                            var semRequest = "";
+                            semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end + "&q=cost");
+                            $q.all([semRequest]).then(function (sem_data) {
+                                var cost = 0;
+                                for (var k = 0; k < sem_data.length; k++) {
+                                    for (var c = 0; c < sem_data[k].data.length; c++) {
+                                        cost += Number(sem_data[k].data[c].cost);
+                                    }
+                                }
+                                $scope.sem_checkArray.forEach(function (key) {
+                                    for (var i = 0; i < data.length; i++) {
+                                        if (key == data[i].label) {
+                                            var temporaryContrastData = [];
+                                            var l = 0;
+                                            switch (key) {
+                                                case "avgCost":
+                                                    for (l = 0; l < data[i].quota.length; l++) {
+                                                        if (Number(data[i].quota[l]) == 0) {
+                                                            temporaryContrastData.push(0);
+                                                        } else {
+                                                            temporaryContrastData.push((cost / Number(data[i].quota[l])).toFixed(2));
+                                                        }
+                                                    }
+                                                    data[i].quota = temporaryContrastData;
+                                                    break;
+                                                case "profit":
+                                                    for (l = 0; l < data[i].quota.length; l++) {
+                                                        if (Number(data[i].quota[l]) == 0) {
+                                                            temporaryContrastData.push(0);
+                                                        } else {
+                                                            temporaryContrastData.push((Number(data[i].quota[l]) - cost).toFixed(2));
+                                                        }
+                                                    }
+                                                    data[i].quota = temporaryContrastData;
+                                                    break;
+                                                case "orderMoney":
+                                                    //var temporaryContrastData = [];
+                                                    //for(var l = 0;l<data[i].quota.length;l++){
+                                                    //    if(Number(data[i].quota[l])==0){
+                                                    //        temporaryContrastData.push(0);
+                                                    //    }else{
+                                                    //        temporaryContrastData.push((cost/Number(data[i].quota[l])).toFixed(2));
+                                                    //    }
+                                                    //}
+                                                    //data[i].quota = temporaryContrastData;
+                                                    break;
+                                            }
+
+                                        }
+                                    }
+                                });
+                                for (var i = 0; i < data.length; i++) {
+                                    data[i].label = chartUtils.convertChinese(data[i].label);
+                                }
+                                cf.renderChart(data, $scope.charts[0].config);
+                                Custom.initCheckInfo();
+                            });
+                        } else {
+                            for (var i = 0; i < data.length; i++) {
+                                data[i].label = chartUtils.convertChinese(data[i].label);
+                            }
+                            cf.renderChart(data, $scope.charts[0].config);
+                            Custom.initCheckInfo();
+                        }
                     });
                 }
 

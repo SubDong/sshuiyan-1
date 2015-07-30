@@ -555,6 +555,20 @@ var transform = {
                                 quota: quotaArry
                             };
                             break;
+                        case "avgCost":
+                            for (i = 0; i < results.length; i++) {
+                                for (var key in results[i]) {
+                                    if (key == queryOption) {
+                                        quotaArry.push(results[i].avgCost.value);
+                                    }
+                                }
+                            }
+                            quota_data = {
+                                label: "avgCost",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
                         default :
                             break;
                     }
@@ -778,7 +792,7 @@ var transform = {
                             case "orderNumRate":
                                 for (i = 0; i < result.length; i++) {
                                     dataArry.push({
-                                        orderNumRate: Number(result[i].orderNumRate_orderNum.value) / Number(results[i].orderNumRate_convertTime.value),
+                                        orderNumRate: Number(result[i].orderNumRate_orderNum.value) / Number(result[i].orderNumRate_convertTime.value),
                                         campaignName: result[i].key
                                     });
                                 }
@@ -1011,6 +1025,14 @@ var transform = {
                             for (i = 0; i < result.length; i++) {
                                 dataArry.push({
                                     orderNumRate: Number(result[i].orderNumRate_orderNum.value) / Number(result[i].orderNumRate_convertTime.value),
+                                    campaignName: result[i].key
+                                });
+                            }
+                            break;
+                        case "avgCost":
+                            for (i = 0; i < result.length; i++) {
+                                dataArry.push({
+                                    avgCost: result[i].avgCost.value,
                                     campaignName: result[i].key
                                 });
                             }
@@ -1362,6 +1384,34 @@ var transform = {
                             });
                             quota_data = {
                                 label: "orderNumRate",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "avgCost":
+                            results.forEach(function(result){
+                                for(var key in result){
+                                    if(key == option){
+                                        quotaArry.push(result[key].value);
+                                    }
+                                }
+                            });
+                            quota_data = {
+                                label: "avgCost",
+                                key: keyArr,
+                                quota: quotaArry
+                            };
+                            break;
+                        case "avgCost_contrast":
+                            results.forEach(function(result){
+                                for(var key in result){
+                                    if(key == option){
+                                        quotaArry.push(result[key].value);
+                                    }
+                                }
+                            });
+                            quota_data = {
+                                label: "avgCost_contrast",
                                 key: keyArr,
                                 quota: quotaArry
                             };
