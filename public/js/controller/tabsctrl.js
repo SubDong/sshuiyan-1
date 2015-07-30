@@ -931,10 +931,13 @@ define(["app"], function (app) {
         }
         //前端ui-grid通用查询方法
         $rootScope.targetSearch = function (isClicked) {
+            $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
             $scope.gridOpArray = angular.copy($rootScope.gridArray);
             $scope.gridOptions.columnDefs = $scope.gridOpArray;
             $scope.gridOptions.rowHeight = 32;
             $scope.gridOptions.columnFooterHeight = 32;
+
+
             //if (isClicked) {
             $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
             //}
@@ -952,6 +955,17 @@ define(["app"], function (app) {
             }
             if ($rootScope.tableSwitch.isJudge == undefined) $scope.isJudge = true;
             if ($rootScope.tableSwitch.isJudge) $rootScope.tableSwitch.tableFilter = undefined;
+            $rootScope.gridArray.forEach(function (item, i) {
+                if (item["cellTemplate"] == undefined) {
+                    var a = $rootScope.tableSwitch.latitude.field;
+                    if(a != undefined && a == item["field"]){
+                        item["footerCellTemplate"] = "<div class='ui-grid-cell-contents'>当页汇总</div>";
+                    }else{
+                        item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 100px'>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),2)}}<br/>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),3)}}<br/>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),4)}}</div>";
+                    }
+                }
+            });
+            console.log($rootScope.gridArray)
             if ($rootScope.tableSwitch.number == 5) {//推广URL速度
                 $http({
                     method: 'GET',
@@ -959,6 +973,7 @@ define(["app"], function (app) {
                 }).success(function (data, status) {
                     if (data.length <= 0) {
                         var result = [{"loc": "暂无数据"}];
+                        $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
                         $scope.gridOptions.data = result;
                     }
                 });
@@ -977,7 +992,8 @@ define(["app"], function (app) {
                         } else {
                             result.push(item);
                         }
-                    })
+                    });
+                    $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
                     $scope.gridOptions.data = result;
                 })
             } else {
@@ -1038,6 +1054,7 @@ define(["app"], function (app) {
                                 }
 
                             });
+                            $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
                             dataArray.push(dataObj);
                             $scope.gridOptions.data = dataArray;
                         });
@@ -1064,22 +1081,30 @@ define(["app"], function (app) {
                                         resultObj[item] = "--";
                                     });
                                     resultObj[$rootScope.tableSwitch.latitude.field] = "暂无数据";
-                                    resultData.push(resultObj)
+                                    resultData.push(resultObj);
+                                    $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
                                     $scope.gridOptions.data = resultData;
-                                } else $scope.gridOptions.data = data;
+                                } else {
+                                    $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
+                                    $scope.gridOptions.data = data;
+                                }
                             } else {
                                 if (data.length == 0) {
                                     var resultData = [];
                                     var resultObj = {};
-                                    if($rootScope.checkedArray != undefined){
+                                    if ($rootScope.checkedArray != undefined) {
                                         $rootScope.checkedArray.forEach(function (item, a) {
                                             resultObj[item] = "--";
                                         });
                                     }
                                     resultObj[$rootScope.tableSwitch.latitude.field] = "暂无数据";
-                                    resultData.push(resultObj)
+                                    resultData.push(resultObj);
+                                    $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
                                     $scope.gridOptions.data = resultData;
-                                } else $scope.gridOptions.data = data;
+                                } else {
+                                    $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
+                                    $scope.gridOptions.data = data;
+                                }
                             }
                         } else {
                             var result = [];
@@ -1123,18 +1148,21 @@ define(["app"], function (app) {
                                 }
                             }
                             if (jupey == 0) {
-                                var resultObj = {}
+                                var resultObj = {};
                                 $rootScope.checkedArray.forEach(function (item, a) {
                                     resultObj[item] = "--";
-                                })
+                                });
                                 resultObj[$rootScope.tableSwitch.latitude.field] = "暂无数据";
                                 result.push(resultObj)
                             }
+                            ;
+                            $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
                             $scope.gridOptions.data = result;
                         }
                     }
 
                 }).error(function (error) {
+                    console.log(error)
                 });
             }
         };
@@ -1150,7 +1178,7 @@ define(["app"], function (app) {
         });
         //数据对比
         $rootScope.datepickerClickTow = function (start, end, label) {
-//            $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
+            $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
             var gridArrayOld = angular.copy($rootScope.gridArray);
             $rootScope.gridArray.forEach(function (item, i) {
                 var a = item["field"];
@@ -1161,6 +1189,7 @@ define(["app"], function (app) {
                 }
             });
             $scope.gridOptions.rowHeight = 95;
+            $scope.gridOptions.columnFooterHeight = 95;
             var time = chartUtils.getTimeOffset(start, end);
             var startTime = time[0];
             var endTime = time[0] + ($rootScope.tableTimeEnd - $rootScope.tableTimeStart);
@@ -1198,7 +1227,7 @@ define(["app"], function (app) {
                             dataArray.push(a);
                         }
                     });
-//                    $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
+                    $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
                 });
                 $scope.gridOptions.data = dataArray;
                 $rootScope.gridArray = gridArrayOld;
