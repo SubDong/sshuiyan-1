@@ -4,7 +4,7 @@
 define(["./module"], function (ctrs) {
     "use strict";
 
-    ctrs.controller('trend_today_ctrl', function ($scope, $q, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
+    ctrs.controller('trend_today_ctrl', function ($scope, $q, $rootScope, $http, requestService, $cookieStore, messageService, areaService, uiGridConstants) {
         $scope.todayClass = true;
         $scope.hourcheckClass = true;
         $scope.lastDaySelect = true;
@@ -254,15 +254,15 @@ define(["./module"], function (ctrs) {
                 switch ($scope.compareType) {
                     case 1:
                         var times = [0, -1];
-                        $scope.compare(times, type,true);
+                        $scope.compare(times, type, true);
                         break;
                     case 2:
                         var times = [0, -7];
-                        $scope.compare(times, type,true);
+                        $scope.compare(times, type, true);
                         break;
                     default :
                         var times = [$rootScope.start, $rootScope.end];
-                        $scope.compare(times, type,true);
+                        $scope.compare(times, type, true);
                         break;
                 }
                 return;
@@ -304,15 +304,15 @@ define(["./module"], function (ctrs) {
                 switch ($scope.compareType) {
                     case 1:
                         var times = [0, -1];
-                        $scope.compare(times, type,true);
+                        $scope.compare(times, type, true);
                         break;
                     case 2:
                         var times = [0, -7];
-                        $scope.compare(times, type,true);
+                        $scope.compare(times, type, true);
                         break;
                     default :
                         var times = [$rootScope.start, $rootScope.end];
-                        $scope.compare(times, type,true);
+                        $scope.compare(times, type, true);
                         break;
                 }
                 return;
@@ -464,7 +464,7 @@ define(["./module"], function (ctrs) {
             $rootScope.start = times[0];
             $rootScope.end = times[1];
             $rootScope.interval = -1;
-            $scope.isShowCalendar=true;
+            $scope.isShowCalendar = true;
             $scope.compareType = true;
             var type = [chartUtils.convertEnglish($scope.charts[0].config.legendData[0])];
             $scope.compare(times, type, true);
@@ -533,7 +533,7 @@ define(["./module"], function (ctrs) {
             });
         }
         $scope.resetC = function (refresh) {
-            $scope.isShowCalendar=false;
+            $scope.isShowCalendar = false;
             $scope.compareType = false;
             $scope.choiceClass = false;
             $scope.dayselect = false;
@@ -591,12 +591,41 @@ define(["./module"], function (ctrs) {
             $scope.reset();
             $scope.todayClass = true;
         };
-        $scope.cancelCheckbox=function(){
+        $scope.cancelCheckbox = function () {
             var checkBox = $("#cm").find("input[type='checkbox']");
             checkBox.each(function (i, o) {
                 $(o).prev("span").css("background-position", "0px 0px");
                 $(o).prop('checked', false);
             });
+        }
+
+        $rootScope.initMailData = function () {
+            $http.get("api/saveMailConfig?rt=read&rule_url=" + $rootScope.mailUrl[1] + "").success(function (result) {
+                if (result) {
+                    var ele = $("ul[name='sen_form']");
+                    formUtils.rendererMailData(result, ele);
+                }
+            });
+        }
+        $scope.sendConfig = function () {
+            var formData = formUtils.vaildateSubmit($("ul[name='sen_form']"));
+            var result = formUtils.validateEmail(formData.mail_address, formData);
+            if (result.ec) {
+                alert(result.info);
+            } else {
+                formData.rule_url = $rootScope.mailUrl[1];
+                formData.uid = $cookieStore.get('uid');
+                formData.site_id = $rootScope.siteId;
+                formData.schedule_date = $scope.mytime.time.Format('hh:mm');
+                $http.get("api/saveMailConfig?data=" + JSON.stringify(formData)).success(function (data) {
+                    var result = JSON.parse(eval("(" + data + ")").toString());
+                    if (result.ok == 1) {
+                        alert("操作成功!");
+                    } else {
+                        alert("操作失败!");
+                    }
+                });
+            }
         }
     });
 });

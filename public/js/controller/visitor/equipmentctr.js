@@ -223,7 +223,7 @@ define(["./module"], function (ctrs) {
         }
 
         $scope.compareType = false;
-        $rootScope.datePickerCompare = function (start, end, lable) {
+        $scope.datePickerCompare = function (start, end, lable) {
             var times = chartUtils.getTimeOffset(start, end);
             var type = [chartUtils.convertEnglish($scope.charts[0].config.legendData[0])];
             $rootScope.start = times[0];

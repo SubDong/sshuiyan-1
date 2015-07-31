@@ -4,7 +4,7 @@
 define(["./module"], function (ctrs) {
     "use strict";
 
-    ctrs.controller('trend_yesterday_ctrl', function ($scope, $rootScope, $q, $http, requestService, messageService, areaService, uiGridConstants) {
+    ctrs.controller('trend_yesterday_ctrl', function ($scope, $rootScope, $q, $http, $cookieStore, requestService, messageService, areaService, uiGridConstants) {
         $('#reportrange span').html(GetDateStr(-1));
         $scope.yesterdayClass = true;
         $scope.hourcheckClass = true;
@@ -27,16 +27,16 @@ define(["./module"], function (ctrs) {
         $scope.terminalSearch = "";
         $scope.areaSearch = "";
 //        取消显示的高级搜索的条件
-        $scope.removeSourceSearch = function(obj){
+        $scope.removeSourceSearch = function (obj) {
             $scope.souce.selected = {"name": "全部"};
             $rootScope.$broadcast("loadAllSource");
             obj.sourceSearch = "";
         }
-        $scope.removeTerminalSearch = function(obj){
+        $scope.removeTerminalSearch = function (obj) {
             $rootScope.$broadcast("loadAllTerminal");
             obj.terminalSearch = "";
         }
-        $scope.removeAreaSearch = function(obj){
+        $scope.removeAreaSearch = function (obj) {
             $scope.city.selected = {"name": "全部"};
             $rootScope.$broadcast("loadAllArea");
             obj.areaSearch = "";
@@ -111,28 +111,28 @@ define(["./module"], function (ctrs) {
 
         $scope.dt = new Date();
         $scope.onLegendClickListener = function (radio, chartObj, chartConfig, checkedVal) {
-                if ($scope.compareType) {
-                    switch ($scope.compareType) {
-                        case 1:
-                            var times = [-1, -2];
-                            $scope.compare(times, checkedVal);
-                            break;
-                        case 2:
-                            var times = [-1 -8];
-                            $scope.compare(times, checkedVal);
-                            break;
-                        default :
-                            var times = [$rootScope.start, $rootScope.end];
-                            $scope.compare(times, checkedVal);
-                            break;
-                    }
-                } else {
-                    clear.lineChart($scope.charts[0].config, checkedVal);
-                    $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
-                    $scope.charts[0].types = checkedVal;
-                    var chartarray = [$scope.charts[0]];
-                    requestService.refresh(chartarray);
+            if ($scope.compareType) {
+                switch ($scope.compareType) {
+                    case 1:
+                        var times = [-1, -2];
+                        $scope.compare(times, checkedVal);
+                        break;
+                    case 2:
+                        var times = [-1 - 8];
+                        $scope.compare(times, checkedVal);
+                        break;
+                    default :
+                        var times = [$rootScope.start, $rootScope.end];
+                        $scope.compare(times, checkedVal);
+                        break;
                 }
+            } else {
+                clear.lineChart($scope.charts[0].config, checkedVal);
+                $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
+                $scope.charts[0].types = checkedVal;
+                var chartarray = [$scope.charts[0]];
+                requestService.refresh(chartarray);
+            }
         }
         $scope.yesterDayFormat = function (data, config, e) {
             if ($rootScope.interval == 1) {
@@ -244,15 +244,15 @@ define(["./module"], function (ctrs) {
                 switch ($scope.compareType) {
                     case 1:
                         var times = [-1, -2];
-                        $scope.compare(times, type,true);
+                        $scope.compare(times, type, true);
                         break;
                     case 2:
                         var times = [-1, -8];
-                        $scope.compare(times, type,true);
+                        $scope.compare(times, type, true);
                         break;
                     default :
                         var times = [$rootScope.start, $rootScope.end];
-                        $scope.compare(times, type,true);
+                        $scope.compare(times, type, true);
                         break;
                 }
                 return;
@@ -294,15 +294,15 @@ define(["./module"], function (ctrs) {
                 switch ($scope.compareType) {
                     case 1:
                         var times = [-1, -2];
-                        $scope.compare(times, type,true);
+                        $scope.compare(times, type, true);
                         break;
                     case 2:
                         var times = [-1, -8];
-                        $scope.compare(times, type,true);
+                        $scope.compare(times, type, true);
                         break;
                     default :
                         var times = [$rootScope.start, $rootScope.end];
-                        $scope.compare(times, type,true);
+                        $scope.compare(times, type, true);
                         break;
                 }
                 return;
@@ -438,7 +438,7 @@ define(["./module"], function (ctrs) {
             $rootScope.start = times[0];
             $rootScope.end = times[1];
             $rootScope.interval = -1;
-            $scope.isShowCalendar=true;
+            $scope.isShowCalendar = true;
             $scope.compareType = true;
             var type = [chartUtils.convertEnglish($scope.charts[0].config.legendData[0])];
             $scope.compare(times, type, true);
@@ -507,7 +507,7 @@ define(["./module"], function (ctrs) {
             });
         }
         $scope.resetC = function (refresh) {
-            $scope.isShowCalendar=false;
+            $scope.isShowCalendar = false;
             $scope.compareType = false;
             $scope.choiceClass = false;
             $scope.dayselect = false;
@@ -566,12 +566,41 @@ define(["./module"], function (ctrs) {
             $scope.reset();
             $scope.yesterdayClass = true;
         };
-        $scope.cancelCheckbox=function(){
+        $scope.cancelCheckbox = function () {
             var checkBox = $("#cm").find("input[type='checkbox']");
             checkBox.each(function (i, o) {
                 $(o).prev("span").css("background-position", "0px 0px");
                 $(o).prop('checked', false);
             });
+        }
+
+        $rootScope.initMailData = function () {
+            $http.get("api/saveMailConfig?rt=read&rule_url=" + $rootScope.mailUrl[2] + "").success(function (result) {
+                if (result) {
+                    var ele = $("ul[name='sen_form']");
+                    formUtils.rendererMailData(result, ele);
+                }
+            });
+        }
+        $scope.sendConfig = function () {
+            var formData = formUtils.vaildateSubmit($("ul[name='sen_form']"));
+            var result = formUtils.validateEmail(formData.mail_address, formData);
+            if (result.ec) {
+                alert(result.info);
+            } else {
+                formData.rule_url = $rootScope.mailUrl[2];
+                formData.uid = $cookieStore.get('uid');
+                formData.site_id = $rootScope.siteId;
+                formData.schedule_date = $scope.mytime.time.Format('hh:mm');
+                $http.get("api/saveMailConfig?data=" + JSON.stringify(formData)).success(function (data) {
+                    var result = JSON.parse(eval("(" + data + ")").toString());
+                    if (result.ok == 1) {
+                        alert("操作成功!");
+                    } else {
+                        alert("操作失败!");
+                    }
+                });
+            }
         }
 
     });

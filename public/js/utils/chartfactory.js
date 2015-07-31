@@ -136,6 +136,10 @@ var op = {
         if (chartConfig.chartType == "bar") {
             if (chartConfig.barClick) {
                 chartObj.on("click", chartConfig.barClick);
+            }else if (chartConfig.dblClick) {
+                chartObj.on("dblclick", function(param){
+                    chartConfig.dblClick(param,chartConfig.quota);
+                });
             }
         }
         chartObj.xAxis = [];
@@ -159,10 +163,6 @@ var op = {
                 },
                 formatter: function (params, ticket, callback) {
                     if (option.tooltip.trigger == "axis") {
-                        //console.log("test");
-                        //if (chartConfig.itemHover) {
-                        //    return chartConfig.itemHover(params, 0, 1);
-                        //}
                         var xName = params[0].name.toString();
                         var res = '<li>' + xName + '</li>';
                         if (xName.indexOf("/点") > -1) {
@@ -294,9 +294,6 @@ var op = {
             }
 
         }
-        //if (chartConfig.chartType == "line") {
-        //    option["color"] = ['#ff7f50', '#87cefa']
-        //}
         chartConfig.toolShow = !chartConfig.toolShow ? false : true;
         if (chartConfig.toolShow) {
             option["toolbox"] = {
@@ -314,12 +311,6 @@ var op = {
         chartConfig.dataValue = !chartConfig.dataValue ? "quota" : chartConfig.dataValue;
         var xData = [];
         var select = {};
-        //if (chartConfig.chartType == "bar" && chartConfig.autoInput) {
-        //    if (json[0].key.length < Number(chartConfig.autoInput)) {
-        //        var inputCount = chartConfig.autoInput - json[0].key.length;
-        //        chartUtils.addStep(json, inputCount);
-        //    }
-        //}
         json.forEach(function (item) {
             select[chartUtils.convertChinese(item.label)] = true;
             var serie = {
@@ -333,9 +324,6 @@ var op = {
             if (chartConfig.lineType == undefined) {
                 serie.itemStyle = {
                     normal: {
-                        //areaStyle: {
-                        //    type: 'default'
-                        //},
                         lineStyle: {
                             width: 2
                         }
@@ -383,7 +371,6 @@ var op = {
             xData.push(x);
             option.series.push(serie);
         });
-        //console.log(option);
         if (!chartConfig.twoYz) {
             var legendType = false;
             if (labelData.length > 1) {
@@ -392,9 +379,6 @@ var op = {
                 }
             }
             for (var i = 0; i < labelData.length; i++) {
-                //if (labelData[i] == "uv" || labelData[i] == "pv" || labelData[i] == "访客数(UV)" || labelData[i] == "浏览量(PV)") {
-                //    option.series[0]["yAxisIndex"] = 0;
-                //} else {
                 var formatType = labelData[i].label;
                 if (!legendType)
                     option.series[i]["yAxisIndex"] = i;
@@ -500,7 +484,6 @@ var op = {
                 x: 'left',
                 data: !chartConfig.legendData ? data.label : chartConfig.legendData
             },
-            //calculable: true,
             series: []
         };
         chartConfig.toolShow = !chartConfig.toolShow ? false : true;

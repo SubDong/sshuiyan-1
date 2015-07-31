@@ -7,9 +7,6 @@ define(["../app"], function (app) {
         $rootScope.defaultcb = function (data, chartconfig) {
             cf.renderChart(data, chartconfig);
         }
-        //$rootScope.user = "jiehun";
-        //$rootScope.baiduAccount = "baidu-bjjiehun2123585";
-        //$rootScope.userType = 2;
         $rootScope.start = 0;
         $rootScope.end = 0;
         $rootScope.interval = 1;

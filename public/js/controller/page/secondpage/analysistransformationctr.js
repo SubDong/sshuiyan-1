@@ -77,11 +77,12 @@ define(["./../module"], function (ctrs) {
         $scope.analysisFormat = function (data, config, e) {
             var json = JSON.parse(eval("(" + data + ")").toString());
             var times = [$rootScope.start, $rootScope.end];
-            var result = chartUtils.getRf_type(json, times, "serverLabel", e.types, config);
+            var sepcialResult=chartUtils.getRf_type(json, times, "serverLabel", e.types, config,3);
+            var result =sepcialResult[0];
             config['noFormat'] = true;
             config['twoYz'] = "none";
             cf.renderChart(result, config);
-            var final_result = chartUtils.getExternalinkPie(result);//获取barchart的数据
+            var final_result = chartUtils.getExternalinkPie(sepcialResult[1]);//获取barchart的数据
             var pieData = chartUtils.getEnginePie(final_result, null, e);
             $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
             cf.renderChart(pieData, $scope.charts[0].config);

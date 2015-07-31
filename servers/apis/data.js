@@ -22,6 +22,8 @@ var changeList_request = require("../services/changeList_request");
 var transform = require("../services/transform-request");
 var heaturl_request = require("../services/heaturl_request");
 var ad_request = require("../services/ad_request");
+var mail = require('../mail/mail');
+var path = require('path');
 
 api.get('/charts', function (req, res) {
     var query = url.parse(req.url, true).query, quotas = [], type = query['type'], dimension = query.dimension, filter = null, topN = [], userType = query.userType;
@@ -991,5 +993,61 @@ api.get("/adsCreative", function (req, res) {
     es_request.search(req.es, indexes, type, quotas, dimension, [0], filters, period[0], period[1], interval, function (data) {
         datautils.send(res, data);
     })
+});
+api.get('/test', function (req, res) {
+    var query = url.parse(req.url, true).query;
+    var msg = query.msg;
+    var mailOptions = {
+        from: 'Ism<70285622@qq.com> ', // sender address
+        to: 'xiaoweiqb@126.com', // list of receivers
+        subject: 'Hello', // Subject line
+        text: 'Hello world', // plaintext body
+        html: '<b>' + msg + '</b>', // html body
+        attachments: [
+            {
+                filename: 'a.text',
+                path: './servers/apis/a.text'
+            }
+        ]
+    };
+    mail.send(mailOptions, function (error, info) {
+        if (error) {
+            console.log(error);
+            datautils.send(res, {status: 'error', info: error});
+        } else {
+            datautils.send(res, {status: 'success', info: 'Message sent: ' + info.response});
+        }
+    });
+});
+api.get("/saveMailConfig", function (req, res) {
+    var model = "mail_rules_model";
+    var query = url.parse(req.url, true).query;
+    var requestType = query.rt;
+    if (!requestType) {
+        var dataInfo = query['data'].replace(/\*/g, "%");
+        var jsonData = JSON.parse(dataInfo);
+        dao.find(model, JSON.stringify({rule_url: jsonData.rule_url}), null, {}, function (err, docs) {
+            if (err)
+                return console.error(err);
+            if (docs.length) {
+                dao.update(model, JSON.stringify({rule_url: jsonData.rule_url}), JSON.stringify(jsonData), function (err, result) {
+                    datautils.send(res, JSON.stringify(result));
+                });
+            } else {
+                dao.save(model, jsonData, function (result) {
+                    if(result){
+                        datautils.send(res, JSON.stringify({ok: "1"}));
+                    }
+                });
+            }
+        });
+    } else {
+        var rule_url = query.rule_url;
+        dao.find(model, JSON.stringify({rule_url: rule_url}), null, {}, function (err, docs) {
+            if (err)
+                return console.error(err);
+            datautils.send(res, docs);
+        });
+    }
 });
 module.exports = api;

@@ -105,7 +105,8 @@ define(["./module"], function (ctrs) {
         $scope.externalinkFormat = function (data, config, e) {
             var json = JSON.parse(eval("(" + data + ")").toString());
             var times = [$rootScope.start, $rootScope.end];
-            var result = chartUtils.getRf_type(json, times, "serverLabel", e.types, config);
+            var specialResult=chartUtils.getRf_type(json, times, "serverLabel", e.types, config,3);
+            var result = specialResult[0];
             result.forEach(function (item) {
                 var _thisCount = 0;
                 item.quota.forEach(function (q) {
@@ -118,7 +119,7 @@ define(["./module"], function (ctrs) {
             config['twoYz'] = "none";
             cf.renderChart(result, config);
             //渲染pie图
-            var pieData = chartUtils.getEnginePie(result, "?", e);
+            var pieData = chartUtils.getEnginePie(specialResult[1], null, e);
             $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
             //$scope.charts[0].config.instance.on("hover", $scope.pieListener);
             cf.renderChart(pieData, $scope.charts[0].config);
