@@ -22,7 +22,7 @@ var changeList_request = require("../services/changeList_request");
 var transform = require("../services/transform-request");
 var heaturl_request = require("../services/heaturl_request");
 var ad_request = require("../services/ad_request");
-var mail = require('../mail/mail');
+//var mail = require('../mail/mail');
 var path = require('path');
 
 api.get('/charts', function (req, res) {
