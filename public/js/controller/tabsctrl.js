@@ -937,7 +937,6 @@ define(["app"], function (app) {
             $scope.gridOptions.rowHeight = 32;
             $scope.gridOptions.columnFooterHeight = 32;
 
-
             //if (isClicked) {
             $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
             //}
@@ -955,17 +954,18 @@ define(["app"], function (app) {
             }
             if ($rootScope.tableSwitch.isJudge == undefined) $scope.isJudge = true;
             if ($rootScope.tableSwitch.isJudge) $rootScope.tableSwitch.tableFilter = undefined;
-            $rootScope.gridArray.forEach(function (item, i) {
+            $scope.gridOpArray.forEach(function (item, i) {
                 if (item["cellTemplate"] == undefined) {
                     var a = $rootScope.tableSwitch.latitude.field;
                     if(a != undefined && a == item["field"]){
-                        item["footerCellTemplate"] = "<div class='ui-grid-cell-contents'>当页汇总</div>";
+                        item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 32px'>当页汇总</div>";
                     }else{
-                        item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 100px'>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),2)}}<br/>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),3)}}<br/>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),4)}}</div>";
+//                        item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 100px'>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),2)}}<br/>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),3)}}<br/>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),4)}}</div>";
+                        item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 32px'>" +
+                            "<ul><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),2)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),3)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),4)}}</li></ul></div>";
                     }
                 }
             });
-            console.log($rootScope.gridArray)
             if ($rootScope.tableSwitch.number == 5) {//推广URL速度
                 $http({
                     method: 'GET',
@@ -1068,7 +1068,6 @@ define(["app"], function (app) {
                                 }
                             })
                         }
-
                         if ($rootScope.tableFormat != "hour") {
                             if ($rootScope.tableFormat == "week") {
                                 data.forEach(function (item, i) {
@@ -1180,12 +1179,12 @@ define(["app"], function (app) {
         $rootScope.datepickerClickTow = function (start, end, label) {
             $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
             var gridArrayOld = angular.copy($rootScope.gridArray);
+            var latitudeOld = angular.copy($rootScope.tableSwitch.latitude);
             $rootScope.gridArray.forEach(function (item, i) {
                 var a = item["field"];
                 if (item["cellTemplate"] == undefined) {
                     item["cellTemplate"] = "<ul class='contrastlist'><li>{{grid.appScope.getContrastInfo(grid, row,0,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,1,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,2,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,3,'" + a + "')}}</li></ul>";
                     item["footerCellTemplate"] = "<ul class='contrastlist'><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),0)}}</li><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),1)}}</li><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),2)}}</li><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),3)}}</li></ul>";
-
                 }
             });
             $scope.gridOptions.rowHeight = 95;
@@ -1230,6 +1229,7 @@ define(["app"], function (app) {
                     $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
                 });
                 $scope.gridOptions.data = dataArray;
+                $rootScope.tableSwitch.latitude = latitudeOld;
                 $rootScope.gridArray = gridArrayOld;
             })
         };
