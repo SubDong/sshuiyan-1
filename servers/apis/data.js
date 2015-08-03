@@ -862,6 +862,13 @@ api.get("/transform/transformAnalysis", function (req, res) {
             transform.SearchContrast(req.es, indexString, contrast_indexString, type, action, showType, queryOptions, function (result) {
                 datautils.send(res, result);
             });
+        } else if (searchType == "queryDataByUrl") {
+            var showType = parameters[5].split("=")[1];
+            var all_urls = parameters[6].split("=")[1];
+            var urlArray = all_urls.split(",");
+            transform.searchByUrls(req.es,indexString,type,urlArray, showType,function(result){
+                datautils.send(res, result);
+            });
         } else {
             var query = "";
             query = parameters[5].split("=")[1];

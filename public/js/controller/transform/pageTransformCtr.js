@@ -3,7 +3,7 @@
  */
 define(["./module"], function (ctrs) {
     "use strict";
-    ctrs.controller('pageTransformCtr', function ($scope, $rootScope, $q, requestService, areaService, $http, SEM_API_URL, uiGridConstants) {
+    ctrs.controller('pageTransformCtr', function ($scope, $rootScope, $q, requestService, areaService, $http, SEM_API_URL, uiGridConstants, $cookieStore) {
             $scope.city.selected = {"name": "全部"};
             $scope.todayClass = true;
             $rootScope.start = 0;
@@ -11,6 +11,34 @@ define(["./module"], function (ctrs) {
             $rootScope.tableFormat = null;
             $scope.send = true;//显示发送
             $scope.isCompared = false;
+            $scope.getRedisConvertData_url = function () {
+                var uid = $cookieStore.get("uid");
+                $http({
+                    method: "GET",
+                    url: "/config/page_conv?type=search&query=" + JSON.stringify({uid: uid})
+                }).success(function (data) {
+                    var url_convert_info = [];
+                    for (var i = 0; i < data.length; i++) {
+                        var all_urls = []
+                        for (var k = 0; k < data[i].target_urls.length; k++) {//获取目标路径
+                            all_urls.push(data[i].target_urls[k].url);
+                        }
+                        for (var k = 0; k < data[i].paths.length; k++) {//以转化路线分组获取url
+                            for (var c = 0; c < data[i].paths[k].steps.length; c++) {//获取步骤路径
+                                for (var l = 0; l < data[i].paths[k].steps[c].step_urls.length; l++) {
+                                    all_urls.push(data[i].paths[k].steps[c].step_urls[l].url);
+                                }
+                            }
+                        }
+                        url_convert_info.push({
+                            pathName: data[i].target_name,
+                            all_urls: all_urls
+                        });
+                    }
+                    $scope.convert_url_all = url_convert_info;
+                });
+            };
+            $scope.getRedisConvertData_url();
             //自定义指标显示
             $scope.bases = [
                 {consumption_name: "浏览量(PV)", name: "pv"},
@@ -325,6 +353,99 @@ define(["./module"], function (ctrs) {
                 //地狱过滤样式数据初始化
                 $scope.city.selected = "";
             };
+            var page_crate = function (isContrastDataByTime, start, end, data, all_urls_data) {
+                if ($scope.sem_checkedArray.length != 0) {
+                    var semRequest = "";
+                    semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + start + "&endOffset=" + end + "&q=cost");
+                    $q.all([semRequest]).then(function (sem_data) {
+                        var cost = 0;
+                        var k = 0;
+                        for (k = 0; k < sem_data.length; k++) {
+                            for (var c = 0; c < sem_data[k].data.length; c++) {
+                                cost += Number(sem_data[k].data[c].cost);
+                            }
+                        }
+                        $scope.dateShowArray.forEach(function (checked, index) {
+                            switch ($scope.dateShowArray[index].label) {
+                                case "avgCost":
+                                    for (var key in data) {
+                                        if ("avgCost" == key) {
+                                            if (isContrastDataByTime) {
+                                                if (Number(data["avgCost"] != 0)) {
+                                                    $scope.dateShowArray[index].cValue = (cost / Number(data["avgCost"])).toFixed(2).toString();
+                                                } else {
+                                                    $scope.dateShowArray[index].cValue = "0";
+                                                }
+                                            } else {
+                                                if (Number(data["avgCost"] != 0)) {
+                                                    $scope.dateShowArray[index].value = (cost / Number(data["avgCost"])).toFixed(2).toString();
+                                                } else {
+                                                    $scope.dateShowArray[index].value = "0";
+                                                }
+                                            }
+                                        }
+                                    }
+                                    break;
+                                case "profit":
+                                    for (var key in data) {
+                                        if ("profit" == key) {
+                                            if (isContrastDataByTime) {
+                                                $scope.dateShowArray[index].cValue = (Number(data["profit"]) - cost);
+                                            } else {
+                                                $scope.dateShowArray[index].value = (Number(data["profit"]) - cost);
+                                            }
+                                        }
+                                    }
+                                    break;
+                                case "crate":
+                                    for (var key in data) {
+                                        if ("crate" == key) {
+                                            if (isContrastDataByTime) {
+                                                $scope.dateShowArray[index].cValue = ((Number(data["crate"]) / Number(all_urls_data.crate_pv)) * 100).toFixed(2);
+                                            } else {
+                                                $scope.dateShowArray[index].value = ((Number(data["crate"]) / Number(all_urls_data.crate_pv)) * 100).toFixed(2);
+                                            }
+                                        }
+                                    }
+                                    break;
+                                default :
+                                    for (var key in data) {
+                                        if ($scope.dateShowArray[index].label == key) {
+                                            if (isContrastDataByTime) {
+                                                $scope.dateShowArray[index].cValue = data[key];
+
+                                            } else {
+                                                $scope.dateShowArray[index].value = data[key];
+                                            }
+                                        }
+                                    }
+                                    break;
+                            }
+                        });
+
+                    });
+                } else {
+                    for (var c = 0; c < $scope.dateShowArray.length; c++) {
+                        for (var key in data) {
+                            if ($scope.dateShowArray[c].label == key) {
+                                if ("crate" == key) {
+                                    if (isContrastDataByTime) {
+                                        $scope.dateShowArray[c].cValue = ((Number(data["crate"]) / Number(all_urls_data.crate_pv)) * 100).toFixed(2) + "%";
+                                    } else {
+                                        $scope.dateShowArray[c].value = ((Number(data["crate"]) / Number(all_urls_data.crate_pv)) * 100).toFixed(2) + "%";
+                                    }
+                                } else {
+                                    if (isContrastDataByTime) {
+                                        $scope.dateShowArray[c].cValue = data[key];
+                                    } else {
+                                        $scope.dateShowArray[c].value = data[key];
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
             $scope.page_init = function (isContrastDataByTime) {
                 $scope.es_checkArray = ["pv", "uv", "vc", "ip", "nuv", "nuvRate", "conversions", "crate", "avgCost", "orderNum", "benefit", "profit", "orderNumRate"];
                 $scope.sem_checkArray = ["avgCost", "profit", "orderMoney"];
@@ -368,89 +489,135 @@ define(["./module"], function (ctrs) {
                 }
                 $scope.isCompared = isContrastDataByTime;
                 $http.get("/api/transform/transformAnalysis?start=" + start + "&end=" + end + "&action=event&type=1&searchType=initAll&queryOptions=" + $scope.es_checkedArray).success(function (data) {
-                    if (data != null || data != "") {
-                        if ($scope.sem_checkedArray.length != 0) {
-                            var semRequest = "";
-                            semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + start + "&endOffset=" + end + "&q=cost");
-                            $q.all([semRequest]).then(function (sem_data) {
-                                var cost = 0;
-                                var k = 0;
-                                for (k = 0; k < sem_data.length; k++) {
-                                    for (var c = 0; c < sem_data[k].data.length; c++) {
-                                        cost += Number(sem_data[k].data[c].cost);
-                                    }
+                        if (data != null || data != "") {
+                            var hasCrate = false;
+                            for (var i = 0; i < $scope.es_checkedArray.length; i++) {
+                                if ($scope.es_checkedArray[i] == "crate") {
+                                    hasCrate = true;
+                                    break;
                                 }
-                                $scope.dateShowArray.forEach(function (checked, index) {
-                                    switch ($scope.dateShowArray[index].label) {
-                                        case "avgCost":
-                                            for (var key in data) {
-                                                if ("avgCost" == key) {
-                                                    if (isContrastDataByTime) {
-                                                        if (Number(data["avgCost"] != 0)) {
-                                                            $scope.dateShowArray[index].cValue = (cost / Number(data["avgCost"])).toFixed(2).toString();
-                                                        } else {
-                                                            $scope.dateShowArray[index].cValue = "0";
-                                                        }
-                                                    } else {
-                                                        if (Number(data["avgCost"] != 0)) {
-                                                            $scope.dateShowArray[index].value = (cost / Number(data["avgCost"])).toFixed(2).toString();
-                                                        } else {
-                                                            $scope.dateShowArray[index].value = "0";
-                                                        }
-                                                    }
-                                                }
+                            }
+                            if (hasCrate) {//针对转化率做特殊处理
+                                if ($scope.convert_url_all.length != 0) {
+                                    var all_urls = [];
+                                    for (var k = 0; k < $scope.convert_url_all.length; k++) {
+                                        for (var c = 0; c < $scope.convert_url_all[k].all_urls.length; c++) {
+                                            if ($scope.convert_url_all[k].all_urls[c].split("/").length != 0) {
+                                                all_urls.push("http://" + $scope.convert_url_all[k].all_urls[c]);
+                                            } else {
+                                                all_urls.push("http://" + $scope.convert_url_all[k].all_urls[c] + "/");
                                             }
-                                            break;
-                                        case "profit":
-                                            for (var key in data) {
-                                                if ("profit" == key) {
-                                                    if (isContrastDataByTime) {
-                                                        $scope.dateShowArray[index].cValue = (Number(data["profit"]) - cost);
-                                                    } else {
-                                                        $scope.dateShowArray[index].value = (Number(data["profit"]) - cost);
-                                                    }
-                                                }
-                                            }
-                                            break;
-                                        default :
-                                            for (var key in data) {
-                                                if ($scope.dateShowArray[index].label == key) {
-                                                    if (isContrastDataByTime) {
-                                                        $scope.dateShowArray[index].cValue = data[key];
-
-                                                    } else {
-                                                        $scope.dateShowArray[index].value = data[key];
-                                                    }
-                                                }
-                                            }
-                                            break;
+                                        }
                                     }
-                                });
+                                    var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];
+                                    $http({
+                                        method: "GET",
+                                        url: "/api/transform/transformAnalysis?start=" + start + "&end=" + end + "&action=event&type=1&searchType=queryDataByUrl&showType=total&all_urls=" + test_url
+                                    }).success(function (all_urls_data) {
+                                            page_crate(isContrastDataByTime, start, end, data, all_urls_data[0]);
+                                        }
+                                    );
+                                }
+                                else {
+                                    $scope.getRedisConvertData_url();
+                                    $http({
+                                        method: "GET",
+                                        url: "/api/transform/transformAnalysis?start=" + start + "&end=" + end + "&action=event&type=1&searchType=queryDataByUrl&showType=total&all_urls=" + test_url
+                                    }).success(function (all_urls_data) {
+                                        page_crate(isContrastDataByTime, start, end, data, all_urls_data);
+                                    });
+                                }
+                            } else {
+                                if ($scope.sem_checkedArray.length != 0) {
+                                    var semRequest = "";
+                                    semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + start + "&endOffset=" + end + "&q=cost");
+                                    $q.all([semRequest]).then(function (sem_data) {
+                                        var cost = 0;
+                                        var k = 0;
+                                        for (k = 0; k < sem_data.length; k++) {
+                                            for (var c = 0; c < sem_data[k].data.length; c++) {
+                                                cost += Number(sem_data[k].data[c].cost);
+                                            }
+                                        }
+                                        $scope.dateShowArray.forEach(function (checked, index) {
+                                            switch ($scope.dateShowArray[index].label) {
+                                                case "avgCost":
+                                                    for (var key in data) {
+                                                        if ("avgCost" == key) {
+                                                            if (isContrastDataByTime) {
+                                                                if (Number(data["avgCost"] != 0)) {
+                                                                    $scope.dateShowArray[index].cValue = (cost / Number(data["avgCost"])).toFixed(2).toString();
+                                                                } else {
+                                                                    $scope.dateShowArray[index].cValue = "0";
+                                                                }
+                                                            } else {
+                                                                if (Number(data["avgCost"] != 0)) {
+                                                                    $scope.dateShowArray[index].value = (cost / Number(data["avgCost"])).toFixed(2).toString();
+                                                                } else {
+                                                                    $scope.dateShowArray[index].value = "0";
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    break;
+                                                case "profit":
+                                                    for (var key in data) {
+                                                        if ("profit" == key) {
+                                                            if (isContrastDataByTime) {
+                                                                $scope.dateShowArray[index].cValue = (Number(data["profit"]) - cost);
+                                                            } else {
+                                                                $scope.dateShowArray[index].value = (Number(data["profit"]) - cost);
+                                                            }
+                                                        }
+                                                    }
+                                                    break;
+                                                default :
+                                                    for (var key in data) {
+                                                        if ($scope.dateShowArray[index].label == key) {
+                                                            if (isContrastDataByTime) {
+                                                                $scope.dateShowArray[index].cValue = data[key];
 
-                            });
-                        } else {
-                            for (var c = 0; c < $scope.dateShowArray.length; c++) {
-                                for (var key in data) {
-                                    if ($scope.dateShowArray[c].label == key) {
-                                        if (isContrastDataByTime) {
-                                            $scope.dateShowArray[c].cValue = data[key];
-                                        } else {
-                                            $scope.dateShowArray[c].value = data[key];
+                                                            } else {
+                                                                $scope.dateShowArray[index].value = data[key];
+                                                            }
+                                                        }
+                                                    }
+                                                    break;
+                                            }
+                                        });
+
+                                    });
+                                } else {
+                                    for (var c = 0; c < $scope.dateShowArray.length; c++) {
+                                        for (var key in data) {
+                                            if ($scope.dateShowArray[c].label == key) {
+                                                if (isContrastDataByTime) {
+                                                    $scope.dateShowArray[c].cValue = data[key];
+                                                } else {
+                                                    $scope.dateShowArray[c].value = data[key];
+                                                }
+                                            }
                                         }
                                     }
                                 }
                             }
-                        }
-                        if (isContrastDataByTime) {
-                            $scope.DateNumbertwo = true;
+                            if (isContrastDataByTime) {
+                                $scope.DateNumbertwo = true;
+                                $scope.DateLoading = true;
+                            }
+                            $scope.DateNumber = true;
                             $scope.DateLoading = true;
                         }
-                        $scope.DateNumber = true;
-                        $scope.DateLoading = true;
-                    }
 
-                });
+                    }
+                )
+                ;
             };
+            var aggs_time = function (start, end, contrast_start, contrast_end) {
+                var aggs_start = Number(start) > Number(contrast_start) ? Number(contrast_start) : Number(start);
+                var aggs_end = Number(end) > Number(contrast_end) ? Number(contrast_end) : Number(end);
+                return {start: aggs_start, end: aggs_end};
+            }
             /**
              * @param isContrastTime　是否为对比数据
              * @param showType　显示横轴方式　有四种：hour小时为单位，显示一天24小时的数据；day天为单位，显示数天的数据，week周为单位，显示数周的数据；month月为单位，显示数月的数据
@@ -458,6 +625,7 @@ define(["./module"], function (ctrs) {
              */
             $scope.dataTable = function (isContrastTime, showType, queryOptions, renderLegend) {
                 if (isContrastTime) {
+                    var crate_time = aggs_time($rootScope.start, $rootScope.end, $scope.start, $scope.end);
                     $http.get("/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&action=event&type=1&searchType=contrastData&showType=" + showType + "&queryOptions=" + queryOptions + "&contrastStart=" + $scope.start + "&contrastEnd=" + $scope.end).success(function (contrastData) {
                         var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
                         chart.showLoading({
@@ -477,23 +645,205 @@ define(["./module"], function (ctrs) {
                                 }
                             }
                         }
+                        var hasCrate = false;
+                        for (var i = 0; i < queryOptions.length; i++) {
+                            if (queryOptions[i] == "crate") {
+                                hasCrate = true;
+                                break;
+                            }
+                        }
                         if (hasSem) {
-                            var semRequest = "";
-                            semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end + "&q=cost");
-                            $q.all([semRequest]).then(function (sem_data) {
-                                var cost = 0;
-                                for (var k = 0; k < sem_data.length; k++) {
-                                    for (var c = 0; c < sem_data[k].data.length; c++) {
-                                        cost += Number(sem_data[k].data[c].cost);
+                            if (hasCrate) {
+                                if ($scope.convert_url_all.length != 0) {
+                                    var all_urls = [];
+                                    for (var k = 0; k < $scope.convert_url_all.length; k++) {
+                                        for (var c = 0; c < $scope.convert_url_all[k].all_urls.length; c++) {
+                                            if ($scope.convert_url_all[k].all_urls[c].split("/").length != 0) {
+                                                all_urls.push("http://" + $scope.convert_url_all[k].all_urls[c]);
+                                            } else {
+                                                all_urls.push("http://" + $scope.convert_url_all[k].all_urls[c] + "/");
+                                            }
+                                        }
                                     }
+                                    var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];
+                                    $http({
+                                        method: "GET",
+                                        url: "/api/transform/transformAnalysis?start=" + crate_time.start + "&end=" + crate_time.end + "&action=event&type=1&searchType=queryDataByUrl&showType=day&all_urls=" + test_url
+                                    }).success(function (all_urls_data) {
+                                            var semRequest = "";
+                                            semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end + "&q=cost");
+                                            $q.all([semRequest]).then(function (sem_data) {
+                                                var cost = 0;
+                                                for (var k = 0; k < sem_data.length; k++) {
+                                                    for (var c = 0; c < sem_data[k].data.length; c++) {
+                                                        cost += Number(sem_data[k].data[c].cost);
+                                                    }
+                                                }
+                                                queryOptions.forEach(function (key) {
+                                                    for (var i = 0; i < contrastData.length; i++) {
+                                                        if (key == contrastData[i].label) {
+                                                            var temporaryContrastData = [];
+                                                            var l = 0;
+                                                            switch (key) {
+                                                                case "avgCost":
+                                                                    for (l = 0; l < contrastData[i].quota.length; l++) {
+                                                                        if (Number(contrastData[i].quota[l]) == 0) {
+                                                                            temporaryContrastData.push(0);
+                                                                        } else {
+                                                                            temporaryContrastData.push((cost / Number(contrastData[i].quota[l])).toFixed(2));
+                                                                        }
+                                                                    }
+                                                                    contrastData[i].quota = temporaryContrastData;
+                                                                    break;
+                                                                case "profit":
+                                                                    for (l = 0; l < contrastData[i].quota.length; l++) {
+                                                                        if (Number(contrastData[i].quota[l]) == 0) {
+                                                                            temporaryContrastData.push(0);
+                                                                        } else {
+                                                                            temporaryContrastData.push((cost / Number(contrastData[i].quota[l])).toFixed(2));
+                                                                        }
+                                                                    }
+                                                                    contrastData[i].quota = temporaryContrastData;
+                                                                    break;
+                                                                case "orderMoney"://订单金额
+                                                                    break;
+                                                                case "crate":
+                                                                    for (l = 0; l < contrastData[i].quota.length; l++) {
+                                                                        if (Number(contrastData[i].quota[l]) == 0) {
+                                                                            temporaryContrastData.push(0);
+                                                                        } else {
+                                                                            for (var p = 0; p < all_urls_data.length; p++) {
+                                                                                if (contrastData[i].key == all_urls_data[p].date_time) {
+                                                                                    if (Number(all_urls_data[i].crate_pv) == 0) {
+                                                                                        temporaryContrastData.push(0);
+                                                                                    } else {
+                                                                                        temporaryContrastData.push((Number(contrastData[i].quota[l]) / Number(all_urls_data[i].crate_pv)).toFixed(2));
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                    contrastData[i].quota = temporaryContrastData;
+                                                                    break;
+                                                            }
+
+                                                        }
+                                                    }
+                                                });
+                                                for (var i = 0; i < contrastData.length; i++) {
+                                                    if (contrastData[i].label.toString().split("_").length > 1) {
+                                                        var temporaryContrastData = [];
+                                                        var l = 0;
+                                                        switch (contrastData[i].label) {
+                                                            case "avgCost_contrast":
+                                                                for (l = 0; l < contrastData[i].quota.length; l++) {
+                                                                    if (Number(contrastData[i].quota[l]) == 0) {
+                                                                        temporaryContrastData.push(0);
+                                                                    } else {
+                                                                        temporaryContrastData.push((cost / Number(contrastData[i].quota[l])).toFixed(2));
+                                                                    }
+                                                                }
+                                                                contrastData[i].quota = temporaryContrastData;
+                                                                break;
+                                                            case "profit_contrast":
+                                                                for (l = 0; l < contrastData[i].quota.length; l++) {
+                                                                    if (Number(contrastData[i].quota[l]) == 0) {
+                                                                        temporaryContrastData.push(0);
+                                                                    } else {
+                                                                        temporaryContrastData.push((Number(contrastData[i].quota[l]) - cost).toFixed(2));
+                                                                    }
+                                                                }
+                                                                contrastData[i].quota = temporaryContrastData;
+                                                                break;
+                                                            case "orderMoney_contrast"://订单金额对比数据
+                                                                break;
+                                                            case "crate_contrast":
+                                                                for (l = 0; l < contrastData[i].quota.length; l++) {
+                                                                    if (Number(contrastData[i].quota[l]) == 0) {
+                                                                        temporaryContrastData.push(0);
+                                                                    } else {
+                                                                        for (var p = 0; p < all_urls_data.length; p++) {
+                                                                            if (contrastData[i].key == all_urls_data[p].date_time) {
+                                                                                if (Number(all_urls_data[p].crate_pv) == 0) {
+                                                                                    temporaryContrastData.push(0);
+                                                                                } else {
+                                                                                    temporaryContrastData.push((Number(contrastData[i].quota[l]) / Number(all_urls_data[p].crate_pv)).toFixed(2));
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                                break;
+                                                        }
+                                                        contrastData[i].label = "对比数据";
+                                                    } else {
+                                                        contrastData[i].label = chartUtils.convertChinese(contrastData[i].label);
+                                                    }
+                                                }
+                                                cf.renderChart(contrastData, $scope.charts[0].config);
+                                                Custom.initCheckInfo();
+                                            });
+                                        }
+                                    );
                                 }
-                                $scope.sem_checkArray.forEach(function (key) {
+                                else {
+                                    $scope.getRedisConvertData_url();
+                                    $http({
+                                        method: "GET",
+                                        url: "/api/transform/transformAnalysis?start=" + crate_time.start + "&end=" + crate_time.end + "&action=event&type=1&searchType=queryDataByUrl&showType=day&all_urls=" + test_url
+                                    }).success(function (all_urls_data) {
+                                        //page_crate(isContrastDataByTime, start, end, data, all_urls_data);
+                                    });
+                                }
+                            } else {
+                                var semRequest = "";
+                                semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end + "&q=cost");
+                                $q.all([semRequest]).then(function (sem_data) {
+                                    var cost = 0;
+                                    for (var k = 0; k < sem_data.length; k++) {
+                                        for (var c = 0; c < sem_data[k].data.length; c++) {
+                                            cost += Number(sem_data[k].data[c].cost);
+                                        }
+                                    }
+                                    $scope.sem_checkArray.forEach(function (key) {
+                                        for (var i = 0; i < contrastData.length; i++) {
+                                            if (key == contrastData[i].label) {
+                                                var temporaryContrastData = [];
+                                                var l = 0;
+                                                switch (key) {
+                                                    case "avgCost":
+                                                        for (l = 0; l < contrastData[i].quota.length; l++) {
+                                                            if (Number(contrastData[i].quota[l]) == 0) {
+                                                                temporaryContrastData.push(0);
+                                                            } else {
+                                                                temporaryContrastData.push((cost / Number(contrastData[i].quota[l])).toFixed(2));
+                                                            }
+                                                        }
+                                                        contrastData[i].quota = temporaryContrastData;
+                                                        break;
+                                                    case "profit":
+                                                        for (l = 0; l < contrastData[i].quota.length; l++) {
+                                                            if (Number(contrastData[i].quota[l]) == 0) {
+                                                                temporaryContrastData.push(0);
+                                                            } else {
+                                                                temporaryContrastData.push((cost / Number(contrastData[i].quota[l])).toFixed(2));
+                                                            }
+                                                        }
+                                                        contrastData[i].quota = temporaryContrastData;
+                                                        break;
+                                                    case "orderMoney"://订单金额
+                                                        break;
+                                                }
+
+                                            }
+                                        }
+                                    });
                                     for (var i = 0; i < contrastData.length; i++) {
-                                        if (key == contrastData[i].label) {
+                                        if (contrastData[i].label.toString().split("_").length > 1) {
                                             var temporaryContrastData = [];
                                             var l = 0;
-                                            switch (key) {
-                                                case "avgCost":
+                                            switch (contrastData[i].label) {
+                                                case "avgCost_contrast":
                                                     for (l = 0; l < contrastData[i].quota.length; l++) {
                                                         if (Number(contrastData[i].quota[l]) == 0) {
                                                             temporaryContrastData.push(0);
@@ -503,69 +853,106 @@ define(["./module"], function (ctrs) {
                                                     }
                                                     contrastData[i].quota = temporaryContrastData;
                                                     break;
-                                                case "profit":
+                                                case "profit_contrast":
                                                     for (l = 0; l < contrastData[i].quota.length; l++) {
                                                         if (Number(contrastData[i].quota[l]) == 0) {
                                                             temporaryContrastData.push(0);
                                                         } else {
-                                                            temporaryContrastData.push((cost / Number(contrastData[i].quota[l])).toFixed(2));
+                                                            temporaryContrastData.push((Number(contrastData[i].quota[l]) - cost).toFixed(2));
                                                         }
                                                     }
                                                     contrastData[i].quota = temporaryContrastData;
                                                     break;
-                                                case "orderMoney":
-                                                    //var temporaryContrastData = [];
-                                                    //for(var l = 0;l<contrastData[i].quota.length;l++){
-                                                    //    if(Number(contrastData[i].quota[l])==0){
-                                                    //        temporaryContrastData.push(0);
-                                                    //    }else{
-                                                    //        temporaryContrastData.push((cost/Number(contrastData[i].quota[l])).toFixed(2));
-                                                    //    }
-                                                    //}
-                                                    //contrastData[i].quota = temporaryContrastData;
+                                                case "orderMoney_contrast"://订单金额对比数据
                                                     break;
                                             }
-
+                                            contrastData[i].label = "对比数据";
+                                        } else {
+                                            contrastData[i].label = chartUtils.convertChinese(contrastData[i].label);
                                         }
                                     }
+                                    cf.renderChart(contrastData, $scope.charts[0].config);
+                                    Custom.initCheckInfo();
                                 });
-                                for (var i = 0; i < contrastData.length; i++) {
-                                    if (contrastData[i].label.toString().split("_").length > 1) {
-                                        var temporaryContrastData = [];
-                                        var l = 0;
+                            }
+                        } else {
+                            if (hasCrate) {
+                                var all_urls = [];
+                                for (var k = 0; k < $scope.convert_url_all.length; k++) {
+                                    for (var c = 0; c < $scope.convert_url_all[k].all_urls.length; c++) {
+                                        if ($scope.convert_url_all[k].all_urls[c].split("/").length != 0) {
+                                            all_urls.push("http://" + $scope.convert_url_all[k].all_urls[c]);
+                                        } else {
+                                            all_urls.push("http://" + $scope.convert_url_all[k].all_urls[c] + "/");
+                                        }
+                                    }
+                                }
+                                var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];
+                                $http({
+                                    method: "GET",
+                                    url: "/api/transform/transformAnalysis?start=" + crate_time.start + "&end=" + crate_time.end + "&action=event&type=1&searchType=queryDataByUrl&showType=day&all_urls=" + test_url
+                                }).success(function (all_urls_data) {
+                                    var temporaryContrastData = [];
+                                    for (var i = 0; i < contrastData.length; i++) {
+                                        temporaryContrastData = [];
                                         switch (contrastData[i].label) {
-                                            case "avgCost_contrast":
-                                                for (l = 0; l < contrastData[i].quota.length; l++) {
+                                            case "crate":
+                                                for (var l = 0; l < contrastData[i].quota.length; l++) {
                                                     if (Number(contrastData[i].quota[l]) == 0) {
                                                         temporaryContrastData.push(0);
                                                     } else {
-                                                        temporaryContrastData.push((cost / Number(contrastData[i].quota[l])).toFixed(2));
+                                                        for (var p = 0; p < all_urls_data.length; p++) {
+                                                            for (var t = 0; t < contrastData[i].key.length; t++) {
+                                                                if (contrastData[i].key[t] == all_urls_data[p].date_time) {
+                                                                    if (Number(all_urls_data[p].crate_pv) == 0) {
+                                                                        temporaryContrastData.push(0);
+                                                                    } else {
+                                                                        temporaryContrastData.push((Number(contrastData[i].quota[l]) / Number(all_urls_data[p].crate_pv)));
+                                                                    }
+                                                                }
+                                                            }
+
+                                                        }
                                                     }
                                                 }
                                                 contrastData[i].quota = temporaryContrastData;
                                                 break;
-                                            case "profit_contrast":
-                                                for (l = 0; l < contrastData[i].quota.length; l++) {
+                                            case "crate_contrast":
+                                                for (var l = 0; l < contrastData[i].quota.length; l++) {
                                                     if (Number(contrastData[i].quota[l]) == 0) {
                                                         temporaryContrastData.push(0);
                                                     } else {
-                                                        temporaryContrastData.push((Number(contrastData[i].quota[l]) - cost).toFixed(2));
+                                                        for (var p = 0; p < all_urls_data.length; p++) {
+                                                            for (var t = 0; t < contrastData[i].key.length; t++) {
+                                                                if (contrastData[i].key[t] == all_urls_data[p].date_time) {
+                                                                    if (Number(all_urls_data[p].crate_pv) == 0) {
+                                                                        temporaryContrastData.push(0);
+                                                                    } else {
+                                                                        temporaryContrastData.push((Number(contrastData[i].quota[l]) / Number(all_urls_data[p].crate_pv)));
+                                                                    }
+                                                                }
+                                                            }
+
+                                                        }
                                                     }
                                                 }
                                                 contrastData[i].quota = temporaryContrastData;
-                                                break;
-                                            case "orderMoney_contrast":
-                                                //var temporaryContrastData = [];
-                                                //for(var l = 0;l<contrastData[i].quota.length;l++){
-                                                //    if(Number(contrastData[i].quota[l])==0){
-                                                //        temporaryContrastData.push(0);
-                                                //    }else{
-                                                //        temporaryContrastData.push((cost/Number(contrastData[i].quota[l])).toFixed(2));
-                                                //    }
-                                                //}
-                                                //contrastData[i].quota = temporaryContrastData;
                                                 break;
                                         }
+                                    }
+                                    for (var i = 0; i < contrastData.length; i++) {
+                                        if (contrastData[i].label.split("_").length > 1) {
+                                            contrastData[i].label = "对比数据";
+                                        } else {
+                                            contrastData[i].label = chartUtils.convertChinese(contrastData[i].label);
+                                        }
+                                    }
+                                    cf.renderChart(contrastData, $scope.charts[0].config);
+                                    Custom.initCheckInfo();
+                                });
+                            } else {
+                                for (var i = 0; i < contrastData.length; i++) {
+                                    if (contrastData[i].label.split("_").length > 1) {
                                         contrastData[i].label = "对比数据";
                                     } else {
                                         contrastData[i].label = chartUtils.convertChinese(contrastData[i].label);
@@ -573,17 +960,8 @@ define(["./module"], function (ctrs) {
                                 }
                                 cf.renderChart(contrastData, $scope.charts[0].config);
                                 Custom.initCheckInfo();
-                            });
-                        } else {
-                            for (var i = 0; i < contrastData.length; i++) {
-                                if (contrastData[i].label.split("_").length > 1) {
-                                    contrastData[i].label = "对比数据";
-                                } else {
-                                    contrastData[i].label = chartUtils.convertChinese(contrastData[i].label);
-                                }
                             }
-                            cf.renderChart(contrastData, $scope.charts[0].config);
-                            Custom.initCheckInfo();
+
                         }
                     });
                 } else {
@@ -605,70 +983,207 @@ define(["./module"], function (ctrs) {
                                 }
                             }
                         }
+                        var hasCrate = false;
+                        for (var i = 0; i < queryOptions.length; i++) {
+                            if (queryOptions[i] == "crate") {
+                                hasCrate = true;
+                                break;
+                            }
+                        }
                         if (hasSem) {
-                            var semRequest = "";
-                            semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end + "&q=cost");
-                            $q.all([semRequest]).then(function (sem_data) {
-                                var cost = 0;
-                                for (var k = 0; k < sem_data.length; k++) {
-                                    for (var c = 0; c < sem_data[k].data.length; c++) {
-                                        cost += Number(sem_data[k].data[c].cost);
-                                    }
-                                }
-                                $scope.sem_checkArray.forEach(function (key) {
-                                    for (var i = 0; i < data.length; i++) {
-                                        if (key == data[i].label) {
-                                            var temporaryContrastData = [];
-                                            var l = 0;
-                                            switch (key) {
-                                                case "avgCost":
-                                                    for (l = 0; l < data[i].quota.length; l++) {
-                                                        if (Number(data[i].quota[l]) == 0) {
-                                                            temporaryContrastData.push(0);
-                                                        } else {
-                                                            temporaryContrastData.push((cost / Number(data[i].quota[l])).toFixed(2));
-                                                        }
-                                                    }
-                                                    data[i].quota = temporaryContrastData;
-                                                    break;
-                                                case "profit":
-                                                    for (l = 0; l < data[i].quota.length; l++) {
-                                                        if (Number(data[i].quota[l]) == 0) {
-                                                            temporaryContrastData.push(0);
-                                                        } else {
-                                                            temporaryContrastData.push((Number(data[i].quota[l]) - cost).toFixed(2));
-                                                        }
-                                                    }
-                                                    data[i].quota = temporaryContrastData;
-                                                    break;
-                                                case "orderMoney":
-                                                    //var temporaryContrastData = [];
-                                                    //for(var l = 0;l<data[i].quota.length;l++){
-                                                    //    if(Number(data[i].quota[l])==0){
-                                                    //        temporaryContrastData.push(0);
-                                                    //    }else{
-                                                    //        temporaryContrastData.push((cost/Number(data[i].quota[l])).toFixed(2));
-                                                    //    }
-                                                    //}
-                                                    //data[i].quota = temporaryContrastData;
-                                                    break;
-                                            }
-
+                            if (hasCrate) {
+                                var all_urls = [];
+                                for (var k = 0; k < $scope.convert_url_all.length; k++) {
+                                    for (var c = 0; c < $scope.convert_url_all[k].all_urls.length; c++) {
+                                        if ($scope.convert_url_all[k].all_urls[c].split("/").length != 0) {
+                                            all_urls.push("http://" + $scope.convert_url_all[k].all_urls[c]);
+                                        } else {
+                                            all_urls.push("http://" + $scope.convert_url_all[k].all_urls[c] + "/");
                                         }
                                     }
+                                }
+                                var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];
+                                $http({
+                                    method: "GET",
+                                    url: "/api/transform/transformAnalysis?start=" + crate_time.start + "&end=" + crate_time.end + "&action=event&type=1&searchType=queryDataByUrl&showType=day&all_urls=" + test_url
+                                }).success(function (all_urls_data) {
+                                    var semRequest = "";
+                                    semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end + "&q=cost");
+                                    $q.all([semRequest]).then(function (sem_data) {
+                                        var cost = 0;
+                                        for (var k = 0; k < sem_data.length; k++) {
+                                            for (var c = 0; c < sem_data[k].data.length; c++) {
+                                                cost += Number(sem_data[k].data[c].cost);
+                                            }
+                                        }
+                                        queryOptions.forEach(function (key) {
+                                            for (var i = 0; i < data.length; i++) {
+                                                if (key == data[i].label) {
+                                                    var temporaryContrastData = [];
+                                                    var l = 0;
+                                                    switch (key) {
+                                                        case "avgCost":
+                                                            for (l = 0; l < data[i].quota.length; l++) {
+                                                                if (Number(data[i].quota[l]) == 0) {
+                                                                    temporaryContrastData.push(0);
+                                                                } else {
+                                                                    temporaryContrastData.push((cost / Number(data[i].quota[l])).toFixed(2));
+                                                                }
+                                                            }
+                                                            data[i].quota = temporaryContrastData;
+                                                            break;
+                                                        case "profit":
+                                                            for (l = 0; l < data[i].quota.length; l++) {
+                                                                if (Number(data[i].quota[l]) == 0) {
+                                                                    temporaryContrastData.push(0);
+                                                                } else {
+                                                                    temporaryContrastData.push((Number(data[i].quota[l]) - cost).toFixed(2));
+                                                                }
+                                                            }
+                                                            data[i].quota = temporaryContrastData;
+                                                            break;
+                                                        case "orderMoney"://订单金额
+                                                            break;
+                                                        case "crate":
+                                                            for (var l = 0; l < data[i].quota.length; l++) {
+                                                                if (Number(data[i].quota[l]) == 0) {
+                                                                    temporaryContrastData.push(0);
+                                                                } else {
+                                                                    for (var p = 0; p < all_urls_data.length; p++) {
+                                                                        for (var t = 0; t < data[i].key.length; t++) {
+                                                                            if (data[i].key[t] == all_urls_data[p].date_time) {
+                                                                                if (Number(all_urls_data[p].crate_pv) == 0) {
+                                                                                    temporaryContrastData.push(0);
+                                                                                } else {
+                                                                                    temporaryContrastData.push((Number(data[i].quota[l]) / Number(all_urls_data[p].crate_pv)));
+                                                                                }
+                                                                            }
+                                                                        }
+
+                                                                    }
+                                                                }
+                                                            }
+                                                            data[i].quota = temporaryContrastData;
+                                                            break;
+                                                            break;
+                                                    }
+
+                                                }
+                                            }
+                                        });
+                                        for (var i = 0; i < data.length; i++) {
+                                            data[i].label = chartUtils.convertChinese(data[i].label);
+                                        }
+                                        cf.renderChart(data, $scope.charts[0].config);
+                                        Custom.initCheckInfo();
+                                    });
                                 });
+                            } else {
+                                var semRequest = "";
+                                semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end + "&q=cost");
+                                $q.all([semRequest]).then(function (sem_data) {
+                                    var cost = 0;
+                                    for (var k = 0; k < sem_data.length; k++) {
+                                        for (var c = 0; c < sem_data[k].data.length; c++) {
+                                            cost += Number(sem_data[k].data[c].cost);
+                                        }
+                                    }
+                                    $scope.sem_checkArray.forEach(function (key) {
+                                        for (var i = 0; i < data.length; i++) {
+                                            if (key == data[i].label) {
+                                                var temporaryContrastData = [];
+                                                var l = 0;
+                                                switch (key) {
+                                                    case "avgCost":
+                                                        for (l = 0; l < data[i].quota.length; l++) {
+                                                            if (Number(data[i].quota[l]) == 0) {
+                                                                temporaryContrastData.push(0);
+                                                            } else {
+                                                                temporaryContrastData.push((cost / Number(data[i].quota[l])).toFixed(2));
+                                                            }
+                                                        }
+                                                        data[i].quota = temporaryContrastData;
+                                                        break;
+                                                    case "profit":
+                                                        for (l = 0; l < data[i].quota.length; l++) {
+                                                            if (Number(data[i].quota[l]) == 0) {
+                                                                temporaryContrastData.push(0);
+                                                            } else {
+                                                                temporaryContrastData.push((Number(data[i].quota[l]) - cost).toFixed(2));
+                                                            }
+                                                        }
+                                                        data[i].quota = temporaryContrastData;
+                                                        break;
+                                                    case "orderMoney"://订单金额
+                                                        break;
+                                                }
+
+                                            }
+                                        }
+                                    });
+                                    for (var i = 0; i < data.length; i++) {
+                                        data[i].label = chartUtils.convertChinese(data[i].label);
+                                    }
+                                    cf.renderChart(data, $scope.charts[0].config);
+                                    Custom.initCheckInfo();
+                                });
+                            }
+
+                        } else {
+                            if (hasCrate) {
+                                var all_urls = [];
+                                for (var k = 0; k < $scope.convert_url_all.length; k++) {
+                                    for (var c = 0; c < $scope.convert_url_all[k].all_urls.length; c++) {
+                                        if ($scope.convert_url_all[k].all_urls[c].split("/").length != 0) {
+                                            all_urls.push("http://" + $scope.convert_url_all[k].all_urls[c]);
+                                        } else {
+                                            all_urls.push("http://" + $scope.convert_url_all[k].all_urls[c] + "/");
+                                        }
+                                    }
+                                }
+                                var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];
+                                $http({
+                                    method: "GET",
+                                    url: "/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&action=event&type=1&searchType=queryDataByUrl&showType=day&all_urls=" + test_url
+                                }).success(function (all_urls_data) {
+                                    var temporaryContrastData = [];
+                                    for(var i = 0;i<data.length;i++){
+                                        if(data[i].label=="crate"){
+                                            for (var l = 0; l < data[i].quota.length; l++) {
+                                                if (Number(data[i].quota[l]) == 0) {
+                                                    temporaryContrastData.push(0);
+                                                } else {
+                                                    for (var p = 0; p < all_urls_data.length; p++) {
+                                                        for (var t = 0; t < data[i].key.length; t++) {
+                                                            if (data[i].key[t] == all_urls_data[p].date_time) {
+                                                                if (Number(all_urls_data[p].crate_pv) == 0) {
+                                                                    temporaryContrastData.push(0);
+                                                                } else {
+                                                                    temporaryContrastData.push((Number(data[i].quota[l]) / Number(all_urls_data[p].crate_pv)));
+                                                                }
+                                                            }
+                                                        }
+
+                                                    }
+                                                }
+                                            }
+                                            data[i].quota = temporaryContrastData;
+                                        }
+                                    }
+
+                                    for (var i = 0; i < data.length; i++) {
+                                        data[i].label = chartUtils.convertChinese(data[i].label);
+                                    }
+                                    cf.renderChart(data, $scope.charts[0].config);
+                                    Custom.initCheckInfo();
+                                });
+                            } else {
                                 for (var i = 0; i < data.length; i++) {
                                     data[i].label = chartUtils.convertChinese(data[i].label);
                                 }
                                 cf.renderChart(data, $scope.charts[0].config);
                                 Custom.initCheckInfo();
-                            });
-                        } else {
-                            for (var i = 0; i < data.length; i++) {
-                                data[i].label = chartUtils.convertChinese(data[i].label);
                             }
-                            cf.renderChart(data, $scope.charts[0].config);
-                            Custom.initCheckInfo();
                         }
                     });
                 }
@@ -762,5 +1277,6 @@ define(["./module"], function (ctrs) {
             };
             $scope.page_init(false);
         }
-    );
+    )
+    ;
 });
