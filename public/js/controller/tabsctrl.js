@@ -928,7 +928,12 @@ define(["app"], function (app) {
             }
             $scope.isJudge = false;
             getHtmlTableData();
+        };
+        $scope.searchUrlSeepd = function(a){
+            console.log(a);
         }
+
+
         //前端ui-grid通用查询方法
         $rootScope.targetSearch = function (isClicked) {
             $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
@@ -967,14 +972,26 @@ define(["app"], function (app) {
                 }
             });
             if ($rootScope.tableSwitch.number == 5) {//推广URL速度
+                //var url = SEM_API_URL + "/sem/report/" + (area == "全部" ? $rootScope.tableSwitch.promotionSearch.SEMData : "region") + "?a=" + user + "&b=" + baiduAccount + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1" + (area == "全部" ? "" : "&rgna=" + area);
                 $http({
                     method: 'GET',
-                    url: "/api/getUrlspeed/?start=" + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&trackId=" + $rootScope.siteTrackId
+                    url: "/api/getUrlspeed/?start=" + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&trackId=634100deaf9a4924351451d6795e3079"/* + $rootScope.siteTrackId*/
                 }).success(function (data, status) {
                     if (data.length <= 0) {
-                        var result = [{"loc": "暂无数据"}];
+                        var result = [{"loc": "暂无数据","openSpeed":"0","vc":"0"}];
                         $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
                         $scope.gridOptions.data = result;
+                    }else{
+                        var dataArray =[];
+                        var dataObj = {};
+                        data.forEach(function(item,i){
+                            dataObj["loc"] = item.key;
+                            dataObj["openSpeed"] = parseInt(item.dms_time.value) / parseInt(item.doc_count);
+                            dataObj["vc"] = item.ucv.value;
+                            dataArray.push(dataObj);
+                        });
+                        $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
+                        $scope.gridOptions.data = dataArray;
                     }
                 });
             } else if ($rootScope.tableSwitch.number == 4) {//推广方式
@@ -1560,9 +1577,9 @@ define(["app"], function (app) {
                         if (a.col.field == "avgTime") {
                             if (item.entity[a.col.field] != undefined && item.entity[a.col.field] != 0 && item.entity[a.col.field] != "--") {
                                 spl = item.entity[a.col.field].split(":");
-                                newSpl[0] += parseInt(spl[0]) + "";
-                                newSpl[1] += parseInt(spl[1]) + "";
-                                newSpl[2] += parseInt(spl[2]) + "";
+                                newSpl[0] += parseInt(spl[0]);
+                                newSpl[1] += parseInt(spl[1]);
+                                newSpl[2] += parseInt(spl[2]);
                             } else if (item.entity[a.col.field] == 0) {
                                 item.entity[a.col.field] = "00:00:00"
                             }
