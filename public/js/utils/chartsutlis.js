@@ -292,7 +292,7 @@ var chartUtils = {
         });
         return val;
     },
-    getRf_type: function (json, times, labelType, types, config) {
+    getRf_type: function (json, times, labelType, types, config, topN) {
         var time = chartUtils.getObjectTime(json, times, config);
         var label = chartUtils.getLabel(json);//去重
         var result = [];
@@ -317,10 +317,18 @@ var chartUtils = {
             item.totalCount = count;
         });
         result.sort(chartUtils.by("totalCount"));
-        if (result.length > 7) {
-            result = result.slice(0, 7);
+        var baseResult = result;
+        if (topN) {
+            if (result.length > topN) {
+                result = result.slice(0, topN);
+            }
+            return [result, baseResult.slice(0, 10)];
+        } else {
+            if (result.length > 3) {
+                result = result.slice(0, 3);
+            }
+            return result;
         }
-        return result;
     },
     getLabel: function (json) {
         var label = [];
@@ -909,6 +917,117 @@ var chartUtils = {
         }
         chart_result.push(_esData);
         return chart_result;
+    }
+}
+var formUtils = {
+    vaildateSubmit: function (ele) {
+        var formData = {};
+        $(ele).find("input[type='text']").each(function (i, o) {
+            var _inputName = $(o).attr('name');
+            if (_inputName) {
+                if ($(o).val()) {
+                    formData[_inputName] = $(o).val();
+                }
+            }
+        });
+
+        //$(ele).find("input[type='time']").each(function (i, o) {
+        //    var _inputName = $(o).attr('name');
+        //    if (_inputName) {
+        //        if ($(o).val()) {
+        //            formData[_inputName] = $(o).val();
+        //        }
+        //    }
+        //});
+
+        $(ele).find("input[type='radio']").each(function (i, o) {
+            var _inputName = $(o).attr('name');
+            if ($(o).prop('checked')) {
+                formData[_inputName] = $(o).val();
+            }
+        });
+
+        $(ele).find("select").each(function (i, o) {
+            var _inputName = $(o).attr('name');
+            if (_inputName) {
+                formData[_inputName] = $(o).val();
+            }
+        });
+
+        return formData;
+    },
+    validateEmail: function (str, formData) {
+        var errorCount = {ec: 1, info: '邮箱地址不能为空!'};
+        var regex = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/;
+        var adData = [];
+        var mailData = [];
+        if (str) {
+            if (str.indexOf(",") > -1) {
+                adData = str.split(",");
+                adData.forEach(function (item, index) {
+                    var email = regex.test(item);
+                    if (!email) {
+                        errorCount["ec"]++;
+                        errorCount["info"] = "第" + (index + 1) + "个邮箱地址输入不正确!请检查邮箱地址!";
+                    } else {
+                        mailData.push(item);
+                        errorCount["ec"] = 0;
+                    }
+                });
+                formData.mail_address = mailData;
+                return errorCount;
+            }
+            else {
+                var email = regex.test(str);
+                if (email) {
+                    mailData.push(str);
+                    errorCount["ec"] = 0
+                    formData.mail_address = mailData;
+                    return errorCount;
+                } else {
+                    errorCount["ec"] = 1;
+                    errorCount["info"] = "邮箱地址输入不正确!";
+                    return errorCount;
+                }
+            }
+        } else {
+            return errorCount;
+        }
+    },
+    rendererMailData: function (docs, ele) {
+        if (docs.length) {
+            var mailData = docs[0];
+            ele.find("input[type='text']").each(function (i, o) {
+                var _name = $(o).attr('name');
+                if (_name) {
+                    $(o).val(mailData[_name]);
+                }
+                var _type = $(o).attr("ng-model");
+                if (_type) {
+                    var time = mailData["schedule_date"].split(":");
+                    switch (_type) {
+                        case "hours":
+                            $(o).val(time[0]);
+                            break;
+                        case "minutes":
+                            $(o).val(time[1]);
+                            break;
+                    }
+                }
+            });
+
+
+            var radioArray = [];
+            ele.find("input[type='radio']").each(function (i, o) {
+                var _name = $(o).attr('name');
+                radioArray.push(_name);
+            });
+            radioArray = radioArray.removal();
+
+            radioArray.forEach(function (item) {
+                $("input[name='" + item + "']:eq(" + mailData[item] + ")").attr("checked", "checked");
+            });
+        }
     }
 }
 //去重

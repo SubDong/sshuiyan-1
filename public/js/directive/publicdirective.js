@@ -573,16 +573,23 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     {name: 'PDF（含图） ', value: 'pdf'}
                 ];
                 scope.send = function () {
-                    console.log(123);
                     scope.urlDialog = ngDialog.open({
                         template: '../conf/Dialog/transformAnalysis_send.html',
                         className: 'ngdialog-theme-default admin_ngdialog ',
                         scope: scope
                     });
-                };
-                scope.mytime = new Date();
+                    if (scope.initMailData) { //根据不同页面加载该页面的邮件发送配置
+                        scope.initMailData();
+                    }else{
+                        var ele = $("ul[name='sen_form']");
+                        formUtils.rendererMailData(result, ele);
+                    }
+                }
+                scope.mytime = {
+                    time: new Date()
+                }
                 scope.hstep = 1;
-                scope.mstep = 15;
+                scope.mstep = 1;
                 scope.options = {
                     hstep: [1, 2, 3],
                     mstep: [1, 5, 10, 15, 25, 30]
@@ -593,8 +600,8 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     console.log(111);
                 };
 
-                scope.flag = $location.path() != "/index";
 
+                scope.flag = $location.path() != "/index";
                 //导出功能
                 scope.fileSave = function (obj) {
                     if (obj.value == "csv") {
@@ -1140,7 +1147,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
 
                 scope.loadCompareDataShow = function (startTime, endTime) {
                     var semRequest = $http.get(SEM_API_URL + "search_word/" + $rootScope.userType
-                    + "/?startOffset=" + startTime + "&endOffset=" + endTime);
+                        + "/?startOffset=" + startTime + "&endOffset=" + endTime);
                     var count = 0;
                     $q.all([semRequest]).then(function (final_result) {
                         angular.forEach(final_result[0].data, function (r) {

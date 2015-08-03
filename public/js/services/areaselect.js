@@ -129,10 +129,10 @@ define(["../app"], function (app) {
         ];
         $rootScope.extendway = {};
         $rootScope.extendways = [
-            {name: '全部页面目标',id:0},
-            {name: '全部事件目标',id:1},
-            {name: '时长目标',id:2},
-            {name: '访问页数目标',id:3},
+            {name: '全部页面目标', id: 0},
+            {name: '全部事件目标', id: 1},
+            {name: '时长目标', id: 2},
+            {name: '访问页数目标', id: 3},
         ];
 
         $rootScope.souce = {};
@@ -213,5 +213,12 @@ define(["../app"], function (app) {
             {name: '必应', value: '必应'},
             {name: '其他', value: '其他'}
         ];
+
+        $rootScope.mailUrl = [
+            "index",
+            "today",
+            "yesterday",
+            "month"
+        ]
     }]);
 });

@@ -2,16 +2,16 @@
  * Created by john on 2015/4/2.
  */
 define(["./module"], function (ctrs) {
-    ctrs.controller('searchctr', function ($scope, $rootScope, $q, requestService, areaService, $http, SEM_API_URL,uiGridConstants) {
+    ctrs.controller('searchctr', function ($scope, $rootScope, $q, requestService, areaService, $http, SEM_API_URL, uiGridConstants) {
 //        高级搜索提示
             $scope.terminalSearch = "";
             $scope.areaSearch = "";
 //        取消显示的高级搜索的条件
-            $scope.removeTerminalSearch = function(obj){
+            $scope.removeTerminalSearch = function (obj) {
                 $rootScope.$broadcast("searchLoadAllTerminal");
                 obj.terminalSearch = "";
             }
-            $scope.removeAreaSearch = function(obj){
+            $scope.removeAreaSearch = function (obj) {
                 $scope.city.selected = {"name": "全部"};
                 $rootScope.$broadcast("searchLoadAllArea");
                 obj.areaSearch = "";
@@ -111,6 +111,9 @@ define(["./module"], function (ctrs) {
                     def.defData($scope.charts[0].config);
                 }
             }
+            $scope.chartDataClickListener = function (param,quota) {
+                $scope.init($rootScope.user, $rootScope.baiduAccount, "campaign", quota, $rootScope.start, $rootScope.end);
+            }
             $scope.charts = [
                 {
                     config: {
@@ -130,7 +133,8 @@ define(["./module"], function (ctrs) {
                         keyFormat: 'eq',
                         noFormat: true,
                         dataKey: "key",//传入数据的key值
-                        dataValue: "quota"//传入数据的value值
+                        dataValue: "quota",//传入数据的value值
+                        dblClick: $scope.chartDataClickListener
                     }
                 }
             ];
@@ -155,7 +159,7 @@ define(["./module"], function (ctrs) {
                     if (quotas.length == 1) {
                         semRequest = $http.get(SEM_API_URL + "/sem/report/" + semType + "?a=" + user + "&b=" + baiduAccount + "&startOffset=" + start + "&endOffset=" + end + "&q=" + quotas[0]);
                     } else {
-                        semRequest = $http.get(SEM_API_URL + "/sem/report/" + semType + "?a=" + user + "&b=" + baiduAccount + "&startOffset=" + start + "&endOffset=" + end + "&q=" + quotas[0]+","+ quotas[1]);
+                        semRequest = $http.get(SEM_API_URL + "/sem/report/" + semType + "?a=" + user + "&b=" + baiduAccount + "&startOffset=" + start + "&endOffset=" + end + "&q=" + quotas[0] + "," + quotas[1]);
                     }
                     $q.all([semRequest]).then(function (final_result) {
                         final_result[0].data.sort(chartUtils.by(quotas[0]));
@@ -164,6 +168,7 @@ define(["./module"], function (ctrs) {
                         chart.showLoading({
                             text: "正在努力的读取数据中..."
                         });
+                        $scope.charts[0].config.quota=quotas;
                         $scope.charts[0].config.instance = chart;
                         if (renderLegend) {
                             util.renderLegend(chart, $scope.charts[0].config);

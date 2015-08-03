@@ -224,6 +224,19 @@ var schemas = {
             creative: String,       //创意
             produceUrl: String      //产生后的URL
         }
+    },
+    mail_rules_model:{
+        model_name:"Mail_Rules_Model",
+        collection_name:'conf_mail_rules',
+        schema:{
+            uid:String,//存入邮件规则的用户id
+            site_id:String,
+            mail_address:[String],//定时发送邮件地址
+            schedule_rule:Number,//定时规则,0为每日,1为每周一,2为每月第一天
+            schedule_date:String,//发送时刻
+            send_type:Number,//发送数据类型,0为csv,1为pdf
+            rule_url:String//发送数据的url的页面
+        }
     }
 
 

@@ -5,8 +5,8 @@ define(["./module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.controller('alliancectr', function ($scope, $rootScope, $q, requestService, areaService, $http, SEM_API_URL,uiGridConstants) {
-        console.log("alliancectr")
+    ctrs.controller('alliance_cy_ctr', function ($scope, $rootScope, $q, requestService, areaService, $http, SEM_API_URL,uiGridConstants) {
+        console.log("alliance_cy_ctr")
         //        高级搜索提示
         $scope.terminalSearch = "";
         $scope.areaSearch = "";
@@ -67,8 +67,8 @@ define(["./module"], function (ctrs) {
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
             }
         ];
-        $rootScope.tableSwitch = {
-            latitude: {name: "计划", field: "plain"},
+        $rootScope.tableSwitch = {//$rootScope.targetSearchSpread();
+            latitude: {name: "计划", field: "loc"},
             tableFilter: null,
             dimen: false,
             // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
@@ -78,7 +78,7 @@ define(["./module"], function (ctrs) {
             //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
             arrayClear: false //是否清空指标array
         };
-        ////////////////////////日期段选择//////////////////////////////
+        //
         $scope.reset = function () {
             $scope.todayClass = false;
             $scope.yesterdayClass = false;
@@ -184,6 +184,26 @@ define(["./module"], function (ctrs) {
             var d = dd.getDate();
             return y + "-" + m + "-" + d;
         }
+
+//刷新
+        $scope.page_refresh = function () {
+//            $rootScope.start = -1;
+//            $rootScope.end = -1;
+//            $rootScope.tableTimeStart = -1;//开始时间
+//            $rootScope.tableTimeEnd = -1;//结束时间、
+//            $rootScope.tableFormat = null;
+//            $rootScope.targetSearchSpread();
+//            $scope.init($rootScope.user, $rootScope.baiduAccount, "creative", $scope.selectedQuota, $rootScope.start, $rootScope.end);
+            //图表
+//            requestService.refresh($scope.charts);
+            //其他页面表格
+            //classcurrent
+            $scope.$broadcast("ssh_dateShow_options_time_change");
+            $scope.reloadByCalendar("yesterday");
+            $('#reportrange span').html(GetDateStr(-1));
+            $scope.reset();
+            $scope.yesterdayClass = true;
+        };
     });
 
 });
