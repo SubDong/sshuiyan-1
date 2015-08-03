@@ -8,11 +8,11 @@
                    onblur="this.setAttribute('placeholder','多个邮箱请用分号隔开')"/>
         </li>
 
-        <li>
-            <label>发送周期：</label>
-            <label><input name="schedule_rule" class="" type="radio"  checked="checked" value="0"/>每天</label>
-            <label> <input name="schedule_rule" class="send_day_left " type="radio" value="1"/>每周一</label>
-            <label> <input name="schedule_rule" class="send_day_left " type="radio" value="2"/>每月一号</label>
+        <li style="margin: 10px 0 0 0" >
+            <label >发送周期：</label>
+            <input name="send_day" class="" type="radio"/><b>每天</b>
+           <input name="send_day" class="send_day_left " type="radio"/><b>每周一</b>
+          <input name="send_day" class="send_day_left " type="radio"/><b>每月一号</b>
 
         </li>
         <li style="margin: 0">
@@ -31,7 +31,7 @@
             <!--</ui-select>-->
             <!--</div>-->
         </li>
-        <li>
+        <li style="margin: 10px 0">
             <label>文件格式：</label>
             <label> <input name="send_type" type="radio" checked="checked" value="0"/>CSV</label>
             <!--<label><input name="send_type" class="send_day_left" type="radio" value="1"/>PDF</label>-->
