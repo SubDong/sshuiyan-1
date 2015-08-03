@@ -424,19 +424,12 @@ api.get('/getUrlspeed', function (req, res) {
     var _index = date.createIndexes(_startTime, _endTime, "access-");//indexs
     var _trackId = query["trackId"];
     redis.service().get('typeid:'.concat(_trackId), function (err, typeId) {
-        var _type = typeId+"_promotion_url";
+        var _type = typeId + "_promotion_url";
         initial.popularizeURL(req.es, _index, _type, _filter, _trackId, function (data) {
             datautils.send(res, data);
             //consoile.log(data)
         })
     })
-
-
-
-
-
-
-
 
 
 });
@@ -863,6 +856,13 @@ api.get("/transform/transformAnalysis", function (req, res) {
                 time = date.getConvertTimeByNumber(contrastStart, contrastEnd);
             }
             transform.SearchContrast(req.es, indexString, contrast_indexString, type, action, showType, queryOptions, function (result) {
+                datautils.send(res, result);
+            });
+        } else if (searchType == "queryDataByUrl") {
+            var showType = parameters[5].split("=")[1];
+            var all_urls = parameters[6].split("=")[1];
+            var urlArray = all_urls.split(",");
+            transform.searchByUrls(req.es,indexString,type,urlArray, showType,function(result){
                 datautils.send(res, result);
             });
         } else {

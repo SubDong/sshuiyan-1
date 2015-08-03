@@ -75,15 +75,9 @@ var es_aggs = {
     },
     //转化率　事件转化
     "crate": {
-
-        "conversions_crate": {
+        "crate": {
             "value_count": {
                 "field": "_type"
-            }
-        },
-        "vc_crate": {
-            "value_count": {
-                "field": "tt"
             }
         }
     },
@@ -149,7 +143,7 @@ var es_aggs = {
             }
         }
     },
-    "avgCost":{
+    "avgCost": {
         "avgCost": {
             "value_count": {
                 "field": "tt"
@@ -197,14 +191,7 @@ var transform = {
                     querys.forEach(function (queryOption) {
                         var isExit = false;
                         var i = 0;
-                        switch (queryOption){
-                            case "crate":
-                                if (result.conversions_crate.value == "0") {
-                                    data[queryOption] = "0";
-                                } else {
-                                    data[queryOption] = (result.conversions_crate.value / result.conversions_crate.value).toFixed(2) + "%";
-                                }
-                                break;
+                        switch (queryOption) {
                             case "nuvRate":
                                 if (result.new_visitor_aggs.value == "0") {
                                     data[queryOption] = 0;
@@ -214,32 +201,32 @@ var transform = {
                                 }
                                 break;
                             case "benefit":
-                                if(result.benefit.buckets.length==0){
+                                if (result.benefit.buckets.length == 0) {
                                     data[queryOption] = 0;//不存在记录
-                                }else{
+                                } else {
 
-                                    for(i = 0;i<result.benefit.buckets.length;i++){
-                                        if(result.benefit.buckets[i]!=""){
+                                    for (i = 0; i < result.benefit.buckets.length; i++) {
+                                        if (result.benefit.buckets[i] != "") {
                                             data[queryOption] = Number(result.benefit.buckets[0].key) * Number(results.convertTime.value);
                                             isExit = true;
                                         }
                                     }
-                                    if(!isExit){
+                                    if (!isExit) {
                                         data[queryOption] = "-";//未定义预期收益
                                     }
                                 }
                                 break;
                             case "profit":
-                                if(result.profit_benefit.buckets.length==0){
+                                if (result.profit_benefit.buckets.length == 0) {
                                     data[queryOption] = 0;//不存在记录
-                                }else{
-                                    for(i = 0;i<result.profit_benefit.buckets.length;i++){
-                                        if(result.profit_benefit.buckets[i]!=""){
+                                } else {
+                                    for (i = 0; i < result.profit_benefit.buckets.length; i++) {
+                                        if (result.profit_benefit.buckets[i] != "") {
                                             data[queryOption] = Number(result.profit_benefit.buckets[0].key) * Number(results.profit_convertTime.value);
                                             isExit = true;
                                         }
                                     }
-                                    if(!isExit){
+                                    if (!isExit) {
                                         data[queryOption] = "-";//未定义预期收益
                                     }
                                 }
@@ -445,11 +432,7 @@ var transform = {
                             for (i = 0; i < results.length; i++) {
                                 for (var key in results[i]) {
                                     if (key == queryOption) {
-                                        if (results[i].conversions_crate.value != "0") {
-                                            quotaArry.push((results[i].conversions_crate.value / results[i].conversions_crate.value).toFixed(2) + "%");
-                                        } else {
-                                            quotaArry.push(0);
-                                        }
+                                        quotaArry.push(results[i].crate.value);
                                     }
                                 }
                             }
@@ -491,16 +474,16 @@ var transform = {
                             for (i = 0; i < results.length; i++) {
                                 for (var key in results[i]) {
                                     if (key == queryOption) {
-                                        if(results[i].benefit.buckets.length==0){
+                                        if (results[i].benefit.buckets.length == 0) {
                                             quotaArry.push("0");//不存在记录
-                                        }else{
-                                            for(i = 0;i<results[i].benefit.buckets.length;i++){
-                                                if(results[i].benefit.buckets[i]!=""){
+                                        } else {
+                                            for (i = 0; i < results[i].benefit.buckets.length; i++) {
+                                                if (results[i].benefit.buckets[i] != "") {
                                                     quotaArry.push(Number(results[i].benefit.buckets[0].key) * Number(results[i].convertTime.value));
                                                     isExit = true;
                                                 }
                                             }
-                                            if(!isExit){
+                                            if (!isExit) {
                                                 quotaArry.push("-");//未定义预期收益
                                             }
                                         }
@@ -518,16 +501,16 @@ var transform = {
                                 for (var key in results[i]) {
                                     if (key == queryOption) {
                                         if (key == queryOption) {
-                                            if(results[i].profit_benefit.buckets.length==0){
+                                            if (results[i].profit_benefit.buckets.length == 0) {
                                                 quotaArry.push("0");//不存在记录
-                                            }else{
-                                                for(i = 0;i<results[i].profit_benefit.buckets.length;i++){
-                                                    if(results[i].profit_benefit.buckets[i]!=""){
+                                            } else {
+                                                for (i = 0; i < results[i].profit_benefit.buckets.length; i++) {
+                                                    if (results[i].profit_benefit.buckets[i] != "") {
                                                         quotaArry.push(Number(results[i].profit_benefit.buckets[0].key) * Number(results[i].profit_convertTime.value));
                                                         isExit = true;
                                                     }
                                                 }
-                                                if(!isExit){
+                                                if (!isExit) {
                                                     quotaArry.push("-");//未定义预期收益
                                                 }
                                             }
@@ -698,7 +681,7 @@ var transform = {
                             case "crate":
                                 for (i = 0; i < result.length; i++) {
                                     dataArry.push({
-                                        crate: (result[i].conversions_crate.value / result[i].vc_crate.value).toFixed(2) + "%",
+                                        crate: (result[i].crate.value),
                                         campaignName: result[i].key
                                     });
                                 }
@@ -738,14 +721,14 @@ var transform = {
                             case "benefit":
                                 for (i = 0; i < result.length; i++) {
                                     isExit = false;
-                                    if(result[i].benefit.buckets.length==0){
+                                    if (result[i].benefit.buckets.length == 0) {
                                         dataArry.push({
                                             benefit: "0",
                                             campaignName: result[i].key
                                         });
-                                    }else{
-                                        for(i = 0;i<result[i].benefit.buckets.length;i++){
-                                            if(result[i].benefit.buckets[i]!=""){
+                                    } else {
+                                        for (i = 0; i < result[i].benefit.buckets.length; i++) {
+                                            if (result[i].benefit.buckets[i] != "") {
                                                 dataArry.push({
                                                     benefit: Number(result[i].benefit.buckets[0].key) * Number(result[i].convertTime.value),
                                                     campaignName: result[i].key
@@ -765,14 +748,14 @@ var transform = {
                             case "profit":
                                 for (i = 0; i < result.length; i++) {
                                     isExit = false;
-                                    if(result[i].profit_benefit.buckets.length==0){
+                                    if (result[i].profit_benefit.buckets.length == 0) {
                                         dataArry.push({
                                             profit: "0",
                                             campaignName: result[i].key
                                         });
-                                    }else{
-                                        for(i = 0;i<result[i].profit_benefit.buckets.length;i++){
-                                            if(result[i].profit_benefit.buckets[i]!=""){
+                                    } else {
+                                        for (i = 0; i < result[i].profit_benefit.buckets.length; i++) {
+                                            if (result[i].profit_benefit.buckets[i] != "") {
                                                 dataArry.push({
                                                     profit: Number(result[i].profit_benefit.buckets[0].key) * Number(result[i].profit_convertTime.value),
                                                     campaignName: result[i].key
@@ -938,7 +921,7 @@ var transform = {
                         case "crate":
                             for (i = 0; i < result.length; i++) {
                                 dataArry.push({
-                                    crate: (result[i].conversions_crate.value / result[i].vc_crate.value).toFixed(2) + "%",
+                                    crate: (result[i].crate.value ),
                                     campaignName: result[i].key
                                 });
                             }
@@ -970,14 +953,14 @@ var transform = {
                         case "benefit":
                             for (i = 0; i < result.length; i++) {
                                 isExit = false;
-                                if(result[i].benefit.buckets.length==0){
+                                if (result[i].benefit.buckets.length == 0) {
                                     dataArry.push({
                                         benefit: "0",
                                         campaignName: result[i].key
                                     });
-                                }else{
-                                    for(i = 0;i<result[i].benefit.buckets.length;i++){
-                                        if(result[i].benefit.buckets[i]!=""){
+                                } else {
+                                    for (i = 0; i < result[i].benefit.buckets.length; i++) {
+                                        if (result[i].benefit.buckets[i] != "") {
                                             dataArry.push({
                                                 benefit: Number(result[i].benefit.buckets[0].key) * Number(result[i].convertTime.value),
                                                 campaignName: result[i].key
@@ -985,7 +968,7 @@ var transform = {
                                             isExit = true;
                                         }
                                     }
-                                    if(!isExit){
+                                    if (!isExit) {
                                         dataArry.push({
                                             benefit: "-",
                                             campaignName: result[i].key
@@ -997,14 +980,14 @@ var transform = {
                         case "profit":
                             for (i = 0; i < result.length; i++) {
                                 isExit = false;
-                                if(result[i].profit_benefit.buckets.length==0){
+                                if (result[i].profit_benefit.buckets.length == 0) {
                                     dataArry.push({
                                         profit: "0",
                                         campaignName: result[i].key
                                     });
-                                }else{
-                                    for(i = 0;i<result[i].profit_benefit.buckets.length;i++){
-                                        if(result[i].benefit.buckets[i]!=""){
+                                } else {
+                                    for (i = 0; i < result[i].profit_benefit.buckets.length; i++) {
+                                        if (result[i].benefit.buckets[i] != "") {
                                             dataArry.push({
                                                 profit: Number(result[i].profit_benefit.buckets[0].key) * Number(result[i].profit_convertTime.value),
                                                 campaignName: result[i].key
@@ -1012,7 +995,7 @@ var transform = {
                                             isExit = true;
                                         }
                                     }
-                                    if(!isExit){
+                                    if (!isExit) {
                                         dataArry.push({
                                             profit: "-",
                                             campaignName: result[i].key
@@ -1144,9 +1127,9 @@ var transform = {
                     var isExit = false;
                     switch (option) {
                         case "pv":
-                            results.forEach(function(result){
-                                for(var key in result){
-                                    if(key == option){
+                            results.forEach(function (result) {
+                                for (var key in result) {
+                                    if (key == option) {
                                         quotaArry.push(result[key].value);
                                     }
                                 }
@@ -1158,9 +1141,9 @@ var transform = {
                             };
                             break;
                         case "uv":
-                            results.forEach(function(result){
-                                for(var key in result){
-                                    if(key == option){
+                            results.forEach(function (result) {
+                                for (var key in result) {
+                                    if (key == option) {
                                         quotaArry.push(result[key].value);
                                     }
                                 }
@@ -1172,9 +1155,9 @@ var transform = {
                             };
                             break;
                         case "vc":
-                            results.forEach(function(result){
-                                for(var key in result){
-                                    if(key == option){
+                            results.forEach(function (result) {
+                                for (var key in result) {
+                                    if (key == option) {
                                         quotaArry.push(result[key].value);
                                     }
                                 }
@@ -1187,9 +1170,9 @@ var transform = {
                             break;
 
                         case "ip":
-                            results.forEach(function(result){
-                                for(var key in result){
-                                    if(key == option){
+                            results.forEach(function (result) {
+                                for (var key in result) {
+                                    if (key == option) {
                                         quotaArry.push(result[key].value);
                                     }
                                 }
@@ -1201,9 +1184,9 @@ var transform = {
                             };
                             break;
                         case "clickTotal":
-                            results.forEach(function(result){
-                                for(var key in result){
-                                    if(key == option){
+                            results.forEach(function (result) {
+                                for (var key in result) {
+                                    if (key == option) {
                                         quotaArry.push(result[key].value);
                                     }
                                 }
@@ -1215,9 +1198,9 @@ var transform = {
                             };
                             break;
                         case "conversions":
-                            results.forEach(function(result){
-                                for(var key in result){
-                                    if(key == option){
+                            results.forEach(function (result) {
+                                for (var key in result) {
+                                    if (key == option) {
                                         quotaArry.push(result[key].value);
                                     }
                                 }
@@ -1229,9 +1212,9 @@ var transform = {
                             };
                             break;
                         case "nuv":
-                            results.forEach(function(result){
-                                for(var key in result){
-                                    if(key == option){
+                            results.forEach(function (result) {
+                                for (var key in result) {
+                                    if (key == option) {
                                         quotaArry.push(result[key].value);
                                     }
                                 }
@@ -1243,9 +1226,9 @@ var transform = {
                             };
                             break;
                         case "nuvRate":
-                            results.forEach(function(result){
-                                for(var key in result){
-                                    if(key == option){
+                            results.forEach(function (result) {
+                                for (var key in result) {
+                                    if (key == option) {
                                         if (result.new_visitor_aggs.value) {
                                             quotaArry.push(0);
                                         } else {
@@ -1261,14 +1244,10 @@ var transform = {
                             };
                             break;
                         case "crate":
-                            results.forEach(function(result){
-                                for(var key in result){
-                                    if(key == option){
-                                        if (result.conversions_crate.value != "0") {
-                                            quotaArry.push((result.conversions_crate.value / result.conversions_crate.value).toFixed(2) + "%");
-                                        } else {
-                                            quotaArry.push(0);
-                                        }
+                            results.forEach(function (result) {
+                                for (var key in result) {
+                                    if (key == option) {
+                                        quotaArry.push(result.crate.value);
                                     }
                                 }
                             });
@@ -1279,9 +1258,9 @@ var transform = {
                             };
                             break;
                         case "visitNum":
-                            results.forEach(function(result){
-                                for(var key in result){
-                                    if(key == option){
+                            results.forEach(function (result) {
+                                for (var key in result) {
+                                    if (key == option) {
                                         quotaArry.push(result[key].value);
                                     }
                                 }
@@ -1293,9 +1272,9 @@ var transform = {
                             };
                             break;
                         case "transformCost":
-                            results.forEach(function(result){
-                                for(var key in result){
-                                    if(key == option){
+                            results.forEach(function (result) {
+                                for (var key in result) {
+                                    if (key == option) {
                                         quotaArry.push(result[key].value);
                                     }
                                 }
@@ -1307,9 +1286,9 @@ var transform = {
                             };
                             break;
                         case "orderNum":
-                            results.forEach(function(result){
-                                for(var key in result){
-                                    if(key == option){
+                            results.forEach(function (result) {
+                                for (var key in result) {
+                                    if (key == option) {
                                         quotaArry.push(result[key].value);
                                     }
                                 }
@@ -1321,20 +1300,20 @@ var transform = {
                             };
                             break;
                         case "benefit":
-                            results.forEach(function(result){
-                                for(var key in result){
-                                    if(key == option){
+                            results.forEach(function (result) {
+                                for (var key in result) {
+                                    if (key == option) {
                                         isExit = false;
-                                        if(result.benefit.buckets.length==0){
+                                        if (result.benefit.buckets.length == 0) {
                                             quotaArry.push("0");
-                                        }else{
-                                            for(i = 0;i<result.benefit.buckets.length;i++){
-                                                if(result.benefit.buckets[i]!=""){
+                                        } else {
+                                            for (i = 0; i < result.benefit.buckets.length; i++) {
+                                                if (result.benefit.buckets[i] != "") {
                                                     quotaArry.push(Number(result.benefit.buckets[0].key) * Number(result.convertTime.value));
                                                     isExit = true;
                                                 }
                                             }
-                                            if(!isExit){
+                                            if (!isExit) {
                                                 quotaArry.push("-");
                                             }
                                         }
@@ -1348,20 +1327,20 @@ var transform = {
                             };
                             break;
                         case "profit":
-                            results.forEach(function(result){
-                                for(var key in result){
-                                    if(key == option){
+                            results.forEach(function (result) {
+                                for (var key in result) {
+                                    if (key == option) {
                                         isExit = false;
-                                        if(result.profit_benefit.buckets.length==0){
+                                        if (result.profit_benefit.buckets.length == 0) {
                                             quotaArry.push("0");
-                                        }else{
-                                            for(i = 0;i<result.profit_benefit.buckets.length;i++){
-                                                if(result.profit_benefit.buckets[i]!=""){
+                                        } else {
+                                            for (i = 0; i < result.profit_benefit.buckets.length; i++) {
+                                                if (result.profit_benefit.buckets[i] != "") {
                                                     quotaArry.push(Number(result.profit_benefit.buckets[0].key) * Number(result.profit_convertTime.value));
                                                     isExit = true;
                                                 }
                                             }
-                                            if(!isExit){
+                                            if (!isExit) {
                                                 quotaArry.push("-");
                                             }
                                         }
@@ -1375,9 +1354,9 @@ var transform = {
                             };
                             break;
                         case "orderNumRate":
-                            results.forEach(function(result){
-                                for(var key in result){
-                                    if(key == option){
+                            results.forEach(function (result) {
+                                for (var key in result) {
+                                    if (key == option) {
                                         quotaArry.push(Number(result.orderNumRate_orderNum.value) / Number(result.orderNumRate_convertTime.value));
                                     }
                                 }
@@ -1389,9 +1368,9 @@ var transform = {
                             };
                             break;
                         case "avgCost":
-                            results.forEach(function(result){
-                                for(var key in result){
-                                    if(key == option){
+                            results.forEach(function (result) {
+                                for (var key in result) {
+                                    if (key == option) {
                                         quotaArry.push(result[key].value);
                                     }
                                 }
@@ -1403,9 +1382,9 @@ var transform = {
                             };
                             break;
                         case "avgCost_contrast":
-                            results.forEach(function(result){
-                                for(var key in result){
-                                    if(key == option){
+                            results.forEach(function (result) {
+                                for (var key in result) {
+                                    if (key == option) {
                                         quotaArry.push(result[key].value);
                                     }
                                 }
@@ -1417,10 +1396,10 @@ var transform = {
                             };
                             break;
                         case "orderNumRate_contrast":
-                            results.forEach(function(result){
-                                for(var key in result){
-                                    if(key == option){
-                                        quotaArry.push(result[key].value/ Number(result.orderNumRate_convertTime.value));
+                            results.forEach(function (result) {
+                                for (var key in result) {
+                                    if (key == option) {
+                                        quotaArry.push(result[key].value / Number(result.orderNumRate_convertTime.value));
                                     }
                                 }
                             });
@@ -1431,29 +1410,26 @@ var transform = {
                             };
                             break;
                         case "profit_contrast":
-                            results.forEach(function(result){
-                                for(var key in result){
-                                    if(key == option){
+                            results.forEach(function (result) {
+                                for (var key in result) {
+                                    if (key == option) {
                                         isExit = false;
-                                        if(result.profit_benefit_contrast.buckets.length==0){
+                                        if (result.profit_benefit_contrast.buckets.length == 0) {
                                             quotaArry.push("0");
-                                        }else{
-                                            for(i = 0;i<result.profit_benefit_contrast.buckets.length;i++){
-                                                if(result.profit_benefit_contrast.buckets[i]!=""){
+                                        } else {
+                                            for (i = 0; i < result.profit_benefit_contrast.buckets.length; i++) {
+                                                if (result.profit_benefit_contrast.buckets[i] != "") {
                                                     quotaArry.push(Number(result.profit_benefit_contrast.buckets[0].key) * Number(result.profit_convertTime.value));
                                                     isExit = true;
                                                 }
                                             }
-                                            if(!isExit){
+                                            if (!isExit) {
                                                 quotaArry.push("-");
                                             }
                                         }
                                     }
                                 }
                             });
-                            for (i = keyArr.length; i < results.length; i++) {
-
-                            }
                             quota_data = {
                                 label: "profit_contrast",
                                 key: keyArr,
@@ -1461,20 +1437,20 @@ var transform = {
                             };
                             break;
                         case "benefit_contrast":
-                            results.forEach(function(result){
-                                for(var key in result){
-                                    if(key == option){
+                            results.forEach(function (result) {
+                                for (var key in result) {
+                                    if (key == option) {
                                         isExit = false;
-                                        if(result.benefit_contrast.buckets.length==0){
+                                        if (result.benefit_contrast.buckets.length == 0) {
                                             quotaArry.push("0");
-                                        }else{
-                                            for(i = 0;i<result.benefit_contrast.buckets.length;i++){
-                                                if(result.benefit_contrast.buckets[i]!=""){
+                                        } else {
+                                            for (i = 0; i < result.benefit_contrast.buckets.length; i++) {
+                                                if (result.benefit_contrast.buckets[i] != "") {
                                                     quotaArry.push(Number(result.benefit_contrast.buckets[0].key) * Number(result.convertTime.value));
                                                     isExit = true;
                                                 }
                                             }
-                                            if(!isExit){
+                                            if (!isExit) {
                                                 quotaArry.push("-");
                                             }
                                         }
@@ -1488,9 +1464,9 @@ var transform = {
                             };
                             break;
                         case "orderNum_contrast":
-                            results.forEach(function(result){
-                                for(var key in result){
-                                    if(key == option){
+                            results.forEach(function (result) {
+                                for (var key in result) {
+                                    if (key == option) {
                                         quotaArry.push(result[key].value);
                                     }
                                 }
@@ -1502,9 +1478,9 @@ var transform = {
                             };
                             break;
                         case "transformCost_contrast":
-                            results.forEach(function(result){
-                                for(var key in result){
-                                    if(key == option){
+                            results.forEach(function (result) {
+                                for (var key in result) {
+                                    if (key == option) {
                                         quotaArry.push(result[key].value);
                                     }
                                 }
@@ -1516,9 +1492,9 @@ var transform = {
                             };
                             break;
                         case "visitNum_contrast":
-                            results.forEach(function(result){
-                                for(var key in result){
-                                    if(key == option){
+                            results.forEach(function (result) {
+                                for (var key in result) {
+                                    if (key == option) {
                                         quotaArry.push(result[key].value);
                                     }
                                 }
@@ -1530,9 +1506,9 @@ var transform = {
                             };
                             break;
                         case "pv_contrast":
-                            results.forEach(function(result){
-                                for(var key in result){
-                                    if(key == option){
+                            results.forEach(function (result) {
+                                for (var key in result) {
+                                    if (key == option) {
                                         quotaArry.push(result[key].value);
                                     }
                                 }
@@ -1544,9 +1520,9 @@ var transform = {
                             };
                             break;
                         case "uv_contrast":
-                            results.forEach(function(result){
-                                for(var key in result){
-                                    if(key == option){
+                            results.forEach(function (result) {
+                                for (var key in result) {
+                                    if (key == option) {
                                         quotaArry.push(result[key].value);
                                     }
                                 }
@@ -1558,9 +1534,9 @@ var transform = {
                             };
                             break;
                         case "vc_contrast":
-                            results.forEach(function(result){
-                                for(var key in result){
-                                    if(key == option){
+                            results.forEach(function (result) {
+                                for (var key in result) {
+                                    if (key == option) {
                                         quotaArry.push(result[key].value);
                                     }
                                 }
@@ -1573,9 +1549,9 @@ var transform = {
                             break;
 
                         case "ip_contrast":
-                            results.forEach(function(result){
-                                for(var key in result){
-                                    if(key == option){
+                            results.forEach(function (result) {
+                                for (var key in result) {
+                                    if (key == option) {
                                         quotaArry.push(result[key].value);
                                     }
                                 }
@@ -1587,9 +1563,9 @@ var transform = {
                             };
                             break;
                         case "clickTotal_contrast":
-                            results.forEach(function(result){
-                                for(var key in result){
-                                    if(key == option){
+                            results.forEach(function (result) {
+                                for (var key in result) {
+                                    if (key == option) {
                                         quotaArry.push(result[key].value);
                                     }
                                 }
@@ -1601,9 +1577,9 @@ var transform = {
                             };
                             break;
                         case "conversions_contrast":
-                            results.forEach(function(result){
-                                for(var key in result){
-                                    if(key == option){
+                            results.forEach(function (result) {
+                                for (var key in result) {
+                                    if (key == option) {
                                         quotaArry.push(result[key].value);
                                     }
                                 }
@@ -1615,9 +1591,9 @@ var transform = {
                             };
                             break;
                         case "nuv_contrast":
-                            results.forEach(function(result){
-                                for(var key in result){
-                                    if(key == option){
+                            results.forEach(function (result) {
+                                for (var key in result) {
+                                    if (key == option) {
                                         quotaArry.push(result[key].value);
                                     }
                                 }
@@ -1629,9 +1605,9 @@ var transform = {
                             };
                             break;
                         case "nuvRate_contrast":
-                            results.forEach(function(result){
-                                for(var key in result){
-                                    if(key == option){
+                            results.forEach(function (result) {
+                                for (var key in result) {
+                                    if (key == option) {
                                         quotaArry.push(result[key].value);
                                     }
                                 }
@@ -1643,14 +1619,10 @@ var transform = {
                             };
                             break;
                         case "crate_contrast":
-                            results.forEach(function(result){
-                                for(var key in result){
-                                    if(key == option){
-                                        if (result.conversions_crate.value != "0") {
-                                        quotaArry.push((result[key].value/ result.conversions_crate.value).toFixed(2));
-                                        } else {
-                                            quotaArry.push(0);
-                                        }
+                            results.forEach(function (result) {
+                                for (var key in result) {
+                                    if (key == option) {
+                                        quotaArry.push(result[key].value);
                                     }
                                 }
                             });
@@ -1672,7 +1644,142 @@ var transform = {
             }
             callbackFn(data);
         });
+    },
+    searchByUrls: function (es, indexs, type, queryOptions, showType, callbackFn) {
+        var requests = [];
+        for (var i = 0; i < indexs.length; i++) {
+            requests.push({
+                index: indexs[i]
+            });
+        }
+        async.map(requests, function (item, callback) {
+            es.indices.exists(item, function (error, exists) {
+                callback(null, exists);
+            });
+        }, function (error, results) {
+            var newIndexs = [];
+            for (var i = 0; i < indexs.length; i++) {
+                if (results[i] == true) {
+                    newIndexs.push(indexs[i]);
+                }
+            }
+            if (newIndexs.length == 0) {
+                var null_data = []
+                if (showType == "total") {
+                    null_data.push({
+                        crate_pv: 0,
+                        date_time: indexs[0].substring(7, indexs[0].length) + "~" + indexs[indexs.length - 1].substring(7, indexs[indexs.length - 1].length)
+                    });
+                } else {
+                    for (var k = 0; k < indexs.length; k++) {
+                        null_data.push({
+                            crate_pv: 0,
+                            date_time: indexs[k].substring(7, indexs[k].length)
+                        });
+                    }
+                }
+                callbackFn(null_data);
+            } else {
+                var requests = [];
+                switch (showType) {
+                    case "hour":
+                        break;
+                    case "day":
+                        var i = 0;
+                        for (i = 0; i < newIndexs.length; i++) {
+                            requests.push({
+                                "index": newIndexs[i],
+                                "type": type,
+                                "body": {
+                                    "size": 0,
+                                    "query": createQueryByUrls(queryOptions),
+                                    "aggs": {
+                                        "pv": {
+                                            "value_count": {
+                                                "field": "_type"
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    case "week":
+                        break;
+                    case "month":
+                        break;
+                    default :
+                        requests.push({
+                            "index": newIndexs,
+                            "type": type,
+                            "body": {
+                                "size": 0,
+                                "query": createQueryByUrls(queryOptions),
+                                "aggs": {
+                                    "pv": {
+                                        "value_count": {
+                                            "field": "_type"
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                        break;
+                }
+                async.map(requests, function (item, callback) {
+                    es.search(item, function (error, result) {
+                        if (result != undefined && result.aggregations != undefined) {
+                            callback(null, result.aggregations);
+                        } else {
+                            callback(null, null);
+                        }
+                    });
+                }, function (error, results) {
+                    var data = [];
+                    if (showType == "total") {
+                        data.push({
+                            "crate_pv": results[0].pv.value,
+                            "date_time": indexs[0].substring(7, indexs[0].length) + "~" + indexs[indexs.length - 1].substring(7, indexs[indexs.length - 1].length)
+                        });
+                    } else {
+                        for (var i = 0; i < indexs.length; i++) {
+                            var flag = false;
+                            for (var c = 0; c < newIndexs.length; c++) {
+                                if (indexs[i] == newIndexs[c]) {
+                                    data.push({
+                                        "crate_pv": results[c].pv.value,
+                                        "date_time": newIndexs[c].substring(7, newIndexs[c].length)
+                                    });
+                                    flag = true;
+                                    break;
+                                }
+                            }
+                            if (!flag) {
+                                data.push({
+                                    "crate_pv": 0,
+                                    "date_time": indexs[i].substring(7, indexs[i].length)
+                                });
+                            }
+
+                        }
+                    }
+                    callbackFn(data);
+                });
+            }
+
+        });
+
     }
+};
+var createQueryByUrls = function (urls) {
+    var boolQuery = [];
+    for (var i = 0; i < urls.length; i++) {
+        boolQuery.push({
+            "term": {
+                "loc": urls[i]
+            }
+        });
+    }
+    return {bool: {should: boolQuery}};
 };
 var createQuery = function (querys) {
     var queryString = [];
