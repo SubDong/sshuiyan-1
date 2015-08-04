@@ -271,7 +271,7 @@ if (config != undefined && !config.open) {
             P: "log.best-ad.cn",
             S: "pft.gif",
             protocol: "https:" == document.location.protocol ? "https:" : "http:",
-            Q: "os tit br fl pm sr lg ck ja sc dt rf loc tt ct vid u api et cv xy ut duration durPage n v".split(" ")
+            Q: "os tit br fl pm sr lg ck ja sc dt rf loc tt ct vid u api et cv xy ut duration durPage n v adtrack".split(" ")
         };
         //通过闭包 访问 私有变量 sa
         (function () {
@@ -439,14 +439,14 @@ if (config != undefined && !config.open) {
                      md.cookie.remove("PFT_DTNJ");
                      md.cookie.remove("PFT_DTNP");
                      }*/
-                    var a, b = this.getData("PFT_COOKIE_RF") == null?"-":this.getData("PFT_COOKIE_RF");
+                    var a, b = this.getData("PFT_COOKIE_RF") == null ? "-" : this.getData("PFT_COOKIE_RF");
                     md.g.tt = a = this.getData("PFT_" + c.id);
                     var rf = decodeURIComponent(md.g.rf).replace("http://", "");
-                    if(rf.indexOf("/") != -1){
+                    if (rf.indexOf("/") != -1) {
                         rf = (rf == "-" ? rf : rf.substring(0, rf.indexOf("/")));
                     }
                     var loc = decodeURIComponent(md.g.loc).replace("http://", "");
-                    if(loc.indexOf("/") != -1){
+                    if (loc.indexOf("/") != -1) {
                         loc = (loc == "-" ? loc : loc.substring(0, loc.indexOf("/")));
                     }
                     var Judge = (rf != "-" && (b == c.q || rf != loc));
@@ -637,6 +637,30 @@ if (config != undefined && !config.open) {
                 }
             })();
         }
+
+        (function () {
+            var loc = md.g.loc;
+            var sr = loc.split("?")[1].split("&")[0].split("=")[0];
+            var md = loc.split("?")[1].split("&")[1].split("=")[0];
+            var pl = loc.split("?")[1].split("&")[2].split("=")[0];
+            var kw = loc.split("?")[1].split("&")[3].split("=")[0];
+            var ci = loc.split("?")[1].split("&")[4].split("=")[0];
+            var tk = loc.split("?")[1].split("&")[5].split("=")[0];
+            /*var adObj = {
+                tid: loc.split("?")[1].split("&")[5].split("=")[1],
+                rf: loc.split("?")[0].split("/")[2],
+                media: loc.split("?")[1].split("&")[0].split("=")[1],
+                cpna: loc.split("?")[1].split("&")[2].split("=")[1],
+                kwna: loc.split("?")[1].split("&")[3].split("=")[1],
+                crt: loc.split("?")[1].split("&")[4].split("=")[1]
+            };*/
+            if (sr == "hmsr" && md == "hmmd" && pl == "hmpl" && kw == "hmkw" && ci == "hmci" && tk == "tid") {
+                md.g.adtrack = 1;
+                h.b.sm();
+            } else {
+
+            }
+        })();
 
         if (config != undefined && config.evt != undefined && config.evt.length > 0) {
             window.onload = function () {

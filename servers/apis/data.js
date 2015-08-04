@@ -433,7 +433,7 @@ api.get('/getUrlspeed', function (req, res) {
         })
     })
 
-
+    redis.service().del
 
 
 
@@ -916,7 +916,7 @@ api.get("/adsSource", function (req, res) {
 
     es_request.search(req.es, indexes, type, quotas, dimension, [0], filters, period[0], period[1], interval, function (data) {
         datautils.send(res, data);
-    })
+    });
 });
 /**
  * adsMedium

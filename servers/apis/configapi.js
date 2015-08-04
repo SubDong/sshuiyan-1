@@ -725,6 +725,7 @@ api.get("/adtrack", function (req, res) {
             var planName = entity.planName;
             var keywords = entity.keywords;
             var creative = entity.creative;
+            var tid = entity.tid;
 
             var strUrl = "";
 
@@ -734,14 +735,16 @@ api.get("/adtrack", function (req, res) {
                     + "&hmmd=" + adTypes
                     + "&hmpl=" + planName
                     + "&hmkw=" + keywords
-                    + "&hmci=" + creative;
+                    + "&hmci=" + creative
+                    + "&tid=" + tid;
             } else {
                 strUrl = "http://" + targetUrl
                     + "&hmsr=" + mediaPlatform
                     + "&hmmd=" + adTypes
                     + "&hmpl=" + planName
                     + "&hmkw=" + keywords
-                    + "&hmci=" + creative;
+                    + "&hmci=" + creative
+                    + "&tid=" + tid;
             }
             entity.produceUrl = encodeURI(strUrl);
 

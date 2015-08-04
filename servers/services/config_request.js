@@ -165,6 +165,50 @@ var config_request = {
         });
 
 
+    },
+
+    /**
+     * 指定广告追踪的  redis  查询
+     * @param redisClient
+     * @param trickid
+     * @param produceUrl
+     */
+    adTrackRedis: function(redisClient, trickid, produceUrl){
+        var qry = {
+            track_id: trickid
+        };
+        dao.find('sites_model', JSON.stringify(qry), null, {}, function(err, smDocs){
+            if(smDocs != null && adDocs.length > 0){
+                smDocs.forEach(function(item){
+                    var smQuery = {
+                        site_id: item._id,
+                        uid: item.uid,
+                        produceUrl: produceUrl
+                    };
+                    dao.find('adtrack_model', JSON.stringify(smQuery), null, {}, function(err, amDocs){
+                        if(amDocs != null && amDocs.length > 0) {
+                            var _array = [];
+                            var result = {};
+                            amDocs.forEach(function (item) {
+                                var adConfig = {
+                                    //targetUrl : item.targetUrl,
+                                    mediaPlatform: item.mediaPlatform,
+                                    adTypes: item.adTypes,
+                                    planName: item.planName,
+                                    keywords: item.keywords,
+                                    creative: item.creative
+                                    //produceUrl: item.produceUrl
+                                };
+                                _array.push(adConfig);
+                            });
+                            redisClient.multi().set("ad:" + produceUrl, JSON.stringify(_array)).exec();
+                            result["ad:" + produceUrl] =  JSON.stringify(_array);
+                            return result;
+                        }
+                    });
+                });
+            };
+        });
     }
 }
 module.exports = config_request;

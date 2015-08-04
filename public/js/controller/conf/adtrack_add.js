@@ -39,7 +39,8 @@ define(["./module"], function (ctrs) {
             planName: "",       //计划名称
             keywords: "",       //关键词
             creative: "",       //创意
-            produceUrl: ""      //生成的URL
+            produceUrl: "",      //生成的URL
+            tid: ""
         };
 
         /**
@@ -101,14 +102,16 @@ define(["./module"], function (ctrs) {
                     + "&hmmd=" + $scope.adTrack.adTypes
                     + "&hmpl=" + $scope.adTrack.planName
                     + "&hmkw=" + kw
-                    + "&hmci=" + $scope.adTrack.creative;
+                    + "&hmci=" + $scope.adTrack.creative
+                    + "&tid=" + $rootScope.siteTrackId;
                 } else {
                     strUrl = "http://" + $scope.adTrack.targetUrl
                     + "&hmsr=" + $scope.adTrack.mediaPlatform
                     + "&hmmd=" + $scope.adTrack.adTypes
                     + "&hmpl=" + $scope.adTrack.planName
                     + "&hmkw=" + kw
-                    + "&hmci=" + $scope.adTrack.creative;
+                    + "&hmci=" + $scope.adTrack.creative
+                    + "&tid=" + $rootScope.siteTrackId;
                 }
 
                 return encodeURI(strUrl);
@@ -147,7 +150,8 @@ define(["./module"], function (ctrs) {
             model.keywords = obj;
             model.creative = $scope.adTrack.creative;
             model.site_id = $rootScope.siteId;
-            model.uid = $cookieStore.get("uid");
+            model.uid = $cookieStore.get("uid")
+            model.tid = $rootScope.siteTrackId;
 
            //保存
             var url = "/config/adtrack?type=save&entity=" + JSON.stringify(model);
