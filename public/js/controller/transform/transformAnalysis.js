@@ -250,6 +250,7 @@ define(["./module"], function (ctrs) {
             $scope.$on("ssh_refresh_charts", function (e, msg) {
                 $scope.charts[0].config.legendDefaultChecked = [0, 1];
                 $scope.my_init(false);
+                init_transformData();
             });
             //$scope.initMap();
             //点击显示指标
@@ -283,12 +284,14 @@ define(["./module"], function (ctrs) {
                 $rootScope.end = time[1];
                 //时间段选择执行数据查询
                 $scope.my_init(false);
+                init_transformData();
             };
             $rootScope.datepickerClickTow = function (start, end, label) {
                 var time = chartUtils.getTimeOffset(start, end);
                 $scope.start = time[0];
                 $scope.end = time[1];
                 $scope.my_init(true);
+                init_transformData();
             };
             function GetDateStr(AddDayCount) {
                 var dd = new Date();
@@ -322,7 +325,8 @@ define(["./module"], function (ctrs) {
 
             };
             $scope.setShowArray();
-            $scope.my_init = function (isContrastDataByTime) {
+
+            var init_transformData = function(){
                 $scope.es_checkArray = ["pv", "uv", "vc", "ip", "nuv", "nuvRate", "conversions", "crate", "transformCost", "clickTotal", "visitNum"];
                 $scope.sem_checkArray = ["transformCost"];
                 $scope.es_checkedArray = [];
@@ -346,6 +350,10 @@ define(["./module"], function (ctrs) {
                     sem_checkedArray: $scope.sem_checkedArray,
                     all_checked: $rootScope.checkedArray
                 });
+            }
+
+            $scope.my_init = function (isContrastDataByTime) {
+
                 var start = 0;
                 var end = 0;
                 if (isContrastDataByTime) {
@@ -1008,6 +1016,7 @@ define(["./module"], function (ctrs) {
                 }
             };
             $scope.my_init(false);
+            init_transformData();
         }
     );
 });
