@@ -45,6 +45,14 @@
                                             <span ng-bind-html="souce.name"></span>
                                         </ui-select-choices>
                                     </ui-select>
+                                    <ui-select ng-model="browser.selected" theme="select2" reset-search-input="false" class="fl" data-ng-change="searchEngine(browser.selected.value)" ng-hide="browserselect"
+                                               style="width: 90px; margin-left:10px;">
+                                        <ui-select-match placeholder="全部">{{$select.selected.name}}
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="browser in browsers">
+                                            <span ng-bind-html="browser.name"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
                                 </div>
                             </li>
                             <li><a href="javascript:void(0)">百度</a></li>
