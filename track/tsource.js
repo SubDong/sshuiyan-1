@@ -646,15 +646,10 @@ if (config != undefined && !config.open) {
             var kw = loc.split("?")[1].split("&")[3].split("=")[0];
             var ci = loc.split("?")[1].split("&")[4].split("=")[0];
             var tk = loc.split("?")[1].split("&")[5].split("=")[0];
-            /*var adObj = {
-                tid: loc.split("?")[1].split("&")[5].split("=")[1],
-                rf: loc.split("?")[0].split("/")[2],
-                media: loc.split("?")[1].split("&")[0].split("=")[1],
-                cpna: loc.split("?")[1].split("&")[2].split("=")[1],
-                kwna: loc.split("?")[1].split("&")[3].split("=")[1],
-                crt: loc.split("?")[1].split("&")[4].split("=")[1]
-            };*/
-            if (sr == "hmsr" && md == "hmmd" && pl == "hmpl" && kw == "hmkw" && ci == "hmci" && tk == "tid") {
+            var ll = loc.split("?")[1].split("&")[6].split("=")[0];
+            var tt = loc.split("?")[1].split("&")[7].split("=")[0];
+
+            if (sr == "rf" && md == "media" && pl == "cpna" && kw == "kwna" && ci == "crt" && tk == "t" && ll == "atk" && tt == "tt") {
                 md.g.adtrack = 1;
                 h.b.sm();
             } else {
