@@ -26,6 +26,14 @@ define(["app"], function (app) {
             {consumption_name: "点击率", name: "ctr"},
             {consumption_name: "平均点击价格", name: "cpc"}
         ];
+        //网盟
+        $scope.targetNms = [
+            {consumption_name: "点击量", name: "click"},
+            {consumption_name: "展现量", name: "impression"},
+            {consumption_name: "消费", name: "cost"},
+            {consumption_name: "点击率", name: "ctr"},
+            {consumption_name: "平均点击价格", name: "acp"}
+        ];
         $scope.Webbased = [
             {consumption_name: "浏览量(PV)", name: "pv"},
             {consumption_name: "访问次数", name: "vc"},
@@ -929,7 +937,7 @@ define(["app"], function (app) {
             $scope.isJudge = false;
             getHtmlTableData();
         };
-        $scope.searchUrlSeepd = function(a){
+        $scope.searchUrlSeepd = function (a) {
             console.log(a);
         }
 
@@ -962,9 +970,9 @@ define(["app"], function (app) {
             $scope.gridOpArray.forEach(function (item, i) {
                 if (item["cellTemplate"] == undefined) {
                     var a = $rootScope.tableSwitch.latitude.field;
-                    if(a != undefined && a == item["field"]){
+                    if (a != undefined && a == item["field"]) {
                         item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 32px'>当页汇总</div>";
-                    }else{
+                    } else {
 //                        item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 100px'>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),2)}}<br/>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),3)}}<br/>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),4)}}</div>";
                         item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 32px'>" +
                             "<ul><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),2)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),3)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),4)}}</li></ul></div>";
@@ -978,15 +986,16 @@ define(["app"], function (app) {
                     url: "/api/getUrlspeed/?start=" + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&trackId=634100deaf9a4924351451d6795e3079"/* + $rootScope.siteTrackId*/
                 }).success(function (data, status) {
                     if (data.length <= 0) {
-                        var result = [{"loc": "暂无数据","openSpeed":"0","vc":"0"}];
+                        var result = [{"loc": "暂无数据", "openSpeed": "0", "vc": "0"}];
                         $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
                         $scope.gridOptions.data = result;
-                    }else{
-                        var dataArray =[];
+                    } else {
+                        var dataArray = [];
                         var dataObj = {};
-                        data.forEach(function(item,i){
+                        data.forEach(function (item, i) {
+                            var urlDateTime = (parseInt(item.dms_time.value) / parseInt(item.doc_count) / 1000).toFixed(2);
                             dataObj["loc"] = item.key;
-                            dataObj["openSpeed"] = parseInt(item.dms_time.value) / parseInt(item.doc_count);
+                            dataObj["openSpeed"] = urlDateTime+"\"";
                             dataObj["vc"] = item.ucv.value;
                             dataArray.push(dataObj);
                         });

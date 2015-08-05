@@ -94,7 +94,6 @@ define(["./module"], function (ctrs) {
             $scope.radio_record.order_conv = false;
             $scope.radio_record[curType] = true;
             $scope.record_type = curType;
-            console.log($scope.radio_record);
         };
         $scope.chooseConvType = function (curType) {
             $scope.radio_conv.regist = false;
@@ -158,8 +157,6 @@ define(["./module"], function (ctrs) {
 
         //Url数组转字符串数组
         var forceUrlsToArray = function (urls) {
-            console.log("forceUrlsToArray")
-            console.log(urls)
             var arr = [];
             for (var i = 0; i < urls.length; i++) {
                 arr.push(urls[i].url);
@@ -179,24 +176,33 @@ define(["./module"], function (ctrs) {
                     $scope.showInputErrMsg("路径" + pathIndex + "-->步骤1 未填写任何步骤URL，至少填写一个步骤URL，请返回并完善信息");
                     return false;
                 }
-            }
-            //先check掉第一组StepUrl
-            if (!checkAndForceUrls(path.steps[0].step_urls)) {
-                $scope.showInputErrMsg("路径" + pathIndex + "-->步骤1 未填写任何步骤URL，至少填写一个步骤URL，请返回并完善信息");
-                return false;
-            }
-            for (var index = 0; index < path.steps.length - 1; index++) {
-                //判断相邻两组URL是否有相等
-                if (!checkAndForceUrls(path.steps[index + 1].step_urls)) {
-                    $scope.showInputErrMsg("路径" + pathIndex + "-->步骤" + (index + 2) + " 未填写任何步骤URL，至少填写一个步骤URL，请返回并完善信息");
+            }else{
+                //先check掉第一组StepUrl
+                if (!checkAndForceUrls(path.steps[0].step_urls)) {
+                    $scope.showInputErrMsg("路径" + pathIndex + "-->步骤1 未填写任何步骤URL，至少填写一个步骤URL，请返回并完善信息");
                     return false;
                 }
-                for (var i = 0; i < path.steps[index].step_urls.length; i++) {
-                    for (var j = 0; j < path.steps[index + 1].step_urls.length; j++) {
-                        if (path.steps[index].step_urls[i].url == path.steps[index + 1].step_urls[j].url) {
-                            $scope.showInputErrMsg("路径" + pathIndex + "中 步骤" + (index + 1) + "与步骤" + (index + 2) + "存在相同URL，请返回并修改");
-                            return false;
+                for (var index = 0; index < path.steps.length - 1; index++) {
+                    //判断相邻两组URL是否有相等
+                    if (!checkAndForceUrls(path.steps[index + 1].step_urls)) {
+                        $scope.showInputErrMsg("路径" + pathIndex + "-->步骤" + (index + 2) + " 未填写任何步骤URL，至少填写一个步骤URL，请返回并完善信息");
+                        return false;
+                    }
+                    for (var i = 0; i < path.steps[index].step_urls.length; i++) {
+                        for (var j = 0; j < path.steps[index + 1].step_urls.length; j++) {
+                            if (path.steps[index].step_urls[i].url == path.steps[index + 1].step_urls[j].url) {
+                                $scope.showInputErrMsg("路径" + pathIndex + "中 步骤" + (index + 1) + "与步骤" + (index + 2) + "存在相同URL，请返回并修改");
+                                return false;
+                            }
                         }
+                    }
+                }
+            }
+            for(var i = 0;i<path.steps[path.steps.length-1].step_urls.length;i++){
+                for(var tindex=0;tindex<$scope.target_urls.length;tindex++){
+                    if(path.steps[path.steps.length-1].step_urls[i].url==$scope.target_urls[tindex].url){
+                        $scope.showInputErrMsg("路径" + pathIndex + "中 最后一步中的URL["+path.steps[path.steps.length-1].step_urls[i].url+"]与目标URL["+$scope.target_urls[tindex].url+"]相同URL，请返回并修改");
+                        return false;
                     }
                 }
             }
@@ -220,8 +226,6 @@ define(["./module"], function (ctrs) {
                         curls: curlArr//子步骤Url
                     }
                     page_conv_step_urls.push(page_conv_step_url);
-                    console.log(page_conv_step_url);
-                    //}
                 }
             }
 
@@ -286,41 +290,34 @@ define(["./module"], function (ctrs) {
                 conv_tpye: $scope.conv_tpye,//转换类型，regist,communicate,place_order,othre_order
                 conv_text:$scope.conv_tpye=="other"?($scope.t_conv_text.trim()==""?menu_conv_type["other"]:$scope.t_conv_text.trim()):menu_conv_type[$scope.conv_tpye]
             }
+            var updatePageConv = "/config/page_conv?type=update&query="+JSON.stringify({_id:$stateParams.id})+"&updates=" + angular.toJson(page_conv_entity);
+            $http({
+                method: 'GET',
+                url: updatePageConv
+            }).success(function (upd, status) {
+                if (status == 200) {
+                    var page_conv_urls = forcePathStepUrls($stateParams.id);
+                    var deleteUrl = "/config/page_conv_urls?type=delete&query=" + JSON.stringify({page_conv_id: $stateParams.id});
+                    $http({
+                        method: 'GET',
+                        url: deleteUrl
+                    }).success(function (data, status) {
+                        if (status == 200) {
+                            var saveUrls = "/config/page_conv_urls?type=saveAll&entitys=" + JSON.stringify(page_conv_urls);
+                            $http({
+                                method: 'GET',
+                                url: saveUrls
+                            }).success(function (data, status) {
+                                if (status != 200) {
+                                }
+                            });
+                        }
 
-            console.log(page_conv_entity)
-            //var updatePageConv = "/config/page_conv?type=update&query="+JSON.stringify({_id:$stateParams.id})+"&updates=" + angular.toJson(page_conv_entity);
-            //console.log("更新 页面转换 配置" + updatePageConv)
-            //$http({
-            //    method: 'GET',
-            //    url: updatePageConv
-            //}).success(function (upd, status) {
-            //    if (status == 200) {
-            //        var page_conv_urls = forcePathStepUrls($stateParams.id);
-            //        var deleteUrl = "/config/page_conv_urls?type=delete&query=" + JSON.stringify({page_conv_id: $stateParams.id});
-            //        console.log("删除 urls 配置" + deleteUrl)
-            //        $http({
-            //            method: 'GET',
-            //            url: deleteUrl
-            //        }).success(function (data, status) {
-            //            if (status == 200) {
-            //                var saveUrls = "/config/page_conv_urls?type=saveAll&entitys=" + JSON.stringify(page_conv_urls);
-            //                console.log("重新插入 urls 配置" + saveUrls)
-            //                $http({
-            //                    method: 'GET',
-            //                    url: saveUrls
-            //                }).success(function (data, status) {
-            //                    if (status != 200) {
-            //                        console.log('保存失败');
-            //                    }
-            //                });
-            //            }
-            //
-            //        });
-            //    }
-            //    $state.go('pagechange');
-            //});
+                    });
+                }
+                $state.go('pagechange');
+            });
         }
-
     })
 })
 ;

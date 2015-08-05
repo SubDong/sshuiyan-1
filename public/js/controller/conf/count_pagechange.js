@@ -46,15 +46,13 @@ define(["./module"], function (ctrs) {
 
         //跳转到修改界面
         $scope.onUpdate = function (entity) {
-            if (entity.$$treeLevel == 0) {
                 $state.go('pagechange_update', {'id': entity._id});
-            }
         };
 
         //配置默认指标
         $rootScope.checkedArray = ["target_name", "target_urls", "needPath", "record_type", "conv_tpye", "_id"];
         $rootScope.gridArray = [
-            //{name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>", maxWidth: 5,  enableSorting: false},
+            {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>", maxWidth: 5,  enableSorting: false},
             {name: "目标名称", displayName: "目标名称", field: "target_name", enableSorting: false},
             {
                 name: "路径",

@@ -5,7 +5,7 @@ var express = require('express');
 var url = require('url');
 var date = require('../utils/date');
 var datautils = require('../utils/datautils');
-
+var daoutil = require('../db/daoutil');
 var initial = require('../services/visitors/initialData');
 var map = require('../utils/map');
 var api = express.Router();
@@ -853,5 +853,31 @@ api.get("/searchByUID", function (req, res) {
         });
 
     }
+});
+
+/**
+ * 网站列表管理
+ */
+api.get("/test", function (req, res) {
+
+    //config 鼠标点击配置
+    var config_mouse = {
+        mouse_ckick: false
+    };
+    var query = url.parse(req.url, true).query;
+    var type = query['type'];
+    var schema_name = "adgroup_model";
+    switch (type) {
+        case "search":
+            daoutil.find(schema_name, JSON.stringify({}), null, {}, function (err, up) {
+                console.log(up)
+                datautils.send(res, up);
+                // TODO 为什么要去差redis
+            });
+            break;
+        default :
+            break;
+    }
+
 });
 module.exports = api;

@@ -32,7 +32,7 @@
         </div>
         <!--网站上半部分列表-->
             <div class="table_content" >
-                <div class="custom_table" style=" margin-top:20px;">
+                <div class="custom_table" ng-class="{hidePageContainer:gridApi2.grid.rows.length<20}" style=" margin-top:20px;">
                     <div ui-grid="gridOptions"  class="grid clearfix secondary_table" ui-grid-selection ui-grid-pagination
                          ui-grid-exporter ui-grid-auto-resize></div>
                 </div>
