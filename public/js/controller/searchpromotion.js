@@ -21,6 +21,14 @@ define(["./module"], function (ctrs) {
             {consumption_name: "平均点击价格", name: "cpc"}
         ];
         //
+        //网盟
+        $scope.targetNms = [
+            {consumption_name: "点击量", name: "click"},
+            {consumption_name: "展现量", name: "impression"},
+            {consumption_name: "消费", name: "cost"},
+            {consumption_name: "点击率", name: "ctr"},
+            {consumption_name: "平均点击价格", name: "acp"}
+        ];
         $scope.Webbased = [
             {consumption_name: "浏览量(PV)", name: "pv"},
             {consumption_name: "访问次数", name: "vc"},
@@ -278,7 +286,7 @@ define(["./module"], function (ctrs) {
             $scope.gridOptions.columnDefs = $scope.gridOpArray;
             $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
             if ($rootScope.tableSwitch.promotionSearch != undefined && $rootScope.tableSwitch.promotionSearch.NMS != undefined) {
-                var url = SEM_API_URL + "/sem/report/nms/" + $rootScope.tableSwitch.promotionSearch.SEMData + "?a=" + user + "&b=" + baiduAccount + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + ($scope.searchNmsId != undefined ? "&"+$scope.searchNmsId: "");
+                var url = SEM_API_URL + "/sem/report/nms/" + $rootScope.tableSwitch.promotionSearch.SEMData + "?a=" + user + "&b=" + baiduAccount + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + ($scope.searchNmsId != undefined ? "&" + $scope.searchNmsId : "");
                 $http({
                     method: 'GET',
                     url: url
@@ -298,11 +306,16 @@ define(["./module"], function (ctrs) {
                             $rootScope.checkedArray.forEach(function (x, y) {
                                 datas[x] = item[x] != undefined ? item[x] : (data[0] == undefined ? "--" : data[0][x]);
                                 if ((x == "ctr" || x == "arrivedRate") && datas[x] != "--") {
-                                    datas[x] += "%";
+                                    if (datas[x] == "-1") {
+                                        datas[x] = "--"
+                                    } else {
+                                        datas[x] += "%";
+                                    }
+
                                 }
                             });
                             var field = $rootScope.tableSwitch.latitude.field;
-                            datas[field] = item[field == "adgroupName" ? "groupName":field] + getTableTitle(field, item);
+                            datas[field] = item[field == "adgroupName" ? "groupName" : field] + getTableTitle(field, item);
                             datas["id"] = item[searchId + "Id"];
                             item["impression"] != undefined ? datas["impression"] = item["impression"] == '-1' ? "--" : item["impression"] : "";
                             item["click"] != undefined ? datas["click"] = item["click"] == '-1' ? "--" : item["click"] : "";

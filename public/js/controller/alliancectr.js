@@ -5,17 +5,17 @@ define(["./module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.controller('alliancectr', function ($scope, $rootScope, $q, requestService, areaService, $http, SEM_API_URL,uiGridConstants) {
+    ctrs.controller('alliancectr', function ($scope, $rootScope, $q, requestService, areaService, $http, SEM_API_URL, uiGridConstants) {
         //console.log("alliancectr")
         //        高级搜索提示
         $scope.terminalSearch = "";
         $scope.areaSearch = "";
 //        取消显示的高级搜索的条件
-        $scope.removeTerminalSearch = function(obj){
+        $scope.removeTerminalSearch = function (obj) {
             $rootScope.$broadcast("searchLoadAllTerminal");
             obj.terminalSearch = "";
         }
-        $scope.removeAreaSearch = function(obj){
+        $scope.removeAreaSearch = function (obj) {
             $scope.city.selected = {"name": "全部"};
             $rootScope.$broadcast("searchLoadAllArea");
             obj.areaSearch = "";
@@ -45,11 +45,6 @@ define(["./module"], function (ctrs) {
                 , footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
                 enableSorting: false
             },
-            /*{
-                name: " ",
-                cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn' title='查看历史趋势'></a></div>",
-                enableSorting: false
-            },*/
             {
                 name: "展现量",
                 displayName: "展现量",
@@ -106,7 +101,7 @@ define(["./module"], function (ctrs) {
             //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
             arrayClear: false, //是否清空指标array
             promotionSearch: {
-                NMS:true,//是否开启网盟数据
+                NMS: true,//是否开启网盟数据
                 //turnOn: true, //是否开始推广中sem数据
                 SEMData: "campaign" //查询类型
             }
