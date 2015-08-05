@@ -2,19 +2,22 @@
     <div class="web_list">
         <!--网站导航-->
         <div class="web_list_nav">
-            <p>  <span ng-bind-html="userTypeName"></span> -事件转化目标</p>
-            <div  class="web_list_nav_right">
+            <p><span ng-bind-html="userTypeName"></span> -事件转化目标</p>
+
+            <div class="web_list_nav_right">
                 <ul>
-                    <li><a  data-ng-href="#/conf/webcountsite/eventchange_add" class="btn btn-info nav_btn ">新增事件转化目标</a></li>
+                    <li><a data-ng-href="#/conf/webcountsite/eventchange_add" class="btn btn-info nav_btn ">新增事件转化目标</a>
+                    </li>
                     <li><a href="#/transform/transformAnalysis" class="btn btn-info nav_btn ">查看报告 </a></li>
                 </ul>
             </div>
         </div>
         <!--网站上部列表部分-->
         <div class="web_list_up">
-            <div class="table_content"  ng-controller="admintablectr">
+            <div class="table_content" ng-controller="admintablectr">
                 <div class="custom_table">
-                    <div ui-grid="gridOptions"  class="grid clearfix secondary_table"   ui-grid-pagination  ui-grid-exporter ui-grid-auto-resize ui-grid-selection ></div>
+                    <div ui-grid="gridOptions" class="grid clearfix secondary_table" ui-grid-pagination ui-grid-exporter
+                         ui-grid-auto-resize ui-grid-selection></div>
                     <gridpageht>
                     </gridpageht>
                 </div>
