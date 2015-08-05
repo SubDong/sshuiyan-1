@@ -21,6 +21,14 @@ define(["./module"], function (ctrs) {
             {consumption_name: "平均点击价格", name: "cpc"}
         ];
         //
+        //网盟
+        $scope.targetNms = [
+            {consumption_name: "点击量", name: "click"},
+            {consumption_name: "展现量", name: "impression"},
+            {consumption_name: "消费", name: "cost"},
+            {consumption_name: "点击率", name: "ctr"},
+            {consumption_name: "平均点击价格", name: "acp"}
+        ];
         $scope.Webbased = [
             {consumption_name: "浏览量(PV)", name: "pv"},
             {consumption_name: "访问次数", name: "vc"},
@@ -276,66 +284,46 @@ define(["./module"], function (ctrs) {
         $rootScope.targetSearchSpread = function (isClicked) {
             $scope.gridOpArray = angular.copy($rootScope.searchGridArray);
             $scope.gridOptions.columnDefs = $scope.gridOpArray;
-            //if (isClicked) {
             $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
-            //}
-            var url = SEM_API_URL + "/sem/report/" + $rootScope.tableSwitch.promotionSearch.SEMData + "?a=" + user + "&b=" + baiduAccount + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=" + $scope.device + ($scope.searchId != undefined && $scope.searchId != "undefined" ? "&" + $scope.searchId : "")
-            $http({
-                method: 'GET',
-                url: url
-            }).success(function (dataSEM, status) {
-                $rootScope.$broadcast("LoadDateShowSEMDataFinish", dataSEM);
-                var dataArray = [];
-                dataSEM.forEach(function (item, i) {
-                    var searchId = $rootScope.tableSwitch.promotionSearch.SEMData;
-
-                    var filter = "[{\"" + getTableFilter(searchId) + "\":[\"" + item[searchId + "Id"] + "\"]}]";
-                    var fieldQuery = $rootScope.tableSwitch.latitude.field;
-
-                    var turl = '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? ($rootScope.tableSwitch.number == 5 ? fieldQuery : null) : fieldQuery )
-                        + "&filerInfo=" + filter + "&promotion=" + JSON.stringify($rootScope.tableSwitch.promotionSearch) + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType;
-                    $http({
-                        method: 'GET',
-                        url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? ($rootScope.tableSwitch.number == 5 ? fieldQuery : null) : fieldQuery )
-                        + "&filerInfo=" + filter + "&promotion=" + JSON.stringify($rootScope.tableSwitch.promotionSearch) + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
-                    }).success(function (data, status) {
-                        var datas = {};
-                        if ($rootScope.tableSwitch.number == 5) {
-                            data.forEach(function (item, i) {
-                                $rootScope.checkedArray.forEach(function (x, y) {
-//                                    datas[x] = item[x] != undefined ? item[x] : (data[0] == undefined ? (x == "avgTime" ? "00:00:00" : 0) : data[0][x]);
-                                    datas[x] = item[x] != undefined ? item[x] : (data[0] == undefined ? "--" : data[0][x]);
-                                    if ((x == "ctr" || x == "arrivedRate") && datas[x] != "--") {
-                                        datas[x] += "%";
-                                    }
-                                });
-                                datas[fieldQuery] = item[fieldQuery] + getTableTitle(fieldQuery, item);
-                                item["impression"] != undefined ? datas["impression"] = item["impression"] : "";
-                                item["click"] != undefined ? datas["click"] = item["click"] : "";
-                                item["cost"] != undefined ? datas["cost"] = item["cost"] : "";
-                                item["cpc"] != undefined ? datas["cpc"] = item["cpc"] : "";
-                                dataArray.push(datas);
-                                if ((dataSEM.length - 1) == i) {
-                                    $scope.gridOptions.data = dataArray;
-                                }
-                            })
-                        } else {
+            if ($rootScope.tableSwitch.promotionSearch != undefined && $rootScope.tableSwitch.promotionSearch.NMS != undefined) {
+                var url = SEM_API_URL + "/sem/report/nms/" + $rootScope.tableSwitch.promotionSearch.SEMData + "?a=" + user + "&b=" + baiduAccount + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + ($scope.searchNmsId != undefined ? "&" + $scope.searchNmsId : "");
+                $http({
+                    method: 'GET',
+                    url: url
+                }).success(function (dataNMS, status) {
+                    console.log(dataNMS)
+                    var dataArray = [];
+                    dataNMS.forEach(function (item, i) {
+                        var searchId = $rootScope.tableSwitch.promotionSearch.SEMData;
+                        var filter = "[{\"" + getTableFilter(searchId) + "\":[\"" + item[searchId + "Id"] + "\"]}]";
+                        var fieldQuery = $rootScope.tableSwitch.latitude.field;
+                        $http({
+                            method: 'GET',
+                            url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? ($rootScope.tableSwitch.number == 5 ? fieldQuery : null) : fieldQuery )
+                            + "&filerInfo=" + filter + "&promotion=" + JSON.stringify($rootScope.tableSwitch.promotionSearch) + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
+                        }).success(function (data, status) {
+                            var datas = {};
                             $rootScope.checkedArray.forEach(function (x, y) {
-//                                datas[x] = item[x] != undefined ? item[x] : (data[0] == undefined ? (x == "avgTime" ? "00:00:00" : 0) : data[0][x]);
                                 datas[x] = item[x] != undefined ? item[x] : (data[0] == undefined ? "--" : data[0][x]);
                                 if ((x == "ctr" || x == "arrivedRate") && datas[x] != "--") {
-                                    datas[x] += "%";
+                                    if (datas[x] == "-1") {
+                                        datas[x] = "--"
+                                    } else {
+                                        datas[x] += "%";
+                                    }
+
                                 }
                             });
                             var field = $rootScope.tableSwitch.latitude.field;
-                            datas[field] = item[field] + getTableTitle(field, item);
+                            datas[field] = item[field == "adgroupName" ? "groupName" : field] + getTableTitle(field, item);
                             datas["id"] = item[searchId + "Id"];
-                            item["impression"] != undefined ? datas["impression"] = item["impression"] : "";
-                            item["click"] != undefined ? datas["click"] = item["click"] : "";
-                            item["cost"] != undefined ? datas["cost"] = item["cost"] : "";
-                            item["cpc"] != undefined ? datas["cpc"] = item["cpc"] : "";
+                            item["impression"] != undefined ? datas["impression"] = item["impression"] == '-1' ? "--" : item["impression"] : "";
+                            item["click"] != undefined ? datas["click"] = item["click"] == '-1' ? "--" : item["click"] : "";
+                            item["cost"] != undefined ? datas["cost"] = item["cost"] == '-1' ? "--" : item["cost"] : "";
+                            item["acp"] != undefined ? datas["acp"] = item["acp"] == '-1' ? "--" : item["acp"] : "";
                             dataArray.push(datas);
-                            if ((dataSEM.length - 1) == i) {
+                            if ((dataNMS.length - 1) == i) {
+                                console.log(dataArray)
                                 if (field == "adgroupName" || field == "keywordName") {
                                     $scope.gridOptions.rowHeight = 55;
                                 } else {
@@ -348,12 +336,86 @@ define(["./module"], function (ctrs) {
                                 $scope.gridOptions.columnDefs = $scope.gridOpArray;
                                 $scope.gridOptions.data = dataArray;
                             }
-                        }
-                    }).error(function (error) {
-                        console.log(error);
+                        })
                     });
                 });
-            });
+            } else {
+                var url = SEM_API_URL + "/sem/report/" + $rootScope.tableSwitch.promotionSearch.SEMData + "?a=" + user + "&b=" + baiduAccount + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=" + $scope.device + ($scope.searchId != undefined && $scope.searchId != "undefined" ? "&" + $scope.searchId : "")
+                $http({
+                    method: 'GET',
+                    url: url
+                }).success(function (dataSEM, status) {
+                    $rootScope.$broadcast("LoadDateShowSEMDataFinish", dataSEM);
+                    var dataArray = [];
+                    dataSEM.forEach(function (item, i) {
+                        var searchId = $rootScope.tableSwitch.promotionSearch.SEMData;
+
+                        var filter = "[{\"" + getTableFilter(searchId) + "\":[\"" + item[searchId + "Id"] + "\"]}]";
+                        var fieldQuery = $rootScope.tableSwitch.latitude.field;
+
+                        var turl = '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? ($rootScope.tableSwitch.number == 5 ? fieldQuery : null) : fieldQuery )
+                            + "&filerInfo=" + filter + "&promotion=" + JSON.stringify($rootScope.tableSwitch.promotionSearch) + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType;
+                        $http({
+                            method: 'GET',
+                            url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? ($rootScope.tableSwitch.number == 5 ? fieldQuery : null) : fieldQuery )
+                            + "&filerInfo=" + filter + "&promotion=" + JSON.stringify($rootScope.tableSwitch.promotionSearch) + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
+                        }).success(function (data, status) {
+                            var datas = {};
+                            if ($rootScope.tableSwitch.number == 5) {
+                                data.forEach(function (item, i) {
+                                    $rootScope.checkedArray.forEach(function (x, y) {
+//                                    datas[x] = item[x] != undefined ? item[x] : (data[0] == undefined ? (x == "avgTime" ? "00:00:00" : 0) : data[0][x]);
+                                        datas[x] = item[x] != undefined ? item[x] : (data[0] == undefined ? "--" : data[0][x]);
+                                        if ((x == "ctr" || x == "arrivedRate") && datas[x] != "--") {
+                                            datas[x] += "%";
+                                        }
+                                    });
+                                    datas[fieldQuery] = item[fieldQuery] + getTableTitle(fieldQuery, item);
+                                    item["impression"] != undefined ? datas["impression"] = item["impression"] : "";
+                                    item["click"] != undefined ? datas["click"] = item["click"] : "";
+                                    item["cost"] != undefined ? datas["cost"] = item["cost"] : "";
+                                    item["cpc"] != undefined ? datas["cpc"] = item["cpc"] : "";
+                                    dataArray.push(datas);
+                                    if ((dataSEM.length - 1) == i) {
+                                        $scope.gridOptions.data = dataArray;
+                                    }
+                                })
+                            } else {
+                                $rootScope.checkedArray.forEach(function (x, y) {
+//                                datas[x] = item[x] != undefined ? item[x] : (data[0] == undefined ? (x == "avgTime" ? "00:00:00" : 0) : data[0][x]);
+                                    datas[x] = item[x] != undefined ? item[x] : (data[0] == undefined ? "--" : data[0][x]);
+                                    if ((x == "ctr" || x == "arrivedRate") && datas[x] != "--") {
+                                        datas[x] += "%";
+                                    }
+                                });
+                                var field = $rootScope.tableSwitch.latitude.field;
+                                datas[field] = item[field] + getTableTitle(field, item);
+                                datas["id"] = item[searchId + "Id"];
+                                item["impression"] != undefined ? datas["impression"] = item["impression"] : "";
+                                item["click"] != undefined ? datas["click"] = item["click"] : "";
+                                item["cost"] != undefined ? datas["cost"] = item["cost"] : "";
+                                item["cpc"] != undefined ? datas["cpc"] = item["cpc"] : "";
+                                dataArray.push(datas);
+                                if ((dataSEM.length - 1) == i) {
+                                    if (field == "adgroupName" || field == "keywordName") {
+                                        $scope.gridOptions.rowHeight = 55;
+                                    } else {
+                                        if (field == "description1") {
+                                            $scope.gridOptions.rowHeight = 100;
+                                        } else {
+                                            $scope.gridOptions.rowHeight = 32;
+                                        }
+                                    }
+                                    $scope.gridOptions.columnDefs = $scope.gridOpArray;
+                                    $scope.gridOptions.data = dataArray;
+                                }
+                            }
+                        }).error(function (error) {
+                            console.log(error);
+                        });
+                    });
+                });
+            }
         };
 
         //搜索词
@@ -448,8 +510,91 @@ define(["./module"], function (ctrs) {
                 })
             });
         };
+        //网盟数据点击
+        $scope.getNmsHistoricalTrend = function (b) {
+            $rootScope.checkedArray = ["impression", "cost", "acp", "outRate", "avgTime", "nuvRate"];
+            $rootScope.searchGridArray = [
+                {
+                    name: "xl",
+                    displayName: "",
+                    cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
+                    maxWidth: 10,
+                    enableSorting: false
+                },
+                {
+                    name: "组",
+                    displayName: "组",
+                    field: "adgroupName",
+                    cellTemplate: "<div><a href='javascript:void(0)' style='color:#0965b8;line-height:30px' ng-click='grid.appScope.getNmsHistoricalTrend(this)'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</div>"
+                    , footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                    enableSorting: false
+                },
+                {
+                    name: "展现量",
+                    displayName: "展现量",
+                    field: "impression",
+                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>",
+                    sort: {
+                        direction: uiGridConstants.DESC,
+                        priority: 1
+                    }
+                },
+                {
+                    name: "消费",
+                    displayName: "消费",
+                    field: "cost",
+                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                },
+                {
+                    name: "平均点击价格",
+                    displayName: "平均点击价格",
+                    field: "acp",
+                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                },
+                {
+                    name: "跳出率",
+                    displayName: "跳出率",
+                    field: "outRate",
+                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                },
+                {
+                    name: "平均访问时长",
+                    displayName: "平均访问时长",
+                    field: "avgTime",
+                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                },
+                {
+                    name: "新访客比率",
+                    displayName: "新访客比率",
+                    field: "nuvRate",
+                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                }
+            ];
+            $rootScope.tableSwitch = {
+                latitude: {
+                    name: "组",
+                    displayName: "组",
+                    field: "adgroupName"
+                },
+                tableFilter: null,
+                dimen: false,
+                // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
+                number: 0,
+                //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
+                coding: false,
+                //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
+                arrayClear: false, //是否清空指标array
+                promotionSearch: {
+                    NMS: true,//是否开启网盟数据
+                    //turnOn: true, //是否开始推广中sem数据
+                    SEMData: "group" //查询类型
+                }
+            };
+            $scope.searchNmsId = "cid=" + b.$parent.$parent.row.entity.id;
+            $rootScope.targetSearchSpread();
+        };
 
-
+        //SEM数据点击
         $scope.getHistoricalTrend = function (b) {
             document.getElementById('areadiv').style.display = "";
             if ($rootScope.tableSwitch.latitude.field == "campaignName") {
@@ -505,8 +650,8 @@ define(["./module"], function (ctrs) {
                         footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
                     },
                     {
-                        name: "新房客比率",
-                        displayName: "新房客比率",
+                        name: "新访客比率",
+                        displayName: "新访客比率",
                         field: "nuvRate",
                         footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
                     }
@@ -574,8 +719,8 @@ define(["./module"], function (ctrs) {
                         footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
                     },
                     {
-                        name: "新房客比率",
-                        displayName: "新房客比率",
+                        name: "新访客比率",
+                        displayName: "新访客比率",
                         field: "nuvRate",
                         footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
                     }
@@ -610,9 +755,9 @@ define(["./module"], function (ctrs) {
             if (option.length > 0) {
                 option.forEach(function (item, i) {
                     var tmp = 0;
-                    if(item.entity[a.col.field] == "--"){
+                    if (item.entity[a.col.field] == "--") {
                         tmp = 0;
-                    }else{
+                    } else {
                         tmp = item.entity[a.col.field];
                     }
                     returnData += parseFloat((tmp + "").replace("%", ""));

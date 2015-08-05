@@ -123,33 +123,26 @@ define(["../module"], function (app) {
                     paginationPageSize: 20,
                     paginationPageSizes: [20, 50, 100],
                     expandableRowTemplate:"<div ui-grid='row.entity.subGridOptions' class='grid clearfix secondary_table' ui-grid-expandable ui-grid-exporter ui-grid-auto-resize></div>",
+                    expandableRowHeight: 360,
                     enableColumnMenus: false,
                     enablePaginationControls: false,
                     enableGridMenu: false,
                     enableHorizontalScrollbar: 0,
                     enableSorting: true,
-                    expandableRowHeight: 30,
-                    //showTreeExpandNoChildren: true,
                     columnDefs: $rootScope.gridArray,
                     onRegisterApi: function (gridApi) {
                         $rootScope.gridApiAdmin = gridApi;
-                        //adminGriApihtml(gridApi);
+                        adminGriApihtml(gridApi);
                         $rootScope.expandRowData(gridApi)
-                        //console.log("页面转化")
                     }
                 };
 
             }
 
         }
-
-        $rootScope.expandIcon = function () {
-            console.log("expandIcon")
-        }
         //////DENG
         //配置展开巷HTML
         var adminGriApiInfo = function (gridApi) {
-
             if (typeof($rootScope.checkedArray) != undefined && $rootScope.tableJu == "html") {
                 $scope.gridOpArray = angular.copy($rootScope.gridArray);
                 gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
@@ -188,9 +181,6 @@ define(["../module"], function (app) {
                 });
             }
         };
-
-        ///////////
-        ///////////////////////////////////展开项处理///////////////////////////////////////////////
     });
 })
 ;

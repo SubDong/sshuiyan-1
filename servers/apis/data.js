@@ -12,6 +12,7 @@ var initial = require('../services/visitors/initialData');
 var map = require('../utils/map');
 var api = express.Router();
 var dao = require('../db/daos');
+var daoutil = require('../db/daoutil');
 var schemas = require('../db/schemas');
 var csvApi = require('json-2-csv');
 var iconv = require('iconv-lite');
@@ -435,7 +436,9 @@ api.get('/getUrlspeed', function (req, res) {
         initial.popularizeURL(req.es, _index, _type, _filter, _trackId, function (data) {
             datautils.send(res, data);
         })
-    })
+    });
+
+    redis.service().del
 });
 
 /**************************************************************/
@@ -664,56 +667,6 @@ api.get("/heaturl", function (req, res) {
 });
 
 // ================================= Config  ===============================
-api.get("/config", function (req, res) {
-
-    var query = url.parse(req.url, true).query;
-    var type = query['type'];
-    var index = query['index'];
-    var schema_name = "";
-    switch (index) {
-        case "site_list"://网站列表
-            schema_name = "sites_model";
-            break;
-        case "0":
-            schema_name = "siterules_model";
-            break;
-        case "5":
-            schema_name = "converts_model";
-            break;
-        case "subdirectoryList"://子目录管理
-            schema_name = "subdirectories_model";
-            break;
-        default :
-    }
-    switch (type) {
-        case "save":
-            var entity = JSON.parse(query['entity']);
-            dao.save(schema_name, entity, function (ins) {
-                datautils.send(res, JSON.stringify(ins));
-            });
-            break;
-        case "search":
-            dao.find(schema_name, query['query'], null, {}, function (err, docs) {
-                datautils.send(res, docs);
-            });
-            break;
-        case "update":
-            //条件下更新
-            dao.update(schema_name, query['query'], query['updates'], function (err, docs) {
-                datautils.send(res, docs);
-            });
-            break;
-        case "delete":
-            //条件下删除
-            dao.remove(schema_name, query['query'], function () {
-                datautils.send(res, "remove");
-            });
-            break;
-        default :
-            break;
-    }
-
-});
 api.get("/trafficmap", function (req, res) {
     var parameterString = req.url.split("?");//获取url的？号以后的字符串
 
@@ -918,7 +871,7 @@ api.get("/adsSource", function (req, res) {
 
     es_request.search(req.es, indexes, type, quotas, dimension, [0], filters, period[0], period[1], interval, function (data) {
         datautils.send(res, data);
-    })
+    });
 });
 /**
  * adsMedium
@@ -1052,4 +1005,5 @@ api.get("/saveMailConfig", function (req, res) {
         });
     }
 });
+
 module.exports = api;

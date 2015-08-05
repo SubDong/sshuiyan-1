@@ -39,7 +39,8 @@ define(["./module"], function (ctrs) {
             planName: "",       //计划名称
             keywords: "",       //关键词
             creative: "",       //创意
-            produceUrl: ""      //生成的URL
+            produceUrl: "",      //生成的URL
+            tid: ""
         };
 
         /**
@@ -95,23 +96,30 @@ define(["./module"], function (ctrs) {
         $scope.keywordsWrap = function(){
             $scope.str = function(kw){
                 var strUrl = "";
-                if($scope.adTrack.targetUrl.indexOf("?") == -1){
-                    strUrl = "http://" + $scope.adTrack.targetUrl
-                    + "?hmsr=" + $scope.adTrack.mediaPlatform
-                    + "&hmmd=" + $scope.adTrack.adTypes
+                var sourceUrl = $scope.adTrack.targetUrl;
+                var yesParam = "?hmsr=" + $scope.adTrack.mediaPlatform;
+                var noParam = "&hmsr=" + $scope.adTrack.mediaPlatform;
+                var notHostName = "&hmmd=" + $scope.adTrack.adTypes
                     + "&hmpl=" + $scope.adTrack.planName
                     + "&hmkw=" + kw
-                    + "&hmci=" + $scope.adTrack.creative;
-                } else {
-                    strUrl = "http://" + $scope.adTrack.targetUrl
-                    + "&hmsr=" + $scope.adTrack.mediaPlatform
-                    + "&hmmd=" + $scope.adTrack.adTypes
-                    + "&hmpl=" + $scope.adTrack.planName
-                    + "&hmkw=" + kw
-                    + "&hmci=" + $scope.adTrack.creative;
-                }
+                    + "&hmci=" + $scope.adTrack.creative
+                    + "&tid=" + $rootScope.siteTrackId;
 
-                return encodeURI(strUrl);
+                if($scope.adTrack.targetUrl.indexOf("?") == -1){
+                    if($scope.adTrack.targetUrl.indexOf("http://") == -1){
+                        strUrl = "http://" + sourceUrl + yesParam + notHostName;
+                    } else {
+                        strUrl = sourceUrl + yesParam + notHostName;
+                    }
+
+                } else {
+                    if($scope.adTrack.targetUrl.indexOf("http://") == -1){
+                        strUrl = "http://" + sourceUrl + noParam + notHostName;
+                    } else {
+                        strUrl = sourceUrl + noParam + notHostName;
+                    }
+                }
+                return encodeURI(strUrl.trim());
             }
 
             var kVal2 = $scope.adTrack.keywords;
@@ -147,7 +155,8 @@ define(["./module"], function (ctrs) {
             model.keywords = obj;
             model.creative = $scope.adTrack.creative;
             model.site_id = $rootScope.siteId;
-            model.uid = $cookieStore.get("uid");
+            model.uid = $cookieStore.get("uid")
+            model.tid = $rootScope.siteTrackId;
 
            //保存
             var url = "/config/adtrack?type=save&entity=" + JSON.stringify(model);
@@ -196,7 +205,7 @@ define(["./module"], function (ctrs) {
             if($scope.adTrack.keywords == null || $scope.adTrack.keywords == ""){
                 document.getElementById("creative").disabled = "disabled";
             }else{
-                document.getElementById("creative   ").disabled = "";
+                document.getElementById("creative").disabled = "";
             }
         };
         //提示

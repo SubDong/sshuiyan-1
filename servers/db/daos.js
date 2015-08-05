@@ -1,5 +1,6 @@
 var schemas = require('./schemas')
 var mongodb = require('../utils/mongo')
+var mongodbs = require('../utils/mongopool')
 
 /*
  schema : String  参考 schemas.js
@@ -114,15 +115,20 @@ var daos = {
         instance.update(JSON.parse(qry), JSON.parse(updates), null, cb);
     },
     createmodel: function (schema) {
-        try {
-            var dbschema = mongodb.service().Schema(schemas[schema].schema);
-            var Model = mongodb.service().model(schemas[schema].model_name, dbschema, schemas[schema].collection_name);
-            return Model;
-        } catch (err) {
-            //console.log("Model " + schemas[schema].model_name + " has been created!Just need get it!");
-            var Model = mongodb.service().model(schemas[schema].model_name);
-            return Model;
-        }
+
+        var conn = mongodbs.service(schemas[schema].module_name);
+        var dbschema = conn.base.Schema(schemas[schema].schema);
+        var model = conn.model(schemas[schema].model_name, dbschema, schemas[schema].collection_name);
+        return model
+        //try {
+        //    var dbschema = mongodb.service().Schema(schemas[schema].schema);
+        //    var Model = mongodb.service().model(schemas[schema].model_name, dbschema, schemas[schema].collection_name);
+        //    return Model;
+        //} catch (err) {
+        //    //console.log("Model " + schemas[schema].model_name + " has been created!Just need get it!");
+        //    var Model = mongodb.service().model(schemas[schema].model_name);
+        //    return Model;
+        //}
     },
     createinstance: function (schema, obj) {
         var Model = this.createmodel(schema);

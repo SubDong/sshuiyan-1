@@ -5,7 +5,7 @@ var express = require('express');
 var url = require('url');
 var date = require('../utils/date');
 var datautils = require('../utils/datautils');
-
+var daoutil = require('../db/daoutil');
 var initial = require('../services/visitors/initialData');
 var map = require('../utils/map');
 var api = express.Router();
@@ -719,31 +719,31 @@ api.get("/adtrack", function (req, res) {
     switch (type) {
         case "save":
             var entity = JSON.parse(query['entity']);
-            var targetUrl = entity.targetUrl;
-            var mediaPlatform = entity.mediaPlatform;
-            var adTypes = entity.adTypes;
-            var planName = entity.planName;
-            var keywords = entity.keywords;
-            var creative = entity.creative;
 
             var strUrl = "";
+            var sourceUrl = entity.targetUrl;
+            var yesParam = "?hmsr=" + entity.mediaPlatform;
+            var noParam = "&hmsr=" + entity.mediaPlatform;
+            var notHostName = "&hmmd=" + entity.adTypes
+                + "&hmpl=" + entity.planName
+                + "&hmkw=" + entity.keywords
+                + "&hmci=" + entity.creative
+                + "&tid=" + entity.tid;
 
-            if (targetUrl.indexOf("?") == -1) {
-                strUrl = "http://" + targetUrl
-                    + "?hmsr=" + mediaPlatform
-                    + "&hmmd=" + adTypes
-                    + "&hmpl=" + planName
-                    + "&hmkw=" + keywords
-                    + "&hmci=" + creative;
+            if (sourceUrl.indexOf("?") == -1) {
+                if(sourceUrl.indexOf("http://") == -1){
+                    strUrl = "http://" + sourceUrl + yesParam + notHostName;
+                } else {
+                    strUrl = sourceUrl + yesParam + notHostName;
+                }
             } else {
-                strUrl = "http://" + targetUrl
-                    + "&hmsr=" + mediaPlatform
-                    + "&hmmd=" + adTypes
-                    + "&hmpl=" + planName
-                    + "&hmkw=" + keywords
-                    + "&hmci=" + creative;
+                if(sourceUrl.indexOf("http://") == -1){
+                    strUrl = "http://" + sourceUrl + noParam + notHostName;
+                } else {
+                    strUrl = sourceUrl + noParam + notHostName;
+                }
             }
-            entity.produceUrl = encodeURI(strUrl);
+            entity.produceUrl = encodeURI(strUrl.trim());
 
             dao.save(schema_name, entity, function (ins) {
                 datautils.send(res, JSON.stringify(ins));
@@ -853,5 +853,31 @@ api.get("/searchByUID", function (req, res) {
         });
 
     }
+});
+
+/**
+ * 网站列表管理
+ */
+api.get("/test", function (req, res) {
+
+    //config 鼠标点击配置
+    var config_mouse = {
+        mouse_ckick: false
+    };
+    var query = url.parse(req.url, true).query;
+    var type = query['type'];
+    var schema_name = "adgroup_model";
+    switch (type) {
+        case "search":
+            daoutil.find(schema_name, JSON.stringify({}), null, {}, function (err, up) {
+                console.log(up)
+                datautils.send(res, up);
+                // TODO 为什么要去差redis
+            });
+            break;
+        default :
+            break;
+    }
+
 });
 module.exports = api;
