@@ -719,34 +719,31 @@ api.get("/adtrack", function (req, res) {
     switch (type) {
         case "save":
             var entity = JSON.parse(query['entity']);
-            var targetUrl = entity.targetUrl;
-            var mediaPlatform = entity.mediaPlatform;
-            var adTypes = entity.adTypes;
-            var planName = entity.planName;
-            var keywords = entity.keywords;
-            var creative = entity.creative;
-            var tid = entity.tid;
 
             var strUrl = "";
+            var sourceUrl = entity.targetUrl;
+            var yesParam = "?hmsr=" + entity.mediaPlatform;
+            var noParam = "&hmsr=" + entity.mediaPlatform;
+            var notHostName = "&hmmd=" + entity.adTypes
+                + "&hmpl=" + entity.planName
+                + "&hmkw=" + entity.keywords
+                + "&hmci=" + entity.creative
+                + "&tid=" + entity.tid;
 
-            if (targetUrl.indexOf("?") == -1) {
-                strUrl = "http://" + targetUrl
-                    + "?hmsr=" + mediaPlatform
-                    + "&hmmd=" + adTypes
-                    + "&hmpl=" + planName
-                    + "&hmkw=" + keywords
-                    + "&hmci=" + creative
-                    + "&tid=" + tid;
+            if (sourceUrl.indexOf("?") == -1) {
+                if(sourceUrl.indexOf("http://") == -1){
+                    strUrl = "http://" + sourceUrl + yesParam + notHostName;
+                } else {
+                    strUrl = sourceUrl + yesParam + notHostName;
+                }
             } else {
-                strUrl = "http://" + targetUrl
-                    + "&hmsr=" + mediaPlatform
-                    + "&hmmd=" + adTypes
-                    + "&hmpl=" + planName
-                    + "&hmkw=" + keywords
-                    + "&hmci=" + creative
-                    + "&tid=" + tid;
+                if(sourceUrl.indexOf("http://") == -1){
+                    strUrl = "http://" + sourceUrl + noParam + notHostName;
+                } else {
+                    strUrl = sourceUrl + noParam + notHostName;
+                }
             }
-            entity.produceUrl = encodeURI(strUrl);
+            entity.produceUrl = encodeURI(strUrl.trim());
 
             dao.save(schema_name, entity, function (ins) {
                 datautils.send(res, JSON.stringify(ins));
