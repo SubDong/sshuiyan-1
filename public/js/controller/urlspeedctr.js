@@ -41,7 +41,7 @@ define(["./module"], function (ctrs) {
             {
                 name: "打开速度",
                 displayName: "打开速度",
-                field: "pv",
+                field: "openSpeed",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
             },
             {

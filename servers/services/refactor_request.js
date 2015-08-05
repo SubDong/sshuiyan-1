@@ -3,6 +3,7 @@
  *
  * refactor, elasticsearch query migrate to access.
  */
+var cacheutils = require('../utils/cacheutils');
 
 var _new_visitor_aggs = {
     "filter": {
@@ -785,6 +786,9 @@ var es_request = {
                 request = buildRequest(indexes, type, quotas, dimension, filters, start, end, interval);
                 break;
         }
+
+        var cacheKey = cacheutils.fixCacheKey(request);
+        console.log("cacheKey : " + cacheKey);
 
         es.search(request, function (error, response) {
             var data = [];

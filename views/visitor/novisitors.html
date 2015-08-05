@@ -17,14 +17,14 @@
                 <li class="ng-isolate-scope" ng-class="{active:tab===2}" ng-click="tab = 2">
                     <a class="ng-binding">高级筛选
                         <span class="impliedCondition">
-                            <span ng-show="sourceSearch || terminalSearch || areaSearch">（</span>
-                            <span ng-show="areaSearch">
+                            <span ng-show="sourceSearch || areaSearch">（</span>
+                            <span ng-show="areaSearch" class="advanceSearch">
                                 {{areaSearch}}<i class="glyphicon glyphicon-remove" data-ng-click="removeAreaSearch(this);" ng-show="areaSearch"></i>
                             </span>
-                            <span ng-show="sourceSearch">
+                            <span ng-show="sourceSearch" class="advanceSearch">
                                 {{sourceSearch}}<i class="glyphicon glyphicon-remove" data-ng-click="removeSourceSearch(this);" ng-show="sourceSearch"></i>
                             </span>
-                            <span ng-show="sourceSearch || terminalSearch || areaSearch">）</span>
+                            <span ng-show="sourceSearch || areaSearch">）</span>
                         </span>
                     </a>
                 </li>

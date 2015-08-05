@@ -250,6 +250,7 @@ define(["./module"], function (ctrs) {
             $scope.$on("ssh_refresh_charts", function (e, msg) {
                 $scope.charts[0].config.legendDefaultChecked = [0, 1];
                 $scope.my_init(false);
+                init_transformData();
             });
             //$scope.initMap();
             //点击显示指标
@@ -283,12 +284,14 @@ define(["./module"], function (ctrs) {
                 $rootScope.end = time[1];
                 //时间段选择执行数据查询
                 $scope.my_init(false);
+                init_transformData();
             };
             $rootScope.datepickerClickTow = function (start, end, label) {
                 var time = chartUtils.getTimeOffset(start, end);
                 $scope.start = time[0];
                 $scope.end = time[1];
                 $scope.my_init(true);
+                init_transformData();
             };
             function GetDateStr(AddDayCount) {
                 var dd = new Date();
@@ -322,7 +325,8 @@ define(["./module"], function (ctrs) {
 
             };
             $scope.setShowArray();
-            $scope.my_init = function (isContrastDataByTime) {
+
+            var init_transformData = function(){
                 $scope.es_checkArray = ["pv", "uv", "vc", "ip", "nuv", "nuvRate", "conversions", "crate", "transformCost", "clickTotal", "visitNum"];
                 $scope.sem_checkArray = ["transformCost"];
                 $scope.es_checkedArray = [];
@@ -344,8 +348,12 @@ define(["./module"], function (ctrs) {
                     end: $rootScope.end,
                     checkedArray: $scope.es_checkedArray,
                     sem_checkedArray: $scope.sem_checkedArray,
-                    all_checked:$rootScope.checkedArray
+                    all_checked: $rootScope.checkedArray
                 });
+            }
+
+            $scope.my_init = function (isContrastDataByTime) {
+
                 var start = 0;
                 var end = 0;
                 if (isContrastDataByTime) {
@@ -361,51 +369,115 @@ define(["./module"], function (ctrs) {
                     end = $rootScope.end;
                     $scope.charts[0].config.legendDefaultChecked = [0, 1];
                     $scope.charts[0].config.legendAllowCheckCount = 2;
-                    $scope.dataTable(isContrastDataByTime, "day", ["pv", "uv"],false);
+                    $scope.dataTable(isContrastDataByTime, "day", ["pv", "uv"], false);
                 }
 
                 $scope.isCompared = isContrastDataByTime;
                 $http.get("/api/transform/transformAnalysis?start=" + start + "&end=" + end + "&action=event&type=1&searchType=initAll&queryOptions=" + $scope.es_checkedArray).success(function (data) {
                     if (data != null || data != "") {
-                        for (var i = 0; i < $scope.dateShowArray.length; i++) {
-                            for (var key in data) {
-                                if ($scope.dateShowArray[i].label == key) {
-                                    if ($scope.dateShowArray[i].label == "transformCost" && Number(data[key]) != 0) {
-                                        var add_i = i;
-                                        var semRequest = "";
-                                        semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + start + "&endOffset=" + end + "&q=cost");
-                                        $q.all([semRequest]).then(function (sem_data) {
-                                            var cost = 0;
-                                            for (var k = 0; k < sem_data.length; k++) {
-                                                for (var c = 0; c < sem_data[k].data.length; c++) {
-                                                    cost += Number(sem_data[k].data[c].cost);
+                        var hasCrate = false;
+                        for (var i = 0; i < $scope.es_checkedArray.length; i++) {
+                            if ($scope.es_checkedArray[i] == "crate") {
+                                hasCrate = true;
+                                break;
+                            }
+                        }
+                        if (hasCrate) {
+                            var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];
+                            $http({
+                                method: "GET",
+                                url: "/api/transform/transformAnalysis?start=" + start + "&end=" + end + "&action=event&type=1&searchType=queryDataByUrl&showType=total&all_urls=" + test_url
+                            }).success(function (all_urls_data) {
+                                for (var i = 0; i < $scope.dateShowArray.length; i++) {
+                                    for (var key in data) {
+                                        if ($scope.dateShowArray[i].label == key) {
+                                            if ($scope.dateShowArray[i].label == "crate") {
+                                                if (isContrastDataByTime) {
+                                                    $scope.dateShowArray[i].cValue = (Number(data["crate"]) / Number(all_urls_data[0].crate_pv) * 100).toFixed(2) + "%";
+
+                                                } else {
+                                                    $scope.dateShowArray[i].value = (Number(data["crate"]) / Number(all_urls_data[0].crate_pv) * 100).toFixed(2) + "%";
+                                                }
+                                            } else if ($scope.dateShowArray[i].label == "transformCost" && Number(data[key]) != 0) {
+                                                var add_i = i;
+                                                var semRequest = "";
+                                                semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + start + "&endOffset=" + end + "&q=cost");
+                                                $q.all([semRequest]).then(function (sem_data) {
+                                                    var cost = 0;
+                                                    for (var k = 0; k < sem_data.length; k++) {
+                                                        for (var c = 0; c < sem_data[k].data.length; c++) {
+                                                            cost += Number(sem_data[k].data[c].cost);
+                                                        }
+                                                    }
+                                                    if (isContrastDataByTime) {
+                                                        $scope.dateShowArray[add_i].cValue = (cost / Number(data[key])).toFixed(2).toString() + "元";
+
+                                                    } else {
+                                                        $scope.dateShowArray[add_i].value = (cost / Number(data[key])).toFixed(2).toString() + "元";
+                                                    }
+                                                });
+                                            } else if ($scope.dateShowArray[i].label == "transformCost" && Number(data[key]) == 0) {
+                                                if (isContrastDataByTime) {
+                                                    $scope.dateShowArray[i].cValue = 0;
+
+                                                } else {
+                                                    $scope.dateShowArray[i].value = 0;
+                                                }
+                                            } else {
+                                                if (isContrastDataByTime) {
+                                                    $scope.dateShowArray[i].cValue = data[key];
+
+                                                } else {
+                                                    $scope.dateShowArray[i].value = data[key];
                                                 }
                                             }
+                                        }
+                                    }
+                                }
+                            });
+                        } else {
+                            for (var i = 0; i < $scope.dateShowArray.length; i++) {
+                                for (var key in data) {
+                                    if ($scope.dateShowArray[i].label == key) {
+                                        if ($scope.dateShowArray[i].label == "transformCost" && Number(data[key]) != 0) {
+                                            var add_i = i;
+                                            var semRequest = "";
+                                            semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + start + "&endOffset=" + end + "&q=cost");
+                                            $q.all([semRequest]).then(function (sem_data) {
+                                                var cost = 0;
+                                                for (var k = 0; k < sem_data.length; k++) {
+                                                    for (var c = 0; c < sem_data[k].data.length; c++) {
+                                                        cost += Number(sem_data[k].data[c].cost);
+                                                    }
+                                                }
+                                                if (isContrastDataByTime) {
+                                                    $scope.dateShowArray[add_i].cValue = (cost / Number(data[key])).toFixed(2).toString() + "元";
+
+                                                } else {
+                                                    $scope.dateShowArray[add_i].value = (cost / Number(data[key])).toFixed(2).toString() + "元";
+                                                }
+                                            });
+                                        } else if ($scope.dateShowArray[i].label == "transformCost" && Number(data[key]) == 0) {
                                             if (isContrastDataByTime) {
-                                                $scope.dateShowArray[add_i].cValue = (cost / Number(data[key])).toFixed(2).toString() + "元";
+                                                $scope.dateShowArray[i].cValue = 0;
 
                                             } else {
-                                                $scope.dateShowArray[add_i].value = (cost / Number(data[key])).toFixed(2).toString() + "元";
+                                                $scope.dateShowArray[i].value = 0;
                                             }
-                                        });
-                                    } else if ($scope.dateShowArray[i].label == "transformCost" && Number(data[key]) == 0) {
-                                        if (isContrastDataByTime) {
-                                            $scope.dateShowArray[i].cValue = 0;
-
                                         } else {
-                                            $scope.dateShowArray[i].value = 0;
-                                        }
-                                    } else {
-                                        if (isContrastDataByTime) {
-                                            $scope.dateShowArray[i].cValue = data[key];
+                                            if (isContrastDataByTime) {
+                                                $scope.dateShowArray[i].cValue = data[key];
 
-                                        } else {
-                                            $scope.dateShowArray[i].value = data[key];
+                                            } else {
+                                                $scope.dateShowArray[i].value = data[key];
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
+
+
                         if (isContrastDataByTime) {
                             $scope.DateNumbertwo = true;
                             $scope.DateLoading = true;
@@ -416,6 +488,11 @@ define(["./module"], function (ctrs) {
 
                 });
             };
+            var aggs_time = function (start, end, contrast_start, contrast_end) {
+                var aggs_start = Number(start) > Number(contrast_start) ? Number(contrast_start) : Number(start);
+                var aggs_end = Number(end) > Number(contrast_end) ? Number(contrast_end) : Number(end);
+                return {start: aggs_start, end: aggs_end};
+            }
             /**
              * @param isContrastTime　是否为对比数据
              * @param showType　显示横轴方式　有四种：hour小时为单位，显示一天24小时的数据；day天为单位，显示数天的数据，week周为单位，显示数周的数据；month月为单位，显示数月的数据
@@ -423,6 +500,7 @@ define(["./module"], function (ctrs) {
              */
             $scope.dataTable = function (isContrastTime, showType, queryOptions, renderLegend) {
                 if (isContrastTime) {
+                    var crate_time = aggs_time($rootScope.start, $rootScope.end, $scope.start, $scope.end);
                     $http.get("/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&action=event&type=1&searchType=contrastData&showType=" + showType + "&queryOptions=" + queryOptions + "&contrastStart=" + $scope.start + "&contrastEnd=" + $scope.end).success(function (contrastData) {
                         var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
                         chart.showLoading({
@@ -432,14 +510,125 @@ define(["./module"], function (ctrs) {
                         $scope.charts[0].config.bGap = true;
                         $scope.charts[0].config.instance = chart;
                         $scope.charts[0].config.instance = chart;
-                        if (renderLegend) {
+                        if (renderLegend)
                             util.renderLegend(chart, $scope.charts[0].config);
-                            Custom.initCheckInfo();
-                        }
                         var hasSem = false;
-                        for(var k = 0;k<queryOptions.length;k++){
-                            if(queryOptions[k] == "transformCost"){
-                                hasSem = true;
+                        for (var t = 0; t < queryOptions.length; t++) {
+                            for (var k = 0; k < $scope.sem_checkArray.length; k++) {
+                                if (queryOptions[t] == $scope.sem_checkArray[k]) {
+                                    hasSem = true;
+                                    break;
+                                }
+                            }
+                        }
+                        var hasCrate = false;
+                        for (var i = 0; i < queryOptions.length; i++) {
+                            if (queryOptions[i] == "crate") {
+                                hasCrate = true;
+                                break;
+                            }
+                        }
+                        if (hasSem) {
+                            if (hasCrate) {
+                                var all_urls = [];
+                                for (var k = 0; k < $scope.convert_url_all.length; k++) {
+                                    for (var c = 0; c < $scope.convert_url_all[k].all_urls.length; c++) {
+                                        if ($scope.convert_url_all[k].all_urls[c].split("/").length != 0) {
+                                            all_urls.push("http://" + $scope.convert_url_all[k].all_urls[c]);
+                                        } else {
+                                            all_urls.push("http://" + $scope.convert_url_all[k].all_urls[c] + "/");
+                                        }
+                                    }
+                                }
+                                var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];
+                                $http({
+                                    method: "GET",
+                                    url: "/api/transform/transformAnalysis?start=" + crate_time.start + "&end=" + crate_time.end + "&action=event&type=1&searchType=queryDataByUrl&showType=day&all_urls=" + test_url
+                                }).success(function (all_urls_data) {
+                                        var semRequest = "";
+                                        semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end + "&q=cost");
+                                        $q.all([semRequest]).then(function (sem_data) {
+                                            var cost = 0;
+                                            for (var k = 0; k < sem_data.length; k++) {
+                                                for (var c = 0; c < sem_data[k].data.length; c++) {
+                                                    cost += Number(sem_data[k].data[c].cost);
+                                                }
+                                            }
+                                            queryOptions.forEach(function (key) {
+                                                for (var i = 0; i < contrastData.length; i++) {
+                                                    if (key == contrastData[i].label) {
+                                                        var temporaryContrastData = [];
+                                                        var l = 0;
+                                                        switch (key) {
+                                                            case "transformCost":
+                                                                for (l = 0; l < contrastData[i].quota.length; l++) {
+                                                                    temporaryContrastData.push((Number(contrastData[i].quota[l]) / cost).toFixed(2));
+                                                                }
+                                                                contrastData[i].quota = temporaryContrastData;
+                                                                break;
+                                                            case "crate":
+                                                                for (l = 0; l < contrastData[i].quota.length; l++) {
+                                                                    if (Number(contrastData[i].quota[l]) == 0) {
+                                                                        temporaryContrastData.push(0);
+                                                                    } else {
+                                                                        for (var p = 0; p < all_urls_data.length; p++) {
+                                                                            if (contrastData[i].key == all_urls_data[p].date_time) {
+                                                                                if (Number(all_urls_data[i].crate_pv) == 0) {
+                                                                                    temporaryContrastData.push(0);
+                                                                                } else {
+                                                                                    temporaryContrastData.push((Number(contrastData[i].quota[l]) / Number(all_urls_data[i].crate_pv)).toFixed(2));
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                                contrastData[i].quota = temporaryContrastData;
+                                                                break;
+                                                        }
+
+                                                    }
+                                                }
+                                            });
+                                            for (var i = 0; i < contrastData.length; i++) {
+                                                if (contrastData[i].label.toString().split("_").length > 1) {
+                                                    var temporaryContrastData = [];
+                                                    var l = 0;
+                                                    switch (contrastData[i].label) {
+                                                        case "transformCost_contrast":
+                                                            for (l = 0; l < contrastData[i].quota.length; l++) {
+                                                                temporaryContrastData.push((Number(contrastData[i].quota[l]) / cost).toFixed(2));
+                                                            }
+                                                            contrastData[i].quota = temporaryContrastData;
+                                                            break;
+                                                        case "crate_contrast":
+                                                            for (l = 0; l < contrastData[i].quota.length; l++) {
+                                                                if (Number(contrastData[i].quota[l]) == 0) {
+                                                                    temporaryContrastData.push(0);
+                                                                } else {
+                                                                    for (var p = 0; p < all_urls_data.length; p++) {
+                                                                        if (contrastData[i].key == all_urls_data[p].date_time) {
+                                                                            if (Number(all_urls_data[p].crate_pv) == 0) {
+                                                                                temporaryContrastData.push(0);
+                                                                            } else {
+                                                                                temporaryContrastData.push((Number(contrastData[i].quota[l]) / Number(all_urls_data[p].crate_pv)).toFixed(2));
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                            break;
+                                                    }
+                                                    contrastData[i].label = "对比数据";
+                                                } else {
+                                                    contrastData[i].label = chartUtils.convertChinese(contrastData[i].label);
+                                                }
+                                            }
+                                            cf.renderChart(contrastData, $scope.charts[0].config);
+                                            Custom.initCheckInfo();
+                                        });
+                                    }
+                                );
+                            }else{
                                 var semRequest = "";
                                 semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end + "&q=cost");
                                 $q.all([semRequest]).then(function (sem_data) {
@@ -449,33 +638,36 @@ define(["./module"], function (ctrs) {
                                             cost += Number(sem_data[k].data[c].cost);
                                         }
                                     }
-                                    $scope.sem_checkArray.forEach(function(key){
-                                        for(var i = 0;i<contrastData.length;i++){
-                                            if(key == contrastData[i].label){
+                                    queryOptions.forEach(function (key) {
+                                        for (var i = 0; i < contrastData.length; i++) {
+                                            if (key == contrastData[i].label) {
                                                 var temporaryContrastData = [];
-                                                for(var l = 0;l<contrastData[i].quota.length;l++){
-                                                    if(Number(contrastData[i].quota[l])==0){
-                                                        temporaryContrastData.push(0);
-                                                    }else{
-                                                        temporaryContrastData.push((cost/Number(contrastData[i].quota[l])).toFixed(2));
-                                                    }
+                                                var l = 0;
+                                                switch (key) {
+                                                    case "transformCost":
+                                                        for (l = 0; l < contrastData[i].quota.length; l++) {
+                                                            temporaryContrastData.push((Number(contrastData[i].quota[l]) / cost).toFixed(2));
+                                                        }
+                                                        contrastData[i].quota = temporaryContrastData;
+                                                        break;
                                                 }
-                                                contrastData[i].quota = temporaryContrastData;
+
                                             }
                                         }
                                     });
                                     for (var i = 0; i < contrastData.length; i++) {
-                                        if (contrastData[i].label.split("_").length > 1) {
-                                            contrastData[i].label = "对比数据";
+                                        if (contrastData[i].label.toString().split("_").length > 1) {
                                             var temporaryContrastData = [];
-                                            for(var c = 0;c<contrastData[i].quota.length;c++){
-                                                if(Number(contrastData[i].quota[c])==0){
-                                                    temporaryContrastData.push(0);
-                                                }else{
-                                                    temporaryContrastData.push((cost/Number(contrastData[i].quota[c])).toFixed(2));
-                                                }
+                                            var l = 0;
+                                            switch (contrastData[i].label) {
+                                                case "transformCost_contrast":
+                                                    for (l = 0; l < contrastData[i].quota.length; l++) {
+                                                        temporaryContrastData.push((Number(contrastData[i].quota[l]) / cost).toFixed(2));
+                                                    }
+                                                    contrastData[i].quota = temporaryContrastData;
+                                                    break;
                                             }
-                                            contrastData[i].quota = temporaryContrastData;
+                                            contrastData[i].label = "对比数据";
                                         } else {
                                             contrastData[i].label = chartUtils.convertChinese(contrastData[i].label);
                                         }
@@ -484,17 +676,82 @@ define(["./module"], function (ctrs) {
                                     Custom.initCheckInfo();
                                 });
                             }
-                        }
-                        if(!hasSem){
-                            for (var i = 0; i < contrastData.length; i++) {
-                                if (contrastData[i].label.split("_").length > 1) {
-                                    contrastData[i].label = "对比数据";
-                                } else {
-                                    contrastData[i].label = chartUtils.convertChinese(contrastData[i].label);
+                        }else{
+                            if(hasCrate){
+                                var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];
+                                $http({
+                                    method: "GET",
+                                    url: "/api/transform/transformAnalysis?start=" + crate_time.start + "&end=" + crate_time.end + "&action=event&type=1&searchType=queryDataByUrl&showType=day&all_urls=" + test_url
+                                }).success(function (all_urls_data) {
+                                    var temporaryContrastData = [];
+                                    for (var i = 0; i < contrastData.length; i++) {
+                                        temporaryContrastData = [];
+                                        switch (contrastData[i].label) {
+                                            case "crate":
+                                                for (var l = 0; l < contrastData[i].quota.length; l++) {
+                                                    if (Number(contrastData[i].quota[l]) == 0) {
+                                                        temporaryContrastData.push(0);
+                                                    } else {
+                                                        for (var p = 0; p < all_urls_data.length; p++) {
+                                                            for (var t = 0; t < contrastData[i].key.length; t++) {
+                                                                if (contrastData[i].key[t] == all_urls_data[p].date_time) {
+                                                                    if (Number(all_urls_data[p].crate_pv) == 0) {
+                                                                        temporaryContrastData.push(0);
+                                                                    } else {
+                                                                        temporaryContrastData.push((Number(contrastData[i].quota[l]) / Number(all_urls_data[p].crate_pv)));
+                                                                    }
+                                                                }
+                                                            }
+
+                                                        }
+                                                    }
+                                                }
+                                                contrastData[i].quota = temporaryContrastData;
+                                                break;
+                                            case "crate_contrast":
+                                                for (var l = 0; l < contrastData[i].quota.length; l++) {
+                                                    if (Number(contrastData[i].quota[l]) == 0) {
+                                                        temporaryContrastData.push(0);
+                                                    } else {
+                                                        for (var p = 0; p < all_urls_data.length; p++) {
+                                                            for (var t = 0; t < contrastData[i].key.length; t++) {
+                                                                if (contrastData[i].key[t] == all_urls_data[p].date_time) {
+                                                                    if (Number(all_urls_data[p].crate_pv) == 0) {
+                                                                        temporaryContrastData.push(0);
+                                                                    } else {
+                                                                        temporaryContrastData.push((Number(contrastData[i].quota[l]) / Number(all_urls_data[p].crate_pv)));
+                                                                    }
+                                                                }
+                                                            }
+
+                                                        }
+                                                    }
+                                                }
+                                                contrastData[i].quota = temporaryContrastData;
+                                                break;
+                                        }
+                                    }
+                                    for (var i = 0; i < contrastData.length; i++) {
+                                        if (contrastData[i].label.split("_").length > 1) {
+                                            contrastData[i].label = "对比数据";
+                                        } else {
+                                            contrastData[i].label = chartUtils.convertChinese(contrastData[i].label);
+                                        }
+                                    }
+                                    cf.renderChart(contrastData, $scope.charts[0].config);
+                                    Custom.initCheckInfo();
+                                });
+                            }else{
+                                for (var i = 0; i < contrastData.length; i++) {
+                                    if (contrastData[i].label.split("_").length > 1) {
+                                        contrastData[i].label = "对比数据";
+                                    } else {
+                                        contrastData[i].label = chartUtils.convertChinese(contrastData[i].label);
+                                    }
                                 }
+                                cf.renderChart(contrastData, $scope.charts[0].config);
+                                Custom.initCheckInfo();
                             }
-                            cf.renderChart(contrastData, $scope.charts[0].config);
-                            Custom.initCheckInfo();
                         }
                     });
                 } else {
@@ -508,10 +765,83 @@ define(["./module"], function (ctrs) {
                         $scope.charts[0].config.instance = chart;
                         util.renderLegend(chart, $scope.charts[0].config);
                         var hasSem = false;
+                        for (var t = 0; t < queryOptions.length; t++) {
+                            for (var k = 0; k < $scope.sem_checkArray.length; k++) {
+                                if (queryOptions[t] == $scope.sem_checkArray[k]) {
+                                    hasSem = true;
+                                    break;
+                                }
+                            }
+                        }
+                        var hasCrate = false;
+                        for (var i = 0; i < queryOptions.length; i++) {
+                            if (queryOptions[i] == "crate") {
+                                hasCrate = true;
+                                break;
+                            }
+                        }
+                        if (hasSem) {
+                            if (hasCrate) {
+                                var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];
+                                $http({
+                                    method: "GET",
+                                    url: "/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&action=event&type=1&searchType=queryDataByUrl&showType=day&all_urls=" + test_url
+                                }).success(function (all_urls_data) {
+                                    var semRequest = "";
+                                    semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end + "&q=cost");
+                                    $q.all([semRequest]).then(function (sem_data) {
+                                        var cost = 0;
+                                        for (var k = 0; k < sem_data.length; k++) {
+                                            for (var c = 0; c < sem_data[k].data.length; c++) {
+                                                cost += Number(sem_data[k].data[c].cost);
+                                            }
+                                        }
+                                        for (var c = 0; c < data.length; c++) {
+                                            var temporaryContrastData = [];
+                                            switch (data[c].label) {
+                                                case "transformCost":
+                                                    for (var l = 0; l < data[c].quota.length; l++) {
+                                                        if (Number(data[c].quota[l]) == 0) {
+                                                            temporaryContrastData.push(0);
+                                                        } else {
+                                                            temporaryContrastData.push((cost / Number(data[c].quota[l])).toFixed(2));
+                                                        }
+                                                    }
+                                                    data[c].quota = temporaryContrastData;
+                                                    break;
+                                                case "crate":
+                                                    for (var l = 0; l < data[c].quota.length; l++) {
+                                                        if (Number(data[c].quota[l]) == 0) {
+                                                            temporaryContrastData.push(0);
+                                                        } else {
+                                                            for (var p = 0; p < all_urls_data.length; p++) {
+                                                                for (var t = 0; t < data[c].key.length; t++) {
+                                                                    if (data[c].key[t] == all_urls_data[p].date_time) {
+                                                                        if (Number(all_urls_data[p].crate_pv) == 0) {
+                                                                            temporaryContrastData.push(0);
+                                                                        } else {
+                                                                            temporaryContrastData.push((Number(data[c].quota[l]) / Number(all_urls_data[p].crate_pv)));
+                                                                        }
+                                                                    }
+                                                                }
 
-                        for(var k = 0;k<queryOptions.length;k++){
-                            if(queryOptions[k] == "transformCost"){
-                                hasSem = true;
+                                                            }
+                                                        }
+                                                    }
+                                                    data[c].quota = temporaryContrastData;
+                                                    break;
+                                            }
+                                        }
+                                        for (var i = 0; i < data.length; i++) {
+                                            data[i].label = chartUtils.convertChinese(data[i].label);
+                                        }
+
+                                        cf.renderChart(data, $scope.charts[0].config);
+                                        Custom.initCheckInfo();
+                                    });
+                                });
+
+                            } else {
                                 var semRequest = "";
                                 semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end + "&q=cost");
                                 $q.all([semRequest]).then(function (sem_data) {
@@ -521,34 +851,74 @@ define(["./module"], function (ctrs) {
                                             cost += Number(sem_data[k].data[c].cost);
                                         }
                                     }
+                                    for (var c = 0; c < data.length; c++) {
+                                        var temporaryContrastData = [];
+                                        switch (data[c].label) {
+                                            case "transformCost":
+                                                for (var l = 0; l < data[c].quota.length; l++) {
+                                                    if (Number(data[c].quota[l]) == 0) {
+                                                        temporaryContrastData.push(0);
+                                                    } else {
+                                                        temporaryContrastData.push((cost / Number(data[c].quota[l])).toFixed(2));
+                                                    }
+                                                }
+                                                data[c].quota = temporaryContrastData;
+                                                break;
+                                        }
+                                    }
                                     for (var i = 0; i < data.length; i++) {
                                         data[i].label = chartUtils.convertChinese(data[i].label);
-
                                     }
-                                    for(var c = 0;c<data.length;c++){
-                                        if(data[c].label=="平均转化成本(事件)"){
+
+                                    cf.renderChart(data, $scope.charts[0].config);
+                                    Custom.initCheckInfo();
+                                });
+                            }
+                        } else {
+                            if (hasCrate) {
+                                var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];
+                                $http({
+                                    method: "GET",
+                                    url: "/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&action=event&type=1&searchType=queryDataByUrl&showType=day&all_urls=" + test_url
+                                }).success(function (all_urls_data) {
+                                    for (var c = 0; c < data.length; c++) {
+                                        if (data[c].label == "crate") {
                                             var temporaryContrastData = [];
-                                            for(var l = 0;l<data[c].quota.length;l++){
-                                                if(Number(data[c].quota[l])==0){
+                                            for (var l = 0; l < data[c].quota.length; l++) {
+                                                if (Number(data[c].quota[l]) == 0) {
                                                     temporaryContrastData.push(0);
-                                                }else{
-                                                    temporaryContrastData.push((cost/Number(data[c].quota[l])).toFixed(2));
+                                                } else {
+                                                    for (var p = 0; p < all_urls_data.length; p++) {
+                                                        for (var t = 0; t < data[c].key.length; t++) {
+                                                            if (data[c].key[t] == all_urls_data[p].date_time) {
+                                                                if (Number(all_urls_data[p].crate_pv) == 0) {
+                                                                    temporaryContrastData.push(0);
+                                                                } else {
+                                                                    temporaryContrastData.push((Number(data[c].quota[l]) / Number(all_urls_data[p].crate_pv)));
+                                                                }
+                                                            }
+                                                        }
+
+                                                    }
                                                 }
                                             }
                                             data[c].quota = temporaryContrastData;
                                         }
                                     }
+                                    for (var i = 0; i < data.length; i++) {
+                                        data[i].label = chartUtils.convertChinese(data[i].label);
+                                    }
                                     cf.renderChart(data, $scope.charts[0].config);
                                     Custom.initCheckInfo();
                                 });
+
+                            } else {
+                                for (var i = 0; i < data.length; i++) {
+                                    data[i].label = chartUtils.convertChinese(data[i].label);
+                                }
+                                cf.renderChart(data, $scope.charts[0].config);
+                                Custom.initCheckInfo();
                             }
-                        }
-                        if(!hasSem){
-                            for (var i = 0; i < data.length; i++) {
-                                data[i].label = chartUtils.convertChinese(data[i].label);
-                            }
-                            cf.renderChart(data, $scope.charts[0].config);
-                            Custom.initCheckInfo();
                         }
                     });
                 }
@@ -580,7 +950,7 @@ define(["./module"], function (ctrs) {
                         end: $rootScope.end,
                         checkedArray: $scope.es_checkedArray,
                         sem_checkedArray: $scope.sem_checkedArray,
-                        all_checked:$rootScope.checkedArray
+                        all_checked: $rootScope.checkedArray
                     });
                 } else {
                     //访客过滤数据获取
@@ -641,11 +1011,12 @@ define(["./module"], function (ctrs) {
                         checkedData: checkedData,
                         checkedArray: $scope.es_checkedArray,
                         sem_checkedArray: $scope.sem_checkedArray,
-                        all_checked:$rootScope.checkedArray
+                        all_checked: $rootScope.checkedArray
                     });
                 }
             };
             $scope.my_init(false);
+            init_transformData();
         }
     );
 });

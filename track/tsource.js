@@ -564,8 +564,8 @@ if (config != undefined && !config.open) {
                     let: la("loadEvent").end - nav.start  //事件加载时间
                 };
                 var ctime = cookie.get("judge");
-                if (ctime != md.g.tt) {
-                    cookie.setNull("judge", md.g.tt);
+                if (ctime != this.getData("PFT_" + c.id)) {
+                    cookie.set("judge", md.g.tt);
                     md.g.ut = JSON.stringify(a);
                     h.b.sm();
                     md.g.ut = null;

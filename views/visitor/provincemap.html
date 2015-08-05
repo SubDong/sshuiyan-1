@@ -67,11 +67,11 @@
                     <a class="ng-binding">高级筛选
                          <span class="impliedCondition">
                             <span ng-show="sourceSearch || visitorSearch">（</span>
-                            <span ng-show="sourceSearch">
+                            <span ng-show="sourceSearch" class="advanceSearch">
                                 {{sourceSearch}}<i class="glyphicon glyphicon-remove"
                                                    data-ng-click="removeSourceSearch(this);" ng-show="sourceSearch"></i>
                             </span>
-                            <span ng-show="visitorSearch">
+                            <span ng-show="visitorSearch" class="advanceSearch">
                                 {{visitorSearch}}<i class="glyphicon glyphicon-remove"
                                                     data-ng-click="removeVisitorSearch(this);"
                                                     ng-show="visitorSearch"></i>

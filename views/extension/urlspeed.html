@@ -1,14 +1,13 @@
-<div class="middle_containers"  ng-controller="urlspeedctr">
+<div class="middle_containers" ng-controller="urlspeedctr">
     <div class="date_select">
         <div aria-label="First group" role="group" class="btn-group fl">
-            <a data-ng-href="#extension/urlspeed"class="btn btn-default current" type="button" >按页面 </a>
+            <a data-ng-href="#extension/urlspeed" class="btn btn-default current" type="button">按页面 </a>
             <a data-ng-href="#extension/urlspeed_w" class="btn btn-default  " type="button">按网络提供商</a>
             <a data-ng-href="#extension/urlspeed_m" class="btn btn-default " type="button"> 按地域</a>
         </div>
-        <div>
+        <div class="date_select">
             <calendar></calendar>
             <refresh></refresh>
-
         </div>
     </div>
     <div class="my_concent">
@@ -28,7 +27,10 @@
                         <div class="custom_select">
                             <div class="btn-group-url fl" role="group">
                                 <p class="fl">计划</p>
-                                <ui-select ng-model="page.selected"theme="select2" reset-search-input="false" class="fl btn-Plan" style="min-width: 120px;">
+                                <ui-select ng-model="page.selected" theme="select2"
+                                           data-ng-change="searchUrlSeepd(page.selected.name)"
+                                           reset-search-input="false"
+                                           class="fl btn-Plan" style="min-width: 120px;">
                                     <ui-select-match placeholder="全部">{{$select.selected.name}}</ui-select-match>
                                     <ui-select-choices repeat="page in pages">
                                         <span ng-bind-html="page.name"></span>
@@ -36,9 +38,12 @@
                                 </ui-select>
                             </div>
                             <div class="input-group fl">
-                                <input type="text" class="form-control fl" placeholder="请输入推广URL…" onfocus="this.setAttribute('placeholder','')" onblur="this.setAttribute('placeholder','请输入推广URL...')">
+                                <input type="text" class="form-control fl" placeholder="请输入推广URL…"
+                                       onfocus="this.setAttribute('placeholder','')"
+                                       onblur="this.setAttribute('placeholder','请输入推广URL...')">
                                        <span class="input-group-btn fl">
-                                 <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                                 <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"
+                                                                                     aria-hidden="true"></span></button>
                                    </span>
                             </div>
 

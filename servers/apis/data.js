@@ -284,6 +284,9 @@ api.get('/indextable', function (req, res) {
                         }
                         var infoKey = info.key[i];
                         var obj = maps[infoKey];
+                        if(_lati == "rf_type" && infoKey == 1){
+                            continue;
+                        }
                         if (!obj) {
                             obj = {};
                             if (_lati != null && _lati.split(":").length > 1) {
@@ -418,6 +421,8 @@ api.get('/realTimeHtml', function (req, res) {
     });
 });
 
+//mongo查询dao
+
 api.get('/getUrlspeed', function (req, res) {
     var query = url.parse(req.url, true).query;
     var _startTime = Number(query["start"]);//开始时间
@@ -426,21 +431,13 @@ api.get('/getUrlspeed', function (req, res) {
     var _index = date.createIndexes(_startTime, _endTime, "access-");//indexs
     var _trackId = query["trackId"];
     redis.service().get('typeid:'.concat(_trackId), function (err, typeId) {
-        var _type = typeId+"_promotion_url";
+        var _type = "1_promotion_url";
         initial.popularizeURL(req.es, _index, _type, _filter, _trackId, function (data) {
             datautils.send(res, data);
-            //consoile.log(data)
         })
-    })
+    });
 
     redis.service().del
-
-
-
-
-
-
-
 });
 
 /**************************************************************/
@@ -865,6 +862,13 @@ api.get("/transform/transformAnalysis", function (req, res) {
                 time = date.getConvertTimeByNumber(contrastStart, contrastEnd);
             }
             transform.SearchContrast(req.es, indexString, contrast_indexString, type, action, showType, queryOptions, function (result) {
+                datautils.send(res, result);
+            });
+        } else if (searchType == "queryDataByUrl") {
+            var showType = parameters[5].split("=")[1];
+            var all_urls = parameters[6].split("=")[1];
+            var urlArray = all_urls.split(",");
+            transform.searchByUrls(req.es,indexString,type,urlArray, showType,function(result){
                 datautils.send(res, result);
             });
         } else {
