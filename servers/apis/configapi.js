@@ -722,12 +722,12 @@ api.get("/adtrack", function (req, res) {
 
             var strUrl = "";
             var sourceUrl = entity.targetUrl;
-            var yesParam = "?hmsr=" + entity.mediaPlatform;
-            var noParam = "&hmsr=" + entity.mediaPlatform;
-            var notHostName = "&hmmd=" + entity.adTypes
-                + "&hmpl=" + entity.planName
-                + "&hmkw=" + entity.keywords
-                + "&hmci=" + entity.creative
+            var yesParam = "?rf=" + entity.mediaPlatform;
+            var noParam = "&rf=" + entity.mediaPlatform;
+            var notHostName = "&media=" + entity.adTypes
+                + "&cpna=" + entity.planName
+                + "&kwna=" + entity.keywords
+                + "&crt=" + entity.creative
                 + "&tid=" + entity.tid;
 
             if (sourceUrl.indexOf("?") == -1) {

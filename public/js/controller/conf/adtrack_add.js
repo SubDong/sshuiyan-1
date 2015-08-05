@@ -97,12 +97,12 @@ define(["./module"], function (ctrs) {
             $scope.str = function(kw){
                 var strUrl = "";
                 var sourceUrl = $scope.adTrack.targetUrl;
-                var yesParam = "?hmsr=" + $scope.adTrack.mediaPlatform;
-                var noParam = "&hmsr=" + $scope.adTrack.mediaPlatform;
-                var notHostName = "&hmmd=" + $scope.adTrack.adTypes
-                    + "&hmpl=" + $scope.adTrack.planName
-                    + "&hmkw=" + kw
-                    + "&hmci=" + $scope.adTrack.creative
+                var yesParam = "?rf=" + $scope.adTrack.mediaPlatform;
+                var noParam = "&rf=" + $scope.adTrack.mediaPlatform;
+                var notHostName = "&media=" + $scope.adTrack.adTypes
+                    + "&cpna=" + $scope.adTrack.planName
+                    + "&kwna=" + kw
+                    + "&crt=" + $scope.adTrack.creative
                     + "&tid=" + $rootScope.siteTrackId;
 
                 if($scope.adTrack.targetUrl.indexOf("?") == -1){

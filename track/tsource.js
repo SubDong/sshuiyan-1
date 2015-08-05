@@ -654,7 +654,7 @@ if (config != undefined && !config.open) {
                 kwna: loc.split("?")[1].split("&")[3].split("=")[1],
                 crt: loc.split("?")[1].split("&")[4].split("=")[1]
             };*/
-            if (sr == "hmsr" && md == "hmmd" && pl == "hmpl" && kw == "hmkw" && ci == "hmci" && tk == "tid") {
+            if (sr == "rf" && md == "media" && pl == "cpna" && kw == "kwna" && ci == "crt" && tk == "tid") {
                 md.g.adtrack = 1;
                 h.b.sm();
             } else {
