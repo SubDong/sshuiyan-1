@@ -1,16 +1,19 @@
-<div class="page"><a ng-click="gridApi2.pagination.previousPage()"
-                     ng-hide="gridApi2.pagination.getTotalPages()<=1">上一页</a>
-    <span data-ng-repeat="gridpage in gridpages"
-            ng-class="{'current':gridApi2.pagination.getPage()=={{$index+1}}}"
-            ng-click="gridApi2.pagination.seek($index+1)" ng-hide="gridApi2.pagination.getTotalPages()<={{$index}}">
-        {{$index+1}}
-    </span>
-    <span ng-hide="gridApi2.pagination.getTotalPages()<=10">...</span>
-    <span ng-click="gridApi2.pagination.seek(gridApi2.pagination.getTotalPages())"
-            ng-class="{'current':gridApi2.pagination.getPage()==gridApi2.pagination.getTotalPages()}"
-            ng-hide="gridApi2.pagination.getTotalPages()<=9"> {{gridApi2.pagination.getTotalPages()}}
-    </span>
-    <a ng-click="gridApi2.pagination.nextPage()" ng-hide="gridApi2.pagination.getTotalPages()<=1">下一页 </a>
-    <input type="text" ng-model="page" value=""><span> /{{ gridApi2.pagination.getTotalPages() }}</span>
-    <button type="button" class="btn" ng-click="pagego(gridApi2)">跳转</button>
-    <span class='pageshow'>每页显示：</span></div>
+<div class="page" ng-class="{hidePerPageShow:gridApi2.grid.rows.length<20}">
+    <div style="display: inline-block" ng-hide="gridApi2.pagination.getTotalPages()<=1">
+        <a ng-click="gridApi2.pagination.previousPage()">上一页</a>
+        <span data-ng-repeat="gridpage in gridpages"
+                ng-class="{'current':gridApi2.pagination.getPage()=={{$index+1}}}"
+                ng-click="gridApi2.pagination.seek($index+1)" ng-hide="gridApi2.pagination.getTotalPages()<={{$index}}">
+            {{$index+1}}
+        </span>
+        <span ng-hide="gridApi2.pagination.getTotalPages()<=10">...</span>
+        <span ng-click="gridApi2.pagination.seek(gridApi2.pagination.getTotalPages())"
+                ng-class="{'current':gridApi2.pagination.getPage()==gridApi2.pagination.getTotalPages()}"
+                ng-hide="gridApi2.pagination.getTotalPages()<=9"> {{gridApi2.pagination.getTotalPages()}}
+        </span>
+        <a ng-click="gridApi2.pagination.nextPage()">下一页 </a>
+        <input type="text" ng-model="page" value=""><span> /{{ gridApi2.pagination.getTotalPages() }}</span>
+        <button type="button" class="btn" ng-click="pagego(gridApi2)">跳转</button>
+    </div>
+    <span class='pageshow'>每页显示：</span>
+</div>
