@@ -728,7 +728,9 @@ api.get("/adtrack", function (req, res) {
                 + "&cpna=" + entity.planName
                 + "&kwna=" + entity.keywords
                 + "&crt=" + entity.creative
-                + "&tid=" + entity.tid;
+                + "&t=" + entity.tid
+                + "&atk=1"
+                + "&tt=0";
 
             if (sourceUrl.indexOf("?") == -1) {
                 if(sourceUrl.indexOf("http://") == -1){

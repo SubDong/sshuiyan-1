@@ -103,7 +103,9 @@ define(["./module"], function (ctrs) {
                     + "&cpna=" + $scope.adTrack.planName
                     + "&kwna=" + kw
                     + "&crt=" + $scope.adTrack.creative
-                    + "&tid=" + $rootScope.siteTrackId;
+                    + "&t=" + $rootScope.siteTrackId
+                    + "&atk=1"
+                    + "&tt=0";
 
                 if($scope.adTrack.targetUrl.indexOf("?") == -1){
                     if($scope.adTrack.targetUrl.indexOf("http://") == -1){
