@@ -134,7 +134,7 @@ var config_request = {
                 //console.log("重写")
                 docs.forEach(function (item) {
                     var pqry = {
-                        root_url: item.site_id,
+                        root_url: item._id,
                         uid: item.uid,
                         event_page: event_page
                     }

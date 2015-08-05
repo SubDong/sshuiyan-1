@@ -4,6 +4,7 @@ var schemas = {
 
     //趋向分析-昨日统计-表格
     trend_yesterday_table_model: {
+        module_name:"config",//推广URL模块
         model_name: "TrendYesterdayTable",
         collection_name: "cache_trend_yesterday_table",
         schema: {
@@ -25,6 +26,7 @@ var schemas = {
 
     //趋向分析-昨日统计-聚合
     trend_yesterday_summary_model: {
+        module_name:"config",//推广URL模块
         model_name: "TrendYesterdaySummary",
         collection_name: "cache_trend_yesterday_summary",
         schema: {
@@ -44,6 +46,7 @@ var schemas = {
     },
     //事件转化目标
     event_change_model: {
+        module_name:"config",//推广URL模块
         model_name: "EventChange",
         collection_name: "conf_event_change",
         schema: {
@@ -60,6 +63,7 @@ var schemas = {
 
     //子目录管理
     subdirectories_model: {
+        module_name:"config",//推广URL模块
         model_name: "Subdirectories",
         collection_name: "conf_subdirectories",
         schema: {
@@ -75,6 +79,7 @@ var schemas = {
     },
 
     sites_model: {
+        module_name:"config",//推广URL模块
         model_name: "Sites",
         collection_name: "conf_sites",
         schema: {
@@ -94,6 +99,7 @@ var schemas = {
 
 // 站点统计规则
     siterules_model: {
+        module_name:"config",//推广URL模块
         model_name: " SiteRules",
         collection_name: "conf_siterules",
         schema: {
@@ -117,6 +123,7 @@ var schemas = {
 
 // 转化目标
     converts_model: {
+        module_name:"config",//推广URL模块
         model_name: "Converts",
         collection_name: "conf_converts",
         schema: {
@@ -135,6 +142,7 @@ var schemas = {
     },
 
     subpaths_model: {
+        module_name:"config",//推广URL模块
         model_name: "SubPaths",
         collection_name: "conf_subpaths",
         schema: {
@@ -152,6 +160,7 @@ var schemas = {
      * 页面转化
      */
     page_conv_model: {
+        module_name:"config",//推广URL模块
         model_name: "PageConvent",
         collection_name: "conf_page_conv",
         schema: {
@@ -179,6 +188,7 @@ var schemas = {
 
     },
     page_conv_urls_model: {
+        module_name:"config",//推广URL模块
         model_name: "EventConvUrls",
         collection_name: "conf_page_conv_urls",
         schema: {
@@ -195,6 +205,7 @@ var schemas = {
      * 页面转化
      */
     page_title_model: {
+        module_name:"config",//推广URL模块
         model_name: "PageTitleConfig",
         collection_name: "conf_page_title",
         schema: {
@@ -211,6 +222,7 @@ var schemas = {
      * mongodb 指定广告追踪 表结构
      */
     adtrack_model: {
+        module_name:"config",//推广URL模块
         model_name: "ConfigAdtrack",
         collection_name: "t_configAdtrack",
         schema: {
@@ -226,6 +238,7 @@ var schemas = {
         }
     },
     mail_rules_model:{
+        module_name:"config",//推广URL模块
         model_name:"Mail_Rules_Model",
         collection_name:'conf_mail_rules',
         schema:{
@@ -237,7 +250,50 @@ var schemas = {
             send_type:Number,//发送数据类型,0为csv,1为pdf
             rule_url:String//发送数据的url的页面
         }
-    }
+    },
+    /////////////////////推广URL 前端Schemas////////////////////////
+    //计划
+    compaign_model:{
+        module_name:"tg_url",//推广URL模块
+        model_name:"User_Compaign_Model",
+        collection_name:"compaign",
+        schema:{
+            "cid" : Number,
+            "name" : String,
+            "off" : [],
+            "sp" : Number,
+            "d" : Number,
+            "pr" : Number,
+            "p" : Boolean,
+            "s" : Number,
+            "acid" : Number,
+            "bd" : [],
+            "rt" : [],
+            "exip" : [],
+            "neg" : [],
+            "exneg" : [],
+            "sd" : [],
+            "idc" : [],
+            "ls" : Number
+        }
+    },
+
+    adgroup_model: {
+        module_name:"tg_url",//推广URL模块
+        model_name: " Ad_Group_Model",
+        collection_name: "adgroup",
+        schema: {
+            "agid" : Number,
+            "cid" : Number,
+            "name" : String,
+            "max" : Number,
+            "p" : Boolean,
+            "s" : Number,
+            "acid" : Number
+        }
+    },
+
+
 
 
 }

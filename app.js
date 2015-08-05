@@ -11,13 +11,15 @@ var express = require('express'),
     root = require('./routes/index'),
     api = require('./servers/apis/data'),
     configapi = require('./servers/apis/configapi'),
+    serviceapi  = require('./servers/apis/serviceapi'),
     app = express(),
     uuid = require('node-uuid'),
     auth = require('./routes/auth'),
     token = require('./routes/token'),
     redis_module = require("./servers/utils/redis"),
     RedisStore = require('connect-redis')(session),
-    mongoose = require('./servers/utils/mongo'),
+    //mongoose = require('./servers/utils/mongo'),
+    mongopool = require('./servers/utils/mongopool'),
     security = require('./servers/services/security'),
     cdApi=require('./servers/apis/test/crossDomain');
 
@@ -27,7 +29,8 @@ var config = require("./config.json");
 
 var es_client = es.init(config.es);
 
-var mongo = mongoose.init(config.mongo)
+//var mongo = mongoose.init(config.mongo)
+var mongos = mongopool.init(config.mongourls)
 var redis_client = redis_module.init(config.redis);
 
 //app.use(express.static('public'))
@@ -85,7 +88,7 @@ app.use(auth.auth)
 
 // 登陆信息
 app.use(function (req, res, next) {
-    req.db = mongo;
+    req.db = mongos;
     req.es = es_client;
     req.redisclient = redis_client;
     req.accountid = req.session.accountid;
@@ -101,6 +104,8 @@ app.use('/', root);
 app.use('/api', api);
 
 app.use('/config', configapi);
+
+app.use('/service', serviceapi);
 
 app.use('/token', token);
 
