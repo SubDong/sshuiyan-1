@@ -64,7 +64,7 @@ define(["../app"], function (app) {
                 controller: ['$scope', '$http', '$compile', function ($scope, $http, $compile) {
                     $http({
                         method: 'GET',
-                        url: "/api/summary/?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.defaultType + "&quotas=pv&dimension=loc" + "&filerInfo=" + filerInfo
+                        url: "/api/index_summary/?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.defaultType + "&indic=pv&dimension=loc" + "&filerInfo=" + filerInfo
                     }).success(function (data, status) {
                         var obj = JSON.parse(eval('(' + data + ')').toString())
                         var contentHtml = "<div class='modal-body source_modal_body'><table class='table'><tr><th>排名</th><th>入口页链接</th></tr>";

@@ -7,6 +7,9 @@ define(["./module"], function (ctrs) {
 
     ctrs.controller('equipmentctr', function ($scope, $rootScope, $q, $http, requestService, areaService, $location,uiGridConstants) {
         //客户端属性初始化
+        $scope.gridOptions = {
+            enableExpandableRowHeader: false
+        }
         $scope.equipment.selected = {"name": "网络设备类型", "field": "pm"};
         if($location.url().split("?").length>1) {
             var param = $location.url().split("?")[1];
