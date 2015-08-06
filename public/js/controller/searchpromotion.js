@@ -41,7 +41,7 @@ define(["./module"], function (ctrs) {
             {consumption_name: "跳出率", name: "outRate"},
             {consumption_name: "平均访问时长", name: "avgTime"},
             {consumption_name: "平均访问页数", name: "avgPage"},
-            {consumption_name: "抵达率", name: "arrivedRate"}
+            //{consumption_name: "抵达率", name: "arrivedRate"}
         ];
 
         if ($rootScope.tableSwitch.number == 1) {
@@ -783,7 +783,7 @@ define(["./module"], function (ctrs) {
                             dataInfoIpmr += option[i].entity["impression"];
                         }
                     }
-                    var returnCtr = (dataInfoIpmr == 0 ? "0%" : ((dataInfoClick / dataInfoIpmr) * 100).toFixed(2) + "%");
+                    var returnCtr = (dataInfoIpmr == 0 ? "0%" : ((dataInfoClick / dataInfoIpmr)).toFixed(2) + "%");
                     return returnCtr;
                 }
                 if ((option[0].entity[a.col.field] + "").indexOf("%") != -1) {
@@ -793,7 +793,7 @@ define(["./module"], function (ctrs) {
                     returnData = (returnData / option.length).toFixed(2);
                 }
                 if (a.col.field == "outRate" || a.col.field == "nuvRate") {
-                    returnData = returnData == "0.00%" ? "0%" : (parseInt(returnData) / option.length).toFixed(2) + "%";
+                    returnData = (returnData == "0.00%" ? "0%" : (parseInt(returnData) / option.length).toFixed(2) + "%");
                 }
                 if (a.col.field == "avgTime") {
                     var atime1 = parseInt(newSpl[0] / option.length) + "";
@@ -804,6 +804,9 @@ define(["./module"], function (ctrs) {
                 /**
                  * TODO  ...
                  */
+                if (a.col.field == "acp") {
+                    returnData = (returnData / option.length).toFixed(2);
+                }
                 if (a.col.field == "cpc" || a.col.field == "cost") {
                     returnData = (returnData + "").substring(0, (returnData + "").indexOf(".") + 3);
                 }

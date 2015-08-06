@@ -132,6 +132,7 @@ define(["angular", "./app"], function (angular, myApp) {
                     resolve: {
                         load: loadDeps([
                             'controller/alliance_group_ctr',
+                            'controller/searchpromotion',
                             'controller/alliancepromotion'
                         ])
                     }
