@@ -26,7 +26,7 @@
         <div class="index_chart">
             <div id="indicators_charts" class="gesture" style="height:400px;"></div>
         </div>
-        <div class="table_content" ng-controller="TabsCtrl">
+        <div class="table_content" ng-controller="SearchPromotion">
             <ul ng-init="tab = 1" class="nav nav-tabs nav-justified">
                 <li class="ng-isolate-scope"  ng-class="{active:tab===1}" ng-click="tab = 1">
                     <a class="ng-binding">自定义指标</a></li>
@@ -44,40 +44,40 @@
                     <div class="chart_top">
                         <span>消费指标 :</span>
                         <ul>
-                            <li ng-repeat="item in target"
+                            <li ng-repeat="item in targetNms" data-sshy-default defvalue="{{item.name}}"
                                 class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
-                                ng-click='indicators(item,target,6)'>{{item.consumption_name}}
+                                ng-click='searchIndicators(item,targetNms,6)'>{{item.consumption_name}}
                             </li>
                         </ul>
                     </div>
                     <div class="chart_top">
                         <span>网站基础指标 :</span>
                         <ul>
-                            <li ng-repeat="item in Webbased"
+                            <li ng-repeat="item in Webbased" data-sshy-default defvalue="{{item.name}}"
                                 class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
-                                ng-click='indicators(item,Webbased,6)'>{{item.consumption_name}}
+                                ng-click='searchIndicators(item,Webbased,6)'>{{item.consumption_name}}
                             </li>
                         </ul>
                     </div>
                     <div class="chart_top">
                         <span>流量质量指标:</span>
                         <ul>
-                            <li ng-repeat="item in flow"
+                            <li ng-repeat="item in flow" data-sshy-default defvalue="{{item.name}}"
                                 class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
-                                ng-click='indicators(item,flow,6)'>{{item.consumption_name}}
+                                ng-click='searchIndicators(item,flow,6)'>{{item.consumption_name}}
                             </li>
                         </ul>
                     </div>
                     <div class="chart_top">
                         <span>转化指标:</span>
                         <ul>
-                            <li ng-repeat="item in transform"
+                            <li ng-repeat="item in transform" data-sshy-default defvalue="{{item.name}}"
                                 class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
-                                ng-click='indicators(item,transform,6)'>{{item.consumption_name}}
+                                ng-click='searchIndicators(item,transform,6)'>{{item.consumption_name}}
                             </li>
                         </ul>
                     </div>
-                    <div class="chart_top">
+                    <!--<div class="chart_top">
                         <span>移动搜索页指标:</span>
                         <ul>
                             <li ng-repeat="item in mobile"
@@ -94,9 +94,9 @@
                                 ng-click='indicators(item,recall,6)'>{{item.consumption_name}}
                             </li>
                         </ul>
-                    </div>
+                    </div>-->
                     <div class="chart_top chart_noborder">
-                        <button class="btn btn-primary" type="button">确定</button>
+                        <button class="btn btn-primary" type="button"  ng-click="targetSearchSpread(true)">确定</button>
                         * 可同时选择6项
                     </div>
 
@@ -141,7 +141,7 @@
                     </div>
                 </div>
             </div>
-            <div class="custom_table">
+            <div class="custom_table" ng-class="{hidePageContainer:gridApi2.grid.rows.length<=20}">
                 <div ui-grid="gridOptions" class="grid clearfix" ui-grid-pagination ui-grid-exporter ui-grid-auto-resize></div>
                 <gridpage></gridpage>
             </div>

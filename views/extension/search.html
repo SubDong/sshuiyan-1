@@ -160,7 +160,7 @@
                         </ui-select>
                     </div>
                 </div>
-                <div class="custom_table">
+                <div class="custom_table" ng-class="{hidePageContainer:gridApi2.grid.rows.length<=20}">
                     <div ui-grid="gridOptions" class="grid clearfix"  ui-grid-pagination
                          ui-grid-exporter ui-grid-auto-resize></div>
                     <gridpage></gridpage>

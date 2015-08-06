@@ -146,7 +146,7 @@
                                </span>
                     </div>
                 </div>
-                <div class="custom_table">
+                <div class="custom_table" ng-class="{hidePageContainer:gridApi2.grid.rows.length<=20}">
                     <!--<div ui-grid="gridOptions" class="grid clearfix" ui-grid-pagination ui-grid-exporter ui-grid-auto-resize></div>-->
                     <div ui-grid="gridOptions" class="grid clearfix secondary_table" style="min-height:30px;" ui-grid-auto-resize ui-grid-pagination
                          ui-grid-exporter></div>

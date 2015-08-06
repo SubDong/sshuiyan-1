@@ -15,7 +15,7 @@
         </div>
         <div class="web_list_table">
             <div class="table_content" ng-controller="TabsCtrl">
-                <div class="custom_table">
+                <div class="custom_table" ng-class="{hidePageContainer:gridApiAdmin.grid.rows.length<=20}">
                     <div ui-grid="gridOptions" class="grid grid_table"  ui-grid-pagination ui-grid-selection
                          ui-grid-exporter></div>
                 </div>

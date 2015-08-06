@@ -13,7 +13,7 @@
         <!--网站上部列表部分-->
         <div class="web_list_up">
             <div class="table_content">
-                <div class="custom_table">
+                <div class="custom_table" ng-class="{hidePageContainer:gridApiAdmin.grid.rows.length<=20}">
                     <div ui-grid="gridArray"  class="grid grid_table clearfix secondary_table" ui-grid-selection ui-grid-pagination
                          ui-grid-exporter ui-grid-auto-resize></div>
                     <gridpageht>

@@ -113,6 +113,10 @@
                             </li>
                             <li><a href="javascript:void(0)" ng-click="searchEngine('百度')">百度</a></li>
                             <li><a href="javascript:void(0)" ng-click="searchEngine('Google')">Google</a></li>
+                            <li><a href="javascript:void(0)" ng-click="searchEngine('百度付费推广')">百度付费推广</a></li>
+                            <li><a href="javascript:void(0)" ng-click="searchEngine('百度搜索推广')">百度搜索推广</a></li>
+                            <li><a href="javascript:void(0)" ng-click="searchEngine('百度网盟推广')">百度网盟推广</a></li>
+                            <li><a href="javascript:void(0)" ng-click="searchEngine('百度自然搜索')">百度自然搜索</a></li>
                         </ul>
                     </div>
                     <div class="chart_top2">
@@ -165,10 +169,9 @@
             <!--</div>-->
             <!--</div>-->
             <!--</div>-->
-            <div class="custom_table">
+            <div class="custom_table" ng-class="{hidePageContainer:gridApi2.grid.rows.length<=24}">
                 <div ui-grid="gridOptions" class="grid clearfix" style="height:auto;" ui-grid-pagination
                      ui-grid-exporter ui-grid-auto-resize></div>
-                <gridpage></gridpage>
             </div>
         </div>
     </div>

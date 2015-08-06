@@ -97,26 +97,30 @@ define(["./module"], function (ctrs) {
             $scope.str = function(kw){
                 var strUrl = "";
                 var sourceUrl = $scope.adTrack.targetUrl;
-                var yesParam = "?hmsr=" + $scope.adTrack.mediaPlatform;
-                var noParam = "&hmsr=" + $scope.adTrack.mediaPlatform;
-                var notHostName = "&hmmd=" + $scope.adTrack.adTypes
-                    + "&hmpl=" + $scope.adTrack.planName
-                    + "&hmkw=" + kw
-                    + "&hmci=" + $scope.adTrack.creative
-                    + "&tid=" + $rootScope.siteTrackId;
+                var yesParam = "?rf=" + $scope.adTrack.mediaPlatform;
+                var noParam = "&rf=" + $scope.adTrack.mediaPlatform;
+                var notHostName = "&media=" + $scope.adTrack.adTypes
+                    + "&cpna=" + $scope.adTrack.planName
+                    + "&kwna=" + kw
+                    + "&crt=" + $scope.adTrack.creative
+                    + "&t=" + $rootScope.siteTrackId
+                    + "&atk=1"
+                    + "&tt=0";
 
-                if($scope.adTrack.targetUrl.indexOf("?") == -1){
-                    if($scope.adTrack.targetUrl.indexOf("http://") == -1){
-                        strUrl = "http://" + sourceUrl + yesParam + notHostName;
-                    } else {
-                        strUrl = sourceUrl + yesParam + notHostName;
-                    }
+                if(sourceUrl != null && sourceUrl != ""){
+                    if(sourceUrl.indexOf("?") == -1){
+                        if(sourceUrl.indexOf("http://") == -1){
+                            strUrl = "http://" + sourceUrl + yesParam + notHostName;
+                        } else {
+                            strUrl = sourceUrl + yesParam + notHostName;
+                        }
 
-                } else {
-                    if($scope.adTrack.targetUrl.indexOf("http://") == -1){
-                        strUrl = "http://" + sourceUrl + noParam + notHostName;
                     } else {
-                        strUrl = sourceUrl + noParam + notHostName;
+                        if(sourceUrl.indexOf("http://") == -1){
+                            strUrl = "http://" + sourceUrl + noParam + notHostName;
+                        } else {
+                            strUrl = sourceUrl + noParam + notHostName;
+                        }
                     }
                 }
                 return encodeURI(strUrl.trim());
