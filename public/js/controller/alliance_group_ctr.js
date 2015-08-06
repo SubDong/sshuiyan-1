@@ -6,8 +6,7 @@ define(["./module"], function (ctrs) {
     "use strict";
 
     ctrs.controller('alliance_group_ctr', function ($scope, $rootScope, $q, requestService, areaService, $http, SEM_API_URL,uiGridConstants) {
-        console.log("alliance_group_ctr")
-        //        高级搜索提示
+        //高级搜索提示
         $scope.terminalSearch = "";
         $scope.areaSearch = "";
 //        取消显示的高级搜索的条件
@@ -28,8 +27,8 @@ define(["./module"], function (ctrs) {
         $rootScope.tableFormat = null;
 
         //配置默认指标
-        $rootScope.checkedArray = ["", "", ""];
-        $rootScope.gridArray = [
+        $rootScope.checkedArray = ["impression", "cost", "acp", "outRate", "avgTime", "nuvRate"];
+        $rootScope.searchGridArray = [
             {
                 name: "xl",
                 displayName: "",
@@ -38,114 +37,82 @@ define(["./module"], function (ctrs) {
                 enableSorting: false
             },
             {
-                name: "计划", field: "loc", footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                name: "组",
+                displayName: "组",
+                field: "adgroupName",
+                cellTemplate: "<div><a href='javascript:void(0)' style='color:#0965b8;line-height:30px' ng-click='grid.appScope.getNmsHistoricalTrend(this)'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</div>"
+                , footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
                 enableSorting: false
             },
             {
-                name: " ",
-                cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn' title='查看历史趋势'></a></div>",
-                enableSorting: false
-            },
-            {
-                name: "访问次数",
-                field: "pv",
-                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>",
+                name: "展现量",
+                displayName: "展现量",
+                field: "impression",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>",
                 sort: {
                     direction: uiGridConstants.DESC,
                     priority: 1
                 }
             },
             {
-                name: "访客数(UV)",
-                displayName: '访客数(UV)',
-                disfield: "uv",
-                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                name: "消费",
+                displayName: "消费",
+                field: "cost",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "平均点击价格",
+                displayName: "平均点击价格",
+                field: "acp",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "跳出率",
+                displayName: "跳出率",
+                field: "outRate",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
             },
             {
                 name: "平均访问时长",
+                displayName: "平均访问时长",
                 field: "avgTime",
-                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "新访客比率",
+                displayName: "新访客比率",
+                field: "nuvRate",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
             }
         ];
-        $rootScope.tableSwitch = {//$rootScope.targetSearchSpread();
-            latitude: {name: "计划", field: "loc"},
+        $rootScope.tableSwitch = {
+            latitude: {
+                name: "组",
+                displayName: "组",
+                field: "adgroupName"
+            },
             tableFilter: null,
             dimen: false,
             // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
-            number: 1,
+            number: 0,
             //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
             coding: false,
             //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
-            arrayClear: false //是否清空指标array
+            arrayClear: false, //是否清空指标array
+            promotionSearch: {
+                NMS: true,//是否开启网盟数据
+                //turnOn: true, //是否开始推广中sem数据
+                SEMData: "group" //查询类型
+            }
+        };
+        //日历
+        $scope.dateClosed = function () {
+            $rootScope.tableTimeStart = $scope.startOffset;
+            $rootScope.tableTimeEnd = $scope.endOffset;
+            $rootScope.targetSearchSpread(true);
+            $scope.$broadcast("ssh_dateShow_options_time_change");
         };
         //
-        $scope.reset = function () {
-            $scope.todayClass = false;
-            $scope.yesterdayClass = false;
-            $scope.sevenDayClass = false;
-            $scope.monthClass = false;
-            $scope.definClass = false;
-        };
-        $scope.today = function () {
-            $scope.reset();
-            $scope.todayClass = true;
-            $scope.dt = new Date();
-
-            //table配置
-            $rootScope.tableTimeStart = 0;
-            $rootScope.tableTimeEnd = 0;
-            //$rootScope.targetSearchSpread();
-            //
-
-        };
-        $scope.yesterday = function () {
-            $scope.reset();
-            $scope.yesterdayClass = true;
-
-            //table配置
-            $rootScope.tableTimeStart = -1;
-            $rootScope.tableTimeEnd = -1;
-            //$rootScope.targetSearchSpread();
-            //
-
-        };
-        $scope.sevenDay = function () {
-            $scope.reset();
-            $scope.sevenDayClass = true;
-
-            //table配置
-            $rootScope.tableTimeStart = -7;
-            $rootScope.tableTimeEnd = -1;
-            //$rootScope.targetSearchSpread();
-            //
-        };
-        $scope.month = function () {
-            $scope.reset();
-            $scope.monthClass = true;
-
-            //table配置
-            $rootScope.tableTimeStart = -30;
-            $rootScope.tableTimeEnd = -1;
-            //$rootScope.targetSearchSpread();
-            //
-
-        };
-        $scope.open = function ($event) {
-            $scope.reset();
-            $scope.definClass = true;
-            $event.preventDefault();
-            $event.stopPropagation();
-            $scope.opened = true;
-        };
-        $scope.checkopen = function ($event) {
-            $scope.reset();
-            $scope.othersdateClass = true;
-            $event.preventDefault();
-            $event.stopPropagation();
-            $scope.opens = true;
-        };
-        // initialize
-        $scope.today();
         //$scope.initMap();
         //点击显示指标
         $scope.visible = true;
