@@ -140,10 +140,6 @@ define(["./module"], function (ctrs) {
         };
         refushGridData();
         $scope.onDelete = function (index, grid, row) {
-            if (row.treeLevel != 0) {
-                return;
-            }
-
             $scope.onDeleteDialog = ngDialog.open({
                 template: '' +
                 '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div><ul class="admin-ng-content"><li> 您确定删除这个路径吗？</li></ul>' +
