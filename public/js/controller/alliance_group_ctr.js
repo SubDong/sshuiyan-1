@@ -106,12 +106,9 @@ define(["./module"], function (ctrs) {
             }
         };
         //日历
-        $scope.dateClosed = function () {
-            $rootScope.tableTimeStart = $scope.startOffset;
-            $rootScope.tableTimeEnd = $scope.endOffset;
-            $rootScope.targetSearchSpread(true);
-            $scope.$broadcast("ssh_dateShow_options_time_change");
-        };
+        $scope.$on("ssh_refresh_charts", function (e, msg) {
+            $rootScope.targetSearchSpread();
+        });
         //
         //$scope.initMap();
         //点击显示指标
