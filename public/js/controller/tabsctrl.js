@@ -1001,18 +1001,24 @@ define(["app"], function (app) {
                     } else {
                         var dataArray = [];
                         var dataObj = {};
+                        var speedDataInfo = 0;
+                        var speedDataVc = 0
                         data.forEach(function (item, i) {
                             var urlDateTime = (parseInt(item.dms_time.value) / parseInt(item.doc_count) / 1000).toFixed(2);
                             dataObj["loc"] = item.key;
-                            dataObj["openSpeed"] = urlDateTime+"\"";
+                            dataObj["openSpeed"] = urlDateTime + "\"";
                             dataObj["vc"] = item.ucv.value;
                             dataArray.push(dataObj);
+                            speedDataInfo += urlDateTime
+                            speedDataVc += item.ucv.value
                         });
+                        $rootScope.urlSeepdDataInfo = (speedDataInfo / (data.length <= 0 ? 1 : data.length)).toFixed(2) + "\"";
+                        $rootScope.urlSeepdDataVc = speedDataVc;
                         $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
                         $scope.gridOptions.data = dataArray;
                     }
                 });
-            } else if ($rootScope.tableSwitch.number == 4) {//推广方式
+            } else if ($rootScope.tableSwitch.number == 4) {//来源分析搜索词-搜索
                 var fi = $rootScope.tableSwitch.tableFilter != undefined && $rootScope.tableSwitch.tableFilter != null ? "&q=" + encodeURIComponent($rootScope.tableSwitch.tableFilter) : "";
                 var searchUrl = SEM_API_URL + "/es/search_word?tid=" + trackid + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + fi;
                 $http({
