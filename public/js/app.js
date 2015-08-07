@@ -112,7 +112,7 @@ define([
             }, {
                 title: '百度推广',
                 icon: 'glyphicon glyphicon-asterisk',
-                stype: 1,
+                stype: 2,
                 sref: 'extension',
                 child: [{
                     text: '推广概况',
@@ -221,12 +221,12 @@ define([
             }, {
                 title: '转化分析',
                 icon: 'glyphicon glyphicon-sort',
-                stype: 0,
+                stype: 2,
                 sref: '#transform/transformAnalysis'
             },{
                 title: '指定广告跟踪',
                 icon: 'glyphicon glyphicon-map-marker',
-                stype: 0,
+                stype: 2,
                 sref: '#ads/adsSource'
             }
         ];
