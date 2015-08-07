@@ -90,7 +90,7 @@ define(["app"], function (app) {
         ];
         $scope.Todayfloweds = [
             {consumption_name: "跳出率", name: "outRate"},
-            {consumption_name: "平均访问时长", name: "avgTime"},
+            {consumption_name: "平均访问时长", name: "a   vgTime"},
             {consumption_name: "平均访问页数", name: "avgPage"}
         ];
         $scope.Order = [
@@ -310,12 +310,16 @@ define(["app"], function (app) {
         var yesterday = temp_path.indexOf("/yesterday");
         var month = temp_path.indexOf("/month");
         // 通用表格配置项
+
         if (typeof($rootScope.checkedArray) != undefined && $scope.tableJu == "html") {
             $scope.gridOptions = {
+
                 paginationPageSize: today != -1 || yesterday != -1 || month != -1 ? 24 : 20,
                 expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
                 //expandableRowHeight: 360,
                 paginationPageSizes: [20, 50, 100],
+                //enableExpandableRowHeader: false,
+                enableExpandableRowHeader: true,
                 enableColumnMenus: false,
                 showColumnFooter: true,
                 enablePaginationControls: true,
@@ -328,12 +332,16 @@ define(["app"], function (app) {
                     griApihtml(girApi);
                 }
             };
+
         } else {
             $scope.gridOptions = {
+
                 paginationPageSize: today != -1 || yesterday != -1 || month != -1 ? 24 : 20,
                 expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
                 //expandableRowHeight: 360,
                 paginationPageSizes: [20, 50, 100],
+                //enableExpandableRowHeader: false,
+                enableExpandableRowHeader: true,
                 enableColumnMenus: false,
                 showColumnFooter: true,
                 enablePaginationControls: true,
@@ -344,7 +352,7 @@ define(["app"], function (app) {
                 onRegisterApi: function (gridApi) {
                     $rootScope.gridApi2 = gridApi;
                     if ($rootScope.tableSwitch.dimen) {
-                        griApiInfo(gridApi);
+                         griApiInfo(gridApi);
                     }
                 }
 
@@ -949,6 +957,7 @@ define(["app"], function (app) {
             $scope.gridOptions.columnDefs = $scope.gridOpArray;
             $scope.gridOptions.rowHeight = 32;
             $scope.gridOptions.columnFooterHeight = 32;
+            $(".custom_table i").css({"display":"block"});
 
             //if (isClicked) {
             $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
@@ -1105,6 +1114,7 @@ define(["app"], function (app) {
                                     $rootScope.checkedArray.forEach(function (item, a) {
                                         resultObj[item] = "--";
                                     });
+
                                     resultObj[$rootScope.tableSwitch.latitude.field] = "暂无数据";
                                     resultData.push(resultObj);
                                     $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
@@ -1114,6 +1124,7 @@ define(["app"], function (app) {
                                     $scope.gridOptions.data = data;
                                 }
                             } else {
+
                                 if (data.length == 0) {
                                     var resultData = [];
                                     var resultObj = {};
@@ -1123,6 +1134,7 @@ define(["app"], function (app) {
                                         });
                                     }
                                     resultObj[$rootScope.tableSwitch.latitude.field] = "暂无数据";
+                                    $(".custom_table i").css({"display":"none"});
                                     resultData.push(resultObj);
                                     $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
                                     $scope.gridOptions.data = resultData;
