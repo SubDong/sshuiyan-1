@@ -291,7 +291,6 @@ define(["./module"], function (ctrs) {
                     method: 'GET',
                     url: url
                 }).success(function (dataNMS, status) {
-                    console.log(dataNMS)
                     var dataArray = [];
                     dataNMS.forEach(function (item, i) {
                         var searchId = $rootScope.tableSwitch.promotionSearch.SEMData;
@@ -323,7 +322,6 @@ define(["./module"], function (ctrs) {
                             item["acp"] != undefined ? datas["acp"] = item["acp"] == '-1' ? "--" : item["acp"] : "";
                             dataArray.push(datas);
                             if ((dataNMS.length - 1) == i) {
-                                console.log(dataArray)
                                 if (field == "adgroupName" || field == "keywordName") {
                                     $scope.gridOptions.rowHeight = 55;
                                 } else {
@@ -969,6 +967,8 @@ define(["./module"], function (ctrs) {
             case "description1":
                 var returnData = ",`" + (b['creativeTitle'].length > 25 ? b['creativeTitle'].substring(0, 25) + "..." : b['creativeTitle']) + ",`" + b['showUrl']
                 return returnData;
+            case "adTitle":
+                return "";
         }
     };
 })
