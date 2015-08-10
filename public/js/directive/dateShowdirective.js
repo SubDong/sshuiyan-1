@@ -53,7 +53,10 @@ define(["../app"], function (app) {
                         $q.all(esRequestArray).then(function (final_result) {
                             var esDataArray = [];
                             angular.forEach(final_result, function (item) {
-                                esDataArray.push(item.data);
+                                var t_a = JSON.parse(eval('(' + item.data + ')').toString())
+                                angular.forEach(t_a, function (t_a_i) {
+                                    esDataArray.push(t_a_i);
+                                });
                             });
                             scope.pushESData(esDataArray);
                         });
@@ -98,8 +101,7 @@ define(["../app"], function (app) {
                 };
                 scope.pushESData = function (result, flag) {
                     var _array = $rootScope.copy(scope.dateShowArray);
-                    var obj = JSON.parse(eval('(' + result + ')').toString()); //由JSON字符串转换为JSON对象
-                    angular.forEach(obj, function (r) {
+                    angular.forEach(result, function (r) {
                         var dateShowObject = {};
                         dateShowObject.label = r.label;
                         var temp = 0;
@@ -241,7 +243,10 @@ define(["../app"], function (app) {
                         $q.all(esRequestArray).then(function (final_result) {
                             var esDataArray = [];
                             angular.forEach(final_result, function (item) {
-                                esDataArray.push(item.data);
+                                var t_a = JSON.parse(eval('(' + item.data + ')').toString())
+                                angular.forEach(t_a, function (t_a_i) {
+                                    esDataArray.push(t_a_i);
+                                });
                             });
                             scope.pushESData(esDataArray);
                         });
@@ -286,7 +291,6 @@ define(["../app"], function (app) {
                 };
                 scope.pushESData = function (result, flag) {
                     var _array = $rootScope.copy(scope.dateShowArray);
-                    var obj = JSON.parse(eval('(' + result + ')').toString()); //由JSON字符串转换为JSON对象
                     angular.forEach(obj, function (r) {
                         var dateShowObject = {};
                         dateShowObject.label = r.label;
