@@ -134,7 +134,7 @@ define(["./module"], function (ctrs) {
         var eventTable = function (data, transNameIndex, dataIndex, test_url, start, end,analysisAction) {
             $http({
                 method: "GET",
-                url: "/api/transform/transformAnalysis?start=" + start + "&end=" + end + "&analysisAction="+analysisAction+"&type=1&searchType=queryDataByUrl&showType=total&all_urls=" + test_url[transNameIndex]
+                url: "/api/transform/transformAnalysis?start=" + start + "&end=" + end + "&analysisAction="+analysisAction+"&type=1&searchType=queryDataByUrl&showType=total&all_urls=" + test_url[transNameIndex].all_urls
             }).success(function (all_urls_data) {
                 var temporaryData = data[dataIndex].crate;
                 if (all_urls_data[0].crate_pv == 0) {
@@ -148,7 +148,7 @@ define(["./module"], function (ctrs) {
         var hasSemEventTable = function (data, transNameIndex, dataIndex, test_url, timeData,sem_data,analysisAction) {
             $http({
                 method: "GET",
-                url: "/api/transform/transformAnalysis?start=" + timeData.start + "&end=" + timeData.end + "&analysisAction="+analysisAction+"&type=1&searchType=queryDataByUrl&showType=total&all_urls=" + test_url[transNameIndex]
+                url: "/api/transform/transformAnalysis?start=" + timeData.start + "&end=" + timeData.end + "&analysisAction="+analysisAction+"&type=1&searchType=queryDataByUrl&showType=total&all_urls=" + test_url[transNameIndex].all_urls
             }).success(function (all_urls_data) {
 
                     timeData.checkedArray.forEach(function (checked) {
@@ -180,8 +180,8 @@ define(["./module"], function (ctrs) {
                 }
                 if (hasCrate) {
                     if (timeData.sem_checkedArray.length != 0) {
-                        var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];
-                        var transName = ["登陆信息", "￧ﾙﾻ￩ﾙﾆ￤﾿ﾡ￦ﾁﾯ"];
+                        //var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];
+                        //var transName = ["登陆信息", "￧ﾙﾻ￩ﾙﾆ￤﾿ﾡ￦ﾁﾯ"];转化测试数据
                         var semRequest = "";
                         semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + timeData.start + "&endOffset=" + timeData.end + "&q=cost");
                         $q.all([semRequest]).then(function (sem_data) {
@@ -239,21 +239,21 @@ define(["./module"], function (ctrs) {
                                 }
                             });
 
-                            for (var p = 0; p < transName.length; p++) {
+                            for (var p = 0; p < timeData.convert_url_all.length; p++) {
                                 for (var i = 0; i < data.length; i++) {
-                                    if (transName[p] == data[i].campaignName) {
-                                        hasSemEventTable(data, p, i, test_url, timeData,sem_data,timeData.analysisAction);
+                                    if (timeData.convert_url_all[p].convertName == data[i].campaignName) {
+                                        hasSemEventTable(data, p, i, timeData.convert_url_all, timeData,sem_data,timeData.analysisAction);
                                     }
                                 }
                             }
                         });
                     } else {
-                        var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];
-                        var transName = ["登陆信息", "￧ﾙﾻ￩ﾙﾆ￤﾿ﾡ￦ﾁﾯ"];
-                        for (var p = 0; p < transName.length; p++) {
+                        //var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];
+                        //var transName = ["登陆信息", "￧ﾙﾻ￩ﾙﾆ￤﾿ﾡ￦ﾁﾯ"];转化测试数据
+                        for (var p = 0; p < timeData.convert_url_all.length; p++) {
                             for (var i = 0; i < data.length; i++) {
-                                if (transName[p] == data[i].campaignName) {
-                                    eventTable(data, p, i, test_url, timeData.start, timeData.end,timeData.analysisAction);
+                                if (timeData.convert_url_all[p].convertName == data[i].campaignName) {
+                                    eventTable(data, p, i, timeData.convert_url_all, timeData.start, timeData.end,timeData.analysisAction);
                                 }
                             }
                         }
@@ -429,8 +429,8 @@ define(["./module"], function (ctrs) {
                 }
                 if(hasCrate){
                     if (msg.sem_checkedArray.length != 0) {
-                        var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];
-                        var transName = ["登陆信息", "￧ﾙﾻ￩ﾙﾆ￤﾿ﾡ￦ﾁﾯ"];
+                        //var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];
+                        //var transName = ["登陆信息", "￧ﾙﾻ￩ﾙﾆ￤﾿ﾡ￦ﾁﾯ"];转化测试数据
                         var semRequest = "";
                         semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + msg.start + "&endOffset=" + msg.end + "&q=cost");
                         $q.all([semRequest]).then(function (sem_data) {
@@ -488,21 +488,21 @@ define(["./module"], function (ctrs) {
                                 }
                             });
 
-                            for (var p = 0; p < transName.length; p++) {
+                            for (var p = 0; p < msg.convert_url_all.length; p++) {
                                 for (var i = 0; i < data.length; i++) {
-                                    if (transName[p] == data[i].campaignName) {
-                                        hasSemEventTable(data, p, i, test_url, msg,sem_data,msg.analysisAction);
+                                    if (msg.convert_url_all[p].convertName == data[i].campaignName) {
+                                        hasSemEventTable(data, p, i, msg.convert_url_all, msg,sem_data,msg.analysisAction);
                                     }
                                 }
                             }
                         });
                     } else {
-                        var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];
-                        var transName = ["登陆信息", "￧ﾙﾻ￩ﾙﾆ￤﾿ﾡ￦ﾁﾯ"];
-                        for (var p = 0; p < transName.length; p++) {
+                        //var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];
+                        //var transName = ["登陆信息", "￧ﾙﾻ￩ﾙﾆ￤﾿ﾡ￦ﾁﾯ"];转化测试数据
+                        for (var p = 0; p < msg.convert_url_all.length; p++) {
                             for (var i = 0; i < data.length; i++) {
-                                if (transName[p] == data[i].campaignName) {
-                                    eventTable(data, p, i, test_url, msg.start, msg.end,msg.analysisAction);
+                                if (msg.convert_url_all[p].convertName == data[i].campaignName) {
+                                    eventTable(data, p, i, msg.convert_url_all, msg.start, msg.end,msg.analysisAction);
                                 }
                             }
                         }
