@@ -31,7 +31,7 @@ define(["./module"], function (ctrs) {
                             }
                         }
                         url_convert_info.push({
-                            pathName: data[i].target_name,
+                            convertName: data[i].target_name,
                             all_urls: all_urls
                         });
                     }
@@ -401,9 +401,17 @@ define(["./module"], function (ctrs) {
                                     for (var key in data) {
                                         if ("crate" == key) {
                                             if (isContrastDataByTime) {
-                                                $scope.dateShowArray[index].cValue = ((Number(data["crate"]) / Number(all_urls_data.crate_pv)) * 100).toFixed(2);
+                                                if (Number(data["crate"]) == 0) {
+                                                    $scope.dateShowArray[index].cValue = ((Number(data["crate"]) / Number(all_urls_data.crate_pv)) * 100).toFixed(2) + "%";
+                                                } else {
+                                                    $scope.dateShowArray[index].cValue = "0%";
+                                                }
                                             } else {
-                                                $scope.dateShowArray[index].value = ((Number(data["crate"]) / Number(all_urls_data.crate_pv)) * 100).toFixed(2);
+                                                if (Number(data["crate"]) == 0) {
+                                                    $scope.dateShowArray[index].Value = ((Number(data["crate"]) / Number(all_urls_data.crate_pv)) * 100).toFixed(2) + "%";
+                                                } else {
+                                                    $scope.dateShowArray[index].Value = "0%";
+                                                }
                                             }
                                         }
                                     }
@@ -430,9 +438,17 @@ define(["./module"], function (ctrs) {
                             if ($scope.dateShowArray[c].label == key) {
                                 if ("crate" == key) {
                                     if (isContrastDataByTime) {
-                                        $scope.dateShowArray[c].cValue = ((Number(data["crate"]) / Number(all_urls_data.crate_pv)) * 100).toFixed(2) + "%";
+                                        if (Number(all_urls_data.crate_pv) == 0) {
+                                            $scope.dateShowArray[c].cValue = ((Number(data["crate"]) / Number(all_urls_data.crate_pv)) * 100).toFixed(2) + "%";
+                                        } else {
+                                            $scope.dateShowArray[c].cValue = "0%";
+                                        }
                                     } else {
-                                        $scope.dateShowArray[c].value = ((Number(data["crate"]) / Number(all_urls_data.crate_pv)) * 100).toFixed(2) + "%";
+                                        if (Number(all_urls_data.crate_pv) == 0) {
+                                            $scope.dateShowArray[c].Value = ((Number(data["crate"]) / Number(all_urls_data.crate_pv)) * 100).toFixed(2) + "%";
+                                        } else {
+                                            $scope.dateShowArray[c].Value = "0%";
+                                        }
                                     }
                                 } else {
                                     if (isContrastDataByTime) {
@@ -469,7 +485,8 @@ define(["./module"], function (ctrs) {
                     checkedArray: $scope.es_checkedArray,
                     sem_checkedArray: $scope.sem_checkedArray,
                     all_checked: $rootScope.checkedArray,
-                    analysisAction:"pageConversion"
+                    analysisAction: "pageConversion",
+                    convert_url_all: $scope.convert_url_all
                 });
                 var start = 0;
                 var end = 0;
@@ -499,21 +516,22 @@ define(["./module"], function (ctrs) {
                                 }
                             }
                             if (hasCrate) {//针对转化率做特殊处理
-                                if ($scope.convert_url_all.length != 0) {
-                                    var all_urls = [];
-                                    for (var k = 0; k < $scope.convert_url_all.length; k++) {
-                                        for (var c = 0; c < $scope.convert_url_all[k].all_urls.length; c++) {
-                                            if ($scope.convert_url_all[k].all_urls[c].split("/").length != 0) {
-                                                all_urls.push("http://" + $scope.convert_url_all[k].all_urls[c]);
-                                            } else {
-                                                all_urls.push("http://" + $scope.convert_url_all[k].all_urls[c] + "/");
-                                            }
+                                var all_urls = [];
+                                for (var k = 0; k < $scope.convert_url_all.length; k++) {
+                                    for (var c = 0; c < $scope.convert_url_all[k].all_urls.length; c++) {
+                                        if ($scope.convert_url_all[k].all_urls[c].split("/").length != 0) {
+                                            all_urls.push("http://" + $scope.convert_url_all[k].all_urls[c]);
+                                        } else {
+                                            all_urls.push("http://" + $scope.convert_url_all[k].all_urls[c] + "/");
                                         }
                                     }
-                                    var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];
+                                }
+                                if ($scope.convert_url_all.length != 0) {
+
+                                    //var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];转化测试数据
                                     $http({
                                         method: "GET",
-                                        url: "/api/transform/transformAnalysis?start=" + start + "&end=" + end + "&analysisAction=pageConversion&type=1&searchType=queryDataByUrl&showType=total&all_urls=" + test_url
+                                        url: "/api/transform/transformAnalysis?start=" + start + "&end=" + end + "&analysisAction=pageConversion&type=1&searchType=queryDataByUrl&showType=total&all_urls=" + all_urls
                                     }).success(function (all_urls_data) {
                                             page_crate(isContrastDataByTime, start, end, data, all_urls_data[0]);
                                         }
@@ -523,7 +541,7 @@ define(["./module"], function (ctrs) {
                                     $scope.getRedisConvertData_url();
                                     $http({
                                         method: "GET",
-                                        url: "/api/transform/transformAnalysis?start=" + start + "&end=" + end + "&analysisAction=pageConversion&type=1&searchType=queryDataByUrl&showType=total&all_urls=" + test_url
+                                        url: "/api/transform/transformAnalysis?start=" + start + "&end=" + end + "&analysisAction=pageConversion&type=1&searchType=queryDataByUrl&showType=total&all_urls=" + all_urls
                                     }).success(function (all_urls_data) {
                                         page_crate(isContrastDataByTime, start, end, data, all_urls_data);
                                     });
@@ -655,21 +673,21 @@ define(["./module"], function (ctrs) {
                         }
                         if (hasSem) {
                             if (hasCrate) {
-                                if ($scope.convert_url_all.length != 0) {
-                                    var all_urls = [];
-                                    for (var k = 0; k < $scope.convert_url_all.length; k++) {
-                                        for (var c = 0; c < $scope.convert_url_all[k].all_urls.length; c++) {
-                                            if ($scope.convert_url_all[k].all_urls[c].split("/").length != 0) {
-                                                all_urls.push("http://" + $scope.convert_url_all[k].all_urls[c]);
-                                            } else {
-                                                all_urls.push("http://" + $scope.convert_url_all[k].all_urls[c] + "/");
-                                            }
+                                var all_urls = [];
+                                for (var k = 0; k < $scope.convert_url_all.length; k++) {
+                                    for (var c = 0; c < $scope.convert_url_all[k].all_urls.length; c++) {
+                                        if ($scope.convert_url_all[k].all_urls[c].split("/").length != 0) {
+                                            all_urls.push("http://" + $scope.convert_url_all[k].all_urls[c]);
+                                        } else {
+                                            all_urls.push("http://" + $scope.convert_url_all[k].all_urls[c] + "/");
                                         }
                                     }
-                                    var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];
+                                }
+                                if ($scope.convert_url_all.length != 0) {
+                                    //var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];转化测试数据
                                     $http({
                                         method: "GET",
-                                        url: "/api/transform/transformAnalysis?start=" + crate_time.start + "&end=" + crate_time.end + "&analysisAction=pageConversion&type=1&searchType=queryDataByUrl&showType=day&all_urls=" + test_url
+                                        url: "/api/transform/transformAnalysis?start=" + crate_time.start + "&end=" + crate_time.end + "&analysisAction=pageConversion&type=1&searchType=queryDataByUrl&showType=day&all_urls=" + all_urls
                                     }).success(function (all_urls_data) {
                                             var semRequest = "";
                                             semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end + "&q=cost");
@@ -791,7 +809,7 @@ define(["./module"], function (ctrs) {
                                     $scope.getRedisConvertData_url();
                                     $http({
                                         method: "GET",
-                                        url: "/api/transform/transformAnalysis?start=" + crate_time.start + "&end=" + crate_time.end + "&analysisAction=pageConversion&type=1&searchType=queryDataByUrl&showType=day&all_urls=" + test_url
+                                        url: "/api/transform/transformAnalysis?start=" + crate_time.start + "&end=" + crate_time.end + "&analysisAction=pageConversion&type=1&searchType=queryDataByUrl&showType=day&all_urls=" + all_urls
                                     }).success(function (all_urls_data) {
                                         //page_crate(isContrastDataByTime, start, end, data, all_urls_data);
                                     });
@@ -888,10 +906,10 @@ define(["./module"], function (ctrs) {
                                         }
                                     }
                                 }
-                                var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];
+                                //var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];转化测试数据
                                 $http({
                                     method: "GET",
-                                    url: "/api/transform/transformAnalysis?start=" + crate_time.start + "&end=" + crate_time.end + "&analysisAction=pageConversion&type=1&searchType=queryDataByUrl&showType=day&all_urls=" + test_url
+                                    url: "/api/transform/transformAnalysis?start=" + crate_time.start + "&end=" + crate_time.end + "&analysisAction=pageConversion&type=1&searchType=queryDataByUrl&showType=day&all_urls=" + all_urls
                                 }).success(function (all_urls_data) {
                                     var temporaryContrastData = [];
                                     for (var i = 0; i < contrastData.length; i++) {
@@ -1003,10 +1021,10 @@ define(["./module"], function (ctrs) {
                                         }
                                     }
                                 }
-                                var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];
+                                //var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];转化测试数据
                                 $http({
                                     method: "GET",
-                                    url: "/api/transform/transformAnalysis?start=" + crate_time.start + "&end=" + crate_time.end + "&analysisAction=pageConversion&type=1&searchType=queryDataByUrl&showType=day&all_urls=" + test_url
+                                    url: "/api/transform/transformAnalysis?start=" + crate_time.start + "&end=" + crate_time.end + "&analysisAction=pageConversion&type=1&searchType=queryDataByUrl&showType=day&all_urls=" + all_urls
                                 }).success(function (all_urls_data) {
                                     var semRequest = "";
                                     semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end + "&q=cost");
@@ -1142,14 +1160,14 @@ define(["./module"], function (ctrs) {
                                         }
                                     }
                                 }
-                                var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];
+                                //var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];转化测试数据
                                 $http({
                                     method: "GET",
-                                    url: "/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&analysisAction=pageConversion&type=1&searchType=queryDataByUrl&showType=day&all_urls=" + test_url
+                                    url: "/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&analysisAction=pageConversion&type=1&searchType=queryDataByUrl&showType=day&all_urls=" + all_urls
                                 }).success(function (all_urls_data) {
                                     var temporaryContrastData = [];
-                                    for(var i = 0;i<data.length;i++){
-                                        if(data[i].label=="crate"){
+                                    for (var i = 0; i < data.length; i++) {
+                                        if (data[i].label == "crate") {
                                             for (var l = 0; l < data[i].quota.length; l++) {
                                                 if (Number(data[i].quota[l]) == 0) {
                                                     temporaryContrastData.push(0);
@@ -1217,7 +1235,8 @@ define(["./module"], function (ctrs) {
                         checkedArray: $scope.es_checkedArray,
                         sem_checkedArray: $scope.sem_checkedArray,
                         all_checked: $rootScope.checkedArray,
-                        analysisAction:"pageConversion"
+                        analysisAction: "pageConversion",
+                        convert_url_all: $scope.convert_url_all
                     });
                 } else {
                     //访客过滤数据获取
@@ -1274,7 +1293,8 @@ define(["./module"], function (ctrs) {
                         checkedArray: $scope.es_checkedArray,
                         sem_checkedArray: $scope.sem_checkedArray,
                         all_checked: $rootScope.checkedArray,
-                        analysisAction:"pageConversion"
+                        analysisAction: "pageConversion",
+                        convert_url_all: $scope.convert_url_all
                     });
                 }
             };

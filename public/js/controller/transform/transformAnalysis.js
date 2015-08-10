@@ -3,7 +3,7 @@
  */
 define(["./module"], function (ctrs) {
     "use strict";
-    ctrs.controller('transformAnalysisctr', function ($scope, $rootScope, $q, requestService, areaService, $http, SEM_API_URL, uiGridConstants) {
+    ctrs.controller('transformAnalysisctr', function ($scope, $rootScope, $q, requestService, areaService, $http, SEM_API_URL, uiGridConstants, $cookieStore) {
             $scope.city.selected = {"name": "全部"};
             $scope.todayClass = true;
             $rootScope.start = 0;
@@ -11,6 +11,31 @@ define(["./module"], function (ctrs) {
             $rootScope.tableFormat = null;
             $scope.send = true;//显示发送
             $scope.isCompared = false;
+            var refushGridData = function () {
+                var uid = $cookieStore.get("uid");
+                var root_url = $rootScope.siteId;
+                var url = "/config/eventchnage_list?type=search&query={\"uid\":\"" + uid + "\",\"root_url\":\"" + root_url + "\"}";
+                $http({
+                    method: 'GET',
+                    url: url
+                }).success(function (dataConfig, status) {
+                    var url_convert_info = [];
+                    for (var i = 0; i < dataConfig.length; i++) {
+                        url_convert_info.push({
+                            convertName: dataConfig[i].event_name,
+                            all_urls: dataConfig[i].event_page
+                        });
+                    }
+                    var all_url = [];
+                    for(var k = 0;k<dataConfig.length;k++){
+                        all_url.push(dataConfig[k].event_page)
+                    }
+                    $scope.all_url = all_url;
+                    $scope.convert_url_all = url_convert_info;
+                });
+            };
+            refushGridData();
+
             //sem
             $scope.bases = [
                 {consumption_name: "浏览量(PV)", name: "pv"},
@@ -326,7 +351,7 @@ define(["./module"], function (ctrs) {
             };
             $scope.setShowArray();
 
-            var init_transformData = function(){
+            var init_transformData = function () {
                 $scope.es_checkArray = ["pv", "uv", "vc", "ip", "nuv", "nuvRate", "conversions", "crate", "transformCost", "clickTotal", "visitNum"];
                 $scope.sem_checkArray = ["transformCost"];
                 $scope.es_checkedArray = [];
@@ -349,7 +374,8 @@ define(["./module"], function (ctrs) {
                     checkedArray: $scope.es_checkedArray,
                     sem_checkedArray: $scope.sem_checkedArray,
                     all_checked: $rootScope.checkedArray,
-                    analysisAction:"event"
+                    analysisAction: "event",
+                    convert_url_all: $scope.convert_url_all
                 });
             };
 
@@ -376,6 +402,7 @@ define(["./module"], function (ctrs) {
                 $scope.isCompared = isContrastDataByTime;
                 $http.get("/api/transform/transformAnalysis?start=" + start + "&end=" + end + "&analysisAction=event&type=1&searchType=initAll&queryOptions=" + $scope.es_checkedArray).success(function (data) {
                     if (data != null || data != "") {
+                        console.log(data)
                         var hasCrate = false;
                         for (var i = 0; i < $scope.es_checkedArray.length; i++) {
                             if ($scope.es_checkedArray[i] == "crate") {
@@ -384,7 +411,8 @@ define(["./module"], function (ctrs) {
                             }
                         }
                         if (hasCrate) {
-                            var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];
+                            //var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];转化测试数据
+                            var test_url = $scope.all_url;
                             $http({
                                 method: "GET",
                                 url: "/api/transform/transformAnalysis?start=" + start + "&end=" + end + "&analysisAction=event&type=1&searchType=queryDataByUrl&showType=total&all_urls=" + test_url
@@ -394,10 +422,17 @@ define(["./module"], function (ctrs) {
                                         if ($scope.dateShowArray[i].label == key) {
                                             if ($scope.dateShowArray[i].label == "crate") {
                                                 if (isContrastDataByTime) {
-                                                    $scope.dateShowArray[i].cValue = (Number(data["crate"]) / Number(all_urls_data[0].crate_pv) * 100).toFixed(2) + "%";
-
+                                                    if(Number(data["crate"])!=0){
+                                                        $scope.dateShowArray[i].cValue = (Number(data["crate"]) / Number(all_urls_data[0].crate_pv) * 100).toFixed(2) + "%";
+                                                    }else{
+                                                        $scope.dateShowArray[i].cValue = "0%";
+                                                    }
                                                 } else {
-                                                    $scope.dateShowArray[i].value = (Number(data["crate"]) / Number(all_urls_data[0].crate_pv) * 100).toFixed(2) + "%";
+                                                    if(Number(data["crate"])!=0){
+                                                        $scope.dateShowArray[i].Value = (Number(data["crate"]) / Number(all_urls_data[0].crate_pv) * 100).toFixed(2) + "%";
+                                                    }else{
+                                                        $scope.dateShowArray[i].Value = "0%";
+                                                    }
                                                 }
                                             } else if ($scope.dateShowArray[i].label == "transformCost" && Number(data[key]) != 0) {
                                                 var add_i = i;
@@ -541,7 +576,8 @@ define(["./module"], function (ctrs) {
                                         }
                                     }
                                 }
-                                var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];
+                                //var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];转化测试数据
+                                var test_url = $scope.all_url;
                                 $http({
                                     method: "GET",
                                     url: "/api/transform/transformAnalysis?start=" + crate_time.start + "&end=" + crate_time.end + "&analysisAction=event&type=1&searchType=queryDataByUrl&showType=day&all_urls=" + test_url
@@ -629,7 +665,7 @@ define(["./module"], function (ctrs) {
                                         });
                                     }
                                 );
-                            }else{
+                            } else {
                                 var semRequest = "";
                                 semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end + "&q=cost");
                                 $q.all([semRequest]).then(function (sem_data) {
@@ -677,9 +713,10 @@ define(["./module"], function (ctrs) {
                                     Custom.initCheckInfo();
                                 });
                             }
-                        }else{
-                            if(hasCrate){
-                                var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];
+                        } else {
+                            if (hasCrate) {
+                                //var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];转化测试数据
+                                var test_url = $scope.all_url;
                                 $http({
                                     method: "GET",
                                     url: "/api/transform/transformAnalysis?start=" + crate_time.start + "&end=" + crate_time.end + "&analysisAction=event&type=1&searchType=queryDataByUrl&showType=day&all_urls=" + test_url
@@ -742,7 +779,7 @@ define(["./module"], function (ctrs) {
                                     cf.renderChart(contrastData, $scope.charts[0].config);
                                     Custom.initCheckInfo();
                                 });
-                            }else{
+                            } else {
                                 for (var i = 0; i < contrastData.length; i++) {
                                     if (contrastData[i].label.split("_").length > 1) {
                                         contrastData[i].label = "对比数据";
@@ -783,7 +820,8 @@ define(["./module"], function (ctrs) {
                         }
                         if (hasSem) {
                             if (hasCrate) {
-                                var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];
+                                //var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];转化测试数据
+                                var test_url = $scope.all_url;
                                 $http({
                                     method: "GET",
                                     url: "/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&analysisAction=event&type=1&searchType=queryDataByUrl&showType=day&all_urls=" + test_url
@@ -877,7 +915,8 @@ define(["./module"], function (ctrs) {
                             }
                         } else {
                             if (hasCrate) {
-                                var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];
+                                //var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];转化测试数据
+                                var test_url = $scope.all_url;
                                 $http({
                                     method: "GET",
                                     url: "/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&analysisAction=event&type=1&searchType=queryDataByUrl&showType=day&all_urls=" + test_url
@@ -952,7 +991,8 @@ define(["./module"], function (ctrs) {
                         checkedArray: $scope.es_checkedArray,
                         sem_checkedArray: $scope.sem_checkedArray,
                         all_checked: $rootScope.checkedArray,
-                        analysisAction:"event"
+                        analysisAction: "event",
+                        convert_url_all: $scope.convert_url_all
                     });
                 } else {
                     //访客过滤数据获取
@@ -1014,7 +1054,8 @@ define(["./module"], function (ctrs) {
                         checkedArray: $scope.es_checkedArray,
                         sem_checkedArray: $scope.sem_checkedArray,
                         all_checked: $rootScope.checkedArray,
-                        analysisAction:"event"
+                        analysisAction: "event",
+                        convert_url_all: $scope.convert_url_all
                     });
                 }
             };
