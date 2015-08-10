@@ -6,11 +6,11 @@ define(["./module"], function (ctrs) {
     "use strict";
 
     ctrs.controller('urlspeedctr', function ($scope, $q, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
-        $scope.todayClass = true;
+        $scope.yesterdayClass = true;
 
         //table配置
-        $rootScope.tableTimeStart = 0;
-        $rootScope.tableTimeEnd = 0;
+        $rootScope.tableTimeStart = -1;
+        $rootScope.tableTimeEnd = -1;
         $rootScope.tableFormat = null;
         //配置默认指标
         $rootScope.checkedArray = ["pv", "vc"];
@@ -93,24 +93,9 @@ define(["./module"], function (ctrs) {
             {name: '通用词'}
         ];
         //日历
-        $rootScope.datepickerClick = function (start, end, label) {
-            var time = chartUtils.getTimeOffset(start, end);
-            var offest = time[1] - time[0];
-            $scope.reset();
-            if (offest >= 31) {
-                $scope.mothselected = false;
-                $scope.weekselected = false;
-            } else {
-                if (offest >= 7) {
-                    $scope.weekselected = false;
-                } else {
-                    $scope.weekselected = true;
-                }
-                $scope.mothselected = true;
-            }
-            requestService.gridRefresh($scope.grids);
-
-        }
+        $scope.$on("ssh_refresh_charts", function (e, msg) {
+            $rootScope.targetSearch();
+        });
 
         this.removeFromSelected = function (dt) {
             this.selectedDates.splice(this.selectedDates.indexOf(dt), 1);

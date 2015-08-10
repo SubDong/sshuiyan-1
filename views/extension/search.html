@@ -14,7 +14,7 @@
         </div>
     </div>
     <div class="my_concent">
-        <ssh-date-show type="yesterday" dimension="region" sem-type="campaign"></ssh-date-show>
+        <ssh-sstg-date-show type="yesterday" dimension="region" sem-type="campaign" sem_id_type="cid"></ssh-sstg-date-show>
         <div class="index_chart">
             <div id="indicators_charts_legend"></div>
             <div id="indicators_charts" class="gesture"  style="height:400px;"></div>
@@ -160,7 +160,7 @@
                         </ui-select>
                     </div>
                 </div>
-                <div class="custom_table" ng-class="{hidePageContainer:gridApi2.grid.rows.length<20}">
+                <div class="custom_table" ng-class="{hidePageContainer:gridApi2.grid.rows.length<=20}">
                     <div ui-grid="gridOptions" class="grid clearfix"  ui-grid-pagination
                          ui-grid-exporter ui-grid-auto-resize></div>
                     <gridpage></gridpage>

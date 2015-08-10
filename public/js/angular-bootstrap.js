@@ -8,6 +8,7 @@ require([
         "./router",
         "js007",
         "./directive/publicdirective",
+        "./directive/dateShowdirective",
         "./services/dateservice",
         "./services/messageService",
         "./services/popupService",

@@ -41,7 +41,7 @@ define(["./module"], function (ctrs) {
             {consumption_name: "跳出率", name: "outRate"},
             {consumption_name: "平均访问时长", name: "avgTime"},
             {consumption_name: "平均访问页数", name: "avgPage"},
-            {consumption_name: "抵达率", name: "arrivedRate"}
+            //{consumption_name: "抵达率", name: "arrivedRate"}
         ];
 
         if ($rootScope.tableSwitch.number == 1) {
@@ -291,7 +291,6 @@ define(["./module"], function (ctrs) {
                     method: 'GET',
                     url: url
                 }).success(function (dataNMS, status) {
-                    console.log(dataNMS)
                     var dataArray = [];
                     dataNMS.forEach(function (item, i) {
                         var searchId = $rootScope.tableSwitch.promotionSearch.SEMData;
@@ -323,7 +322,6 @@ define(["./module"], function (ctrs) {
                             item["acp"] != undefined ? datas["acp"] = item["acp"] == '-1' ? "--" : item["acp"] : "";
                             dataArray.push(datas);
                             if ((dataNMS.length - 1) == i) {
-                                console.log(dataArray)
                                 if (field == "adgroupName" || field == "keywordName") {
                                     $scope.gridOptions.rowHeight = 55;
                                 } else {
@@ -783,7 +781,7 @@ define(["./module"], function (ctrs) {
                             dataInfoIpmr += option[i].entity["impression"];
                         }
                     }
-                    var returnCtr = (dataInfoIpmr == 0 ? "0%" : ((dataInfoClick / dataInfoIpmr) * 100).toFixed(2) + "%");
+                    var returnCtr = (dataInfoIpmr == 0 ? "0%" : ((dataInfoClick / dataInfoIpmr)).toFixed(2) + "%");
                     return returnCtr;
                 }
                 if ((option[0].entity[a.col.field] + "").indexOf("%") != -1) {
@@ -793,7 +791,7 @@ define(["./module"], function (ctrs) {
                     returnData = (returnData / option.length).toFixed(2);
                 }
                 if (a.col.field == "outRate" || a.col.field == "nuvRate") {
-                    returnData = returnData == "0.00%" ? "0%" : (parseInt(returnData) / option.length).toFixed(2) + "%";
+                    returnData = (returnData == "0.00%" ? "0%" : (parseInt(returnData) / option.length).toFixed(2) + "%");
                 }
                 if (a.col.field == "avgTime") {
                     var atime1 = parseInt(newSpl[0] / option.length) + "";
@@ -804,6 +802,9 @@ define(["./module"], function (ctrs) {
                 /**
                  * TODO  ...
                  */
+                if (a.col.field == "acp") {
+                    returnData = (returnData / option.length).toFixed(2);
+                }
                 if (a.col.field == "cpc" || a.col.field == "cost") {
                     returnData = (returnData + "").substring(0, (returnData + "").indexOf(".") + 3);
                 }
@@ -966,6 +967,8 @@ define(["./module"], function (ctrs) {
             case "description1":
                 var returnData = ",`" + (b['creativeTitle'].length > 25 ? b['creativeTitle'].substring(0, 25) + "..." : b['creativeTitle']) + ",`" + b['showUrl']
                 return returnData;
+            case "adTitle":
+                return "";
         }
     };
 })

@@ -57,7 +57,7 @@ define(["./module"], function (ctrs) {
             ];
             $scope.order = [
                 {consumption_name: "订单数", name: "orderNum"},
-                {consumption_name: "订单金额", name: "orderMoney"},
+                //{consumption_name: "订单金额", name: "orderMoney"},
                 {consumption_name: "订单转化率", name: "orderNumRate"}
             ];
             $scope.es_checkArray = ["pv", "uv", "vc", "ip", "nuv", "nuvRate", "conversions", "crate", "avgCost", "orderNum", "benefit", "profit", "orderNumRate"];
@@ -468,7 +468,8 @@ define(["./module"], function (ctrs) {
                     end: $rootScope.end,
                     checkedArray: $scope.es_checkedArray,
                     sem_checkedArray: $scope.sem_checkedArray,
-                    all_checked: $rootScope.checkedArray
+                    all_checked: $rootScope.checkedArray,
+                    analysisAction:"pageConversion"
                 });
                 var start = 0;
                 var end = 0;
@@ -488,7 +489,7 @@ define(["./module"], function (ctrs) {
                     $scope.dataTable(isContrastDataByTime, "day", ["pv", "uv"]);
                 }
                 $scope.isCompared = isContrastDataByTime;
-                $http.get("/api/transform/transformAnalysis?start=" + start + "&end=" + end + "&action=event&type=1&searchType=initAll&queryOptions=" + $scope.es_checkedArray).success(function (data) {
+                $http.get("/api/transform/transformAnalysis?start=" + start + "&end=" + end + "&analysisAction=pageConversion&type=1&searchType=initAll&queryOptions=" + $scope.es_checkedArray).success(function (data) {
                         if (data != null || data != "") {
                             var hasCrate = false;
                             for (var i = 0; i < $scope.es_checkedArray.length; i++) {
@@ -512,7 +513,7 @@ define(["./module"], function (ctrs) {
                                     var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];
                                     $http({
                                         method: "GET",
-                                        url: "/api/transform/transformAnalysis?start=" + start + "&end=" + end + "&action=event&type=1&searchType=queryDataByUrl&showType=total&all_urls=" + test_url
+                                        url: "/api/transform/transformAnalysis?start=" + start + "&end=" + end + "&analysisAction=pageConversion&type=1&searchType=queryDataByUrl&showType=total&all_urls=" + test_url
                                     }).success(function (all_urls_data) {
                                             page_crate(isContrastDataByTime, start, end, data, all_urls_data[0]);
                                         }
@@ -522,7 +523,7 @@ define(["./module"], function (ctrs) {
                                     $scope.getRedisConvertData_url();
                                     $http({
                                         method: "GET",
-                                        url: "/api/transform/transformAnalysis?start=" + start + "&end=" + end + "&action=event&type=1&searchType=queryDataByUrl&showType=total&all_urls=" + test_url
+                                        url: "/api/transform/transformAnalysis?start=" + start + "&end=" + end + "&analysisAction=pageConversion&type=1&searchType=queryDataByUrl&showType=total&all_urls=" + test_url
                                     }).success(function (all_urls_data) {
                                         page_crate(isContrastDataByTime, start, end, data, all_urls_data);
                                     });
@@ -626,7 +627,7 @@ define(["./module"], function (ctrs) {
             $scope.dataTable = function (isContrastTime, showType, queryOptions, renderLegend) {
                 if (isContrastTime) {
                     var crate_time = aggs_time($rootScope.start, $rootScope.end, $scope.start, $scope.end);
-                    $http.get("/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&action=event&type=1&searchType=contrastData&showType=" + showType + "&queryOptions=" + queryOptions + "&contrastStart=" + $scope.start + "&contrastEnd=" + $scope.end).success(function (contrastData) {
+                    $http.get("/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&analysisAction=pageConversion&type=1&searchType=contrastData&showType=" + showType + "&queryOptions=" + queryOptions + "&contrastStart=" + $scope.start + "&contrastEnd=" + $scope.end).success(function (contrastData) {
                         var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
                         chart.showLoading({
                             text: "正在努力的读取数据中..."
@@ -668,7 +669,7 @@ define(["./module"], function (ctrs) {
                                     var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];
                                     $http({
                                         method: "GET",
-                                        url: "/api/transform/transformAnalysis?start=" + crate_time.start + "&end=" + crate_time.end + "&action=event&type=1&searchType=queryDataByUrl&showType=day&all_urls=" + test_url
+                                        url: "/api/transform/transformAnalysis?start=" + crate_time.start + "&end=" + crate_time.end + "&analysisAction=pageConversion&type=1&searchType=queryDataByUrl&showType=day&all_urls=" + test_url
                                     }).success(function (all_urls_data) {
                                             var semRequest = "";
                                             semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end + "&q=cost");
@@ -790,7 +791,7 @@ define(["./module"], function (ctrs) {
                                     $scope.getRedisConvertData_url();
                                     $http({
                                         method: "GET",
-                                        url: "/api/transform/transformAnalysis?start=" + crate_time.start + "&end=" + crate_time.end + "&action=event&type=1&searchType=queryDataByUrl&showType=day&all_urls=" + test_url
+                                        url: "/api/transform/transformAnalysis?start=" + crate_time.start + "&end=" + crate_time.end + "&analysisAction=pageConversion&type=1&searchType=queryDataByUrl&showType=day&all_urls=" + test_url
                                     }).success(function (all_urls_data) {
                                         //page_crate(isContrastDataByTime, start, end, data, all_urls_data);
                                     });
@@ -890,7 +891,7 @@ define(["./module"], function (ctrs) {
                                 var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];
                                 $http({
                                     method: "GET",
-                                    url: "/api/transform/transformAnalysis?start=" + crate_time.start + "&end=" + crate_time.end + "&action=event&type=1&searchType=queryDataByUrl&showType=day&all_urls=" + test_url
+                                    url: "/api/transform/transformAnalysis?start=" + crate_time.start + "&end=" + crate_time.end + "&analysisAction=pageConversion&type=1&searchType=queryDataByUrl&showType=day&all_urls=" + test_url
                                 }).success(function (all_urls_data) {
                                     var temporaryContrastData = [];
                                     for (var i = 0; i < contrastData.length; i++) {
@@ -965,7 +966,7 @@ define(["./module"], function (ctrs) {
                         }
                     });
                 } else {
-                    $http.get("/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&action=event&type=1&searchType=dataTable&showType=" + showType + "&queryOptions=" + queryOptions).success(function (data) {
+                    $http.get("/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&analysisAction=pageConversion&type=1&searchType=dataTable&showType=" + showType + "&queryOptions=" + queryOptions).success(function (data) {
                         var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
                         chart.showLoading({
                             text: "正在努力的读取数据中..."
@@ -1005,7 +1006,7 @@ define(["./module"], function (ctrs) {
                                 var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];
                                 $http({
                                     method: "GET",
-                                    url: "/api/transform/transformAnalysis?start=" + crate_time.start + "&end=" + crate_time.end + "&action=event&type=1&searchType=queryDataByUrl&showType=day&all_urls=" + test_url
+                                    url: "/api/transform/transformAnalysis?start=" + crate_time.start + "&end=" + crate_time.end + "&analysisAction=pageConversion&type=1&searchType=queryDataByUrl&showType=day&all_urls=" + test_url
                                 }).success(function (all_urls_data) {
                                     var semRequest = "";
                                     semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end + "&q=cost");
@@ -1144,7 +1145,7 @@ define(["./module"], function (ctrs) {
                                 var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];
                                 $http({
                                     method: "GET",
-                                    url: "/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&action=event&type=1&searchType=queryDataByUrl&showType=day&all_urls=" + test_url
+                                    url: "/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&analysisAction=pageConversion&type=1&searchType=queryDataByUrl&showType=day&all_urls=" + test_url
                                 }).success(function (all_urls_data) {
                                     var temporaryContrastData = [];
                                     for(var i = 0;i<data.length;i++){
@@ -1215,7 +1216,8 @@ define(["./module"], function (ctrs) {
                         end: $rootScope.end,
                         checkedArray: $scope.es_checkedArray,
                         sem_checkedArray: $scope.sem_checkedArray,
-                        all_checked: $rootScope.checkedArray
+                        all_checked: $rootScope.checkedArray,
+                        analysisAction:"pageConversion"
                     });
                 } else {
                     //访客过滤数据获取
@@ -1271,7 +1273,8 @@ define(["./module"], function (ctrs) {
                         checkedData: checkedData,
                         checkedArray: $scope.es_checkedArray,
                         sem_checkedArray: $scope.sem_checkedArray,
-                        all_checked: $rootScope.checkedArray
+                        all_checked: $rootScope.checkedArray,
+                        analysisAction:"pageConversion"
                     });
                 }
             };

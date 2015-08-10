@@ -123,7 +123,6 @@ define(["angular", "./app"], function (angular, myApp) {
                         load: loadDeps([
                             "controller/alliancectr",
                             'controller/searchpromotion',
-                            'controller/alliancepromotion'
                         ])
                     }
                 }).state('alliance_group', {
@@ -132,6 +131,7 @@ define(["angular", "./app"], function (angular, myApp) {
                     resolve: {
                         load: loadDeps([
                             'controller/alliance_group_ctr',
+                            'controller/searchpromotion',
                             'controller/alliancepromotion'
                         ])
                     }
@@ -141,7 +141,7 @@ define(["angular", "./app"], function (angular, myApp) {
                     resolve: {
                         load: loadDeps([
                             'controller/alliance_cy_ctr',
-                            'controller/alliancepromotion'
+                            'controller/searchpromotion',
                         ])
                     }
                 });

@@ -90,7 +90,7 @@ define(["app"], function (app) {
         ];
         $scope.Todayfloweds = [
             {consumption_name: "跳出率", name: "outRate"},
-            {consumption_name: "平均访问时长", name: "avgTime"},
+            {consumption_name: "平均访问时长", name: "a   vgTime"},
             {consumption_name: "平均访问页数", name: "avgPage"}
         ];
         $scope.Order = [
@@ -310,12 +310,16 @@ define(["app"], function (app) {
         var yesterday = temp_path.indexOf("/yesterday");
         var month = temp_path.indexOf("/month");
         // 通用表格配置项
+
         if (typeof($rootScope.checkedArray) != undefined && $scope.tableJu == "html") {
             $scope.gridOptions = {
+
                 paginationPageSize: today != -1 || yesterday != -1 || month != -1 ? 24 : 20,
                 expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
                 //expandableRowHeight: 360,
                 paginationPageSizes: [20, 50, 100],
+                //enableExpandableRowHeader: false,
+                enableExpandableRowHeader: true,
                 enableColumnMenus: false,
                 showColumnFooter: true,
                 enablePaginationControls: true,
@@ -328,12 +332,16 @@ define(["app"], function (app) {
                     griApihtml(girApi);
                 }
             };
+
         } else {
             $scope.gridOptions = {
+
                 paginationPageSize: today != -1 || yesterday != -1 || month != -1 ? 24 : 20,
                 expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
                 //expandableRowHeight: 360,
                 paginationPageSizes: [20, 50, 100],
+                //enableExpandableRowHeader: false,
+                enableExpandableRowHeader: true,
                 enableColumnMenus: false,
                 showColumnFooter: true,
                 enablePaginationControls: true,
@@ -344,7 +352,7 @@ define(["app"], function (app) {
                 onRegisterApi: function (gridApi) {
                     $rootScope.gridApi2 = gridApi;
                     if ($rootScope.tableSwitch.dimen) {
-                        griApiInfo(gridApi);
+                         griApiInfo(gridApi);
                     }
                 }
 
@@ -949,6 +957,7 @@ define(["app"], function (app) {
             $scope.gridOptions.columnDefs = $scope.gridOpArray;
             $scope.gridOptions.rowHeight = 32;
             $scope.gridOptions.columnFooterHeight = 32;
+            $(".custom_table i").css({"display":"block"});
 
             //if (isClicked) {
             $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
@@ -992,18 +1001,24 @@ define(["app"], function (app) {
                     } else {
                         var dataArray = [];
                         var dataObj = {};
+                        var speedDataInfo = 0;
+                        var speedDataVc = 0
                         data.forEach(function (item, i) {
                             var urlDateTime = (parseInt(item.dms_time.value) / parseInt(item.doc_count) / 1000).toFixed(2);
                             dataObj["loc"] = item.key;
-                            dataObj["openSpeed"] = urlDateTime+"\"";
+                            dataObj["openSpeed"] = urlDateTime + "\"";
                             dataObj["vc"] = item.ucv.value;
                             dataArray.push(dataObj);
+                            speedDataInfo += urlDateTime
+                            speedDataVc += item.ucv.value
                         });
+                        $rootScope.urlSeepdDataInfo = (speedDataInfo / (data.length <= 0 ? 1 : data.length)).toFixed(2) + "\"";
+                        $rootScope.urlSeepdDataVc = speedDataVc;
                         $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
                         $scope.gridOptions.data = dataArray;
                     }
                 });
-            } else if ($rootScope.tableSwitch.number == 4) {//推广方式
+            } else if ($rootScope.tableSwitch.number == 4) {//来源分析搜索词-搜索
                 var fi = $rootScope.tableSwitch.tableFilter != undefined && $rootScope.tableSwitch.tableFilter != null ? "&q=" + encodeURIComponent($rootScope.tableSwitch.tableFilter) : "";
                 var searchUrl = SEM_API_URL + "/es/search_word?tid=" + trackid + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + fi;
                 $http({
@@ -1105,6 +1120,7 @@ define(["app"], function (app) {
                                     $rootScope.checkedArray.forEach(function (item, a) {
                                         resultObj[item] = "--";
                                     });
+
                                     resultObj[$rootScope.tableSwitch.latitude.field] = "暂无数据";
                                     resultData.push(resultObj);
                                     $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
@@ -1114,6 +1130,7 @@ define(["app"], function (app) {
                                     $scope.gridOptions.data = data;
                                 }
                             } else {
+
                                 if (data.length == 0) {
                                     var resultData = [];
                                     var resultObj = {};
@@ -1123,6 +1140,7 @@ define(["app"], function (app) {
                                         });
                                     }
                                     resultObj[$rootScope.tableSwitch.latitude.field] = "暂无数据";
+                                    $(".custom_table i").css({"display":"none"});
                                     resultData.push(resultObj);
                                     $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
                                     $scope.gridOptions.data = resultData;

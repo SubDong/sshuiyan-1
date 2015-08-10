@@ -23,8 +23,8 @@ define(["./module"], function (ctrs) {
         $scope.city.selected = {"name": "全部"};
         $scope.visible = true;
         $scope.yesterdayClass = true;
-        $rootScope.tableTimeStart = -2;//开始时间
-        $rootScope.tableTimeEnd = -2;//结束时间、
+        $rootScope.tableTimeStart = -1;//开始时间
+        $rootScope.tableTimeEnd = -1;//结束时间、
         $rootScope.tableFormat = null;
 
         //配置默认指标
@@ -67,6 +67,7 @@ define(["./module"], function (ctrs) {
                 field: "acp",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
             },
+
             {
                 name: "跳出率",
                 displayName: "跳出率",
@@ -107,24 +108,9 @@ define(["./module"], function (ctrs) {
             }
         };
         //日历
-        $scope.dateClosed = function () {
-            $rootScope.start = $scope.startOffset;
-            $rootScope.end = $scope.endOffset;
-            $scope.charts.forEach(function (e) {
-                var chart = echarts.init(document.getElementById(e.config.id));
-                e.config.instance = chart;
-            })
-            if ($rootScope.start <= -1) {
-                $scope.charts[0].config.keyFormat = "day";
-            } else {
-                $scope.charts[0].config.keyFormat = "hour";
-            }
-            requestService.refresh($scope.charts);
-            $rootScope.targetSearch();
-            $rootScope.tableTimeStart = $scope.startOffset;
-            $rootScope.tableTimeEnd = $scope.endOffset;
-            $scope.$broadcast("ssh_dateShow_options_time_change");
-        };
+        $scope.$on("ssh_refresh_charts", function (e, msg) {
+            $rootScope.targetSearchSpread();
+        });
         //
         //$scope.initMap();
         //点击显示指标
