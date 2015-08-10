@@ -160,7 +160,7 @@ define(["./module"], function (ctrs) {
                 // 默认图例勾选的指标值
                 types: ["pv", "vc"],
                 // 图例过滤的值
-                dimension: ["city"],
+                dimension: ["media"],
                 interval: $rootScope.interval,
                 url: "/api/charts",
                 cb: $scope.dataFormat
