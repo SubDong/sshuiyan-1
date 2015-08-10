@@ -27,7 +27,7 @@ define(["./module"], function (ctrs) {
         $rootScope.tableFormat = null;
 
         //配置默认指标
-        $rootScope.checkedArray = ["adTitle","uv", "cost", "acp", "outRate", "avgTime", "nuvRate"];
+        $rootScope.checkedArray = ["uv", "cost", "acp", "outRate", "avgTime", "nuvRate"];
         $rootScope.searchGridArray = [
             {
                 name: "xl",
