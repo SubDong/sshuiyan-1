@@ -110,11 +110,21 @@ define(["angular", "./app"], function (angular, myApp) {
                 })
                 .state('urlspeed_m', {
                     url: "/extension/urlspeed_m",
-                    templateUrl: "../extension/urlspeed_m.html"
+                    templateUrl: "../extension/urlspeed_m.html",
+                    resolve: {
+                        load: loadDeps([
+                            "controller/urlspeed_m"
+                        ])
+                    }
                 })
                 .state('urlspeed_w', {
                     url: "/extension/urlspeed_w",
-                    templateUrl: "../extension/urlspeed_w.html"
+                    templateUrl: "../extension/urlspeed_w.html",
+                    resolve: {
+                        load: loadDeps([
+                            "controller/urlspeed_w"
+                        ])
+                    }
                 })
                 .state('alliance', {
                     url: "/extension/alliance",

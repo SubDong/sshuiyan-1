@@ -992,10 +992,17 @@ define(["app"], function (app) {
                 //var url = SEM_API_URL + "/sem/report/" + (area == "全部" ? $rootScope.tableSwitch.promotionSearch.SEMData : "region") + "?a=" + user + "&b=" + baiduAccount + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1" + (area == "全部" ? "" : "&rgna=" + area);
                 $http({
                     method: 'GET',
-                    url: "/api/getUrlspeed/?start=" + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&trackId=634100deaf9a4924351451d6795e3079"/* + $rootScope.siteTrackId*/
+                    url: "/api/getUrlspeed/?start=" + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&trackId=" + $rootScope.siteTrackId
                 }).success(function (data, status) {
+                    console.log(data)
                     if (data.length <= 0) {
-                        var result = [{"loc": "暂无数据", "openSpeed": "0", "vc": "0"}];
+                        var fields = $rootScope.tableSwitch.latitude.field;
+                        var result = [];
+                        var resultObj = {};
+                        resultObj[fields] = "暂无数据";
+                        resultObj["openSpeed"] = "0";
+                        resultObj["vc"] = "0";
+                        result.push(resultObj);
                         $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
                         $scope.gridOptions.data = result;
                     } else {
