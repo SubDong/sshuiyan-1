@@ -49,7 +49,7 @@ define(["./module"], function (ctrs) {
             site_name: "", // site name 设置的URL
             site_pause: false,//配置暂停 true：暂停 false：使用
             track_status: 0, // track code status
-            icon:1,
+            //status: String, // enable or disable track
             is_top: false,
             is_use: 1
         };
@@ -72,7 +72,7 @@ define(["./module"], function (ctrs) {
             " })();\<br\>" +
             "&lt;/script&gt;" +
             "</div> <div class='mid_right'><button type='button' class='btn btn-default navbar-btn' ssh-clip=''  data-clipboard-target='base_code'>复制</div></button><ul type='disc'>" +
-            "  <li>请将代码添加至网站全部页面的&lt;/body&gt;标签前；</li><li>建议在header.htm类似的页头模板页面中安装，以达到一处安装，全站皆有的效果；</li><li>如需在JS文件中调用统计分析代码，请直接去掉以下代码首尾的&lt;script type='text/javascript' &gt;与&lt;/script&gt;后，放入JS文件中即可；</li>" +
+            "  <li>请将代码添加至网站全部页面的&lt;/head&gt;标签前；</li><li>建议在header.htm类似的页头模板页面中安装，以达到一处安装，全站皆有的效果；</li><li>如需在JS文件中调用统计分析代码，请直接去掉以下代码首尾的&lt;script type='text/javascript' &gt;与&lt;/script&gt;后，放入JS文件中即可；</li>" +
             "<li> 如果代码安装正确，一般20分钟 后,可以查看网站分析数据；</li></ul></div></div>";
 
 
@@ -218,7 +218,7 @@ define(["./module"], function (ctrs) {
                     row.entity.is_top = true;
                     var url = "/config/site_list?type=update&query=" + JSON.stringify({
                             _id: $rootScope.gridOptions.data[0]._id
-                        }) + "&updates=" + JSON.stringify({is_top: "false",icon:1});
+                        }) + "&updates=" + JSON.stringify({is_top: "false"});
                     $http({method: 'GET', url: url}).success(function (dataConfig, status) {
                         $http({method: 'GET', url: updateurl}).success(function (insData, status) {
                             if (status == 200)forceRowData(row.entity, index);
@@ -479,9 +479,9 @@ define(["./module"], function (ctrs) {
                     model.track_id = $scope.gridOptions.data[i].track_id;
                     model.track_status = statusNumber;//0，１状态值
                     var url = "/config/site_list?type=update&query={\"uid\":\"" + model.uid + "\",\"site_url\":\"" + path + "\"}&updates=" + JSON.stringify(model);
-
                     $http({method: 'GET', url: url}).
                         success(function (data, status) {
+                            console.log("test")
                             if (status == "200") {
                                 createDialog(status_ch(statusNumber), "成功");
                             } else {
@@ -546,6 +546,7 @@ define(["./module"], function (ctrs) {
                                     if (data != null || data != "") {
                                         if (data.match("404 Not Found") == null) {
                                             var k = Number((data.toString().split('tid=')[0].split('\"').length));
+                                            console.log(data.toString().split("tid=")[0].split("\"")[k - 1].split("/").length)
                                             if (data.toString().split("tid=")[0].split("\"")[k - 1].split("/").length == 4) {
                                                 if (data.toString().split("tid=").length > 1) {
                                                     var tid = data.toString().split("tid=")[1].split("\"")[0];

@@ -188,8 +188,7 @@ api.get("/site_list", function (req, res) {
                 var siteconfig = {
                     siteid: ins._id.toString(),//站点ID 对应MongoDb _id
                     siteurl: temp.site_url,//站点URL
-                    sitepause: ins.site_pause,//站点暂停状态，false启用，true暂停
-                    icon:ins.icon==undefined?1:ins.icon
+                    sitepause: ins.site_pause//站点暂停状态，false启用，true暂停
                 }
                 //默认存储时长转化和PV转化到Redis
                 var time_config = {
@@ -227,8 +226,7 @@ api.get("/site_list", function (req, res) {
                             var siteconfig = {
                                 siteid: docs[0]._id.toString(),//站点ID 对应MongoDb _id
                                 siteurl: docs[0].site_url,//站点URL
-                                sitepause: docs[0].site_pause,//站点暂停状态，false启用，true暂停
-                                icon:docs[0].icon==undefined?1:docs[0].icon
+                                sitepause: docs[0].site_pause//站点暂停状态，false启用，true暂停
                             }
                             //默认存储时长转化和PV转化到Redis
                             var time_config = {
@@ -239,6 +237,10 @@ api.get("/site_list", function (req, res) {
                                 pvpause: false,
                                 pvtimes: 3
                             }
+                            //console.log("typeid:".concat(docs[0].track_id)+"===="+ docs[0].type_id)
+                            //console.log("ts:" + docs[0].track_id+"===="+docs[0]._id)
+                            //console.log("st:" + docs[0]._id+"===="+ docs[0].track_id)
+                            //console.log("tsu:" + docs[0].track_id+"===="+docs[0].site_url)
                             req.redisclient.multi().set("typeid:".concat(docs[0].track_id), docs[0].type_id)//
                                 .set("ts:" + docs[0].track_id, docs[0]._id)//
                                 .set("st:" + docs[0]._id, docs[0].track_id)//
@@ -409,14 +411,19 @@ api.get("/page_conv", function (req, res) {
         case "save":
             var entity = JSON.parse(query['entity']);
             dao.save(schema_name, entity, function (ins) {
+                //console.log("dddddddddddddd")
                 datautils.send(res, ins);
+                //console.log("st:" + ins.site_id)
                 req.redisclient.get("st:" + ins.site_id, function (error, redis_track_id) {//取Track_id
+                    //console.log("pc:" + redis_track_id)
                     req.redisclient.get("pc:" + redis_track_id, function (error, page_convs) {
+                        //console.log(page_convs)
                         var arr = [];
                         if (page_convs != null && page_convs == undefined) {
                             arr = JSON.parse(page_convs);
                         }
                         arr.push(ins)
+                        //console.log(arr)
                         req.redisclient.multi().set("pc:" + redis_track_id, arr).exec();
                     });
                 })
@@ -461,6 +468,7 @@ api.get("/page_conv_urls", function (req, res) {
         case "saveAll":
             var entitys = JSON.parse(query['entitys']);
 
+            //console.log(entitys.length)
             if (entitys.length > 0) {
                 dao.saveAll(schema_name, entitys, function () {
                     datautils.send(res, "SUCCESS");
@@ -468,23 +476,34 @@ api.get("/page_conv_urls", function (req, res) {
                     var tempPathMark = entitys[0];
                     var redisPageUrls = [];
                     var bulk = req.redisclient.multi();
+                    //console.log("1")
                     for (var index = 0; index < entitys.length; index++) {
+                        //console.log("1")
+                        //console.log(tempPathMark + "--->" + entitys[index].path)
+                        //console.log(JSON.stringify(entitys[index]))
                         if (entitys[index].path == tempPathMark.path) {
+                            //console.log("if")
                             redisPageUrls.push(entitys[index]);
                             if (index == (entitys.length - 1)) {
                                 var key = tempPathMark.page_conv_id + ":pcu:" + tempPathMark.path;
+                                //console.log("key-====" + key)
+                                //console.log(JSON.stringify(redisPageUrls))
                                 bulk.set(key, JSON.stringify(redisPageUrls));
                                 break;
                             }
                         } else {
+                            //console.log("else")
                             //存Redis
                             var key = tempPathMark.page_conv_id + ":pcu:" + tempPathMark.path;
+                            //console.log("key" + key)
                             bulk.set(key, JSON.stringify(redisPageUrls));
                             redisPageUrls = [];
                             redisPageUrls.push(entitys[index]);
                             tempPathMark = entitys[index]
                             if (index == (entitys.length - 1)) {
                                 var key = tempPathMark.page_conv_id + ":pcu:" + tempPathMark.path;
+                                //console.log("key-====" + key)
+                                //console.log(JSON.stringify(redisPageUrls))
                                 bulk.set(key, JSON.stringify(redisPageUrls));
                                 break;
                             }
@@ -605,6 +624,7 @@ api.get("/page_title", function (req, res) {
     var schema_name = "page_title_model";
     switch (type) {
         case "save":
+            //console.log(query['entity'])
             var entity = JSON.parse(query['entity']);
             dao.save(schema_name, entity, function (ins) {
                 datautils.send(res, JSON.stringify(ins));
@@ -627,6 +647,7 @@ api.get("/page_title", function (req, res) {
             });
             break;
         case "search":
+            //console.log(query['query'])
             dao.find(schema_name, query['query'], null, {}, function (err, docs) {
                 datautils.send(res, docs);
             });
@@ -783,11 +804,13 @@ api.get("/select", function (req, res) {
                                 root_url: sitejson.siteid
                             }
                             if (docs == null || docs.length == 0) {//存在配置
+                                //console.log("*******该事件配置不存在 插入********")
                                 dao.save(schema_name, eventData, function (ins) {
                                     if (ins != null) {
                                     }
                                 });
                             } else {
+                                //console.log("*******该事件配置已存在 更新********")
                                 dao.update(schema_name, JSON.stringify(existQry), eventData, function (ins) {
                                     if (ins != null) {
 
@@ -849,6 +872,7 @@ api.get("/test", function (req, res) {
     switch (type) {
         case "search":
             daoutil.find(schema_name, JSON.stringify({}), null, {}, function (err, up) {
+                console.log(up)
                 datautils.send(res, up);
                 // TODO 为什么要去差redis
             });

@@ -91,7 +91,7 @@ var schemas = {
             site_name: String, // site name 设置的URL
             site_pause: Boolean,//配置暂停 true：暂停 false：使用
             track_status: Number,// track code status
-            icon:Number,
+            //status: String, // enable or disable track
             is_top: Boolean,
             is_use:Number
         }
@@ -259,24 +259,22 @@ var schemas = {
         collection_name:"compaign",
         schema:{
             "cid" : Number,
-            "cpna" : String,
-            "impr" : Number,
-            "click" : Number,
-            "ctr" : Number,
-            "cost" :String,
-            "cpm" : String,
-            "acp" : String,
-            "srchuv" : Number,
-            "clickuv" : Number,
-            "srsur" : Number,
-            "cusur" : Number,
-            "cocur" : String,
-            "ar" : Number,
-            "hr" : Number,
-            "art" : Number,
-            "dt" : Number,
-            "idt" : Number,
-            "acid" :Number
+            "name" : String,
+            "off" : [],
+            "sp" : Number,
+            "d" : Number,
+            "pr" : Number,
+            "p" : Boolean,
+            "s" : Number,
+            "acid" : Number,
+            "bd" : [],
+            "rt" : [],
+            "exip" : [],
+            "neg" : [],
+            "exneg" : [],
+            "sd" : [],
+            "idc" : [],
+            "ls" : Number
         }
     },
 
