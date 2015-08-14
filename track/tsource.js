@@ -667,10 +667,17 @@ if (config != undefined && !config.open) {
         if (config != undefined) {
             if(!md.g.loc.indexOf("www.farmer.com.cn")){
                 (function () {
-                    var img = document.createElement("img");
-                    img.src = "http://hy.best-ad.cn/img/" + (config.iconNumber != undefined ? config.iconNumber : "1") + ".gif";
+                    var protocol = "https:" == document.location.protocol ? "https:" : "http:";
+                    var k = (config.iconNumber != undefined ? config.iconNumber : "1");
+                    var ment = document.createElement("a");
+                    ment.setAttribute("href",protocol+"//hy.best-ad.cn");
+                    ment.setAttribute("target","_blank");
+                    ment.setAttribute("title","百思统计");
+                    var img=new Image();
+                    img.src = protocol+"//hy.best-ad.cn/img/"+k+".gif";
+                    ment.appendChild(img);
                     var s = document.getElementsByTagName("img")[0];
-                    document.body.appendChild(img, s);
+                    document.body.appendChild(ment, s);
                 })()
             }
         }
