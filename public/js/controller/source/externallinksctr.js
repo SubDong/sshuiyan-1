@@ -105,7 +105,7 @@ define(["./module"], function (ctrs) {
         $scope.externalinkFormat = function (data, config, e) {
             var json = JSON.parse(eval("(" + data + ")").toString());
             var times = [$rootScope.start, $rootScope.end];
-            var specialResult=chartUtils.getRf_type(json, times, "serverLabel", e.types, config,3);
+            var specialResult = chartUtils.getRf_type(json, times, "serverLabel", e.types, config, 3);
             var result = specialResult[0];
             result.forEach(function (item) {
                 var _thisCount = 0;
@@ -123,17 +123,18 @@ define(["./module"], function (ctrs) {
             $scope.charts[0].config.instance = echarts.init(document.getElementById($scope.charts[0].config.id));
             //$scope.charts[0].config.instance.on("hover", $scope.pieListener);
             cf.renderChart(pieData, $scope.charts[0].config);
-            var firstCount=0;
-            pieData.forEach(function(i){
-                i.quota.forEach(function(q){
-                    firstCount+=q;
+            var firstCount = 0;
+            pieData.forEach(function (i) {
+                i.quota.forEach(function (q) {
+                    firstCount += q;
                 });
             });
-            if(firstCount){
+            if (firstCount) {
                 $(".chart_box").attr("style", "background:" + $rootScope.chartColors[0]);
-                $("#chartlink").html(pieData[0].key[0]);
+                var name=pieData[0].key[0]
+                $("#chartlink").html(name.length > 30 ? name.substring(0, 30) + "..." + name.substring(name.length - 10, name.length) : name);
                 $("#chartnumber").html(pieData[0].quota[0]);
-                $("#chartpointe").html(parseFloat(pieData[0].quota[0]/firstCount*100).toFixed(2)+"%");
+                $("#chartpointe").html(parseFloat(pieData[0].quota[0] / firstCount * 100).toFixed(2) + "%");
             }
             $("#chartname").html(chartUtils.convertChinese(e.types[0]));
         }
@@ -141,7 +142,7 @@ define(["./module"], function (ctrs) {
             if (params.dataIndex != -1) {
                 var colorIndex = Number(params.dataIndex);
                 $(".chart_box").attr("style", "background:" + $rootScope.chartColors[colorIndex]);
-                $("#chartlink").html(params.name);
+                $("#chartlink").html(params.name.length > 30 ? params.name.substring(0, 30) + "..." + params.name.substring(params.name.length - 10, params.name.length) : params.name);
                 $("#chartname").html(chartUtils.convertChinese(type));
                 $("#chartnumber").html(params.data.value);
                 $("#chartpointe").html(params.special + "%");
