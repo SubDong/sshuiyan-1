@@ -14,6 +14,14 @@
             <li style="color: black;"><input type="checkbox"  name="置顶" data-ng-model="dialog_model.is_top"/>
                 <span>设置站点是否置顶</span></li>
             <br>
+            <li>选择图标:</li>
+            <div class="target_way_content">
+                <ul>
+                    <label><input type="radio"  name="type" style="margin:10px 5px 0 0 ;"ng-checked="choosedIcons[0]" data-ng-click="choosedIcon(1)"><img src="../img/1.gif">(默认)</label>
+                    <label><input type="radio"  name="type" style="margin:10px 5px 0 0 ;" ng-checked="choosedIcons[1]" data-ng-click="choosedIcon(2)"><img src="../img/2.gif"></label>
+                </ul>
+            </div>
+            <br>
             <li>可输入如下4种域名形式</li>
             <li>1.主域名（如：www.baidu.com）</li>
             <li>2.二级域名（如：sub.baidu.com)</li>

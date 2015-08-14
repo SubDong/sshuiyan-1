@@ -183,6 +183,13 @@ define(["./module"], function (ctrs) {
             arrayClear: false //是否清空指标array
         };
 
+        $scope.choosedIcons = [true,false]
+        $scope.choosedIconNum = 1;
+        $scope.choosedIcon = function(index){
+            $scope.choosedIcons=[false,false]
+            $scope.choosedIcons[index-1] = true;
+            $scope.choosedIconNum = index;
+        }
 
         $scope.viewSite = function (rootGrid,grid,row) {
             $rootScope.default = row.entity.site_name;     // default site
@@ -195,6 +202,7 @@ define(["./module"], function (ctrs) {
             $state.go("index");
         }
         $scope.openAddDialog = function () {
+            $scope.choosedIconNum = 1;
             $scope.urlDialog = ngDialog.open({
                 template: '../conf/Dialog/main_addDialog.html',
                 className: 'ngdialog-theme-default admin_ngdialog',
@@ -203,6 +211,8 @@ define(["./module"], function (ctrs) {
         };
 
         $scope.openUpdateDialog = function (index, row) {
+            $scope.choosedIconNum = row.entity.icon==undefined?1:row.entity.icon;
+            $scope.choosedIcon($scope.choosedIconNum);
             $scope.urlDialog = ngDialog.open({
                 template: './conf/Dialog/main_UpdateDialog.html',
                 className: 'ngdialog-theme-default admin_ngdialog ',
@@ -211,14 +221,15 @@ define(["./module"], function (ctrs) {
             $scope.submitUpdate = function () {
                 var updateurl = "/config/site_list?type=update&query=" + JSON.stringify({_id: row.entity._id}) + "&updates=" + JSON.stringify({
                         site_name: $scope.dialog_model.site_name,
-                        is_top: $scope.dialog_model.is_top
+                        is_top: $scope.dialog_model.is_top,
+                        icon:$scope.choosedIconNum
                     });
                 if ($scope.dialog_model.is_top || $rootScope.gridOptions.data.length > 1) {//若置顶 先使原来置顶变为False
                     $rootScope.gridOptions.data[0].is_top = false;
                     row.entity.is_top = true;
                     var url = "/config/site_list?type=update&query=" + JSON.stringify({
                             _id: $rootScope.gridOptions.data[0]._id
-                        }) + "&updates=" + JSON.stringify({is_top: "false",icon:1});
+                        }) + "&updates=" + JSON.stringify({is_top: "false"});
                     $http({method: 'GET', url: url}).success(function (dataConfig, status) {
                         $http({method: 'GET', url: updateurl}).success(function (insData, status) {
                             if (status == 200)forceRowData(row.entity, index);
@@ -386,6 +397,7 @@ define(["./module"], function (ctrs) {
             model.site_name = $scope.dialog_model.site_name;//网站名称 页面输入
             model.is_top = $scope.dialog_model.is_top;
             model.uid = $cookieStore.get("uid");
+            model.icon=$scope.choosedIconNum;
             //用户ID+url 确定该用户对某个网站是否进行配置
             var query = "/config/site_list?type=search&query=" + JSON.stringify({
                     uid: model.uid,
@@ -481,7 +493,6 @@ define(["./module"], function (ctrs) {
                     var url = "/config/site_list?type=update&query={\"uid\":\"" + model.uid + "\",\"site_url\":\"" + path + "\"}&updates=" + JSON.stringify(model);
                     $http({method: 'GET', url: url}).
                         success(function (data, status) {
-                            console.log("test")
                             if (status == "200") {
                                 createDialog(status_ch(statusNumber), "成功");
                             } else {
@@ -545,7 +556,6 @@ define(["./module"], function (ctrs) {
                                     if (data != null || data != "") {
                                         if (data.match("404 Not Found") == null) {
                                             var k = Number((data.toString().split('tid=')[0].split('\"').length));
-                                            console.log(data.toString().split("tid=")[0].split("\"")[k - 1].split("/").length)
                                             if (data.toString().split("tid=")[0].split("\"")[k - 1].split("/").length == 4) {
                                                 if (data.toString().split("tid=").length > 1) {
                                                     var tid = data.toString().split("tid=")[1].split("\"")[0];
