@@ -111,7 +111,6 @@ if (config != undefined && !config.open) {
                 return "0";
             }
         }
-
         var p = !0, s = null, t = !1, ac = md.achieve;
         md.g = {};
         //os 系统
@@ -638,26 +637,6 @@ if (config != undefined && !config.open) {
             })();
         }
 
-        (function () {
-            var loc = md.g.loc;
-            var sr = loc.split("?")[1].split("&")[0].split("=")[0];
-            var md = loc.split("?")[1].split("&")[1].split("=")[0];
-            var pl = loc.split("?")[1].split("&")[2].split("=")[0];
-            var kw = loc.split("?")[1].split("&")[3].split("=")[0];
-            var ci = loc.split("?")[1].split("&")[4].split("=")[0];
-            var tk = loc.split("?")[1].split("&")[5].split("=")[0];
-            var ll = loc.split("?")[1].split("&")[6].split("=")[0];
-            var tt = loc.split("?")[1].split("&")[7].split("=")[0];
-
-            if (sr == "rf" && md == "media" && pl == "cpna" && kw == "kwna" && ci == "crt" && tk == "t" && ll == "atk" && tt == "tt") {
-                //md.g.adtrack = 1;
-                md.g.adtrack = loc;
-                h.b.sm();
-            } else {
-
-            }
-        })();
-
         if (config != undefined && config.evt != undefined && config.evt.length > 0) {
             window.onload = function () {
                 //自动添加客户转化时间配置
@@ -682,6 +661,17 @@ if (config != undefined && !config.open) {
                         }
                     }
                 })
+            }
+        }
+        //慧眼统计js图标
+        if (config != undefined) {
+            if(!md.g.loc.indexOf("www.farmer.com.cn")){
+                (function () {
+                    var img = document.createElement("img");
+                    img.src = "http://hy.best-ad.cn/img/" + (config.iconNumber != undefined ? config.iconNumber : "1") + ".gif";
+                    var s = document.getElementsByTagName("img")[0];
+                    document.body.appendChild(img, s);
+                })()
             }
         }
     })();
