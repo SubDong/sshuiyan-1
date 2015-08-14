@@ -12,7 +12,6 @@ var config_request = {
      * @param redisClient
      * @param track_id
      */
-
     refreshSiteRedis: function (redis_client, trackid,cb) {
         //由track_id查询站点配置
         var qry = {
@@ -25,7 +24,8 @@ var config_request = {
                     var siteconfig = {
                         siteid: item._id.toString(),//站点ID 对应MongoDb _id
                         siteurl: item.site_url,//站点URL
-                        sitepause: item.site_pause//站点暂停状态，false启用，true暂停
+                        sitepause: item.site_pause,//站点暂停状态，false启用，true暂停
+                        icon:item.icon ==undefined?1:item.icon
                     }
                     //默认存储时长转化和PV转化到Redis
                     var time_config = {

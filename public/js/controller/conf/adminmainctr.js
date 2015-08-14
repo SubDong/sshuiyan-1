@@ -49,7 +49,7 @@ define(["./module"], function (ctrs) {
             site_name: "", // site name 设置的URL
             site_pause: false,//配置暂停 true：暂停 false：使用
             track_status: 0, // track code status
-            //status: String, // enable or disable track
+           icon:1,
             is_top: false,
             is_use: 1
         };
@@ -218,7 +218,7 @@ define(["./module"], function (ctrs) {
                     row.entity.is_top = true;
                     var url = "/config/site_list?type=update&query=" + JSON.stringify({
                             _id: $rootScope.gridOptions.data[0]._id
-                        }) + "&updates=" + JSON.stringify({is_top: "false"});
+                        }) + "&updates=" + JSON.stringify({is_top: "false",icon:1});
                     $http({method: 'GET', url: url}).success(function (dataConfig, status) {
                         $http({method: 'GET', url: updateurl}).success(function (insData, status) {
                             if (status == 200)forceRowData(row.entity, index);
@@ -513,7 +513,6 @@ define(["./module"], function (ctrs) {
             });
 
         }
-
         var userID = $cookieStore.get("uid");
         //代码检查方法
         $scope.codeCheck = function () {

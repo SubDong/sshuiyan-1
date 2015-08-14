@@ -91,12 +91,11 @@ var schemas = {
             site_name: String, // site name 设置的URL
             site_pause: Boolean,//配置暂停 true：暂停 false：使用
             track_status: Number,// track code status
-            //status: String, // enable or disable track
+            icon:Number,
             is_top: Boolean,
             is_use:Number
         }
     },
-
 // 站点统计规则
     siterules_model: {
         module_name:"config",//推广URL模块

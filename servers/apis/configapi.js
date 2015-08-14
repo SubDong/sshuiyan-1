@@ -188,7 +188,8 @@ api.get("/site_list", function (req, res) {
                 var siteconfig = {
                     siteid: ins._id.toString(),//站点ID 对应MongoDb _id
                     siteurl: temp.site_url,//站点URL
-                    sitepause: ins.site_pause//站点暂停状态，false启用，true暂停
+                    sitepause: ins.site_pause,//站点暂停状态，false启用，true暂停
+                    icon:ins.icon ==undefined?1:ins.icon
                 }
                 //默认存储时长转化和PV转化到Redis
                 var time_config = {
@@ -216,7 +217,6 @@ api.get("/site_list", function (req, res) {
             });
             break;
         case "update":
-            //
             var update = query['updates'];
             dao.update(schema_name, query['query'], query['updates'], function (err, up) {
                 datautils.send(res, up);
@@ -226,7 +226,8 @@ api.get("/site_list", function (req, res) {
                             var siteconfig = {
                                 siteid: docs[0]._id.toString(),//站点ID 对应MongoDb _id
                                 siteurl: docs[0].site_url,//站点URL
-                                sitepause: docs[0].site_pause//站点暂停状态，false启用，true暂停
+                                sitepause: docs[0].site_pause,//站点暂停状态，false启用，true暂停
+                                icon:docs[0].icon ==undefined?1:docs[0].icon
                             }
                             //默认存储时长转化和PV转化到Redis
                             var time_config = {
