@@ -25,7 +25,8 @@ var config_request = {
                     var siteconfig = {
                         siteid: item._id.toString(),//站点ID 对应MongoDb _id
                         siteurl: item.site_url,//站点URL
-                        sitepause: item.site_pause//站点暂停状态，false启用，true暂停
+                        sitepause: item.site_pause,//站点暂停状态，false启用，true暂停
+                        icon:item.icon==undefined?1:item.icon
                     }
                     //默认存储时长转化和PV转化到Redis
                     var time_config = {
@@ -38,7 +39,6 @@ var config_request = {
                     }
                     reut = {};//返回值
                     redis_client.multi().set("typeid:".concat(item.track_id), item.type_id)//
-                        .set("ts:" + item.track_id, item._id)//
                         .set("st:" + item._id, item.track_id)//
                         .set("tsj:" + item.track_id, JSON.stringify(siteconfig))
                         //.set(ins._id + ":mouse:" + ins.site_url, JSON.stringify(config_mouse))//目前无具体URL配置 暂时设置在站点上
