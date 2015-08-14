@@ -1,7 +1,7 @@
 /**
  * Created by icepros on 2015/8/4.
  */
-//tsource.js ÖÐ 641-658ÐÐ
+//tsource.js ï¿½ï¿½ 641-658ï¿½ï¿½
 (function () {
     var loc = md.g.loc;
     var sr = loc.split("?")[1].split("&")[0].split("=")[0];
@@ -14,7 +14,8 @@
     var tt = loc.split("?")[1].split("&")[7].split("=")[0];
 
     if (sr == "rf" && md == "media" && pl == "cpna" && kw == "kwna" && ci == "crt" && tk == "t" && ll == "atk" && tt == "tt") {
-        md.g.adtrack = 1;
+        //md.g.adtrack = 1;
+        md.g.adtrack = loc;
         h.b.sm();
     } else {
 

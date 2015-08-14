@@ -280,12 +280,12 @@ api.get('/indextable', function (req, res) {
                         if (popFlag != 1) {
                             if (_lati == "rf" && _filter != null && _filter[0]["rf_type"][0] && infoKey == "-") continue
                             if (_promotion == "ssc" || _lati == "kw") {
-                                if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null" || infoKey.length >= 40)) continue;
+                                if (infoKey != undefined && (infoKey == "-" || infoKey == "--" || infoKey == "" || infoKey == "www" || infoKey == "null" || infoKey.length >= 40)) continue;
                             }
                         }
                         var infoKey = info.key[i];
                         var obj = maps[infoKey];
-                        if(_lati == "rf_type" && infoKey == 1){
+                        if (_lati == "rf_type" && infoKey == 1) {
                             continue;
                         }
                         if (!obj) {
@@ -819,7 +819,7 @@ api.get("/transform/transformAnalysis", function (req, res) {
             var showType = parameters[5].split("=")[1];
             var all_urls = parameters[6].split("=")[1];
             var urlArray = all_urls.split(",");
-            transform.searchByUrls(req.es,indexString,type,urlArray, showType,function(result){
+            transform.searchByUrls(req.es, indexString, type, urlArray, showType, function (result) {
                 datautils.send(res, result);
             });
         } else {
@@ -990,7 +990,7 @@ api.get("/saveMailConfig", function (req, res) {
                 });
             } else {
                 dao.save(model, jsonData, function (result) {
-                    if(result){
+                    if (result) {
                         datautils.send(res, JSON.stringify({ok: "1"}));
                     }
                 });

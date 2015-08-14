@@ -352,7 +352,7 @@ define(["app"], function (app) {
                 onRegisterApi: function (gridApi) {
                     $rootScope.gridApi2 = gridApi;
                     if ($rootScope.tableSwitch.dimen) {
-                         griApiInfo(gridApi);
+                        griApiInfo(gridApi);
                     }
                 }
 
@@ -957,7 +957,7 @@ define(["app"], function (app) {
             $scope.gridOptions.columnDefs = $scope.gridOpArray;
             $scope.gridOptions.rowHeight = 32;
             $scope.gridOptions.columnFooterHeight = 32;
-            $(".custom_table i").css({"display":"block"});
+            $(".custom_table i").css({"display": "block"});
 
             //if (isClicked) {
             $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
@@ -994,7 +994,6 @@ define(["app"], function (app) {
                     method: 'GET',
                     url: "/api/getUrlspeed/?start=" + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&trackId=" + $rootScope.siteTrackId
                 }).success(function (data, status) {
-                    console.log(data)
                     if (data.length <= 0) {
                         var fields = $rootScope.tableSwitch.latitude.field;
                         var result = [];
@@ -1016,7 +1015,7 @@ define(["app"], function (app) {
                             dataObj["openSpeed"] = urlDateTime + "\"";
                             dataObj["vc"] = item.ucv.value;
                             dataArray.push(dataObj);
-                            speedDataInfo += urlDateTime
+                            speedDataInfo += urlDateTime;
                             speedDataVc += item.ucv.value
                         });
                         $rootScope.urlSeepdDataInfo = (speedDataInfo / (data.length <= 0 ? 1 : data.length)).toFixed(2) + "\"";
@@ -1147,7 +1146,7 @@ define(["app"], function (app) {
                                         });
                                     }
                                     resultObj[$rootScope.tableSwitch.latitude.field] = "暂无数据";
-                                    $(".custom_table i").css({"display":"none"});
+                                    $(".custom_table i").css({"display": "none"});
                                     resultData.push(resultObj);
                                     $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
                                     $scope.gridOptions.data = resultData;
@@ -1577,11 +1576,11 @@ define(["app"], function (app) {
                 case 0:
                     return str;
                 case 1:
-                    return rastString[0] != "" ? rastString[0] : rast[0];
+                    return rastString[0] != "" ? isNaN(rastString[0]) ? 0 : rastString[0] : isNaN(rast[0]) ? 0 : rast[0];
                 case 2:
-                    return rastString[1] != "" ? rastString[1] : rast[1];
+                    return rastString[1] != "" ? isNaN(rastString[1]) ? 0 : rastString[1] : isNaN(rast[1]) ? 0 : rast[1];
                 case 3:
-                    return bhlString != "" ? bhlString : bhl;
+                    return bhlString != "" ? bhlString : isNaN(bhl) ? 0 : bhl;
                 default :
                     return "--";
             }
@@ -1664,15 +1663,15 @@ define(["app"], function (app) {
 
                 switch (number) {
                     case 1:
-                        return returnData[0];
+                        return isNaN(returnData[0]) ? 0 : returnData[0];
                     case 2:
-                        return returnData[1] == 0 ? returnData[0] : returnData[1];
+                        return returnData[1] == 0 ? isNaN(returnData[0]) ? 0 : returnData[0] : isNaN(returnData[1]) ? 0 : returnData[1];
                     case 3:
-                        return returnData[2];
+                        return isNaN(returnData[2]) ? 0 : returnData[2];
                     case 4:
-                        return returnData[3];
+                        return isNaN(returnData[3]) ? 0 : returnData[3];
                     default :
-                        return returnData[0];
+                        return isNaN(returnData[0]) ? 0 : returnData[0];
                 }
             }
         }

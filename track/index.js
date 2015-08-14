@@ -51,7 +51,7 @@ router.get('/select', function (req, resp) {
             return;
         }
         fs.readFile('./track/select.js', function (err, data) {
-            resp.set('Content-Type', 'application/javascript')
+            resp.set('Content-Type', 'application/javascript');
             resp.set('Cache-Control', 'max-age=0,must-revalidate');
             resp.send("var select = " + data);
         })
@@ -75,6 +75,7 @@ function getData(req, resp, tid, sitejson) {
         ref = ref.slice(0, ref.indexOf('?'));
         var config = {
             "trackid": tid,
+            "iconNumber":sitejson.icon,
             "domain": sitejson.siteurl,
             "open": sitejson.sitepause   //是否启用
         }
