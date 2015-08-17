@@ -563,7 +563,7 @@ if (config != undefined && !config.open) {
                     let: la("loadEvent").end - nav.start  //事件加载时间
                 };
                 var ctime = cookie.get("judge");
-                if (ctime != this.getData("PFT_" + c.id)) {
+                if (ctime != cookie.get("PFT_" + c.id)) {
                     cookie.set("judge", md.g.tt);
                     md.g.ut = JSON.stringify(a);
                     h.b.sm();
@@ -665,12 +665,21 @@ if (config != undefined && !config.open) {
         }
         //慧眼统计js图标
         if (config != undefined) {
-            if(!md.g.loc.indexOf("www.farmer.com.cn")){
+            if(md.g.loc.indexOf("www.farmer.com.cn")<0){
                 (function () {
-                    var img = document.createElement("img");
-                    img.src = "http://hy.best-ad.cn/img/" + (config.iconNumber != undefined ? config.iconNumber : "1") + ".gif";
+                    var protocol = "https:" == document.location.protocol ? "https:" : "http:";
+                    var k = (config.iconNumber != undefined ? config.iconNumber : "1");
+                    var ment = document.createElement("a");
+                    ment.setAttribute("href",protocol+"//hy.best-ad.cn");
+                    ment.setAttribute("class","baisi");
+                    ment.setAttribute("id","baisi");
+                    ment.setAttribute("target","_blank");
+                    ment.setAttribute("title","百思统计");
+                    var img=new Image();
+                    img.src = protocol+"//hy.best-ad.cn/img/"+k+".gif";
+                    ment.appendChild(img);
                     var s = document.getElementsByTagName("img")[0];
-                    document.body.appendChild(img, s);
+                    document.body.appendChild(ment, s);
                 })()
             }
         }
