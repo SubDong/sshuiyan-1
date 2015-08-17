@@ -675,6 +675,7 @@ if (config != undefined && !config.open) {
                     ment.setAttribute("id","baisi");
                     ment.setAttribute("target","_blank");
                     ment.setAttribute("title","百思统计");
+                    ment.setAttribute("style","margin-left: 50%");
                     var img=new Image();
                     img.src = protocol+"//hy.best-ad.cn/img/"+k+".gif";
                     ment.appendChild(img);
