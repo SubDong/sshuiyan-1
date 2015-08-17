@@ -64,7 +64,7 @@ define(["../app"], function (app) {
                 controller: ['$scope', '$http', '$compile', function ($scope, $http, $compile) {
                     $http({
                         method: 'GET',
-                        url: "/api/index_summary/?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.defaultType + "&indic=pv&dimension=loc" + "&filerInfo=" + filerInfo
+                        url: "/api/index_summary/?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&indic=pv&dimension=loc" + "&filerInfo=" + filerInfo
                     }).success(function (data, status) {
                         var obj = JSON.parse(eval('(' + data + ')').toString())
                         var contentHtml = "<div class='modal-body source_modal_body'><table class='table'><tr><th>排名</th><th>入口页链接</th></tr>";
@@ -110,7 +110,7 @@ define(["../app"], function (app) {
                         $scope.laiyuanClass = true;
                         $http({
                             method: 'GET',
-                            url: "/api/indextable/?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.defaultType + "&indic=contribution,pv&dimension=rf&popup=1" + "&filerInfo=[{\"entrance\":[\"" + entrance + "\"]}]"
+                            url: "/api/indextable/?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&indic=contribution,pv&dimension=rf&popup=1" + "&filerInfo=[{\"entrance\":[\"" + entrance + "\"]}]"
                         }).success(function (data, status) {
                             var contentHtml = "<div class='modal-body'><table class='table'><tr><th>来源URL TOP10</th><th>来源次数</th><th>带来浏览量</th></tr>";
                             data.forEach(function (item, i) {
@@ -141,7 +141,7 @@ define(["../app"], function (app) {
                         $scope.liexingClass = true;
                         $http({
                             method: 'GET',
-                            url: "/api/indextable/?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.defaultType + "&indic=contribution&dimension=rf_type&popup=1" + "&filerInfo=[{\"entrance\":[\"" + entrance + "\"]}]"
+                            url: "/api/indextable/?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&indic=contribution&dimension=rf_type&popup=1" + "&filerInfo=[{\"entrance\":[\"" + entrance + "\"]}]"
                         }).success(function (data, status) {
                             var contentHtml = "<div class='modal-body'><table class='table'>";
                             var result = 0;
