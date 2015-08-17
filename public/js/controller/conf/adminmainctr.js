@@ -72,7 +72,7 @@ define(["./module"], function (ctrs) {
             " })();\<br\>" +
             "&lt;/script&gt;" +
             "</div> <div class='mid_right'><button type='button' class='btn btn-default navbar-btn' ssh-clip=''  data-clipboard-target='base_code'>复制</div></button><ul type='disc'>" +
-            "  <li>请将代码添加至网站全部页面的&lt;/head&gt;标签前；</li><li>建议在header.htm类似的页头模板页面中安装，以达到一处安装，全站皆有的效果；</li><li>如需在JS文件中调用统计分析代码，请直接去掉以下代码首尾的&lt;script type='text/javascript' &gt;与&lt;/script&gt;后，放入JS文件中即可；</li>" +
+            "  <li>请将代码添加至网站全部页面的&lt;/body&gt;标签前；</li><li>如需在JS文件中调用统计分析代码，请直接去掉以下代码首尾的&lt;script type='text/javascript' &gt;与&lt;/script&gt;后，放入JS文件中即可；</li>" +
             "<li> 如果代码安装正确，一般20分钟 后,可以查看网站分析数据；</li></ul></div></div>";
 
 
