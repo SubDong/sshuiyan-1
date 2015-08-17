@@ -514,7 +514,7 @@ api.get('/provincemap', function (req, res) {
 });
 
 //csv下载功能
-api.get("/downCSV", function (req, res) {
+api.post("/downCSV", function (req, res) {
     var query = url.parse(req.url, true).query;
     var dataInfo = query['dataInfo'].replace(/\*/g, "%");
     var jsonData = JSON.parse(dataInfo);

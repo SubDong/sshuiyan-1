@@ -616,7 +616,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                         });
                         var repData = JSON.stringify(dataInfo).replace(/\%/g, "*");
                         $http({
-                            method: 'GET',
+                            method: 'POST',
                             url: '/api/downCSV/?dataInfo=' + repData,
                             headers: {
                                 'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
