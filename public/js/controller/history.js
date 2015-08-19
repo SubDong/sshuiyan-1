@@ -102,6 +102,11 @@ define(['./module'], function (ctrs) {
         $rootScope.tableTimeEnd = 0;
         $rootScope.tableFormat = null;
 
+        $rootScope.gridArray.forEach(function(item, i){
+            if(item.sort != undefined){
+                delete item["sort"];
+            }
+        });
 
         $rootScope.gridArray[0] = {
             name: "日期",
@@ -123,6 +128,57 @@ define(['./module'], function (ctrs) {
         }
 
         $rootScope.historyJu = "NO";
+        var evTimeStamp = 0;
+        //历史趋势访客来源
+        $scope.setHistoryVisitors = function (a) {
+            var now = +new Date();
+            if (now - evTimeStamp < 100) {
+                return;
+            }
+            evTimeStamp = now;
+            var inputArray = $(".chart_top2 .styled");
+            inputArray.each(function (i, o) {
+                $(o).prev("span").css("background-position", "0px 0px");
+                $(o).prop("checked", false);
+            });
+            $(inputArray[a]).prev("span").css("background-position", "0px -51px");
+            if (a == 0) $rootScope.tableSwitch.tableFilter = null, $scope.visitorSearch = "";
+            if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"ct\":[0]}]", $scope.visitorSearch = "新访客";
+            if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"ct\":[1]}]", $scope.visitorSearch = "老访客";
+            //$scope.isJudge = false;
+            $rootScope.$broadcast("ssh_data_show_refresh");
+            $scope.historyInit();
+        };
+
+        //历史趋势来源过滤
+        $scope.setHistorySource = function (a) {
+            if (a == 0) {
+                $rootScope.tableSwitch.tableFilter = null;
+                $scope.sourceSearch = "";
+            }
+            ;
+            if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[1]}]", $scope.sourceSearch = "直接访问";
+            if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[2]}]", $scope.sourceSearch = "搜索引擎";
+            if (a == 2) {
+                $scope.browserselect = false;
+            }
+            else {
+                $scope.browserselect = true;
+            }
+            if (a == 3) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[3]}]", $scope.sourceSearch = "外部链接";
+
+            if ($scope.tableJu == "html") {
+                if (a == 0) $rootScope.tableSwitch.tableFilter = null;
+                if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":\"1\"}]";
+                if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":\"2\"}]";
+                if (a == 3) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":\"3\"}]";
+                getHtmlTableData();
+            } else {
+                $rootScope.$broadcast("ssh_data_show_refresh");
+                $scope.historyInit();
+            }
+        };
+
 
         $scope.historyInit = function () {
             var getTime = $rootScope.tableTimeStart < -1 ? "day" : "hour";

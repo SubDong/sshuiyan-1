@@ -38,7 +38,7 @@
                                 <div role="group" class="btn-group">
                                     <ui-select ng-model="souce.selected" theme="select2" reset-search-input="false"
                                                class="fl"
-                                               style="width: 90px;" ng-change="setSource(souce.selected.value)">
+                                               style="width: 90px;" ng-change="setHistorySource(souce.selected.value)">
                                         <ui-select-match placeholder="全部">{{$select.selected.name}}
                                         </ui-select-match>
                                         <ui-select-choices repeat="souce in souces">
@@ -62,9 +62,9 @@
                     <div class="chart_top2">
                         <ul>
                             <li><span>访客过滤 :</span></li>
-                            <li><label ng-click="setVisitors(0)"><input type="radio"  checked="checked" name="radio0" class="styled"/>全部</label></li>
-                            <li><label ng-click="setVisitors(1)"><input type="radio" name="radio0" class="styled"/>新访客</label></li>
-                            <li><label ng-click="setVisitors(2)"><input type="radio" name="radio0" class="styled"/>老访客</label></li>
+                            <li><label ng-click="setHistoryVisitors(0)"><input type="radio"  checked="checked" name="radio0" class="styled"/>全部</label></li>
+                            <li><label ng-click="setHistoryVisitors(1)"><input type="radio" name="radio0" class="styled"/>新访客</label></li>
+                            <li><label ng-click="setHistoryVisitors(2)"><input type="radio" name="radio0" class="styled"/>老访客</label></li>
                         </ul>
                     </div>
                 </div>

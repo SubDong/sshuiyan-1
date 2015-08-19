@@ -1571,16 +1571,15 @@ define(["app"], function (app) {
             rast[1] = (rast[1] / option.length).toFixed(2) + (a.col.field == "outRate" || a.col.field == "nuvRate" || a.col.field == "arrivedRate" ? "%" : "");
 
             var bhl = (((parseFloat(((rast[0] + "").replace("%", ""))) - parseFloat(((rast[1] + "").replace("%", "")))) / parseFloat(((rast[1] + "").replace("%", "")))) * 100 ).toFixed(2) + "%";
-
             switch (number) {
                 case 0:
                     return str;
                 case 1:
-                    return rastString[0] != "" ? isNaN(rastString[0]) ? 0 : rastString[0] : isNaN(rast[0]) ? 0 : rast[0];
+                    return rastString[0] != "" ? (rastString[0] + "").indexOf("NaN") != -1 ? 0 : rastString[0] : (rast[0] + "").indexOf("NaN") != -1 ? 0 : rast[0];
                 case 2:
-                    return rastString[1] != "" ? isNaN(rastString[1]) ? 0 : rastString[1] : isNaN(rast[1]) ? 0 : rast[1];
+                    return rastString[1] != "" ? (rastString[1] + "").indexOf("NaN") != -1 ? 0 : rastString[1] : (rast[1] + "").indexOf("NaN") != -1 ? 0 : rast[1];
                 case 3:
-                    return bhlString != "" ? bhlString : isNaN(bhl) ? 0 : bhl;
+                    return bhlString != "" ? bhlString : (bhl + "").indexOf("NaN") != -1 ? 0 : bhl;
                 default :
                     return "--";
             }
@@ -1663,15 +1662,15 @@ define(["app"], function (app) {
 
                 switch (number) {
                     case 1:
-                        return isNaN(returnData[0]) ? 0 : returnData[0];
+                        return returnData[0];
                     case 2:
-                        return returnData[1] == 0 ? isNaN(returnData[0]) ? 0 : returnData[0] : isNaN(returnData[1]) ? 0 : returnData[1];
+                        return returnData[1] == 0 ? returnData[0] : returnData[1];
                     case 3:
-                        return isNaN(returnData[2]) ? 0 : returnData[2];
+                        return returnData[2];
                     case 4:
-                        return isNaN(returnData[3]) ? 0 : returnData[3];
+                        return returnData[3];
                     default :
-                        return isNaN(returnData[0]) ? 0 : returnData[0];
+                        return returnData[0];
                 }
             }
         }
