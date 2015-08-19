@@ -675,12 +675,19 @@ if (config != undefined && !config.open) {
                     ment.setAttribute("id","baisi");
                     ment.setAttribute("target","_blank");
                     ment.setAttribute("title","百思统计");
-                    ment.setAttribute("style","margin-left: 50%");
                     var img=new Image();
                     img.src = protocol+"//hy.best-ad.cn/img/"+k+".gif";
                     ment.appendChild(img);
-                    var s = document.getElementsByTagName("img")[0];
-                    document.body.appendChild(ment, s);
+                    var sx = document.getElementsByTagName("script");
+                    var number;
+                    for(var i = 0; i < sx.length; i++){
+                        console.log(sx[i].text.indexOf("_pct") != -1);
+                        if(sx[i].text.indexOf("_pct") != -1){
+                            number = i;
+                        }
+                    }
+                    var s = document.getElementsByTagName("script")[number];
+                    s.parentNode.insertBefore(ment, s);
                 })()
             }
         }
