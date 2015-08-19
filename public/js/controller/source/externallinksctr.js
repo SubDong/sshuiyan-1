@@ -142,7 +142,7 @@ define(["./module"], function (ctrs) {
             if (params.dataIndex != -1) {
                 var colorIndex = Number(params.dataIndex);
                 $(".chart_box").attr("style", "background:" + $rootScope.chartColors[colorIndex]);
-                $("#chartlink").html(params.name.length > 30 ? params.name.substring(0, 30) + "..." + params.name.substring(params.name.length - 10, params.name.length) : params.name);
+                $("#chartlink").html(params.name.length > 30 ? "<a href='"+params.name+"' target='_blank'>"+params.name.substring(0, 30) + "..." + params.name.substring(params.name.length - 10, params.name.length) +"</a>": "<a href='"+params.name+"' target='_blank'>"+params.name+"</a>");
                 $("#chartname").html(chartUtils.convertChinese(type));
                 $("#chartnumber").html(params.data.value);
                 $("#chartpointe").html(params.special + "%");
