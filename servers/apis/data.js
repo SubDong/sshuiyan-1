@@ -290,9 +290,9 @@ api.get('/indextable', function (req, res) {
                         }
                         var infoKey = info.key[i];
                         var obj = maps[infoKey];
-                        if (_lati == "rf_type" && infoKey == 1) {
-                            continue;
-                        }
+                        //if (_lati == "rf_type" && infoKey == 1) {
+                        //    continue;
+                        //}
                         if (!obj) {
                             obj = {};
                             if (_lati != null && _lati.split(":").length > 1) {
