@@ -64,7 +64,7 @@ define(["./module"], function (ctrs) {
 
         $scope.realTimeFormat = function (data, config, e) {
             var final_result = [];
-            if (data != "[]") {
+            if (data != "\"[]\"") {
                 var json = JSON.parse(eval("(" + data + ")").toString());
                 var result = json[0].result;
                 e.types.forEach(function (qtype) {
@@ -107,7 +107,7 @@ define(["./module"], function (ctrs) {
         $scope.initPeron = function () {
             $http.get("api/halfhour?userType=" + $rootScope.userType + "&type=uv&start=0&end=0&dimension=period").success(function (data) {
                 var count = 0;
-                if (data != "[]") {
+                if (data != "\"[]\"") {
                     var json = JSON.parse(eval("(" + data + ")").toString());
                     var result = json[0].result;
                     if (result) {

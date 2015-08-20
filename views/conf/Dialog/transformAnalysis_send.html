@@ -10,9 +10,9 @@
 
         <li style="margin: 10px 0 0 0" >
             <label >发送周期：</label>
-            <input name="send_day" class="" type="radio"/><b>每天</b>
-           <input name="send_day" class="send_day_left " type="radio"/><b>每周一</b>
-          <input name="send_day" class="send_day_left " type="radio"/><b>每月一号</b>
+            <input name="schedule_rule" class="" type="radio" value="0" checked="checked"/><b>每天</b>
+           <input name="schedule_rule" class="send_day_left " type="radio" value="1"/><b>每周一</b>
+          <input name="schedule_rule" class="send_day_left " type="radio" value="2"/><b>每月一号</b>
 
         </li>
         <li style="margin: 0">
@@ -34,8 +34,8 @@
         <li style="margin: 10px 0">
             <label>文件格式：</label>
 
-            <input name="send_type" type="radio"  checked="checked" value="0"/><b>CSV</b>
-            <input name="send_type" type="radio" class="send_day_left "  checked="checked" value="0"/><b>HTML</b>
+            <input name="send_type" type="radio"  value="0" checked="checked"/><b>CSV</b>
+            <input name="send_type" type="radio" class="send_day_left "   value="1"/><b>HTML</b>
             <!--<label><input name="send_type" class="send_day_left" type="radio" value="1"/>PDF</label>-->
 
             <p> 本格式图文并茂，支持数据量较少，体积小便于下载阅读</p>

@@ -592,7 +592,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                 scope.mstep = 1;
                 scope.options = {
                     hstep: [1, 2, 3],
-                    mstep: [1, 5, 10, 15, 25, 30]
+                    mstep: [1]
                 };
 
                 scope.ismeridian = true;

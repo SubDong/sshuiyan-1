@@ -23,8 +23,10 @@ var changeList_request = require("../services/changeList_request");
 var transform = require("../services/transform-request");
 var heaturl_request = require("../services/heaturl_request");
 var ad_request = require("../services/ad_request");
-//var mail = require('../mail/mail');
+var mail = require('../mail/mail');
+var scheduler = require("../mail/scheduler");
 var path = require('path');
+var fs = require("file-system");
 
 api.get('/charts', function (req, res) {
     var query = url.parse(req.url, true).query, quotas = [], type = query['type'], dimension = query.dimension, filter = null, topN = [], userType = query.userType;
@@ -282,8 +284,8 @@ api.get('/indextable', function (req, res) {
                             if (_promotion == "ssc" || _lati == "kw") {
                                 if (infoKey != undefined && (infoKey == "-" || infoKey == "--" || infoKey == "" || infoKey == "www" || infoKey == "null" || infoKey.length >= 40)) continue;
                             }
-                            if(_lati == "se"){
-                                if(infoKey != undefined && infoKey == "-") continue;
+                            if (_lati == "se") {
+                                if (infoKey != undefined && infoKey == "-") continue;
                             }
                         }
                         var infoKey = info.key[i];
@@ -952,30 +954,108 @@ api.get("/adsCreative", function (req, res) {
         datautils.send(res, data);
     })
 });
+api.get("/initSchedule", function (req, res) {
+    //var query = url.parse(req.url, true).query;
+    //var uid = query.uid, site_id = query.siteId;
+    scheduler();
+    datautils.send(res, {status: 'ok'});
+});
 api.get('/test', function (req, res) {
-    var query = url.parse(req.url, true).query;
-    var msg = query.msg;
-    var mailOptions = {
-        from: 'Ism<70285622@qq.com> ', // sender address
-        to: 'xiaoweiqb@126.com', // list of receivers
-        subject: 'Hello', // Subject line
-        text: 'Hello world', // plaintext body
-        html: '<b>' + msg + '</b>', // html body
-        attachments: [
-            {
-                filename: 'a.text',
-                path: './servers/apis/a.text'
-            }
-        ]
-    };
-    mail.send(mailOptions, function (error, info) {
-        if (error) {
-            console.log(error);
-            datautils.send(res, {status: 'error', info: error});
-        } else {
-            datautils.send(res, {status: 'success', info: 'Message sent: ' + info.response});
-        }
+    var data = [
+        {"时间": "00:00 - 00:59", "浏览量(PV)": 111, "访客数(UV)": 97, "IP数": 11, "跳出率": "31%", "平均访问时长": "00:00:31"},
+        {"时间": "01:00 - 01:59", "浏览量(PV)": 79, "访客数(UV)": 77, "IP数": 8, "跳出率": "38%", "平均访问时长": "00:00:39"},
+        {"时间": "02:00 - 02:59", "浏览量(PV)": 52, "访客数(UV)": 46, "IP数": 12, "跳出率": "56%", "平均访问时长": "00:00:35"},
+        {"时间": "03:00 - 03:59", "浏览量(PV)": 63, "访客数(UV)": 59, "IP数": 7, "跳出率": "40%", "平均访问时长": "00:00:10"},
+        {"时间": "04:00 - 04:59", "浏览量(PV)": 53, "访客数(UV)": 49, "IP数": 14, "跳出率": "51%", "平均访问时长": "00:00:18"},
+        {"时间": "05:00 - 05:59", "浏览量(PV)": 71, "访客数(UV)": 64, "IP数": 11, "跳出率": "38%", "平均访问时长": "00:00:28"},
+        {"时间": "06:00 - 06:59", "浏览量(PV)": 73, "访客数(UV)": 73, "IP数": 10, "跳出率": "53%", "平均访问时长": "00:00:23"},
+        {"时间": "07:00 - 07:59", "浏览量(PV)": 53, "访客数(UV)": 52, "IP数": 16, "跳出率": "59%", "平均访问时长": "00:00:14"},
+        {"时间": "08:00 - 08:59", "浏览量(PV)": 109, "访客数(UV)": 99, "IP数": 59, "跳出率": "84%", "平均访问时长": "00:00:02"},
+        {"时间": "09:00 - 09:59", "浏览量(PV)": 132, "访客数(UV)": 130, "IP数": 39, "跳出率": "72%", "平均访问时长": "00:00:06"},
+        {"时间": "10:00 - 10:59", "浏览量(PV)": 204, "访客数(UV)": 175, "IP数": 53, "跳出率": "69%", "平均访问时长": "00:00:04"},
+        {"时间": "11:00 - 11:59", "浏览量(PV)": 0, "访客数(UV)": 0, "IP数": 0, "跳出率": "0%", "平均访问时长": "00:00:00"},
+        {"时间": "12:00 - 12:59", "浏览量(PV)": 0, "访客数(UV)": 0, "IP数": 0, "跳出率": "0%", "平均访问时长": "00:00:00"},
+        {"时间": "13:00 - 13:59", "浏览量(PV)": 0, "访客数(UV)": 0, "IP数": 0, "跳出率": "0%", "平均访问时长": "00:00:00"},
+        {"时间": "14:00 - 14:59", "浏览量(PV)": 0, "访客数(UV)": 0, "IP数": 0, "跳出率": "0%", "平均访问时长": "00:00:00"},
+        {"时间": "15:00 - 15:59", "浏览量(PV)": 0, "访客数(UV)": 0, "IP数": 0, "跳出率": "0%", "平均访问时长": "00:00:00"},
+        {"时间": "16:00 - 16:59", "浏览量(PV)": 0, "访客数(UV)": 0, "IP数": 0, "跳出率": "0%", "平均访问时长": "00:00:00"},
+        {"时间": "17:00 - 17:59", "浏览量(PV)": 0, "访客数(UV)": 0, "IP数": 0, "跳出率": "0%", "平均访问时长": "00:00:00"},
+        {"时间": "18:00 - 18:59", "浏览量(PV)": 0, "访客数(UV)": 0, "IP数": 0, "跳出率": "0%", "平均访问时长": "00:00:00"},
+        {"时间": "19:00 - 19:59", "浏览量(PV)": 0, "访客数(UV)": 0, "IP数": 0, "跳出率": "0%", "平均访问时长": "00:00:00"},
+        {"时间": "20:00 - 20:59", "浏览量(PV)": 0, "访客数(UV)": 0, "IP数": 0, "跳出率": "0%", "平均访问时长": "00:00:00"},
+        {"时间": "21:00 - 21:59", "浏览量(PV)": 0, "访客数(UV)": 0, "IP数": 0, "跳出率": "0%", "平均访问时长": "00:00:00"},
+        {"时间": "22:00 - 22:59", "浏览量(PV)": 0, "访客数(UV)": 0, "IP数": 0, "跳出率": "0%", "平均访问时长": "00:00:00"},
+        {"时间": "23:00 - 23:59", "浏览量(PV)": 0, "访客数(UV)": 0, "IP数": 0, "跳出率": "0%", "平均访问时长": "00:00:00"}
+    ];
+    var indexes = date.createIndexes(-1, -1, "access-");//indexs
+    //es,["access-2015"](index),"1"(type),["pv","uv","ip","outRate","avtTime"](quotas),"period"(dimension),[0](topN),null(filter),1439913600000(start),1439999999999(end),1(interval),function(){}
+    es_request.search(req.es, indexes,"1" , "pv,uv,ip,outRate,avgTime","period", [0], null, null, null, 1, function (data) {
+
     });
+
+    csvApi.json2csv(data, function (err, csv) {
+        if (err) throw err;
+        var buffer = new Buffer(csv);
+        var fileSuffix = new Date().getTime();
+        fs.writeFile("servers/filetmp/" + fileSuffix + ".csv", buffer, function (error) {
+            if (error) {
+                console.error(error);
+                datautils.send(res, {status: 'error', info: error});
+            } else {
+                var mailOptions = {
+                    from: '百思慧眼<70285622@qq.com> ', // sender address
+                    to: 'xiaoweiqb@126.com', // list of receivers
+                    subject: 'Hello', // Subject line
+                    text: 'Hello world', // plaintext body
+                    html: '<b>我是來發文件的</b>', // html body
+                    attachments: [
+                        {
+                            filename: fileSuffix + '.csv',
+                            path: './servers/filetmp/' + fileSuffix + '.csv'
+                        }
+                    ]
+                };
+                mail.send(mailOptions, function (error, info) {
+                    if (error) {
+                        console.log(error);
+                        datautils.send(res, {status: 'error', info: error});
+                    } else {
+                        datautils.send(res, {status: 'success', info: 'Message sent: ' + info.response});
+                        fs.exists('servers/filetmp/' + fileSuffix + '.csv', function (exists) {
+                            if (exists) {
+                                fs.unlinkSync('servers/filetmp/' + fileSuffix + '.csv');
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    });
+
+
+    //var query = url.parse(req.url, true).query;
+    //var msg = query.msg;
+    //var mailOptions = {
+    //    from: '百思慧眼<70285622@qq.com> ', // sender address
+    //    to: 'xiaoweiqb@126.com', // list of receivers
+    //    subject: 'Hello', // Subject line
+    //    text: 'Hello world', // plaintext body
+    //    html: '<b>' + msg + '</b>', // html body
+    //    attachments: [
+    //        {
+    //            filename: 'a.text',
+    //            path: './servers/apis/a.text'
+    //        }
+    //    ]
+    //};
+    //mail.send(mailOptions, function (error, info) {
+    //    if (error) {
+    //        console.log(error);
+    //        datautils.send(res, {status: 'error', info: error});
+    //    } else {
+    //        datautils.send(res, {status: 'success', info: 'Message sent: ' + info.response});
+    //    }
+    //});
 });
 api.get("/saveMailConfig", function (req, res) {
     var model = "mail_rules_model";
