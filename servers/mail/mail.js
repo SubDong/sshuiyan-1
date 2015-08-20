@@ -3,13 +3,10 @@
  */
 var nodemail=require('nodemailer');
 
-
+var config = require("../../config.json");
 var transporter = nodemail.createTransport({
     service: 'QQ',
-    auth: {
-        user: '70285622@qq.com',
-        pass: '1987924a..'
-    }
+    auth: config.mail.auth
 });
 
 var mail={

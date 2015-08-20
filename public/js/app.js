@@ -51,7 +51,7 @@ define([
     myApp.controller('menuctr', function ($scope, $rootScope, $location) {
         $scope.oneAtATime = true;
         // 项目导航模块。用于页面刷新时，当前选中模块index的获取
-        $scope.array = ["index", "extension", "trend", "source", "page", "visitor", "value","transform", "ads"];
+        $scope.array = ["index", "extension", "trend", "source", "page", "visitor", "value", "transform", "ads"];
         $scope.selectRestaurant = function (row) {
             $scope.selectedRow = row;
         };
@@ -67,7 +67,7 @@ define([
             return $scope.menuClass(menu, hrefs, i + 1);
         };
         if (menu.indexOf("/conf") != -1) {
-            $scope.selectedRow  = menu.length > 6 ? 1 : 0;
+            $scope.selectedRow = menu.length > 6 ? 1 : 0;
         } else {
             $scope.selectedRow = $scope.menuClass(menu, $scope.array, 0);
         }
@@ -223,7 +223,7 @@ define([
                 icon: 'glyphicon glyphicon-sort',
                 stype: 0,
                 sref: '#transform/transformAnalysis'
-            },{
+            }, {
                 title: '指定广告跟踪',
                 icon: 'glyphicon glyphicon-map-marker',
                 stype: 0,
@@ -286,7 +286,7 @@ define([
 
 
     /*********nav-select*********/
-    myApp.controller('ngSelect', function ($scope, $location, $cookieStore, $window, $rootScope, $state) {
+    myApp.controller('ngSelect', function ($scope, $location, $cookieStore, $window, $rootScope, $state,$http) {
         $scope.clear = function () {
             $scope.siteselect.selected = undefined;
         };
@@ -298,6 +298,7 @@ define([
             $rootScope.usites = $cookieStore.get('usites');
             $rootScope.default = $rootScope.usites ? $rootScope.usites[0].site_name : '用户信息加载失败，请重新刷新页面！';     // default site
             $rootScope.defaultType = $rootScope.usites ? $rootScope.usites[0].type_id : '暂无';   // default site id
+            $http.get("/api/initSchedule");
         }
         $scope.initPerfectAccount();
         $scope.siteselect = {};
@@ -308,7 +309,7 @@ define([
             $rootScope.siteId = $rootScope.usites[0].site_id;
             $rootScope.userTypeName = $rootScope.usites[0].site_name;
             $rootScope.siteUrl = $rootScope.usites[0].site_url;
-            $rootScope.siteTrackId=$rootScope.usites[0].site_track_id;
+            $rootScope.siteTrackId = $rootScope.usites[0].site_track_id;
         }
         $scope.changeUrl = function (select) {
             $rootScope.user = $rootScope.perfectUser;
@@ -317,12 +318,14 @@ define([
             $rootScope.siteId = select.site_id;
             $rootScope.siteUrl = select.site_url;
             $rootScope.userTypeName = select.site_name;
-            $rootScope.siteTrackId=select.site_track_id;
+            $rootScope.siteTrackId = select.site_track_id;
+            $http.get("/api/initSchedule");
             if ($location.path().indexOf("conf") > -1) {
                 $state.go("conf");
             } else {
                 $state.go("index");
             }
+
         }
     });
 
