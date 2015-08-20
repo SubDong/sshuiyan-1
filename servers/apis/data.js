@@ -27,6 +27,7 @@ var mail = require('../mail/mail');
 var scheduler = require("../mail/scheduler");
 var path = require('path');
 var fs = require("file-system");
+var data_convert=require('../mail/data_convert');
 
 api.get('/charts', function (req, res) {
     var query = url.parse(req.url, true).query, quotas = [], type = query['type'], dimension = query.dimension, filter = null, topN = [], userType = query.userType;
@@ -987,50 +988,57 @@ api.get('/test', function (req, res) {
         {"时间": "22:00 - 22:59", "浏览量(PV)": 0, "访客数(UV)": 0, "IP数": 0, "跳出率": "0%", "平均访问时长": "00:00:00"},
         {"时间": "23:00 - 23:59", "浏览量(PV)": 0, "访客数(UV)": 0, "IP数": 0, "跳出率": "0%", "平均访问时长": "00:00:00"}
     ];
-    var indexes = date.createIndexes(-1, -1, "access-");//indexs
+    var indexes = date.createIndexes(0, 0, "access-");//indexs
+    var period = date.period(0, 0);
     //es,["access-2015"](index),"1"(type),["pv","uv","ip","outRate","avtTime"](quotas),"period"(dimension),[0](topN),null(filter),1439913600000(start),1439999999999(end),1(interval),function(){}
-    es_request.search(req.es, indexes,"1" , "pv,uv,ip,outRate,avgTime","period", [0], null, null, null, 1, function (data) {
-
+    var quotas = ["pv", "uv", "ip", "outRate", "avtTime"];
+    es_request.search(req.es, indexes, "1", quotas, "period", [0], null, period[0], period[1], 1, function (data) {
+        if (data.length) {
+            data_convert.convertData(data);
+        } else {
+            console.log("No data result");
+        }
     });
 
-    csvApi.json2csv(data, function (err, csv) {
-        if (err) throw err;
-        var buffer = new Buffer(csv);
-        var fileSuffix = new Date().getTime();
-        fs.writeFile("servers/filetmp/" + fileSuffix + ".csv", buffer, function (error) {
-            if (error) {
-                console.error(error);
-                datautils.send(res, {status: 'error', info: error});
-            } else {
-                var mailOptions = {
-                    from: '百思慧眼<70285622@qq.com> ', // sender address
-                    to: 'xiaoweiqb@126.com', // list of receivers
-                    subject: 'Hello', // Subject line
-                    text: 'Hello world', // plaintext body
-                    html: '<b>我是來發文件的</b>', // html body
-                    attachments: [
-                        {
-                            filename: fileSuffix + '.csv',
-                            path: './servers/filetmp/' + fileSuffix + '.csv'
-                        }
-                    ]
-                };
-                mail.send(mailOptions, function (error, info) {
-                    if (error) {
-                        console.log(error);
-                        datautils.send(res, {status: 'error', info: error});
-                    } else {
-                        datautils.send(res, {status: 'success', info: 'Message sent: ' + info.response});
-                        fs.exists('servers/filetmp/' + fileSuffix + '.csv', function (exists) {
-                            if (exists) {
-                                fs.unlinkSync('servers/filetmp/' + fileSuffix + '.csv');
-                            }
-                        });
-                    }
-                });
-            }
-        });
-    });
+    //csvApi.json2csv(data, function (err, csv) {
+    //    if (err) throw err;
+    //    var buffer = new Buffer(csv);
+    //    var fileSuffix = new Date().getTime();
+    //    fs.writeFile("servers/filetmp/" + fileSuffix + ".csv", buffer, function (error) {
+    //        if (error) {
+    //            console.error(error);
+    //            datautils.send(res, {status: 'error', info: error});
+    //        } else {
+    //            var mailOptions = {
+    //                from: '百思慧眼<70285622@qq.com> ', // sender address
+    //                to: 'xiaoweiqb@126.com', // list of receivers
+    //                subject: 'Hello', // Subject line
+    //                text: 'Hello world', // plaintext body
+    //                html: '<b>我是來發文件的</b>', // html body
+    //                attachments: [
+    //                    {
+    //                        filename: fileSuffix + '.csv',
+    //                        path: './servers/filetmp/' + fileSuffix + '.csv'
+    //                    }
+    //                ]
+    //            };
+    //            mail.send(mailOptions, function (error, info) {
+    //                if (error) {
+    //                    console.log(error);
+    //                    datautils.send(res, {status: 'error', info: error});
+    //                } else {
+    //                    datautils.send(res, {status: 'success', info: 'Message sent: ' + info.response});
+    datautils.send(res, {status: 'success', info: 'Message sent: '});
+    //                    fs.exists('servers/filetmp/' + fileSuffix + '.csv', function (exists) {
+    //                        if (exists) {
+    //                            fs.unlinkSync('servers/filetmp/' + fileSuffix + '.csv');
+    //                        }
+    //                    });
+    //                }
+    //            });
+    //        }
+    //    });
+    //});
 
 
     //var query = url.parse(req.url, true).query;
