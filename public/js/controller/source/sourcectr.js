@@ -5,7 +5,7 @@ define(["./module"], function (ctrls) {
 
     'use strict';
 
-    ctrls.controller("sourcectr", function ($scope, $rootScope, $http, requestService, areaService, messageService, uiGridConstants) {
+    ctrls.controller("sourcectr", function ($scope, $rootScope, $http,$cookieStore, requestService, areaService, messageService, uiGridConstants) {
         $scope.todayClass = true;
         //        高级搜索提示显示
         $scope.terminalSearch = "";
@@ -290,6 +290,37 @@ define(["./module"], function (ctrls) {
             $scope.reset();
             $scope.todayClass = true;
         };
+        $rootScope.initMailData = function () {
+            $http.get("api/saveMailConfig?rt=read&rule_url=" + $rootScope.mailUrl[4] + "").success(function (result) {
+                if (result) {
+                    var ele = $("ul[name='sen_form']");
+                    formUtils.rendererMailData(result, ele);
+                }
+            });
+        }
+        $scope.sendConfig = function () {
+            var formData = formUtils.vaildateSubmit($("ul[name='sen_form']"));
+            var result = formUtils.validateEmail(formData.mail_address, formData);
+            if (result.ec) {
+                alert(result.info);
+            } else {
+                formData.rule_url = $rootScope.mailUrl[4];
+                formData.uid = $cookieStore.get('uid');
+                formData.site_id = $rootScope.siteId;
+                formData.type_id=$rootScope.userType;
+                formData.schedule_date = $scope.mytime.time.Format('hh:mm');
+                $http.get("api/saveMailConfig?data=" + JSON.stringify(formData)).success(function (data) {
+                    var result = JSON.parse(eval("(" + data + ")").toString());
+                    if (result.ok == 1) {
+                        alert("操作成功!");
+                        $http.get("/api/initSchedule");
+                    } else {
+                        alert("操作失败!");
+                    }
+                });
+            }
+        }
     });
+
 
 });

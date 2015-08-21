@@ -5,12 +5,12 @@ define(["./module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.controller('indexoverview', function ($scope, $rootScope, areaService, uiGridConstants) {
+    ctrs.controller('indexoverview', function ($scope, $rootScope, $cookieStore,$http, areaService, uiGridConstants) {
         //        高级搜索提示
         $scope.sourceSearch = "";
         $scope.visitorSearch = "";
 //        取消显示的高级搜索的条件
-        $scope.removeSourceSearch = function(obj){
+        $scope.removeSourceSearch = function (obj) {
             $scope.souce.selected = {"name": "全部"};
             $rootScope.$broadcast("loadAllSource");
             obj.sourceSearch = "";
@@ -127,6 +127,37 @@ define(["./module"], function (ctrs) {
             $scope.reset();
             $scope.todayClass = true;
         };
+
+        $rootScope.initMailData = function () {
+            $http.get("api/saveMailConfig?rt=read&rule_url=" + $rootScope.mailUrl[8] + "").success(function (result) {
+                if (result) {
+                    var ele = $("ul[name='sen_form']");
+                    formUtils.rendererMailData(result, ele);
+                }
+            });
+        }
+        $scope.sendConfig = function () {
+            var formData = formUtils.vaildateSubmit($("ul[name='sen_form']"));
+            var result = formUtils.validateEmail(formData.mail_address, formData);
+            if (result.ec) {
+                alert(result.info);
+            } else {
+                formData.rule_url = $rootScope.mailUrl[8];
+                formData.uid = $cookieStore.get('uid');
+                formData.site_id = $rootScope.siteId;
+                formData.type_id = $rootScope.userType;
+                formData.schedule_date = $scope.mytime.time.Format('hh:mm');
+                $http.get("api/saveMailConfig?data=" + JSON.stringify(formData)).success(function (data) {
+                    var result = JSON.parse(eval("(" + data + ")").toString());
+                    if (result.ok == 1) {
+                        alert("操作成功!");
+                        $http.get("/api/initSchedule");
+                    } else {
+                        alert("操作失败!");
+                    }
+                });
+            }
+        }
     });
 
 });

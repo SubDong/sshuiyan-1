@@ -597,6 +597,7 @@ define(["./module"], function (ctrs) {
                     var result = JSON.parse(eval("(" + data + ")").toString());
                     if (result.ok == 1) {
                         alert("操作成功!");
+                        $http.get("/api/initSchedule");
                     } else {
                         alert("操作失败!");
                     }

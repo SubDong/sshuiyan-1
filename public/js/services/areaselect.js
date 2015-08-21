@@ -218,7 +218,13 @@ define(["../app"], function (app) {
             "index",
             "today",
             "yesterday",
-            "month"
+            "month",
+            "source",
+            "engine",
+            "keyword",
+            "ext",
+            "indexoverview",
+            "entrancepage"
         ]
     }]);
 });
