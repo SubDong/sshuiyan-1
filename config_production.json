@@ -26,6 +26,12 @@
     "tuiguang_url": "http://server1:19082/",
     "mode":"cluster",
     "auth_url":"http://sem.best-ad.cn/login?url="
+  },
+  "mail": {
+    "auth": {
+      "user": "70285622@qq.com",
+      "pass": "1987924a.."
+    }
   }
 
 }
