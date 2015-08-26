@@ -58,8 +58,8 @@ define(["./../module"], function (ctrs) {
                 }
             },
             {
-                name: "访客数(UV)",
-                displayName: "访客数(UV)",
+                name: "IP数",
+                displayName: "IP数",
                 field: "ip",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
             },
