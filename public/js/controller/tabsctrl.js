@@ -90,7 +90,7 @@ define(["app"], function (app) {
         ];
         $scope.Todayfloweds = [
             {consumption_name: "跳出率", name: "outRate"},
-            {consumption_name: "平均访问时长", name: "a   vgTime"},
+            {consumption_name: "平均访问时长", name: "avgTime"},
             {consumption_name: "平均访问页数", name: "avgPage"}
         ];
         $scope.Order = [
