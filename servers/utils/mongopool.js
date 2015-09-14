@@ -27,9 +27,6 @@ var mongo_pool = {
         }
         return connPool;
     },
-    service: function (dburl) {
-        return mongoose;
-    },
     /**
      * 传入业务模块名称  返回mongo连接 如果不存在返回null
      * @param module
