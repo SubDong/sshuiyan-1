@@ -12,7 +12,7 @@ var config_request = {
      * @param redisClient
      * @param track_id
      */
-    refreshSiteRedis: function (redis_client, trackid,cb) {
+    refreshSiteRedis: function (redis_client, trackid, cb) {
         //由track_id查询站点配置
         var qry = {
             track_id: trackid
@@ -25,7 +25,7 @@ var config_request = {
                         siteid: item._id.toString(),//站点ID 对应MongoDb _id
                         siteurl: item.site_url,//站点URL
                         sitepause: item.site_pause,//站点暂停状态，false启用，true暂停
-                        icon:item.icon ==undefined?1:item.icon
+                        icon: item.icon == undefined ? 1 : item.icon
                     }
                     //默认存储时长转化和PV转化到Redis
                     var time_config = {
@@ -40,6 +40,7 @@ var config_request = {
                     redis_client.multi().set("typeid:".concat(item.track_id), item.type_id)//
                         .set("ts:" + item.track_id, item._id)//
                         .set("st:" + item._id, item.track_id)//
+                        .set("tsu:" + item.track_id, item.site_url)
                         .set("tsj:" + item.track_id, JSON.stringify(siteconfig))
                         //.set(ins._id + ":mouse:" + ins.site_url, JSON.stringify(config_mouse))//目前无具体URL配置 暂时设置在站点上
                         .set("duration:" + item._id, JSON.stringify(time_config))//站点级别设置
@@ -75,7 +76,7 @@ var config_request = {
                                 reut["visit:" + item._id] = JSON.stringify(pv_config);//track_id 对应页面访问次数转化 使用已有配置覆盖
                             }
                         }
-                        cb(err,reut);
+                        cb(err, reut);
                     });
                 });
             }
@@ -173,20 +174,20 @@ var config_request = {
      * @param trickid
      * @param produceUrl
      */
-    adTrackRedis: function(redisClient, trickid, produceUrl){
+    adTrackRedis: function (redisClient, trickid, produceUrl) {
         var qry = {
             track_id: trickid
         };
-        dao.find('sites_model', JSON.stringify(qry), null, {}, function(err, smDocs){
-            if(smDocs != null && adDocs.length > 0){
-                smDocs.forEach(function(item){
+        dao.find('sites_model', JSON.stringify(qry), null, {}, function (err, smDocs) {
+            if (smDocs != null && adDocs.length > 0) {
+                smDocs.forEach(function (item) {
                     var smQuery = {
                         site_id: item._id,
                         uid: item.uid,
                         produceUrl: produceUrl
                     };
-                    dao.find('adtrack_model', JSON.stringify(smQuery), null, {}, function(err, amDocs){
-                        if(amDocs != null && amDocs.length > 0) {
+                    dao.find('adtrack_model', JSON.stringify(smQuery), null, {}, function (err, amDocs) {
+                        if (amDocs != null && amDocs.length > 0) {
                             var _array = [];
                             var result = {};
                             amDocs.forEach(function (item) {
@@ -202,12 +203,13 @@ var config_request = {
                                 _array.push(adConfig);
                             });
                             redisClient.multi().set("ad:" + produceUrl, JSON.stringify(_array)).exec();
-                            result["ad:" + produceUrl] =  JSON.stringify(_array);
+                            result["ad:" + produceUrl] = JSON.stringify(_array);
                             return result;
                         }
                     });
                 });
-            };
+            }
+            ;
         });
     }
 }
