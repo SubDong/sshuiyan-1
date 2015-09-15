@@ -140,7 +140,7 @@ if (config != undefined && !config.open) {
         //v 统计js版本号
         md.g.v = c.version;
         //tit  title信息
-        md.g.tit = document.title;
+        md.g.tit = encodeURIComponent(document.title);
         //ct 新老客户（0:新客户， 1：老客户）
         md.g.ct = ((md.cookie.get("vid") == null || md.cookie.get("vid") == undefined || md.cookie.get("vid") == "") ? "0" : "1");
         // hm 热力图坐标
@@ -681,7 +681,6 @@ if (config != undefined && !config.open) {
                     var sx = document.getElementsByTagName("script");
                     var number;
                     for(var i = 0; i < sx.length; i++){
-                        console.log(sx[i].text.indexOf("_pct") != -1);
                         if(sx[i].text.indexOf("_pct") != -1){
                             number = i;
                         }
