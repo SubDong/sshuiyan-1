@@ -10,17 +10,19 @@
     var tips = [];
 
     var p = {
+        //flashUrl: "127.0.0.1:8000",
         flashUrl: "hy.best-ad.cn",
         urlPath: "config/select",
         protocol: "https:" == document.location.protocol ? "https:" : "http:",
         webroot: "http://tongji.baidu.com/hm-web",
         hyContent: "TrackerSenderContent",
-        eventPanelStyle: "position:absolute; color:#000; text-align:left;  margin:0; z-index:2147483584; width:400px; padding:0 10px 5px 10px; background:#EAEFF4 url(/img/event_add_bg.gif) repeat-x; border:1px solid #6990B3; font-size:12px;",
+        eventPanelStyle: "position:absolute; color:#000; text-align:left;  margin:0; z-index:2147483584; width:400px; padding:0 10px 5px 10px; background:#EAEFF4  repeat-x; border:1px solid #6990B3; font-size:12px;",
         disablePanelStyle: "position:absolute; text-align:left; font-size:13px; color:#000; line-height:150%; text-align:left; z-index:2147483583; width:200px; padding:5px 10px; background:#EAEFF4; border:1px solid #6990B3; font-size:12px;",
         q: null,
-        v:"1.0.1"
+        v: "1.0.1"
     };
-
+    //服务访问的BasePath
+    var server_base_path = p.protocol + "//" + p.flashUrl + "/" + p.urlPath;
     //无ID元素或者元素ID不正确情况 点击提示内容
     var errIdMsg = {
         defaultTargetName: "事件目标",
@@ -41,8 +43,6 @@
     var J = /opera\/(\d+\.\d)/i.test(navigator.userAgent) ? parseFloat(RegExp["\x241"]) : 0;
     var K = document.compatMode == "CSS1Compat";
     //////////////////////////////////////公共方法
-
-
     function ckeckDoc(doc) {
         if (doc && doc.preventDefault) {
             doc.preventDefault()
@@ -51,8 +51,7 @@
         }
         return false
     }
-
-    function forcedoc(doc) {//=n
+    function forcedoc(doc) {
         if ("string" == typeof doc || doc instanceof String) {
             return document.getElementById(doc)
         } else {
@@ -62,7 +61,6 @@
         }
         return null
     }
-
     //添加鼠标事件
     function attachEvent(doc, ename, efunc) {
         doc = forcedoc(doc);
@@ -75,7 +73,6 @@
             }
         }
     }
-
     //设置风格
     function setPanleStyle(elem) {//elem=Y
         //var elem = attachEvent(elem);
@@ -131,7 +128,6 @@
         //}
         //return ad
     }
-
     //随机名称生成
     var randName = function (length) {
         function randChar() {
@@ -155,7 +151,7 @@
     var D = "EventContainer" + randName(8);
     var m = "EventContainer" + randName(8);
     var h = "EventTarget" + randName(8);
-    var s = "EventTarget" + randName(8);
+    var path_url = "EventTarget" + randName(8);
     var Q = "EventSubmit" + randName(8);
     var cancelBtn = "EventCancel" + randName(8);
     var deleteBtn = "EventDelete" + randName(8);
@@ -175,7 +171,6 @@
             return G
         }
     }
-
     //阻止浏览器 冒泡事件
     function stopBrowserBubble(G) {
         var G = G || window.event;
@@ -185,7 +180,6 @@
             window.event.cancelBubble = true
         }
     }
-
     function t(G) {
         this.list = [];
         this.nameSpace = "v";
@@ -468,24 +462,24 @@
     //返回值为 返回数据存放位置
     crossDomainSendData = function (url, cb) {
         var index = getQueueIndex();
-        console.log("跨域请求使用数据队列：" + index)
         if (index < 0) {//队列满了
             return;
         }
         var scriptBlock = document.createElement("script");
         if (url.indexOf("?") < 0) {//请求附加uid和trackid信息
-            scriptBlock.src = url + "?index=" + index+"&td="+params["td"]+"&cuid="+params["cuid"];
+            scriptBlock.src = url + "?index=" + index + "&td=" + params["td"] + "&cuid=" + params["cuid"];
         } else {
-            scriptBlock.src = url + "&index=" + index+"&td="+params["td"]+"&cuid="+params["cuid"];
+            scriptBlock.src = url + "&index=" + index + "&td=" + params["td"] + "&cuid=" + params["cuid"];
         }
+        //console.log("跨域请求使用数据队列：" + scriptBlock.src)
         document.getElementsByTagName("head")[0].appendChild(scriptBlock);
         window.setTimeout(function () {
             if (resQueue[index].val == undefined) {
-                console.log("超时，数据回写失败！")
+                //console.log("超时，数据回写失败！")
             }
             else {
                 //刷新显示事件
-                console.log("跨域请求 返回数据:" + index + "==>" + JSON.stringify(resQueue[index]));
+                //console.log("跨域请求 返回数据:" + index + "==>" + JSON.stringify(resQueue[index]));
                 cb(index, resQueue[index]);//数据发送并返回成功后处理
                 panelcont.canelPanel();//关闭窗口
             }
@@ -556,9 +550,8 @@
             attachEvent(document, "click", panelcont.showPanelHandle);
             attachEvent(document, "mouseover", panelcont.showPanelTip);
             attachEvent(document, "mouseout", panelcont.hidePanelTip)
-
             //初始化已添加事件目标信息
-            var url = p.protocol + "//" + p.flashUrl + "/" + p.urlPath + "?type=getTips&eventPage="+params["srcUrl"];
+            var url = p.protocol + "//" + p.flashUrl + "/" + p.urlPath + "?type=getTips&eventPage=" + params["pathUrl"];
             crossDomainSendData(url, rootBody.initTips);
         },
         initTips: function (index, resData) {
@@ -690,13 +683,11 @@
         updateInfo: function (ab) {
             var aa = forcedoc(ab);
             var X = aa.getAttribute("HY_eventTargetName") || errIdMsg.defaultTargetName + (tips.length + 1);
-            var Z = aa.getAttribute("HY_eventDomain");// || k.PREVIEW_URL;
             var Y = ab.length > 20 ? ab.substr(0, 18) + "..." : ab;
             var G = forcedoc(y);
             G.innerHTML = Y;
             G.title = ab;
             forcedoc(h).value = X;
-            forcedoc(s).value = Z
         },
         fixedPosition: function (ag, Z, aa) {
             var aj = g(aa, "dispaly", "none") || g(aa, "visibility", "hidden");
@@ -746,7 +737,7 @@
         submitPanel: function () {
             var addPanel = createElem();//addPanel=X
             var G = a(forcedoc(h).value);
-            var ab = a(forcedoc(s).value);
+            var ab = a(forcedoc(path_url).value);
             if (G == "") {
                 alert("事件目标名称不能为空!");
                 return
@@ -765,11 +756,22 @@
 
             var ac = Y ? Y : "";
             var evenData = {name: encodeURIComponent(G), id: ad, eventType: Z, targetId: ac, monUrl: ab};
-            var url = p.protocol + "//" + p.flashUrl  + "/" + p.urlPath+"?type=saveTips&data="+JSON.stringify(evenData);
+            var url = server_base_path + "?type=saveTips&entity=" + JSON.stringify(evenData);
             crossDomainSendData(url, function (index, resData) {
                 //刷新显示事件
-                panelcont.addCompleteController(evenData);
-            });//==sendData 分不同情况
+                if (resData.val.code == 1) {//保存成功
+                    panelcont.addCompleteController(evenData);
+                } else if (resData.val.code == 2) {//更新成功
+                    var doc = forcedoc(evenData.id);
+                    var eventId = doc.getAttribute("HY_EventId");
+                    if (eventId) {
+                        var elem = document.getElementById(eventId);
+                        if (elem != null)
+                            elem.parentNode.removeChild(elem);
+                        panelcont.addCompleteController(evenData);
+                    }
+                }
+            });
         },
         canelPanel: function () {
             var G = createElem();
@@ -802,7 +804,7 @@
             if (H > 0 && H < 8) {
                 panelcont.curVml.clearLine()
             } else {
-                G.style.outline = ""
+                doc.style.outline = ""
             }
         },
         //添加事件Panel构建
@@ -814,11 +816,11 @@
             G.push('<td  height="28" colspan="2" id="' + A + '" valign="middle"><div style="float:right;style="margin:0; padding:0; border:0; font-size:12px; color:#000"><a href="http://support.baidu.com/tongji/?module=default&controller=index&action=detail&nodeid=4791" target="_blank" style="font-size:12px; color:#00c; ">如何设置事件作用页面或目录</a></div></td>');
             G.push("</tr>");
             G.push("<tr>");
-            G.push('<td width="150" height="30">ID</td>');
+            G.push('<td width="150" height="30">事件ID</td>');
             G.push('<td id="' + y + '" colspan="2" style="margin:0;text-align:left;  padding:0; border:0; font-size:12px; color:#000"></td>');
             G.push("</tr>");
             G.push("<tr>");
-            G.push('<td height="30" style="margin:0; padding:0; border:0; text-align:left; font-size:12px; color:#000">名称：</td>');
+            G.push('<td height="30" style="margin:0; padding:0; border:0; text-align:left; font-size:12px; color:#000">事件名称：</td>');
             G.push('<td colspan="2">');
             G.push("<label>");
             G.push('<input type="text" id="' + h + '" value="" size="40" style="font-size:12px; color:#000" />');
@@ -829,7 +831,7 @@
             G.push('<td height="30" style="margin:0; padding:0; border:0; text-align:left; font-size:12px; color:#000">事件作用页面或目录：</td>');
             G.push('<td colspan="2">');
             G.push("<label>");
-            G.push('<input type="text"  size="40" id="' + s + '" value="' + params["srcUrl"] + '" />');
+            G.push('<input type="text"  size="40" id="' + path_url + '" value="' + params["pathUrl"] + '" readOnly=true/>');
             G.push("</label>");
             G.push("</td>");
             G.push("</tr>");
@@ -996,16 +998,16 @@
             aa.style.cssText = tipContent.cssStr.NameDiv;
             aa.innerHTML = decodeURIComponent(G);
             aa.setAttribute("title", G);
-            var ac = X[2];
-            ac.style.cssText = tipContent.cssStr.EditDivNormal;
-            var ab = X[3];
-            ab.style.cssText = tipContent.cssStr.DeleteDivNormal;
+            var editIcon = X[2];
+            editIcon.style.cssText = tipContent.cssStr.EditDivNormal;
+            var deleteIcon = X[3];
+            deleteIcon.style.cssText = tipContent.cssStr.DeleteDivNormal;
             //为Tip标签设置事件
             attachEvent(tipDiv, "mouseover", tipContent.overTipHandle(tipDiv.id));
             attachEvent(tipDiv, "mouseout", tipContent.outTipHandle(tipDiv.id));
             attachEvent(tipDiv, "click", tipContent.editTipHandle(tipDiv.id));
-            attachEvent(ac, "click", tipContent.editTipHandle(tipDiv.id));//编辑
-            attachEvent(ab, "click", tipContent.deleteHandle(tipDiv.id))//删除
+            attachEvent(editIcon, "click", tipContent.editTipHandle(tipDiv.id));//编辑
+            attachEvent(deleteIcon, "click", tipContent.deleteHandle(tipDiv.id))//删除
         },
         clickHandle: function (G) {
             stopBrowserBubble(G)
@@ -1068,22 +1070,21 @@
                         elem.parentNode.removeChild(elem);
                     var ttips = [];
                     for (var n = 0, k = 0; n < tips.length; n++, k++) {
-                        if (ab.id == tips[n].id) {
+                        if (targetMap == tips[n].id) {
                             k--;
-                            tipContent.deleteComplete(aa);
+                            tipContent.deleteComplete(elem.id);
+                            //物理删除
+                            var url = server_base_path + "?type=deleteTip&event_id=" + tips[n].id + "&event_page=" + tips[n].getAttribute("hy_eventdomain")
+                            crossDomainSendData(url, function (index, resData) {
+                                //刷新显示事件
+                                panelcont.addCompleteController(evenData);
+                            });
                             continue
                         }
                         ttips[k] = tips[n];
                     }
                     tips = ttips;
-                    //物理删除
-                    var ad = doc.getAttribute("HY_panelTarget");
-                    console.log("event id="+ad);
-                    //var url = p.protocol + "//" + p.flashUrl  + "/" + p.urlPath+"?type=deleteTips&data="+JSON.stringify(eventId);
-                    //crossDomainSendData(url, function (index, resData) {
-                    //    //刷新显示事件
-                    //    panelcont.addCompleteController(evenData);
-                    //});//==sendData 分不同情况
+
                 }
             }
         },
@@ -1105,23 +1106,18 @@
         }
     }
 
-    var params={};
+    var params = {};
     var shref = document.location.href;
-    var tps = shref.substring(shref.indexOf('?')+1,shref.length).split("&");
-    for(var i = 0; i<tps.length;i++){
-        var kv=tps[i].split("=");
-        params[kv[0]]=kv[1];
+    var tps = shref.substring(shref.indexOf('?') + 1, shref.length).split("&");
+    for (var i = 0; i < tps.length; i++) {
+        var kv = tps[i].split("=");
+        params[kv[0]] = kv[1];
     }
-
-    params["srcUrl"]=shref.substring(0,shref.indexOf('?'));
-    if(params!=null&&params.jn=="select"){
-        //console.log("初始化使用Select.js 注入客户端代码 请求参数：")
-        //console.log(params)
-        //页面div插入
-        document.write('<div id="' + p.hyContent + '" style="position:absolute;width:1px;height:1px;"></div>');
-        //根Body初始化
+    params["srcUrl"] = shref.substring(0, shref.indexOf('?'));
+    params["pathUrl"] = document.location.pathname
+    if (params != null && params.jn == "select") {
+        document.write("<div id='" + p.hyContent + "' style='position:absolute;width:1px;height:1px;'></div>");
         rootBody.initRootBody();
-        //页面事件绑定
         attachEvent(document.body, "onload", rootPage.init);
     }
 })();

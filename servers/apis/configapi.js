@@ -189,7 +189,7 @@ api.get("/site_list", function (req, res) {
                     siteid: ins._id.toString(),//站点ID 对应MongoDb _id
                     siteurl: temp.site_url,//站点URL
                     sitepause: ins.site_pause,//站点暂停状态，false启用，true暂停
-                    icon:ins.icon ==undefined?1:ins.icon
+                    icon: ins.icon == undefined ? 1 : ins.icon
                 }
                 //默认存储时长转化和PV转化到Redis
                 var time_config = {
@@ -227,7 +227,7 @@ api.get("/site_list", function (req, res) {
                                 siteid: docs[0]._id.toString(),//站点ID 对应MongoDb _id
                                 siteurl: docs[0].site_url,//站点URL
                                 sitepause: docs[0].site_pause,//站点暂停状态，false启用，true暂停
-                                icon:docs[0].icon ==undefined?1:docs[0].icon
+                                icon: docs[0].icon == undefined ? 1 : docs[0].icon
                             }
                             //默认存储时长转化和PV转化到Redis
                             var time_config = {
@@ -479,32 +479,21 @@ api.get("/page_conv_urls", function (req, res) {
                     var bulk = req.redisclient.multi();
                     //console.log("1")
                     for (var index = 0; index < entitys.length; index++) {
-                        //console.log("1")
-                        //console.log(tempPathMark + "--->" + entitys[index].path)
-                        //console.log(JSON.stringify(entitys[index]))
                         if (entitys[index].path == tempPathMark.path) {
-                            //console.log("if")
                             redisPageUrls.push(entitys[index]);
                             if (index == (entitys.length - 1)) {
                                 var key = tempPathMark.page_conv_id + ":pcu:" + tempPathMark.path;
-                                //console.log("key-====" + key)
-                                //console.log(JSON.stringify(redisPageUrls))
                                 bulk.set(key, JSON.stringify(redisPageUrls));
                                 break;
                             }
                         } else {
-                            //console.log("else")
-                            //存Redis
                             var key = tempPathMark.page_conv_id + ":pcu:" + tempPathMark.path;
-                            //console.log("key" + key)
                             bulk.set(key, JSON.stringify(redisPageUrls));
                             redisPageUrls = [];
                             redisPageUrls.push(entitys[index]);
                             tempPathMark = entitys[index]
                             if (index == (entitys.length - 1)) {
                                 var key = tempPathMark.page_conv_id + ":pcu:" + tempPathMark.path;
-                                //console.log("key-====" + key)
-                                //console.log(JSON.stringify(redisPageUrls))
                                 bulk.set(key, JSON.stringify(redisPageUrls));
                                 break;
                             }
@@ -693,6 +682,7 @@ api.get("/tt_conf", function (req, res) {
  *
  */
 api.get("/redis", function (req, res) {
+    console.log("redis")
     var query = url.parse(req.url, true).query;
     req.redisclient.get(query['key'], function (error, redis_conf) {//
 
@@ -734,13 +724,13 @@ api.get("/adtrack", function (req, res) {
                 + "&tt=0";
 
             if (sourceUrl.indexOf("?") == -1) {
-                if(sourceUrl.indexOf("http://") == -1){
+                if (sourceUrl.indexOf("http://") == -1) {
                     strUrl = "http://" + sourceUrl + yesParam + notHostName;
                 } else {
                     strUrl = sourceUrl + yesParam + notHostName;
                 }
             } else {
-                if(sourceUrl.indexOf("http://") == -1){
+                if (sourceUrl.indexOf("http://") == -1) {
                     strUrl = "http://" + sourceUrl + noParam + notHostName;
                 } else {
                     strUrl = sourceUrl + noParam + notHostName;
@@ -788,19 +778,19 @@ api.get("/select", function (req, res) {
                 var schema_name = "event_change_model";//设置选择schemas Model名称
                 switch (type) {
                     case "saveTips":
-                        var dataJson = JSON.parse(query["data"]);
+                        var entityJson = JSON.parse(query["entity"]);
                         var existQry = {
                             uid: uid,
-                            event_id: dataJson["id"],
-                            event_page: dataJson["monUrl"],
+                            event_id: entityJson["id"],
+                            event_page: entityJson["monUrl"],
                             root_url: sitejson.siteid
                         }
                         dao.find(schema_name, JSON.stringify(existQry), null, {}, function (err, docs) {//查询所有配置
                             var eventData = {
                                 uid: uid,
-                                event_id: dataJson["id"],
-                                event_name: dataJson["name"],
-                                event_page: dataJson["monUrl"],
+                                event_id: entityJson["id"],
+                                event_name: entityJson["name"],
+                                event_page: entityJson["monUrl"],
                                 event_method: "自动",
                                 root_url: sitejson.siteid
                             }
@@ -808,38 +798,54 @@ api.get("/select", function (req, res) {
                                 //console.log("*******该事件配置不存在 插入********")
                                 dao.save(schema_name, eventData, function (ins) {
                                     if (ins != null) {
+                                        res.write("crossDomainCallback({code:1,state:'Save Success'}," + query["index"] + ");");
+                                        res.end();
                                     }
                                 });
                             } else {
                                 //console.log("*******该事件配置已存在 更新********")
-                                dao.update(schema_name, JSON.stringify(existQry), eventData, function (ins) {
-                                    if (ins != null) {
-
-                                    }
+                                dao.update(schema_name, JSON.stringify(existQry), JSON.stringify({event_name: entityJson["name"]}), function (err, docs) {
+                                    res.write("crossDomainCallback({code:2,state:'Update Success'}," + query["index"] + ");");
+                                    res.end();
                                 });
                             }
                         });
-                        res.write("crossDomainCallback({state:'SUCCESS'}," + query["index"] + ");");
-                        res.end();
                         break;
                     case "getTips"://获取
-
                         var existQry = {//用户 站点 页面 为查询条件
                             uid: uid,
-                            event_page: query["eventPage"],
+                            event_path: query["eventPath"],
                             root_url: sitejson.siteid
                         }
                         dao.find(schema_name, JSON.stringify(existQry), null, {}, function (err, docs) {//查询所有配置
-                            if (docs != null && docs.length > 0) {//存在配置
+                            if (docs != null) {//存在配置
                                 res.write("crossDomainCallback(" + JSON.stringify(docs) + "," + query["index"] + ");");
+                            } else if (err) {
+                                res.write("crossDomainCallback({state:'FAILED'," + query["index"] + ")});");
+                            }
+                            res.end();
+                        });
+                        break;
+                    case "deleteTip"://删除
+                        var existQry = {//用户 站点 页面 为查询条件
+                            uid: uid,
+                            event_page: query["event_page"],
+                            event_id: query["event_id"],
+                            root_url: sitejson.siteid
+                        }
+                        dao.remove(schema_name, JSON.stringify(existQry), function (err) {
+                            if (!err) {
+                                res.write("crossDomainCallback({code:1,state:'Delete Success'}," + query["index"] + ")});");
+                                res.end();
+                            } else {
+                                res.write("crossDomainCallback({code:0,state:'Delete Failed'}," + query["index"] + ")});");
                                 res.end();
                             }
                         });
                         break;
-                    case "delTip"://删除
-                        break;
                     default:
                         break;
+
                 }
             }
         });

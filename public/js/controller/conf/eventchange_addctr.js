@@ -6,34 +6,19 @@ define(["./module"], function (ctrs) {
 
     ctrs.controller('eventchange_addctr', function ($scope, $http, $rootScope, $cookieStore, ngDialog, $state) {
 
-
         $scope.eventChange = {};
-
         $scope.eventChange.event_id = "";
-
         $scope.eventChange.event_name = "";
-
         $scope.eventChange.event_page = "";
-
         $scope.eventChange.event_method = "手动方式";
-
         $scope.eventChange.event_status = "1";
-
         $scope.eventChange.uid = $cookieStore.get("uid");
-
         $scope.eventChange.root_url = $rootScope.siteId;
-
-
         $scope.targetUrl = "";
-
-
         $scope.onCancel = function () {
             $state.go('eventchange');
         }
-
-
         $scope.onSaveEvent = function () {
-
             var entity = JSON.stringify($scope.eventChange);
             var url = "/config/eventchnage_list?type=save&entity=" + entity;
             $http({
@@ -52,7 +37,6 @@ define(["./module"], function (ctrs) {
                 });
             });
         };
-
         /**
          * 接收预览URL的输入
          * @type {{url: string}}
@@ -60,8 +44,6 @@ define(["./module"], function (ctrs) {
         $scope.preview = {
             url: ""
         };
-
-
         /**
          * 事件转化目标URL验证
          */
@@ -92,50 +74,20 @@ define(["./module"], function (ctrs) {
                             <iframe id="" name="" marginwidth="0" marginheight="0" width="100%" height=700 frameborder="0" src=' + strSrc + '></iframe>\
                                 </div>\
                                 <div class="ng-button-div">\
-                                <button id="overlaySubmitBtn" class="ngdialog-button ngdialog-button-secondary">确定</button>\
-                                <button id="overlayCancelBtn" class="ngdialog-button ng-button">取消</button>\
+                                <button  class="ngdialog-button ngdialog-button-secondary">确定</button>\
+                                <button  class="ngdialog-button ng-button" data-ng-click="closeThisDialog()">取消</button>\
                                 </div>\
                             </div>\
                         </div>',
-
                     className: 'ngdialog-theme-default admin_ngdialog iframeBox',
                     plain: true,
                     closeByDocument: false,
                     scope: $scope
                 });
             };
-            $scope.iframeobj();
-            //if (regex.test(previewUrl) == true) {
-            //    $http.get("cdapi/link?path=" + previewUrl).success(function (data) {
-            //
-            //        var k = Number((data.toString().split('tid=')[0].split('\"').length));
-            //        if (data.toString().split("tid=")[0].split("\"")[k - 1].split("/").length == 4) {
-            //
-            //            if (data.toString().split("tid=").length > 1) {
-            //
-            //                var tid = data.toString().split("tid=")[1].split("\"")[0];
-            //
-            //                $http.get("/config/searchByUID?uid=" + uid + "&track_id=" + tid).success(function (result) {
-            //
-            //                    if (result == null || result == "") {
-            //                        alert("该账户下不存在该路径");
-            //                    } else {
-            //                        $scope.iframeobj(tid);
-            //                    }
-            //                });
-            //            } else {
-            //                $scope.iframeobj();
-            //                alert("未检测到代码安装");
-            //            }
-            //        } else {
-            //            alert("您输入的地址不存在");
-            //        }
-            //    });
-            //} else {
-            //    alert("预览URL应该是本站或跨域内的URL");
-            //}
-        }
 
+            $scope.iframeobj($rootScope.siteTrackId);
+        }
         /**
          * 预览保存事件
          */
