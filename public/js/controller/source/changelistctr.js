@@ -8,24 +8,26 @@ define(["./module"], function (ctrs) {
             //初始化时间
             $rootScope.tableTimeStart = 0;
             $rootScope.tableTimeEnd = 0;
-            $rootScope.start = -1;
-            $rootScope.end = -1;
-            $rootScope.contrastStart = -2;
-            $rootScope.contrastEnd = -2;
-            $rootScope.startString = GetDateStr(-1);
-            $rootScope.contrastStartString = GetDateStr(-2)
+            $rootScope.start = 0;
+            $rootScope.end = 0;
+            $rootScope.contrastStart = -1;
+            $rootScope.contrastEnd = -1;
+            $rootScope.startString = GetDateStr(0);
+            $rootScope.contrastStartString = GetDateStr(-1);
             $scope.initTime = {
-                time: GetDateStr(-1),
-                contrastTime: GetDateStr(-2)
+                time: GetDateStr(0),
+                contrastTime: GetDateStr(-1)
             };
 
-            $scope.yesterdayClass = true;
+            $scope.timeClass = true;
+            $scope.choiceClass = true;
+            $scope.yesterdayClass = false;
             $scope.lastWeek = true;
             $scope.lastMonth = true;
             $scope.visible = true;
             $scope.send = true;//显示发送
             $scope.dateshows = true;
-            $scope.lastDayClass = true;
+            $scope.lastDayClass = false;
             $rootScope.gridArray = [
                 {
                     name: "xl",
@@ -95,25 +97,16 @@ define(["./module"], function (ctrs) {
                     end: $rootScope.end,
                     contrastStart: $rootScope.contrastStart,
                     contrastEnd: $rootScope.contrastEnd,
-                    gridArray:$rootScope.gridArray
+                    gridArray: $rootScope.gridArray
                 });
             });
-            //$scope.$broadcast("parrentData",  '7894561321564');
-            $scope.reset = function () {
-                $scope.yesterdayClass = false;
-                $scope.definClass = false;
-                $scope.btnchecked = true;
-                $scope.weekcheckClass = false;
-                $scope.mothcheckClass = false;
-                $scope.timeClass = false;
-                $scope.clearCompareSelect = false;
-            };
+
             function GetDateStr(AddDayCount) {
                 var dd = new Date();
                 dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
                 var y = dd.getFullYear();
-                var m = dd.getMonth() + 1;//获取当前月份的日期
-                var d = dd.getDate();
+                var m = (dd.getMonth() + 1) < 10 ? "0" + (dd.getMonth() + 1) : (dd.getMonth() + 1);//获取当前月份的日期
+                var d = dd.getDate() < 10 ? "0" + dd.getDate() : dd.getDate();
                 return y + "-" + m + "-" + d;
             }
 
@@ -127,7 +120,7 @@ define(["./module"], function (ctrs) {
                     $rootScope.contrastEnd = time[1];
                 }
             };
-            $('#choicetrange span').html(GetDateStr(-2));
+            $('#choicetrange span').html(GetDateStr(-1));
             $('#choicetrange').daterangepicker({
                 format: 'YYYY-MM-DD',
                 maxDate: GetDateStr(0),
@@ -143,7 +136,8 @@ define(["./module"], function (ctrs) {
                 buttonClasses: ['btn', 'btn-sm'],
                 applyClass: 'btn-primary',
                 cancelClass: 'btn-default',
-                separator: ' to '
+                separator: ' to ',
+                singleDatePicker: true
             }, function (start, end, label) {
                 $rootScope.datepickerClick1(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), false);
                 $rootScope.contrastStartString = (start.format('YYYY-MM-DD') + ' 至 ' + end.format('YYYY-MM-DD'));
@@ -156,7 +150,7 @@ define(["./module"], function (ctrs) {
                     $('#choicetrange span').html(start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD'));
                 }
             });
-            $('#reportrange span').html(GetDateStr(-1));
+            $('#reportrange span').html(GetDateStr(0));
             $('#reportrange').daterangepicker({
                 format: 'YYYY-MM-DD',
                 maxDate: GetDateStr(0),
@@ -172,7 +166,8 @@ define(["./module"], function (ctrs) {
                 buttonClasses: ['btn', 'btn-sm'],
                 applyClass: 'btn-primary',
                 cancelClass: 'btn-default',
-                separator: ' to '
+                separator: ' to ',
+                singleDatePicker: true
             }, function (start, end, label) {
                 $rootScope.datepickerClick1(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), true);
                 $rootScope.startString = (start.format('YYYY-MM-DD') + ' 至 ' + end.format('YYYY-MM-DD'));
@@ -191,24 +186,13 @@ define(["./module"], function (ctrs) {
                 $rootScope.$broadcast("ssh_dateShow_options_time_change", type);
             };
             $scope.yesterday = function () {
-                $scope.isShowCalendar = false;
-                $scope.hiddenSeven = false;
-                $scope.todayCalendar = GetDateStr(-1);
-                $scope.hourselect = false;
-                $scope.dayselect = false;
-                $scope.weekselected = true;
-                $scope.mothselected = true;
-                $scope.reset();
-                $scope.lastDaySelect = true;
-                $scope.lastWeekSelect = true;
-                $scope.clearCompareSelect = true;
                 $scope.yesterdayClass = true;
+                $scope.timeClass = false;
                 $rootScope.tableTimeStart = -1;
                 $rootScope.tableTimeEnd = -1;
                 $rootScope.start = -1;
                 $rootScope.end = -1;
                 $rootScope.startString = GetDateStr(-1);
-                $scope.reloadByCalendar("yesterday");
                 $('#reportrange span').html(GetDateStr(-1));
                 $('#reportrange').data('daterangepicker').setStartDate(GetDateStr(-1));
                 $('#reportrange').data('daterangepicker').setEndDate(GetDateStr(-1));
@@ -226,24 +210,24 @@ define(["./module"], function (ctrs) {
             }
 
             $scope.lastDay = function () {
-                $rootScope.contrastStart = -2;
-                $rootScope.contrastEnd = -2;
+                $rootScope.contrastStart = $rootScope.start - 1;
+                $rootScope.contrastEnd = $rootScope.end - 1;
                 contrastReset();
                 $scope.lastDayClass = true;
-                $rootScope.contrastStartString = GetDateStr(-2)
-                $('#choicetrange span').html(GetDateStr(-2));
-                $('#choicetrange').data('daterangepicker').setStartDate(GetDateStr(-2));
-                $('#choicetrange').data('daterangepicker').setEndDate(GetDateStr(-2));
+                $rootScope.contrastStartString = GetDateStr($rootScope.start - 1);
+                $('#choicetrange span').html(GetDateStr($rootScope.start - 1));
+                $('#choicetrange').data('daterangepicker').setStartDate(GetDateStr($rootScope.start - 1));
+                $('#choicetrange').data('daterangepicker').setEndDate($rootScope.end - 1);
             };
             $scope.lastWeek = function () {
-                $rootScope.contrastStart = -6;
-                $rootScope.contrastEnd = -6;
+                $rootScope.contrastStart = $rootScope.start - 7;
+                $rootScope.contrastEnd = $rootScope.end - 7;
                 contrastReset();
                 $scope.lastWeekClass = true;
-                $rootScope.contrastStartString = GetDateStr(-8)
-                $('#choicetrange span').html(GetDateStr(-8));
-                $('#choicetrange').data('daterangepicker').setStartDate(GetDateStr(-8));
-                $('#choicetrange').data('daterangepicker').setEndDate(GetDateStr(-8));
+                $rootScope.contrastStartString = GetDateStr($rootScope.start - 7);
+                $('#choicetrange span').html(GetDateStr($rootScope.start - 7));
+                $('#choicetrange').data('daterangepicker').setStartDate(GetDateStr($rootScope.start - 7));
+                $('#choicetrange').data('daterangepicker').setEndDate(GetDateStr($rootScope.end - 7));
             };
             $scope.contrastTimeClick = function () {
                 contrastReset();
@@ -254,7 +238,6 @@ define(["./module"], function (ctrs) {
                     time: $rootScope.startString,
                     contrastTime: $rootScope.contrastStartString
                 };
-                $scope.init();
                 $rootScope.gridArray[2].displayName = $rootScope.startString;
                 $rootScope.gridArray[3].displayName = $rootScope.contrastStartString;
                 $scope.$broadcast("parrentData", {
@@ -262,32 +245,38 @@ define(["./module"], function (ctrs) {
                     end: $rootScope.end,
                     contrastStart: $rootScope.contrastStart,
                     contrastEnd: $rootScope.contrastEnd,
-                    gridArray:$rootScope.gridArray
-                });
-
-            };
-            $scope.init = function () {
-                $http.get("api/changeList?start=" + $rootScope.start + ",end=" + $rootScope.end + ",contrastStart=" + $rootScope.contrastStart + ",contrastEnd=" + $rootScope.contrastEnd).success(function (data) {
-                    $scope.sum_pv_count = data.sum_pv;
-                    $scope.contrast_sum_pv_count = data.contrast_sum_pv;
-                    $scope.all_percentage = data.percentage;
+                    gridArray: $rootScope.gridArray
                 });
             };
-            $scope.init();
             //刷新
-//            $scope.page_refresh = function () {
-//                $rootScope.start = -1;
-//                $rootScope.end = -1;
-//                $rootScope.tableTimeStart = -1;
-//                $rootScope.tableTimeEnd = -1;
-//                $scope.reloadByCalendar("yesterday");
-//                $('#reportrange span').html(GetDateStr(-1));
-//                //其他页面表格
-////            $rootScope.targetSearch();
-//                //classcurrent
-//                $scope.reset();
-//                $scope.yesterdayClass = true;
-//            };
+            $scope.page_refresh = function () {
+                $rootScope.start = 0;
+                $rootScope.end = 0;
+                $rootScope.tableTimeStart = -1;
+                $rootScope.tableTimeEnd = -1;
+                $scope.timeClass = true;
+                $scope.choiceClass = true;
+                $scope.lastDayClass = false;
+                $scope.lastWeekClass = false;
+                $('#reportrange span').html(GetDateStr(0));
+                $('#choicetrange span').html(GetDateStr(-1));
+                $rootScope.startString = GetDateStr(0);
+                $rootScope.contrastStartString = GetDateStr(-1);
+                $('#reportrange').data('daterangepicker').setStartDate(GetDateStr(0));
+                $('#reportrange').data('daterangepicker').setEndDate(GetDateStr(0));
+                $('#choicetrange').data('daterangepicker').setStartDate(GetDateStr(-1));
+                $('#choicetrange').data('daterangepicker').setEndDate(GetDateStr(-1));
+                $scope.reset();
+                $scope.changeTime();
+            };
+
+            $scope.reset = function () {
+                $scope.timeClass = true;
+                $scope.choiceClass = true;
+                $scope.lastDayClass = false;
+                $scope.lastWeekClass = false;
+                $scope.yesterdayClass = false;
+            };
         }
     );
 

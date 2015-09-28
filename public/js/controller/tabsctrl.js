@@ -984,7 +984,7 @@ define(["app"], function (app) {
                     } else {
 //                        item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 100px'>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),2)}}<br/>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),3)}}<br/>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),4)}}</div>";
                         item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 32px'>" +
-                            "<ul><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),2)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),3)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),4)}}</li></ul></div>";
+                        "<ul><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),2)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),3)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),4)}}</li></ul></div>";
                     }
                 }
             });
@@ -1732,9 +1732,15 @@ define(["app"], function (app) {
         }
         ];
         $scope.init = function (timeData) {
-            $scope.gridOptions.data = [];
-            $http.get("api/changeList?start=" + timeData.start + ",end=" + timeData.end + ",contrastStart=" + timeData.contrastStart + ",contrastEnd=" + timeData.contrastEnd).success(function (data) {
-                $scope.gridOptions.data = data.pv;
+            $http.get("api/changeList?start=" + timeData.start + "&end=" + timeData.end + "&contrastStart=" + timeData.contrastStart + "&contrastEnd=" + timeData.contrastEnd).success(function (data) {
+
+                $scope.changeObj = {
+                    sum_pv_count: data.sum_pv,
+                    contrast_sum_pv_count: data.contrast_sum_pv,
+                    all_percentage: data.percentage
+                };
+
+                $scope.gridOptions.data = data.pv ? data.pv : [];
                 $scope.gridOptions.enableSorting = true;
                 $scope.gridOptions.columnDefs[4].cellClass = function (grid, row, col, rowRenderIndex, colRenderIndex) {
                     if (grid.getCellValue(row, col).toString().substring(0, 1) == "+") {
