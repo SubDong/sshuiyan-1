@@ -132,7 +132,7 @@ define(["angular", "./app"], function (angular, myApp) {
                     resolve: {
                         load: loadDeps([
                             "controller/alliancectr",
-                            'controller/searchpromotion',
+                            'controller/searchpromotion'
                         ])
                     }
                 }).state('alliance_group', {
@@ -151,7 +151,7 @@ define(["angular", "./app"], function (angular, myApp) {
                     resolve: {
                         load: loadDeps([
                             'controller/alliance_cy_ctr',
-                            'controller/searchpromotion',
+                            'controller/searchpromotion'
                         ])
                     }
                 });
@@ -217,6 +217,17 @@ define(["angular", "./app"], function (angular, myApp) {
                     resolve: {
                         load: loadDeps([
                             'controller/transform/pageTransformCtr'
+                        ])
+                    }
+                });
+//            同类群主分析
+            $stateProvider
+                .state('sameGroupAnalysis', {
+                    url: '/group_analysis/sameGroupAnalysis',
+                    templateUrl: '../group_analysis/sameGroupAnalysis.html',
+                    resolve: {
+                        load: loadDeps([
+                            "controller/group_analysis/sameGroupAnalysisCtr"
                         ])
                     }
                 });

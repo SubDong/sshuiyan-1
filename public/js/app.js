@@ -12,6 +12,7 @@ define([
     "./controller/conf/module",
     "./controller/transform/module",
     "./controller/ads/module",
+    "./controller/group_analysis/module",
     "js002",
     "js003",
     "js006",
@@ -31,6 +32,7 @@ define([
         "conf.controllers",
         "transform.controllers",
         "ads.controllers",
+        "group_analysis.controllers",
         'ui.grid',
         'ui.grid.autoResize',
         'ui.grid.grouping',
@@ -228,6 +230,11 @@ define([
                 icon: 'glyphicon glyphicon-map-marker',
                 stype: 0,
                 sref: '#ads/adsSource'
+            }, {
+                title: '同类群主分析',
+                icon: 'glyphicon glyphicon-map-marker',
+                stype: 0,
+                sref: '#group_analysis/sameGroupAnalysis'
             }
         ];
         $scope.adminmenus = [
