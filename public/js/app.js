@@ -53,7 +53,7 @@ define([
     myApp.controller('menuctr', function ($scope, $rootScope, $location) {
         $scope.oneAtATime = true;
         // 项目导航模块。用于页面刷新时，当前选中模块index的获取
-        $scope.array = ["index", "extension", "trend", "source", "page", "visitor", "value", "transform", "ads"];
+        $scope.array = ["index", "extension", "trend", "source", "page", "visitor", "value", "transform", "ads","group_analysis"];
         $scope.selectRestaurant = function (row) {
             $scope.selectedRow = row;
         };
@@ -232,7 +232,7 @@ define([
                 sref: '#ads/adsSource'
             }, {
                 title: '同类群主分析',
-                icon: 'glyphicon glyphicon-map-marker',
+                icon: 'glyphicon glyphicon-list-alt',
                 stype: 0,
                 sref: '#group_analysis/sameGroupAnalysis'
             }
