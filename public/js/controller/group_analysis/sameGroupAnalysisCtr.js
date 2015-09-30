@@ -6,6 +6,7 @@ define(["./module"], function (ctrs) {
     "use strict";
 
     ctrs.controller('sameGroupAnalysisCtr', function ($scope, $rootScope, $q, $http, requestService, areaService, $location,uiGridConstants) {
+
         $scope.groupTypes = [
             {name: '流量获取日期', field: 'date'}
         ];
@@ -15,10 +16,10 @@ define(["./module"], function (ctrs) {
             {name: '按月', field: 'month'}
         ];
         $scope.dateRanges = [
-            {name: '过去7天', field: 'pastSeven'},
-            {name: '过去14天', field: 'pastFourteen'},
-            {name: '过去21天', field: 'pastTwenty'},
-            {name: '过去30天', field: 'pastThirty'}
+            {name: '过去7天', field: '7'},
+            {name: '过去14天', field: '14'},
+            {name: '过去21天', field: '21'},
+            {name: '过去30天', field: '30'}
         ];
         $scope.groupIndexs = [
             {name: '用户留存率', field: 'userKeep'},
@@ -31,17 +32,20 @@ define(["./module"], function (ctrs) {
         $scope.groupIndex={};
         $scope.groupType.selected = {"name": "流量获取日期", "field": "date"};
         $scope.groupScale.selected = {"name": "按天", "field": "day"};
-        $scope.dateRange.selected = {"name": "过去30天", "field": "pastThirty"};
+        $scope.dateRange.selected = {"name": "过去7天", "field": "7"};
         $scope.groupIndex.selected = {"name": "用户数", "field": "userNo"};
+
+
 
         $scope.scaleChange = function(val) {
             if(val.name == "按天"){
-                $scope.dateRange.selected = {"name": "过去30天", "field": "pastThirty"};
+
+                $scope.dateRange.selected = {"name": "过去30天", "field": "30"};
                 $scope.dateRanges = [
-                    {name: '过去7天', field: 'pastSeven'},
-                    {name: '过去14天', field: 'pastFourteen'},
-                    {name: '过去21天', field: 'pastTwenty'},
-                    {name: '过去30天', field: 'pastThirty'}
+                    {name: '过去7天', field: '7'},
+                    {name: '过去14天', field: '14'},
+                    {name: '过去21天', field: '21'},
+                    {name: '过去30天', field: '30'}
                 ];
                 $scope.tables = [
                     {name:"第0天"},
@@ -59,13 +63,14 @@ define(["./module"], function (ctrs) {
                     {name:"第12天"}
                 ];
             }else if(val.name == "按周"){
-                $scope.dateRange.selected = {"name": "上周", "field": "pastSeven"};
+
+                $scope.dateRange.selected = {"name": "上周", "field": "1"};
                 $scope.dateRanges = [
-                    {name: '上周', field: 'pastSeven'},
-                    {name: '过去3周', field: 'pastFourteen'},
-                    {name: '过去6周', field: 'pastTwenty'},
-                    {name: '过去9周', field: 'pastThirty'},
-                    {name: '过去12周', field: 'pastThirty'}
+                    {name: '上周', field: '1'},
+                    {name: '过去3周', field: '3'},
+                    {name: '过去6周', field: '6'},
+                    {name: '过去9周', field: '9'},
+                    {name: '过去12周', field: '12'}
                 ];
                 $scope.tables = [
                     {name:"第0周"},
@@ -83,11 +88,12 @@ define(["./module"], function (ctrs) {
                     {name:"第12周"}
                 ];
             }else if(val.name == "按月"){
-                $scope.dateRange.selected = {"name": "上月", "field": "pastSeven"};
+
+                $scope.dateRange.selected = {"name": "上月", "field": "1"};
                 $scope.dateRanges = [
-                    {name: '上月', field: 'pastSeven'},
-                    {name: '过去2个月', field: 'pastFourteen'},
-                    {name: '过去3个月', field: 'pastTwenty'}
+                    {name: '上月', field: '1'},
+                    {name: '过去2个月', field: '2'},
+                    {name: '过去3个月', field: '3'}
                 ];
                 $scope.tables = [
                     {name:"第0月"},
@@ -106,6 +112,8 @@ define(["./module"], function (ctrs) {
                 ];
             }
         }
+
+
         $scope.dateChange = function(val) {
             console.log(val);
         }
@@ -151,5 +159,35 @@ define(["./module"], function (ctrs) {
                 subTableDates:[{name:'2015年5月3日-2015年5月9日',total:'18771位用户'},{name:'18771'},{name:'671'},{name:'415'},{name:'253'},{name:'206'},{name:'148'},{name:'126'},{name:'97'},{name:'77'},{name:'60'},{name:'29'},{name:'14'},{name:'5'}]
             }
         ]
-    })
+
+        $scope.searchData = function () {
+
+
+            var parameter = {
+                type:$rootScope.userType,
+                scale:$scope.groupScale.selected.field,
+                dateRange: $scope.dateRange.selected.field,
+                indicator:$scope.groupIndex.selected.field
+              };
+
+            var url = "/gacache/querydata?query="+JSON.stringify(parameter);
+
+
+            console.log(url);
+
+
+
+            $http({
+                method: 'GET',
+                url: url
+            }).success(function (data) {
+
+                console.log(data);
+
+            });
+
+        }
+
+
+        })
 })
