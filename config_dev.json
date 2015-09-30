@@ -1,13 +1,13 @@
 {
   "es": {
-    "host": "182.92.227.79:19500",
+    "host": "192.168.100.10:9200",
     "sniffOnStart": false,
     "sniffOnConnectionFault": false,
     "keepAlive": true,
     "log": "debug"
   },
   "redis": {
-    "host": "182.92.227.23",
+    "host": "192.168.100.10",
     "port": 6379,
     "options": {
       "auth_pass": "3edcvfr4"
@@ -15,17 +15,17 @@
     "sessiondb": 10
   },
   "mongo": {
-    "url": "mongodb://192.168.100.10:23135/conf"
+    "url": "mongodb://192.168.100.5:27017/conf"
   },
   "mongourls": {
     "urls": [
       {
-        "url": "mongodb://192.168.100.10:23135/",
+        "url": "mongodb://192.168.100.5:27017/",
         "db": "user_perfect2015",
         "module_names":["tg_url"]
       },
       {
-        "url": "mongodb://192.168.100.10:23135/",
+        "url": "mongodb://192.168.100.5:27017/",
         "db": "conf",
         "module_names":["config"]
       }
@@ -34,7 +34,7 @@
   "app": {
     "tuiguang_url": "http://182.92.227.79:9080/",
     "mode": "single",
-    "auth_url": "http://182.92.227.23:8080/login?url="
+    "auth_url": "http://192.168.100.10:8080/login?url="
   },
   "mail": {
     "auth": {
