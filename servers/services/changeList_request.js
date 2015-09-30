@@ -10,36 +10,6 @@ var changeList_request = {
      * @param callbackFn　回调函数
      */
     search: function (es, indexs, times, callbackFn) {
-        //var requests = [];
-        //for (var i = 0; i < 1; i++) {
-        //    requests.push({
-        //        index: indexs[i],
-        //        type: null,
-        //        body: {
-        //            "size": 0,
-        //            "aggs": {
-        //                "pv": {
-        //                    "value_count": {
-        //                        "field": "dm"
-        //                    }
-        //                },
-        //                "data": {
-        //                    "terms": {
-        //                        "field": "dm"
-        //                    }, "aggs": {
-        //                        "pv": {
-        //                            "value_count": {
-        //                                "field": "dm"
-        //                            }
-        //                        }
-        //                    }
-        //
-        //
-        //                }
-        //            }
-        //        }
-        //    });
-        //}
         var request = {
             index: indexs,
             type: null,

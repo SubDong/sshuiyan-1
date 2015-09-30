@@ -724,29 +724,22 @@ api.get("/modalInstance", function (req, res) {
 });
 // ================================= changeList  ==============================
 api.get("/changeList", function (req, res) {
-    var parameters = req.url.split("?")[1].split(",");
-    var start = parameters[0].split("=")[1];
-    var end = parameters[1].split("=")[1];
-    var contrastStart = parameters[2].split("=")[1];
-    var contrastEnd = parameters[3].split("=")[1];
+    var query = url.parse(req.url, true).query;
+    var start = query["start"];
+    var end = query["end"];
+    var contrastStart = query["contrastStart"];
+    var contrastEnd = query["contrastEnd"];
     var indexString = [];
     var contrastIndexString = [];
     var time = [];
     var contrastTime = [];
-    if (start.substring(1, start.length).match("-") != null && end.substring(1, start.length).match("-") != null) {
-        indexString = date.createIndexsByTime(start, end, "access-");
-        time = date.getConvertTimeByTime(start, end);
-    } else {
-        indexString = date.createIndexes(start, end, "access-");
-        time = date.getConvertTimeByNumber(start, end);
-    }
-    if (contrastStart.substring(1, start.length).match("-") != null && contrastEnd.substring(1, start.length).match("-") != null) {
-        contrastIndexString = date.createIndexsByTime(contrastStart, contrastEnd, "access-");
-        contrastTime = date.getConvertTimeByTime(contrastStart, contrastEnd);
-    } else {
-        contrastIndexString = date.createIndexes(contrastStart, contrastEnd, "access-");
-        contrastTime = date.getConvertTimeByNumber(contrastStart, contrastEnd);
-    }
+
+    indexString = date.createIndexes(start, end, "access-");
+    time = date.getConvertTimeByNumber(start, end);
+
+    contrastIndexString = date.createIndexes(contrastStart, contrastEnd, "access-");
+    contrastTime = date.getConvertTimeByNumber(contrastStart, contrastEnd);
+
     for (var i = 0; i < contrastIndexString.length; i++) {
         indexString.push(contrastIndexString[i]);
     }
