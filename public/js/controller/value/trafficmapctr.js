@@ -71,11 +71,15 @@ define(["./module"], function (ctrs) {
                     }
                     if (linkData.length > 0) {
                         if (linkData.length == 1) {
-                            $(".linkstree_left").css("margin-top", "64px")
+                            $(".linkstree_left").css("margin-top", "64px");
                             $scope.links = linkData;
+                            document.getElementById("linkstree_top").style.top = "50px";
+                            document.getElementById("linkstree_right").style.top = "50px";
                         } else {
-                            $(".linkstree_left").css("margin-top", "0px")
+                            $(".linkstree_left").css("margin-top", "0px");
                             $scope.links = linkData;
+                            document.getElementById("linkstree_top").style.top = "36%";
+                            document.getElementById("linkstree_right").style.top = "36%";
                         }
                     } else {
                         linkData.push({
@@ -84,8 +88,8 @@ define(["./module"], function (ctrs) {
                             ratio: 0,
                             count: 0
                         });
-                        document.getElementById("linkstree_top").style.top = "50px";
-                        document.getElementById("linkstree_right").style.top = "50px";
+                        /*document.getElementById("linkstree_top").style.top = "50px";
+                        document.getElementById("linkstree_right").style.top = "50px";*/
                         $(".linkstree_left").css("margin-top", "64px")
                         $(".linkstree_left_list").css("margin-top", "64px")
                         $scope.links = linkData
