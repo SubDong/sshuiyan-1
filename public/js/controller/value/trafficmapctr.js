@@ -76,10 +76,10 @@ define(["./module"], function (ctrs) {
                             document.getElementById("linkstree_top").style.top = "50px";
                             document.getElementById("linkstree_right").style.top = "50px";
                         } else {
-                            $(".linkstree_left").css("margin-top", "0px");
+                            $(".linkstree_left").css("margin-top", "8px");
                             $scope.links = linkData;
-                            document.getElementById("linkstree_top").style.top = "36%";
-                            document.getElementById("linkstree_right").style.top = "36%";
+                            document.getElementById("linkstree_top").style.top = (linkData.length*66-75)/2 +"px";
+                            document.getElementById("linkstree_right").style.top = (linkData.length*66-75)/2 +"px";
                         }
                     } else {
                         linkData.push({
