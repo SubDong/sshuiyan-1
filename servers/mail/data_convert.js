@@ -225,6 +225,50 @@ var data_convert = {
             default :
                 return "外部链接";
         }
+    },
+    convertChangeListData: function (data, ss, css) {
+        var result = [];
+        result.push({
+            "站点名称": "站点首页",
+            "www.best-ad.cn": "best-ad.cn",
+            " ": "",
+            "  ": ""
+        });
+        result.push({
+            "站点名称": "来源分析-来源升降榜(来路域名)(指标：pv)(" + ss + "对比" + css + ")",
+            "www.best-ad.cn": "",
+            " ": "",
+            "  ": ""
+        });
+        result.push({
+            "站点名称": "来路域名",
+            "www.best-ad.cn": ss,
+            " ": css,
+            "  ": "变化情况"
+        });
+        data["pv"].forEach(function (d, count) {
+            var _tmp = {
+                "站点名称": d["pathName"],
+                "www.best-ad.cn": d["pv"],
+                " ": d["contrastPv"],
+                "  ": d["percentage"]
+            };
+            result.push(_tmp);
+        });
+        result.push({
+            "站点名称": "全站统计",
+            "www.best-ad.cn": data["sum_pv"],
+            " ": data["contrast_sum_pv"],
+            "  ": data["percentage"]
+        });
+        result.push({
+            "站点名称": "Power by best-ad.cn",
+            "www.best-ad.cn": "",
+            " ": "",
+            "  ": ""
+        });
+        console.log(result);
+        return result;
     }
 }
 

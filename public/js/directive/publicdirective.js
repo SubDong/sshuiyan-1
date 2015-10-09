@@ -580,7 +580,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     });
                     if (scope.initMailData) { //根据不同页面加载该页面的邮件发送配置
                         scope.initMailData();
-                    }else{
+                    } else {
                         var ele = $("ul[name='sen_form']");
                         formUtils.rendererMailData(result, ele);
                     }
@@ -607,27 +607,77 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     if (obj.value == "csv") {
                         var dataInfo = angular.copy($rootScope.gridApi2.grid.options.data);
                         var dataHeadInfo = angular.copy($rootScope.gridApi2.grid.options.columnDefs);
-                        dataHeadInfo.forEach(function (item, i) {
-                            if (item.field != undefined) {
-                                dataInfo.forEach(function (dataItem, x) {
-                                    dataInfo[x] = JSON.parse(JSON.stringify(dataItem).replace(item.field, item.displayName));
-                                })
-                            }
-                        });
-                        var repData = JSON.stringify(dataInfo).replace(/\%/g, "*");
+                        if ($location.path().indexOf("changelist") != -1) {
+                            var _dataInfo = [];
+                            _dataInfo.push({
+                                "站点名称": "站点首页",
+                                "www.best-ad.cn": "best-ad.cn",
+                                " ": "",
+                                "  ": ""
+                            });
+                            _dataInfo.push({
+                                "站点名称": "来源分析-来源升降榜(来路域名)(指标：pv)(" + $rootScope.startString + "对比" + $rootScope.contrastStartString + ")",
+                                "www.best-ad.cn": "",
+                                " ": "",
+                                "  ": ""
+                            });
+                            _dataInfo.push({
+                                "站点名称": "来路域名",
+                                "www.best-ad.cn": $rootScope.startString,
+                                " ": $rootScope.contrastStartString,
+                                "  ": "变化情况"
+                            });
+                            //
+                            var sum_pv = 0;
+                            var contrast_sum_pv = 0;
+                            dataInfo.forEach(function (d, count) {
+                                var _tmp = {
+                                    "站点名称": d["pathName"],
+                                    "www.best-ad.cn": d["pv"],
+                                    " ": d["contrastPv"],
+                                    "  ": d["percentage"]
+                                };
+                                sum_pv += d["pv"];
+                                contrast_sum_pv += d["contrastPv"];
+                                _dataInfo.push(_tmp);
+                            });
+                            var percentage = sum_pv - contrast_sum_pv;
+                            _dataInfo.push({
+                                "站点名称": "全站统计",
+                                "www.best-ad.cn": sum_pv,
+                                " ": contrast_sum_pv,
+                                "  ": percentage + "(" + ((sum_pv - contrast_sum_pv) / contrast_sum_pv * 100) + "%)"
+                            });
+                            _dataInfo.push({
+                                "站点名称": "Power by best-ad.cn",
+                                "www.best-ad.cn": "",
+                                " ": "",
+                                "  ": ""
+                            });
+                            var repData = JSON.stringify(_dataInfo).replace(/\%/g, "*");
+                        } else {
+                            dataHeadInfo.forEach(function (item, i) {
+                                if (item.field != undefined) {
+                                    dataInfo.forEach(function (dataItem, x) {
+                                        dataInfo[x] = JSON.parse(JSON.stringify(dataItem).replace(item.field, item.displayName));
+                                    })
+                                }
+                            });
+                            var repData = JSON.stringify(dataInfo).replace(/\%/g, "*");
+                        }
+                        console.log(repData);
                         $http({
                             method: 'POST',
                             url: '/api/downCSV/?dataInfo=' + repData,
                             headers: {
                                 'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
                                 'Content-type': 'text/csv; charset=utf-8'
-
                             }
                         }).success(function (data, status, headers, config) {
                             var hiddenElement = document.createElement('a');
                             var dateTime = new Date();
                             var dateString = dateTime.Format("yyyyMdhmsS");
-                            hiddenElement.href = 'data:attachment/csv;charset=utf-8,' + encodeURI(data);
+                            hiddenElement.href = 'data:attachment/csv;charset=utf-8,\uFEFF' + encodeURI(data);
                             hiddenElement.target = '_blank';
                             hiddenElement.download = "down-" + dateString + ".csv";
                             hiddenElement.click();
@@ -1147,7 +1197,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
 
                 scope.loadCompareDataShow = function (startTime, endTime) {
                     var semRequest = $http.get(SEM_API_URL + "search_word/" + $rootScope.userType
-                        + "/?startOffset=" + startTime + "&endOffset=" + endTime);
+                    + "/?startOffset=" + startTime + "&endOffset=" + endTime);
                     var count = 0;
                     $q.all([semRequest]).then(function (final_result) {
                         angular.forEach(final_result[0].data, function (r) {

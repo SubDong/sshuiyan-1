@@ -1733,8 +1733,8 @@ define(["app"], function (app) {
         ];
         $scope.init = function (timeData) {
             $http.get("api/changeList?start=" + timeData.start + "&end=" + timeData.end + "&contrastStart=" + timeData.contrastStart + "&contrastEnd=" + timeData.contrastEnd).success(function (data) {
-
-                $scope.changeObj = {
+                console.log(data);
+                $rootScope.changeObj = {
                     sum_pv_count: data.sum_pv,
                     contrast_sum_pv_count: data.contrast_sum_pv,
                     all_percentage: data.percentage

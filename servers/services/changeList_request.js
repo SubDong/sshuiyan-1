@@ -160,11 +160,24 @@ var changeList_request = {
                         }
                     }
                 }
+
+                //data = {
+                //    sum_pv: result.data.pv.value,
+                //    contrast_sum_pv: result.contrastData.pv.value,
+                //    pv: pv_data,
+                //    percentage: (result.data.pv.value > result.contrastData.pv.value ? "+" + (result.data.pv.value - result.contrastData.pv.value) : result.data.pv.value - result.contrastData.pv.value) + "(" + (result.contrastData.pv.value==0?0+"%)":(result.data.pv.value > result.contrastData.pv.value ? "+" + ((result.data.pv.value - result.contrastData.pv.value) / result.contrastData.pv.value > 1 ? 1 : (result.data.pv.value - result.contrastData.pv.value) / result.contrastData.pv.value).toFixed(2) + "%)" : ((result.data.pv.value - result.contrastData.pv.value) / result.contrastData.pv.value > 1 ? 1 : (result.data.pv.value - result.contrastData.pv.value) / result.contrastData.pv.value).toFixed(2) + "%)"))
+                //};
+                var sum_pv = 0;
+                var contrast_sum_pv = 0;
+                pv_data.forEach(function (d) {
+                    sum_pv += d["pv"];
+                    contrast_sum_pv += d["contrastPv"];
+                })
                 data = {
-                    sum_pv: result.data.pv.value,
-                    contrast_sum_pv: result.contrastData.pv.value,
+                    sum_pv: sum_pv,
+                    contrast_sum_pv: contrast_sum_pv,
                     pv: pv_data,
-                    percentage: (result.data.pv.value > result.contrastData.pv.value ? "+" + (result.data.pv.value - result.contrastData.pv.value) : result.data.pv.value - result.contrastData.pv.value) + "(" + (result.contrastData.pv.value==0?0+"%)":(result.data.pv.value > result.contrastData.pv.value ? "+" + ((result.data.pv.value - result.contrastData.pv.value) / result.contrastData.pv.value > 1 ? 1 : (result.data.pv.value - result.contrastData.pv.value) / result.contrastData.pv.value).toFixed(2) + "%)" : ((result.data.pv.value - result.contrastData.pv.value) / result.contrastData.pv.value > 1 ? 1 : (result.data.pv.value - result.contrastData.pv.value) / result.contrastData.pv.value).toFixed(2) + "%)"))
+                    percentage: (sum_pv > contrast_sum_pv ? "+" + (sum_pv - contrast_sum_pv) : sum_pv - contrast_sum_pv) + "(" + (contrast_sum_pv==0?0+"%)":(sum_pv > contrast_sum_pv ? "+" + ((sum_pv - contrast_sum_pv) / contrast_sum_pv > 1 ? 1 : (sum_pv - contrast_sum_pv) / contrast_sum_pv).toFixed(2) + "%)" : ((sum_pv - contrast_sum_pv) / contrast_sum_pv > 1 ? 1 : (sum_pv - contrast_sum_pv) / contrast_sum_pv).toFixed(2) + "%)"))
                 };
                 callbackFn(data);
             } else

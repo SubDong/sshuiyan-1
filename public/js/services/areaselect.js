@@ -224,7 +224,8 @@ define(["../app"], function (app) {
             "keyword",
             "ext",
             "indexoverview",
-            "entrancepage"
+            "entrancepage",
+            "changelist"
         ]
     }]);
 });

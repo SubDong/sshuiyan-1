@@ -4,7 +4,7 @@
 define(["./module"], function (ctrs) {
 
     'use strict';
-    ctrs.controller('changelistctr', function ($scope, $rootScope, $q, $http, requestService, messageService, areaService, uiGridConstants, popupService) {
+    ctrs.controller('changelistctr', function ($scope, $rootScope, $q, $http, $cookieStore, requestService, messageService, areaService, uiGridConstants, popupService) {
             //初始化时间
             $rootScope.tableTimeStart = 0;
             $rootScope.tableTimeEnd = 0;
@@ -61,6 +61,7 @@ define(["./module"], function (ctrs) {
                 },
                 {
                     name: " ",
+                    displayName: "变化情况",
                     headerCellTemplate: '<div class="change_list">' +
                     '<a href="javascript:void(0)" class="rise">+升</a>' +
                     '<a href="javascript:void(0)" class="descend">-降</a>' +
@@ -276,6 +277,44 @@ define(["./module"], function (ctrs) {
                 $scope.lastDayClass = false;
                 $scope.lastWeekClass = false;
                 $scope.yesterdayClass = false;
+            };
+
+            $rootScope.initMailData = function () {
+                console.log($rootScope.mailUrl[10]);
+                $http.get("api/saveMailConfig?rt=read&rule_url=" + $rootScope.mailUrl[10] + "").success(function (result) {
+                    if (result) {
+                        var ele = $("ul[name='sen_form']");
+                        formUtils.rendererMailData(result, ele);
+                    }
+                });
+            }
+            $scope.sendConfig = function () {
+                var formData = formUtils.vaildateSubmit($("ul[name='sen_form']"));
+                var result = formUtils.validateEmail(formData.mail_address, formData);
+                if (result.ec) {
+                    alert(result.info);
+                } else {
+                    formData.rule_url = $rootScope.mailUrl[10];
+                    formData.uid = $cookieStore.get('uid');
+                    formData.site_id = $rootScope.siteId;
+                    formData.type_id = $rootScope.userType;
+                    formData.schedule_date = $scope.mytime.time.Format('hh:mm');
+                    formData.start = $rootScope.start + "";
+                    formData.end = $rootScope.end + "";
+                    formData.startString = $rootScope.startString;
+                    formData.contrastStart = $rootScope.contrastStart + "";
+                    formData.contrastEnd = $rootScope.contrastEnd + "";
+                    formData.contrastStartString = $rootScope.contrastStartString;
+                    $http.get("api/saveMailConfig?data=" + JSON.stringify(formData)).success(function (data) {
+                        var result = JSON.parse(eval("(" + data + ")").toString());
+                        if (result.ok == 1) {
+                            alert("操作成功!");
+                            $http.get("/api/initSchedule");
+                        } else {
+                            alert("操作失败!");
+                        }
+                    });
+                }
             };
         }
     );

@@ -521,8 +521,10 @@ api.post("/downCSV", function (req, res) {
     var query = url.parse(req.url, true).query;
     var dataInfo = query['dataInfo'].replace(/\*/g, "%");
     var jsonData = JSON.parse(dataInfo);
+    console.log(jsonData);
     csvApi.json2csv(jsonData, function (err, csv) {
         if (err) throw err;
+        console.log(csv);
         var buffer = new Buffer(csv);
         //需要转换字符集
         var uid = uuid.v1();
