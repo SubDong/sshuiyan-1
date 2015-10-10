@@ -8,6 +8,8 @@ var http = require('http');
 var url = require('url');
 var datautils = require('../utils/datautils');
 
+var bufferutils = require('../utils/bufferutils');
+
 
 var options = {
     host: '192.168.1.103',
@@ -27,14 +29,27 @@ var options = {
 
 api.get("/querydata", function (req, res){
     var query = url.parse(req.url, true).query;
+    var parameter = JSON.parse(query.query);
+    options.path = "/escache/groupAnalytics/condition/1/" + parameter.scale+"/"+parameter.dateRange+"/"+parameter.indicator;
+    console.log(options.path);
+
     var result;
 
     var remote_req = http.request(options, function (data) {
 
+        var bufferHelper = new bufferutils();
+
         data.on('data',function (chunk) {
-            result = chunk.toString();
-            datautils.send(res, JSON.stringify(result));
+
+            bufferHelper.concat(chunk);
         });
+
+        data.on('end',function (chunk) {
+            var html = bufferHelper.toBuffer().toString();
+            res.writeHead(200);
+            res.end(html);
+        });
+
     });
     remote_req.end();
 

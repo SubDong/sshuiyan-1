@@ -43,10 +43,11 @@
         <refresh></refresh>
     </div>
     <div class="my_concent">
-        <!--<ssh-date-show type="today" dimension="br"></ssh-date-show>-->
+
         <div class="index_chart">
-            <div id="group_analysis" class="gesture" style="height:400px;"></div>
+            <div id="myChart" class="gesture" style="height:400px;"></div>
         </div>
+
         <div class="group-analysis-table">
             <table>
                 <thead>
@@ -70,10 +71,45 @@
                 </thead>
                 <tbody>
                 <tr ng-repeat="groupTableDatas in groupTableDataes" ng-class="{'summaryColor':$index == 0}">
-                    <td ng-repeat="groupTableData in groupTableDatas.subTableDates" ng-class="{'firstBgColor':groupTableData.name >= 100,'secondBgColor':100 > groupTableData.name && groupTableData.name > 40,'thirdBgColor':groupTableData.name < 40,'defaultColor':groupTableData.name == '','zeroColor':$index == 1}">
-                        <p ng-bind-html="groupTableData.name"></p>
-                        <span ng-bind-html="groupTableData.total"></span>
+
+                    <!-- 标题-->
+                    <td ng-class = "firstBgColor" >
+                        <p ng-bind-html="groupTableDatas.code"></p>
+                        <span ng-bind-html="groupTableDatas.userNumber"></span>
+                        <span>位用户</span>
                     </td>
+
+                    <!-- 第0天-->
+                    <td ng-class = "zeroColor" >
+                        <p ng-bind-html="groupTableDatas.data"></p>
+                    </td>
+
+                    <!--同类群组比较-->
+                    <td ng-if="groupIndex.selected.field != 'retentionRate'"  ng-repeat="groupTableData in groupTableDatas.gaResultTdDatas | limitTo : 12"
+                        ng-class="{'firstBgColor':max >= groupTableData.data && groupTableData.data > max * 0.75,
+                              'secondBgColor':max * 0.75 >= groupTableData.data && groupTableData.data > max * 0.5,
+                              'thirdBgColor':max * 0.5 >= groupTableData.data && groupTableData.data > max * 0.25,
+                              'lastBgColor':max * 0.25 >= groupTableData.data }">
+
+                        <p ng-bind-html="groupTableData.data"></p>
+
+                    </td>
+                    </ng-if>
+
+
+                        <td ng-if="groupIndex.selected.field  == 'retentionRate' "  ng-repeat="groupTableData in groupTableDatas.gaResultTdDatas | limitTo : 12"
+                            ng-class="{'firstBgColor':max >= groupTableData.value && groupTableData.value > max * 0.75,
+                              'secondBgColor':max * 0.75 >= groupTableData.value && groupTableData.value > max * 0.5,
+                              'thirdBgColor':max * 0.5 >= groupTableData.value && groupTableData.value > max * 0.25,
+                              'lastBgColor':max * 0.25 >= groupTableData.value }">
+
+                            <p ng-bind-html="groupTableData.data"></p>
+
+                        </td>
+
+
+
+
                     <!--<td ng-bind-html="groupTableData.n0"></td>
                     <td ng-bind-html="groupTableData.n1" ng-class="{'firstBgColor':groupTableData.n1 >= 100,'secondBgColor':100 > groupTableData.n1 && groupTableData.n1 > 40,'thirdBgColor':groupTableData.n1 < 40,'defaultColor':groupTableData.n1 == ''}"></td>
                     <td ng-bind-html="groupTableData.n2" ng-class="{'firstBgColor':groupTableData.n2 >= 100,'secondBgColor':100 > groupTableData.n2 && groupTableData.n2 > 40,'thirdBgColor':groupTableData.n2 < 40,'defaultColor':groupTableData.n2 == ''}"></td>

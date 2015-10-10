@@ -12,6 +12,7 @@ var express = require('express'),
     api = require('./servers/apis/data'),
     configapi = require('./servers/apis/configapi'),
     serviceapi  = require('./servers/apis/serviceapi'),
+    cache = require('./servers/apis/gacache');
     app = express(),
     uuid = require('node-uuid'),
     auth = require('./routes/auth'),
@@ -106,6 +107,8 @@ app.use('/api', api);
 app.use('/config', configapi);
 
 app.use('/service', serviceapi);
+
+app.use("/gacache",cache);
 
 app.use('/token', token);
 
