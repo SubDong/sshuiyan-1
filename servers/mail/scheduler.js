@@ -71,12 +71,13 @@ module.exports = function (req) {
                         changeList_request.search(req.es, indexString, time, function (data) {
                             if (data) {
                                 var subject = "附件中含有数据统计,请查收!";
-                                var title = startString + "与" + contrastStartString + "来源变化榜数据报告!!!";
+                                var title = startString + "与" + contrastStartString + "来源变化榜数据报告";
                                 var result = data_convert.convertChangeListData(data, startString, contrastStartString);
                                 csvApi.json2csv(result, function (err, csv) {
-                                    var buffer = new Buffer(csv);
+                                    //var buffer = new Buffer(csv);
+                                    //需要转换字符集
                                     var fileSuffix = new Date().getTime();
-                                    fs.writeFile("servers/filetmp/" + fileSuffix + ".csv", buffer, function (error) {
+                                    fs.writeFile("servers/filetmp/" + fileSuffix + ".csv", csv, function (error) {
                                         if (error) {
                                             console.error(error);
                                             return;
@@ -89,7 +90,7 @@ module.exports = function (req) {
                                                 html: '<b>' + subject + '</b>',// html body
                                                 attachments: [
                                                     {
-                                                        filename: fileSuffix + '.csv',
+                                                        filename: fileSuffix + '.txt',
                                                         path: "servers/filetmp/" + fileSuffix + ".csv"
                                                     }
                                                 ]

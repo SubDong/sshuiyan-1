@@ -267,7 +267,6 @@ var data_convert = {
             " ": "",
             "  ": ""
         });
-        console.log(result);
         return result;
     }
 }
