@@ -1293,14 +1293,10 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
 
                 scope.pushESData = function (result, flag) {
                     var _array = $rootScope.copy(scope.dateShowArray);
-
                     if (Object.prototype.toString.call(result) === '[object Array]') {
                         var _count = 0;
                         angular.forEach(result, function (r) {
                             var infoKey = r[$rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field];
-                            //if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null")) {
-                            //    return false;
-                            //}
                             if (infoKey == undefined) {
                                 return false;
                             }
@@ -1352,9 +1348,14 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                         angular.forEach(obj, function (r) {
                             var dateShowObject = {};
                             dateShowObject.label = r.label;
+
                             var temp = 0;
                             var count = 0;
                             angular.forEach(r.quota, function (qo, _i) {
+                                var _key = r.key[_i];
+                                if (_key != undefined && (_key == "-" || _key == "" || _key == "www" || _key == "null")) {
+                                    return false;
+                                }
                                 temp += Number(qo);
                                 count++;
                             });
