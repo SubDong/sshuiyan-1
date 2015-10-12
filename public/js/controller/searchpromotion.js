@@ -808,6 +808,8 @@ define(["./module"], function (ctrs) {
                 if (a.col.field == "cpc" || a.col.field == "cost") {
                     returnData = (returnData + "").substring(0, (returnData + "").indexOf(".") + 3);
                 }
+            }else{
+                returnData = "--"
             }
             return returnData;
         }

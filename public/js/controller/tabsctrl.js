@@ -1077,7 +1077,7 @@ define(["app"], function (app) {
                                     if (dataSEM[0]) {
                                         dataObj["accountName"] = "搜索推广 (" + dataSEM[0].accountName + ")";
                                     } else {
-                                        dataObj["accountName"] = "搜索推广 (--)";
+                                        dataObj["accountName"] = "搜索推广 (暂无数据 )";
                                     }
                                 }
                                 semDataArray.forEach(function (sem, i) {
@@ -1660,7 +1660,9 @@ define(["app"], function (app) {
 
                     }
                 }
-
+                if(option[0].entity.period == "暂无数据" || option[0].entity.rf_type == "暂无数据" || option[0].entity.se == "暂无数据" || option[0].entity.kw == "暂无数据" || option[0].entity.rf == "暂无数据" || option[0].entity.loc == "暂无数据" || option[0].entity.region == "暂无数据" || option[0].entity.pm == "暂无数据" || option[0].entity.ct == "暂无数据" || option[0].entity.city == "暂无数据" || option[0].entity.accountName == "搜索推广 (暂无数据 )"){
+                    returnData = ["--", "--", "--", "--"]
+                }
                 switch (number) {
                     case 1:
                         return returnData[0];
