@@ -1,7 +1,7 @@
 <div class="middle_containers" ng-controller="history" ng-init="historyInit()">
-
     <div class="date_select">
-        <b class="" ng-model="webName">{{webName}}历史趋势</b>
+        <b><b style="width: 25%;height: 40px;display: block;overflow: hidden;white-space: nowrap;-o-text-overflow: ellipsis;text-overflow: ellipsis;"
+              title="{{webName}}">{{webName}}</b>历史趋势</b>
         <calendar></calendar>
         <datecontrast></datecontrast>
         <refresh></refresh>
@@ -14,15 +14,19 @@
         </div>
         <div class="table_content" ng-controller="TabsCtrl">
             <ul ng-init="tab = 1" class="nav nav-tabs nav-justified">
-                <li class="ng-isolate-scope" ng-class="{active:tab===1}" ng-click="tab = 1" style="width: auto;min-width: 108px">
+                <li class="ng-isolate-scope" ng-class="{active:tab===1}" ng-click="tab = 1"
+                    style="width: auto;min-width: 108px">
                     <a class="ng-binding">高级筛选
                         <span>
                             <span ng-show="sourceSearch || visitorSearch">（</span>
                             <span ng-show="sourceSearch">
-                                {{sourceSearch}}<i class="glyphicon glyphicon-remove" data-ng-click="removeSourceSearch(this);" ng-show="sourceSearch"></i>
+                                {{sourceSearch}}<i class="glyphicon glyphicon-remove"
+                                                   data-ng-click="removeSourceSearch(this);" ng-show="sourceSearch"></i>
                             </span>
                             <span ng-show="visitorSearch">
-                                {{visitorSearch}}<i class="glyphicon glyphicon-remove" data-ng-click="removeVisitorSearch(this);" ng-show="visitorSearch"></i>
+                                {{visitorSearch}}<i class="glyphicon glyphicon-remove"
+                                                    data-ng-click="removeVisitorSearch(this);"
+                                                    ng-show="visitorSearch"></i>
                             </span>
                             <span ng-show="sourceSearch || visitorSearch">）</span>
                         </span>
@@ -45,7 +49,9 @@
                                             <span ng-bind-html="souce.name"></span>
                                         </ui-select-choices>
                                     </ui-select>
-                                    <ui-select ng-model="browser.selected" theme="select2" reset-search-input="false" class="fl" data-ng-change="searchEngine(browser.selected.value)" ng-hide="browserselect"
+                                    <ui-select ng-model="browser.selected" theme="select2" reset-search-input="false"
+                                               class="fl" data-ng-change="searchEngine(browser.selected.value)"
+                                               ng-hide="browserselect"
                                                style="width: 90px; margin-left:10px;">
                                         <ui-select-match placeholder="全部">{{$select.selected.name}}
                                         </ui-select-match>
@@ -62,38 +68,42 @@
                     <div class="chart_top2">
                         <ul>
                             <li><span>访客过滤 :</span></li>
-                            <li><label ng-click="setHistoryVisitors(0)"><input type="radio"  checked="checked" name="radio0" class="styled"/>全部</label></li>
-                            <li><label ng-click="setHistoryVisitors(1)"><input type="radio" name="radio0" class="styled"/>新访客</label></li>
-                            <li><label ng-click="setHistoryVisitors(2)"><input type="radio" name="radio0" class="styled"/>老访客</label></li>
+                            <li><label ng-click="setHistoryVisitors(0)"><input type="radio" checked="checked"
+                                                                               name="radio0" class="styled"/>全部</label>
+                            </li>
+                            <li><label ng-click="setHistoryVisitors(1)"><input type="radio" name="radio0"
+                                                                               class="styled"/>新访客</label></li>
+                            <li><label ng-click="setHistoryVisitors(2)"><input type="radio" name="radio0"
+                                                                               class="styled"/>老访客</label></li>
                         </ul>
                     </div>
                 </div>
             </div>
-<!--            <div class="custom_secendtitle">
-                <div class="custom_select" style="margin-top:15px;">
-                    转化目标
-                    <div role="group" class="btn-group">
-                        <ui-select ng-change="extendwayChange(extendway)" ng-model="extendway.selected" theme="select2" reset-search-input="false"
-                                   class="fl"
-                                   style="width: 120px;">
-                            <ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>
-                            <ui-select-choices repeat="extendway in extendways">
-                                <span ng-bind-html="extendway.name"  ></span>
-                            </ui-select-choices>
-                        </ui-select>
+            <!--            <div class="custom_secendtitle">
+                            <div class="custom_select" style="margin-top:15px;">
+                                转化目标
+                                <div role="group" class="btn-group">
+                                    <ui-select ng-change="extendwayChange(extendway)" ng-model="extendway.selected" theme="select2" reset-search-input="false"
+                                               class="fl"
+                                               style="width: 120px;">
+                                        <ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>
+                                        <ui-select-choices repeat="extendway in extendways">
+                                            <span ng-bind-html="extendway.name"  ></span>
+                                        </ui-select-choices>
+                                    </ui-select>
 
-                        <ui-select  ng-change="childrenExtendwayChange(childrenExtendway)" ng-model="childrenExtendway.selected" theme="select2" reset-search-input="false"
-                                    class="fl"
-                                    style="width: 120px;">
-                            <ui-select-match placeholder="请选择">{{$select.selected.name}}</ui-select-match>
+                                    <ui-select  ng-change="childrenExtendwayChange(childrenExtendway)" ng-model="childrenExtendway.selected" theme="select2" reset-search-input="false"
+                                                class="fl"
+                                                style="width: 120px;">
+                                        <ui-select-match placeholder="请选择">{{$select.selected.name}}</ui-select-match>
 
-                            <ui-select-choices repeat="childrenExtendway in childrenExtendways">
-                                <span ng-bind-html="childrenExtendway.name"  ></span>
-                            </ui-select-choices>
-                        </ui-select>
-                    </div>
-                </div>
-            </div>-->
+                                        <ui-select-choices repeat="childrenExtendway in childrenExtendways">
+                                            <span ng-bind-html="childrenExtendway.name"  ></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+                        </div>-->
             <div class="custom_table" ng-class="{hidePageContainer:gridApi2.grid.rows.length<=20}">
                 <div ui-grid="gridOptions" class="grid clearfix" i-grid-selection ui-grid-pagination
                      ui-grid-exporter ui-grid-auto-resize></div>
