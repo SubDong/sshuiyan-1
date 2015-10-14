@@ -1,6 +1,7 @@
 define(["./module"], function (ctrs) {
     "use strict";
     ctrs.controller("adsSourceCtr", function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants, $cookieStore) {
+        $scope.allCitys = angular.copy($rootScope.citys);
         // 高级搜索提示
         $scope.visitorSearch = "";
         $scope.areaSearch = "";

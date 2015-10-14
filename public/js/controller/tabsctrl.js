@@ -616,6 +616,7 @@ define(["app"], function (app) {
                     $scope.city.selected["name"] = area;
                 }
             }
+            $scope.allCitys = angular.copy($rootScope.citys);
             if (!$rootScope.tableSwitch) {
                 return;
             }
@@ -705,6 +706,7 @@ define(["app"], function (app) {
             $scope.isJudge = false;
             $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.targetSearch();
+            $scope.allCitys = angular.copy($rootScope.citys);
         };
 
         //设置搜索引擎过滤
@@ -736,6 +738,7 @@ define(["app"], function (app) {
                     $scope.browser.selected["name"] = info;
                 }
             }
+            $scope.allBrowsers = angular.copy($rootScope.browsers);
         };
         // 搜索词过滤
         $scope.setGjcFilter = function (gjcText) {

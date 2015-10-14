@@ -5,6 +5,8 @@ define(["./module"], function (ctrs) {
     "use strict";
 
     ctrs.controller('trend_today_ctrl', function ($scope, $q, $rootScope, $http, requestService, $cookieStore, messageService, areaService, uiGridConstants) {
+        $scope.allCitys = angular.copy($rootScope.citys);
+        $scope.allBrowsers = angular.copy($rootScope.browsers);
         $scope.todayClass = true;
         $scope.hourcheckClass = true;
         $scope.lastDaySelect = true;

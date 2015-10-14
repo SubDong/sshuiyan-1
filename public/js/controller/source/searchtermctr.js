@@ -5,6 +5,7 @@ define(["./module"], function (ctrs) {
 
     'use strict';
     ctrs.controller('searchtermctr', function ($scope, $rootScope, $q, $http, $cookieStore, requestService, messageService, areaService, uiGridConstants, popupService, $location) {
+            $scope.allCitys = angular.copy($rootScope.citys);
             //        高级搜索提示显示
             $scope.terminalSearch = "";
             $scope.areaSearch = "";

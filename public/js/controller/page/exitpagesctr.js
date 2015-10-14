@@ -5,7 +5,8 @@ define(["./module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.controller('exitpagesctr', function ($scope, $rootScope, $http, uiGridConstants) {
+    ctrs.controller('exitpagesctr', function ($scope, $rootScope ,$http, areaService, uiGridConstants) {
+        $scope.allBrowsers = angular.copy($rootScope.browsers);
         //        高级搜索提示
         $scope.sourceSearch = "";
         $scope.visitorSearch = "";

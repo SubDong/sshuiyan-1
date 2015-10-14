@@ -6,6 +6,8 @@ define(["./module"], function (ctrs) {
     "use strict";
 
     ctrs.controller('novisitors', function ($scope, $rootScope, $http, areaService,uiGridConstants) {
+        $scope.allCitys = angular.copy($rootScope.citys);
+        $scope.allBrowsers = angular.copy($rootScope.browsers);
 //        高级搜索提示
         $scope.sourceSearch = "";
         $scope.areaSearch = "";

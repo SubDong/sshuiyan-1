@@ -12,6 +12,27 @@ define(["./module"], function (ctrs) {
         var esType = $rootScope.userType;
         var trackid = $rootScope.siteTrackId;
 
+        //        高级搜索提示
+        $scope.sourceSearch = "";
+        $scope.terminalSearch = "";
+        $scope.areaSearch = "";
+//        取消显示的高级搜索的条件
+        $scope.removeSourceSearch = function (obj) {
+            $scope.souce.selected = {"name": "全部"};
+//            $rootScope.$broadcast("loadAllSource");
+            obj.sourceSearch = "";
+        }
+        $scope.removeTerminalSearch = function (obj) {
+//            $rootScope.$broadcast("loadAllTerminal");
+            obj.sourceSearch = "";
+        }
+
+        $scope.removeAreaSearch = function (obj) {
+            $scope.city.selected = {"name": "全部"};
+//            $rootScope.$broadcast("loadAllArea");
+            obj.areaSearch = "";
+        }
+
         //转化分析表格配置
         $scope.gridOptions = {
             paginationPageSize: 20,
