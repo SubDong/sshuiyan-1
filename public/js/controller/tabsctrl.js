@@ -184,7 +184,7 @@ define(["app"], function (app) {
                     name: '来源',
                     displayName: "来源",
                     field: "referrer",
-                    cellTemplate: "<a href='{{grid.appScope.getDataUrlInfo(grid, row,1)}}' title='{{grid.appScope.getDataUrlInfo(grid, row,1)}}' target='_blank' style='color:#0965b8;line-height:30px; display:block; padding:0 10px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;}'>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</a>",
+                    cellTemplate: "<div class='getReferrerData' my-data-one='{{grid.appScope.getCellDisplayValueReferrer(grid, row, 1)}}' my-data-two='{{grid.appScope.getCellDisplayValueReferrer(grid, row, 2)}}'></div>",
                     enableSorting: false
                 },
                 {
@@ -1586,6 +1586,20 @@ define(["app"], function (app) {
                     return bhlString != "" ? bhlString : (bhl + "").indexOf("NaN") != -1 ? 0 : bhl;
                 default :
                     return "--";
+            }
+        }
+        $scope.getCellDisplayValueReferrer = function (grid, row, number) {
+            var a = row.entity.referrer.split(",");
+            if (number == 1) {
+                if (a[0] == "-") {
+                    a[0] = "javascript:void(0)"
+                }
+                return a[0];
+            } else if (number == 2) {
+                if (a[0] == "-") {
+                    a[1] = "直接访问";
+                }
+                return a[1];
             }
         }
         //得到表格底部数据
