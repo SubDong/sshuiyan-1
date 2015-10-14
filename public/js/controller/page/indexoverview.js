@@ -6,6 +6,7 @@ define(["./module"], function (ctrs) {
     "use strict";
 
     ctrs.controller('indexoverview', function ($scope, $rootScope, $cookieStore,$http, areaService, uiGridConstants) {
+        $scope.allBrowsers = angular.copy($rootScope.browsers);
         //        高级搜索提示
         $scope.sourceSearch = "";
         $scope.visitorSearch = "";

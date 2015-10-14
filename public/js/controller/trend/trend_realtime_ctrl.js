@@ -5,6 +5,8 @@ define(["./module"], function (ctrs) {
     "use strict";
 
     ctrs.controller('trend_realtime_ctrl', function ($scope, $rootScope, $http, requestService, messageService, $log, areaService, SEM_API_URL) {
+        $scope.allCitys = angular.copy($rootScope.citys);
+        $scope.allBrowsers = angular.copy($rootScope.browsers);
         $scope.visitorCount = 0;
         //table配置
         $rootScope.tableTimeStart = 0;

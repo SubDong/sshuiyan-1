@@ -6,6 +6,7 @@ define(["./module"], function (ctrs) {
     "use strict";
 
     ctrs.controller('visitepagesctr', function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants) {
+        $scope.allBrowsers = angular.copy($rootScope.browsers);
         //        高级搜索提示
         $scope.sourceSearch = "";
         $scope.visitorSearch = "";

@@ -3,6 +3,7 @@
  */
 define(["./module"], function (ctrs) {
     ctrs.controller('searchctr', function ($scope, $rootScope, $q, requestService, areaService, $http, SEM_API_URL, uiGridConstants) {
+            $scope.allCitys = angular.copy($rootScope.citys);
 //        高级搜索提示
             $scope.terminalSearch = "";
             $scope.areaSearch = "";

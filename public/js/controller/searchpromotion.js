@@ -212,6 +212,7 @@ define(["./module"], function (ctrs) {
                     $scope.city.selected["name"] = area;
                 }
             }
+            $scope.allCitys = angular.copy($rootScope.citys);
             $scope.gridOptions.data = [];
             $scope.gridOpArray = angular.copy($rootScope.searchGridArray);
             $scope.gridOptions.columnDefs = $scope.gridOpArray;

@@ -100,7 +100,7 @@
                                                    style="width: 90px; margin-left:10px;">
                                             <ui-select-match placeholder="全部">{{$select.selected.name}}
                                             </ui-select-match>
-                                            <ui-select-choices repeat="browser in browsers">
+                                            <ui-select-choices repeat="browser in allBrowsers">
                                                 <span ng-bind-html="browser.name"></span>
                                             </ui-select-choices>
                                         </ui-select>
@@ -132,7 +132,7 @@
                                                        style="width: 120px;">
                                                 <ui-select-match placeholder="全部">{{$select.selected.name}}
                                                 </ui-select-match>
-                                                <ui-select-choices repeat="city in citys">
+                                                <ui-select-choices repeat="city in allCitys">
                                                     <span ng-bind-html="city.name"></span>
                                                 </ui-select-choices>
                                             </ui-select>

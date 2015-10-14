@@ -5,6 +5,8 @@ define(["./module"], function (ctrs) {
     "use strict";
 
     ctrs.controller('trend_month_ctrl', function ($scope, $rootScope, $q, $http,$cookieStore, requestService, messageService, areaService, uiGridConstants) {
+        $scope.allCitys = angular.copy($rootScope.citys);
+        $scope.allBrowsers = angular.copy($rootScope.browsers);
         $('#reportrange span').html(GetDateStr(-29) + "至" + GetDateStr(0));
         $scope.monthClass = true;
         $scope.hourcheckClass = true;
