@@ -715,6 +715,9 @@ var ad = {
     formatFunc: function (value, formatType) {
         switch (formatType) {
             case "avgTime":
+                if (value == 0) {
+                    return "--";
+                }
                 var days = Math.floor(value / 1440 / 60);
                 var hours = Math.floor((value - days * 1440 * 60) / 3600);
                 var minutes = Math.floor((value - days * 1440 * 60 - hours * 3600) / 60);
