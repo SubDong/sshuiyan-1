@@ -1670,11 +1670,19 @@ define(["app"], function (app) {
                         returnData[0] = returnData[0] == "0" ? "0" : (returnData[0] / option.length).toFixed(2);
                     }
                     if (a.col.field == "avgTime") {
-                        var atime1 = parseInt(newSpl[0] / option.length) + "";
-                        var atime2 = parseInt(newSpl[1] / option.length) + "";
-                        var atime3 = parseInt(newSpl[2] / option.length) + "";
+                        var _ll = 0;
+                        for (var _i = 0; _i < option.length; _i++) {
+                            if (option[_i].entity.avgTime != "--") {
+                                _ll++;
+                            }
+                        }
+                        if (_ll == 0) {
+                            _ll = 1;
+                        }
+                        var atime1 = parseInt(newSpl[0] / _ll) + "";
+                        var atime2 = parseInt(newSpl[1] / _ll) + "";
+                        var atime3 = parseInt(newSpl[2] / _ll) + "";
                         returnData[0] = (atime1.length == 1 ? "0" + atime1 : atime1) + ":" + (atime2.length == 1 ? "0" + atime2 : atime2) + ":" + (atime3.length == 1 ? "0" + atime3 : atime3);
-
                     }
                 }
                 if(option[0].entity.period == "暂无数据" || option[0].entity.rf_type == "暂无数据" || option[0].entity.se == "暂无数据" || option[0].entity.kw == "暂无数据" || option[0].entity.rf == "暂无数据" || option[0].entity.loc == "暂无数据" || option[0].entity.region == "暂无数据" || option[0].entity.pm == "暂无数据" || option[0].entity.ct == "暂无数据" || option[0].entity.city == "暂无数据" || option[0].entity.accountName == "搜索推广 (暂无数据 )"){
