@@ -1,27 +1,30 @@
 <div class="middle_containers" ng-controller="eventchange_addctr">
     <div class="add_event_title">
-        <p>  <span ng-bind-html="userTypeName"></span> -新增事件转化目标</p>
+        <p><span ng-bind-html="userTypeName"></span> -新增事件转化目标</p>
     </div>
     <div class="add_event_content">
         <div class="table_content">
             <ul ng-init="tab = 1" class="nav nav-tabs nav-justified">
-                <li class="ng-isolate-scope"  ng-class="{active:tab===1}" ng-click="tab = 1">
+                <li class="ng-isolate-scope" ng-class="{active:tab===1}" ng-click="tab = 1">
                     <a class="ng-binding">预览添加</a></li>
                 <li class="ng-isolate-scope" ng-class="{active:tab===2}" ng-click="tab = 2">
                     <a class="ng-binding">手动添加</a></li>
             </ul>
-            <div class="tabs_content add_event_tabs" >
-                <div class="custom_title" data-ng-show="tab === 1" >
+            <div class="tabs_content add_event_tabs">
+                <div class="custom_title" data-ng-show="tab === 1">
                     <p> 事件预览目标URL:</p>
 
                     <form class="form-horizontal" id="previewForm" name="previewForm" novalidate>
                         <div class="form-group">
                             <div class="col-sm-4">
-                                <input type="text" id="previewUrl" name="previewUrl" ssh-url="" data-ng-model="preview.url" class="form-control" placeholder="请输入..." required>
+                                <input type="text" id="previewUrl" name="previewUrl" ssh-url=""
+                                       data-ng-model="preview.url" class="form-control" placeholder="请输入..." required>
                             </div>
                             <div class="col-sm-4">
-                                <button ng-disabled="previewForm.previewUrl.$invalid" type="submit" class="btn btn-info" data-ng-click="sshUrlEvent()">保 存</button>
-                            <a href="#conf/webcountsite/eventchange" type="submit" class="btn btn-info">取消</a>
+                                <button ng-disabled="previewForm.previewUrl.$invalid" type="submit" class="btn btn-info"
+                                        data-ng-click="sshUrlEvent()">保 存
+                                </button>
+                                <a href="#conf/webcountsite/eventchange" type="submit" class="btn btn-info">取消</a>
                             </div>
                         </div>
                         <span style="color:red" ng-show="previewForm.previewUrl.$invalid">
@@ -29,39 +32,60 @@
                         </span>
                     </form>
                     <p>提示：请输入您所要监控的事件目标(按钮、下载链接等)所在页面的URL，系统将读入该页面供您设置事件目标。</p>
-                    <p><span class="errorMsg">注意：</span>事件目标需要在网页源代码中有位移的ID标志,如果此页面需要登录后才能访问，请您登录后再在同一浏览器中登录百度统计后进行设置。</p>
+
+                    <p><span class="errorMsg">注意：</span>事件目标需要在网页源代码中有位移的ID标志,如果此页面需要登录后才能访问，请您登录后再在同一浏览器中登录百度统计后进行设置。
+                    </p>
 
                 </div>
-                <form role="form" name="eventForm" ng-submit="submitForm(eventForm.$valid)" class="form-horizontal" novalidate>
+                <form role="form" name="eventForm" ng-submit="submitForm(eventForm.$valid)" class="form-horizontal"
+                      novalidate>
                     <div class="custom_title" ng-show="tab === 2">
                         <form class="form-horizontal">
                             <div class="form-group">
                                 <label class=" col-md-12 control-label">事件元素ID：</label>
+
                                 <div class="col-sm-4">
-                                    <input type="text" class="form-control" placeholder="事件元素ID" onfocus="this.setAttribute('placeholder','')"
-                                           required data-ng-model="eventChange.event_id" onblur="this.setAttribute('placeholder','事件元素ID')">
+                                    <input type="text" class="form-control" placeholder="事件元素ID"
+                                           onfocus="this.setAttribute('placeholder','')"
+                                           required data-ng-model="eventChange.event_id"
+                                           onblur="this.setAttribute('placeholder','事件元素ID')">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class=" col-md-12 control-label">事件目标名称：</label>
+
                                 <div class="col-sm-4">
-                                    <input type="text" class="form-control" placeholder="事件目标名称" onfocus="this.setAttribute('placeholder','')"
-                                           required data-ng-model=" eventChange.event_name"  onblur="this.setAttribute('placeholder','事件目标名称')">
+                                    <input type="text" class="form-control" placeholder="事件目标名称"
+                                           onfocus="this.setAttribute('placeholder','')"
+                                           required data-ng-model=" eventChange.event_name"
+                                           onblur="this.setAttribute('placeholder','事件目标名称')">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-md-12 control-label">事件作用页面或目录：</label>
+
                                 <div class="col-sm-4">
-                                    <input type="text" class="form-control" placeholder="事件作用页面或目录" onfocus="this.setAttribute('placeholder','')"
-                                           required data-ng-model="eventChange.event_page" onblur="this.setAttribute('placeholder','事件作用页面或目录')">
+                                    <input type="text" class="form-control" placeholder="事件作用页面或目录"
+                                           onfocus="this.setAttribute('placeholder','')"
+                                           required data-ng-model="eventChange.event_page"
+                                           onblur="this.setAttribute('placeholder','事件作用页面或目录')">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <!--<input type="checkbox"   name="设置为转化目标" data-ng-model="eventChange.event_target" />-->
+                                <div class="col-sm-4">
+                                    <input type="checkbox" name="设置时长转化"
+                                           data-ng-model="eventChange.event_target"/><span><strong>设置访问页数转化</strong></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-12">
                                     <p>可以在URL首或尾使用*匹配任意长度字符，直接填写*代表事件作用目标为整个网站</p>
 
-                                    <button  ng-disabled="eventForm.$invalid" class="btn btn-info count_content_button" ng-click="onSaveEvent()">确定</button>
-                                    <button  class="btn btn-info count_content_button" ng-click="onCancel()">取消</button>
+                                    <button ng-disabled="eventForm.$invalid" class="btn btn-info count_content_button"
+                                            ng-click="onSaveEvent()">确定
+                                    </button>
+                                    <button class="btn btn-info count_content_button" ng-click="onCancel()">取消</button>
 
                                 </div>
                             </div>
