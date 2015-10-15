@@ -1659,7 +1659,11 @@ define(["app"], function (app) {
                             contrastPv += option[c].entity["contrastPv"];
                         }
                         if (window.location.href.split("/")[window.location.href.split("/").length - 1] == "changelist") {
-                            returnData[0] = returnData[0] == "0" ? "0%" : (returnData[0] / contrastPv).toFixed(2) + "%";
+                            if (contrastPv == 0) {
+                                returnData[0] = "100%"
+                            } else {
+                                returnData[0] = returnData[0] == "0" ? "0%" : (returnData[0] * 100 / contrastPv).toFixed(2) + "%";
+                            }
                         } else {
                             returnData[0] = returnData[0] == "0" ? "0%" : (returnData[0] / option.length).toFixed(2) + "%";
                         }
@@ -1760,7 +1764,6 @@ define(["app"], function (app) {
         ];
         $scope.init = function (timeData) {
             $http.get("api/changeList?start=" + timeData.start + "&end=" + timeData.end + "&contrastStart=" + timeData.contrastStart + "&contrastEnd=" + timeData.contrastEnd).success(function (data) {
-                console.log(data);
                 $rootScope.changeObj = {
                     sum_pv_count: data.sum_pv,
                     contrast_sum_pv_count: data.contrast_sum_pv,

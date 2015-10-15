@@ -118,21 +118,30 @@ var changeList_request = {
                         var flag = false;
                         for (var k = 0; k < result.contrastData.all_pv.buckets.length; k++) {
                             if (result.data.all_pv.buckets[i].key == result.contrastData.all_pv.buckets[k].key) {
+                                var _pv = result.data.all_pv.buckets[i].pv_count.value;
+                                var _contrastPv = result.contrastData.all_pv.buckets[k].pv_count.value;
+                                var _percentage = ((_pv - _contrastPv) / _contrastPv) * 100;
+                                if (_percentage > 0) {
+                                    _percentage = "+" + (_pv - _contrastPv) + "(+" + _percentage.toFixed(2) + "%)"
+                                } else {
+                                    _percentage = (_pv - _contrastPv) + "(" + _percentage.toFixed(2) + "%)";
+                                }
                                 pv_data.push({
-                                    pathName: result.data.all_pv.buckets[i].key=="-"?"直接输入网址或标签":result.data.all_pv.buckets[i].key,
-                                    pv: result.data.all_pv.buckets[i].pv_count.value,
-                                    contrastPv: result.contrastData.all_pv.buckets[k].pv_count.value,
-                                    percentage: (result.data.all_pv.buckets[i].pv_count.value > result.contrastData.all_pv.buckets[k].pv_count.value ? "+" + (result.data.all_pv.buckets[i].pv_count.value - result.contrastData.all_pv.buckets[k].pv_count.value) : (result.data.all_pv.buckets[i].pv_count.value - result.contrastData.all_pv.buckets[k].pv_count.value)) + "(" + (result.data.all_pv.buckets[i].pv_count.value > result.contrastData.all_pv.buckets[k].pv_count.value ? "+" + ((result.data.all_pv.buckets[i].pv_count.value - result.contrastData.all_pv.buckets[k].pv_count.value) / result.contrastData.all_pv.buckets[k].pv_count.value).toFixed(2) + "%)" : ((result.data.all_pv.buckets[i].pv_count.value - result.contrastData.all_pv.buckets[k].pv_count.value) / result.contrastData.all_pv.buckets[k].pv_count.value).toFixed(2) + "%)")
+                                    pathName: result.data.all_pv.buckets[i].key == "-" ? "直接输入网址或标签" : result.data.all_pv.buckets[i].key,
+                                    pv: _pv,
+                                    contrastPv: _contrastPv,
+                                    percentage: _percentage
+                                    //percentage: (result.data.all_pv.buckets[i].pv_count.value > result.contrastData.all_pv.buckets[k].pv_count.value ? "+" + (result.data.all_pv.buckets[i].pv_count.value - result.contrastData.all_pv.buckets[k].pv_count.value) : (result.data.all_pv.buckets[i].pv_count.value - result.contrastData.all_pv.buckets[k].pv_count.value)) + "(" + (result.data.all_pv.buckets[i].pv_count.value > result.contrastData.all_pv.buckets[k].pv_count.value ? "+" + ((result.data.all_pv.buckets[i].pv_count.value - result.contrastData.all_pv.buckets[k].pv_count.value) / result.contrastData.all_pv.buckets[k].pv_count.value).toFixed(2) + "%)" : ((result.data.all_pv.buckets[i].pv_count.value - result.contrastData.all_pv.buckets[k].pv_count.value) / result.contrastData.all_pv.buckets[k].pv_count.value).toFixed(2) + "%)")
                                 });
                                 flag = true;
                             }
                         }
                         if (!flag) {
                             pv_data.push({
-                                pathName: result.data.all_pv.buckets[i].key=="-"?"直接输入网址或标签":result.data.all_pv.buckets[i].key,
+                                pathName: result.data.all_pv.buckets[i].key == "-" ? "直接输入网址或标签" : result.data.all_pv.buckets[i].key,
                                 pv: result.data.all_pv.buckets[i].pv_count.value,
                                 contrastPv: 0,
-                                percentage: "+" + result.data.all_pv.buckets[i].pv_count.value + "(1.00%)"
+                                percentage: "+" + result.data.all_pv.buckets[i].pv_count.value + "(+100%)"
                             });
                         }
                     }
@@ -141,43 +150,65 @@ var changeList_request = {
                         var flag = false;
                         for (var k = 0; k < result.data.all_pv.buckets.length; k++) {
                             if (result.data.all_pv.buckets[k].key == result.contrastData.all_pv.buckets[i].key) {
+                                var _pv = result.data.all_pv.buckets[k].pv_count.value;
+                                var _contrastPv = result.contrastData.all_pv.buckets[i].pv_count.value;
+                                var _percentage = ((_pv - _contrastPv) / _contrastPv) * 100;
+                                if (_percentage > 0) {
+                                    _percentage = "+" + (_pv - _contrastPv) + "(+" + _percentage.toFixed(2) + "%)"
+                                } else {
+                                    _percentage = (_pv - _contrastPv) + "(" + _percentage.toFixed(2) + "%)";
+                                }
                                 pv_data.push({
-                                    pathName: result.data.all_pv.buckets[k].key=="-"?"直接输入网址或标签":result.data.all_pv.buckets[k].key,
-                                    pv: result.data.all_pv.buckets[k].pv_count.value,
-                                    contrastPv: result.contrastData.all_pv.buckets[i].pv_count.value,
-                                    percentage: (result.data.all_pv.buckets[k].pv_count.value > result.contrastData.all_pv.buckets[i].pv_count.value ? "+" + (result.data.all_pv.buckets[k].pv_count.value - result.contrastData.all_pv.buckets[i].pv_count.value) : result.data.all_pv.buckets[k].pv_count.value - result.contrastData.all_pv.buckets[i].pv_count.value) + "(" + (result.data.all_pv.buckets[k].pv_count.value > result.contrastData.all_pv.buckets[i].pv_count.value ? "+" + ((result.data.all_pv.buckets[k].pv_count.value - result.contrastData.all_pv.buckets[i].pv_count.value) / result.contrastData.all_pv.buckets[i].pv_count.value).toFixed(2) + "%)" : ((result.data.all_pv.buckets[k].pv_count.value - result.contrastData.all_pv.buckets[i].pv_count.value) / result.contrastData.all_pv.buckets[i].pv_count.value).toFixed(2) + "%)")
+                                    pathName: result.data.all_pv.buckets[k].key == "-" ? "直接输入网址或标签" : result.data.all_pv.buckets[k].key,
+                                    pv: _pv,
+                                    contrastPv: _contrastPv,
+                                    percentage: _percentage
+                                    //percentage: (result.data.all_pv.buckets[k].pv_count.value > result.contrastData.all_pv.buckets[i].pv_count.value ? "+" + (result.data.all_pv.buckets[k].pv_count.value - result.contrastData.all_pv.buckets[i].pv_count.value) : result.data.all_pv.buckets[k].pv_count.value - result.contrastData.all_pv.buckets[i].pv_count.value) + "(" + (result.data.all_pv.buckets[k].pv_count.value > result.contrastData.all_pv.buckets[i].pv_count.value ? "+" + ((result.data.all_pv.buckets[k].pv_count.value - result.contrastData.all_pv.buckets[i].pv_count.value) / result.contrastData.all_pv.buckets[i].pv_count.value).toFixed(2) + "%)" : ((result.data.all_pv.buckets[k].pv_count.value - result.contrastData.all_pv.buckets[i].pv_count.value) / result.contrastData.all_pv.buckets[i].pv_count.value).toFixed(2) + "%)")
                                 });
                                 flag = true;
                             }
                         }
                         if (!flag) {
                             pv_data.push({
-                                pathName: result.contrastData.all_pv.buckets[i].key=="-"?"直接输入网址或标签":result.contrastData.all_pv.buckets[i].key,
+                                pathName: result.contrastData.all_pv.buckets[i].key == "-" ? "直接输入网址或标签" : result.contrastData.all_pv.buckets[i].key,
                                 pv: 0,
                                 contrastPv: result.contrastData.all_pv.buckets[i].pv_count.value,
-                                percentage: (0 - result.contrastData.all_pv.buckets[i].pv_count.value) + "(" + (0 - result.contrastData.all_pv.buckets[i].pv_count.value) / result.contrastData.all_pv.buckets[i].pv_count.value + "%)"
+                                percentage: (0 - result.contrastData.all_pv.buckets[i].pv_count.value) + "(" + (0 - result.contrastData.all_pv.buckets[i].pv_count.value * 100) / result.contrastData.all_pv.buckets[i].pv_count.value + "%)"
                             });
                         }
                     }
                 }
 
-                //data = {
-                //    sum_pv: result.data.pv.value,
-                //    contrast_sum_pv: result.contrastData.pv.value,
-                //    pv: pv_data,
-                //    percentage: (result.data.pv.value > result.contrastData.pv.value ? "+" + (result.data.pv.value - result.contrastData.pv.value) : result.data.pv.value - result.contrastData.pv.value) + "(" + (result.contrastData.pv.value==0?0+"%)":(result.data.pv.value > result.contrastData.pv.value ? "+" + ((result.data.pv.value - result.contrastData.pv.value) / result.contrastData.pv.value > 1 ? 1 : (result.data.pv.value - result.contrastData.pv.value) / result.contrastData.pv.value).toFixed(2) + "%)" : ((result.data.pv.value - result.contrastData.pv.value) / result.contrastData.pv.value > 1 ? 1 : (result.data.pv.value - result.contrastData.pv.value) / result.contrastData.pv.value).toFixed(2) + "%)"))
-                //};
                 var sum_pv = 0;
                 var contrast_sum_pv = 0;
                 pv_data.forEach(function (d) {
                     sum_pv += d["pv"];
                     contrast_sum_pv += d["contrastPv"];
                 })
+                var percentage = 0;
+                if (contrast_sum_pv == 0) {
+                    if (sum_pv == 0) {
+                        percentage = "0(0)";
+                    } else {
+                        percentage = "+" + sum_pv + "(+100%)";
+                    }
+                } else {
+                    if (sum_pv == 0) {
+                        percentage = "-" + contrast_sum_pv + "(-100%)";
+                    } else {
+                        percentage = ((sum_pv - contrast_sum_pv) / contrast_sum_pv) * 100;
+                        if (percentage > 0) {
+                            percentage = "+" + (sum_pv - contrast_sum_pv) + "(" + percentage.toFixed(2) + "%)";
+                        } else {
+                            percentage = (sum_pv - contrast_sum_pv) + "(" + percentage.toFixed(2) + "%)";
+                        }
+                    }
+                }
                 data = {
                     sum_pv: sum_pv,
                     contrast_sum_pv: contrast_sum_pv,
                     pv: pv_data,
-                    percentage: (sum_pv > contrast_sum_pv ? "+" + (sum_pv - contrast_sum_pv) : sum_pv - contrast_sum_pv) + "(" + (contrast_sum_pv==0?0+"%)":(sum_pv > contrast_sum_pv ? "+" + ((sum_pv - contrast_sum_pv) / contrast_sum_pv > 1 ? 1 : (sum_pv - contrast_sum_pv) / contrast_sum_pv).toFixed(2) + "%)" : ((sum_pv - contrast_sum_pv) / contrast_sum_pv > 1 ? 1 : (sum_pv - contrast_sum_pv) / contrast_sum_pv).toFixed(2) + "%)"))
+                    percentage: percentage
                 };
                 callbackFn(data);
             } else
