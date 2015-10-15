@@ -79,6 +79,8 @@ var config_request = {
                         cb(err, reut);
                     });
                 });
+            }else{
+                cb(err, null);
             }
             // TODO 为什么要去差redis
         });
@@ -118,6 +120,8 @@ var config_request = {
                         return reut;
                     });
                 });
+            }else{
+                return null;
             }
             // TODO 为什么要去差redis
         });
@@ -161,6 +165,8 @@ var config_request = {
 
                     });
                 });
+            }else{
+                return null;
             }
             // TODO 为什么要去差redis
         });
@@ -208,6 +214,8 @@ var config_request = {
                         }
                     });
                 });
+            }else{
+                return null;
             }
             ;
         });
