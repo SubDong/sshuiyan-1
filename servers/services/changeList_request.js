@@ -9,10 +9,10 @@ var changeList_request = {
      * @param times　毫秒为单位的时间数组
      * @param callbackFn　回调函数
      */
-    search: function (es, indexs, times, filterType, callbackFn) {
+    search: function (es, indexs, times, type, filterType, callbackFn) {
         var request = {
             index: indexs,
-            type: null,
+            type: type,
             body: {
                 "size": 0,
                 "aggs": {
@@ -122,7 +122,7 @@ var changeList_request = {
                                 var _contrastPv = result.contrastData.all_pv.buckets[k].pv_count.value;
                                 var _percentage = ((_pv - _contrastPv) / _contrastPv) * 100;
                                 if (_percentage > 0) {
-                                    _percentage = "+" + (_pv - _contrastPv) + "(+" + _percentage.toFixed(2) + "%)"
+                                    _percentage = "+" + (_pv - _contrastPv) + "(+" + _percentage.toFixed(2) + "%)";
                                 } else {
                                     _percentage = (_pv - _contrastPv) + "(" + _percentage.toFixed(2) + "%)";
                                 }
@@ -141,7 +141,7 @@ var changeList_request = {
                                 pathName: result.data.all_pv.buckets[i].key == "-" ? "直接输入网址或标签" : result.data.all_pv.buckets[i].key,
                                 pv: result.data.all_pv.buckets[i].pv_count.value,
                                 contrastPv: 0,
-                                percentage: "+" + result.data.all_pv.buckets[i].pv_count.value + "(+100%)"
+                                percentage: "+" + result.data.all_pv.buckets[i].pv_count.value + "(-)"
                             });
                         }
                     }
@@ -190,7 +190,7 @@ var changeList_request = {
                     if (sum_pv == 0) {
                         percentage = "0(0)";
                     } else {
-                        percentage = "+" + sum_pv + "(+100%)";
+                        percentage = "+" + sum_pv + "(-)";
                     }
                 } else {
                     if (sum_pv == 0) {

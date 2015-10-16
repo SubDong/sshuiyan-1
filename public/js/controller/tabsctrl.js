@@ -1686,7 +1686,7 @@ define(["app"], function (app) {
                         }
                         if (window.location.href.split("/")[window.location.href.split("/").length - 1] == "changelist") {
                             if (contrastPv == 0) {
-                                returnData[0] = "100%"
+                                returnData[0] = "-"
                             } else {
                                 returnData[0] = returnData[0] == "0" ? "0%" : (returnData[0] * 100 / contrastPv).toFixed(2) + "%";
                             }
@@ -1790,7 +1790,7 @@ define(["app"], function (app) {
         ];
         $scope.init = function (timeData) {
             console.log(timeData);
-            $http.get("api/changeList?start=" + timeData.start + "&end=" + timeData.end + "&contrastStart=" + timeData.contrastStart + "&contrastEnd=" + timeData.contrastEnd + "&filterType=" + timeData.filterType).success(function (data) {
+            $http.get("api/changeList?start=" + timeData.start + "&end=" + timeData.end + "&contrastStart=" + timeData.contrastStart + "&contrastEnd=" + timeData.contrastEnd + "&filterType=" + timeData.filterType + "&type=" + $rootScope.userType).success(function (data) {
                 $rootScope.changeObj = {
                     sum_pv_count: data.sum_pv,
                     contrast_sum_pv_count: data.contrast_sum_pv,

@@ -12,26 +12,30 @@ define(["./module"], function (ctrs) {
             $scope.send = true;//显示发送
             $scope.isCompared = false;
             var refushGridData = function () {
-                var uid = $cookieStore.get("uid");
-                var root_url = $rootScope.siteId;
-                var url = "/config/eventchnage_list?type=search&query={\"uid\":\"" + uid + "\",\"root_url\":\"" + root_url + "\"}";
+                var url = "/config/eventchnage_list?type=search&query=" + JSON.stringify(
+                        {uid: $cookieStore.get("uid"), root_url: $rootScope.siteId}
+                    );
                 $http({
                     method: 'GET',
                     url: url
                 }).success(function (dataConfig, status) {
                     var url_convert_info = [];
                     for (var i = 0; i < dataConfig.length; i++) {
+                        if(dataConfig[i].event_target)
                         url_convert_info.push({
                             convertName: dataConfig[i].event_name,
+                            convertId: dataConfig[i].event_id,
                             all_urls: dataConfig[i].event_page
                         });
                     }
                     var all_url = [];
-                    for(var k = 0;k<dataConfig.length;k++){
+                    for (var k = 0; k < dataConfig.length; k++) {
                         all_url.push(dataConfig[k].event_page)
                     }
                     $scope.all_url = all_url;
                     $scope.convert_url_all = url_convert_info;
+                    console.log($scope.all_url)
+                    console.log($scope.convert_url_all)
                 });
             };
             refushGridData();
@@ -48,7 +52,7 @@ define(["./module"], function (ctrs) {
             $scope.transform = [
                 {consumption_name: '转化次数', name: 'conversions'},
                 {consumption_name: '转化率', name: 'crate'},
-                {consumption_name: '平均转化成本(事件)', name: 'transformCost'}
+                //{consumption_name: '平均转化成本(事件)', name: 'transformCost'}
             ];
             $scope.eventParameter = [
                 {consumption_name: "事件点击总数", name: "clickTotal"},
@@ -115,7 +119,7 @@ define(["./module"], function (ctrs) {
                 latitude: {name: "事件名称", displayName: "事件名称", field: "campaignName"},
                 tableFilter: null,
                 dimen: false,
-                number: 1,
+                number: 6,
                 arrayClear: false, //是否清空指标array
                 promotionSearch: {
                     turnOn: true, //是否开启推广中sem数据
@@ -171,7 +175,8 @@ define(["./module"], function (ctrs) {
                         $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
                         $scope.gridObjButton["maxWidth"] = 10;
                         $rootScope.searchGridArray.unshift($scope.gridObjButton);
-                    } else {
+                    }
+                    else {
                         $rootScope.checkedArray.push(item.name);
 
                         $scope.searchGridObj["name"] = item.consumption_name;
@@ -235,7 +240,7 @@ define(["./module"], function (ctrs) {
                         autoInput: 20,
                         //auotHidex: true,
                         id: "indicators_charts",
-                        chartType: "line",//图表类型
+                        chartType: "bar",//图表类型
                         keyFormat: 'eq',
                         noFormat: true,
                         dataKey: "key",//传入数据的key值
@@ -347,7 +352,6 @@ define(["./module"], function (ctrs) {
                     tempArray.push({"label": q_r, "value": 0, "cValue": 0, "count": 0, "cCount": 0});
                 });
                 $scope.dateShowArray = $rootScope.copy(tempArray);
-
             };
             $scope.setShowArray();
 
@@ -379,8 +383,7 @@ define(["./module"], function (ctrs) {
                 });
             };
 
-            $scope.my_init = function (isContrastDataByTime) {
-
+            $scope.my_init = function (isContrastDataByTime) {//isContrastDataByTime 是否按时间对比
                 var start = 0;
                 var end = 0;
                 if (isContrastDataByTime) {
@@ -398,42 +401,47 @@ define(["./module"], function (ctrs) {
                     $scope.charts[0].config.legendAllowCheckCount = 2;
                     $scope.dataTable(isContrastDataByTime, "day", ["pv", "uv"], false);
                 }
-
                 $scope.isCompared = isContrastDataByTime;
-                $http.get("/api/transform/transformAnalysis?start=" + start + "&end=" + end + "&analysisAction=event&type=1&searchType=initAll&queryOptions=" + $scope.es_checkedArray).success(function (data) {
+                $http.get("/api/transform/transformAnalysis?start=" + start + "&end=" + end + "&analysisAction=event&type=" + $rootScope.userType + "&searchType=initAll&queryOptions=" + $scope.es_checkArray).success(function (data) {
                     if (data != null || data != "") {
-                        console.log(data)
-                        var hasCrate = false;
+                        var hasEvent = false;
+                        //$scope.es_checkedArray = ["pv", "uv", "ip"]
                         for (var i = 0; i < $scope.es_checkedArray.length; i++) {
-                            if ($scope.es_checkedArray[i] == "crate") {
-                                hasCrate = true;
+                            if ($scope.es_checkedArray[i] == "crate" || $scope.es_checkedArray[i] == "conversions" || $scope.es_checkedArray[i] == "clickTatol") {
+                                hasEvent = true;
                                 break;
                             }
                         }
-                        if (hasCrate) {
-                            //var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];转化测试数据
-                            var test_url = $scope.all_url;
+                        //是否需要查询 包含事件的信息
+                        if (hasEvent) {
                             $http({
                                 method: "GET",
-                                url: "/api/transform/transformAnalysis?start=" + start + "&end=" + end + "&analysisAction=event&type=1&searchType=queryDataByUrl&showType=total&all_urls=" + test_url
+                                url: "/api/transform/getConvEvent?" +
+                                "&start=" + start +
+                                "&end=" + end +
+                                "&analysisAction=" + "event" +
+                                "&type=" + $rootScope.userType +
+                                "&showType=" + "tatol"
                             }).success(function (all_urls_data) {
                                 for (var i = 0; i < $scope.dateShowArray.length; i++) {
                                     for (var key in data) {
                                         if ($scope.dateShowArray[i].label == key) {
                                             if ($scope.dateShowArray[i].label == "crate") {
                                                 if (isContrastDataByTime) {
-                                                    if(Number(data["crate"])!=0){
-                                                        $scope.dateShowArray[i].cValue = (Number(data["crate"]) / Number(all_urls_data[0].crate_pv) * 100).toFixed(2) + "%";
-                                                    }else{
+                                                    if (Number(data["pv"]) != 0) {
+                                                        $scope.dateShowArray[i].cValue = ( Number(all_urls_data[0].convCount / Number(data["pv"])) * 100).toFixed(2) + "%";
+                                                    } else {
                                                         $scope.dateShowArray[i].cValue = "0%";
                                                     }
                                                 } else {
-                                                    if(Number(data["crate"])!=0){
-                                                        $scope.dateShowArray[i].Value = (Number(data["crate"]) / Number(all_urls_data[0].crate_pv) * 100).toFixed(2) + "%";
-                                                    }else{
-                                                        $scope.dateShowArray[i].Value = "0%";
+                                                    if (Number(data["crate"]) != 0) {
+                                                        $scope.dateShowArray[i].value = (Number(all_urls_data[0].convCount / Number(data["pv"])) * 100).toFixed(2) + "%";
+                                                    } else {
+                                                        $scope.dateShowArray[i].value = "0%";
                                                     }
                                                 }
+                                                console.log("crate")
+                                                console.log( $scope.dateShowArray)
                                             } else if ($scope.dateShowArray[i].label == "transformCost" && Number(data[key]) != 0) {
                                                 var add_i = i;
                                                 var semRequest = "";
@@ -447,22 +455,31 @@ define(["./module"], function (ctrs) {
                                                     }
                                                     if (isContrastDataByTime) {
                                                         $scope.dateShowArray[add_i].cValue = (cost / Number(data[key])).toFixed(2).toString() + "元";
-
                                                     } else {
                                                         $scope.dateShowArray[add_i].value = (cost / Number(data[key])).toFixed(2).toString() + "元";
                                                     }
                                                 });
-                                            } else if ($scope.dateShowArray[i].label == "transformCost" && Number(data[key]) == 0) {
+                                            } else if ($scope.dateShowArray[i].label == "clickTotal") {
                                                 if (isContrastDataByTime) {
-                                                    $scope.dateShowArray[i].cValue = 0;
-
+                                                    $scope.dateShowArray[i].cValue = Number(all_urls_data[i].eventCount);
                                                 } else {
-                                                    $scope.dateShowArray[i].value = 0;
+                                                    $scope.dateShowArray[i].value = Number(all_urls_data[0].eventCount);
                                                 }
-                                            } else {
+                                                console.log("clickTotal")
+                                                console.log( $scope.dateShowArray)
+                                            }
+                                            else if ($scope.dateShowArray[i].label == "conversions") {
+                                                if (isContrastDataByTime) {
+                                                    $scope.dateShowArray[i].cValue = Number(all_urls_data[i].convCount);
+                                                } else {
+                                                    $scope.dateShowArray[i].value = Number(all_urls_data[0].convCount);
+                                                }
+                                                console.log("conversions")
+                                                console.log( $scope.dateShowArray)
+                                            }
+                                            else {
                                                 if (isContrastDataByTime) {
                                                     $scope.dateShowArray[i].cValue = data[key];
-
                                                 } else {
                                                     $scope.dateShowArray[i].value = data[key];
                                                 }
@@ -471,7 +488,8 @@ define(["./module"], function (ctrs) {
                                     }
                                 }
                             });
-                        } else {
+                        }
+                        else {
                             for (var i = 0; i < $scope.dateShowArray.length; i++) {
                                 for (var key in data) {
                                     if ($scope.dateShowArray[i].label == key) {
@@ -512,8 +530,6 @@ define(["./module"], function (ctrs) {
                                 }
                             }
                         }
-
-
                         if (isContrastDataByTime) {
                             $scope.DateNumbertwo = true;
                             $scope.DateLoading = true;
@@ -537,7 +553,7 @@ define(["./module"], function (ctrs) {
             $scope.dataTable = function (isContrastTime, showType, queryOptions, renderLegend) {
                 if (isContrastTime) {
                     var crate_time = aggs_time($rootScope.start, $rootScope.end, $scope.start, $scope.end);
-                    $http.get("/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&analysisAction=event&type=1&searchType=contrastData&showType=" + showType + "&queryOptions=" + queryOptions + "&contrastStart=" + $scope.start + "&contrastEnd=" + $scope.end).success(function (contrastData) {
+                    $http.get("/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&analysisAction=event&type=" + $rootScope.userType + "&searchType=contrastData&showType=" + showType + "&queryOptions=" + queryOptions + "&contrastStart=" + $scope.start + "&contrastEnd=" + $scope.end).success(function (contrastData) {
                         var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
                         chart.showLoading({
                             text: "正在努力的读取数据中..."
@@ -549,237 +565,67 @@ define(["./module"], function (ctrs) {
                         if (renderLegend)
                             util.renderLegend(chart, $scope.charts[0].config);
                         var hasSem = false;
-                        for (var t = 0; t < queryOptions.length; t++) {
-                            for (var k = 0; k < $scope.sem_checkArray.length; k++) {
-                                if (queryOptions[t] == $scope.sem_checkArray[k]) {
-                                    hasSem = true;
-                                    break;
-                                }
-                            }
-                        }
-                        var hasCrate = false;
+
+                        var hasEvent = false;
                         for (var i = 0; i < queryOptions.length; i++) {
-                            if (queryOptions[i] == "crate") {
-                                hasCrate = true;
+                            if (queryOptions == "crate" || $scope.es_checkedArray[i] == "conversions" || $scope.es_checkedArray[i] == "clickTatol") {
+                                hasEvent = true;
                                 break;
                             }
                         }
-                        if (hasSem) {
-                            if (hasCrate) {
-                                var all_urls = [];
-                                for (var k = 0; k < $scope.convert_url_all.length; k++) {
-                                    for (var c = 0; c < $scope.convert_url_all[k].all_urls.length; c++) {
-                                        if ($scope.convert_url_all[k].all_urls[c].split("/").length != 0) {
-                                            all_urls.push("http://" + $scope.convert_url_all[k].all_urls[c]);
-                                        } else {
-                                            all_urls.push("http://" + $scope.convert_url_all[k].all_urls[c] + "/");
-                                        }
-                                    }
-                                }
-                                //var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];转化测试数据
-                                var test_url = $scope.all_url;
-                                $http({
-                                    method: "GET",
-                                    url: "/api/transform/transformAnalysis?start=" + crate_time.start + "&end=" + crate_time.end + "&analysisAction=event&type=1&searchType=queryDataByUrl&showType=day&all_urls=" + test_url
-                                }).success(function (all_urls_data) {
-                                        var semRequest = "";
-                                        semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end + "&q=cost");
-                                        $q.all([semRequest]).then(function (sem_data) {
-                                            var cost = 0;
-                                            for (var k = 0; k < sem_data.length; k++) {
-                                                for (var c = 0; c < sem_data[k].data.length; c++) {
-                                                    cost += Number(sem_data[k].data[c].cost);
-                                                }
-                                            }
-                                            queryOptions.forEach(function (key) {
-                                                for (var i = 0; i < contrastData.length; i++) {
-                                                    if (key == contrastData[i].label) {
-                                                        var temporaryContrastData = [];
-                                                        var l = 0;
-                                                        switch (key) {
-                                                            case "transformCost":
-                                                                for (l = 0; l < contrastData[i].quota.length; l++) {
-                                                                    temporaryContrastData.push((Number(contrastData[i].quota[l]) / cost).toFixed(2));
-                                                                }
-                                                                contrastData[i].quota = temporaryContrastData;
-                                                                break;
-                                                            case "crate":
-                                                                for (l = 0; l < contrastData[i].quota.length; l++) {
-                                                                    if (Number(contrastData[i].quota[l]) == 0) {
-                                                                        temporaryContrastData.push(0);
-                                                                    } else {
-                                                                        for (var p = 0; p < all_urls_data.length; p++) {
-                                                                            if (contrastData[i].key == all_urls_data[p].date_time) {
-                                                                                if (Number(all_urls_data[i].crate_pv) == 0) {
-                                                                                    temporaryContrastData.push(0);
-                                                                                } else {
-                                                                                    temporaryContrastData.push((Number(contrastData[i].quota[l]) / Number(all_urls_data[i].crate_pv)).toFixed(2));
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }
-                                                                contrastData[i].quota = temporaryContrastData;
-                                                                break;
-                                                        }
-
-                                                    }
-                                                }
-                                            });
-                                            for (var i = 0; i < contrastData.length; i++) {
-                                                if (contrastData[i].label.toString().split("_").length > 1) {
-                                                    var temporaryContrastData = [];
-                                                    var l = 0;
-                                                    switch (contrastData[i].label) {
-                                                        case "transformCost_contrast":
-                                                            for (l = 0; l < contrastData[i].quota.length; l++) {
-                                                                temporaryContrastData.push((Number(contrastData[i].quota[l]) / cost).toFixed(2));
-                                                            }
-                                                            contrastData[i].quota = temporaryContrastData;
-                                                            break;
-                                                        case "crate_contrast":
-                                                            for (l = 0; l < contrastData[i].quota.length; l++) {
-                                                                if (Number(contrastData[i].quota[l]) == 0) {
+                        if (hasEvent) {
+                            $http({
+                                method: "GET",
+                                url: "/api/transform/getConvEvent?start=" + crate_time.start + "&end=" + crate_time.end + "&analysisAction=event&type=" + $rootScope.userType + "&searchType=queryDataByUrl&showType=day"
+                            }).success(function (all_urls_data) {
+                                var temporaryContrastData = [];
+                                for (var i = 0; i < contrastData.length; i++) {
+                                    temporaryContrastData = [];
+                                    switch (contrastData[i].label) {
+                                        case "crate":
+                                            for (var l = 0; l < contrastData[i].quota.length; l++) {
+                                                if (Number(contrastData[i].quota[l]) == 0) {
+                                                    temporaryContrastData.push(0);
+                                                } else {
+                                                    for (var p = 0; p < all_urls_data.length; p++) {
+                                                        for (var t = 0; t < contrastData[i].key.length; t++) {
+                                                            if (contrastData[i].key[t] == all_urls_data[p].date_time) {
+                                                                if (Number(all_urls_data[p].crate_pv) == 0) {
                                                                     temporaryContrastData.push(0);
                                                                 } else {
-                                                                    for (var p = 0; p < all_urls_data.length; p++) {
-                                                                        if (contrastData[i].key == all_urls_data[p].date_time) {
-                                                                            if (Number(all_urls_data[p].crate_pv) == 0) {
-                                                                                temporaryContrastData.push(0);
-                                                                            } else {
-                                                                                temporaryContrastData.push((Number(contrastData[i].quota[l]) / Number(all_urls_data[p].crate_pv)).toFixed(2));
-                                                                            }
-                                                                        }
-                                                                    }
+                                                                    temporaryContrastData.push((Number(contrastData[i].quota[l]) / Number(all_urls_data[p].crate_pv)));
                                                                 }
                                                             }
-                                                            break;
+                                                        }
+
                                                     }
-                                                    contrastData[i].label = "对比数据";
+                                                }
+                                            }
+                                            contrastData[i].quota = temporaryContrastData;
+                                            break;
+                                        case "crate_contrast":
+                                            for (var l = 0; l < contrastData[i].quota.length; l++) {
+                                                if (Number(contrastData[i].quota[l]) == 0) {
+                                                    temporaryContrastData.push(0);
                                                 } else {
-                                                    contrastData[i].label = chartUtils.convertChinese(contrastData[i].label);
-                                                }
-                                            }
-                                            cf.renderChart(contrastData, $scope.charts[0].config);
-                                            Custom.initCheckInfo();
-                                        });
-                                    }
-                                );
-                            } else {
-                                var semRequest = "";
-                                semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end + "&q=cost");
-                                $q.all([semRequest]).then(function (sem_data) {
-                                    var cost = 0;
-                                    for (var k = 0; k < sem_data.length; k++) {
-                                        for (var c = 0; c < sem_data[k].data.length; c++) {
-                                            cost += Number(sem_data[k].data[c].cost);
-                                        }
-                                    }
-                                    queryOptions.forEach(function (key) {
-                                        for (var i = 0; i < contrastData.length; i++) {
-                                            if (key == contrastData[i].label) {
-                                                var temporaryContrastData = [];
-                                                var l = 0;
-                                                switch (key) {
-                                                    case "transformCost":
-                                                        for (l = 0; l < contrastData[i].quota.length; l++) {
-                                                            temporaryContrastData.push((Number(contrastData[i].quota[l]) / cost).toFixed(2));
-                                                        }
-                                                        contrastData[i].quota = temporaryContrastData;
-                                                        break;
-                                                }
-
-                                            }
-                                        }
-                                    });
-                                    for (var i = 0; i < contrastData.length; i++) {
-                                        if (contrastData[i].label.toString().split("_").length > 1) {
-                                            var temporaryContrastData = [];
-                                            var l = 0;
-                                            switch (contrastData[i].label) {
-                                                case "transformCost_contrast":
-                                                    for (l = 0; l < contrastData[i].quota.length; l++) {
-                                                        temporaryContrastData.push((Number(contrastData[i].quota[l]) / cost).toFixed(2));
-                                                    }
-                                                    contrastData[i].quota = temporaryContrastData;
-                                                    break;
-                                            }
-                                            contrastData[i].label = "对比数据";
-                                        } else {
-                                            contrastData[i].label = chartUtils.convertChinese(contrastData[i].label);
-                                        }
-                                    }
-                                    cf.renderChart(contrastData, $scope.charts[0].config);
-                                    Custom.initCheckInfo();
-                                });
-                            }
-                        } else {
-                            if (hasCrate) {
-                                //var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];转化测试数据
-                                var test_url = $scope.all_url;
-                                $http({
-                                    method: "GET",
-                                    url: "/api/transform/transformAnalysis?start=" + crate_time.start + "&end=" + crate_time.end + "&analysisAction=event&type=1&searchType=queryDataByUrl&showType=day&all_urls=" + test_url
-                                }).success(function (all_urls_data) {
-                                    var temporaryContrastData = [];
-                                    for (var i = 0; i < contrastData.length; i++) {
-                                        temporaryContrastData = [];
-                                        switch (contrastData[i].label) {
-                                            case "crate":
-                                                for (var l = 0; l < contrastData[i].quota.length; l++) {
-                                                    if (Number(contrastData[i].quota[l]) == 0) {
-                                                        temporaryContrastData.push(0);
-                                                    } else {
-                                                        for (var p = 0; p < all_urls_data.length; p++) {
-                                                            for (var t = 0; t < contrastData[i].key.length; t++) {
-                                                                if (contrastData[i].key[t] == all_urls_data[p].date_time) {
-                                                                    if (Number(all_urls_data[p].crate_pv) == 0) {
-                                                                        temporaryContrastData.push(0);
-                                                                    } else {
-                                                                        temporaryContrastData.push((Number(contrastData[i].quota[l]) / Number(all_urls_data[p].crate_pv)));
-                                                                    }
+                                                    for (var p = 0; p < all_urls_data.length; p++) {
+                                                        for (var t = 0; t < contrastData[i].key.length; t++) {
+                                                            if (contrastData[i].key[t] == all_urls_data[p].date_time) {
+                                                                if (Number(all_urls_data[p].crate_pv) == 0) {
+                                                                    temporaryContrastData.push(0);
+                                                                } else {
+                                                                    temporaryContrastData.push((Number(contrastData[i].quota[l]) / Number(all_urls_data[p].crate_pv)));
                                                                 }
                                                             }
-
                                                         }
+
                                                     }
                                                 }
-                                                contrastData[i].quota = temporaryContrastData;
-                                                break;
-                                            case "crate_contrast":
-                                                for (var l = 0; l < contrastData[i].quota.length; l++) {
-                                                    if (Number(contrastData[i].quota[l]) == 0) {
-                                                        temporaryContrastData.push(0);
-                                                    } else {
-                                                        for (var p = 0; p < all_urls_data.length; p++) {
-                                                            for (var t = 0; t < contrastData[i].key.length; t++) {
-                                                                if (contrastData[i].key[t] == all_urls_data[p].date_time) {
-                                                                    if (Number(all_urls_data[p].crate_pv) == 0) {
-                                                                        temporaryContrastData.push(0);
-                                                                    } else {
-                                                                        temporaryContrastData.push((Number(contrastData[i].quota[l]) / Number(all_urls_data[p].crate_pv)));
-                                                                    }
-                                                                }
-                                                            }
-
-                                                        }
-                                                    }
-                                                }
-                                                contrastData[i].quota = temporaryContrastData;
-                                                break;
-                                        }
+                                            }
+                                            contrastData[i].quota = temporaryContrastData;
+                                            break;
                                     }
-                                    for (var i = 0; i < contrastData.length; i++) {
-                                        if (contrastData[i].label.split("_").length > 1) {
-                                            contrastData[i].label = "对比数据";
-                                        } else {
-                                            contrastData[i].label = chartUtils.convertChinese(contrastData[i].label);
-                                        }
-                                    }
-                                    cf.renderChart(contrastData, $scope.charts[0].config);
-                                    Custom.initCheckInfo();
-                                });
-                            } else {
+                                }
                                 for (var i = 0; i < contrastData.length; i++) {
                                     if (contrastData[i].label.split("_").length > 1) {
                                         contrastData[i].label = "对比数据";
@@ -789,11 +635,24 @@ define(["./module"], function (ctrs) {
                                 }
                                 cf.renderChart(contrastData, $scope.charts[0].config);
                                 Custom.initCheckInfo();
-                            }
+                            });
                         }
+                        else {
+                            for (var i = 0; i < contrastData.length; i++) {
+                                if (contrastData[i].label.split("_").length > 1) {
+                                    contrastData[i].label = "对比数据";
+                                } else {
+                                    contrastData[i].label = chartUtils.convertChinese(contrastData[i].label);
+                                }
+                            }
+                            cf.renderChart(contrastData, $scope.charts[0].config);
+                            Custom.initCheckInfo();
+                        }
+                        //}
                     });
-                } else {
-                    $http.get("/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&analysisAction=event&type=1&searchType=dataTable&showType=" + showType + "&queryOptions=" + queryOptions).success(function (data) {
+                }
+                else {
+                    $http.get("/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&analysisAction=event&type=" + $rootScope.userType + "&searchType=dataTable&showType=" + showType + "&queryOptions=" + queryOptions).success(function (data) {
                         var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
                         chart.showLoading({
                             text: "正在努力的读取数据中..."
@@ -818,147 +677,38 @@ define(["./module"], function (ctrs) {
                                 break;
                             }
                         }
-                        if (hasSem) {
-                            if (hasCrate) {
-                                //var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];转化测试数据
-                                var test_url = $scope.all_url;
-                                $http({
-                                    method: "GET",
-                                    url: "/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&analysisAction=event&type=1&searchType=queryDataByUrl&showType=day&all_urls=" + test_url
-                                }).success(function (all_urls_data) {
-                                    var semRequest = "";
-                                    semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end + "&q=cost");
-                                    $q.all([semRequest]).then(function (sem_data) {
-                                        var cost = 0;
-                                        for (var k = 0; k < sem_data.length; k++) {
-                                            for (var c = 0; c < sem_data[k].data.length; c++) {
-                                                cost += Number(sem_data[k].data[c].cost);
-                                            }
-                                        }
-                                        for (var c = 0; c < data.length; c++) {
-                                            var temporaryContrastData = [];
-                                            switch (data[c].label) {
-                                                case "transformCost":
-                                                    for (var l = 0; l < data[c].quota.length; l++) {
-                                                        if (Number(data[c].quota[l]) == 0) {
-                                                            temporaryContrastData.push(0);
-                                                        } else {
-                                                            temporaryContrastData.push((cost / Number(data[c].quota[l])).toFixed(2));
-                                                        }
-                                                    }
-                                                    data[c].quota = temporaryContrastData;
-                                                    break;
-                                                case "crate":
-                                                    for (var l = 0; l < data[c].quota.length; l++) {
-                                                        if (Number(data[c].quota[l]) == 0) {
-                                                            temporaryContrastData.push(0);
-                                                        } else {
-                                                            for (var p = 0; p < all_urls_data.length; p++) {
-                                                                for (var t = 0; t < data[c].key.length; t++) {
-                                                                    if (data[c].key[t] == all_urls_data[p].date_time) {
-                                                                        if (Number(all_urls_data[p].crate_pv) == 0) {
-                                                                            temporaryContrastData.push(0);
-                                                                        } else {
-                                                                            temporaryContrastData.push((Number(data[c].quota[l]) / Number(all_urls_data[p].crate_pv)));
-                                                                        }
-                                                                    }
-                                                                }
-
-                                                            }
-                                                        }
-                                                    }
-                                                    data[c].quota = temporaryContrastData;
-                                                    break;
-                                            }
-                                        }
-                                        for (var i = 0; i < data.length; i++) {
-                                            data[i].label = chartUtils.convertChinese(data[i].label);
-                                        }
-
-                                        cf.renderChart(data, $scope.charts[0].config);
-                                        Custom.initCheckInfo();
-                                    });
-                                });
-
-                            } else {
-                                var semRequest = "";
-                                semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end + "&q=cost");
-                                $q.all([semRequest]).then(function (sem_data) {
-                                    var cost = 0;
-                                    for (var k = 0; k < sem_data.length; k++) {
-                                        for (var c = 0; c < sem_data[k].data.length; c++) {
-                                            cost += Number(sem_data[k].data[c].cost);
-                                        }
-                                    }
-                                    for (var c = 0; c < data.length; c++) {
+                        if (hasCrate) {
+                            $http({
+                                method: "GET",
+                                url: "/api/transform/getConvEvent?" +
+                                "&start=" + $rootScope.start +
+                                "&end=" + $rootScope.end +
+                                "&analysisAction=" + "event" +
+                                "&type=" + $rootScope.userType +
+                                "&showType=" + "day"
+                            }).success(function (all_urls_data) {
+                                for (var c = 0; c < data.length; c++) {
+                                    if (data[c].label == "crate") {
                                         var temporaryContrastData = [];
-                                        switch (data[c].label) {
-                                            case "transformCost":
-                                                for (var l = 0; l < data[c].quota.length; l++) {
-                                                    if (Number(data[c].quota[l]) == 0) {
-                                                        temporaryContrastData.push(0);
-                                                    } else {
-                                                        temporaryContrastData.push((cost / Number(data[c].quota[l])).toFixed(2));
-                                                    }
-                                                }
-                                                data[c].quota = temporaryContrastData;
-                                                break;
+                                        for (var l = 0; l < data[c].quota.length; l++) {
+                                            temporaryContrastData.push(Number(all_urls_data[l].convCount) / +Number(data[c].quota[l]) );
                                         }
+                                        data[c].quota = temporaryContrastData;
                                     }
-                                    for (var i = 0; i < data.length; i++) {
-                                        data[i].label = chartUtils.convertChinese(data[i].label);
-                                    }
-
-                                    cf.renderChart(data, $scope.charts[0].config);
-                                    Custom.initCheckInfo();
-                                });
-                            }
-                        } else {
-                            if (hasCrate) {
-                                //var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];转化测试数据
-                                var test_url = $scope.all_url;
-                                $http({
-                                    method: "GET",
-                                    url: "/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&analysisAction=event&type=1&searchType=queryDataByUrl&showType=day&all_urls=" + test_url
-                                }).success(function (all_urls_data) {
-                                    for (var c = 0; c < data.length; c++) {
-                                        if (data[c].label == "crate") {
-                                            var temporaryContrastData = [];
-                                            for (var l = 0; l < data[c].quota.length; l++) {
-                                                if (Number(data[c].quota[l]) == 0) {
-                                                    temporaryContrastData.push(0);
-                                                } else {
-                                                    for (var p = 0; p < all_urls_data.length; p++) {
-                                                        for (var t = 0; t < data[c].key.length; t++) {
-                                                            if (data[c].key[t] == all_urls_data[p].date_time) {
-                                                                if (Number(all_urls_data[p].crate_pv) == 0) {
-                                                                    temporaryContrastData.push(0);
-                                                                } else {
-                                                                    temporaryContrastData.push((Number(data[c].quota[l]) / Number(all_urls_data[p].crate_pv)));
-                                                                }
-                                                            }
-                                                        }
-
-                                                    }
-                                                }
-                                            }
-                                            data[c].quota = temporaryContrastData;
-                                        }
-                                    }
-                                    for (var i = 0; i < data.length; i++) {
-                                        data[i].label = chartUtils.convertChinese(data[i].label);
-                                    }
-                                    cf.renderChart(data, $scope.charts[0].config);
-                                    Custom.initCheckInfo();
-                                });
-
-                            } else {
+                                }
                                 for (var i = 0; i < data.length; i++) {
                                     data[i].label = chartUtils.convertChinese(data[i].label);
                                 }
                                 cf.renderChart(data, $scope.charts[0].config);
                                 Custom.initCheckInfo();
+                            });
+
+                        } else {
+                            for (var i = 0; i < data.length; i++) {
+                                data[i].label = chartUtils.convertChinese(data[i].label);
                             }
+                            cf.renderChart(data, $scope.charts[0].config);
+                            Custom.initCheckInfo();
                         }
                     });
                 }
@@ -983,6 +733,7 @@ define(["./module"], function (ctrs) {
                     }
                 }
                 if (isClicked) {
+                    console.log("isClicked"+isClicked)
                     $scope.setShowArray();
                     $scope.my_init(false);
                     $scope.$broadcast("transformData_ui_grid", {
@@ -1059,8 +810,9 @@ define(["./module"], function (ctrs) {
                     });
                 }
             };
-            $scope.my_init(false);
             init_transformData();
+            $scope.my_init(false);
+            //console.log($rootScope.targetSearch())
         }
     );
 });
