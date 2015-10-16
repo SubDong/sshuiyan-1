@@ -6,15 +6,12 @@ var express = require('express');
 var api = express.Router();
 var http = require('http');
 var url = require('url');
-var datautils = require('../utils/datautils');
-
 var bufferutils = require('../utils/bufferutils');
 
 
 var options = {
-    host: '192.168.1.103',
+    host: '192.168.100.10',
     port: '8083',
-    path: '/escache/groupAnalytics/condition/1/day/7/user',
     method: 'GET',
     headers:{
         'accept': '*/*',

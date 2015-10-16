@@ -235,7 +235,6 @@ define(["./module"], function (ctrs) {
 
             var url = "/gacache/querydata?query="+JSON.stringify(parameter);
 
-            console.log(url);
             $http({
                 method: 'GET',
             url: url
@@ -248,7 +247,6 @@ define(["./module"], function (ctrs) {
 
         }
 
-        $scope.init();
 
 
         })
