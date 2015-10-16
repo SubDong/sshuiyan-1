@@ -1790,7 +1790,7 @@ define(["app"], function (app) {
         ];
         $scope.init = function (timeData) {
             console.log(timeData);
-            $http.get("api/changeList?start=" + timeData.start + "&end=" + timeData.end + "&contrastStart=" + timeData.contrastStart + "&contrastEnd=" + timeData.contrastEnd + "&filterType=" + timeData.filterType).success(function (data) {
+            $http.get("api/changeList?start=" + timeData.start + "&end=" + timeData.end + "&contrastStart=" + timeData.contrastStart + "&contrastEnd=" + timeData.contrastEnd + "&filterType=" + timeData.filterType + "&type=" + $rootScope.userType).success(function (data) {
                 $rootScope.changeObj = {
                     sum_pv_count: data.sum_pv,
                     contrast_sum_pv_count: data.contrast_sum_pv,

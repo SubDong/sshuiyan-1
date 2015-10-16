@@ -30,6 +30,6 @@
     "strftime": "^0.9.0",
     "later": "^1.1.6",
     "nodemailer": "^1.4.0",
-    "pdfkit": "^1.7.1"
+    "pdfkit": "^0.7.1"
   }
 }

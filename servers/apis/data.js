@@ -762,6 +762,7 @@ api.get("/changeList", function (req, res) {
     var contrastStart = query["contrastStart"];
     var contrastEnd = query["contrastEnd"];
     var filterType = query["filterType"];
+    var type = query["type"];
     var indexString = [];
     var contrastIndexString = [];
     var time = [];
@@ -779,7 +780,7 @@ api.get("/changeList", function (req, res) {
     for (var i = 0; i < contrastTime.length; i++) {
         time.push(contrastTime[i]);
     }
-    changeList_request.search(req.es, indexString, time, filterType, function (result) {
+    changeList_request.search(req.es, indexString, time, type, filterType, function (result) {
         datautils.send(res, result);
     });
 });
