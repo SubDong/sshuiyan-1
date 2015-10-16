@@ -28,7 +28,8 @@
     "redis": "^0.12.1",
     "serve-favicon": "^2.2.0",
     "strftime": "^0.9.0",
-    "later":"^1.1.6",
-    "nodemailer":"^1.4.0"
+    "later": "^1.1.6",
+    "nodemailer": "^1.4.0",
+    "pdfkit": "^1.7.1"
   }
 }
