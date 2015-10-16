@@ -124,6 +124,25 @@ define(["app"], function (app) {
             {consumption_name: "访客数(UV)", name: "uv"},
             {consumption_name: "IP数", name: "ip"}
         ];
+
+        //事件
+        $scope.bases = [
+            {consumption_name: "浏览量(PV)", name: "pv"},
+            {consumption_name: "访客数(UV)", name: "uv"},
+            {consumption_name: "访问次数", name: "vc"},
+            {consumption_name: "IP数", name: "ip"},
+            {consumption_name: "新访客数", name: "nuv"},
+            {consumption_name: "新访客比率", name: "nuvRate"}
+        ];
+        $scope.transform = [
+            {consumption_name: '转化次数', name: 'conversions'},
+            {consumption_name: '转化率', name: 'crate'},
+            {consumption_name: '平均转化成本(事件)', name: 'transformCost'}
+        ];
+        $scope.eventParameter = [
+            {consumption_name: "事件点击总数", name: "clickTotal"},
+            {consumption_name: "唯一访客事件数", name: "visitNum"}
+        ];
         //实时访问
         //TODO item["searchWord"] == ""?"--" 为捕获到暂为  --
         var getHtmlTableData = function () {
@@ -987,7 +1006,7 @@ define(["app"], function (app) {
                     } else {
 //                        item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 100px'>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),2)}}<br/>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),3)}}<br/>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),4)}}</div>";
                         item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 32px'>" +
-                        "<ul><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),2)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),3)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),4)}}</li></ul></div>";
+                            "<ul><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),2)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),3)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),4)}}</li></ul></div>";
                     }
                 }
             });
@@ -1046,8 +1065,37 @@ define(["app"], function (app) {
                     $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
                     $scope.gridOptions.data = result;
                 })
+            } else if ($rootScope.tableSwitch.number == 6) {//来源分析搜索词-搜索
+                console.log("事件")
+                $http({
+                    method: 'GET',
+                    url: "/config/eventchnage_list?type=search&query=" + JSON.stringify({
+                            uid: $cookieStore.get("uid"),
+                            root_url: $rootScope.siteId
+                        }
+                    )
+                }).success(function (dataConfig, status) {
+                    var eventPages = [], hash = {};
+                    dataConfig.forEach(function (elem) {
+                        if (!hash[elem.event_page]) {
+                            eventPages.push(elem.event_page);
+                            hash[elem.event_page] = true;
+                        }
+                    })
+                    console.log(eventPages)
+                    var esurl = "/api/transform/getPagePVs?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&queryOptions=" + $scope.es_checkArray+"&eventPages="+eventPages+"&showType=day"
+                    console.log(esurl)
+                    $http.get(esurl).success(function (data) {
+                        if (data != null || data != "") {//PV 信息若不存在 则事件信息认为一定不存在
+                            var result = [];
+                            result.push(data)
+                            console.log(data)
+                            $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
+                            $scope.gridOptions.data = result;
+                        }
+                    });
+                })
             } else {
-
                 $http({
                     method: 'GET',
                     url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field)
@@ -1418,12 +1466,11 @@ define(["app"], function (app) {
                         + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&type=" + esType
                     }).success(function (data, status) {
                         var reg = new RegExp($rootScope.tableSwitch.dimen, "g");
-                        console.log($rootScope.tableSwitch.latitude.field);
                         if (data != undefined && data.length != 0) {
                             data = JSON.parse(JSON.stringify(data).replace(reg, $rootScope.tableSwitch.latitude.field));
                             dataNumber = data.length;
                         }
-                        row.entity.subGridOptions.columnDefs = $scope.getSubColumnDefs($scope.gridOpArray);
+                        row.entity.subGridOptions.columnDefs = $scope.gridOpArray;
                         row.entity.subGridOptions.data = data;
                         row.entity.subGridOptions.virtualizationThreshold = data.length;
                         if (data.length == 0) {
@@ -1436,30 +1483,6 @@ define(["app"], function (app) {
                 }
             });
         };
-
-        $scope.getSubColumnDefs = function (gridOpArray) {
-            var _t_arr = [];
-            for (var i = 0; i < gridOpArray.length; i++) {
-                if (gridOpArray[i]["name"] == " ") {
-                    _t_arr.push({
-                        name: gridOpArray[i]["name"],
-                        displayName: gridOpArray[i]["displayName"],
-                        field: gridOpArray[i]["field"],
-                        maxWidth: gridOpArray[i]["maxWidth"],
-                        cellTemplate: gridOpArray[i]["cellTemplate"]
-                    });
-                } else {
-                    _t_arr.push({
-                        name: gridOpArray[i]["name"],
-                        displayName: gridOpArray[i]["displayName"],
-                        field: gridOpArray[i]["field"],
-                        maxWidth: gridOpArray[i]["maxWidth"]
-                    });
-                }
-            }
-            return _t_arr;
-        };
-
         //子表格方法通用
         $scope.subGridScope = {
             getHistoricalTrend: function (b) {
@@ -1641,7 +1664,6 @@ define(["app"], function (app) {
             var newSpl = [0, 0, 0];
             var newitemSplData = [0, 0, 0, 0];
             if (option.length > 0) {
-
                 option.forEach(function (item, i) {
                     var itemSplData = (item.entity[a.col.field] + "").split(",");
                     if (itemSplData.length >= 4) {
@@ -1692,7 +1714,7 @@ define(["app"], function (app) {
                         }
                         if (window.location.href.split("/")[window.location.href.split("/").length - 1] == "changelist") {
                             if (contrastPv == 0) {
-                                returnData[0] = "-"
+                                returnData[0] = "100%"
                             } else {
                                 returnData[0] = returnData[0] == "0" ? "0%" : (returnData[0] * 100 / contrastPv).toFixed(2) + "%";
                             }
@@ -1802,31 +1824,7 @@ define(["app"], function (app) {
                     all_percentage: data.percentage
                 };
 
-                data.pv = data.pv ? data.pv : [];
-                var _tempData = [];
-                if (timeData.filterType == 4) {
-                    _tempData = data.pv;
-                } else if (timeData.filterType == 1) {
-                    for (var i = 0; i < data.pv.length; i++) {
-                        if (data.pv[i]["percentage"].substring(0, 1) == "+") {
-                            _tempData.push(data.pv[i]);
-                        }
-                    }
-                } else if (timeData.filterType == 2) {
-                    for (var i = 0; i < data.pv.length; i++) {
-                        if (data.pv[i]["percentage"].substring(0, 1) == "-") {
-                            _tempData.push(data.pv[i]);
-                        }
-                    }
-                } else if (timeData.filterType == 3) {
-                    for (var i = 0; i < data.pv.length; i++) {
-                        if (data.pv[i]["percentage"].substring(0, 1) != "+" && data.pv[i]["percentage"].substring(0, 1) != "-") {
-                            _tempData.push(data.pv[i]);
-                        }
-                    }
-                }
-
-                $scope.gridOptions.data = _tempData;
+                $scope.gridOptions.data = data.pv ? data.pv : [];
                 $scope.gridOptions.enableSorting = true;
                 $scope.gridOptions.columnDefs[4].cellClass = function (grid, row, col, rowRenderIndex, colRenderIndex) {
                     if (grid.getCellValue(row, col).toString().substring(0, 1) == "+") {

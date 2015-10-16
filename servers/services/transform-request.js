@@ -1645,6 +1645,7 @@ var transform = {
             callbackFn(data);
         });
     },
+
     searchByUrls: function (es, indexs, type, queryOptions, showType, callbackFn) {
         var requests = [];
         for (var i = 0; i < indexs.length; i++) {
@@ -1769,6 +1770,102 @@ var transform = {
         });
 
     },
+
+    searchPagePVs: function (es, indexs, type, queryOptions, callbackFn) {
+        var requests = [];
+        for (var i = 0; i < indexs.length; i++) {
+            requests.push({
+                index: indexs[i]
+            });
+        }
+        async.map(requests, function (item, callback) {
+            es.indices.exists(item, function (error, exists) {
+                callback(null, exists);
+            });
+        }, function (error, results) {
+            var newIndexs = [];
+            for (var i = 0; i < indexs.length; i++) {
+                if (results[i] == true) {
+                    newIndexs.push(indexs[i]);
+                }
+            }
+            var _aggs = {};
+            querys.forEach(function (queryOption) {
+                for (var key in es_aggs[queryOption]) {
+                    _aggs[key] = es_aggs[queryOption][key];
+                }
+            });
+            var request = {
+                "index": newIndexs,
+                "type": type,//+ "_" + action,
+                "body": {
+                    "size": 0,
+                    "query": createQueryByUrls(queryOptions),
+                    "aggs": _aggs
+                }
+            };
+            es.search(request, function (error, response) {
+                var data = {};
+                if (response != undefined && response.aggregations != undefined) {
+                    var result = response.aggregations;
+                    querys.forEach(function (queryOption) {
+                        var isExit = false;
+                        var i = 0;
+                        switch (queryOption) {
+                            case "nuvRate":
+                                if (result.new_visitor_aggs.value == "0") {
+                                    data[queryOption] = 0;
+                                } else {
+                                    data[queryOption] = (result.uv_aggs.value / result.new_visitor_aggs.value).toFixed(2) + "%";
+
+                                }
+                                break;
+                            case "benefit":
+                                if (result.benefit.buckets.length == 0) {
+                                    data[queryOption] = 0;//不存在记录
+                                } else {
+
+                                    for (i = 0; i < result.benefit.buckets.length; i++) {
+                                        if (result.benefit.buckets[i] != "") {
+                                            data[queryOption] = Number(result.benefit.buckets[0].key) * Number(results.convertTime.value);
+                                            isExit = true;
+                                        }
+                                    }
+                                    if (!isExit) {
+                                        data[queryOption] = "-";//未定义预期收益
+                                    }
+                                }
+                                break;
+                            case "profit":
+                                if (result.profit_benefit.buckets.length == 0) {
+                                    data[queryOption] = 0;//不存在记录
+                                } else {
+                                    for (i = 0; i < result.profit_benefit.buckets.length; i++) {
+                                        if (result.profit_benefit.buckets[i] != "") {
+                                            data[queryOption] = Number(result.profit_benefit.buckets[0].key) * Number(results.profit_convertTime.value);
+                                            isExit = true;
+                                        }
+                                    }
+                                    if (!isExit) {
+                                        data[queryOption] = "-";//未定义预期收益
+                                    }
+                                }
+                                break;
+                            case "orderNumRate":
+                                data[queryOption] = (Number(result.orderNumRate_orderNum.value) / Number(result.orderNumRate_convertTime.value)).toFixed(2) + "%";
+                                break;
+                            default :
+                                data[queryOption] = result[queryOption].value;
+                                break;
+                        }
+                    });
+                    callbackFn(data);
+                } else
+                    callbackFn(data);
+            });
+        });
+    },
+
     searchConvEvent: function (es, indexs, type, showType, callback) {
         console.log("searchConvEvent")
         var indexQurey = []
@@ -1903,6 +2000,7 @@ var transform = {
                 }
             })
     },
+
     searchEventInfo: function (es, indexs, type, showType, callback) {
         console.log("searchEventInfo")
         var indexQurey = []
