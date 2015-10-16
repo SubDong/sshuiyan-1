@@ -878,13 +878,39 @@ api.get("/transform/transformAnalysis", function (req, res) {
         }
 
     }
-)
-;
+);
+api.get("/transform/getConvEvent", function (req, res) {
+    var query = url.parse(req.url, true).query;
+    var indexString = [];
+    if (query.start.substring(1, query.start.length).match("-") != null && end.substring(1, query.start.length).match("-") != null) {
+        indexString = date.createIndexsByTime(query.start, query.end, "access-");
+    } else {
+        indexString = date.createIndexes(query.start, query.end, "access-");
+    }
+    transform.searchConvEvent(req.es,  indexString, query.type, query.showType, function (result) {
+        datautils.send(res, result);
+    });
+});
+api.get("/transform/getEventInfos", function (req, res) {
+    var query = url.parse(req.url, true).query;
+    var indexString = [];
+    if (query.start.substring(1, query.start.length).match("-") != null && end.substring(1, query.start.length).match("-") != null) {
+        indexString = date.createIndexsByTime(query.start, query.end, "access-");
+    } else {
+        indexString = date.createIndexes(query.start, query.end, "access-");
+    }
+    transform.searchEventInfo(req.es,  indexString, query.type, query.showType, function (result) {
+        datautils.send(res, result);
+    });
+});
+
+
 api.get("/transform/pageTransformCtr", function (req, res) {
     var parameters = req.url.split("?")[1].split("&");
     var start = parameters[0].split("=")[1];
     var end = parameters[1].split("=")[1];
 });
+
 //==================================== ad_track by icepros ===============================================
 /**
  * adsSource
