@@ -299,7 +299,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
 
                 $('#reportrange span').html(GetDateStr(0));
                 $('#reportrange').daterangepicker({
-                    format: 'YYYY-MM-DD',
                     maxDate: GetDateStr(0),
                     minDate: GetDateStr(-43),
                     showDropdowns: true,

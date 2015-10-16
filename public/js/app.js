@@ -53,7 +53,7 @@ define([
     myApp.controller('menuctr', function ($scope, $rootScope, $location) {
         $scope.oneAtATime = true;
         // 项目导航模块。用于页面刷新时，当前选中模块index的获取
-        $scope.array = ["index", "extension", "trend", "source", "page", "visitor", "value", "transform", "ads","group_analysis"];
+        $scope.array = ["index", "extension", "trend", "source", "page", "visitor", "value", "transform", "ads", "group_analysis"];
         $scope.selectRestaurant = function (row) {
             $scope.selectedRow = row;
         };
@@ -125,13 +125,13 @@ define([
                 }, {
                     text: '搜索推广',
                     sref: '#extension/search'
-                }/*, {
-                 text: '网盟推广',
-                 sref: '#extension/alliance'
-                 }, {
-                 text: '推广URL速度',
-                 sref: '#extension/urlspeed'
-                 }*/
+                }, {
+                    text: '网盟推广',
+                    sref: '#extension/alliance'
+                }, {
+                    text: '推广URL速度',
+                    sref: '#extension/urlspeed'
+                }
                 ]
             }, {
                 title: '趋向分析',
@@ -293,7 +293,7 @@ define([
 
 
     /*********nav-select*********/
-    myApp.controller('ngSelect', function ($scope, $location, $cookieStore, $window, $rootScope, $state,$http) {
+    myApp.controller('ngSelect', function ($scope, $location, $cookieStore, $window, $rootScope, $state, $http) {
         $scope.clear = function () {
             $scope.siteselect.selected = undefined;
         };

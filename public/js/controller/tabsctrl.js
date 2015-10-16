@@ -1385,7 +1385,6 @@ define(["app"], function (app) {
 
         //表格数据展开项
         var griApiInfo = function (gridApi) {
-            console.log("11111");
             $scope.gridOpArray = angular.copy($rootScope.gridArray);
             gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
                 var dataNumber;

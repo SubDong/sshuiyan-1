@@ -112,7 +112,7 @@ require.config({
         "angularjs/pdfmake": ["angular"],
         "angularjs/ui-grid-unstable.min": ["angular"],
         "angularjs/checkbox": ["angular"],
-        "angularjs/moment.min": ["angular"],
+        "angularjs/moment": ["angular"],
         "angularjs/daterangepicker": ["angular"],
         "angularjs/angular-ui-router": ["angular"]
     }
