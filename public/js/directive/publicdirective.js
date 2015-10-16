@@ -671,7 +671,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                             });
                             var repData = JSON.stringify(dataInfo).replace(/\%/g, "*");
                         }
-                        console.log(repData);
                         $http({
                             method: 'POST',
                             url: '/api/downCSV/?dataInfo=' + repData,
@@ -695,11 +694,37 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                          $rootScope.gridApi.exporter.csvExport("all", "visible", angular.element());
                          }*/
                     } else {
-                        if (scope.flag) {
-                            $rootScope.gridApi2.exporter.pdfExport("all", "visible", angular.element());
-                        } else {
-                            $rootScope.gridApi2.exporter.pdfExport("all", "visible", angular.element());
-                        }
+                        var dataInfo = angular.copy($rootScope.gridApi2.grid.options.data);
+                        var dataHeadInfo = angular.copy($rootScope.gridApi2.grid.options.columnDefs);
+                        dataHeadInfo.forEach(function (item, i) {
+                            if (item.field != undefined) {
+                                dataInfo.forEach(function (dataItem, x) {
+                                    dataInfo[x] = JSON.parse(JSON.stringify(dataItem).replace(item.field, item.displayName));
+                                })
+                            }
+                        });
+                        var repData = JSON.stringify(dataInfo).replace(/\%/g, "*");
+                        $http({
+                            method: 'POST',
+                            url: '/api/downPDF/?dataInfo=' + repData,
+                            headers: {
+                                'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+                                'Content-type': 'text/pdf; charset=utf-8'
+                            }
+                        }).success(function (data, status, headers, config) {
+                            var hiddenElement = document.createElement('a');
+                            var dateTime = new Date();
+                            var dateString = dateTime.Format("yyyyMdhmsS");
+                            hiddenElement.href = "output.pdf";
+                            hiddenElement.target = '_blank';
+                            hiddenElement.download = "down-" + dateString + ".pdf";
+                            hiddenElement.click();
+                        })
+                        //if (scope.flag) {
+                        //    $rootScope.gridApi2.exporter.pdfExport("all", "visible", angular.element());
+                        //} else {
+                        //    $rootScope.gridApi2.exporter.pdfExport("all", "visible", angular.element());
+                        //}
 
                     }
                 }

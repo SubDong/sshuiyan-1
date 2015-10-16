@@ -9,7 +9,7 @@ var changeList_request = {
      * @param times　毫秒为单位的时间数组
      * @param callbackFn　回调函数
      */
-    search: function (es, indexs, times, callbackFn) {
+    search: function (es, indexs, times, filterType, callbackFn) {
         var request = {
             index: indexs,
             type: null,
