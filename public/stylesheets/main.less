@@ -3249,12 +3249,21 @@ textarea.tNum {
 
 //图表
 .echarts-tooltip {
+  padding: 5px !important;
+  overflow: hidden;
   li:first-child {
+    position: absolute;
     background: #f2f2f2;
-    padding: 0 10px 0 5px;
+    left: 0;
+    right: 0;
+    top: 0;
+    padding: 0 10px 0 10px;
   }
   p:first-child {
     background: #f2f2f2;
+  }
+  li:nth-child(2){
+    margin-top: 15px;
   }
   p {
     display: block;
