@@ -3,6 +3,7 @@
  */
 define(["./module"], function (ctrs) {
     ctrs.controller("provincemapctr", function ($scope, uiGridConstants, $rootScope, $http, areaService, $location, $stateParams, $state) {
+        $scope.allBrowsers = angular.copy($rootScope.browsers);
         //        高级搜索提示
         $scope.sourceSearch = "";
         $scope.visitorSearch = "";

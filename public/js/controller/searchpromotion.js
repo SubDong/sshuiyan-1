@@ -212,6 +212,7 @@ define(["./module"], function (ctrs) {
                     $scope.city.selected["name"] = area;
                 }
             }
+            $scope.allCitys = angular.copy($rootScope.citys);
             $scope.gridOptions.data = [];
             $scope.gridOpArray = angular.copy($rootScope.searchGridArray);
             $scope.gridOptions.columnDefs = $scope.gridOpArray;
@@ -808,6 +809,8 @@ define(["./module"], function (ctrs) {
                 if (a.col.field == "cpc" || a.col.field == "cost") {
                     returnData = (returnData + "").substring(0, (returnData + "").indexOf(".") + 3);
                 }
+            }else{
+                returnData = "--"
             }
             return returnData;
         }

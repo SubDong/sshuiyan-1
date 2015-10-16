@@ -4,6 +4,7 @@
 define(["./module"], function (ctrs) {
     "use strict";
     ctrs.controller("searchenginectr", function ($scope, $rootScope, $http,$cookieStore, requestService, messageService, areaService, uiGridConstants) {
+        $scope.allCitys = angular.copy($rootScope.citys);
         $scope.todayClass = true;
         //        高级搜索提示显示
         $scope.terminalSearch = "";

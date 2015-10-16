@@ -178,7 +178,7 @@ var transform = {
             });
             var request = {
                 "index": newIndexs,
-                "type": type + "_" + action,
+                "type": type,//+ "_" + action,
                 "body": {
                     "size": 0,
                     "aggs": _aggs
@@ -260,7 +260,7 @@ var transform = {
                 for (var i = 0; i < indexs.length; i++) {
                     requests.push({
                         index: indexs[i],
-                        type: type + "_" + action,
+                        type: type,//+ "_" + action,
                         body: {
                             "size": 0,
                             "aggs": _aggs
@@ -1768,6 +1768,271 @@ var transform = {
 
         });
 
+    },
+    searchConvEvent: function (es, indexs, type, showType, callback) {
+        console.log("searchConvEvent")
+        var indexQurey = []
+        for (var i = 0; i < indexs.length; i++) {
+            indexQurey.push({
+                index: indexs[i]
+            });
+        }
+        async.map(indexQurey,
+            //集合不存在情况处理
+            function (item, callback) {
+                es.indices.exists(item, function (error, exists) {
+                    callback(null, exists);
+                });
+            },
+            //存在集合情况处理
+            function (error, results) {
+                var existIndexs = []
+                for (var eindex in results) {
+                    if (results[eindex])
+                        existIndexs.push(indexQurey[eindex])
+                }
+                if (existIndexs.length == 0) {//不存在集合
+                    var null_data = []
+                    if (showType == "total") {
+                        null_data.push({
+                            crate_pv: 0,
+                            date_time: indexs[0].substring(7, indexs[0].length) + "~" + indexs[indexs.length - 1].substring(7, indexs[indexs.length - 1].length)
+                        });
+                    } else {
+                        for (var k = 0; k < indexs.length; k++) {
+                            null_data.push({
+                                crate_pv: 0, date_time: indexs[k].substring(7, indexs[k].length)
+                            });
+                        }
+                    }
+                    callback(null_data);
+                } else {
+                    var requests = [];
+
+                    switch (showType) {
+                        case "day":
+                            for (i = 0; i < existIndexs.length; i++) {
+                                requests.push({
+                                    "index": existIndexs[i].index,
+                                    "type": type + "_event",
+                                    "body": {
+                                        "size": 0,
+                                        "aggs": {
+                                            "countTarget": {
+                                                "terms": {
+                                                    "field": "et_target"
+                                                }
+                                            },
+                                        }
+                                    }
+                                });
+                            }
+                            break;
+                        default :
+                            requests.push({
+                                "index": existIndexs[0].index,
+                                "type": type + "_event",
+                                "body": {
+                                    "size": 0,
+                                    "aggs": {
+                                        "countTarget": {
+                                            "terms": {
+                                                "field": "et_target"
+                                            }
+                                        },
+                                    }
+                                }
+                            });
+                            break;
+                    }
+                    console.log("***************requests***************")
+                    console.log(requests)
+                    async.map(requests, function (item, callback) {
+                        es.search(item, function (error, result) {
+                            if (result != undefined && result.aggregations != undefined) {
+                                callback(null, result.aggregations);
+                            } else {
+                                callback(null, null);
+                            }
+                        });
+                    }, function (error, results) {
+                        var data = []
+
+
+                        console.log(showType)
+                        //callback(results)
+                        if (showType == "tatol") {
+                            console.log(results[0].countTarget.buckets)
+                            var eventCount = 0;
+                            var convCount = 0;
+                            results[0].countTarget.buckets.forEach(function (item) {
+                                if (item.key == "true") {
+                                    convCount = item.doc_count
+                                    eventCount += item.doc_count
+                                } else {
+                                    eventCount += item.doc_count
+                                }
+                            })
+                            data.push({
+                                "eventCount": eventCount,
+                                "convCount": convCount,
+                                "date_time": indexs[0].substring(7, indexs[0].length) + "~" + indexs[indexs.length - 1].substring(7, indexs[indexs.length - 1].length)
+                            });
+                        } else if (showType == "day") {
+                            results.forEach(function (item) {
+                                console.log(item.countTarget.buckets)
+                                var eventCount = 0;
+                                var convCount = 0;
+                                item.countTarget.buckets.forEach(function (item) {
+                                    if (item.key == "true") {
+                                        convCount = item.doc_count
+                                        eventCount += item.doc_count
+                                    } else {
+                                        eventCount += item.doc_count
+                                    }
+                                })
+                                data.push({
+                                    "eventCount": eventCount,
+                                    "convCount": convCount,
+                                    "date_time": indexs[0].substring(7, indexs[0].length) + "~" + indexs[indexs.length - 1].substring(7, indexs[indexs.length - 1].length)
+                                });
+                            })
+                        }
+                        callback(data);
+                    });
+                }
+            })
+    },
+    searchEventInfo: function (es, indexs, type, showType, callback) {
+        console.log("searchEventInfo")
+        var indexQurey = []
+        for (var i = 0; i < indexs.length; i++) {
+            indexQurey.push({
+                index: indexs[i]
+            });
+        }
+        async.map(indexQurey,
+            //集合不存在情况处理
+            function (item, callback) {
+                es.indices.exists(item, function (error, exists) {
+                    callback(null, exists);
+                });
+            },
+            //存在集合情况处理
+            function (error, results) {
+                var existIndexs = []
+                for (var eindex in results) {
+                    if (results[eindex])
+                        existIndexs.push(indexQurey[eindex])
+                }
+                if (existIndexs.length == 0) {//不存在集合
+                    var null_data = []
+                    if (showType == "total") {
+                        null_data.push({
+                            crate_pv: 0,
+                            date_time: indexs[0].substring(7, indexs[0].length) + "~" + indexs[indexs.length - 1].substring(7, indexs[indexs.length - 1].length)
+                        });
+                    } else {
+                        for (var k = 0; k < indexs.length; k++) {
+                            null_data.push({
+                                crate_pv: 0, date_time: indexs[k].substring(7, indexs[k].length)
+                            });
+                        }
+                    }
+                    callback(null_data);
+                } else {
+                    var requests = [];
+
+                    switch (showType) {
+                        case "day":
+                            for (i = 0; i < existIndexs.length; i++) {
+                                requests.push({
+                                    "index": existIndexs[i].index,
+                                    "type": type + "_event",
+                                    "body": {
+                                        "size": 0,
+                                        //"aggs": {
+                                        //    "countTarget": {
+                                        //        "terms": {
+                                        //            "field": "et_category"
+                                        //        }
+                                        //    },
+                                        //}
+                                    }
+                                });
+                            }
+                            break;
+                        default :
+                            requests.push({
+                                "index": existIndexs[0].index,
+                                "type": type + "_event",
+                                "et_target": "true",
+                                //"body": {
+                                //    "size": 0,
+                                //    "aggs": {
+                                //        "countTarget": {
+                                //
+                                //        },
+                                //    }
+                                //}
+                            });
+                            break;
+                    }
+                    console.log("***************requests***************")
+                    console.log(requests)
+                    async.map(requests, function (item, callback) {
+                        es.search(item, function (error, result) {
+                            if (result != undefined && result.aggregations != undefined) {
+                                callback(null, result.aggregations);
+                            } else {
+                                callback(null, null);
+                            }
+                        });
+                    }, function (error, results) {
+                        var data = []
+                        console.log(showType)
+                        callback(results)
+                        //if (showType == "tatol") {
+                        //    console.log(results[0].countTarget.buckets)
+                        //    var eventCount = 0;
+                        //    var convCount = 0;
+                        //    results[0].countTarget.buckets.forEach(function (item) {
+                        //        if (item.key=="true") {
+                        //            convCount = item.doc_count
+                        //            eventCount += item.doc_count
+                        //        } else {
+                        //            eventCount += item.doc_count
+                        //        }
+                        //    })
+                        //    data.push({
+                        //        "eventCount": eventCount,
+                        //        "convCount": convCount,
+                        //        "date_time": indexs[0].substring(7, indexs[0].length) + "~" + indexs[indexs.length - 1].substring(7, indexs[indexs.length - 1].length)
+                        //    });
+                        //}else if(showType =="day"){
+                        //    results.forEach(function(item){
+                        //        console.log(item.countTarget.buckets)
+                        //        var eventCount = 0;
+                        //        var convCount = 0;
+                        //        item.countTarget.buckets.forEach(function (item) {
+                        //            if (item.key=="true") {
+                        //                convCount = item.doc_count
+                        //                eventCount += item.doc_count
+                        //            } else {
+                        //                eventCount += item.doc_count
+                        //            }
+                        //        })
+                        //        data.push({
+                        //            "eventCount": eventCount,
+                        //            "convCount": convCount,
+                        //            "date_time": indexs[0].substring(7, indexs[0].length) + "~" + indexs[indexs.length - 1].substring(7, indexs[indexs.length - 1].length)
+                        //        });
+                        //    })
+                        //}
+                        //callback(data);
+                    });
+                }
+            })
     }
 };
 var createQueryByUrls = function (urls) {

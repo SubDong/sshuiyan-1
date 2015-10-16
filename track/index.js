@@ -8,10 +8,10 @@ config_request = require('../servers/services/config_request');
 
 
 router.get('/', function (req, resp) {
-    console.log("ref=" + req.header('Referer'))
     var tid = req.query["tid"];
     redis.service().get('tsj:'.concat(tid), function (err, sitejson) {
         var ref = req.header('Referer');
+        console.log(sitejson )
         //判断redis是否存在sitejson
         if (err || sitejson == null) {
             //初始化reids
@@ -44,6 +44,7 @@ router.get('/', function (req, resp) {
 });
 router.get('/select', function (req, resp) {
     var tid = req.query["tid"];
+    console.log(tid)
     redis.service().get('tsj:'.concat(tid), function (err, sitejson) {
         var ref = req.header('Referer');
         if (ref == undefined || ref == '') {
@@ -72,7 +73,8 @@ function getData(req, resp, tid, sitejson) {
         resp.end();
         return;
     } else {
-        ref = ref.slice(0, ref.indexOf('?'));
+        console.log(ref.indexOf('?'))
+        ref = ref.indexOf('?')==-1?ref:ref.slice(0, ref.indexOf('?'));
         var config = {
             "trackid": tid,
             "iconNumber":sitejson.icon,
@@ -87,10 +89,11 @@ function getData(req, resp, tid, sitejson) {
          * visit 是否开起 访客访问页数转化数据获取
          * @type {string[]}
          */
-        var tasks = ['mouse', 'duration', 'visit', 'evt'];
+        var tasks = ['mouse', 'duration', 'visit', 'e'];
         async.eachSeries(tasks, function (item, cb) {
-            var url = (item == "mouse" ? siteid.concat(":", item, ":", ref) : item.concat(":", siteid));
+            var url = ((item == "mouse"||item == "e") ? siteid.concat(":", item, ":", ref):item.concat(":", siteid));
             redis.service().get(url, function (err, val) {
+                console.log("get key="+url+" == "+val)
                 if (val != null) {
                     try {
                         config[item] = JSON.parse(val);

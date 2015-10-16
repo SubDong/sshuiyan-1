@@ -5,12 +5,12 @@ define(["./module"], function (ctrs) {
     "use strict";
 
     ctrs.controller('eventchange_addctr', function ($scope, $http, $rootScope, $cookieStore, ngDialog, $state) {
-
         $scope.eventChange = {};
         $scope.eventChange.event_id = "";
         $scope.eventChange.event_name = "";
         $scope.eventChange.event_page = "";
         $scope.eventChange.event_method = "手动方式";
+        $scope.eventChange.event_target = false;
         $scope.eventChange.event_status = "1";
         $scope.eventChange.uid = $cookieStore.get("uid");
         $scope.eventChange.root_url = $rootScope.siteId;
@@ -58,12 +58,9 @@ define(["./module"], function (ctrs) {
             //二级域名验证
             var regex = new RegExp("(\\w.)?" + localURl + "/*");
             $scope.iframeobj = function (tid) {
-
                 var strSrc = "http://" + previewUrl + "?domain=" + configUrl + "&amp;td=" + tid + "&amp;cuid=" + uid + "&amp;jn=select&amp;type=event";
-
                 var dialogFlag = false;
                 $scope.urlDialog = ngDialog.open({
-
                     template: '\
                         <div class="ngdialog-content" style="width:100%">\
                             <div id="previewControlPanel">\

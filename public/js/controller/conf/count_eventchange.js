@@ -15,7 +15,12 @@ define(["./module"], function (ctrs ) {
         $scope.deleteGridData  = function () {
 
             //后台删除
-            var url= "/config/eventchnage_list?type=delete&query={\"uid\":\"" + $scope.entity.uid + "\",\"_id\":\"" +  $scope.entity._id + "\"}";
+            var url= "/config/eventchnage_list?type=delete&query="+JSON.stringify({
+                    root_url:$scope.entity.root_url,
+                    event_page:$scope.entity.event_page,
+                    event_id:$scope.entity.event_id
+
+                });
             $http({
                 method: 'GET',
                 url: url
@@ -56,26 +61,24 @@ define(["./module"], function (ctrs ) {
                 scope: $scope
             });
         };
-        //$scope.toUpdate = function (entity) {
-        //
-        //    $state.go('eventchange_update',{ 'id':entity._id});
-        //
-        //};
-
+        $scope.operationEventTarget = function (entity) {
+            entity.event_target = !entity.event_target
+            var url = "/config/eventchnage_list?type=update&query={\"_id\":\"" + entity._id + "\"}&updates={\"event_target\":\"" + entity.event_target + "\"}";
+            $http({
+                method: 'GET',
+                url: url
+            }).success(function (dataConfig, status) {
+                entity.event_target_des = entity.event_target?"是":"否"
+            });
+        };
         $scope.operationStatus = function (entity) {
-
             entity.event_status = entity.event_status == '0' ? '1':'0';
-
             var url = "/config/eventchnage_list?type=update&query={\"_id\":\"" + entity._id + "\"}&updates={\"event_status\":\"" + entity.event_status + "\"}";
-
             $http({
                 method: 'GET',
                 url: url
             }).success(function (dataConfig, status) {});
-
         };
-
-
         //配置默认指标
         $rootScope.checkArray = ["", "", ""];
 
@@ -91,23 +94,30 @@ define(["./module"], function (ctrs ) {
             {name: "事件元素ID", displayName: "事件元素ID", field: "event_id",cellClass: 'table_admin_color', enableSorting: false},
             {name: "事件作用或目录", displayName: "事件作用或目录", field: "event_page",cellClass: 'table_admin_color', enableSorting: false},
             {name: "记录方式", displayName: "记录方式", field: "event_method",cellClass: 'table_admin_color',enableSorting: false},
-            {name: "是否为事件转化目标", displayName: "是否为事件转化目标", field: "event_target",cellClass: 'table_admin_color',enableSorting: false},
+            {name: "是否为事件转化目标", displayName: "是否为事件转化目标", field: "event_target_des",cellClass: 'table_admin_color',enableSorting: false},
             {
                 name: "x4",
+                displayName: "设置转化目标",
+                cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.operationEventTarget(row.entity)'>{{row.entity.event_target ? '取消':'设置' }}</a></div>",
+                maxWidth: 100,
+                enableSorting: false
+            },
+            {
+                name: "x5",
                 displayName: "",
                 cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.operationStatus(row.entity)'>{{row.entity.event_status == '0' ? '启动':'暂停' }}</a></div>",
                 maxWidth: 80,
                 enableSorting: false
             },
             {
-                name: "x5",
+                name: "x6",
                 displayName: "",
                 cellTemplate: "<div class='table_admin'><a  ng-click='grid.appScope.toUpdate(row.entity)' >修改</a></div>",
                 maxWidth: 80,
                 enableSorting: false
             },
             {
-                name: "x6",
+                name: "x7",
                 displayName: "",
                 cellTemplate: "<div class='table_admin'><a ng-click='grid.appScope.deleteDialog(row.entity)' >删除</a></div>",
                 maxWidth: 50,
@@ -149,14 +159,15 @@ define(["./module"], function (ctrs ) {
             var uid = $cookieStore.get("uid");
             var root_url = $rootScope.siteId;
             var url = "/config/eventchnage_list?type=search&query={\"uid\":\"" + uid + "\",\"root_url\":\"" + root_url + "\"}";
+            console.log(url)
             $http({
                 method: 'GET',
                 url: url
             }).success(function (dataConfig, status) {
-
                 $scope.gridOptions.data = dataConfig;
-
-
+                $scope.gridOptions.data.forEach(function(item){
+                    item.event_target_des = item.event_target?"是":"否"
+                })
             });
         };
         /**

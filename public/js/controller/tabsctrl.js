@@ -184,7 +184,7 @@ define(["app"], function (app) {
                     name: '来源',
                     displayName: "来源",
                     field: "referrer",
-                    cellTemplate: "<a href='{{grid.appScope.getDataUrlInfo(grid, row,1)}}' title='{{grid.appScope.getDataUrlInfo(grid, row,1)}}' target='_blank' style='color:#0965b8;line-height:30px; display:block; padding:0 10px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;}'>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</a>",
+                    cellTemplate: "<div class='getReferrerData' my-data-one='{{grid.appScope.getCellDisplayValueReferrer(grid, row, 1)}}' my-data-two='{{grid.appScope.getCellDisplayValueReferrer(grid, row, 2)}}'></div>",
                     enableSorting: false
                 },
                 {
@@ -616,6 +616,7 @@ define(["app"], function (app) {
                     $scope.city.selected["name"] = area;
                 }
             }
+            $scope.allCitys = angular.copy($rootScope.citys);
             if (!$rootScope.tableSwitch) {
                 return;
             }
@@ -705,6 +706,7 @@ define(["app"], function (app) {
             $scope.isJudge = false;
             $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.targetSearch();
+            $scope.allCitys = angular.copy($rootScope.citys);
         };
 
         //设置搜索引擎过滤
@@ -736,6 +738,7 @@ define(["app"], function (app) {
                     $scope.browser.selected["name"] = info;
                 }
             }
+            $scope.allBrowsers = angular.copy($rootScope.browsers);
         };
         // 搜索词过滤
         $scope.setGjcFilter = function (gjcText) {
@@ -1077,7 +1080,7 @@ define(["app"], function (app) {
                                     if (dataSEM[0]) {
                                         dataObj["accountName"] = "搜索推广 (" + dataSEM[0].accountName + ")";
                                     } else {
-                                        dataObj["accountName"] = "搜索推广 (--)";
+                                        dataObj["accountName"] = "搜索推广 (暂无数据 )";
                                     }
                                 }
                                 semDataArray.forEach(function (sem, i) {
@@ -1382,6 +1385,7 @@ define(["app"], function (app) {
 
         //表格数据展开项
         var griApiInfo = function (gridApi) {
+            console.log("11111");
             $scope.gridOpArray = angular.copy($rootScope.gridArray);
             gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
                 var dataNumber;
@@ -1415,11 +1419,12 @@ define(["app"], function (app) {
                         + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&type=" + esType
                     }).success(function (data, status) {
                         var reg = new RegExp($rootScope.tableSwitch.dimen, "g");
+                        console.log($rootScope.tableSwitch.latitude.field);
                         if (data != undefined && data.length != 0) {
                             data = JSON.parse(JSON.stringify(data).replace(reg, $rootScope.tableSwitch.latitude.field));
                             dataNumber = data.length;
                         }
-                        row.entity.subGridOptions.columnDefs = $scope.gridOpArray;
+                        row.entity.subGridOptions.columnDefs = $scope.getSubColumnDefs($scope.gridOpArray);
                         row.entity.subGridOptions.data = data;
                         row.entity.subGridOptions.virtualizationThreshold = data.length;
                         if (data.length == 0) {
@@ -1432,6 +1437,30 @@ define(["app"], function (app) {
                 }
             });
         };
+
+        $scope.getSubColumnDefs = function (gridOpArray) {
+            var _t_arr = [];
+            for (var i = 0; i < gridOpArray.length; i++) {
+                if (gridOpArray[i]["name"] == " ") {
+                    _t_arr.push({
+                        name: gridOpArray[i]["name"],
+                        displayName: gridOpArray[i]["displayName"],
+                        field: gridOpArray[i]["field"],
+                        maxWidth: gridOpArray[i]["maxWidth"],
+                        cellTemplate: gridOpArray[i]["cellTemplate"]
+                    });
+                } else {
+                    _t_arr.push({
+                        name: gridOpArray[i]["name"],
+                        displayName: gridOpArray[i]["displayName"],
+                        field: gridOpArray[i]["field"],
+                        maxWidth: gridOpArray[i]["maxWidth"]
+                    });
+                }
+            }
+            return _t_arr;
+        };
+
         //子表格方法通用
         $scope.subGridScope = {
             getHistoricalTrend: function (b) {
@@ -1585,6 +1614,20 @@ define(["app"], function (app) {
                     return "--";
             }
         }
+        $scope.getCellDisplayValueReferrer = function (grid, row, number) {
+            var a = row.entity.referrer.split(",");
+            if (number == 1) {
+                if (a[0] == "-") {
+                    a[0] = "javascript:void(0)"
+                }
+                return a[0];
+            } else if (number == 2) {
+                if (a[0] == "-") {
+                    a[1] = "直接访问";
+                }
+                return a[1];
+            }
+        }
         //得到表格底部数据
         $scope.getFooterData = function (a, option, number) {
             var returnData = [0, 0, 0, 0];
@@ -1642,7 +1685,11 @@ define(["app"], function (app) {
                             contrastPv += option[c].entity["contrastPv"];
                         }
                         if (window.location.href.split("/")[window.location.href.split("/").length - 1] == "changelist") {
-                            returnData[0] = returnData[0] == "0" ? "0%" : (returnData[0] / contrastPv).toFixed(2) + "%";
+                            if (contrastPv == 0) {
+                                returnData[0] = "-"
+                            } else {
+                                returnData[0] = returnData[0] == "0" ? "0%" : (returnData[0] * 100 / contrastPv).toFixed(2) + "%";
+                            }
                         } else {
                             returnData[0] = returnData[0] == "0" ? "0%" : (returnData[0] / option.length).toFixed(2) + "%";
                         }
@@ -1653,14 +1700,24 @@ define(["app"], function (app) {
                         returnData[0] = returnData[0] == "0" ? "0" : (returnData[0] / option.length).toFixed(2);
                     }
                     if (a.col.field == "avgTime") {
-                        var atime1 = parseInt(newSpl[0] / option.length) + "";
-                        var atime2 = parseInt(newSpl[1] / option.length) + "";
-                        var atime3 = parseInt(newSpl[2] / option.length) + "";
+                        var _ll = 0;
+                        for (var _i = 0; _i < option.length; _i++) {
+                            if (option[_i].entity.avgTime != "--") {
+                                _ll++;
+                            }
+                        }
+                        if (_ll == 0) {
+                            _ll = 1;
+                        }
+                        var atime1 = parseInt(newSpl[0] / _ll) + "";
+                        var atime2 = parseInt(newSpl[1] / _ll) + "";
+                        var atime3 = parseInt(newSpl[2] / _ll) + "";
                         returnData[0] = (atime1.length == 1 ? "0" + atime1 : atime1) + ":" + (atime2.length == 1 ? "0" + atime2 : atime2) + ":" + (atime3.length == 1 ? "0" + atime3 : atime3);
-
                     }
                 }
-
+                if (option[0].entity.period == "暂无数据" || option[0].entity.rf_type == "暂无数据" || option[0].entity.se == "暂无数据" || option[0].entity.kw == "暂无数据" || option[0].entity.rf == "暂无数据" || option[0].entity.loc == "暂无数据" || option[0].entity.region == "暂无数据" || option[0].entity.pm == "暂无数据" || option[0].entity.ct == "暂无数据" || option[0].entity.city == "暂无数据" || option[0].entity.accountName == "搜索推广 (暂无数据 )") {
+                    returnData = ["--", "--", "--", "--"]
+                }
                 switch (number) {
                     case 1:
                         return returnData[0];
@@ -1732,15 +1789,39 @@ define(["app"], function (app) {
         }
         ];
         $scope.init = function (timeData) {
-            $http.get("api/changeList?start=" + timeData.start + "&end=" + timeData.end + "&contrastStart=" + timeData.contrastStart + "&contrastEnd=" + timeData.contrastEnd).success(function (data) {
-                console.log(data);
+            console.log(timeData);
+            $http.get("api/changeList?start=" + timeData.start + "&end=" + timeData.end + "&contrastStart=" + timeData.contrastStart + "&contrastEnd=" + timeData.contrastEnd + "&filterType=" + timeData.filterType + "&type=" + $rootScope.userType).success(function (data) {
                 $rootScope.changeObj = {
                     sum_pv_count: data.sum_pv,
                     contrast_sum_pv_count: data.contrast_sum_pv,
                     all_percentage: data.percentage
                 };
 
-                $scope.gridOptions.data = data.pv ? data.pv : [];
+                data.pv = data.pv ? data.pv : [];
+                var _tempData = [];
+                if (timeData.filterType == 4) {
+                    _tempData = data.pv;
+                } else if (timeData.filterType == 1) {
+                    for (var i = 0; i < data.pv.length; i++) {
+                        if (data.pv[i]["percentage"].substring(0, 1) == "+") {
+                            _tempData.push(data.pv[i]);
+                        }
+                    }
+                } else if (timeData.filterType == 2) {
+                    for (var i = 0; i < data.pv.length; i++) {
+                        if (data.pv[i]["percentage"].substring(0, 1) == "-") {
+                            _tempData.push(data.pv[i]);
+                        }
+                    }
+                } else if (timeData.filterType == 3) {
+                    for (var i = 0; i < data.pv.length; i++) {
+                        if (data.pv[i]["percentage"].substring(0, 1) != "+" && data.pv[i]["percentage"].substring(0, 1) != "-") {
+                            _tempData.push(data.pv[i]);
+                        }
+                    }
+                }
+
+                $scope.gridOptions.data = _tempData;
                 $scope.gridOptions.enableSorting = true;
                 $scope.gridOptions.columnDefs[4].cellClass = function (grid, row, col, rowRenderIndex, colRenderIndex) {
                     if (grid.getCellValue(row, col).toString().substring(0, 1) == "+") {

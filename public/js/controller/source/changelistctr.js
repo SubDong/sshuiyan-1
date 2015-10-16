@@ -12,6 +12,7 @@ define(["./module"], function (ctrs) {
             $rootScope.end = 0;
             $rootScope.contrastStart = -1;
             $rootScope.contrastEnd = -1;
+            $rootScope.changeListFilterType = 4;
             $rootScope.startString = GetDateStr(0);
             $rootScope.contrastStartString = GetDateStr(-1);
             $scope.initTime = {
@@ -63,17 +64,20 @@ define(["./module"], function (ctrs) {
                     name: " ",
                     displayName: "变化情况",
                     headerCellTemplate: '<div class="change_list">' +
-                    '<a href="javascript:void(0)" class="rise">+升</a>' +
-                    '<a href="javascript:void(0)" class="descend">-降</a>' +
-                    '<a href="javascript:void(0)" class="flat">平</a>' +
-                    '<a href="javascript:void(0)" class="all">全部</a>' +
+                    '<a href="javascript:void(0)" onclick="weimsssss(this, 1)" class="rise">+升</a>' +
+                    '<a href="javascript:void(0)" onclick="weimsssss(this, 2)" class="descend">-降</a>' +
+                    '<a href="javascript:void(0)" onclick="weimsssss(this, 3)" class="flat">平</a>' +
+                    '<a href="javascript:void(0)" onclick="weimsssss(this, 4)" class="all">全部</a>' +
                     '</div>',
                     field: "percentage",
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>",
                     enableSorting: false
                 }
             ];
-            //alert($rootScope.contrastStartString)
+            $scope.filter_data = function (type) {
+                $rootScope.changeListFilterType = type;
+                $scope.changeTime();
+            };
             $scope.showSearchUrl = function (row) {
                 popupService.showSourceData(row.entity.kw);
             };
@@ -98,6 +102,7 @@ define(["./module"], function (ctrs) {
                     end: $rootScope.end,
                     contrastStart: $rootScope.contrastStart,
                     contrastEnd: $rootScope.contrastEnd,
+                    filterType: $rootScope.changeListFilterType,
                     gridArray: $rootScope.gridArray
                 });
             });
@@ -241,11 +246,13 @@ define(["./module"], function (ctrs) {
                 };
                 $rootScope.gridArray[2].displayName = $rootScope.startString;
                 $rootScope.gridArray[3].displayName = $rootScope.contrastStartString;
+                console.log($rootScope.changeListFilterType);
                 $scope.$broadcast("parrentData", {
                     start: $rootScope.start,
                     end: $rootScope.end,
                     contrastStart: $rootScope.contrastStart,
                     contrastEnd: $rootScope.contrastEnd,
+                    filterType: $rootScope.changeListFilterType,
                     gridArray: $rootScope.gridArray
                 });
             };
@@ -320,3 +327,24 @@ define(["./module"], function (ctrs) {
     );
 
 });
+
+function weimsssss(e, type) {
+    var appElement = document.querySelector('[ng-controller=changelistctr]');
+    //然后在获取$scope变量：
+    switch (type) {
+        case 1:
+            angular.element(e).addClass("current");
+            break;
+        case 2:
+            angular.element(e).addClass("current");
+            break;
+        case 3:
+            angular.element(e).addClass("current");
+            break;
+        case 4:
+            angular.element(e).addClass("current");
+            break;
+        default:
+    }
+    angular.element(appElement).scope().filter_data(type);
+};

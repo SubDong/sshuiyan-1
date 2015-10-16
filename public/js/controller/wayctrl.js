@@ -6,6 +6,7 @@ define(["app"], function (app) {
     "use strict";
 
     app.controller('wayctrl', function ($timeout, $scope, $rootScope, $q, $http, requestService, areaService, SEM_API_URL, uiGridConstants) {
+        $scope.allCitys = angular.copy($rootScope.citys);
         $scope.areaSearch = "";
         $scope.removeAreaSearch = function (obj) {
             $scope.city.selected = {"name": "全部"};

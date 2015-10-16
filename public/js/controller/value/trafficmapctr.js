@@ -88,8 +88,8 @@ define(["./module"], function (ctrs) {
                             ratio: 0,
                             count: 0
                         });
-                        /*document.getElementById("linkstree_top").style.top = "50px";
-                        document.getElementById("linkstree_right").style.top = "50px";*/
+                        document.getElementById("linkstree_top").style.top = "50px";
+                        document.getElementById("linkstree_right").style.top = "50px";
                         $(".linkstree_left").css("margin-top", "64px")
                         $(".linkstree_left_list").css("margin-top", "64px")
                         $scope.links = linkData

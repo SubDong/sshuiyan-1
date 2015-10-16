@@ -57,6 +57,7 @@ var schemas = {
             event_name: String,//事件名称
             event_page: String, //事件作用页面
             event_method: String, //事件设置方式
+            event_target:Boolean,//是否为事件转化目标
             event_status: String //事件状态 1：启动  0：暂停
         }
     },

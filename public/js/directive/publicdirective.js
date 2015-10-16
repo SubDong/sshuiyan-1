@@ -563,7 +563,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
     app.directive("refresh", function ($rootScope, $http, $location, ngDialog) {
         var option = {
             restrict: "EA",
-            template: "<div class=\"right_refresh fr\"><button class=\"btn btn-default btn-Refresh fl\" ng-click=\"page_refresh()\"  type=\"button\"><span aria-hidden=\"true\" class=\"glyphicon glyphicon-refresh\"></span></button><button data-ng-click='send()' class=\"btn btn-default btn-Refresh fl\" type=\"button\" ng-show=\"send\" >发送</button><ui-select ng-model=\"export.selected\" ng-change='fileSave(export.selected)' theme=\"select2\" ng-hide=\"menu_select\" reset-search-input=\"false\" class=\"fl\"style=\"min-width: 90px;background-color: #fff;\"> <ui-select-match placeholder=\"下载\">{{$select.selected.name}} </ui-select-match> <ui-select-choices repeat=\"export in exportsaa\"> <span ng-bind-html=\"export.name\"></span></ui-select-choices></ui-select></div>",
+            template: "<div class=\"right_refresh fr\"><button class=\"btn btn-default btn-Refresh fl\" ng-click=\"page_refresh()\"  type=\"button\"><span aria-hidden=\"true\" class=\"glyphicon glyphicon-refresh\"></span></button><button data-ng-click='send()' class=\"btn btn-default btn-Refresh fl\" type=\"button\" ng-show=\"send\" >发送</button><ui-select ng-model=\"export.selected\" data-on-select='fileSave(export.selected)' theme=\"select2\" ng-hide=\"menu_select\" reset-search-input=\"false\" class=\"fl\"style=\"min-width: 90px;background-color: #fff;\"> <ui-select-match placeholder=\"下载\">{{$select.selected.name}} </ui-select-match> <ui-select-choices repeat=\"export in exportsaa\"> <span ng-bind-html=\"export.name\"></span></ui-select-choices></ui-select></div>",
             transclude: true,
             replace: true,
             link: function (scope) {
@@ -642,11 +642,17 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                                 _dataInfo.push(_tmp);
                             });
                             var percentage = sum_pv - contrast_sum_pv;
+                            var _t_percentage = 0;
+                            if (contrast_sum_pv == 0) {
+                                _t_percentage = "(100%)";
+                            } else {
+                                _t_percentage = "(" + ((sum_pv - contrast_sum_pv) / contrast_sum_pv * 100) + "%)"
+                            }
                             _dataInfo.push({
                                 "站点名称": "全站统计",
                                 "www.best-ad.cn": sum_pv,
                                 " ": contrast_sum_pv,
-                                "  ": percentage + "(" + ((sum_pv - contrast_sum_pv) / contrast_sum_pv * 100) + "%)"
+                                "  ": percentage + _t_percentage
                             });
                             _dataInfo.push({
                                 "站点名称": "Power by best-ad.cn",
@@ -665,7 +671,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                             });
                             var repData = JSON.stringify(dataInfo).replace(/\%/g, "*");
                         }
-                        console.log(repData);
                         $http({
                             method: 'POST',
                             url: '/api/downCSV/?dataInfo=' + repData,
@@ -688,13 +693,38 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                          } else {
                          $rootScope.gridApi.exporter.csvExport("all", "visible", angular.element());
                          }*/
-                    }
-                    else {
-                        if (scope.flag) {
-                            $rootScope.gridApi2.exporter.pdfExport("all", "visible", angular.element());
-                        } else {
-                            $rootScope.gridApi2.exporter.pdfExport("all", "visible", angular.element());
-                        }
+                    } else {
+                        var dataInfo = angular.copy($rootScope.gridApi2.grid.options.data);
+                        var dataHeadInfo = angular.copy($rootScope.gridApi2.grid.options.columnDefs);
+                        dataHeadInfo.forEach(function (item, i) {
+                            if (item.field != undefined) {
+                                dataInfo.forEach(function (dataItem, x) {
+                                    dataInfo[x] = JSON.parse(JSON.stringify(dataItem).replace(item.field, item.displayName));
+                                })
+                            }
+                        });
+                        var repData = JSON.stringify(dataInfo).replace(/\%/g, "*");
+                        $http({
+                            method: 'POST',
+                            url: '/api/downPDF/?dataInfo=' + repData,
+                            headers: {
+                                'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+                                'Content-type': 'text/pdf; charset=utf-8'
+                            }
+                        }).success(function (data, status, headers, config) {
+                            var hiddenElement = document.createElement('a');
+                            var dateTime = new Date();
+                            var dateString = dateTime.Format("yyyyMdhmsS");
+                            hiddenElement.href = "output.pdf";
+                            hiddenElement.target = '_blank';
+                            hiddenElement.download = "down-" + dateString + ".pdf";
+                            hiddenElement.click();
+                        })
+                        //if (scope.flag) {
+                        //    $rootScope.gridApi2.exporter.pdfExport("all", "visible", angular.element());
+                        //} else {
+                        //    $rootScope.gridApi2.exporter.pdfExport("all", "visible", angular.element());
+                        //}
 
                     }
                 }
@@ -1293,14 +1323,10 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
 
                 scope.pushESData = function (result, flag) {
                     var _array = $rootScope.copy(scope.dateShowArray);
-
                     if (Object.prototype.toString.call(result) === '[object Array]') {
                         var _count = 0;
                         angular.forEach(result, function (r) {
                             var infoKey = r[$rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field];
-                            //if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null")) {
-                            //    return false;
-                            //}
                             if (infoKey == undefined) {
                                 return false;
                             }
@@ -1352,9 +1378,14 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                         angular.forEach(obj, function (r) {
                             var dateShowObject = {};
                             dateShowObject.label = r.label;
+
                             var temp = 0;
                             var count = 0;
                             angular.forEach(r.quota, function (qo, _i) {
+                                var _key = r.key[_i];
+                                if (_key != undefined && (_key == "-" || _key == "" || _key == "www" || _key == "null")) {
+                                    return false;
+                                }
                                 temp += Number(qo);
                                 count++;
                             });
@@ -2332,5 +2363,23 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                 };
             }
         };
+    });
+
+    app.directive('getReferrerData', function () {
+
+        return {
+            restrict: 'C',
+            replace: true,
+            transclude: true,
+            scope: {
+                myDataOne: '@myDataOne',
+                myDataTwo: '@myDataTwo'
+            },
+            template: '<div ng-switch on="myDataTwo">' +
+            '<div ng-switch-when="直接访问" style="line-height:30px; display:block; padding:0 10px;white-space: nowrap;}">{{myDataTwo}}</div>' +
+            '<a ng-switch-default href="{{myDataOne}}" title="{{myDataOne}}" target="_blank" style="color:#0965b8;line-height:30px; display:block; padding:0 10px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;}">{{myDataTwo}}</a>' +
+            '</div>'
+        }
+
     });
 });

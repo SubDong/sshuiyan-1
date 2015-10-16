@@ -190,10 +190,12 @@ var op = {
                                     res += '<li class=chartstyle' + i + '>' + baseSerieName[0] + chartUtils.convertChinese(baseSerieName[1]) + ' : ' + ad.formatFunc(params[i].value, baseSerieName[1]) + '</li>';
                                 }
                             } else {
+                                var _t = params[i].seriesName;
+                                var __t =  _t.length > 30 ? _t.substring(0, 30) + "..." + _t.substring(_t.length - 10, _t.length) : _t;
                                 if (chartConfig.toolTip == undefined) {
-                                    res += '<li class=chartstyle' + i + '>' + params[i].seriesName + ' : ' + ad.formatFunc(params[i].value, formatType) + '</li>';
+                                    res += '<li class=chartstyle' + i + '>' + __t + ' : ' + ad.formatFunc(params[i].value, formatType) + '</li>';
                                 } else {
-                                    res += '<li class=chartstyle' + i + '>' + params[i].seriesName + ' : ' + params[i].value + '</li>';
+                                    res += '<li class=chartstyle' + i + '>' + __t + ' : ' + params[i].value + '</li>';
                                 }
                             }
 
@@ -313,8 +315,10 @@ var op = {
         var select = {};
         json.forEach(function (item) {
             select[chartUtils.convertChinese(item.label)] = true;
+            var _t = item.label;
+            var __t =  _t.length > 30 ? _t.substring(0, 30) + "..." + _t.substring(_t.length - 10, _t.length) : _t;
             var serie = {
-                name: !chartConfig.noFormat ? chartUtils.convertChinese(item.label) : item.label,
+                name: !chartConfig.noFormat ? chartUtils.convertChinese(__t) : __t,
                 type: !chartConfig.chartType ? "line" : chartConfig.chartType,
                 data: item[chartConfig.dataValue],
                 barMaxWidth: 25,
@@ -711,6 +715,9 @@ var ad = {
     formatFunc: function (value, formatType) {
         switch (formatType) {
             case "avgTime":
+                if (value == 0) {
+                    return "--";
+                }
                 var days = Math.floor(value / 1440 / 60);
                 var hours = Math.floor((value - days * 1440 * 60) / 3600);
                 var minutes = Math.floor((value - days * 1440 * 60 - hours * 3600) / 60);

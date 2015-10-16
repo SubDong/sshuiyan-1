@@ -15,6 +15,7 @@ var dao = require('../db/daos');
 var daoutil = require('../db/daoutil');
 var schemas = require('../db/schemas');
 var csvApi = require('json-2-csv');
+var PDF = require('pdfkit');
 var iconv = require('iconv-lite');
 var uuid = require("node-uuid");
 var async = require("async");
@@ -531,6 +532,37 @@ api.post("/downCSV", function (req, res) {
     });
 });
 
+//pdf下载功能
+api.post("/downPDF", function (req, res) {
+    try {
+        var query = url.parse(req.url, true).query;
+        var dataInfo = query['dataInfo'].replace(/\*/g, "%");
+        var jsonData = JSON.parse(dataInfo);
+        var doc = new PDF();
+        doc.pipe(fs.createWriteStream('./public/output.pdf'));
+
+        doc.fontSize(25).text("weims", 100, 100);
+        doc.save();
+        doc.end();
+        var buffer = new Buffer(doc);
+        //需要转换字符集
+        var str = iconv.encode(buffer, 'utf-8');
+        res.send(str);
+    } catch (e) {
+        console.log(e);
+    }
+
+    //csvApi.json2csv(jsonData, function (err, csv) {
+    //    if (err) throw err;
+    //    var buffer = new Buffer(csv);
+    //    //需要转换字符集
+    //    var uid = uuid.v1();
+    //    var str = iconv.encode(buffer, 'utf-8');
+    //    res.send(str);
+    //});
+
+});
+
 /**
  * summary.by wms
  */
@@ -729,6 +761,8 @@ api.get("/changeList", function (req, res) {
     var end = query["end"];
     var contrastStart = query["contrastStart"];
     var contrastEnd = query["contrastEnd"];
+    var filterType = query["filterType"];
+    var type = query["type"];
     var indexString = [];
     var contrastIndexString = [];
     var time = [];
@@ -746,7 +780,7 @@ api.get("/changeList", function (req, res) {
     for (var i = 0; i < contrastTime.length; i++) {
         time.push(contrastTime[i]);
     }
-    changeList_request.search(req.es, indexString, time, function (result) {
+    changeList_request.search(req.es, indexString, time, type, filterType, function (result) {
         datautils.send(res, result);
     });
 });
@@ -845,13 +879,39 @@ api.get("/transform/transformAnalysis", function (req, res) {
         }
 
     }
-)
-;
+);
+api.get("/transform/getConvEvent", function (req, res) {
+    var query = url.parse(req.url, true).query;
+    var indexString = [];
+    if (query.start.substring(1, query.start.length).match("-") != null && end.substring(1, query.start.length).match("-") != null) {
+        indexString = date.createIndexsByTime(query.start, query.end, "access-");
+    } else {
+        indexString = date.createIndexes(query.start, query.end, "access-");
+    }
+    transform.searchConvEvent(req.es,  indexString, query.type, query.showType, function (result) {
+        datautils.send(res, result);
+    });
+});
+api.get("/transform/getEventInfos", function (req, res) {
+    var query = url.parse(req.url, true).query;
+    var indexString = [];
+    if (query.start.substring(1, query.start.length).match("-") != null && end.substring(1, query.start.length).match("-") != null) {
+        indexString = date.createIndexsByTime(query.start, query.end, "access-");
+    } else {
+        indexString = date.createIndexes(query.start, query.end, "access-");
+    }
+    transform.searchEventInfo(req.es,  indexString, query.type, query.showType, function (result) {
+        datautils.send(res, result);
+    });
+});
+
+
 api.get("/transform/pageTransformCtr", function (req, res) {
     var parameters = req.url.split("?")[1].split("&");
     var start = parameters[0].split("=")[1];
     var end = parameters[1].split("=")[1];
 });
+
 //==================================== ad_track by icepros ===============================================
 /**
  * adsSource
