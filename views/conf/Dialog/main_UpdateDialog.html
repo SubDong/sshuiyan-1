@@ -3,12 +3,12 @@
         
         <ul class="admin-ng-content"> 
             <li>网站域名</li>
-            <li><input type="text" name="remote" readOnly  adminmainctr-remote-validation data-ng-focus="site_url_focus = true" data-ng-blur="site_name_focus = false" data-ng-model="dialog_model.site_url" class="form-control" required/></li> 
+            <li><input type="text" maxlength="128" name="remote" readOnly  adminmainctr-remote-validation data-ng-focus="site_url_focus = true" data-ng-blur="site_name_focus = false" data-ng-model="dialog_model.site_url" class="form-control" required/></li>
             <li ng-show="adminmainctrForm.remote.$error.remote" style="color: red;">网站域名重复！</li> 
             <li data-ng-show="site_url_focus && !dialog_model.site_url" style="color: red;">不能为空</li>
             <br>
             <li>网站名称</li>
-            <li><input type="text" data-ng-focus="site_name_focus=true" data-ng-blur="site_name_focus =false" data-ng-model="dialog_model.site_name" class="form-control"/></li> 
+            <li><input type="text" maxlength="128" data-ng-focus="site_name_focus=true" data-ng-blur="site_name_focus =false" data-ng-model="dialog_model.site_name" class="form-control"/></li>
             <li data-ng-show="site_name_focus && !dialog_model.site_name" style="color: red;">不能为空</li>
             <br>
             <li style="color: black;"><input type="checkbox"  name="置顶" data-ng-model="dialog_model.is_top"/>

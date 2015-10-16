@@ -19,7 +19,7 @@
     <div class="my_concent">
         <div class="pagetitle_search">
             <div class="input-group fl">
-                <input type="text" data-ng-model="pageUrl" placeholder="热力图监控页面…" class="form-control fl" onfocus="this.setAttribute('placeholder','')" onblur="this.setAttribute('placeholder','热力图监控页面...')">
+                <input type="text" data-ng-model="pageUrl" maxlength="128" placeholder="热力图监控页面…" class="form-control fl" onfocus="this.setAttribute('placeholder','')" onblur="this.setAttribute('placeholder','热力图监控页面...')">
                     <span class="input-group-btn fl">
                        <button type="button" class="btn btn-default" data-ng-click="searchGridData()" ><span aria-hidden="true" class="glyphicon glyphicon-search"></span>
                        </button>

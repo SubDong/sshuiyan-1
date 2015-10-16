@@ -9,7 +9,7 @@
                         <div class="form-group">
                             <label class=" col-md-4 control-label">事件元素ID：</label>
                             <div class="col-sm-7">
-                                <input type="text" class="form-control" placeholder="事件元素ID"
+                                <input type="text" maxlength="128" class="form-control" placeholder="事件元素ID"
                                        onfocus="this.setAttribute('placeholder','')"
                                        required data-ng-model="eventChange.event_id"
                                        onblur="this.setAttribute('placeholder','事件元素ID')">
@@ -19,7 +19,7 @@
                             <label class=" col-md-4 control-label">事件目标名称：</label>
 
                             <div class="col-sm-7">
-                                <input type="text" class="form-control" placeholder="事件目标名称"
+                                <input type="text" maxlength="128" class="form-control" placeholder="事件目标名称"
                                        onfocus="this.setAttribute('placeholder','')"
                                        required data-ng-model="eventChange.event_name"
                                        onblur="this.setAttribute('placeholder','事件目标名称')">
@@ -29,7 +29,7 @@
                             <label class=" col-md-4 control-label">事件作用页面或目录：</label>
 
                             <div class="col-sm-7">
-                                <input type="text" class="form-control" placeholder="事件作用页面或目录"
+                                <input type="text" maxlength="128" class="form-control" placeholder="事件作用页面或目录"
                                        onfocus="this.setAttribute('placeholder','')"
                                        required data-ng-model="eventChange.event_page"
                                        onblur="this.setAttribute('placeholder','事件作用页面或目录')">

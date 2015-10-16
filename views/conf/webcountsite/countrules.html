@@ -10,11 +10,11 @@
                         <span>统一页面地址</span>
 
                         <div data-ng-repeat="rule in rules">
-                            <input type="text" class="form-control" data-ng-focus="myFocus(rules_area)"
+                            <input type="text" maxlength="128" class="form-control" data-ng-focus="myFocus(rules_area)"
                                    data-ng-blur="myBlur(rules_area)" ng-model="rule.source" placeholder="统一前的URL" onfocus="this.setAttribute('placeholder','')"
                                    onblur="this.setAttribute('placeholder','统一前的URL')"/>
                             <img src="../img/right-icon.png" alt=""/>
-                            <input type="text" class="form-control" data-ng-focus="myFocus(rules_area)"
+                            <input type="text" maxlength="128" class="form-control" data-ng-focus="myFocus(rules_area)"
                                    data-ng-blur="myBlur(rules_area)" ng-model="rule.convert" placeholder="统一后的URL" onfocus="this.setAttribute('placeholder','')"
                                    onblur="this.setAttribute('placeholder','统一后的URL')"/>
                         </div>
