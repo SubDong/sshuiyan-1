@@ -1686,7 +1686,7 @@ define(["app"], function (app) {
                         }
                         if (window.location.href.split("/")[window.location.href.split("/").length - 1] == "changelist") {
                             if (contrastPv == 0) {
-                                returnData[0] = "100%"
+                                returnData[0] = "-"
                             } else {
                                 returnData[0] = returnData[0] == "0" ? "0%" : (returnData[0] * 100 / contrastPv).toFixed(2) + "%";
                             }
