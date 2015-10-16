@@ -11,7 +11,7 @@ define(["./module"], function (ctrs) {
             obj.visitorSearch = "";
         }
         $scope.removeAreaSearch = function (obj) {
-            $scope.city.selected = {"name": "全部"};
+            $scope.rf.selected = {"name": "全部"};
             $rootScope.$broadcast("loadAllArea");
             obj.areaSearch = "";
         }
@@ -34,7 +34,7 @@ define(["./module"], function (ctrs) {
             {
                 name: "来源",
                 displayName: "来源",
-                field: "city",
+                field: "rf",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
                 enableSorting: false
             },
@@ -87,7 +87,7 @@ define(["./module"], function (ctrs) {
         ];
         $rootScope.tableSwitch = {
             // 维度字段
-            latitude: {name: "来源", displayName: "来源", field: "city"},
+            latitude: {name: "来源", displayName: "来源", field: "rf"},
             // 过滤字段值
             tableFilter: null,
             dimen: false,
@@ -161,7 +161,7 @@ define(["./module"], function (ctrs) {
                 // 默认图例勾选的指标值
                 types: ["pv", "vc"],
                 // 图例过滤的值
-                dimension: ["media"],
+                dimension: ["rf"],
                 interval: $rootScope.interval,
                 url: "/api/charts",
                 cb: $scope.dataFormat

@@ -10,7 +10,7 @@ define(["./module"], function (ctrs) {
             obj.visitorSearch = "";
         }
         $scope.removeAreaSearch = function (obj) {
-            $scope.city.selected = {"name": "全部"};
+            $scope.cpna.selected = {"name": "全部"};
             $rootScope.$broadcast("loadAllArea");
             obj.areaSearch = "";
         }
@@ -33,7 +33,7 @@ define(["./module"], function (ctrs) {
             {
                 name: "推广计划",
                 displayName: "推广计划",
-                field: "region",
+                field: "cpna",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
                 enableSorting: false
             },
@@ -86,7 +86,7 @@ define(["./module"], function (ctrs) {
         ];
         $rootScope.tableSwitch = {
             // 维度字段
-            latitude: {name: "推广计划", displayName: "推广计划", field: "region"},
+            latitude: {name: "推广计划", displayName: "推广计划", field: "cpna"},
             // 过滤字段值
             tableFilter: null,
             dimen: false,
@@ -160,7 +160,7 @@ define(["./module"], function (ctrs) {
                 // 默认图例勾选的指标值
                 types: ["pv", "vc"],
                 // 图例过滤的值
-                dimension: ["region"],
+                dimension: ["cpna"],
                 interval: $rootScope.interval,
                 url: "/api/charts",
                 cb: $scope.dataFormat

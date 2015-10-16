@@ -435,7 +435,7 @@ var ad_request = {
                 "aggs": {
                     "result": {
                         "terms": {
-                            "field": "city"
+                            "field": "rf"
                         },
                         "aggs": {
                             "pv_aggs": {

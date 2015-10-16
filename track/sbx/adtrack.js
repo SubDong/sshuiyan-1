@@ -17,7 +17,5 @@
         //md.g.adtrack = 1;
         md.g.adtrack = loc;
         h.b.sm();
-    } else {
-
     }
 })();

@@ -10,7 +10,7 @@ define(["./module"], function (ctrs) {
             obj.visitorSearch = "";
         }
         $scope.removeAreaSearch = function (obj) {
-            $scope.city.selected = {"name": "全部"};
+            $scope.media.selected = {"name": "全部"};
             $rootScope.$broadcast("loadAllArea");
             obj.areaSearch = "";
         }
@@ -33,7 +33,7 @@ define(["./module"], function (ctrs) {
             {
                 name: "媒介",
                 displayName: "媒介",
-                field: "tit",
+                field: "media",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
                 enableSorting: false
             },
@@ -86,7 +86,7 @@ define(["./module"], function (ctrs) {
         ];
         $rootScope.tableSwitch = {
             // 维度字段
-            latitude: {name: "媒介", displayName: "媒介", field: "tit"},
+            latitude: {name: "媒介", displayName: "媒介", field: "media"},
             // 过滤字段值
             tableFilter: null,
             dimen: false,
@@ -160,7 +160,7 @@ define(["./module"], function (ctrs) {
                 // 默认图例勾选的指标值
                 types: ["pv", "vc"],
                 // 图例过滤的值
-                dimension: ["tit"],
+                dimension: ["media"],
                 interval: $rootScope.interval,
                 url: "/api/charts",
                 cb: $scope.dataFormat
@@ -178,6 +178,7 @@ define(["./module"], function (ctrs) {
         };
         $scope.init();
         $scope.$on("ssh_refresh_charts", function (e, msg) {
+            console.log("------------------ssh_refresh_charts ")
             $rootScope.targetSearch();
             var chart = $scope.charts[0];
             chart.config.instance = echarts.init(document.getElementById(chart.config.id));
