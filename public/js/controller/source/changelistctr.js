@@ -64,10 +64,10 @@ define(["./module"], function (ctrs) {
                     name: " ",
                     displayName: "变化情况",
                     headerCellTemplate: '<div class="change_list">' +
-                    '<a href="javascript:void(0)" onclick="weimsssss(this, 1)" class="rise">+升</a>' +
-                    '<a href="javascript:void(0)" onclick="weimsssss(this, 2)" class="descend">-降</a>' +
-                    '<a href="javascript:void(0)" onclick="weimsssss(this, 3)" class="flat">平</a>' +
-                    '<a href="javascript:void(0)" onclick="weimsssss(this, 4)" class="all">全部</a>' +
+                    '<a href="javascript:void(0)" onclick="filterChangeListData(this, 1)" class="rise">+升</a>' +
+                    '<a href="javascript:void(0)" onclick="filterChangeListData(this, 2)" class="descend">-降</a>' +
+                    '<a href="javascript:void(0)" onclick="filterChangeListData(this, 3)" class="flat">平</a>' +
+                    '<a href="javascript:void(0)" onclick="filterChangeListData(this, 4)" class="all">全部</a>' +
                     '</div>',
                     field: "percentage",
                     footerCellTemplate: "<div class='ui-grid-cell-contents' id='summary'>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),5)}}</div>",
@@ -246,7 +246,6 @@ define(["./module"], function (ctrs) {
                 };
                 $rootScope.gridArray[2].displayName = $rootScope.startString;
                 $rootScope.gridArray[3].displayName = $rootScope.contrastStartString;
-                console.log($rootScope.changeListFilterType);
                 $scope.$broadcast("parrentData", {
                     start: $rootScope.start,
                     end: $rootScope.end,
@@ -287,7 +286,6 @@ define(["./module"], function (ctrs) {
             };
 
             $rootScope.initMailData = function () {
-                console.log($rootScope.mailUrl[10]);
                 $http.get("api/saveMailConfig?rt=read&rule_url=" + $rootScope.mailUrl[10] + "").success(function (result) {
                     if (result) {
                         var ele = $("ul[name='sen_form']");
@@ -328,7 +326,7 @@ define(["./module"], function (ctrs) {
 
 });
 
-function weimsssss(e, type) {
+function filterChangeListData(e, type) {
     var appElement = document.querySelector('[ng-controller=changelistctr]');
     //然后在获取$scope变量：
     switch (type) {
