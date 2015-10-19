@@ -1790,7 +1790,7 @@ var transform = {
                 }
             }
             var _aggs = {};
-            querys.forEach(function (queryOption) {
+            queryOptions.forEach(function (queryOption) {
                 for (var key in es_aggs[queryOption]) {
                     _aggs[key] = es_aggs[queryOption][key];
                 }
@@ -1919,7 +1919,7 @@ var transform = {
                                                 "terms": {
                                                     "field": "et_target"
                                                 }
-                                            },
+                                            }
                                         }
                                     }
                                 });
@@ -1936,7 +1936,7 @@ var transform = {
                                             "terms": {
                                                 "field": "et_target"
                                             }
-                                        },
+                                        }
                                     }
                                 }
                             });
@@ -2048,7 +2048,7 @@ var transform = {
                                     "index": existIndexs[i].index,
                                     "type": type + "_event",
                                     "body": {
-                                        "size": 0,
+                                        "size": 0
                                         //"aggs": {
                                         //    "countTarget": {
                                         //        "terms": {
@@ -2064,7 +2064,7 @@ var transform = {
                             requests.push({
                                 "index": existIndexs[0].index,
                                 "type": type + "_event",
-                                "et_target": "true",
+                                "et_target": "true"
                                 //"body": {
                                 //    "size": 0,
                                 //    "aggs": {
