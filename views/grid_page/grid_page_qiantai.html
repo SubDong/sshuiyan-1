@@ -12,7 +12,7 @@
                 ng-hide="gridApi2.pagination.getTotalPages()<=9"> {{gridApi2.pagination.getTotalPages()}}
         </span>
         <a ng-click="gridApi2.pagination.nextPage()">下一页 </a>
-        <input type="text" ng-model="page" value=""><span> /{{ gridApi2.pagination.getTotalPages() }}</span>
+        <input type="text" maxlength="128" ng-model="page" value=""><span> /{{ gridApi2.pagination.getTotalPages() }}</span>
         <button type="button" class="btn" ng-click="pagego(gridApi2)">跳转</button>
     </div>
     <span class='pageshow'>每页显示：</span>

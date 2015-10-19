@@ -880,6 +880,21 @@ api.get("/transform/transformAnalysis", function (req, res) {
 
     }
 );
+/**
+ * 查询站点下 配置有事件的页面的PV
+ */
+api.get("/transform/getPagePVs", function (req, res) {
+    var query = url.parse(req.url, true).query;
+    var indexString = [];
+    if (query.start.substring(1, query.start.length).match("-") != null && end.substring(1, query.start.length).match("-") != null) {
+        indexString = date.createIndexsByTime(query.start, query.end, "access-");
+    } else {
+        indexString = date.createIndexes(query.start, query.end, "access-");
+    }
+    transform.searchPagePVs(req.es, indexString, query.type,query.eventPages, function (result) {
+        datautils.send(res, result);
+    });
+});
 api.get("/transform/getConvEvent", function (req, res) {
     var query = url.parse(req.url, true).query;
     var indexString = [];

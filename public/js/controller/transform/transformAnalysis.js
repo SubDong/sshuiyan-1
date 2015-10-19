@@ -34,35 +34,25 @@ define(["./module"], function (ctrs) {
                     }
                     $scope.all_url = all_url;
                     $scope.convert_url_all = url_convert_info;
-                    console.log($scope.all_url)
-                    console.log($scope.convert_url_all)
+                    //console.log($scope.convert_url_all)
                 });
             };
             refushGridData();
 
             //sem
-            $scope.bases = [
-                {consumption_name: "浏览量(PV)", name: "pv"},
-                {consumption_name: "访客数(UV)", name: "uv"},
-                {consumption_name: "访问次数", name: "vc"},
-                {consumption_name: "IP数", name: "ip"},
-                {consumption_name: "新访客数", name: "nuv"},
-                {consumption_name: "新访客比率", name: "nuvRate"}
-            ];
-            $scope.transform = [
-                {consumption_name: '转化次数', name: 'conversions'},
-                {consumption_name: '转化率', name: 'crate'},
-                //{consumption_name: '平均转化成本(事件)', name: 'transformCost'}
-            ];
-            $scope.eventParameter = [
-                {consumption_name: "事件点击总数", name: "clickTotal"},
-                {consumption_name: "唯一访客事件数", name: "visitNum"}
-            ];
             $scope.es_checkArray = ["pv", "uv", "vc", "ip", "nuv", "nuvRate", "conversions", "crate", "transformCost", "clickTotal", "visitNum"];
             $scope.sem_checkArray = ["transformCost"];
+
+            $rootScope.tableTimeStart = -1;//开始时间
+            $rootScope.tableTimeEnd = -1;//结束时间、
+            $rootScope.tableFormat = null;
+
             //配置默认指标
             $rootScope.checkedArray = ["clickTotal", "pv", "uv", "ip", "conversions", "crate"];
-            $rootScope.searchGridArray = [
+            $scope.getEventName =function(grid, row,index){
+                //console.log(row)
+            }
+            $rootScope.gridArray = [
                 {
                     name: "xl",
                     displayName: "",
@@ -73,8 +63,8 @@ define(["./module"], function (ctrs) {
                 {
                     name: "事件名称",
                     displayName: "事件名称",
-                    field: "campaignName",
-                    cellTemplate: "<div><a href='javascript:void(0)' style='color:#0965b8;line-height:30px' ng-click='grid.appScope.getHistoricalTrend(this)'>{{grid.appScope.getDataUrlInfo(grid, row,3)}}</a></div>"
+                    field: "pv",
+                    cellTemplate: "<div><a href='javascript:void(0)' style='color:#0965b8;line-height:30px' ng-click='grid.appScope.getHistoricalTrend(this)'>{{grid.appScope.getEventName(grid, row,index)}}</a></div>"
                     , footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
                     enableSorting: false
                 },
@@ -127,54 +117,54 @@ define(["./module"], function (ctrs) {
                 }
             };
             $scope.searchIndicators = function (item, entities, number) {
-                $rootScope.searchGridArray.shift();
-                $rootScope.searchGridArray.shift();
-                $rootScope.tableSwitch.number != 0 ? $scope.searchGridArray.shift() : "";
+                $rootScope.gridArray.shift();
+                $rootScope.gridArray.shift();
+                $rootScope.tableSwitch.number != 0 ? $scope.gridArray.shift() : "";
                 $scope.searchGridObj = {};
                 $scope.searchGridObjButton = {};
                 var a = $rootScope.checkedArray.indexOf(item.name);
                 if (a != -1) {
                     $rootScope.checkedArray.splice(a, 1);
-                    $rootScope.searchGridArray.splice(a, 1);
+                    $rootScope.gridArray.splice(a, 1);
 
                     if ($rootScope.tableSwitch.number != 0) {
                         $scope.searchGridObjButton["name"] = " ";
                         $scope.searchGridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
-                        $rootScope.searchGridArray.unshift($scope.searchGridObjButton);
+                        $rootScope.gridArray.unshift($scope.searchGridObjButton);
                     }
-                    $rootScope.searchGridArray.unshift($rootScope.tableSwitch.latitude);
+                    $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude);
                     $scope.gridObjButton = {};
                     $scope.gridObjButton["name"] = "xl";
                     $scope.gridObjButton["displayName"] = "";
                     $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
                     $scope.gridObjButton["maxWidth"] = 10;
-                    $rootScope.searchGridArray.unshift($scope.gridObjButton);
+                    $rootScope.gridArray.unshift($scope.gridObjButton);
                 } else {
                     if ($rootScope.checkedArray.length >= number) {
                         $rootScope.checkedArray.shift();
                         $rootScope.checkedArray.push(item.name);
-                        $rootScope.searchGridArray.shift();
+                        $rootScope.gridArray.shift();
 
                         $scope.searchGridObj["name"] = item.consumption_name;
                         $scope.searchGridObj["displayName"] = item.consumption_name;
                         $scope.searchGridObj["footerCellTemplate"] = "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>";
                         $scope.searchGridObj["field"] = item.name;
 
-                        $rootScope.searchGridArray.push($scope.searchGridObj);
+                        $rootScope.gridArray.push($scope.searchGridObj);
 
                         if ($rootScope.tableSwitch.number != 0) {
                             $scope.searchGridObjButton["name"] = " ";
                             $scope.searchGridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
-                            $rootScope.searchGridArray.unshift($scope.searchGridObjButton);
+                            $rootScope.gridArray.unshift($scope.searchGridObjButton);
                         }
 
-                        $rootScope.searchGridArray.unshift($rootScope.tableSwitch.latitude);
+                        $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude);
                         $scope.gridObjButton = {};
                         $scope.gridObjButton["name"] = "xl";
                         $scope.gridObjButton["displayName"] = "";
                         $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
                         $scope.gridObjButton["maxWidth"] = 10;
-                        $rootScope.searchGridArray.unshift($scope.gridObjButton);
+                        $rootScope.gridArray.unshift($scope.gridObjButton);
                     }
                     else {
                         $rootScope.checkedArray.push(item.name);
@@ -183,20 +173,20 @@ define(["./module"], function (ctrs) {
                         $scope.searchGridObj["displayName"] = item.consumption_name;
                         $scope.searchGridObj["footerCellTemplate"] = "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>";
                         $scope.searchGridObj["field"] = item.name;
-                        $rootScope.searchGridArray.push($scope.searchGridObj);
+                        $rootScope.gridArray.push($scope.searchGridObj);
 
                         if ($rootScope.tableSwitch.number != 0) {
                             $scope.searchGridObjButton["name"] = " ";
                             $scope.searchGridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
-                            $rootScope.searchGridArray.unshift($scope.searchGridObjButton);
+                            $rootScope.gridArray.unshift($scope.searchGridObjButton);
                         }
-                        $rootScope.searchGridArray.unshift($rootScope.tableSwitch.latitude);
+                        $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude);
                         $scope.gridObjButton = {};
                         $scope.gridObjButton["name"] = "xl";
                         $scope.gridObjButton["displayName"] = "";
                         $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
                         $scope.gridObjButton["maxWidth"] = 10;
-                        $rootScope.searchGridArray.unshift($scope.gridObjButton);
+                        $rootScope.gridArray.unshift($scope.gridObjButton);
                     }
                 }
                 angular.forEach(entities, function (subscription, index) {
@@ -279,7 +269,7 @@ define(["./module"], function (ctrs) {
 
             $scope.$on("ssh_refresh_charts", function (e, msg) {
                 $scope.charts[0].config.legendDefaultChecked = [0, 1];
-                $scope.my_init(false);
+                $scope.refreshData(false);
                 init_transformData();
             });
             //$scope.initMap();
@@ -313,14 +303,14 @@ define(["./module"], function (ctrs) {
                 $rootScope.start = time[0];
                 $rootScope.end = time[1];
                 //时间段选择执行数据查询
-                $scope.my_init(false);
+                $scope.refreshData(false);
                 init_transformData();
             };
             $rootScope.datepickerClickTow = function (start, end, label) {
                 var time = chartUtils.getTimeOffset(start, end);
                 $scope.start = time[0];
                 $scope.end = time[1];
-                $scope.my_init(true);
+                $scope.refreshData(true);
                 init_transformData();
             };
             function GetDateStr(AddDayCount) {
@@ -383,7 +373,7 @@ define(["./module"], function (ctrs) {
                 });
             };
 
-            $scope.my_init = function (isContrastDataByTime) {//isContrastDataByTime 是否按时间对比
+            $scope.refreshData = function (isContrastDataByTime) {//isContrastDataByTime 是否按时间对比
                 var start = 0;
                 var end = 0;
                 if (isContrastDataByTime) {
@@ -403,6 +393,7 @@ define(["./module"], function (ctrs) {
                 }
                 $scope.isCompared = isContrastDataByTime;
                 $http.get("/api/transform/transformAnalysis?start=" + start + "&end=" + end + "&analysisAction=event&type=" + $rootScope.userType + "&searchType=initAll&queryOptions=" + $scope.es_checkArray).success(function (data) {
+
                     if (data != null || data != "") {
                         var hasEvent = false;
                         //$scope.es_checkedArray = ["pv", "uv", "ip"]
@@ -440,8 +431,6 @@ define(["./module"], function (ctrs) {
                                                         $scope.dateShowArray[i].value = "0%";
                                                     }
                                                 }
-                                                console.log("crate")
-                                                console.log( $scope.dateShowArray)
                                             } else if ($scope.dateShowArray[i].label == "transformCost" && Number(data[key]) != 0) {
                                                 var add_i = i;
                                                 var semRequest = "";
@@ -465,8 +454,6 @@ define(["./module"], function (ctrs) {
                                                 } else {
                                                     $scope.dateShowArray[i].value = Number(all_urls_data[0].eventCount);
                                                 }
-                                                console.log("clickTotal")
-                                                console.log( $scope.dateShowArray)
                                             }
                                             else if ($scope.dateShowArray[i].label == "conversions") {
                                                 if (isContrastDataByTime) {
@@ -474,8 +461,6 @@ define(["./module"], function (ctrs) {
                                                 } else {
                                                     $scope.dateShowArray[i].value = Number(all_urls_data[0].convCount);
                                                 }
-                                                console.log("conversions")
-                                                console.log( $scope.dateShowArray)
                                             }
                                             else {
                                                 if (isContrastDataByTime) {
@@ -530,6 +515,7 @@ define(["./module"], function (ctrs) {
                                 }
                             }
                         }
+
                         if (isContrastDataByTime) {
                             $scope.DateNumbertwo = true;
                             $scope.DateLoading = true;
@@ -537,7 +523,6 @@ define(["./module"], function (ctrs) {
                         $scope.DateNumber = true;
                         $scope.DateLoading = true;
                     }
-
                 });
             };
             var aggs_time = function (start, end, contrast_start, contrast_end) {
@@ -732,10 +717,10 @@ define(["./module"], function (ctrs) {
                         }
                     }
                 }
+                $rootScope.targetSearch(isClicked)
                 if (isClicked) {
-                    console.log("isClicked"+isClicked)
                     $scope.setShowArray();
-                    $scope.my_init(false);
+                    $scope.refreshData(false);
                     $scope.$broadcast("transformData_ui_grid", {
                         start: $rootScope.start,
                         end: $rootScope.end,
@@ -745,7 +730,11 @@ define(["./module"], function (ctrs) {
                         analysisAction: "event",
                         convert_url_all: $scope.convert_url_all
                     });
-                } else {
+                    console.log("自定义指标"+isClicked)
+
+                }
+                else {
+                    console.log("高级筛选"+isClicked)
                     //访客过滤数据获取
                     var inputArray = $(".chart_top2 .styled");
                     inputArray.each(function (i, o) {
@@ -809,10 +798,11 @@ define(["./module"], function (ctrs) {
                         convert_url_all: $scope.convert_url_all
                     });
                 }
+                $rootScope.targetSearch(isClicked)
             };
             init_transformData();
-            $scope.my_init(false);
-            //console.log($rootScope.targetSearch())
+            $scope.refreshData(false);
         }
+
     );
 });

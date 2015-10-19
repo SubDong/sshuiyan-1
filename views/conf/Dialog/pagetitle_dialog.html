@@ -5,11 +5,11 @@
             <div class="ngdialog-buttons">
                 <ul>
                     <li>点击图名称</li>
-                    <li><input type="text" data-ng-focus="icon_name_focus=true" data-ng-blur="site_name_focus =false"
+                    <li><input type="text" maxlength="128" data-ng-focus="icon_name_focus=true" data-ng-blur="site_name_focus =false"
                                data-ng-model="dialog_page_title.icon_name" class="form-control"/></li>
                     <li data-ng-show="icon_name_focus && !dialog_page_title.icon_name" style="color: red;">不能为空</li>
                     <li>您想统计的页面</li>
-                    <li><input type="text" name="remote" pagetitlectr-remote-validation
+                    <li><input type="text" maxlength="128" name="remote" pagetitlectr-remote-validation
                                data-ng-focus="page_url_focus = true" data-ng-blur="page_url_focus = false"
                                data-ng-model="dialog_page_title.page_url" class="form-control" required/></li>
                     <li ng-show="pagetitleForm.remote.$error.remote" style="color: red;">网站域名重复！</li>

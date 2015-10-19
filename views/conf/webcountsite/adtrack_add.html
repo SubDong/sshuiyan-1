@@ -13,7 +13,7 @@
                     <span>目标URL<p>（在其媒体投放广告时所指向的URL）</p></span>
 
                     <div class="">
-                        <input type="text" ssh-url id="targetUrl" name="targetUrl" ng-model="adTrack.targetUrl"
+                        <input type="text" maxlength="128" x ssh-url id="targetUrl" name="targetUrl" ng-model="adTrack.targetUrl"
                                data-ng-focus="addfocus(targetUrlHelp)"
                                data-ng-blur="addblur(targetUrlHelp)"    placeholder="www.mydomain/product.html" required/>
                     </div>
@@ -30,7 +30,7 @@
 
                         </ul>
                         <ul>
-                            <input type="text"  data-ng-focus="addfocus(mediaPlatformhelp)" data-ng-blur="addblur(mediaPlatformhelp)" id="mediaPlatform" name="mediaPlatform"  ng-model="adTrack.mediaPlatform" ng-click="advancedOpt()" placeholder="请输入" required/>
+                            <input type="text" maxlength="128"  data-ng-focus="addfocus(mediaPlatformhelp)" data-ng-blur="addblur(mediaPlatformhelp)" id="mediaPlatform" name="mediaPlatform"  ng-model="adTrack.mediaPlatform" ng-click="advancedOpt()" placeholder="请输入" required/>
                             <span style="color:red" ng-show="adTrackForm.mediaPlatform.$invalid">
                                 <span ng-show="adTrackForm.mediaPlatform.$error.required && mediaPlatformhelp.help">媒介平台必填</span>
                             </span>
@@ -49,14 +49,14 @@
                             <li><input type="radio"  name="adTypes" ng-model="adTrack.adTypes" ng-click="advancedOpt()" value="其他"/><span>&nbsp;其他</span></li>
                         </ul>
                         <ul>
-                            <input type="text" id="adTypes" name="adTypes" ng-model="adTrack.adTypes" ng-click="advancedOpt()"/>
+                            <input type="text" maxlength="128" id="adTypes" name="adTypes" ng-model="adTrack.adTypes" ng-click="advancedOpt()"/>
                         </ul>
                     </div>
                 </li>
                 <li><span class="adtrack_add_tz">计划名称</span>
                     <p>（广告所属的推广计划，如：端午活动）</p>
                     <div class="">
-                        <input type="text" id="planName" name="planName" ng-model="adTrack.planName" ng-click="advancedOpt()"/>
+                        <input type="text" maxlength="128" id="planName" name="planName" ng-model="adTrack.planName" ng-click="advancedOpt()"/>
                     </div>
                 </li>
                 <li>
@@ -70,7 +70,7 @@
                 </li>
                 <li>
                     <span>创意<p>（广告内容的简要描述信息）</p></span>
-                    <div><input type="text" id="creative" ng-model="adTrack.creative" ng-click="advancedOpt()"/></div>
+                    <div><input type="text" maxlength="128" id="creative" ng-model="adTrack.creative" ng-click="advancedOpt()"/></div>
                 </li>
             </ul>
 
