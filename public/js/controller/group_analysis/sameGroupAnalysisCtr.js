@@ -239,7 +239,7 @@ define(["./module"], function (ctrs) {
                 method: 'GET',
             url: url
         }).success(function (data) {
-            console.log(data);
+          //  console.log(data);
             $scope.groupTableDataes = data.gaResultTrData;
             $scope.max = data.max;
             $scope.init();

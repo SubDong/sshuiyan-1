@@ -28,7 +28,7 @@ api.get("/querydata", function (req, res){
     var query = url.parse(req.url, true).query;
     var parameter = JSON.parse(query.query);
     options.path = "/escache/groupAnalytics/condition/1/" + parameter.scale+"/"+parameter.dateRange+"/"+parameter.indicator;
-    console.log(options.path);
+    //console.log(options.path);
 
     var result;
 
