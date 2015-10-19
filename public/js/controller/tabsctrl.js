@@ -836,7 +836,6 @@ define(["app"], function (app) {
         };
         // 查看入口页链接
         $scope.showEntryPageLink = function (row, _type) {
-            console.log(111);
             if (_type == 1) {// 搜索引擎
                 popupService.showEntryPageData(row.entity.rf_type);
             } else if (_type == 2) {
@@ -973,7 +972,7 @@ define(["app"], function (app) {
             getHtmlTableData();
         };
         $scope.searchUrlSeepd = function (a) {
-            console.log(a);
+            //console.log(a);
         }
 
 
@@ -1071,7 +1070,7 @@ define(["app"], function (app) {
                     $scope.gridOptions.data = result;
                 })
             } else if ($rootScope.tableSwitch.number == 6) {//来源分析搜索词-搜索
-                console.log("事件")
+                //console.log("事件")
                 $http({
                     method: 'GET',
                     url: "/config/eventchnage_list?type=search&query=" + JSON.stringify({
@@ -1087,14 +1086,14 @@ define(["app"], function (app) {
                             hash[elem.event_page] = true;
                         }
                     })
-                    console.log(eventPages)
+                    //console.log(eventPages)
                     var esurl = "/api/transform/getPagePVs?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&queryOptions=" + $scope.es_checkArray + "&eventPages=" + eventPages + "&showType=day"
-                    console.log(esurl)
+                    //console.log(esurl)
                     $http.get(esurl).success(function (data) {
                         if (data != null || data != "") {//PV 信息若不存在 则事件信息认为一定不存在
                             var result = [];
                             result.push(data)
-                            console.log(data)
+                            //console.log(data)
                             $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
                             $scope.gridOptions.data = result;
                         }
@@ -1494,7 +1493,7 @@ define(["app"], function (app) {
         $scope.getSubColumnDefs = function (gridOpArray) {
             var _t_arr = [];
             for (var i = 0; i < gridOpArray.length; i++) {
-                console.log(gridOpArray[i]["name"]);
+                //console.log(gridOpArray[i]["name"]);
                 if (gridOpArray[i]["name"] == " ") {
                     _t_arr.push({
                         name: gridOpArray[i]["name"],
