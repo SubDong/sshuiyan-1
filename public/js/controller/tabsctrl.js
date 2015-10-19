@@ -832,6 +832,7 @@ define(["app"], function (app) {
         };
         // 查看入口页链接
         $scope.showEntryPageLink = function (row, _type) {
+            console.log(111);
             if (_type == 1) {// 搜索引擎
                 popupService.showEntryPageData(row.entity.rf_type);
             } else if (_type == 2) {
@@ -1006,7 +1007,7 @@ define(["app"], function (app) {
                     } else {
 //                        item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 100px'>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),2)}}<br/>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),3)}}<br/>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),4)}}</div>";
                         item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 32px'>" +
-                            "<ul><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),2)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),3)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),4)}}</li></ul></div>";
+                        "<ul><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),2)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),3)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),4)}}</li></ul></div>";
                     }
                 }
             });
@@ -1083,7 +1084,7 @@ define(["app"], function (app) {
                         }
                     })
                     console.log(eventPages)
-                    var esurl = "/api/transform/getPagePVs?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&queryOptions=" + $scope.es_checkArray+"&eventPages="+eventPages+"&showType=day"
+                    var esurl = "/api/transform/getPagePVs?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&queryOptions=" + $scope.es_checkArray + "&eventPages=" + eventPages + "&showType=day"
                     console.log(esurl)
                     $http.get(esurl).success(function (data) {
                         if (data != null || data != "") {//PV 信息若不存在 则事件信息认为一定不存在
@@ -1470,7 +1471,9 @@ define(["app"], function (app) {
                             data = JSON.parse(JSON.stringify(data).replace(reg, $rootScope.tableSwitch.latitude.field));
                             dataNumber = data.length;
                         }
-                        row.entity.subGridOptions.columnDefs = $scope.gridOpArray;
+                        //PS：直接使用$scope.gridOpArray作为只表格的配置会出现子表格数据显示问题
+                        //row.entity.subGridOptions.columnDefs = $scope.gridOpArray;
+                        row.entity.subGridOptions.columnDefs = $scope.getSubColumnDefs($scope.gridOpArray);
                         row.entity.subGridOptions.data = data;
                         row.entity.subGridOptions.virtualizationThreshold = data.length;
                         if (data.length == 0) {
@@ -1483,10 +1486,49 @@ define(["app"], function (app) {
                 }
             });
         };
+
+        $scope.getSubColumnDefs = function (gridOpArray) {
+            var _t_arr = [];
+            for (var i = 0; i < gridOpArray.length; i++) {
+                console.log(gridOpArray[i]["name"]);
+                if (gridOpArray[i]["name"] == " ") {
+                    _t_arr.push({
+                        name: gridOpArray[i]["name"],
+                        displayName: gridOpArray[i]["displayName"],
+                        field: gridOpArray[i]["field"],
+                        maxWidth: gridOpArray[i]["maxWidth"],
+                        cellTemplate: gridOpArray[i]["cellTemplate"]
+                    });
+                } else if (gridOpArray[i]["name"] == "来源类型") {
+                    _t_arr.push({
+                        name: gridOpArray[i]["name"],
+                        displayName: gridOpArray[i]["displayName"],
+                        field: gridOpArray[i]["field"],
+                        maxWidth: gridOpArray[i]["maxWidth"],
+                        cellTemplate: "<div class='getExternalLinks' my-data-one='{{grid.appScope.getExternalLinksCellValue(grid, row, 1)}}' my-data-two='{{grid.appScope.getExternalLinksCellValue(grid, row, 2)}}'></div>"
+                    });
+                } else {
+                    _t_arr.push({
+                        name: gridOpArray[i]["name"],
+                        displayName: gridOpArray[i]["displayName"],
+                        field: gridOpArray[i]["field"],
+                        maxWidth: gridOpArray[i]["maxWidth"]
+                    });
+                }
+            }
+            return _t_arr;
+        };
+
         //子表格方法通用
         $scope.subGridScope = {
             getHistoricalTrend: function (b) {
                 $scope.getHistoricalTrend(b, true);
+            },
+            showEntryPageLink: function (row, number) {
+                $scope.showEntryPageLink(row, number);
+            },
+            getExternalLinksCellValue: function (grid, row, number) {
+               return $scope.getExternalLinksCellValue(grid, row, number);
             }
         };
         //得到数据中的url
@@ -1655,6 +1697,18 @@ define(["app"], function (app) {
                     a[1] = "直接访问";
                 }
                 return a[1];
+            }
+        }
+        $scope.getExternalLinksCellValue = function (grid, row, number) {
+            var a = row.entity.rf_type;
+            if (number == 1) {
+                if (a.indexOf("http://") != -1 || a.indexOf("https://") != -1) {
+                    return "links";
+                } else {
+                    return "others";
+                }
+            } else if (number == 2) {
+                return a;
             }
         }
         //得到表格底部数据
@@ -1907,7 +1961,8 @@ define(["app"], function (app) {
         });
         $scope.$emit("Ctr1NameChange", '');
     });
-});
+})
+;
 /**********************隐藏table中按钮的弹出层*******************************/
 var s = 1;
 

@@ -2381,4 +2381,22 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
         }
 
     });
+
+    app.directive('getExternalLinks', function () {
+
+        return {
+            restrict: 'C',
+            replace: true,
+            transclude: true,
+            scope: {
+                myDataOne: '@myDataOne',
+                myDataTwo: "@myDataTwo"
+            },
+            template: '<div ng-switch on="myDataOne">' +
+            '<div ng-switch-default style="line-height:30px; display:block; padding:0 10px;white-space: nowrap;}">{{myDataTwo}}</div>' +
+            '<a ng-switch-when="links" href="{{myDataTwo}}" target="_blank" style="color:#0965b8;line-height:30px; display:block; padding:0 10px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;}">{{myDataTwo}}</a>' +
+            '</div>'
+        }
+
+    });
 });
