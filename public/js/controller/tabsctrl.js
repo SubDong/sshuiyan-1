@@ -1755,6 +1755,18 @@ define(["app"], function (app) {
                         return returnData[2];
                     case 4:
                         return returnData[3];
+                    case 5:
+                        /*仅用于来源变化棒中当页汇总出现的颜色变化*/
+                        if(returnData[0] != "--" && returnData[0] != undefined){
+                             if(returnData[0].toString().substring(0,1) == "+"){
+                                 document.getElementById("summary").style.color = "#ea1414";
+                             }else if(returnData[0].toString().substring(0,1) == "-") {
+                                 document.getElementById("summary").style.color = "#07cd2c";
+                             }else {
+                                 document.getElementById("summary").style.color = "#01aeef";
+                             }
+                        }
+                        return returnData[0];
                     default :
                         return returnData[0];
                 }
@@ -1825,6 +1837,38 @@ define(["app"], function (app) {
                 };
 
                 $scope.gridOptions.data = data.pv ? data.pv : [];
+                if(data.percentage.substring(0,1) == '+'){
+                    $rootScope.riseCell = true;
+                }else if(data.percentage.substring(0,1) == '-'){
+                    $rootScope.descendCell = true;
+                }else{
+                    $rootScope.flatCell = true;
+                }
+                data.pv = data.pv ? data.pv : [];
+                var _tempData = [];
+                if (timeData.filterType == 4) {
+                    _tempData = data.pv;
+                } else if (timeData.filterType == 1) {
+                    for (var i = 0; i < data.pv.length; i++) {
+                        if (data.pv[i]["percentage"].substring(0, 1) == "+") {
+                            _tempData.push(data.pv[i]);
+                        }
+                    }
+                } else if (timeData.filterType == 2) {
+                    for (var i = 0; i < data.pv.length; i++) {
+                        if (data.pv[i]["percentage"].substring(0, 1) == "-") {
+                            _tempData.push(data.pv[i]);
+                        }
+                    }
+                } else if (timeData.filterType == 3) {
+                    for (var i = 0; i < data.pv.length; i++) {
+                        if (data.pv[i]["percentage"].substring(0, 1) != "+" && data.pv[i]["percentage"].substring(0, 1) != "-") {
+                            _tempData.push(data.pv[i]);
+                        }
+                    }
+                }
+
+                $scope.gridOptions.data = _tempData;
                 $scope.gridOptions.enableSorting = true;
                 $scope.gridOptions.columnDefs[4].cellClass = function (grid, row, col, rowRenderIndex, colRenderIndex) {
                     if (grid.getCellValue(row, col).toString().substring(0, 1) == "+") {

@@ -70,7 +70,7 @@ define(["./module"], function (ctrs) {
                     '<a href="javascript:void(0)" onclick="weimsssss(this, 4)" class="all">全部</a>' +
                     '</div>',
                     field: "percentage",
-                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>",
+                    footerCellTemplate: "<div class='ui-grid-cell-contents' id='summary'>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),5)}}</div>",
                     enableSorting: false
                 }
             ];
