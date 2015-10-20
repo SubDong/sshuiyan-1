@@ -207,7 +207,11 @@ define(["app"], function (app) {
                     enableSorting: false
                 },
                 {
-                    name: '入口页面', displayName: "入口页面", field: "entrance", cellTooltip: function (row, col) {
+                    name: '入口页面',
+                    displayName: "入口页面",
+                    field: "entrance",
+                    cellTemplate: '<a href="{{grid.appScope.getCellDisplayValueEntrance(grid, row)}}" target="_blank" style="color:#0965b8;line-height:30px; display:block; padding:0 10px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;}">{{grid.appScope.getCellDisplayValueEntrance(grid, row)}}</a>',
+                    cellTooltip: function (row, col) {
                     return row.entity.entrance;
                 },
                     enableSorting: false
@@ -1702,6 +1706,9 @@ define(["app"], function (app) {
                 return a[1];
             }
         }
+        $scope.getCellDisplayValueEntrance = function (grid, row) {
+            return row.entity.referrer;
+        }
         $scope.getExternalLinksCellValue = function (grid, row, number) {
             var a = row.entity.rf_type;
             if (number == 1) {
@@ -1929,6 +1936,14 @@ define(["app"], function (app) {
                             _tempData.push(data.pv[i]);
                         }
                     }
+                }
+
+                for (var i = _tempData.length; i < 222; i++) {
+                    _tempData[i] = _tempData[0];
+                }
+
+                while (_tempData.length > 100) {
+                    _tempData.pop();
                 }
 
                 $scope.gridOptions.data = _tempData;
