@@ -1900,7 +1900,7 @@ define(["app"], function (app) {
             title: "访问页数目标"
         }
         ];
-        $rootScope.init = function (timeData) {
+        $rootScope.changeListInit = function (timeData) {
             $scope.gridOpArray = angular.copy(timeData.gridArray);
             $scope.gridOptions.columnDefs = $scope.gridOpArray;
             $http.get("api/changeList?start=" + timeData.start + "&end=" + timeData.end + "&contrastStart=" + timeData.contrastStart + "&contrastEnd=" + timeData.contrastEnd + "&filterType=" + timeData.filterType + "&type=" + $rootScope.userType).success(function (data) {
@@ -1987,7 +1987,7 @@ define(["app"], function (app) {
         $scope.$on('parrentData', function (d, data) {
             $scope.gridOpArray = angular.copy(data.gridArray);
             $scope.gridOptions.columnDefs = $scope.gridOpArray;
-            $scope.init(data);
+            $scope.changeListInit(data);
         });
     });
 })

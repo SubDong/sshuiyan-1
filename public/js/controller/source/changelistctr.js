@@ -276,7 +276,7 @@ define(["./module"], function (ctrs) {
             $scope.helloKitty = function () {
                 $rootScope.gridArray[2].displayName = $rootScope.startString;
                 $rootScope.gridArray[3].displayName = $rootScope.contrastStartString;
-                $rootScope.init({
+                $rootScope.changeListInit({
                     start: $rootScope.start,
                     end: $rootScope.end,
                     contrastStart: $rootScope.contrastStart,
