@@ -1,17 +1,18 @@
 /**
- * Created by Administrator on 2015/9/29.
+ * Created by TomDing on 2015/9/29.
  */
 
 var express = require('express');
 var api = express.Router();
 var http = require('http');
 var url = require('url');
+var config = require("../../config_dev.json");
+var cache = config.cache;
 var bufferutils = require('../utils/bufferutils');
 
-
 var options = {
-    host: '192.168.100.10',
-    port: '8083',
+    host: cache.ip,
+    port: cache.port,
     method: 'GET',
     headers:{
         'accept': '*/*',
@@ -28,7 +29,7 @@ api.get("/querydata", function (req, res){
     var query = url.parse(req.url, true).query;
     var parameter = JSON.parse(query.query);
     options.path = "/escache/groupAnalytics/condition/1/" + parameter.scale+"/"+parameter.dateRange+"/"+parameter.indicator;
-   // console.log(options.path);
+    console.log(options.path);
 
     var result;
 
