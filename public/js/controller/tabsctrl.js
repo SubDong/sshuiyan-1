@@ -1832,8 +1832,10 @@ define(["app"], function (app) {
                                 document.getElementById("summary").style.color = "#ea1414";
                             } else if (returnData[0].toString().substring(0, 1) == "-") {
                                 document.getElementById("summary").style.color = "#07cd2c";
-                            } else {
+                            } else if(returnData[0]==0){
                                 document.getElementById("summary").style.color = "#01aeef";
+                            }else{
+                                document.getElementById("summary").style.color = "#ea1414";
                             }
                         }
                         return returnData[0];
@@ -1907,13 +1909,13 @@ define(["app"], function (app) {
                 };
 
                 $scope.gridOptions.data = data.pv ? data.pv : [];
-                if (data.percentage.substring(0, 1) == '+') {
+                /*if (data.percentage.substring(0, 1) == '+') {
                     $rootScope.riseCell = true;
                 } else if (data.percentage.substring(0, 1) == '-') {
                     $rootScope.descendCell = true;
                 } else {
                     $rootScope.flatCell = true;
-                }
+                }*/
                 data.pv = data.pv ? data.pv : [];
                 var _tempData = [];
                 if (timeData.filterType == 4) {

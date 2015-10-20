@@ -3,7 +3,8 @@
     <div class="date_select">
         <div role="group" class="btn-group fl">
             <span class="fl"> 同类群主类型：</span>
-            <ui-select ng-model="groupType.selected" theme="select2" reset-search-input="false" ng-disabled="disabled" class="fl btn-delta" style="width: 160px;">
+            <ui-select ng-model="groupType.selected" theme="select2" reset-search-input="false" ng-disabled="disabled"
+                       class="fl btn-delta" style="width: 160px;">
                 <ui-select-match placeholder="流量获取日期">{{$select.selected.name}}</ui-select-match>
                 <ui-select-choices repeat="type in groupTypes">
                     <span ng-bind-html="type.name"></span>
@@ -12,7 +13,8 @@
         </div>
         <div role="group" class="btn-group fl">
             <span class="fl"> 同类群主规模：</span>
-            <ui-select ng-model="groupScale.selected" theme="select2" reset-search-input="false" ng-disabled="disabled" class="fl btn-delta" ng-change="scaleChange(groupScale.selected)" style="width: 70px;">
+            <ui-select ng-model="groupScale.selected" theme="select2" reset-search-input="false" ng-disabled="disabled"
+                       class="fl btn-delta" ng-change="scaleChange(groupScale.selected)" style="width: 70px;">
                 <ui-select-match placeholder="按周">{{$select.selected.name}}</ui-select-match>
                 <ui-select-choices repeat="groupScale in groupScales">
                     <span ng-bind-html="groupScale.name"></span>
@@ -21,7 +23,8 @@
         </div>
         <div role="group" class="btn-group fl">
             <span class="fl"> 日期范围：</span>
-            <ui-select ng-model="dateRange.selected" theme="select2" reset-search-input="false" ng-disabled="disabled" class="fl btn-delta" ng-change="dateChange(dateRange.selected)" style="width: 100px;">
+            <ui-select ng-model="dateRange.selected" theme="select2" reset-search-input="false" ng-disabled="disabled"
+                       class="fl btn-delta" ng-change="dateChange(dateRange.selected)" style="width: 100px;">
                 <ui-select-match placeholder="过去12周">{{$select.selected.name}}</ui-select-match>
                 <ui-select-choices repeat="dateRange in dateRanges">
                     <span ng-bind-html="dateRange.name"></span>
@@ -30,7 +33,8 @@
         </div>
         <div role="group" class="btn-group fl">
             <span class="fl"> 指标：</span>
-            <ui-select ng-model="groupIndex.selected" theme="select2" reset-search-input="false" ng-disabled="disabled" class="fl btn-delta" ng-change="indexChange(groupIndex.selected)" style="width: 100px;">
+            <ui-select ng-model="groupIndex.selected" theme="select2" reset-search-input="false" ng-disabled="disabled"
+                       class="fl btn-delta" ng-change="indexChange(groupIndex.selected)" style="width: 100px;">
                 <ui-select-match placeholder="浏览量(pv)">{{$select.selected.name}}</ui-select-match>
                 <ui-select-choices repeat="groupIndex in groupIndexs">
                     <span ng-bind-html="groupIndex.name"></span>
@@ -38,7 +42,7 @@
             </ui-select>
         </div>
         <div role="group" class="btn-group fl">
-            <button class="btn btn-default current" ng-click="searchData()" type="button">确定</button>
+            <button class="btn btn-default" ng-click="searchData()" type="button">确定</button>
         </div>
         <!--
         <refresh></refresh>
@@ -56,38 +60,26 @@
                 <tr>
                     <td></td>
                     <td ng-repeat="table in tables">{{table.name}}</td>
-                    <!--<td>第0周</td>
-                    <td>第1周</td>
-                    <td>第2周</td>
-                    <td>第3周</td>
-                    <td>第4周</td>
-                    <td>第5周</td>
-                    <td>第6周</td>
-                    <td>第7周</td>
-                    <td>第8周</td>
-                    <td>第9周</td>
-                    <td>第10周</td>
-                    <td>第11周</td>
-                    <td>第12周</td>-->
                 </tr>
                 </thead>
                 <tbody>
                 <tr ng-repeat="groupTableDatas in groupTableDataes" ng-class="{'summaryColor':$index == 0}">
 
                     <!-- 标题-->
-                    <td ng-class = "firstBgColor" >
+                    <td ng-class="firstBgColor">
                         <p ng-bind-html="groupTableDatas.code"></p>
                         <span ng-bind-html="groupTableDatas.userNumber"></span>
                         <span>位用户</span>
                     </td>
 
                     <!-- 第0天-->
-                    <td ng-class = "zeroColor" >
+                    <td ng-class="zeroColor">
                         <p ng-bind-html="groupTableDatas.data"></p>
                     </td>
 
                     <!--同类群组比较-->
-                    <td ng-if="groupIndex.selected.field != 'retentionRate'"  ng-repeat="groupTableData in groupTableDatas.gaResultTdDatas | limitTo : 12"
+                    <td ng-if="groupIndex.selected.field != 'retentionRate'"
+                        ng-repeat="groupTableData in groupTableDatas.gaResultTdDatas | limitTo : 12"
                         ng-class="{'firstBgColor':interval >= groupTableData.data && groupTableData.data > interval * 0.75,
                               'secondBgColor':interval * 0.75 >= groupTableData.data && groupTableData.data > interval * 0.5,
                               'thirdBgColor':interval * 0.5 >= groupTableData.data && groupTableData.data > interval * 0.25,
@@ -96,35 +88,18 @@
                         <p ng-bind-html="groupTableData.data"></p>
 
                     </td>
-                    </ng-if>
 
 
-                        <td ng-if="groupIndex.selected.field  == 'retentionRate' "  ng-repeat="groupTableData in groupTableDatas.gaResultTdDatas | limitTo : 12"
-                            ng-class="{'firstBgColor':interval >= groupTableData.value && groupTableData.value > interval * 0.75,
+                    <td ng-if="groupIndex.selected.field  == 'retentionRate' "
+                        ng-repeat="groupTableData in groupTableDatas.gaResultTdDatas | limitTo : 12"
+                        ng-class="{'firstBgColor':interval >= groupTableData.value && groupTableData.value > interval * 0.75,
                               'secondBgColor':interval * 0.75 >= groupTableData.value && groupTableData.value > interval * 0.5,
                               'thirdBgColor':interval * 0.5 >= groupTableData.value && groupTableData.value > interval * 0.25,
                               'lastBgColor':interval * 0.25 >= groupTableData.value }">
 
-                            <p ng-bind-html="groupTableData.data"></p>
+                        <p ng-bind-html="groupTableData.data"></p>
 
-                        </td>
-
-
-
-
-                    <!--<td ng-bind-html="groupTableData.n0"></td>
-                    <td ng-bind-html="groupTableData.n1" ng-class="{'firstBgColor':groupTableData.n1 >= 100,'secondBgColor':100 > groupTableData.n1 && groupTableData.n1 > 40,'thirdBgColor':groupTableData.n1 < 40,'defaultColor':groupTableData.n1 == ''}"></td>
-                    <td ng-bind-html="groupTableData.n2" ng-class="{'firstBgColor':groupTableData.n2 >= 100,'secondBgColor':100 > groupTableData.n2 && groupTableData.n2 > 40,'thirdBgColor':groupTableData.n2 < 40,'defaultColor':groupTableData.n2 == ''}"></td>
-                    <td ng-bind-html="groupTableData.n3" ng-class="{'firstBgColor':groupTableData.n3 >= 100,'secondBgColor':100 > groupTableData.n3 && groupTableData.n3 > 40,'thirdBgColor':groupTableData.n3 < 40,'defaultColor':groupTableData.n3 == ''}"></td>
-                    <td ng-bind-html="groupTableData.n4" ng-class="{'firstBgColor':groupTableData.n4 >= 100,'secondBgColor':100 > groupTableData.n4 && groupTableData.n4 > 40,'thirdBgColor':groupTableData.n4 < 40,'defaultColor':groupTableData.n4 == ''}"></td>
-                    <td ng-bind-html="groupTableData.n2" ng-class="{'firstBgColor':groupTableData.n5 >= 100,'secondBgColor':100 > groupTableData.n5 && groupTableData.n5 > 40,'thirdBgColor':groupTableData.n5 < 40,'defaultColor':groupTableData.n5 == ''}"></td>
-                    <td ng-bind-html="groupTableData.n6" ng-class="{'firstBgColor':groupTableData.n6 >= 100,'secondBgColor':100 > groupTableData.n6 && groupTableData.n6 > 40,'thirdBgColor':groupTableData.n6 < 40,'defaultColor':groupTableData.n6 == ''}"></td>
-                    <td ng-bind-html="groupTableData.n7" ng-class="{'firstBgColor':groupTableData.n7 >= 100,'secondBgColor':100 > groupTableData.n7 && groupTableData.n7 > 40,'thirdBgColor':groupTableData.n7 < 40,'defaultColor':groupTableData.n7 == ''}"></td>
-                    <td ng-bind-html="groupTableData.n8" ng-class="{'firstBgColor':groupTableData.n8 >= 100,'secondBgColor':100 > groupTableData.n8 && groupTableData.n8 > 40,'thirdBgColor':groupTableData.n8 < 40,'defaultColor':groupTableData.n8 == ''}"></td>
-                    <td ng-bind-html="groupTableData.n9" ng-class="{'firstBgColor':groupTableData.n9 >= 100,'secondBgColor':100 > groupTableData.n9 && groupTableData.n9 > 40,'thirdBgColor':groupTableData.n9 < 40,'defaultColor':groupTableData.n9 == ''}"></td>
-                    <td ng-bind-html="groupTableData.n10" ng-class="{'firstBgColor':groupTableData.n10 >= 100,'secondBgColor':100 > groupTableData.n10 && groupTableData.n10 > 40,'thirdBgColor':groupTableData.n10 < 40,'defaultColor':groupTableData.n10 == ''}"></td>
-                    <td ng-bind-html="groupTableData.n11" ng-class="{'firstBgColor':groupTableData.n11 >= 100,'secondBgColor':100 > groupTableData.n11 && groupTableData.n11 > 40,'thirdBgColor':groupTableData.n11 < 40,'defaultColor':groupTableData.n11 == ''}"></td>
-                    <td ng-bind-html="groupTableData.n12" ng-class="{'firstBgColor':groupTableData.n12 >= 100,'secondBgColor':100 > groupTableData.n12 && groupTableData.n12 > 40,'thirdBgColor':groupTableData.n12 < 40,'defaultColor':groupTableData.n12 == ''}"></td>-->
+                    </td>
                 </tr>
                 </tbody>
             </table>
