@@ -148,7 +148,7 @@ define(["./module"], function (ctrs) {
                 name: "x4",
                 displayName: "",
                 cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.stop(this,grid,row)'>{{grid.appScope.x4Text(row)}}</a></div>",
-                maxWidth: 50,
+                maxWidth: 65,
                 enableSorting: false
             },
             {
