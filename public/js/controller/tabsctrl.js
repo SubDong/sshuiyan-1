@@ -212,8 +212,8 @@ define(["app"], function (app) {
                     field: "entrance",
                     cellTemplate: '<a href="{{grid.appScope.getCellDisplayValueEntrance(grid, row)}}" target="_blank" style="color:#0965b8;line-height:30px; display:block; padding:0 10px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;}">{{grid.appScope.getCellDisplayValueEntrance(grid, row)}}</a>',
                     cellTooltip: function (row, col) {
-                    return row.entity.entrance;
-                },
+                        return row.entity.entrance;
+                    },
                     enableSorting: false
                 },
                 {name: '关键词', displayName: "关键词", field: "keyword", enableSorting: false},
@@ -321,6 +321,13 @@ define(["app"], function (app) {
                     $rootScope.gridArray.unshift($scope.gridObjButton);
                 }
             }
+
+            angular.forEach($rootScope.gridArray, function (_record, index) {
+                if (_record.name == "新访客比率" || _record.name == "跳出率") {
+                    _record.sortingAlgorithm = $rootScope.sortPercent;
+                }
+            });
+
             angular.forEach(entities, function (subscription, index) {
                 if (subscription.name == item.name) {
                     $scope.classInfo = 'current';
@@ -1832,9 +1839,9 @@ define(["app"], function (app) {
                                 document.getElementById("summary").style.color = "#ea1414";
                             } else if (returnData[0].toString().substring(0, 1) == "-") {
                                 document.getElementById("summary").style.color = "#07cd2c";
-                            } else if(returnData[0]==0){
+                            } else if (returnData[0] == 0) {
                                 document.getElementById("summary").style.color = "#01aeef";
-                            }else{
+                            } else {
                                 document.getElementById("summary").style.color = "#ea1414";
                             }
                         }
@@ -1912,12 +1919,12 @@ define(["app"], function (app) {
 
                 $scope.gridOptions.data = data.pv ? data.pv : [];
                 /*if (data.percentage.substring(0, 1) == '+') {
-                    $rootScope.riseCell = true;
-                } else if (data.percentage.substring(0, 1) == '-') {
-                    $rootScope.descendCell = true;
-                } else {
-                    $rootScope.flatCell = true;
-                }*/
+                 $rootScope.riseCell = true;
+                 } else if (data.percentage.substring(0, 1) == '-') {
+                 $rootScope.descendCell = true;
+                 } else {
+                 $rootScope.flatCell = true;
+                 }*/
                 data.pv = data.pv ? data.pv : [];
                 var _tempData = [];
                 if (timeData.filterType == 4) {
@@ -1983,6 +1990,18 @@ define(["app"], function (app) {
                 return 0;
             }
 
+        }
+        // 百分比排序
+        $rootScope.sortPercent = function (a, b) {
+            var _t_a = a.substring(0, a.length - 1);
+            var _t_b = a.substring(0, b.length - 1);
+            if (_t_a == _t_b) {
+                return 0;
+            }
+            if (_t_a < _t_b) {
+                return -1;
+            }
+            return 1;
         }
         $scope.$on('parrentData', function (d, data) {
             $scope.gridOpArray = angular.copy(data.gridArray);
