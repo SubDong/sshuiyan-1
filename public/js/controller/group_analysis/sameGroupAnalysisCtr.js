@@ -211,7 +211,7 @@ define(["./module"], function (ctrs) {
                     formatter: function (params) {
                         var res;
                         if($scope.retentionRate == true){
-                            res = params[0].name + '<br/>' + $scope.groupIndex.selected.name+'：' +(params[0].value*100)+'%<br/>';
+                            res = params[0].name + '<br/>' + $scope.groupIndex.selected.name+'：' +(params[0].value*100).toFixed(2)+'%<br/>';
                         }else{
                             res = params[0].name + '<br/>' + $scope.groupIndex.selected.name+'：' +params[0].value+'<br/>';
                         }
