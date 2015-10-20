@@ -51,6 +51,7 @@ module.exports = function (req) {
                         var contrastEnd = mailRule["contrastEnd"];
                         var startString = mailRule["startString"];
                         var contrastStartString = mailRule["contrastStartString"];
+                        var typeId = mailRule["type_id"];
                         var indexString = [];
                         var contrastIndexString = [];
                         var time = [];
@@ -68,7 +69,7 @@ module.exports = function (req) {
                         for (var i = 0; i < contrastTime.length; i++) {
                             time.push(contrastTime[i]);
                         }
-                        changeList_request.search(req.es, indexString, time, function (data) {
+                        changeList_request.search(req.es, indexString, time, typeId, null, function (data) {
                             if (data) {
                                 var subject = "附件中含有数据统计,请查收!";
                                 var title = startString + "与" + contrastStartString + "来源变化榜数据报告";
