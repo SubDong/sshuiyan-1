@@ -190,6 +190,7 @@ define(['./module'], function (ctrs) {
                 config: {
                     legendData: ["移动", "PC"],
                     chartType: "pie",
+                    pieStyle: true,
                     id: "environment_map",
                     serieName: "所占比例",
                     dataKey: "key",

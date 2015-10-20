@@ -60,7 +60,7 @@ var mixingMap = {
                             if (parseInt(params.value) != 0 && !isNaN(params.value)) {
                                 returnValue = ((parseInt(params.value) / dataValueSum) * 100).toFixed(2)
                             }
-                            var value = "<p>" + params.name + "</p><p>" + dataValueName + " : " + params.value + "</p><p>占比：" + returnValue + "%</p>";
+                            var value = "<li>" + params.name + "</li><li>" + dataValueName + " : " + params.value + "</li><li>占比：" + returnValue + "%</li>";
                             return value;
                         }
                     },
@@ -82,7 +82,7 @@ var mixingMap = {
                     type: 'pie',
                     tooltip: {
                         trigger: 'item',
-                        formatter: "<p>{b}</p><p>{a}: {c}</p> <p>占比:{d}%</p>"
+                        formatter: "<li>{b}</li><li>{a}: {c}</li> <li>占比:{d}%</li>"
                     },
                     center: ['80%', '50%'],
                     radius: ["0", "50%"],

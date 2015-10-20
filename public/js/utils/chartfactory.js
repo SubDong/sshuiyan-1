@@ -136,9 +136,9 @@ var op = {
         if (chartConfig.chartType == "bar") {
             if (chartConfig.barClick) {
                 chartObj.on("click", chartConfig.barClick);
-            }else if (chartConfig.dblClick) {
-                chartObj.on("dblclick", function(param){
-                    chartConfig.dblClick(param,chartConfig.quota);
+            } else if (chartConfig.dblClick) {
+                chartObj.on("dblclick", function (param) {
+                    chartConfig.dblClick(param, chartConfig.quota);
                 });
             }
         }
@@ -191,7 +191,7 @@ var op = {
                                 }
                             } else {
                                 var _t = params[i].seriesName;
-                                var __t =  _t.length > 30 ? _t.substring(0, 30) + "..." + _t.substring(_t.length - 10, _t.length) : _t;
+                                var __t = _t.length > 30 ? _t.substring(0, 30) + "..." + _t.substring(_t.length - 10, _t.length) : _t;
                                 if (chartConfig.toolTip == undefined) {
                                     res += '<li class=chartstyle' + i + '>' + __t + ' : ' + ad.formatFunc(params[i].value, formatType) + '</li>';
                                 } else {
@@ -316,7 +316,7 @@ var op = {
         json.forEach(function (item) {
             select[chartUtils.convertChinese(item.label)] = true;
             var _t = item.label;
-            var __t =  _t.length > 30 ? _t.substring(0, 30) + "..." + _t.substring(_t.length - 10, _t.length) : _t;
+            var __t = _t.length > 30 ? _t.substring(0, 30) + "..." + _t.substring(_t.length - 10, _t.length) : _t;
             var serie = {
                 name: !chartConfig.noFormat ? chartUtils.convertChinese(__t) : __t,
                 type: !chartConfig.chartType ? "line" : chartConfig.chartType,
@@ -522,11 +522,43 @@ var op = {
             data: [],
             legendHoverLink: true,
             itemStyle: {
+                normal: {
+                    label: {
+                        position: 'inner',
+                        show: true,
+                        textStyle: {
+                            color: "rgba(255,255,255,1)"
+                        }
+                    },
+                    labelLine: {
+                        show: false
+                    }
+                },
                 emphasis: {
                     borderWidth: 2,
-                    borderColor: "#fff"
+                    borderColor: "#fdf9f9",
+                    label: {
+                        position: 'outer',
+                        show: true,
+                        formatter: "{d}%",
+                        textStyle: {
+                            color: "rgba(0,0,0,1)"
+                        }
+                    },
+                    labelLine: {
+                        show: true,
+                        length: 2
+                    },
+                    color: (function () {
+                        var zrColor = zrender.tool.color;
+                        return zrColor.getRadialGradient(
+                            650, 200, 80, 650, 200, 120,
+                            [[0, 'rgba(0,0,0,0)'], [1, 'rgba(0,0,0,0)']]
+                        )
+                    })
                 }
             }
+
         };
         if (chartConfig.status) {
             switch (chartConfig.status) {
@@ -549,22 +581,32 @@ var op = {
             {
                 normal: {
                     label: {
-                        position: 'inner',
-                        formatter: function (params) {
-                            return (params.percent - 0).toFixed(0) + '%'
-                        }
+                        position: 'outer',
+                        formatter: "{d}%"
+                        /*       formatter: function (params) {
+                         return (params.percent - 0).toFixed(0) + '%'
+                         }*/
                     },
                     labelLine: {
-                        show: false
+                        show: true,
+                        length: 2
                     }
                 },
                 emphasis: {
                     borderWidth: 2,
-                    borderColor: "#fff",
+                    borderColor: "#fdf9f9",
                     label: {
+                        position: 'inner',
                         show: true,
                         formatter: "{d}%"
-                    }
+                    },
+                    color: (function () {
+                        var zrColor = zrender.tool.color;
+                        return zrColor.getRadialGradient(
+                            650, 200, 80, 650, 200, 120,
+                            [[0, 'rgba(0,0,0,0.1)'], [1, 'rgba(0,0,0,0.1)']]
+                        )
+                    })
                 }
             };
         }
