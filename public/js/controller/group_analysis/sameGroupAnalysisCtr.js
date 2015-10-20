@@ -246,7 +246,7 @@ define(["./module"], function (ctrs) {
         });
 
         }
-        $scope.searchData();
+
 
 
         })

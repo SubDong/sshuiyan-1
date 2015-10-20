@@ -1786,7 +1786,7 @@ define(["app"], function (app) {
                                     returnData[0] = returnData[0] + "(-)";
                                 }
                             } else {
-                                returnData[0] = returnData[0] == "0" ? "0%" : returnData[0] + "(" + (returnData[0] * 100 / contrastPv).toFixed(2) + "%)";
+                                returnData[0] = returnData[0] == "0" ? "0%" : (returnData[0] > 0 ? ("+" + returnData[0]) : returnData[0]) + "(" + (returnData[0] * 100 / contrastPv).toFixed(2) + "%)";
                             }
                         } else {
                             returnData[0] = returnData[0] == "0" ? "0%" : (returnData[0] / option.length).toFixed(2) + "%";
@@ -1832,8 +1832,10 @@ define(["app"], function (app) {
                                 document.getElementById("summary").style.color = "#ea1414";
                             } else if (returnData[0].toString().substring(0, 1) == "-") {
                                 document.getElementById("summary").style.color = "#07cd2c";
-                            } else {
+                            } else if(returnData[0]==0){
                                 document.getElementById("summary").style.color = "#01aeef";
+                            }else{
+                                document.getElementById("summary").style.color = "#ea1414";
                             }
                         }
                         return returnData[0];
@@ -1898,7 +1900,9 @@ define(["app"], function (app) {
             title: "访问页数目标"
         }
         ];
-        $scope.init = function (timeData) {
+        $rootScope.changeListInit = function (timeData) {
+            $scope.gridOpArray = angular.copy(timeData.gridArray);
+            $scope.gridOptions.columnDefs = $scope.gridOpArray;
             $http.get("api/changeList?start=" + timeData.start + "&end=" + timeData.end + "&contrastStart=" + timeData.contrastStart + "&contrastEnd=" + timeData.contrastEnd + "&filterType=" + timeData.filterType + "&type=" + $rootScope.userType).success(function (data) {
                 $rootScope.changeObj = {
                     sum_pv_count: data.sum_pv,
@@ -1907,13 +1911,13 @@ define(["app"], function (app) {
                 };
 
                 $scope.gridOptions.data = data.pv ? data.pv : [];
-                if (data.percentage.substring(0, 1) == '+') {
+                /*if (data.percentage.substring(0, 1) == '+') {
                     $rootScope.riseCell = true;
                 } else if (data.percentage.substring(0, 1) == '-') {
                     $rootScope.descendCell = true;
                 } else {
                     $rootScope.flatCell = true;
-                }
+                }*/
                 data.pv = data.pv ? data.pv : [];
                 var _tempData = [];
                 if (timeData.filterType == 4) {
@@ -1938,8 +1942,10 @@ define(["app"], function (app) {
                     }
                 }
 
-                for (var i = _tempData.length; i < 222; i++) {
-                    _tempData[i] = _tempData[0];
+                if (_tempData.length > 0) {
+                    for (var i = _tempData.length; i < 222; i++) {
+                        _tempData[i] = _tempData[0];
+                    }
                 }
 
                 while (_tempData.length > 100) {
@@ -1981,9 +1987,8 @@ define(["app"], function (app) {
         $scope.$on('parrentData', function (d, data) {
             $scope.gridOpArray = angular.copy(data.gridArray);
             $scope.gridOptions.columnDefs = $scope.gridOpArray;
-            $scope.init(data);
+            $scope.changeListInit(data);
         });
-        $scope.$emit("Ctr1NameChange", '');
     });
 })
 ;

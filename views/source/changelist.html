@@ -24,7 +24,7 @@
                 <i class="glyphicon glyphicon-calendar fa fa-calendar"></i><span></span></button>
         </div>
         <div role="group" class="btn-group fl">
-            <button class="btn btn-default current" data-ng-click="changeTime()" type="button">确定</button>
+            <button class="btn btn-default" data-ng-click="changeTime()" type="button">确定</button>
         </div>
         <refresh></refresh>
     </div>
@@ -41,7 +41,8 @@
                     <th>来访次数</th>
                     <th>{{changeObj.sum_pv_count||'0'}}</th>
                     <th>{{changeObj.contrast_sum_pv_count||'0'}}</th>
-                    <th ng-class="{'riseCell':riseCell,'descendCell':descendCell,'flatCell':flatCell}">
+                    <!--<th ng-class="{'riseCell':riseCell,'descendCell':descendCell,'flatCell':flatCell}">-->
+                    <th>
                         {{changeObj.all_percentage||'0(0%)'}}
                     </th>
                 </tr>
@@ -49,7 +50,7 @@
         </div>
         <div class="index_chart">
         </div>
-        <div class="table_content" ng-controller="TabsCtrl">
+        <div class="table_content" ng-controller="TabsCtrl" data-ng-init="helloKitty()">
             <div class="custom_table" ng-class="{hidePageContainer:gridApi2.grid.rows.length<=20}">
                 <div ui-grid="gridOptions" class="grid clearfix" ui-grid-pagination
                      ui-grid-exporter ui-grid-auto-resize></div>
