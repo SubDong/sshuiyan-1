@@ -206,6 +206,12 @@ define(["./module"], function (ctrs) {
 //                $scope.reset();
 //                $scope.todayClass = true;
         };
+        // 清除查询条件
+        $scope.clearQueryTerms = function () {
+            $scope.$$childHead.input_gjc = "";
+            $scope.$$childHead.input_rky = "";
+            $scope.$$childHead.input_ip = "";
+        };
     });
 
 });
