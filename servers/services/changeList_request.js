@@ -211,8 +211,11 @@ var changeList_request = {
                     percentage: percentage
                 };
                 callbackFn(data);
-            } else
+            } else {
+                console.log("changeList_request");
+                console.log(callbackFn);
                 callbackFn(data);
+            }
         });
     }
 };

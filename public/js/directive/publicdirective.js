@@ -319,11 +319,9 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     if (start.format('YYYY-MM-DD') == end.format('YYYY-MM-DD')) {
                         $('#reportrange span').html(start.format('YYYY-MM-DD'));
                         $rootScope.startString = (start.format('YYYY-MM-DD'));
-                    }
-                    else {
+                    } else {
                         $('#reportrange span').html(start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD'));
                     }
-                    //$('#reportrange span').html(start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD'));
                 });
 
                 var _path = $location.path();
@@ -514,6 +512,9 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     },
                     function (start, end, label) {
                         //if(){
+                        $rootScope.sshuiyanCompareStart = start.format('YYYY-MM-DD');
+                        $rootScope.sshuiyanCompareEnd = end.format('YYYY-MM-DD');
+                        $rootScope.sshuiyanCompareFlag = true;
                         $rootScope.datepickerClickTow(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
                         scope.datePickerCompare(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
                         //if (!$rootScope.datePickerCompare) {
@@ -737,7 +738,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
             template: "<div class=\"right_refresh fr right_refresh_exchange \"><button class=\"btn btn-default btn-Refresh fl\" ng-click=\"page_refresh()\"  type=\"button\"><span aria-hidden=\"true\" class=\"glyphicon glyphicon-refresh\"></span></button></div>",
             transclude: true,
             replace: true
-
         };
         return option;
     });
@@ -2377,6 +2377,24 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
             template: '<div ng-switch on="myDataTwo">' +
             '<div ng-switch-when="直接访问" style="line-height:30px; display:block; padding:0 10px;white-space: nowrap;}">{{myDataTwo}}</div>' +
             '<a ng-switch-default href="{{myDataOne}}" title="{{myDataOne}}" target="_blank" style="color:#0965b8;line-height:30px; display:block; padding:0 10px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;}">{{myDataTwo}}</a>' +
+            '</div>'
+        }
+
+    });
+
+    app.directive('getExternalLinks', function () {
+
+        return {
+            restrict: 'C',
+            replace: true,
+            transclude: true,
+            scope: {
+                myDataOne: '@myDataOne',
+                myDataTwo: "@myDataTwo"
+            },
+            template: '<div ng-switch on="myDataOne">' +
+            '<div ng-switch-default style="line-height:30px; display:block; padding:0 10px;white-space: nowrap;}">{{myDataTwo}}</div>' +
+            '<a ng-switch-when="links" href="{{myDataTwo}}" target="_blank" style="color:#0965b8;line-height:30px; display:block; padding:0 10px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;}">{{myDataTwo}}</a>' +
             '</div>'
         }
 

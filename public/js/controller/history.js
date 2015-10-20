@@ -4,7 +4,12 @@
 define(['./module'], function (ctrs) {
     'use strict';
     ctrs.controller('history', function ($cookieStore, $scope, $window, $location, $rootScope, requestService, areaService, $http, SEM_API_URL) {
-
+        if ($rootScope.gridArray == undefined || $rootScope.tableSwitch == undefined) {
+            $rootScope.gridArray = [];
+            var temp_path = $location.path();
+            var _index = temp_path.indexOf("/history");
+            $location.path(temp_path.substring(0, _index));
+        }
         //        高级搜索提示
         $scope.sourceSearch = "";
         $scope.visitorSearch = "";
@@ -85,13 +90,6 @@ define(['./module'], function (ctrs) {
             $scope.refreshChart(["conversions"]);
         }
 
-
-        if ($rootScope.gridArray == undefined || $rootScope.tableSwitch == undefined) {
-            $rootScope.gridArray = [];
-            var temp_path = $location.path();
-            var _index = temp_path.indexOf("/history");
-            $location.path(temp_path.substring(0, _index));
-        }
         $scope.webName = $rootScope.webName
         $scope.monthClass = true;
         var esType = $rootScope.userType;

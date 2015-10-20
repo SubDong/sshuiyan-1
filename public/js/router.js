@@ -650,7 +650,35 @@ define(["angular", "./app"], function (angular, myApp) {
                             "controller/history"
                         ])
                     }
-                });
+                })
+                .state('history12', {
+                    url: "/page/indexoverview_pv/history",
+                    templateUrl: "../historytrend/history.html",
+                    resolve: {
+                        load: loadDeps([
+                            "controller/history"
+                        ])
+                    }
+                })
+                .state('history13', {
+                    url: "/page/indexoverview_pg/history",
+                    templateUrl: "../historytrend/history.html",
+                    resolve: {
+                        load: loadDeps([
+                            "controller/history"
+                        ])
+                    }
+                })
+                .state('history14', {
+                    url: "/page/indexoverview_ep/history",
+                    templateUrl: "../historytrend/history.html",
+                    resolve: {
+                        load: loadDeps([
+                            "controller/history"
+                        ])
+                    }
+                })
+            ;
 
             // 管理设置
             //$urlRouterProvider.when('', '/conf');
