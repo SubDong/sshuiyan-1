@@ -94,18 +94,6 @@ define(["./module"], function (ctrs) {
                 //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
                 arrayClear: false //是否清空指标array
             };
-            $scope.$on("Ctr1NameChange", function (event, msg) {
-                $rootScope.gridArray[2].displayName = $rootScope.startString;
-                $rootScope.gridArray[3].displayName = $rootScope.contrastStartString;
-                $scope.$broadcast("parrentData", {
-                    start: $rootScope.start,
-                    end: $rootScope.end,
-                    contrastStart: $rootScope.contrastStart,
-                    contrastEnd: $rootScope.contrastEnd,
-                    filterType: $rootScope.changeListFilterType,
-                    gridArray: $rootScope.gridArray
-                });
-            });
 
             function GetDateStr(AddDayCount) {
                 var dd = new Date();
@@ -283,6 +271,19 @@ define(["./module"], function (ctrs) {
                 $scope.lastDayClass = false;
                 $scope.lastWeekClass = false;
                 $scope.yesterdayClass = false;
+            };
+
+            $scope.helloKitty = function () {
+                $rootScope.gridArray[2].displayName = $rootScope.startString;
+                $rootScope.gridArray[3].displayName = $rootScope.contrastStartString;
+                $rootScope.init({
+                    start: $rootScope.start,
+                    end: $rootScope.end,
+                    contrastStart: $rootScope.contrastStart,
+                    contrastEnd: $rootScope.contrastEnd,
+                    filterType: $rootScope.changeListFilterType,
+                    gridArray: $rootScope.gridArray
+                });
             };
 
             $rootScope.initMailData = function () {
