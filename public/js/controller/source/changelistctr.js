@@ -276,14 +276,19 @@ define(["./module"], function (ctrs) {
             $scope.helloKitty = function () {
                 $rootScope.gridArray[2].displayName = $rootScope.startString;
                 $rootScope.gridArray[3].displayName = $rootScope.contrastStartString;
-                $rootScope.changeListInit({
-                    start: $rootScope.start,
-                    end: $rootScope.end,
-                    contrastStart: $rootScope.contrastStart,
-                    contrastEnd: $rootScope.contrastEnd,
-                    filterType: $rootScope.changeListFilterType,
-                    gridArray: $rootScope.gridArray
-                });
+                while (true) {
+                    if ($rootScope.changeListInit) {
+                        $rootScope.changeListInit({
+                            start: $rootScope.start,
+                            end: $rootScope.end,
+                            contrastStart: $rootScope.contrastStart,
+                            contrastEnd: $rootScope.contrastEnd,
+                            filterType: $rootScope.changeListFilterType,
+                            gridArray: $rootScope.gridArray
+                        });
+                        break;
+                    }
+                }
             };
 
             $rootScope.initMailData = function () {
