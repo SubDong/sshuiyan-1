@@ -72,14 +72,14 @@
                     <table>
                         <tr>
                             <td>预期每次转化收益</td>
-                            <td><input type="text" maxlength="128" class="input_name form-control"
+                            <td><input type="text" maxlength="20" class="input_name form-control" onkeyup="this.value=this.value.replace(/\D/g,'')"  onafterpaste="this.value=this.value.replace(/\D/g,'')"
                                        data-ng-model="expected_yield"></td>
                             <td>元</td>
                             <td>（精确到两位小数）</td>
                         </tr>
                         <tr>
                             <td>预期转化率</td>
-                            <td><input type="text" maxlength="128" class="input_name form-control" data-ng-model="pecent_yield">
+                            <td><input type="text" maxlength="3" class="input_name form-control" data-ng-model="pecent_yield" onkeyup="this.value=this.value.replace(/\D/g,'')"  onafterpaste="this.value=this.value.replace(/\D/g,'')">
                             </td>
                             <td>%</td>
 
@@ -148,7 +148,7 @@
                                   data-ng-click="chooseConvType('place_order')">下单</label>
                     <label><input type="radio" class="styled" name="type" ng-checked="radio_conv.other"
                                   data-ng-click="chooseConvType('other')">其他</label>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <input id="convTypeText" type="text" class="input_text " data-ng-model="t_conv_text">
+                    <input id="convTypeText" type="text" maxlength="7" class="input_text " data-ng-model="t_conv_text">
                 </div>
             </div>
         </div>
