@@ -90,6 +90,20 @@ define(["./module"], function (ctrs) {
          */
         $scope.deleteAll = function (index, grid, row) {
 
+            var elements = $scope.gridApiAdmin.selection.getSelectedRows();
+            if(elements.length==0){
+                $scope.onAlertDialog = ngDialog.open({
+                    template: '' +
+                    '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div><ul class="admin-ng-content" ><li>请勾选要删除的配置项</li></ul> <div class="ng-button-div"><button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
+                    </div></div>',
+                    className: 'ngdialog-theme-default admin_ngdialog',
+                    plain: true,
+                    scope: $scope
+                });
+                return;
+            }
+
+
             $scope.onDeleteDialog = ngDialog.open({
                 template: '' +
                 '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div><ul class="admin-ng-content" ><li>您想批量删除已选择的指定广告跟踪吗？</li></ul> <div class="ng-button-div"><button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
