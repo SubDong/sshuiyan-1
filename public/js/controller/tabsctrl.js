@@ -1757,11 +1757,11 @@ define(["app"], function (app) {
                 } else {
                     if ((option[0].entity[a.col.field] + "").indexOf("%") != -1 || (option[0].entity[a.col.field] + "").indexOf("(-)") != -1) {
 //                        returnData[0] = (returnData[0] / option.length).toFixed(2) + "%";
-                        var contrastPv = 0;
-                        for (var c = 0; c < option.length; c++) {
-                            contrastPv += option[c].entity["contrastPv"];
-                        }
                         if (window.location.href.split("/")[window.location.href.split("/").length - 1] == "changelist") {
+                            var contrastPv = 0;
+                            for (var c = 0; c < option.length; c++) {
+                                contrastPv += option[c].entity["contrastPv"];
+                            }
                             if (contrastPv == 0) {
                                 if (returnData[0] > 0) {
                                     returnData[0] = "+" + returnData[0] + "(-)";
@@ -1936,6 +1936,27 @@ define(["app"], function (app) {
                 while (_tempData.length > 100) {
                     _tempData.pop();
                 }
+
+                //_tempData.push({
+                //    pathName: "123",
+                //    pv: 123,
+                //    contrastPv: 23,
+                //    percentage: "+100(+434.78%)"
+                //})
+                //
+                //_tempData.push({
+                //    pathName: "1weims",
+                //    pv: 12,
+                //    contrastPv: 2,
+                //    percentage: "+10(+500%)"
+                //})
+                //
+                //_tempData.push({
+                //    pathName: "1weimsdfasdfs",
+                //    pv: 42,
+                //    contrastPv: 67,
+                //    percentage: "-25(-37.31%)"
+                //})
 
                 $scope.gridOptions.data = _tempData;
                 $scope.gridOptions.enableSorting = true;
