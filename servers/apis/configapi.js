@@ -27,7 +27,7 @@ api.get("/eventchnage_list", function (req, res) {
         case "save":
             var entity = query['entity'];
             var temp = JSON.parse(entity);
-            temp.event_target = false;
+            temp.update_time = new Date().getTime();
             dao.save(schema_name, temp, function (ins) {
                 datautils.send(res, JSON.stringify(ins));
                 if (ins != null) {
@@ -44,7 +44,8 @@ api.get("/eventchnage_list", function (req, res) {
                                     eid: item.event_id,//事件ID
                                     evttag: item.event_name,//事件名称
                                     evpage: item.event_page,//事件页面
-                                    evtarget:item.event_target//是否为转化目标
+                                    evtarget:item.event_target,//是否为转化目标
+                                    evtime:item.update_time//转化修改时间
                                 };
                                 confs.push(event_config);
                             });
@@ -61,8 +62,9 @@ api.get("/eventchnage_list", function (req, res) {
             });
             break;
         case "update":
-            var update = query['updates'];
-            dao.update(schema_name, query['query'], query['updates'], function (err, up) {
+            var update = JSON.parse(query['updates']);
+            update["update_time"] = new Date().getTime();
+            dao.update(schema_name, query['query'], JSON.stringify(update), function (err, up) {
                 datautils.send(res, up);
                 if (up.nModified > 0) {//有更新 刷新配置
                     dao.find(schema_name, query['query'], null, {}, function (err, sres) {//先获取一条 用这条的获取uid 和site_id
@@ -80,11 +82,12 @@ api.get("/eventchnage_list", function (req, res) {
                                             eid: item.event_id,//事件ID
                                             evttag: item.event_name,//事件名称
                                             evpage: item.event_page,//事件页面
-                                            evtarget:item.event_target//是否为转化目标
+                                            evtarget:item.event_target,//是否为转化目标
+                                            evtime:item.update_time//转化修改时间
                                         };
                                         confs.push(event_config);
                                     });
-                                    console.log("update 刷新Redis："+ sres[0].root_url + ":e:" + sres[0].event_page+" = "+ JSON.stringify(confs))
+                                    console.log("1 update 刷新Redis："+ sres[0].root_url + ":e:" + sres[0].event_page+" = "+ JSON.stringify(confs))
                                     req.redisclient.multi().set(sres[0].root_url + ":e:" + sres[0].event_page, JSON.stringify(confs)).exec();
                                 }
                                 datautils.send(res, docs);
@@ -203,7 +206,6 @@ api.get("/site_list", function (req, res) {
             var temp = JSON.parse(entity);
             temp.type_id = randstring.rand_string();
             temp.track_id = randstring.rand_string();
-            temp["event_taget"] = false;
             dao.save(schema_name, temp, function (ins) {
                 datautils.send(res, ins);
                 // 参考 https://github.com/zerocoolys/suiyan/wiki/%E9%85%8D%E7%BD%AE%E5%8F%82%E6%95%B0%5Bredis-key-%E8%A7%84%E8%8C%83%5D
@@ -440,13 +442,11 @@ api.get("/page_conv", function (req, res) {
                 req.redisclient.get("st:" + ins.site_id, function (error, redis_track_id) {//取Track_id
                     //console.log("pc:" + redis_track_id)
                     req.redisclient.get("pc:" + redis_track_id, function (error, page_convs) {
-                        //console.log(page_convs)
                         var arr = [];
                         if (page_convs != null && page_convs == undefined) {
                             arr = JSON.parse(page_convs);
                         }
                         arr.push(ins)
-                        //console.log(arr)
                         req.redisclient.multi().set("pc:" + redis_track_id, arr).exec();
                     });
                 })
@@ -499,7 +499,6 @@ api.get("/page_conv_urls", function (req, res) {
                     var tempPathMark = entitys[0];
                     var redisPageUrls = [];
                     var bulk = req.redisclient.multi();
-                    //console.log("1")
                     for (var index = 0; index < entitys.length; index++) {
                         if (entitys[index].path == tempPathMark.path) {
                             redisPageUrls.push(entitys[index]);
@@ -636,7 +635,6 @@ api.get("/page_title", function (req, res) {
     var schema_name = "page_title_model";
     switch (type) {
         case "save":
-            //console.log(query['entity'])
             var entity = JSON.parse(query['entity']);
             dao.save(schema_name, entity, function (ins) {
                 datautils.send(res, JSON.stringify(ins));
@@ -659,7 +657,6 @@ api.get("/page_title", function (req, res) {
             });
             break;
         case "search":
-            //console.log(query['query'])
             dao.find(schema_name, query['query'], null, {}, function (err, docs) {
                 datautils.send(res, docs);
             });
@@ -704,7 +701,6 @@ api.get("/tt_conf", function (req, res) {
  *
  */
 api.get("/redis", function (req, res) {
-    console.log("redis")
     var query = url.parse(req.url, true).query;
     req.redisclient.get(query['key'], function (error, redis_conf) {//
 
@@ -801,11 +797,11 @@ api.get("/select", function (req, res) {
                 switch (type) {
                     case "saveTips":
                         var entityJson = JSON.parse(query["entity"]);
-                        //entityJson["event_target"] = false;
                         var existQry = {
                             uid: uid,
                             event_id: entityJson["id"],
                             event_page: entityJson["monUrl"],
+                            event_name: entityJson["name"],
                             root_url: sitejson.siteid
                         }
                         dao.find(schema_name, JSON.stringify(existQry), null, {}, function (err, docs) {//查询所有配置
@@ -821,6 +817,7 @@ api.get("/select", function (req, res) {
                                 eventData.event_status=1
                                 eventData.event_method= "自动"
                                 eventData.event_target=false
+                                eventData.update_time=new Date().getTime();
                                 dao.save(schema_name, eventData, function (ins) {
                                     if (ins != null) {
                                         res.write("crossDomainCallback({code:1,state:'Save Success'}," + query["index"] + ");");
@@ -837,11 +834,12 @@ api.get("/select", function (req, res) {
                                                         eid: item.event_id,//事件ID
                                                         evttag: item.event_name,//事件名称
                                                         evpage: item.event_page,//事件页面
-                                                        evtarget:item.event_target//是否为转化目标
+                                                        evtarget:item.event_target,//是否为转化目标
+                                                        evtime:item.update_time
                                                     };
                                                     confs.push(event_config);
                                                 });
-                                                console.log("saveTips 刷新Redis："+ docs[0].root_url + ":e:" + docs[0].event_page+" = "+ JSON.stringify(confs))
+                                                //console.log("saveTips 刷新Redis："+ docs[0].root_url + ":e:" + docs[0].event_page+" = "+ JSON.stringify(confs))
                                                 req.redisclient.multi().set(docs[0].root_url + ":e:" + docs[0].event_page, JSON.stringify(confs)).exec();
                                             }
                                             datautils.send(res, docs);
@@ -853,8 +851,10 @@ api.get("/select", function (req, res) {
                                 dao.update(schema_name, JSON.stringify({
                                     uid: uid,
                                     event_page: entityJson["monUrl"],
-                                    root_url: sitejson.siteid
-                                }), JSON.stringify({event_name: entityJson["name"]}), function (err, docs) {
+                                    event_name: entityJson["name"],
+                                    root_url: sitejson.siteid,
+
+                                }), JSON.stringify({event_name: entityJson["name"] ,update_time:new Date().getTime()}), function (err, docs) {
                                     res.write("crossDomainCallback({code:2,state:'Update Success'}," + query["index"] + ");");
                                     res.end();
                                     dao.find(schema_name, JSON.stringify(existQry), null, {}, function (err, docs) {//查询所有配置
@@ -865,11 +865,12 @@ api.get("/select", function (req, res) {
                                                     eid: item.event_id,//事件ID
                                                     evttag: item.event_name,//事件名称
                                                     evpage: item.event_page,//事件页面
-                                                    evtarget:item.event_target//是否为转化目标
+                                                    evtarget:item.event_target,//是否为转化目标
+                                                    evtime:item.update_time
                                                 };
                                                 confs.push(event_config);
                                             });
-                                            console.log("updateTips 刷新Redis："+ docs[0].root_url + ":e:" + docs[0].event_page+" = "+ JSON.stringify(confs))
+                                            //console.log("updateTips 刷新Redis："+ docs[0].root_url + ":e:" + docs[0].event_page+" = "+ JSON.stringify(confs))
                                             req.redisclient.multi().set(docs[0].root_url + ":e:" + docs[0].event_page, JSON.stringify(confs)).exec();
                                         }
                                         datautils.send(res, docs);
@@ -918,7 +919,7 @@ api.get("/select", function (req, res) {
                                     };
                                     confs.push(event_config);
                                 });
-                                console.log("deleteTips 刷新Redis："+ existQry.root_url + ":e:" + existQry.event_page+" = "+ JSON.stringify(confs))
+                                //console.log("deleteTips 刷新Redis："+ existQry.root_url + ":e:" + existQry.event_page+" = "+ JSON.stringify(confs))
                                 req.redisclient.multi().set(existQry.root_url + ":e:" + existQry.event_page, JSON.stringify(confs)).exec();
                                 datautils.send(res, docs);
                             });
@@ -960,7 +961,7 @@ api.get("/test", function (req, res) {
     switch (type) {
         case "search":
             daoutil.find(schema_name, JSON.stringify({}), null, {}, function (err, up) {
-                console.log(up)
+                //console.log(up)
                 datautils.send(res, up);
                 // TODO 为什么要去差redis
             });

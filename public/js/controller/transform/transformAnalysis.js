@@ -21,12 +21,12 @@ define(["./module"], function (ctrs) {
                 }).success(function (dataConfig, status) {
                     var url_convert_info = [];
                     for (var i = 0; i < dataConfig.length; i++) {
-                        if(dataConfig[i].event_target)
-                        url_convert_info.push({
-                            convertName: dataConfig[i].event_name,
-                            convertId: dataConfig[i].event_id,
-                            all_urls: dataConfig[i].event_page
-                        });
+                        if (dataConfig[i].event_target)
+                            url_convert_info.push({
+                                convertName: dataConfig[i].event_name,
+                                convertId: dataConfig[i].event_id,
+                                all_urls: dataConfig[i].event_page
+                            });
                     }
                     var all_url = [];
                     for (var k = 0; k < dataConfig.length; k++) {
@@ -49,7 +49,7 @@ define(["./module"], function (ctrs) {
 
             //配置默认指标
             $rootScope.checkedArray = ["clickTotal", "pv", "uv", "ip", "conversions", "crate"];
-            $scope.getEventName =function(grid, row,index){
+            $scope.getEventName = function (grid, row, index) {
                 //console.log(row)
             }
             $rootScope.gridArray = [
@@ -63,10 +63,22 @@ define(["./module"], function (ctrs) {
                 {
                     name: "事件名称",
                     displayName: "事件名称",
-                    field: "pv",
-                    cellTemplate: "<div><a href='javascript:void(0)' style='color:#0965b8;line-height:30px' ng-click='grid.appScope.getHistoricalTrend(this)'>{{grid.appScope.getEventName(grid, row,index)}}</a></div>"
-                    , footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
-                    enableSorting: false
+                    field: "eventName",
+                    //cellTemplate: "<div><a href='javascript:void(0)' style='color:#0965b8;line-height:30px' ng-click='grid.appScope.getHistoricalTrend(this)'>{{grid.appScope.getSearchFooterData(grid, row,index)}}</a></div>",
+                    footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                    //enableSorting: false
+                },
+                {
+                    name: "事件ID",
+                    displayName: "事件ID",
+                    field: "eventId",
+                    //footerCellTemplate: "--"
+                },
+                {
+                    name: "页面URL",
+                    displayName: "页面URL",
+                    field: "loc",
+                    //footerCellTemplate: "--"
                 },
                 {
                     name: "浏览量(PV)",
@@ -106,7 +118,7 @@ define(["./module"], function (ctrs) {
                 }
             ];
             $rootScope.tableSwitch = {
-                latitude: {name: "事件名称", displayName: "事件名称", field: "campaignName"},
+                latitude: {name: "事件名称", displayName: "事件名称", field: "eventName"},
                 tableFilter: null,
                 dimen: false,
                 number: 6,
@@ -303,14 +315,14 @@ define(["./module"], function (ctrs) {
                 $rootScope.start = time[0];
                 $rootScope.end = time[1];
                 //时间段选择执行数据查询
-                $scope.refreshData(false);
+                $rootScope.refreshData(false);
                 init_transformData();
             };
             $rootScope.datepickerClickTow = function (start, end, label) {
                 var time = chartUtils.getTimeOffset(start, end);
                 $scope.start = time[0];
                 $scope.end = time[1];
-                $scope.refreshData(true);
+                $rootScope.refreshData(true);
                 init_transformData();
             };
             function GetDateStr(AddDayCount) {
@@ -373,115 +385,52 @@ define(["./module"], function (ctrs) {
                 });
             };
 
-            $scope.refreshData = function (isContrastDataByTime) {//isContrastDataByTime 是否按时间对比
-                var start = 0;
-                var end = 0;
-                if (isContrastDataByTime) {
-                    start = $scope.start;
-                    end = $scope.end;
-                    $scope.DateNumbertwo = false;
-                    $scope.DateLoading = false;
-                    $scope.charts[0].config.legendDefaultChecked = [0];
-                    $scope.charts[0].config.legendAllowCheckCount = 1;
-                    $scope.dataTable(isContrastDataByTime, "day", ["pv"], true);
-                } else {
-                    start = $rootScope.start;
-                    end = $rootScope.end;
-                    $scope.charts[0].config.legendDefaultChecked = [0, 1];
-                    $scope.charts[0].config.legendAllowCheckCount = 2;
-                    $scope.dataTable(isContrastDataByTime, "day", ["pv", "uv"], false);
-                }
+            $rootScope.refreshData = function (isContrastDataByTime) {//isContrastDataByTime 是否按时间对比
                 $scope.isCompared = isContrastDataByTime;
-                $http.get("/api/transform/transformAnalysis?start=" + start + "&end=" + end + "&analysisAction=event&type=" + $rootScope.userType + "&searchType=initAll&queryOptions=" + $scope.es_checkArray).success(function (data) {
-
-                    if (data != null || data != "") {
-                        var hasEvent = false;
-                        //$scope.es_checkedArray = ["pv", "uv", "ip"]
-                        for (var i = 0; i < $scope.es_checkedArray.length; i++) {
-                            if ($scope.es_checkedArray[i] == "crate" || $scope.es_checkedArray[i] == "conversions" || $scope.es_checkedArray[i] == "clickTatol") {
-                                hasEvent = true;
-                                break;
-                            }
+                $http({
+                    method: 'GET',
+                    url: "/config/eventchnage_list?type=search&query=" + JSON.stringify({
+                            uid: $cookieStore.get("uid"),
+                            root_url: $rootScope.siteId
                         }
-                        //是否需要查询 包含事件的信息
-                        if (hasEvent) {
-                            $http({
-                                method: "GET",
-                                url: "/api/transform/getConvEvent?" +
-                                "&start=" + start +
-                                "&end=" + end +
-                                "&analysisAction=" + "event" +
-                                "&type=" + $rootScope.userType +
-                                "&showType=" + "tatol"
-                            }).success(function (all_urls_data) {
-                                for (var i = 0; i < $scope.dateShowArray.length; i++) {
-                                    for (var key in data) {
-                                        if ($scope.dateShowArray[i].label == key) {
-                                            if ($scope.dateShowArray[i].label == "crate") {
-                                                if (isContrastDataByTime) {
-                                                    if (Number(data["pv"]) != 0) {
-                                                        $scope.dateShowArray[i].cValue = ( Number(all_urls_data[0].convCount / Number(data["pv"])) * 100).toFixed(2) + "%";
-                                                    } else {
-                                                        $scope.dateShowArray[i].cValue = "0%";
-                                                    }
-                                                } else {
-                                                    if (Number(data["crate"]) != 0) {
-                                                        $scope.dateShowArray[i].value = (Number(all_urls_data[0].convCount / Number(data["pv"])) * 100).toFixed(2) + "%";
-                                                    } else {
-                                                        $scope.dateShowArray[i].value = "0%";
-                                                    }
-                                                }
-                                            } else if ($scope.dateShowArray[i].label == "transformCost" && Number(data[key]) != 0) {
-                                                var add_i = i;
-                                                var semRequest = "";
-                                                semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + start + "&endOffset=" + end + "&q=cost");
-                                                $q.all([semRequest]).then(function (sem_data) {
-                                                    var cost = 0;
-                                                    for (var k = 0; k < sem_data.length; k++) {
-                                                        for (var c = 0; c < sem_data[k].data.length; c++) {
-                                                            cost += Number(sem_data[k].data[c].cost);
-                                                        }
-                                                    }
-                                                    if (isContrastDataByTime) {
-                                                        $scope.dateShowArray[add_i].cValue = (cost / Number(data[key])).toFixed(2).toString() + "元";
-                                                    } else {
-                                                        $scope.dateShowArray[add_i].value = (cost / Number(data[key])).toFixed(2).toString() + "元";
-                                                    }
-                                                });
-                                            } else if ($scope.dateShowArray[i].label == "clickTotal") {
-                                                if (isContrastDataByTime) {
-                                                    $scope.dateShowArray[i].cValue = Number(all_urls_data[i].eventCount);
-                                                } else {
-                                                    $scope.dateShowArray[i].value = Number(all_urls_data[0].eventCount);
-                                                }
-                                            }
-                                            else if ($scope.dateShowArray[i].label == "conversions") {
-                                                if (isContrastDataByTime) {
-                                                    $scope.dateShowArray[i].cValue = Number(all_urls_data[i].convCount);
-                                                } else {
-                                                    $scope.dateShowArray[i].value = Number(all_urls_data[0].convCount);
-                                                }
-                                            }
-                                            else {
-                                                if (isContrastDataByTime) {
-                                                    $scope.dateShowArray[i].cValue = data[key];
-                                                } else {
-                                                    $scope.dateShowArray[i].value = data[key];
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            });
+                    )
+                }).success(function (events, status) {
+                    var eventPages = [], hash = {}, eventParams = [], eventInfos = {};
+                    events.forEach(function (elem) {
+                        if (!hash[elem.event_page]) {
+                            eventPages.push(elem.event_page);
+                            hash[elem.event_page] = true;
                         }
-                        else {
-                            for (var i = 0; i < $scope.dateShowArray.length; i++) {
-                                for (var key in data) {
-                                    if ($scope.dateShowArray[i].label == key) {
-                                        if ($scope.dateShowArray[i].label == "transformCost" && Number(data[key]) != 0) {
+                        eventParams.push({
+                            event_page: elem.event_page,
+                            event_id: elem.event_id,
+                            update_time: elem.update_time,
+                            event_target: elem.event_target,
+                        })
+                    })
+                    var purl = "/api/transform/getPagePVs?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&queryOptions=" + $scope.es_checkArray + "&events=" + JSON.stringify(eventParams) + "&showType=day"
+                    $http.get(purl).success(function (pvs) {
+                        if (pvs != null || pvs != "") {//PV 信息若不存在 则事件信息认为一定不存在
+                            var esurl = "/api/transform/getConvEvents?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&eventPages=" + JSON.stringify(eventPages) + "&showType=day"
+                            $http.get(esurl).success(function (eventInfos) {
+                                var results = [];
+                                events.forEach(function (event, index) {
+                                    var data = pvs[index]
+                                    data["eventName"] = event.event_name
+                                    data["eventId"] = event.event_id
+                                    data["loc"] = event.event_page
+                                    for (var i = 0; i < $scope.es_checkArray.length; i++) {
+                                        //console.log("显示指标："+$scope.es_checkArray[i])
+                                        if ($scope.es_checkArray[i] == "crate") {
+                                            if (eventInfos[event.event_page + "_" + event.event_id] != undefined && Number(data["crate"]) != 0 && Number(data["pv"]) != 0 && event.event_target) {
+                                                data["crate"] = (Number(eventInfos[event.event_page + "_" + event.event_id].eventCount / Number(data["pv"])) * 100).toFixed(2) + "%";
+                                            } else {
+                                                data["crate"] = "0%";
+                                            }
+                                        } else if ($scope.es_checkArray[i] == "transformCost") {
                                             var add_i = i;
                                             var semRequest = "";
-                                            semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + start + "&endOffset=" + end + "&q=cost");
+                                            semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end + "&q=cost");
                                             $q.all([semRequest]).then(function (sem_data) {
                                                 var cost = 0;
                                                 for (var k = 0; k < sem_data.length; k++) {
@@ -489,41 +438,69 @@ define(["./module"], function (ctrs) {
                                                         cost += Number(sem_data[k].data[c].cost);
                                                     }
                                                 }
-                                                if (isContrastDataByTime) {
-                                                    $scope.dateShowArray[add_i].cValue = (cost / Number(data[key])).toFixed(2).toString() + "元";
-
-                                                } else {
-                                                    $scope.dateShowArray[add_i].value = (cost / Number(data[key])).toFixed(2).toString() + "元";
-                                                }
+                                                data["transformCost"] = (cost / Number(data["transformCost"])).toFixed(2).toString() + "元";
                                             });
-                                        } else if ($scope.dateShowArray[i].label == "transformCost" && Number(data[key]) == 0) {
-                                            if (isContrastDataByTime) {
-                                                $scope.dateShowArray[i].cValue = 0;
-
+                                        } else if ($scope.es_checkArray[i] == "clickTotal") {
+                                            if (eventInfos[event.event_page + "_" + event.event_id] != undefined) {
+                                                data["clickTotal"] = eventInfos[event.event_page + "_" + event.event_id].eventCount;
                                             } else {
-                                                $scope.dateShowArray[i].value = 0;
+                                                data["clickTotal"] = 0
                                             }
-                                        } else {
-                                            if (isContrastDataByTime) {
-                                                $scope.dateShowArray[i].cValue = data[key];
 
+                                        }
+                                        else if ($scope.es_checkArray[i] == "conversions") {
+                                            if (eventInfos[event.event_page + "_" + event.event_id] != undefined && event.event_target) {
+                                                data["conversions"] = eventInfos[event.event_page + "_" + event.event_id].eventCount;
                                             } else {
-                                                $scope.dateShowArray[i].value = data[key];
+                                                data["conversions"] = 0;
                                             }
                                         }
                                     }
-                                }
-                            }
-                        }
+                                    results.push(data)
+                                })
+                                $rootScope.gridData = results;
+                                $rootScope.targetSearch(true)
 
-                        if (isContrastDataByTime) {
-                            $scope.DateNumbertwo = true;
+                            })
+                            var hashloc = {}, maxvalues = {}
+                            events.forEach(function (event, index) {
+                                $scope.dateShowArray.forEach(function (item) {
+                                    maxvalues[item.label] = maxvalues[item.label] == undefined ? pvs[index][item.label] : (maxvalues[item.label] > pvs[index][item.label] ? maxvalues[item.label] : pvs[index][item.label])
+                                    if (item.label == "crate") {
+                                    } else if (item.label == "transformCost") {
+                                    } else if (item.label == "clickTotal") {
+                                    } else if (item.label == "conversions") {
+                                    } else {
+                                        item.value = hashloc[event.event_page] == undefined ? (pvs[index][item.label] + item.value) : (maxvalues[item.label] < pvs[index][item.label] ? (item.value + pvs[index][item.label] - maxvalues[item.label]) : item.value)
+                                    }
+                                })
+                                if (!hashloc[event.event_page]) {
+                                    hashloc[event.event_page] = true;
+                                }
+                            })
+
+                            //刷新图表
+                            if (isContrastDataByTime) {
+                                $scope.DateNumbertwo = false;
+                                $scope.DateLoading = false;
+                                $scope.charts[0].config.legendDefaultChecked = [0];
+                                $scope.charts[0].config.legendAllowCheckCount = 1;
+                                $scope.dataTable(isContrastDataByTime, "day", ["pv"], true);
+                            } else {
+                                $scope.charts[0].config.legendDefaultChecked = [0, 1];
+                                $scope.charts[0].config.legendAllowCheckCount = 2;
+                                $scope.dataTable(isContrastDataByTime, "day", ["pv", "uv"], false);
+                            }
+                            if (isContrastDataByTime) {
+                                $scope.DateNumbertwo = true;
+                                $scope.DateLoading = true;
+                            }
+                            $scope.DateNumber = true;
                             $scope.DateLoading = true;
                         }
-                        $scope.DateNumber = true;
-                        $scope.DateLoading = true;
-                    }
-                });
+                    });
+                })
+
             };
             var aggs_time = function (start, end, contrast_start, contrast_end) {
                 var aggs_start = Number(start) > Number(contrast_start) ? Number(contrast_start) : Number(start);
@@ -676,7 +653,7 @@ define(["./module"], function (ctrs) {
                                     if (data[c].label == "crate") {
                                         var temporaryContrastData = [];
                                         for (var l = 0; l < data[c].quota.length; l++) {
-                                            temporaryContrastData.push(Number(all_urls_data[l].convCount) / +Number(data[c].quota[l]) );
+                                            temporaryContrastData.push(Number(all_urls_data[l].convCount) / +Number(data[c].quota[l]));
                                         }
                                         data[c].quota = temporaryContrastData;
                                     }
@@ -684,6 +661,8 @@ define(["./module"], function (ctrs) {
                                 for (var i = 0; i < data.length; i++) {
                                     data[i].label = chartUtils.convertChinese(data[i].label);
                                 }
+                                //console.log("datatable data ")
+                                //console.log(data)
                                 cf.renderChart(data, $scope.charts[0].config);
                                 Custom.initCheckInfo();
                             });
@@ -692,13 +671,13 @@ define(["./module"], function (ctrs) {
                             for (var i = 0; i < data.length; i++) {
                                 data[i].label = chartUtils.convertChinese(data[i].label);
                             }
+                            //console.log("datatable data ")
+                            //console.log(data)
                             cf.renderChart(data, $scope.charts[0].config);
                             Custom.initCheckInfo();
                         }
                     });
                 }
-
-
             };
             $scope.targetSearchSpreadTransform = function (isClicked) {
                 $scope.es_checkArray = ["pv", "uv", "vc", "ip", "nuv", "nuvRate", "conversions", "crate", "transformCost", "clickTotal", "visitNum"];
@@ -717,10 +696,9 @@ define(["./module"], function (ctrs) {
                         }
                     }
                 }
-                $rootScope.targetSearch(isClicked)
                 if (isClicked) {
                     $scope.setShowArray();
-                    $scope.refreshData(false);
+                    $rootScope.refreshData(false);
                     $scope.$broadcast("transformData_ui_grid", {
                         start: $rootScope.start,
                         end: $rootScope.end,
@@ -730,11 +708,8 @@ define(["./module"], function (ctrs) {
                         analysisAction: "event",
                         convert_url_all: $scope.convert_url_all
                     });
-                    console.log("自定义指标"+isClicked)
-
                 }
                 else {
-                    console.log("高级筛选"+isClicked)
                     //访客过滤数据获取
                     var inputArray = $(".chart_top2 .styled");
                     inputArray.each(function (i, o) {
@@ -798,11 +773,10 @@ define(["./module"], function (ctrs) {
                         convert_url_all: $scope.convert_url_all
                     });
                 }
-                $rootScope.targetSearch(isClicked)
+                //$rootScope.targetSearch(isClicked)
             };
             init_transformData();
-            $scope.refreshData(false);
+            $rootScope.refreshData(false);
         }
-
     );
 });

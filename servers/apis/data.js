@@ -698,7 +698,7 @@ api.get("/heaturl", function (req, res) {
     var indexes = date.createIndexes(_startTime, _endTime, "access-");
     heaturl_request.searchHeaderData(req.es, indexes, _type, _rf, function (result) {
 
-        console.log(result);
+        //console.log(result);
         datautils.send(res, result);
     });
 
@@ -885,13 +885,48 @@ api.get("/transform/transformAnalysis", function (req, res) {
  */
 api.get("/transform/getPagePVs", function (req, res) {
     var query = url.parse(req.url, true).query;
+    //组合Index
     var indexString = [];
     if (query.start.substring(1, query.start.length).match("-") != null && end.substring(1, query.start.length).match("-") != null) {
         indexString = date.createIndexsByTime(query.start, query.end, "access-");
     } else {
         indexString = date.createIndexes(query.start, query.end, "access-");
     }
-    transform.searchPagePVs(req.es, indexString, query.type,query.eventPages, function (result) {
+    //计算开始时间
+    var timeArea = date.getConvertTimeByNumber(query.start, query.end)
+    //计算计算时间
+    transform.searchPagePVs(req.es, indexString, timeArea[0],timeArea[1],query.type,JSON.parse(query.events),query.queryOptions,function (result) {
+        datautils.send(res, result);
+    });
+});
+api.get("/transform/getDayPagePVs", function (req, res) {
+    var query = url.parse(req.url, true).query;
+    //组合Index
+    var indexString = [];
+    if (query.start.substring(1, query.start.length).match("-") != null && end.substring(1, query.start.length).match("-") != null) {
+        indexString = date.createIndexsByTime(query.start, query.end, "access-");
+    } else {
+        indexString = date.createIndexes(query.start, query.end, "access-");
+    }
+    //计算开始时间
+    var timeArea = date.getConvertTimeByNumber(query.start, query.end)
+    //计算计算时间
+    //transform.searchPagePVs(req.es, indexString, timeArea[0],timeArea[1],query.type,JSON.parse(query.events),query.queryOptions,function (result) {
+    //    datautils.send(res, result);
+    //});
+    transform.searchByShowTypeAndQueryOption(req.es, indexString, query.type, query.showType, query.queryOptions, function (result) {
+        datautils.send(res, result);
+    });
+});
+api.get("/transform/getConvEvents", function (req, res) {
+    var query = url.parse(req.url, true).query;
+    var indexString = [];
+    if (query.start.substring(1, query.start.length).match("-") != null && end.substring(1, query.start.length).match("-") != null) {
+        indexString = date.createIndexsByTime(query.start, query.end, "access-");
+    } else {
+        indexString = date.createIndexes(query.start, query.end, "access-");
+    }
+    transform.searchConvEvents(req.es,  indexString, query.type,JSON.parse(query.eventPages), query.showType, function (result) {
         datautils.send(res, result);
     });
 });
@@ -1069,7 +1104,7 @@ api.get('/test', function (req, res) {
         if (data.length) {
 
             var result = data_convert.convertData(data, rule_index, dimension)
-            console.log(result);
+            //console.log(result);
             //csvApi.json2csv(result, function (err, csv) {
             //    var buffer = new Buffer(csv);
             //    var fileSuffix = new Date().getTime();
@@ -1079,7 +1114,7 @@ api.get('/test', function (req, res) {
             //});
             datautils.send(res, {status: 'success', info: 'Message sent: '});
         } else {
-            console.log("No data result");
+            //console.log("No data result");
         }
     });
 
