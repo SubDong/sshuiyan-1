@@ -8,7 +8,7 @@
             <div class="page_container">
                 <div class="target_add fl">
                     <ul class="target_add_content fl ">
-                        <li><input type="text" maxlength="128" class="input_name form-control" placeholder="目标名称"
+                        <li><input type="text" maxlength="20" class="input_name form-control" placeholder="目标名称"
                                    data-ng-model="target_name"
                                    onfocus="this.setAttribute('placeholder','')"
                                    onblur="this.setAttribute('placeholder','目标名称')"></li>
@@ -73,14 +73,14 @@
                 <table>
                     <tr>
                         <td>预期每次转化收益</td>
-                        <td><input type="text" maxlength="128" class="input_name form-control"
+                        <td><input type="text" maxlength="20" class="input_name form-control" onkeyup="this.value=this.value.replace(/\D/g,'')"  onafterpaste="this.value=this.value.replace(/\D/g,'')"
                                    data-ng-model="expected_yield"></td>
                         <td>元</td>
                         <td>（精确到两位小数）</td>
                     </tr>
                     <tr>
                         <td>预期转化率</td>
-                        <td><input type="text" maxlength="128" class="input_name form-control" data-ng-model="pecent_yield">
+                        <td><input type="text" maxlength="3" onkeyup="this.value=this.value.replace(/\D/g,'')"  onafterpaste="this.value=this.value.replace(/\D/g,'')" class="input_name form-control" data-ng-model="pecent_yield">
                         </td>
                         <td>%</td>
 
@@ -95,7 +95,7 @@
 
             <div class="benefit_content">
                 <div data-ng-repeat="path in paths">
-                    <input class="input_name" maxlength="128" type="text" placeholder="路径名称" data-ng-model="path.path_name"
+                    <input class="input_name" maxlength="20" type="text" placeholder="路径名称" data-ng-model="path.path_name"
                            class="form-control"
                            onfocus="this.setAttribute('placeholder','')"
                            onblur="this.setAttribute('placeholder','路径名称')">
@@ -106,7 +106,7 @@
                     <div data-ng-repeat="step in path.steps">
                         <ul class="path_type_content fl">
                             <li>步骤{{$index+1}}</li>
-                            <li><input type="text" maxlength="128" class="input_name input_name_te" placeholder="步骤名称"
+                            <li><input type="text" maxlength="20" class="input_name input_name_te" placeholder="步骤名称"
                                        data-ng-model="step.step_name"
                                        onfocus="this.setAttribute('placeholder','')"
                                        onblur="this.setAttribute('placeholder','步骤名称')"></li>
@@ -151,7 +151,7 @@
                               data-ng-click="chooseConvType('place_order')">下单</label>
                 <label><input type="radio" class="styled" name="type" ng-checked="radio_conv.other"
                               data-ng-click="chooseConvType('other')">其他</label>&nbsp;&nbsp;&nbsp;&nbsp;
-                <input id="convTypeText" maxlength="128" readOnly=false type="text" class="input_text " data-ng-model="t_conv_text">
+                <input id="convTypeText" maxlength="7" readOnly=false type="text" class="input_text " data-ng-model="t_conv_text">
             </div>
         </div>
     </div>
