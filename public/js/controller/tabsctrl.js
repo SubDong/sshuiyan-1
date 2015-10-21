@@ -384,7 +384,10 @@ define(["app"], function (app) {
                         griApiInfo(gridApi);
                     }
                 }
-
+            }
+            if($scope.changeListHide == true){
+                $scope.gridOptions.enablePaginationControls = false;
+                $scope.gridOptions.paginationPageSize = 50;
             }
             //$rootScope.$broadcast("ssh_reload_datashow");
         }
@@ -1541,6 +1544,9 @@ define(["app"], function (app) {
                 } else if (number == 2) {
                     return a[2];
                 } else if (number == 3) {
+                    if (a[2] == 0) {
+                        return "--";
+                    }
                     return a[3];
                 }
             }
@@ -1754,11 +1760,11 @@ define(["app"], function (app) {
                 } else {
                     if ((option[0].entity[a.col.field] + "").indexOf("%") != -1 || (option[0].entity[a.col.field] + "").indexOf("(-)") != -1) {
 //                        returnData[0] = (returnData[0] / option.length).toFixed(2) + "%";
-                        var contrastPv = 0;
-                        for (var c = 0; c < option.length; c++) {
-                            contrastPv += option[c].entity["contrastPv"];
-                        }
                         if (window.location.href.split("/")[window.location.href.split("/").length - 1] == "changelist") {
+                            var contrastPv = 0;
+                            for (var c = 0; c < option.length; c++) {
+                                contrastPv += option[c].entity["contrastPv"];
+                            }
                             if (contrastPv == 0) {
                                 if (returnData[0] > 0) {
                                     returnData[0] = "+" + returnData[0] + "(-)";
@@ -1814,7 +1820,7 @@ define(["app"], function (app) {
                                 document.getElementById("summary").style.color = "#ea1414";
                             } else if (returnData[0].toString().substring(0, 1) == "-") {
                                 document.getElementById("summary").style.color = "#07cd2c";
-                            } else if (returnData[0] == 0) {
+                            } else if(returnData[0]=="0%"){
                                 document.getElementById("summary").style.color = "#01aeef";
                             } else {
                                 document.getElementById("summary").style.color = "#ea1414";
@@ -1934,13 +1940,38 @@ define(["app"], function (app) {
                     _tempData.pop();
                 }
 
+                //_tempData.push({
+                //    pathName: "123",
+                //    pv: 123,
+                //    contrastPv: 23,
+                //    percentage: "+100(+434.78%)"
+                //})
+                //
+                //_tempData.push({
+                //    pathName: "1weims",
+                //    pv: 12,
+                //    contrastPv: 2,
+                //    percentage: "+10(+500%)"
+                //})
+                //
+                //_tempData.push({
+                //    pathName: "1weimsdfasdfs",
+                //    pv: 42,
+                //    contrastPv: 67,
+                //    percentage: "-25(-37.31%)"
+                //})
+
                 $scope.gridOptions.data = _tempData;
                 $scope.gridOptions.enableSorting = true;
                 $scope.gridOptions.columnDefs[4].cellClass = function (grid, row, col, rowRenderIndex, colRenderIndex) {
-                    if (grid.getCellValue(row, col).toString().substring(0, 1) == "+") {
-                        return "riseCell";
-                    } else if (grid.getCellValue(row, col).toString().substring(0, 1) == "-") {
-                        return "descendCell";
+                    if (grid.getCellValue(row, col)) {
+                        if (grid.getCellValue(row, col).toString().substring(0, 1) == "+") {
+                            return "riseCell";
+                        } else if (grid.getCellValue(row, col).toString().substring(0, 1) == "-") {
+                            return "descendCell";
+                        } else {
+                            return "flatCell";
+                        }
                     } else {
                         return "flatCell";
                     }

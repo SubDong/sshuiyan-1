@@ -5,6 +5,8 @@ define(["./module"], function (ctrs) {
 
     'use strict';
     ctrs.controller('changelistctr', function ($scope, $rootScope, $q, $http, $cookieStore, requestService, messageService, areaService, uiGridConstants, popupService) {
+//            不显示页面显示条数
+            $scope.changeListHide = true;
             //初始化时间
             $rootScope.tableTimeStart = 0;
             $rootScope.tableTimeEnd = 0;
@@ -36,31 +38,38 @@ define(["./module"], function (ctrs) {
                     cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
                     maxWidth: 10,
                     enableSorting: false
-                },
-                {
+                }, {
                     name: "来源域名",
                     displayName: "来源域名",
                     field: "pathName",
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
                     enableSorting: false
-                },
-                {
+                }, {
                     name: "浏览量(PV)",
                     displayName: "",
                     field: "pv",
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>",
+                    enableSorting: true,
                     sort: {
                         direction: uiGridConstants.DESC,
                         priority: 1
+                    },
+                    sortingAlgorithm: function (a, b) {
+                        console.log("123");
+                        if (parseInt(a) === parseInt(b)) {
+                            return 0;
+                        }
+                        if (parseInt(a) < parseInt(b)) {
+                            return -1;
+                        }
+                        return 1;
                     }
-                },
-                {
+                }, {
                     name: "访问次数",
                     displayName: "",
                     field: "contrastPv",
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
-                },
-                {
+                }, {
                     name: " ",
                     displayName: "变化情况",
                     headerCellTemplate: '<div class="change_list">' +
@@ -73,7 +82,8 @@ define(["./module"], function (ctrs) {
                     footerCellTemplate: "<div class='ui-grid-cell-contents' id='summary'>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),5)}}</div>",
                     enableSorting: false
                 }
-            ];
+            ]
+            ;
             $scope.filter_data = function (type) {
                 $rootScope.changeListFilterType = type;
                 $scope.changeTime();
@@ -330,7 +340,8 @@ define(["./module"], function (ctrs) {
         }
     );
 
-});
+})
+;
 
 function filterChangeListData(e, type) {
     var appElement = document.querySelector('[ng-controller=changelistctr]');
