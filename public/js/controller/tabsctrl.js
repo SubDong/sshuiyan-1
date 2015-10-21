@@ -1949,11 +1949,11 @@ define(["app"], function (app) {
                     }
                 }
 
-                if (_tempData.length > 0) {
-                    for (var i = _tempData.length; i < 222; i++) {
-                        _tempData[i] = _tempData[0];
-                    }
-                }
+                //if (_tempData.length > 0) {
+                //    for (var i = _tempData.length; i < 222; i++) {
+                //        _tempData[i] = _tempData[0];
+                //    }
+                //}
 
                 while (_tempData.length > 100) {
                     _tempData.pop();
