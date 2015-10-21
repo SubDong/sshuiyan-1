@@ -44,15 +44,33 @@ var changeList_request = {
                                 },
                                 "aggs": {
                                     "pv_count": {
-                                        "value_count": {
-                                            "field": "dm"
+                                        "filter": {
+                                            "term": {
+                                                "entrance": "1"
+                                            }
+                                        },
+                                        "aggs": {
+                                            "pv_count_aggs": {
+                                                "value_count": {
+                                                    "field": "tt"
+                                                }
+                                            }
                                         }
                                     }
                                 }
                             },
                             "pv": {
-                                "value_count": {
-                                    "field": "dm"
+                                "filter": {
+                                    "term": {
+                                        "entrance": "1"
+                                    }
+                                },
+                                "aggs": {
+                                    "pv_aggs": {
+                                        "value_count": {
+                                            "field": "tt"
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -60,40 +78,6 @@ var changeList_request = {
                 }
             }
         };
-        //async.map(requests, function (item, callback) {
-        //    es.search(item, function (error, response) {
-        //        var result = response.aggregations.p.buckets;
-        //        var data = {};
-        //        var all_pv_data = [];
-        //        var all_pv_contrastData = [];
-        //        for(var i = 0;i<result.data.buckets.length;i++){
-        //            all_pv_data.push({
-        //                pathName:result.data.buckets[i].key,
-        //                pv:result.data.buckets[i].pv.value
-        //            });
-        //        }
-        //        data={
-        //            sum_pv:result.pv.value,
-        //            all_pv:all_pv_data
-        //        };
-        //        callback(null, data);
-        //    });
-        //}, function (error, results) {
-        //    var request = {
-        //        index:indexs[1],
-        //        type:null,
-        //        body:{
-        //            "size":0,
-        //            "aggs":{
-        //                "data":{
-        //                    "terms":{
-        //                        "field":results.all_pv[0].pathName
-        //                    }
-        //                }
-        //            }
-        //        }
-        //    }
-        //});
         es.search(request, function (error, response) {
             var data = {};
             var all_pv_data = [];
@@ -104,13 +88,13 @@ var changeList_request = {
                 for (var i = 0; i < result.data.all_pv.buckets.length; i++) {
                     all_pv_data.push({
                         pathName: result.data.all_pv.buckets[i].key,
-                        pv: result.data.all_pv.buckets[i].pv_count.value
+                        pv: result.data.all_pv.buckets[i].pv_count.pv_count_aggs.value
                     });
                 }
                 for (var i = 0; i < result.contrastData.all_pv.buckets.length; i++) {
                     all_pv_contrastData.push({
                         pathName: result.contrastData.all_pv.buckets[i].key,
-                        pv: result.contrastData.all_pv.buckets[i].pv_count.value
+                        pv: result.contrastData.all_pv.buckets[i].pv_count.pv_count_aggs.value
                     });
                 }
                 if (result.data.all_pv.buckets.length >= result.contrastData.all_pv.buckets.length) {
@@ -118,8 +102,8 @@ var changeList_request = {
                         var flag = false;
                         for (var k = 0; k < result.contrastData.all_pv.buckets.length; k++) {
                             if (result.data.all_pv.buckets[i].key == result.contrastData.all_pv.buckets[k].key) {
-                                var _pv = result.data.all_pv.buckets[i].pv_count.value;
-                                var _contrastPv = result.contrastData.all_pv.buckets[k].pv_count.value;
+                                var _pv = result.data.all_pv.buckets[i].pv_count.pv_count_aggs.value;
+                                var _contrastPv = result.contrastData.all_pv.buckets[k].pv_count.pv_count_aggs.value;
                                 var _percentage = ((_pv - _contrastPv) / _contrastPv) * 100;
                                 if (_percentage > 0) {
                                     _percentage = "+" + (_pv - _contrastPv) + "(+" + _percentage.toFixed(2) + "%)";
@@ -131,7 +115,7 @@ var changeList_request = {
                                     pv: _pv,
                                     contrastPv: _contrastPv,
                                     percentage: _percentage
-                                    //percentage: (result.data.all_pv.buckets[i].pv_count.value > result.contrastData.all_pv.buckets[k].pv_count.value ? "+" + (result.data.all_pv.buckets[i].pv_count.value - result.contrastData.all_pv.buckets[k].pv_count.value) : (result.data.all_pv.buckets[i].pv_count.value - result.contrastData.all_pv.buckets[k].pv_count.value)) + "(" + (result.data.all_pv.buckets[i].pv_count.value > result.contrastData.all_pv.buckets[k].pv_count.value ? "+" + ((result.data.all_pv.buckets[i].pv_count.value - result.contrastData.all_pv.buckets[k].pv_count.value) / result.contrastData.all_pv.buckets[k].pv_count.value).toFixed(2) + "%)" : ((result.data.all_pv.buckets[i].pv_count.value - result.contrastData.all_pv.buckets[k].pv_count.value) / result.contrastData.all_pv.buckets[k].pv_count.value).toFixed(2) + "%)")
+                                    //percentage: (result.data.all_pv.buckets[i].pv_count.pv_count_aggs.value > result.contrastData.all_pv.buckets[k].pv_count.value ? "+" + (result.data.all_pv.buckets[i].pv_count.pv_count_aggs.value - result.contrastData.all_pv.buckets[k].pv_count.value) : (result.data.all_pv.buckets[i].pv_count.pv_count_aggs.value - result.contrastData.all_pv.buckets[k].pv_count.value)) + "(" + (result.data.all_pv.buckets[i].pv_count.pv_count_aggs.value > result.contrastData.all_pv.buckets[k].pv_count.value ? "+" + ((result.data.all_pv.buckets[i].pv_count.pv_count_aggs.value - result.contrastData.all_pv.buckets[k].pv_count.value) / result.contrastData.all_pv.buckets[k].pv_count.value).toFixed(2) + "%)" : ((result.data.all_pv.buckets[i].pv_count.pv_count_aggs.value - result.contrastData.all_pv.buckets[k].pv_count.value) / result.contrastData.all_pv.buckets[k].pv_count.value).toFixed(2) + "%)")
                                 });
                                 flag = true;
                             }
@@ -139,9 +123,9 @@ var changeList_request = {
                         if (!flag) {
                             pv_data.push({
                                 pathName: result.data.all_pv.buckets[i].key == "-" ? "直接输入网址或标签" : result.data.all_pv.buckets[i].key,
-                                pv: result.data.all_pv.buckets[i].pv_count.value,
+                                pv: result.data.all_pv.buckets[i].pv_count.pv_count_aggs.value,
                                 contrastPv: 0,
-                                percentage: "+" + result.data.all_pv.buckets[i].pv_count.value + "(-)"
+                                percentage: "+" + result.data.all_pv.buckets[i].pv_count.pv_count_aggs.value + "(-)"
                             });
                         }
                     }
@@ -150,8 +134,8 @@ var changeList_request = {
                         var flag = false;
                         for (var k = 0; k < result.data.all_pv.buckets.length; k++) {
                             if (result.data.all_pv.buckets[k].key == result.contrastData.all_pv.buckets[i].key) {
-                                var _pv = result.data.all_pv.buckets[k].pv_count.value;
-                                var _contrastPv = result.contrastData.all_pv.buckets[i].pv_count.value;
+                                var _pv = result.data.all_pv.buckets[k].pv_count.pv_count_aggs.value;
+                                var _contrastPv = result.contrastData.all_pv.buckets[i].pv_count.pv_count_aggs.value;
                                 var _percentage = ((_pv - _contrastPv) / _contrastPv) * 100;
                                 if (_percentage > 0) {
                                     _percentage = "+" + (_pv - _contrastPv) + "(+" + _percentage.toFixed(2) + "%)"
@@ -163,7 +147,7 @@ var changeList_request = {
                                     pv: _pv,
                                     contrastPv: _contrastPv,
                                     percentage: _percentage
-                                    //percentage: (result.data.all_pv.buckets[k].pv_count.value > result.contrastData.all_pv.buckets[i].pv_count.value ? "+" + (result.data.all_pv.buckets[k].pv_count.value - result.contrastData.all_pv.buckets[i].pv_count.value) : result.data.all_pv.buckets[k].pv_count.value - result.contrastData.all_pv.buckets[i].pv_count.value) + "(" + (result.data.all_pv.buckets[k].pv_count.value > result.contrastData.all_pv.buckets[i].pv_count.value ? "+" + ((result.data.all_pv.buckets[k].pv_count.value - result.contrastData.all_pv.buckets[i].pv_count.value) / result.contrastData.all_pv.buckets[i].pv_count.value).toFixed(2) + "%)" : ((result.data.all_pv.buckets[k].pv_count.value - result.contrastData.all_pv.buckets[i].pv_count.value) / result.contrastData.all_pv.buckets[i].pv_count.value).toFixed(2) + "%)")
+                                    //percentage: (result.data.all_pv.buckets[k].pv_count.value > result.contrastData.all_pv.buckets[i].pv_count.pv_count_aggs.value ? "+" + (result.data.all_pv.buckets[k].pv_count.value - result.contrastData.all_pv.buckets[i].pv_count.pv_count_aggs.value) : result.data.all_pv.buckets[k].pv_count.value - result.contrastData.all_pv.buckets[i].pv_count.pv_count_aggs.value) + "(" + (result.data.all_pv.buckets[k].pv_count.value > result.contrastData.all_pv.buckets[i].pv_count.pv_count_aggs.value ? "+" + ((result.data.all_pv.buckets[k].pv_count.value - result.contrastData.all_pv.buckets[i].pv_count.pv_count_aggs.value) / result.contrastData.all_pv.buckets[i].pv_count.pv_count_aggs.value).toFixed(2) + "%)" : ((result.data.all_pv.buckets[k].pv_count.value - result.contrastData.all_pv.buckets[i].pv_count.pv_count_aggs.value) / result.contrastData.all_pv.buckets[i].pv_count.pv_count_aggs.value).toFixed(2) + "%)")
                                 });
                                 flag = true;
                             }
@@ -172,8 +156,8 @@ var changeList_request = {
                             pv_data.push({
                                 pathName: result.contrastData.all_pv.buckets[i].key == "-" ? "直接输入网址或标签" : result.contrastData.all_pv.buckets[i].key,
                                 pv: 0,
-                                contrastPv: result.contrastData.all_pv.buckets[i].pv_count.value,
-                                percentage: (0 - result.contrastData.all_pv.buckets[i].pv_count.value) + "(" + (0 - result.contrastData.all_pv.buckets[i].pv_count.value * 100) / result.contrastData.all_pv.buckets[i].pv_count.value + "%)"
+                                contrastPv: result.contrastData.all_pv.buckets[i].pv_count.pv_count_aggs.value,
+                                percentage: (0 - result.contrastData.all_pv.buckets[i].pv_count.pv_count_aggs.value) + "(" + (0 - result.contrastData.all_pv.buckets[i].pv_count.pv_count_aggs.value * 100) / result.contrastData.all_pv.buckets[i].pv_count.pv_count_aggs.value + "%)"
                             });
                         }
                     }
@@ -212,8 +196,6 @@ var changeList_request = {
                 };
                 callbackFn(data);
             } else {
-                console.log("changeList_request");
-                console.log(callbackFn);
                 callbackFn(data);
             }
         });
