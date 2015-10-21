@@ -910,11 +910,8 @@ api.get("/transform/getDayPagePVs", function (req, res) {
     }
     //计算开始时间
     var timeArea = date.getConvertTimeByNumber(query.start, query.end)
-    //计算计算时间
-    //transform.searchPagePVs(req.es, indexString, timeArea[0],timeArea[1],query.type,JSON.parse(query.events),query.queryOptions,function (result) {
-    //    datautils.send(res, result);
-    //});
-    transform.searchByShowTypeAndQueryOption(req.es, indexString, query.type, query.showType, query.queryOptions, function (result) {
+    console.log(query)
+    transform.searchDayPagePVs(req.es, indexString, query.type, query.showType, query.queryOptions.split(","),JSON.parse(query.urls), function (result) {
         datautils.send(res, result);
     });
 });
@@ -954,7 +951,21 @@ api.get("/transform/getEventInfos", function (req, res) {
         datautils.send(res, result);
     });
 });
-
+api.get("/transform/getDayEvents", function (req, res) {
+    var query = url.parse(req.url, true).query;
+    //组合Index
+    var indexString = [];
+    if (query.start.substring(1, query.start.length).match("-") != null && end.substring(1, query.start.length).match("-") != null) {
+        indexString = date.createIndexsByTime(query.start, query.end, "access-");
+    } else {
+        indexString = date.createIndexes(query.start, query.end, "access-");
+    }
+    //计算开始时间
+    var timeArea = date.getConvertTimeByNumber(query.start, query.end)
+    transform.searchDayConvEvents(req.es, indexString, query.type, function (result) {
+        datautils.send(res, result);
+    });
+});
 
 api.get("/transform/pageTransformCtr", function (req, res) {
     var parameters = req.url.split("?")[1].split("&");

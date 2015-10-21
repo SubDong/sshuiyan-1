@@ -242,6 +242,13 @@ define(["app"], function (app) {
         $rootScope.indicators = function (item, entities, number, refresh) {
             $rootScope.gridArray.shift();
             $rootScope.gridArray.shift();
+            var footerTemp
+            if ($rootScope.tableSwitch.number == 6) {
+                $rootScope.gridArray.shift();
+                footerTemp = "<div class='ui-grid-cell-contents'>{{grid.appScope.getEventRootData(this,grid.getVisibleRows())}}</div>";
+            } else {
+                footerTemp = "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>";
+            }
             if (refresh == "refresh") {
                 $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude);
                 $scope.gridObjButton = {};
@@ -252,15 +259,23 @@ define(["app"], function (app) {
                 $rootScope.gridArray.unshift($scope.gridObjButton);
                 return
             }
-            $rootScope.tableSwitch.number != 0 ? $scope.gridArray.shift() : "";
+
+            $rootScope.tableSwitch.number != 0 && $rootScope.tableSwitch.number != 6 ? $scope.gridArray.shift() : "";
             $scope.gridObj = {};
             $scope.gridObjButton = {};
             var a = $rootScope.checkedArray.indexOf(item.name);
             if (a != -1) {
                 $rootScope.checkedArray.splice(a, 1);
                 $rootScope.gridArray.splice(a, 1);
-
-                if ($rootScope.tableSwitch.number != 0) {
+                if ($rootScope.tableSwitch.number == 6) {
+                    var tempButton = {};
+                    tempButton["name"] = "页面URL";
+                    tempButton["displayName"] = "页面URL";
+                    tempButton["field"] = "eventId";
+                    tempButton["footerCellTemplate"] = "<div class='ui-grid-cell-contents'>--</div>"
+                    $rootScope.gridArray.unshift(tempButton);
+                }
+                if ($rootScope.tableSwitch.number != 0 && $rootScope.tableSwitch.number != 6) {
                     $scope.gridObjButton["name"] = " ";
                     $scope.gridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
                     $rootScope.gridArray.unshift($scope.gridObjButton);
@@ -280,12 +295,19 @@ define(["app"], function (app) {
 
                     $scope.gridObj["name"] = item.consumption_name;
                     $scope.gridObj["displayName"] = item.consumption_name;
-                    $scope.gridObj["footerCellTemplate"] = "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                    $scope.gridObj["footerCellTemplate"] = footerTemp
                     $scope.gridObj["field"] = item.name;
 
                     $rootScope.gridArray.push($scope.gridObj);
-
-                    if ($rootScope.tableSwitch.number != 0) {
+                    if ($rootScope.tableSwitch.number == 6) {
+                        var tempButton = {};
+                        tempButton["name"] = "页面URL";
+                        tempButton["displayName"] = "页面URL";
+                        tempButton["field"] = "eventId";
+                        tempButton["footerCellTemplate"] = "<div class='ui-grid-cell-contents'>--</div>"
+                        $rootScope.gridArray.unshift(tempButton);
+                    }
+                    if ($rootScope.tableSwitch.number != 0 && $rootScope.tableSwitch.number != 6) {
                         $scope.gridObjButton["name"] = " ";
                         $scope.gridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
                         $rootScope.gridArray.unshift($scope.gridObjButton);
@@ -303,11 +325,18 @@ define(["app"], function (app) {
 
                     $scope.gridObj["name"] = item.consumption_name;
                     $scope.gridObj["displayName"] = item.consumption_name;
-                    $scope.gridObj["footerCellTemplate"] = "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>";
+                    $scope.gridObj["footerCellTemplate"] = footerTemp;
                     $scope.gridObj["field"] = item.name;
                     $rootScope.gridArray.push($scope.gridObj);
-
-                    if ($rootScope.tableSwitch.number != 0) {
+                    if ($rootScope.tableSwitch.number == 6) {
+                        var tempButton = {};
+                        tempButton["name"] = "页面URL";
+                        tempButton["displayName"] = "页面URL";
+                        tempButton["field"] = "eventId";
+                        tempButton["footerCellTemplate"] = "<div class='ui-grid-cell-contents'>--</div>"
+                        $rootScope.gridArray.unshift(tempButton);
+                    }
+                    if ($rootScope.tableSwitch.number != 0 && $rootScope.tableSwitch.number != 6) {
                         $scope.gridObjButton["name"] = " ";
                         $scope.gridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
                         $rootScope.gridArray.unshift($scope.gridObjButton);
@@ -984,13 +1013,33 @@ define(["app"], function (app) {
             $scope.isJudge = false;
             getHtmlTableData();
         };
-        $scope.searchUrlSeepd = function (a) {
-            //console.log(a);
-        }
-
-
-        $rootScope.targetSearch = function (isClicked) {
-
+        $scope.getEventRootData = function (a, options) {
+            //console.log("getEventRootData")
+            var hash = {}
+            var val = 0
+            if (a.col.field == "crate") {
+                options.forEach(function (option) {
+                    var tempCrate = option.entity[a.col.field].substring(0, option.entity[a.col.field].length - 2)
+                    val = val + Number(tempCrate)
+                })
+                val+="%"
+            } else if (a.col.field == "clickTotal") {
+                options.forEach(function (option) {
+                    val = val + Number(option.entity[a.col.field])
+                })
+            } else if (a.col.field == "conversions") {
+                options.forEach(function (option) {
+                    val = val + Number(option.entity[a.col.field])
+                })
+            } else {
+                options.forEach(function (option) {
+                    if (!hash[option.entity.loc]) {
+                        hash[option.entity.loc] = true;
+                        val = val + Number(option.entity[a.col.field])
+                    }
+                })
+            }
+            return val
         }
         //前端ui-grid通用查询方法
         $rootScope.targetSearch = function (isClicked) {
@@ -1018,18 +1067,35 @@ define(["app"], function (app) {
             }
             if ($rootScope.tableSwitch.isJudge == undefined) $scope.isJudge = true;
             if ($rootScope.tableSwitch.isJudge) $rootScope.tableSwitch.tableFilter = undefined;
-            $scope.gridOpArray.forEach(function (item, i) {
-                if (item["cellTemplate"] == undefined) {
-                    var a = $rootScope.tableSwitch.latitude.field;
-                    if (a != undefined && a == item["field"]) {
-                        item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 32px'>当页汇总</div>";
-                    } else {
-//                        item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 100px'>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),2)}}<br/>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),3)}}<br/>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),4)}}</div>";
-                        item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 32px'>" +
-                        "<ul><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),2)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),3)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),4)}}</li></ul></div>";
+            if ($rootScope.tableSwitch.number == 6) {
+                var a = $rootScope.tableSwitch.latitude.field;
+                $scope.gridOpArray.forEach(function (item, i) {
+                    if (item["cellTemplate"] == undefined) {
+                        if (a == item["field"]) {
+                            item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 32px'>当页汇总</div>";
+                        } else if (item["field"] == "eventId" || item["field"] == "loc") {
+                            item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 32px'>--</div>";
+                        } else {
+                            item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 32px'>" +
+                                "<ul><li>{{grid.appScope.getEventRootData(this,grid.getVisibleRows())}}</li></ul></div>";
+                        }
                     }
-                }
-            });
+                });
+            } else {
+                $scope.gridOpArray.forEach(function (item, i) {
+                    if (item["cellTemplate"] == undefined) {
+                        var a = $rootScope.tableSwitch.latitude.field;
+                        if (a != undefined && a == item["field"]) {
+                            item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 32px'>当页汇总</div>";
+                        } else {
+//                        item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 100px'>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),2)}}<br/>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),3)}}<br/>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),4)}}</div>";
+                            item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 32px'>" +
+                                "<ul><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),2)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),3)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),4)}}</li></ul></div>";
+                        }
+                    }
+                });
+            }
+
             if ($rootScope.tableSwitch.number == 5) {//推广URL速度
                 //var url = SEM_API_URL + "/sem/report/" + (area == "全部" ? $rootScope.tableSwitch.promotionSearch.SEMData : "region") + "?a=" + user + "&b=" + baiduAccount + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1" + (area == "全部" ? "" : "&rgna=" + area);
                 $http({
@@ -1256,7 +1322,6 @@ define(["app"], function (app) {
                     }
 
                 }).error(function (error) {
-                    //console.log(error)
                 });
             }
         };

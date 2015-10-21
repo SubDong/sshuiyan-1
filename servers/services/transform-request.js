@@ -1863,7 +1863,7 @@ var transform = {
                 });
             });
         },
-        searchDayPagePVs: function (es, indexs, type, showType, queryOptions,locs, callbackFn) {
+        searchDayPagePVs: function (es, indexs, type, showType, queryOptions, urls, callbackFn) {
             var _aggs = {};
             queryOptions.forEach(function (queryOption) {
                 for (var key in es_aggs[queryOption]) {
@@ -1881,7 +1881,11 @@ var transform = {
                             type: type,
                             "body": {
                                 "size": 0,
-                                query:createQueryByUrls(locs),
+                                query: {
+                                    bool: {
+                                        "should": createQueryByUrls(urls)
+                                    }
+                                },
                                 "aggs": _aggs
                             }
                         });
@@ -1892,12 +1896,300 @@ var transform = {
                 case "month":
                     break;
             }
+            async.map(requests, function (item, callback) {
+                es.search(item, function (error, result) {
+                    if (result != undefined && result.aggregations != undefined) {
+                        callback(null, result.aggregations);
+                    } else {
+                        callback(null, null);
+                    }
+                });
+            }, function (error, results) {
+                var data = [];
+                var quota_data = {};
+                var keyArr = [];
+                var quotaArry = [];
+                if (results[0] != null) {
+                    for (var i = 0; i < indexs.length; i++) {
+                        keyArr.push(indexs[i].substring(7, indexs[i].length));
+                    }
+                    queryOptions.forEach(function (queryOption) {
+                        quota_data = {};
+                        quotaArry = [];
+                        var i = 0;
+                        var isExit = false;
+                        switch (queryOption) {
+                            case "pv":
+                                for (i = 0; i < results.length; i++) {
+                                    for (var key in results[i]) {
+                                        if (key == queryOption) {
+                                            quotaArry.push(results[i].pv.value);
+                                        }
+                                    }
+
+                                }
+                                quota_data = {
+                                    label: "pv",
+                                    key: keyArr,
+                                    quota: quotaArry
+                                };
+                                break;
+                            case "uv":
+                                for (i = 0; i < results.length; i++) {
+                                    for (var key in results[i]) {
+                                        if (key == queryOption) {
+                                            quotaArry.push(results[i].uv.value);
+                                        }
+                                    }
+                                }
+                                quota_data = {
+                                    label: "uv",
+                                    key: keyArr,
+                                    quota: quotaArry
+                                };
+                                break;
+                            case "vc":
+                                for (i = 0; i < results.length; i++) {
+                                    for (var key in results[i]) {
+                                        if (key == queryOption) {
+                                            quotaArry.push(results[i].vc.value);
+                                        }
+                                    }
+                                }
+                                quota_data = {
+                                    label: "vc",
+                                    key: keyArr,
+                                    quota: quotaArry
+                                };
+                                break;
+
+                            case "ip":
+                                for (i = 0; i < results.length; i++) {
+                                    for (var key in results[i]) {
+                                        if (key == queryOption) {
+                                            quotaArry.push(results[i].ip.value);
+                                        }
+                                    }
+                                }
+                                quota_data = {
+                                    label: "ip",
+                                    key: keyArr,
+                                    quota: quotaArry
+                                };
+                                break;
+                            case "clickTotal":
+                                for (i = 0; i < results.length; i++) {
+                                    for (var key in results[i]) {
+                                        if (key == queryOption) {
+                                            quotaArry.push(results[i].clickTotal.value);
+                                        }
+                                    }
+                                }
+                                quota_data = {
+                                    label: "clickTotal",
+                                    key: keyArr,
+                                    quota: quotaArry
+                                };
+                                break;
+                            case "conversions":
+                                for (i = 0; i < results.length; i++) {
+                                    for (var key in results[i]) {
+                                        if (key == queryOption) {
+                                            quotaArry.push(results[i].conversions.value);
+                                        }
+                                    }
+                                }
+                                quota_data = {
+                                    label: "conversions",
+                                    key: keyArr,
+                                    quota: quotaArry
+                                };
+                                break;
+                            case "nuv":
+                                for (i = 0; i < results.length; i++) {
+                                    for (var key in results[i]) {
+                                        if (key == queryOption) {
+                                            quotaArry.push(results[i].nuv.value);
+                                        }
+                                    }
+                                }
+                                quota_data = {
+                                    label: "nuv",
+                                    key: keyArr,
+                                    quota: quotaArry
+                                };
+                                break;
+                            case "visitNum":
+                                for (i = 0; i < results.length; i++) {
+                                    for (var key in results[i]) {
+                                        if (key == queryOption) {
+                                            quotaArry.push(results[i].visitNum.value);
+                                        }
+                                    }
+                                }
+                                quota_data = {
+                                    label: "visitNum",
+                                    key: keyArr,
+                                    quota: quotaArry
+                                };
+                                break;
+                            case "nuvRate":
+                                for (i = 0; i < results.length; i++) {
+                                    for (var key in results[i]) {
+                                        if (key == queryOption) {
+                                            if (results[i].new_visitor_aggs.value == "0") {
+                                                quotaArry.push(0);
+                                            } else {
+                                                quotaArry.push((results[i].uv_aggs.value / results[i].new_visitor_aggs.value).toFixed(2) + "%");
+                                            }
+                                        }
+                                    }
+                                }
+                                quota_data = {
+                                    label: "nuvRate",
+                                    key: keyArr,
+                                    quota: quotaArry
+                                };
+                                break;
+                            case "crate":
+                                for (i = 0; i < results.length; i++) {
+                                    for (var key in results[i]) {
+                                        if (key == queryOption) {
+                                            quotaArry.push(results[i].crate.value);
+                                        }
+                                    }
+                                }
+                                quota_data = {
+                                    label: "crate",
+                                    key: keyArr,
+                                    quota: quotaArry
+                                };
+                                break;
+                            case "transformCost":
+                                for (i = 0; i < results.length; i++) {
+                                    for (var key in results[i]) {
+                                        if (key == queryOption) {
+                                            quotaArry.push(results[i].transformCost.value);
+                                        }
+                                    }
+                                }
+                                quota_data = {
+                                    label: "transformCost",
+                                    key: keyArr,
+                                    quota: quotaArry
+                                };
+                                break;
+                            case "orderNum":
+                                for (i = 0; i < results.length; i++) {
+                                    for (var key in results[i]) {
+                                        if (key == queryOption) {
+                                            quotaArry.push(results[i].orderNum.value);
+                                        }
+                                    }
+                                }
+                                quota_data = {
+                                    label: "orderNum",
+                                    key: keyArr,
+                                    quota: quotaArry
+                                };
+                                break;
+                            case "benefit":
+                                for (i = 0; i < results.length; i++) {
+                                    for (var key in results[i]) {
+                                        if (key == queryOption) {
+                                            if (results[i].benefit.buckets.length == 0) {
+                                                quotaArry.push("0");//不存在记录
+                                            } else {
+                                                for (i = 0; i < results[i].benefit.buckets.length; i++) {
+                                                    if (results[i].benefit.buckets[i] != "") {
+                                                        quotaArry.push(Number(results[i].benefit.buckets[0].key) * Number(results[i].convertTime.value));
+                                                        isExit = true;
+                                                    }
+                                                }
+                                                if (!isExit) {
+                                                    quotaArry.push("-");//未定义预期收益
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                quota_data = {
+                                    label: "benefit",
+                                    key: keyArr,
+                                    quota: quotaArry
+                                };
+                                break;
+                            case "profit":
+                                for (i = 0; i < results.length; i++) {
+                                    for (var key in results[i]) {
+                                        if (key == queryOption) {
+                                            if (key == queryOption) {
+                                                if (results[i].profit_benefit.buckets.length == 0) {
+                                                    quotaArry.push("0");//不存在记录
+                                                } else {
+                                                    for (i = 0; i < results[i].profit_benefit.buckets.length; i++) {
+                                                        if (results[i].profit_benefit.buckets[i] != "") {
+                                                            quotaArry.push(Number(results[i].profit_benefit.buckets[0].key) * Number(results[i].profit_convertTime.value));
+                                                            isExit = true;
+                                                        }
+                                                    }
+                                                    if (!isExit) {
+                                                        quotaArry.push("-");//未定义预期收益
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                quota_data = {
+                                    label: "profit",
+                                    key: keyArr,
+                                    quota: quotaArry
+                                };
+                                break;
+                            case "orderNumRate":
+                                for (i = 0; i < results.length; i++) {
+                                    for (var key in results[i]) {
+                                        if (key == queryOption) {
+                                            quotaArry.push(Number(results[i].orderNumRate_orderNum.value) / Number(results[i].orderNumRate_convertTime.value));
+                                        }
+                                    }
+                                }
+                                quota_data = {
+                                    label: "orderNumRate",
+                                    key: keyArr,
+                                    quota: quotaArry
+                                };
+                                break;
+                            case "avgCost":
+                                for (i = 0; i < results.length; i++) {
+                                    for (var key in results[i]) {
+                                        if (key == queryOption) {
+                                            quotaArry.push(results[i].avgCost.value);
+                                        }
+                                    }
+                                }
+                                quota_data = {
+                                    label: "avgCost",
+                                    key: keyArr,
+                                    quota: quotaArry
+                                };
+                                break;
+                            default :
+                                break;
+                        }
+                        if (quota_data != null || quota_data != []) {
+                            data.push(quota_data);
+                        }
+
+                    });
+                }
+                callbackFn(data);
+            });
         },
         searchConvEvents: function (es, indexs, type, eventPages, showType, callback) {
-            //console.log("searchConvEvents")
             var indexQurey = []
             for (var i = 0; i < indexs.length; i++) {
-                //console.log(indexs[i])
                 indexQurey.push({
                     index: indexs[i]
                 });
@@ -1919,7 +2211,6 @@ var transform = {
                     }
 
                     if (newIndexs.length == 0) {//不存在集合
-                        //console.log("***************if***************")
                         var null_data = []
                         if (showType == "total") {
                             null_data.push({
@@ -1993,7 +2284,6 @@ var transform = {
             )
         },
         searchConvEvent: function (es, indexs, type, showType, callback) {
-            //console.log("searchConvEvent")
             var indexQurey = []
             for (var i = 0; i < indexs.length; i++) {
                 indexQurey.push({
@@ -2078,12 +2368,7 @@ var transform = {
                             });
                         }, function (error, results) {
                             var data = []
-
-
-                            //console.log(showType)
-                            //callback(results)
                             if (showType == "tatol") {
-                                //console.log(results[0].countTarget.buckets)
                                 var eventCount = 0;
                                 var convCount = 0;
                                 results[0].countTarget.buckets.forEach(function (item) {
@@ -2254,7 +2539,96 @@ var transform = {
                         });
                     }
                 })
-        }
+        },
+        /**
+         * 按天查询时间内的 事件转化次数
+         * @param es
+         * @param indexs
+         * @param type
+         * @param showType
+         * @param queryOptions
+         * @param urls
+         * @param callbackFn
+         */
+        searchDayConvEvents: function (es, indexs, type, callbackFn) {
+            var _aggs = {};
+            //queryOptions.forEach(function (queryOption) {
+            //    for (var key in es_aggs[queryOption]) {
+            //        _aggs[key] = es_aggs[queryOption][key];
+            //    }
+            //});
+            var convRequests = [];
+            for (var i = 0; i < indexs.length; i++) {
+                convRequests.push({
+                    index: indexs[i],
+                    type: type+"_event",
+                    "body": {
+                        "size": 0,
+                        query: {
+                            bool: {
+                                "should": {
+                                    "term":{
+                                        "et_target":true
+                                    }
+                                }
+                            }
+                        },
+                        "aggs": {
+                            "convCount": {
+                                "value_count": {
+                                    "field": "_type"
+                                }
+
+                            }
+                        }
+                    }
+                });
+            }
+            var requests =[]
+            for (var i = 0; i < indexs.length; i++) {
+                requests.push({
+                    index: indexs[i],
+                    type: type+"_event",
+                    "body": {
+                        "size": 0,
+                        "aggs": {
+                            "eventCount": {
+                                "value_count": {
+                                    "field": "_type"
+                                }
+
+                            }
+                        }
+                    }
+                });
+            }
+            async.map(requests, function (item, callback) {
+                es.search(item, function (error, result) {
+                    if (result != undefined && result.aggregations != undefined) {
+                        callback(null, result.aggregations);
+                    } else {
+                        callback(null, null);
+                    }
+                });
+            }, function (error, eventResults) {
+                //callbackFn(eventResults);
+                async.map(convRequests, function (item, callback) {
+                    es.search(item, function (error, result) {
+                        if (result != undefined && result.aggregations != undefined) {
+                            callback(null, result.aggregations);
+                        } else {
+                            callback(null, null);
+                        }
+                    });
+                }, function (error, convResults) {
+                    var result = {
+                        "eventCountArr":eventResults,
+                        "convCountArr":convResults
+                    }
+                    callbackFn(result);
+                })
+            });
+        },
     }
     ;
 var createQueryByUrls = function (urls) {
