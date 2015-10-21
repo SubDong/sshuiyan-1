@@ -1541,6 +1541,9 @@ define(["app"], function (app) {
                 } else if (number == 2) {
                     return a[2];
                 } else if (number == 3) {
+                    if (a[2] == 0) {
+                        return "--";
+                    }
                     return a[3];
                 }
             }
@@ -1937,10 +1940,14 @@ define(["app"], function (app) {
                 $scope.gridOptions.data = _tempData;
                 $scope.gridOptions.enableSorting = true;
                 $scope.gridOptions.columnDefs[4].cellClass = function (grid, row, col, rowRenderIndex, colRenderIndex) {
-                    if (grid.getCellValue(row, col).toString().substring(0, 1) == "+") {
-                        return "riseCell";
-                    } else if (grid.getCellValue(row, col).toString().substring(0, 1) == "-") {
-                        return "descendCell";
+                    if (grid.getCellValue(row, col)) {
+                        if (grid.getCellValue(row, col).toString().substring(0, 1) == "+") {
+                            return "riseCell";
+                        } else if (grid.getCellValue(row, col).toString().substring(0, 1) == "-") {
+                            return "descendCell";
+                        } else {
+                            return "flatCell";
+                        }
                     } else {
                         return "flatCell";
                     }
