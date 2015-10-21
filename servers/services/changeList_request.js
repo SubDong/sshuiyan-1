@@ -102,7 +102,7 @@ var changeList_request = {
 
                 for (var i = 0; i < pathNameArray.length; i++) {
                     var _d_i = dataPathName.indexOf(pathNameArray[i]);
-                    var _c_d_i = dataPathName.indexOf(pathNameArray[i]);
+                    var _c_d_i = contrastDataPathName.indexOf(pathNameArray[i]);
                     var _t_o = {
                         pathName: pathNameArray[i] == "-" ? "直接输入网址或标签" : pathNameArray[i],
                         pv: 0,
