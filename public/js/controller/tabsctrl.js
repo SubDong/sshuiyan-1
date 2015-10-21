@@ -384,7 +384,10 @@ define(["app"], function (app) {
                         griApiInfo(gridApi);
                     }
                 }
-
+            }
+            if($scope.changeListHide == true){
+                $scope.gridOptions.enablePaginationControls = false;
+                $scope.gridOptions.paginationPageSize = 50;
             }
             //$rootScope.$broadcast("ssh_reload_datashow");
         }
@@ -1817,7 +1820,7 @@ define(["app"], function (app) {
                                 document.getElementById("summary").style.color = "#ea1414";
                             } else if (returnData[0].toString().substring(0, 1) == "-") {
                                 document.getElementById("summary").style.color = "#07cd2c";
-                            } else if (returnData[0] == 0) {
+                            } else if(returnData[0]=="0%"){
                                 document.getElementById("summary").style.color = "#01aeef";
                             } else {
                                 document.getElementById("summary").style.color = "#ea1414";

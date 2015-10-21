@@ -5,6 +5,8 @@ define(["./module"], function (ctrs) {
 
     'use strict';
     ctrs.controller('changelistctr', function ($scope, $rootScope, $q, $http, $cookieStore, requestService, messageService, areaService, uiGridConstants, popupService) {
+//            不显示页面显示条数
+            $scope.changeListHide = true;
             //初始化时间
             $rootScope.tableTimeStart = 0;
             $rootScope.tableTimeEnd = 0;
