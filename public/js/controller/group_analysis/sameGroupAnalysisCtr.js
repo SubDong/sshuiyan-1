@@ -40,7 +40,7 @@ define(["./module"], function (ctrs) {
         $scope.scaleChange = function (val) {
             if (val.name == "按天") {
                 $scope.groupScale.selected.field = "day";
-                $scope.dateRange.selected = {"name": "过去30天", "field": "30"};
+                $scope.dateRange.selected = {"name": "过去7天", "field": "7"};
                 $scope.dateRanges = [
                     {name: '过去7天', field: '7'},
                     {name: '过去14天', field: '14'},

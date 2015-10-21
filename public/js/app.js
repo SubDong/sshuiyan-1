@@ -231,7 +231,7 @@ define([
                 stype: 0,
                 sref: '#ads/adsSource'
             }, {
-                title: '同类群主分析',
+                title: '同类群组分析',
                 icon: 'glyphicon glyphicon-list-alt',
                 stype: 0,
                 sref: '#group_analysis/sameGroupAnalysis'
