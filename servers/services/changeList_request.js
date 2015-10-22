@@ -117,7 +117,22 @@ var changeList_request = {
                     if (_c_d_i != -1) {
                         _t_o.contrastPv = parseInt(result.contrastData.all_pv.buckets[_c_d_i].pv_count.pv_count_aggs.value);
                     }
-                    
+                    //[{"pathName":"ç›´æŽ¥è¾“å…¥ç½‘å€æˆ–æ ‡ç­¾","pv":5,"contrastPv":5,"percentage":"0(-)"},
+                    //    {"pathName":"http://dev.index8.cn","pv":42,"contrastPv":0,"percentage":"0(-)"},
+                    //    {"pathName":"http://t.adpro.cn","pv":14,"contrastPv":0,"percentage":"0(-)"},
+                    //    {"pathName":"http://m.index8.cn","pv":8,"contrastPv":0,"percentage":"0(-)"},
+                    //    {"pathName":"http://m.baidu.com","pv":4,"contrastPv":0,"percentage":"0(-)"},
+                    //    {"pathName":"https://www.baidu.com","pv":4,"contrastPv":2,"percentage":"0(-)"},
+                    //    {"pathName":"http://pos.baidu.com","pv":3,"contrastPv":0,"percentage":"0(-)"},
+                    //    {"pathName":"http://ys.rili.com.cn","pv":1,"contrastPv":0,"percentage":"0(-)"},
+                    //    {"pathName":"http://192.168.100.10","pv":0,"contrastPv":5,"percentage":"0(-)"},
+                    //    {"pathName":"http://tongji.cnzz.com","pv":0,"contrastPv":5,"percentage":"0(-)"},
+                    //    {"pathName":"http://whois.22.cn","pv":0,"contrastPv":4,"percentage":"0(-)"},
+                    //    {"pathName":"http://www.perfect-cn.cn","pv":0,"contrastPv":3,"percentage":"0(-)"},
+                    //    {"pathName":"https://sg.search.yahoo.com","pv":0,"contrastPv":2,"percentage":"0(-)"},
+                    //    {"pathName":"http://localhost","pv":0,"contrastPv":1,"percentage":"0(-)"},
+                    //    {"pathName":"http://tongji.baidu.com","pv":0,"contrastPv":1,"percentage":"0(-)"},
+                    //    {"pathName":"http://www.sogou.com","pv":0,"contrastPv":1,"percentage":"0(-)"}]
                     var percentage = 0;
                     if (_t_o.contrastPv == 0) {
                         if (_t_o.pv == 0) {
@@ -137,8 +152,8 @@ var changeList_request = {
                             }
                         }
                     }
+                    percentage = "100%";
                     _t_o.percentage = percentage;
-
                     pv_data.push(_t_o);
                 }
 
