@@ -92,7 +92,8 @@ define(["./module"], function (ctrs) {
             {
                 name: "网站域名",
                 displayName: "网站域名",
-                field: "site_url",
+                //field: "site_url",
+                cellTemplate: "<div class='table_admin'><a data-ng-click='grid.appScope.goPage(index,grid,row)'</a>{{row.entity.site_url}}</div>",
                 maxWidth: '',
                 cellClass: 'table_admin',
                 enableSorting: false
@@ -340,6 +341,16 @@ define(["./module"], function (ctrs) {
             }
             return "暂停"
         };
+
+        //页面跳转
+        $scope.goPage = function (index, grid, row) {
+           console.log(row.entity.site_url)
+            if(row.entity.site_url.indexOf("http")>-1||row.entity.site_url.indexOf("https")>-1){
+                window.open(row.entity.site_url);
+            }else{
+                window.open("http://"+row.entity.site_url);
+            }
+        };
         //获取代码弹框
         $scope.gain = function (index, grid, row) {
             var thtml = $rootScope.adminSetHtml.replace("ex_track_id", row.entity.track_id);
@@ -404,6 +415,9 @@ define(["./module"], function (ctrs) {
             model.is_top = $scope.dialog_model.is_top;
             model.uid = $cookieStore.get("uid");
             model.icon=$scope.choosedIconNum;
+
+
+
             //用户ID+url 确定该用户对某个网站是否进行配置
             var query = "/config/site_list?type=search&query=" + JSON.stringify({
                     uid: model.uid,
@@ -413,6 +427,7 @@ define(["./module"], function (ctrs) {
                 method: 'GET',
                 url: query
             }).success(function (dataConfig, status) {
+                //不存在历史删除过数据
                 if (dataConfig == null || dataConfig.length == 0) {//不存在配置 save
                     var insurl = "/config/site_list?type=save&entity=" + JSON.stringify(model);
                     if (model.is_top) {//若置顶 先使原来置顶变为False
@@ -439,7 +454,9 @@ define(["./module"], function (ctrs) {
                             }
                         })
                     }
-                } else {
+                }
+                //不存在历史假删数据 更新
+                else {
                     var upurl = "/config/site_list?type=update&query=" + JSON.stringify({_id: dataConfig[0]._id}) + "&updates=" + JSON.stringify({
                             site_name: $scope.dialog_model.site_name,
                             is_top: $scope.dialog_model.is_top, is_use: 1
