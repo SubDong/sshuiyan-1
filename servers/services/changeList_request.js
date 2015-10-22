@@ -104,10 +104,10 @@ var changeList_request = {
                     var _d_i = dataPathName.indexOf(pathNameArray[i]);
                     var _c_d_i = contrastDataPathName.indexOf(pathNameArray[i]);
                     var _t_o = {
-                        pathName: pathNameArray[i] == "-" ? "直接输入网weiiwiweiwieiwieiweiiwei址或标签" : pathNameArray[i],
+                        pathName: pathNameArray[i] == "-" ? "直接输入网址或标签" : pathNameArray[i],
                         pv: 0,
                         contrastPv: 0,
-                        percentage: "123123123123"
+                        percentage: "0(0)"
                     };
 
                     if (_d_i != -1) {
@@ -118,26 +118,25 @@ var changeList_request = {
                         _t_o.contrastPv = parseInt(result.contrastData.all_pv.buckets[_c_d_i].pv_count.pv_count_aggs.value);
                     }
                     
-                    //var percentage = 0;
-                    //if (_t_o.contrastPv == 0) {
-                    //    if (_t_o.pv == 0) {
-                    //        percentage = "0(0)";
-                    //    } else {
-                    //        percentage = "+" + _t_o.pv + "(-)";
-                    //    }
-                    //} else {
-                    //    if (_t_o.pv == 0) {
-                    //        percentage = "-" + _t_o.contrastPv + "(-100.00%)";
-                    //    } else {
-                    //        percentage = ((_t_o.pv - _t_o.contrastPv) / _t_o.contrastPv) * 100;
-                    //        if (percentage > 0) {
-                    //            percentage = "+" + (_t_o.pv - _t_o.contrastPv) + "(" + percentage.toFixed(2) + "%)";
-                    //        } else {
-                    //            percentage = (_t_o.pv - _t_o.contrastPv) + "(" + percentage.toFixed(2) + "%)";
-                    //        }
-                    //    }
-                    //}
-                    percentage = "123123123123";
+                    var percentage = 0;
+                    if (_t_o.contrastPv == 0) {
+                        if (_t_o.pv == 0) {
+                            percentage = "0(0)";
+                        } else {
+                            percentage = "+" + _t_o.pv + "(-)";
+                        }
+                    } else {
+                        if (_t_o.pv == 0) {
+                            percentage = "-" + _t_o.contrastPv + "(-100.00%)";
+                        } else {
+                            percentage = ((_t_o.pv - _t_o.contrastPv) / _t_o.contrastPv) * 100;
+                            if (percentage > 0) {
+                                percentage = "+" + (_t_o.pv - _t_o.contrastPv) + "(" + percentage.toFixed(2) + "%)";
+                            } else {
+                                percentage = (_t_o.pv - _t_o.contrastPv) + "(" + percentage.toFixed(2) + "%)";
+                            }
+                        }
+                    }
                     _t_o.percentage = percentage;
                     pv_data.push(_t_o);
                 }
