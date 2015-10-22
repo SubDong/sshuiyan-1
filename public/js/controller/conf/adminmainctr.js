@@ -232,12 +232,18 @@ define(["./module"], function (ctrs) {
                         }) + "&updates=" + JSON.stringify({is_top: "false"});
                     $http({method: 'GET', url: url}).success(function (dataConfig, status) {
                         $http({method: 'GET', url: updateurl}).success(function (insData, status) {
-                            if (status == 200)forceRowData(row.entity, index);
+                            if (status == 200){
+                                row.entity.site_name= $scope.dialog_model.site_name
+                                forceRowData(row.entity, index);
+                            }
                         })
                     });
                 } else {
                     $http({method: 'GET', url: updateurl}).success(function (insData, status) {
-                        if (status == 200)forceRowData(row.entity, index);
+                        if (status == 200){
+                            row.entity.site_name= $scope.dialog_model.site_name
+                            forceRowData(row.entity, index);
+                        }
                     })
                 }
                 $scope.urlDialog.close();
