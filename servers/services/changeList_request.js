@@ -107,7 +107,7 @@ var changeList_request = {
                         pathName: pathNameArray[i] == "-" ? "直接输入网址或标签" : pathNameArray[i],
                         pv: 0,
                         contrastPv: 0,
-                        percentage: "0(-)"
+                        percentage: "123123123123"
                     };
 
                     if (_d_i != -1) {
