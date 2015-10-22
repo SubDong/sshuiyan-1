@@ -213,6 +213,7 @@ define(["./module"], function (ctrs) {
         $scope.openUpdateDialog = function (index, row) {
             $scope.choosedIconNum = row.entity.icon==undefined?1:row.entity.icon;
             $scope.choosedIcon($scope.choosedIconNum);
+            $scope.dialog_model =angular.copy(row.entity)
             $scope.urlDialog = ngDialog.open({
                 template: './conf/Dialog/main_UpdateDialog.html',
                 className: 'ngdialog-theme-default admin_ngdialog ',
@@ -224,7 +225,7 @@ define(["./module"], function (ctrs) {
                         is_top: $scope.dialog_model.is_top,
                         icon:$scope.choosedIconNum
                     });
-                if ($scope.dialog_model.is_top || $rootScope.gridOptions.data.length > 1) {//若置顶 先使原来置顶变为False
+                if ($scope.dialog_model.is_top && $rootScope.gridOptions.data.length > 1) {//若置顶 先使原来置顶变为False
                     $rootScope.gridOptions.data[0].is_top = false;
                     row.entity.is_top = true;
                     var url = "/config/site_list?type=update&query=" + JSON.stringify({
@@ -242,7 +243,6 @@ define(["./module"], function (ctrs) {
                     $http({method: 'GET', url: updateurl}).success(function (insData, status) {
                         if (status == 200){
                             row.entity.site_name= $scope.dialog_model.site_name
-                            forceRowData(row.entity, index);
                         }
                     })
                 }
