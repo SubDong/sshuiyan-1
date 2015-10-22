@@ -5,30 +5,35 @@
 define(["./module"], function (ctrs) {
     "use strict";
 
+    var strRegex = /^((https|HTTPS|http|HTTP|ftp|FTP|rtsp|RTSP|mms|MMS)?:\/\/)?(([0-9a-zA-Z_!~*'().&=+$%-]+: )?[0-9a-zA-Z_!~*'().&=+$%-]+@)?((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5]$)|([0-9a-zA-Z_!~*'()-]+\.)*([0-9a-zA-Z][0-9a-zA-Z-]{0,61})?[0-9a-zA-Z]\.[a-zA-Z]{2,6})(:[0-9]{1,4})?((\/?)|(\/[0-9a-zA-Z_!~*'().;?:@&=+$,%#-]+)+\/?)$/;
     ctrs.directive('adminmainctrRemoteValidation', function ($http, $cookieStore) {
         return {
             require: 'ngModel',
             link: function (scope, elm, attrs, ctrl) {
                 elm.bind('keyup', function () {
-                    var uid = $cookieStore.get("uid");
-                    var url = "/config/site_list?type=search&query=" + JSON.stringify({
-                            uid: uid,
-                            site_url: scope.dialog_model.site_url,
-                            is_use: 1
-                        });
-                    $http({method: 'GET', url: url}).
-                        success(function (data, status) {
-                            if (data.length > 0) {
+                    //判定是否为网站
+                    if(strRegex.test(scope.dialog_model.site_url)){
+                        ctrl.$setValidity('remoteSite', true);
+                        var uid = $cookieStore.get("uid");
+                        var url = "/config/site_list?type=search&query=" + JSON.stringify({
+                                uid: uid,
+                                site_url: scope.dialog_model.site_url,
+                                is_use: 1
+                            });
+                        $http({method: 'GET', url: url}).
+                            success(function (data, status) {
+                                if (data.length > 0) {
+                                    ctrl.$setValidity('remote', false);
+                                } else {
+                                    ctrl.$setValidity('remote', true);
+                                }
+                            }).
+                            error(function (data, status, headers, config) {
                                 ctrl.$setValidity('remote', false);
-                            } else {
-                                ctrl.$setValidity('remote', true);
-                            }
-                        }).
-                        error(function (data, status, headers, config) {
-                            ctrl.$setValidity('remote', false);
-                        });
-
-
+                            });
+                    }else{
+                        ctrl.$setValidity('remoteSite', false);
+                    }
                 });
             }
         };
@@ -344,7 +349,6 @@ define(["./module"], function (ctrs) {
 
         //页面跳转
         $scope.goPage = function (index, grid, row) {
-           console.log(row.entity.site_url)
             if(row.entity.site_url.indexOf("http")>-1||row.entity.site_url.indexOf("https")>-1){
                 window.open(row.entity.site_url);
             }else{

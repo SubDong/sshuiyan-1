@@ -1,11 +1,12 @@
 <form role="form" name="adminmainctrForm" class="form-horizontal" novalidate>
     <div class="ngdialog-buttons">
-        <div class="ngdialog-tilte">来自网页的消息</div>
+        <div class="ngdialog-tilte">新增网站信息</div>
         <ul class="admin-ng-content ">
             <li>网站域名</li>
             <li><input type="text" maxlength="128" name="remote" adminmainctr-remote-validation data-ng-focus="site_url_focus = true"
                        data-ng-blur="site_name_focus = false" data-ng-model="dialog_model.site_url" class="form-control"
                        required/></li>
+            <li ng-show="adminmainctrForm.remote.$error.remoteSite" style="color: red;">网站域名不正确！</li>
             <li ng-show="adminmainctrForm.remote.$error.remote" style="color: red;">网站域名重复！</li>
             <li data-ng-show="site_url_focus && !dialog_model.site_url" style="color: red;">不能为空</li>
             <br>
