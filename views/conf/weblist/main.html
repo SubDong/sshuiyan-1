@@ -1,4 +1,4 @@
-<div class="middle_containers" ng-controller="adminmainctr">
+\<div class="middle_containers" ng-controller="adminmainctr">
     <div class="web_list">
         <!--网站导航-->
         <div class="web_list_nav">
@@ -17,20 +17,16 @@
         <div class="web_list_up" >
             <div class="table_content" ng-controller="admintablectr">
                 <div class="custom_table main_table">
-                    <div ui-grid="gridOptions"  class="grid clearfix secondary_table" ui-grid-selection ui-grid-pagination ui-grid-exporter ui-grid-auto-resize ui.grid.selection></div>
-
-
+                    <div ui-grid="gridOptions"  class="grid clearfix secondary_table"  ui-grid-exporter ui-grid-auto-resize ui.grid.selection></div>
                 </div>
             </div>
         </div>
-
         <!--网站中部左右部分-->
         <!--网站底部列表-->
         <div class="web_list_down">
             <a  ng-click="onInsert()" class="btn btn-default">+&nbsp;新增网站</a>
         </div>
         <br/>
-
 
     </div>
 </div>
