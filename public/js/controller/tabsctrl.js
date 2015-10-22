@@ -2009,26 +2009,26 @@ define(["app"], function (app) {
                     _tempData.pop();
                 }
 
-                //_tempData.push({
-                //    pathName: "123",
-                //    pv: 123,
-                //    contrastPv: 23,
-                //    percentage: "+100(+434.78%)"
-                //})
-                //
-                //_tempData.push({
-                //    pathName: "1weims",
-                //    pv: 12,
-                //    contrastPv: 2,
-                //    percentage: "+10(+500%)"
-                //})
-                //
-                //_tempData.push({
-                //    pathName: "1weimsdfasdfs",
-                //    pv: 42,
-                //    contrastPv: 67,
-                //    percentage: "-25(-37.31%)"
-                //})
+                _tempData.push({
+                    pathName: "123",
+                    pv: 123,
+                    contrastPv: 23,
+                    percentage: "+100(+434.78%)"
+                })
+
+                _tempData.push({
+                    pathName: "1weims",
+                    pv: 12,
+                    contrastPv: 2,
+                    percentage: "+10(+500%)"
+                })
+
+                _tempData.push({
+                    pathName: "1weimsdfasdfs",
+                    pv: 42,
+                    contrastPv: 67,
+                    percentage: "-25(-37.31%)"
+                })
 
                 $scope.gridOptions.data = _tempData;
                 $scope.gridOptions.enableSorting = true;
