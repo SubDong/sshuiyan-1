@@ -781,12 +781,6 @@ api.get("/changeList", function (req, res) {
         time.push(contrastTime[i]);
     }
     changeList_request.search(req.es, indexString, time, type, filterType, function (result) {
-        result.pv.push({
-            pathName: "1weimsdfasdfs",
-            pv: 42,
-            contrastPv: 67,
-            percentage: "-25(-37.31%)"
-        })
         datautils.send(res, result);
     });
 });
