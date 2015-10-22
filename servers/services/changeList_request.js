@@ -112,20 +112,25 @@ var changeList_request = {
 
                     if (_d_i != -1) {
                         _t_o.pv = parseInt(result.data.all_pv.buckets[_d_i].pv_count.pv_count_aggs.value);
+                        alert(_t_o.pv);
                     }
 
                     if (_c_d_i != -1) {
                         _t_o.contrastPv = parseInt(result.contrastData.all_pv.buckets[_c_d_i].pv_count.pv_count_aggs.value);
+                        alert(_t_o.contrastPv);
                     }
                     
                     var percentage = 0;
                     if (_t_o.contrastPv == 0) {
+                        alert(1);
                         if (_t_o.pv == 0) {
                             percentage = "0(0)";
                         } else {
                             percentage = "+" + _t_o.pv + "(-)";
                         }
+                        alert(percentage);
                     } else {
+                        alert(2);
                         if (_t_o.pv == 0) {
                             percentage = "-" + _t_o.contrastPv + "(-100%)";
                         } else {
@@ -136,9 +141,11 @@ var changeList_request = {
                                 percentage = (_t_o.pv - _t_o.contrastPv) + "(" + percentage.toFixed(2) + "%)";
                             }
                         }
+                        alert(percentage);
                     }
+                    alert(percentage);
                     _t_o.percentage = percentage;
-
+                    alert(_t_o.percentage);
                     pv_data.push(_t_o);
                 }
 
