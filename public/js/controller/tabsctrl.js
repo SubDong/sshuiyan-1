@@ -414,7 +414,7 @@ define(["app"], function (app) {
                     }
                 }
             }
-            if($scope.changeListHide == true){
+            if ($scope.changeListHide == true) {
                 $scope.gridOptions.enablePaginationControls = false;
                 $scope.gridOptions.paginationPageSize = 50;
             }
@@ -1022,7 +1022,7 @@ define(["app"], function (app) {
                     var tempCrate = option.entity[a.col.field].substring(0, option.entity[a.col.field].length - 2)
                     val = val + Number(tempCrate)
                 })
-                val+="%"
+                val += "%"
             } else if (a.col.field == "clickTotal") {
                 options.forEach(function (option) {
                     val = val + Number(option.entity[a.col.field])
@@ -1043,6 +1043,10 @@ define(["app"], function (app) {
         }
         //前端ui-grid通用查询方法
         $rootScope.targetSearch = function (isClicked) {
+            if (window.location.href.split("/")[window.location.href.split("/").length - 1] == "changelist") {
+                // 来源变化榜不需要查询
+                return;
+            }
             $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
             $scope.gridOpArray = angular.copy($rootScope.gridArray);
             $scope.gridOptions.columnDefs = $scope.gridOpArray;
@@ -1077,7 +1081,7 @@ define(["app"], function (app) {
                             item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 32px'>--</div>";
                         } else {
                             item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 32px'>" +
-                                "<ul><li>{{grid.appScope.getEventRootData(this,grid.getVisibleRows())}}</li></ul></div>";
+                            "<ul><li>{{grid.appScope.getEventRootData(this,grid.getVisibleRows())}}</li></ul></div>";
                         }
                     }
                 });
@@ -1090,7 +1094,7 @@ define(["app"], function (app) {
                         } else {
 //                        item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 100px'>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),2)}}<br/>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),3)}}<br/>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),4)}}</div>";
                             item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 32px'>" +
-                                "<ul><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),2)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),3)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),4)}}</li></ul></div>";
+                            "<ul><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),2)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),3)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),4)}}</li></ul></div>";
                         }
                     }
                 });
@@ -1885,7 +1889,7 @@ define(["app"], function (app) {
                                 document.getElementById("summary").style.color = "#ea1414";
                             } else if (returnData[0].toString().substring(0, 1) == "-") {
                                 document.getElementById("summary").style.color = "#07cd2c";
-                            } else if(returnData[0]=="0%"){
+                            } else if (returnData[0] == "0%") {
                                 document.getElementById("summary").style.color = "#01aeef";
                             } else {
                                 document.getElementById("summary").style.color = "#ea1414";
