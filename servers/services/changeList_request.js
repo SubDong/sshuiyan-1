@@ -111,13 +111,13 @@ var changeList_request = {
                     };
 
                     if (_d_i != -1) {
-                        _t_o.pv = result.data.all_pv.buckets[_d_i].pv_count.pv_count_aggs.value;
+                        _t_o.pv = parseInt(result.data.all_pv.buckets[_d_i].pv_count.pv_count_aggs.value);
                     }
 
                     if (_c_d_i != -1) {
-                        _t_o.contrastPv = result.contrastData.all_pv.buckets[_c_d_i].pv_count.pv_count_aggs.value;
+                        _t_o.contrastPv = parseInt(result.contrastData.all_pv.buckets[_c_d_i].pv_count.pv_count_aggs.value);
                     }
-
+                    
                     var percentage = 0;
                     if (_t_o.contrastPv == 0) {
                         if (_t_o.pv == 0) {

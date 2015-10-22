@@ -55,7 +55,6 @@ define(["./module"], function (ctrs) {
                         priority: 1
                     },
                     sortingAlgorithm: function (a, b) {
-                        console.log("123");
                         if (parseInt(a) === parseInt(b)) {
                             return 0;
                         }
