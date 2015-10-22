@@ -404,8 +404,13 @@ var buildRequest = function (indexes, type, quotas, dimension, filters, start, e
                 else
                     dimensionScript += ("doc[\'" + _arr[i] + "\'].value+\'," + "\'+");
             }
-        } else
+        } else {
             dimensionScript = ("doc[\'" + dimension + "\'].value");
+        }
+
+        if (dimensionScript == "doc['rf_type'].value") {
+            dimensionScript = "doc['rf_type'].value == 0 ? 3 : doc['rf_type'].value";
+        }
 
         return {
             "index": indexes.toString(),

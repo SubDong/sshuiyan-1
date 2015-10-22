@@ -137,6 +137,7 @@ var changeList_request = {
                             }
                         }
                     }
+                    _t_o.percentage = percentage;
 
                     pv_data.push(_t_o);
                 }

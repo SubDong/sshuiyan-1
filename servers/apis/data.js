@@ -895,7 +895,7 @@ api.get("/transform/getPagePVs", function (req, res) {
     //计算开始时间
     var timeArea = date.getConvertTimeByNumber(query.start, query.end)
     //计算计算时间
-    transform.searchPagePVs(req.es, indexString, timeArea[0],timeArea[1],query.type,JSON.parse(query.events),query.queryOptions,function (result) {
+    transform.searchPagePVs(req.es, indexString, timeArea[0], timeArea[1], query.type, JSON.parse(query.events), query.queryOptions, function (result) {
         datautils.send(res, result);
     });
 });
@@ -923,7 +923,7 @@ api.get("/transform/getConvEvents", function (req, res) {
     } else {
         indexString = date.createIndexes(query.start, query.end, "access-");
     }
-    transform.searchConvEvents(req.es,  indexString, query.type,JSON.parse(query.eventPages), query.showType, function (result) {
+    transform.searchConvEvents(req.es, indexString, query.type, JSON.parse(query.eventPages), query.showType, function (result) {
         datautils.send(res, result);
     });
 });
@@ -935,7 +935,7 @@ api.get("/transform/getConvEvent", function (req, res) {
     } else {
         indexString = date.createIndexes(query.start, query.end, "access-");
     }
-    transform.searchConvEvent(req.es,  indexString, query.type, query.showType, function (result) {
+    transform.searchConvEvent(req.es, indexString, query.type, query.showType, function (result) {
         datautils.send(res, result);
     });
 });
@@ -947,7 +947,7 @@ api.get("/transform/getEventInfos", function (req, res) {
     } else {
         indexString = date.createIndexes(query.start, query.end, "access-");
     }
-    transform.searchEventInfo(req.es,  indexString, query.type, query.showType, function (result) {
+    transform.searchEventInfo(req.es, indexString, query.type, query.showType, function (result) {
         datautils.send(res, result);
     });
 });
@@ -989,7 +989,7 @@ api.get("/adsSource", function (req, res) {
     var period = date.period(startTime, endTime);                       //时间轴维度
     var interval = date.interval(startTime, endTime);                   //时间分割
 
-    es_request.search(req.es, indexes, type+"_ad_track", quotas, dimension, [0], filters, period[0], period[1], interval, function (data) {
+    es_request.search(req.es, indexes, type + "_ad_track", quotas, dimension, [0], filters, period[0], period[1], interval, function (data) {
         datautils.send(res, data);
     });
 });
@@ -1008,7 +1008,7 @@ api.get("/adsMedium", function (req, res) {
     var period = date.period(startTime, endTime);                       //时间轴维度
     var interval = date.interval(startTime, endTime);                   //时间分割
 
-    es_request.search(req.es, indexes, type+"_ad_track", quotas, dimension, [0], filters, period[0], period[1], interval, function (data) {
+    es_request.search(req.es, indexes, type + "_ad_track", quotas, dimension, [0], filters, period[0], period[1], interval, function (data) {
         datautils.send(res, data);
     })
 });
@@ -1027,7 +1027,7 @@ api.get("/adsPlan", function (req, res) {
     var period = date.period(startTime, endTime);                       //时间轴维度
     var interval = date.interval(startTime, endTime);                   //时间分割
 
-    es_request.search(req.es, indexes, type+"_ad_track", quotas, dimension, [0], filters, period[0], period[1], interval, function (data) {
+    es_request.search(req.es, indexes, type + "_ad_track", quotas, dimension, [0], filters, period[0], period[1], interval, function (data) {
         datautils.send(res, data);
     })
 });
@@ -1046,7 +1046,7 @@ api.get("/adsKeyWord", function (req, res) {
     var period = date.period(startTime, endTime);                       //时间轴维度
     var interval = date.interval(startTime, endTime);                   //时间分割
 
-    es_request.search(req.es, indexes, type+"_ad_track", quotas, dimension, [0], filters, period[0], period[1], interval, function (data) {
+    es_request.search(req.es, indexes, type + "_ad_track", quotas, dimension, [0], filters, period[0], period[1], interval, function (data) {
         datautils.send(res, data);
     })
 });
@@ -1065,7 +1065,7 @@ api.get("/adsCreative", function (req, res) {
     var period = date.period(startTime, endTime);                       //时间轴维度
     var interval = date.interval(startTime, endTime);                   //时间分割
 
-    es_request.search(req.es, indexes, type+"_ad_track", quotas, dimension, [0], filters, period[0], period[1], interval, function (data) {
+    es_request.search(req.es, indexes, type + "_ad_track", quotas, dimension, [0], filters, period[0], period[1], interval, function (data) {
         datautils.send(res, data);
     })
 });
