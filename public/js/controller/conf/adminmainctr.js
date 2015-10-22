@@ -12,7 +12,7 @@ define(["./module"], function (ctrs) {
             link: function (scope, elm, attrs, ctrl) {
                 elm.bind('keyup', function () {
                     //判定是否为网站
-                    if(strRegex.test(scope.dialog_model.site_url)){
+                    if (strRegex.test(scope.dialog_model.site_url)) {
                         ctrl.$setValidity('remoteSite', true);
                         var uid = $cookieStore.get("uid");
                         var url = "/config/site_list?type=search&query=" + JSON.stringify({
@@ -31,7 +31,7 @@ define(["./module"], function (ctrs) {
                             error(function (data, status, headers, config) {
                                 ctrl.$setValidity('remote', false);
                             });
-                    }else{
+                    } else {
                         ctrl.$setValidity('remoteSite', false);
                     }
                 });
@@ -54,7 +54,7 @@ define(["./module"], function (ctrs) {
             site_name: "", // site name 设置的URL
             site_pause: false,//配置暂停 true：暂停 false：使用
             track_status: 0, // track code status
-           icon:1,
+            icon: 1,
             is_top: false,
             is_use: 1
         };
@@ -189,22 +189,22 @@ define(["./module"], function (ctrs) {
             arrayClear: false //是否清空指标array
         };
 
-        $scope.choosedIcons = [true,false]
+        $scope.choosedIcons = [true, false]
         $scope.choosedIconNum = 1;
-        $scope.choosedIcon = function(index){
-            $scope.choosedIcons=[false,false]
-            $scope.choosedIcons[index-1] = true;
+        $scope.choosedIcon = function (index) {
+            $scope.choosedIcons = [false, false]
+            $scope.choosedIcons[index - 1] = true;
             $scope.choosedIconNum = index;
         }
 
-        $scope.viewSite = function (rootGrid,grid,row) {
+        $scope.viewSite = function (rootGrid, grid, row) {
             $rootScope.default = row.entity.site_name;     // default site
             //$rootScope.defaultType =row.entity.type_id;   // default site id
             $rootScope.siteId = row.entity.site_id;
             $rootScope.siteUrl = row.entity.site_url;
             $rootScope.userType = row.entity.type_id;
             $rootScope.userTypeName = row.entity.site_name;
-            $rootScope.siteTrackId=row.entity.site_track_id;
+            $rootScope.siteTrackId = row.entity.site_track_id;
             $state.go("index");
         }
         $scope.openAddDialog = function () {
@@ -217,9 +217,9 @@ define(["./module"], function (ctrs) {
         };
 
         $scope.openUpdateDialog = function (index, row) {
-            $scope.choosedIconNum = row.entity.icon==undefined?1:row.entity.icon;
+            $scope.choosedIconNum = row.entity.icon == undefined ? 1 : row.entity.icon;
             $scope.choosedIcon($scope.choosedIconNum);
-            $scope.dialog_model =angular.copy(row.entity)
+            $scope.dialog_model = angular.copy(row.entity)
             $scope.urlDialog = ngDialog.open({
                 template: './conf/Dialog/main_UpdateDialog.html',
                 className: 'ngdialog-theme-default admin_ngdialog ',
@@ -229,7 +229,7 @@ define(["./module"], function (ctrs) {
                 var updateurl = "/config/site_list?type=update&query=" + JSON.stringify({_id: row.entity._id}) + "&updates=" + JSON.stringify({
                         site_name: $scope.dialog_model.site_name,
                         is_top: $scope.dialog_model.is_top,
-                        icon:$scope.choosedIconNum
+                        icon: $scope.choosedIconNum
                     });
                 if ($scope.dialog_model.is_top && $rootScope.gridOptions.data.length > 1) {//若置顶 先使原来置顶变为False
                     $rootScope.gridOptions.data[0].is_top = false;
@@ -239,16 +239,16 @@ define(["./module"], function (ctrs) {
                         }) + "&updates=" + JSON.stringify({is_top: "false"});
                     $http({method: 'GET', url: url}).success(function (dataConfig, status) {
                         $http({method: 'GET', url: updateurl}).success(function (insData, status) {
-                            if (status == 200){
-                                row.entity.site_name= $scope.dialog_model.site_name
+                            if (status == 200) {
+                                row.entity.site_name = $scope.dialog_model.site_name
                                 forceRowData(row.entity, index);
                             }
                         })
                     });
                 } else {
                     $http({method: 'GET', url: updateurl}).success(function (insData, status) {
-                        if (status == 200){
-                            row.entity.site_name= $scope.dialog_model.site_name
+                        if (status == 200) {
+                            row.entity.site_name = $scope.dialog_model.site_name
                         }
                     })
                 }
@@ -264,6 +264,8 @@ define(["./module"], function (ctrs) {
             $scope.openAddDialog();
         };
         $scope.onUpdate = function (rootGrid, grid, row) {
+            if (row.entity.site_name == "")
+                return
             $scope.dialog_model.readOnly = "readonly";
             $scope.dialog_model.site_url = row.entity.site_url;
             $scope.dialog_model.site_name = row.entity.site_name;
@@ -278,7 +280,7 @@ define(["./module"], function (ctrs) {
          * @param row
          */
         $scope.onDelete = function (rootGrid, grid, row) {
-            $scope.tip='<li> 删除后，百思慧眼将不在跟踪统计该目标，该目标的  历史数据会被删除且无法恢复。<br/><br/>您希望现在删除吗？</li>';
+            $scope.tip = '<li> 删除后，百思慧眼将不在跟踪统计该目标，该目标的  历史数据会被删除且无法恢复。<br/><br/>您希望现在删除吗？</li>';
             $scope.onDeleteDialog = ngDialog.open({
                 template: './conf/Dialog/common_diaolg.html',
                 className: 'ngdialog-theme-default admin_ngdialog',
@@ -324,7 +326,7 @@ define(["./module"], function (ctrs) {
                     }
                 });
             };
-             $scope.tip = "";
+            $scope.tip = "";
             if (row.entity.site_pause) {
                 $scope.tip = "确定重新启用？";
             } else {
@@ -349,10 +351,10 @@ define(["./module"], function (ctrs) {
 
         //页面跳转
         $scope.goPage = function (index, grid, row) {
-            if(row.entity.site_url.indexOf("http")>-1||row.entity.site_url.indexOf("https")>-1){
+            if (row.entity.site_url.indexOf("http") > -1 || row.entity.site_url.indexOf("https") > -1) {
                 window.open(row.entity.site_url);
-            }else{
-                window.open("http://"+row.entity.site_url);
+            } else {
+                window.open("http://" + row.entity.site_url);
             }
         };
         //获取代码弹框
@@ -413,14 +415,15 @@ define(["./module"], function (ctrs) {
          */
         $scope.submitSave = function (cliecked) {
             //var site_id=$rootScope.userType;//从conf_sites中获取
+            if ($scope.dialog_model.site_name == "") {
+                return
+            }
             var model = angular.copy($scope.sites_model);
             model.site_url = $scope.dialog_model.site_url;//网站URL 页面输入
             model.site_name = $scope.dialog_model.site_name;//网站名称 页面输入
             model.is_top = $scope.dialog_model.is_top;
             model.uid = $cookieStore.get("uid");
-            model.icon=$scope.choosedIconNum;
-
-
+            model.icon = $scope.choosedIconNum;
 
             //用户ID+url 确定该用户对某个网站是否进行配置
             var query = "/config/site_list?type=search&query=" + JSON.stringify({
@@ -466,6 +469,7 @@ define(["./module"], function (ctrs) {
                             is_top: $scope.dialog_model.is_top, is_use: 1
                         });
                     dataConfig[0].is_use = 1;
+                    dataConfig[0].site_name =  $scope.dialog_model.site_name;
                     if (model.is_top) {//若置顶 先使原来置顶变为False
                         var url = "/config/site_list?type=update&query=" + JSON.stringify({
                                 uid: $cookieStore.get("uid"),
@@ -551,6 +555,7 @@ define(["./module"], function (ctrs) {
             });
 
         }
+
         var userID = $cookieStore.get("uid");
         //代码检查方法
         $scope.codeCheck = function () {
