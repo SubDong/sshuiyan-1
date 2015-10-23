@@ -249,14 +249,14 @@ define(["./module"], function (ctrls) {
             var time = chartUtils.getTimeOffset(start, end);
             $rootScope.start = time[0];
             $rootScope.end = time[1];
+            $rootScope.tableTimeStart = time[0];
+            $rootScope.tableTimeEnd = time[1];
             var e = $scope.charts[1];
             e.config.keyFormat = "day";
             var chart = echarts.init(document.getElementById(e.config.id));
             e.config.instance = chart;
             requestService.refresh([e]);
             $rootScope.targetSearch();
-            $rootScope.tableTimeStart = time[0];
-            $rootScope.tableTimeEnd = time[1];
             $scope.$broadcast("ssh_dateShow_options_time_change");
         }
         function GetDateStr(AddDayCount) {
