@@ -11,7 +11,7 @@ define(["./module"], function (ctrs) {
             "count": 1,//个数
             "helpFlag": false//是否显示帮组信息
         };
-        $scope.adtrack_add =angular.copy($scope.ipArea);
+        $scope.adtrack_add = angular.copy($scope.ipArea);
         $scope.addIP = function (e, obj) {
             var f = e.currentTarget;
             var d = f.value.replace(/\r/gi, "");
@@ -60,11 +60,11 @@ define(["./module"], function (ctrs) {
          * 去重
          * @returns {Array}
          */
-        Array.prototype.unique = function(){
+        Array.prototype.unique = function () {
             var res = [];
             var json = {};
-            for(var i = 0; i < this.length; i++){
-                if(!json[this[i]]){
+            for (var i = 0; i < this.length; i++) {
+                if (!json[this[i]]) {
                     res.push(this[i]);
                     json[this[i]] = 1;
                 }
@@ -75,15 +75,15 @@ define(["./module"], function (ctrs) {
         /**
          * 根据 keywords 来进行回车符换行拆分
          */
-        $scope.allSubmit = function(){
+        $scope.allSubmit = function () {
             var kVal = $scope.adTrack.keywords;
             var includeObj = kVal.indexOf("\\n");
-            if( includeObj < -1) {
+            if (includeObj < -1) {
                 $scope.submit();
             } else {
                 var kVal2 = $scope.adTrack.keywords;
                 var splArray = kVal2.split("\n").unique();  //拆分回车换行符并去重
-                for (var i=0 ; i< splArray.length ; i++) {
+                for (var i = 0; i < splArray.length; i++) {
                     var kwObj = splArray[i];
                     $scope.submit(kwObj);
                 }
@@ -93,8 +93,8 @@ define(["./module"], function (ctrs) {
         /**
          * show URL
          */
-        $scope.keywordsWrap = function(){
-            $scope.str = function(kw){
+        $scope.keywordsWrap = function () {
+            $scope.str = function (kw) {
                 var strUrl = "";
                 var sourceUrl = $scope.adTrack.targetUrl;
                 var yesParam = "?rf=" + $scope.adTrack.mediaPlatform;
@@ -107,16 +107,16 @@ define(["./module"], function (ctrs) {
                     + "&atk=1"
                     + "&tt=0";
 
-                if(sourceUrl != null && sourceUrl != ""){
-                    if(sourceUrl.indexOf("?") == -1){
-                        if(sourceUrl.indexOf("http://") == -1){
+                if (sourceUrl != null && sourceUrl != "") {
+                    if (sourceUrl.indexOf("?") == -1) {
+                        if (sourceUrl.indexOf("http://") == -1) {
                             strUrl = "http://" + sourceUrl + yesParam + notHostName;
                         } else {
                             strUrl = sourceUrl + yesParam + notHostName;
                         }
 
                     } else {
-                        if(sourceUrl.indexOf("http://") == -1){
+                        if (sourceUrl.indexOf("http://") == -1) {
                             strUrl = "http://" + sourceUrl + noParam + notHostName;
                         } else {
                             strUrl = sourceUrl + noParam + notHostName;
@@ -130,7 +130,7 @@ define(["./module"], function (ctrs) {
             var splArray = kVal2.split("\n").unique();  //拆分回车换行符并去重
             $scope.ssssss = "";
 
-            for (var i=0 ; i< splArray.length ; i++) {
+            for (var i = 0; i < splArray.length; i++) {
                 var kw = splArray[i];
                 $scope.ssssss += $scope.str(kw) + "\n";
             }
@@ -162,7 +162,7 @@ define(["./module"], function (ctrs) {
             model.uid = $cookieStore.get("uid")
             model.tid = $rootScope.siteTrackId;
 
-           //保存
+            //保存
             var url = "/config/adtrack?type=save&entity=" + JSON.stringify(model);
             $http({method: 'GET', url: url}).success(function (dataConfig, status) {
 
@@ -172,16 +172,16 @@ define(["./module"], function (ctrs) {
         /**
          * 清除 form 表单输入的内容
          */
-        $scope.clear = function(){
+        $scope.clear = function () {
             $scope.urlDialog = ngDialog.open({
-                template:  '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div><ul class="admin-ng-content"><li>  您确认要清空当前填写的内容吗？</li></ul>' + '<div class="ng-button-div"><button type="button" class="ngdialog-button ng-button " ng-click="sureClear()">确认</button>\
+                template: '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div><ul class="admin-ng-content"><li>  您确认要清空当前填写的内容吗？</li></ul>' + '<div class="ng-button-div"><button type="button" class="ngdialog-button ng-button " ng-click="sureClear()">确认</button>\
                   <button type="button" class="ngdialog-button ngdialog-button-secondary " ng-click="closeThisDialog(0)">取消</button></div></div>',
                 className: 'ngdialog-theme-default admin_ngdialog',
                 plain: true,
                 scope: $scope
             });
             //var isNoClear = confirm("您确认要清空当前填写的内容吗？");
-          $scope.sureClear=function(){
+            $scope.sureClear = function () {
                 //document.getElementById('adTrackForm').reset();
                 window.location.reload();
             }
@@ -190,27 +190,62 @@ define(["./module"], function (ctrs) {
         /**
          * 高级选项
          */
-        $scope.advancedOpt = function(){
-            if($scope.adTrack.mediaPlatform == null || $scope.adTrack.mediaPlatform == ""){
-                document.getElementById("adTypes").disabled = "disabled";
-            }else{
-                document.getElementById("adTypes").disabled = "";
+        $scope.adTrack.mediaPlatform = '';
+        $scope.advancedOpt = function (obj, type) {
+            if (type == 1) {
+                if (obj.name == "其他") {
+                    $scope.adTrack.mediaPlatform = obj.name;
+                    document.getElementById("mediaPlatform").removeAttribute("disabled");
+                } else {
+                    document.getElementById("mediaPlatform").setAttribute("disabled", "disabled");
+                    $scope.adTrack.mediaPlatform = obj.name;
+                }
+                if ($scope.adTrack.mediaPlatform != null && $scope.adTrack.mediaPlatform != "") {
+                    for (var i = 0; i < 4; i++) {
+                        document.getElementsByClassName("adTypes")[i].removeAttribute("disabled")
+                    }
+                }
+            } else if (type == 2) {
+                if (obj == "其他") {
+                    $scope.adTrack.adTypes = "其他";
+                    document.getElementById("adTypes").removeAttribute("disabled");
+                } else {
+                    $scope.adTrack.adTypes = obj;
+                    document.getElementById("adTypes").setAttribute("disabled", "disabled")
+                }
+                if ($scope.adTrack.adTypes != null && $scope.adTrack.adTypes != "") {
+                    document.getElementById("planName").removeAttribute("disabled");
+                }
+            } else if (type == 3) {
+                if ($scope.adTrack.planName != null && $scope.adTrack.planName != "") {
+                    document.getElementById("keywords").removeAttribute("disabled");
+                } else {
+                    document.getElementById("keywords").setAttribute("disabled", "disabled");
+                }
+            } else if (type == 4) {
+                if ($scope.adTrack.keywords != "" && $scope.adTrack.keywords != null) {
+                    document.getElementById("creative").removeAttribute("disabled");
+                } else {
+                    document.getElementById("creative").setAttribute("disabled", "disabled");
+                }
             }
-            if($scope.adTrack.adTypes == null || $scope.adTrack.adTypes == ""){
-                document.getElementById("planName").disabled = "disabled";
-            }else{
-                document.getElementById("planName").disabled = "";
-            }
-            if($scope.adTrack.planName == null || $scope.adTrack.planName == ""){
-                document.getElementById("keywords").disabled = "disabled";
-            }else{
-                document.getElementById("keywords").disabled = "";
-            }
-            if($scope.adTrack.keywords == null || $scope.adTrack.keywords == ""){
-                document.getElementById("creative").disabled = "disabled";
-            }else{
-                document.getElementById("creative").disabled = "";
-            }
+
+
+            /*if($scope.adTrack.adTypes == null || $scope.adTrack.adTypes == ""){
+             document.getElementById("planName").disabled = "disabled";
+             }else{
+             document.getElementById("planName").disabled = "";
+             }
+             if($scope.adTrack.planName == null || $scope.adTrack.planName == ""){
+             document.getElementById("keywords").disabled = "disabled";
+             }else{
+             document.getElementById("keywords").disabled = "";
+             }
+             if($scope.adTrack.keywords == null || $scope.adTrack.keywords == ""){
+             document.getElementById("creative").disabled = "disabled";
+             }else{
+             document.getElementById("creative").disabled = "";
+             }*/
         };
         //提示
         $scope.fzk = {
@@ -222,15 +257,25 @@ define(["./module"], function (ctrs) {
         $scope.mediaPlatformhelp = {
             "help": false//是否显示帮组信息
         };
-        $scope.addblur= function (obj) {
-            obj.help=   false;
+        $scope.addblur = function (obj) {
+            obj.help = false;
         };
-        $scope.addfocus= function (obj) {
+        $scope.addfocus = function (obj) {
             obj.help = true;
         };
         Custom.initCheckInfo();//页面check样式js调用
-        $scope.adtrack_checked={};
-        $scope.adtrack_checkeds=[ {name: '搜狐'},{name: '新浪'},{name: '网易'},{name: '博客'},{name: '微博'},{name: '微信'},{name: '贴吧 '},{name: '论坛/BBS'},{name: '其他'}];
+        $scope.adtrack_checked = {};
+        $scope.adtrack_checkeds = [
+            {name: '搜狐'},
+            {name: '新浪'},
+            {name: '网易'},
+            {name: '博客'},
+            {name: '微博'},
+            {name: '微信'},
+            {name: '贴吧 '},
+            {name: '论坛/BBS'},
+            {name: '其他'}
+        ];
         //$scope.adtrack_checkeds=[  'fzk1', 'fzk2'];
 
     });

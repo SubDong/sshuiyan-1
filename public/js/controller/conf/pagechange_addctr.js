@@ -56,12 +56,42 @@ define(["./module"], function (ctrs) {
             checkAndForceUrls(target_urls);
             target_urls.push(angular.copy(singleUrl));
         };
-        $scope.removeTargetUrl = function (target_urls, index) {
-            target_urls.splice(index, 1);
+//        确认弹出框
+        $scope.removeTargetUrl = function (target_urls,index) {
+            $scope.openTargetUrlConfirmDialog = ngDialog.openConfirm({
+                template:'<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自目标URL的消息</div>' +
+                    '<ul class="admin-ng-content">' +
+                    '<li> 你确定删除这个目标URL吗？</li></ul>' +
+                    '<div class="ng-button-div"> <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>' +
+                    '<button type="button" class="ngdialog-button ng-button" ng-click="confirm()">确定</button></div>' +
+                    '</div>',
+                className: 'ngdialog-theme-default admin_ngdialog',
+                plain: true,
+                scope : $scope
+            }).then(function () {
+                target_urls.splice(index, 1);
+            }, function (reason) {
+                return;
+            });
         };
+
         //增删步骤URL
         $scope.removeStepUrl = function (step_urls, index) {
-            step_urls.splice(index, 1);
+            $scope.openStepUrlConfirmDialog = ngDialog.openConfirm({
+                template:'<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自路径类型的消息</div>' +
+                    '<ul class="admin-ng-content">' +
+                    '<li> 你确定删除这个步骤URL吗？</li></ul>' +
+                    '<div class="ng-button-div"> <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>' +
+                    '<button type="button" class="ngdialog-button ng-button" ng-click="confirm()">确定</button></div>' +
+                    '</div>',
+                className: 'ngdialog-theme-default admin_ngdialog',
+                plain: true,
+                scope : $scope
+            }).then(function () {
+                step_urls.splice(index, 1);
+            }, function (reason) {
+                return;
+            });
         };
         $scope.addStepUrl = function (step_urls, step_url, index) {
             checkAndForceUrls(step_urls);
@@ -76,7 +106,21 @@ define(["./module"], function (ctrs) {
             paths.push(angular.copy(singlePath));
         };
         $scope.removePath = function (steps, _index) {
-            steps.splice(_index, 1);
+            $scope.openPathConfirmDialog = ngDialog.openConfirm({
+                template:'<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自路径类型的消息</div>' +
+                    '<ul class="admin-ng-content">' +
+                    '<li> 你确定删除这个路径吗？</li></ul>' +
+                    '<div class="ng-button-div"> <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>' +
+                    '<button type="button" class="ngdialog-button ng-button" ng-click="confirm()">确定</button></div>' +
+                    '</div>',
+                className: 'ngdialog-theme-default admin_ngdialog',
+                plain: true,
+                scope : $scope
+            }).then(function () {
+                steps.splice(_index, 1);
+            }, function (reason) {
+                return;
+            });
         };
 
         $scope.insertOrder = function(){
