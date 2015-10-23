@@ -1,22 +1,29 @@
 <div class="middle_containers" ng-controller="count_timechange">
     <div class="time">
-        <span class="time_title_span"><span ng-bind-html="userTypeName"></span> -时长转化目标</span>   <!--标题-->
-        <div class="time_banner"><img src="../img/bg.png" alt="背景图片" class="img-responsive"/></div> <!--banner图-->
+        <span class="time_title_span"><span ng-bind-html="userTypeName"></span> -时长转化目标</span> <!--标题-->
+        <div class="time_banner"><img src="../img/bg.png" alt="背景图片" class="img-responsive"/></div>
+        <!--banner图-->
         <div class="time_content">
             <!--主要内容-->
             <ul>
                 <li>
                     <div class="time_content_left">
                         <ul>
-                            <li><input type="checkbox" name="设置时长转化" data-ng-model="time_conv.status" ng-change="onCheckBoxChange()" /><span>设置时长转化</span></li>
-                            <li>访客的一次访问中，访问总时长超过 <input type="text"  maxlength="128"class="form-control time_content_left_input" placeholder="30"  onkeyup="this.value=this.value.replace(/\D/g,'')"  onafterpaste="this.value=this.value.replace(/\D/g,'')" ng-model="time_conv.val" ng-readonly="truefalse" /> 秒时，记录为一次转化。</li>
+                            <li><input type="checkbox" name="设置时长转化" data-ng-model="time_conv.status"
+                                       ng-change="onCheckBoxChange()"/><span>设置时长转化</span></li>
+                            <li>访客的一次访问中，访问总时长超过 <input type="text" maxlength="128" placeholder="30"
+                                                        class="form-control time_content_left_input"
+                                                        onkeyup="this.value=this.value.replace(/\D/g,'')"
+                                                        onafterpaste="this.value=this.value.replace(/\D/g,'')"
+                                                         onblur="this.value=this.value.match(/^((1[1-9])|([2-9]\d)|([1-9]\d{2,}))$/)" data-ng-model="time_conv.val" ng-readonly="truefalse"/> 秒时，记录为一次转化。
+                            </li>
                         </ul>
                     </div>
                     <div class="time_content_right">
                         <div class="popover right box " style="display: block;">
                             <div class="arrow"></div>
                             <div class="popover-content">
-                                <p>设置时长转化<br/>客户在网站上停留超过一定时间计为一次转化。一般网站<br/>推荐设置为30秒。</p>
+                                <p>设置时长转化<br/>客户在网站上停留超过一定时间计为一次转化。一般网站<br/>推荐设置为30秒。(设置的值必须为大于或等于10的倍数)</p>
                             </div>
                         </div>
                     </div>
@@ -25,15 +32,21 @@
                 <li>
                     <div class="time_content_left">
                         <ul>
-                            <li><input type="checkbox"   name="设置时长转化" data-ng-model="pv_conv.status" ng-change="onCheckBoxChange()" /><span>设置访问页数转化</span></li>
-                            <li>访客的一次访问中，访问总页数超过  <input type="text" maxlength="128"  onkeyup="this.value=this.value.replace(/\D/g,'')"  onafterpaste="this.value=this.value.replace(/\D/g,'')" class="form-control time_content_left_input" placeholder="3" ng-model="pv_conv.val" ng-readonly="truefalsenext"/> 页时，记录为一次转化。</li>
+                            <li><input type="checkbox" name="设置时长转化" data-ng-model="pv_conv.status"
+                                       ng-change="onCheckBoxChange()"/><span>设置访问页数转化</span></li>
+                            <li>访客的一次访问中，访问总页数超过 <input type="text" maxlength="128"
+                                                        onkeyup="this.value=this.value.replace(/\D/g,'')"
+                                                        onafterpaste="this.value=this.value.replace(/\D/g,'')"
+                                                        class="form-control time_content_left_input" placeholder="2"
+                                                        onblur="this.value=this.value.match(/(d{2,}|[2-9])$/)" ng-model="pv_conv.val" ng-readonly="truefalsenext"/> 页时，记录为一次转化。
+                            </li>
                         </ul>
                     </div>
                     <div class="time_content_right">
-                        <div class="popover right box "style="display: block;">
+                        <div class="popover right box " style="display: block;">
                             <div class="arrow"></div>
                             <div class="popover-content">
-                                <p>设置访问页数转化<br/>客户在网站上浏览页面数超过一定值计为一次转化。一般<br/>网站推荐设置为3页。</p>
+                                <p>设置访问页数转化<br/>客户在网站上浏览页面数超过一定值计为一次转化。一般<br/>网站推荐设置为3页。设置的值必须为大于或等于2的倍数)</p>
                             </div>
                         </div>
                     </div>

@@ -10,6 +10,10 @@ define(["./module"], function (ctrs) {
             status: false,
             val: 30
         };
+         $scope.timeconv=function(val){
+            console.log(val)
+        };
+
         $scope.pv_conv = {
             status: false,
             val: 3
