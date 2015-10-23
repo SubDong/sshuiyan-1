@@ -1720,6 +1720,7 @@ define(["app"], function (app) {
                 $rootScope.tableSwitch.tableFilter = "[{\"" + $rootScope.tableSwitch.latitude.field + "\":[\"" + getField(a, $rootScope.tableSwitch.latitude.field) + "\"]}" + newFileter + "]";
             }
         };
+        // 对比时的底部显示
         $scope.getCourFooterData = function (a, option, number) {
             var rast = [0.0, 0.0];
             var rastString = ["", ""];
@@ -1749,9 +1750,11 @@ define(["app"], function (app) {
             }
 
             var bhl = (((parseFloat(((rast[0] + "").replace("%", ""))) - parseFloat(((rast[1] + "").replace("%", "")))) / parseFloat(((rast[1] + "").replace("%", "")))) * 100 ).toFixed(2) + "%";
-            if ((bhl + "").indexOf("NaN") == -1 || (bhl + "").indexOf("Infinity") == -1) {
+
+            if ((bhl + "").indexOf("NaN") != -1 || (bhl + "").indexOf("Infinity") != -1) {
                 bhl = "--";
             }
+            
             switch (number) {
                 case 0:
                     return str;
@@ -1760,11 +1763,11 @@ define(["app"], function (app) {
                 case 2:
                     return rastString[1] != "" ? (rastString[1] + "").indexOf("NaN") != -1 ? 0 : rastString[1] : (rast[1] + "").indexOf("NaN") != -1 ? 0 : rast[1];
                 case 3:
-                    return bhlString != "" ? bhlString : (bhl + "").indexOf("NaN") != -1 ? 0 : bhl;
+                    return bhlString != "" ? bhlString : bhl;
                 default :
                     return "--";
             }
-        }
+        };
         $scope.getCellDisplayValueReferrer = function (grid, row, number) {
             var a = row.entity.referrer.split(",");
             if (number == 1) {
