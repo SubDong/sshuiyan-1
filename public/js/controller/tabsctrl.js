@@ -351,11 +351,7 @@ define(["app"], function (app) {
                 }
             }
 
-            angular.forEach($rootScope.gridArray, function (_record, index) {
-                if (_record.name == "新访客比率" || _record.name == "跳出率") {
-                    _record.sortingAlgorithm = $rootScope.sortPercent;
-                }
-            });
+
 
             angular.forEach(entities, function (subscription, index) {
                 if (subscription.name == item.name) {
@@ -1053,6 +1049,26 @@ define(["app"], function (app) {
             $scope.gridOptions.rowHeight = 32;
             $scope.gridOptions.columnFooterHeight = 32;
             $(".custom_table i").css({"display": "block"});
+
+
+            //默认指标设置排序类型
+            angular.forEach($rootScope.gridArray, function (_record, index) {
+
+
+                angular.forEach($rootScope.gridArray, function (_record, index) {
+
+                    if (_record.name == "新访客比率" || _record.name == "跳出率") {
+                        _record.sortingAlgorithm = $rootScope.sortPercent;
+                    } else if (_record.field == "vc" || _record.field == "uv" || _record.field == "pv"
+                       || _record.field == "nuv" || _record.field == "ip" ||  _record.field == "avgPage" ) {
+                        _record.sortingAlgorithm = $rootScope.sortNumber;
+                    }
+
+                });
+
+
+            });
+
 
             //if (isClicked) {
             $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
@@ -2057,10 +2073,10 @@ define(["app"], function (app) {
                     return 0;
                 }
                 if (parseInt(a) < parseInt(b)) {
-                    return 1;
+                    return -1;
                 }
                 if (parseInt(a) > parseInt(b)) {
-                    return -1;
+                    return 1;
                 }
                 return 0;
             }

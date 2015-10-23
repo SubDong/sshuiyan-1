@@ -6,7 +6,7 @@ var express = require('express');
 var api = express.Router();
 var http = require('http');
 var url = require('url');
-var config = require("../../config_production.json");
+var config = require("../../config_dev.json");
 var cache = config.cache;
 var bufferutils = require('../utils/bufferutils');
 
