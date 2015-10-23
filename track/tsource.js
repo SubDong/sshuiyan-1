@@ -464,7 +464,7 @@ if (config != undefined && !config.open) {
                         r.setTime(r.getTime() * 100);
                         document.cookie = "vid=" + p.createUUID() + ";expires=" + r.toGMTString() + ";domain=" + g.getDomain() + "; path=/"
                     }
-                    g.g.vid = "C6CB9A30AC0000016FBFEC9612D7EFF0"//this.getData("vid")
+                    g.g.vid = this.getData("vid")
                 }, par: function () {
                     var s = "", r = d.I.Q, u = g.g, t = g.cookie;
                     for (var v = 0; v < r.length; v++) {
