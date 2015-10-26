@@ -240,37 +240,7 @@ define(["app"], function (app) {
             $scope.gridBtnDivObj = "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'>" + $rootScope.tableSwitch.coding + "</ul></div></div>";
         }
 
-        //排序
-        $rootScope.sortNumber = function (a, b) {
-            var nulls = $rootScope.gridApi2.core.sortHandleNulls(a, b);
-            if (nulls !== null) {
-                return nulls;
-            } else {
-                if (parseInt(a) === parseInt(b)) {
-                    return 0;
-                }
-                if (parseInt(a) < parseInt(b)) {
-                    return -1;
-                }
-                if (parseInt(a) > parseInt(b)) {
-                    return 1;
-                }
-                return 0;
-            }
 
-        }
-        // 百分比排序
-        $rootScope.sortPercent = function (a, b) {
-            var _t_a = a.substring(0, a.length - 1);
-            var _t_b = a.substring(0, b.length - 1);
-            if (_t_a == _t_b) {
-                return 0;
-            }
-            if (_t_a < _t_b) {
-                return -1;
-            }
-            return 1;
-        }
 
         $rootScope.indicators = function (item, entities, number, refresh) {
             $rootScope.gridArray.shift();
@@ -1071,7 +1041,37 @@ define(["app"], function (app) {
             return val
         }
 
+        //排序
+        $rootScope.sortNumber = function (a, b) {
+            var nulls = $rootScope.gridApi2.core.sortHandleNulls(a, b);
+            if (nulls !== null) {
+                return nulls;
+            } else {
+                if (parseInt(a) === parseInt(b)) {
+                    return 0;
+                }
+                if (parseInt(a) < parseInt(b)) {
+                    return -1;
+                }
+                if (parseInt(a) > parseInt(b)) {
+                    return 1;
+                }
+                return 0;
+            }
 
+        }
+        // 百分比排序
+        $rootScope.sortPercent = function (a, b) {
+            var _t_a = a.substring(0, a.length - 1);
+            var _t_b = a.substring(0, b.length - 1);
+            if (_t_a == _t_b) {
+                return 0;
+            }
+            if (_t_a < _t_b) {
+                return -1;
+            }
+            return 1;
+        }
 
 
 
@@ -1089,7 +1089,7 @@ define(["app"], function (app) {
             $(".custom_table i").css({"display": "block"});
 
             //默认指标设置排序类型
-            angular.forEach($rootScope.gridArray, function (_record, index) {
+            angular.forEach($scope.gridOptions.columnDefs, function (_record, index) {
                 if (_record.name == "新访客比率" || _record.name == "跳出率") {
                     _record.sortingAlgorithm = $rootScope.sortPercent;
                 } else if (_record.field == "vc" || _record.field == "uv" || _record.field == "pv"
