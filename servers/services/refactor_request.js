@@ -570,8 +570,8 @@ var nuvRateFn = function (result) {
 
     for (var i = 0, l = result.length; i < l; i++) {
         var nuv = result[i].new_visitor_aggs.nuv_aggs.value;
-        //var uv = result[i].uv_aggs.value;
-        var uv = result[i].uv_filter.uv_aggs.value;
+        var uv = result[i].uv_aggs.value;
+      //  var uv = result[i].uv_filter.uv_aggs.value;
         keyArr.push(result[i].key);
 
         var nuvRate = 0;

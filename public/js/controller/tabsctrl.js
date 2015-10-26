@@ -239,6 +239,9 @@ define(["app"], function (app) {
         } else if ($rootScope.tableSwitch.number == 2) {
             $scope.gridBtnDivObj = "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'>" + $rootScope.tableSwitch.coding + "</ul></div></div>";
         }
+
+
+
         $rootScope.indicators = function (item, entities, number, refresh) {
             $rootScope.gridArray.shift();
             $rootScope.gridArray.shift();
@@ -351,13 +354,13 @@ define(["app"], function (app) {
                 }
             }
 
-
-
             angular.forEach(entities, function (subscription, index) {
                 if (subscription.name == item.name) {
                     $scope.classInfo = 'current';
                 }
             });
+
+
             //$rootScope.$broadcast("ssh_reload_datashow");
         }
         var temp_path = $location.path();
@@ -1037,6 +1040,41 @@ define(["app"], function (app) {
             }
             return val
         }
+
+
+        //排序
+        $rootScope.sortNumber = function (a, b) {
+            var nulls = $rootScope.gridApi2.core.sortHandleNulls(a, b);
+            if (nulls !== null) {
+                return nulls;
+            } else {
+                if (parseInt(a) === parseInt(b)) {
+                    return 0;
+                }
+                if (parseInt(a) < parseInt(b)) {
+                    return 1;
+                }
+                if (parseInt(a) > parseInt(b)) {
+                    return -1;
+                }
+                return 0;
+            }
+
+        }
+        // 百分比排序
+        $rootScope.sortPercent = function (a, b) {
+            var _t_a = a.substring(0, a.length - 1);
+            var _t_b = a.substring(0, b.length - 1);
+            if (_t_a == _t_b) {
+                return 0;
+            }
+            if (_t_a < _t_b) {
+                return -1;
+            }
+            return 1;
+        }
+
+
         //前端ui-grid通用查询方法
         $rootScope.targetSearch = function (isClicked) {
             if (window.location.href.split("/")[window.location.href.split("/").length - 1] == "changelist") {
@@ -1050,24 +1088,16 @@ define(["app"], function (app) {
             $scope.gridOptions.columnFooterHeight = 32;
             $(".custom_table i").css({"display": "block"});
 
-
             //默认指标设置排序类型
-            angular.forEach($rootScope.gridArray, function (_record, index) {
-
-
-                angular.forEach($rootScope.gridArray, function (_record, index) {
-
-                    if (_record.name == "新访客比率" || _record.name == "跳出率") {
-                        _record.sortingAlgorithm = $rootScope.sortPercent;
-                    } else if (_record.field == "vc" || _record.field == "uv" || _record.field == "pv"
-                       || _record.field == "nuv" || _record.field == "ip" ||  _record.field == "avgPage" ) {
-                        _record.sortingAlgorithm = $rootScope.sortNumber;
-                    }
-
-                });
-
-
+            angular.forEach($scope.gridOptions.columnDefs, function (_record, index) {
+                if (_record.name == "新访客比率" || _record.name == "跳出率") {
+                    _record.sortingAlgorithm = $rootScope.sortPercent;
+                } else if (_record.field == "vc" || _record.field == "uv" || _record.field == "pv"
+                    || _record.field == "nuv" || _record.field == "ip" ||  _record.field == "avgPage" ) {
+                    _record.sortingAlgorithm = $rootScope.sortNumber;
+                }
             });
+
 
 
             //if (isClicked) {
@@ -2066,37 +2096,7 @@ define(["app"], function (app) {
                 }
             });
         };
-        //排序
-        $rootScope.sortNumber = function (a, b) {
-            var nulls = $rootScope.gridApi2.core.sortHandleNulls(a, b);
-            if (nulls !== null) {
-                return nulls;
-            } else {
-                if (parseInt(a) === parseInt(b)) {
-                    return 0;
-                }
-                if (parseInt(a) < parseInt(b)) {
-                    return -1;
-                }
-                if (parseInt(a) > parseInt(b)) {
-                    return 1;
-                }
-                return 0;
-            }
 
-        }
-        // 百分比排序
-        $rootScope.sortPercent = function (a, b) {
-            var _t_a = a.substring(0, a.length - 1);
-            var _t_b = a.substring(0, b.length - 1);
-            if (_t_a == _t_b) {
-                return 0;
-            }
-            if (_t_a < _t_b) {
-                return -1;
-            }
-            return 1;
-        }
         $scope.$on('parrentData', function (d, data) {
             $scope.gridOpArray = angular.copy(data.gridArray);
             $scope.gridOptions.columnDefs = $scope.gridOpArray;
