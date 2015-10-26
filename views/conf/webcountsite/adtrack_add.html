@@ -75,9 +75,12 @@
                     <p>（广告所属的推广计划，如：端午活动）</p>
 
                     <div class="">
-                        <input type="text" disabled maxlength="128" id="planName" name="planName"
+                        <input type="text" disabled maxlength="30" id="planName" name="planName"
                                ng-model="adTrack.planName" data-ng-change="advancedOpt('other',3)"/>
                     </div>
+                    <span style="color:red" ng-show="adTrack.planName.length>=30">
+                            最多30个字符
+                    </span>
                 </li>
                 <li>
                     <span>关键词<p>（可填写多个，每行一个）</p></span>

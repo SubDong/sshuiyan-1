@@ -149,7 +149,7 @@ define(["./module"], function (ctrs) {
                     // 图表首行缩进
                     bGap: true,
                     // 要渲染的图表元素id
-                    id: "indicators_charts",
+                    id: "ads_source",
                     // 图表类型
                     chartType: "bar",
                     keyFormat: 'eq',
