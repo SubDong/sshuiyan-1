@@ -158,10 +158,18 @@ define(["./module"], function (ctrs) {
 
             var xAxisData = [];
             var seriesData = [];
+            var myChart = echarts.init(document.getElementById('myChart'));
+
+
+            if($scope.groupTableDataes == null || $scope.groupTableDataes.length <= 0 ) {
+                myChart = null;
+                return;
+            }
 
             angular.forEach($scope.tables, function (data, index, array) {
                 xAxisData.push(data.name);
             });
+
             /*为了每行中每列达到12*/
             angular.forEach($scope.groupTableDataes, function (data, index, array) {
                 var tdLength = data.gaResultTdDatas.length;
@@ -194,8 +202,6 @@ define(["./module"], function (ctrs) {
                 });
             }
             //console.log(seriesData);
-
-            var myChart = echarts.init(document.getElementById('myChart'));
             option = {
                 tooltip: {
                     trigger: 'axis',
@@ -287,10 +293,11 @@ define(["./module"], function (ctrs) {
                 method: 'GET',
                 url: url
             }).success(function (data) {
-//                console.log(data);
+
                 $scope.groupTableDataes = data.gaResultTrData;
                 $scope.interval = data.intervalValue;
                 $scope.init();
+
             });
 
         }
