@@ -1382,6 +1382,7 @@ define(["app"], function (app) {
                 $scope.targetDataContrast(startTime, endTime, function (contrast) {
                     item.forEach(function (a, b) {
                         var dataObj = {};
+                        var is = 1;
                         for (var i = 0; i < contrast.length; i++) {
                             if (a[target] == contrast[i][target]) {
                                 $rootScope.checkedArray.forEach(function (tt, aa) {
@@ -1393,8 +1394,6 @@ define(["app"], function (app) {
                                 dataArray.push(a);
                                 is = 0;
                                 return;
-                            } else {
-                                is = 1
                             }
                         }
                         if (is == 1) {
