@@ -33,15 +33,13 @@
                                                                                              ng-click="advancedOpt(adtrack_checked,1)"
                                                                                              value="{{adtrack_checked.name}}"/><span>&nbsp;{{adtrack_checked.name}}</span>
                             </li>
-
                         </ul>
                         <ul>
-                            <input type="text" maxlength="128" disabled="disabled"
+                            <input type="text" maxlength="7" disabled="disabled" data-ng-change="advancedOpt('other',1)"
                                    data-ng-focus="addfocus(mediaPlatformhelp)" data-ng-blur="addblur(mediaPlatformhelp)"
-                                   id="mediaPlatform" name="mediaPlatform" ng-model="adTrack.mediaPlatform"
-                                   placeholder="请输入" required/>
-                            <span style="color:red" ng-show="adTrackForm.mediaPlatform.$invalid">
-                                <span ng-show="adTrackForm.mediaPlatform.$error.required && mediaPlatformhelp.help">媒介平台必填</span>
+                                   id="mediaPlatform" name="mediaPlatform" data-ng-model="adTrack.temMediaPlatform"/>
+                            <span style="color:red">
+                                <span ng-show="adTrack.temMediaPlatform.length==0 && mediaPlatformFocus"> 最多7个字符(不能为空)</span>
                             </span>
                         </ul>
                     </div>
@@ -54,7 +52,7 @@
                 <li><span>广告类型<p>（广告所投放的具体形式，如：文字广告，图片广告等）</p></span>
 
                     <div class="adtrack_add_input">
-                        <ul>
+                        <ul style="height: 34px;">
                             <li><input type="radio" disabled class="adTypes" name="adTypes"
                                        ng-click="advancedOpt('文字广告',2)" value="文字广告"/><span>&nbsp;文字广告</span></li>
                             <li><input type="radio" disabled class="adTypes" name="adTypes"
@@ -63,14 +61,24 @@
                                        ng-click="advancedOpt('多媒体广告',2)" value="多媒体广告"/><span>&nbsp多媒体广告</span></li>
                             <li><input type="radio" disabled class="adTypes" name="adTypes"
                                        ng-click="advancedOpt('其他',2)" value="其他"/><span>&nbsp;其他</span></li>
+                            <li style="margin-top: 5px;margin-bottom: 0">
+                                <input type="text" maxlength="7" style="width: 145px;
+    height: 30px;" disabled id="adTypes" name="adTypes" data-ng-model="adTrack.temAdTypes"
+                                       data-ng-blur="advancedOpt('other',2)" data-ng-focus="temAdTypesFocus=true"/>
+
+                                <div>
+                                    <span style="color:red;margin-top: 2px"
+                                          ng-show="adTrack.temAdTypes.length == 0 && temAdTypesFocus">
+                                        最多7个字符(不能为空)
+                                    </span>
+                                </div>
+                            </li>
+
                         </ul>
-                        <ul>
-                            <input type="text" maxlength="128" disabled id="adTypes" name="adTypes"
-                                   ng-model="adTrack.adTypes" ng-click="advancedOpt()"/>
-                        </ul>
+
                     </div>
                 </li>
-                <li><span class="adtrack_add_tz">计划名称</span>
+                <li style="margin-top: 20px;"><span class="adtrack_add_tz">计划名称</span>
 
                     <p>（广告所属的推广计划，如：端午活动）</p>
 

@@ -50,7 +50,9 @@ define(["./module"], function (ctrs) {
         $scope.adTrack = {
             targetUrl: "",
             mediaPlatform: "",
+            temMediaPlatform: "", /*暂存的mediaPlatform*/
             adTypes: "",
+            temAdTypes: "", /*暂存的adTypes*/
             planName: "",
             keywords: "",
             creative: ""
@@ -190,12 +192,14 @@ define(["./module"], function (ctrs) {
         /**
          * 高级选项
          */
-        $scope.adTrack.mediaPlatform = '';
         $scope.advancedOpt = function (obj, type) {
             if (type == 1) {
                 if (obj.name == "其他") {
-                    $scope.adTrack.mediaPlatform = obj.name;
+                    $scope.adTrack.mediaPlatform = "";
                     document.getElementById("mediaPlatform").removeAttribute("disabled");
+                    document.getElementById("mediaPlatform").focus();
+                } else if (obj == "other") {
+                    $scope.adTrack.mediaPlatform = $scope.adTrack.temMediaPlatform;
                 } else {
                     document.getElementById("mediaPlatform").setAttribute("disabled", "disabled");
                     $scope.adTrack.mediaPlatform = obj.name;
@@ -204,17 +208,26 @@ define(["./module"], function (ctrs) {
                     for (var i = 0; i < 4; i++) {
                         document.getElementsByClassName("adTypes")[i].removeAttribute("disabled")
                     }
+                } else {
+                    for (var j = 0; j < 4; j++) {
+                        document.getElementsByClassName("adTypes")[j].setAttribute("disabled", "disabled");
+                    }
                 }
             } else if (type == 2) {
                 if (obj == "其他") {
-                    $scope.adTrack.adTypes = "其他";
+                    $scope.adTrack.adTypes = "";
                     document.getElementById("adTypes").removeAttribute("disabled");
+                    document.getElementById("adTypes").focus();
+                } else if (obj == "other") {
+                    $scope.adTrack.adTypes = document.getElementById("adTypes").value;
                 } else {
                     $scope.adTrack.adTypes = obj;
                     document.getElementById("adTypes").setAttribute("disabled", "disabled")
                 }
                 if ($scope.adTrack.adTypes != null && $scope.adTrack.adTypes != "") {
                     document.getElementById("planName").removeAttribute("disabled");
+                } else {
+                    document.getElementById("planName").setAttribute("disabled", "disabled");
                 }
             } else if (type == 3) {
                 if ($scope.adTrack.planName != null && $scope.adTrack.planName != "") {
@@ -262,6 +275,7 @@ define(["./module"], function (ctrs) {
         };
         $scope.addfocus = function (obj) {
             obj.help = true;
+            $scope.mediaPlatformFocus = true;
         };
         Custom.initCheckInfo();//页面check样式js调用
         $scope.adtrack_checked = {};
