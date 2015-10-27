@@ -154,7 +154,7 @@ api.get("/subdirectory_list", function (req, res) {
     switch (type) {
         case "save":
             var entity = query['entity'];
-            var temp = JSON.parse(entity);
+            var temp =  JSON.parse( unescape(entity));
             dao.save(schema_name, temp, function (ins) {
                 datautils.send(res, JSON.stringify(ins));
             });
@@ -165,8 +165,8 @@ api.get("/subdirectory_list", function (req, res) {
             });
             break;
         case "update":
-            var update = query['updates'];
-            dao.update(schema_name, query['query'], query['updates'], function (err, docs) {
+            var updateqry = unescape(query['updates']);
+            dao.update(schema_name, query['query'], updateqry, function (err, docs) {
                 datautils.send(res, docs);
             });
             break;
