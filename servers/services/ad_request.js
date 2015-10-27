@@ -2,7 +2,7 @@
  * Created by icepros on 2015/7/15.
  */
 
-// ÐÂ·Ã¿ÍÊý
+// ï¿½Â·Ã¿ï¿½ï¿½ï¿½
 var _new_visitor_aggs = {
     "filter": {
         "term": {
@@ -18,7 +18,7 @@ var _new_visitor_aggs = {
     }
 };
 
-// ·Ã¿Í´ÎÊý
+// ï¿½Ã¿Í´ï¿½ï¿½ï¿½
 var _vc_aggs = {
     "filter": {
         "term": {
@@ -35,7 +35,7 @@ var _vc_aggs = {
 };
 
 var es_aggs = {
-    // ä¯ÀÀÁ¿£º
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     "pv": {
         "pv_aggs": {
             "value_count": {
@@ -43,7 +43,7 @@ var es_aggs = {
             }
         }
     },
-    // ¹±Ï×ä¯ÀÀÁ¿
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     "contribution": {
         "cpv_aggs": {
             "filter": {
@@ -60,7 +60,7 @@ var es_aggs = {
             }
         }
     },
-    // ·Ã¿ÍÊý
+    // ï¿½Ã¿ï¿½ï¿½ï¿½
     "uv": {
         "uv_aggs": {
             "cardinality": {
@@ -68,11 +68,11 @@ var es_aggs = {
             }
         }
     },
-    // ·ÃÎÊ´ÎÊý
+    // ï¿½ï¿½ï¿½Ê´ï¿½ï¿½ï¿½
     "vc": {
         "vc_aggs": _vc_aggs
     },
-    // Ìø³öÂÊ
+    // ï¿½ï¿½ï¿½ï¿½ï¿½
     "outRate": {
         "single_visitor_aggs": {
             "terms": {
@@ -83,7 +83,7 @@ var es_aggs = {
         },
         "vc_aggs": _vc_aggs
     },
-    // Æ½¾ù·ÃÎÊÊ±³¤
+    // Æ½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
     "avgTime": {
         "tvt_aggs": {
             "terms": {
@@ -105,11 +105,11 @@ var es_aggs = {
         },
         "vc_aggs": _vc_aggs
     },
-    // ÐÂ·Ã¿ÍÊý
+    // ï¿½Â·Ã¿ï¿½ï¿½ï¿½
     "nuv": {
         "new_visitor_aggs": _new_visitor_aggs
     },
-    // ÐÂ·Ã¿Í±ÈÂÊ
+    // ï¿½Â·Ã¿Í±ï¿½ï¿½ï¿½
     "nuvRate": {
         "new_visitor_aggs": _new_visitor_aggs,
         "uv_filter": {
@@ -125,7 +125,7 @@ var es_aggs = {
             }
         }
     },
-    // Æ½¾ù·ÃÎÊÒ³Êý
+    // Æ½ï¿½ï¿½ï¿½ï¿½ï¿½Ò³ï¿½ï¿½
     "avgPage": {
         "pv_aggs": {
             "value_count": {
@@ -134,7 +134,7 @@ var es_aggs = {
         },
         "vc_aggs": _vc_aggs
     },
-    // IPÊý
+    // IPï¿½ï¿½
     "ip": {
         "ip_aggs": {
             "filter": {
@@ -182,7 +182,7 @@ var buildQuery = function (filters, start, end) {
 };
 
 /**
- * ä¯ÀÀÁ¿ pv
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ pv
  * @param result
  * @returns {{label: string, key: Array, quota: Array}}
  */
@@ -202,7 +202,7 @@ var pvFn = function (result) {
     };
 };
 /**
- * ·Ã¿ÍÁ¿ uv
+ * ï¿½Ã¿ï¿½ï¿½ï¿½ uv
  * @param result
  * @returns {{label: string, key: Array, quota: Array}}
  */
@@ -222,7 +222,7 @@ var uvFn = function (result) {
     };
 };
 /**
- * ·ÃÎÊ´ÎÊý vc
+ * ï¿½ï¿½ï¿½Ê´ï¿½ï¿½ï¿½ vc
  * @param result
  * @returns {{label: string, key: Array, quota: Array}}
  */
@@ -244,7 +244,7 @@ var vcFn = function (result) {
     };
 };
 /**
- * Æ½¾ù·ÃÎÊÊ±³¤ avgTime
+ * Æ½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ avgTime
  * @param result
  * @returns {{label: string, key: Array, quota: Array}}
  */
@@ -274,7 +274,7 @@ var avgTimeFn = function (result) {
     };
 };
 /**
- * Ìø³öÂÊ outRate
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ outRate
  * @param result
  * @returns {{label: string, key: Array, quota: Array}}
  */
@@ -302,7 +302,7 @@ var outRateFn = function (result) {
     };
 };
 /**
- * ÐÂ·Ã¿Í nuv
+ * ï¿½Â·Ã¿ï¿½ nuv
  * @param result
  * @returns {{label: string, key: Array, quota: Array}}
  */
@@ -324,7 +324,7 @@ var nuvFn = function (result) {
     };
 };
 /**
- * ÐÂ·Ã¿Í±ÈÂÊ nuvRate
+ * ï¿½Â·Ã¿Í±ï¿½ï¿½ï¿½ nuvRate
  * @param result
  * @returns {{label: string, key: Array, quota: Array}}
  */
@@ -334,8 +334,8 @@ var nuvRateFn = function (result) {
 
     for (var i = 0, l = result.length; i < l; i++) {
         var nuv = result[i].new_visitor_aggs.nuv_aggs.value;
-        //var uv = result[i].uv_aggs.value;
-        var uv = result[i].uv_filter.uv_aggs.value;
+        var uv = result[i].uv_aggs.value;
+        //var uv = result[i].uv_filter.uv_aggs.value;
         keyArr.push(result[i].key);
 
         var nuvRate = 0;
@@ -376,7 +376,7 @@ var ipFn = function (result) {
     };
 };
 /**
- * Æ½¾ù·ÃÎÊÒ³Êý
+ * Æ½ï¿½ï¿½ï¿½ï¿½ï¿½Ò³ï¿½ï¿½
  * @param result
  * @returns {{label: string, key: Array, quota: Array}}
  */
@@ -401,7 +401,7 @@ var avgPageFn = function (result) {
     };
 };
 /**
- * µÖ´ïÂÊ arrivedRate
+ * ï¿½Ö´ï¿½ï¿½ï¿½ arrivedRate
  * @param result
  * @returns {{label: string, key: Array, quota: Array}}
  */

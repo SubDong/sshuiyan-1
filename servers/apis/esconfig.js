@@ -4,7 +4,7 @@
 var config = {
     pv: "pv_aggs.value",
     contribution: "cpv_aggs.cpv_aggs.value",
-    uv: "uv_filter.uv_aggs.value",
+    uv: "uv_aggs.value",
     vc: "vc_aggs.vc_aggs.value",
     avgTime: {
         tvt: "max_aggs.value - min_aggs.value",
@@ -30,7 +30,7 @@ var config = {
     nuv: "new_visitor_aggs.nuv_aggs.value",
     nuvRate: {
         nuv: "new_visitor_aggs.nuv_aggs.value",
-        uv: "uv_filter.uv_aggs.value",
+        uv: "uv_aggs.value",
         nuvRate: "(parseFloat(nuv) / parseFloat(uv) * 100).toFixed(2)"
     }
 }
