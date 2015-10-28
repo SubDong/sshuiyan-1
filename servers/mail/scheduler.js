@@ -23,6 +23,7 @@ module.exports = function (req) {
             mailIntervalIds.forEach(function (mailIntervalId) {
                 mailIntervalId.clear();
             });
+            mailIntervalIds = [];
         }
         if (docs.length) {
             docs.forEach(function (mailRule) {
