@@ -515,6 +515,8 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                         $rootScope.sshuiyanCompareStart = start.format('YYYY-MM-DD');
                         $rootScope.sshuiyanCompareEnd = end.format('YYYY-MM-DD');
                         $rootScope.sshuiyanCompareFlag = true;
+                        $rootScope.startDateString = start.format('YYYY-MM-DD');
+                        $rootScope.endDateString = end.format('YYYY-MM-DD');
                         $rootScope.datepickerClickTow(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
                         scope.datePickerCompare(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
                         //if (!$rootScope.datePickerCompare) {

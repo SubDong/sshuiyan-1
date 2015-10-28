@@ -249,6 +249,7 @@ define(["./module"], function (ctrs) {
             $rootScope.interval = 1;
             $scope.weekcheckClass = false;
             $scope.mothcheckClass = false;
+            $rootScope.tableFormat = "hour";
             if ($scope.compareType) {
                 $scope.charts[0].config.chartType = "line";
                 $scope.charts[0].config.keyFormat = "none";
@@ -267,6 +268,7 @@ define(["./module"], function (ctrs) {
                         $scope.compare(times, type, true);
                         break;
                 }
+                $rootScope.datepickerClickTow($rootScope.startDateString, $rootScope.endDateString);
                 return;
             }
             $scope.charts.forEach(function (e) {
@@ -299,6 +301,7 @@ define(["./module"], function (ctrs) {
             $scope.lastWeekSelect = false;
             $scope.clearCompareSelect = false;
             $rootScope.interval = -1;
+            $rootScope.tableFormat = "day";
             if ($scope.compareType) {
                 $scope.charts[0].config.chartType = "bar";
                 $scope.charts[0].config.keyFormat = "day";
@@ -317,6 +320,7 @@ define(["./module"], function (ctrs) {
                         $scope.compare(times, type, true);
                         break;
                 }
+                $rootScope.datepickerClickTow($rootScope.startDateString, $rootScope.endDateString);
                 return;
             }
             $scope.charts.forEach(function (e) {

@@ -272,7 +272,6 @@ define(["app"], function (app) {
             return 1;
         }
 
-
         $rootScope.indicators = function (item, entities, number, refresh) {
             $rootScope.gridArray.shift();
             $rootScope.gridArray.shift();
@@ -1087,7 +1086,6 @@ define(["app"], function (app) {
 
 
 
-
         //前端ui-grid通用查询方法
         $rootScope.targetSearch = function (isClicked) {
             if (window.location.href.split("/")[window.location.href.split("/").length - 1] == "changelist") {
@@ -1106,11 +1104,10 @@ define(["app"], function (app) {
                 if (_record.name == "新访客比率" || _record.name == "跳出率") {
                     _record.sortingAlgorithm = $rootScope.sortPercent;
                 } else if (_record.field == "vc" || _record.field == "uv" || _record.field == "pv"
-                    || _record.field == "nuv" || _record.field == "ip" ||  _record.field == "avgPage" ) {
+                    || _record.field == "nuv" || _record.field == "ip" || _record.field == "avgPage") {
                     _record.sortingAlgorithm = $rootScope.sortNumber;
                 }
             });
-
 
 
             //if (isClicked) {
@@ -1421,25 +1418,41 @@ define(["app"], function (app) {
             $scope.targetDataContrast(null, null, function (item) {
                 var target = $rootScope.tableSwitch.latitude.field;
                 var dataArray = [];
-                var is = 0;
+                var is = 1;
                 $scope.targetDataContrast(startTime, endTime, function (contrast) {
                     item.forEach(function (a, b) {
                         var dataObj = {};
-                        for (var i = 0; i < contrast.length; i++) {
-                            if (a[target] == contrast[i][target]) {
-                                $rootScope.checkedArray.forEach(function (tt, aa) {
-                                    var bili = ((parseInt(a[tt] + "".replace("%")) - parseInt((contrast[i][tt] + "").replace("%"))) / (parseInt((contrast[i][tt] + "").replace("%")) == 0 ? parseInt(a[tt] + "".replace("%")) : parseInt((contrast[i][tt] + "").replace("%"))) * 100).toFixed(2);
+                        if (target == "period" && $location.$$path == "/trend/today" && $rootScope.tableFormat == "day") {// 今日统计按日统计时特殊处理
+                            $rootScope.checkedArray.forEach(function (tt, aa) {
+                                try {
+                                    var bili = ((parseInt(a[tt] + "".replace("%")) - parseInt((contrast[b][tt] + "").replace("%"))) / (parseInt((contrast[b][tt] + "").replace("%")) == 0 ? parseInt(a[tt] + "".replace("%")) : parseInt((contrast[b][tt] + "").replace("%"))) * 100).toFixed(2);
                                     dataObj[tt] = (isNaN(bili) ? 0 : bili) + "%";
-                                    a[tt] = "　" + "," + a[tt] + "," + contrast[i][tt] + "," + dataObj[tt]
-                                });
-                                a[target] = a[target] + "," + ($rootScope.startString != undefined ? $rootScope.startString : dateTime1[0] == dateTime1[1] ? dateTime1[0] + "," + dateTime2[0] + "," + "变化率" : dateTime1[0] + " 至 " + dateTime1[1]) + "," + (dateTime2[0] + " 至 " + dateTime2[1]) + "," + "变化率";
-                                dataArray.push(a);
-                                is = 0;
-                                return;
-                            } else {
-                                is = 1
+                                    a[tt] = "　" + "," + a[tt] + "," + contrast[b][tt] + "," + dataObj[tt]
+                                } catch (e) {
+                                    a[tt] = "　" + "," + a[tt] + "," + "--" + "," + "--"
+                                }
+                            });
+                            a[target] = a[target] + "," + ($rootScope.startString != undefined ? $rootScope.startString : dateTime1[0] == dateTime1[1] ? dateTime1[0] + "," + dateTime2[0] + "," + "变化率" : dateTime1[0] + " 至 " + dateTime1[1]) + "," + (dateTime2[0] + " 至 " + dateTime2[1]) + "," + "变化率";
+                            dataArray.push(a);
+                            is = 0;
+                        } else {
+                            for (var i = 0; i < contrast.length; i++) {
+                                if (a[target] == contrast[i][target]) {
+                                    $rootScope.checkedArray.forEach(function (tt, aa) {
+                                        var bili = ((parseInt(a[tt] + "".replace("%")) - parseInt((contrast[i][tt] + "").replace("%"))) / (parseInt((contrast[i][tt] + "").replace("%")) == 0 ? parseInt(a[tt] + "".replace("%")) : parseInt((contrast[i][tt] + "").replace("%"))) * 100).toFixed(2);
+                                        dataObj[tt] = (isNaN(bili) ? 0 : bili) + "%";
+                                        a[tt] = "　" + "," + a[tt] + "," + contrast[i][tt] + "," + dataObj[tt]
+                                    });
+                                    a[target] = a[target] + "," + ($rootScope.startString != undefined ? $rootScope.startString : dateTime1[0] == dateTime1[1] ? dateTime1[0] + "," + dateTime2[0] + "," + "变化率" : dateTime1[0] + " 至 " + dateTime1[1]) + "," + (dateTime2[0] + " 至 " + dateTime2[1]) + "," + "变化率";
+                                    dataArray.push(a);
+                                    is = 0;
+                                    return;
+                                } else {
+                                    is = 1
+                                }
                             }
                         }
+
                         if (is == 1) {
                             $rootScope.checkedArray.forEach(function (tt, aa) {
                                 dataObj[tt] = "--";
@@ -1797,7 +1810,7 @@ define(["app"], function (app) {
             if ((bhl + "").indexOf("NaN") != -1 || (bhl + "").indexOf("Infinity") != -1) {
                 bhl = "--";
             }
-            
+
             switch (number) {
                 case 0:
                     return str;
@@ -1951,7 +1964,7 @@ define(["app"], function (app) {
                                 document.getElementById("summary").style.color = "#ea1414";
                             } else if (returnData[0].toString().substring(0, 1) == "-") {
                                 document.getElementById("summary").style.color = "#07cd2c";
-                            } else if(returnData[0]=="0%" || returnData[0]=="0"){
+                            } else if (returnData[0] == "0%" || returnData[0] == "0") {
                                 document.getElementById("summary").style.color = "#01aeef";
                             } else {
                                 document.getElementById("summary").style.color = "#ea1414";

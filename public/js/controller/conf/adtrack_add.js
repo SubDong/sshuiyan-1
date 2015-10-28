@@ -50,7 +50,9 @@ define(["./module"], function (ctrs) {
         $scope.adTrack = {
             targetUrl: "",
             mediaPlatform: "",
+            temMediaPlatform: "", /*暂存的mediaPlatform*/
             adTypes: "",
+            temAdTypes: "", /*暂存的adTypes*/
             planName: "",
             keywords: "",
             creative: ""
@@ -190,12 +192,14 @@ define(["./module"], function (ctrs) {
         /**
          * 高级选项
          */
-        $scope.adTrack.mediaPlatform = '';
         $scope.advancedOpt = function (obj, type) {
             if (type == 1) {
                 if (obj.name == "其他") {
-                    $scope.adTrack.mediaPlatform = obj.name;
+                    $scope.adTrack.mediaPlatform = "";
                     document.getElementById("mediaPlatform").removeAttribute("disabled");
+                    document.getElementById("mediaPlatform").focus();
+                } else if (obj == "other") {
+                    $scope.adTrack.mediaPlatform = $scope.adTrack.temMediaPlatform;
                 } else {
                     document.getElementById("mediaPlatform").setAttribute("disabled", "disabled");
                     $scope.adTrack.mediaPlatform = obj.name;
@@ -204,17 +208,26 @@ define(["./module"], function (ctrs) {
                     for (var i = 0; i < 4; i++) {
                         document.getElementsByClassName("adTypes")[i].removeAttribute("disabled")
                     }
+                } else {
+                    for (var j = 0; j < 4; j++) {
+                        document.getElementsByClassName("adTypes")[j].setAttribute("disabled", "disabled");
+                    }
                 }
             } else if (type == 2) {
                 if (obj == "其他") {
-                    $scope.adTrack.adTypes = "其他";
+                    $scope.adTrack.adTypes = "";
                     document.getElementById("adTypes").removeAttribute("disabled");
+                    document.getElementById("adTypes").focus();
+                } else if (obj == "other") {
+                    $scope.adTrack.adTypes = document.getElementById("adTypes").value;
                 } else {
                     $scope.adTrack.adTypes = obj;
                     document.getElementById("adTypes").setAttribute("disabled", "disabled")
                 }
                 if ($scope.adTrack.adTypes != null && $scope.adTrack.adTypes != "") {
                     document.getElementById("planName").removeAttribute("disabled");
+                } else {
+                    document.getElementById("planName").setAttribute("disabled", "disabled");
                 }
             } else if (type == 3) {
                 if ($scope.adTrack.planName != null && $scope.adTrack.planName != "") {
@@ -259,9 +272,31 @@ define(["./module"], function (ctrs) {
         };
         $scope.addblur = function (obj) {
             obj.help = false;
+            var  siteUrl= $rootScope.siteUrl;
+            var  targetUrl =  $scope.adTrack.targetUrl;
+            if(siteUrl.indexOf("http")==-1){
+                siteUrl="http://"+siteUrl;
+            }
+            if(targetUrl.indexOf("http")==-1){
+                targetUrl ="http://"+targetUrl;
+            }
+            if( ($scope.getDomain(siteUrl).trim()!=$scope.getDomain(targetUrl).trim()) && ($scope.getDomain(targetUrl).trim() != "")){
+                $scope.veryUrl=true;
+                $scope.veryUrlmsg =  "目标url的应该以"+ $scope.getDomain(siteUrl)+"开头";
+            } else {
+                $scope.veryUrl=false;
+            }
         };
+
+        $scope.getDomain= function(weburl){
+            var urlReg=/http:\/\/([^\/]+)/i;
+            var  domain = weburl.match(urlReg);
+            return ((domain != null && domain.length>0)?domain[0]:"");
+        }
+
         $scope.addfocus = function (obj) {
             obj.help = true;
+            $scope.mediaPlatformFocus = true;
         };
         Custom.initCheckInfo();//页面check样式js调用
         $scope.adtrack_checked = {};
@@ -278,5 +313,62 @@ define(["./module"], function (ctrs) {
         ];
         //$scope.adtrack_checkeds=[  'fzk1', 'fzk2'];
 
+        $scope.filterKeywords = function(e,v){
+            var code = e.keyCode;
+            if(code == 13){
+                var strs= new Array();
+                strs = v.split("\n")
+                if(strs.length>1){
+                    console.log("size===="+strs.length);
+                    if(strs.length>10){
+                        $scope.meshelps=true;
+                        return;
+                    }else{
+                        $scope.meshelp=false;
+                        for(var i=0;i<strs.length-1;i++){
+                            for(var j=i+1;j<strs.length;j++){
+                                if (strs[i].trim()==strs[j].trim()){
+
+                                    $scope.mes =  "相同的关键词："+strs[i];
+                                    $scope.meshelp=true;
+                                    break;
+                                }
+
+                            }
+                        }
+                    }
+                }
+
+
+            }
+        };
+
     });
+
+    ctrs.directive('urlverify', ['$rootScope', function($rootScope) {
+        return {
+            require: 'ngModel',
+            link: function(scope, ele, attrs, c) {
+                scope.$watch(attrs.ngModel, function() {
+                    var  siteUrl= $rootScope.siteUrl;
+                    var  targetUrl =  c.$viewValue;
+                    if(siteUrl.indexOf("http")==-1){
+                        siteUrl="http://"+siteUrl;
+                    }
+                    if(targetUrl.indexOf("http")==-1){
+                        targetUrl ="http://"+targetUrl;
+                    }
+                    if( (scope.getDomain(siteUrl).trim()!=scope.getDomain(targetUrl).trim()) && (scope.getDomain(targetUrl).trim() != "")){
+                        c.$setValidity('targetUrl', true);
+                        scope.veryUrl=true;
+                        scope.veryUrlmsg =  "目标url的应该以"+ scope.getDomain(siteUrl)+"开头";
+                    } else {
+                        scope.veryUrl=false;
+                        c.$setValidity('targetUrl', false);
+                    }
+                });
+            }
+        }
+    }]);
+
 });
