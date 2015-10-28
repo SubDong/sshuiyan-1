@@ -35,7 +35,7 @@
                         </ul>
                         <ul>
                             <input type="text" maxlength="7" disabled="disabled" data-ng-change="advancedOpt('other',1)"
-                                   data-ng-focus="addfocus(mediaPlatformhelp)" data-ng-blur="addblur(mediaPlatformhelp)"
+                                   data-ng-focus="mediaPlatformFocus = true"
                                    id="mediaPlatform" name="mediaPlatform" data-ng-model="adTrack.temMediaPlatform"/>
                             <span style="color:red">
                                 <span ng-show="adTrack.temMediaPlatform.length==0 && mediaPlatformFocus"> 最多7个字符(不能为空)</span>
@@ -63,7 +63,7 @@
                             <li style="margin-top: 5px;margin-bottom: 0">
                                 <input type="text" maxlength="7" style="width: 145px;
     height: 30px;" disabled id="adTypes" name="adTypes" data-ng-model="adTrack.temAdTypes"
-                                       data-ng-blur="advancedOpt('other',2)" data-ng-focus="temAdTypesFocus=true"/>
+                                       data-ng-change="advancedOpt('other',2)" data-ng-focus="temAdTypesFocus=true"/>
 
                                 <div>
                                     <span style="color:red;margin-top: 2px"

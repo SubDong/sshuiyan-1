@@ -201,6 +201,8 @@ define(["./module"], function (ctrs) {
                 } else if (obj == "other") {
                     $scope.adTrack.mediaPlatform = $scope.adTrack.temMediaPlatform;
                 } else {
+                    $scope.adTrack.temMediaPlatform = "";
+                    $scope.mediaPlatformFocus = false;
                     document.getElementById("mediaPlatform").setAttribute("disabled", "disabled");
                     $scope.adTrack.mediaPlatform = obj.name;
                 }
@@ -219,8 +221,10 @@ define(["./module"], function (ctrs) {
                     document.getElementById("adTypes").removeAttribute("disabled");
                     document.getElementById("adTypes").focus();
                 } else if (obj == "other") {
-                    $scope.adTrack.adTypes = document.getElementById("adTypes").value;
+                    $scope.adTrack.adTypes = $scope.adTrack.temAdTypes;
                 } else {
+                    $scope.adTrack.temAdTypes = "";
+                    $scope.temAdTypesFocus = false;
                     $scope.adTrack.adTypes = obj;
                     document.getElementById("adTypes").setAttribute("disabled", "disabled")
                 }
@@ -296,7 +300,6 @@ define(["./module"], function (ctrs) {
 
         $scope.addfocus = function (obj) {
             obj.help = true;
-            $scope.mediaPlatformFocus = true;
         };
         Custom.initCheckInfo();//页面check样式js调用
         $scope.adtrack_checked = {};
