@@ -14,14 +14,13 @@
 
                     <div class="">
                         <input type="text" maxlength="128" x ssh-url id="targetUrl" name="targetUrl"
-                               ng-model="adTrack.targetUrl"
-                               data-ng-focus="addfocus(targetUrlHelp)"
-                               data-ng-blur="addblur(targetUrlHelp)" placeholder="www.mydomain/product.html" required/>
+                               ng-model="adTrack.targetUrl" urlverify data-ng-focus="addfocus(targetUrlHelp)" placeholder="www.mydomain/product.html" required/>
                     </div>
                     <span style="color:red" ng-show="adTrackForm.targetUrl.$invalid">
                         <span ng-show="adTrackForm.targetUrl.$error.required && targetUrlHelp.help ">请输入目标URL</span>
                         <span ng-show="adTrackForm.targetUrl.$error.sshUrl">您设置的目标URL格式错误</span>
                     </span>
+                    <span style="color: red" ng-show="veryUrl">{{veryUrlmsg}}</span>
                 </li>
                 <li>
                     <span>媒介平台<p>（广告所投放的平台，如：新浪、搜狐、贴吧、论坛）</p></span>
@@ -96,10 +95,12 @@
                     <div class="">
                         <textarea ng-model="adtrack_add.tNum" class="tNum" disabled></textarea>
                         <textarea id="keywords" data-ng-change="advancedOpt('other',4)" disabled
-                                  data-ng-keyup="addIP($event, adtrack_add)" wrap="off"
-                                  data-ng-model="adTrack.keywords"
+                                  data-ng-keyup="addIP($event, adtrack_add)" wrap="virtual"
+                                  data-ng-model="adTrack.keywords" ng-keydown="filterKeywords($event,adTrack.keywords)"
                                   class="tText"></textarea>
                     </div>
+                    <span style="color: red" data-ng-show="meshelps" >关键字不能超过10个！</span>
+                    <span style="color: red" data-ng-show="meshelp">{{mes}}</span>
                 </li>
                 <li>
                     <span>创意<p>（广告内容的简要描述信息）</p></span>

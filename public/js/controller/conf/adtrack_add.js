@@ -272,7 +272,28 @@ define(["./module"], function (ctrs) {
         };
         $scope.addblur = function (obj) {
             obj.help = false;
+            var  siteUrl= $rootScope.siteUrl;
+            var  targetUrl =  $scope.adTrack.targetUrl;
+            if(siteUrl.indexOf("http")==-1){
+                siteUrl="http://"+siteUrl;
+            }
+            if(targetUrl.indexOf("http")==-1){
+                targetUrl ="http://"+targetUrl;
+            }
+            if( ($scope.getDomain(siteUrl).trim()!=$scope.getDomain(targetUrl).trim()) && ($scope.getDomain(targetUrl).trim() != "")){
+                $scope.veryUrl=true;
+                $scope.veryUrlmsg =  "目标url的应该以"+ $scope.getDomain(siteUrl)+"开头";
+            } else {
+                $scope.veryUrl=false;
+            }
         };
+
+        $scope.getDomain= function(weburl){
+            var urlReg=/http:\/\/([^\/]+)/i;
+            var  domain = weburl.match(urlReg);
+            return ((domain != null && domain.length>0)?domain[0]:"");
+        }
+
         $scope.addfocus = function (obj) {
             obj.help = true;
             $scope.mediaPlatformFocus = true;
@@ -292,5 +313,62 @@ define(["./module"], function (ctrs) {
         ];
         //$scope.adtrack_checkeds=[  'fzk1', 'fzk2'];
 
+        $scope.filterKeywords = function(e,v){
+            var code = e.keyCode;
+            if(code == 13){
+                var strs= new Array();
+                strs = v.split("\n")
+                if(strs.length>1){
+                    console.log("size===="+strs.length);
+                    if(strs.length>10){
+                        $scope.meshelps=true;
+                        return;
+                    }else{
+                        $scope.meshelp=false;
+                        for(var i=0;i<strs.length-1;i++){
+                            for(var j=i+1;j<strs.length;j++){
+                                if (strs[i].trim()==strs[j].trim()){
+
+                                    $scope.mes =  "相同的关键词："+strs[i];
+                                    $scope.meshelp=true;
+                                    break;
+                                }
+
+                            }
+                        }
+                    }
+                }
+
+
+            }
+        };
+
     });
+
+    ctrs.directive('urlverify', ['$rootScope', function($rootScope) {
+        return {
+            require: 'ngModel',
+            link: function(scope, ele, attrs, c) {
+                scope.$watch(attrs.ngModel, function() {
+                    var  siteUrl= $rootScope.siteUrl;
+                    var  targetUrl =  c.$viewValue;
+                    if(siteUrl.indexOf("http")==-1){
+                        siteUrl="http://"+siteUrl;
+                    }
+                    if(targetUrl.indexOf("http")==-1){
+                        targetUrl ="http://"+targetUrl;
+                    }
+                    if( (scope.getDomain(siteUrl).trim()!=scope.getDomain(targetUrl).trim()) && (scope.getDomain(targetUrl).trim() != "")){
+                        c.$setValidity('targetUrl', true);
+                        scope.veryUrl=true;
+                        scope.veryUrlmsg =  "目标url的应该以"+ scope.getDomain(siteUrl)+"开头";
+                    } else {
+                        scope.veryUrl=false;
+                        c.$setValidity('targetUrl', false);
+                    }
+                });
+            }
+        }
+    }]);
+
 });
