@@ -5,13 +5,13 @@ define(["app"], function (app) {
 
     "use strict";
 
-    app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, requestService, SEM_API_URL, $cookieStore, $location, popupService, uiGridConstants) {
+    app.controller("TabsCtrlAds", function ($timeout, $scope, $rootScope, $http, $q, requestService, SEM_API_URL, $cookieStore, $location, popupService, uiGridConstants) {
         $scope.todayClass = true;
         $scope.browserselect = true;
         var user = $rootScope.user;
         $scope.sortType = 'name';
         var baiduAccount = $rootScope.baiduAccount;
-        var esType = $rootScope.userType;
+        var esType = $rootScope.userType+"_ad_track";
         var trackid = $rootScope.siteTrackId;
 
         $scope.tabs = [

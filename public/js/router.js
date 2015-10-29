@@ -239,7 +239,7 @@ define(["angular", "./app"], function (angular, myApp) {
                     resolve: {
                         load: loadDeps([
                             "controller/ads/adsSourceCtr",
-                            "controller/tabsctrl"
+                            "controller/tabsctrlads"
                         ])
                     }
                 })
@@ -249,7 +249,7 @@ define(["angular", "./app"], function (angular, myApp) {
                     resolve: {
                         load: loadDeps([
                             "controller/ads/adsPlanCtr",
-                            "controller/tabsctrl"
+                            "controller/tabsctrlads"
                         ])
                     }
                 })
