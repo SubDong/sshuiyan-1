@@ -299,7 +299,7 @@ define(["./module"], function (ctrs) {
                 $scope.min = data.min;
                 $scope.half = ($scope.max + $scope.min ) / 2;
                 $scope.maxhalf = ($scope.max + $scope.half ) / 2;
-                $scope.minhalf = ($scope.min + $scope.min ) / 2;
+                $scope.minhalf = ($scope.min + $scope.half ) / 2;
 
 
 
