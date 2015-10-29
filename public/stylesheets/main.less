@@ -3255,13 +3255,17 @@ textarea.tNum {
     left: 0;
     right: 0;
     top: 0;
+    height: 26px;
     padding: 0 10px 0 10px;
+    z-index: 1;
   }
   p:first-child {
     background: #f2f2f2;
   }
   li:nth-child(2){
-    margin-top: 15px;
+    position: relative;
+    z-index: 2;
+    padding-bottom: 4px;
   }
   p {
     display: block;
@@ -3512,6 +3516,9 @@ textarea.tNum {
 
 }
 .provincemapmid{
+  .echarts-tooltip li:nth-child(2){
+    padding-bottom: 4px;
+  }
   .echarts-tooltip li{
     padding:0 10px 0 5px;
   }

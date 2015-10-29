@@ -322,7 +322,6 @@ define(["./module"], function (ctrs) {
                 var strs= new Array();
                 strs = v.split("\n")
                 if(strs.length>1){
-                    console.log("size===="+strs.length);
                     if(strs.length>10){
                         $scope.meshelps=true;
                         return;
@@ -343,6 +342,14 @@ define(["./module"], function (ctrs) {
                 }
 
 
+            }else if(code == 8){
+                var strs= new Array();
+                strs = v.split("\n");
+                if(strs.length>10){
+                    $scope.meshelps = true;
+                }else{
+                    $scope.meshelps = false;
+                }
             }
         };
 

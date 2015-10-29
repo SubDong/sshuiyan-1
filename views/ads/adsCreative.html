@@ -64,6 +64,15 @@
                             </li>
                         </ul>
                     </div>
+                    <div class="chart_top">
+                        <span>转化指标 :</span>
+                        <ul>
+                            <li ng-repeat="item in adsTransform" data-sshy-default defvalue="{{item.name}}"
+                                class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                ng-click='indicators(item,transform,6)'>{{item.consumption_name}}
+                            </li>
+                        </ul>
+                    </div>
                     <div class="chart_top chart_noborder">
                         <button class="btn btn-primary" type="button" ng-click="targetSearch(true)">确定</button>
                         * 可同时选择6项

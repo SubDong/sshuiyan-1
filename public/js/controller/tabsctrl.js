@@ -139,6 +139,10 @@ define(["app"], function (app) {
             {consumption_name: '转化率', name: 'crate'},
             {consumption_name: '平均转化成本(事件)', name: 'transformCost'}
         ];
+        $scope.adsTransform = [
+            {consumption_name: '转化次数', name: 'conversions'},
+            {consumption_name: '转化率', name: 'crate'}
+        ];
         $scope.eventParameter = [
             {consumption_name: "事件点击总数", name: "clickTotal"},
             {consumption_name: "唯一访客事件数", name: "visitNum"}

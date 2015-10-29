@@ -164,18 +164,18 @@ var op = {
                 formatter: function (params, ticket, callback) {
                     if (option.tooltip.trigger == "axis") {
                         var xName = params[0].name.toString();
-                        var res = '<li>' + xName + '</li>';
+                        var res = '<li></li><li>' + xName + '</li>';
                         if (xName.indexOf("/点") > -1) {
                             xName = xName.split("/点")[0];
                         }
                         if (chartConfig.compare || chartConfig.compareCustom) {
                             if (chartConfig.chartType == "line") {
-                                res = '<li>' + xName + ':00-' + xName + ':59</li>';
+                                res = '<li></li><li>' + xName + ':00-' + xName + ':59</li>';
                             }
                         } else {
                             if (chartConfig.keyFormat == "none") {
                                 if (!chartConfig.half) {
-                                    res = '<li>' + xName + ':00-' + xName + ':59</li>';
+                                    res = '<li></li><li>' + xName + ':00-' + xName + ':59</li>';
                                 }
                             }
                         }
