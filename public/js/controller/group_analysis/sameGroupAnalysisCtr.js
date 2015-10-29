@@ -295,7 +295,14 @@ define(["./module"], function (ctrs) {
             }).success(function (data) {
 
                 $scope.groupTableDataes = data.gaResultTrData;
-                $scope.interval = data.intervalValue;
+                $scope.max = data.max;
+                $scope.min = data.min;
+                $scope.half = ($scope.max + $scope.min ) / 2;
+                $scope.maxhalf = ($scope.max + $scope.half ) / 2;
+                $scope.minhalf = ($scope.min + $scope.min ) / 2;
+
+
+
                 $scope.init();
 
             });
