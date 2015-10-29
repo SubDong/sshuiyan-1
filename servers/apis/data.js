@@ -89,7 +89,6 @@ api.get('/charts', function (req, res) {
 
 api.get('/adscharts', function (req, res) {
     var query = url.parse(req.url, true).query, quotas = [], type = query['type'], dimension = query.dimension, filter = null, topN = [], userType = query.userType;
-    console.log("--------------------------------"+query);
     var filter_f = query.filter;
     var topN_f = query.topN == undefined ? null : query.topN;
     if (topN_f) {
