@@ -271,12 +271,56 @@ define(["./module"], function (ctrs) {
 
         }
 
-
+        //数据
         $scope.groupTableDataes = []
-        $scope.max = 0.00;
 
 
-        $scope.searchData = function () {
+        //格式化数据
+        $rootScope.gaFormatDataCSV = function () {
+
+            var tableCSV = [];
+
+            var trsData = $scope.groupTableDataes;
+
+            angular.forEach(trsData, function (trData, trIndex, array) {
+
+                var trCsv = '{"日期":"'+trData.code+'","第0天":"'+trData.data+'",';
+                var keepGoing = true;
+
+                angular.forEach(trData.gaResultTdDatas, function (tdData, tdIndex, array) {
+
+                    if(keepGoing) {
+
+                        if($scope.dateRange.selected.field - 1 == tdIndex) {
+                        keepGoing = false;
+
+                        }
+
+                        if(tdData.data != null && tdData != undefined && tdData != "") {
+                             var day = tdIndex + 1;
+                           // if($scope.groupIndex.selected.field != 'retentionRate') {
+                               trCsv += '"第'+ day +'天":"'+tdData.data+'",'
+                           // } else {
+                           //     trCsv += '"第'+ day +'天":"'+tdData.value+'",'
+                           // }
+                         } else {
+                            var day = tdIndex + 1;
+                            trCsv += '"第'+ day +'天":"",'
+                        }
+                    } else {
+                        trCsv = trCsv.substr(0,trCsv.length-1);
+                        trCsv += '}';
+                    }
+                });
+                tableCSV.push(JSON.parse(trCsv));
+                trCsv = "";
+            });
+
+            return JSON.stringify(tableCSV).replace(/\%/g, "*");
+
+        }
+
+        $scope.page_refresh = function () {
 
 
             var parameter = {
@@ -295,20 +339,20 @@ define(["./module"], function (ctrs) {
             }).success(function (data) {
 
                 $scope.groupTableDataes = data.gaResultTrData;
+               // console.log($scope.groupTableDataes);
                 $scope.max = data.max;
                 $scope.min = data.min;
                 $scope.half = ($scope.max + $scope.min ) / 2;
                 $scope.maxhalf = ($scope.max + $scope.half ) / 2;
                 $scope.minhalf = ($scope.min + $scope.half ) / 2;
-
-
-
                 $scope.init();
 
-            });
+             //   console.log($rootScope.gaFormatDataCSV());
 
+
+            });
         }
-        $scope.searchData();
+        $scope.page_refresh();
 
     })
 })

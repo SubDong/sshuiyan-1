@@ -663,6 +663,10 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                                 "  ": ""
                             });
                             var repData = JSON.stringify(_dataInfo).replace(/\%/g, "*");
+
+                        } else if($location.path().indexOf("sameGroupAnalysis") != -1) {
+                            //同类群组分析-下载CSV格式。
+                           var  repData = $rootScope.gaFormatDataCSV();
                         } else {
                             dataHeadInfo.forEach(function (item, i) {
                                 if (item.field != undefined) {
