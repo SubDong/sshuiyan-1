@@ -162,7 +162,7 @@ define(["./module"], function (ctrs) {
                 // 图例过滤的值
                 dimension: ["crt"],
                 interval: $rootScope.interval,
-                url: "/api/charts",
+                url: "/api/adscharts",
                 cb: $scope.dataFormat
             }
         ];
