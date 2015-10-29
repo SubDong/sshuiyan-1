@@ -333,9 +333,9 @@ define(["../app"], function (app) {
                             maxWidth: 10
                         },
                         {
-                            name: "搜索引擎",
-                            displayName: "搜索引擎",
-                            field: "se",
+                            name: "来源",
+                            displayName: "来源",
+                            field: "rf",
                             footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"
                         },
                         {

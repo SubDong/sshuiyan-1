@@ -122,6 +122,9 @@ define(["./module"], function (ctrs) {
                 var topQuota = quota.slice(0, 10);
                 topData.push({key: topKey, label: label, quota: topQuota});
             });
+            for (var i = 0; i < topData.length; i++) {
+                topData[i].label = chartUtils.convertChinese(topData[i].label);
+            }
             // 是否转化
             chartConfig['noFormat'] = true;
             // 是否为双轴
@@ -237,6 +240,14 @@ define(["./module"], function (ctrs) {
         };
         $scope.convertData();
 
+        //日历
+        $rootScope.datepickerClick = function (start, end, label) {
+            var time = chartUtils.getTimeOffset(start, end);
+            $rootScope.tableTimeStart = time[0];
+            $rootScope.tableTimeEnd = time[1];
+            $rootScope.targetSearch();
+            $scope.$broadcast("ssh_dateShow_options_time_change");
+        }
         function GetDateStr(AddDayCount) {
             var dd = new Date();
             dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
