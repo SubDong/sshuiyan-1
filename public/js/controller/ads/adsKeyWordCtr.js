@@ -121,6 +121,9 @@ define(["./module"], function (ctrs) {
                 var topQuota = quota.slice(0, 10);
                 topData.push({key: topKey, label: label, quota: topQuota});
             });
+            for (var i = 0; i < topData.length; i++) {
+                topData[i].label = chartUtils.convertChinese(topData[i].label);
+            }
             // 是否转化
             chartConfig['noFormat'] = true;
             // 是否为双轴
