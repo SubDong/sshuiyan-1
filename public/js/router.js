@@ -259,7 +259,7 @@ define(["angular", "./app"], function (angular, myApp) {
                     resolve: {
                         load: loadDeps([
                             "controller/ads/adsKeyWordCtr",
-                            "controller/searchpromotion"
+                            "controller/tabsctrlads"
                         ])
                     }
                 })
@@ -269,7 +269,7 @@ define(["angular", "./app"], function (angular, myApp) {
                     resolve: {
                         load: loadDeps([
                             "controller/ads/adsCreativeCtr",
-                            "controller/searchpromotion"
+                            "controller/tabsctrlads"
                         ])
                     }
                 })
@@ -279,7 +279,7 @@ define(["angular", "./app"], function (angular, myApp) {
                     resolve: {
                         load: loadDeps([
                             "controller/ads/adsMediumCtr",
-                            "controller/searchpromotion"
+                            "controller/tabsctrlads"
                         ])
                     }
                 })
