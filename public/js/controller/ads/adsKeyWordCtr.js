@@ -10,7 +10,7 @@ define(["./module"], function (ctrs) {
             obj.visitorSearch = "";
         }
         $scope.removeAreaSearch = function (obj) {
-            $scope.kwna.selected = {"name": "全部"};
+            $scope.city.selected = {"name": "全部"};
             $rootScope.$broadcast("loadAllArea");
             obj.areaSearch = "";
         }
@@ -97,7 +97,9 @@ define(["./module"], function (ctrs) {
             // 是否清空指标array
             arrayClear: false,
             // 是否清空filter 默认为清空
-            isJudge: false
+            isJudge: false,
+            //popup等于1时不开启数据过滤，不接入popup属性则开启数据过滤
+            popup:1
         };
 
         // 图例勾选监听事件
@@ -121,6 +123,9 @@ define(["./module"], function (ctrs) {
                 var topQuota = quota.slice(0, 10);
                 topData.push({key: topKey, label: label, quota: topQuota});
             });
+            for (var i = 0; i < topData.length; i++) {
+                topData[i].label = chartUtils.convertChinese(topData[i].label);
+            }
             // 是否转化
             chartConfig['noFormat'] = true;
             // 是否为双轴

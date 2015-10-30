@@ -11,7 +11,7 @@ define(["./module"], function (ctrs) {
             obj.visitorSearch = "";
         }
         $scope.removeAreaSearch = function (obj) {
-            $scope.rf.selected = {"name": "全部"};
+            $scope.city.selected = {"name": "全部"};
             $rootScope.$broadcast("loadAllArea");
             obj.areaSearch = "";
         }
@@ -98,7 +98,9 @@ define(["./module"], function (ctrs) {
             // 是否清空指标array
             arrayClear: false,
             // 是否清空filter 默认为清空
-            isJudge: false
+            isJudge: false,
+            //popup等于1时不开启数据过滤，不接入popup属性则开启数据过滤
+            popup:1
         };
 
         // 图例勾选监听事件
