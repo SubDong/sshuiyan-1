@@ -143,6 +143,10 @@ define(["app"], function (app) {
             {consumption_name: "事件点击总数", name: "clickTotal"},
             {consumption_name: "唯一访客事件数", name: "visitNum"}
         ];
+        $scope.adsTransform = [
+            {consumption_name: '转化次数', name: 'conversions'},
+            {consumption_name: '转化率', name: 'crate'}
+        ];
         //实时访问
         //TODO item["searchWord"] == ""?"--" 为捕获到暂为  --
         var getHtmlTableData = function () {
