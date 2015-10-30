@@ -1922,10 +1922,10 @@ define(["app"], function (app) {
                                     returnData[0] = returnData[0] + "(0.00%)";
                                 }
                             } else {
-                                returnData[0] = returnData[0] == "0" ? "0%" : (returnData[0] > 0 ? ("+" + returnData[0]) : returnData[0]) + "(" + (returnData[0] * 100 / contrastPv).toFixed(2) + "%)";
+                                returnData[0] = returnData[0] == "0" ? "0(0.00%)" : (returnData[0] > 0 ? ("+" + returnData[0]) : returnData[0]) + "(" + (returnData[0] * 100 / contrastPv).toFixed(2) + "%)";
                             }
                         } else {
-                            returnData[0] = returnData[0] == "0" ? "0%" : (returnData[0] / option.length).toFixed(2) + "%";
+                            returnData[0] = returnData[0] == "0" ? "0(0.00%)" : (returnData[0] / option.length).toFixed(2) + "%";
                         }
 
                     }
