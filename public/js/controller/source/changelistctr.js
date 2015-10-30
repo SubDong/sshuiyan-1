@@ -4,7 +4,7 @@
 define(["./module"], function (ctrs) {
 
     'use strict';
-    ctrs.controller('changelistctr', function ($scope, $rootScope, $q, $http, $cookieStore, requestService, messageService, areaService, uiGridConstants, popupService) {
+    ctrs.controller('changelistctr', function ($scope, $rootScope, $q, $http, $cookieStore, $templateCache, requestService, messageService, areaService, uiGridConstants, popupService) {
 //            不显示页面显示条数
             $scope.changeListHide = true;
             //初始化时间
@@ -307,7 +307,8 @@ define(["./module"], function (ctrs) {
                         formUtils.rendererMailData(result, ele);
                     }
                 });
-            }
+            };
+
             $scope.sendConfig = function () {
                 var formData = formUtils.vaildateSubmit($("ul[name='sen_form']"));
                 var result = formUtils.validateEmail(formData.mail_address, formData);
@@ -335,6 +336,21 @@ define(["./module"], function (ctrs) {
                         }
                     });
                 }
+            };
+
+            $scope.generatePDFData = function (cb) {
+                //生成pdf模板数据
+                var data = {
+                    title: $rootScope.startString + "与" + $rootScope.contrastStartString + "来源变化榜数据报告",
+                    startString: $rootScope.startString,
+                    contrastStartString: $rootScope.contrastStartString,
+                    zdmc: "www.best-ad.cn",
+                    zdsy: "best-ad.cn",
+                    author: "Power by best-ad.cn",
+                    changeListData: $rootScope.changeListData,
+                    changeObj: $rootScope.changeObj
+                };
+                cb("ChangeListPDFTemp", data);
             };
         }
     );

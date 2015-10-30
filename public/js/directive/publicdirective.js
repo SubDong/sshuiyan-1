@@ -562,7 +562,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
         return option;
     });
 
-    app.directive("refresh", function ($rootScope, $http, $location, ngDialog) {
+    app.directive("refresh", function ($rootScope, $http, $location, $templateCache, ngDialog) {
         var option = {
             restrict: "EA",
             template: "<div class=\"right_refresh fr\"><button class=\"btn btn-default btn-Refresh fl\" ng-click=\"page_refresh()\"  type=\"button\"><span aria-hidden=\"true\" class=\"glyphicon glyphicon-refresh\"></span></button><button data-ng-click='send()' class=\"btn btn-default btn-Refresh fl\" type=\"button\" ng-show=\"send\" >发送</button><ui-select ng-model=\"export.selected\" data-on-select='fileSave(export.selected)' theme=\"select2\" ng-hide=\"menu_select\" reset-search-input=\"false\" class=\"fl\"style=\"min-width: 90px;background-color: #fff;\"> <ui-select-match placeholder=\"下载\">{{$select.selected.name}} </ui-select-match> <ui-select-choices repeat=\"export in exportsaa\"> <span ng-bind-html=\"export.name\"></span></ui-select-choices></ui-select></div>",
@@ -696,38 +696,46 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                          $rootScope.gridApi.exporter.csvExport("all", "visible", angular.element());
                          }*/
                     } else {
-                        var dataInfo = angular.copy($rootScope.gridApi2.grid.options.data);
-                        var dataHeadInfo = angular.copy($rootScope.gridApi2.grid.options.columnDefs);
-                        dataHeadInfo.forEach(function (item, i) {
-                            if (item.field != undefined) {
-                                dataInfo.forEach(function (dataItem, x) {
-                                    dataInfo[x] = JSON.parse(JSON.stringify(dataItem).replace(item.field, item.displayName));
-                                })
-                            }
-                        });
-                        var repData = JSON.stringify(dataInfo).replace(/\%/g, "*");
-                        $http({
-                            method: 'POST',
-                            url: '/api/downPDF/?dataInfo=' + repData,
-                            headers: {
-                                'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
-                                'Content-type': 'text/pdf; charset=utf-8'
-                            }
-                        }).success(function (data, status, headers, config) {
-                            var hiddenElement = document.createElement('a');
-                            var dateTime = new Date();
-                            var dateString = dateTime.Format("yyyyMdhmsS");
-                            hiddenElement.href = "output.pdf";
-                            hiddenElement.target = '_blank';
-                            hiddenElement.download = "down-" + dateString + ".pdf";
-                            hiddenElement.click();
-                        })
+                        //var dataInfo = angular.copy($rootScope.gridApi2.grid.options.data);
+                        //var dataHeadInfo = angular.copy($rootScope.gridApi2.grid.options.columnDefs);
+                        //dataHeadInfo.forEach(function (item, i) {
+                        //    if (item.field != undefined) {
+                        //        dataInfo.forEach(function (dataItem, x) {
+                        //            dataInfo[x] = JSON.parse(JSON.stringify(dataItem).replace(item.field, item.displayName));
+                        //        })
+                        //    }
+                        //});
+                        //var repData = JSON.stringify(dataInfo).replace(/\%/g, "*");
+                        //$http({
+                        //    method: 'POST',
+                        //    url: '/api/downPDF/?dataInfo=' + repData,
+                        //    headers: {
+                        //        'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+                        //        'Content-type': 'text/pdf; charset=utf-8'
+                        //    }
+                        //}).success(function (data, status, headers, config) {
+                        //    var hiddenElement = document.createElement('a');
+                        //    var dateTime = new Date();
+                        //    var dateString = dateTime.Format("yyyyMdhmsS");
+                        //    hiddenElement.href = "output.pdf";
+                        //    hiddenElement.target = '_blank';
+                        //    hiddenElement.download = "down-" + dateString + ".pdf";
+                        //    hiddenElement.click();
+                        //})
                         //if (scope.flag) {
                         //    $rootScope.gridApi2.exporter.pdfExport("all", "visible", angular.element());
                         //} else {
                         //    $rootScope.gridApi2.exporter.pdfExport("all", "visible", angular.element());
                         //}
-
+                        // 通过XDoc云服务器进行PDF文件的转换。
+                        // 自己模块实现scope.generatePDFData方法。
+                        // 回调传递过去的函数，参数为PDF文件的模板和数据。
+                        // 参考source/changelistctr.js和source/module.js
+                        if (scope.generatePDFData) {
+                            scope.generatePDFData(function (temp, data) {
+                                XDoc.to(baidu.template($templateCache.get(temp), data), "pdf", {}, "_blank");
+                            });
+                        }
                     }
                 }
             }

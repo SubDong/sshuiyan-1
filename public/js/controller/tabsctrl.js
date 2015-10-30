@@ -2108,7 +2108,7 @@ define(["app"], function (app) {
                 //    contrastPv: 67,
                 //    percentage: "-25(-37.31%)"
                 //})
-
+                $rootScope.changeListData = _tempData;
                 $scope.gridOptions.data = _tempData;
                 $scope.gridOptions.enableSorting = true;
                 $scope.gridOptions.columnDefs[4].cellClass = function (grid, row, col, rowRenderIndex, colRenderIndex) {
