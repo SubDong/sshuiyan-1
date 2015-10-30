@@ -731,9 +731,15 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                         // 自己模块实现scope.generatePDFData方法。
                         // 回调传递过去的函数，参数为PDF文件的模板和数据。
                         // 参考source/changelistctr.js和source/module.js
-                        if (scope.generatePDFData) {
-                            scope.generatePDFData(function (temp, data) {
-                                XDoc.to(baidu.template($templateCache.get(temp), data), "pdf", {}, "_blank");
+                        //if (scope.generatePDFData) {
+                        //    scope.generatePDFData(function (temp, data) {
+                        //        XDoc.to(baidu.template($templateCache.get(temp), data), "pdf", {}, "_blank");
+                        //    });
+                        //}
+                        if (scope.generatePDFMakeData) {
+                            scope.generatePDFMakeData(function (docDefinition) {
+                                //pdfMake.createPdf(docDefinition).download();
+                                pdfMake.createPdf(docDefinition).open();
                             });
                         }
                     }

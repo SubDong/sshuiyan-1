@@ -1919,7 +1919,7 @@ define(["app"], function (app) {
                                 } else if (returnData[0] < 0) {
                                     returnData[0] = "-" + returnData[0] + "(-)";
                                 } else {
-                                    returnData[0] = returnData[0] + "(-)";
+                                    returnData[0] = returnData[0] + "(0.00%)";
                                 }
                             } else {
                                 returnData[0] = returnData[0] == "0" ? "0%" : (returnData[0] > 0 ? ("+" + returnData[0]) : returnData[0]) + "(" + (returnData[0] * 100 / contrastPv).toFixed(2) + "%)";
