@@ -11,13 +11,20 @@ var daos = require('../db/daos'),
     date = require('../utils/date'),
     data_convert = require('../mail/data_convert'),
     csvApi = require('json-2-csv'),
-    fs = require("file-system");
+    fs = require("file-system"),
+    mailIntervalIds = [];
 module.exports = function (req) {
     var everyDaySchedule = " ? * *";
     var weekMonSchedule = " ? * MON";
     var firstMonthSchedule = " 1 * ? *";
     later.date.localTime();
     daos.findSync('mail_rules_model', JSON.stringify({}), null, {}, function (err, docs) {
+        if (mailIntervalIds && mailIntervalIds.length > 0) {
+            mailIntervalIds.forEach(function (mailIntervalId) {
+                mailIntervalId.clear();
+            });
+            mailIntervalIds = [];
+        }
         if (docs.length) {
             docs.forEach(function (mailRule) {
                 var cronSched = later.parse.cron("59 23 ? * *");
@@ -215,6 +222,8 @@ module.exports = function (req) {
                         });
                     }
                 }, cronSched);
+                // 存储定时任务
+                mailIntervalIds.push(interval);
             });
         }
     });

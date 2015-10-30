@@ -80,10 +80,10 @@
                     <!--同类群组比较-->
                     <td ng-if="groupIndex.selected.field != 'retentionRate'"
                         ng-repeat="groupTableData in groupTableDatas.gaResultTdDatas | limitTo : 12"
-                        ng-class="{'firstBgColor':interval >= groupTableData.data && groupTableData.data > interval * 0.75,
-                              'secondBgColor':interval * 0.75 >= groupTableData.data && groupTableData.data > interval * 0.5,
-                              'thirdBgColor':interval * 0.5 >= groupTableData.data && groupTableData.data > interval * 0.25,
-                              'lastBgColor':interval * 0.25 >= groupTableData.data }">
+                        ng-class="{'firstBgColor':max >= groupTableData.data && groupTableData.data > maxhalf,
+                              'secondBgColor':maxhalf >= groupTableData.data && groupTableData.data > half,
+                              'thirdBgColor':half >= groupTableData.data && groupTableData.data > minhalf,
+                              'lastBgColor':minhalf  >= groupTableData.data }">
 
                         <p ng-bind-html="groupTableData.data"></p>
 
@@ -92,10 +92,10 @@
 
                     <td ng-if="groupIndex.selected.field  == 'retentionRate' "
                         ng-repeat="groupTableData in groupTableDatas.gaResultTdDatas | limitTo : 12"
-                        ng-class="{'firstBgColor':interval >= groupTableData.value && groupTableData.value > interval * 0.75,
-                              'secondBgColor':interval * 0.75 >= groupTableData.value && groupTableData.value > interval * 0.5,
-                              'thirdBgColor':interval * 0.5 >= groupTableData.value && groupTableData.value > interval * 0.25,
-                              'lastBgColor':interval * 0.25 >= groupTableData.value }">
+                        ng-class="{'firstBgColor':max >= groupTableData.value && groupTableData.value > maxhalf,
+                              'secondBgColor':maxhalf >= groupTableData.value && groupTableData.value > half,
+                              'thirdBgColor':half >= groupTableData.value && groupTableData.value > minhalf,
+                              'lastBgColor':minhalf >= groupTableData.value }">
 
                         <p ng-bind-html="groupTableData.data"></p>
 

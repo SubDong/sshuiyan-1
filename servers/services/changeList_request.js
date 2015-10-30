@@ -107,7 +107,7 @@ var changeList_request = {
                         pathName: pathNameArray[i] == "-" ? "直接输入网址或标签" : pathNameArray[i],
                         pv: 0,
                         contrastPv: 0,
-                        percentage: "0(0)"
+                        percentage: "0(0.00%)"
                     };
 
                     if (_d_i != -1) {
@@ -121,7 +121,7 @@ var changeList_request = {
                     var percentage = 0;
                     if (_t_o.contrastPv == 0) {
                         if (_t_o.pv == 0) {
-                            percentage = "0(0)";
+                            percentage = "0(0.00%)";
                         } else {
                             percentage = "+" + _t_o.pv + "(-)";
                         }
@@ -150,7 +150,7 @@ var changeList_request = {
                 var percentage = 0;
                 if (contrast_sum_pv == 0) {
                     if (sum_pv == 0) {
-                        percentage = "0(0)";
+                        percentage = "0(0.00%)";
                     } else {
                         percentage = "+" + sum_pv + "(-)";
                     }

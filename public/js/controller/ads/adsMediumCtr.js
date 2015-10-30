@@ -10,7 +10,7 @@ define(["./module"], function (ctrs) {
             obj.visitorSearch = "";
         }
         $scope.removeAreaSearch = function (obj) {
-            $scope.media.selected = {"name": "全部"};
+            $scope.city.selected = {"name": "全部"};
             $rootScope.$broadcast("loadAllArea");
             obj.areaSearch = "";
         }
@@ -162,7 +162,7 @@ define(["./module"], function (ctrs) {
                 // 图例过滤的值
                 dimension: ["media"],
                 interval: $rootScope.interval,
-                url: "/api/charts",
+                url: "/api/adscharts",
                 cb: $scope.dataFormat
             }
         ];
@@ -178,7 +178,6 @@ define(["./module"], function (ctrs) {
         };
         $scope.init();
         $scope.$on("ssh_refresh_charts", function (e, msg) {
-            console.log("------------------ssh_refresh_charts ")
             $rootScope.targetSearch();
             var chart = $scope.charts[0];
             chart.config.instance = echarts.init(document.getElementById(chart.config.id));

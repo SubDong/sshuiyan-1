@@ -5,7 +5,7 @@ define(["./module"], function (ctrls) {
 
     'use strict';
 
-    ctrls.controller("sourcectr", function ($scope, $rootScope, $http,$cookieStore, requestService, areaService, messageService, uiGridConstants) {
+    ctrls.controller("sourcectr", function ($scope, $rootScope, $http, $cookieStore, requestService, areaService, messageService, uiGridConstants) {
         $scope.todayClass = true;
         //        高级搜索提示显示
         $scope.terminalSearch = "";
@@ -80,6 +80,9 @@ define(["./module"], function (ctrls) {
             arrayClear: false //是否清空指标array
         };
 
+        $scope.isShowExpandable = function (e) {
+            return e.rf_type != "直接访问";
+        };
 
         $scope.onLegendClick = function (radio, chartInstance, config, checkedVal) {
             clear.lineChart(config, checkedVal);
@@ -307,7 +310,7 @@ define(["./module"], function (ctrls) {
                 formData.rule_url = $rootScope.mailUrl[4];
                 formData.uid = $cookieStore.get('uid');
                 formData.site_id = $rootScope.siteId;
-                formData.type_id=$rootScope.userType;
+                formData.type_id = $rootScope.userType;
                 formData.schedule_date = $scope.mytime.time.Format('hh:mm');
                 $http.get("api/saveMailConfig?data=" + JSON.stringify(formData)).success(function (data) {
                     var result = JSON.parse(eval("(" + data + ")").toString());

@@ -1,6 +1,6 @@
 define(["./module"], function (ctrs) {
     "use strict";
-    ctrs.controller("adsSourceCtr", function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants, $cookieStore) {
+    ctrs.controller("adsSourceCtr", function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants, $cookieStore, $q) {
         $scope.allCitys = angular.copy($rootScope.citys);
         // 高级搜索提示
         $scope.visitorSearch = "";
@@ -11,7 +11,7 @@ define(["./module"], function (ctrs) {
             obj.visitorSearch = "";
         }
         $scope.removeAreaSearch = function (obj) {
-            $scope.rf.selected = {"name": "全部"};
+            $scope.city.selected = {"name": "全部"};
             $rootScope.$broadcast("loadAllArea");
             obj.areaSearch = "";
         }
@@ -122,6 +122,9 @@ define(["./module"], function (ctrs) {
                 var topQuota = quota.slice(0, 10);
                 topData.push({key: topKey, label: label, quota: topQuota});
             });
+            for (var i = 0; i < topData.length; i++) {
+                topData[i].label = chartUtils.convertChinese(topData[i].label);
+            }
             // 是否转化
             chartConfig['noFormat'] = true;
             // 是否为双轴
@@ -149,7 +152,7 @@ define(["./module"], function (ctrs) {
                     // 图表首行缩进
                     bGap: true,
                     // 要渲染的图表元素id
-                    id: "indicators_charts",
+                    id: "ads_source",
                     // 图表类型
                     chartType: "bar",
                     keyFormat: 'eq',
@@ -163,7 +166,7 @@ define(["./module"], function (ctrs) {
                 // 图例过滤的值
                 dimension: ["rf"],
                 interval: $rootScope.interval,
-                url: "/api/charts",
+                url: "/api/adscharts",
                 cb: $scope.dataFormat
             }
         ];
@@ -186,6 +189,11 @@ define(["./module"], function (ctrs) {
             requestService.refresh([chart]);
         });
 
+        $scope.setADSFilter = function (e) {
+            console.log(e);
+            // TODO:根据条件进行过滤
+        };
+
         $scope.page = {};
         $scope.pages = [];
         $scope.events = [];
@@ -193,28 +201,53 @@ define(["./module"], function (ctrs) {
         $scope.convertData = function () {
             var uid = $cookieStore.get("uid");
             var event_url = "/config/eventchnage_list?type=search&query={\"uid\":\"" + uid + "\"}";
-            var page_url = "/config/page_conv?type=search&query="+JSON.stringify({uid: uid});
+            var page_url = "/config/page_conv?type=search&query=" + JSON.stringify({uid: uid});
             //var time_url= "/config/time_conv?type=search&query={\"uid\":\""+uid+"\"}";
+            var event_request = $http.get(event_url);
+            var page_request = $http.get(page_url);
+            //$http({method: 'GET', url: page_url}).success(function (dataConfig) {
+            //    dataConfig.forEach(function (item) {
+            //        $scope.pages.push({name: item.target_name, obj: item});
+            //    });
+            //});
+            //
+            //$http({method: 'GET', url: event_url}).success(function (dataConfig) {
+            //    dataConfig.forEach(function (item) {
+            //        $scope.events.push({name: item.event_name, obj: item});
+            //    });
+            //});
 
-            $http({method: 'GET', url: page_url}).success(function (dataConfig) {
-                dataConfig.forEach(function(item){
-                    $scope.pages.push({name: item.target_name});
+            //$http({method: 'GET', url: time_url}).success(function (dataConfig) {
+            //    dataConfig.forEach(function (item) {
+            //        $scope.pages.push({time: item._id});
+            //    });
+            //});
+
+            $q.all([event_request, page_request]).then(function (final_result) {
+                final_result.forEach(function (_result, _i) {
+                    _result.data.forEach(function (_r_d) {
+                        if (_i == 0) {
+                            $scope.events.push({name: _r_d.event_name, obj: _r_d, type: "全部事件目标"});
+                        } else if (_i == 1) {
+                            $scope.pages.push({name: _r_d.target_name, obj: _r_d, type: "全部页面目标"});
+                        } else {
+                            $scope.times.push({name: _r_d.target_name, obj: _r_d, type: "全部时长目标"});
+                        }
+                    });
                 });
             });
 
-            $http({method: 'GET', url: event_url}).success(function (dataConfig) {
-                dataConfig.forEach(function(item){
-                    $scope.events.push({name: item.event_name});
-                });
-            });
-           /* $http({method: 'GET', url: time_url}).success(function (dataConfig) {
-                dataConfig.forEach(function(item){
-                    $scope.pages.push({time: item._id});
-                });
-            });*/
         };
         $scope.convertData();
 
+        //日历
+        $rootScope.datepickerClick = function (start, end, label) {
+            var time = chartUtils.getTimeOffset(start, end);
+            $rootScope.tableTimeStart = time[0];
+            $rootScope.tableTimeEnd = time[1];
+            $rootScope.targetSearch();
+            $scope.$broadcast("ssh_dateShow_options_time_change");
+        }
         function GetDateStr(AddDayCount) {
             var dd = new Date();
             dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期

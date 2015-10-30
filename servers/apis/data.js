@@ -86,6 +86,64 @@ api.get('/charts', function (req, res) {
         datautils.send(res, JSON.stringify(result));
     });
 });
+
+api.get('/adscharts', function (req, res) {
+    var query = url.parse(req.url, true).query, quotas = [], type = query['type'], dimension = query.dimension, filter = null, topN = [], userType = query.userType;
+    var filter_f = query.filter;
+    var topN_f = query.topN == undefined ? null : query.topN;
+    if (topN_f) {
+        topN = topN_f.split(",");
+    } else {
+        topN.push(0);
+    }
+    if (filter_f) {
+        filter = JSON.parse(filter_f);
+    }
+    if (type.indexOf(",") > -1)for (var i = 0; i < type.split(",").length; i++) {
+        quotas.push(type.split(",")[i]);
+    }
+    else
+        quotas.push(type);
+    var start = Number(query['start']);//
+    var end = Number(query['end']);//
+    var indexes = date.createIndexes(start, end, "access-");
+
+    var period = date.period(start, end);
+    var interval = 1;
+    if (Number(query['int'])) {
+        if (Number(query['int']) == 1) {
+            interval = 1;
+        } else if (Number(query['int']) == -1) {
+            if (Number(query['int']) == -1 && dimension == "period") {
+                interval = 2;
+            } else {
+                interval = date.interval(start, end, Number(query['int']));
+            }
+        } else {
+            interval = Number(query['int']);
+        }
+    }
+    else {
+        if ((end - start) == 0) {
+            interval = 3600000;
+        } else {
+            interval = 86400000;
+        }
+        //interval = date.interval(start, end, Number(query['int']));
+    }
+
+    if (!userType) {
+        userType = 1;
+    }
+    if (dimension == "one") {
+        interval = null;
+        dimension = null;
+    }
+    es_request.search(req.es, indexes, userType+"_ad_track", quotas, dimension, topN, filter, period[0], period[1], interval, function (result) {
+        datautils.send(res, JSON.stringify(result));
+    });
+});
+
 api.get('/halfhour', function (req, res) {
     var query = url.parse(req.url, true).query, quotas = [], type = query['type'], topN = [], userType = query.userType;
     var start = Number(query['start']);//

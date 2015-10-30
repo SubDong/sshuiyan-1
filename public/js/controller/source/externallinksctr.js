@@ -35,6 +35,7 @@ define(["./module"], function (ctrs) {
                 name: "外部连接",
                 displayName: "外部连接",
                 field: "rf",
+                cellTemplate: '<a href="{{row.entity.rf}}" title="{{row.entity.rf}}" target="_blank" style="color:#0965b8;line-height:30px; display:block; padding:0 10px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;}">{{row.entity.rf}}</a></div>',
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
                 cellTooltip: function (row, col) {
                     return row.entity.rf;

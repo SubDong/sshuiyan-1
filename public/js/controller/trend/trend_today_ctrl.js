@@ -249,6 +249,7 @@ define(["./module"], function (ctrs) {
             $rootScope.interval = 1;
             $scope.weekcheckClass = false;
             $scope.mothcheckClass = false;
+            $rootScope.tableFormat = "hour";
             if ($scope.compareType) {
                 $scope.charts[0].config.chartType = "line";
                 $scope.charts[0].config.keyFormat = "none";
@@ -267,6 +268,7 @@ define(["./module"], function (ctrs) {
                         $scope.compare(times, type, true);
                         break;
                 }
+                $rootScope.datepickerClickTow($rootScope.startDateString, $rootScope.endDateString);
                 return;
             }
             $scope.charts.forEach(function (e) {
@@ -299,6 +301,7 @@ define(["./module"], function (ctrs) {
             $scope.lastWeekSelect = false;
             $scope.clearCompareSelect = false;
             $rootScope.interval = -1;
+            $rootScope.tableFormat = "day";
             if ($scope.compareType) {
                 $scope.charts[0].config.chartType = "bar";
                 $scope.charts[0].config.keyFormat = "day";
@@ -317,6 +320,7 @@ define(["./module"], function (ctrs) {
                         $scope.compare(times, type, true);
                         break;
                 }
+                $rootScope.datepickerClickTow($rootScope.startDateString, $rootScope.endDateString);
                 return;
             }
             $scope.charts.forEach(function (e) {
@@ -456,7 +460,7 @@ define(["./module"], function (ctrs) {
                 return;
             }
             var times = chartUtils.getTimeOffset(start, end);
-            $scope.todayCalendar = start;
+            $scope.todayCalendar = $scope.getDateByDayInt($rootScope.tableTimeStart);
             $scope.dayOrWeek = end;
             $scope.mothselected = true;
             $scope.weekselected = true;
@@ -471,7 +475,20 @@ define(["./module"], function (ctrs) {
             var type = [chartUtils.convertEnglish($scope.charts[0].config.legendData[0])];
             $scope.compare(times, type, true);
             $scope.cancelCheckbox();
-        }
+        };
+        $scope.getDateByDayInt = function (startInt) {
+
+            function GetDateStr(AddDayCount) {
+                var dd = new Date();
+                dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
+                var y = dd.getFullYear();
+                var m = dd.getMonth() + 1;//获取当前月份的日期
+                var d = dd.getDate();
+                return y + "-" + m + "-" + d;
+            }
+
+            return GetDateStr(startInt);
+        };
         $scope.compare = function (times, type, legendRender) {
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
@@ -496,10 +513,10 @@ define(["./module"], function (ctrs) {
                 var reqRequestEnd;
                 if (e.config.keyFormat == "day") {
                     e.half = true;
-                    reqRequestStart = $http.get(e.url + "?type=" + e.types + "&dimension=" + e.dimension + "&start=" + times[0] + "&end=" + times[0] + "&userType=" + $rootScope.userType + "&int=-1");
+                    reqRequestStart = $http.get(e.url + "?type=" + e.types + "&dimension=" + e.dimension + "&start=" + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&userType=" + $rootScope.userType + "&int=-1");
                     reqRequestEnd = $http.get(e.url + "?type=" + e.types + "&dimension=" + e.dimension + "&start=" + times[1] + "&end=" + times[1] + "&userType=" + $rootScope.userType + "&int=-1");
                 } else {
-                    reqRequestStart = $http.get(e.url + "?type=" + e.types + "&dimension=" + e.dimension + "&start=" + times[0] + "&end=" + times[0] + "&userType=" + $rootScope.userType);
+                    reqRequestStart = $http.get(e.url + "?type=" + e.types + "&dimension=" + e.dimension + "&start=" + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&userType=" + $rootScope.userType);
                     reqRequestEnd = $http.get(e.url + "?type=" + e.types + "&dimension=" + e.dimension + "&start=" + times[1] + "&end=" + times[1] + "&userType=" + $rootScope.userType);
                 }
                 e.config.instance.showLoading({
@@ -618,7 +635,7 @@ define(["./module"], function (ctrs) {
                 formData.rule_url = $rootScope.mailUrl[1];
                 formData.uid = $cookieStore.get('uid');
                 formData.site_id = $rootScope.siteId;
-                formData.type_id=$rootScope.userType;
+                formData.type_id = $rootScope.userType;
                 formData.schedule_date = $scope.mytime.time.Format('hh:mm');
                 $http.get("api/saveMailConfig?data=" + JSON.stringify(formData)).success(function (data) {
                     var result = JSON.parse(eval("(" + data + ")").toString());

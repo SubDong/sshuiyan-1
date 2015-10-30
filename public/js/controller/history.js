@@ -381,6 +381,7 @@ define(['./module'], function (ctrs) {
         $scope.$on("ssh_refresh_charts", function (e, msg) {
             $scope.historyInit();
             $scope.refreshChart();
+            $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
         });
         $rootScope.datepickerClick = function (start, end, label) {
             $scope.timeClass = true;

@@ -5,13 +5,13 @@ define(["app"], function (app) {
 
     "use strict";
 
-    app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, requestService, SEM_API_URL, $cookieStore, $location, popupService, uiGridConstants) {
+    app.controller("TabsCtrlAds", function ($timeout, $scope, $rootScope, $http, $q, requestService, SEM_API_URL, $cookieStore, $location, popupService, uiGridConstants) {
         $scope.todayClass = true;
         $scope.browserselect = true;
         var user = $rootScope.user;
         $scope.sortType = 'name';
         var baiduAccount = $rootScope.baiduAccount;
-        var esType = $rootScope.userType;
+        var esType = $rootScope.userType+"_ad_track";
         var trackid = $rootScope.siteTrackId;
 
         $scope.tabs = [
@@ -138,10 +138,6 @@ define(["app"], function (app) {
             {consumption_name: '转化次数', name: 'conversions'},
             {consumption_name: '转化率', name: 'crate'},
             {consumption_name: '平均转化成本(事件)', name: 'transformCost'}
-        ];
-        $scope.adsTransform = [
-            {consumption_name: '转化次数', name: 'conversions'},
-            {consumption_name: '转化率', name: 'crate'}
         ];
         $scope.eventParameter = [
             {consumption_name: "事件点击总数", name: "clickTotal"},

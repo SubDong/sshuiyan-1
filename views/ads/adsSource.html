@@ -12,28 +12,32 @@
         <dateother></dateother>
         <refresh></refresh>
         <div aria-label="First group" role="group" class="btn-group fr">
-            <a class="btn btn-default current add_ads_title" style="line-height: 24px" data-ng-href="#conf/webcountsite/adtrack_add" type="button">新增指定广告跟踪</a>
+            <a class="btn btn-default current add_ads_title" style="line-height: 24px"
+               data-ng-href="#conf/webcountsite/adtrack_add" type="button">新增指定广告跟踪</a>
         </div>
     </div>
     <div class="my_concent">
         <ssh-es-ads-source-show type="today"></ssh-es-ads-source-show>
         <div class="index_chart gesture">
             <div id="indicators_charts_legend"></div>
-            <div id="indicators_charts" class="chart_height"></div>
+            <div id="ads_source" class="chart_height"></div>
         </div>
-        <div class="table_content" ng-controller="TabsCtrl">
+        <div class="table_content" ng-controller="TabsCtrlAds">
             <ul ng-init="tab = 1" class="nav nav-tabs nav-justified">
-                <li class="ng-isolate-scope"  ng-class="{active:tab===1}" ng-click="tab = 1">
+                <li class="ng-isolate-scope" ng-class="{active:tab===1}" ng-click="tab = 1">
                     <a class="ng-binding">自定义指标</a></li>
                 <li class="ng-isolate-scope" ng-class="{active:tab===2}" ng-click="tab = 2">
                     <a class="ng-binding">高级筛选
                         <span class="impliedCondition">
                             <span ng-show="visitorSearch || areaSearch">（</span>
                             <span ng-show="areaSearch" class="advanceSearch">
-                                {{areaSearch}}<i class="glyphicon glyphicon-remove" data-ng-click="removeAreaSearch(this);" ng-show="areaSearch"></i>
+                                {{areaSearch}}<i class="glyphicon glyphicon-remove"
+                                                 data-ng-click="removeAreaSearch(this);" ng-show="areaSearch"></i>
                             </span>
                             <span ng-show="visitorSearch" class="advanceSearch">
-                                {{visitorSearch}}<i class="glyphicon glyphicon-remove" data-ng-click="removeVisitorSearch(this);" ng-show="visitorSearch"></i>
+                                {{visitorSearch}}<i class="glyphicon glyphicon-remove"
+                                                    data-ng-click="removeVisitorSearch(this);"
+                                                    ng-show="visitorSearch"></i>
                             </span>
                             <span ng-show="visitorSearch || areaSearch">）</span>
                         </span>
@@ -44,7 +48,8 @@
                 <div class="custom_title" ng-show="tab === 1">
                     <div class="chart_tops chart_default">
                         <ul>
-                            <li><a href="javascript:void(0)" data-ssh-default-quota="source_searchengine">系统默认指标</a></li>
+                            <li><a href="javascript:void(0)" data-ssh-default-quota="source_searchengine">系统默认指标</a>
+                            </li>
                         </ul>
                     </div>
                     <div class="chart_top">
@@ -65,20 +70,30 @@
                             </li>
                         </ul>
                     </div>
+                    <div class="chart_top">
+                        <span>转化指标 :</span>
+                        <ul>
+                            <li ng-repeat="item in adsTransform" data-sshy-default defvalue="{{item.name}}"
+                                class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                ng-click='indicators(item,transform,6)'>{{item.consumption_name}}
+                            </li>
+                        </ul>
+                    </div>
                     <div class="chart_top chart_noborder">
                         <button class="btn btn-primary" type="button" ng-click="targetSearch(true)">确定</button>
                         * 可同时选择6项
                     </div>
 
                 </div>
-                <div class="custom_title"  ng-show="tab === 2">
+                <div class="custom_title" ng-show="tab === 2">
                     <div class="chart_top2">
                         <ul>
                             <li><span>地域过滤:</span></li>
                             <li>
                                 <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
                                     <div role="group" class="btn-group">
-                                        <ui-select ng-model="city.selected" theme="select2" reset-search-input="false" class="fl"
+                                        <ui-select ng-model="city.selected" theme="select2" reset-search-input="false"
+                                                   class="fl"
                                                    data-ng-change="setSearchEngineAreaFilter(city.selected.name)"
                                                    style="width: 80px;">
                                             <ui-select-match placeholder="全部">{{$select.selected.name}}
@@ -101,9 +116,12 @@
                     <div class="chart_top2">
                         <ul>
                             <li><span>访客过滤 :</span></li>
-                            <li><label ng-click="setVisitors(0)"><input type="radio" checked="checked" class="styled" name="radio0"/>全部</label></li>
-                            <li><label ng-click="setVisitors(1)"><input type="radio" name="radio0"  class="styled" />新访客</label></li>
-                            <li><label ng-click="setVisitors(2)"><input type="radio" name="radio0"  class="styled"/>老访客</label></li>
+                            <li><label ng-click="setVisitors(0)"><input type="radio" checked="checked" class="styled"
+                                                                        name="radio0"/>全部</label></li>
+                            <li><label ng-click="setVisitors(1)"><input type="radio" name="radio0"
+                                                                        class="styled"/>新访客</label></li>
+                            <li><label ng-click="setVisitors(2)"><input type="radio" name="radio0"
+                                                                        class="styled"/>老访客</label></li>
                         </ul>
                     </div>
                 </div>
@@ -111,20 +129,21 @@
             <div class="custom_secendtitle">
                 <div class="custom_select custom_select_way">转化目标
                     <div role="group" class="btn-group">
-                        <select name="bid" id="brand_3">
-                            <option label="全部页面目标">
-                                <option ng-repeat="p in pages">&nbsp;&nbsp;{{p.name}}</option>
+                        <select name="bid" id="brand_3" data-ng-model="ads" data-ng-change="setADSFilter(ads)">
+                            <option label="全部页面目标" value="page_all">
+                            <option ng-repeat="p in pages" value="{{p.obj}}">{{p.name}}</option>
                             </option>
-                            <option label="全部事件目标">
-                                <option ng-repeat="e in events">&nbsp;&nbsp;{{e.name}}</option>
+                            <option label="全部事件目标" value="event_all">
+                            <option ng-repeat="e in events" value="{{e.obj}}">{{e.name}}</option>
                             </option>
-                            <option label="时长目标"></option>
+                            <option label="时长目标" value="time_all"></option>
                         </select>
                     </div>
                 </div>
             </div>
             <div class="custom_table" ng-class="{hidePageContainer:gridApi2.grid.rows.length<=20}">
-                <div class="grid clearfix" ui-grid="gridOptions" ui-grid-pagination ui-grid-exporter ui-grid-auto-resize></div>
+                <div class="grid clearfix" ui-grid="gridOptions" ui-grid-pagination ui-grid-exporter
+                     ui-grid-auto-resize></div>
                 <gridpage></gridpage>
             </div>
         </div>

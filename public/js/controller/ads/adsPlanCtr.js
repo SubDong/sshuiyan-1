@@ -10,7 +10,7 @@ define(["./module"], function (ctrs) {
             obj.visitorSearch = "";
         }
         $scope.removeAreaSearch = function (obj) {
-            $scope.cpna.selected = {"name": "全部"};
+            $scope.city.selected = {"name": "全部"};
             $rootScope.$broadcast("loadAllArea");
             obj.areaSearch = "";
         }
@@ -162,7 +162,7 @@ define(["./module"], function (ctrs) {
                 // 图例过滤的值
                 dimension: ["cpna"],
                 interval: $rootScope.interval,
-                url: "/api/charts",
+                url: "/api/adscharts",
                 cb: $scope.dataFormat
             }
         ];
