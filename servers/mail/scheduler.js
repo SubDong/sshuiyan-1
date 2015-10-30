@@ -8,11 +8,31 @@ var daos = require('../db/daos'),
     url = require('url'),
     es_request = require('../services/refactor_request'),
     changeList_request = require("../services/changeList_request"),
+    gacache = require('../services/gacache_request'),
     date = require('../utils/date'),
     data_convert = require('../mail/data_convert'),
     csvApi = require('json-2-csv'),
-    fs = require("file-system"),
+    fs = require("file-system")
+
     mailIntervalIds = [];
+
+var getScaleName = function (scale) {
+    switch (scale) {
+        case "day":
+            return "天";
+            break;
+        case "day":
+            return "周";
+            break;
+        case "month":
+            return "月";
+            break;
+        default :
+            return "天";
+    }
+}
+
+
 module.exports = function (req) {
     var everyDaySchedule = " ? * *";
     var weekMonSchedule = " ? * MON";
@@ -122,6 +142,82 @@ module.exports = function (req) {
                                 console.log("Send mail failed:No data result!");
                             }
                         });
+                    } else if(rule_index == "groupAnalysis") { //同类群组分析
+                        var typeId = mailRule["type_id"];
+                        var scale = mailRule["scale"];
+                        var dateRange = mailRule["dateRange"];
+                        var indicator = mailRule["indicator"];
+                        var scaleName = getScaleName(scale);
+                       gacache.search(typeId,scale,dateRange,indicator,function (data) {
+
+                            if (data) {
+                                var subject = "附件中含有数据统计,请查收!";
+                                var title = "同类群组数据报告----规模" + scaleName + ",日期范围" + dateRange;
+                                var tableCSV = [];
+                                var trsData = JSON.parse(data).gaResultTrData;
+                                trsData.forEach(function (trData, trIndex, array) {
+                                    var trCsv = '{"日期":"' + trData.code + '","第0'+scaleName +'":"' + trData.data + '",';
+                                    var tdsData = trData.gaResultTdDatas;
+                                    for(var i = 0; i < trsData[0].gaResultTdDatas.length; i++) {
+                                            var tdData = tdsData[i];
+
+                                            if (tdData != null && tdData != undefined && tdData != "") {
+                                                var day = i + 1;
+                                                trCsv += '"第' + day + scaleName +'":"' + tdData.data + '",'
+                                            } else {
+                                                var day = i + 1;
+                                                trCsv += '"第' + day + scaleName+'":"",'
+                                            }
+                                            if(i == trsData[0].gaResultTdDatas.length - 1) {
+                                                trCsv = trCsv.substr(0, trCsv.length - 1);
+                                                trCsv += '}';
+                                            }
+                                    }
+                                    tableCSV.push(JSON.parse(trCsv));
+                                    trCsv = "";
+                                });
+                                var result = JSON.stringify(tableCSV).replace(/\%/g, "*");
+                                result = JSON.parse(result);
+                                csvApi.json2csv(result, function (err, csv) {
+                                    var buffer = new Buffer(csv);
+                                    var fileSuffix = new Date().getTime();
+                                    fs.writeFile("servers/filetmp/" + fileSuffix + ".csv", buffer, function (error) {
+                                        if (error) {
+                                            console.error(error);
+                                            return;
+                                        } else {
+                                            var mailOptions = {
+                                                from: '百思慧眼<70285622@qq.com> ', // sender address
+                                                to: mailRule.mail_address.toString(), // list of receivers
+                                                subject: title, // Subject line
+                                                text: 'Hello world', // plaintext body
+                                                html: '<b>' + subject + '</b>',// html body
+                                                attachments: [
+                                                    {
+                                                        filename: fileSuffix + '.csv',
+                                                        path: "servers/filetmp/" + fileSuffix + ".csv"
+                                                    }
+                                                ]
+                                            };
+                                            mail.send(mailOptions, function (error, info) {
+                                                if (error) {
+                                                    console.error(error);
+                                                } else {
+                                                    console.log('Message sent: ' + info.response + "at " + new Date());
+                                                    fs.exists('servers/filetmp/' + fileSuffix + '.csv', function (exists) {
+                                                        if (exists) {
+                                                            fs.unlinkSync('servers/filetmp/' + fileSuffix + '.csv');
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    });
+                                });
+                            } else {
+                                console.log("Send mail failed:No data result!");
+                            }
+                       });
                     } else {
                         var timeOffset = [-1, -1];
                         var interval = 1;
