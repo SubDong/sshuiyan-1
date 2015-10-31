@@ -454,12 +454,12 @@ define(["../app"], function (app) {
         quotaObject.eventConversion = "事件转化";
         quotaObject.avgTime = "访客在一次访问中，平均打开网站的时长。即每次访问中，打开第一个页面到关闭最后一个页面的平均值，打开一个页面时计算打开关闭的时间差。";
         quotaObject.avgPage = "平均每次访问浏览的页面数量，平均访问页数=浏览量/访问次数。";
-        quotaObject.cost = "消费";
-        quotaObject.impression = "展现量";
-        quotaObject.click = "点击量";
+        quotaObject.cost = "推广被点击后产生的费用。";
+        quotaObject.impression = "一段时间内广告展现的次数。";
+        quotaObject.click = "一段时间内推广被点击的次数。";
         quotaObject.ctr = "点击率";
-        quotaObject.acp = "平均点击价格";
-        quotaObject.cpc = "平均点击价格";
+        quotaObject.acp = "平均每次点击产生的消费。平均点击价格=消费金额/点击次数。";
+        quotaObject.cpc = "平均每次点击产生的消费。平均点击价格=消费金额/点击次数。";
         quotaObject.cpm = "千次展现消费";
         quotaObject.conversion = "转化";
         quotaObject.entrance = "作为访问会话的入口页面（也称着陆页面）的次数。";
@@ -470,7 +470,7 @@ define(["../app"], function (app) {
         quotaObject.haosou = "来自搜索引擎好搜的搜索次数占比";
         quotaObject.bing = "来自搜索引擎必应的搜索次数占比";
         quotaObject.other = "来自其他搜索引擎的搜索次数占比";
-        quotaObject.conversions = "转化次数";
+        quotaObject.conversions = "访客到达转化目标页面的次数。";
         quotaObject.clickTotal = "事件点击总数";
         quotaObject.crate = "转化率";
         return function (key) {
