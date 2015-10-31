@@ -1,6 +1,7 @@
 define(["./module"], function (ctrs) {
     "use strict";
     ctrs.controller("adsKeyWordCtr", function ($scope, $rootScope, $http, requestService, messageService, areaService, uiGridConstants, $cookieStore) {
+        $scope.allCitys = angular.copy($rootScope.citys);
         // 高级搜索提示
         $scope.visitorSearch = "";
         $scope.areaSearch = "";
@@ -14,6 +15,7 @@ define(["./module"], function (ctrs) {
             $rootScope.$broadcast("loadAllArea");
             obj.areaSearch = "";
         }
+        $scope.city.selected = {"name": "全部"};
         $scope.todayClass = true;
         $scope.send = true;
         // table配置
