@@ -143,6 +143,10 @@ define(["app"], function (app) {
             {consumption_name: "事件点击总数", name: "clickTotal"},
             {consumption_name: "唯一访客事件数", name: "visitNum"}
         ];
+        $scope.adsTransform = [
+            {consumption_name: '转化次数', name: 'conversions'},
+            {consumption_name: '转化率', name: 'crate'}
+        ];
         //实时访问
         //TODO item["searchWord"] == ""?"--" 为捕获到暂为  --
         var getHtmlTableData = function () {
@@ -1218,7 +1222,7 @@ define(["app"], function (app) {
                 $http({
                     method: 'GET',
                     url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field)
-                    + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
+                    + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat +"&popup=" + $rootScope.tableSwitch.popup + "&type=" + esType
                 }).success(function (data, status) {
                     $rootScope.$broadcast("LoadDateShowDataFinish", data);
                     if ($rootScope.tableSwitch.promotionSearch != undefined && $rootScope.tableSwitch.promotionSearch) {
@@ -1487,7 +1491,7 @@ define(["app"], function (app) {
                 $http({
                     method: 'GET',
                     url: '/api/indextable/?start=' + (startInfoTime == null ? $rootScope.tableTimeStart : startInfoTime) + "&end=" + (endInfoTime == null ? $rootScope.tableTimeEnd : endInfoTime) + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field)
-                    + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + JSON.stringify($rootScope.tableSwitch.promotionSearch) + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
+                    + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + JSON.stringify($rootScope.tableSwitch.promotionSearch) + "&formartInfo=" + $rootScope.tableFormat + "&popup=" + $rootScope.tableSwitch.popup +"&type=" + esType
                 }).success(function (data, status) {
                     if ($rootScope.tableSwitch.promotionSearch != undefined && $rootScope.tableSwitch.promotionSearch) {
                         var url = SEM_API_URL + "sem/report/account?a=" + user + "&b=" + baiduAccount + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1";

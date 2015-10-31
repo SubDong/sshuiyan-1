@@ -256,7 +256,10 @@ var schemas = {
             startString: String,//来源变化榜开始时间字符串
             contrastStart: Number,//来源变化榜对比时间
             contrastEnd: Number,//来源变化榜对比时间
-            contrastStartString: String//来源变化榜对比时间字符串
+            contrastStartString: String,//来源变化榜对比时间字符串
+            scale: String, //同类群组分析-规模
+            dateRange: String,//同类群组分析-周期
+            indicator: String //同类群组分析-指标
         }
     },
     /////////////////////推广URL 前端Schemas////////////////////////

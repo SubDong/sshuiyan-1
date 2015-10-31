@@ -225,7 +225,8 @@ define(["../app"], function (app) {
             "ext",
             "indexoverview",
             "entrancepage",
-            "changelist"
+            "changelist",
+            "groupAnalysis"
         ]
     }]);
 });

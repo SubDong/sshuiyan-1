@@ -33,6 +33,12 @@ require.config({
         ],
         "js008": [
             "http://ui-grid.info/docs/grunt-scripts/vfs_fonts"
+        ],
+        "js009": [
+            "http://xdoc.aliapp.com/xdoc"
+        ],
+        "js010": [
+            "http://xdoc.aliapp.com/baiduTemplate"
         ]
     },
     shim: {
@@ -120,6 +126,8 @@ require.config({
 
 require([
     "js001",
+    "js009",
+    "js010",
     "./angular-bootstrap",
     "./utils/chartfactory",
     "./utils/chartsMapOrPie",
@@ -130,7 +138,9 @@ require([
     "./angularjs/checkbox",
     "./angularjs/daterangepicker",
     "./angularjs/tooltip",
-    "./utils/dataPicker"
+    "./utils/dataPicker",
+    "./pdfmake/pdfmake.min",
+    "./pdfmake/vfs_fonts"
 ], function () {
     "use strict";
 });

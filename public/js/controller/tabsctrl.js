@@ -1919,13 +1919,13 @@ define(["app"], function (app) {
                                 } else if (returnData[0] < 0) {
                                     returnData[0] = "-" + returnData[0] + "(-)";
                                 } else {
-                                    returnData[0] = returnData[0] + "(-)";
+                                    returnData[0] = returnData[0] + "(0.00%)";
                                 }
                             } else {
-                                returnData[0] = returnData[0] == "0" ? "0%" : (returnData[0] > 0 ? ("+" + returnData[0]) : returnData[0]) + "(" + (returnData[0] * 100 / contrastPv).toFixed(2) + "%)";
+                                returnData[0] = returnData[0] == "0" ? "0(0.00%)" : (returnData[0] > 0 ? ("+" + returnData[0]) : returnData[0]) + "(" + (returnData[0] * 100 / contrastPv).toFixed(2) + "%)";
                             }
                         } else {
-                            returnData[0] = returnData[0] == "0" ? "0%" : (returnData[0] / option.length).toFixed(2) + "%";
+                            returnData[0] = returnData[0] == "0" ? "0(0.00%)" : (returnData[0] / option.length).toFixed(2) + "%";
                         }
 
                     }
@@ -2108,7 +2108,7 @@ define(["app"], function (app) {
                 //    contrastPv: 67,
                 //    percentage: "-25(-37.31%)"
                 //})
-
+                $rootScope.changeListData = _tempData;
                 $scope.gridOptions.data = _tempData;
                 $scope.gridOptions.enableSorting = true;
                 $scope.gridOptions.columnDefs[4].cellClass = function (grid, row, col, rowRenderIndex, colRenderIndex) {

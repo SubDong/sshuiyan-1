@@ -5,17 +5,19 @@ define(["./module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.controller('sameGroupAnalysisCtr', function ($scope, $rootScope, $q, $http, requestService, areaService, $location, uiGridConstants) {
+    ctrs.controller('sameGroupAnalysisCtr', function ($scope, $rootScope, $q, $http,$cookieStore, requestService, areaService, $location, uiGridConstants) {
 
         var option;
         $scope.groupTypes = [
             {name: '流量获取日期', field: 'date'}
         ];
         $scope.groupScales = [
-            {name: '按天', field: 'day'},
-            {name: '按周', field: 'week'},
-            {name: '按月', field: 'month'}
+            {name: '天', field: 'day'},
+            {name: '周', field: 'week'},
+            {name: '月', field: 'month'}
         ];
+
+
         $scope.dateRanges = [
             {name: '过去7天', field: '7'},
             {name: '过去14天', field: '14'},
@@ -32,14 +34,15 @@ define(["./module"], function (ctrs) {
         $scope.dateRange = {};
         $scope.groupIndex = {};
         $scope.groupType.selected = {"name": "流量获取日期", "field": "date"};
-        $scope.groupScale.selected = {"name": "按天", "field": "day"};
+        $scope.groupScale.selected = {"name": "天", "field": "day"};
         $scope.dateRange.selected = {"name": "过去7天", "field": "7"};
         $scope.groupIndex.selected = {"name": "用户数", "field": "visitor"};
 
 
         $scope.scaleChange = function (val) {
-            if (val.name == "按天") {
+            if (val.name == "天") {
                 $scope.groupScale.selected.field = "day";
+                $scope.groupScale.selected.name = "天";
                 $scope.dateRange.selected = {"name": "过去7天", "field": "7"};
                 $scope.dateRanges = [
                     {name: '过去7天', field: '7'},
@@ -62,8 +65,9 @@ define(["./module"], function (ctrs) {
                     {name: "第11天"},
                     {name: "第12天"}
                 ];
-            } else if (val.name == "按周") {
+            } else if (val.name == "周") {
                 $scope.groupScale.selected.field = "week";
+                $scope.groupScale.selected.name = "周";
                 $scope.dateRange.selected = {"name": "上周", "field": "1"};
                 $scope.dateRanges = [
                     {name: '上周', field: '1'},
@@ -87,8 +91,9 @@ define(["./module"], function (ctrs) {
                     {name: "第11周"},
                     {name: "第12周"}
                 ];
-            } else if (val.name == "按月") {
+            } else if (val.name == "月") {
                 $scope.groupScale.selected.field = "month";
+                $scope.groupScale.selected.name = "月";
                 $scope.dateRange.selected = {"name": "上月", "field": "1"};
                 $scope.dateRanges = [
                     {name: '上月', field: '1'},
@@ -271,13 +276,84 @@ define(["./module"], function (ctrs) {
 
         }
 
-
+        //数据
         $scope.groupTableDataes = []
-        $scope.max = 0.00;
+
+        //发送邮件功能-初始化数据
+        $rootScope.initMailData = function () {
+            $http.get("api/saveMailConfig?rt=read&rule_url=" + $rootScope.mailUrl[11] + "").success(function (result) {
+                if (result) {
+                    var ele = $("ul[name='sen_form']");
+                    formUtils.rendererMailData(result, ele);
+                }
+            });
+        }
+        //发送邮件功能-确定发送
+        $scope.sendConfig = function () {
+            var formData = formUtils.vaildateSubmit($("ul[name='sen_form']"));
+            var result = formUtils.validateEmail(formData.mail_address, formData);
+            if (result.ec) {
+                alert(result.info);
+            } else {
+                formData.rule_url = $rootScope.mailUrl[11];
+                formData.uid = $cookieStore.get('uid');
+                formData.site_id = $rootScope.siteId;
+                formData.type_id = $rootScope.userType;
+                formData.schedule_date = $scope.mytime.time.Format('hh:mm');
+                //同类群组分析数据
+                formData.scale = $scope.groupScale.selected.field;
+                formData.dateRange = $scope.dateRange.selected.field;
+                formData.indicator = $scope.groupIndex.selected.field;
+
+                $http.get("api/saveMailConfig?data=" + JSON.stringify(formData)).success(function (data) {
+                    var result = JSON.parse(eval("(" + data + ")").toString());
+                    if (result.ok == 1) {
+                        alert("操作成功!");
+                        $http.get("/api/initSchedule");
+                    } else {
+                        alert("操作失败!");
+                    }
+                });
+            }
+        };
 
 
-        $scope.searchData = function () {
 
+        //下载功能-格式化数据
+        $rootScope.gaFormatDataCSV = function () {
+            var tableCSV = [];
+            var trsData = $scope.groupTableDataes;
+            angular.forEach(trsData, function (trData, trIndex, array) {
+
+                var trCsv = '{"日期":"'+trData.code+'","第0'+ $scope.groupScale.selected.name +'":"'+trData.data+'",';
+                var keepGoing = true;
+
+                var boundary = $scope.dateRange.selected.field > 12 ? 12 :$scope.dateRange.selected.field;
+
+                angular.forEach(trData.gaResultTdDatas, function (tdData, tdIndex, array) {
+
+                    if(keepGoing) {
+                        if(tdData.data != null && tdData != undefined && tdData != "") {
+                             var day = tdIndex + 1;
+                               trCsv += '"第'+ day +''+ $scope.groupScale.selected.name +'":"'+tdData.data+'",'
+                         } else {
+                            var day = tdIndex + 1;
+                            trCsv += '"第'+ day +''+ $scope.groupScale.selected.name +'":"",'
+                        }
+                        if(boundary - 1 == tdIndex) {
+                            keepGoing = false;
+                            trCsv = trCsv.substr(0,trCsv.length-1);
+                            trCsv += '}';
+                        }
+                    }
+                });
+                console.log(trCsv);
+                tableCSV.push(JSON.parse(trCsv));
+                trCsv = "";
+            });
+            return JSON.stringify(tableCSV).replace(/\%/g, "*");
+        }
+        $scope.page_refresh = function () {
 
             var parameter = {
                 type: $rootScope.userType,
@@ -285,30 +361,21 @@ define(["./module"], function (ctrs) {
                 dateRange: $scope.dateRange.selected.field,
                 indicator: $scope.groupIndex.selected.field
             };
-
-
             var url = "/gacache/querydata?query=" + JSON.stringify(parameter);
-
             $http({
                 method: 'GET',
                 url: url
             }).success(function (data) {
-
                 $scope.groupTableDataes = data.gaResultTrData;
                 $scope.max = data.max;
                 $scope.min = data.min;
                 $scope.half = ($scope.max + $scope.min ) / 2;
                 $scope.maxhalf = ($scope.max + $scope.half ) / 2;
                 $scope.minhalf = ($scope.min + $scope.half ) / 2;
-
-
-
                 $scope.init();
-
             });
-
         }
-        $scope.searchData();
+        $scope.page_refresh();
 
     })
 })
