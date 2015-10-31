@@ -2419,4 +2419,26 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
         }
 
     });
+    //顶部下拉固定
+    app.directive('setClassWhenAtTop', function ($window) {
+        var $win = angular.element($window);
+        return {
+            restrict: 'A',
+            link: function (scope, element, attrs) {
+                var topClass = attrs.setClassWhenAtTop,
+                    offsetTop = element.offset().top;
+                $win.on('scroll', function (e) {
+                    if ($win.scrollTop() >= offsetTop) {
+                        element.addClass(topClass);
+                        $(".fix-to-top").css("width",$(document.body).width()-155);
+                        window.onresize = function(){
+                            $(".fix-to-top").css("width",$(document.body).width()-155);
+                        }
+                    } else {
+                        element.removeClass(topClass);
+                    }
+                });
+            }
+        };
+    })
 });
