@@ -194,6 +194,7 @@ define(["./../module"], function (ctrs) {
                 types: ["pv"],
                 dimension: ["period,loc"],
                 interval: $rootScope.interval,
+                filter:$rootScope.tableSwitch.tableFilter,
                 url: "/api/charts",
                 cb: $scope.newVisitorFormat
             }
