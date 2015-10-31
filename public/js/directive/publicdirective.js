@@ -664,9 +664,9 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                             });
                             var repData = JSON.stringify(_dataInfo).replace(/\%/g, "*");
 
-                        } else if($location.path().indexOf("sameGroupAnalysis") != -1) {
+                        } else if ($location.path().indexOf("sameGroupAnalysis") != -1) {
                             //同类群组分析-下载CSV格式。
-                           var  repData = $rootScope.gaFormatDataCSV();
+                            var repData = $rootScope.gaFormatDataCSV();
                         } else {
                             dataHeadInfo.forEach(function (item, i) {
                                 if (item.field != undefined) {
@@ -2427,14 +2427,14 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
         return {
             restrict: 'A',
             link: function (scope, element, attrs) {
-                var topClass = attrs.setClassWhenAtTop,
-                    offsetTop = element.offset().top;
+                var topClass = attrs.setClassWhenAtTop;
+                var offsetTop = element.offset().top;
                 $win.on('scroll', function (e) {
                     if ($win.scrollTop() >= offsetTop) {
                         element.addClass(topClass);
-                        $(".fix-to-top").css("width",$(document.body).width()-155);
-                        window.onresize = function(){
-                            $(".fix-to-top").css("width",$(document.body).width()-155);
+                        $(".fix-to-top").css("width", $(document.body).width() - 155);
+                        window.onresize = function () {
+                            $(".fix-to-top").css("width", $(document.body).width() - 155);
                         }
                     } else {
                         element.removeClass(topClass);

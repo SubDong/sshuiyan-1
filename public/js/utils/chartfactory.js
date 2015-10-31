@@ -82,6 +82,7 @@ var init = {
                 itemStyle: {normal: {areaStyle: {type: 'default'}}},
                 data: []
             };
+
             option.series.push(serie);
         });
         instance.setOption(option);
@@ -282,19 +283,21 @@ var op = {
         };
         if (chartConfig.auotHidex) {
             option.xAxis[0]["axisLabel"] = {
-                interval: 0
+                interval: "0"
             }
         }
         if (chartConfig.qingXie) {
             option.xAxis[0]["axisLabel"] = {
                 interval: 0,
-                rotate: chartConfig.qxv ? chartConfig.qxv : 25,
+                /*    rotate: chartConfig.qxv ? chartConfig.qxv : 25,*/
                 textStyle: {
                     color: '#0D0D0D',
                     fontFamily: '微软雅黑'
+                },
+                formatter: function (chartConfig) {
+                    return chartConfig.substr(0, 8) + "\n" + chartConfig.substr(8, 8) + "\n" + chartConfig.substr(16, 8) + "...";
                 }
             }
-
         }
         chartConfig.toolShow = !chartConfig.toolShow ? false : true;
         if (chartConfig.toolShow) {
