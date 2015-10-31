@@ -11,7 +11,6 @@ router.get('/', function (req, resp) {
     var tid = req.query["tid"];
     redis.service().get('tsj:'.concat(tid), function (err, sitejson) {
         var ref = req.header('Referer');
-        console.log(sitejson )
         //判断redis是否存在sitejson
         if (err || sitejson == null) {
             //初始化reids
@@ -44,7 +43,6 @@ router.get('/', function (req, resp) {
 });
 router.get('/select', function (req, resp) {
     var tid = req.query["tid"];
-    console.log(tid)
     redis.service().get('tsj:'.concat(tid), function (err, sitejson) {
         var ref = req.header('Referer');
         if (ref == undefined || ref == '') {
@@ -73,11 +71,10 @@ function getData(req, resp, tid, sitejson) {
         resp.end();
         return;
     } else {
-        console.log(ref.indexOf('?'))
-        ref = ref.indexOf('?')==-1?ref:ref.slice(0, ref.indexOf('?'));
+        ref = ref.indexOf('?') == -1 ? ref : ref.slice(0, ref.indexOf('?'));
         var config = {
             "trackid": tid,
-            "iconNumber":sitejson.icon,
+            "iconNumber": sitejson.icon,
             "domain": sitejson.siteurl,
             "open": sitejson.sitepause   //是否启用
         }
@@ -89,11 +86,13 @@ function getData(req, resp, tid, sitejson) {
          * visit 是否开起 访客访问页数转化数据获取
          * @type {string[]}
          */
-        var tasks = ['mouse', 'duration', 'visit', 'e'];
+        var tasks = ['mouse', 'duration', 'visit', 'e', 'pc'];
         async.eachSeries(tasks, function (item, cb) {
-            var url = ((item == "mouse"||item == "e") ? siteid.concat(":", item, ":", ref):item.concat(":", siteid));
+            var url = ((item == "mouse" || item == "e"||item == "pc") ? siteid.concat(":", item, ":", ref) : item.concat(":", siteid));
+            if(item == "pc"){
+                url = siteid.concat(":", item, ":", req.header('Referer'))
+            }
             redis.service().get(url, function (err, val) {
-                console.log("get key="+url+" == "+val)
                 if (val != null) {
                     try {
                         config[item] = JSON.parse(val);

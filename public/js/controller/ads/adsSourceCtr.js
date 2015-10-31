@@ -15,6 +15,7 @@ define(["./module"], function (ctrs) {
             $rootScope.$broadcast("loadAllArea");
             obj.areaSearch = "";
         }
+        $scope.city.selected = {"name": "全部"};
         $scope.todayClass = true;
         $scope.send = true;
         // table配置

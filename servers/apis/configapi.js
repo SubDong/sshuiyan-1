@@ -13,6 +13,7 @@ var dao = require('../db/daos');
 var schemas = require('../db/schemas');
 var randstring = require('../utils/randstring');
 var querystring = require('querystring');
+var async = require('async');
 
 
 // ================================= eventchnage_list ===============================
@@ -44,12 +45,12 @@ api.get("/eventchnage_list", function (req, res) {
                                     eid: item.event_id,//事件ID
                                     evttag: item.event_name,//事件名称
                                     evpage: item.event_page,//事件页面
-                                    evtarget:item.event_target,//是否为转化目标
-                                    evtime:item.update_time//转化修改时间
+                                    evtarget: item.event_target,//是否为转化目标
+                                    evtime: item.update_time//转化修改时间
                                 };
                                 confs.push(event_config);
                             });
-                            console.log("save 刷新Redis："+ ins.root_url + ":e:" + ins.event_page+" = "+ JSON.stringify(confs))
+                            console.log("save 刷新Redis：" + ins.root_url + ":e:" + ins.event_page + " = " + JSON.stringify(confs))
                             req.redisclient.multi().set(ins.root_url + ":e:" + ins.event_page, JSON.stringify(confs)).exec();
                         }
                     });
@@ -82,12 +83,12 @@ api.get("/eventchnage_list", function (req, res) {
                                             eid: item.event_id,//事件ID
                                             evttag: item.event_name,//事件名称
                                             evpage: item.event_page,//事件页面
-                                            evtarget:item.event_target,//是否为转化目标
-                                            evtime:item.update_time//转化修改时间
+                                            evtarget: item.event_target,//是否为转化目标
+                                            evtime: item.update_time//转化修改时间
                                         };
                                         confs.push(event_config);
                                     });
-                                    console.log("1 update 刷新Redis："+ sres[0].root_url + ":e:" + sres[0].event_page+" = "+ JSON.stringify(confs))
+                                    console.log("1 update 刷新Redis：" + sres[0].root_url + ":e:" + sres[0].event_page + " = " + JSON.stringify(confs))
                                     req.redisclient.multi().set(sres[0].root_url + ":e:" + sres[0].event_page, JSON.stringify(confs)).exec();
                                 }
                                 datautils.send(res, docs);
@@ -109,19 +110,22 @@ api.get("/eventchnage_list", function (req, res) {
                     dao.remove(schema_name, qry, function (del) {
                         datautils.send(res, "success");
                         var jsonqry = JSON.parse(qry)
-                        dao.find(schema_name, JSON.stringify({root_url:jsonqry.root_url,event_page:jsonqry.event_page}), null, {}, function (err, docs) {//查询所有配置
+                        dao.find(schema_name, JSON.stringify({
+                            root_url: jsonqry.root_url,
+                            event_page: jsonqry.event_page
+                        }), null, {}, function (err, docs) {//查询所有配置
                             var confs = [];
                             docs.forEach(function (item) {
                                 var event_config = {
                                     eid: item.event_id,//事件ID
                                     evttag: item.event_name,//事件名称
                                     evpage: item.event_page,//事件页面
-                                    evtarget:item.event_target//是否为转化目标
+                                    evtarget: item.event_target//是否为转化目标
                                 };
                                 console.log(event_config)
                                 confs.push(event_config);
                             });
-                            console.log("delete 刷新Redis："+ jsonqry.root_url + ":e:" + jsonqry.event_page+" = "+ JSON.stringify(confs))
+                            console.log("delete 刷新Redis：" + jsonqry.root_url + ":e:" + jsonqry.event_page + " = " + JSON.stringify(confs))
                             req.redisclient.multi().set(jsonqry.root_url + ":e:" + jsonqry.event_page, JSON.stringify(confs)).exec();
                             datautils.send(res, docs);
                         });
@@ -154,7 +158,7 @@ api.get("/subdirectory_list", function (req, res) {
     switch (type) {
         case "save":
             var entity = query['entity'];
-            var temp = JSON.parse(entity);
+            var temp = JSON.parse(unescape(entity));
             dao.save(schema_name, temp, function (ins) {
                 datautils.send(res, JSON.stringify(ins));
             });
@@ -165,8 +169,8 @@ api.get("/subdirectory_list", function (req, res) {
             });
             break;
         case "update":
-            var update = query['updates'];
-            dao.update(schema_name, query['query'], query['updates'], function (err, docs) {
+            var updateqry = unescape(query['updates']);
+            dao.update(schema_name, query['query'], updateqry, function (err, docs) {
                 datautils.send(res, docs);
             });
             break;
@@ -331,6 +335,8 @@ api.get("/site_list", function (req, res) {
                 if (docs != null && docs.length > 0) {
                     docs.forEach(function (item) {
                         //删除Redis
+
+                        //删除Redis
                         req.redisclient.del("typeid:" + item.track_id);
                         req.redisclient.del("ts:" + item.track_id);
                         req.redisclient.del("tsu:" + item.track_id);
@@ -345,24 +351,24 @@ api.get("/site_list", function (req, res) {
                             site_id: item._id,
                             uid: item.uid
                         };
-                        //dao.remove("siterules_model", JSON.stringify(del_qry1), function () {
-                        //});//统计规则
-                        //dao.remove("page_conv_model", JSON.stringify(del_qry1), function () {
-                        //});//页面转化
-                        //dao.remove("converts_model", JSON.stringify(del_qry1), function () {
-                        //});//时长转化
-                        //dao.remove("page_title_model", JSON.stringify(del_qry1), function () {
-                        //});//页面标题
-                        //dao.remove("adtrack_model", JSON.stringify(del_qry1), function () {
-                        //});//广告
-                        //var del_qry2 = {
-                        //    root_url: item._id,
-                        //    uid: item.uid
-                        //};
-                        //dao.remove("subdirectories_model", JSON.stringify(del_qry2), function () {
-                        //});//子目录管理
-                        //dao.remove("event_change_model", JSON.stringify(del_qry2), function () {
-                        //});//事件转化
+                        dao.remove("siterules_model", JSON.stringify(del_qry1), function () {
+                        });//统计规则
+                        dao.remove("page_conv_model", JSON.stringify(del_qry1), function () {
+                        });//页面转化
+                        dao.remove("converts_model", JSON.stringify(del_qry1), function () {
+                        });//时长转化
+                        dao.remove("page_title_model", JSON.stringify(del_qry1), function () {
+                        });//页面标题
+                        dao.remove("adtrack_model", JSON.stringify(del_qry1), function () {
+                        });//广告
+                        var del_qry2 = {
+                            root_url: item._id,
+                            uid: item.uid
+                        };
+                        dao.remove("subdirectories_model", JSON.stringify(del_qry2), function () {
+                        });//子目录管理
+                        dao.remove("event_change_model", JSON.stringify(del_qry2), function () {
+                        });//事件转化
                     });
                     //查询 删除级联 删除本身
                     dao.update(schema_name, query['query'], JSON.stringify({is_use: 0}), function (err, up) {//逻辑删除置is_use=0
@@ -434,22 +440,41 @@ api.get("/page_conv", function (req, res) {
     var schema_name = "page_conv_model";
     switch (type) {
         case "save":
+
+            var site_id;
             var entity = JSON.parse(query['entity']);
-            dao.save(schema_name, entity, function (ins) {
-                //console.log("dddddddddddddd")
+            dao.save(schema_name, entity, function (ins,err) {
                 datautils.send(res, ins);
-                //console.log("st:" + ins.site_id)
-                req.redisclient.get("st:" + ins.site_id, function (error, redis_track_id) {//取Track_id
-                    //console.log("pc:" + redis_track_id)
-                    req.redisclient.get("pc:" + redis_track_id, function (error, page_convs) {
-                        var arr = [];
-                        if (page_convs != null && page_convs == undefined) {
-                            arr = JSON.parse(page_convs);
+                if(ins._id!=undefined){
+                    var tpaths = [];
+                    ins.paths.forEach(function(path,index){
+                        if(path.path_mark){
+                            var pathsteps = []
+                            path.steps.forEach(function(step){
+                                var stepurls = []
+                                step.step_urls.forEach(function(step_url){
+                                    stepurls.push(step_url.url)
+                                })
+                                pathsteps.push(stepurls)
+                            })
+                            var tpath = {
+                                path_num :index+1,
+                                steps:pathsteps
+                            }
+                            tpaths.push(tpath)
                         }
-                        arr.push(ins)
-                        req.redisclient.multi().set("pc:" + redis_track_id, arr).exec();
-                    });
-                })
+                    })
+                    var conf = {
+                        target_name:ins.target_name,
+                        record_type:ins.record_type,
+                        expected_yield:ins.expected_yield,
+                        pecent_yield:ins.pecent_yield,
+                        paths:tpaths,
+                    }
+                    ins.target_urls.forEach(function(target_url){
+                        req.redisclient.multi().set(ins.site_id+":pc:"+target_url.url,JSON.stringify(conf)).exec()
+                    })
+                }
             });
             break;
         case "search":
@@ -458,8 +483,45 @@ api.get("/page_conv", function (req, res) {
             });
             break;
         case "update":
-            dao.update(schema_name, query['query'], query['updates'], function (err, docs) {
-                datautils.send(res, docs);
+            dao.update(schema_name, query['query'], query['updates'], function (err, up) {
+                datautils.send(res, up);
+                if (up.nModified > 0) {//有更新 刷新配置
+                    dao.find(schema_name, query['query'], null, {}, function (err, configs) {
+                        if(configs!=undefined&&configs.length==1){
+                            var config = configs[0]
+                            if(config._id!=undefined){
+                                var tpaths = [];
+                                config.paths.forEach(function(path,index){
+                                    if(path.path_mark){
+                                        var pathsteps = []
+                                        path.steps.forEach(function(step){
+                                            var stepurls = []
+                                            step.step_urls.forEach(function(step_url){
+                                                stepurls.push(step_url.url)
+                                            })
+                                            pathsteps.push(stepurls)
+                                        })
+                                        var tpath = {
+                                            path_num :index+1,
+                                            steps:pathsteps
+                                        }
+                                        tpaths.push(tpath)
+                                    }
+                                })
+                                var conf = {
+                                    target_name:config.target_name,
+                                    record_type:config.record_type,
+                                    expected_yield:config.expected_yield,
+                                    pecent_yield:config.pecent_yield,
+                                    paths:tpaths,
+                                }
+                                config.target_urls.forEach(function(target_url){
+                                    req.redisclient.multi().set(config.site_id+":pc:"+target_url.url,JSON.stringify(conf)).exec()
+                                })
+                            }
+                        }
+                    });
+                }
             });
             break;
         case "delete":
@@ -703,17 +765,13 @@ api.get("/tt_conf", function (req, res) {
 api.get("/redis", function (req, res) {
     var query = url.parse(req.url, true).query;
     req.redisclient.get(query['key'], function (error, redis_conf) {//
+        datautils.send(res, redis_conf);
+    });
+});
 
-        //if(redis_conf!=null){
-        //    try{
-        //        datautils.send(res, JSON.parse(redis_conf));
-        //    }catch(err){
-        //        datautils.send(res, redis_conf);
-        //    }
-        //
-        //}else{
-        //datautils.send(res, redis_conf);
-        //}
+api.get("/redisjson", function (req, res) {
+    var query = url.parse(req.url, true).query;
+    req.redisclient.get(query['key'], function (error, redis_conf) {//
         datautils.send(res, redis_conf);
     });
 });
@@ -814,10 +872,10 @@ api.get("/select", function (req, res) {
                             }
                             if (docs == null || docs.length == 0) {//存在配置
                                 //console.log("*******该事件配置不存在 插入********")
-                                eventData.event_status=1
-                                eventData.event_method= "自动"
-                                eventData.event_target=false
-                                eventData.update_time=new Date().getTime();
+                                eventData.event_status = 1
+                                eventData.event_method = "自动"
+                                eventData.event_target = false
+                                eventData.update_time = new Date().getTime();
                                 dao.save(schema_name, eventData, function (ins) {
                                     if (ins != null) {
                                         res.write("crossDomainCallback({code:1,state:'Save Success'}," + query["index"] + ");");
@@ -834,8 +892,8 @@ api.get("/select", function (req, res) {
                                                         eid: item.event_id,//事件ID
                                                         evttag: item.event_name,//事件名称
                                                         evpage: item.event_page,//事件页面
-                                                        evtarget:item.event_target,//是否为转化目标
-                                                        evtime:item.update_time
+                                                        evtarget: item.event_target,//是否为转化目标
+                                                        evtime: item.update_time
                                                     };
                                                     confs.push(event_config);
                                                 });
@@ -854,7 +912,10 @@ api.get("/select", function (req, res) {
                                     event_name: entityJson["name"],
                                     root_url: sitejson.siteid,
 
-                                }), JSON.stringify({event_name: entityJson["name"] ,update_time:new Date().getTime()}), function (err, docs) {
+                                }), JSON.stringify({
+                                    event_name: entityJson["name"],
+                                    update_time: new Date().getTime()
+                                }), function (err, docs) {
                                     res.write("crossDomainCallback({code:2,state:'Update Success'}," + query["index"] + ");");
                                     res.end();
                                     dao.find(schema_name, JSON.stringify(existQry), null, {}, function (err, docs) {//查询所有配置
@@ -865,8 +926,8 @@ api.get("/select", function (req, res) {
                                                     eid: item.event_id,//事件ID
                                                     evttag: item.event_name,//事件名称
                                                     evpage: item.event_page,//事件页面
-                                                    evtarget:item.event_target,//是否为转化目标
-                                                    evtime:item.update_time
+                                                    evtarget: item.event_target,//是否为转化目标
+                                                    evtime: item.update_time
                                                 };
                                                 confs.push(event_config);
                                             });
@@ -915,7 +976,7 @@ api.get("/select", function (req, res) {
                                         eid: item.event_id,//事件ID
                                         evttag: item.event_name,//事件名称
                                         evpage: item.event_page,//事件页面
-                                        evtarget:item.event_target//是否为转化目标
+                                        evtarget: item.event_target//是否为转化目标
                                     };
                                     confs.push(event_config);
                                 });

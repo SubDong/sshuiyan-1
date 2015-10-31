@@ -79,11 +79,12 @@ define(["./module"], function (ctrs) {
                         page.correcturl = false;
                         page.errmsg = "请您输入正确且与当前网站主域名一致的URL。"
                         flag = false
-                    } else if (page.url.indexOf("?") > -1) {
-                        page.correcturl = false;
-                        page.errmsg = "页面或目录包含参数"
-                        flag = false
                     }
+                    //else if (page.url.indexOf("?") > -1) {
+                    //    page.correcturl = false;
+                    //    page.errmsg = "页面或目录包含参数"
+                    //    flag = false
+                    //}
                 }
             })
             return flag;
@@ -119,7 +120,7 @@ define(["./module"], function (ctrs) {
 
             var entity = JSON.stringify($scope.subdirectory);
 
-            var url = "/config/subdirectory_list?type=update&query={\"_id\":\"" + $scope.subdirectory._id + "\"}&updates=" + entity;
+            var url = "/config/subdirectory_list?type=update&query={\"_id\":\"" + $scope.subdirectory._id + "\"}&updates=" + escape(entity) ;
             $http({
                 method: 'GET',
                 url: url

@@ -400,7 +400,7 @@ define(["./module"], function (ctrs) {
                         })
                     })
                     $rootScope.locUrls = eventPages;
-                    var purl = "/api/transform/getPagePVs?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&queryOptions=" + $scope.es_checkArray + "&events=" + JSON.stringify(eventParams) + "&showType=day"
+                    var purl = "/api/transform/getEventPVs?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&queryOptions=" + $scope.es_checkArray + "&events=" + JSON.stringify(eventParams) + "&showType=day"
                     $http.get(purl).success(function (pvs) {
                         if (pvs != null || pvs != "") {//PV 信息若不存在 则事件信息认为一定不存在
                             var esurl = "/api/transform/getConvEvents?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&eventPages=" + JSON.stringify(eventPages) + "&showType=day"
@@ -641,7 +641,7 @@ define(["./module"], function (ctrs) {
                     if (!falgPv) {
                         tempOptions.push("pv")
                     }
-                    $http.get("/api/transform/getDayPagePVs?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&showType=" + showType + "&queryOptions=" + tempOptions + "&urls=" + JSON.stringify($rootScope.locUrls)).success(function (data) {
+                    $http.get("/api/transform/getDayEventPVs?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&showType=" + showType + "&queryOptions=" + tempOptions + "&urls=" + JSON.stringify($rootScope.locUrls)).success(function (data) {
                         var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
                         chart.showLoading({
                             text: "正在努力的读取数据中..."

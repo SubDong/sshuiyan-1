@@ -288,7 +288,8 @@ define(["./module"], function (ctrs) {
                 //路径类型
                 paths: $scope.paths,
                 conv_tpye: $scope.conv_tpye,//转换类型，regist,communicate,place_order,othre_order
-                conv_text:$scope.conv_tpye=="other"?($scope.t_conv_text.trim()==""?menu_conv_type["other"]:$scope.t_conv_text.trim()):menu_conv_type[$scope.conv_tpye]
+                conv_text:$scope.conv_tpye=="other"?($scope.t_conv_text.trim()==""?menu_conv_type["other"]:$scope.t_conv_text.trim()):menu_conv_type[$scope.conv_tpye],
+                update_time: new Date().getTime()
             }
             var updatePageConv = "/config/page_conv?type=update&query="+JSON.stringify({_id:$stateParams.id})+"&updates=" + angular.toJson(page_conv_entity);
             $http({

@@ -1,13 +1,13 @@
 define(["./module"], function (ctrs) {
     "use strict";
 
-    ctrs.controller('countrules', function ($scope, $http,$rootScope,$cookieStore,ngDialog) {
+    ctrs.controller('countrules', function ($scope, $http, $rootScope, $cookieStore, ngDialog) {
 
 
         //规则IP
-        $scope.rules =[{
-            source:"",
-            convert:""
+        $scope.rules = [{
+            source: "",
+            convert: ""
         }];
         //点击效果
         $scope.ipArea = {
@@ -19,62 +19,62 @@ define(["./module"], function (ctrs) {
         $scope.rules_area = angular.copy($scope.ipArea); //规则IP 与其他域不同 该与不使用其text
         $scope.ex_ips_area = angular.copy($scope.ipArea);//排除IP
         $scope.ex_refer_urls_area = angular.copy($scope.ipArea);//排除来源域名
-        $scope.ex_urls_area =angular.copy($scope.ipArea);//排除受访域名
-        $scope.cross_sites_area =angular.copy($scope.ipArea);//跨域监控
-        $scope.open_tranver_area =angular.copy($scope.ipArea);
-        $scope.days_area =angular.copy($scope.ipArea);
+        $scope.ex_urls_area = angular.copy($scope.ipArea);//排除受访域名
+        $scope.cross_sites_area = angular.copy($scope.ipArea);//跨域监控
+        $scope.open_tranver_area = angular.copy($scope.ipArea);
+        $scope.days_area = angular.copy($scope.ipArea);
 
         /**
          * 数据初始化
          */
-        $scope.init= function(){
-            var uid= $cookieStore.get("uid");
-            var site_id=$rootScope.siteId;
-            var url= "/config/conf?index=0&type=search&query={\"uid\":\""+uid+"\",\"site_id\":\""+site_id+"\"}";
+        $scope.init = function () {
+            var uid = $cookieStore.get("uid");
+            var site_id = $rootScope.siteId;
+            var url = "/config/conf?index=0&type=search&query={\"uid\":\"" + uid + "\",\"site_id\":\"" + site_id + "\"}";
             $http({
                 method: 'GET',
                 url: url
             }).success(function (dataConfig, status) {
-                if(dataConfig!=null && dataConfig.length > 0){
+                if (dataConfig != null && dataConfig.length > 0) {
 
 
                     $scope.rules = dataConfig[0].rules;
-                    $scope.ex_ips_area =convertIpArea(dataConfig[0].ex_ips);
-                    $scope.ex_refer_urls_area= convertIpArea(dataConfig[0].ex_refer_urls);
-                    $scope.ex_urls_area= convertIpArea(dataConfig[0].ex_urls);
-                    $scope.cross_sites_area= convertIpArea(dataConfig[0].cross_sites);
-                    $scope.open_tranver_area= dataConfig[0].open_tranver;
-                    $scope.days_area= dataConfig[0].days;
+                    $scope.ex_ips_area = convertIpArea(dataConfig[0].ex_ips);
+                    $scope.ex_refer_urls_area = convertIpArea(dataConfig[0].ex_refer_urls);
+                    $scope.ex_urls_area = convertIpArea(dataConfig[0].ex_urls);
+                    $scope.cross_sites_area = convertIpArea(dataConfig[0].cross_sites);
+                    $scope.open_tranver_area = dataConfig[0].open_tranver;
+                    $scope.days_area = dataConfig[0].days;
                 }
             });
 
         };
         $scope.init();
 
-        $scope.onSubmitClickListener = function (){
-            var uid= $cookieStore.get("uid");
-            var site_id=$rootScope.siteId;//从conf_sites中获取
-            var query= "/config/conf?index=0&type=search&query={\"uid\":\""+uid+"\",\"site_id\":\""+site_id+"\"}";
+        $scope.onSubmitClickListener = function () {
+            var uid = $cookieStore.get("uid");
+            var site_id = $rootScope.siteId;//从conf_sites中获取
+            var query = "/config/conf?index=0&type=search&query={\"uid\":\"" + uid + "\",\"site_id\":\"" + site_id + "\"}";
             $http({
                 method: 'GET',
                 url: query
             }).success(function (dataConfig, status) {
-                if(dataConfig==null||dataConfig.length==0){//不存在配置 save
-                    var entity= "{\"uid\":\""+uid+"\",\"site_id\":\""+site_id+"\",\"rules\":"+ angular.toJson($scope.rules)+",\"ex_ips\":[\""+$scope.ex_ips_area.tText.replace(/\n/g,"\",\"")+"\"],\"ex_refer_urls\":[\""
-                        + $scope.ex_refer_urls_area.tText.replace(/\n/g,"\",\"")+"\"],\"ex_urls\":[\""+ $scope.ex_urls_area.tText.replace(/\n/g,"\",\"")+"\"],\"cross_sites\":[\""+ $scope.cross_sites_area.tText.replace(/\n/g,"\",\"")+"\"]}";
+                if (dataConfig == null || dataConfig.length == 0) {//不存在配置 save
+                    var entity = "{\"uid\":\"" + uid + "\",\"site_id\":\"" + site_id + "\",\"rules\":" + angular.toJson($scope.rules) + ",\"ex_ips\":[\"" + $scope.ex_ips_area.tText.replace(/\n/g, "\",\"") + "\"],\"ex_refer_urls\":[\""
+                        + $scope.ex_refer_urls_area.tText.replace(/\n/g, "\",\"") + "\"],\"ex_urls\":[\"" + $scope.ex_urls_area.tText.replace(/\n/g, "\",\"") + "\"],\"cross_sites\":[\"" + $scope.cross_sites_area.tText.replace(/\n/g, "\",\"") + "\"]}";
                     //console.log(entity);
-                    var url= "/config/conf?index=0&type=save&entity="+entity;
+                    var url = "/config/conf?index=0&type=save&entity=" + entity;
                     $http({
                         method: 'GET',
                         url: url
                     }).success(function (dataConfig, status) {
 
                     });
-                }else{//update
-                    var updates= "{\"uid\":\""+uid+"\",\"site_id\":\""+site_id+"\",\"rules\":"+ angular.toJson($scope.rules)+",\"ex_ips\":[\""+$scope.ex_ips_area.tText.replace(/\n/g,"\",\"")+"\"],\"ex_refer_urls\":[\""
-                        + $scope.ex_refer_urls_area.tText.replace(/\n/g,"\",\"")+"\"],\"ex_urls\":[\""+ $scope.ex_urls_area.tText.replace(/\n/g,"\",\"")+"\"],\"cross_sites\":[\""+ $scope.cross_sites_area.tText.replace(/\n/g,"\",\"")+"\"]}";
+                } else {//update
+                    var updates = "{\"uid\":\"" + uid + "\",\"site_id\":\"" + site_id + "\",\"rules\":" + angular.toJson($scope.rules) + ",\"ex_ips\":[\"" + $scope.ex_ips_area.tText.replace(/\n/g, "\",\"") + "\"],\"ex_refer_urls\":[\""
+                        + $scope.ex_refer_urls_area.tText.replace(/\n/g, "\",\"") + "\"],\"ex_urls\":[\"" + $scope.ex_urls_area.tText.replace(/\n/g, "\",\"") + "\"],\"cross_sites\":[\"" + $scope.cross_sites_area.tText.replace(/\n/g, "\",\"") + "\"]}";
                     //console.log(updates);
-                    var url= "/config/conf?index=0&type=update&query={\"uid\":\""+uid+"\",\"site_id\":\""+site_id+"\"}&updates="+updates;
+                    var url = "/config/conf?index=0&type=update&query={\"uid\":\"" + uid + "\",\"site_id\":\"" + site_id + "\"}&updates=" + updates;
                     $http({
                         method: 'GET',
                         url: url
@@ -94,41 +94,41 @@ define(["./module"], function (ctrs) {
         };
 
 
-            $scope.addRule = function (o) {
-                o.push({});
-            };
+        $scope.addRule = function (o) {
+            o.push({});
+        };
 
-            $scope.addIP = function (e, obj) {
-                var f = e.currentTarget;
-                var d = f.value.replace(/\r/gi, "");
-                var s = d.split("\n").length;
-                var num = "";
-                for (var i = 0; i < s; i++) {
-                    num += (i + 1) + "\r\n";
-                }
-                obj.count = s;
-                obj.tNum = num;
-                obj.tText = f.value;
-                $(f.previousElementSibling).scrollTop(f.scrollTop);
-            };
+        $scope.addIP = function (e, obj) {
+            var f = e.currentTarget;
+            var d = f.value.replace(/\r/gi, "");
+            var s = d.split("\n").length;
+            var num = "";
+            for (var i = 0; i < s; i++) {
+                num += (i + 1) + "\r\n";
+            }
+            obj.count = s;
+            obj.tNum = num;
+            obj.tText = f.value;
+            $(f.previousElementSibling).scrollTop(f.scrollTop);
+        };
 
-            $scope.myFocus = function (obj) {
-                obj.helpFlag = true;
-            };
+        $scope.myFocus = function (obj) {
+            obj.helpFlag = true;
+        };
 
-            $scope.myBlur = function (obj) {
-                obj.helpFlag = false;
-            };
-            var convertIpArea = function (ips) {
-                var ips_area = angular.copy($scope.ipArea);
-                ips_area.tNum = "";
-                for (var i = 0; i < ips.length; i++) {
-                    ips_area.tNum += (i + 1) + "\r\n";
-                }
-                ips_area.count = ips.length;
-                ips_area.tText = ips.toString().replace(/\,/g, "\n");
-                return ips_area;
-            };
+        $scope.myBlur = function (obj) {
+            obj.helpFlag = false;
+        };
+        var convertIpArea = function (ips) {
+            var ips_area = angular.copy($scope.ipArea);
+            ips_area.tNum = "";
+            for (var i = 0; i < ips.length; i++) {
+                ips_area.tNum += (i + 1) + "\r\n";
+            }
+            ips_area.count = ips.length;
+            ips_area.tText = ips.toString().replace(/\,/g, "\n");
+            return ips_area;
+        };
         Custom.initCheckInfo();//页面check样式js调用
     });
 });

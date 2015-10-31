@@ -12,7 +12,8 @@ define(["./module"], function (ctrs) {
             "helpFlag": false//是否显示帮组信息
         };
         $scope.adtrack_add = angular.copy($scope.ipArea);
-        $scope.addIP = function (e, obj) {
+        $scope.addIP = function (e, obj, v) {
+            /*关键字序列号*/
             var f = e.currentTarget;
             var d = f.value.replace(/\r/gi, "");
             var s = d.split("\n").length;
@@ -24,6 +25,89 @@ define(["./module"], function (ctrs) {
             obj.tNum = num;
             obj.tText = f.value;
             $(f.previousElementSibling).scrollTop(f.scrollTop);
+            /*验证是否相同以及长度是否超过10*/
+            var strs= new Array();
+            strs = v.split("\n");
+            console.log(strs)
+            if(strs.length>10){
+                $scope.meshelps = true;
+            }else if(strs.length>=2){
+                console.log(123)
+                $scope.meshelps = false;
+                for(var i=0;i<strs.length-1;i++){
+                    for(var j=i+1;j<strs.length;j++){
+                        if (strs[i].trim()==strs[j].trim()){
+                            $scope.mes =  "相同的关键词："+strs[i];
+                            $scope.meshelp = true;
+                            return;
+                        }else{
+                            $scope.meshelp = false;
+                        }
+
+                    }
+                }
+            }else{
+                $scope.meshelp = false;
+                $scope.meshelps = false;
+            }
+        };
+
+        $scope.filterKeywords = function(e, v){
+            var code = e.keyCode;
+            var strs= new Array();
+            strs = v.split("\n");
+            if($scope.adtrack_add.count>9 || $scope.meshelp == true){
+                if(e.keyCode == 13){
+                     e.preventDefault();
+                     return false;
+                 }
+            }
+            /*if(code == 13){
+                var strs= new Array();
+                strs = v.split("\n")
+                if(strs.length>1){
+                    if(strs.length>10){
+                        $scope.meshelps=true;
+                        return;
+                    }else{
+                        $scope.meshelp=false;
+                        for(var i=0;i<strs.length-1;i++){
+                            for(var j=i+1;j<strs.length;j++){
+                                if (strs[i].trim()==strs[j].trim()){
+
+                                    $scope.mes =  "相同的关键词："+strs[i];
+                                    $scope.meshelp=true;
+                                    break;
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }else if(code == 8){
+                var strs= new Array();
+                strs = v.split("\n");
+                console.log(strs);
+                if(strs.length>10){
+                    strs.length = 10;
+                    $scope.meshelps = true;
+                }else if(strs.length >= 2){
+                    $scope.meshelps = false;
+                    for(var i=0;i<strs.length-1;i++){
+                        for(var j=i+1;j<strs.length;j++){
+                            if (strs[i].trim()==strs[j].trim()){
+                                $scope.mes =  "相同的关键词："+strs[i];
+                                $scope.meshelp = true;
+                            }else{
+                                $scope.meshelp = false;
+                            }
+                        }
+                    }
+                }else{
+                    $scope.meshelps = false;
+                    $scope.meshelp = false;
+                }
+            }*/
         };
 
         /**
@@ -285,8 +369,8 @@ define(["./module"], function (ctrs) {
                 targetUrl ="http://"+targetUrl;
             }
             if( ($scope.getDomain(siteUrl).trim()!=$scope.getDomain(targetUrl).trim()) && ($scope.getDomain(targetUrl).trim() != "")){
-                $scope.veryUrl=true;
-                $scope.veryUrlmsg =  "目标url的应该以"+ $scope.getDomain(siteUrl)+"开头";
+                $scope.veryUrl = true;
+                $scope.veryUrlmsg =  "目标URL应该是本站或跨域内的URL";
             } else {
                 $scope.veryUrl=false;
             }
@@ -316,42 +400,7 @@ define(["./module"], function (ctrs) {
         ];
         //$scope.adtrack_checkeds=[  'fzk1', 'fzk2'];
 
-        $scope.filterKeywords = function(e,v){
-            var code = e.keyCode;
-            if(code == 13){
-                var strs= new Array();
-                strs = v.split("\n")
-                if(strs.length>1){
-                    if(strs.length>10){
-                        $scope.meshelps=true;
-                        return;
-                    }else{
-                        $scope.meshelp=false;
-                        for(var i=0;i<strs.length-1;i++){
-                            for(var j=i+1;j<strs.length;j++){
-                                if (strs[i].trim()==strs[j].trim()){
 
-                                    $scope.mes =  "相同的关键词："+strs[i];
-                                    $scope.meshelp=true;
-                                    break;
-                                }
-
-                            }
-                        }
-                    }
-                }
-
-
-            }else if(code == 8){
-                var strs= new Array();
-                strs = v.split("\n");
-                if(strs.length>10){
-                    $scope.meshelps = true;
-                }else{
-                    $scope.meshelps = false;
-                }
-            }
-        };
 
     });
 
@@ -371,7 +420,7 @@ define(["./module"], function (ctrs) {
                     if( (scope.getDomain(siteUrl).trim()!=scope.getDomain(targetUrl).trim()) && (scope.getDomain(targetUrl).trim() != "")){
                         c.$setValidity('targetUrl', true);
                         scope.veryUrl=true;
-                        scope.veryUrlmsg =  "目标url的应该以"+ scope.getDomain(siteUrl)+"开头";
+                        scope.veryUrlmsg =  "目标URL应该是本站或跨域内的URL";
                     } else {
                         scope.veryUrl=false;
                         c.$setValidity('targetUrl', false);

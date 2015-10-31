@@ -12,6 +12,28 @@ define(["./module"], function (ctrs) {
         var esType = $rootScope.userType;
         var trackid = $rootScope.siteTrackId;
 
+
+        $rootScope.bases = [
+            {consumption_name: "浏览量(PV)", name: "pv"},
+            {consumption_name: "访客数(UV)", name: "uv"},
+            {consumption_name: "访问次数", name: "vc"},
+            {consumption_name: "IP数", name: "ip"},
+            {consumption_name: "新访客数", name: "nuv"},
+            {consumption_name: "新访客比率", name: "nuvRate"}
+        ];
+        $rootScope.transform = [
+            {consumption_name: '转化次数', name: 'conversions'},
+            {consumption_name: '转化率', name: 'crate'},
+            //{consumption_name: '平均转化成本(页面)', name: 'avgCost'},
+            {consumption_name: '收益', name: 'benefit'},
+            //{consumption_name: '利润', name: 'profit'}
+        ];
+        $rootScope.order = [
+            {consumption_name: "订单数", name: "orderNum"},
+            //{consumption_name: "订单金额", name: "orderMoney"},
+            {consumption_name: "订单转化率", name: "orderNumRate"}
+        ];
+
         //        高级搜索提示
         $scope.sourceSearch = "";
         $scope.terminalSearch = "";
@@ -34,7 +56,7 @@ define(["./module"], function (ctrs) {
         }
 
         //转化分析表格配置
-        $scope.gridOptions = {
+        $rootScope.gridOptions = {
             paginationPageSize: 20,
             paginationPageSizes: [20, 50, 100],
             expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions' style='height:150px;'></div>",
@@ -57,7 +79,7 @@ define(["./module"], function (ctrs) {
         };
         $rootScope.targetSearchSpread = function (isClicked) {
             $scope.gridOpArray = angular.copy($rootScope.searchGridArray);
-            $scope.gridOptions.columnDefs = $scope.gridOpArray;
+            $rootScope.gridOptions.columnDefs = $scope.gridOpArray;
         };
 
         $scope.page = "";
@@ -117,7 +139,7 @@ define(["./module"], function (ctrs) {
                 if (a.col.field == "cpc" || a.col.field == "cost") {
                     returnData = (returnData + "").substring(0, (returnData + "").indexOf(".") + 3);
                 }
-            }else{
+            } else {
                 returnData = "--"
             }
             return returnData;
@@ -154,10 +176,10 @@ define(["./module"], function (ctrs) {
         $scope.getIndex = function (b) {
             return b.$parent.$parent.rowRenderIndex + 1
         };
-        var eventTable = function (data, transNameIndex, dataIndex, test_url, start, end,analysisAction) {
+        var eventTable = function (data, transNameIndex, dataIndex, test_url, start, end, analysisAction) {
             $http({
                 method: "GET",
-                url: "/api/transform/transformAnalysis?start=" + start + "&end=" + end + "&analysisAction="+analysisAction+"&type=1&searchType=queryDataByUrl&showType=total&all_urls=" + test_url[transNameIndex].all_urls
+                url: "/api/transform/transformAnalysis?start=" + start + "&end=" + end + "&analysisAction=" + analysisAction + "&type=1&searchType=queryDataByUrl&showType=total&all_urls=" + test_url[transNameIndex].all_urls
             }).success(function (all_urls_data) {
                 var temporaryData = data[dataIndex].crate;
                 if (all_urls_data[0].crate_pv == 0) {
@@ -165,194 +187,43 @@ define(["./module"], function (ctrs) {
                 } else {
                     data[dataIndex].crate = (Number(temporaryData / all_urls_data[0].crate_pv) * 100).toFixed(2);
                 }
-                $scope.gridOptions.data = data;
+                $rootScope.gridOptions.data = data;
             });
         };
-        var hasSemEventTable = function (data, transNameIndex, dataIndex, test_url, timeData,sem_data,analysisAction) {
+        var hasSemEventTable = function (data, transNameIndex, dataIndex, test_url, timeData, sem_data, analysisAction) {
             $http({
                 method: "GET",
-                url: "/api/transform/transformAnalysis?start=" + timeData.start + "&end=" + timeData.end + "&analysisAction="+analysisAction+"&type=1&searchType=queryDataByUrl&showType=total&all_urls=" + test_url[transNameIndex].all_urls
+                url: "/api/transform/transformAnalysis?start=" + timeData.start + "&end=" + timeData.end + "&analysisAction=" + analysisAction + "&type=1&searchType=queryDataByUrl&showType=total&all_urls=" + test_url[transNameIndex].all_urls
             }).success(function (all_urls_data) {
 
-                    timeData.checkedArray.forEach(function (checked) {
-                        switch (checked) {
+                timeData.checkedArray.forEach(function (checked) {
+                    switch (checked) {
 
-                            case "crate":
-                                var temporaryData = data[dataIndex].crate;
-                                if (all_urls_data[0].crate_pv == 0) {
-                                    data[dataIndex].crate = 0;
-                                } else {
-                                    data[dataIndex].crate = (Number(temporaryData / all_urls_data[0].crate_pv) * 100).toFixed(2);
-                                }
-                                break;
-                        }
-                    });
-                    $scope.gridOptions.data = data;
+                        case "crate":
+                            var temporaryData = data[dataIndex].crate;
+                            if (all_urls_data[0].crate_pv == 0) {
+                                data[dataIndex].crate = 0;
+                            } else {
+                                data[dataIndex].crate = (Number(temporaryData / all_urls_data[0].crate_pv) * 100).toFixed(2);
+                            }
+                            break;
+                    }
+                });
+                $rootScope.gridOptions.data = data;
 
             });
         };
-        $scope.init = function (timeData) {
-            $scope.gridOptions.data = [];
-            $http.get("/api/transform/transformAnalysis?start=" + timeData.start + "&end=" + timeData.end + "&analysisAction="+timeData.analysisAction+"&type=1&searchType=table&queryOptions=" + timeData.checkedArray).success(function (data) {
-                var hasCrate = false;
-                for (var o = 0; o < timeData.checkedArray.length; o++) {
-                    if (timeData.checkedArray[o] == "crate") {
-                        hasCrate = true;
-                        break;
-                    }
-                }
-                if (hasCrate) {
-                    if (timeData.sem_checkedArray.length != 0) {
-                        //var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];
-                        //var transName = ["登陆信息", "￧ﾙﾻ￩ﾙﾆ￤﾿ﾡ￦ﾁﾯ"];转化测试数据
-                        var semRequest = "";
-                        semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + timeData.start + "&endOffset=" + timeData.end + "&q=cost");
-                        $q.all([semRequest]).then(function (sem_data) {
-                            var cost = 0;
-                            for (var k = 0; k < sem_data.length; k++) {
-                                for (var c = 0; c < sem_data[k].data.length; c++) {
-                                    cost += Number(sem_data[k].data[c].cost);
-                                }
-                            }
-                            timeData.checkedArray.forEach(function(checked){
-                                var k =0;
-                                switch(checked){
-                                    case "avgCost":
-                                        var avgCost_all = 0;
-                                        for (k = 0; k < data.length; k++) {
-                                            avgCost_all += data[k].avgCost;
-                                        }
-                                        if (avgCost_all == 0) {
-                                            for (k = 0; k < data.length; k++) {
-                                                data[k].avgCost = 0;
-                                            }
-                                        } else {
-                                            var avgCost_avg = (cost / avgCost_all).toFixed(2).toString();
-                                            for (k = 0; k < data.length; k++) {
-                                                data[k].avgCost = avgCost_avg;
-                                            }
-                                        }
-                                        break;
-                                    case "profit":
-                                        var profit_all = 0;
-                                        for (k = 0; k < data.length; k++) {
-                                            profit_all += Number(data[k].profit);
-                                        }
-                                        var profit_avg = (profit_all - cost).toFixed(2).toString();
-                                        for (k = 0; k < data.length; k++) {
-                                            data[k].profit = profit_avg;
-                                        }
-                                        break;
-                                    case "transformCost":
-                                        var transformCost_all = 0;
-                                        for (k = 0; k < data.length; k++) {
-                                            transformCost_all += data[k].transformCost;
-                                        }
-                                        if (transformCost_all == 0) {
-                                            for (k = 0; k < data.length; k++) {
-                                                data[k].transformCost = 0;
-                                            }
-                                        } else {
-                                            var transformCost_avg = (cost / transformCost_all).toFixed(2).toString();
-                                            for (k = 0; k < data.length; k++) {
-                                                data[k].transformCost = transformCost_avg;
-                                            }
-                                        }
-                                        break;
-                                }
-                            });
 
-                            for (var p = 0; p < timeData.convert_url_all.length; p++) {
-                                for (var i = 0; i < data.length; i++) {
-                                    if (timeData.convert_url_all[p].convertName == data[i].campaignName) {
-                                        hasSemEventTable(data, p, i, timeData.convert_url_all, timeData,sem_data,timeData.analysisAction);
-                                    }
-                                }
-                            }
-                        });
-                    } else {
-                        //var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];
-                        //var transName = ["登陆信息", "￧ﾙﾻ￩ﾙﾆ￤﾿ﾡ￦ﾁﾯ"];转化测试数据
-                        for (var p = 0; p < timeData.convert_url_all.length; p++) {
-                            for (var i = 0; i < data.length; i++) {
-                                if (timeData.convert_url_all[p].convertName == data[i].campaignName) {
-                                    eventTable(data, p, i, timeData.convert_url_all, timeData.start, timeData.end,timeData.analysisAction);
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    if (timeData.sem_checkedArray.length != 0) {
-                        var semRequest = "";
-                        semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + timeData.start + "&endOffset=" + timeData.end + "&q=cost");
-                        $q.all([semRequest]).then(function (sem_data) {
-                            var cost = 0;
-                            for (var k = 0; k < sem_data.length; k++) {
-                                for (var c = 0; c < sem_data[k].data.length; c++) {
-                                    cost += Number(sem_data[k].data[c].cost);
-                                }
-                            }
-                            timeData.sem_checkedArray.forEach(function (checked, index) {
-                                var k = 0;
-                                switch (timeData.sem_checkedArray[index]) {
-                                    case "avgCost":
-                                        var avgCost_all = 0;
-                                        for (k = 0; k < data.length; k++) {
-                                            avgCost_all += data[k].avgCost;
-                                        }
-                                        if (avgCost_all == 0) {
-                                            for (k = 0; k < data.length; k++) {
-                                                data[k].avgCost = 0;
-                                            }
-                                        } else {
-                                            var avgCost_avg = (cost / avgCost_all).toFixed(2).toString();
-                                            for (k = 0; k < data.length; k++) {
-                                                data[k].avgCost = avgCost_avg;
-                                            }
-                                        }
-                                        break;
-                                    case "profit":
-                                        var profit_all = 0;
-                                        for (k = 0; k < data.length; k++) {
-                                            profit_all += Number(data[k].profit);
-                                        }
-                                        var profit_avg = (profit_all - cost).toFixed(2).toString();
-                                        for (k = 0; k < data.length; k++) {
-                                            data[k].profit = profit_avg;
-                                        }
-                                        break;
-                                    case "transformCost":
-                                        var transformCost_all = 0;
-                                        for (k = 0; k < data.length; k++) {
-                                            transformCost_all += data[k].transformCost;
-                                        }
-                                        if (transformCost_all == 0) {
-                                            for (k = 0; k < data.length; k++) {
-                                                data[k].transformCost = 0;
-                                            }
-                                        } else {
-                                            var transformCost_avg = (cost / transformCost_all).toFixed(2).toString();
-                                            for (k = 0; k < data.length; k++) {
-                                                data[k].transformCost = transformCost_avg;
-                                            }
-                                        }
-                                        break;
-                                }
-                            });
-                            $scope.gridOptions.data = data;
-                        });
-                    } else {
-                        $scope.gridOptions.data = data;
-                    }
-                }
+        //初始化数据
+        $rootScope.refreshData()
 
-            });
-        };
         $scope.$on("transformData", function (e, msg) {
-            $scope.init(msg)
+            $(msg)
         });
         $scope.$on("transformData_ui_grid", function (e, msg) {
             $rootScope.searchGridArray[1].footerCellTemplate = "<div class='ui-grid-cell-contents'>当页汇总</div>";
+            $rootScope.searchGridArray[2].footerCellTemplate = "<div class='ui-grid-cell-contents'>--</div>";
+            $rootScope.searchGridArray[3].footerCellTemplate = "<div class='ui-grid-cell-contents'>--</div>";
             for (var i = 0; i < msg.checkedArray.length; i++) {
                 $rootScope.searchGridArray[i + 2].displayName = chartUtils.convertChinese(msg.checkedArray[i]);
                 $rootScope.searchGridArray[i + 2].field = msg.checkedArray[i];
@@ -360,8 +231,8 @@ define(["./module"], function (ctrs) {
                 $rootScope.searchGridArray[i + 2].name = chartUtils.convertChinese(msg.checkedArray[i]);
             }
             $scope.gridOpArray = angular.copy($rootScope.searchGridArray);
-            $scope.gridOptions.columnDefs = $scope.gridOpArray;
-            $scope.init(msg)
+            $rootScope.gridOptions.columnDefs = $scope.gridOpArray;
+            $rootScope.refreshData(msg)
         });
         $scope.$on("transformAdvancedData_ui_grid", function (e, msg) {
             $scope.advancedInit(msg)
@@ -441,8 +312,8 @@ define(["./module"], function (ctrs) {
 
             }
             query = query.substring(0, query.length - 1);
-            $scope.gridOptions.data = [];
-            $http.get("/api/transform/transformAnalysis?start=" + msg.start + "&end=" + msg.end + "&analysisAction="+msg.analysisAction+"&type=1&searchType=advancedTable&queryOptions={" + query + "}&aggsOptions=" + msg.checkedArray).success(function (data) {
+            $rootScope.gridOptions.data = [];
+            $http.get("/api/transform/transformAnalysis?start=" + msg.start + "&end=" + msg.end + "&analysisAction=" + msg.analysisAction + "&type=1&searchType=advancedTable&queryOptions={" + query + "}&aggsOptions=" + msg.checkedArray).success(function (data) {
                 var hasCrate = false;
                 for (var o = 0; o < msg.checkedArray.length; o++) {
                     if (msg.checkedArray[o] == "crate") {
@@ -450,7 +321,7 @@ define(["./module"], function (ctrs) {
                         break;
                     }
                 }
-                if(hasCrate){
+                if (hasCrate) {
                     if (msg.sem_checkedArray.length != 0) {
                         //var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];
                         //var transName = ["登陆信息", "￧ﾙﾻ￩ﾙﾆ￤﾿ﾡ￦ﾁﾯ"];转化测试数据
@@ -463,9 +334,9 @@ define(["./module"], function (ctrs) {
                                     cost += Number(sem_data[k].data[c].cost);
                                 }
                             }
-                            msg.checkedArray.forEach(function(checked){
-                                var k =0;
-                                switch(checked){
+                            msg.checkedArray.forEach(function (checked) {
+                                var k = 0;
+                                switch (checked) {
                                     case "avgCost":
                                         var avgCost_all = 0;
                                         for (k = 0; k < data.length; k++) {
@@ -514,7 +385,7 @@ define(["./module"], function (ctrs) {
                             for (var p = 0; p < msg.convert_url_all.length; p++) {
                                 for (var i = 0; i < data.length; i++) {
                                     if (msg.convert_url_all[p].convertName == data[i].campaignName) {
-                                        hasSemEventTable(data, p, i, msg.convert_url_all, msg,sem_data,msg.analysisAction);
+                                        hasSemEventTable(data, p, i, msg.convert_url_all, msg, sem_data, msg.analysisAction);
                                     }
                                 }
                             }
@@ -525,12 +396,12 @@ define(["./module"], function (ctrs) {
                         for (var p = 0; p < msg.convert_url_all.length; p++) {
                             for (var i = 0; i < data.length; i++) {
                                 if (msg.convert_url_all[p].convertName == data[i].campaignName) {
-                                    eventTable(data, p, i, msg.convert_url_all, msg.start, msg.end,msg.analysisAction);
+                                    eventTable(data, p, i, msg.convert_url_all, msg.start, msg.end, msg.analysisAction);
                                 }
                             }
                         }
                     }
-                }else{
+                } else {
                     if (msg.sem_checkedArray.length != 0) {
                         var semRequest = "";
                         semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + msg.start + "&endOffset=" + msg.end + "&q=cost");
@@ -588,11 +459,11 @@ define(["./module"], function (ctrs) {
                                         }
                                 }
                             });
-                            $scope.gridOptions.data = data;
+                            $rootScope.gridOptions.data = data;
                         });
 
                     } else {
-                        $scope.gridOptions.data = data;
+                        $rootScope.gridOptions.data = data;
                     }
                 }
             });
@@ -600,34 +471,34 @@ define(["./module"], function (ctrs) {
     });
 
 //得到tableFilter key
-    var getTableFilter = function (a) {
-        switch (a) {
-            case "campaign":
-                return "cid";
-            case "adgroup":
-                return "agid";
-            case "keyword":
-                return "kwid";
-            default :
-                return "cid";
-        }
-    };
+//    var getTableFilter = function (a) {
+//        switch (a) {
+//            case "campaign":
+//                return "cid";
+//            case "adgroup":
+//                return "agid";
+//            case "keyword":
+//                return "kwid";
+//            default :
+//                return "cid";
+//        }
+//    };
 
 
-    var getTableTitle = function (a, b) {
-        switch (a) {
-            case "campaignName":
-                return "";
-            case "adgroupName":
-                return ",[" + b['campaignName'] + "]";
-            case "keywordName":
-                return ",[" + b['campaignName'] + "]" + "  [" + b['adgroupName'] + "]";
-            case "kw":
-                return ",[" + b['campaignName'] + "]" + "  [" + b['adgroupName'] + "]";
-            case "description1":
-                var returnData = ",`" + (b['creativeTitle'].length > 25 ? b['creativeTitle'].substring(0, 25) + "..." : b['creativeTitle']) + ",`" + b['showUrl']
-                return returnData;
-        }
-    };
+    //var getTableTitle = function (a, b) {
+    //    switch (a) {
+    //        case "campaignName":
+    //            return "";
+    //        case "adgroupName":
+    //            return ",[" + b['campaignName'] + "]";
+    //        case "keywordName":
+    //            return ",[" + b['campaignName'] + "]" + "  [" + b['adgroupName'] + "]";
+    //        case "kw":
+    //            return ",[" + b['campaignName'] + "]" + "  [" + b['adgroupName'] + "]";
+    //        case "description1":
+    //            var returnData = ",`" + (b['creativeTitle'].length > 25 ? b['creativeTitle'].substring(0, 25) + "..." : b['creativeTitle']) + ",`" + b['showUrl']
+    //            return returnData;
+    //    }
+    //};
 })
 ;

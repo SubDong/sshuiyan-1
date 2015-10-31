@@ -101,11 +101,12 @@ define(["./module"], function (ctrs) {
                         page.correcturl = false;
                         page.errmsg="请您输入正确且与当前网站主域名一致的URL。"
                         flag = false
-                    }else if(page.url.indexOf("?")>-1){
-                        page.correcturl = false;
-                        page.errmsg="页面或目录包含参数"
-                        flag = false
                     }
+                    //else if(page.url.indexOf("?")>-1){
+                    //    page.correcturl = false;
+                    //    page.errmsg="页面或目录包含参数"
+                    //    flag = false
+                    //}
                 }
             })
             return flag;
@@ -138,7 +139,7 @@ define(["./module"], function (ctrs) {
             $scope.subdirectory.analysis_url = listToStirng(pages);
             $scope.subdirectory.not_analysis_url = listToStirng(no_pages);
             var entity = JSON.stringify($scope.subdirectory);
-            var url = "/config/subdirectory_list?type=save&entity=" + entity;
+            var url = "/config/subdirectory_list?type=save&entity=" + escape(entity);
             $http({
                 method: 'GET',
                 url: url
