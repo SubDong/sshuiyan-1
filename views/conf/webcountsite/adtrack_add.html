@@ -95,7 +95,7 @@
                     <div class="">
                         <textarea ng-model="adtrack_add.tNum" class="tNum" disabled></textarea>
                         <textarea id="keywords" data-ng-change="advancedOpt('other',4)" disabled
-                                  data-ng-keyup="addIP($event, adtrack_add)" wrap="virtual"
+                                  data-ng-keyup="addIP($event, adtrack_add, adTrack.keywords)" wrap="off"
                                   data-ng-model="adTrack.keywords" ng-keydown="filterKeywords($event,adTrack.keywords)"
                                   class="tText"></textarea>
                     </div>
@@ -110,8 +110,8 @@
                 </li>
             </ul>
 
-            <button class="btn btn-info timechange_button"
-                    ng-disabled="adTrackForm.targetUrl.$invalid || adTrackForm.mediaPlatform.$invalid"
+            <button class="btn btn-info timechange_button" id="confirmUrl"
+                    ng-disabled="(adTrackForm.targetUrl.$error.required && targetUrlHelp.help) || adTrackForm.targetUrl.$error.sshUrl || !adTrack.mediaPlatform || (adTrack.temMediaPlatform.length==0 && mediaPlatformFocus) || (adTrack.temAdTypes.length == 0 && temAdTypesFocus) || meshelps || meshelp || adTrack.planName.length>=30"
                     ng-click="allSubmit();isNoHide = true">确定拼生成URL
             </button>
             &nbsp;&nbsp;&nbsp;

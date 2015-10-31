@@ -230,7 +230,7 @@ define(["./module"], function (ctrs) {
                     }
                 },
                 legend: {
-                    data: ['所有会话']
+                    data: ['所有访客']
                 },
                 calculable: true,
                 xAxis: [
@@ -257,7 +257,7 @@ define(["./module"], function (ctrs) {
                 ],
                 series: [
                     {
-                        name: '所有会话',
+                        name: '所有访客',
                         type: 'line',
                         stack: '总量',
                         data: seriesData
