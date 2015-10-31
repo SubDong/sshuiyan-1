@@ -207,7 +207,7 @@ define(["angular", "./app"], function (angular, myApp) {
                     resolve: {
                         load: loadDeps([
                             "controller/transform/transformAnalysis",
-                            "controller/transform/transformSearchPromotion"
+                            "controller/TabsCtrl"
                         ])
                     }
                 })
@@ -216,7 +216,8 @@ define(["angular", "./app"], function (angular, myApp) {
                     templateUrl: "./transform/pageTransform.html",
                     resolve: {
                         load: loadDeps([
-                            'controller/transform/pageTransformCtr'
+                            'controller/transform/pageTransformCtr',
+                            "controller/transform/transformSearchPromotion"
                         ])
                     }
                 });

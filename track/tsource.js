@@ -1,5 +1,4 @@
 if (config != undefined && !config.open) {
-    console.log("excute t.js");
     (function () {
         var e = [], d = {}, g = {}, j = {id: config.trackid, version: "1.0.21", q: null};
         g.achieve = {};
@@ -309,14 +308,23 @@ if (config != undefined && !config.open) {
             return s + q + o + h + m + c
         };
         d.I = {
-            R: "hy.best-ad.cn",
-            RS: "t.best-ad.cn",
+            R: "192.168.1.102:8000",
+            RS: "192.168.1.102:8001",
             u: config.domain,
-            P: "log.best-ad.cn",
+            P: "192.168.100.10:9090",
             S: "pft.gif",
             protocol: "https:" == document.location.protocol ? "https:" : "http:",
-            Q: "os tit br fl pm sr lg ck ja sc dt rf loc tt ct vid u api et cv xy ut duration durPage n v adtrack".split(" ")
+            Q: "os tit br fl pm sr lg ck ja sc dt rf loc tt ct vid u api et cv xy ut duration durPage n v adtrack".split(" "),
+            PQ: "os tit br fl pm sr lg ck ja sc dt rf loc tt ct vid u api p_name p_type p_record p_orderid p_income p_conversionrate".split(" ")
         };
+        g.g.getOrderId = function(){
+            if(g.g.loc.indexOf("[[[")>0&&g.g.loc.indexOf("]]]")&&g.g.loc.indexOf("[[[")<g.g.loc.indexOf("]]]")){
+                return g.g.loc.substring(g.g.loc.indexOf("[[[")+3,g.g.loc.indexOf("]]]"))
+            }else{
+                return ""
+            }
+        };
+
         (function () {
             var c = {
                 i: {}, e: function (h, k) {
@@ -362,12 +370,10 @@ if (config != undefined && !config.open) {
                     g.g.api = "1_0";
                     d.b.init()
                 }, _trackEvent: function (l) {
-                    //判定手动添加 是否可操作
                     if (l[1] != undefined && l[1] != "" && l[1] != null) {
                         if (l[2] != undefined && l[2] != "" && l[2] != null) {
                             g.g.dt = new Date().getTime();
-                            2 < l.length && (g.g.api = "2_0", g.g.et = c(l[1]) + "*" + c(l[2]) + "*" + c(l[3])  + (l[4] ? "*" + c(l[4]) : ""), d.b.init())
-                            console.log(g.g.et)
+                            2 < l.length && (g.g.api = "2_0", g.g.et = c(l[1]) + "*" + c(l[2]) + "*" + c(l[3]) + (l[4] ? "*" + c(l[4]) : ""), d.b.init());
                         }
                     }
                 }, _setCustomVar: function (n) {
@@ -472,7 +478,16 @@ if (config != undefined && !config.open) {
                     }
                     t.set("PFT_SJKD", new Date().getDate());
                     return s
-                }, custor: function () {
+                }
+                , pagePar: function () {
+                    var s = "", r = d.I.PQ, u = g.g, t = g.cookie;
+                    for (var v = 0; v < r.length; v++) {
+                        u[r[v]] != undefined && u[r[v]] != "" && u[r[v]] != null ? s = s + r[v] + "=" + u[r[v]] + ((r[v] == "v") ? "" : "&") : ""
+                    }
+                    t.set("PFT_PAGE", new Date().getDate());
+                    return s
+                }
+                , custor: function () {
                     g.g.cv = g.cookie.get("PFT_CV_" + j.id);
                     g.g.api = g.cookie.get("PFT_API");
                     if (g.g.cv != null && g.g.cv != undefined && g.g.cv != "") {
@@ -484,7 +499,13 @@ if (config != undefined && !config.open) {
                     var s = d.I;
                     var t = s.protocol + "//" + s.P + "/" + s.S + "?t=" + j.id + "&" + this.par();
                     c.log(t)
-                }, hbInfo: function () {
+                }
+                , pageSm: function (r) {
+                    var s = d.I;
+                    var t = s.protocol + "//" + s.P + "/" + s.S + "?t=" + j.id + "&" + this.pagePar();
+                    c.log(t)
+                }
+                , hbInfo: function () {
                     var s = d.I;
                     var r = document.createElement("script");
                     r.setAttribute("type", "text/javascript");
@@ -605,7 +626,7 @@ if (config != undefined && !config.open) {
         if (config != undefined && config.e != undefined && config.e.length > 0) {
             window.onload = function () {
                 config.e.forEach(function (k, h) {
-                    var l = document.location.origin+document.location.pathname
+                    var l = document.location.origin + document.location.pathname;
                     if (l === k.evpage) {
                         var m = document.getElementById(k.eid);
                         var c = m.attributes.getNamedItem("onclick");
@@ -653,6 +674,67 @@ if (config != undefined && !config.open) {
                 })()
             }
         }
+
+        //页面转化 条件是有页面转化配置
+
+        if (config != undefined && config.pc != undefined) {//到达目标URL了
+            if (config.pc.paths == undefined || config.pc.paths.length == 0) {//不需要路径 直接转化
+                g.g.p_name = config.pc.target_name
+                g.g.p_record = config.pc.record_type
+                //判定订单是否存在
+                g.g.p_orderid =  g.g.getOrderId()
+                g.g.p_type = "regist"//测试
+                g.g.p_income = config.pc.expected_yield
+                g.g.p_conversionrate = config.pc.pecent_yield
+                d.b.pageSm();
+            } else {//根据路径来转化 判定转化正确性
+                var rm = g.cookie.get("RF_map" + j.id)
+                if (rm == undefined || rm == "") {//不存在父目录
+                    return;
+                } else {
+                    var rmarr = rm.split("|")
+                    config.pc.paths.forEach(function (path) {
+                        if (path.steps.length < rmarr.length) {
+                            var flag = true;
+                            for (var index = 0; index < path.steps; index++) {
+                                var step = path.steps[index]
+                                flag = true
+                                step.forEach(function (url) {
+                                    if (url != rmarr[rmarr.length - path.steps.length + index]) {
+                                        flag = false;
+                                    }
+                                })
+                                if (flag) {
+                                    break;
+                                }
+                            }
+                            if (flag) {
+                                g.g.p_name = config.pc.target_name
+                                g.g.p_record = config.pc.record_type
+                                g.g.p_orderid =  g.g.getOrderId()
+                                g.g.p_type = "测试路径"//测试
+                                g.g.p_income = config.pc.expected_yield
+                                g.g.p_conversionrate = config.pc.pecent_yield
+                                d.b.pageSm();
+                            }
+                        }
+                    })
+                }
+            }
+
+        }
+        var rm = g.cookie.get("RF_map" + j.id)
+        if (rm == undefined || rm == "") {
+            rm = g.g.loc
+        } else {
+            var rmarr = rm.split("|")
+            if (rmarr.length == 10) {
+                rmarr.splice(0, 1)
+            }
+            rmarr.push(g.g.loc)
+            rm = rmarr.join("|")
+        }
+        g.cookie.set("RF_map" + j.id, rm)
     })()
 }
 ;

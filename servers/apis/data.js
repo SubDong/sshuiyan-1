@@ -938,10 +938,8 @@ api.get("/transform/transformAnalysis", function (req, res) {
 
     }
 );
-/**
- * 查询站点下 配置有事件的页面的PV
- */
-api.get("/transform/getPagePVs", function (req, res) {
+
+api.get("/transform/getPageBasePVs", function (req, res) {
     var query = url.parse(req.url, true).query;
     //组合Index
     var indexString = [];
@@ -950,13 +948,32 @@ api.get("/transform/getPagePVs", function (req, res) {
     } else {
         indexString = date.createIndexes(query.start, query.end, "access-");
     }
+    var ctime = new Date()
     //计算开始时间
     var timeArea = date.getConvertTimeByNumber(query.start, query.end)
     //计算计算时间
-    transform.searchPagePVs(req.es, indexString, timeArea[0], timeArea[1], query.type, JSON.parse(query.events), query.queryOptions, function (result) {
+    transform.searchPageBasePVs(req.es, indexString, timeArea[0], timeArea[1], query.type, JSON.parse(query.pages), query.queryOptions, function (result) {
         datautils.send(res, result);
     });
 });
+api.get("/transform/getPageBaseInfo", function (req, res) {
+    var query = url.parse(req.url, true).query;
+    //组合Index
+    var indexString = [];
+    if (query.start.substring(1, query.start.length).match("-") != null && end.substring(1, query.start.length).match("-") != null) {
+        indexString = date.createIndexsByTime(query.start, query.end, "access-");
+    } else {
+        indexString = date.createIndexes(query.start, query.end, "access-");
+    }
+    var ctime = new Date()
+    //计算开始时间
+    var timeArea = date.getConvertTimeByNumber(query.start, query.end)
+    //计算计算时间
+    transform.searchPageBaseInfo(req.es, indexString, timeArea[0], timeArea[1], query.type, JSON.parse(query.pages), query.queryOptions, function (result) {
+        datautils.send(res, result);
+    });
+});
+
 api.get("/transform/getDayPagePVs", function (req, res) {
     var query = url.parse(req.url, true).query;
     //组合Index
@@ -970,6 +987,41 @@ api.get("/transform/getDayPagePVs", function (req, res) {
     var timeArea = date.getConvertTimeByNumber(query.start, query.end)
     console.log(query)
     transform.searchDayPagePVs(req.es, indexString, query.type, query.showType, query.queryOptions.split(","),JSON.parse(query.urls), function (result) {
+        datautils.send(res, result);
+    });
+});
+
+/**
+ * 查询站点下 配置有事件的页面的PV
+ */
+api.get("/transform/getEventPVs", function (req, res) {
+    var query = url.parse(req.url, true).query;
+    //组合Index
+    var indexString = [];
+    if (query.start.substring(1, query.start.length).match("-") != null && end.substring(1, query.start.length).match("-") != null) {
+        indexString = date.createIndexsByTime(query.start, query.end, "access-");
+    } else {
+        indexString = date.createIndexes(query.start, query.end, "access-");
+    }
+    //计算开始时间
+    var timeArea = date.getConvertTimeByNumber(query.start, query.end)
+    //计算计算时间
+    transform.searchEventPVs(req.es, indexString, timeArea[0], timeArea[1], query.type, JSON.parse(query.events), query.queryOptions, function (result) {
+        datautils.send(res, result);
+    });
+});
+api.get("/transform/getDayEventPVs", function (req, res) {
+    var query = url.parse(req.url, true).query;
+    //组合Index
+    var indexString = [];
+    if (query.start.substring(1, query.start.length).match("-") != null && end.substring(1, query.start.length).match("-") != null) {
+        indexString = date.createIndexsByTime(query.start, query.end, "access-");
+    } else {
+        indexString = date.createIndexes(query.start, query.end, "access-");
+    }
+    //计算开始时间
+    var timeArea = date.getConvertTimeByNumber(query.start, query.end)
+    transform.searchDayEventPVs(req.es, indexString, query.type, query.showType, query.queryOptions.split(","),JSON.parse(query.urls), function (result) {
         datautils.send(res, result);
     });
 });

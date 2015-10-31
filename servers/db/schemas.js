@@ -184,7 +184,8 @@ var schemas = {
 
             }],
             conv_tpye: String,//转换类型，regist,communicate,place_order,othre_order
-            conv_text: String
+            conv_text: String,
+            update_time:Number
         }
 
     },
