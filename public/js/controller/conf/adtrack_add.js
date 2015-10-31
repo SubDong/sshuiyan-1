@@ -28,11 +28,9 @@ define(["./module"], function (ctrs) {
             /*验证是否相同以及长度是否超过10*/
             var strs= new Array();
             strs = v.split("\n");
-            console.log(strs)
             if(strs.length>10){
                 $scope.meshelps = true;
             }else if(strs.length>=2){
-                console.log(123)
                 $scope.meshelps = false;
                 for(var i=0;i<strs.length-1;i++){
                     for(var j=i+1;j<strs.length;j++){
