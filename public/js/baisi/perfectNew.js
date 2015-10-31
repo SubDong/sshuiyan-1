@@ -98,7 +98,7 @@ var _pct = _pct || [];
         var exp = new Date();
         exp.setTime(exp.getTime() - 1);
         var cval = md.cookie.get(a);
-        if (cval != null) document.cookie = a + "="+cval+";expires="+exp.toGMTString();
+        if (cval != null) document.cookie = a + "=" + cval + ";expires=" + exp.toGMTString();
     };
     //用户使用设备（0 移动端访问网页  1 PC端访问网页）
     md.achieve.PorM = function (a) {
@@ -579,6 +579,4 @@ var _pct = _pct || [];
             setTimeout(ut, 400);
         })
     })();
-
-    console.log(md.g);
 })();
