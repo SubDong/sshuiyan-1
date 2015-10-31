@@ -226,7 +226,8 @@ define(["../app"], function (app) {
             "indexoverview",
             "entrancepage",
             "changelist",
-            "groupAnalysis"
+            "groupAnalysis",
+            "adsTrack"
         ]
     }]);
 });
