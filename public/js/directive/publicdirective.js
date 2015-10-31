@@ -1622,6 +1622,8 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                         }
                         if (_path == "/transform/transformAnalysis") {
                             $rootScope.$broadcast("updateSelectRowIndex", 7);
+                        }else if(_path == "/ads/adsSource"){
+                            $rootScope.$broadcast("updateSelectRowIndex", 8);
                         }
                         if (e_r.sref == _path.substring(1, _path.substring(1).indexOf("/") + 1)) {
 
