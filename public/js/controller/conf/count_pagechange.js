@@ -5,8 +5,6 @@ define(["./module"], function (ctrs) {
     "use strict";
 
     ctrs.controller('count_pagechange', function ($http, $scope, $q, $rootScope, $cookieStore, ngDialog, $state) {
-
-
         $scope.page_schema_model = {
             //id: String,
             uid: "",//用户ID
@@ -88,7 +86,9 @@ define(["./module"], function (ctrs) {
             latitude: {name: "页面转化", displayName: "页面转化", field: ""},
             adminindex: true
         };
-
+        $scope.isShowExpandable = function (e) {
+            return true
+        };
         var forceUrlsToArray = function (urls) {
             var arr = [];
             for (var i = 0; i < urls.length; i++) {
@@ -170,8 +170,10 @@ define(["./module"], function (ctrs) {
          * @param pGridApi
          */
         $rootScope.expandRowData = function (pGridApi) {
+            console.log("expandRowData")
             //展开操作
             pGridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
+                console.log("展开下一级")
                 initExpandData(row);//每次展开第一级都初始化 保证下一级收起
                 row.isInit = true;
                 row.entity.subGridOptions.data.length = row.entity.paths.length + 1;

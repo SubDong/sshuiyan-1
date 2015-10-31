@@ -1785,7 +1785,6 @@ var transform = {
          * @param callbackFn
          */
         searchPageBasePVs: function (es, indexs, startNum, endNum, type, pages, queryOptionsStr, callbackFn) {
-            console.log("******************" + type)
             var requests = [];
             for (var i = 0; i < indexs.length; i++) {
                 requests.push({
@@ -1853,6 +1852,103 @@ var transform = {
                             var data = {}
                             data["rf_type"] = pv["key"]
                             data["campaignName"] = pv["key"] == 1 ? "直接访问" : (pv["key"] == 2 ? "外部链接" : "搜索引擎")
+                            queryOptions.forEach(function (queryOption) {
+                                switch (queryOption) {
+                                    case "nuvRate":
+                                        if (pv.new_visitor_aggs.value == "0") {
+                                            data[queryOption] = 0;
+                                        } else {
+                                            data[queryOption] = (pv.uv_aggs.value / pv.new_visitor_aggs.value).toFixed(2) + "%";
+                                        }
+                                        break;
+                                    default :
+                                        if (pv[queryOption] != undefined)
+                                            data[queryOption] = pv[queryOption].value;
+                                        break;
+                                }
+                            })
+                            datas.push(data)
+                        })
+                        callbackFn(datas)
+                    } else {
+                        callbackFn(datas)
+                    }
+                });
+            });
+        },
+        searchPageSePVs: function (es, indexs, startNum, endNum, type, rfType, pages, queryOptionsStr, callbackFn) {
+            var requests = [];
+            for (var i = 0; i < indexs.length; i++) {
+                requests.push({
+                    index: indexs[i]
+                });
+            }
+            async.map(requests, function (item, callback) {
+                es.indices.exists(item, function (error, exists) {
+                    callback(null, exists);
+                });
+            }, function (error, results) {
+                var newIndexs = [];
+                for (var i = 0; i < indexs.length; i++) {
+                    if (results[i] == true) {
+                        newIndexs.push(indexs[i]);
+                    }
+                }
+                //查询内容
+                var _aggs = {};
+                var queryOptions = queryOptionsStr.split(",")
+                queryOptions.forEach(function (queryOption) {
+                    for (var key in es_aggs[queryOption]) {
+                        _aggs[key] = es_aggs[queryOption][key];
+                    }
+                });
+                var querys = []
+                var boolQuery = [];
+                pages.forEach(function (page) {
+                    for (var i = 0; i < page.page_urls.length; i++) {
+                        boolQuery.push({
+                            "bool":{
+                                "must": [
+                                    { "match": { "rf_type": rfType }},
+                                    { "match": {  "loc": page.page_urls[i] }}
+                                ]
+                            }
+                        });
+                    }
+                })
+                querys.push({
+                    "index": newIndexs,
+                    "type": type,
+                    "body": {
+                        "size": 0,
+                        "query": {
+                            "bool": {
+                                "should": boolQuery
+                            }
+                        },
+                        "aggs": {
+                            "pagePVs": {
+                                "terms": {
+                                    "field": "se",
+                                },
+                                "aggs": _aggs
+                            }
+                        },
+                    }
+                })
+                var pvs = []
+
+                console.log(JSON.stringify(querys[0]))
+                es.search(querys[0], function (error, result) {
+                    var datas = []
+                    if (result != undefined && result.aggregations != undefined && result.aggregations.pagePVs != undefined && result.aggregations.pagePVs.buckets != undefined) {
+                        var pvs = result.aggregations.pagePVs.buckets
+
+                        pvs.forEach(function (pv) {
+                            var data = {}
+                            //data["rf_type"] = pv["key"]
+                            data["se"] = pv["key"]
+                            data["campaignName"] = pv["key"] == "-" ? "未知来源" : (pv["key"] == 2 ? "外部链接" : "搜索引擎")
                             queryOptions.forEach(function (queryOption) {
                                 switch (queryOption) {
                                     case "nuvRate":
@@ -1968,7 +2064,7 @@ var transform = {
                     var results = {}
                     if (result != undefined && result.aggregations != undefined && result.aggregations.pagePVs != undefined && result.aggregations.pagePVs.buckets != undefined) {
                         var infos = result.aggregations.pagePVs.buckets
-                        infos.forEach(function(info){
+                        infos.forEach(function (info) {
                             var key = info["key"] == 1 ? "直接访问" : (info["key"] == 2 ? "外部链接" : "搜索引擎")
                             results[key] = info
                         })
@@ -1977,9 +2073,7 @@ var transform = {
                 });
             });
         },
-
-
-        searchPagePVs: function (es, indexs, startNum, endNum, type, pages, queryOptionsStr, callbackFn) {
+        searchPageSeInfo: function (es, indexs, startNum, endNum, type, rfType,pages, queryOptionsStr, callbackFn) {
             var requests = [];
             for (var i = 0; i < indexs.length; i++) {
                 requests.push({
@@ -1997,7 +2091,6 @@ var transform = {
                         newIndexs.push(indexs[i]);
                     }
                 }
-
                 //查询内容
                 var _aggs = {};
                 var queryOptions = queryOptionsStr.split(",")
@@ -2006,96 +2099,141 @@ var transform = {
                         _aggs[key] = es_aggs[queryOption][key];
                     }
                 });
-                _aggs["rf"] = {
-                    "value_count": {
-                        "field": "rf_type"
-                    }
-                }
-
                 var querys = []
+                var boolQuery = [];
                 pages.forEach(function (page) {
-                    var boolQuery = [];
                     for (var i = 0; i < page.page_urls.length; i++) {
                         boolQuery.push({
-                            "term": {
-                                "loc": page.page_urls[i]
+                            "bool":{
+                                "must": [
+                                    { "match": { "rf_type": rfType }},
+                                    { "match": {  "loc": page.page_urls[i] }}
+                                ]
                             }
                         });
                     }
-                    var timequry = []
-                    timequry.push({
-                        "range": {
-                            "utime": {
-                                "from": (startNum > page.updateTime ? startNum : page.updateTime ),
-                                "to": endNum
-                            }//开始时间取大的
-                        }
-                    })
-                    querys.push({
-                        "index": newIndexs,
-                        "type": type,//+ "_" + action,
-                        "body": {
-                            "size": 0,
-                            query: {
-                                //bool: {
-                                //    "must": timequry,
-                                //    //"should":boolQuery
-                                //}
-                                "filtered": {
-                                    "filter": {
-                                        "term": {"rf_type": "1"}
-                                    }
-                                }
-                            },
-                            //"aggs": _aggs,
-                            "aggs": {
-                                "rf_type": {
-                                    "value_count": {
-                                        "field": "rf_type"
-                                    }
-
-                                }
-                            },
-                        }
-                    })
                 })
-                var pvs = []
-                async.eachSeries(querys, function (item, callback) {
-                    es.search(item, function (error, result) {
-                        if (result != undefined && result.aggregations != undefined) {
-                            console.log("result**************************")
-                            console.log(result.aggregations)
-                            pvs.push(result.aggregations)
-                            callback(null, result.aggregations);
-                        } else {
-                            callback(null, null);
-                        }
-                    });
-
-                }, function (error, results) {
-                    console.log("results**************************")
-                    console.log(results)
-                    var datas = []
-                    //pvs.forEach(function (pv) {
-                    //    var data = {}
-                    //    queryOptions.forEach(function (queryOption) {
-                    //        switch (queryOption) {
-                    //            case "nuvRate":
-                    //                if (pv.new_visitor_aggs.value == "0") {
-                    //                    data[queryOption] = 0;
-                    //                } else {
-                    //                    data[queryOption] = (pv.uv_aggs.value / pv.new_visitor_aggs.value).toFixed(2) + "%";
-                    //                }
-                    //                break;
-                    //            default :
-                    //                if (pv[queryOption] != undefined)
-                    //                    data[queryOption] = pv[queryOption].value;
-                    //                break;
-                    //        }
-                    //    })
-                    //    datas.push(data)
-                    //})
-                    callbackFn(results);
+                querys.push({
+                    "index": newIndexs,
+                    "type": type + "_page",
+                    "body": {
+                        "size": 0,
+                        query: {
+                            "bool": {
+                                "should": boolQuery
+                            }
+                        },
+                        "aggs": {
+                            "pagePVs": {
+                                "terms": {
+                                    "field": "se"
+                                },
+                                "aggs": {
+                                    "conversions": {
+                                        "value_count": {
+                                            "field": "_type"
+                                        }
+                                    },
+                                    "benefit": {
+                                        "sum": {
+                                            "script": "doc['p_income'].value"
+                                        }
+                                    },
+                                    "orderNum": {
+                                        "value_count": {
+                                            "field": "p_orderid"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                    }
+                })
+                es.search(querys[0], function (error, result) {
+                    console.log(result)
+                    var results = {}
+                    if (result != undefined && result.aggregations != undefined && result.aggregations.pagePVs != undefined && result.aggregations.pagePVs.buckets != undefined) {
+                        var infos = result.aggregations.pagePVs.buckets
+                        infos.forEach(function (info) {
+                            var key = info["key"] == "-" ? "未知来源" : (info["key"] == 2 ? "外部链接" : "搜索引擎")
+                            results[key] = info
+                        })
+                    }
+                    callbackFn(results)
+                });
+            });
+        },
+        searchPageConvInfo: function (es, indexs, startNum, endNum, type, rfType,se, queryOptionsStr, callbackFn) {
+            var requests = [];
+            for (var i = 0; i < indexs.length; i++) {
+                requests.push({
+                    index: indexs[i]
+                });
+            }
+            async.map(requests, function (item, callback) {
+                es.indices.exists(item, function (error, exists) {
+                    callback(null, exists);
+                });
+            }, function (error, results) {
+                var newIndexs = [];
+                for (var i = 0; i < indexs.length; i++) {
+                    if (results[i] == true) {
+                        newIndexs.push(indexs[i]);
+                    }
+                }
+                //查询内容
+                var _aggs = {};
+                var queryOptions = queryOptionsStr.split(",")
+                queryOptions.forEach(function (queryOption) {
+                    for (var key in es_aggs[queryOption]) {
+                        _aggs[key] = es_aggs[queryOption][key];
+                    }
+                });
+                var query={
+                    "index": newIndexs,
+                    "type": type + "_page",
+                    "body": {
+                        "size": 0,
+                        query: {
+                            "bool":{
+                                "must": [
+                                    { "match": { "rf_type": rfType }},
+                                    { "match": { "se": se }},
+                                ]
+                            }
+                        },
+                        "aggs": {
+                            "pagePVs": {
+                                "terms": {
+                                    "field": "p_name"
+                                },
+                                "aggs": {
+                                    "conversions": {
+                                        "value_count": {
+                                            "field": "_type"
+                                        }
+                                    },
+                                    "benefit": {
+                                        "sum": {
+                                            "script": "doc['p_income'].value"
+                                        }
+                                    },
+                                    "orderNum": {
+                                        "value_count": {
+                                            "field": "p_orderid"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                    }
+                }
+                es.search(query, function (error, result) {
+                    if (result != undefined && result.aggregations != undefined && result.aggregations.pagePVs != undefined && result.aggregations.pagePVs.buckets != undefined) {
+                        var infos = result.aggregations.pagePVs.buckets
+                        callbackFn(infos)
+                    }
+                    callbackFn([])
                 });
             });
         },

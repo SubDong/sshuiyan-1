@@ -938,7 +938,9 @@ api.get("/transform/transformAnalysis", function (req, res) {
 
     }
 );
-
+/**
+ * 汇总信息
+ */
 api.get("/transform/getPageBasePVs", function (req, res) {
     var query = url.parse(req.url, true).query;
     //组合Index
@@ -956,6 +958,44 @@ api.get("/transform/getPageBasePVs", function (req, res) {
         datautils.send(res, result);
     });
 });
+/**
+ * 按照SE分组信息
+ */
+api.get("/transform/getPageSePVs", function (req, res) {
+    var query = url.parse(req.url, true).query;
+    //组合Index
+    var indexString = [];
+    if (query.start.substring(1, query.start.length).match("-") != null && end.substring(1, query.start.length).match("-") != null) {
+        indexString = date.createIndexsByTime(query.start, query.end, "access-");
+    } else {
+        indexString = date.createIndexes(query.start, query.end, "access-");
+    }
+    var ctime = new Date()
+    //计算开始时间
+    var timeArea = date.getConvertTimeByNumber(query.start, query.end)
+    //计算计算时间
+    transform.searchPageSePVs(req.es, indexString, timeArea[0], timeArea[1], query.type,query.rfType, JSON.parse(query.pages), query.queryOptions, function (result) {
+        datautils.send(res, result);
+    });
+});
+api.get("/transform/getPageConvPVs", function (req, res) {
+    var query = url.parse(req.url, true).query;
+    //组合Index
+    var indexString = [];
+    if (query.start.substring(1, query.start.length).match("-") != null && end.substring(1, query.start.length).match("-") != null) {
+        indexString = date.createIndexsByTime(query.start, query.end, "access-");
+    } else {
+        indexString = date.createIndexes(query.start, query.end, "access-");
+    }
+    var ctime = new Date()
+    //计算开始时间
+    var timeArea = date.getConvertTimeByNumber(query.start, query.end)
+    //计算计算时间
+    transform.searchPageSePVs(req.es, indexString, timeArea[0], timeArea[1], query.type,query.rfType, JSON.parse(query.pages), query.queryOptions, function (result) {
+        datautils.send(res, result);
+    });
+});
+
 api.get("/transform/getPageBaseInfo", function (req, res) {
     var query = url.parse(req.url, true).query;
     //组合Index
@@ -973,6 +1013,42 @@ api.get("/transform/getPageBaseInfo", function (req, res) {
         datautils.send(res, result);
     });
 });
+api.get("/transform/getPageSeInfo", function (req, res) {
+    var query = url.parse(req.url, true).query;
+    //组合Index
+    var indexString = [];
+    if (query.start.substring(1, query.start.length).match("-") != null && end.substring(1, query.start.length).match("-") != null) {
+        indexString = date.createIndexsByTime(query.start, query.end, "access-");
+    } else {
+        indexString = date.createIndexes(query.start, query.end, "access-");
+    }
+    var ctime = new Date()
+    //计算开始时间
+    var timeArea = date.getConvertTimeByNumber(query.start, query.end)
+    //计算计算时间
+    transform.searchPageSeInfo(req.es, indexString, timeArea[0], timeArea[1], query.type,query.rfType, JSON.parse(query.pages), query.queryOptions, function (result) {
+        datautils.send(res, result);
+    });
+});
+api.get("/transform/getPageConvInfo", function (req, res) {
+    var query = url.parse(req.url, true).query;
+    //组合Index
+    var indexString = [];
+    if (query.start.substring(1, query.start.length).match("-") != null && end.substring(1, query.start.length).match("-") != null) {
+        indexString = date.createIndexsByTime(query.start, query.end, "access-");
+    } else {
+        indexString = date.createIndexes(query.start, query.end, "access-");
+    }
+    var ctime = new Date()
+    //计算开始时间
+    var timeArea = date.getConvertTimeByNumber(query.start, query.end)
+    //计算计算时间
+    console.log("*********************************")
+    transform.searchPageConvInfo(req.es, indexString, timeArea[0], timeArea[1], query.type,query.rfType, query.se, query.queryOptions, function (result) {
+        datautils.send(res, result);
+    });
+});
+
 
 api.get("/transform/getDayPagePVs", function (req, res) {
     var query = url.parse(req.url, true).query;
