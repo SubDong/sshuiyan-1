@@ -95,7 +95,7 @@
                     <tr>
                         <td>预期每次转化收益</td>
                         <td><input type="text" maxlength="20" class="input_name form-control"
-                                   onkeyup="this.value=this.value.replace(/\D/g,'')"
+                                   onkeyup="this.value=( /^-?\d+\.?\d{0,2}$/.test(this.value)?this.value:0)"
                                    onafterpaste="this.value=this.value.replace(/\D/g,'')"
                                    data-ng-model="expected_yield"></td>
                         <td>元</td>
@@ -103,12 +103,13 @@
                     </tr>
                     <tr>
                         <td>预期转化率</td>
-                        <td><input type="text" maxlength="3" onkeyup="this.value=this.value.replace(/\D/g,'')"
+                        <td><input type="text" maxlength="3"
+                                   onkeyup="this.value=( /^(0|[1-9]\d?|100)$/.test(this.value)?this.value:100)"
                                    onafterpaste="this.value=this.value.replace(/\D/g,'')"
                                    class="input_name form-control" data-ng-model="pecent_yield">
                         </td>
                         <td>%</td>
-
+                        <td>（百分比范围0~100）</td>
                     </tr>
                 </table>
             </div>
