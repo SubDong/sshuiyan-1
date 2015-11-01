@@ -66,7 +66,7 @@
                             <li><label><input class="styled" type="radio" name="record3" checked="checked"
                                               data-ng-click="chooseRecordType('order_conv')">订单转化</label>&nbsp;&nbsp;&nbsp;&nbsp;
                             </li>
-                            <a href="" data-ng-click="insertOrder()">插入订单号</a>
+                            <a href=""  data-ng-show="radio_record.order_conv" data-ng-click="insertOrder()">插入订单号</a>
                         </ul>
                     </div>
                 </div>
@@ -214,7 +214,7 @@
                               data-ng-click="chooseConvType('place_order')">下单</label>
                 <label><input type="radio" class="styled" name="type8" checked="checked"
                               data-ng-click="chooseConvType('other')">其他</label>&nbsp;&nbsp;&nbsp;&nbsp;
-                <input id="convTypeText4" maxlength="7" type="text" class="input_text "
+                <input id="convTypeText" maxlength="7" type="text" class="input_text " readonly="false"
                        data-ng-model="t_conv_text">
             </div>
         </div>
