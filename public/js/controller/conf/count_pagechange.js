@@ -170,7 +170,6 @@ define(["./module"], function (ctrs) {
          * @param pGridApi
          */
         $rootScope.expandRowData = function (pGridApi) {
-            console.log("expandRowData")
             //展开操作
             pGridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
                 console.log("展开下一级")
