@@ -16,7 +16,8 @@
                     <ul class="targeturl fl">
                         <li data-ng-repeat="target_url in target_urls">
                                 <span style="margin-left: -16px;"
-                                      data-ng-if="$index > 0 && target_urls.length>1">或</span> <input type="text" maxlength="128"
+                                      data-ng-if="$index > 0 && target_urls.length>1">或</span> <input type="text"
+                                                                                                      maxlength="128"
                                                                                                       data-ng-model="target_url.url"
                                                                                                       class="input_url"
                                                                                                       placeholder="目标URL"
@@ -36,16 +37,36 @@
                         <span>可选择记录方式&nbsp;&nbsp;</span>
                     </div>
                     <div class="target_way_content">
-                        <ul>
-                            <li><label><input class="styled" type="radio" name="record" ng-checked="radio_record.visit_times"
+
+                        <ul data-ng-show="radio_record.visit_times">
+                            <li><label><input class="styled" type="radio" name="record1" checked="checked"
                                               data-ng-click="chooseRecordType('visit_times')">访问次数</label></li>
-                            <li><label><input class="styled" type="radio" name="record" data-ng-click="chooseRecordType('pv')"
-                                              ng-checked="radio_record.pv">浏览量PV</label></li>
-                            <li><label><input class="styled" type="radio" name="record"
-                                              data-ng-click="chooseRecordType('order_conv')"
-                                              ng-checked="radio_record.order_conv">订单转化</label>&nbsp;&nbsp;&nbsp;&nbsp;<a
-                                    href="" data-ng-click="insertOrder()">插入订单号</a>
+                            <li><label><input class="styled" type="radio" name="record1"
+                                              data-ng-click="chooseRecordType('pv')">浏览量PV</label></li>
+                            <li><label><input class="styled" type="radio" name="record1"
+                                              data-ng-click="chooseRecordType('order_conv')">订单转化</label>&nbsp;&nbsp;&nbsp;&nbsp;
                             </li>
+                            <a href="" data-ng-click="insertOrder()">插入订单号</a>
+                        </ul>
+                        <ul data-ng-show="radio_record.pv">
+                            <li><label><input class="styled" type="radio" name="record2"
+                                              data-ng-click="chooseRecordType('visit_times')">访问次数</label></li>
+                            <li><label><input class="styled" type="radio" name="record2" checked="checked"
+                                              data-ng-click="chooseRecordType('pv')">浏览量PV</label></li>
+                            <li><label><input class="styled" type="radio" name="record2"
+                                              data-ng-click="chooseRecordType('order_conv')">订单转化</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                            </li>
+                            <a href="" data-ng-click="insertOrder()">插入订单号</a>
+                        </ul>
+                        <ul data-ng-show="radio_record.order_conv">
+                            <li><label><input class="styled" type="radio" name="record3"
+                                              data-ng-click="chooseRecordType('visit_times')">访问次数</label></li>
+                            <li><label><input class="styled" type="radio" name="record3"
+                                              data-ng-click="chooseRecordType('pv')">浏览量PV</label></li>
+                            <li><label><input class="styled" type="radio" name="record3" checked="checked"
+                                              data-ng-click="chooseRecordType('order_conv')">订单转化</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                            </li>
+                            <a href="" data-ng-click="insertOrder()">插入订单号</a>
                         </ul>
                     </div>
                 </div>
@@ -73,14 +94,18 @@
                 <table>
                     <tr>
                         <td>预期每次转化收益</td>
-                        <td><input type="text" maxlength="20" class="input_name form-control" onkeyup="this.value=this.value.replace(/\D/g,'')"  onafterpaste="this.value=this.value.replace(/\D/g,'')"
+                        <td><input type="text" maxlength="20" class="input_name form-control"
+                                   onkeyup="this.value=this.value.replace(/\D/g,'')"
+                                   onafterpaste="this.value=this.value.replace(/\D/g,'')"
                                    data-ng-model="expected_yield"></td>
                         <td>元</td>
                         <td>（精确到两位小数）</td>
                     </tr>
                     <tr>
                         <td>预期转化率</td>
-                        <td><input type="text" maxlength="3" onkeyup="this.value=this.value.replace(/\D/g,'')"  onafterpaste="this.value=this.value.replace(/\D/g,'')" class="input_name form-control" data-ng-model="pecent_yield">
+                        <td><input type="text" maxlength="3" onkeyup="this.value=this.value.replace(/\D/g,'')"
+                                   onafterpaste="this.value=this.value.replace(/\D/g,'')"
+                                   class="input_name form-control" data-ng-model="pecent_yield">
                         </td>
                         <td>%</td>
 
@@ -95,7 +120,8 @@
 
             <div class="benefit_content">
                 <div data-ng-repeat="path in paths">
-                    <input class="input_name" maxlength="20" type="text" placeholder="路径名称" data-ng-model="path.path_name"
+                    <input class="input_name" maxlength="20" type="text" placeholder="路径名称"
+                           data-ng-model="path.path_name"
                            class="form-control"
                            onfocus="this.setAttribute('placeholder','')"
                            onblur="this.setAttribute('placeholder','路径名称')">
@@ -115,7 +141,8 @@
                             <li data-ng-repeat="step_url in step.step_urls">
                             <span style="margin-left: -16px;"
                                   data-ng-if="$index > 0">或</span>
-                                <input type="text" maxlength="128" data-ng-model="step_url.url" class="input_url" placeholder="步骤URL"
+                                <input type="text" maxlength="128" data-ng-model="step_url.url" class="input_url"
+                                       placeholder="步骤URL"
                                        onfocus="this.setAttribute('placeholder','')"
                                        onblur="this.setAttribute('placeholder','步骤URL')">
                             <span class="remove" style="margin-bottom: 10px"
@@ -142,16 +169,53 @@
             <div class="small_title">
                 <p>转化类型</p> (选填)
             </div>
-            <div class="benefit_content">
-                <label><input type="radio" class="styled" name="type" ng-checked="radio_conv.regist"
+            <div class="benefit_content" data-ng-show="radio_conv.regist">
+                <label><input type="radio" class="styled" name="type5" checked="checked"
                               data-ng-click="chooseConvType('regist')">注册</label>
-                <label><input type="radio" class="styled" name="type" ng-checked="radio_conv.communicate"
+                <label><input type="radio" class="styled" name="type5"
                               data-ng-click="chooseConvType('communicate')">沟通</label>
-                <label><input type="radio" class="styled" name="type" ng-checked="radio_conv.place_order"
+                <label><input type="radio" class="styled" name="type5"
                               data-ng-click="chooseConvType('place_order')">下单</label>
-                <label><input type="radio" class="styled" name="type" ng-checked="radio_conv.other"
+                <label><input type="radio" class="styled" name="type5"
                               data-ng-click="chooseConvType('other')">其他</label>&nbsp;&nbsp;&nbsp;&nbsp;
-                <input id="convTypeText" maxlength="7" readOnly=false type="text" class="input_text " data-ng-model="t_conv_text">
+                <input id="convTypeText1" maxlength="7" readOnly=false type="text" class="input_text "
+                       data-ng-model="t_conv_text">
+            </div>
+            <div class="benefit_content" data-ng-show="radio_conv.communicate">
+                <label><input type="radio" class="styled" name="type6"
+                              data-ng-click="chooseConvType('regist')">注册</label>
+                <label><input type="radio" class="styled" name="type6" checked="checked"
+                              data-ng-click="chooseConvType('communicate')">沟通</label>
+                <label><input type="radio" class="styled" name="type6"
+                              data-ng-click="chooseConvType('place_order')">下单</label>
+                <label><input type="radio" class="styled" name="type6"
+                              data-ng-click="chooseConvType('other')">其他</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                <input id="convTypeText2" maxlength="7" readOnly=false type="text" class="input_text "
+                       data-ng-model="t_conv_text">
+            </div>
+            <div class="benefit_content" data-ng-show="radio_conv.place_order">
+                <label><input type="radio" class="styled" name="type7"
+                              data-ng-click="chooseConvType('regist')">注册</label>
+                <label><input type="radio" class="styled" name="type7"
+                              data-ng-click="chooseConvType('communicate')">沟通</label>
+                <label><input type="radio" class="styled" name="type7" checked="checked"
+                              data-ng-click="chooseConvType('place_order')">下单</label>
+                <label><input type="radio" class="styled" name="type7"
+                              data-ng-click="chooseConvType('other')">其他</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                <input id="convTypeText3" maxlength="7" readOnly=false type="text" class="input_text "
+                       data-ng-model="t_conv_text">
+            </div>
+            <div class="benefit_content" data-ng-show="radio_conv.other">
+                <label><input type="radio" class="styled" name="type8"
+                              data-ng-click="chooseConvType('regist')">注册</label>
+                <label><input type="radio" class="styled" name="type8"
+                              data-ng-click="chooseConvType('communicate')">沟通</label>
+                <label><input type="radio" class="styled" name="type8"
+                              data-ng-click="chooseConvType('place_order')">下单</label>
+                <label><input type="radio" class="styled" name="type8" checked="checked"
+                              data-ng-click="chooseConvType('other')">其他</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                <input id="convTypeText4" maxlength="7" readOnly=false type="text" class="input_text "
+                       data-ng-model="t_conv_text">
             </div>
         </div>
     </div>
