@@ -44,10 +44,10 @@ define(["./module"], function (ctrs) {
             order_conv: false
         };
         $scope.radio_conv = {
-            regist: false,
+            regist: true,
             communicate: false,
             place_order: false,
-            other: true
+            other: false
         };
 
 

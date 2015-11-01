@@ -26,7 +26,6 @@ define(["./module"], function (ctrs ) {
                 url: url
             }).success(function (dataConfig, status) {
                 //页面删除
-                console.log("删除成功 关闭窗口");
                 $scope.gridOptions.data.splice($scope.gridOptions.data.indexOf($scope.entity), 1);
                 $scope.urlDialog.close();
             });
@@ -159,7 +158,6 @@ define(["./module"], function (ctrs ) {
             var uid = $cookieStore.get("uid");
             var root_url = $rootScope.siteId;
             var url = "/config/eventchnage_list?type=search&query={\"uid\":\"" + uid + "\",\"root_url\":\"" + root_url + "\"}";
-            console.log(url)
             $http({
                 method: 'GET',
                 url: url

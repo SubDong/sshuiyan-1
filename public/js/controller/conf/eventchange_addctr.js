@@ -19,6 +19,20 @@ define(["./module"], function (ctrs) {
             $state.go('eventchange');
         }
         $scope.onSaveEvent = function () {
+            //去掉 www. 的配置URL
+            var localURl = $rootScope.siteUrl.replace(/www./g, '');
+            //二级域名验证
+            var regex = new RegExp("(\\w.)?" + localURl + "/*");
+            if(! regex.test($scope.eventChange.event_page)){
+                $scope.urlDialog = ngDialog.open({
+                    template: '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div><ul class="admin-ng-content"><li>输入的网址不在站点 '+$rootScope.siteUrl+' 下</li></ul>' + '<div class="ng-button-div">\
+                  <button type="button" class="ngdialog-button ng-button " ng-click="closeThisDialog(0)">确定</button></div></div>',
+                    className: 'ngdialog-theme-default admin_ngdialog',
+                    plain: true,
+                    scope: $scope
+                });
+                return;
+            }
             var entity = JSON.stringify($scope.eventChange);
             var url = "/config/eventchnage_list?type=save&entity=" + entity;
             $http({
@@ -57,6 +71,16 @@ define(["./module"], function (ctrs) {
             var localURl = $rootScope.siteUrl.replace(/www./g, '');
             //二级域名验证
             var regex = new RegExp("(\\w.)?" + localURl + "/*");
+           if(! regex.test($scope.previewUrl)){
+               $scope.urlDialog = ngDialog.open({
+                   template: '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div><ul class="admin-ng-content"><li>输入的网址不在站点 '+$rootScope.siteUrl+' 下</li></ul>' + '<div class="ng-button-div">\
+                  <button type="button" class="ngdialog-button ng-button " ng-click="closeThisDialog(0)">确定</button></div></div>',
+                   className: 'ngdialog-theme-default admin_ngdialog',
+                   plain: true,
+                   scope: $scope
+               });
+               return;
+           }
             $scope.iframeobj = function (tid) {
                 var strSrc = "http://" + previewUrl + "?domain=" + configUrl + "&amp;td=" + tid + "&amp;cuid=" + uid + "&amp;jn=select&amp;type=event";
                 var dialogFlag = false;
