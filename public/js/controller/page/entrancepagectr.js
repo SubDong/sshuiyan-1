@@ -185,7 +185,7 @@ define(["./module"], function (ctrs) {
                     dataKey: "key",
                     dataValue: "quota"
                 },
-                types: ["pv"],
+                types: ["uv"],
                 dimension: ["period,loc"],
                 interval: $rootScope.interval,
                 url: "/api/charts",
