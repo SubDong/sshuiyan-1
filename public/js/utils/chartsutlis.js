@@ -356,6 +356,9 @@ var chartUtils = {
             case "vc":
                 return buc.vc_aggs.vc_aggs.value;
                 break;
+            case "ip":
+                return buc.ip_aggs.ip_aggs1.value;
+                break;
             default :
                 if (buc[aggs + "_aggs"]) {
                     return buc[aggs + "_aggs"].value;
