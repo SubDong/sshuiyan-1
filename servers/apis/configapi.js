@@ -472,7 +472,7 @@ api.get("/page_conv", function (req, res) {
                         paths:tpaths,
                     }
                     ins.target_urls.forEach(function(target_url){
-                        console.log("save page_conv 刷新Redis："+ config.site_id+":pc:"+target_url.url+" = "+ JSON.stringify(conf))
+                        console.log("save page_conv 刷新Redis："+ ins.site_id+":pc:"+target_url.url+" = "+ JSON.stringify(conf))
                         req.redisclient.multi().set(ins.site_id+":pc:"+target_url.url,JSON.stringify(conf)).exec()
                     })
                 }
