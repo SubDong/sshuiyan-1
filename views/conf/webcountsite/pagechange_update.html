@@ -159,53 +159,58 @@
                 <div class="small_title">
                     <p>转化类型</p> (选填)
                 </div>
-                <div class="benefit_content" data-ng-show="radio_conv.regist">
-                    <label><input type="radio" class="styled" name="type5" checked="checked"
-                                  data-ng-click="chooseConvType('regist')">注册</label>
-                    <label><input type="radio" class="styled" name="type5"
-                                  data-ng-click="chooseConvType('communicate')">沟通</label>
-                    <label><input type="radio" class="styled" name="type5"
-                                  data-ng-click="chooseConvType('place_order')">下单</label>
-                    <label><input type="radio" class="styled" name="type5"
-                                  data-ng-click="chooseConvType('other')">其他</label>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <input id="convTypeText1" maxlength="7" readOnly=false type="text" class="input_text "
-                           data-ng-model="t_conv_text">
-                </div>
-                <div class="benefit_content" data-ng-show="radio_conv.communicate">
-                    <label><input type="radio" class="styled" name="type6"
-                                  data-ng-click="chooseConvType('regist')">注册</label>
-                    <label><input type="radio" class="styled" name="type6" checked="checked"
-                                  data-ng-click="chooseConvType('communicate')">沟通</label>
-                    <label><input type="radio" class="styled" name="type6"
-                                  data-ng-click="chooseConvType('place_order')">下单</label>
-                    <label><input type="radio" class="styled" name="type6"
-                                  data-ng-click="chooseConvType('other')">其他</label>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <input id="convTypeText2" maxlength="7" readOnly=false type="text" class="input_text "
-                           data-ng-model="t_conv_text">
-                </div>
-                <div class="benefit_content" data-ng-show="radio_conv.place_order">
-                    <label><input type="radio" class="styled" name="type7"
-                                  data-ng-click="chooseConvType('regist')">注册</label>
-                    <label><input type="radio" class="styled" name="type7"
-                                  data-ng-click="chooseConvType('communicate')">沟通</label>
-                    <label><input type="radio" class="styled" name="type7" checked="checked"
-                                  data-ng-click="chooseConvType('place_order')">下单</label>
-                    <label><input type="radio" class="styled" name="type7"
-                                  data-ng-click="chooseConvType('other')">其他</label>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <input id="convTypeText3" maxlength="7" readOnly=false type="text" class="input_text "
-                           data-ng-model="t_conv_text">
-                </div>
-                <div class="benefit_content" data-ng-show="radio_conv.other">
-                    <label><input type="radio" class="styled" name="type8"
-                                  data-ng-click="chooseConvType('regist')">注册</label>
-                    <label><input type="radio" class="styled" name="type8"
-                                  data-ng-click="chooseConvType('communicate')">沟通</label>
-                    <label><input type="radio" class="styled" name="type8"
-                                  data-ng-click="chooseConvType('place_order')">下单</label>
-                    <label><input type="radio" class="styled" name="type8" checked="checked"
-                                  data-ng-click="chooseConvType('other')">其他</label>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <input id="convTypeText4" maxlength="7" readOnly=false type="text" class="input_text "
-                           data-ng-model="t_conv_text">
+                <div class="page_container padding_content">
+                    <div class="small_title">
+                        <p>转化类型</p> (选填)
+                    </div>
+                    <div class="benefit_content" data-ng-show="radio_conv.regist">
+                        <label><input type="radio" class="styled" name="type5" checked="checked"
+                                      data-ng-click="chooseConvType('regist')">注册</label>
+                        <label><input type="radio" class="styled" name="type5"
+                                      data-ng-click="chooseConvType('communicate')">沟通</label>
+                        <label><input type="radio" class="styled" name="type5"
+                                      data-ng-click="chooseConvType('place_order')">下单</label>
+                        <label><input type="radio" class="styled" name="type5"
+                                      data-ng-click="chooseConvType('other')">其他</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <!--<input id="convTypeText1" maxlength="7" readOnly=false type="text" class="input_text "-->
+                        <!--data-ng-model="t_conv_text">-->
+                    </div>
+                    <div class="benefit_content" data-ng-show="radio_conv.communicate">
+                        <label><input type="radio" class="styled" name="type6"
+                                      data-ng-click="chooseConvType('regist')">注册</label>
+                        <label><input type="radio" class="styled" name="type6" checked="checked"
+                                      data-ng-click="chooseConvType('communicate')">沟通</label>
+                        <label><input type="radio" class="styled" name="type6"
+                                      data-ng-click="chooseConvType('place_order')">下单</label>
+                        <label><input type="radio" class="styled" name="type6"
+                                      data-ng-click="chooseConvType('other')">其他</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <!--<input id="convTypeText2" maxlength="7" readOnly=false type="text" class="input_text "-->
+                        <!--data-ng-model="t_conv_text">-->
+                    </div>
+                    <div class="benefit_content" data-ng-show="radio_conv.place_order">
+                        <label><input type="radio" class="styled" name="type7"
+                                      data-ng-click="chooseConvType('regist')">注册</label>
+                        <label><input type="radio" class="styled" name="type7"
+                                      data-ng-click="chooseConvType('communicate')">沟通</label>
+                        <label><input type="radio" class="styled" name="type7" checked="checked"
+                                      data-ng-click="chooseConvType('place_order')">下单</label>
+                        <label><input type="radio" class="styled" name="type7"
+                                      data-ng-click="chooseConvType('other')">其他</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <!--<input id="convTypeText3" maxlength="7" readOnly=false type="text" class="input_text "-->
+                        <!--data-ng-model="t_conv_text">-->
+                    </div>
+                    <div class="benefit_content" data-ng-show="radio_conv.other">
+                        <label><input type="radio" class="styled" name="type8"
+                                      data-ng-click="chooseConvType('regist')">注册</label>
+                        <label><input type="radio" class="styled" name="type8"
+                                      data-ng-click="chooseConvType('communicate')">沟通</label>
+                        <label><input type="radio" class="styled" name="type8"
+                                      data-ng-click="chooseConvType('place_order')">下单</label>
+                        <label><input type="radio" class="styled" name="type8" checked="checked"
+                                      data-ng-click="chooseConvType('other')">其他</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input id="convTypeText4" maxlength="7" type="text" class="input_text "
+                               data-ng-model="t_conv_text">
+                    </div>
                 </div>
             </div>
         </div>
