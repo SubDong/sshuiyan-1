@@ -78,8 +78,10 @@ define(["./module"], function (ctrs) {
         };
 
         $scope.insertOrder = function(){
-            var temp =$scope.target_urls[$scope.target_urls.length-1].url
-            $scope.target_urls[$scope.target_urls.length-1].url = temp==undefined?"目标URL[[[*]]]":(temp+"目标URL[[[*]]]");
+            if($scope.radio_record.order_conv){
+                var temp =$scope.target_urls[$scope.target_urls.length-1].url
+                $scope.target_urls[$scope.target_urls.length-1].url = temp==undefined?"目标URL[[[*]]]":(temp+"目标URL[[[*]]]");
+            }
         }
 
         var menu_conv_type = {

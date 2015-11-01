@@ -66,7 +66,7 @@
                             <li><label><input class="styled" type="radio" name="record3" checked="checked"
                                               data-ng-click="chooseRecordType('order_conv')">订单转化</label>&nbsp;&nbsp;&nbsp;&nbsp;
                             </li>
-                            <a href="" data-ng-click="insertOrder()">插入订单号</a>
+                            <a href=""  data-ng-show="radio_record.order_conv" data-ng-click="insertOrder()">插入订单号</a>
                         </ul>
                     </div>
                 </div>
@@ -95,7 +95,7 @@
                     <tr>
                         <td>预期每次转化收益</td>
                         <td><input type="text" maxlength="20" class="input_name form-control"
-                                   onkeyup="this.value=this.value.replace(/\D/g,'')"
+                                   onkeyup="this.value=( /^-?\d+\.?\d{0,2}$/.test(this.value)?this.value:0)"
                                    onafterpaste="this.value=this.value.replace(/\D/g,'')"
                                    data-ng-model="expected_yield"></td>
                         <td>元</td>
@@ -103,12 +103,13 @@
                     </tr>
                     <tr>
                         <td>预期转化率</td>
-                        <td><input type="text" maxlength="3" onkeyup="this.value=this.value.replace(/\D/g,'')"
+                        <td><input type="text" maxlength="3"
+                                   onkeyup="this.value=( /^(0|[1-9]\d?|100)$/.test(this.value)?this.value:100)"
                                    onafterpaste="this.value=this.value.replace(/\D/g,'')"
                                    class="input_name form-control" data-ng-model="pecent_yield">
                         </td>
                         <td>%</td>
-
+                        <td>（百分比范围0~100）</td>
                     </tr>
                 </table>
             </div>
@@ -214,7 +215,7 @@
                               data-ng-click="chooseConvType('place_order')">下单</label>
                 <label><input type="radio" class="styled" name="type8" checked="checked"
                               data-ng-click="chooseConvType('other')">其他</label>&nbsp;&nbsp;&nbsp;&nbsp;
-                <input id="convTypeText4" maxlength="7" type="text" class="input_text "
+                <input id="convTypeText" maxlength="7" type="text" class="input_text " readonly="false"
                        data-ng-model="t_conv_text">
             </div>
         </div>
