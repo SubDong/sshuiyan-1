@@ -78,7 +78,8 @@ define(["./module"], function (ctrs) {
         };
 
         $scope.insertOrder = function(){
-           $scope.target_urls[$scope.target_urls.length-1].url = "目标URL[[[*]]]";
+            var temp =$scope.target_urls[$scope.target_urls.length-1].url
+            $scope.target_urls[$scope.target_urls.length-1].url = temp==undefined?"目标URL[[[*]]]":(temp+"目标URL[[[*]]]");
         }
 
         var menu_conv_type = {
