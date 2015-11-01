@@ -472,6 +472,7 @@ api.get("/page_conv", function (req, res) {
                         paths:tpaths,
                     }
                     ins.target_urls.forEach(function(target_url){
+                        console.log("save page_conv 刷新Redis："+ ins.site_id+":pc:"+target_url.url+" = "+ JSON.stringify(conf))
                         req.redisclient.multi().set(ins.site_id+":pc:"+target_url.url,JSON.stringify(conf)).exec()
                     })
                 }
@@ -516,6 +517,7 @@ api.get("/page_conv", function (req, res) {
                                     paths:tpaths,
                                 }
                                 config.target_urls.forEach(function(target_url){
+                                    console.log("update page_conv 刷新Redis："+ config.site_id+":pc:"+target_url.url+" = "+ JSON.stringify(conf))
                                     req.redisclient.multi().set(config.site_id+":pc:"+target_url.url,JSON.stringify(conf)).exec()
                                 })
                             }
@@ -566,6 +568,7 @@ api.get("/page_conv_urls", function (req, res) {
                             redisPageUrls.push(entitys[index]);
                             if (index == (entitys.length - 1)) {
                                 var key = tempPathMark.page_conv_id + ":pcu:" + tempPathMark.path;
+                                console.log("save page_conv_urls 刷新Redis："+ key+" = "+ JSON.stringify(redisPageUrls))
                                 bulk.set(key, JSON.stringify(redisPageUrls));
                                 break;
                             }
@@ -576,7 +579,10 @@ api.get("/page_conv_urls", function (req, res) {
                             redisPageUrls.push(entitys[index]);
                             tempPathMark = entitys[index]
                             if (index == (entitys.length - 1)) {
+
                                 var key = tempPathMark.page_conv_id + ":pcu:" + tempPathMark.path;
+
+                                console.log("save page_conv_urls 刷新Redis："+ key+" = "+ JSON.stringify(redisPageUrls))
                                 bulk.set(key, JSON.stringify(redisPageUrls));
                                 break;
                             }
@@ -897,7 +903,7 @@ api.get("/select", function (req, res) {
                                                     };
                                                     confs.push(event_config);
                                                 });
-                                                //console.log("saveTips 刷新Redis："+ docs[0].root_url + ":e:" + docs[0].event_page+" = "+ JSON.stringify(confs))
+                                                console.log("saveTips 刷新Redis："+ docs[0].root_url + ":e:" + docs[0].event_page+" = "+ JSON.stringify(confs))
                                                 req.redisclient.multi().set(docs[0].root_url + ":e:" + docs[0].event_page, JSON.stringify(confs)).exec();
                                             }
                                             datautils.send(res, docs);
@@ -931,7 +937,7 @@ api.get("/select", function (req, res) {
                                                 };
                                                 confs.push(event_config);
                                             });
-                                            //console.log("updateTips 刷新Redis："+ docs[0].root_url + ":e:" + docs[0].event_page+" = "+ JSON.stringify(confs))
+                                            console.log("updateTips 刷新Redis："+ docs[0].root_url + ":e:" + docs[0].event_page+" = "+ JSON.stringify(confs))
                                             req.redisclient.multi().set(docs[0].root_url + ":e:" + docs[0].event_page, JSON.stringify(confs)).exec();
                                         }
                                         datautils.send(res, docs);
@@ -980,7 +986,7 @@ api.get("/select", function (req, res) {
                                     };
                                     confs.push(event_config);
                                 });
-                                //console.log("deleteTips 刷新Redis："+ existQry.root_url + ":e:" + existQry.event_page+" = "+ JSON.stringify(confs))
+                                console.log("deleteTips 刷新Redis："+ existQry.root_url + ":e:" + existQry.event_page+" = "+ JSON.stringify(confs))
                                 req.redisclient.multi().set(existQry.root_url + ":e:" + existQry.event_page, JSON.stringify(confs)).exec();
                                 datautils.send(res, docs);
                             });

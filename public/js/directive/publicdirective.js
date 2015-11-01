@@ -664,9 +664,9 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                             });
                             var repData = JSON.stringify(_dataInfo).replace(/\%/g, "*");
 
-                        } else if($location.path().indexOf("sameGroupAnalysis") != -1) {
+                        } else if ($location.path().indexOf("sameGroupAnalysis") != -1) {
                             //同类群组分析-下载CSV格式。
-                           var  repData = $rootScope.gaFormatDataCSV();
+                            var repData = $rootScope.gaFormatDataCSV();
                         } else {
                             dataHeadInfo.forEach(function (item, i) {
                                 if (item.field != undefined) {
@@ -1622,6 +1622,8 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                         }
                         if (_path == "/transform/transformAnalysis") {
                             $rootScope.$broadcast("updateSelectRowIndex", 7);
+                        }else if(_path == "/ads/adsSource"){
+                            $rootScope.$broadcast("updateSelectRowIndex", 8);
                         }
                         if (e_r.sref == _path.substring(1, _path.substring(1).indexOf("/") + 1)) {
 
@@ -2419,4 +2421,26 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
         }
 
     });
+    //顶部下拉固定
+    app.directive('setClassWhenAtTop', function ($window) {
+        var $win = angular.element($window);
+        return {
+            restrict: 'A',
+            link: function (scope, element, attrs) {
+                var topClass = attrs.setClassWhenAtTop;
+                var offsetTop = element.offset().top;
+                $win.on('scroll', function (e) {
+                    if ($win.scrollTop() >= offsetTop) {
+                        element.addClass(topClass);
+                        $(".fix-to-top").css("width", $(document.body).width() - 155);
+                        window.onresize = function () {
+                            $(".fix-to-top").css("width", $(document.body).width() - 155);
+                        }
+                    } else {
+                        element.removeClass(topClass);
+                    }
+                });
+            }
+        };
+    })
 });

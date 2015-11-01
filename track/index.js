@@ -100,6 +100,7 @@ function getData(req, resp, tid, sitejson) {
                         config[item] = val;
                     }
                 }
+                console.log("获取Redis参数："+url+"   ===  "+val)
                 cb();
             })
         }, function (err) {

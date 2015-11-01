@@ -124,7 +124,8 @@ define(["./module"], function (ctrs) {
         };
 
         $scope.insertOrder = function(){
-            $scope.target_urls[$scope.target_urls.length-1].url = "目标URL[[[*]]]";
+            var temp =$scope.target_urls[$scope.target_urls.length-1].url
+            $scope.target_urls[$scope.target_urls.length-1].url = temp==undefined?"目标URL[[[*]]]":(temp+"目标URL[[[*]]]");
         }
 
         var menu_conv_type = {
@@ -214,25 +215,25 @@ define(["./module"], function (ctrs) {
         //相邻步骤之间不能有重复URL
         var checkSinglePath = function (path, pathIndex) {
             if (path.steps.length == 0) {
-                showInputErrMsg("路径" + pathIndex + " 未添加任何步骤，至少添一个步骤，请返回并完善信息")
-                return false;
+                //showInputErrMsg("路径" + pathIndex + " 未添加任何步骤，至少添一个步骤，请返回并完善信息")
+                return true;
             }
             if (path.steps.length == 1) {
                 if (!checkAndForceUrls(path.steps[0].step_urls)) {
-                    $scope.showInputErrMsg("路径" + pathIndex + "-->步骤1 未填写任何步骤URL，至少填写一个步骤URL，请返回并完善信息");
-                    return false;
+                    //$scope.showInputErrMsg("路径" + pathIndex + "-->步骤1 未填写任何步骤URL，至少填写一个步骤URL，请返回并完善信息");
+                    return true;
                 }
             }else{
                 //先check掉第一组StepUrl
                 if (!checkAndForceUrls(path.steps[0].step_urls)) {
-                    $scope.showInputErrMsg("路径" + pathIndex + "-->步骤1 未填写任何步骤URL，至少填写一个步骤URL，请返回并完善信息");
-                    return false;
+                    //$scope.showInputErrMsg("路径" + pathIndex + "-->步骤1 未填写任何步骤URL，至少填写一个步骤URL，请返回并完善信息");
+                    return true;
                 }
                 for (var index = 0; index < path.steps.length - 1; index++) {
                     //判断相邻两组URL是否有相等
                     if (!checkAndForceUrls(path.steps[index + 1].step_urls)) {
-                        $scope.showInputErrMsg("路径" + pathIndex + "-->步骤" + (index + 2) + " 未填写任何步骤URL，至少填写一个步骤URL，请返回并完善信息");
-                        return false;
+                        //$scope.showInputErrMsg("路径" + pathIndex + "-->步骤" + (index + 2) + " 未填写任何步骤URL，至少填写一个步骤URL，请返回并完善信息");
+                        return true;
                     }
                     for (var i = 0; i < path.steps[index].step_urls.length; i++) {
                         for (var j = 0; j < path.steps[index + 1].step_urls.length; j++) {

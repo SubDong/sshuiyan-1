@@ -11,8 +11,6 @@ define(["./module"], function (ctrs) {
         var baiduAccount = $rootScope.baiduAccount;
         var esType = $rootScope.userType;
         var trackid = $rootScope.siteTrackId;
-
-
         $rootScope.bases = [
             {consumption_name: "浏览量(PV)", name: "pv"},
             {consumption_name: "访客数(UV)", name: "uv"},
@@ -55,26 +53,105 @@ define(["./module"], function (ctrs) {
             obj.areaSearch = "";
         }
 
+        var griApihtml = function (gridApi) {
+            gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
+                row.entity.subGridOptions = {
+                    appScopeProvider: $scope.subGridScope,
+                    expandableRowHeight: 360,
+                    enableHorizontalScrollbar: 1,
+                    enableVerticalScrollbar: 1,
+                    showHeader: false,
+                    columnDefs: $rootScope.searchGridArray
+                };
+            });
+        };
+        $rootScope.expandInex=1
+        $rootScope.expandRowData = function (pGridApi) {
+            //展开操作
+            pGridApi.expandable.on.rowExpandedStateChanged($scope, function (pRow) {
+                if( $rootScope.expandInex==1){
+                    pRow.entity.subGridOptions = {
+                        enableColumnMenus: false,
+                        enablePaginationControls: false,
+                        enableExpandableRowHeader: false,
+                        enableGridMenu: false,
+                        enableHorizontalScrollbar: 0,
+                        enableSorting: false,
+                        //expandableRowHeight: 30,
+                        expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions' class='grid clearfix secondary_table' ui-grid-exporter ui-grid-auto-resize ></div>",
+                        //columnDefs: $rootScope.searchGridArray,
+                        data: [],
+                    }
+                }else{
+                    var tPageInfoArr = ["conversions", "benefit"]
+                    var pageurl = "/api/transform/getPageConvInfo?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&rfType=" + pRow.entity.rf_type + "&se=" + pRow.entity.se + "&queryOptions=" + tPageInfoArr
+                    $http.get(pageurl).success(function (pagedatas) {
+                        var datas = []
+                        pagedatas.forEach(function (pdata, index) {
+                            var data = angular.copy(pRow.entity)
+                            $rootScope.checkedArray.forEach(function (attr) {
+                                switch (attr) {
+                                    case "conversions"://转化次数
+                                        data["conversions"] = pdata[attr] != undefined ? pdata[attr].value : 0
+                                        break;
+                                    case "crate"://转化率
+                                        data["crate"] = pdata["conversions"] != undefined && pRow.entity.pv > 0 ? (Number(pdata["conversions"].value) / Number(pRow.entity.pv)) : 0
+                                        break;
+                                    case "benefit"://收益
+                                        data["benefit"] = pdata[attr] != undefined ? pdata[attr].value : 0
+                                        break;
+                                    case "orderNum"://订单数量
+                                        data["orderNum"] = pdata[attr] != undefined ? pdata[attr].value : 0
+                                        break;
+                                    case "orderNumRate"://订单转化率
+                                        data["orderNumRate"] = pdata["orderNum"] != undefined ? (Number(pdata["orderNum"].value) / Number(pRow.entity.pv)) : 0
+                                        break;
+                                    default :
+                                        if (pRow.entity[attr] != undefined)
+                                            data[attr] = pRow.entity[attr]
+                                        break;
+
+                                }
+                            })
+                            data["campaignName"] = pdata["key"]
+                            datas.push(data)
+                        })
+                        pRow.entity.subGridOptions.data = datas
+                    })
+                    pRow.entity.subGridOptions = {
+                        enableColumnMenus: false,
+                        enablePaginationControls: false,
+                        enableExpandableRowHeader: false,
+                        enableExpandable: true,
+                        enableGridMenu: false,
+                        enableHorizontalScrollbar: 0,
+                        enableSorting: false,
+                        expandableRowHeight: 30,
+                        showHeader:false,
+                        columnDefs: $rootScope.searchGridArray,
+                        expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions' class='grid clearfix secondary_table' ui-grid-exporter ui-grid-auto-resize ></div>",
+                        data: [],
+                    }
+
+                }
+            })
+        }
         //转化分析表格配置
         $rootScope.gridOptions = {
-            paginationPageSize: 20,
-            paginationPageSizes: [20, 50, 100],
-            expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions' style='height:150px;'></div>",
-            expandableRowHeight: 150,
+            //paginationPageSize: 20,
+            expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
+            enableExpandableRowHeader: true,
+            enableExpandable: true,
             enableColumnMenus: false,
             showColumnFooter: true,
-            enablePaginationControls: true,
+            //enablePaginationControls: true,
             enableSorting: true,
             enableGridMenu: false,
             enableHorizontalScrollbar: 0,
-            enableVerticalScrollbar: false,
-            enableScrollbars: false,
+            enableVerticalScrollbar: 0,
             onRegisterApi: function (gridApi) {
-                $scope.gridApi2 = gridApi;
-                if ($rootScope.tableSwitch.dimen) {
-                    griApiInfo(gridApi);
-                }
-
+                $rootScope.gridApiAdmin = gridApi;
+                $rootScope.expandRowData(gridApi)
             }
         };
         $rootScope.targetSearchSpread = function (isClicked) {
@@ -145,7 +222,6 @@ define(["./module"], function (ctrs) {
             return returnData;
         }
 
-
         //得到数据中的url
         $scope.getDataUrlInfo = function (grid, row, number) {
             var data = row.entity[$rootScope.tableSwitch.latitude.field] + "";
@@ -172,51 +248,8 @@ define(["./module"], function (ctrs) {
                 }
             }
         };
-        //得到序列号
-        $scope.getIndex = function (b) {
-            return b.$parent.$parent.rowRenderIndex + 1
-        };
-        var eventTable = function (data, transNameIndex, dataIndex, test_url, start, end, analysisAction) {
-            $http({
-                method: "GET",
-                url: "/api/transform/transformAnalysis?start=" + start + "&end=" + end + "&analysisAction=" + analysisAction + "&type=1&searchType=queryDataByUrl&showType=total&all_urls=" + test_url[transNameIndex].all_urls
-            }).success(function (all_urls_data) {
-                var temporaryData = data[dataIndex].crate;
-                if (all_urls_data[0].crate_pv == 0) {
-                    data[dataIndex].crate = 0;
-                } else {
-                    data[dataIndex].crate = (Number(temporaryData / all_urls_data[0].crate_pv) * 100).toFixed(2);
-                }
-                $rootScope.gridOptions.data = data;
-            });
-        };
-        var hasSemEventTable = function (data, transNameIndex, dataIndex, test_url, timeData, sem_data, analysisAction) {
-            $http({
-                method: "GET",
-                url: "/api/transform/transformAnalysis?start=" + timeData.start + "&end=" + timeData.end + "&analysisAction=" + analysisAction + "&type=1&searchType=queryDataByUrl&showType=total&all_urls=" + test_url[transNameIndex].all_urls
-            }).success(function (all_urls_data) {
-
-                timeData.checkedArray.forEach(function (checked) {
-                    switch (checked) {
-
-                        case "crate":
-                            var temporaryData = data[dataIndex].crate;
-                            if (all_urls_data[0].crate_pv == 0) {
-                                data[dataIndex].crate = 0;
-                            } else {
-                                data[dataIndex].crate = (Number(temporaryData / all_urls_data[0].crate_pv) * 100).toFixed(2);
-                            }
-                            break;
-                    }
-                });
-                $rootScope.gridOptions.data = data;
-
-            });
-        };
-
         //初始化数据
         $rootScope.refreshData()
-
         $scope.$on("transformData", function (e, msg) {
             $(msg)
         });
@@ -237,268 +270,5 @@ define(["./module"], function (ctrs) {
         $scope.$on("transformAdvancedData_ui_grid", function (e, msg) {
             $scope.advancedInit(msg)
         });
-        $scope.advancedInit = function (msg) {
-            var query = "";
-            for (var i = 0; i < msg.checkedData.length; i++) {
-                switch (msg.checkedData[i].field) {
-                    case "all_rf":
-                        query += msg.checkedData[i].field + ":all,";
-                        break;
-                    case "souce":
-                        switch (msg.checkedData[i].name) {
-                            case "直接访问":
-                                query += "souce:3,";
-                                break;
-                            case "搜索引擎":
-                                query += "souce:2,";
-                                break;
-                            case "外部链接":
-                                query += "souce:1,";
-                                break;
-                        }
-                        break;
-                    case "browser":
-                        switch (msg.checkedData[i].name) {
-                            case "其他":
-                                query += "browser:other,";
-                                break;
-                            case "全部":
-                                break;
-                            default :
-                                query += "browser:" + msg.checkedData[i].name + ",";
-                                break;
-                        }
-                        break;
-                    case "uv_type":
-                        switch (msg.checkedData[i].name) {
-                            case "新访客":
-                                query += "uv_type:0,";
-                                break;
-                            case "老访客":
-                                query += "uv_type:1,";
-                                break;
-                            default :
-                                query += "uv_type:all,";
-                                break;
-                        }
-                        break;
-                    case "city":
-                        switch (msg.checkedData[i].name) {
-                            case "所有地域":
-                                query += "city:all,";
-                                break;
-                            case "全部":
-                                query += "city:all,";
-                                break;
-                            default :
-                                query += "city:" + msg.checkedData[i].name + ",";
-                                break;
-                        }
-                        break;
-                    case "terminal_type":
-                        switch (msg.checkedData[i].name) {
-                            case "计算机":
-                                query += "terminal_type:0,";
-                                break;
-                            case "移动设备":
-                                query += "terminal_type:1,";
-                                break;
-                            default :
-                                query += "terminal_type:all,";
-                                break;
-                        }
-                        break;
-                }
-
-            }
-            query = query.substring(0, query.length - 1);
-            $rootScope.gridOptions.data = [];
-            $http.get("/api/transform/transformAnalysis?start=" + msg.start + "&end=" + msg.end + "&analysisAction=" + msg.analysisAction + "&type=1&searchType=advancedTable&queryOptions={" + query + "}&aggsOptions=" + msg.checkedArray).success(function (data) {
-                var hasCrate = false;
-                for (var o = 0; o < msg.checkedArray.length; o++) {
-                    if (msg.checkedArray[o] == "crate") {
-                        hasCrate = true;
-                        break;
-                    }
-                }
-                if (hasCrate) {
-                    if (msg.sem_checkedArray.length != 0) {
-                        //var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];
-                        //var transName = ["登陆信息", "￧ﾙﾻ￩ﾙﾆ￤﾿ﾡ￦ﾁﾯ"];转化测试数据
-                        var semRequest = "";
-                        semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + msg.start + "&endOffset=" + msg.end + "&q=cost");
-                        $q.all([semRequest]).then(function (sem_data) {
-                            var cost = 0;
-                            for (var k = 0; k < sem_data.length; k++) {
-                                for (var c = 0; c < sem_data[k].data.length; c++) {
-                                    cost += Number(sem_data[k].data[c].cost);
-                                }
-                            }
-                            msg.checkedArray.forEach(function (checked) {
-                                var k = 0;
-                                switch (checked) {
-                                    case "avgCost":
-                                        var avgCost_all = 0;
-                                        for (k = 0; k < data.length; k++) {
-                                            avgCost_all += data[k].avgCost;
-                                        }
-                                        if (avgCost_all == 0) {
-                                            for (k = 0; k < data.length; k++) {
-                                                data[k].avgCost = 0;
-                                            }
-                                        } else {
-                                            var avgCost_avg = (cost / avgCost_all).toFixed(2).toString();
-                                            for (k = 0; k < data.length; k++) {
-                                                data[k].avgCost = avgCost_avg;
-                                            }
-                                        }
-                                        break;
-                                    case "profit":
-                                        var profit_all = 0;
-                                        for (k = 0; k < data.length; k++) {
-                                            profit_all += Number(data[k].profit);
-                                        }
-                                        var profit_avg = (profit_all - cost).toFixed(2).toString();
-                                        for (k = 0; k < data.length; k++) {
-                                            data[k].profit = profit_avg;
-                                        }
-                                        break;
-                                    case "transformCost":
-                                        var transformCost_all = 0;
-                                        for (k = 0; k < data.length; k++) {
-                                            transformCost_all += data[k].transformCost;
-                                        }
-                                        if (transformCost_all == 0) {
-                                            for (k = 0; k < data.length; k++) {
-                                                data[k].transformCost = 0;
-                                            }
-                                        } else {
-                                            var transformCost_avg = (cost / transformCost_all).toFixed(2).toString();
-                                            for (k = 0; k < data.length; k++) {
-                                                data[k].transformCost = transformCost_avg;
-                                            }
-                                        }
-                                        break;
-                                }
-                            });
-
-                            for (var p = 0; p < msg.convert_url_all.length; p++) {
-                                for (var i = 0; i < data.length; i++) {
-                                    if (msg.convert_url_all[p].convertName == data[i].campaignName) {
-                                        hasSemEventTable(data, p, i, msg.convert_url_all, msg, sem_data, msg.analysisAction);
-                                    }
-                                }
-                            }
-                        });
-                    } else {
-                        //var test_url = ["http://www.farmer.com.cn/", "http://182.92.227.23:8080/login?url=localhost:8000"];
-                        //var transName = ["登陆信息", "￧ﾙﾻ￩ﾙﾆ￤﾿ﾡ￦ﾁﾯ"];转化测试数据
-                        for (var p = 0; p < msg.convert_url_all.length; p++) {
-                            for (var i = 0; i < data.length; i++) {
-                                if (msg.convert_url_all[p].convertName == data[i].campaignName) {
-                                    eventTable(data, p, i, msg.convert_url_all, msg.start, msg.end, msg.analysisAction);
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    if (msg.sem_checkedArray.length != 0) {
-                        var semRequest = "";
-                        semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + msg.start + "&endOffset=" + msg.end + "&q=cost");
-                        $q.all([semRequest]).then(function (sem_data) {
-                            var cost = 0;
-                            var k = 0;
-                            for (k = 0; k < sem_data.length; k++) {
-                                for (var c = 0; c < sem_data[k].data.length; c++) {
-                                    cost += Number(sem_data[k].data[c].cost);
-                                }
-                            }
-                            msg.sem_checkedArray.forEach(function (checked, index) {
-                                var k = 0;
-                                switch (msg.sem_checkedArray[index]) {
-                                    case "avgCost":
-                                        var avgCost_all = 0;
-                                        for (k = 0; k < data.length; k++) {
-                                            avgCost_all += data[k].avgCost;
-                                        }
-                                        if (avgCost_all == 0) {
-                                            for (k = 0; k < data.length; k++) {
-                                                data[k].avgCost = 0;
-                                            }
-                                        } else {
-                                            var avgCost_avg = (cost / avgCost_all).toFixed(2).toString();
-                                            for (k = 0; k < data.length; k++) {
-                                                data[k].avgCost = avgCost_avg;
-                                            }
-                                        }
-                                        break;
-                                    case "profit":
-                                        var profit_all = 0;
-                                        for (k = 0; k < data.length; k++) {
-                                            profit_all += Number(data[k].profit);
-                                        }
-                                        var profit_avg = (profit_all - cost).toFixed(2).toString();
-                                        for (k = 0; k < data.length; k++) {
-                                            data[k].profit = profit_avg;
-                                        }
-                                        break;
-                                    case "transformCost":
-                                        var transformCost_all = 0;
-                                        for (k = 0; k < data.length; k++) {
-                                            transformCost_all += data[k].transformCost;
-                                        }
-                                        if (transformCost_all == 0) {
-                                            for (k = 0; k < data.length; k++) {
-                                                data[k].transformCost = 0;
-                                            }
-                                        } else {
-                                            var transformCost_avg = (cost / transformCost_all).toFixed(2).toString();
-                                            for (k = 0; k < data.length; k++) {
-                                                data[k].transformCost = transformCost_avg;
-                                            }
-                                        }
-                                }
-                            });
-                            $rootScope.gridOptions.data = data;
-                        });
-
-                    } else {
-                        $rootScope.gridOptions.data = data;
-                    }
-                }
-            });
-        };
     });
-
-//得到tableFilter key
-//    var getTableFilter = function (a) {
-//        switch (a) {
-//            case "campaign":
-//                return "cid";
-//            case "adgroup":
-//                return "agid";
-//            case "keyword":
-//                return "kwid";
-//            default :
-//                return "cid";
-//        }
-//    };
-
-
-    //var getTableTitle = function (a, b) {
-    //    switch (a) {
-    //        case "campaignName":
-    //            return "";
-    //        case "adgroupName":
-    //            return ",[" + b['campaignName'] + "]";
-    //        case "keywordName":
-    //            return ",[" + b['campaignName'] + "]" + "  [" + b['adgroupName'] + "]";
-    //        case "kw":
-    //            return ",[" + b['campaignName'] + "]" + "  [" + b['adgroupName'] + "]";
-    //        case "description1":
-    //            var returnData = ",`" + (b['creativeTitle'].length > 25 ? b['creativeTitle'].substring(0, 25) + "..." : b['creativeTitle']) + ",`" + b['showUrl']
-    //            return returnData;
-    //    }
-    //};
-})
-;
+});
