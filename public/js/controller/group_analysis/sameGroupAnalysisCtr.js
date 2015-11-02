@@ -280,7 +280,7 @@ define(["./module"], function (ctrs) {
         }
 
         //数据
-        $scope.groupTableDataes = []
+        $scope.groupTableDataes = [];
 
         //发送邮件功能-初始化数据
         $rootScope.initMailData = function () {
@@ -322,7 +322,7 @@ define(["./module"], function (ctrs) {
 
 
 
-        //下载功能-格式化数据
+        //下载功能-CSV
         $rootScope.gaFormatDataCSV = function () {
             var tableCSV = [];
             var trsData = $scope.groupTableDataes;
@@ -350,12 +350,84 @@ define(["./module"], function (ctrs) {
                         }
                     }
                 });
-                console.log(trCsv);
+               // console.log(trCsv);
                 tableCSV.push(JSON.parse(trCsv));
                 trCsv = "";
             });
             return JSON.stringify(tableCSV).replace(/\%/g, "*");
         }
+
+        //下载功能 - PDF
+        $scope.generatePDFMakeData = function (cb) {
+            var _tableBody = [];
+            //表单头
+            var _tableHeader = [];
+            var boundary = $scope.dateRange.selected.field > 12 ? 12 :$scope.dateRange.selected.field;
+            _tableHeader.push("");
+            for(var day = 0; day <= boundary; day ++) {
+                _tableHeader.push($scope.groupScale.selected.field+day);
+            }
+            _tableBody.push(_tableHeader);
+
+            var trsData = $scope.groupTableDataes;
+            angular.forEach(trsData, function (trData, trIndex, array) {
+                //表单明细
+                var _tableDetail = [];
+                //日期
+                var _code = trData.code == "所有访客" ? "all" : trData.code;
+                _tableDetail.push(_code);
+                //汇总
+                _tableDetail.push(trData.data);
+
+                var keepGoing = true;
+                //同类群组比较数据
+                angular.forEach(trData.gaResultTdDatas, function (tdData, tdIndex, array) {
+                    if(keepGoing) {
+                        if(tdData.data != null && tdData != undefined && tdData != "") {
+                            _tableDetail.push(tdData.data);
+                        } else {
+                            _tableDetail.push("");
+                        }
+                        if(boundary - 1 == tdIndex) {
+                            keepGoing = false;
+                        }
+                    }
+                });
+                _tableBody.push(_tableDetail);
+            });
+            //定义表格样式
+            var docDefinition = {
+                header: {
+                    text: "Cohort Analysis Data Report",
+                    style: "header",
+                    alignment: 'center'
+                },
+                content: [
+                    {text: 'Scale:'+$scope.groupScale.selected.field+ '\n'},
+                    {text: 'Date Range:'+  $scope.dateRange.selected.field +'\n'},
+                    {text: 'Indicator:' + $scope.groupIndex.selected.field  +'\n'},
+                    {
+                        table: {
+                            // headers are automatically repeated if the table spans over multiple pages
+                            // you can declare how many rows should be treated as headers
+                            headerRows: 1,
+                            body: _tableBody
+                        }
+                    },
+                    {text: '\nPower by www.best-ad.cn', style: 'header'},
+                ],
+                styles: {
+                    header: {
+                        fontSize: 20,
+                        fontName: "标宋",
+                        alignment: 'justify',
+                        bold: true
+                    }
+                }
+            };
+            cb(docDefinition);
+        };
+
         $scope.page_refresh = function () {
 
             var parameter = {
