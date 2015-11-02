@@ -116,11 +116,13 @@ define(["./module"], function (ctrs) {
                     {name: "第12月"}
                 ];
             }
+            $scope.page_refresh();
         }
 
 
         $scope.dateChange = function (val) {
             $scope.dateRange.selected = val;
+            $scope.page_refresh();
         }
         /*当含有‘率’的时候纵轴含有百分号*/
         $scope.retentionRate = false;
@@ -131,6 +133,7 @@ define(["./module"], function (ctrs) {
                 $scope.retentionRate = false;
             }
             $scope.groupIndex.selected = val;
+            $scope.page_refresh();
         }
         $scope.tables = {
 
