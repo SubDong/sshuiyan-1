@@ -88,16 +88,16 @@ function getData(req, resp, tid, sitejson) {
          */
         var tasks = ['mouse', 'duration', 'visit', 'e', 'pc'];
         async.eachSeries(tasks, function (item, cb) {
-            console.log(ref)
+            //console.log(ref)
             var tempRef = ref
             if (ref.indexOf("http://") > -1&&ref.length>8){
                 tempRef =ref.substring(7,ref.length)
-                console.log("http 开头 拆分后="+tempRef)
+                //console.log("http 开头 拆分后="+tempRef)
             }
 
             if (ref.indexOf("https://") > -1&&ref.length>9){
                 tempRef =ref.substring(8,ref.length)
-                console.log("https 开头 拆分后="+tempRef)
+                //console.log("https 开头 拆分后="+tempRef)
             }
 
            // console.log(tempRef)
