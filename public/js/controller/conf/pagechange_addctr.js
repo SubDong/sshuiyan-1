@@ -299,40 +299,77 @@ define(["./module"], function (ctrs) {
                 if (!checkSinglePath($scope.paths[index], index + 1))
                     return;
             }
-            var page_conv_entity = {
-                uid: $cookieStore.get("uid"),
-                site_id: $rootScope.siteId,
-                target_name: $scope.target_name,//目标名称
-                target_urls: $scope.target_urls,//目标URL
-                record_type: $scope.record_type,//记录方式
-                //收益设置
-                expected_yield: $scope.expected_yield,//预期收益
-                pecent_yield: $scope.pecent_yield,//预期收益率
-                //路径类型
-                paths: $scope.paths,
-                conv_tpye: $scope.conv_tpye,//转换类型，regist,communicate,place_order,othre_order
-                conv_text:$scope.conv_tpye=="other"?($scope.t_conv_text.trim()==""?menu_conv_type["other"]:$scope.t_conv_text.trim()):menu_conv_type[$scope.conv_tpye],
-                update_time: new Date().getTime()
-            }
-            var savePageConv = "/config/page_conv?type=save&entity=" + JSON.stringify(page_conv_entity);
+
+            ///检查名称是否相同
+            var uid = $cookieStore.get("uid");
+            var site_id = $rootScope.siteId;
+            var url = "/config/page_conv?type=search&query=" + JSON.stringify({uid: uid, site_id: site_id});
             $http({
                 method: 'GET',
-                url: savePageConv
-            }).success(function (ins, status) {
-                if (status == 200) {
-                    var page_conv_urls = forcePathStepUrls(ins._id);
-                    var saveUrls = "/config/page_conv_urls?type=saveAll&entitys=" + JSON.stringify(page_conv_urls);
-                    $http({
-                        method: 'GET',
-                        url: saveUrls
-                    }).success(function (data, status) {
-                        if (status != 200) {
+                url: url
+            }).success(function (dataConfig, status) {
+                var flag=true
+                if(dataConfig!=undefined&&dataConfig.length>0){
+                    dataConfig.forEach(function(data){
+                        if(data.target_name==$scope.target_name){
+                            $scope.showInputErrMsg("存在相同的目标名称，请修改！");
+                            $scope.target_name="";
+                            flag=false
                             return;
                         }
+                        if(data.target_urls!=null&&$scope.target_urls.length>0){
+                            data.target_urls.forEach(function(durl){
+                                $scope.target_urls.forEach(function(surl){
+                                    if(durl.url==surl.url){
+                                        if(data.target_name==$scope.target_name){
+                                            $scope.showInputErrMsg("存在相同的目标URL，已删除，请修改！");
+                                            surl.url="";
+                                            flag=false
+                                            return;
+                                        }
+                                    }
+                                })
+                            })
+                        }
+                    })
+                }
+                if(  flag){
+                    var page_conv_entity = {
+                        uid: $cookieStore.get("uid"),
+                        site_id: $rootScope.siteId,
+                        target_name: $scope.target_name,//目标名称
+                        target_urls: $scope.target_urls,//目标URL
+                        record_type: $scope.record_type,//记录方式
+                        //收益设置
+                        expected_yield: $scope.expected_yield,//预期收益
+                        pecent_yield: $scope.pecent_yield,//预期收益率
+                        //路径类型
+                        paths: $scope.paths,
+                        conv_tpye: $scope.conv_tpye,//转换类型，regist,communicate,place_order,othre_order
+                        conv_text:$scope.conv_tpye=="other"?($scope.t_conv_text.trim()==""?menu_conv_type["other"]:$scope.t_conv_text.trim()):menu_conv_type[$scope.conv_tpye],
+                        update_time: new Date().getTime()
+                    }
+                    var savePageConv = "/config/page_conv?type=save&entity=" + JSON.stringify(page_conv_entity);
+                    $http({
+                        method: 'GET',
+                        url: savePageConv
+                    }).success(function (ins, status) {
+                        if (status == 200) {
+                            var page_conv_urls = forcePathStepUrls(ins._id);
+                            var saveUrls = "/config/page_conv_urls?type=saveAll&entitys=" + JSON.stringify(page_conv_urls);
+                            $http({
+                                method: 'GET',
+                                url: saveUrls
+                            }).success(function (data, status) {
+                                if (status != 200) {
+                                    return;
+                                }
+                            });
+                        }
+                        $state.go('pagechange');
                     });
                 }
-                $state.go('pagechange');
-            });
+            })
         }
     })
 });

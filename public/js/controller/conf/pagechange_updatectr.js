@@ -294,33 +294,73 @@ define(["./module"], function (ctrs) {
                 conv_text:$scope.conv_tpye=="other"?($scope.t_conv_text.trim()==""?menu_conv_type["other"]:$scope.t_conv_text.trim()):menu_conv_type[$scope.conv_tpye],
                 update_time: new Date().getTime()
             }
-            var updatePageConv = "/config/page_conv?type=update&query="+JSON.stringify({_id:$stateParams.id})+"&updates=" + angular.toJson(page_conv_entity);
+
+            ///检查名称是否相同
+            var uid = $cookieStore.get("uid");
+            var site_id = $rootScope.siteId;
+            var url = "/config/page_conv?type=search&query=" + JSON.stringify({uid: uid, site_id: site_id});
             $http({
                 method: 'GET',
-                url: updatePageConv
-            }).success(function (upd, status) {
-                if (status == 200) {
-                    var page_conv_urls = forcePathStepUrls($stateParams.id);
-                    var deleteUrl = "/config/page_conv_urls?type=delete&query=" + JSON.stringify({page_conv_id: $stateParams.id});
+                url: url
+            }).success(function (dataConfig, status) {
+                var flag = true
+                if (dataConfig != undefined && dataConfig.length > 0) {
+                    dataConfig.forEach(function (data) {
+                        if($stateParams.id!=data._id){
+                            if (data.target_name == $scope.target_name) {
+                                $scope.showInputErrMsg("存在相同的目标名称，请修改！");
+                                $scope.target_name = "";
+                                flag = false
+                                return;
+                            }
+                            if (data.target_urls != null && $scope.target_urls.length > 0) {
+                                data.target_urls.forEach(function (durl) {
+                                    $scope.target_urls.forEach(function (surl) {
+                                        if (durl.url == surl.url) {
+                                            if (data.target_name == $scope.target_name) {
+                                                $scope.showInputErrMsg("存在相同的目标URL，已删除，请修改！");
+                                                surl.url = "";
+                                                flag = false
+                                                return;
+                                            }
+                                        }
+                                    })
+                                })
+                            }
+                        }
+                    })
+                }
+                if(flag){
+                    var updatePageConv = "/config/page_conv?type=update&query="+JSON.stringify({_id:$stateParams.id})+"&updates=" + angular.toJson(page_conv_entity);
                     $http({
                         method: 'GET',
-                        url: deleteUrl
-                    }).success(function (data, status) {
+                        url: updatePageConv
+                    }).success(function (upd, status) {
                         if (status == 200) {
-                            var saveUrls = "/config/page_conv_urls?type=saveAll&entitys=" + JSON.stringify(page_conv_urls);
+                            var page_conv_urls = forcePathStepUrls($stateParams.id);
+                            var deleteUrl = "/config/page_conv_urls?type=delete&query=" + JSON.stringify({page_conv_id: $stateParams.id});
                             $http({
                                 method: 'GET',
-                                url: saveUrls
+                                url: deleteUrl
                             }).success(function (data, status) {
-                                if (status != 200) {
+                                if (status == 200) {
+                                    var saveUrls = "/config/page_conv_urls?type=saveAll&entitys=" + JSON.stringify(page_conv_urls);
+                                    $http({
+                                        method: 'GET',
+                                        url: saveUrls
+                                    }).success(function (data, status) {
+                                        if (status != 200) {
+                                        }
+                                    });
                                 }
+
                             });
                         }
-
+                        $state.go('pagechange');
                     });
                 }
-                $state.go('pagechange');
-            });
+            })
+
         }
     })
 })

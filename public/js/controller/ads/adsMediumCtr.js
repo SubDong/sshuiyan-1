@@ -40,18 +40,6 @@ define(["./module"], function (ctrs) {
                 enableSorting: false
             },
             {
-                name: " ",
-                cellTemplate: "<div class='table_box'>" +
-                "<button onmousemove='getMyButton(this)' class='table_btn'></button>" +
-                "<div class='table_win'>" +
-                "<ul style='color: #45b1ec'>" +
-                "<li><a ui-sref='history6' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li>" +
-                "</ul>" +
-                "</div>" +
-                "</div>",
-                enableSorting: false
-            },
-            {
                 name: "浏览量(PV)",
                 displayName: "浏览量(PV)",
                 field: "pv",

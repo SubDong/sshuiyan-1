@@ -472,7 +472,7 @@ define(["angular", "./app"], function (angular, myApp) {
                         ])
                     }
                 })
-                .state('offsitelinks', {
+                /*.state('offsitelinks', {
                     url: "/page/offsitelinks",
                     templateUrl: "../page/offsitelinks.html",
                     resolve: {
@@ -480,7 +480,7 @@ define(["angular", "./app"], function (angular, myApp) {
                             "controller/page/linksctrl"
                         ])
                     }
-                });
+                })*/;
 
             // visitor访客分析
             $stateProvider
