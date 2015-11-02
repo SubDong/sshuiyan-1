@@ -70,6 +70,14 @@ define(["./module"], function (ctrs ) {
                 entity.event_target_des = entity.event_target?"是":"否"
             });
         };
+        $scope.operationStatus = function (entity) {
+            entity.event_status = entity.event_status == '0' ? '1':'0';
+            var url = "/config/eventchnage_list?type=update&query={\"_id\":\"" + entity._id + "\"}&updates={\"event_status\":\"" + entity.event_status + "\"}";
+            $http({
+                method: 'GET',
+                url: url
+            }).success(function (dataConfig, status) {});
+        };
         //配置默认指标
         $rootScope.checkArray = ["", "", ""];
 
