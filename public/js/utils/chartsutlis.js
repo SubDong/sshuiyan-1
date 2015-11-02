@@ -819,6 +819,9 @@ var chartUtils = {
                             if (quota == "ctr" || quota == "cpc") {
                                 semCount = parseFloat(semCount / res[0].data.length).toFixed(2);
                             }
+                            if (quota == "cost") {
+                                semCount = semCount.toFixed(2);
+                            }
                         }
                         _tmp["label"] = chartUtils.convertChinese(quota);
                         _tmp["key"] = ["搜索推广"];
