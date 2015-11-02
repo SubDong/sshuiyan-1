@@ -4,7 +4,7 @@
 define(["./module"], function (ctrs) {
 
     "use strict";
-    ctrs.controller('search_ssc_ctr', function ($scope, $rootScope, requestService, areaService, $http,uiGridConstants) {
+    ctrs.controller('search_ssc_ctr', function ($scope, $rootScope, requestService, areaService, $http, uiGridConstants, $cookieStore) {
         //        高级搜索提示
         $scope.areaSearch = "";
         $scope.removeAreaSearch = function(obj){
@@ -269,20 +269,52 @@ define(["./module"], function (ctrs) {
 
         //刷新
         $scope.page_refresh = function () {
-            $rootScope.start = -1;
-            $rootScope.end = -1;
-            $rootScope.tableTimeStart = -1;//开始时间
-            $rootScope.tableTimeEnd = -1;//结束时间、
-            $rootScope.tableFormat = null;
-            $scope.init($rootScope.user, $rootScope.baiduAccount, "creative", $scope.selectedQuota, $rootScope.start, $rootScope.end);
-            //图表
-            requestService.refresh($scope.charts);
+            //$rootScope.start = -1;
+            //$rootScope.end = -1;
+            //$rootScope.tableTimeStart = -1;//开始时间
+            //$rootScope.tableTimeEnd = -1;//结束时间、
+            //$rootScope.tableFormat = null;
+            //$scope.init($rootScope.user, $rootScope.baiduAccount, "creative", $scope.selectedQuota, $rootScope.start, $rootScope.end);
+            ////图表
+            //requestService.refresh($scope.charts);
             $scope.reloadByCalendar("yesterday");
             $('#reportrange span').html(GetDateStr(-1));
             //其他页面表格
             //classcurrent
             $scope.reset();
             $scope.yesterdayClass = true;
+        };
+
+        $rootScope.initMailData = function () {
+            $http.get("api/saveMailConfig?rt=read&rule_url=" + $rootScope.mailUrl[1] + "").success(function (result) {
+                if (result) {
+                    var ele = $("ul[name='sen_form']");
+                    formUtils.rendererMailData(result, ele);
+                }
+            });
+        };
+
+        $scope.sendConfig = function () {
+            var formData = formUtils.vaildateSubmit($("ul[name='sen_form']"));
+            var result = formUtils.validateEmail(formData.mail_address, formData);
+            if (result.ec) {
+                alert(result.info);
+            } else {
+                formData.rule_url = $rootScope.mailUrl[1];
+                formData.uid = $cookieStore.get('uid');
+                formData.site_id = $rootScope.siteId;
+                formData.type_id = $rootScope.userType;
+                formData.schedule_date = $scope.mytime.time.Format('hh:mm');
+                $http.get("api/saveMailConfig?data=" + JSON.stringify(formData)).success(function (data) {
+                    var result = JSON.parse(eval("(" + data + ")").toString());
+                    if (result.ok == 1) {
+                        alert("操作成功!");
+                        $http.get("/api/initSchedule");
+                    } else {
+                        alert("操作失败!");
+                    }
+                });
+            }
         };
     });
 

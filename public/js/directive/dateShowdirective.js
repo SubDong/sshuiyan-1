@@ -291,7 +291,7 @@ define(["../app"], function (app) {
                 };
                 scope.pushESData = function (result, flag) {
                     var _array = $rootScope.copy(scope.dateShowArray);
-                    angular.forEach(obj, function (r) {
+                    angular.forEach(result, function (r) {
                         var dateShowObject = {};
                         dateShowObject.label = r.label;
                         var temp = 0;
