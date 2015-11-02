@@ -111,7 +111,7 @@
             </ul>
 
             <button class="btn btn-info timechange_button" id="confirmUrl"
-                    ng-disabled="(adTrackForm.targetUrl.$error.required && targetUrlHelp.help) || adTrackForm.targetUrl.$error.sshUrl || !adTrack.mediaPlatform || (adTrack.temMediaPlatform.length==0 && mediaPlatformFocus) || (adTrack.temAdTypes.length == 0 && temAdTypesFocus) || meshelps || meshelp || adTrack.planName.length>=30"
+                    ng-disabled="(adTrackForm.targetUrl.$error.required && targetUrlHelp.help) || veryUrl || adTrackForm.targetUrl.$error.sshUrl || !adTrack.mediaPlatform || (adTrack.temMediaPlatform.length==0 && mediaPlatformFocus) || (adTrack.temAdTypes.length == 0 && temAdTypesFocus) || meshelps || meshelp || adTrack.planName.length>=30"
                     ng-click="allSubmit();isNoHide = true">确定拼生成URL
             </button>
             &nbsp;&nbsp;&nbsp;

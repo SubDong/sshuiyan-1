@@ -1988,10 +1988,8 @@ define(["app"], function (app) {
                                 document.getElementById("summary").style.color = "#ea1414";
                             } else if (returnData[0].toString().substring(0, 1) == "-") {
                                 document.getElementById("summary").style.color = "#07cd2c";
-                            } else if (returnData[0] == "0%" || returnData[0] == "0") {
+                            } else if (returnData[0] == "0(0.00%)") {
                                 document.getElementById("summary").style.color = "#01aeef";
-                            } else {
-                                document.getElementById("summary").style.color = "#ea1414";
                             }
                         }
                         return returnData[0];

@@ -623,7 +623,9 @@ define(["./module"], function (ctrs) {
                         }
                     )
                 }).success(function (pageConvConfs, status) {
-                    var pages = [], hash = {}, pageParams = []
+                    var pages = [], hash = {}, pageParams = [];
+                    var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
+                    util.renderLegend(chart, $scope.charts[0].config);
                     pageConvConfs.forEach(function (elem) {
                         elem.target_urls.forEach(function (turl) {
                             if (!hash[turl.url]) {
