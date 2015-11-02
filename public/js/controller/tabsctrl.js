@@ -379,15 +379,14 @@ define(["app"], function (app) {
                         $rootScope.gridArray.unshift($scope.gridObjButton);
                     }
                     $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude);
-                $scope.gridObjButton = {};
-                $scope.gridObjButton["name"] = "xl";
-                $scope.gridObjButton["displayName"] = "";
-                $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
-                $scope.gridObjButton["maxWidth"] = 10;
-                $rootScope.gridArray.unshift($scope.gridObjButton);
+                    $scope.gridObjButton = {};
+                    $scope.gridObjButton["name"] = "xl";
+                    $scope.gridObjButton["displayName"] = "";
+                    $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
+                    $scope.gridObjButton["maxWidth"] = 10;
+                    $rootScope.gridArray.unshift($scope.gridObjButton);
+                }
             }
-            }
-
 
 
             //默认指标设置排序类型
@@ -395,7 +394,7 @@ define(["app"], function (app) {
                 if (_record.name == "新访客比率" || _record.name == "跳出率") {
                     _record.sortingAlgorithm = $rootScope.sortPercent;
                 } else if (_record.field == "vc" || _record.field == "uv" || _record.field == "pv"
-                    || _record.field == "nuv" || _record.field == "ip" ||  _record.field == "avgPage" ) {
+                    || _record.field == "nuv" || _record.field == "ip" || _record.field == "avgPage") {
                     _record.sortingAlgorithm = $rootScope.sortNumber;
                 }
             });
@@ -968,6 +967,23 @@ define(["app"], function (app) {
             $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.targetSearch();
         };
+
+        //事件名称过滤
+        $scope.searchGjcText = ""
+        $scope.oldGirdData = [];
+        $scope.filtrateEventName = function () {
+            if ($scope.searchGjcText.trim() != "" && $scope.gridOptions.data != undefined && $scope.gridOptions.data.length > 0) {
+                var tempDatas = []
+                $rootScope.gridData.forEach(function (data) {
+                    if (data.eventName.indexOf($scope.searchGjcText) > -1) {
+                        tempDatas.push(data)
+                    }
+                })
+                $scope.gridOptions.data = tempDatas
+            } else {
+                $scope.gridOptions.data = $rootScope.gridData
+            }
+        }
         // 输入URL过滤
         $scope.searchURLFilter = function (urlText) {
             if (!$rootScope.tableSwitch) {
@@ -1076,6 +1092,12 @@ define(["app"], function (app) {
                 options.forEach(function (option) {
                     val = val + Number(option.entity[a.col.field])
                 })
+            }
+            else if (a.col.field == "transformCost") {
+                options.forEach(function (option) {
+                    val = val + Number(option.entity[a.col.field].substring(0, option.entity[a.col.field].length - 2))
+                })
+                val = val + "元"
             } else {
                 options.forEach(function (option) {
                     if (!hash[option.entity.loc]) {
@@ -1086,8 +1108,6 @@ define(["app"], function (app) {
             }
             return val
         }
-
-
 
 
         //前端ui-grid通用查询方法
@@ -1141,7 +1161,7 @@ define(["app"], function (app) {
                             item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 32px'>--</div>";
                         } else {
                             item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 32px'>" +
-                            "<ul><li>{{grid.appScope.getEventRootData(this,grid.getVisibleRows())}}</li></ul></div>";
+                                "<ul><li>{{grid.appScope.getEventRootData(this,grid.getVisibleRows())}}</li></ul></div>";
                         }
                     }
                 });
@@ -1154,7 +1174,7 @@ define(["app"], function (app) {
                         } else {
 //                        item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 100px'>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),2)}}<br/>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),3)}}<br/>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),4)}}</div>";
                             item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 32px'>" +
-                            "<ul><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),2)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),3)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),4)}}</li></ul></div>";
+                                "<ul><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),2)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),3)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),4)}}</li></ul></div>";
                         }
                     }
                 });
