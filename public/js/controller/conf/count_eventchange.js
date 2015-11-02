@@ -70,14 +70,6 @@ define(["./module"], function (ctrs ) {
                 entity.event_target_des = entity.event_target?"是":"否"
             });
         };
-        $scope.operationStatus = function (entity) {
-            entity.event_status = entity.event_status == '0' ? '1':'0';
-            var url = "/config/eventchnage_list?type=update&query={\"_id\":\"" + entity._id + "\"}&updates={\"event_status\":\"" + entity.event_status + "\"}";
-            $http({
-                method: 'GET',
-                url: url
-            }).success(function (dataConfig, status) {});
-        };
         //配置默认指标
         $rootScope.checkArray = ["", "", ""];
 
@@ -89,10 +81,12 @@ define(["./module"], function (ctrs ) {
                 maxWidth: 5,
                 enableSorting: false
             },
-            {name: "事件目标事件名称", displayName: "事件目标事件名称", field: "event_name",cellClass: 'table_admin_color', enableSorting: false},
+            {name: "事件名称", displayName: "事件名称", field: "event_name",cellClass: 'table_admin_color', enableSorting: false},
+            {name: "生成日期", displayName: "生成日期", cellClass: 'table_admin_color', enableSorting: false},
             {name: "事件元素ID", displayName: "事件元素ID", field: "event_id",cellClass: 'table_admin_color', enableSorting: false},
-            {name: "事件作用或目录", displayName: "事件作用或目录", field: "event_page",cellClass: 'table_admin_color', enableSorting: false},
-            {name: "记录方式", displayName: "记录方式", field: "event_method",cellClass: 'table_admin_color',enableSorting: false},
+            {name: "事件预览页面", displayName: "事件预览页面", field: "event_page",cellClass: 'table_admin_color', enableSorting: false},
+            {name: "事件作用页面或目录", displayName: "事件作用或目录", field: "event_page",cellClass: 'table_admin_color', enableSorting: false},
+ /*           {name: "记录方式", displayName: "记录方式", field: "event_method",cellClass: 'table_admin_color',enableSorting: false},*/
             {name: "是否为事件转化目标", displayName: "是否为事件转化目标", field: "event_target_des",cellClass: 'table_admin_color',enableSorting: false},
             {
                 name: "x4",
@@ -104,7 +98,7 @@ define(["./module"], function (ctrs ) {
             {
                 name: "x5",
                 displayName: "",
-                cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.operationStatus(row.entity)'>{{row.entity.event_status == '0' ? '启动':'暂停' }}</a></div>",
+                cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.operationStatus(row.entity)'>{{row.entity.event_status == '0' ? '重新启用':'暂停使用' }}</a></div>",
                 maxWidth: 80,
                 enableSorting: false
             },
@@ -122,7 +116,6 @@ define(["./module"], function (ctrs ) {
                 maxWidth: 50,
                 enableSorting: false
             }
-
         ];
         $rootScope.tableSwitch = {
             latitude: {name: "网站域名", displayName: "网站域名", field: ""},

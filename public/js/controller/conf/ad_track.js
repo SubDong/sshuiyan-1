@@ -4,7 +4,7 @@
 define(["./module"], function (ctrs) {
     "use strict";
 
-    ctrs.controller('ad_track', function ($scope, $rootScope, $cookieStore, $http, ngDialog) {
+    ctrs.controller('ad_track', function ($scope, $rootScope, $cookieStore, $http, ngDialog,$state) {
 
         //配置默认指标
         $rootScope.checkedArray = ["_uid", "uid", "type_id", "track_id", "targetUrl", "mediaPlatform", "adTypes", "planName", "keywords", "creative", "produceUrl"];
@@ -30,6 +30,7 @@ define(["./module"], function (ctrs) {
                     maxWidth: 5
                 },
                 {name: "目标URL", displayName: "目标URL", field: "targetUrl"},
+                {name: "生成日期", displayName: "生成日期", field: ""},
                 {name: "媒体平台", displayName: "媒体平台", field: "mediaPlatform"},
                 {name: "广告类型", displayName: "广告类型", field: "adTypes"},
                 {name: "计划名称", displayName: "计划名称", field: "planName"},
@@ -50,12 +51,21 @@ define(["./module"], function (ctrs) {
                     maxWidth: 50,
                     cellClass: 'table_admin',
                     enableSorting: false
-                }
-
+                } ,
+                 {
+                 name: "x8",
+                 displayName: "",
+                 cellTemplate: "<div class='table_admin' ng-click='grid.appScope.onUpdate(row.entity)'><a href=''>修改</a></div>",
+                 maxWidth: 50,
+                 enableSorting: false
+                 }
             ],
             data: [{}]
         };
-
+        //跳转到修改界面
+        $scope.onUpdate = function (entity) {
+            $state.go('adtrack_add', {'id': entity._id});
+        };
         /**
          * 刪除
          * @param index
@@ -91,7 +101,7 @@ define(["./module"], function (ctrs) {
         $scope.deleteAll = function (index, grid, row) {
 
             var elements = $scope.gridApiAdmin.selection.getSelectedRows();
-            if(elements.length==0){
+            if (elements.length == 0) {
                 $scope.onAlertDialog = ngDialog.open({
                     template: '' +
                     '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div><ul class="admin-ng-content" ><li>请勾选要删除的配置项</li></ul> <div class="ng-button-div"><button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
