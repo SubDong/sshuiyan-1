@@ -11,32 +11,32 @@ define(["./module"], function (ctrs) {
             $rootScope.tableFormat = null;
             $scope.send = true;//显示发送
             $scope.isCompared = false;
-            var refushGridData = function () {
-                var url = "/config/eventchnage_list?type=search&query=" + JSON.stringify(
-                        {uid: $cookieStore.get("uid"), root_url: $rootScope.siteId}
-                    );
-                $http({
-                    method: 'GET',
-                    url: url
-                }).success(function (dataConfig, status) {
-                    var url_convert_info = [];
-                    for (var i = 0; i < dataConfig.length; i++) {
-                        if (dataConfig[i].event_target)
-                            url_convert_info.push({
-                                convertName: dataConfig[i].event_name,
-                                convertId: dataConfig[i].event_id,
-                                all_urls: dataConfig[i].event_page
-                            });
-                    }
-                    var all_url = [];
-                    for (var k = 0; k < dataConfig.length; k++) {
-                        all_url.push(dataConfig[k].event_page)
-                    }
-                    $scope.all_url = all_url;
-                    $scope.convert_url_all = url_convert_info;
-                });
-            };
-            refushGridData();
+            //var refushGridData = function () {
+            //    var url = "/config/eventchnage_list?type=search&query=" + JSON.stringify(
+            //            {uid: $cookieStore.get("uid"), root_url: $rootScope.siteId}
+            //        );
+            //    $http({
+            //        method: 'GET',
+            //        url: url
+            //    }).success(function (dataConfig, status) {
+            //        var url_convert_info = [];
+            //        for (var i = 0; i < dataConfig.length; i++) {
+            //            if (dataConfig[i].event_target)
+            //                url_convert_info.push({
+            //                    convertName: dataConfig[i].event_name,
+            //                    convertId: dataConfig[i].event_id,
+            //                    all_urls: dataConfig[i].event_page
+            //                });
+            //        }
+            //        var all_url = [];
+            //        for (var k = 0; k < dataConfig.length; k++) {
+            //            all_url.push(dataConfig[k].event_page)
+            //        }
+            //        $scope.all_url = all_url;
+            //        $scope.convert_url_all = url_convert_info;
+            //    });
+            //};
+            //refushGridData();
 
             //sem
             $scope.es_checkArray = ["pv", "uv", "vc", "ip", "nuv", "nuvRate", "conversions", "crate", "transformCost", "clickTotal", "visitNum"];
@@ -47,7 +47,7 @@ define(["./module"], function (ctrs) {
             $rootScope.tableFormat = null;
 
             //配置默认指标
-            $rootScope.checkedArray = ["pv", "uv", "ip","clickTotal", "conversions", "crate"];
+            $rootScope.checkedArray = ["pv", "uv", "ip", "clickTotal", "conversions", "crate"];
             $scope.getEventName = function (grid, row, index) {
             }
             $rootScope.gridArray = [
@@ -63,7 +63,7 @@ define(["./module"], function (ctrs) {
                     displayName: "事件名称",
                     field: "eventName",
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
-                    maxWidth:150
+                    maxWidth: 150
                 },
                 {
                     name: "页面URL",
@@ -272,6 +272,7 @@ define(["./module"], function (ctrs) {
 
             $scope.$on("ssh_refresh_charts", function (e, msg) {
                 $scope.charts[0].config.legendDefaultChecked = [0, 1];
+                console.log("ssh_refresh_charts")
                 $scope.refreshData(false);
                 init_transformData();
             });
@@ -377,9 +378,25 @@ define(["./module"], function (ctrs) {
             };
 
 
+            $rootScope.getFilters = function(){
+                var  filters = []
+                console.log( JSON.stringify($rootScope.tableSwitch.eginFilter)+"  "+ JSON.stringify($rootScope.tableSwitch.visitorFilter)+" " +JSON.stringify($rootScope.tableSwitch.areaFilter))
+                if($rootScope.tableSwitch.eginFilter!=undefined&&$rootScope.tableSwitch.eginFilter!=null){
+                        filters.push($rootScope.tableSwitch.eginFilter)
+                }
+                if($rootScope.tableSwitch.visitorFilter!=undefined&&$rootScope.tableSwitch.visitorFilter!=null){
+                    filters.push($rootScope.tableSwitch.visitorFilter)
+                }
+                if($rootScope.tableSwitch.areaFilter!=undefined&&$rootScope.tableSwitch.areaFilter!=null&&$rootScope.tableSwitch.areaFilter.length>0){
+                    $rootScope.tableSwitch.areaFilter.fore(function(area){
+                        filters.push(area)
+                    })
+                }
+                console.log("过滤内容="+JSON.stringify(filters))
+                return JSON.stringify(filters)
+            }
             $rootScope.locUrls = [];
             $rootScope.refreshData = function (isContrastDataByTime) {//isContrastDataByTime 是否按时间对比
-                $scope.isCompared = isContrastDataByTime;
                 $http({
                     method: 'GET',
                     url: "/config/eventchnage_list?type=search&query=" + JSON.stringify({
@@ -393,6 +410,8 @@ define(["./module"], function (ctrs) {
                         if (!hash[elem.event_page]) {
                             eventPages.push(elem.event_page);
                             hash[elem.event_page] = true;
+                        }else{
+
                         }
                         eventParams.push({
                             event_page: elem.event_page,
@@ -402,11 +421,10 @@ define(["./module"], function (ctrs) {
                         })
                     })
                     $rootScope.locUrls = eventPages;
-                    var purl = "/api/transform/getEventPVs?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&queryOptions=" + $scope.es_checkArray + "&events=" + JSON.stringify(eventParams) + "&showType=day"
+                    var purl = "/api/transform/getEventPVs?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&queryOptions=" + $scope.es_checkArray + "&events=" + JSON.stringify(eventParams) + "&showType=day" + "&filters=" + $rootScope.getFilters()
                     $http.get(purl).success(function (pvs) {
                         if (pvs != null || pvs != "") {//PV 信息若不存在 则事件信息认为一定不存在
-                            var esurl = "/api/transform/getConvEvents?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&eventPages=" + JSON.stringify(eventPages) + "&showType=day"
-
+                            var esurl = "/api/transform/getConvEvents?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&eventPages=" + JSON.stringify(eventParams) + "&showType=day"+ "&filters=" + $rootScope.getFilters()
                             $http.get(esurl).success(function (eventInfos) {
                                 var results = [];
                                 events.forEach(function (event, index) {
@@ -416,8 +434,8 @@ define(["./module"], function (ctrs) {
                                     data["loc"] = event.event_page
                                     for (var i = 0; i < $scope.es_checkArray.length; i++) {
                                         if ($scope.es_checkArray[i] == "crate") {
-                                            if (eventInfos[event.event_page + "_" + event.event_id] != undefined && Number(data["crate"]) != 0 && Number(data["pv"]) != 0 && event.event_target) {
-                                                data["crate"] = (Number(eventInfos[event.event_page + "_" + event.event_id].eventCount / Number(data["pv"])) * 100).toFixed(2) + "%";
+                                            if (eventInfos[event.event_page + "_" + event.event_id] != undefined && Number(data["pv"]) != 0 && event.event_target) {
+                                                data["crate"] = (Number(eventInfos[event.event_page + "_" + event.event_id].convCount / Number(data["pv"])) * 100).toFixed(2) + "%";
                                             } else {
                                                 data["crate"] = "0%";
                                             }
@@ -444,7 +462,7 @@ define(["./module"], function (ctrs) {
                                         }
                                         else if ($scope.es_checkArray[i] == "conversions") {
                                             if (eventInfos[event.event_page + "_" + event.event_id] != undefined && event.event_target) {
-                                                data["conversions"] = eventInfos[event.event_page + "_" + event.event_id].eventCount;
+                                                data["conversions"] = eventInfos[event.event_page + "_" + event.event_id].convCount;
                                             } else {
                                                 data["conversions"] = 0;
                                             }
@@ -747,17 +765,18 @@ define(["./module"], function (ctrs) {
                 if (isClicked) {
                     $scope.setShowArray();
                     $rootScope.refreshData(true);
-                    //$scope.$broadcast("transformData_ui_grid", {
-                    //    start: $rootScope.start,
-                    //    end: $rootScope.end,
-                    //    checkedArray: $scope.es_checkedArray,
-                    //    sem_checkedArray: $scope.sem_checkedArray,
-                    //    all_checked: $rootScope.checkedArray,
-                    //    analysisAction: "event",
-                    //    convert_url_all: $scope.convert_url_all
-                    //});
+                    $scope.$broadcast("transformData_ui_grid", {
+                        start: $rootScope.start,
+                        end: $rootScope.end,
+                        checkedArray: $scope.es_checkedArray,
+                        sem_checkedArray: $scope.sem_checkedArray,
+                        all_checked: $rootScope.checkedArray,
+                        analysisAction: "event",
+                        convert_url_all: $scope.convert_url_all
+                    });
                 }
                 else {
+                    console.log()
                     //访客过滤数据获取
                     var inputArray = $(".chart_top2 .styled");
                     inputArray.each(function (i, o) {
@@ -821,7 +840,11 @@ define(["./module"], function (ctrs) {
                         convert_url_all: $scope.convert_url_all
                     });
                 }
-                //$rootScope.targetSearch(isClicked)
+                //$scope.setShowArray();
+                console.log($scope.city)
+                console.log($scope.souce)
+                console.log($scope.visitNum)
+                $rootScope.refreshData(true);
             };
             init_transformData();
             $rootScope.refreshData(false);

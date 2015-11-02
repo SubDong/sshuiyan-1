@@ -50,8 +50,14 @@ api.get("/eventchnage_list", function (req, res) {
                                 };
                                 confs.push(event_config);
                             });
-                            console.log("save 刷新Redis：" + ins.root_url + ":e:" + ins.event_page + " = " + JSON.stringify(confs))
-                            req.redisclient.multi().set(ins.root_url + ":e:" + ins.event_page, JSON.stringify(confs)).exec();
+
+                            var tempRef = ins.event_page
+                            if (ins.event_page.indexOf("http://") > -1&&ins.event_page.length>8)
+                                tempRef =ins.event_page.substring(7,ins.event_page.length)
+                            if (ins.event_page.indexOf("https://") > -1&&ins.event_page.length>9)
+                                tempRef =ins.event_page.substring(8,ins.event_page.length)
+                            console.log("save 刷新Redis：" + ins.root_url + ":e:" + tempRef + " = " + JSON.stringify(confs))
+                            req.redisclient.multi().set(ins.root_url + ":e:" + tempRef, JSON.stringify(confs)).exec();
                         }
                     });
                 }
@@ -88,8 +94,13 @@ api.get("/eventchnage_list", function (req, res) {
                                         };
                                         confs.push(event_config);
                                     });
-                                    console.log("1 update 刷新Redis：" + sres[0].root_url + ":e:" + sres[0].event_page + " = " + JSON.stringify(confs))
-                                    req.redisclient.multi().set(sres[0].root_url + ":e:" + sres[0].event_page, JSON.stringify(confs)).exec();
+                                    var tempRef = sres[0].event_page
+                                    if (sres[0].event_page.indexOf("http://") > -1&&sres[0].event_page.length>8)
+                                        tempRef =sres[0].event_page.substring(7,sres[0].event_page.length)
+                                    if (sres[0].event_page.indexOf("https://") > -1&&sres[0].event_page.length>9)
+                                        tempRef =sres[0].event_page.substring(8,sres[0].event_page.length)
+                                    console.log("1 update 刷新Redis：" + sres[0].root_url + ":e:" + tempRef + " = " + JSON.stringify(confs))
+                                    req.redisclient.multi().set(sres[0].root_url + ":e:" + tempRef, JSON.stringify(confs)).exec();
                                 }
                                 datautils.send(res, docs);
                             });
@@ -125,8 +136,13 @@ api.get("/eventchnage_list", function (req, res) {
                                 console.log(event_config)
                                 confs.push(event_config);
                             });
-                            console.log("delete 刷新Redis：" + jsonqry.root_url + ":e:" + jsonqry.event_page + " = " + JSON.stringify(confs))
-                            req.redisclient.multi().set(jsonqry.root_url + ":e:" + jsonqry.event_page, JSON.stringify(confs)).exec();
+                            var tempRef = jsonqry.event_page
+                            if (jsonqry.event_page.indexOf("http://") > -1&&jsonqry.event_page.length>8)
+                                tempRef =jsonqry.event_page.substring(7,jsonqry.event_page.length)
+                            if (jsonqry.event_page.indexOf("https://") > -1&&jsonqry.event_page.length>9)
+                                tempRef =jsonqry.event_page.substring(8,jsonqry.event_page.length)
+                            console.log("delete 刷新Redis：" + jsonqry.root_url + ":e:" + tempRef + " = " + JSON.stringify(confs))
+                            req.redisclient.multi().set(jsonqry.root_url + ":e:" + tempRef, JSON.stringify(confs)).exec();
                             datautils.send(res, docs);
                         });
                     });
@@ -266,10 +282,6 @@ api.get("/site_list", function (req, res) {
                                 pvpause: false,
                                 pvtimes: 3
                             }
-                            //console.log("typeid:".concat(docs[0].track_id)+"===="+ docs[0].type_id)
-                            //console.log("ts:" + docs[0].track_id+"===="+docs[0]._id)
-                            //console.log("st:" + docs[0]._id+"===="+ docs[0].track_id)
-                            //console.log("tsu:" + docs[0].track_id+"===="+docs[0].site_url)
                             req.redisclient.multi().set("typeid:".concat(docs[0].track_id), docs[0].type_id)//
                                 .set("ts:" + docs[0].track_id, docs[0]._id)//
                                 .set("st:" + docs[0]._id, docs[0].track_id)//
@@ -472,8 +484,14 @@ api.get("/page_conv", function (req, res) {
                         paths:tpaths,
                     }
                     ins.target_urls.forEach(function(target_url){
-                        console.log("save page_conv 刷新Redis："+ ins.site_id+":pc:"+target_url.url+" = "+ JSON.stringify(conf))
-                        req.redisclient.multi().set(ins.site_id+":pc:"+target_url.url,JSON.stringify(conf)).exec()
+
+                        var tempRef = target_url.url
+                        if (target_url.url.indexOf("http://") > -1&&target_url.url.length>8)
+                            tempRef =target_url.url.substring(7,target_url.url.length)
+                        if (target_url.url.indexOf("https://") > -1&&target_url.url.length>9)
+                            tempRef =target_url.url.substring(8,target_url.url.length)
+                        console.log("save page_conv 刷新Redis："+ ins.site_id+":pc:"+tempRef+" = "+ JSON.stringify(conf))
+                        req.redisclient.multi().set(ins.site_id+":pc:"+tempRef,JSON.stringify(conf)).exec()
                     })
                 }
             });
@@ -517,8 +535,14 @@ api.get("/page_conv", function (req, res) {
                                     paths:tpaths,
                                 }
                                 config.target_urls.forEach(function(target_url){
-                                    console.log("update page_conv 刷新Redis："+ config.site_id+":pc:"+target_url.url+" = "+ JSON.stringify(conf))
-                                    req.redisclient.multi().set(config.site_id+":pc:"+target_url.url,JSON.stringify(conf)).exec()
+
+                                    var tempRef = target_url.url
+                                    if (target_url.url.indexOf("http://") > -1&&target_url.url.length>8)
+                                        tempRef =target_url.url.substring(7,target_url.url.length)
+                                    if (target_url.url.indexOf("https://") > -1&&target_url.url.length>9)
+                                        tempRef =target_url.url.substring(8,target_url.url.length)
+                                    console.log("update page_conv 刷新Redis："+ config.site_id+":pc:"+tempRef+" = "+ JSON.stringify(conf))
+                                    req.redisclient.multi().set(config.site_id+":pc:"+tempRef,JSON.stringify(conf)).exec()
                                 })
                             }
                         }
@@ -720,7 +744,12 @@ api.get("/page_title", function (req, res) {
                 }
                 //通过site_id 去获取track_id
                 if (entity.site_id != null && entity.page_url != null) {
-                    req.redisclient.multi().set(entity.site_id + ":mouse:" + entity.page_url, JSON.stringify(page_title)).exec();//站点级别设置
+                    var tempRef = entity.page_url
+                    if (entity.page_url.indexOf("http://") > -1&&entity.page_url.length>8)
+                        tempRef =entity.page_url.substring(7,entity.page_url.length)
+                    if (entity.page_url.indexOf("https://") > -1&&entity.page_url.length>9)
+                        tempRef =entity.page_url.substring(8,entity.page_url.length)
+                    req.redisclient.multi().set(entity.site_id + ":mouse:" + tempRef, JSON.stringify(page_title)).exec();//站点级别设置
                 }
             });
             break;
@@ -865,7 +894,7 @@ api.get("/select", function (req, res) {
                             uid: uid,
                             event_id: entityJson["id"],
                             event_page: entityJson["monUrl"],
-                            event_name: entityJson["name"],
+                            //event_name: entityJson["name"],
                             root_url: sitejson.siteid
                         }
                         dao.find(schema_name, JSON.stringify(existQry), null, {}, function (err, docs) {//查询所有配置
@@ -903,8 +932,14 @@ api.get("/select", function (req, res) {
                                                     };
                                                     confs.push(event_config);
                                                 });
-                                                console.log("saveTips 刷新Redis："+ docs[0].root_url + ":e:" + docs[0].event_page+" = "+ JSON.stringify(confs))
-                                                req.redisclient.multi().set(docs[0].root_url + ":e:" + docs[0].event_page, JSON.stringify(confs)).exec();
+
+                                                var tempRef = docs[0].event_page
+                                                if (docs[0].event_page.indexOf("http://") > -1&&docs[0].event_page.length>8)
+                                                    tempRef =docs[0].event_page.substring(7,docs[0].event_page.length)
+                                                if (docs[0].event_page.indexOf("https://") > -1&&docs[0].event_page.length>9)
+                                                    tempRef =docs[0].event_page.substring(8,docs[0].event_page.length)
+                                                console.log("saveTips 刷新Redis："+ docs[0].root_url + ":e:" + tempRef+" = "+ JSON.stringify(confs))
+                                                req.redisclient.multi().set(docs[0].root_url + ":e:" + tempRef, JSON.stringify(confs)).exec();
                                             }
                                             datautils.send(res, docs);
                                         });
@@ -937,8 +972,13 @@ api.get("/select", function (req, res) {
                                                 };
                                                 confs.push(event_config);
                                             });
-                                            console.log("updateTips 刷新Redis："+ docs[0].root_url + ":e:" + docs[0].event_page+" = "+ JSON.stringify(confs))
-                                            req.redisclient.multi().set(docs[0].root_url + ":e:" + docs[0].event_page, JSON.stringify(confs)).exec();
+                                            var tempRef = docs[0].event_page
+                                            if (docs[0].event_page.indexOf("http://") > -1&&docs[0].event_page.length>8)
+                                                tempRef =docs[0].event_page.substring(7,docs[0].event_page.length)
+                                            if (docs[0].event_page.indexOf("https://") > -1&&docs[0].event_page.length>9)
+                                                tempRef =docs[0].event_page.substring(8,docs[0].event_page.length)
+                                            console.log("updateTips 刷新Redis："+ docs[0].root_url + ":e:" + tempRef+" = "+ JSON.stringify(confs))
+                                            req.redisclient.multi().set(docs[0].root_url + ":e:" + tempRef, JSON.stringify(confs)).exec();
                                         }
                                         datautils.send(res, docs);
                                     });
@@ -986,8 +1026,13 @@ api.get("/select", function (req, res) {
                                     };
                                     confs.push(event_config);
                                 });
-                                console.log("deleteTips 刷新Redis："+ existQry.root_url + ":e:" + existQry.event_page+" = "+ JSON.stringify(confs))
-                                req.redisclient.multi().set(existQry.root_url + ":e:" + existQry.event_page, JSON.stringify(confs)).exec();
+                                var tempRef = existQry.event_page
+                                if (existQry.event_page.indexOf("http://") > -1&&existQry.event_page.length>8)
+                                    tempRef =existQry.event_page.substring(7,existQry.event_page.length)
+                                if (existQry.event_page.indexOf("https://") > -1&&existQry.event_page.length>9)
+                                    tempRef =existQry.event_page.substring(8,existQry.event_page.length)
+                                console.log("deleteTips 刷新Redis："+ existQry.root_url + ":e:" + tempRef+" = "+ JSON.stringify(confs))
+                                req.redisclient.multi().set(existQry.root_url + ":e:" + tempRef, JSON.stringify(confs)).exec();
                                 datautils.send(res, docs);
                             });
                         });

@@ -659,9 +659,18 @@ define(["app"], function (app) {
             if (a == 0) $rootScope.tableSwitch.tableFilter = null, $scope.visitorSearch = "";
             if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"ct\":[0]}]", $scope.visitorSearch = "新访客";
             if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"ct\":[1]}]", $scope.visitorSearch = "老访客";
+            if ($rootScope.tableSwitch.number == 6 && (a == 1 || a == 2)) {
+                $rootScope.tableSwitch.visitorFilter = {ct: a - 1}
+            } else {
+                $rootScope.tableSwitch.visitorFilter = null
+            }
             //$scope.isJudge = false;
             $rootScope.$broadcast("ssh_data_show_refresh");
-            $scope.targetSearch();
+            if ($rootScope.tableSwitch.number == 6) {
+                $rootScope.refreshData()
+            } else {
+                $scope.targetSearch();
+            }
         };
         //设置来源网站
         $scope.setWebSite = function (a) {
@@ -794,15 +803,22 @@ define(["app"], function (app) {
         };
         //设置（搜 索引擎）地域过滤
         $scope.setSearchEngineAreaFilter = function (area) {
+
             if (!$rootScope.tableSwitch) {
                 return;
             }
             if ("全部" == area) {
                 $scope.areaSearch = "";
                 $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[2]}]";
+                if ($rootScope.tableSwitch.number == 6) {
+                    $rootScope.tableSwitch.areaFilter = {rf_type: 2}
+                }
             } else {
                 $scope.areaSearch = area;
                 $rootScope.tableSwitch.tableFilter = "[{\"region\":[\"" + area + "\"]},{\"rf_type\":[2]}]";
+                if ($rootScope.tableSwitch.number == 6) {
+                    $rootScope.tableSwitch.areaFilter = [{rf_type: 2}, {region: area}]
+                }
             }
             if (area == "北京" || area == "上海" || area == "广州") {
                 if ($scope.city.selected != undefined) {
@@ -814,7 +830,11 @@ define(["app"], function (app) {
             }
             $scope.isJudge = false;
             $rootScope.$broadcast("ssh_data_show_refresh");
-            $scope.targetSearch();
+            if ($rootScope.tableSwitch.number == 6) {
+                $rootScope.refreshData()
+            } else {
+                $scope.targetSearch();
+            }
             $scope.allCitys = angular.copy($rootScope.citys);
         };
 
@@ -822,22 +842,45 @@ define(["app"], function (app) {
         $scope.searchEngine = function (info) {
             if (info === '全部') {
                 $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[2]}]";
+                if ($rootScope.tableSwitch.number == 6) {
+                    $rootScope.tableSwitch.eginFilter = null
+                }
                 $scope.sourceSearch = "全部引擎";
             } else {
                 $rootScope.tableSwitch.tableFilter = "[{\"se\":[\"" + info + "\"]}]";
+                console.log("搜索引擎 ifno "+info)
+               if ($rootScope.tableSwitch.number == 6) {
+                    if (info == 0)
+                        $rootScope.tableSwitch.eginFilter =null
+                    else if(info == 1)
+                        $rootScope.tableSwitch.eginFilter ={se: "-"}
+                    else
+                        $rootScope.tableSwitch.eginFilter = {se: info}
+
+                }
                 $scope.sourceSearch = info;
             }
             $scope.isJudge = false;
             if ($scope.tableJu == "html") {
                 if (info === '全部') {
                     $rootScope.tableSwitch.tableFilter = null;
+                    if ($rootScope.tableSwitch.number == 6) {
+                        $rootScope.tableSwitch.eginFilter = null
+                    }
                 } else {
                     $rootScope.tableSwitch.tableFilter = "[{\"se\":\"" + info + "\"}]";
+                    if ($rootScope.tableSwitch.number == 6) {
+                        $rootScope.tableSwitch.eginFilter = {se: info}
+                    }
                 }
                 getHtmlTableData();
             } else {
                 $rootScope.$broadcast("ssh_data_show_refresh");
-                $scope.targetSearch();
+                if ($rootScope.tableSwitch.number == 6) {
+                    $rootScope.refreshData()
+                } else {
+                    $scope.targetSearch();
+                }
             }
             if (info == "百度" || info == "Google") {
                 if ($scope.browser.selected != undefined) {
@@ -1095,7 +1138,10 @@ define(["app"], function (app) {
             }
             else if (a.col.field == "transformCost") {
                 options.forEach(function (option) {
-                    val = val + Number(option.entity[a.col.field].substring(0, option.entity[a.col.field].length - 2))
+                    if ((option.entity[a.col.field] + "").indexOf("元") > -1)
+                        val = val + Number(option.entity[a.col.field].substring(0, option.entity[a.col.field].length - 2))
+                    else
+                        val = val + option.entity[a.col.field]
                 })
                 val = val + "元"
             } else {
@@ -1132,8 +1178,6 @@ define(["app"], function (app) {
                     _record.sortingAlgorithm = $rootScope.sortNumber;
                 }
             });
-
-
             //if (isClicked) {
             $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
             //}
@@ -1179,7 +1223,6 @@ define(["app"], function (app) {
                     }
                 });
             }
-
             if ($rootScope.tableSwitch.number == 5) {//推广URL速度
                 //var url = SEM_API_URL + "/sem/report/" + (area == "全部" ? $rootScope.tableSwitch.promotionSearch.SEMData : "region") + "?a=" + user + "&b=" + baiduAccount + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1" + (area == "全部" ? "" : "&rgna=" + area);
                 $http({

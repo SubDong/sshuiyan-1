@@ -94,7 +94,7 @@
                                 <div role="group" class="btn-group">
                                     <ui-select ng-model="souce.selected" theme="select2" reset-search-input="false"
                                                class="fl"
-                                               style="width: 90px;" ng-change="setSource(souce.selected.value)">
+                                               style="width: 90px;" ng-change="searchEngine(souce.selected.value)">
                                         <ui-select-match placeholder="全部">{{$select.selected.name}}
                                         </ui-select-match>
                                         <ui-select-choices repeat="souce in souces">
@@ -126,7 +126,7 @@
                                 <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
                                     <div role="group" class="btn-group">
                                         <ui-select ng-model="city.selected" theme="select2" reset-search-input="false"
-                                                   class="fl btn-pv" data-ng-change="setAreaFilterTran(city.selected.name)"
+                                                   class="fl btn-pv" data-ng-change="setSearchEngineAreaFilter(city.selected.name)"
                                                    style="width: 120px;">
                                             <ui-select-match placeholder="全部">{{$select.selected.name}}
                                             </ui-select-match>
@@ -142,10 +142,10 @@
                             <li><a href="javascript:void(0)">广州</a></li>
                         </ul>
                     </div>
-                    <div class="chart_top chart_noborder">
-                        <button class="btn btn-primary" type="button" ng-click="targetSearchSpreadTransform(false)">确定
-                        </button>
-                    </div>
+                    <!--<div class="chart_top chart_noborder">-->
+                        <!--<button class="btn btn-primary" type="button" ng-click="targetSearchSpreadTransform(false)">确定-->
+                        <!--</button>-->
+                    <!--</div>-->
                 </div>
             </div>
             <div class="custom_secendtitle">
@@ -155,7 +155,7 @@
                                onfocus="this.setAttribute('placeholder','')"
                                onblur="this.setAttribute('placeholder','输入事件名称')">
                                <span class="input-group-btn fl">
-                                     <button type="button" class="btn btn-default"
+                                     <button type="button" class="btn btn-default"  data-ng-click="filtrateEventName()"
                                              ><span aria-hidden="true" class="glyphicon glyphicon-search"></span>
                                      </button>
                                </span>

@@ -585,6 +585,7 @@ define(["./module"], function (ctrs) {
                                                 attr.value += data[attr.label]
                                         })
                                     })
+                                    console.log( $rootScope.gridOptions.data)
                                     //刷新图表
                                     $scope.charts[0].config.legendDefaultChecked = [0, 1];
                                     $scope.charts[0].config.legendAllowCheckCount = 2;
@@ -592,7 +593,6 @@ define(["./module"], function (ctrs) {
                                     $scope.DateLoading = true;
                                     $scope.DateNumber = true;
                                     $scope.DateLoading = true;
-
                                     $scope.dataTable(true, "day", ["pv", "uv"], false);
                                 })
                             } else {
