@@ -796,14 +796,14 @@ api.get("/adtrack", function (req, res) {
             var strUrl = "";
             var sourceUrl = entity.targetUrl;
             var yesParam = "?rf=" + entity.mediaPlatform;
-            var noParam = "&rf=" + entity.mediaPlatform;
-            var notHostName = "&media=" + entity.adTypes
-                + "&cpna=" + entity.planName
-                + "&kwna=" + entity.keywords
-                + "&crt=" + entity.creative
-                + "&t=" + entity.tid
-                + "&atk=1"
-                + "&tt=0";
+            var noParam = "*rf=" + entity.mediaPlatform;
+            var notHostName = "*media=" + entity.adTypes
+                + "*cpna=" + entity.planName
+                + "*kwna=" + entity.keywords
+                + "*crt=" + entity.creative
+                + "*t=" + entity.tid
+                + "*atk=1"
+                + "*tt=0";
 
             if (sourceUrl.indexOf("?") == -1) {
                 if (sourceUrl.indexOf("http://") == -1) {

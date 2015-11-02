@@ -161,6 +161,7 @@ define(["./module"], function (ctrs) {
          */
         $scope.allSubmit = function () {
             var kVal = $scope.adTrack.keywords;
+
             var includeObj = kVal.indexOf("\\n");
             if (includeObj < -1) {
                 $scope.submit();
@@ -182,14 +183,14 @@ define(["./module"], function (ctrs) {
                 var strUrl = "";
                 var sourceUrl = $scope.adTrack.targetUrl;
                 var yesParam = "?rf=" + $scope.adTrack.mediaPlatform;
-                var noParam = "&rf=" + $scope.adTrack.mediaPlatform;
-                var notHostName = "&media=" + $scope.adTrack.adTypes
-                    + "&cpna=" + $scope.adTrack.planName
-                    + "&kwna=" + kw
-                    + "&crt=" + $scope.adTrack.creative
-                    + "&t=" + $rootScope.siteTrackId
-                    + "&atk=1"
-                    + "&tt=0";
+                var noParam = "*rf=" + $scope.adTrack.mediaPlatform;
+                var notHostName = "*media=" + $scope.adTrack.adTypes
+                    + "*cpna=" + $scope.adTrack.planName
+                    + "*kwna=" + kw
+                    + "*crt=" + $scope.adTrack.creative
+                    + "*t=" + $rootScope.siteTrackId
+                    + "*atk=1"
+                    + "*tt=0";
 
                 if (sourceUrl != null && sourceUrl != "") {
                     if (sourceUrl.indexOf("?") == -1) {
@@ -245,7 +246,6 @@ define(["./module"], function (ctrs) {
             model.site_id = $rootScope.siteId;
             model.uid = $cookieStore.get("uid")
             model.tid = $rootScope.siteTrackId;
-
             //保存
             var url = "/config/adtrack?type=save&entity=" + JSON.stringify(model);
             $http({method: 'GET', url: url}).success(function (dataConfig, status) {
