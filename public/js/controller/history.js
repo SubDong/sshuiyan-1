@@ -129,6 +129,16 @@ define(['./module'], function (ctrs) {
         var evTimeStamp = 0;
         //历史趋势访客来源
         $scope.setHistoryVisitors = function (a) {
+            //获取默认的过滤条件
+            var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
+            //排除访客过滤
+            var rf_index = _allFilters.elementHasOwnProperty("ct");
+            if(rf_index != -1) {
+                _allFilters.remove(rf_index);
+            }
+            //访客过滤条件
+            var _visitorFilter = "";
+
             var now = +new Date();
             if (now - evTimeStamp < 100) {
                 return;
@@ -140,9 +150,16 @@ define(['./module'], function (ctrs) {
                 $(o).prop("checked", false);
             });
             $(inputArray[a]).prev("span").css("background-position", "0px -51px");
-            if (a == 0) $rootScope.tableSwitch.tableFilter = null, $scope.visitorSearch = "";
-            if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"ct\":[0]}]", $scope.visitorSearch = "新访客";
-            if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"ct\":[1]}]", $scope.visitorSearch = "老访客";
+
+            if (a == 0) $scope.visitorSearch = "";
+            if (a == 1) _visitorFilter = JSON.parse("{\"ct\":[0]}"), $scope.visitorSearch = "新访客";
+            if (a == 2) _visitorFilter = JSON.parse("{\"ct\":[1]}"), $scope.visitorSearch = "老访客";
+
+            if(_visitorFilter != "") {
+                _allFilters.push(_visitorFilter);
+            }
+            $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
+
             //$scope.isJudge = false;
             $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.historyInit();
@@ -150,26 +167,34 @@ define(['./module'], function (ctrs) {
 
         //历史趋势来源过滤
         $scope.setHistorySource = function (a) {
+            //获取默认的过滤条件
+            var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
+            //排除来源过滤
+            var rf_index = _allFilters.elementHasOwnProperty("rf_type");
+            if(rf_index != -1) {
+                _allFilters.remove(rf_index);
+            }
+            //来源过滤条件
+            var _rfFilter = "";
             if (a == 0) {
-                $rootScope.tableSwitch.tableFilter = null;
                 $scope.sourceSearch = "";
             }
-            ;
-            if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[1]}]", $scope.sourceSearch = "直接访问";
-            if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[2]}]", $scope.sourceSearch = "搜索引擎";
+            if (a == 1) _rfFilter = JSON.parse("{\"rf_type\":[1]}"), $scope.sourceSearch = "直接访问";
+            if (a == 2) _rfFilter = JSON.parse("{\"rf_type\":[2]}"), $scope.sourceSearch = "搜索引擎";
             if (a == 2) {
                 $scope.browserselect = false;
             }
             else {
                 $scope.browserselect = true;
             }
-            if (a == 3) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[3]}]", $scope.sourceSearch = "外部链接";
+            if (a == 3) _rfFilter = JSON.parse("{\"rf_type\":[3]}"), $scope.sourceSearch = "外部链接";
+
+            if(_rfFilter != "") {
+                _allFilters.push(_rfFilter);
+            }
+            $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
 
             if ($scope.tableJu == "html") {
-                if (a == 0) $rootScope.tableSwitch.tableFilter = null;
-                if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":\"1\"}]";
-                if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":\"2\"}]";
-                if (a == 3) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":\"3\"}]";
                 getHtmlTableData();
             } else {
                 $rootScope.$broadcast("ssh_data_show_refresh");
