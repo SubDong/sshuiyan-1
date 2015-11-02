@@ -36,7 +36,8 @@ define(["./module"], function (ctrs) {
             ]
         };
         //初始化路径 默认有一个空的单个Path
-        $scope.paths = [angular.copy(singlePath)];
+        $scope.paths = [];
+        //$scope.paths = [angular.copy(singlePath)];
 
         $scope.radio_record = {
             visit_times: true,
