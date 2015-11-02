@@ -112,7 +112,7 @@ define(["./module"], function (ctrs) {
                     def.defData($scope.charts[0].config);
                 }
             }
-            $scope.chartDataClickListener = function (param,quota) {
+            $scope.chartDataClickListener = function (param, quota) {
                 $scope.init($rootScope.user, $rootScope.baiduAccount, "campaign", quota, $rootScope.start, $rootScope.end);
             }
             $scope.charts = [
@@ -169,7 +169,7 @@ define(["./module"], function (ctrs) {
                         chart.showLoading({
                             text: "正在努力的读取数据中..."
                         });
-                        $scope.charts[0].config.quota=quotas;
+                        $scope.charts[0].config.quota = quotas;
                         $scope.charts[0].config.instance = chart;
                         if (renderLegend) {
                             util.renderLegend(chart, $scope.charts[0].config);
@@ -245,15 +245,15 @@ define(["./module"], function (ctrs) {
 
             //刷新
             $scope.page_refresh = function () {
-//                $rootScope.start = -1;
-//                $rootScope.end = -1;
-//                $rootScope.tableTimeStart = -1;//开始时间
-//                $rootScope.tableTimeEnd = -1;//结束时间、
 //                $rootScope.tableFormat = null;
 //                //$rootScope.targetSearchSpread();
 //                $scope.init($rootScope.user, $rootScope.baiduAccount, "campaign", $scope.selectedQuota, $rootScope.start, $rootScope.end);
 //                //图表
 //                requestService.refresh($scope.charts);
+                $rootScope.start = -1;
+                $rootScope.end = -1;
+                $rootScope.tableTimeStart = -1;// 开始时间
+                $rootScope.tableTimeEnd = -1;// 结束时间
                 $scope.reloadByCalendar("yesterday");
                 $('#reportrange span').html(GetDateStr(-1));
                 //其他页面表格
