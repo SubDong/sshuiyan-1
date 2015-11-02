@@ -58,6 +58,24 @@
                             </li>
                         </ul>
                     </div>
+                    <div class="chart_top">
+                        <span>网站基础指标 :</span>
+                        <ul>
+                            <li ng-repeat="item in Webbased" data-sshy-default defvalue="{{item.name}}"
+                                class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                ng-click='searchIndicators(item,Webbased,6)'>{{item.consumption_name}}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="chart_top">
+                        <span>流量质量指标:</span>
+                        <ul>
+                            <li ng-repeat="item in flow" data-sshy-default defvalue="{{item.name}}"
+                                class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
+                                ng-click='searchIndicators(item,flow,6)'>{{item.consumption_name}}
+                            </li>
+                        </ul>
+                    </div>
                     <div class="chart_top chart_noborder">
                         <button class="btn btn-primary" type="button" ng-click="targetSearchSpread(true)">确定
                         </button>
