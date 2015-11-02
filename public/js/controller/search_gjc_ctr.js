@@ -5,12 +5,12 @@ define(["./module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.controller('search_gjc_ctr', function ($scope, $rootScope, $q, requestService, areaService, $http, SEM_API_URL,uiGridConstants) {
+    ctrs.controller('search_gjc_ctr', function ($scope, $rootScope, $q, requestService, areaService, $http, SEM_API_URL, uiGridConstants, $cookieStore) {
         $scope.city.selected = {"name": "全部"};
         //        高级搜索提示
         $scope.areaSearch = "";
 //        取消显示的高级搜索的条件
-        $scope.removeAreaSearch = function(obj){
+        $scope.removeAreaSearch = function (obj) {
             $scope.city.selected = {"name": "全部"};
             $rootScope.$broadcast("searchLoadAllArea");
             obj.areaSearch = "";
@@ -137,7 +137,7 @@ define(["./module"], function (ctrs) {
                 if (quotas.length == 1) {
                     semRequest = $http.get(SEM_API_URL + "/sem/report/" + semType + "?a=" + user + "&b=" + baiduAccount + "&startOffset=" + start + "&endOffset=" + end + "&q=" + quotas[0]);
                 } else {
-                    semRequest = $http.get(SEM_API_URL + "/sem/report/" + semType + "?a=" + user + "&b=" + baiduAccount + "&startOffset=" + start + "&endOffset=" + end + "&q=" + quotas[0]+","+ quotas[1]);
+                    semRequest = $http.get(SEM_API_URL + "/sem/report/" + semType + "?a=" + user + "&b=" + baiduAccount + "&startOffset=" + start + "&endOffset=" + end + "&q=" + quotas[0] + "," + quotas[1]);
                 }
                 $q.all([semRequest]).then(function (final_result) {
                     final_result[0].data.sort(chartUtils.by(quotas[0]));
@@ -203,20 +203,52 @@ define(["./module"], function (ctrs) {
 
         //刷新
         $scope.page_refresh = function () {
-            $rootScope.start = -1;
-            $rootScope.end = -1;
-            $rootScope.tableTimeStart = -1;//开始时间
-            $rootScope.tableTimeEnd = -1;//结束时间、
-            $rootScope.tableFormat = null;
-            $scope.init($rootScope.user, $rootScope.baiduAccount, "keyword", $scope.selectedQuota, $rootScope.start, $rootScope.end);
-            //图表
-            requestService.refresh($scope.charts);
+            //$rootScope.start = -1;
+            //$rootScope.end = -1;
+            //$rootScope.tableTimeStart = -1;//开始时间
+            //$rootScope.tableTimeEnd = -1;//结束时间、
+            //$rootScope.tableFormat = null;
+            //$scope.init($rootScope.user, $rootScope.baiduAccount, "keyword", $scope.selectedQuota, $rootScope.start, $rootScope.end);
+            ////图表
+            //requestService.refresh($scope.charts);
             $scope.reloadByCalendar("yesterday");
             $('#reportrange span').html(GetDateStr(-1));
             //其他页面表格
             //classcurrent
             $scope.reset();
             $scope.yesterdayClass = true;
+        };
+
+        $rootScope.initMailData = function () {
+            $http.get("api/saveMailConfig?rt=read&rule_url=" + $rootScope.mailUrl[1] + "").success(function (result) {
+                if (result) {
+                    var ele = $("ul[name='sen_form']");
+                    formUtils.rendererMailData(result, ele);
+                }
+            });
+        };
+
+        $scope.sendConfig = function () {
+            var formData = formUtils.vaildateSubmit($("ul[name='sen_form']"));
+            var result = formUtils.validateEmail(formData.mail_address, formData);
+            if (result.ec) {
+                alert(result.info);
+            } else {
+                formData.rule_url = $rootScope.mailUrl[1];
+                formData.uid = $cookieStore.get('uid');
+                formData.site_id = $rootScope.siteId;
+                formData.type_id = $rootScope.userType;
+                formData.schedule_date = $scope.mytime.time.Format('hh:mm');
+                $http.get("api/saveMailConfig?data=" + JSON.stringify(formData)).success(function (data) {
+                    var result = JSON.parse(eval("(" + data + ")").toString());
+                    if (result.ok == 1) {
+                        alert("操作成功!");
+                        $http.get("/api/initSchedule");
+                    } else {
+                        alert("操作失败!");
+                    }
+                });
+            }
         };
     });
 

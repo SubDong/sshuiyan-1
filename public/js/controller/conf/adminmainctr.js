@@ -144,7 +144,7 @@ define(["./module"], function (ctrs) {
                 "<li><a href='#conf/webcountsite/childlist'>设置子目录</a></li>" +
                 "<li><a href='#conf/webcountsite/pagechange'>设置页面转化目标</a></li>" +
                 "<li><a href='#conf/webcountsite/eventchange'>设置事件转化目标</a></li>" +
-                "<li><a href='#conf/webcountsite/timechange'>设置市场转化目标</a></li>" +
+                "<li><a href='#conf/webcountsite/timechange'>设置时长转化目标</a></li>" +
                 " <li><a href='#conf/webcountsite/adtrack'>设置指定广告跟踪</a></li>" +
                 "</ul> </div>",
                 maxWidth: 80,

@@ -375,6 +375,8 @@ define(["./module"], function (ctrs) {
                     convert_url_all: $scope.convert_url_all
                 });
             };
+
+
             $rootScope.locUrls = [];
             $rootScope.refreshData = function (isContrastDataByTime) {//isContrastDataByTime 是否按时间对比
                 $scope.isCompared = isContrastDataByTime;
@@ -404,6 +406,7 @@ define(["./module"], function (ctrs) {
                     $http.get(purl).success(function (pvs) {
                         if (pvs != null || pvs != "") {//PV 信息若不存在 则事件信息认为一定不存在
                             var esurl = "/api/transform/getConvEvents?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&eventPages=" + JSON.stringify(eventPages) + "&showType=day"
+
                             $http.get(esurl).success(function (eventInfos) {
                                 var results = [];
                                 events.forEach(function (event, index) {
@@ -449,7 +452,6 @@ define(["./module"], function (ctrs) {
                                     }
                                     results.push(data)
                                 })
-                                $rootScope.gridData = []
                                 $rootScope.gridData = results;
                                 $rootScope.targetSearch(true)
 

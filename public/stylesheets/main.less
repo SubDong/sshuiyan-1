@@ -3249,7 +3249,7 @@ textarea.tNum {
 
 //图表
 .echarts-tooltip {
-  padding: 5px !important;
+  padding: 0px 5px 5px 5px !important;
   overflow: hidden;
   li:first-child {
     position: absolute;
@@ -3257,7 +3257,7 @@ textarea.tNum {
     left: 0;
     right: 0;
     top: 0;
-    height: 26px;
+    height: 24px;
     padding: 0 10px 0 10px;
     z-index: 1;
   }
@@ -3267,7 +3267,7 @@ textarea.tNum {
   li:nth-child(2) {
     position: relative;
     z-index: 2;
-    padding-bottom: 4px;
+    line-height: 24px;
   }
   p {
     display: block;
@@ -3520,9 +3520,6 @@ textarea.tNum {
 }
 
 .provincemapmid {
-  .echarts-tooltip li:nth-child(2) {
-    padding-bottom: 4px;
-  }
   .echarts-tooltip li {
     padding: 0 10px 0 5px;
   }
@@ -3543,4 +3540,7 @@ textarea.tNum {
 }
 .table_content .nav > li > a {
   padding: 12px 15px 10px 15px;
+}
+.web_list_nav_right label{
+  float:left;
 }
