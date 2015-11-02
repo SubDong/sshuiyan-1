@@ -5,7 +5,7 @@ define(["./module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.controller('alliancectr', function ($scope, $rootScope, $q, requestService, areaService, $http, SEM_API_URL, uiGridConstants, $cookieStore) {
+    ctrs.controller('alliancectr', function ($scope, $rootScope, $q, requestService, areaService, $http, uiGridConstants, $cookieStore) {
         //console.log("alliancectr")
         //        高级搜索提示
         $scope.terminalSearch = "";

@@ -4,7 +4,7 @@
 define(["./module"], function (ctrs) {
     "use strict";
 
-    ctrs.controller('trend_realtime_ctrl', function ($scope, $rootScope, $http, requestService, messageService, $log, areaService, SEM_API_URL) {
+    ctrs.controller('trend_realtime_ctrl', function ($scope, $rootScope, $http, requestService, messageService, $log, areaService) {
         $scope.allCitys = angular.copy($rootScope.citys);
         $scope.allBrowsers = angular.copy($rootScope.browsers);
         $scope.visitorCount = 0;

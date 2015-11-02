@@ -1494,7 +1494,7 @@ define(["app"], function (app) {
                     + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + JSON.stringify($rootScope.tableSwitch.promotionSearch) + "&formartInfo=" + $rootScope.tableFormat + "&popup=" + $rootScope.tableSwitch.popup +"&type=" + esType
                 }).success(function (data, status) {
                     if ($rootScope.tableSwitch.promotionSearch != undefined && $rootScope.tableSwitch.promotionSearch) {
-                        var url = SEM_API_URL + "sem/report/account?a=" + user + "&b=" + baiduAccount + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1";
+                        var url = SEM_API_URL + "/sem/report/account?a=" + user + "&b=" + baiduAccount + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1";
                         $http({
                             method: 'GET',
                             url: url
