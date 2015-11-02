@@ -1,1014 +1,730 @@
-(function () {
-    var msgs = {title: "你好"};
-    var tips = [];
-    var p = {
-        flashUrl: "192.168.1.102:8000",
-        urlPath: "config/select",
-        protocol: "https:" == document.location.protocol ? "https:" : "http:",
-        webroot: "http://tongji.baidu.com/hm-web",
-        hyContent: "TrackerSenderContent",
-        eventPanelStyle: "position:absolute; color:#000; text-align:left;  margin:0; z-index:2147483584; width:400px; padding:0 10px 5px 10px; background:#EAEFF4  repeat-x; border:1px solid #6990B3; font-size:12px;",
-        disablePanelStyle: "position:absolute; text-align:left; font-size:13px; color:#000; line-height:150%; text-align:left; z-index:2147483583; width:200px; padding:5px 10px; background:#EAEFF4; border:1px solid #6990B3; font-size:12px;",
-        q: null,
-        v: "1.0.1"
-    };
-    var server_base_path = p.protocol + "//" + p.flashUrl + "/" + p.urlPath;
-    var errIdMsg = {
-        defaultTargetName: "事件目标",
-        disable: "该对象没有ID，无法监控，请修改网页源代码，为该对象添加ID.",
-        Delete: "删除后，将不再跟踪统计该目标，该目标的历史数据会被删除且无法恢复。是否立即删除？",
-        DUPLICATE_ID: function (G) {
-            return "该网页中有该对象重复的ID，请修改网页源代码保证ID唯一。"
-        },
-        EDIT_DUPLICATE_ID: function (G, X) {
-            return '"' + decodeURIComponent(G) + '"（id=' + X + ")的id在当前页面中不唯一，请调整页面代码保证该事件目标id唯一性。"
-        },
-        OBJECT: "无法监控。"
-    };
-    var d = /gecko/i.test(navigator.userAgent) && !/like gecko/i.test(navigator.userAgent);
-    var H = /msie (\d+\.\d)/i.test(navigator.userAgent) ? parseFloat(RegExp["\x241"]) : 0;
-    var e = /webkit/i.test(navigator.userAgent);
-    var J = /opera\/(\d+\.\d)/i.test(navigator.userAgent) ? parseFloat(RegExp["\x241"]) : 0;
-    var K = document.compatMode == "CSS1Compat";
-
-    function ckeckDoc(doc) {
-        if (doc && doc.preventDefault) {
-            doc.preventDefault()
-        } else {
-            window.event.returnValue = false
-        }
-        return false
-    }
-
-    function forcedoc(doc) {
-        if ("string" == typeof doc || doc instanceof String) {
-            return document.getElementById(doc)
-        } else {
-            if (doc && doc.nodeName && (doc.nodeType == 1 || doc.nodeType == 9)) {
-                return doc
-            }
-        }
-        return null
-    }
-
-    function attachEvent(doc, ename, efunc) {
-        doc = forcedoc(doc);
-        ename = ename.replace(/^on/i, "").toLowerCase();
-        if (doc.attachEvent) {
-            doc.attachEvent("on" + ename, efunc)
-        } else {
-            if (doc.addEventListener) {
-                doc.addEventListener(ename, efunc, false)
-            }
-        }
-    }
-
-    function setPanleStyle(elem) {
-    }
-
-    var randName = function (length) {
-        function randChar() {
-            var ab = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-            var aa = ab.length;
-            return ab.charAt(Math.floor(Math.random() * aa))
-        }
-
-        var len = length || 8;
-        var tempName = "";
-        while (len--) {
-            tempName += randChar()
-        }
-        if (randName.uniqueIdMap[tempName]) {
-            return randName(len)
-        } else {
-            randName.uniqueIdMap[tempName] = 1;
-            return tempName
-        }
-    };
-    randName.uniqueIdMap = {};
-    var D = "EventContainer" + randName(8);
-    var m = "EventContainer" + randName(8);
-    var h = "EventTarget" + randName(8);
-    var path_url = "EventTarget" + randName(8);
-    var Q = "EventSubmit" + randName(8);
-    var cancelBtn = "EventCancel" + randName(8);
-    var deleteBtn = "EventDelete" + randName(8);
-    var S = "EventPanelTitle" + randName(8);
-    var A = "EventPanelHelp" + randName(8);
-    var y = "EventIdcontainer" + randName(8);
-
-    function createElem() {
-        var X = forcedoc(D);
-        if (X) {
-            X.style.zIndex = 2147483584;
-            return X
-        } else {
-            var G = document.createElement("DIV");
-            G.id = D;
-            document.body.appendChild(G);
-            return G
-        }
-    }
-
-    function stopBrowserBubble(G) {
-        var G = G || window.event;
-        if (G.stopPropagation) {
-            G.stopPropagation()
-        } else {
-            window.event.cancelBubble = true
-        }
-    }
-
-    function t(G) {
-        this.list = [];
-        this.nameSpace = "v";
-        this.className = "vml" + this.getUniqueNum();
-        this.strokeColor = G.color || "blue";
-        this.strokeDashStyle = G.strokeDashStyle || "dash";
-        this.StrokeWeight = G.StrokeWeight || "1";
-        this.style = G.style || "";
-        this.init()
-    }
-
-    t.prototype = {
-        init: function () {
-            if (!this.vml && document.all) {
-                document.createStyleSheet().addRule("." + this.className, "behavior:url(#default#VML);display:inline-block;");
-                if (!document.namespaces[this.nameSpace]) {
-                    document.namespaces.add(this.nameSpace, "urn:schemas-microsoft-com:vml")
-                }
-                this.vml = true
-            }
-        }, getUniqueNum: function () {
-            return Math.round(Math.random() * 2147483647)
-        }, drawLine: function (ac, aa, ad, ab) {
-            var Z = "vml" + this.getUniqueNum();
-            var ae = '<v:stroke dashstyle = "' + this.strokeDashStyle + '"/></v:line>';
-            var X = '<v:Line from="' + ac + "," + aa + '" to="' + ad + "," + ab + '" id="' + Z + '" strokeweight="' + this.StrokeWeight + '" strokecolor="' + this.strokeColor + '" class="' + this.className + '" style="' + this.style + '">';
-            X += "</v:Line>";
-            var G = document.createElement(ae);
-            var Y = document.createElement(X);
-            Y.appendChild(G);
-            document.body.appendChild(Y);
-            this.list.push(Y)
-        }, drawRect: function (ag, ad, ah, X) {
-            var aa = ag + ah;
-            var Y = ad + X;
-            var Z = this.list;
-            var af = [ag, aa, aa, ag];
-            var ac = [ad, ad, Y, Y];
-            var ae = [aa, aa, ag, ag];
-            var ab = [ad, Y, Y, ad];
-            for (var G = 0; G < 4; G++) {
-                if (Z[G]) {
-                    this.setLinePos(Z[G], af[G], ac[G], ae[G], ab[G])
+if (config != undefined && !config.open) {
+    (function () {
+        var e = [], d = {}, g = {}, j = {id: config.trackid, version: "1.0.21", q: null};
+        g.achieve = {};
+        g.achieve.os = function (h, c) {
+            var k = navigator.platform, l = navigator.userAgent;
+            if (h.indexOf("Win") > -1) {
+                if (c.indexOf("Windows NT 5.0") > -1) {
+                    return "Windows 2000"
                 } else {
-                    this.drawLine(af[G], ac[G], ae[G], ab[G])
-                }
-            }
-        }, setLinePos: function (ab, aa, X, Z, G) {
-            var Y = forcedoc(ab);
-            Y.style.display = "";
-            Y.from = aa + "," + X;
-            Y.to = Z + "," + G
-        }, setColor: function (Y) {
-            var X = this.list;
-            for (var G = 0, aa = X.length; G < aa; G++) {
-                var Z = X[G];
-                if (Z) {
-                    Z.strokecolor = Y
-                }
-            }
-        }, clearLine: function () {
-            var Y = document.getElementById;
-            var Z = this.list;
-            for (var X = 0, ab = Z.length; X < ab; X++) {
-                var aa = Z[X];
-                if (aa) {
-                    aa.style.display = "none"
-                }
-            }
-        }, remoiveLine: function () {
-            var Y = document.getElementById;
-            var Z = this.list;
-            for (var X = 0, ab = Z.length; X < ab; X++) {
-                var aa = Z[X];
-                if (aa) {
-                    document.body.removeChild(aa)
-                }
-            }
-        }
-    };
-    function a(G) {
-        return G.replace(new RegExp("(^[\\s\\t\\xa0\\u3000]+)|([\\u3000\\xa0\\s\\t]+\x24)", "g"), "")
-    }
-
-    function ckeckEventName(G) {
-        return (G.search(/[^*()<>"']/) == -1) ? true : false
-    }
-
-    function L(Y, Z) {
-        var X = new RegExp("(^|&|\\?)" + Y + "=([^&]*)(&|\x24|#)");
-        var G = Z.match(X);
-        if (G) {
-            return G[2]
-        }
-    }
-
-    function o(ab, X, G, Y, aa) {
-        var Z = '<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" width="' + G + '" height="' + Y + '" id="' + ab + '" align="middle">';
-        Z += '<param name="allowscriptaccess" value="always">';
-        Z += '<param name="quality" value="high">';
-        Z += '<param name="movie" value="' + X + '">';
-        Z += '<param name="flashvars" value="' + aa + '">';
-        Z += '<embed src="' + X + '" flashvars="' + aa + '" quality="high" width="' + G + '" height="' + Y + '" name="' + ab + '" align="middle" allowscriptaccess="always" wmode="window" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer">';
-        Z += "</object>";
-        return Z
-    }
-
-    function r(G) {
-        return String(G).replace(/[-_]\D/g, function (X) {
-            return X.charAt(1).toUpperCase()
-        })
-    }
-
-    function N(X, G) {
-        X = forcedoc(X);
-        G = r(G);
-        var Z = X.style[G];
-        if (Z) {
-            return Z
-        }
-        var Y = X.currentStyle || (H ? X.style : getComputedStyle(X, null));
-        Z = Y[G];
-        return Z
-    }
-
-    function E(Y) {
-        var Y = forcedoc(Y);
-        var ac = (Y.nodeType == 9) ? Y : Y.ownerDocument || Y.document;
-        var ab = d > 0 && ac.getBoxObjectFor && N(Y, "position") == "absolute" && (Y.style.top === "" || Y.style.left === "");
-        var ad = {left: 0, top: 0};
-        var X = (H && !K) ? ac.body : ac.documentElement;
-        if (Y == X) {
-            return ad
-        }
-        var Z = null;
-        var aa;
-        if (Y.getBoundingClientRect) {
-            aa = Y.getBoundingClientRect();
-            ad.left = Math.floor(aa.left) + Math.max(ac.documentElement.scrollLeft, ac.body.scrollLeft);
-            ad.top = Math.floor(aa.top) + Math.max(ac.documentElement.scrollTop, ac.body.scrollTop);
-            ad.left -= ac.documentElement.clientLeft;
-            ad.top -= ac.documentElement.clientTop;
-            if (H && !K) {
-                ad.left -= 2;
-                ad.top -= 2
-            }
-        } else {
-            if (ac.getBoxObjectFor && !ab) {
-                aa = ac.getBoxObjectFor(Y);
-                var G = ac.getBoxObjectFor(X);
-                ad.left = aa.screenX - G.screenX;
-                ad.top = aa.screenY - G.screenY
-            } else {
-                Z = Y;
-                do {
-                    ad.left += Z.offsetLeft;
-                    ad.top += Z.offsetTop;
-                    if (e > 0 && N(Z, "position") == "fixed") {
-                        ad.left += ac.body.scrollLeft;
-                        ad.top += ac.body.scrollTop;
-                        break
-                    }
-                    Z = Z.offsetParent
-                } while (Z && Z != Y);
-                if (J > 0 || (browser.isWebkit > 0 && N(Y, "position") == "absolute")) {
-                    ad.top -= ac.body.offsetTop
-                }
-                Z = Y.offsetParent;
-                while (Z && Z != ac.body) {
-                    ad.left -= Z.scrollLeft;
-                    if (!b.opera || Z.tagName != "TR") {
-                        ad.top -= Z.scrollTop
-                    }
-                    Z = Z.offsetParent
-                }
-            }
-        }
-        return ad
-    }
-
-    function C(X) {
-        var G = q(X);
-        return w(G)
-    }
-
-    function q(X) {
-        var G = [];
-        var Z = document.getElementsByTagName("*");
-        var Y = 0;
-        while (elm = Z[Y++]) {
-            elm[X] ? G[G.length] = elm[X] : null
-        }
-        return G
-    }
-
-    function w(G) {
-        var X = G.sort();
-        var Z = {};
-        for (var Y = 0, ab = G.length - 1; Y < ab; Y++) {
-            if (X[Y + 1] == X[Y]) {
-                var aa = X[Y];
-                Z[aa] = Y
-            }
-        }
-        return Z
-    }
-
-    function W(X, G) {
-        var X = forcedoc(X);
-        while (X && X != document.body) {
-            if (X.tagName == G) {
-                return true
-            }
-            X = X.parentNode
-        }
-        return false
-    }
-
-    function createNewElem() {
-        var X = forcedoc(D);
-        if (X) {
-            X.style.zIndex = 2147483584;
-            return X
-        } else {
-            var G = document.createElement("DIV");
-            G.id = D;
-            document.body.appendChild(G);
-            return G
-        }
-    }
-
-    function g(G, Y, X) {
-        var G = forcedoc(G);
-        while (G && G != document.body) {
-            if (N(G, Y) == X) {
-                return true
-            }
-            G = G.parentNode
-        }
-        return false
-    }
-
-    function I(G) {
-        return document[G] || window[G]
-    }
-
-    function l() {
-        var G = forcedoc(m);
-        if (G) {
-            G.style.zIndex = "2047483583";
-            return G
-        } else {
-            var G = document.createElement("IFRAME");
-            G.src = "about:blank";
-            G.style.position = "absolute";
-            G.style.zIndex = "2047483583";
-            G.id = m;
-            document.body.appendChild(G);
-            return G
-        }
-    }
-
-    var resQueue = [{locked: 0, val: undefined}, {locked: 0, val: undefined}, {locked: 0, val: undefined}];
-    var getQueueIndex = function () {
-        for (var i = 0; i < resQueue.length; i++) {
-            if (resQueue[i].locked == 0) {
-                resQueue[i].locked = 1;
-                resQueue[i].val = undefined;
-                return i
-            }
-        }
-        return -1
-    };
-    crossDomainCallback = function (data, index) {
-        resQueue[index].val = data
-    };
-    crossDomainSendData = function (url, cb) {
-        var index = getQueueIndex();
-        if (index < 0) {
-            return
-        }
-        var scriptBlock = document.createElement("script");
-        if (url.indexOf("?") < 0) {
-            scriptBlock.src = url + "?index=" + index + "&td=" + params["td"] + "&cuid=" + params["cuid"]
-        } else {
-            scriptBlock.src = url + "&index=" + index + "&td=" + params["td"] + "&cuid=" + params["cuid"]
-        }
-        document.getElementsByTagName("head")[0].appendChild(scriptBlock);
-        window.setTimeout(function () {
-            if (resQueue[index].val == undefined) {
-            } else {
-                cb(index, resQueue[index]);
-                panelcont.canelPanel()
-            }
-            resQueue[index].locked = 0;
-            resQueue[index].val = undefined;
-            document.getElementsByTagName("head")[0].removeChild(scriptBlock)
-        }, 2000)
-    };
-    var rootPage = {
-        init: function () {
-            rootPage.reBuildingFlash();
-            rootPage.reBuildingWindow()
-        }, forms: {input: "", select: "", img: ""}, reBuildingWindow: function () {
-            window.open = function () {
-            };
-            window.openDialog = function () {
-            };
-            window.setHomePage = function () {
-            }
-        }, reBuildingFlash: function () {
-            var ac = [];
-            var aa = document.getElementsByTagName("OBJECT");
-            var G = document.getElementsByTagName("IFRAME");
-            var X = document.getElementsByTagName("EMBED");
-            for (var Y = 0, ab = aa.length; Y < ab; Y++) {
-                rootPage.displayAltContent(aa[Y])
-            }
-            for (var Y = 0, ab = G.length; Y < ab; Y++) {
-                rootPage.displayAltContent(G[Y])
-            }
-            for (var Y = 0, ab = X.length; Y < ab; Y++) {
-                var Z = X[Y];
-                if (Z.parentNode.tagName != "OBJECT") {
-                    rootPage.displayAltContent(Z)
-                }
-            }
-        }, displayAltContent: function (Y) {
-            if (Y.parentNode.id == "TrackerSenderFlashContent" || Y.parentNode.id.indexOf("BDBridge") > -1) {
-                return false
-            }
-            var nelem = document.createElement("div");
-            var X = E(Y);
-            nelem.style.cssText = "position:absolute; border:1px solid #6990B3; font-size:12px; overflow:hidden; background:#fff";
-            nelem.innerHTML = errIdMsg.OBJECT;
-            nelem.title = errIdMsg.OBJECT;
-            nelem.style.textAlign = "center";
-            nelem.style.height = Y.offsetHeight + "px";
-            nelem.style.lineHeight = Y.offsetHeight + "px";
-            nelem.style.width = Y.offsetWidth + "px";
-            Y.parentNode.insertBefore(nelem, Y);
-            Y.style.visibility = "hidden"
-        }
-    };
-    var rootBody = {
-        initRootBody: function () {
-            attachEvent(document, "click", panelcont.showPanelHandle);
-            attachEvent(document, "mouseover", panelcont.showPanelTip);
-            attachEvent(document, "mouseout", panelcont.hidePanelTip);
-            var url = p.protocol + "//" + p.flashUrl + "/" + p.urlPath + "?type=getTips&eventPage=" + params["pathUrl"];
-            crossDomainSendData(url, rootBody.initTips)
-        }, initTips: function (index, resData) {
-            var rtips = resData.val;
-            for (var i = 0, len = rtips.length; i < len; i++) {
-                var eventId = rtips[i]["event_id"];
-                var eventName = rtips[i]["event_name"];
-                var eventPage = rtips[i]["event_page"];
-                var doc = forcedoc(eventId);
-                if (doc != null) {
-                    doc.setAttribute("HY_transId", eventId);
-                    doc.setAttribute("HY_eventTargetName", decodeURIComponent(eventName));
-                    doc.setAttribute("HY_eventDomain", eventPage);
-                    tipContent.showTip(doc.id);
-                    tips.push(rtips[i])
-                }
-            }
-        }
-    };
-    var panelcont = {
-        limit: 10,
-        current: null,
-        otherzIndex: 2147483570,
-        vml: new t({style: "position:absolute; top:0; left:0;z-index:2147483582", strokeDashStyle: "ShortDash"}),
-        curVml: new t({style: "position:absolute; top:0; left:0;z-index:2147483581"}),
-        selectTip: null,
-        showPanelHandle: function (doc) {
-            ckeckDoc(doc);
-            if (k.unFindIdList.length > 0) {
-                k.showNoSelected()
-            }
-            var elem = doc.srcElement || doc.target;
-            if (elem.tagName == "HTML" || elem.tagName == "BODY" || elem.tagName == "Line") {
-                panelcont.canelPanel();
-                return
-            }
-            if (panelcont.curId) {
-                panelcont.hideRect(panelcont.curId)
-            }
-            panelcont.showRect(elem);
-            if (elem && elem.id) {
-                panelcont.showAddPanel(elem, doc)
-            } else {
-                panelcont.showDisablePanel(elem, errIdMsg.disable)
-            }
-        },
-        showPanelTip: function (doc) {
-            var elem = doc.srcElement || doc.target;
-            if (elem.tagName == "HTML" || elem.tagName == "BrootBodyDY" || elem.tagName == "Line") {
-                return
-            }
-            var eid = elem.id;
-            if (panelcont.curId && eid == panelcont.curId) {
-                return
-            }
-            elem.style.outline = "1px solid #00F"
-        },
-        hidePanelTip: function (doc) {
-            var elem = doc.srcElement || doc.target;
-            var eid = elem.id;
-            if (panelcont.curId && eid == panelcont.curId) {
-                return
-            }
-            if (H > 0 && H < 8) {
-                panelcont.vml.clearLine()
-            } else {
-                elem.style.outline = ""
-            }
-        },
-        showAddPanel: function (elem, doc) {
-            doc = doc || window.event;
-            var ab = E(elem);
-            var eid = elem.id;
-            if (k.hasDuplicateId(eid)) {
-                panelcont.showDisablePanel(elem, errIdMsg.DUPLICATE_ID(eid));
-                return false
-            }
-            rootBody.curId = eid;
-            var X = elem.getAttribute("HY_transId");
-            var Z = X ? X : "";
-            var G = createElem();
-            G.setAttribute("HY_panelTarget", eid);
-            G.setAttribute("HY_eventType", doc.type);
-            G.setAttribute("HY_transId", Z);
-            G.style.cssText = p.eventPanelStyle;
-            G.style.display = "block";
-            G.innerHTML = panelcont.addEventPanel();
-            elem.top = elem.top + elem.offsetHeight;
-            panelcont.fixedPosition(G, ab, elem);
-            attachEvent(G, "click", stopBrowserBubble);
-            attachEvent(G, "mouseover", stopBrowserBubble);
-            attachEvent(G, "mouseout", stopBrowserBubble);
-            panelcont.bindPanelEvent();
-            panelcont.updateInfo(elem.id);
-            if (Z) {
-                forcedoc(deleteBtn).style.display = "block";
-                forcedoc(S).innerHTML = "编辑事件目标"
-            } else {
-                forcedoc(deleteBtn).style.display = "none";
-                forcedoc(S).innerHTML = "添加事件目标"
-            }
-        },
-        showDisablePanel: function (elem, contText) {
-            var Y = E(elem);
-            var G = createElem();
-            G.style.cssText = p.disablePanelStyle;
-            G.style.display = "block";
-            G.innerHTML = contText;
-            Y.top = Y.top + elem.offsetHeight;
-            panelcont.fixedPosition(G, Y, elem);
-            attachEvent(G, "click", stopBrowserBubble)
-        },
-        bindPanelEvent: function () {
-            attachEvent(Q, "click", panelcont.submitPanel);
-            attachEvent(cancelBtn, "click", panelcont.canelPanel);
-            attachEvent(deleteBtn, "click", panelcont.deletePanel)
-        },
-        updateInfo: function (ab) {
-            var aa = forcedoc(ab);
-            var X = aa.getAttribute("HY_eventTargetName") || errIdMsg.defaultTargetName + (tips.length + 1);
-            var Y = ab.length > 20 ? ab.substr(0, 18) + "..." : ab;
-            var G = forcedoc(y);
-            G.innerHTML = Y;
-            G.title = ab;
-            forcedoc(h).value = X
-        },
-        fixedPosition: function (ag, Z, aa) {
-            var aj = g(aa, "dispaly", "none") || g(aa, "visibility", "hidden");
-            var G = K ? document.documentElement.clientWidth : document.body.clientWidth;
-            var ab = K ? document.documentElement.clientHeight : document.body.clientHeight;
-            var am = K ? document.documentElement.scrollTop : document.body.scrollTop;
-            var af = ag.offsetWidth;
-            var al = ag.offsetHeight;
-            var ah = aa.offsetWidth;
-            var an = aa.offsetHeight;
-            var X = Z.left;
-            var ai = Z.top;
-            var ae, ad;
-            if (an > al) {
-                var Y = (af + X) < G ? true : false;
-                var ak = (al + ai) < ab ? true : false;
-                ae = Y ? X : X - af + ah;
-                ad = ai - an
-            } else {
-                var Y = (af + X) < G ? true : false;
-                var ak = (al + ai) < ab ? true : false;
-                ae = Y ? X : X - af + ah;
-                ad = ak ? ai : ai - al - an
-            }
-            ae = ae < 0 ? 0 : ae;
-            ad = ad < 0 ? 0 : ad;
-            if (aj || (ae == 0 && ad == 0)) {
-                ae = (G / 2) - (af / 2);
-                ad = (ab / 2) + (am ? am : 0) - (al / 2)
-            }
-            if (H == 6) {
-                var ac = l();
-                if (ac) {
-                    ac.style.left = ae + "px";
-                    ac.style.top = ad + "px";
-                    ac.style.height = al + "px";
-                    ac.style.width = af + "px";
-                    ac.style.display = "block"
-                }
-            }
-            ag.style.left = ae + "px";
-            ag.style.top = ad + "px";
-            ag.style.display = "block"
-        },
-        submitPanel: function () {
-            var addPanel = createElem();
-            var G = a(forcedoc(h).value);
-            var ab = a(forcedoc(path_url).value);
-            if (G == "") {
-                alert("事件目标名称不能为空!");
-                return
-            }
-            if (ab == "") {
-                alert("事件作用页面或目录名称不能为空!");
-                return
-            }
-            if (ckeckEventName(G)) {
-                alert("事件目标名称是非法的!");
-                return
-            }
-            var ad = addPanel.getAttribute("HY_panelTarget");
-            var Z = addPanel.getAttribute("HY_eventType");
-            var Y = addPanel.getAttribute("HY_transId");
-            var ac = Y ? Y : "";
-            var evenData = {name: encodeURIComponent(G), id: ad, eventType: Z, targetId: ac, monUrl: ab};
-            var url = server_base_path + "?type=saveTips&entity=" + JSON.stringify(evenData);
-            crossDomainSendData(url, function (index, resData) {
-                if (resData.val.code == 1) {
-                    panelcont.addCompleteController(evenData)
-                } else {
-                    if (resData.val.code == 2) {
-                        var doc = forcedoc(evenData.id);
-                        var eventId = doc.getAttribute("HY_EventId");
-                        if (eventId) {
-                            var elem = document.getElementById(eventId);
-                            if (elem != null) {
-                                elem.parentNode.removeChild(elem)
-                            }
-                            panelcont.addCompleteController(evenData)
-                        }
-                    }
-                }
-            })
-        },
-        canelPanel: function () {
-            var G = createElem();
-            var Y = G.getAttribute("HY_panelTarget");
-            G.style.display = "none";
-            panelcont.hideRect(Y);
-            if (H == 6) {
-                var X = l();
-                if (X) {
-                    X.style.display = "none"
-                }
-            }
-        },
-        deletePanel: function () {
-            var elm = createElem();
-            elm.style.display = "none";
-            var targetPanel = elm.getAttribute("HY_panelTarget");
-            var doc = forcedoc(targetPanel);
-            var eventId = doc.getAttribute("HY_EventId");
-            if (eventId) {
-                tipContent.deleteTip(eventId)
-            }
-        },
-        hideRect: function (docId) {
-            var doc = forcedoc(docId);
-            if (!doc) {
-                return
-            }
-            if (H > 0 && H < 8) {
-                panelcont.curVml.clearLine()
-            } else {
-                doc.style.outline = ""
-            }
-        },
-        addEventPanel: function () {
-            var G = [];
-            G.push('<table width="100%" border="0" cellspacing="0" cellpadding="0">');
-            G.push("<tr>");
-            G.push('<td  height="28" id="' + S + '" valign="middle" style="margin:0; padding:0; border:0; font-size:12px; color:#000">添加事件目标</td>');
-            G.push('<td  height="28" colspan="2" id="' + A + '" valign="middle"><div style="float:right;style="margin:0; padding:0; border:0; font-size:12px; color:#000"><a href="http://support.baidu.com/tongji/?module=default&controller=index&action=detail&nodeid=4791" target="_blank" style="font-size:12px; color:#00c; ">如何设置事件作用页面或目录</a></div></td>');
-            G.push("</tr>");
-            G.push("<tr>");
-            G.push('<td width="150" height="30">事件ID</td>');
-            G.push('<td id="' + y + '" colspan="2" style="margin:0;text-align:left;  padding:0; border:0; font-size:12px; color:#000"></td>');
-            G.push("</tr>");
-            G.push("<tr>");
-            G.push('<td height="30" style="margin:0; padding:0; border:0; text-align:left; font-size:12px; color:#000">事件名称：</td>');
-            G.push('<td colspan="2">');
-            G.push("<label>");
-            G.push('<input type="text" id="' + h + '" value="" size="40" style="font-size:12px; color:#000" />');
-            G.push("</label>");
-            G.push("</td>");
-            G.push("</tr>");
-            G.push("<tr>");
-            G.push('<td height="30" style="margin:0; padding:0; border:0; text-align:left; font-size:12px; color:#000">事件作用页面或目录：</td>');
-            G.push('<td colspan="2">');
-            G.push("<label>");
-            G.push('<input type="text"  size="40" id="' + path_url + '" value="' + params["pathUrl"] + '" readOnly=true/>');
-            G.push("</label>");
-            G.push("</td>");
-            G.push("</tr>");
-            G.push("<tr>");
-            G.push('<td height="30" colspan="3"><span style="color:#999;text-align:left;  font-size:12px; ">( 可以在URL首或尾使用*匹配任意长度字符，直接填写*代表事件作用目标为整个网站)</span></td>');
-            G.push("</tr>");
-            G.push("<tr>");
-            G.push('<td height="30">');
-            G.push('<input id="' + Q + '" type="button" value="保存"/>');
-            G.push("</td>");
-            G.push('<td height="30">');
-            G.push('<input id="' + cancelBtn + '" type="button" value="取消" />');
-            G.push("</td>");
-            G.push('<td height="30">');
-            G.push('<input id="' + deleteBtn + '" type="button" value="删除" />');
-            G.push("</td>");
-            G.push("</tr>");
-            G.push("</table>");
-            return G.join("")
-        },
-        showRect: function (X) {
-            if (!X) {
-                return
-            }
-            if (N(X, "z-index") > 2147483570 && !flag) {
-                X.style.zIndex = panelcont.otherzIndex--
-            }
-            if (H > 0 && H < 8) {
-                var G = E(X);
-                panelcont.curVml.drawRect(G.left, G.top, X.offsetWidth, X.offsetHeight)
-            } else {
-                X.style.outline = "1px solid #00F"
-            }
-        },
-        addCompleteController: function (data) {
-            var Y = data.id;
-            var X = forcedoc(Y);
-            if (X) {
-                X.setAttribute("HY_transId", data.targetId);
-                X.setAttribute("HY_eventTargetName", decodeURIComponent(data.name));
-                X.setAttribute("HY_eventType", data.eventType);
-                X.setAttribute("HY_eventDomain", data.monUrl);
-                tipContent.showTip(Y);
-                tips.push({event_id: data.id, event_page: data.monUrl})
-            }
-            panelcont.canelPanel()
-        }
-    };
-    var k = {
-        unFindIdList: [], status: 1, hasDuplicateId: function (X) {
-            var G = C("id");
-            if (G.hasOwnProperty(X)) {
-                return true
-            }
-            return false
-        }, unFindList: function () {
-            var G = [];
-            for (var X = 0, ab = x.length; X < ab; X++) {
-                var Y = x[X];
-                if (Y && Y.id) {
-                    var aa = Y.id;
-                    var Z = forcedoc(aa);
-                    if (!Z) {
-                        G.push(Y)
+                    if (c.indexOf("Windows NT 5.1") > -1) {
+                        return "Windows XP"
                     } else {
-                        if (g(Z, "dispaly", "none") || g(Z, "visibility", "hidden")) {
-                            G.push(Y)
+                        if (c.indexOf("Windows NT 5.2") > -1) {
+                            return "Windows 2003"
+                        } else {
+                            if (c.indexOf("Windows NT 6.0") > -1) {
+                                return "Windows Vista"
+                            } else {
+                                if (c.indexOf("Windows NT 6.1") > -1 || c.indexOf("Windows 7") > -1) {
+                                    return "Windows 7"
+                                } else {
+                                    if (c.indexOf("Windows 8") > -1) {
+                                        return "Windows 8"
+                                    } else {
+                                        return "Other"
+                                    }
+                                }
+                            }
                         }
                     }
-                }
-            }
-            k.unFindIdList = G;
-            return G
-        }, showNoSelected: function () {
-            var X = k.unFindIdList;
-            for (var G = 0, ab = X.length; G < ab; G++) {
-                var Y = X[G];
-                if (Y && Y.id) {
-                    var aa = forcedoc(Y.id);
-                    if (aa) {
-                        aa.setAttribute("HY_eventType", Y.eventType);
-                        var Z = Y.targetId ? Y.targetId : "";
-                        aa.setAttribute("HY_transId", Z);
-                        aa.setAttribute("HY_eventTargetName", decodeURIComponent(Y.name));
-                        aa.setAttribute("HY_eventDomain", Y.monUrl);
-                        tipContent.showTip(Y.id);
-                        X.splice(G, 1)
-                    }
-                }
-            }
-        }
-    };
-    var tipContent = {
-        zIndex: 2147483001,
-        cssStr: {
-            TipDiv: "position:absolute; width:120px; height:20px; line-height:20px; padding:0 5px; font-size:12px; color:#fff; background:#a1afef;",
-            NameDiv: "width:90px; height:20px; overflow:hidden; white-space:nowrap; margin:0; padding:0; border:0; color:#fff; font-size:12px;",
-            EditDivNormal: "margin:0; padding:0; border:0;width:12px; height:12px; background:url(" + p.webroot + "/img/event-icon.gif) 0 -21px no-repeat",
-            DeleteDivNormal: "margin:0; padding:0; border:0;width:12px; height:12px; background:url(" + p.webroot + "/img/event-icon.gif) -13px -21px no-repeat",
-            EditDivHover: "margin:0; padding:0; border:0;width:12px; height:12px; background:url(" + p.webroot + "/img/event-icon.gif) 0 0 no-repeat",
-            DeleteDivHover: "margin:0; padding:0; border:0;width:12px; height:12px; background:url(" + p.webroot + "/img/event-icon.gif) -13px 0 no-repeat"
-        },
-        getTipHtml: function (X) {
-            var G = [];
-            G.push("<div>");
-            G.push('<table width="100%" border="0" cellspacing="0" cellpadding="0">');
-            G.push("  <tr></tr>");
-            G.push("  <tr>");
-            G.push("    <td><div></div></td>");
-            G.push('    <td width="15"><div title="编辑">&nbsp;</div></td>');
-            G.push('    <td width="12"><div title="删除">&nbsp;</div></td>');
-            G.push("  </tr>");
-            G.push("  </table>");
-            G.push("</div>");
-            return G.join("")
-        },
-        creatTipContainer: function () {
-            var G = document.createElement("DIV");
-            G.id = "HY_EventTipContainer" + randName(8);
-            G.style.zIndex = tipContent.zIndex;
-            tipContent.zIndex++;
-            return G
-        },
-        showTip: function (docId) {
-            var doc = forcedoc(docId);
-            var ag = (g(doc, "position", "fixed") || g(doc, "position", "absolute"));
-            var tipDiv = tipContent.creatTipContainer();
-            doc.setAttribute("HY_transId", docId);
-            doc.setAttribute("HY_EventId", tipDiv.id);
-            if (ag) {
-                var ak = doc.firstChild;
-                if (ak) {
-                    doc.insertBefore(tipDiv, ak)
-                } else {
-                    doc.appendChild(tipDiv)
                 }
             } else {
-                document.body.appendChild(tipDiv)
-            }
-            var X = tipDiv.getElementsByTagName("DIV");
-            var aj = doc.offsetWidth;
-            var ad = doc.offsetHeight;
-            tipDiv.innerHTML = tipContent.getTipHtml();
-            tipDiv.style.border = "1px solid #a1afef";
-            tipDiv.style.position = "absolute";
-            tipDiv.style.width = aj + "px";
-            tipDiv.style.height = ad + "px";
-            tipDiv.style.cursor = "pointer";
-            tipDiv.style.textAlign = "left";
-            tipDiv.setAttribute("MapTarget", docId);
-            var ae = W(doc, "CENTER") || g(doc, "text-align", "center");
-            if (!ag) {
-                var ah = E(doc);
-                tipDiv.style.top = ah.top + "px";
-                tipDiv.style.left = ah.left + "px"
-            }
-            X[0].style.cssText = tipContent.cssStr.TipDiv;
-            var aa = X[1];
-            var G = doc.getAttribute("HY_eventTargetName");
-            aa.style.cssText = tipContent.cssStr.NameDiv;
-            aa.innerHTML = decodeURIComponent(G);
-            aa.setAttribute("title", G);
-            var editIcon = X[2];
-            editIcon.style.cssText = tipContent.cssStr.EditDivNormal;
-            var deleteIcon = X[3];
-            deleteIcon.style.cssText = tipContent.cssStr.DeleteDivNormal;
-            attachEvent(tipDiv, "mouseover", tipContent.overTipHandle(tipDiv.id));
-            attachEvent(tipDiv, "mouseout", tipContent.outTipHandle(tipDiv.id));
-            attachEvent(tipDiv, "click", tipContent.editTipHandle(tipDiv.id));
-            attachEvent(editIcon, "click", tipContent.editTipHandle(tipDiv.id));
-            attachEvent(deleteIcon, "click", tipContent.deleteHandle(tipDiv.id))
-        },
-        clickHandle: function (G) {
-            stopBrowserBubble(G)
-        },
-        overTipHandle: function (G) {
-            return function (X) {
-                stopBrowserBubble(X);
-                var Z = forcedoc(G);
-                Z.style.zIndex = 2147483581;
-                var Y = Z.getElementsByTagName("DIV");
-                Y[0].style.background = "#2a4bda";
-                Z.style.border = "1px solid #2a4bda";
-                Y[2].style.cssText = tipContent.cssStr.EditDivHover;
-                Y[3].style.cssText = tipContent.cssStr.DeleteDivHover
-            }
-        },
-        outTipHandle: function (G) {
-            return function (X) {
-                stopBrowserBubble(X);
-                var Z = forcedoc(G);
-                if (Z == null || Z == undefined) {
-                    return
-                }
-                Z.style.border = "1px solid #a1afef";
-                var Y = Z.getElementsByTagName("DIV");
-                Y[0].style.background = "#a1afef";
-                Y[2].style.cssText = tipContent.cssStr.EditDivNormal;
-                Y[3].style.cssText = tipContent.cssStr.DeleteDivNormal
-            }
-        },
-        editTipHandle: function (G) {
-            return function (Y) {
-                stopBrowserBubble(Y);
-                var X = forcedoc(G).getAttribute("MapTarget");
-                if (X) {
-                    var Z = forcedoc(X);
-                    panelcont.showAddPanel(Z, Y)
-                }
-            }
-        },
-        deleteHandle: function (G) {
-            return function (X) {
-                stopBrowserBubble(X);
-                tipContent.deleteTip(G)
-            }
-        },
-        deleteTip: function (docId) {
-            var doc = forcedoc(docId);
-            var targetMap = doc.getAttribute("MapTarget");
-            if (targetMap) {
-                var targetMapDoc = forcedoc(targetMap);
-                if (targetMapDoc) {
-                    var transId = targetMapDoc.getAttribute("HY_transId");
-                    if (transId) {
-                        var msgWind = window.confirm(errIdMsg.Delete);
-                        if (!msgWind) {
-                            return false
-                        }
-                    }
-                    var elem = document.getElementById(docId);
-                    if (elem != null) {
-                        elem.parentNode.removeChild(elem)
-                    }
-                    for (var n = 0; n < tips.length; n++) {
-                        if (targetMap == tips[n].event_id) {
-                            var url = server_base_path + "?type=deleteTip&event_id=" + tips[n].event_id + "&event_page=" + tips[n].event_page;
-                            crossDomainSendData(url, function (index, resData) {
-                            });
-                            tipContent.deleteComplete(elem.id);
-                            tips.splice(n, 1);
-                            break
+                if (h.indexOf("Mac") > -1) {
+                    return "Mac"
+                } else {
+                    if (h.indexOf("X11") > -1) {
+                        return "Unix"
+                    } else {
+                        if (h.indexOf("Linux") > -1) {
+                            return "Linux"
+                        } else {
+                            if (h.indexOf("Android") > -1 || h.indexOf("Linux") > -1) {
+                                return "Android"
+                            } else {
+                                if (h.indexOf("iPhone") > -1) {
+                                    return "iPhone"
+                                } else {
+                                    if (h.indexOf("Windows Phone") > -1) {
+                                        return "Windows Phone"
+                                    } else {
+                                        return "Other"
+                                    }
+                                }
+                            }
                         }
                     }
                 }
             }
-        },
-        deleteComplete: function (G) {
-            var Y = forcedoc(G.id);
-            if (!Y) {
-                return
+        };
+        g.achieve.browser = function (c) {
+            var h;
+            if (/AppleWebKit.*Mobile/i.test(c) || /Android/i.test(c) || /BlackBerry/i.test(c) || /IEMobile/i.test(c) || (/MIDP|SymbianOS|NOKIA|SAMSUNG|LG|NEC|TCL|Alcatel|BIRD|DBTEL|Dopod|PHILIPS|HAIER|LENOVO|MOT-|Nokia|SonyEricsson|SIE-|Amoi|ZTE/.test(c))) {
+                return "Mobile Browser"
+            } else {
+                if (/[Ff]irefox(\/\d+\.\d+)/.test(c)) {
+                    h = /([Ff]irefox)\/(\d+\.\d+)/.exec(c);
+                    return h[1] + h[2]
+                } else {
+                    if (/MSIE \d+\.\d+/.test(c)) {
+                        h = /MS(IE) (\d+\.\d+)/.exec(c);
+                        return h[1] + h[2]
+                    } else {
+                        if (/[Cc]hrome\/\d+/.test(c)) {
+                            h = /([Cc]hrome)\/(\d+)/.exec(c);
+                            return h[1] + h[2]
+                        } else {
+                            if (/[Vv]ersion\/\d+\.\d+\.\d+(\.\d)* *[Ss]afari/.test(c)) {
+                                h = /[Vv]ersion\/(\d+\.\d+\.\d+)(\.\d)* *([Ss]afari)/.exec(c);
+                                return h[3] + h[1]
+                            } else {
+                                if (/[Oo]pera.+[Vv]ersion\/\d+\.\d+/.test(c)) {
+                                    h = /([Oo]pera).+[Vv]ersion\/(\d+)\.\d+/.exec(c);
+                                    return h[1] + h[2]
+                                } else {
+                                    if (/[Tt]rident\/\d+\.\d+/.test(c)) {
+                                        h = /[Tt]rident\/(\d+)\.\d+/.exec(c);
+                                        return h[1] + h[2]
+                                    } else {
+                                        if (/[Aa]ppleWebKit\/\d+\.\d+/.test(c)) {
+                                            h = /[Aa]ppleWebKit\/(\d+)\.\d+/.exec(c);
+                                            return h[1] + h[2]
+                                        } else {
+                                            if (/[Gg]ecko\/\d+\.\d+/.test(c)) {
+                                                h = /[Gg]ecko\/(\d+)\.\d+/.exec(c);
+                                                return h[1] + h[2]
+                                            } else {
+                                                if (/[Kk]HTML\/\d+\.\d+/.test(c)) {
+                                                    h = /[Kk]HTML\/(\d+)\.\d+/.exec(c);
+                                                    return h[1] + h[2]
+                                                } else {
+                                                    return "Other"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
-            if (G.tip_container) {
-                var X = forcedoc(G.tip_container);
-                Y.removeAttribute("HY_eventTargetName");
-                Y.removeAttribute("HY_transId");
-                Y.removeAttribute("HY_EventId");
-                Y.removeAttribute("HY_eventDomain");
-                X.parentNode.removeChild(X)
+        };
+        g.achieve.flashV = function (c) {
+            var h;
+            for (var k = 0; k < c.length; k++) {
+                if (c[k].name.toLowerCase().indexOf("shockwave flash") >= 0) {
+                    h = c[k].description.substring(c[k].description.toLowerCase().lastIndexOf("flash ") + 6, c[k].description.length);
+                    h = h.substring(0, h.indexOf(" "))
+                }
             }
-            panelcont.canelPanel()
+            return ((h == undefined || h == "") ? "" : h)
+        };
+        g.V = {};
+        g.V.log = function (h, c) {
+            var k = new Image, l = "mini_tangram_log_" + Math.floor(2147483648 * Math.random()).toString(36);
+            window[l] = k;
+            k.onload = k.onerror = k.onabort = function () {
+                k.onload = k.onerror = k.onabort = j.q;
+                k = window[l] = j.q;
+                c && c(h)
+            };
+            k.src = h
+        };
+        g.cookie = {};
+        g.getDomain = function () {
+            var h = document.location.hostname;
+            var c = d.I.u;
+            h = "." + h.replace(/:\d+/, "");
+            c = "." + c.replace(/:\d+/, "");
+            var k = h.indexOf(c);
+            return (-1 < k && k + c.length == h.length) ? c.replace(/(:\d+)?[\/\?#].*/) : ""
+        };
+        g.cookie.set = function (k, h, l) {
+            document.cookie = k + "=" + escape(h) + "; path=/"
+        };
+        g.cookie.setNull = function (h, c) {
+            document.cookie = h + "=" + escape(c) + "; path=/"
+        };
+        g.cookie.get = function (h) {
+            var c, k = new RegExp("(^| )" + h + "=([^;]*)(;|$)");
+            if (c = document.cookie.match(k)) {
+                return unescape(c[2])
+            } else {
+                return null
+            }
+        };
+        g.cookie.remove = function (c) {
+            var k = new Date();
+            k.setTime(k.getTime() - 1);
+            var h = g.cookie.get(c);
+            if (h != null) {
+                document.cookie = c + "=" + h + ";expires=" + k.toGMTString()
+            }
+        };
+        g.achieve.PorM = function (c) {
+            if (/AppleWebKit.*Mobile/i.test(c) || /Android/i.test(c) || /BlackBerry/i.test(c) || /IEMobile/i.test(c) || (/MIDP|SymbianOS|NOKIA|SAMSUNG|LG|NEC|TCL|Alcatel|BIRD|DBTEL|Dopod|PHILIPS|HAIER|LENOVO|MOT-|Nokia|SonyEricsson|SIE-|Amoi|ZTE/.test(c))) {
+                if (/iPad/i.test(c)) {
+                    return "1"
+                } else {
+                    return "1"
+                }
+            } else {
+                return "0"
+            }
+        };
+        var i = !0, b = null, a = !1, f = g.achieve;
+        g.g = {};
+        g.g.os = f.os(navigator.platform, navigator.userAgent);
+        g.g.br = f.browser(navigator.userAgent);
+        g.g.fl = f.flashV(navigator.plugins);
+        g.g.pm = f.PorM(navigator.userAgent);
+        g.g.sr = window.screen.width + "x" + window.screen.height;
+        g.g.lg = navigator.language || navigator.browserLanguage || navigator.systemLanguage || navigator.userLanguage || "";
+        g.g.ck = (navigator.cookieEnabled ? "1" : "0");
+        g.g.ja = (navigator.javaEnabled() ? "1" : "0");
+        g.g.sc = window.screen.colorDepth + "-bit";
+        g.g.dt = new Date().getTime();
+        g.g.rf = document.referrer == "" ? "-" : encodeURIComponent(document.referrer);
+        g.g.loc = window.location.href;
+        g.g.v = j.version;
+        g.g.tit = encodeURIComponent(document.title);
+        g.g.ct = ((g.cookie.get("vid") == null || g.cookie.get("vid") == undefined || g.cookie.get("vid") == "") ? "0" : "1");
+        g.event = {};
+        g.event.e = function (h, c, k) {
+            h.attachEvent ? h.attachEvent("on" + c, function (l) {
+                k.call(h, l)
+            }) : h.addEventListener && h.addEventListener(c, k, a)
+        };
+        g.event.preventDefault = function (c) {
+            c.preventDefault ? c.preventDefault() : c.returnValue = a
+        };
+        g.lang = {};
+        g.lang.d = function (h, c) {
+            return "[object " + c + "]" === {}.toString.call(h)
+        };
+        g.localStorage = {};
+        g.localStorage.f = "";
+        g.localStorage.s = function () {
+            if (!g.localStorage.f) {
+                try {
+                    g.localStorage.f = document.createElement("input"), g.localStorage.f.type = "hidden", g.localStorage.f.style.display = "none", g.localStorage.f.addBehavior("#default#userData"), document.getElementsByTagName("head")[0].appendChild(g.localStorage.f)
+                } catch (c) {
+                    return a
+                }
+            }
+            return i
+        };
+        g.localStorage.set = function (h, c, l) {
+            var m = new Date;
+            m.setTime(m.getTime() + l || 31536000000);
+            try {
+                window.localStorage ? (c = m.getTime() + "|" + c, window.localStorage.setItem(h, c)) : g.localStorage.s() && (g.localStorage.f.expires = m.toUTCString(), g.localStorage.f.load(document.location.hostname), g.localStorage.f.setAttribute(h, c), g.localStorage.f.save(document.location.hostname))
+            } catch (k) {
+            }
+        };
+        g.localStorage.get = function (c) {
+            if (window.localStorage) {
+                if (c = window.localStorage.getItem(c)) {
+                    return window.localStorage.getItem(c)
+                }
+            } else {
+                if (g.localStorage.s()) {
+                    try {
+                        return g.localStorage.f.load(document.location.hostname), g.localStorage.f.getAttribute(c)
+                    } catch (h) {
+                    }
+                }
+            }
+            return window.localStorage.getItem(c)
+        };
+        g.localStorage.remove = function (h) {
+            if (window.localStorage) {
+                window.localStorage.removeItem(h)
+            } else {
+                if (g.localStorage.s()) {
+                    try {
+                        g.localStorage.f.load(document.location.hostname), g.localStorage.f.removeAttribute(h), g.localStorage.f.save(document.location.hostname)
+                    } catch (c) {
+                    }
+                }
+            }
+        };
+        g.sessionStorage = {};
+        g.sessionStorage.set = function (h, c) {
+            if (window.sessionStorage) {
+                try {
+                    window.sessionStorage.setItem(h, c)
+                } catch (k) {
+                }
+            }
+        };
+        g.sessionStorage.get = function (c) {
+            return window.sessionStorage ? window.sessionStorage.getItem(c) : b
+        };
+        g.sessionStorage.remove = function (c) {
+            window.sessionStorage && window.sessionStorage.removeItem(c)
+        };
+        g.UUID = {};
+        g.UUID.toString = function () {
+            return this.id
+        };
+        g.UUID.rand = function (c) {
+            return Math.floor(Math.random() * (c + 1))
+        };
+        g.UUID.returnBase = function (c, h) {
+            return (c).toString(h).toUpperCase()
+        };
+        g.UUID.getIntegerBits = function (o, p, k) {
+            var h = g.UUID;
+            var c = h.returnBase(o, 16);
+            var m = new Array();
+            var n = "";
+            var l = 0;
+            for (l = 0; l < c.length; l++) {
+                m.push(c.substring(l, l + 1))
+            }
+            for (l = Math.floor(p / 4); l <= Math.floor(k / 4); l++) {
+                if (!m[l] || m[l] == "") {
+                    n += "0"
+                } else {
+                    n += m[l]
+                }
+            }
+            return n
+        };
+        g.UUID.createUUID = function () {
+            var l = g.UUID;
+            var k = new Date(1582, 10, 15, 0, 0, 0, 0);
+            var p = new Date();
+            var r = p.getTime() - k.getTime();
+            var s = l.getIntegerBits(r, 0, 31);
+            var q = l.getIntegerBits(r, 32, 47);
+            var o = l.getIntegerBits(r, 48, 59) + "1";
+            var h = l.getIntegerBits(l.rand(4095), 0, 7);
+            var m = l.getIntegerBits(l.rand(4095), 0, 7);
+            var c = l.getIntegerBits(l.rand(8191), 0, 7) + l.getIntegerBits(l.rand(8191), 8, 15) + l.getIntegerBits(l.rand(8191), 0, 7) + l.getIntegerBits(l.rand(8191), 8, 15) + l.getIntegerBits(l.rand(8191), 0, 15);
+            return s + q + o + h + m + c
+        };
+        d.I = {
+            R: "192.168.1.102:8000",
+            RS: "192.168.1.102:8001",
+            u: config.domain,
+            P: "192.168.100.10:9090",
+            S: "pft.gif",
+            protocol: "https:" == document.location.protocol ? "https:" : "http:",
+            Q: "os tit br fl pm sr lg ck ja sc dt rf loc tt ct vid u api et cv xy ut duration durPage n v adtrack".split(" "),
+            PQ: "os tit br fl pm sr lg ck ja sc dt rf loc tt ct vid u api p_name p_type p_record p_orderid p_income p_conversionrate".split(" ")
+        };
+        g.g.getOrderId = function () {
+            if (g.g.loc.indexOf("[[[") > 0 && g.g.loc.indexOf("]]]") && g.g.loc.indexOf("[[[") < g.g.loc.indexOf("]]]")) {
+                return g.g.loc.substring(g.g.loc.indexOf("[[[") + 3, g.g.loc.indexOf("]]]"))
+            } else {
+                return ""
+            }
+        };
+        (function () {
+            var c = {
+                i: {}, e: function (h, k) {
+                    this.i[h] = this.i[h] || [];
+                    this.i[h].push(k)
+                }, o: function (h, l) {
+                    this.i[h] = this.i[h] || [];
+                    for (var m = this.i[h].length, k = 0; k < m; k++) {
+                        this.i[h][k](l)
+                    }
+                }
+            };
+            return d.w = c
+        })();
+        (function () {
+            function c(l) {
+                return l.replace ? l.replace(/'/g, "'0").replace(/\*/g, "'1").replace(/!/g, "'2") : l
+            }
+
+            var m = g.lang, h = d.w, k = {
+                init: function () {
+                    _pct.putPar = function (n) {
+                        if (g.lang.d(n, "Array")) {
+                            var l = n[0];
+                            if (k.hasOwnProperty(l) && g.lang.d(k[l], "Function")) {
+                                k[l](n)
+                            }
+                        }
+                    }
+                }, D: function (n) {
+                    if (m.d(n, "Array")) {
+                        var l = n[0];
+                        if (l != undefined && l != null && l != "") {
+                            if (k.hasOwnProperty(l) && m.d(k[l], "Function")) {
+                                k[l](n)
+                            }
+                        }
+                    }
+                }, _trackPageview: function (l) {
+                    l[1].indexOf("/") == 0 ? "" : l[1] = "/" + l[1];
+                    g.g.u = d.I.protocol + "//" + document.location.host + l[1];
+                    g.g.dt = new Date().getTime();
+                    g.g.api = "1_0";
+                    d.b.init()
+                }, _trackEvent: function (l) {
+                    if (l[1] != undefined && l[1] != "" && l[1] != null) {
+                        if (l[2] != undefined && l[2] != "" && l[2] != null) {
+                            g.g.dt = new Date().getTime();
+                            2 < l.length && (g.g.api = "2_0", g.g.et = c(l[1]) + "*" + c(l[2]) + "*" + c(l[3]) + (l[4] ? "*" + c(l[4]) : ""), d.b.init())
+                        }
+                    }
+                }, _setCustomVar: function (n) {
+                    if (!(4 > n.length)) {
+                        var t = n[1], s = n[4] || 3;
+                        if (0 < t && 6 > t && 0 < s && 4 > s) {
+                            var q = d.b.getSessionData("PFT_CV_" + j.id);
+                            if (q == undefined || q == null || q == "") {
+                                var l = "", o = n[n.length - 1];
+                                if (o == undefined || o == "" || o == null) {
+                                    n[n.length - 1] = 3
+                                }
+                                for (var p = 1; p < n.length; p++) {
+                                    l = l + (n[p] == undefined ? "" : n[p] + "*")
+                                }
+                                l = l.substring(0, l.length - 1);
+                                g.cookie.set("PFT_CV_" + j.id, decodeURIComponent(l), 1);
+                                g.cookie.set("PFT_API", decodeURIComponent("3_0"), 1)
+                            }
+                        }
+                    }
+                }
+            };
+            k.init();
+            d.T = k;
+            return d.T
+        })();
+        (function () {
+            function l() {
+                this.init()
+            }
+
+            var o = g.g, c = g.V, h = g.achieve, q = g.sessionStorage, n = g.localStorage, k = g.cookie, p = g.UUID, m = g.position;
+            l.prototype = {
+                setData: function (r) {
+                    try {
+                        k.set(r, p.createUUID(), 1);
+                        n.set(r, p.createUUID())
+                    } catch (s) {
+                    }
+                }, setSessionData: function (s, r) {
+                    q.set(s, r)
+                }, getSessionData: function (r) {
+                    return q.get(r)
+                }, getData: function (r) {
+                    return k.get(r)
+                }, uv: function () {
+                    var r = new Date().getTime()
+                }, matchUrl: function (r) {
+                    return (r = r.match(/^(https?:\/\/)?([^\/\?#]*)/)) ? r[2].replace(/.*@/, "") : null
+                }, na: function () {
+                    var y, x = this.getData("PFT_COOKIE_RF") == null ? "-" : this.getData("PFT_COOKIE_RF");
+                    g.g.tt = y = this.getData("PFT_" + j.id);
+                    var z = decodeURIComponent(g.g.rf).replace("http://", "");
+                    if (z.indexOf("/") != -1) {
+                        z = (z == "-" ? z : z.substring(0, z.indexOf("/")))
+                    }
+                    var u = decodeURIComponent(g.g.loc).replace("http://", "");
+                    if (u.indexOf("/") != -1) {
+                        u = (u == "-" ? u : u.substring(0, u.indexOf("/")))
+                    }
+                    var v = (z != "-" && (x == j.q || z != u));
+                    if (null == y || undefined == y || "" == y) {
+                        if (z != document.location.hostname) {
+                            k.set("PFT_COOKIE_RF", g.g.rf)
+                        }
+                        this.setData("PFT_" + j.id);
+                        g.g.tt = this.getData("PFT_" + j.id);
+                        g.g.n = "1";
+                        g.cookie.remove("PFT_DTNJ");
+                        g.cookie.remove("PFT_DTNP")
+                    } else {
+                        if (v) {
+                            if (z != document.location.hostname) {
+                                k.set("PFT_COOKIE_RF", g.g.rf);
+                                this.setData("PFT_" + j.id);
+                                g.g.tt = this.getData("PFT_" + j.id);
+                                g.g.n = "1";
+                                g.cookie.remove("PFT_DTNJ");
+                                g.cookie.remove("PFT_DTNP")
+                            }
+                        } else {
+                            var t = this.getData("PFT_SJKD");
+                            var w = new Date().getDate();
+                            if (t != undefined && t < w) {
+                                this.setData("PFT_" + j.id);
+                                g.g.n = "1"
+                            }
+                        }
+                    }
+                    var s = document.cookie.indexOf("vid");
+                    if (s == -1) {
+                        var r = new Date();
+                        r.setTime(r.getTime() * 100);
+                        document.cookie = "vid=" + p.createUUID() + ";expires=" + r.toGMTString() + ";domain=" + g.getDomain() + "; path=/"
+                    }
+                    g.g.vid = this.getData("vid")
+                }, par: function () {
+                    var s = "", r = d.I.Q, u = g.g, t = g.cookie;
+                    for (var v = 0; v < r.length; v++) {
+                        u[r[v]] != undefined && u[r[v]] != "" && u[r[v]] != null ? s = s + r[v] + "=" + u[r[v]] + ((r[v] == "v") ? "" : "&") : ""
+                    }
+                    t.set("PFT_SJKD", new Date().getDate());
+                    return s
+                }, pagePar: function () {
+                    var s = "", r = d.I.PQ, u = g.g, t = g.cookie;
+                    for (var v = 0; v < r.length; v++) {
+                        u[r[v]] != undefined && u[r[v]] != "" && u[r[v]] != null ? s = s + r[v] + "=" + u[r[v]] + ((r[v] == "v") ? "" : "&") : ""
+                    }
+                    t.set("PFT_PAGE", new Date().getDate());
+                    return s
+                }, custor: function () {
+                    g.g.cv = g.cookie.get("PFT_CV_" + j.id);
+                    g.g.api = g.cookie.get("PFT_API");
+                    if (g.g.cv != null && g.g.cv != undefined && g.g.cv != "") {
+                        g.cookie.remove("PFT_CV_" + j.id);
+                        g.cookie.remove("PFT_API");
+                        this.sm()
+                    }
+                }, sm: function (r) {
+                    var s = d.I;
+                    var t = s.protocol + "//" + s.P + "/" + s.S + "?t=" + j.id + "&" + this.par();
+                    c.log(t)
+                }, pageSm: function (r) {
+                    var s = d.I;
+                    var t = s.protocol + "//" + s.P + "/" + s.S + "?t=" + j.id + "&" + this.pagePar();
+                    c.log(t)
+                }, hbInfo: function () {
+                    var s = d.I;
+                    var r = document.createElement("script");
+                    r.setAttribute("type", "text/javascript");
+                    r.setAttribute("charset", "utf-8");
+                    r.setAttribute("src", s.protocol + "//" + s.P + "/" + s.S + "?t=" + j.id + "tt=" + g.g.tt + "&rf='-'&ping=" + Date.parse(new Date()));
+                    var t = document.getElementsByTagName("script")[0];
+                    t.parentNode.insertBefore(r, t)
+                }, heartBeat: function (s) {
+                    var r = 5 * 60 * 1000, v = 3 * 60 * 1000;
+                    s == undefined || s == "" || s == null ? r : s = s * 60 * 1000;
+                    var t = s < v ? r : s;
+                    var u = setInterval(this.hbInfo, t)
+                }, getSelectJS: function () {
+                    var s = document.referrer;
+                    if (s.indexOf("http://" + d.I.R) === 0 || s.indexOf("https://" + d.I.R) === 0) {
+                        var r = document.createElement("script");
+                        r.setAttribute("type", "text/javascript");
+                        r.setAttribute("src", d.I.protocol + "//" + d.I.RS + "/t.js/select?tid=" + j.id);
+                        var t = document.getElementsByTagName("script")[0];
+                        t.parentNode.insertBefore(r, t)
+                    }
+                }, init: function () {
+                    d.b = this;
+                    this.na();
+                    this.sm();
+                    this.custor();
+                    this.getSelectJS()
+                }
+            };
+            return new l
+        })();
+        (function () {
+            var c = g.event, h = g.cookie;
+            var l = function (n) {
+                var m = performance.timing, o = m[n + "Start"] ? m[n + "Start"] : 0;
+                n = m[n + "End"] ? m[n + "End"] : 0;
+                return {start: o, end: n, value: 0 < n - o ? n - o : 0}
+            };
+            var k = function () {
+                var m, n, p;
+                p = l("navigation");
+                n = l("request");
+                m = {
+                    nett: n.start - p.start,
+                    netd: l("domainLookup").value,
+                    nttp: l("connect").value,
+                    srv: l("response").start - n.start,
+                    dms: performance.timing.domInteractive - performance.timing.fetchStart,
+                    let: l("loadEvent").end - p.start
+                };
+                var o = h.get("judge");
+                if (o != h.get("PFT_" + j.id)) {
+                    h.set("judge", g.g.tt);
+                    g.g.ut = JSON.stringify(m);
+                    d.b.sm();
+                    g.g.ut = null
+                }
+            };
+            c.e(window, "load", function () {
+                setTimeout(k, 400)
+            })
+        })();
+        if (config.duration != undefined && config.duration.ttpause) {
+            (function () {
+                var c = g.cookie;
+                c.get("PFT_DTNJ") === null ? c.set("PFT_DTNJ", true) : "";
+                if (c.get("PFT_DTNJ") == "true") {
+                    var h = function () {
+                        var m = c.get("PFT_DTN") == null ? c.set("PFT_DTN", new Date().getTime()) : c.get("PFT_DTN");
+                        var l = new Date().getTime();
+                        if (parseInt((l - m) / 1000) >= config.duration.tttime) {
+                            g.g.duration = 1;
+                            d.b.sm();
+                            g.g.duration = null;
+                            clearInterval(k);
+                            c.set("PFT_DTNJ", false)
+                        }
+                    }
+                }
+                var k = setInterval(h, 1000)
+            }())
         }
-    };
-    var params = {};
-    var shref = document.location.href;
-    var tps = shref.substring(shref.indexOf("?") + 1, shref.length).split("&");
-    for (var i = 0; i < tps.length; i++) {
-        var kv = tps[i].split("=");
-        params[kv[0]] = kv[1]
-    }
-    params["srcUrl"] = shref.substring(0, shref.indexOf("?"));
-    params["pathUrl"] = document.location.origin + document.location.pathname;
-    if (params != null && params.jn == "select") {
-        document.write("<div id='" + p.hyContent + "' style='position:absolute;width:1px;height:1px;'></div>");
-        rootBody.initRootBody();
-        attachEvent(document.body, "onload", rootPage.init)
-    }
-})();
+        if (config.visit != undefined && config.visit.pvpause) {
+            (function () {
+                var c = g.cookie;
+                c.get("PFT_DTNP") == null ? c.set("PFT_DTNP", true) : "";
+                if (c.get("PFT_DTNP") === "true") {
+                    var h = c.get("PFT_PAGE") == null ? c.set("PFT_PAGE", 0) : c.get("PFT_PAGE");
+                    if (parseInt(h) >= config.visit.pvtimes) {
+                        g.g.durPage = 1;
+                        d.b.sm();
+                        g.g.durPage = null;
+                        c.set("PFT_DTNP", false)
+                    } else {
+                        c.set("PFT_PAGE", parseInt(c.get("PFT_PAGE")) + 1)
+                    }
+                }
+            }())
+        }
+        if (config.mouse != undefined && config.mouse) {
+            (function () {
+                document.onclick = function (k) {
+                    var m = k || window.event;
+                    var n = document.documentElement.scrollLeft || document.body.scrollLeft;
+                    var l = document.documentElement.scrollTop || document.body.scrollTop;
+                    var h = m.pageX || m.clientX + n;
+                    var o = m.pageY || m.clientY + l;
+                    var c = {x: h, y: o};
+                    e.push(c);
+                    if (e.length >= 5) {
+                        g.g.xy = JSON.stringify(e);
+                        d.b.sm();
+                        e = []
+                    }
+                }
+            })()
+        }
+        if (config != undefined && config.e != undefined && config.e.length > 0) {
+            console.log("事件配置" + config.e);
+            window.onload = function () {
+                config.e.forEach(function (k, h) {
+                    var l = document.location.origin + document.location.pathname;
+                    if (l === k.evpage) {
+                        var m = document.getElementById(k.eid);
+                        var c = m.attributes.getNamedItem("onclick");
+                        if (m != undefined && m != null) {
+                            if (c == null) {
+                                m.onclick = function () {
+                                    _pct.putPar(["_trackEvent", k.eid, k.evttag, k.evtarget])
+                                }
+                            } else {
+                                if (c.nodeValue.indexOf("_pct.putPar") == -1) {
+                                    m.onclick = function () {
+                                        _pct.putPar(["_trackEvent", k.eid, k.evttag, k.evtarget])
+                                    }
+                                }
+                            }
+                        }
+                    }
+                })
+            }
+        } else {
+            console.log("母球的事件配置")
+        }
+        if (config != undefined) {
+            if (g.g.loc.indexOf("www.farmer.com.cn") < 0) {
+                (function () {
+                    var o = "https:" == document.location.protocol ? "https:" : "http:";
+                    var h = (config.iconNumber != undefined ? config.iconNumber : "1");
+                    var q = document.createElement("a");
+                    q.setAttribute("href", o + "//hy.best-ad.cn");
+                    q.setAttribute("class", "baisi");
+                    q.setAttribute("id", "baisi");
+                    q.setAttribute("target", "_blank");
+                    q.setAttribute("title", "百思统计");
+                    var c = new Image();
+                    c.src = o + "//hy.best-ad.cn/img/" + h + ".gif";
+                    q.appendChild(c);
+                    var p = document.getElementsByTagName("script");
+                    var n;
+                    for (var l = 0; l < p.length; l++) {
+                        if (p[l].text.indexOf("_pct") != -1) {
+                            n = l
+                        }
+                    }
+                    var m = document.getElementsByTagName("script")[n];
+                    m.parentNode.insertBefore(q, m)
+                })()
+            }
+        }
+        if (config != undefined && config.pc != undefined) {
+            if (config.pc.paths == undefined || config.pc.paths.length == 0) {
+                g.g.p_name = config.pc.target_name;
+                g.g.p_record = config.pc.record_type;
+                g.g.p_orderid = g.g.getOrderId();
+                g.g.p_income = config.pc.expected_yield;
+                g.g.p_conversionrate = config.pc.pecent_yield;
+                d.b.pageSm()
+            } else {
+                var rm = g.cookie.get("RF_map" + j.id);
+                if (rm == undefined || rm == "") {
+                    return
+                } else {
+                    var rmarr = rm.split("|");
+                    config.pc.paths.forEach(function (path) {
+                        if (path.steps.length < rmarr.length) {
+                            var flag = true;
+                            for (var index = 0; index < path.steps; index++) {
+                                var step = path.steps[index];
+                                flag = true;
+                                step.forEach(function (url) {
+                                    if (url != rmarr[rmarr.length - path.steps.length + index]) {
+                                        flag = false
+                                    }
+                                });
+                                if (flag) {
+                                    break
+                                }
+                            }
+                            if (flag) {
+                                g.g.p_name = config.pc.target_name;
+                                g.g.p_record = config.pc.record_type;
+                                g.g.p_orderid = g.g.getOrderId();
+                                g.g.p_income = config.pc.expected_yield;
+                                g.g.p_conversionrate = config.pc.pecent_yield;
+                                d.b.pageSm()
+                            }
+                        }
+                    })
+                }
+            }
+        }
+        var rm = g.cookie.get("RF_map" + j.id);
+        if (rm == undefined || rm == "") {
+            rm = g.g.loc
+        } else {
+            var rmarr = rm.split("|");
+            if (rmarr.length == 10) {
+                rmarr.splice(0, 1)
+            }
+            rmarr.push(g.g.loc);
+            rm = rmarr.join("|")
+        }
+        g.cookie.set("RF_map" + j.id, rm)
+    })()
+}
+;

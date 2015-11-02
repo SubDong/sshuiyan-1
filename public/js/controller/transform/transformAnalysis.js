@@ -434,7 +434,7 @@ define(["./module"], function (ctrs) {
                                     data["loc"] = event.event_page
                                     for (var i = 0; i < $scope.es_checkArray.length; i++) {
                                         if ($scope.es_checkArray[i] == "crate") {
-                                            if (eventInfos[event.event_page + "_" + event.event_id] != undefined && Number(data["pv"]) != 0 && event.event_target) {
+                                            if (eventInfos[event.event_page + "_" + event.event_id] != undefined && Number(data["pv"]) != 0 ) {
                                                 data["crate"] = (Number(eventInfos[event.event_page + "_" + event.event_id].convCount / Number(data["pv"])) * 100).toFixed(2) + "%";
                                             } else {
                                                 data["crate"] = "0%";
@@ -461,7 +461,7 @@ define(["./module"], function (ctrs) {
 
                                         }
                                         else if ($scope.es_checkArray[i] == "conversions") {
-                                            if (eventInfos[event.event_page + "_" + event.event_id] != undefined && event.event_target) {
+                                            if (eventInfos[event.event_page + "_" + event.event_id] != undefined ) {
                                                 data["conversions"] = eventInfos[event.event_page + "_" + event.event_id].convCount;
                                             } else {
                                                 data["conversions"] = 0;
@@ -487,8 +487,8 @@ define(["./module"], function (ctrs) {
                                             item.value += eventInfos[event.event_page + "_" + event.event_id] != undefined ? eventInfos[event.event_page + "_" + event.event_id].eventCount : 0;
 
                                         } else if (item.label == "conversions") {
-                                            if (eventInfos[event.event_page + "_" + event.event_id] != undefined && event.event_target) {
-                                                item.value += eventInfos[event.event_page + "_" + event.event_id].eventCount;
+                                            if (eventInfos[event.event_page + "_" + event.event_id] != undefined ) {
+                                                item.value += eventInfos[event.event_page + "_" + event.event_id].convCount;
                                             }
                                         } else {
                                             item.value = hashloc[event.event_page] == undefined ? (pvs[index][item.label] + item.value) : (maxvalues[item.label] < pvs[index][item.label] ? (item.value + pvs[index][item.label] - maxvalues[item.label]) : item.value)
@@ -500,8 +500,8 @@ define(["./module"], function (ctrs) {
                                     //计算全部的PV
                                     tempPv = hashloc[event.event_page] == undefined ? (pvs[index]["pv"] + tempPv) : (maxvalues["pv"] < pvs[index]["pv"] ? (item.value + pvs[index]["pv"] - maxvalues["pv"]) : tempPv)
                                     //计算全部的转化次数
-                                    if (eventInfos[event.event_page + "_" + event.event_id] != undefined && event.event_target) {
-                                        tempConv += eventInfos[event.event_page + "_" + event.event_id].eventCount;
+                                    if (eventInfos[event.event_page + "_" + event.event_id] != undefined ) {
+                                        tempConv += eventInfos[event.event_page + "_" + event.event_id].convCount;
                                     }
                                     if (!hashloc[event.event_page]) {
                                         hashloc[event.event_page] = true;

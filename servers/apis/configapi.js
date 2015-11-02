@@ -70,7 +70,7 @@ api.get("/eventchnage_list", function (req, res) {
             break;
         case "update":
             var update = JSON.parse(query['updates']);
-            update["update_time"] = new Date().getTime();
+            //update["update_time"] = new Date().getTime();
             dao.update(schema_name, query['query'], JSON.stringify(update), function (err, up) {
                 datautils.send(res, up);
                 if (up.nModified > 0) {//有更新 刷新配置
@@ -133,7 +133,6 @@ api.get("/eventchnage_list", function (req, res) {
                                     evpage: item.event_page,//事件页面
                                     evtarget: item.event_target//是否为转化目标
                                 };
-                                console.log(event_config)
                                 confs.push(event_config);
                             });
                             var tempRef = jsonqry.event_page
@@ -955,7 +954,7 @@ api.get("/select", function (req, res) {
 
                                 }), JSON.stringify({
                                     event_name: entityJson["name"],
-                                    update_time: new Date().getTime()
+                                    //update_time: new Date().getTime()
                                 }), function (err, docs) {
                                     res.write("crossDomainCallback({code:2,state:'Update Success'}," + query["index"] + ");");
                                     res.end();
