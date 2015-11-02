@@ -186,10 +186,10 @@ define([
                 }, {
                     text: '页面热点图',
                     sref: '#page/pagetitle'
-                }, {
+                }/*, {
                     text: '离站链接',
                     sref: '#page/offsitelinks'
-                }]
+                }*/]
             }, {
                 title: '访客分析',
                 icon: 'glyphicon glyphicon-signal',
