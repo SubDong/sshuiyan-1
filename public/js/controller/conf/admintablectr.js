@@ -125,10 +125,9 @@ define(["../module"], function (app) {
                     expandableRowTemplate:"<div ui-grid='row.entity.subGridOptions' class='grid clearfix secondary_table' ui-grid-expandable ui-grid-exporter ui-grid-auto-resize></div>",
                     expandableRowHeight: 360,
                     enableColumnMenus: false,
-                    enablePaginationControls: false,
+                    enablePaginationControls: true,
+                    enableSorting: false,
                     enableGridMenu: false,
-                    enableHorizontalScrollbar: 0,
-                    enableSorting: true,
                     columnDefs: $rootScope.gridArray,
                     onRegisterApi: function (gridApi) {
                         $rootScope.gridApiAdmin = gridApi;
