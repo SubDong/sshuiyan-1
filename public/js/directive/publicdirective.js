@@ -679,10 +679,13 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                         }
                         $http({
                             method: 'POST',
-                            url: '/api/downCSV/?dataInfo=' + repData,
+                            url: '/api/downCSV',
                             headers: {
                                 'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
                                 'Content-type': 'text/csv; charset=utf-8'
+                            },
+                            data: {
+                                dataInfo: repData
                             }
                         }).success(function (data, status, headers, config) {
                             var hiddenElement = document.createElement('a');
