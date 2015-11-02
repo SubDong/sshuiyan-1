@@ -282,6 +282,36 @@ define(["./module"], function (ctrs) {
                     });
                 }
             }
-        }
+        };
+        //批量删除
+        $scope.deleteAll = function (index, grid, row) {
+
+            $scope.onDeleteDialog = ngDialog.open({
+                template: '' +
+                '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div><ul class="admin-ng-content" ><li>您想批量删除已选择的页面转化目标吗？</li></ul> <div class="ng-button-div"><button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
+                  <button type="button" class="ngdialog-button ng-button" ng-click="batchDelete()">确定</button></div></div>',
+                className: 'ngdialog-theme-default admin_ngdialog',
+                plain: true,
+                scope: $scope
+            });
+
+            $scope.batchDelete = function () {
+                var choiceAll = $scope.gridApiAdmin.selection.getSelectedRows();
+                for (var i = 0; i < choiceAll.length; i++) {
+                    var val = choiceAll[i]._id;
+                    $scope.onDeleteDialog.close();
+                    var query = "/config/page_conv?type=delete&query={\"_id\":\"" + val + "\"}";
+                    //var url= "/config/eventchnage_list?type=delete&query={\"uid\":\"" + $scope.entity.uid + "\",\"_id\":\"" +  $scope.entity._id + "\"}";
+                    $http({method: 'GET', url: query}).success(function (dataConfig, status) {
+                        if (dataConfig == "\"remove\"") {
+                            refushGridData();
+                        }
+                    });
+                }
+            };
+
+
+        };
+
     });
 });
