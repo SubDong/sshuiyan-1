@@ -23,7 +23,7 @@ define(["./module"], function (ctrs) {
             {consumption_name: '转化次数', name: 'conversions'},
             {consumption_name: '转化率', name: 'crate'},
             //{consumption_name: '平均转化成本(页面)', name: 'avgCost'},
-            {consumption_name: '收益', name: 'benefit'},
+            {consumption_name: '收益', name: 'benefit'}
             //{consumption_name: '利润', name: 'profit'}
         ];
         $rootScope.order = [
@@ -80,7 +80,7 @@ define(["./module"], function (ctrs) {
                         //expandableRowHeight: 30,
                         expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions' class='grid clearfix secondary_table' ui-grid-exporter ui-grid-auto-resize ></div>",
                         //columnDefs: $rootScope.searchGridArray,
-                        data: [],
+                        data: []
                     }
                 }else{
                     var tPageInfoArr = ["conversions", "benefit"]
@@ -130,7 +130,7 @@ define(["./module"], function (ctrs) {
                         showHeader:false,
                         columnDefs: $rootScope.searchGridArray,
                         expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions' class='grid clearfix secondary_table' ui-grid-exporter ui-grid-auto-resize ></div>",
-                        data: [],
+                        data: []
                     }
 
                 }
@@ -150,6 +150,7 @@ define(["./module"], function (ctrs) {
             enableHorizontalScrollbar: 0,
             enableVerticalScrollbar: 0,
             onRegisterApi: function (gridApi) {
+                $rootScope.gridApi2 = gridApi;/*页面转化中分页显示需要#609*/
                 $rootScope.gridApiAdmin = gridApi;
                 $rootScope.expandRowData(gridApi)
             }

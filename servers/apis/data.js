@@ -577,16 +577,22 @@ api.get('/provincemap', function (req, res) {
 
 //csv下载功能
 api.post("/downCSV", function (req, res) {
-    var query = url.parse(req.url, true).query;
-    var dataInfo = query['dataInfo'].replace(/\*/g, "%");
-    var jsonData = JSON.parse(dataInfo);
-    csvApi.json2csv(jsonData, function (err, csv) {
-        if (err) throw err;
-        var buffer = new Buffer(csv);
-        //需要转换字符集
-        var uid = uuid.v1();
-        var str = iconv.encode(buffer, 'utf-8');
-        res.send(str);
+    var requestData = "";
+    req.addListener("data", function (postDataChunk) {
+        requestData = postDataChunk + "";
+    });
+
+    req.addListener("end",function(){
+        var _requestData = JSON.parse(requestData);
+        var jsonData = JSON.parse(_requestData.dataInfo);
+        csvApi.json2csv(jsonData, function (err, csv) {
+            if (err) throw err;
+            var buffer = new Buffer(csv);
+            //需要转换字符集
+            var uid = uuid.v1();
+            var str = iconv.encode(buffer, 'utf-8');
+            res.send(str);
+        });
     });
 });
 
