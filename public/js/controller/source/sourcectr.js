@@ -81,7 +81,7 @@ define(["./module"], function (ctrls) {
         };
 
         $scope.isShowExpandable = function (e) {
-            return e.rf_type != "直接访问";
+            return e.rf_type == "直接访问";
         };
 
         $scope.onLegendClick = function (radio, chartInstance, config, checkedVal) {
