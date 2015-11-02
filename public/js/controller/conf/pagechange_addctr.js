@@ -102,11 +102,32 @@ define(["./module"], function (ctrs) {
         $scope.addSteps = function (steps) {
             steps.push(angular.copy(singleStep));
         };
+        $scope.removeSteps = function (steps, _index) {
+            $scope.openPathConfirmDialog = ngDialog.openConfirm({
+                template:'<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自路径类型的消息</div>' +
+                    '<ul class="admin-ng-content">' +
+                    '<li> 你确定删除这个步骤吗？</li></ul>' +
+                    '<div class="ng-button-div"> <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>' +
+                    '<button type="button" class="ngdialog-button ng-button" ng-click="confirm()">确定</button></div>' +
+                    '</div>',
+                className: 'ngdialog-theme-default admin_ngdialog',
+                plain: true,
+                scope : $scope
+            }).then(function () {
+                if(_index <= 0){
+                    $scope.paths.splice(_index, 1)
+                }else{
+                    steps.splice(_index, 1);
+                }
+            }, function (reason) {
+                return;
+            });
+        };
         //增删路径
         $scope.addPaths = function (paths) {
             paths.push(angular.copy(singlePath));
         };
-        $scope.removePath = function (steps, _index) {
+        $scope.removePath = function (paths, _index) {
             $scope.openPathConfirmDialog = ngDialog.openConfirm({
                 template:'<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自路径类型的消息</div>' +
                     '<ul class="admin-ng-content">' +
@@ -118,7 +139,7 @@ define(["./module"], function (ctrs) {
                 plain: true,
                 scope : $scope
             }).then(function () {
-                steps.splice(_index, 1);
+                paths.splice(_index, 1);
             }, function (reason) {
                 return;
             });
