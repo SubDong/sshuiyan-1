@@ -460,9 +460,9 @@ api.get("/page_conv", function (req, res) {
     var schema_name = "page_conv_model";
     switch (type) {
         case "save":
-
-            var site_id;
             var entity = JSON.parse(query['entity']);
+            entity.update_time = new Date().getTime();
+            console.log(JSON.stringify(entity))
             dao.save(schema_name, entity, function (ins, err) {
                 datautils.send(res, ins);
                 if (ins._id != undefined) {
@@ -489,6 +489,7 @@ api.get("/page_conv", function (req, res) {
                         record_type: ins.record_type,
                         expected_yield: ins.expected_yield,
                         pecent_yield: ins.pecent_yield,
+                        update_time : ins.update_time,
                         paths: tpaths,
                     }
                     ins.target_urls.forEach(function (target_url) {
@@ -543,6 +544,7 @@ api.get("/page_conv", function (req, res) {
                                     record_type: config.record_type,
                                     expected_yield: config.expected_yield,
                                     pecent_yield: config.pecent_yield,
+                                    update_time : config.update_time,
                                     paths: tpaths,
                                 }
                                 config.target_urls.forEach(function (target_url) {

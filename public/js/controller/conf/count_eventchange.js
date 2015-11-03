@@ -90,7 +90,7 @@ define(["./module"], function (ctrs ) {
                 enableSorting: false
             },
             {name: "事件名称", displayName: "事件名称", field: "event_name",cellClass: 'table_admin_color', enableSorting: false},
-            {name: "生成日期", displayName: "生成日期", cellClass: 'table_admin_color', enableSorting: false},
+            {name: "生成日期", displayName: "生成日期", field:"update_time_desc",cellClass: 'table_admin_color', enableSorting: false},
             {name: "事件元素ID", displayName: "事件元素ID", field: "event_id",cellClass: 'table_admin_color', enableSorting: false},
             {name: "事件预览页面", displayName: "事件预览页面", field: "event_page",cellClass: 'table_admin_color', enableSorting: false},
             {name: "事件作用页面或目录", displayName: "事件作用或目录", field: "event_page",cellClass: 'table_admin_color', enableSorting: false},
@@ -166,6 +166,7 @@ define(["./module"], function (ctrs ) {
                 $scope.gridOptions.data = dataConfig;
                 $scope.gridOptions.data.forEach(function(item){
                     item.event_target_des = item.event_target?"是":"否"
+                    item["update_time_desc"] = new Date(item.update_time).format("yyyy-MM-dd hh:mm:ss")
                 })
             });
         };

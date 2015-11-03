@@ -56,7 +56,7 @@ define(["./module"], function (ctrs) {
                 enableSorting: false
             },
             {name: "目标名称", displayName: "目标名称", field: "target_name", enableSorting: false},
-            {name: "生成日期", displayName: "生成日期", enableSorting: false},
+            {name: "生成日期", displayName: "生成日期",field: "update_time_desc", enableSorting: false},
             {
                 name: "URL",
                 displayName: "URL",
@@ -153,10 +153,10 @@ define(["./module"], function (ctrs) {
                     if (item.conv_tpye != null) {
                         item.conv_tpye = $scope.conv_tpye_cn[item.conv_tpye]
                     }
+                    item["update_time_desc"] = new Date(item.update_time).format("yyyy-MM-dd hh:mm:ss")
                     tempData.push(item);
                 });
                 $rootScope.gridOptions.data = tempData;
-
             });
         };
         refushGridData();
