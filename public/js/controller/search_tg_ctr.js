@@ -31,8 +31,8 @@ define(["./module"], function (ctrs) {
             {
                 name: "关键词对应的URL",
                 displayName: "关键词对应的URL",
-                field: "des_url"
-                , footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                field: "des_url",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
                 enableSorting: false
             }, /*
              {

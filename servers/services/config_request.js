@@ -118,6 +118,9 @@ var config_request = {
                                     tempRef =tempRef.substring(7,tempRef.length)
                                 if (tempRef.indexOf("https://") > -1&&tempRef.length>9)
                                     tempRef =tempRef.substring(8,tempRef.length)
+                                if(tempRef!=undefined&&tempRef!=""&&tempRef[tempRef.length-1]=="/"){
+                                    tempRef = tempRef.substring(0,tempRef.length-1)
+                                }
                                 redis_client.multi().set(pdocs[0].site_id + ":mouse:" + tempRef, JSON.stringify(page_title)).exec();//站点级别设置
                                 reut[pdocs[0].site_id + ":mouse:" + tempRef] = JSON.stringify(page_title);//热力图
                             }
@@ -168,6 +171,9 @@ var config_request = {
                                 tempRef =tempRef.substring(7,tempRef.length)
                             if (tempRef.indexOf("https://") > -1&&tempRef.length>9)
                                 tempRef =tempRef.substring(8,tempRef.length)
+                            if(tempRef!=undefined&&tempRef!=""&&tempRef[tempRef.length-1]=="/"){
+                                tempRef = tempRef.substring(0,tempRef.length-1)
+                            }
                             redis_client.multi().set(item._id + ":evt:" + tempRef, JSON.stringify(confs)).exec();
                             reut[item._id + ":evt:" + tempRef] = JSON.stringify(confs);
                             return reut;

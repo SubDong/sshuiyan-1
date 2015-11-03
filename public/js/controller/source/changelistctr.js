@@ -84,8 +84,7 @@ define(["./module"], function (ctrs) {
         ]
         ;
         $scope.filter_data = function (type) {
-            $rootScope.changeListFilterType = type;
-            $scope.changeTime();
+            $scope.changeTime(type);
         };
         $scope.showSearchUrl = function (row) {
             popupService.showSourceData(row.entity.kw);
@@ -236,7 +235,8 @@ define(["./module"], function (ctrs) {
             contrastReset();
             $scope.choiceClass = true;
         };
-        $scope.changeTime = function () {
+        $scope.changeTime = function (type) {
+            $rootScope.changeListFilterType = type ? type : 4;
             $scope.initTime = {
                 time: $rootScope.startString,
                 contrastTime: $rootScope.contrastStartString

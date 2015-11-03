@@ -295,7 +295,12 @@ var op = {
                     fontFamily: '微软雅黑'
                 },
                 formatter: function (chartConfig) {
-                    return chartConfig.substr(0, 8) + "\n" + chartConfig.substr(8, 8) + "\n" + chartConfig.substr(16, 8) + "...";
+                    if (chartConfig.length >= 4) {
+                        return chartConfig.replace(/[{}]/g, "").substr(0, 4) + "...";
+                    }
+                    else {
+                        return chartConfig.replace(/[{}]/g, "").substr(0, 4)
+                    }
                 }
             }
         }

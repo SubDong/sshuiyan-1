@@ -139,8 +139,8 @@ require([
     "./angularjs/daterangepicker",
     "./angularjs/tooltip",
     "./utils/dataPicker",
-    "./pdfmake/pdfmake.min",
-    "./pdfmake/vfs_fonts"
+    "angularjs/vfs_fonts",
+    "angularjs/pdfmake"
 ], function () {
     "use strict";
 });
