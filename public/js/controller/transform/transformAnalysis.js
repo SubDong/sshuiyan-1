@@ -498,7 +498,7 @@ define(["./module"], function (ctrs) {
                                         }
                                     })
                                     //计算全部的PV
-                                    tempPv = hashloc[event.event_page] == undefined ? (pvs[index]["pv"] + tempPv) : (maxvalues["pv"] < pvs[index]["pv"] ? (item.value + pvs[index]["pv"] - maxvalues["pv"]) : tempPv)
+                                    tempPv = hashloc[event.event_page] == undefined ? pvs[index]["pv"] : (maxvalues["pv"] < pvs[index]["pv"] ? (item.value + pvs[index]["pv"] - maxvalues["pv"]) : tempPv)
                                     //计算全部的转化次数
                                     if (eventInfos[event.event_page + "_" + event.event_id] != undefined ) {
                                         tempConv += eventInfos[event.event_page + "_" + event.event_id].convCount;
@@ -506,6 +506,7 @@ define(["./module"], function (ctrs) {
                                     if (!hashloc[event.event_page]) {
                                         hashloc[event.event_page] = true;
                                     }
+                                    console.log(" tempPV  "+tempPv +" tempConv "+tempConv)
                                 })
 
                                 $scope.dateShowArray.forEach(function (item) {
