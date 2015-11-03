@@ -498,10 +498,10 @@ var chartUtils = {
                     _val.push(Number(item[quota].split("%")[0]));
                     _key.push(item["period"]);
                 } else if (quota == "avgTime") {
-                    var hour = _val.push(Number(item[quota].split(":")[0]));
-                    var min = _val.push(Number(item[quota].split(":")[1]));
-                    var sec = _val.push(Number(item[quota].split(":")[2]));
-                    var count = (((hour * 60) * 60) + (min * 60) + sec) / 1000;
+                    var hour = Number(item[quota].split(":")[0]);
+                    var min = Number(item[quota].split(":")[1]);
+                    var sec = Number(item[quota].split(":")[2]);
+                    var count = (((hour * 60) * 60) + (min * 60) + sec);
                     _val.push(count);
                     _key.push(item["period"]);
                 } else {
