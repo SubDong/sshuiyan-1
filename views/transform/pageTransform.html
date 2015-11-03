@@ -75,14 +75,15 @@
                     <div class="chart_top2">
                         <ul>
                             <li><span>设备过滤:</span></li>
-                            <li><label ng-click="setTerminal(0)"><input type="radio" checked="checked" name="radio1"
-                                                                        class="styled terminal_class"
-                                                                        value="全部"/>全部</label></li>
-                            <li><label ng-click="setTerminal(1)"><input type="radio" name="radio1"
-                                                                        class="styled terminal_class"
-                                                                        value="计算机"/>计算机</label></li>
-                            <li><label ng-click="setTerminal(2)"><input type="radio" name="radio1"
-                                                                        class="styled terminal_class" value="移动设备"/>移动设备</label>
+                            <li><label data-ng-click="setTerminal(0)"><input type="radio" checked="checked"
+                                                                             name="radio1" class="styled terminal_class"
+                                                                             value="全部"/>全部</label></li>
+                            <li><label data-ng-click="setTerminal(1)"><input type="radio" name="radio1"
+                                                                             class="styled terminal_class"
+                                                                             value="计算机"/>计算机</label></li>
+                            <li><label data-ng-click="setTerminal(2)"><input type="radio" name="radio1"
+                                                                             class="styled terminal_class"
+                                                                             value="移动设备"/>移动设备</label>
                             </li>
                         </ul>
                     </div>
@@ -94,7 +95,7 @@
                                     <div role="group" class="btn-group">
                                         <ui-select ng-model="city.selected" theme="select2" reset-search-input="false"
                                                    class="fl btn-pv"
-                                                   data-ng-change="setAreaFilterTran(city.selected.name)"
+                                                   data-ng-change="setSearchEngineAreaFilter(city.selected.name)"
                                                    style="width: 120px;">
                                             <ui-select-match placeholder="全部">{{$select.selected.name}}
                                             </ui-select-match>
@@ -105,29 +106,29 @@
                                     </div>
                                 </div>
                             </li>
-                            <li><a href="javascript:void(0)">北京</a></li>
-                            <li><a href="javascript:void(0)">上海</a></li>
-                            <li><a href="javascript:void(0)">广州</a></li>
+                            <li><a href="javascript:void(0)" data-ng-click="setSearchEngineAreaFilter('北京')">北京</a></li>
+                            <li><a href="javascript:void(0)" data-ng-click="setSearchEngineAreaFilter('上海')">上海</a></li>
+                            <li><a href="javascript:void(0)" data-ng-click="setSearchEngineAreaFilter('广州')">广州</a></li>
                         </ul>
                     </div>
                     <div class="chart_top2">
                         <ul>
                             <li><span>访客过滤 :</span></li>
-                            <li><label ng-click="setVisitors(0)"><input type="radio" checked="checked"
-                                                                        class="styled uv_class"
-                                                                        name="radio0" value="全部"/>全部</label></li>
-                            <li><label ng-click="setVisitors(1)"><input type="radio" name="radio0"
-                                                                        class="styled uv_class"
-                                                                        value="新访客"/>新访客</label></li>
-                            <li><label ng-click="setVisitors(2)"><input type="radio" name="radio0"
-                                                                        class="styled uv_class"
-                                                                        value="老访客"/>老访客</label></li>
+                            <li><label data-ng-click="setVisitors(0)"><input type="radio" checked="checked"
+                                                                             class="styled uv_class" name="radio0"
+                                                                             value="全部"/>全部</label></li>
+                            <li><label data-ng-click="setVisitors(1)"><input type="radio" name="radio0"
+                                                                             class="styled uv_class"
+                                                                             value="新访客"/>新访客</label></li>
+                            <li><label data-ng-click="setVisitors(2)"><input type="radio" name="radio0"
+                                                                             class="styled uv_class"
+                                                                             value="老访客"/>老访客</label></li>
                         </ul>
                     </div>
-                    <div class="chart_top2 chart_noborder">
-                        <button class="btn btn-primary" type="button" ng-click="targetSearchSpreadPage(false)">确定
-                        </button>
-                    </div>
+                    <!--<div class="chart_top2 chart_noborder">-->
+                    <!--<button class="btn btn-primary" type="button" ng-click="targetSearchSpreadPage(false)">确定-->
+                    <!--</button>-->
+                    <!--</div>-->
                 </div>
 
             </div>

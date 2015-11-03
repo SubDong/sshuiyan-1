@@ -174,6 +174,7 @@ define(["./module"], function (ctrs ) {
          */
         $scope.deleteAll = function (index, grid, row) {
 
+
             $scope.onDeleteDialog = ngDialog.open({
                 template: '' +
                 '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div><ul class="admin-ng-content" ><li>您想批量删除已选择的时间转化目标吗？</li></ul> <div class="ng-button-div"><button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
@@ -185,16 +186,16 @@ define(["./module"], function (ctrs ) {
 
             $scope.batchDelete = function () {
                 var choiceAll = $scope.gridApiAdmin.selection.getSelectedRows();
+                //$rootScope.gridOptions.data.splice(index,1)
                 for (var i = 0; i < choiceAll.length; i++) {
                     var val = choiceAll[i]._id;
                     $scope.onDeleteDialog.close();
                     var query = "/config/eventchnage_list?type=delete&query={\"_id\":\"" + val + "\"}";
-                    //var url= "/config/eventchnage_list?type=delete&query={\"uid\":\"" + $scope.entity.uid + "\",\"_id\":\"" +  $scope.entity._id + "\"}";
                     $http({method: 'GET', url: query}).success(function (dataConfig, status) {
-                        if (dataConfig == "\"remove\"") {
-                            refushGridData();
+                        if (dataConfig == "\"success\"") {
                         }
                     });
+                    $scope.gridOptions.data.splice($scope.gridOptions.data.indexOf(choiceAll[i]), 1);
                 }
             };
 

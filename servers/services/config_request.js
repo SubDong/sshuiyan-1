@@ -114,10 +114,10 @@ var config_request = {
                             if (pdocs[0].site_id != null && pdocs[0].page_url != null) {
                                 //console.log("重写"+(pdocs[0].site_id + ":mouse:" + pdocs[0].page_url)+"-->"+JSON.stringify(page_title))
                                 var tempRef = pdocs[0].page_url
-                                if (tempRef.indexOf("http://") > -1&&tempRef.length>8)
-                                    tempRef =tempRef.substring(7,tempRef.length)
-                                if (tempRef.indexOf("https://") > -1&&tempRef.length>9)
-                                    tempRef =tempRef.substring(8,tempRef.length)
+                                if (tempRef!=undefined&&tempRef.indexOf("http://") > -1 && tempRef.length > 8)
+                                    tempRef = tempRef.substring(7, tempRef.length)
+                                if (tempRef!=undefined&&tempRef.indexOf("https://") > -1 && tempRef.length > 9)
+                                    tempRef = tempRef.substring(8, tempRef.length)
                                 if(tempRef!=undefined&&tempRef!=""&&tempRef[tempRef.length-1]=="/"){
                                     tempRef = tempRef.substring(0,tempRef.length-1)
                                 }
@@ -167,10 +167,10 @@ var config_request = {
                             //console.log(item)
                             //console.log("重写"+(item._id + ":e:" + event_page)+"-->"+JSON.stringify(confs))
                             var tempRef = event_page
-                            if (tempRef.indexOf("http://") > -1&&tempRef.length>8)
-                                tempRef =tempRef.substring(7,tempRef.length)
-                            if (tempRef.indexOf("https://") > -1&&tempRef.length>9)
-                                tempRef =tempRef.substring(8,tempRef.length)
+                            if (tempRef!=undefined&&tempRef.indexOf("http://") > -1 && tempRef.length > 8)
+                                tempRef = tempRef.substring(7, tempRef.length)
+                            if (tempRef!=undefined&&tempRef.indexOf("https://") > -1 && tempRef.length > 9)
+                                tempRef = tempRef.substring(8, tempRef.length)
                             if(tempRef!=undefined&&tempRef!=""&&tempRef[tempRef.length-1]=="/"){
                                 tempRef = tempRef.substring(0,tempRef.length-1)
                             }

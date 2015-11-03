@@ -725,10 +725,12 @@ define(["app"], function (app) {
             $scope.setAreaFilter("全部");
         })
         $scope.setAreaFilter = function (area) {
+            $rootScope.areaFilter = area;
             $scope.areaSearch = area == "全部" ? "" : area;
             if (area == "北京" || area == "上海" || area == "广州") {
                 if ($scope.city.selected != undefined) {
-                    $scope.city.selected.name = area;
+                    $scope.city.selected = {};
+                    $scope.city.selected["name"] = area;
                 } else {
                     $scope.city.selected = {};
                     $scope.city.selected["name"] = area;
@@ -811,18 +813,19 @@ define(["app"], function (app) {
                 $scope.areaSearch = "";
                 $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[2]}]";
                 if ($rootScope.tableSwitch.number == 6) {
-                    $rootScope.tableSwitch.areaFilter = {rf_type: 2}
+                    $rootScope.tableSwitch.areaFilter = null
                 }
             } else {
                 $scope.areaSearch = area;
                 $rootScope.tableSwitch.tableFilter = "[{\"region\":[\"" + area + "\"]},{\"rf_type\":[2]}]";
                 if ($rootScope.tableSwitch.number == 6) {
-                    $rootScope.tableSwitch.areaFilter = [{rf_type: 2}, {region: area}]
+                    $rootScope.tableSwitch.areaFilter = [ {region: area}]
                 }
             }
             if (area == "北京" || area == "上海" || area == "广州") {
                 if ($scope.city.selected != undefined) {
-                    $scope.city.selected.name = area;
+                    $scope.city.selected = {};
+                    $scope.city.selected["name"] = area;
                 } else {
                     $scope.city.selected = {};
                     $scope.city.selected["name"] = area;
@@ -838,8 +841,14 @@ define(["app"], function (app) {
             $scope.allCitys = angular.copy($rootScope.citys);
         };
 
+
+         $scope.searchEasyEngine = function (info,segin){
+             $rootScope.tableSwitch.seFilter=[{se:segin}]
+             $scope.searchEngine(info)
+         }
         //设置搜索引擎过滤
         $scope.searchEngine = function (info) {
+            $rootScope.tableSwitch.seFilter=null
             if (info === '全部') {
                 $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[2]}]";
                 if ($rootScope.tableSwitch.number == 6) {
@@ -848,15 +857,13 @@ define(["app"], function (app) {
                 $scope.sourceSearch = "全部引擎";
             } else {
                 $rootScope.tableSwitch.tableFilter = "[{\"se\":[\"" + info + "\"]}]";
-                console.log("搜索引擎 ifno "+info)
+                //console.log("搜索引擎 ifno "+info)
                if ($rootScope.tableSwitch.number == 6) {
                     if (info == 0)
                         $rootScope.tableSwitch.eginFilter =null
-                    else if(info == 1)
-                        $rootScope.tableSwitch.eginFilter ={se: "-"}
-                    else
-                        $rootScope.tableSwitch.eginFilter = {se: info}
-
+                    else {
+                        $rootScope.tableSwitch.eginFilter ={rf_type: info}
+                    }
                 }
                 $scope.sourceSearch = info;
             }
@@ -865,12 +872,12 @@ define(["app"], function (app) {
                 if (info === '全部') {
                     $rootScope.tableSwitch.tableFilter = null;
                     if ($rootScope.tableSwitch.number == 6) {
-                        $rootScope.tableSwitch.eginFilter = null
+                        $rootScope.tableSwitch.seFilter = null
                     }
                 } else {
                     $rootScope.tableSwitch.tableFilter = "[{\"se\":\"" + info + "\"}]";
                     if ($rootScope.tableSwitch.number == 6) {
-                        $rootScope.tableSwitch.eginFilter = {se: info}
+                        $rootScope.tableSwitch.eginFilter = {rf_type: info}
                     }
                 }
                 getHtmlTableData();
@@ -1186,7 +1193,7 @@ define(["app"], function (app) {
                 return;
             }
             if ($rootScope.tableTimeStart == undefined) {
-                console.error("error: tableTimeStart is not defined,Please check whether the parameter the configuration.");
+                //console.error("error: tableTimeStart is not defined,Please check whether the parameter the configuration.");
                 return;
             }
             if ($rootScope.tableTimeEnd == undefined) {
@@ -1289,7 +1296,12 @@ define(["app"], function (app) {
                 }).success(function (data, status) {
                     $rootScope.$broadcast("LoadDateShowDataFinish", data);
                     if ($rootScope.tableSwitch.promotionSearch != undefined && $rootScope.tableSwitch.promotionSearch) {
-                        var url = SEM_API_URL + "/sem/report/account?a=" + user + "&b=" + baiduAccount + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1"
+                        if ($rootScope.areaFilter != "全部" && $location.path() == "/extension/way") {// 推广方式地域过滤不为全部是特殊处理
+                            var url = SEM_API_URL + "/sem/report/region?a=" + user + "&b=" + baiduAccount + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1&rgna=" + $rootScope.areaFilter
+                        } else {
+                            var url = SEM_API_URL + "/sem/report/account?a=" + user + "&b=" + baiduAccount + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1"
+                        }
+
                         $http({
                             method: 'GET',
                             url: url
@@ -1312,7 +1324,11 @@ define(["app"], function (app) {
                             $rootScope.checkedArray.forEach(function (item, i) {
                                 if ($rootScope.tableSwitch.latitude.field == "accountName") {
                                     if (dataSEM[0]) {
-                                        dataObj["accountName"] = "搜索推广 (" + dataSEM[0].accountName + ")";
+                                        if ($rootScope.areaFilter != "全部" && $location.path() == "/extension/way") {// 推广方式地域过滤不为全部是特殊处理
+                                            dataObj["accountName"] = "搜索推广 (" + dataSEM[0].regionName + ")";
+                                        }else {
+                                            dataObj["accountName"] = "搜索推广 (" + dataSEM[0].accountName + ")";
+                                        }
                                     } else {
                                         dataObj["accountName"] = "搜索推广 (暂无数据 )";
                                     }
@@ -1637,7 +1653,7 @@ define(["app"], function (app) {
                         }
                     }
                 }).error(function (error) {
-                    //console.log(error);
+                    ////console.log(error);
                 });
             }
         };

@@ -379,7 +379,7 @@ define(["./module"], function (ctrs) {
 
             $rootScope.getFilters = function(){
                 var  filters = []
-                console.log( JSON.stringify($rootScope.tableSwitch.eginFilter)+"  "+ JSON.stringify($rootScope.tableSwitch.visitorFilter)+" " +JSON.stringify($rootScope.tableSwitch.areaFilter))
+                //console.log( JSON.stringify($rootScope.tableSwitch.seFilter)+"  "+JSON.stringify($rootScope.tableSwitch.eginFilter)+"  "+ JSON.stringify($rootScope.tableSwitch.visitorFilter)+" " +JSON.stringify($rootScope.tableSwitch.areaFilter))
                 if($rootScope.tableSwitch.eginFilter!=undefined&&$rootScope.tableSwitch.eginFilter!=null){
                         filters.push($rootScope.tableSwitch.eginFilter)
                 }
@@ -387,11 +387,16 @@ define(["./module"], function (ctrs) {
                     filters.push($rootScope.tableSwitch.visitorFilter)
                 }
                 if($rootScope.tableSwitch.areaFilter!=undefined&&$rootScope.tableSwitch.areaFilter!=null&&$rootScope.tableSwitch.areaFilter.length>0){
-                    $rootScope.tableSwitch.areaFilter.fore(function(area){
+                    $rootScope.tableSwitch.areaFilter.forEach(function(area){
                         filters.push(area)
                     })
                 }
-                console.log("过滤内容="+JSON.stringify(filters))
+                if($rootScope.tableSwitch.seFilter!=undefined&&$rootScope.tableSwitch.seFilter!=null&&$rootScope.tableSwitch.seFilter.length>0){
+                    $rootScope.tableSwitch.seFilter.forEach(function(area){
+                        filters.push(area)
+                    })
+                }
+                //console.log("过滤内容="+JSON.stringify(filters))
                 return JSON.stringify(filters)
             }
             $rootScope.locUrls = [];
@@ -555,7 +560,7 @@ define(["./module"], function (ctrs) {
             $scope.dataTable = function (isContrastTime, showType, queryOptions, renderLegend) {
                 if (isContrastTime) {
                     var crate_time = aggs_time($rootScope.start, $rootScope.end, $scope.start, $scope.end);
-                    $http.get("/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&analysisAction=event&type=" + $rootScope.userType + "&searchType=contrastData&showType=" + showType + "&queryOptions=" + queryOptions + "&contrastStart=" + $scope.start + "&contrastEnd=" + $scope.end).success(function (contrastData) {
+                    $http.get("/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&analysisAction=event&type=" + $rootScope.userType + "&searchType=contrastData&showType=" + showType + "&queryOptions=" + queryOptions + "&contrastStart=" + $scope.start + "&contrastEnd=" + $scope.end+ "&filters=" + $rootScope.getFilters()).success(function (contrastData) {
                         var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
                         chart.showLoading({
                             text: "正在努力的读取数据中..."
@@ -578,7 +583,7 @@ define(["./module"], function (ctrs) {
                         if (hasEvent) {
                             $http({
                                 method: "GET",
-                                url: "/api/transform/getConvEvent?start=" + crate_time.start + "&end=" + crate_time.end + "&analysisAction=event&type=" + $rootScope.userType + "&searchType=queryDataByUrl&showType=day"
+                                url: "/api/transform/getConvEvent?start=" + crate_time.start + "&end=" + crate_time.end + "&analysisAction=event&type=" + $rootScope.userType + "&searchType=queryDataByUrl&showType=day"+ "&filters=" + $rootScope.getFilters()
                             }).success(function (all_urls_data) {
                                 var temporaryContrastData = [];
                                 for (var i = 0; i < contrastData.length; i++) {

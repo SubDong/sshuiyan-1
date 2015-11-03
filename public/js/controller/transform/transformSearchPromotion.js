@@ -65,11 +65,11 @@ define(["./module"], function (ctrs) {
                 };
             });
         };
-        $rootScope.expandInex=1
+        $rootScope.expandInex = 1
         $rootScope.expandRowData = function (pGridApi) {
             //展开操作
             pGridApi.expandable.on.rowExpandedStateChanged($scope, function (pRow) {
-                if( $rootScope.expandInex==1){
+                if ($rootScope.expandInex == 1) {
                     pRow.entity.subGridOptions = {
                         enableColumnMenus: false,
                         enablePaginationControls: false,
@@ -82,7 +82,7 @@ define(["./module"], function (ctrs) {
                         //columnDefs: $rootScope.searchGridArray,
                         data: []
                     }
-                }else{
+                } else {
                     var tPageInfoArr = ["conversions", "benefit"]
                     var pageurl = "/api/transform/getPageConvInfo?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&rfType=" + pRow.entity.rf_type + "&se=" + pRow.entity.se + "&queryOptions=" + tPageInfoArr
                     $http.get(pageurl).success(function (pagedatas) {
@@ -127,7 +127,7 @@ define(["./module"], function (ctrs) {
                         enableHorizontalScrollbar: 0,
                         enableSorting: false,
                         expandableRowHeight: 30,
-                        showHeader:false,
+                        showHeader: false,
                         columnDefs: $rootScope.searchGridArray,
                         expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions' class='grid clearfix secondary_table' ui-grid-exporter ui-grid-auto-resize ></div>",
                         data: []
@@ -150,7 +150,8 @@ define(["./module"], function (ctrs) {
             enableHorizontalScrollbar: 0,
             enableVerticalScrollbar: 0,
             onRegisterApi: function (gridApi) {
-                $rootScope.gridApi2 = gridApi;/*页面转化中分页显示需要#609*/
+                $rootScope.gridApi2 = gridApi;
+                /*页面转化中分页显示需要#609*/
                 $rootScope.gridApiAdmin = gridApi;
                 $rootScope.expandRowData(gridApi)
             }
@@ -271,5 +272,64 @@ define(["./module"], function (ctrs) {
         $scope.$on("transformAdvancedData_ui_grid", function (e, msg) {
             $scope.advancedInit(msg)
         });
+
+
+        ////////////过滤////////////
+
+
+        //设备过滤
+        $rootScope.$on("loadAllTerminal", function () {
+            $scope.setTerminal(0);
+        })
+        var terminalStamp = 0;
+        $scope.setTerminal = function (a) {
+            if (a == 0)
+                $rootScope.tableSwitch.terminalFilter = null
+            else
+                $rootScope.tableSwitch.terminalFilter = {pm: a-1}
+            $rootScope.refreshData()
+        };
+
+        $scope.setSearchEngineAreaFilter = function (area) {
+
+            if (!$rootScope.tableSwitch) {
+                return;
+            }
+            if ("全部" == area) {
+                $scope.areaSearch = "";
+                $rootScope.tableSwitch.areaFilter = null
+            } else {
+                $scope.areaSearch = area;
+                $rootScope.tableSwitch.areaFilter = {region: area}
+            }
+            if (area == "北京" || area == "上海" || area == "广州") {
+                if ($scope.city.selected != undefined) {
+                    $scope.city.selected = {};
+                    $scope.city.selected["name"] = area;
+                } else {
+                    $scope.city.selected = {};
+                    $scope.city.selected["name"] = area;
+                }
+            }
+            $scope.isJudge = false;
+            $rootScope.$broadcast("ssh_data_show_refresh");
+            $scope.allCitys = angular.copy($rootScope.citys);
+            $rootScope.refreshData()
+        };
+
+        //设置访客来源
+        $rootScope.$on("loadAllVisitor", function () {
+            $scope.setVisitors(0);
+        })
+        var visitStamp = 0;
+        $scope.setVisitors = function (a) {
+            if (a == 1 || a == 2) {
+                $rootScope.tableSwitch.visitorFilter = {ct: a - 1}
+            } else {
+                $rootScope.tableSwitch.visitorFilter = null
+            }
+            $rootScope.$broadcast("ssh_data_show_refresh");
+            $rootScope.refreshData()
+        };
     });
 });

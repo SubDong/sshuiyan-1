@@ -1784,7 +1784,7 @@ var transform = {
          * @param queryOptionsStr
          * @param callbackFn
          */
-        searchPageBasePVs: function (es, indexs, startNum, endNum, type, pages, queryOptionsStr, callbackFn) {
+        searchPageBasePVs: function (es, indexs, startNum, endNum, type, pages, queryOptionsStr, filters, callbackFn) {
             var requests = [];
             for (var i = 0; i < indexs.length; i++) {
                 requests.push({
@@ -1812,11 +1812,21 @@ var transform = {
                 });
                 var querys = []
                 var boolQuery = [];
+
+
                 pages.forEach(function (page) {
                     for (var i = 0; i < page.page_urls.length; i++) {
+                        var filterQuery = []
+                        if (filters != undefined && filters.length > 0) {
+                            var jfilters = JSON.parse(filters)
+                            jfilters.forEach(function (filter) {
+                                filterQuery.push({"match": filter})
+                            })
+                        }
+                        filterQuery.push({"match": {"loc": page.page_urls[i]}});
                         boolQuery.push({
-                            "term": {
-                                "loc": page.page_urls[i]
+                            "bool": {
+                                "must": filterQuery
                             }
                         });
                     }
@@ -1876,7 +1886,7 @@ var transform = {
                 });
             });
         },
-        searchPageSePVs: function (es, indexs, startNum, endNum, type, rfType, pages, queryOptionsStr, callbackFn) {
+        searchPageSePVs: function (es, indexs, startNum, endNum, type, rfType, pages, queryOptionsStr, filters, callbackFn) {
             var requests = [];
             for (var i = 0; i < indexs.length; i++) {
                 requests.push({
@@ -1906,12 +1916,18 @@ var transform = {
                 var boolQuery = [];
                 pages.forEach(function (page) {
                     for (var i = 0; i < page.page_urls.length; i++) {
+                        var filterQuery = []
+                        if (filters != undefined && filters.length > 0) {
+                            var jfilters = JSON.parse(filters)
+                            jfilters.forEach(function (filter) {
+                                filterQuery.push({"match": filter})
+                            })
+                        }
+                        filterQuery.push({"match": {"rf_type": rfType}})
+                        filterQuery.push({"match": {"loc": page.page_urls[i]}})
                         boolQuery.push({
                             "bool": {
-                                "must": [
-                                    {"match": {"rf_type": rfType}},
-                                    {"match": {"loc": page.page_urls[i]}}
-                                ]
+                                "must": filterQuery
                             }
                         });
                     }
@@ -1984,7 +2000,7 @@ var transform = {
          * @param queryOptionsStr
          * @param callbackFn
          */
-        searchPageBaseInfo: function (es, indexs, startNum, endNum, type, pages, queryOptionsStr, callbackFn) {
+        searchPageBaseInfo: function (es, indexs, startNum, endNum, type, pages, queryOptionsStr, filters, callbackFn) {
             var requests = [];
             for (var i = 0; i < indexs.length; i++) {
                 requests.push({
@@ -2014,9 +2030,17 @@ var transform = {
                 var boolQuery = [];
                 pages.forEach(function (page) {
                     for (var i = 0; i < page.page_urls.length; i++) {
+                        var filterQuery = []
+                        if (filters != undefined && filters.length > 0) {
+                            var jfilters = JSON.parse(filters)
+                            jfilters.forEach(function (filter) {
+                                filterQuery.push({"match": filter})
+                            })
+                        }
+                        filterQuery.push({"match": {"loc": page.page_urls[i]}})
                         boolQuery.push({
-                            "term": {
-                                "loc": page.page_urls[i]
+                            "bool": {
+                                "must": filterQuery
                             }
                         });
                     }
@@ -2071,7 +2095,8 @@ var transform = {
                 });
             });
         },
-        searchPageSeInfo: function (es, indexs, startNum, endNum, type, rfType, pages, queryOptionsStr, callbackFn) {
+
+        searchPageConvInfo: function (es, indexs, startNum, endNum, type, rfType, se, queryOptionsStr, filters, callbackFn) {
             var requests = [];
             for (var i = 0; i < indexs.length; i++) {
                 requests.push({
@@ -2097,95 +2122,15 @@ var transform = {
                         _aggs[key] = es_aggs[queryOption][key];
                     }
                 });
-                var querys = []
-                var boolQuery = [];
-                pages.forEach(function (page) {
-                    for (var i = 0; i < page.page_urls.length; i++) {
-                        boolQuery.push({
-                            "bool": {
-                                "must": [
-                                    {"match": {"rf_type": rfType}},
-                                    {"match": {"loc": page.page_urls[i]}}
-                                ]
-                            }
-                        });
-                    }
-                })
-                querys.push({
-                    "index": newIndexs,
-                    "type": type + "_page",
-                    "body": {
-                        "size": 0,
-                        query: {
-                            "bool": {
-                                "should": boolQuery
-                            }
-                        },
-                        "aggs": {
-                            "pagePVs": {
-                                "terms": {
-                                    "field": "se"
-                                },
-                                "aggs": {
-                                    "conversions": {
-                                        "value_count": {
-                                            "field": "_type"
-                                        }
-                                    },
-                                    "benefit": {
-                                        "sum": {
-                                            "script": "doc['p_income'].value"
-                                        }
-                                    },
-                                    "orderNum": {
-                                        "value_count": {
-                                            "field": "p_orderid"
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                    }
-                })
-                es.search(querys[0], function (error, result) {
-                    var results = {}
-                    if (result != undefined && result.aggregations != undefined && result.aggregations.pagePVs != undefined && result.aggregations.pagePVs.buckets != undefined) {
-                        var infos = result.aggregations.pagePVs.buckets
-                        infos.forEach(function (info) {
-                            var key = info["key"] == "-" ? "未知来源" : (info["key"] == 2 ? "外部链接" : "搜索引擎")
-                            results[key] = info
-                        })
-                    }
-                    callbackFn(results)
-                });
-            });
-        },
-        searchPageConvInfo: function (es, indexs, startNum, endNum, type, rfType, se, queryOptionsStr, callbackFn) {
-            var requests = [];
-            for (var i = 0; i < indexs.length; i++) {
-                requests.push({
-                    index: indexs[i]
-                });
-            }
-            async.map(requests, function (item, callback) {
-                es.indices.exists(item, function (error, exists) {
-                    callback(null, exists);
-                });
-            }, function (error, results) {
-                var newIndexs = [];
-                for (var i = 0; i < indexs.length; i++) {
-                    if (results[i] == true) {
-                        newIndexs.push(indexs[i]);
-                    }
+                var filterQuery = []
+                if (filters != undefined && filters.length > 0) {
+                    var jfilters = JSON.parse(filters)
+                    jfilters.forEach(function (filter) {
+                        filterQuery.push({"match": filter})
+                    })
                 }
-                //查询内容
-                var _aggs = {};
-                var queryOptions = queryOptionsStr.split(",")
-                queryOptions.forEach(function (queryOption) {
-                    for (var key in es_aggs[queryOption]) {
-                        _aggs[key] = es_aggs[queryOption][key];
-                    }
-                });
+                filterQuery.push({"match": {"rf_type": rfType}})
+                filterQuery.push({"match": {"loc": page.page_urls[i]}})
                 var query = {
                     "index": newIndexs,
                     "type": type + "_page",
@@ -2193,10 +2138,7 @@ var transform = {
                         "size": 0,
                         query: {
                             "bool": {
-                                "must": [
-                                    {"match": {"rf_type": rfType}},
-                                    {"match": {"se": se}},
-                                ]
+                                "must": filterQuery
                             }
                         },
                         "aggs": {
@@ -2235,7 +2177,7 @@ var transform = {
             });
         },
 
-        searchDayPagePVs: function (es, indexs, type, showType, queryOptions, urls, callbackFn) {
+        searchDayPagePVs: function (es, indexs, type, showType, queryOptions, urls, filters, callbackFn) {
             var _aggs = {};
             queryOptions.forEach(function (queryOption) {
                 for (var key in es_aggs[queryOption]) {
@@ -2248,6 +2190,22 @@ var transform = {
                     break;
                 case "day":
                     for (var i = 0; i < indexs.length; i++) {
+                        var boolQuery = []
+                        for (var i = 0; i < urls.length; i++) {
+                            var filterQuery = []
+                            if (filters != undefined && filters.length > 0) {
+                                var jfilters = JSON.parse(filters)
+                                jfilters.forEach(function (filter) {
+                                    filterQuery.push({"match": filter})
+                                })
+                            }
+                            filterQuery.push({"match": {"loc": urls[i]}})
+                            boolQuery.push({
+                                "bool": {
+                                    "must": filterQuery
+                                }
+                            });
+                        }
                         requests.push({
                             index: indexs[i],
                             type: type,
@@ -2255,7 +2213,7 @@ var transform = {
                                 "size": 0,
                                 query: {
                                     bool: {
-                                        "should": createQueryByUrls(urls)
+                                        "should": boolQuery
                                     }
                                 },
                                 "aggs": _aggs
@@ -2596,7 +2554,6 @@ var transform = {
                     if (filters != undefined && filters.length > 0) {
                         var jfilters = JSON.parse(filters)
                         jfilters.forEach(function (filter) {
-                            //console.log(filter)
                             filterQuery.push({
                                 "term": filter
                             })
@@ -2614,8 +2571,6 @@ var transform = {
                     filterQuery.push({
                         "term": {"loc": event.event_page}
                     })
-                    //console.log("*****************Single query*********************************")
-                    //console.log(filterQuery.length)
                     querys.push({
                         "index": newIndexs,
                         "type": type,
@@ -2666,7 +2621,7 @@ var transform = {
                 });
             });
         },
-        searchDayEventPVs: function (es, indexs, type, showType, queryOptions, urls, callbackFn) {
+        searchDayEventPVs: function (es, indexs, type, showType, queryOptions, urls, filters, callbackFn) {
             var _aggs = {};
             queryOptions.forEach(function (queryOption) {
                 for (var key in es_aggs[queryOption]) {
@@ -2679,6 +2634,22 @@ var transform = {
                     break;
                 case "day":
                     for (var i = 0; i < indexs.length; i++) {
+                        var boolQuery = []
+                        for (var i = 0; i < urls.length; i++) {
+                            var filterQuery = []
+                            if (filters != undefined && filters.length > 0) {
+                                var jfilters = JSON.parse(filters)
+                                jfilters.forEach(function (filter) {
+                                    filterQuery.push({"match": filter})
+                                })
+                            }
+                            filterQuery.push({"match": {"loc": urls[i]}})
+                            boolQuery.push({
+                                "bool": {
+                                    "must": filterQuery
+                                }
+                            });
+                        }
                         requests.push({
                             index: indexs[i],
                             type: type,
@@ -2686,7 +2657,7 @@ var transform = {
                                 "size": 0,
                                 query: {
                                     bool: {
-                                        "should": createQueryByUrls(urls)
+                                        "should": boolQuery
                                     }
                                 },
                                 "aggs": _aggs
@@ -3031,12 +3002,29 @@ var transform = {
                     }
                     else {
                         var querys = []
-                        eventPages.forEach(function ( eventPage) {
-                            //console.log("***********************")
-                            //console.log(startNum+"  input time "+eventPage.update_time)
-                            //console.log((startNum > eventPage.update_time ? startNum : eventPage.update_time)+" 到 "+endNum)
+                        eventPages.forEach(function (eventPage) {
+                            var filterQuery = []
+                            if (filters != undefined && filters.length > 0) {
+                                var jfilters = JSON.parse(filters)
+                                jfilters.forEach(function (filter) {
+                                    filterQuery.push({
+                                        "term": filter
+                                    })
+                                })
+                            }
+                            filterQuery.push({
+                                "term": {"loc": eventPage.event_page}
+                            })
+                            filterQuery.push({
+                                "range": {
+                                    "utime": {
+                                        "from": (startNum > eventPage.update_time ? startNum : eventPage.update_time ),
+                                        "to": endNum
+                                    }//开始时间取大的
+                                }
+                            })
                             querys.push({
-                                    eventPage:  eventPage.event_page,
+                                    eventPage: eventPage.event_page,
                                     query: {
                                         "index": newIndexs,
                                         "type": type + "_event",
@@ -3044,19 +3032,7 @@ var transform = {
                                             "size": 0,
                                             query: {
                                                 bool: {
-                                                    "must": [
-                                                        {
-                                                            "term": {"loc": eventPage.event_page}
-                                                        },
-                                                        {
-                                                            "range": {
-                                                                "utime": {
-                                                                    "from": (startNum > eventPage.update_time ? startNum : eventPage.update_time ),
-                                                                    "to": endNum
-                                                                }//开始时间取大的
-                                                            }
-                                                        }
-                                                    ]
+                                                    "must": filterQuery
                                                 }
                                             },
                                             "aggs": {
@@ -3111,7 +3087,7 @@ var transform = {
                 }
             )
         },
-        searchConvEvent: function (es, indexs, type, showType, callback) {
+        searchConvEvent: function (es, indexs, type, showType, filters, callback) {
             var indexQurey = []
             for (var i = 0; i < indexs.length; i++) {
                 indexQurey.push({
@@ -3153,11 +3129,25 @@ var transform = {
                         switch (showType) {
                             case "day":
                                 for (i = 0; i < newIndexs.length; i++) {
+                                    var filterQuery = []
+                                    if (filters != undefined && filters.length > 0) {
+                                        var jfilters = JSON.parse(filters)
+                                        jfilters.forEach(function (filter) {
+                                            filterQuery.push({
+                                                "term": filter
+                                            })
+                                        })
+                                    }
                                     requests.push({
                                         "index": newIndexs[i].index,
                                         "type": type + "_event",
                                         "body": {
                                             "size": 0,
+                                            query: {
+                                                bool: {
+                                                    "must": filterQuery
+                                                }
+                                            },
                                             "aggs": {
                                                 "countTarget": {
                                                     "terms": {
@@ -3236,131 +3226,7 @@ var transform = {
                     }
                 })
         },
-        searchEventInfo: function (es, indexs, type, showType, callback) {
-            var indexQurey = []
-            for (var i = 0; i < indexs.length; i++) {
-                indexQurey.push({
-                    index: indexs[i]
-                });
-            }
-            async.map(indexQurey,
-                //集合不存在情况处理
-                function (item, callback) {
-                    es.indices.exists(item, function (error, exists) {
-                        callback(null, exists);
-                    });
-                },
-                //存在集合情况处理
-                function (error, results) {
-                    var newIndexs = []
-                    for (var eindex in results) {
-                        if (results[eindex])
-                            newIndexs.push(indexQurey[eindex])
-                    }
-                    if (newIndexs.length == 0) {//不存在集合
-                        var null_data = []
-                        if (showType == "total") {
-                            null_data.push({
-                                crate_pv: 0,
-                                date_time: indexs[0].substring(7, indexs[0].length) + "~" + indexs[indexs.length - 1].substring(7, indexs[indexs.length - 1].length)
-                            });
-                        } else {
-                            for (var k = 0; k < indexs.length; k++) {
-                                null_data.push({
-                                    crate_pv: 0, date_time: indexs[k].substring(7, indexs[k].length)
-                                });
-                            }
-                        }
-                        callback(null_data);
-                    } else {
-                        var requests = [];
 
-                        switch (showType) {
-                            case "day":
-                                for (i = 0; i < newIndexs.length; i++) {
-                                    requests.push({
-                                        "index": newIndexs[i].index,
-                                        "type": type + "_event",
-                                        "body": {
-                                            "size": 0,
-                                            //"aggs": {
-                                            //    "countTarget": {
-                                            //        "terms": {
-                                            //            "field": "et_category"
-                                            //        }
-                                            //    },
-                                            //}
-                                        }
-                                    });
-                                }
-                                break;
-                            default :
-                                requests.push({
-                                    "index": newIndexs[0].index,
-                                    "type": type + "_event",
-                                    "et_target": "true",
-                                    //"body": {
-                                    //    "size": 0,
-                                    //    "aggs": {
-                                    //        "countTarget": {
-                                    //
-                                    //        },
-                                    //    }
-                                    //}
-                                });
-                                break;
-                        }
-                        async.map(requests, function (item, callback) {
-                            es.search(item, function (error, result) {
-                                if (result != undefined && result.aggregations != undefined) {
-                                    callback(null, result.aggregations);
-                                } else {
-                                    callback(null, null);
-                                }
-                            });
-                        }, function (error, results) {
-                            var data = []
-                            callback(results)
-                            //if (showType == "tatol") {
-                            //    var eventCount = 0;
-                            //    var convCount = 0;
-                            //    results[0].countTarget.buckets.forEach(function (item) {
-                            //        if (item.key=="true") {
-                            //            convCount = item.doc_count
-                            //            eventCount += item.doc_count
-                            //        } else {
-                            //            eventCount += item.doc_count
-                            //        }
-                            //    })
-                            //    data.push({
-                            //        "eventCount": eventCount,
-                            //        "convCount": convCount,
-                            //        "date_time": indexs[0].substring(7, indexs[0].length) + "~" + indexs[indexs.length - 1].substring(7, indexs[indexs.length - 1].length)
-                            //    });
-                            //}else if(showType =="day"){
-                            //    results.forEach(function(item){
-                            //        var eventCount = 0;
-                            //        var convCount = 0;
-                            //        item.countTarget.buckets.forEach(function (item) {
-                            //            if (item.key=="true") {
-                            //                convCount = item.doc_count
-                            //                eventCount += item.doc_count
-                            //            } else {
-                            //                eventCount += item.doc_count
-                            //            }
-                            //        })
-                            //        data.push({
-                            //            "eventCount": eventCount,
-                            //            "convCount": convCount,
-                            //            "date_time": indexs[0].substring(7, indexs[0].length) + "~" + indexs[indexs.length - 1].substring(7, indexs[indexs.length - 1].length)
-                            //        });
-                            //    })
-                            //}
-                            //callback(data);
-                        });
-                    }
-                })
-        },
         /**
          * 按天查询时间内的 事件转化次数
          * @param es

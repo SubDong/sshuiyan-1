@@ -8,6 +8,7 @@ define(["app"], function (app) {
     app.controller('wayctrl', function ($timeout, $scope, $rootScope, $q, $http, $cookieStore, requestService, areaService, SEM_API_URL, uiGridConstants) {
         $scope.allCitys = angular.copy($rootScope.citys);
         $scope.areaSearch = "";
+        $rootScope.areaFilter = "全部";
         $scope.removeAreaSearch = function (obj) {
             $scope.city.selected = {"name": "全部"};
             $rootScope.$broadcast("loadAllArea");

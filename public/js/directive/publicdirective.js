@@ -906,7 +906,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
     /**
      * Create by wms on 2015-04-22.合计信息显示
      */
-    app.directive("sshDateShow", function ($http, $rootScope, $q, SEM_API_URL) {
+    app.directive("sshDateShow", function ($http, $rootScope, $q, $location, SEM_API_URL) {
         return {
             restrict: 'E',
             templateUrl: '../commons/date_show.html',
@@ -940,7 +940,11 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     var esRequest = $http.get('/api/index_summary/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field) + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
                     var seoQuotas = scope.getSEOQuotas();
                     if (seoQuotas.length > 0) {
-                        var seoRequest = $http.get(SEM_API_URL + "/sem/report/" + scope.ssh_seo_type + "?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&device=-1&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd);
+                        if ($rootScope.areaFilter != "全部" && $location.path() == "/extension/way") {// 推广方式地域过滤不为全部是特殊处理
+                            var seoRequest = $http.get(SEM_API_URL + "/sem/report/region?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&device=-1&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&rgna=" + $rootScope.areaFilter);
+                        } else {
+                            var seoRequest = $http.get(SEM_API_URL + "/sem/report/" + scope.ssh_seo_type + "?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&device=-1&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd);
+                        }
                     }
                     $q.all([esRequest, seoRequest]).then(function (final_result) {
                         scope.pushESData(final_result[0].data);
@@ -957,7 +961,11 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     var esRequest = $http.get('/api/index_summary/?start=' + startTime + "&end=" + endTime + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field) + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
                     var seoQuotas = scope.getSEOQuotas();
                     if (seoQuotas.length > 0) {
-                        var seoRequest = $http.get(SEM_API_URL + "/sem/report/" + scope.ssh_seo_type + "?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&device=-1&startOffset=" + startTime + "&endOffset=" + endTime);
+                        if ($rootScope.areaFilter != "全部" && $location.path() == "/extension/way") {// 推广方式地域过滤不为全部是特殊处理
+                            var seoRequest = $http.get(SEM_API_URL + "/sem/report/region?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&device=-1&startOffset=" + startTime + "&endOffset=" + endTime + "&rgna=" + $rootScope.areaFilter);
+                        } else {
+                            var seoRequest = $http.get(SEM_API_URL + "/sem/report/" + scope.ssh_seo_type + "?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&device=-1&startOffset=" + startTime + "&endOffset=" + endTime);
+                        }
                     }
                     $q.all([esRequest, seoRequest]).then(function (final_result) {
                         // 初始化对比数据

@@ -150,7 +150,7 @@ define(["./module"], function (ctrs) {
                             turls.push({updateTime: data.update_time, page_urls: urls})
                         })
                         var tCheckedArray = ["pv", "uv", "vc", "ip", "nuv", "nuvRate"]
-                        var pvurl = "/api/transform/getPageSePVs?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&rfType=" + row.entity.rf_type + "&queryOptions=" + tCheckedArray + "&pages=" + JSON.stringify(turls) + "&showType=day"
+                        var pvurl = "/api/transform/getPageSePVs?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&rfType=" + row.entity.rf_type + "&queryOptions=" + tCheckedArray + "&pages=" + JSON.stringify(turls) + "&showType=day" + "&filters=" + $rootScope.getFilters()
                         $http.get(pvurl).success(function (pvdatas) {
                             var isPConv = false;
                             for (var index = 0; index < $rootScope.checkedArray.length; index++) {
@@ -167,7 +167,7 @@ define(["./module"], function (ctrs) {
                             if (isPConv) {
                                 //查询转化的数据
                                 var tPageInfoArr = ["conversions", "benefit"]
-                                var pageurl = "/api/transform/getPageBaseInfo?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&rfType=" + row.entity.rf_type + "&queryOptions=" + tPageInfoArr + "&pages=" + JSON.stringify(turls) + "&showType=day"
+                                var pageurl = "/api/transform/getPageBaseInfo?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&rfType=" + row.entity.rf_type + "&queryOptions=" + tPageInfoArr + "&pages=" + JSON.stringify(turls) + "&showType=day" + "&filters=" + $rootScope.getFilters()
                                 $http.get(pageurl).success(function (pagedatas) {
                                     $rootScope.gridOptions.data.forEach(function (data, index) {
                                         $rootScope.checkedArray.forEach(function (attr) {
@@ -217,8 +217,8 @@ define(["./module"], function (ctrs) {
                     enableSorting: false
                 },
                 {
-                    name: "页面转化目标名称",
-                    displayName: "页面转化目标名称",
+                    name: "来源",
+                    displayName: "来源",
                     field: "campaignName",
                     cellTemplate: "<div><a href='javascript:void(0)' style='color:#0965b8;line-height:30px' ng-click='grid.appScope.showPageSeDetail(grid.options.data,row)'>{{grid.appScope.getDataUrlInfo(grid, row,3)}}</a></div>",
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
@@ -528,7 +528,7 @@ define(["./module"], function (ctrs) {
                             turls.push({updateTime: data.update_time, page_urls: urls})
                         })
                         var tCheckedArray = ["pv", "uv", "vc", "ip", "nuv", "nuvRate"]
-                        var pvurl = "/api/transform/getPageBasePVs?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&queryOptions=" + tCheckedArray + "&pages=" + JSON.stringify(turls) + "&showType=day"
+                        var pvurl = "/api/transform/getPageBasePVs?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&queryOptions=" + tCheckedArray + "&pages=" + JSON.stringify(turls) + "&showType=day" + "&filters=" + $rootScope.getFilters()
                         $http.get(pvurl).success(function (pvdatas) {
                             var isPConv = false;
                             for (var index = 0; index < $rootScope.checkedArray.length; index++) {
@@ -545,7 +545,7 @@ define(["./module"], function (ctrs) {
                             if (isPConv) {
                                 //查询转化的数据
                                 var tPageInfoArr = ["conversions", "benefit"]
-                                var pageurl = "/api/transform/getPageBaseInfo?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&queryOptions=" + tPageInfoArr + "&pages=" + JSON.stringify(turls) + "&showType=day"
+                                var pageurl = "/api/transform/getPageBaseInfo?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&queryOptions=" + tPageInfoArr + "&pages=" + JSON.stringify(turls) + "&showType=day" + "&filters=" + $rootScope.getFilters()
                                 $http.get(pageurl).success(function (pagedatas) {
                                     $rootScope.gridOptions.data.forEach(function (data, index) {
                                         $rootScope.checkedArray.forEach(function (attr) {
@@ -588,7 +588,7 @@ define(["./module"], function (ctrs) {
                                                 attr.value += data[attr.label]
                                         })
                                     })
-                                    console.log( $rootScope.gridOptions.data)
+                                    //console.log( $rootScope.gridOptions.data)
                                     //刷新图表
                                     $scope.charts[0].config.legendDefaultChecked = [0, 1];
                                     $scope.charts[0].config.legendAllowCheckCount = 2;
@@ -637,9 +637,9 @@ define(["./module"], function (ctrs) {
                             }
                         })
                     })
-                    $http.get("/api/transform/getDayPagePVs?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&showType=" + showType + "&queryOptions=" + queryOptions + "&urls=" + JSON.stringify(pages)).success(function (pagePVDatas) {
+                    $http.get("/api/transform/getDayPagePVs?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&showType=" + showType + "&queryOptions=" + queryOptions + "&urls=" + JSON.stringify(pages) + "&filters=" + $rootScope.getFilters()).success(function (pagePVDatas) {
                         var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
-                        console.log(pagePVDatas )
+                        //console.log(pagePVDatas )
                         chart.showLoading({
                             text: "正在努力的读取数据中..."
                         });
@@ -746,6 +746,21 @@ define(["./module"], function (ctrs) {
                 }
             };
 
+            $rootScope.getFilters = function(){
+                var  filters = []
+                //console.log( JSON.stringify($rootScope.tableSwitch.terminalFilter)+"  "+ JSON.stringify($rootScope.tableSwitch.visitorFilter)+" " +JSON.stringify($rootScope.tableSwitch.areaFilter))
+                if($rootScope.tableSwitch.terminalFilter!=undefined&&$rootScope.tableSwitch.terminalFilter!=null){
+                    filters.push($rootScope.tableSwitch.terminalFilter)
+                }
+                if($rootScope.tableSwitch.visitorFilter!=undefined&&$rootScope.tableSwitch.visitorFilter!=null){
+                    filters.push($rootScope.tableSwitch.visitorFilter)
+                }
+                if($rootScope.tableSwitch.areaFilter!=undefined&&$rootScope.tableSwitch.areaFilter!=null){
+                        filters.push($rootScope.tableSwitch.areaFilter)
+                }
+                //console.log("页面转化过滤内容="+JSON.stringify(filters))
+                return JSON.stringify(filters)
+            }
             // 配置邮件
             $rootScope.initMailData = function () {
                 $http.get("api/saveMailConfig?rt=read&rule_url=" + $rootScope.mailUrl[1] + "").success(function (result) {
