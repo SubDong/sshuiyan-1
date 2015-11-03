@@ -114,7 +114,7 @@ define(["./module"], function (ctrs) {
                 plain: true,
                 scope : $scope
             }).then(function () {
-                if(_index <= 0){
+                if(steps.length <= 1){
                     $scope.paths.splice(_index, 1)
                 }else{
                     steps.splice(_index, 1);
