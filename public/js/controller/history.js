@@ -131,11 +131,14 @@ define(['./module'], function (ctrs) {
         $scope.setHistoryVisitors = function (a) {
             //获取默认的过滤条件
             var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
-            //排除访客过滤
-            var rf_index = _allFilters.elementHasOwnProperty("ct");
-            if(rf_index != -1) {
-                _allFilters.remove(rf_index);
+            if(_allFilters != null) {
+                //排除访客过滤
+                var rf_index = _allFilters.elementHasOwnProperty("ct");
+                if(rf_index != -1) {
+                    _allFilters.remove(rf_index);
+                }
             }
+
             //访客过滤条件
             var _visitorFilter = "";
 
@@ -169,11 +172,14 @@ define(['./module'], function (ctrs) {
         $scope.setHistorySource = function (a) {
             //获取默认的过滤条件
             var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
-            //排除来源过滤
-            var rf_index = _allFilters.elementHasOwnProperty("rf_type");
-            if(rf_index != -1) {
-                _allFilters.remove(rf_index);
+            if(_allFilters != null) {
+                //排除来源过滤
+                var rf_index = _allFilters.elementHasOwnProperty("rf_type");
+                if(rf_index != -1) {
+                    _allFilters.remove(rf_index);
+                }
             }
+
             //来源过滤条件
             var _rfFilter = "";
             if (a == 0) {

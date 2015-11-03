@@ -1460,6 +1460,16 @@ define(["app"], function (app) {
             $scope.gridOpArray = angular.copy($rootScope.gridArray);
             $scope.gridOpArray.splice(1, 1);
             $scope.gridOptions.columnDefs = $scope.gridOpArray;
+
+            //默认指标设置排序类型
+            angular.forEach($scope.gridOptions.columnDefs, function (_record, index) {
+                if (_record.name == "新访客比率" || _record.name == "跳出率") {
+                    _record.sortingAlgorithm = $rootScope.sortPercent;
+                } else if (_record.field == "vc" || _record.field == "uv" || _record.field == "pv"
+                    || _record.field == "nuv" || _record.field == "ip" || _record.field == "avgPage") {
+                    _record.sortingAlgorithm = $rootScope.sortNumber;
+                }
+            });
             $scope.gridOptions.data = msg;
         });
         //数据对比
