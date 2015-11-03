@@ -52,10 +52,10 @@ api.get("/eventchnage_list", function (req, res) {
                             });
 
                             var tempRef = ins.event_page
-                            if (ins.event_page.indexOf("http://") > -1 && ins.event_page.length > 8)
-                                tempRef = ins.event_page.substring(7, ins.event_page.length)
-                            if (ins.event_page.indexOf("https://") > -1 && ins.event_page.length > 9)
-                                tempRef = ins.event_page.substring(8, ins.event_page.length)
+                            if (tempRef!=undefined&&tempRef.indexOf("http://") > -1 && tempRef.length > 8)
+                                tempRef = tempRef.substring(7, tempRef.length)
+                            if (tempRef!=undefined&&tempRef.indexOf("https://") > -1 && tempRef.length > 9)
+                                tempRef = tempRef.substring(8, tempRef.length)
                             if(tempRef!=undefined&&tempRef!=""&&tempRef[tempRef.length-1]=="/"){
                                 tempRef = tempRef.substring(0,tempRef.length-1)
                             }
@@ -98,10 +98,10 @@ api.get("/eventchnage_list", function (req, res) {
                                         confs.push(event_config);
                                     });
                                     var tempRef = sres[0].event_page
-                                    if (sres[0].event_page.indexOf("http://") > -1 && sres[0].event_page.length > 8)
-                                        tempRef = sres[0].event_page.substring(7, sres[0].event_page.length)
-                                    if (sres[0].event_page.indexOf("https://") > -1 && sres[0].event_page.length > 9)
-                                        tempRef = sres[0].event_page.substring(8, sres[0].event_page.length)
+                                    if (tempRef!=undefined&&tempRef.indexOf("http://") > -1 && tempRef.length > 8)
+                                        tempRef = tempRef.substring(7, tempRef.length)
+                                    if (tempRef!=undefined&&tempRef.indexOf("https://") > -1 && tempRef.length > 9)
+                                        tempRef = tempRef.substring(8, tempRef.length)
                                     if(tempRef!=undefined&&tempRef!=""&&tempRef[tempRef.length-1]=="/"){
                                         tempRef = tempRef.substring(0,tempRef.length-1)
                                     }
@@ -142,10 +142,10 @@ api.get("/eventchnage_list", function (req, res) {
                                 confs.push(event_config);
                             });
                             var tempRef = jsonqry.event_page
-                            if (jsonqry.event_page.indexOf("http://") > -1 && jsonqry.event_page.length > 8)
-                                tempRef = jsonqry.event_page.substring(7, jsonqry.event_page.length)
-                            if (jsonqry.event_page.indexOf("https://") > -1 && jsonqry.event_page.length > 9)
-                                tempRef = jsonqry.event_page.substring(8, jsonqry.event_page.length)
+                            if (tempRef!=undefined&&tempRef.indexOf("http://") > -1 && tempRef.length > 8)
+                                tempRef = tempRef.substring(7, tempRef.length)
+                            if (tempRef!=undefined&&tempRef.indexOf("https://") > -1 && tempRef.length > 9)
+                                tempRef = tempRef.substring(8, tempRef.length)
                             if(tempRef!=undefined&&tempRef!=""&&tempRef[tempRef.length-1]=="/"){
                                 tempRef = tempRef.substring(0,tempRef.length-1)
                             }
@@ -494,12 +494,12 @@ api.get("/page_conv", function (req, res) {
                     ins.target_urls.forEach(function (target_url) {
 
                         var tempRef = target_url.url
-                        if (target_url.url.indexOf("http://") > -1 && target_url.url.length > 8)
-                            tempRef = target_url.url.substring(7, target_url.url.length)
-                        if (target_url.url.indexOf("https://") > -1 && target_url.url.length > 9)
-                            tempRef = target_url.url.substring(8, target_url.url.length)
-                        if (tempRef != undefined && tempRef != "" && tempRef[tempRef.length - 1] == "/") {
-                            tempRef = tempRef.substring(0, tempRef.length - 1)
+                        if (tempRef!=undefined&&tempRef.indexOf("http://") > -1 && tempRef.length > 8)
+                            tempRef = tempRef.substring(7, tempRef.length)
+                        if (tempRef!=undefined&&tempRef.indexOf("https://") > -1 && tempRef.length > 9)
+                            tempRef = tempRef.substring(8, tempRef.length)
+                        if(tempRef!=undefined&&tempRef!=""&&tempRef[tempRef.length-1]=="/"){
+                            tempRef = tempRef.substring(0,tempRef.length-1)
                         }
                         console.log("save page_conv 刷新Redis：" + ins.site_id + ":pc:" + tempRef + " = " + JSON.stringify(conf))
                         req.redisclient.multi().set(ins.site_id + ":pc:" + tempRef, JSON.stringify(conf)).exec()
@@ -548,12 +548,12 @@ api.get("/page_conv", function (req, res) {
                                 config.target_urls.forEach(function (target_url) {
 
                                     var tempRef = target_url.url
-                                    if (target_url.url.indexOf("http://") > -1 && target_url.url.length > 8)
-                                        tempRef = target_url.url.substring(7, target_url.url.length)
-                                    if (target_url.url.indexOf("https://") > -1 && target_url.url.length > 9)
-                                        tempRef = target_url.url.substring(8, target_url.url.length)
-                                    if (tempRef != undefined && tempRef != "" && tempRef[tempRef.length - 1] == "/") {
-                                        tempRef = tempRef.substring(0, tempRef.length - 1)
+                                    if (tempRef!=undefined&&tempRef.indexOf("http://") > -1 && tempRef.length > 8)
+                                        tempRef = tempRef.substring(7, tempRef.length)
+                                    if (tempRef!=undefined&&tempRef.indexOf("https://") > -1 && tempRef.length > 9)
+                                        tempRef = tempRef.substring(8, tempRef.length)
+                                    if(tempRef!=undefined&&tempRef!=""&&tempRef[tempRef.length-1]=="/"){
+                                        tempRef = tempRef.substring(0,tempRef.length-1)
                                     }
                                     console.log("update page_conv 刷新Redis：" + config.site_id + ":pc:" + tempRef + " = " + JSON.stringify(conf))
                                     req.redisclient.multi().set(config.site_id + ":pc:" + tempRef, JSON.stringify(conf)).exec()
@@ -759,10 +759,10 @@ api.get("/page_title", function (req, res) {
                 //通过site_id 去获取track_id
                 if (entity.site_id != null && entity.page_url != null) {
                     var tempRef = entity.page_url
-                    if (entity.page_url.indexOf("http://") > -1 && entity.page_url.length > 8)
-                        tempRef = entity.page_url.substring(7, entity.page_url.length)
-                    if (entity.page_url.indexOf("https://") > -1 && entity.page_url.length > 9)
-                        tempRef = entity.page_url.substring(8, entity.page_url.length)
+                    if (tempRef!=undefined&&tempRef.indexOf("http://") > -1 && tempRef.length > 8)
+                        tempRef = tempRef.substring(7, tempRef.length)
+                    if (tempRef!=undefined&&tempRef.indexOf("https://") > -1 && tempRef.length > 9)
+                        tempRef = tempRef.substring(8, tempRef.length)
                     if(tempRef!=undefined&&tempRef!=""&&tempRef[tempRef.length-1]=="/"){
                         tempRef = tempRef.substring(0,tempRef.length-1)
                     }
@@ -951,10 +951,10 @@ api.get("/select", function (req, res) {
                                                 });
 
                                                 var tempRef = docs[0].event_page
-                                                if (docs[0].event_page.indexOf("http://") > -1 && docs[0].event_page.length > 8)
-                                                    tempRef = docs[0].event_page.substring(7, docs[0].event_page.length)
-                                                if (docs[0].event_page.indexOf("https://") > -1 && docs[0].event_page.length > 9)
-                                                    tempRef = docs[0].event_page.substring(8, docs[0].event_page.length)
+                                                if (tempRef!=undefined&&tempRef.indexOf("http://") > -1 && tempRef.length > 8)
+                                                    tempRef = tempRef.substring(7, tempRef.length)
+                                                if (tempRef!=undefined&&tempRef.indexOf("https://") > -1 && tempRef.length > 9)
+                                                    tempRef = tempRef.substring(8, tempRef.length)
                                                 if(tempRef!=undefined&&tempRef!=""&&tempRef[tempRef.length-1]=="/"){
                                                     tempRef = tempRef.substring(0,tempRef.length-1)
                                                 }
@@ -993,10 +993,10 @@ api.get("/select", function (req, res) {
                                                 confs.push(event_config);
                                             });
                                             var tempRef = docs[0].event_page
-                                            if (docs[0].event_page.indexOf("http://") > -1 && docs[0].event_page.length > 8)
-                                                tempRef = docs[0].event_page.substring(7, docs[0].event_page.length)
-                                            if (docs[0].event_page.indexOf("https://") > -1 && docs[0].event_page.length > 9)
-                                                tempRef = docs[0].event_page.substring(8, docs[0].event_page.length)
+                                            if (tempRef!=undefined&&tempRef.indexOf("http://") > -1 && tempRef.length > 8)
+                                                tempRef = tempRef.substring(7, tempRef.length)
+                                            if (tempRef!=undefined&&tempRef.indexOf("https://") > -1 && tempRef.length > 9)
+                                                tempRef = tempRef.substring(8, tempRef.length)
                                             if(tempRef!=undefined&&tempRef!=""&&tempRef[tempRef.length-1]=="/"){
                                                 tempRef = tempRef.substring(0,tempRef.length-1)
                                             }
@@ -1050,10 +1050,10 @@ api.get("/select", function (req, res) {
                                     confs.push(event_config);
                                 });
                                 var tempRef = existQry.event_page
-                                if (existQry.event_page.indexOf("http://") > -1 && existQry.event_page.length > 8)
-                                    tempRef = existQry.event_page.substring(7, existQry.event_page.length)
-                                if (existQry.event_page.indexOf("https://") > -1 && existQry.event_page.length > 9)
-                                    tempRef = existQry.event_page.substring(8, existQry.event_page.length)
+                                if (tempRef!=undefined&&tempRef.indexOf("http://") > -1 && tempRef.length > 8)
+                                    tempRef = tempRef.substring(7, tempRef.length)
+                                if (tempRef!=undefined&&tempRef.indexOf("https://") > -1 && tempRef.length > 9)
+                                    tempRef = tempRef.substring(8, tempRef.length)
                                 if(tempRef!=undefined&&tempRef!=""&&tempRef[tempRef.length-1]=="/"){
                                     tempRef = tempRef.substring(0,tempRef.length-1)
                                 }
