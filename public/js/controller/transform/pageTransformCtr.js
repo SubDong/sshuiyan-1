@@ -437,7 +437,7 @@ define(["./module"], function (ctrs) {
                 $rootScope.start = time[0];
                 $rootScope.end = time[1];
                 //时间段选择执行数据查询
-                $scope.page_init(false);
+                $rootScope.refreshData(true);
             };
             $rootScope.datepickerClickTow = function (start, end, label) {
                 var time = chartUtils.getTimeOffset(start, end);
