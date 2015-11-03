@@ -25,5 +25,5 @@
         <input type="text" maxlength="128" ng-model="page" value=""><span> /{{ gridApiAdmin.pagination.getTotalPages() }}</span>
         <button type="button" class="btn btn_ht  " ng-click="pagego(gridApiAdmin)">跳转</button>
     </div>
-    <span class='pageshow' ng-class="{hidePerPageShow:gridApiAdmin.grid.rows.length<=20}">每页显示：</span>
+    <!--<span class='pageshow' ng-class="{hidePerPageShow:gridApiAdmin.grid.rows.length<=20}"></span>-->
 </div>
