@@ -406,13 +406,15 @@ define(["./module"], function (ctrs) {
                                         }
                                     }
                                     $scope.gridOptions.columnDefs = $scope.gridOpArray;
-                                    $scope.gridOptions.data = dataArray;
                                 }
                             }
                         }).error(function (error) {
                             console.log(error);
                         });
                     });
+                    if ($rootScope.tableSwitch.number != 5) {
+                        $scope.gridOptions.data = dataArray;
+                    }
                 });
             }
         };
