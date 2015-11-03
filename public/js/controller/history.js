@@ -201,6 +201,10 @@ define(['./module'], function (ctrs) {
             $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
 
             if ($scope.tableJu == "html") {
+                if (a == 0) $rootScope.tableSwitch.tableFilter = null;
+                if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":\"1\"}]";
+                if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":\"2\"}]";
+                if (a == 3) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":\"3\"}]";
                 getHtmlTableData();
             } else {
                 $rootScope.$broadcast("ssh_data_show_refresh");
