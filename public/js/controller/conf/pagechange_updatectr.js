@@ -292,7 +292,6 @@ define(["./module"], function (ctrs) {
                 paths: $scope.paths,
                 conv_tpye: $scope.conv_tpye,//转换类型，regist,communicate,place_order,othre_order
                 conv_text:$scope.conv_tpye=="other"?($scope.t_conv_text.trim()==""?menu_conv_type["other"]:$scope.t_conv_text.trim()):menu_conv_type[$scope.conv_tpye],
-                update_time: new Date().getTime()
             }
 
             ///检查名称是否相同

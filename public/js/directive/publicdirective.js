@@ -745,8 +745,8 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                         //}
                         if (scope.generatePDFMakeData) {
                             scope.generatePDFMakeData(function (docDefinition) {
-                                //pdfMake.createPdf(docDefinition).download();
-                                pdfMake.createPdf(docDefinition).open();
+                                pdfMake.createPdf(docDefinition).download();
+                                //pdfMake.createPdf(docDefinition).open();
                             });
                         }
                     }
@@ -951,7 +951,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     var esRequest = $http.get('/api/index_summary/?start=' + startTime + "&end=" + endTime + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field) + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
                     var seoQuotas = scope.getSEOQuotas();
                     if (seoQuotas.length > 0) {
-                        var seoRequest = $http.get(SEM_API_URL + "/sem/report/" + scope.ssh_seo_type + "?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&device=-1&?startOffset=" + startTime + "&endOffset=" + endTime);
+                        var seoRequest = $http.get(SEM_API_URL + "/sem/report/" + scope.ssh_seo_type + "?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&device=-1&startOffset=" + startTime + "&endOffset=" + endTime);
                     }
                     $q.all([esRequest, seoRequest]).then(function (final_result) {
                         // 初始化对比数据
@@ -1248,7 +1248,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                 };
 
                 scope.loadCompareDataShow = function (startTime, endTime) {
-                    var semRequest = $http.get(SEM_API_URL + "search_word/" + $rootScope.userType
+                    var semRequest = $http.get(SEM_API_URL + "/search_word/" + $rootScope.userType
                     + "/?startOffset=" + startTime + "&endOffset=" + endTime);
                     var count = 0;
                     $q.all([semRequest]).then(function (final_result) {

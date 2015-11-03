@@ -5,7 +5,7 @@ define(["./module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.controller("alliancepromotion", function ($timeout, $scope, $rootScope, $http, $q, requestService, SEM_API_URL, $cookieStore, uiGridConstants) {
+    ctrs.controller("alliancepromotion", function ($timeout, $scope, $rootScope, $http, $q, requestService, $cookieStore, uiGridConstants) {
         $scope.todayClass = true;
         var user = $rootScope.user
         var baiduAccount = $rootScope.baiduAccount;

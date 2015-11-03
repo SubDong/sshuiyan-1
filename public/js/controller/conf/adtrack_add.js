@@ -182,15 +182,15 @@ define(["./module"], function (ctrs) {
             $scope.str = function (kw) {
                 var strUrl = "";
                 var sourceUrl = $scope.adTrack.targetUrl;
-                var yesParam = "?rf=" + $scope.adTrack.mediaPlatform;
-                var noParam = "*rf=" + $scope.adTrack.mediaPlatform;
-                var notHostName = "*media=" + $scope.adTrack.adTypes
-                    + "*cpna=" + $scope.adTrack.planName
-                    + "*kwna=" + kw
-                    + "*crt=" + $scope.adTrack.creative
-                    + "*t=" + $rootScope.siteTrackId
-                    + "*atk=1"
-                    + "*tt=0";
+                var yesParam = "?adsrf=" + $scope.adTrack.mediaPlatform;
+                var noParam = "&adsrf=" + $scope.adTrack.mediaPlatform;
+                var notHostName = "&media=" + $scope.adTrack.adTypes
+                    + "&cpna=" + $scope.adTrack.planName
+                    + "&kwna=" + kw
+                    + "&crt=" + $scope.adTrack.creative
+                    + "&t=" + $rootScope.siteTrackId
+                    + "&atk=1"
+                    + "&adstt=0";
 
                 if (sourceUrl != null && sourceUrl != "") {
                     if (sourceUrl.indexOf("?") == -1) {

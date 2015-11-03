@@ -1,17 +1,8 @@
-/**
- * Created by MrDeng on 2015/6/25.
- */
 (function () {
-    //提示消息 常量字符串定义
-    var msgs = {
-        title: "你好"
-    }
-    //标签数组
+    var msgs = {title: "你好"};
     var tips = [];
-
     var p = {
-        //flashUrl: "127.0.0.1:8000",
-        flashUrl: "hy.best-ad.cn",
+        flashUrl: "192.168.1.102:8000",
         urlPath: "config/select",
         protocol: "https:" == document.location.protocol ? "https:" : "http:",
         webroot: "http://tongji.baidu.com/hm-web",
@@ -21,9 +12,7 @@
         q: null,
         v: "1.0.1"
     };
-    //服务访问的BasePath
     var server_base_path = p.protocol + "//" + p.flashUrl + "/" + p.urlPath;
-    //无ID元素或者元素ID不正确情况 点击提示内容
     var errIdMsg = {
         defaultTargetName: "事件目标",
         disable: "该对象没有ID，无法监控，请修改网页源代码，为该对象添加ID.",
@@ -36,13 +25,12 @@
         },
         OBJECT: "无法监控。"
     };
-    /////////////////////////////浏览器兼容处理
-    var d = /gecko/i.test(navigator.userAgent) && !/like gecko/i.test(navigator.userAgent);//Mozilla
+    var d = /gecko/i.test(navigator.userAgent) && !/like gecko/i.test(navigator.userAgent);
     var H = /msie (\d+\.\d)/i.test(navigator.userAgent) ? parseFloat(RegExp["\x241"]) : 0;
     var e = /webkit/i.test(navigator.userAgent);
     var J = /opera\/(\d+\.\d)/i.test(navigator.userAgent) ? parseFloat(RegExp["\x241"]) : 0;
     var K = document.compatMode == "CSS1Compat";
-    //////////////////////////////////////公共方法
+
     function ckeckDoc(doc) {
         if (doc && doc.preventDefault) {
             doc.preventDefault()
@@ -63,7 +51,6 @@
         return null
     }
 
-    //添加鼠标事件
     function attachEvent(doc, ename, efunc) {
         doc = forcedoc(doc);
         ename = ename.replace(/^on/i, "").toLowerCase();
@@ -76,63 +63,9 @@
         }
     }
 
-    //设置风格
-    function setPanleStyle(elem) {//elem=Y
-        //var elem = attachEvent(elem);
-        //var ac = (elem.nodeType == 9) ? elem : elem.ownerDocument || elem.document;
-        //var ab = d > 0 && ac.getBoxObjectFor && N(elem, "position") == "absolute" && (elem.style.top === "" || elem.style.left === "");
-        //var ad = {left: 0, top: 0};
-        //var X = (H && !K) ? ac.body : ac.documentElement;
-        //if (elem == X) {
-        //    return ad
-        //}
-        //var Z = null;
-        //var aa;
-        //if (elem.getBoundingClientRect) {
-        //    aa = elem.getBoundingClientRect();
-        //    ad.left = Math.floor(aa.left) + Math.max(ac.documentElement.scrollLeft, ac.body.scrollLeft);
-        //    ad.top = Math.floor(aa.top) + Math.max(ac.documentElement.scrollTop, ac.body.scrollTop);
-        //    ad.left -= ac.documentElement.clientLeft;
-        //    ad.top -= ac.documentElement.clientTop;
-        //    if (H && !K) {
-        //        ad.left -= 2;
-        //        ad.top -= 2
-        //    }
-        //} else {
-        //    if (ac.getBoxObjectFor && !ab) {
-        //        aa = ac.getBoxObjectFor(elem);
-        //        var G = ac.getBoxObjectFor(X);
-        //        ad.left = aa.screenX - G.screenX;
-        //        ad.top = aa.screenY - G.screenY
-        //    } else {
-        //        Z = elem;
-        //        do {
-        //            ad.left += Z.offsetLeft;
-        //            ad.top += Z.offsetTop;
-        //            if (e > 0 && N(Z, "position") == "fixed") {
-        //                ad.left += ac.body.scrollLeft;
-        //                ad.top += ac.body.scrollTop;
-        //                break
-        //            }
-        //            Z = Z.offsetParent
-        //        } while (Z && Z != elem);
-        //        if (J > 0 || (browser.isWebkit > 0 && N(elem, "position") == "absolute")) {
-        //            ad.top -= ac.body.offsetTop
-        //        }
-        //        Z = elem.offsetParent;
-        //        while (Z && Z != ac.body) {
-        //            ad.left -= Z.scrollLeft;
-        //            if (!b.opera || Z.tagName != "TR") {
-        //                ad.top -= Z.scrollTop
-        //            }
-        //            Z = Z.offsetParent
-        //        }
-        //    }
-        //}
-        //return ad
+    function setPanleStyle(elem) {
     }
 
-    //随机名称生成
     var randName = function (length) {
         function randChar() {
             var ab = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
@@ -177,7 +110,6 @@
         }
     }
 
-    //阻止浏览器 冒泡事件
     function stopBrowserBubble(G) {
         var G = G || window.event;
         if (G.stopPropagation) {
@@ -267,13 +199,10 @@
             }
         }
     };
-
-    //获取元素值，并去除限定字符
     function a(G) {
         return G.replace(new RegExp("(^[\\s\\t\\xa0\\u3000]+)|([\\u3000\\xa0\\s\\t]+\x24)", "g"), "")
     }
 
-    //判断事件名称是否合法
     function ckeckEventName(G) {
         return (G.search(/[^*()<>"']/) == -1) ? true : false
     }
@@ -284,7 +213,8 @@
         if (G) {
             return G[2]
         }
-    };
+    }
+
     function o(ab, X, G, Y, aa) {
         var Z = '<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" width="' + G + '" height="' + Y + '" id="' + ab + '" align="middle">';
         Z += '<param name="allowscriptaccess" value="always">';
@@ -367,8 +297,7 @@
             }
         }
         return ad
-    };
-
+    }
 
     function C(X) {
         var G = q(X);
@@ -383,7 +312,8 @@
             elm[X] ? G[G.length] = elm[X] : null
         }
         return G
-    };
+    }
+
     function w(G) {
         var X = G.sort();
         var Z = {};
@@ -394,7 +324,8 @@
             }
         }
         return Z
-    };
+    }
+
     function W(X, G) {
         var X = forcedoc(X);
         while (X && X != document.body) {
@@ -417,7 +348,8 @@
             document.body.appendChild(G);
             return G
         }
-    };
+    }
+
     function g(G, Y, X) {
         var G = forcedoc(G);
         while (G && G != document.body) {
@@ -449,74 +381,55 @@
         }
     }
 
-    //HTTP跨域请求返回JS值 全局变量
     var resQueue = [{locked: 0, val: undefined}, {locked: 0, val: undefined}, {locked: 0, val: undefined}];
     var getQueueIndex = function () {
         for (var i = 0; i < resQueue.length; i++) {
             if (resQueue[i].locked == 0) {
                 resQueue[i].locked = 1;
                 resQueue[i].val = undefined;
-                return i;
+                return i
             }
         }
-        return -1;
-    }
-    //HTTP跨域请求返回JS接收 回调函数
+        return -1
+    };
     crossDomainCallback = function (data, index) {
-        resQueue[index].val = data;
-    }
-    //跨域访问 统一函数
-    //返回值为 返回数据存放位置
+        resQueue[index].val = data
+    };
     crossDomainSendData = function (url, cb) {
         var index = getQueueIndex();
-        if (index < 0) {//队列满了
-            return;
+        if (index < 0) {
+            return
         }
         var scriptBlock = document.createElement("script");
-        if (url.indexOf("?") < 0) {//请求附加uid和trackid信息
-            scriptBlock.src = url + "?index=" + index + "&td=" + params["td"] + "&cuid=" + params["cuid"];
+        if (url.indexOf("?") < 0) {
+            scriptBlock.src = url + "?index=" + index + "&td=" + params["td"] + "&cuid=" + params["cuid"]
         } else {
-            scriptBlock.src = url + "&index=" + index + "&td=" + params["td"] + "&cuid=" + params["cuid"];
+            scriptBlock.src = url + "&index=" + index + "&td=" + params["td"] + "&cuid=" + params["cuid"]
         }
-        //console.log("跨域请求使用数据队列：" + scriptBlock.src)
         document.getElementsByTagName("head")[0].appendChild(scriptBlock);
         window.setTimeout(function () {
             if (resQueue[index].val == undefined) {
-                //console.log("超时，数据回写失败！")
+            } else {
+                cb(index, resQueue[index]);
+                panelcont.canelPanel()
             }
-            else {
-                //刷新显示事件
-                //console.log("跨域请求 返回数据:" + index + "==>" + JSON.stringify(resQueue[index]));
-                cb(index, resQueue[index]);//数据发送并返回成功后处理
-                panelcont.canelPanel();//关闭窗口
-            }
-            resQueue[index].locked = 0;//归还队列
+            resQueue[index].locked = 0;
             resQueue[index].val = undefined;
-            document.getElementsByTagName("head")[0].removeChild(scriptBlock);//删除临时script元素
-        }, 2000);//设置超时时间
-    }
-    //////////////////////////////////////公共方法
-
-
-    /**
-     * 页面整体控制
-     * @type {{init: Function, forms: {input: string, select: string, img: string}, reBuildingWindow: Function, reBuildingFlash: Function, displayAltContent: Function}}
-     */
-    var rootPage = {//v=rootPage
+            document.getElementsByTagName("head")[0].removeChild(scriptBlock)
+        }, 2000)
+    };
+    var rootPage = {
         init: function () {
             rootPage.reBuildingFlash();
             rootPage.reBuildingWindow()
-        },
-        forms: {input: "", select: "", img: ""},
-        reBuildingWindow: function () {
+        }, forms: {input: "", select: "", img: ""}, reBuildingWindow: function () {
             window.open = function () {
             };
             window.openDialog = function () {
             };
             window.setHomePage = function () {
             }
-        },
-        reBuildingFlash: function () {
+        }, reBuildingFlash: function () {
             var ac = [];
             var aa = document.getElementsByTagName("OBJECT");
             var G = document.getElementsByTagName("IFRAME");
@@ -533,8 +446,7 @@
                     rootPage.displayAltContent(Z)
                 }
             }
-        },
-        displayAltContent: function (Y) {
+        }, displayAltContent: function (Y) {
             if (Y.parentNode.id == "TrackerSenderFlashContent" || Y.parentNode.id.indexOf("BDBridge") > -1) {
                 return false
             }
@@ -551,39 +463,31 @@
             Y.style.visibility = "hidden"
         }
     };
-    //Body标签操作
-    var rootBody = {//rootBody=P
-        initRootBody: function () {//初始化Body操作 =P.init()
+    var rootBody = {
+        initRootBody: function () {
             attachEvent(document, "click", panelcont.showPanelHandle);
             attachEvent(document, "mouseover", panelcont.showPanelTip);
-            attachEvent(document, "mouseout", panelcont.hidePanelTip)
-            //初始化已添加事件目标信息
+            attachEvent(document, "mouseout", panelcont.hidePanelTip);
             var url = p.protocol + "//" + p.flashUrl + "/" + p.urlPath + "?type=getTips&eventPage=" + params["pathUrl"];
-            crossDomainSendData(url, rootBody.initTips);
-        },
-        initTips: function (index, resData) {
-            //同时要写入Tips
+            crossDomainSendData(url, rootBody.initTips)
+        }, initTips: function (index, resData) {
             var rtips = resData.val;
             for (var i = 0, len = rtips.length; i < len; i++) {
-                var eventId = rtips[i]["event_id"];//事件ID
-                var eventName = rtips[i]["event_name"];//事件名称
-                var eventPage = rtips[i]["event_page"];//事件所属页面
-
+                var eventId = rtips[i]["event_id"];
+                var eventName = rtips[i]["event_name"];
+                var eventPage = rtips[i]["event_page"];
                 var doc = forcedoc(eventId);
                 if (doc != null) {
                     doc.setAttribute("HY_transId", eventId);
                     doc.setAttribute("HY_eventTargetName", decodeURIComponent(eventName));
-                    //doc.setAttribute("HY_eventType", data.eventType);
                     doc.setAttribute("HY_eventDomain", eventPage);
                     tipContent.showTip(doc.id);
-                    tips.push(rtips[i]);
+                    tips.push(rtips[i])
                 }
             }
         }
-    }
-    //弹出Panel容器
-    var panelcont = {//=O
-        //显示各种弹出容器
+    };
+    var panelcont = {
         limit: 10,
         current: null,
         otherzIndex: 2147483570,
@@ -595,24 +499,23 @@
             if (k.unFindIdList.length > 0) {
                 k.showNoSelected()
             }
-            var elem = doc.srcElement || doc.target;//elem=X
+            var elem = doc.srcElement || doc.target;
             if (elem.tagName == "HTML" || elem.tagName == "BODY" || elem.tagName == "Line") {
-                panelcont.canelPanel();//关闭弹出层
+                panelcont.canelPanel();
                 return
             }
             if (panelcont.curId) {
                 panelcont.hideRect(panelcont.curId)
             }
             panelcont.showRect(elem);
-            if (elem && elem.id) {//存在ID的 元素
+            if (elem && elem.id) {
                 panelcont.showAddPanel(elem, doc)
-            } else {//无ID元素
+            } else {
                 panelcont.showDisablePanel(elem, errIdMsg.disable)
             }
         },
-        //展示边框
         showPanelTip: function (doc) {
-            var elem = doc.srcElement || doc.target;//获取鼠标点击元素
+            var elem = doc.srcElement || doc.target;
             if (elem.tagName == "HTML" || elem.tagName == "BrootBodyDY" || elem.tagName == "Line") {
                 return
             }
@@ -621,9 +524,7 @@
                 return
             }
             elem.style.outline = "1px solid #00F"
-            //}
         },
-        //隐藏边框
         hidePanelTip: function (doc) {
             var elem = doc.srcElement || doc.target;
             var eid = elem.id;
@@ -636,8 +537,7 @@
                 elem.style.outline = ""
             }
         },
-        //存在ID元素点击 显示添加事件Panel
-        showAddPanel: function (elem, doc) {//ac=elem Y=doc
+        showAddPanel: function (elem, doc) {
             doc = doc || window.event;
             var ab = E(elem);
             var eid = elem.id;
@@ -656,7 +556,7 @@
             G.style.display = "block";
             G.innerHTML = panelcont.addEventPanel();
             elem.top = elem.top + elem.offsetHeight;
-            panelcont.fixedPosition(G, ab, elem);//固定位置
+            panelcont.fixedPosition(G, ab, elem);
             attachEvent(G, "click", stopBrowserBubble);
             attachEvent(G, "mouseover", stopBrowserBubble);
             attachEvent(G, "mouseout", stopBrowserBubble);
@@ -670,7 +570,6 @@
                 forcedoc(S).innerHTML = "添加事件目标"
             }
         },
-        //无ID元素点击提示
         showDisablePanel: function (elem, contText) {
             var Y = E(elem);
             var G = createElem();
@@ -681,7 +580,6 @@
             panelcont.fixedPosition(G, Y, elem);
             attachEvent(G, "click", stopBrowserBubble)
         },
-
         bindPanelEvent: function () {
             attachEvent(Q, "click", panelcont.submitPanel);
             attachEvent(cancelBtn, "click", panelcont.canelPanel);
@@ -694,7 +592,7 @@
             var G = forcedoc(y);
             G.innerHTML = Y;
             G.title = ab;
-            forcedoc(h).value = X;
+            forcedoc(h).value = X
         },
         fixedPosition: function (ag, Z, aa) {
             var aj = g(aa, "dispaly", "none") || g(aa, "visibility", "hidden");
@@ -739,10 +637,8 @@
             ag.style.top = ad + "px";
             ag.style.display = "block"
         },
-
-        //弹出添加事件框 确定按钮
         submitPanel: function () {
-            var addPanel = createElem();//addPanel=X
+            var addPanel = createElem();
             var G = a(forcedoc(h).value);
             var ab = a(forcedoc(path_url).value);
             if (G == "") {
@@ -760,25 +656,26 @@
             var ad = addPanel.getAttribute("HY_panelTarget");
             var Z = addPanel.getAttribute("HY_eventType");
             var Y = addPanel.getAttribute("HY_transId");
-
             var ac = Y ? Y : "";
             var evenData = {name: encodeURIComponent(G), id: ad, eventType: Z, targetId: ac, monUrl: ab};
             var url = server_base_path + "?type=saveTips&entity=" + JSON.stringify(evenData);
             crossDomainSendData(url, function (index, resData) {
-                //刷新显示事件
-                if (resData.val.code == 1) {//保存成功
-                    panelcont.addCompleteController(evenData);
-                } else if (resData.val.code == 2) {//更新成功
-                    var doc = forcedoc(evenData.id);
-                    var eventId = doc.getAttribute("HY_EventId");
-                    if (eventId) {
-                        var elem = document.getElementById(eventId);
-                        if (elem != null)
-                            elem.parentNode.removeChild(elem);
-                        panelcont.addCompleteController(evenData);
+                if (resData.val.code == 1) {
+                    panelcont.addCompleteController(evenData)
+                } else {
+                    if (resData.val.code == 2) {
+                        var doc = forcedoc(evenData.id);
+                        var eventId = doc.getAttribute("HY_EventId");
+                        if (eventId) {
+                            var elem = document.getElementById(eventId);
+                            if (elem != null) {
+                                elem.parentNode.removeChild(elem)
+                            }
+                            panelcont.addCompleteController(evenData)
+                        }
                     }
                 }
-            });
+            })
         },
         canelPanel: function () {
             var G = createElem();
@@ -802,7 +699,6 @@
                 tipContent.deleteTip(eventId)
             }
         },
-        //隐藏弹出层
         hideRect: function (docId) {
             var doc = forcedoc(docId);
             if (!doc) {
@@ -814,7 +710,6 @@
                 doc.style.outline = ""
             }
         },
-        //添加事件Panel构建
         addEventPanel: function () {
             var G = [];
             G.push('<table width="100%" border="0" cellspacing="0" cellpadding="0">');
@@ -859,7 +754,6 @@
             G.push("</table>");
             return G.join("")
         },
-
         showRect: function (X) {
             if (!X) {
                 return
@@ -882,17 +776,12 @@
                 X.setAttribute("HY_eventTargetName", decodeURIComponent(data.name));
                 X.setAttribute("HY_eventType", data.eventType);
                 X.setAttribute("HY_eventDomain", data.monUrl);
-                tipContent.showTip(Y)
-                tips.push({
-                    event_id:data.id,
-                    event_page:data.monUrl
-                });
+                tipContent.showTip(Y);
+                tips.push({event_id: data.id, event_page: data.monUrl})
             }
             panelcont.canelPanel()
         }
     };
-
-
     var k = {
         unFindIdList: [], status: 1, hasDuplicateId: function (X) {
             var G = C("id");
@@ -937,7 +826,6 @@
             }
         }
     };
-
     var tipContent = {
         zIndex: 2147483001,
         cssStr: {
@@ -970,10 +858,10 @@
             return G
         },
         showTip: function (docId) {
-            var doc = forcedoc(docId)//获取标签附着元素DOM
+            var doc = forcedoc(docId);
             var ag = (g(doc, "position", "fixed") || g(doc, "position", "absolute"));
-            var tipDiv = tipContent.creatTipContainer();//创建tip标签
-            doc.setAttribute("HY_transId", docId);//设置所属ID
+            var tipDiv = tipContent.creatTipContainer();
+            doc.setAttribute("HY_transId", docId);
             doc.setAttribute("HY_EventId", tipDiv.id);
             if (ag) {
                 var ak = doc.firstChild;
@@ -1012,16 +900,14 @@
             editIcon.style.cssText = tipContent.cssStr.EditDivNormal;
             var deleteIcon = X[3];
             deleteIcon.style.cssText = tipContent.cssStr.DeleteDivNormal;
-            //为Tip标签设置事件
             attachEvent(tipDiv, "mouseover", tipContent.overTipHandle(tipDiv.id));
             attachEvent(tipDiv, "mouseout", tipContent.outTipHandle(tipDiv.id));
             attachEvent(tipDiv, "click", tipContent.editTipHandle(tipDiv.id));
-            attachEvent(editIcon, "click", tipContent.editTipHandle(tipDiv.id));//编辑
-            attachEvent(deleteIcon, "click", tipContent.deleteHandle(tipDiv.id))//删除
+            attachEvent(editIcon, "click", tipContent.editTipHandle(tipDiv.id));
+            attachEvent(deleteIcon, "click", tipContent.deleteHandle(tipDiv.id))
         },
         clickHandle: function (G) {
             stopBrowserBubble(G)
-
         },
         overTipHandle: function (G) {
             return function (X) {
@@ -1039,8 +925,9 @@
             return function (X) {
                 stopBrowserBubble(X);
                 var Z = forcedoc(G);
-                if (Z == null || Z == undefined)
+                if (Z == null || Z == undefined) {
                     return
+                }
                 Z.style.border = "1px solid #a1afef";
                 var Y = Z.getElementsByTagName("DIV");
                 Y[0].style.background = "#a1afef";
@@ -1078,19 +965,17 @@
                         }
                     }
                     var elem = document.getElementById(docId);
-                    if (elem != null)
-                        elem.parentNode.removeChild(elem);
+                    if (elem != null) {
+                        elem.parentNode.removeChild(elem)
+                    }
                     for (var n = 0; n < tips.length; n++) {
                         if (targetMap == tips[n].event_id) {
-                            //物理删除
-                            var url = server_base_path + "?type=deleteTip&event_id=" + tips[n].event_id + "&event_page=" + tips[n].event_page
+                            var url = server_base_path + "?type=deleteTip&event_id=" + tips[n].event_id + "&event_page=" + tips[n].event_page;
                             crossDomainSendData(url, function (index, resData) {
-                                //刷新显示事件
-                                //panelcont.addCompleteController(evenData);
                             });
                             tipContent.deleteComplete(elem.id);
                             tips.splice(n, 1);
-                            break;
+                            break
                         }
                     }
                 }
@@ -1104,7 +989,6 @@
             if (G.tip_container) {
                 var X = forcedoc(G.tip_container);
                 Y.removeAttribute("HY_eventTargetName");
-                //Y.removeAttribute("HY_eventType");
                 Y.removeAttribute("HY_transId");
                 Y.removeAttribute("HY_EventId");
                 Y.removeAttribute("HY_eventDomain");
@@ -1112,20 +996,19 @@
             }
             panelcont.canelPanel()
         }
-    }
-
+    };
     var params = {};
     var shref = document.location.href;
-    var tps = shref.substring(shref.indexOf('?') + 1, shref.length).split("&");
+    var tps = shref.substring(shref.indexOf("?") + 1, shref.length).split("&");
     for (var i = 0; i < tps.length; i++) {
         var kv = tps[i].split("=");
-        params[kv[0]] = kv[1];
+        params[kv[0]] = kv[1]
     }
-    params["srcUrl"] = shref.substring(0, shref.indexOf('?'));
-    params["pathUrl"] = document.location.origin+document.location.pathname
+    params["srcUrl"] = shref.substring(0, shref.indexOf("?"));
+    params["pathUrl"] = document.location.origin + document.location.pathname;
     if (params != null && params.jn == "select") {
         document.write("<div id='" + p.hyContent + "' style='position:absolute;width:1px;height:1px;'></div>");
         rootBody.initRootBody();
-        attachEvent(document.body, "onload", rootPage.init);
+        attachEvent(document.body, "onload", rootPage.init)
     }
 })();

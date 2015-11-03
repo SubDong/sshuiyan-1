@@ -88,10 +88,20 @@ function getData(req, resp, tid, sitejson) {
          */
         var tasks = ['mouse', 'duration', 'visit', 'e', 'pc'];
         async.eachSeries(tasks, function (item, cb) {
-            var url = ((item == "mouse" || item == "e"||item == "pc") ? siteid.concat(":", item, ":", ref) : item.concat(":", siteid));
-            if(item == "pc"){
-                url = siteid.concat(":", item, ":", req.header('Referer'))
+            //console.log(ref)
+            var tempRef = ref
+            if (ref.indexOf("http://") > -1&&ref.length>8){
+                tempRef =ref.substring(7,ref.length)
+                //console.log("http 开头 拆分后="+tempRef)
             }
+
+            if (ref.indexOf("https://") > -1&&ref.length>9){
+                tempRef =ref.substring(8,ref.length)
+                //console.log("https 开头 拆分后="+tempRef)
+            }
+
+           // console.log(tempRef)
+            var url = ((item == "mouse" || item == "e" || item == "pc") ? siteid.concat(":", item, ":", tempRef) : item.concat(":", siteid));
             redis.service().get(url, function (err, val) {
                 if (val != null) {
                     try {
@@ -100,7 +110,7 @@ function getData(req, resp, tid, sitejson) {
                         config[item] = val;
                     }
                 }
-                console.log("获取Redis参数："+url+"   ===  "+val)
+                console.log("new获取Redis参数：" + url + "   ===  " + val)
                 cb();
             })
         }, function (err) {

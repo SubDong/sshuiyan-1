@@ -1,26 +1,29 @@
 <div class="page_ht">
-    <div class="shishi"><input class='select_checkbox' type='checkbox' ng-click='Selectall()' id='Selectall'
-                                 name='Selectall'>
+    <div class="shishi"><input class='select_checkbox ' type='checkbox' ng-click='Selectall()' id='Selectall'
+                               name='Selectall'>
 
         <p style='color: #000011;position: absolute; margin-left: 35px; '>本页全选</p>
 
-        <p><a href='' style='color:#46b8da;position: absolute;margin-left: 60px;' ng-click='deleteall();deleteAll()'>批量删除</a></p>
+        <p><a href='' style='color:#46b8da;position: absolute;margin-left: 60px;' ng-click='deleteall();deleteAll()'>批量删除</a>
+        </p>
     </div>
     <div style="display: inline-block" ng-hide="gridApiAdmin.pagination.getTotalPages()<=1">
         <a ng-click="gridApiAdmin.pagination.previousPage()">上一页</a>
-        <span  data-ng-repeat="gridpage in gridpages"
-                ng-class="{'current':gridApiAdmin.pagination.getPage()=={{$index+1}}}"
-                ng-click="gridApiAdmin.pagination.seek($index+1)" ng-hide="gridApiAdmin.pagination.getTotalPages()<={{$index}}">
+        <span data-ng-repeat="gridpage in gridpages"
+              ng-class="{'current':gridApiAdmin.pagination.getPage()=={{$index+1}}}"
+              ng-click="gridApiAdmin.pagination.seek($index+1)"
+              ng-hide="gridApiAdmin.pagination.getTotalPages()<={{$index}}">
             {{$index+1}}
         </span>
         <span ng-hide="gridApiAdmin.pagination.getTotalPages()<=10">...</span>
-        <button type="button" class="btn btn_ht" ng-click="gridApiAdmin.pagination.seek(gridApiAdmin.pagination.getTotalPages())"
+        <button type="button" class="btn btn_ht"
+                ng-click="gridApiAdmin.pagination.seek(gridApiAdmin.pagination.getTotalPages())"
                 ng-class="{'current':gridApiAdmin.pagination.getPage()==gridApiAdmin.pagination.getTotalPages()}"
                 ng-hide="gridApiAdmin.pagination.getTotalPages()<=9"> {{gridApiAdmin.pagination.getTotalPages()}}
         </button>
         <a ng-click="gridApiAdmin.pagination.nextPage()">下一页 </a>
-        <input type="text"  maxlength="128"  ng-model="page" value=""><span> /{{ gridApiAdmin.pagination.getTotalPages() }}</span>
+        <input type="text" maxlength="128" ng-model="page" value=""><span> /{{ gridApiAdmin.pagination.getTotalPages() }}</span>
         <button type="button" class="btn btn_ht  " ng-click="pagego(gridApiAdmin)">跳转</button>
     </div>
-    <span class='pageshow' ng-class="{hidePerPageShow:gridApiAdmin.grid.rows.length<20}">每页显示：</span>
+    <!--<span class='pageshow' ng-class="{hidePerPageShow:gridApiAdmin.grid.rows.length<=20}"></span>-->
 </div>

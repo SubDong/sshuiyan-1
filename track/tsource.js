@@ -317,14 +317,13 @@ if (config != undefined && !config.open) {
             Q: "os tit br fl pm sr lg ck ja sc dt rf loc tt ct vid u api et cv xy ut duration durPage n v adtrack".split(" "),
             PQ: "os tit br fl pm sr lg ck ja sc dt rf loc tt ct vid u api p_name p_type p_record p_orderid p_income p_conversionrate".split(" ")
         };
-        g.g.getOrderId = function(){
-            if(g.g.loc.indexOf("[[[")>0&&g.g.loc.indexOf("]]]")&&g.g.loc.indexOf("[[[")<g.g.loc.indexOf("]]]")){
-                return g.g.loc.substring(g.g.loc.indexOf("[[[")+3,g.g.loc.indexOf("]]]"))
-            }else{
+        g.g.getOrderId = function () {
+            if (g.g.loc.indexOf("[[[") > 0 && g.g.loc.indexOf("]]]") && g.g.loc.indexOf("[[[") < g.g.loc.indexOf("]]]")) {
+                return g.g.loc.substring(g.g.loc.indexOf("[[[") + 3, g.g.loc.indexOf("]]]"))
+            } else {
                 return ""
             }
         };
-
         (function () {
             var c = {
                 i: {}, e: function (h, k) {
@@ -373,7 +372,7 @@ if (config != undefined && !config.open) {
                     if (l[1] != undefined && l[1] != "" && l[1] != null) {
                         if (l[2] != undefined && l[2] != "" && l[2] != null) {
                             g.g.dt = new Date().getTime();
-                            2 < l.length && (g.g.api = "2_0", g.g.et = c(l[1]) + "*" + c(l[2]) + "*" + c(l[3]) + (l[4] ? "*" + c(l[4]) : ""), d.b.init());
+                            2 < l.length && (g.g.api = "2_0", g.g.et = c(l[1]) + "*" + c(l[2]) + "*" + c(l[3]) + (l[4] ? "*" + c(l[4]) : ""), d.b.init())
                         }
                     }
                 }, _setCustomVar: function (n) {
@@ -478,16 +477,14 @@ if (config != undefined && !config.open) {
                     }
                     t.set("PFT_SJKD", new Date().getDate());
                     return s
-                }
-                , pagePar: function () {
+                }, pagePar: function () {
                     var s = "", r = d.I.PQ, u = g.g, t = g.cookie;
                     for (var v = 0; v < r.length; v++) {
                         u[r[v]] != undefined && u[r[v]] != "" && u[r[v]] != null ? s = s + r[v] + "=" + u[r[v]] + ((r[v] == "v") ? "" : "&") : ""
                     }
                     t.set("PFT_PAGE", new Date().getDate());
                     return s
-                }
-                , custor: function () {
+                }, custor: function () {
                     g.g.cv = g.cookie.get("PFT_CV_" + j.id);
                     g.g.api = g.cookie.get("PFT_API");
                     if (g.g.cv != null && g.g.cv != undefined && g.g.cv != "") {
@@ -499,13 +496,11 @@ if (config != undefined && !config.open) {
                     var s = d.I;
                     var t = s.protocol + "//" + s.P + "/" + s.S + "?t=" + j.id + "&" + this.par();
                     c.log(t)
-                }
-                , pageSm: function (r) {
+                }, pageSm: function (r) {
                     var s = d.I;
                     var t = s.protocol + "//" + s.P + "/" + s.S + "?t=" + j.id + "&" + this.pagePar();
                     c.log(t)
-                }
-                , hbInfo: function () {
+                }, hbInfo: function () {
                     var s = d.I;
                     var r = document.createElement("script");
                     r.setAttribute("type", "text/javascript");
@@ -624,6 +619,7 @@ if (config != undefined && !config.open) {
             })()
         }
         if (config != undefined && config.e != undefined && config.e.length > 0) {
+            console.log("事件配置" + config.e);
             window.onload = function () {
                 config.e.forEach(function (k, h) {
                     var l = document.location.origin + document.location.pathname;
@@ -646,6 +642,8 @@ if (config != undefined && !config.open) {
                     }
                 })
             }
+        } else {
+            console.log("母球的事件配置")
         }
         if (config != undefined) {
             if (g.g.loc.indexOf("www.farmer.com.cn") < 0) {
@@ -663,8 +661,7 @@ if (config != undefined && !config.open) {
                     q.appendChild(c);
                     var p = document.getElementsByTagName("script");
                     var n;
-                    for (var l = 0;
-                         l < p.length; l++) {
+                    for (var l = 0; l < p.length; l++) {
                         if (p[l].text.indexOf("_pct") != -1) {
                             n = l
                         }
@@ -674,64 +671,57 @@ if (config != undefined && !config.open) {
                 })()
             }
         }
-
-        //页面转化 条件是有页面转化配置
-
-        if (config != undefined && config.pc != undefined) {//到达目标URL了
-            if (config.pc.paths == undefined || config.pc.paths.length == 0) {//不需要路径 直接转化
-                g.g.p_name = config.pc.target_name
-                g.g.p_record = config.pc.record_type
-                //判定订单是否存在
-                g.g.p_orderid =  g.g.getOrderId()
-                g.g.p_type = "regist"//测试
-                g.g.p_income = config.pc.expected_yield
-                g.g.p_conversionrate = config.pc.pecent_yield
-                d.b.pageSm();
-            } else {//根据路径来转化 判定转化正确性
-                var rm = g.cookie.get("RF_map" + j.id)
-                if (rm == undefined || rm == "") {//不存在父目录
-                    return;
+        if (config != undefined && config.pc != undefined) {
+            if (config.pc.paths == undefined || config.pc.paths.length == 0) {
+                g.g.p_name = config.pc.target_name;
+                g.g.p_record = config.pc.record_type;
+                g.g.p_orderid = g.g.getOrderId();
+                g.g.p_income = config.pc.expected_yield;
+                g.g.p_conversionrate = config.pc.pecent_yield;
+                d.b.pageSm()
+            } else {
+                var rm = g.cookie.get("RF_map" + j.id);
+                if (rm == undefined || rm == "") {
+                    return
                 } else {
-                    var rmarr = rm.split("|")
+                    var rmarr = rm.split("|");
                     config.pc.paths.forEach(function (path) {
                         if (path.steps.length < rmarr.length) {
                             var flag = true;
                             for (var index = 0; index < path.steps; index++) {
-                                var step = path.steps[index]
-                                flag = true
+                                var step = path.steps[index];
+                                flag = true;
                                 step.forEach(function (url) {
                                     if (url != rmarr[rmarr.length - path.steps.length + index]) {
-                                        flag = false;
+                                        flag = false
                                     }
-                                })
+                                });
                                 if (flag) {
-                                    break;
+                                    break
                                 }
                             }
                             if (flag) {
-                                g.g.p_name = config.pc.target_name
-                                g.g.p_record = config.pc.record_type
-                                g.g.p_orderid =  g.g.getOrderId()
-                                g.g.p_type = "测试路径"//测试
-                                g.g.p_income = config.pc.expected_yield
-                                g.g.p_conversionrate = config.pc.pecent_yield
-                                d.b.pageSm();
+                                g.g.p_name = config.pc.target_name;
+                                g.g.p_record = config.pc.record_type;
+                                g.g.p_orderid = g.g.getOrderId();
+                                g.g.p_income = config.pc.expected_yield;
+                                g.g.p_conversionrate = config.pc.pecent_yield;
+                                d.b.pageSm()
                             }
                         }
                     })
                 }
             }
-
         }
-        var rm = g.cookie.get("RF_map" + j.id)
+        var rm = g.cookie.get("RF_map" + j.id);
         if (rm == undefined || rm == "") {
             rm = g.g.loc
         } else {
-            var rmarr = rm.split("|")
+            var rmarr = rm.split("|");
             if (rmarr.length == 10) {
                 rmarr.splice(0, 1)
             }
-            rmarr.push(g.g.loc)
+            rmarr.push(g.g.loc);
             rm = rmarr.join("|")
         }
         g.cookie.set("RF_map" + j.id, rm)

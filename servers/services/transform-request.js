@@ -1907,10 +1907,10 @@ var transform = {
                 pages.forEach(function (page) {
                     for (var i = 0; i < page.page_urls.length; i++) {
                         boolQuery.push({
-                            "bool":{
+                            "bool": {
                                 "must": [
-                                    { "match": { "rf_type": rfType }},
-                                    { "match": {  "loc": page.page_urls[i] }}
+                                    {"match": {"rf_type": rfType}},
+                                    {"match": {"loc": page.page_urls[i]}}
                                 ]
                             }
                         });
@@ -1938,7 +1938,6 @@ var transform = {
                 })
                 var pvs = []
 
-                console.log(JSON.stringify(querys[0]))
                 es.search(querys[0], function (error, result) {
                     var datas = []
                     if (result != undefined && result.aggregations != undefined && result.aggregations.pagePVs != undefined && result.aggregations.pagePVs.buckets != undefined) {
@@ -2060,7 +2059,6 @@ var transform = {
                     }
                 })
                 es.search(querys[0], function (error, result) {
-                    console.log(result)
                     var results = {}
                     if (result != undefined && result.aggregations != undefined && result.aggregations.pagePVs != undefined && result.aggregations.pagePVs.buckets != undefined) {
                         var infos = result.aggregations.pagePVs.buckets
@@ -2073,7 +2071,7 @@ var transform = {
                 });
             });
         },
-        searchPageSeInfo: function (es, indexs, startNum, endNum, type, rfType,pages, queryOptionsStr, callbackFn) {
+        searchPageSeInfo: function (es, indexs, startNum, endNum, type, rfType, pages, queryOptionsStr, callbackFn) {
             var requests = [];
             for (var i = 0; i < indexs.length; i++) {
                 requests.push({
@@ -2104,10 +2102,10 @@ var transform = {
                 pages.forEach(function (page) {
                     for (var i = 0; i < page.page_urls.length; i++) {
                         boolQuery.push({
-                            "bool":{
+                            "bool": {
                                 "must": [
-                                    { "match": { "rf_type": rfType }},
-                                    { "match": {  "loc": page.page_urls[i] }}
+                                    {"match": {"rf_type": rfType}},
+                                    {"match": {"loc": page.page_urls[i]}}
                                 ]
                             }
                         });
@@ -2150,7 +2148,6 @@ var transform = {
                     }
                 })
                 es.search(querys[0], function (error, result) {
-                    console.log(result)
                     var results = {}
                     if (result != undefined && result.aggregations != undefined && result.aggregations.pagePVs != undefined && result.aggregations.pagePVs.buckets != undefined) {
                         var infos = result.aggregations.pagePVs.buckets
@@ -2163,7 +2160,7 @@ var transform = {
                 });
             });
         },
-        searchPageConvInfo: function (es, indexs, startNum, endNum, type, rfType,se, queryOptionsStr, callbackFn) {
+        searchPageConvInfo: function (es, indexs, startNum, endNum, type, rfType, se, queryOptionsStr, callbackFn) {
             var requests = [];
             for (var i = 0; i < indexs.length; i++) {
                 requests.push({
@@ -2189,16 +2186,16 @@ var transform = {
                         _aggs[key] = es_aggs[queryOption][key];
                     }
                 });
-                var query={
+                var query = {
                     "index": newIndexs,
                     "type": type + "_page",
                     "body": {
                         "size": 0,
                         query: {
-                            "bool":{
+                            "bool": {
                                 "must": [
-                                    { "match": { "rf_type": rfType }},
-                                    { "match": { "se": se }},
+                                    {"match": {"rf_type": rfType}},
+                                    {"match": {"se": se}},
                                 ]
                             }
                         },
@@ -2565,7 +2562,7 @@ var transform = {
 
 
         /////////////////////////MrDeng 新增 事件转化部分查询
-        searchEventPVs: function (es, indexs, startNum, endNum, type, events, queryOptionsStr, callbackFn) {
+        searchEventPVs: function (es, indexs, startNum, endNum, type, events, queryOptionsStr, filters, callbackFn) {
             var requests = [];
             for (var i = 0; i < indexs.length; i++) {
                 requests.push({
@@ -2595,26 +2592,38 @@ var transform = {
 
                 var querys = []
                 events.forEach(function (event) {
+                    var filterQuery = []
+                    if (filters != undefined && filters.length > 0) {
+                        var jfilters = JSON.parse(filters)
+                        jfilters.forEach(function (filter) {
+                            //console.log(filter)
+                            filterQuery.push({
+                                "term": filter
+                            })
+                        })
+                    }
+                    filterQuery.push({
+                        "range": {
+                            "utime": {
+                                "from": (startNum > event.update_time ? startNum : event.update_time ),
+                                "to": endNum
+                            }//开始时间取大的
+                        }
+                    })
+
+                    filterQuery.push({
+                        "term": {"loc": event.event_page}
+                    })
+                    //console.log("*****************Single query*********************************")
+                    //console.log(filterQuery.length)
                     querys.push({
                         "index": newIndexs,
-                        "type": type,//+ "_" + action,
+                        "type": type,
                         "body": {
                             "size": 0,
                             query: {
                                 bool: {
-                                    "must": [
-                                        {
-                                            "range": {
-                                                "utime": {
-                                                    "from": (startNum > event.update_time ? startNum : event.update_time ),
-                                                    "to": endNum
-                                                }//开始时间取大的
-                                            }
-                                        },
-                                        {
-                                            "term": {"loc": event.event_page}
-                                        }
-                                    ]
+                                    "must": filterQuery
                                 }
                             },
                             "aggs": _aggs
@@ -2981,7 +2990,7 @@ var transform = {
                 callbackFn(data);
             });
         },
-        searchConvEvents: function (es, indexs, type, eventPages, showType, callback) {
+        searchConvEvents: function (es, indexs, startNum, endNum, type, eventPages, showType, filters, callback) {
             var indexQurey = []
             for (var i = 0; i < indexs.length; i++) {
                 indexQurey.push({
@@ -3022,30 +3031,52 @@ var transform = {
                     }
                     else {
                         var querys = []
-                        eventPages.forEach(function (page) {
+                        eventPages.forEach(function ( eventPage) {
+                            //console.log("***********************")
+                            //console.log(startNum+"  input time "+eventPage.update_time)
+                            //console.log((startNum > eventPage.update_time ? startNum : eventPage.update_time)+" 到 "+endNum)
                             querys.push({
-                                    eventPage: page,
+                                    eventPage:  eventPage.event_page,
                                     query: {
                                         "index": newIndexs,
                                         "type": type + "_event",
                                         "body": {
-                                            "fields": ["tt"],
                                             "size": 0,
                                             query: {
                                                 bool: {
                                                     "must": [
                                                         {
-                                                            "term": {"loc": page}
+                                                            "term": {"loc": eventPage.event_page}
+                                                        },
+                                                        {
+                                                            "range": {
+                                                                "utime": {
+                                                                    "from": (startNum > eventPage.update_time ? startNum : eventPage.update_time ),
+                                                                    "to": endNum
+                                                                }//开始时间取大的
+                                                            }
                                                         }
                                                     ]
                                                 }
                                             },
                                             "aggs": {
-                                                "countTarget": {
+                                                "etIdTerms": {
                                                     "terms": {
                                                         "field": "et_category"
+                                                    },
+                                                    "aggs": {
+                                                        "convCount": {
+                                                            "sum": {
+                                                                "script": "c = 0; if (doc['et_target'].value=='true') { c = 1 }; c"
+                                                            }
+                                                        },
+                                                        "eventCount": {
+                                                            "value_count": {
+                                                                "field": "et_category"
+                                                            }
+                                                        }
                                                     }
-                                                },
+                                                }
                                             }
                                         }
                                     }
@@ -3056,13 +3087,16 @@ var transform = {
                         async.eachSeries(querys, function (item, callback) {
                                 es.search(item.query, function (error, result) {
                                     if (result != undefined && result.aggregations != undefined) {
-                                        if (result.aggregations.countTarget.buckets != undefined) {
-                                            result.aggregations.countTarget.buckets.forEach(function (buck) {
+                                        if (result.aggregations.etIdTerms.buckets != undefined) {
+                                            result.aggregations.etIdTerms.buckets.forEach(function (buck) {
                                                 var res = {}
-                                                pageEvents[item.eventPage + "_" + buck.key] = {eventCount: buck.doc_count}
+                                                pageEvents[item.eventPage + "_" + buck.key] = {
+                                                    eventCount: buck.eventCount == undefined ? 0 : buck.eventCount.value,
+                                                    convCount: buck.convCount == undefined ? 0 : buck.convCount.value
+                                                }
                                             })
                                         }
-                                        callback(null, pageEvents);
+                                        callback(null, result);
                                     }
                                     else {
                                         callback(null, null);
@@ -3180,7 +3214,6 @@ var transform = {
                                 });
                             } else if (showType == "day") {
                                 results.forEach(function (item) {
-                                    //console.log(item.countTarget.buckets)
                                     var eventCount = 0;
                                     var convCount = 0;
                                     item.countTarget.buckets.forEach(function (item) {
@@ -3204,7 +3237,6 @@ var transform = {
                 })
         },
         searchEventInfo: function (es, indexs, type, showType, callback) {
-            //console.log("searchEventInfo")
             var indexQurey = []
             for (var i = 0; i < indexs.length; i++) {
                 indexQurey.push({
@@ -3278,8 +3310,6 @@ var transform = {
                                 });
                                 break;
                         }
-                        //console.log("***************requests***************")
-                        //console.log(requests)
                         async.map(requests, function (item, callback) {
                             es.search(item, function (error, result) {
                                 if (result != undefined && result.aggregations != undefined) {
@@ -3290,10 +3320,8 @@ var transform = {
                             });
                         }, function (error, results) {
                             var data = []
-                            //console.log(showType)
                             callback(results)
                             //if (showType == "tatol") {
-                            //    console.log(results[0].countTarget.buckets)
                             //    var eventCount = 0;
                             //    var convCount = 0;
                             //    results[0].countTarget.buckets.forEach(function (item) {
@@ -3311,7 +3339,6 @@ var transform = {
                             //    });
                             //}else if(showType =="day"){
                             //    results.forEach(function(item){
-                            //        console.log(item.countTarget.buckets)
                             //        var eventCount = 0;
                             //        var convCount = 0;
                             //        item.countTarget.buckets.forEach(function (item) {

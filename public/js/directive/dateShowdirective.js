@@ -449,7 +449,7 @@ define(["../app"], function (app) {
         quotaObject.ip = "一天之内您网站的独立访问ip数。";
         quotaObject.nuv = "一天的独立访客中，历史第一次访问您网站的访客数。";
         quotaObject.nuvRate = "新访客比率=新访客数/访客数。";
-        quotaObject.arrivedRate = "抵达率";
+        quotaObject.arrivedRate = "抵达率=访问次数/点击量。即访客点击广告到完全打开网站次数的比例。";
         quotaObject.pageConversion = "页面转化";
         quotaObject.eventConversion = "事件转化";
         quotaObject.avgTime = "访客在一次访问中，平均打开网站的时长。即每次访问中，打开第一个页面到关闭最后一个页面的平均值，打开一个页面时计算打开关闭的时间差。";
@@ -457,13 +457,13 @@ define(["../app"], function (app) {
         quotaObject.cost = "推广被点击后产生的费用。";
         quotaObject.impression = "一段时间内广告展现的次数。";
         quotaObject.click = "一段时间内推广被点击的次数。";
-        quotaObject.ctr = "点击率";
+        quotaObject.ctr = "点击率＝点击量/展现量，较高的点击率反映了网民对您的推广结果更感兴趣、更为认可。点击率是影响关键词质量度的重要因素。";
         quotaObject.acp = "平均每次点击产生的消费。平均点击价格=消费金额/点击次数。";
         quotaObject.cpc = "平均每次点击产生的消费。平均点击价格=消费金额/点击次数。";
         quotaObject.cpm = "千次展现消费";
         quotaObject.conversion = "转化";
         quotaObject.entrance = "作为访问会话的入口页面（也称着陆页面）的次数。";
-        quotaObject.contribution = "贡献浏览量";
+        quotaObject.contribution = "指以该页面作为入口产生的浏览量（PV）总计。";
         quotaObject.freq = "访客点击搜索结果到达您网站的次数。";
         quotaObject.baidu = "来自搜索引擎百度的搜索次数占比";
         quotaObject.sougou = "来自搜索引擎搜狗的搜索次数占比";
@@ -472,7 +472,9 @@ define(["../app"], function (app) {
         quotaObject.other = "来自其他搜索引擎的搜索次数占比";
         quotaObject.conversions = "访客到达转化目标页面的次数。";
         quotaObject.clickTotal = "事件点击总数";
-        quotaObject.crate = "转化率";
+        quotaObject.crate = "转化率=转化次数/访问次数。";
+        quotaObject.visitNum = "一个用户进行一次操作记录一次唯一访客事件数，但同一个用户多次点击同一个按钮不重复计算。";
+        quotaObject.clickTotal = "操作发生的次数。";
         return function (key) {
             return quotaObject[key] || "未定义的指标KEY";
         };

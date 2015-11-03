@@ -40,21 +40,34 @@ define(["./module"], function (ctrs) {
             place_order: "下单",
             other: "其他"
         };
-
-
         //跳转到修改界面
         $scope.onUpdate = function (entity) {
-                $state.go('pagechange_update', {'id': entity._id});
+            $state.go('pagechange_update', {'id': entity._id});
         };
-
+        var statusTemplate = "<div class='table_admin' ng-click='grid.appScope.PauseDelete(index,grid,row)' ><a>{{row.entity.event_status == '0' ? '重新启用':'暂停使用' }}</a></div>";
         //配置默认指标
         $rootScope.checkedArray = ["target_name", "target_urls", "needPath", "record_type", "conv_tpye", "_id"];
         $rootScope.gridArray = [
-            {name: "xl", displayName: "", cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>", maxWidth: 5,  enableSorting: false},
-            {name: "目标名称", displayName: "目标名称", field: "target_name", enableSorting: false},
             {
-                name: "路径",
-                displayName: "目标URL",
+                name: "xl",
+                displayName: "",
+                cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
+                maxWidth: 5,
+                enableSorting: false
+            },
+            {name: "目标名称", displayName: "目标名称", field: "target_name", enableSorting: false},
+            {name: "生成日期", displayName: "生成日期", enableSorting: false},
+            {
+                name: "URL",
+                displayName: "URL",
+                field: "target_urls",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>URL</div>",
+                cellClass: "table_list_color",
+                enableSorting: false
+            },
+            {
+                name: "路径名称",
+                displayName: "路径名称",
                 field: "target_urls",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>URL</div>",
                 cellClass: "table_list_color",
@@ -63,6 +76,14 @@ define(["./module"], function (ctrs) {
             {name: "是否需要经过路径", displayName: "是否需要经过路径", field: "needPath", enableSorting: false},
             {name: "记录方式", displayName: "记录方式", field: "record_type", enableSorting: false},
             {name: "转化类型", displayName: "转化类型", field: "conv_tpye", enableSorting: false},
+            {
+                name: "",
+                displayName: "",
+                field: "pause_use",
+                cellTemplate: statusTemplate,
+                maxWidth: 150,
+                enableSorting: false
+            },
             {
                 name: "x3",
                 displayName: "",
@@ -165,18 +186,34 @@ define(["./module"], function (ctrs) {
             };
 
         };
+        $scope.PauseDelete = function (index, grid, row, thise) {
+            console.log(row)
+            $scope.onDeleteDialog = ngDialog.open({
+                template: '' +
+                '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div><ul class="admin-ng-content"><li> 您确定暂停使用这个路径吗？</li></ul>' +
+                '<div class="ng-button-div"><button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
+                    <button type="button" class="ngdialog-button ng-button" ng-click="surePauseDelete()">确定</button></div></div>',
+                className: 'ngdialog-theme-default admin_ngdialog',
+                plain: true,
+                scope: $scope
+            });
+            $scope.surePauseDelete = function () {
+                $scope.onDeleteDialog.close();
+
+            };
+        };
         /**
          * 实现expandRowData 控制展开项
          * @param pGridApi
          */
         $rootScope.expandRowData = function (pGridApi) {
             //展开操作
-            pGridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
-                console.log("展开下一级")
-                initExpandData(row);//每次展开第一级都初始化 保证下一级收起
-                row.isInit = true;
-                row.entity.subGridOptions.data.length = row.entity.paths.length + 1;
-            })
+            /*     pGridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
+             console.log("展开下一级")
+             initExpandData(row);//每次展开第一级都初始化 保证下一级收起
+             row.isInit = true;
+             row.entity.subGridOptions.data.length = row.entity.paths.length + 1;
+             })*/
         }
 
         /**
@@ -218,7 +255,7 @@ define(["./module"], function (ctrs) {
                             field: "url",
                             width: '70%'
                         }],
-                        data: chileChildData,
+                        data: chileChildData
                     }
                 })
             }
@@ -245,6 +282,36 @@ define(["./module"], function (ctrs) {
                     });
                 }
             }
-        }
+        };
+        //批量删除
+        $scope.deleteAll = function (index, grid, row) {
+
+            $scope.onDeleteDialog = ngDialog.open({
+                template: '' +
+                '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div><ul class="admin-ng-content" ><li>您想批量删除已选择的页面转化目标吗？</li></ul> <div class="ng-button-div"><button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
+                  <button type="button" class="ngdialog-button ng-button" ng-click="batchDelete()">确定</button></div></div>',
+                className: 'ngdialog-theme-default admin_ngdialog',
+                plain: true,
+                scope: $scope
+            });
+
+            $scope.batchDelete = function () {
+                var choiceAll = $scope.gridApiAdmin.selection.getSelectedRows();
+                for (var i = 0; i < choiceAll.length; i++) {
+                    var val = choiceAll[i]._id;
+                    $scope.onDeleteDialog.close();
+                    var query = "/config/page_conv?type=delete&query={\"_id\":\"" + val + "\"}";
+                    //var url= "/config/eventchnage_list?type=delete&query={\"uid\":\"" + $scope.entity.uid + "\",\"_id\":\"" +  $scope.entity._id + "\"}";
+                    $http({method: 'GET', url: query}).success(function (dataConfig, status) {
+                        if (dataConfig == "\"remove\"") {
+                            refushGridData();
+                        }
+                    });
+                }
+            };
+
+
+        };
+
     });
 });

@@ -65,13 +65,18 @@ define(["./module"], function (ctrs) {
             var uid = $cookieStore.get("uid");
             //预览输入URL去空格
             var previewUrl = $scope.preview.url.trim();
+            if(previewUrl.indexOf("?")>-1)
+                previewUrl = previewUrl.substring(0,previewUrl.indexOf("?"))
             //当前站点配置的URL
             var configUrl = $rootScope.siteUrl;
             //去掉 www. 的配置URL
-            var localURl = $rootScope.siteUrl.replace(/www./g, '');
+            var localURl = $rootScope.siteUrl.replace(/http:\/\/./g, '').replace(/www./g, '');
+
+            console.log(localURl)
+            console.log(previewUrl)
+            console.log(previewUrl.indexOf(localURl))
             //二级域名验证
-            var regex = new RegExp("(\\w.)?" + localURl + "/*");
-           if(! regex.test($scope.previewUrl)){
+           if(previewUrl.indexOf(localURl)<0){
                $scope.urlDialog = ngDialog.open({
                    template: '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div><ul class="admin-ng-content"><li>输入的网址不在站点 '+$rootScope.siteUrl+' 下</li></ul>' + '<div class="ng-button-div">\
                   <button type="button" class="ngdialog-button ng-button " ng-click="closeThisDialog(0)">确定</button></div></div>',
@@ -82,7 +87,7 @@ define(["./module"], function (ctrs) {
                return;
            }
             $scope.iframeobj = function (tid) {
-                var strSrc = "http://" + previewUrl + "?domain=" + configUrl + "&amp;td=" + tid + "&amp;cuid=" + uid + "&amp;jn=select&amp;type=event";
+                var strSrc =  previewUrl + "?domain=" + configUrl + "&amp;td=" + tid + "&amp;cuid=" + uid + "&amp;jn=select&amp;type=event";
                 var dialogFlag = false;
                 $scope.urlDialog = ngDialog.open({
                     template: '\

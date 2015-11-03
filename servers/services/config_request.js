@@ -113,8 +113,13 @@ var config_request = {
                             //通过site_id trackid
                             if (pdocs[0].site_id != null && pdocs[0].page_url != null) {
                                 //console.log("重写"+(pdocs[0].site_id + ":mouse:" + pdocs[0].page_url)+"-->"+JSON.stringify(page_title))
-                                redis_client.multi().set(pdocs[0].site_id + ":mouse:" + pdocs[0].page_url, JSON.stringify(page_title)).exec();//站点级别设置
-                                reut[pdocs[0].site_id + ":mouse:" + pdocs[0].page_url] = JSON.stringify(page_title);//热力图
+                                var tempRef = pdocs[0].page_url
+                                if (tempRef.indexOf("http://") > -1&&tempRef.length>8)
+                                    tempRef =tempRef.substring(7,tempRef.length)
+                                if (tempRef.indexOf("https://") > -1&&tempRef.length>9)
+                                    tempRef =tempRef.substring(8,tempRef.length)
+                                redis_client.multi().set(pdocs[0].site_id + ":mouse:" + tempRef, JSON.stringify(page_title)).exec();//站点级别设置
+                                reut[pdocs[0].site_id + ":mouse:" + tempRef] = JSON.stringify(page_title);//热力图
                             }
                         }
                         return reut;
@@ -158,8 +163,13 @@ var config_request = {
                             });
                             //console.log(item)
                             //console.log("重写"+(item._id + ":e:" + event_page)+"-->"+JSON.stringify(confs))
-                            redis_client.multi().set(item._id + ":evt:" + event_page, JSON.stringify(confs)).exec();
-                            reut[item._id + ":evt:" + event_page] = JSON.stringify(confs);
+                            var tempRef = event_page
+                            if (tempRef.indexOf("http://") > -1&&tempRef.length>8)
+                                tempRef =tempRef.substring(7,tempRef.length)
+                            if (tempRef.indexOf("https://") > -1&&tempRef.length>9)
+                                tempRef =tempRef.substring(8,tempRef.length)
+                            redis_client.multi().set(item._id + ":evt:" + tempRef, JSON.stringify(confs)).exec();
+                            reut[item._id + ":evt:" + tempRef] = JSON.stringify(confs);
                             return reut;
                         }
 
