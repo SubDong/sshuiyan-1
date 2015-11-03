@@ -315,6 +315,12 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     separator: ' to '
                 }, function (start, end, label) {
                     $rootScope.datepickerClick(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
+                    var pickerTiemTow = chartUtils.getTimeOffset(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
+                    var startTime = pickerTiemTow[0];
+                    var endTime = pickerTiemTow[0] + Math.abs(pickerTiemTow[1] - pickerTiemTow[0]);
+                    $rootScope.tableTimeStart = startTime;
+                    $rootScope.tableTimeEnd = endTime;
+                    $rootScope.targetSearchSpread();
                     $rootScope.startString = (start.format('YYYY-MM-DD') + ' 至 ' + end.format('YYYY-MM-DD'));
                     if (start.format('YYYY-MM-DD') == end.format('YYYY-MM-DD')) {
                         $('#reportrange span').html(start.format('YYYY-MM-DD'));
