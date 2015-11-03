@@ -308,6 +308,7 @@ if (config != undefined && !config.open) {
             return s + q + o + h + m + c
         };
         d.I = {
+
             R: "192.168.1.102:8000",
             RS: "192.168.1.102:8001",
             u: config.domain,
@@ -619,11 +620,10 @@ if (config != undefined && !config.open) {
             })()
         }
         if (config != undefined && config.e != undefined && config.e.length > 0) {
-            console.log("事件配置" + config.e);
             window.onload = function () {
                 config.e.forEach(function (k, h) {
                     var l = document.location.origin + document.location.pathname;
-                    if (l === k.evpage) {
+                    if (l.indexOf(k.evpage) > -1 || k.evpage.indexOf(l) > -1) {
                         var m = document.getElementById(k.eid);
                         var c = m.attributes.getNamedItem("onclick");
                         if (m != undefined && m != null) {
@@ -642,8 +642,6 @@ if (config != undefined && !config.open) {
                     }
                 })
             }
-        } else {
-            console.log("母球的事件配置")
         }
         if (config != undefined) {
             if (g.g.loc.indexOf("www.farmer.com.cn") < 0) {
@@ -671,6 +669,26 @@ if (config != undefined && !config.open) {
                 })()
             }
         }
+        var rm = g.cookie.get("RF_map" + j.id);
+        //console.log(g.g.rf + " rf  loc   " + g.g.loc)
+        if (g.g.rf != g.g.loc) {
+            if (rm == undefined || rm == "") {
+                rm = 0 + "*" + g.g.rf
+                g.cookie.set("RF_map" + j.id, rm)
+            } else {
+                var rmarr = rm.split("|");
+                var last = rmarr[rmarr.length - 1].split("*", 2)
+                //console.log(last)
+                if (last[1] != g.g.rf) {
+                    if (rmarr.length == 10) {
+                        rmarr.splice(0, 1)
+                    }
+                    rmarr.push(rm = 0 + "*" + g.g.rf);
+                    rm = rmarr.join("|")
+                    g.cookie.set("RF_map" + j.id, rm)
+                }
+            }
+        }
         if (config != undefined && config.pc != undefined) {
             if (config.pc.paths == undefined || config.pc.paths.length == 0) {
                 g.g.p_name = config.pc.target_name;
@@ -688,43 +706,40 @@ if (config != undefined && !config.open) {
                     config.pc.paths.forEach(function (path) {
                         if (path.steps.length < rmarr.length) {
                             var flag = true;
-                            for (var index = 0; index < path.steps; index++) {
-                                var step = path.steps[index];
-                                flag = true;
-                                step.forEach(function (url) {
-                                    if (url != rmarr[rmarr.length - path.steps.length + index]) {
-                                        flag = false
+                            var last = rmarr[rmarr.length - 1].split("*", 2)
+                            if (last[0] == "0") {
+                                for (var index = 0; index < path.steps; index++) {
+                                    var step = path.steps[index];
+                                    flag = true;
+                                    step.forEach(function (url) {
+                                        var temprm = rmarr[rmarr.length - path.steps.length + index].split("*", 2)
+                                        if (url != temprm[1]) {
+                                            flag = false
+                                        }
+                                    });
+                                    if (flag) {
+                                        break
                                     }
-                                });
+                                }
                                 if (flag) {
-                                    break
+                                    last[0] = "1"
+                                    rmarr[rmarr.length - 1] = last.join("*")
+                                    g.cookie.set("RF_map" + j.id, rmarr.join("|"))
+                                    g.g.p_name = config.pc.target_name;
+                                    g.g.p_record = config.pc.record_type;
+                                    g.g.p_orderid = g.g.getOrderId();
+                                    g.g.p_income = config.pc.expected_yield;
+                                    g.g.p_conversionrate = config.pc.pecent_yield;
+                                    d.b.pageSm()
                                 }
                             }
-                            if (flag) {
-                                g.g.p_name = config.pc.target_name;
-                                g.g.p_record = config.pc.record_type;
-                                g.g.p_orderid = g.g.getOrderId();
-                                g.g.p_income = config.pc.expected_yield;
-                                g.g.p_conversionrate = config.pc.pecent_yield;
-                                d.b.pageSm()
-                            }
+
                         }
                     })
                 }
             }
         }
-        var rm = g.cookie.get("RF_map" + j.id);
-        if (rm == undefined || rm == "") {
-            rm = g.g.loc
-        } else {
-            var rmarr = rm.split("|");
-            if (rmarr.length == 10) {
-                rmarr.splice(0, 1)
-            }
-            rmarr.push(g.g.loc);
-            rm = rmarr.join("|")
-        }
-        g.cookie.set("RF_map" + j.id, rm)
+
     })()
 }
 ;
