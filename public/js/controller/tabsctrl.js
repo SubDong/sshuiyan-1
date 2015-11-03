@@ -667,7 +667,7 @@ define(["app"], function (app) {
             //$scope.isJudge = false;
             $rootScope.$broadcast("ssh_data_show_refresh");
             if ($rootScope.tableSwitch.number == 6) {
-                $rootScope.refreshData()
+                $rootScope.refreshData(false)
             } else {
                 $scope.targetSearch();
             }
@@ -831,7 +831,7 @@ define(["app"], function (app) {
             $scope.isJudge = false;
             $rootScope.$broadcast("ssh_data_show_refresh");
             if ($rootScope.tableSwitch.number == 6) {
-                $rootScope.refreshData()
+                $rootScope.refreshData(false)
             } else {
                 $scope.targetSearch();
             }
@@ -877,7 +877,7 @@ define(["app"], function (app) {
             } else {
                 $rootScope.$broadcast("ssh_data_show_refresh");
                 if ($rootScope.tableSwitch.number == 6) {
-                    $rootScope.refreshData()
+                    $rootScope.refreshData(false)
                 } else {
                     $scope.targetSearch();
                 }

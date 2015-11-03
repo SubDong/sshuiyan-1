@@ -141,6 +141,9 @@ define(["./module"], function (ctrs) {
                             var urls = []
                             if (data.target_urls != undefined && data.target_urls.length > 0) {
                                 data.target_urls.forEach(function (item) {
+                                    if(item.url!=undefined&&item.url!=""&&item.url[item.url.length-1]=="/"){
+                                        item.url = item.url.substring(0,item.url.length-1)
+                                    }
                                     urls.push(item.url)
                                 })
                             }
@@ -379,12 +382,12 @@ define(["./module"], function (ctrs) {
                     def.defData($scope.charts[0].config);
                 }
             };
-            $scope.queryOption_all = ["pv", "uv", "vc", "nuv", "conversions", "crate", "avgCost", "benefit", "profit", "orderNum", "orderMoney", "orderNumRate"];
+            $scope.queryOption_all = ["pv", "uv", "vc", "nuv","ip", "conversions", "crate", "avgCost", "benefit",/* "profit",*/ "orderNum"/*, "orderMoney"*/, "orderNumRate"];
             $scope.charts = [
                 {
                     config: {
                         legendId: "indicators_charts_legend",
-                        legendData: ["浏览量(PV)", "访客数(UV)", "访问次数", "新访客数", "转化次数", "转化率", "平均转化成本(页面)", "收益", "利润", "订单数", "订单金额", "订单转化率"],//显示几种数据
+                        legendData: ["浏览量(PV)", "访客数(UV)", "访问次数", "新访客数","IP数", "转化次数", "转化率", "平均转化成本(页面)", "收益", /*"利润",*/ "订单数"/*, "订单金额"*/, "订单转化率"],//显示几种数据
                         //legendMultiData: $rootScope.lagerMulti,
                         legendAllowCheckCount: 2,
                         legendClickListener: $scope.onLegendClickListener,
@@ -636,6 +639,7 @@ define(["./module"], function (ctrs) {
                     })
                     $http.get("/api/transform/getDayPagePVs?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&showType=" + showType + "&queryOptions=" + queryOptions + "&urls=" + JSON.stringify(pages)).success(function (pagePVDatas) {
                         var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
+                        console.log(pagePVDatas )
                         chart.showLoading({
                             text: "正在努力的读取数据中..."
                         });

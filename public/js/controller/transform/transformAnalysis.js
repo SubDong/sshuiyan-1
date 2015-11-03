@@ -272,7 +272,6 @@ define(["./module"], function (ctrs) {
 
             $scope.$on("ssh_refresh_charts", function (e, msg) {
                 $scope.charts[0].config.legendDefaultChecked = [0, 1];
-                console.log("ssh_refresh_charts")
                 $scope.refreshData(false);
                 init_transformData();
             });
@@ -314,7 +313,7 @@ define(["./module"], function (ctrs) {
                 var time = chartUtils.getTimeOffset(start, end);
                 $scope.start = time[0];
                 $scope.end = time[1];
-                $rootScope.refreshData(true);
+                $rootScope.refreshData(false);
                 init_transformData();
             };
             function GetDateStr(AddDayCount) {
@@ -407,6 +406,10 @@ define(["./module"], function (ctrs) {
                 }).success(function (events, status) {
                     var eventPages = [], hash = {}, eventParams = [], eventInfos = {};
                     events.forEach(function (elem) {
+                        //去除页面中的/结尾情况
+                        if(elem.event_page!=undefined&&elem.event_page!=""&&elem.event_page[elem.event_page.length-1]=="/"){
+                            elem.event_page = elem.event_page.substring(0,elem.event_page.length-1)
+                        }
                         if (!hash[elem.event_page]) {
                             eventPages.push(elem.event_page);
                             hash[elem.event_page] = true;
@@ -506,7 +509,7 @@ define(["./module"], function (ctrs) {
                                     if (!hashloc[event.event_page]) {
                                         hashloc[event.event_page] = true;
                                     }
-                                    console.log(" tempPV  "+tempPv +" tempConv "+tempConv)
+                                    //console.log(" tempPV  "+tempPv +" tempConv "+tempConv)
                                 })
 
                                 $scope.dateShowArray.forEach(function (item) {
@@ -764,20 +767,20 @@ define(["./module"], function (ctrs) {
                     }
                 }
                 if (isClicked) {
+                    init_transformData()
                     $scope.setShowArray();
-                    $rootScope.refreshData(true);
-                    $scope.$broadcast("transformData_ui_grid", {
-                        start: $rootScope.start,
-                        end: $rootScope.end,
-                        checkedArray: $scope.es_checkedArray,
-                        sem_checkedArray: $scope.sem_checkedArray,
-                        all_checked: $rootScope.checkedArray,
-                        analysisAction: "event",
-                        convert_url_all: $scope.convert_url_all
-                    });
+                    $rootScope.refreshData(false);
+                    //$scope.$broadcast("transformData_ui_grid", {
+                    //    start: $rootScope.start,
+                    //    end: $rootScope.end,
+                    //    checkedArray: $scope.es_checkedArray,
+                    //    sem_checkedArray: $scope.sem_checkedArray,
+                    //    all_checked: $rootScope.checkedArray,
+                    //    analysisAction: "event",
+                    //    convert_url_all: $scope.convert_url_all
+                    //});
                 }
                 else {
-                    console.log()
                     //访客过滤数据获取
                     var inputArray = $(".chart_top2 .styled");
                     inputArray.each(function (i, o) {
@@ -842,11 +845,12 @@ define(["./module"], function (ctrs) {
                     });
                 }
                 //$scope.setShowArray();
-                console.log($scope.city)
-                console.log($scope.souce)
-                console.log($scope.visitNum)
-                $rootScope.refreshData(true);
+                //console.log($scope.city)
+                //console.log($scope.souce)
+                //console.log($scope.visitNum)
+                //$rootScope.refreshData(true);
             };
+
             init_transformData();
             $rootScope.refreshData(false);
 
