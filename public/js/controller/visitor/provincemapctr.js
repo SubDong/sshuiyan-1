@@ -94,6 +94,9 @@ define(["./module"], function (ctrs) {
             //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
             arrayClear: false //是否清空指标array
         };
+        $scope.isShowExpandable = function (e) {
+            return e.region == "暂无数据";
+        };
 
         $scope.dateTimeStart = 0;
         $scope.dateTimeEnd = 0;
