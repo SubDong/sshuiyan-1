@@ -320,8 +320,6 @@ define(["./module"], function (ctrs) {
             }
         };
 
-
-
         //下载功能-CSV
         $rootScope.gaFormatDataCSV = function () {
             var tableCSV = [];
@@ -354,7 +352,7 @@ define(["./module"], function (ctrs) {
                 tableCSV.push(JSON.parse(trCsv));
                 trCsv = "";
             });
-            return JSON.stringify(tableCSV).replace(/\%/g, "*");
+            return JSON.stringify(tableCSV);
         }
 
         //下载功能 - PDF
