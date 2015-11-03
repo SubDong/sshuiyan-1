@@ -745,8 +745,8 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                         //}
                         if (scope.generatePDFMakeData) {
                             scope.generatePDFMakeData(function (docDefinition) {
-                                //pdfMake.createPdf(docDefinition).download();
-                                pdfMake.createPdf(docDefinition).open();
+                                pdfMake.createPdf(docDefinition).download();
+                                //pdfMake.createPdf(docDefinition).open();
                             });
                         }
                     }
