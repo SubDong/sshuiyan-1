@@ -263,7 +263,89 @@ define(["./module"], function (ctrs) {
                     }
                 });
             }
+        };
+
+
+        $scope.generatePDFMakeData = function (cb) {
+            var d = new Date();
+            var str = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+
+            var _tableBody = [];
+            _tableBody.push(["pv", "uv","ip", "Jump out rate","Average access time"]);
+
+            var datas =  $scope.dateShowArray;
+            var pv =datas[0].value+"";
+            var uv =datas[1].value+"";
+            var ip =datas[2].value+"";
+            if(datas.length>0){
+                var rate =datas[3].value/datas[3].count.toFixed(2)+"%";
+            }else{
+                var rate =datas[3].value.length+"%";
+            }
+            if(datas.length>0){
+                var averagetime =  $scope.formatSeconds(datas[4].value/datas[4].count/1000)+"";
+            }else{
+                var averagetime =  $scope.formatSeconds(datas[4].value)+"";
+            }
+
+
+
+            _tableBody.push([pv, uv,ip, rate,averagetime]);
+
+            var docDefinition = {
+                header: {
+                    text:  str+ " Ad's tracking Report",
+                    style: "header",
+                    alignment: 'center'
+                },
+                content: [
+                    {
+                        table: {
+                            // headers are automatically repeated if the table spans over multiple pages
+                            // you can declare how many rows should be treated as headers
+                            headerRows: 1,
+                            body: _tableBody
+                        }
+                    },
+                    {text: '\nPower by www.best-ad.cn', style: 'header'},
+                ],
+                styles: {
+                    header: {
+                        fontSize: 20,
+                        fontName: "标宋",
+                        alignment: 'justify',
+                        bold: true
+                    }
+                }
+            };
+
+            cb(docDefinition);
+        };
+
+        $scope.formatSeconds = function (value) {
+            var theTime = parseInt(value);// 秒
+            var theTime1 = 0;// 分
+            var theTime2 = 0;// 小时
+            if(theTime > 60) {
+                theTime1 = parseInt(theTime/60);
+                theTime = parseInt(theTime%60);
+                if(theTime1 > 60) {
+                    theTime2 = parseInt(theTime1/60);
+                    theTime1 = parseInt(theTime1%60);
+                }
+            }
+
+            var result = ""+parseInt(theTime)+"秒";
+            if(theTime1 > 0) {
+                result = ""+parseInt(theTime1)+"分"+result;
+            }
+            if(theTime2 > 0) {
+                result = ""+parseInt(theTime2)+"小时"+result;
+            }
+            return result;
+
         }
+
 
     });
 });
