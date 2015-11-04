@@ -239,7 +239,7 @@ module.exports = function (req) {
                                             html: '<b>' + subject + '</b>',// html body
                                             attachments: [
                                                 {
-                                                    filename: fileSuffix + '.csv',
+                                                    filename: fileSuffix + '.txt',
                                                     path: "servers/filetmp/" + fileSuffix + ".csv"
                                                 }
                                             ]
