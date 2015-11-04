@@ -517,7 +517,6 @@ define(["app"], function (app) {
 
 
             if (a == 0) {
-                _pmFilter = null;
                 $scope.terminalSearch = "";
             }
             ;
@@ -529,8 +528,8 @@ define(["app"], function (app) {
                 _pmFilter = JSON.parse("{\"pm\":[1]}");
                 $scope.terminalSearch = "移动设备";
             }
-            var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
             //获取所有过滤条件
+            var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
             _allFilters = filterUtil.filter(_allFilters,"pm",_pmFilter);
             $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
 
@@ -615,6 +614,7 @@ define(["app"], function (app) {
             if (a == 0) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[2]}]";
             if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[0]},{\"rf_type\":[2]}]";
             if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[1]},{\"rf_type\":[2]}]";
+
             $scope.isJudge = false;
             $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.targetSearch();
@@ -626,7 +626,7 @@ define(["app"], function (app) {
         })
         $scope.setSource = function (a) {
             if (a == 0) {
-                $scope.sourceSearch = "";
+                    $scope.sourceSearch = "";
             }
             //来源过滤条件
             var _rfFilter = "";
@@ -647,9 +647,13 @@ define(["app"], function (app) {
                 if (a == 3) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":\"3\"}]";
                 getHtmlTableData();
             } else {
+                //获取所有过滤条件
                 var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
                 _allFilters = filterUtil.filter(_allFilters,"rf_type",_rfFilter);
-                //设置过滤条件
+                if (a == 0) {
+                    //排除搜索引擎
+                    filterUtil.filter(_allFilters,"se","");
+                }
                 $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
 
                 $rootScope.$broadcast("ssh_data_show_refresh");
@@ -765,22 +769,25 @@ define(["app"], function (app) {
                 return;
             }
             var _areaFilter = "";
-            if ("全部" == area) {
-                _areaFilter = "";
-            } else {
+            if ("全部" != area) {
                 area = (area == "北京" ? area + "市" : area);
-                if ($scope.tableJu == "html") {
-                    _areaFilter = JSON.parse("{\"region\":\"" + area + "\"}");
-                } else {
-                    _areaFilter = JSON.parse("{\"region\":\"" + area + "\"}");
-                }
             }
-            var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
-            //获取所有过滤条件
-            _allFilters = filterUtil.filter(_allFilters,"region",_areaFilter);
-            $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
 
-            $scope.isJudge = false;
+
+            if ($scope.tableJu == "html") {
+                $rootScope.tableSwitch.tableFilter = "[{\"region\":\"" + area + "\"}]";
+            } else {
+                if("全部" != area) {
+                    _areaFilter = JSON.parse("{\"region\":\"" + area + "\" }");
+                }
+                //获取所有过滤条件
+                var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
+                _allFilters = filterUtil.filter(_allFilters,"region",_areaFilter);
+                $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
+            }
+
+
+        $scope.isJudge = false;
             if ($scope.tableJu == "html") {
                 getHtmlTableData();
             } else {
@@ -825,8 +832,8 @@ define(["app"], function (app) {
                     _dateFilter = JSON.parse("{\"period\":[\"" + time + "\"]}");
                 }
             }
-            var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
             //获取所有过滤条件
+            var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
             _allFilters = filterUtil.filter(_allFilters,"period",_dateFilter);
             $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
             $scope.isJudge = false;
@@ -850,9 +857,10 @@ define(["app"], function (app) {
                 if ($rootScope.tableSwitch.number == 6) {
                     $rootScope.tableSwitch.areaFilter = null
                 }
-                var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
                 //获取所有过滤条件
+                var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
                 _allFilters = filterUtil.filter(_allFilters,"rf_type",_rfFilter);
+                _allFilters = filterUtil.filter(_allFilters,"region","");
                 $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
             } else {
                 $scope.areaSearch = area;
@@ -862,9 +870,8 @@ define(["app"], function (app) {
                 if ($rootScope.tableSwitch.number == 6) {
                     $rootScope.tableSwitch.areaFilter = [ {region: area}]
                 }
-
-                var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
                 //获取所有过滤条件
+                var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
                 _allFilters = filterUtil.filter(_allFilters,"rf_type",_rfFilter);
                 _allFilters = filterUtil.filter(_allFilters,"region",_areaFilter);
                 $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
@@ -898,8 +905,8 @@ define(["app"], function (app) {
             $rootScope.tableSwitch.seFilter=null
             if (info === '全部') {
                 var _rfFilter  = JSON.parse("{\"rf_type\":[2]}");
-                var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
                 //获取所有过滤条件
+                var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
                 _allFilters = filterUtil.filter(_allFilters,"rf_type",_rfFilter);
                 $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
                 if ($rootScope.tableSwitch.number == 6) {
@@ -909,8 +916,8 @@ define(["app"], function (app) {
             } else {
                 //console.log("搜索引擎 ifno "+info)
                 var _seFilter  = JSON.parse("{\"se\":[\"" + info + "\"]}");
-                var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
                 //获取所有过滤条件
+                var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
                 _allFilters = filterUtil.filter(_allFilters,"se",_seFilter);
                 $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
                if ($rootScope.tableSwitch.number == 6) {

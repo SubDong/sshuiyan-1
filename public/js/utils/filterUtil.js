@@ -3,23 +3,18 @@ var filterUtil = {
         if(allFilters == null || allFilters ==undefined || allFilters =="") {
             allFilters = [];
         }
-            //搜素是否存在该元素
             var _index = allFilters.elementHasOwnProperty(element);
-            //已存在
             if(_index != -1) {
-                //替换
                 if(filter != "") {
-                    allFilters[_index](filter);
-                //删除
+                    allFilters[_index] = filter;
                 } else {
-                    allFilters.remove(_index);
+                    this.splice(_index,1);
                 }
             } else {
                 if(filter != "") {
                     allFilters.push(filter);
                 }
             }
-
         return allFilters;
     }
 }

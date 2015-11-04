@@ -12,8 +12,10 @@ if (!Array.targetIndexOf) {
 if (!Array.elementHasOwnProperty) {
     Array.prototype.elementHasOwnProperty = function (property) {
             for(var i = 0; i<this.length; i++) {
-                if(this[i].hasOwnProperty(property) ) {
-                    return i;
+                if(this[i] != null && this[i] != undefined && this[i] != "") {
+                    if(this[i].hasOwnProperty(property) ) {
+                        return i;
+                     }
                 }
             }
         return -1;
