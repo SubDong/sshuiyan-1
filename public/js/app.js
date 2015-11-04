@@ -187,9 +187,9 @@ define([
                     text: '页面热点图',
                     sref: '#page/pagetitle'
                 }/*, {
-                    text: '离站链接',
-                    sref: '#page/offsitelinks'
-                }*/]
+                 text: '离站链接',
+                 sref: '#page/offsitelinks'
+                 }*/]
             }, {
                 title: '访客分析',
                 icon: 'glyphicon glyphicon-signal',
@@ -353,6 +353,33 @@ define([
         // 求别删
         $rootScope.getIndex = function (b) {
             return b.$parent.$parent.rowRenderIndex + 1;
+        };
+
+        // 获取通用表格的PDF下载数据
+        $rootScope.getPDFTableBody = function (dataInfo, dataHeadInfo) {
+            var _tableBody = [];
+            var tableHeadObj = [];
+            for (var i = 0; i < dataHeadInfo.length; i++) {
+                if (dataHeadInfo[i].field != undefined) {
+                    tableHeadObj.push(dataHeadInfo[i].field);
+                }
+            }
+            _tableBody.push(tableHeadObj);
+            for (var i = 0; i < dataInfo.length; i++) {
+                var _array = [];
+                for (var j = 0; j < dataHeadInfo.length; j++) {
+                    if (dataHeadInfo[j].field != undefined) {
+                        var _t = dataInfo[i][dataHeadInfo[j].field];
+                        if (_t["text"]) {
+                            _array.push(dataInfo[i][dataHeadInfo[j].field]["text"] + "");
+                        } else {
+                            _array.push(dataInfo[i][dataHeadInfo[j].field] + "");
+                        }
+                    }
+                }
+                _tableBody.push(_array);
+            }
+            return _tableBody;
         };
 
     });
