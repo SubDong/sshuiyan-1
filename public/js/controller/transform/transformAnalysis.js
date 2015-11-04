@@ -577,7 +577,7 @@ define(["./module"], function (ctrs) {
                         if (temConvs.length <= 10) {
                             barDatas.forEach(function (bdata, oindex) {
                                 barDatas[oindex].key.push(gdata.eventName)
-                                barDatas[oindex].quota.push(gdata[bdata.option])
+                                barDatas[oindex].quota.push(gdata[bdata.option]==undefined?0:gdata[bdata.option])
                                 temConvs.push(gdata.conversions)
                             })
                         } else {
@@ -591,7 +591,7 @@ define(["./module"], function (ctrs) {
                             if(minIndex>-1){
                                 barDatas.forEach(function (bdata, oindex) {
                                     barDatas[minIndex].key.push(gdata.eventName)
-                                    barDatas[minIndex].quota.push(gdata[bdata.option])
+                                    barDatas[minIndex].quota.push(gdata[bdata.option]==undefined?0:gdata[bdata.option])
                                     temConvs[minIndex](conversions)
                                 })
                             }

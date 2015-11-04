@@ -580,6 +580,7 @@ define(["./module"], function (ctrs) {
                                             }
                                         })
                                     })
+                                    $rootScope.gridData = $rootScope.gridOptions.data
                                     //概况
                                     $scope.setShowArray();
                                     $rootScope.gridOptions.data.forEach(function (data) {
@@ -618,45 +619,51 @@ define(["./module"], function (ctrs) {
              * @param queryOption　查询条件指标　事件转化：指标："浏览量(pv)", "访客数(uv)", "转化次数(conversions)", "转化率(crate)", "平均转化成本(transformCost)"
              */
             $scope.dataTable = function (isContrastTime, showType, queryOptions, renderLegend) {
-                $http({
-                    method: 'GET',
-                    url: "/config/page_conv?type=search&query=" + JSON.stringify({
-                            uid: $cookieStore.get("uid"),
-                            site_id: $rootScope.siteId
-                        }
-                    )
-                }).success(function (pageConvConfs, status) {
-                    if(pageConvConfs!=undefined&pageConvConfs.length>0){
-                        var pages = [], hash = {}, pageParams = [];
-                        var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
-                        util.renderLegend(chart, $scope.charts[0].config);
-                        pageConvConfs.forEach(function (elem) {
-                            elem.target_urls.forEach(function (turl) {
-                                if (!hash[turl.url]) {
-                                    pages.push(turl.url);
-                                    hash[turl.url] = true;
+                var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
+                util.renderLegend(chart, $scope.charts[0].config);
+                var barDatas =   []
+                var temConvs=[]
+                queryOptions.forEach(function (option, oindex) {
+                    barDatas.push({
+                        label: chartUtils.convertChinese(option),
+                        key: [],
+                        option: option,
+                        quota: [],
+                    })
+                })
+                $rootScope.gridData.forEach(function (gdata, dindex) {
+                    console.log(gdata)
+                    if (gdata.conversions != undefined) {
+                        if (temConvs.length <= 10) {
+                            barDatas.forEach(function (bdata, oindex) {
+                                barDatas[oindex].key.push(gdata.campaignName)
+                                barDatas[oindex].quota.push(gdata[bdata.option]==undefined?0:gdata[bdata.option])
+                                temConvs.push(gdata.conversions)
+                            })
+                        } else {
+                            var minIndex = -1
+                            var conversions = gdata.conversions
+                            temConvs.forEach(function(convs,cindex){
+                                if(convs<conversions){
+                                    minIndex=cindex
                                 }
                             })
-                        })
-                        $http.get("/api/transform/getDayPagePVs?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&showType=" + showType + "&queryOptions=" + queryOptions + "&urls=" + JSON.stringify(pages) + "&filters=" + $rootScope.getFilters()).success(function (pagePVDatas) {
-                            var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
-                            //console.log(pagePVDatas )
-                            chart.showLoading({
-                                text: "正在努力的读取数据中..."
-                            });
-                            for (var i = 0; i < pagePVDatas.length; i++) {
-                                pagePVDatas[i].label = chartUtils.convertChinese(pagePVDatas[i].label);
+                            if(minIndex>-1){
+                                barDatas.forEach(function (bdata, oindex) {
+                                    barDatas[minIndex].key.push(gdata.campaignName)
+                                    barDatas[minIndex].quota.push(gdata[bdata.option]==undefined?0:gdata[bdata.option])
+                                    temConvs[minIndex](conversions)
+                                })
                             }
-                            console.log(pagePVDatas)
-                            cf.renderChart(pagePVDatas, $scope.charts[0].config);
-                            Custom.initCheckInfo();
-                        })
+                        }
                     }
                 })
+                cf.renderChart(barDatas, $scope.charts[0].config);
+                Custom.initCheckInfo();
             };
-            $scope.setShowArray();
-            init_transformData();
-            $scope.dataTable(true, "day", ["pv", "uv"], false);
+            //$scope.setShowArray();
+            //init_transformData();
+            //$scope.dataTable(true, "day", ["pv", "uv"], false);
             $scope.targetSearchSpreadPage = function (isClicked) {
                 $rootScope.expandInex=1
                 $scope.es_checkArray = ["pv", "uv", "vc", "ip", "nuv", "nuvRate", "conversions", "crate", "avgCost", "orderNum", "benefit", "profit", "orderNumRate"];
