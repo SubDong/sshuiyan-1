@@ -423,24 +423,49 @@ define(["./module"], function (ctrs) {
         $rootScope.targetSearchSSC = function (isClicked) {
             $scope.gridOpArray = angular.copy($rootScope.searchGridArray);
             $scope.gridOptions.columnDefs = $scope.gridOpArray;
-            if (isClicked) $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
+            if (isClicked) {
+                $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
+            }
             $http({
                 method: 'GET',
                 url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=kwsid"
                 + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=ssc&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
             }).success(function (data, status) {
                 var dataArray = [];
-                $rootScope.$broadcast("LoadDateShowDataFinish", data);
                 if (data != null && data.length > 0) {
-
+                    var semReqURLs = [];
                     data.forEach(function (item, i) {
                         var variousId = item.kw.split(",");
                         item.kw = variousId[0];
                         var url = SEM_API_URL + "/sem/report/" + $rootScope.tableSwitch.promotionSearch.SEMData + "?a=" + user + "&b=" + baiduAccount + "&kwid=" + variousId[3] + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1"
-                        $http({
-                            method: 'GET',
-                            url: url
-                        }).success(function (dataSEM, status) {
+                        //$http({
+                        //    method: 'GET',
+                        //    url: url
+                        //}).success(function (dataSEM, status) {
+                        //    var datas = {};
+                        //    if (variousId[3] == 0) {
+                        //        $rootScope.checkedArray.forEach(function (x, y) {
+                        //            datas[x] = (item[x] != undefined ? item[x] : "--");
+                        //            var field = $rootScope.tableSwitch.latitude.field
+                        //            datas[field] = item[field] + ",";
+                        //        })
+                        //    } else {
+                        //        $rootScope.checkedArray.forEach(function (x, y) {
+                        //            datas[x] = (item[x] != undefined ? item[x] : dataSEM[0][x]);
+                        //        });
+                        //        var field = $rootScope.tableSwitch.latitude.field
+                        //        datas[field] = item[field] + getTableTitle(field, dataSEM[0]);
+                        //    }
+                        //    dataArray.push(datas);
+                        //    console.log(dataArray.length);
+                        //});
+                        semReqURLs.push($http.get(url));
+                    });
+                    $q.all(semReqURLs).then(function (final_result) {
+                        final_result.forEach(function (_result, i) {
+                            var item = data[i];
+                            var variousId = item.kw.split(",");
+                            item.kw = variousId[0];
                             var datas = {};
                             if (variousId[3] == 0) {
                                 $rootScope.checkedArray.forEach(function (x, y) {
@@ -450,16 +475,17 @@ define(["./module"], function (ctrs) {
                                 })
                             } else {
                                 $rootScope.checkedArray.forEach(function (x, y) {
-                                    datas[x] = (item[x] != undefined ? item[x] : dataSEM[0][x]);
+                                    datas[x] = (item[x] != undefined ? item[x] : _result["data"][0][x]);
                                 });
                                 var field = $rootScope.tableSwitch.latitude.field
-                                datas[field] = item[field] + getTableTitle(field, dataSEM[0]);
+                                datas[field] = item[field] + getTableTitle(field, _result["data"][0]);
                             }
                             dataArray.push(datas);
-
                         });
+                        $rootScope.$broadcast("LoadSSCDataFinish", $rootScope.checkedArray, dataArray);
                     });
                 }
+
                 $scope.gridOptions.rowHeight = 55;
                 $scope.gridOptions.data = dataArray;
 

@@ -825,7 +825,7 @@ define(["app"], function (app) {
                 $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
             } else {
                 if ("全部" != area) {
-                    _areaFilter = JSON.parse("{\"region\":\"" + area + "\" }");
+                    _areaFilter = JSON.parse("{\"region\":[\"" + area + "\"]}");
                 }
                 //获取所有过滤条件
                 var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
