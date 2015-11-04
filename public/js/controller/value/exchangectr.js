@@ -22,7 +22,14 @@ define(["./module"], function (ctrs) {
                         pv: page.pv,
                         uv: page.uv
                     };
-                    $scope.pathData = data[0].path1
+                    var i = 0;
+                    for (i = 0; i < data.length; i++) {
+                        var item = data[i];
+                        if(item.pathName == page.name){
+                            break;
+                        }
+                    }
+                    $scope.pathData = data[i].path1;
                     $scope.exchange_prefix = {
                         name: page.prefix + page.name,
                         id: page.id,
