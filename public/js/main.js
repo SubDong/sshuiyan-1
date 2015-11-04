@@ -135,6 +135,7 @@ require([
     "./utils/date",
     "./utils/map",
     "./utils/arrayUtil",
+    "./utils/filterUtil",
     "./angularjs/checkbox",
     "./angularjs/daterangepicker",
     "./angularjs/tooltip",
