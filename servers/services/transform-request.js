@@ -2191,7 +2191,7 @@ var transform = {
                 case "day":
                     for (var i = 0; i < indexs.length; i++) {
                         var boolQuery = []
-                        for (var i = 0; i < urls.length; i++) {
+                        urls.forEach(function(url){
                             var filterQuery = []
                             if (filters != undefined && filters.length > 0) {
                                 var jfilters = JSON.parse(filters)
@@ -2199,13 +2199,13 @@ var transform = {
                                     filterQuery.push({"match": filter})
                                 })
                             }
-                            filterQuery.push({"match": {"loc": urls[i]}})
+                            filterQuery.push({"match": {"loc": url}})
                             boolQuery.push({
                                 "bool": {
                                     "must": filterQuery
                                 }
                             });
-                        }
+                        })
                         requests.push({
                             index: indexs[i],
                             type: type,
