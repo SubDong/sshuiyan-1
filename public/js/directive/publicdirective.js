@@ -2396,7 +2396,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
             link: function (scope, element, attrs) {
                 var topClass = attrs.setClassWhenAtTop;
                 var offsetTop = element.offset().top -40;
-                 console.log(offsetTop);
                 element.addClass(topClass);
                 $(".fix-to-top").css("width", $(document.body).width() - 155);
                 window.onresize = function () {
