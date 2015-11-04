@@ -179,7 +179,7 @@ define(["app"], function (app) {
                     $scope.gridOptions.data = data;
                 }
             }).error(function (error) {
-                //console.log(error);
+                ////console.log(error);
             });
         };
         if (typeof($rootScope.checkedArray) != undefined && $rootScope.checkedArray == "SS") {
@@ -536,7 +536,7 @@ define(["app"], function (app) {
             $scope.isJudge = false;
             if ($scope.tableJu == "html") {
                 var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
-                _allFilters = filterUtil.filter(_allFilters,"pm", _pmFilterRealTime);
+                _allFilters = filterUtil.filter(_allFilters, "pm", _pmFilterRealTime);
                 $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
                 getHtmlTableData();
             } else {
@@ -574,7 +574,7 @@ define(["app"], function (app) {
             }
 
             var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
-            _allFilters = filterUtil.filter(_allFilters,"pm",_pmFilter);
+            _allFilters = filterUtil.filter(_allFilters, "pm", _pmFilter);
             $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
 
             $scope.isJudge = false;
@@ -613,7 +613,7 @@ define(["app"], function (app) {
                 $scope.webTypeSearch = "电子邮箱";
             }
             var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
-            _allFilters = filterUtil.filter(_allFilters,"web_type",_webFilter);
+            _allFilters = filterUtil.filter(_allFilters, "web_type", _webFilter);
             $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
 
             $scope.isJudge = false;
@@ -680,7 +680,7 @@ define(["app"], function (app) {
             if ($scope.tableJu == "html") {
                 //获取所有过滤条件
                 var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
-                _allFilters = filterUtil.filter(_allFilters,"rf_type", _rfRealTimeFilter);
+                _allFilters = filterUtil.filter(_allFilters, "rf_type", _rfRealTimeFilter);
                 if (a != 2) {// 排除搜索引擎
                     filterUtil.filter(_allFilters, "se", "");
                 }
@@ -821,7 +821,7 @@ define(["app"], function (app) {
                 _areaFilter = JSON.parse("{\"region\":\"" + area + "\" }");
                 //获取所有过滤条件
                 var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
-                _allFilters = filterUtil.filter(_allFilters,"region",_areaFilter);
+                _allFilters = filterUtil.filter(_allFilters, "region", _areaFilter);
                 $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
             } else {
                 if ("全部" != area) {
@@ -982,20 +982,20 @@ define(["app"], function (app) {
         };
         //设置搜索引擎过滤
         $scope.searchEngine = function (info) {
-            $rootScope.tableSwitch.seFilter=null
+            $rootScope.tableSwitch.seFilter = null
             if (info === '全部') {
-                var _rfFilter  = JSON.parse("{\"rf_type\":[2]}");
+                var _rfFilter = JSON.parse("{\"rf_type\":[2]}");
                 //获取所有过滤条件
                 var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
-                _allFilters = filterUtil.filter(_allFilters,"rf_type",_rfFilter);
+                _allFilters = filterUtil.filter(_allFilters, "rf_type", _rfFilter);
                 $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
                 $scope.sourceSearch = "全部引擎";
             } else {
-                //console.log("搜索引擎 ifno "+info)
-                var _seFilter  = JSON.parse("{\"se\":[\"" + info + "\"]}");
+                ////console.log("搜索引擎 ifno "+info)
+                var _seFilter = JSON.parse("{\"se\":[\"" + info + "\"]}");
                 //获取所有过滤条件
                 var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
-                _allFilters = filterUtil.filter(_allFilters,"se",_seFilter);
+                _allFilters = filterUtil.filter(_allFilters, "se", _seFilter);
                 $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
                 $scope.sourceSearch = info;
             }
@@ -1006,21 +1006,21 @@ define(["app"], function (app) {
                     $rootScope.tableSwitch.tableFilter = null;
                     //获取所有过滤条件
                     var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
-                    filterUtil.filter(_allFilters,"se", "");
+                    filterUtil.filter(_allFilters, "se", "");
                     filterUtil.filter(_allFilters, "rf_type", "");
                     $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
                 } else {
-                    var _seFilter  = JSON.parse("{\"se\":\"" + info + "\"}");
+                    var _seFilter = JSON.parse("{\"se\":\"" + info + "\"}");
                     //获取所有过滤条件
                     var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
-                    _allFilters = filterUtil.filter(_allFilters,"se",_seFilter);
+                    _allFilters = filterUtil.filter(_allFilters, "se", _seFilter);
                     filterUtil.filter(_allFilters, "rf_type", "");
                     $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
                 }
                 getHtmlTableData();
             } else {
                 $rootScope.$broadcast("ssh_data_show_refresh");
-                    $scope.targetSearch();
+                $scope.targetSearch();
             }
             if (info == "百度" || info == "Google") {
                 if ($scope.browser.selected != undefined) {
@@ -1035,7 +1035,7 @@ define(["app"], function (app) {
 
 
         $scope.removeSource = function (obj) {
-            console.log("删除来源");
+            //console.log("删除来源");
             $rootScope.tableSwitch.eginFilter = null
             $rootScope.tableSwitch.seFilter = null
             $scope.souce.selected = {"name": "全部"};
@@ -1048,7 +1048,7 @@ define(["app"], function (app) {
             $rootScope.refreshData(false)
         }
         $scope.removeBrowser = function (obj) {
-            console.log("删除搜索")
+            //console.log("删除搜索")
             $rootScope.tableSwitch.seFilter = null
             $scope.browser.selected = {"name": "全部"};
             obj.curBrowser = "";
@@ -1318,7 +1318,7 @@ define(["app"], function (app) {
             getHtmlTableData();
         };
         $scope.getEventRootData = function (a, options) {
-            //console.log("getEventRootData")
+            ////console.log("getEventRootData")
             var hash = {}
             var val = 0
             if (a.col.field == "crate") {
@@ -1382,15 +1382,15 @@ define(["app"], function (app) {
             $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
             //}
             if ($rootScope.tableSwitch.latitude != null && $rootScope.tableSwitch.latitude == undefined) {
-                console.error("error: latitude is not defined,Please check whether the parameter the configuration.");
+                //console.error("error: latitude is not defined,Please check whether the parameter the configuration.");
                 return;
             }
             if ($rootScope.tableTimeStart == undefined) {
-                //console.error("error: tableTimeStart is not defined,Please check whether the parameter the configuration.");
+                ////console.error("error: tableTimeStart is not defined,Please check whether the parameter the configuration.");
                 return;
             }
             if ($rootScope.tableTimeEnd == undefined) {
-                console.error("error: tableTimeEnd is not defined,Please check whether the parameter the configuration.");
+                //console.error("error: tableTimeEnd is not defined,Please check whether the parameter the configuration.");
                 return;
             }
             if ($rootScope.tableSwitch.isJudge == undefined) $scope.isJudge = true;
@@ -1702,6 +1702,7 @@ define(["app"], function (app) {
             var dateTime1 = chartUtils.getSetOffTime($rootScope.tableTimeStart, $rootScope.tableTimeEnd);
             var dateTime2 = chartUtils.getSetOffTime(startTime, endTime);
             $scope.targetDataContrast(null, null, function (item) {
+                //console.log("targetDataContrast")
                 var target = $rootScope.tableSwitch.latitude.field;
                 var dataArray = [];
                 var is = 1;
@@ -1768,6 +1769,93 @@ define(["app"], function (app) {
                     url: searchUrl
                 }).success(function (data, status) {
                     cabk(data);
+                })
+            }
+            if ($rootScope.tableSwitch.number == 6) {
+                $http({
+                    method: 'GET',
+                    url: "/config/eventchnage_list?type=search&query=" + JSON.stringify({
+                            uid: $cookieStore.get("uid"),
+                            root_url: $rootScope.siteId
+                        }
+                    )
+                }).success(function (events, status) {
+                    var eventPages = [], hash = {}, eventParams = [], eventInfos = {};
+                    events.forEach(function (elem) {
+                        //去除页面中的/结尾情况
+                        if (elem.event_page != undefined && elem.event_page != "" && elem.event_page[elem.event_page.length - 1] == "/") {
+                            elem.event_page = elem.event_page.substring(0, elem.event_page.length - 1)
+                        }
+                        if (!hash[elem.event_page]) {
+                            eventPages.push(elem.event_page);
+                            hash[elem.event_page] = true;
+                        } else {
+
+                        }
+                        eventParams.push({
+                            event_page: elem.event_page,
+                            event_id: elem.event_id,
+                            update_time: elem.update_time,
+                            event_target: elem.event_target,
+                        })
+                    })
+                    $rootScope.curEventConfs = eventParams;
+                    var purl = "/api/transform/getEventPVs?start=" + (startInfoTime == null ? $rootScope.tableTimeStart : startInfoTime) + "&end=" + (endInfoTime == null ? $rootScope.tableTimeEnd : endInfoTime) + "&type=" + $rootScope.userType + "&queryOptions=" + $scope.es_checkArray + "&events=" + JSON.stringify(eventParams) + "&showType=day" + "&filters=" + $rootScope.getFilters()
+                    $http.get(purl).success(function (pvs) {
+                        if (pvs != null || pvs != "") {//PV 信息若不存在 则事件信息认为一定不存在
+                            $rootScope.curEventPVs = pvs
+                            var esurl = "/api/transform/getConvEvents?start=" + (startInfoTime == null ? $rootScope.tableTimeStart : startInfoTime) + "&end=" + (endInfoTime == null ? $rootScope.tableTimeEnd : endInfoTime) + "&type=" + $rootScope.userType + "&eventPages=" + JSON.stringify(eventParams) + "&showType=day" + "&filters=" + $rootScope.getFilters()
+                            $http.get(esurl).success(function (eventInfos) {
+                                $rootScope.curEventInfos = eventInfos
+                                var results = [];
+                                events.forEach(function (event, index) {
+                                    var data = pvs[index]
+                                    data["eventName"] = event.event_name
+                                    data["eventId"] = event.event_id
+                                    data["loc"] = event.event_page
+                                    for (var i = 0; i < $scope.es_checkArray.length; i++) {
+                                        if ($scope.es_checkArray[i] == "crate") {
+                                            if (eventInfos[event.event_page + "_" + event.event_id] != undefined && Number(data["pv"]) != 0) {
+                                                data["crate"] = (Number(eventInfos[event.event_page + "_" + event.event_id].convCount / Number(data["pv"])) * 100).toFixed(2) + "%";
+                                            } else {
+                                                data["crate"] = "0%";
+                                            }
+                                        } else if ($scope.es_checkArray[i] == "transformCost") {
+                                            //var add_i = i;
+                                            //var semRequest = "";
+                                            //semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + (startInfoTime == null ? $rootScope.tableTimeStart : startInfoTime) + "&endOffset=" + (endInfoTime == null ? $rootScope.tableTimeEnd : endInfoTime) + "&q=cost");
+                                            //$q.all([semRequest]).then(function (sem_data) {
+                                            //    var cost = 0;
+                                            //    for (var k = 0; k < sem_data.length; k++) {
+                                            //        for (var c = 0; c < sem_data[k].data.length; c++) {
+                                            //            cost += Number(sem_data[k].data[c].cost);
+                                            //        }
+                                            //    }
+                                                data["transformCost"] = /*(cost / Number(data["transformCost"])).toFixed(2).toString() +*/ "0元";
+                                            //});
+                                        } else if ($scope.es_checkArray[i] == "clickTotal") {
+                                            if (eventInfos[event.event_page + "_" + event.event_id] != undefined) {
+                                                data["clickTotal"] = eventInfos[event.event_page + "_" + event.event_id].eventCount;
+                                            } else {
+                                                data["clickTotal"] = 0
+                                            }
+
+                                        }
+                                        else if ($scope.es_checkArray[i] == "conversions") {
+                                            if (eventInfos[event.event_page + "_" + event.event_id] != undefined) {
+                                                data["conversions"] = eventInfos[event.event_page + "_" + event.event_id].convCount;
+                                            } else {
+                                                data["conversions"] = 0;
+                                            }
+                                        }
+                                    }
+                                    //console.log("对比查询数据")
+                                    results.push(data)
+                                })
+                                cabk(results)
+                            })
+                        }
+                    });
                 })
             } else {
                 $http({
@@ -1846,7 +1934,7 @@ define(["app"], function (app) {
                         }
                     }
                 }).error(function (error) {
-                    ////console.log(error);
+                    //////console.log(error);
                 });
             }
         };
@@ -1900,7 +1988,7 @@ define(["app"], function (app) {
                         }
                         $rootScope.tableSwitch.tableFilter = returnFilter;
                     }).error(function (error) {
-                        //console.log(error);
+                        ////console.log(error);
                     });
                 }
             });
@@ -1909,7 +1997,7 @@ define(["app"], function (app) {
         $scope.getSubColumnDefs = function (gridOpArray) {
             var _t_arr = [];
             for (var i = 0; i < gridOpArray.length; i++) {
-                //console.log(gridOpArray[i]["name"]);
+                ////console.log(gridOpArray[i]["name"]);
                 if (gridOpArray[i]["name"] == " ") {
                     _t_arr.push({
                         name: gridOpArray[i]["name"],
@@ -2039,7 +2127,7 @@ define(["app"], function (app) {
                     htmlData.push(res);
                     row.entity.subGridOptions.data = [{"info": " "}];
                 }).error(function (error) {
-                    //console.log(error);
+                    ////console.log(error);
                 });
             });
         };

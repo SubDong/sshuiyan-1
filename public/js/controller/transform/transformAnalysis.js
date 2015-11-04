@@ -378,7 +378,7 @@ define(["./module"], function (ctrs) {
 
             $rootScope.getFilters = function () {
                 var filters = []
-                //console.log( JSON.stringify($rootScope.tableSwitch.seFilter)+"  "+JSON.stringify($rootScope.tableSwitch.eginFilter)+"  "+ JSON.stringify($rootScope.tableSwitch.visitorFilter)+" " +JSON.stringify($rootScope.tableSwitch.areaFilter))
+                ////console.log( JSON.stringify($rootScope.tableSwitch.seFilter)+"  "+JSON.stringify($rootScope.tableSwitch.eginFilter)+"  "+ JSON.stringify($rootScope.tableSwitch.visitorFilter)+" " +JSON.stringify($rootScope.tableSwitch.areaFilter))
                 if ($rootScope.tableSwitch.eginFilter != undefined && $rootScope.tableSwitch.eginFilter != null) {
                     filters.push($rootScope.tableSwitch.eginFilter)
                 }
@@ -393,7 +393,7 @@ define(["./module"], function (ctrs) {
                 if ($rootScope.tableSwitch.seFilter != undefined && $rootScope.tableSwitch.seFilter != null) {
                         filters.push($rootScope.tableSwitch.seFilter)
                 }
-                console.log("过滤内容="+JSON.stringify(filters))
+                //console.log("过滤内容="+JSON.stringify(filters))
                 return JSON.stringify(filters)
             }
             $rootScope.curEventConfs = [];
@@ -450,18 +450,18 @@ define(["./module"], function (ctrs) {
                                                 data["crate"] = "0%";
                                             }
                                         } else if ($scope.es_checkArray[i] == "transformCost") {
-                                            var add_i = i;
-                                            var semRequest = "";
-                                            semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end + "&q=cost");
-                                            $q.all([semRequest]).then(function (sem_data) {
-                                                var cost = 0;
-                                                for (var k = 0; k < sem_data.length; k++) {
-                                                    for (var c = 0; c < sem_data[k].data.length; c++) {
-                                                        cost += Number(sem_data[k].data[c].cost);
-                                                    }
-                                                }
-                                                data["transformCost"] = (cost / Number(data["transformCost"])).toFixed(2).toString() + "元";
-                                            });
+                                            //var add_i = i;
+                                            //var semRequest = "";
+                                            //semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end + "&q=cost");
+                                            //$q.all([semRequest]).then(function (sem_data) {
+                                            //    var cost = 0;
+                                            //    for (var k = 0; k < sem_data.length; k++) {
+                                            //        for (var c = 0; c < sem_data[k].data.length; c++) {
+                                            //            cost += Number(sem_data[k].data[c].cost);
+                                            //        }
+                                            //    }
+                                                data["transformCost"] = /*(cost / Number(data["transformCost"])).toFixed(2).toString()*/ + "0元";
+                                            //});
                                         } else if ($scope.es_checkArray[i] == "clickTotal") {
                                             if (eventInfos[event.event_page + "_" + event.event_id] != undefined) {
                                                 data["clickTotal"] = eventInfos[event.event_page + "_" + event.event_id].eventCount;
@@ -516,7 +516,7 @@ define(["./module"], function (ctrs) {
                                     if (!hashloc[event.event_page]) {
                                         hashloc[event.event_page] = true;
                                     }
-                                    //console.log(" tempPV  "+tempPv +" tempConv "+tempConv)
+                                    ////console.log(" tempPV  "+tempPv +" tempConv "+tempConv)
                                 })
 
                                 $scope.dateShowArray.forEach(function (item) {
@@ -697,9 +697,9 @@ define(["./module"], function (ctrs) {
                     });
                 }
                 //$scope.setShowArray();
-                //console.log($scope.city)
-                //console.log($scope.souce)
-                //console.log($scope.visitNum)
+                ////console.log($scope.city)
+                ////console.log($scope.souce)
+                ////console.log($scope.visitNum)
                 //$rootScope.refreshData(true);
             };
 
