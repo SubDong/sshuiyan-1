@@ -8,7 +8,7 @@ var filterUtil = {
                 if(filter != "") {
                     allFilters[_index] = filter;
                 } else {
-                    this.splice(_index,1);
+                    allFilters.splice(_index,1);
                 }
             } else {
                 if(filter != "") {
