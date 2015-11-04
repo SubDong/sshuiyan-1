@@ -616,63 +616,13 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                         var dataInfo = angular.copy($rootScope.gridApi2.grid.options.data);
                         var dataHeadInfo = angular.copy($rootScope.gridApi2.grid.options.columnDefs);
                         if ($location.path().indexOf("changelist") != -1) {
-                            var _dataInfo = [];
-                            _dataInfo.push({
-                                "站点名称": "站点首页",
-                                "www.best-ad.cn": "best-ad.cn",
-                                " ": "",
-                                "  ": ""
-                            });
-                            _dataInfo.push({
-                                "站点名称": "来源分析-来源升降榜(来路域名)(指标：pv)(" + $rootScope.startString + "对比" + $rootScope.contrastStartString + ")",
-                                "www.best-ad.cn": "",
-                                " ": "",
-                                "  ": ""
-                            });
-                            _dataInfo.push({
-                                "站点名称": "来路域名",
-                                "www.best-ad.cn": $rootScope.startString,
-                                " ": $rootScope.contrastStartString,
-                                "  ": "变化情况"
-                            });
-                            //
-                            var sum_pv = 0;
-                            var contrast_sum_pv = 0;
-                            dataInfo.forEach(function (d, count) {
-                                var _tmp = {
-                                    "站点名称": d["pathName"],
-                                    "www.best-ad.cn": d["pv"],
-                                    " ": d["contrastPv"],
-                                    "  ": d["percentage"]
-                                };
-                                sum_pv += d["pv"];
-                                contrast_sum_pv += d["contrastPv"];
-                                _dataInfo.push(_tmp);
-                            });
-                            var percentage = sum_pv - contrast_sum_pv;
-                            var _t_percentage = 0;
-                            if (contrast_sum_pv == 0) {
-                                _t_percentage = "(100%)";
-                            } else {
-                                _t_percentage = "(" + ((sum_pv - contrast_sum_pv) / contrast_sum_pv * 100) + "%)"
-                            }
-                            _dataInfo.push({
-                                "站点名称": "全站统计",
-                                "www.best-ad.cn": sum_pv,
-                                " ": contrast_sum_pv,
-                                "  ": percentage + _t_percentage
-                            });
-                            _dataInfo.push({
-                                "站点名称": "Power by best-ad.cn",
-                                "www.best-ad.cn": "",
-                                " ": "",
-                                "  ": ""
-                            });
-                            var repData = JSON.stringify(_dataInfo).replace(/\%/g, "*");
-
+                            var repData = scope.generateCSVData(dataInfo);
                         } else if ($location.path().indexOf("sameGroupAnalysis") != -1) {
                             //同类群组分析-下载CSV格式。
                             var repData = $rootScope.gaFormatDataCSV();
+                        } else if ($location.path().indexOf("transform/transformAnalysis") != -1) {
+                            //事件转化-下载CSV格式。
+                            var repData = scope.generateCSVData(dataHeadInfo, dataInfo);
                         } else {
                             dataHeadInfo.forEach(function (item, i) {
                                 if (item.field != undefined) {
@@ -1639,7 +1589,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                         }
                         if (_path == "/transform/transformAnalysis") {
                             $rootScope.$broadcast("updateSelectRowIndex", 7);
-                        }else if(_path == "/ads/adsSource"){
+                        } else if (_path == "/ads/adsSource") {
                             $rootScope.$broadcast("updateSelectRowIndex", 8);
                         }
                         if (e_r.sref == _path.substring(1, _path.substring(1).indexOf("/") + 1)) {

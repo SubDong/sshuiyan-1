@@ -57,7 +57,7 @@ var schemas = {
             event_name: String,//事件名称
             event_page: String, //事件作用页面
             event_method: String, //事件设置方式
-            event_target:Boolean,//是否为事件转化目标
+            event_target: Boolean,//是否为事件转化目标
             update_time: Number, //事件插入更新时间
             event_status: String //事件状态 1：启动  0：暂停
         }
@@ -185,7 +185,7 @@ var schemas = {
             }],
             conv_tpye: String,//转换类型，regist,communicate,place_order,othre_order
             conv_text: String,
-            update_time:Number
+            update_time: Number
         }
 
     },
@@ -260,7 +260,9 @@ var schemas = {
             contrastStartString: String,//来源变化榜对比时间字符串
             scale: String, //同类群组分析-规模
             dateRange: String,//同类群组分析-周期
-            indicator: String //同类群组分析-指标
+            indicator: String, //同类群组分析-指标
+            result_data: [],
+            result_head_data: []
         }
     },
     /////////////////////推广URL 前端Schemas////////////////////////
@@ -303,8 +305,7 @@ var schemas = {
             "s": Number,
             "acid": Number
         }
-    },
-
+    }
 
 }
 module.exports = schemas

@@ -437,6 +437,41 @@ define(["./module"], function (ctrs) {
             cb(docDefinition);
         };
 
+        $scope.generateCSVData = function (dataInfo) {
+
+            function pushObj(_array, a, b, c, d) {
+                _array.push({
+                    "站点名称": a,
+                    "www.best-ad.cn": b,
+                    " ": c,
+                    "  ": d
+                });
+            }
+
+            var _dataInfo = [];
+            pushObj(_dataInfo, "站点首页", "best-ad.cn", "", "");
+            pushObj(_dataInfo, "来源分析-来源升降榜(来路域名)(指标：pv)(" + $rootScope.startString + "对比" + $rootScope.contrastStartString + ")", "", "", "");
+            pushObj(_dataInfo, "来路域名", $rootScope.startString, $rootScope.contrastStartString, "变化情况");
+            //
+            var sum_pv = 0;
+            var contrast_sum_pv = 0;
+            dataInfo.forEach(function (d, count) {
+                sum_pv += d["pv"];
+                contrast_sum_pv += d["contrastPv"];
+                pushObj(_dataInfo, d["pathName"], d["pv"], d["contrastPv"], d["percentage"]);
+            });
+            var percentage = sum_pv - contrast_sum_pv;
+            var _t_percentage = 0;
+            if (contrast_sum_pv == 0) {
+                _t_percentage = "(100%)";
+            } else {
+                _t_percentage = "(" + ((sum_pv - contrast_sum_pv) / contrast_sum_pv * 100) + "%)"
+            }
+            pushObj(_dataInfo, "全站统计", sum_pv, contrast_sum_pv, percentage + _t_percentage);
+            pushObj(_dataInfo, "Power by best-ad.cn", "", "", "");
+            return JSON.stringify(_dataInfo).replace(/\%/g, "*");
+        };
+
     });
 });
 

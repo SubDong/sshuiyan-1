@@ -14,7 +14,7 @@ var daos = require('../db/daos'),
     csvApi = require('json-2-csv'),
     fs = require("file-system")
 
-    mailIntervalIds = [];
+mailIntervalIds = [];
 
 var getScaleName = function (scale) {
     switch (scale) {
@@ -70,8 +70,6 @@ module.exports = function (req) {
                 var interval = later.setInterval(function () {
                     var rule_index = mailRule.rule_url;
                     if (rule_index == "changelist") {// 来源变化榜
-                        console.log("来源变化榜");
-                        console.log(mailRule);
                         var start = mailRule["start"];
                         var end = mailRule["end"];
                         var contrastStart = mailRule["contrastStart"];
@@ -142,13 +140,13 @@ module.exports = function (req) {
                                 console.log("Send mail failed:No data result!");
                             }
                         });
-                    } else if(rule_index == "groupAnalysis") { //同类群组分析
+                    } else if (rule_index == "groupAnalysis") { //同类群组分析
                         var typeId = mailRule["type_id"];
                         var scale = mailRule["scale"];
                         var dateRange = mailRule["dateRange"];
                         var indicator = mailRule["indicator"];
                         var scaleName = getScaleName(scale);
-                       gacache.search(typeId,scale,dateRange,indicator,function (data) {
+                        gacache.search(typeId, scale, dateRange, indicator, function (data) {
 
                             if (data) {
                                 var subject = "附件中含有数据统计,请查收!";
@@ -156,22 +154,22 @@ module.exports = function (req) {
                                 var tableCSV = [];
                                 var trsData = JSON.parse(data).gaResultTrData;
                                 trsData.forEach(function (trData, trIndex, array) {
-                                    var trCsv = '{"日期":"' + trData.code + '","第0'+scaleName +'":"' + trData.data + '",';
+                                    var trCsv = '{"日期":"' + trData.code + '","第0' + scaleName + '":"' + trData.data + '",';
                                     var tdsData = trData.gaResultTdDatas;
-                                    for(var i = 0; i < trsData[0].gaResultTdDatas.length; i++) {
-                                            var tdData = tdsData[i];
+                                    for (var i = 0; i < trsData[0].gaResultTdDatas.length; i++) {
+                                        var tdData = tdsData[i];
 
-                                            if (tdData != null && tdData != undefined && tdData != "") {
-                                                var day = i + 1;
-                                                trCsv += '"第' + day + scaleName +'":"' + tdData.data + '",'
-                                            } else {
-                                                var day = i + 1;
-                                                trCsv += '"第' + day + scaleName+'":"",'
-                                            }
-                                            if(i == trsData[0].gaResultTdDatas.length - 1) {
-                                                trCsv = trCsv.substr(0, trCsv.length - 1);
-                                                trCsv += '}';
-                                            }
+                                        if (tdData != null && tdData != undefined && tdData != "") {
+                                            var day = i + 1;
+                                            trCsv += '"第' + day + scaleName + '":"' + tdData.data + '",'
+                                        } else {
+                                            var day = i + 1;
+                                            trCsv += '"第' + day + scaleName + '":"",'
+                                        }
+                                        if (i == trsData[0].gaResultTdDatas.length - 1) {
+                                            trCsv = trCsv.substr(0, trCsv.length - 1);
+                                            trCsv += '}';
+                                        }
                                     }
                                     tableCSV.push(JSON.parse(trCsv));
                                     trCsv = "";
@@ -217,7 +215,53 @@ module.exports = function (req) {
                             } else {
                                 console.log("Send mail failed:No data result!");
                             }
-                       });
+                        });
+                    } else if (rule_index == "transformAnalysis") {// 事件转化
+                        var subject = "附件中含有事件转化数据,请查收!";
+                        var title = "转化分析-事件转化数据报告!";
+                        var data = mailRule["result_data"];
+                        var dataHead = mailRule["result_head_data"];
+                        if (data.length) {
+                            var result = data_convert.convertSjzhData(data, dataHead);
+                            csvApi.json2csv(result, function (err, csv) {
+                                var buffer = new Buffer(csv);
+                                var fileSuffix = new Date().getTime();
+                                fs.writeFile("servers/filetmp/" + fileSuffix + ".csv", buffer, function (error) {
+                                    if (error) {
+                                        console.error(error);
+                                        return;
+                                    } else {
+                                        var mailOptions = {
+                                            from: '百思慧眼<70285622@qq.com> ', // sender address
+                                            to: mailRule.mail_address.toString(), // list of receivers
+                                            subject: title, // Subject line
+                                            text: 'Hello world', // plaintext body
+                                            html: '<b>' + subject + '</b>',// html body
+                                            attachments: [
+                                                {
+                                                    filename: fileSuffix + '.csv',
+                                                    path: "servers/filetmp/" + fileSuffix + ".csv"
+                                                }
+                                            ]
+                                        };
+                                        mail.send(mailOptions, function (error, info) {
+                                            if (error) {
+                                                console.error(error);
+                                            } else {
+                                                console.log('Message sent: ' + info.response + "at " + new Date());
+                                                fs.exists('servers/filetmp/' + fileSuffix + '.csv', function (exists) {
+                                                    if (exists) {
+                                                        fs.unlinkSync('servers/filetmp/' + fileSuffix + '.csv');
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }
+                                });
+                            });
+                        } else {
+                            console.log("Send mail failed:No data result!");
+                        }
                     } else {
                         var timeOffset = [-1, -1];
                         var interval = 1;

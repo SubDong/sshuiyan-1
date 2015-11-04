@@ -861,7 +861,7 @@ define(["./module"], function (ctrs) {
 
             // 配置邮件
             $rootScope.initMailData = function () {
-                $http.get("api/saveMailConfig?rt=read&rule_url=" + $rootScope.mailUrl[1] + "").success(function (result) {
+                $http.get("api/saveMailConfig?rt=read&rule_url=" + $rootScope.mailUrl[13] + "").success(function (result) {
                     if (result) {
                         var ele = $("ul[name='sen_form']");
                         formUtils.rendererMailData(result, ele);
@@ -875,12 +875,24 @@ define(["./module"], function (ctrs) {
                 if (result.ec) {
                     alert(result.info);
                 } else {
-                    formData.rule_url = $rootScope.mailUrl[1];
+                    formData.rule_url = $rootScope.mailUrl[13];
                     formData.uid = $cookieStore.get('uid');
                     formData.site_id = $rootScope.siteId;
                     formData.type_id = $rootScope.userType;
                     formData.schedule_date = $scope.mytime.time.Format('hh:mm');
-                    $http.get("api/saveMailConfig?data=" + JSON.stringify(formData)).success(function (data) {
+                    formData.result_data = angular.copy($rootScope.gridApi2.grid.options.data);
+                    formData.result_head_data = angular.copy($rootScope.gridApi2.grid.options.columnDefs);
+                    $http({
+                        method: 'POST',
+                        url: 'api/saveMailConfig',
+                        headers: {
+                            'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+                            'Content-type': 'text/csv; charset=utf-8'
+                        },
+                        data: {
+                            data: formData
+                        }
+                    }).success(function (data, status, headers, config) {
                         var result = JSON.parse(eval("(" + data + ")").toString());
                         if (result.ok == 1) {
                             alert("操作成功!");
@@ -890,6 +902,81 @@ define(["./module"], function (ctrs) {
                         }
                     });
                 }
+            };
+
+            $scope.generateCSVData = function (_dataHead, _dataArray) {
+                var _t_data_arr = [];
+                _dataArray.forEach(function (_data_item, x) {
+                    var _obj = {};
+                    _dataHead.forEach(function (item, i) {
+                        if (item.field != undefined) {
+                            _obj[item.displayName] = _data_item[item.field];
+                        }
+                    });
+                    _t_data_arr.push(_obj);
+                });
+                if (_t_data_arr.length == 0) {
+                    var _obj = {};
+                    _dataHead.forEach(function (item, i) {
+                        if (item.field != undefined) {
+                            _obj[item.displayName] = "--";
+                        }
+                    });
+                    _t_data_arr.push(_obj);
+                }
+                return JSON.stringify(_t_data_arr).replace(/\%/g, "*");
+            };
+
+            $scope.generatePDFMakeData = function (cb) {
+                var dataInfo = angular.copy($rootScope.gridApi2.grid.options.data);
+                var dataHeadInfo = angular.copy($rootScope.gridApi2.grid.options.columnDefs);
+                var _tableBody = [];
+                var tableHeadObj = [];
+                for (var i = 0; i < dataHeadInfo.length; i++) {
+                    if (dataHeadInfo[i].field != undefined) {
+                        tableHeadObj.push(dataHeadInfo[i].field);
+                    }
+                }
+                _tableBody.push(tableHeadObj);
+                for (var i = 0; i < dataInfo.length; i++) {
+                    var _array = [];
+                    for (var j = 0; j < dataHeadInfo.length; j++) {
+                        if (dataHeadInfo[j].field != undefined) {
+                            var _t = dataInfo[i][dataHeadInfo[j].field];
+                            if (_t["text"]) {
+                                _array.push(dataInfo[i][dataHeadInfo[j].field]["text"] + "");
+                            } else {
+                                _array.push(dataInfo[i][dataHeadInfo[j].field] + "");
+                            }
+                        }
+                    }
+                    _tableBody.push(_array);
+                }
+                var docDefinition = {
+                    header: {
+                        text: "Event transformation data report",
+                        style: "header",
+                        alignment: 'center'
+                    },
+                    content: [
+                        {
+                            table: {
+                                headerRows: 1,
+                                body: _tableBody
+                            }
+                        },
+                        {text: '\nPower by www.best-ad.cn', style: 'header'},
+                    ],
+                    styles: {
+                        header: {
+                            fontSize: 20,
+                            fontName: "标宋",
+                            alignment: 'justify',
+                            bold: true
+                        }
+                    }
+                };
+                cb(docDefinition);
             };
         }
     );

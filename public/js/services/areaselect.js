@@ -227,7 +227,8 @@ define(["../app"], function (app) {
             "entrancepage",
             "changelist",
             "groupAnalysis",
-            "adsTrack"
+            "adsTrack",
+            "transformAnalysis"
         ]
     }]);
 });

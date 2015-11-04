@@ -1372,5 +1372,32 @@ api.get("/saveMailConfig", function (req, res) {
         });
     }
 });
+api.post("/saveMailConfig", function (req, res) {
+    var requestData = "";
+    req.addListener("data", function (postDataChunk) {
+        requestData = postDataChunk + "";
+    });
+
+    req.addListener("end", function () {
+        var model = "mail_rules_model";
+        var jsonData = JSON.parse(requestData).data;
+        dao.find(model, JSON.stringify({rule_url: jsonData.rule_url}), null, {}, function (err, docs) {
+            if (err) {
+                return console.error(err);
+            }
+            if (docs.length) {
+                dao.update(model, JSON.stringify({rule_url: jsonData.rule_url}), JSON.stringify(jsonData), function (err, result) {
+                    datautils.send(res, JSON.stringify(result));
+                });
+            } else {
+                dao.save(model, jsonData, function (result) {
+                    if (result) {
+                        datautils.send(res, JSON.stringify({ok: "1"}));
+                    }
+                });
+            }
+        });
+    });
+});
 
 module.exports = api;

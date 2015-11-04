@@ -268,6 +268,28 @@ var data_convert = {
             "  ": ""
         });
         return result;
+    },
+    convertSjzhData: function (_dataArray, _dataHead) {
+        var _t_data_arr = [];
+        _dataArray.forEach(function (_data_item, x) {
+            var _obj = {};
+            _dataHead.forEach(function (item, i) {
+                if (item.field != undefined) {
+                    _obj[item.displayName] = _data_item[item.field];
+                }
+            });
+            _t_data_arr.push(_obj);
+        });
+        if (_t_data_arr.length == 0) {
+            var _obj = {};
+            _dataHead.forEach(function (item, i) {
+                if (item.field != undefined) {
+                    _obj[item.displayName] = "--";
+                }
+            });
+            _t_data_arr.push(_obj);
+        }
+        return _t_data_arr;
     }
 }
 
