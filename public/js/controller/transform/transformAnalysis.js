@@ -238,9 +238,7 @@ define(["./module"], function (ctrs) {
                         keyFormat: 'eq',
                         noFormat: true,
                         dataKey: "key",//传入数据的key值
-                        dataValue: "quota",//传入数据的value值
-                        // qingXie: true,
-                        qxv: 18
+                        dataValue: "quota"//传入数据的value值
                     }
                 }
             ];
@@ -378,29 +376,30 @@ define(["./module"], function (ctrs) {
             };
 
 
-            $rootScope.getFilters = function(){
-                var  filters = []
+            $rootScope.getFilters = function () {
+                var filters = []
                 //console.log( JSON.stringify($rootScope.tableSwitch.seFilter)+"  "+JSON.stringify($rootScope.tableSwitch.eginFilter)+"  "+ JSON.stringify($rootScope.tableSwitch.visitorFilter)+" " +JSON.stringify($rootScope.tableSwitch.areaFilter))
-                if($rootScope.tableSwitch.eginFilter!=undefined&&$rootScope.tableSwitch.eginFilter!=null){
-                        filters.push($rootScope.tableSwitch.eginFilter)
+                if ($rootScope.tableSwitch.eginFilter != undefined && $rootScope.tableSwitch.eginFilter != null) {
+                    filters.push($rootScope.tableSwitch.eginFilter)
                 }
-                if($rootScope.tableSwitch.visitorFilter!=undefined&&$rootScope.tableSwitch.visitorFilter!=null){
+                if ($rootScope.tableSwitch.visitorFilter != undefined && $rootScope.tableSwitch.visitorFilter != null) {
                     filters.push($rootScope.tableSwitch.visitorFilter)
                 }
-                if($rootScope.tableSwitch.areaFilter!=undefined&&$rootScope.tableSwitch.areaFilter!=null&&$rootScope.tableSwitch.areaFilter.length>0){
-                    $rootScope.tableSwitch.areaFilter.forEach(function(area){
+                if ($rootScope.tableSwitch.areaFilter != undefined && $rootScope.tableSwitch.areaFilter != null && $rootScope.tableSwitch.areaFilter.length > 0) {
+                    $rootScope.tableSwitch.areaFilter.forEach(function (area) {
                         filters.push(area)
                     })
                 }
-                if($rootScope.tableSwitch.seFilter!=undefined&&$rootScope.tableSwitch.seFilter!=null&&$rootScope.tableSwitch.seFilter.length>0){
-                    $rootScope.tableSwitch.seFilter.forEach(function(area){
-                        filters.push(area)
-                    })
+                if ($rootScope.tableSwitch.seFilter != undefined && $rootScope.tableSwitch.seFilter != null) {
+                        filters.push($rootScope.tableSwitch.seFilter)
                 }
-                //console.log("过滤内容="+JSON.stringify(filters))
+                console.log("过滤内容="+JSON.stringify(filters))
                 return JSON.stringify(filters)
             }
-            $rootScope.locUrls = [];
+            $rootScope.curEventConfs = [];
+            $rootScope.curEventPVs = []
+            $rootScope.curEventInfos = []
+
             $rootScope.refreshData = function (isContrastDataByTime) {//isContrastDataByTime 是否按时间对比
                 $http({
                     method: 'GET',
@@ -413,13 +412,13 @@ define(["./module"], function (ctrs) {
                     var eventPages = [], hash = {}, eventParams = [], eventInfos = {};
                     events.forEach(function (elem) {
                         //去除页面中的/结尾情况
-                        if(elem.event_page!=undefined&&elem.event_page!=""&&elem.event_page[elem.event_page.length-1]=="/"){
-                            elem.event_page = elem.event_page.substring(0,elem.event_page.length-1)
+                        if (elem.event_page != undefined && elem.event_page != "" && elem.event_page[elem.event_page.length - 1] == "/") {
+                            elem.event_page = elem.event_page.substring(0, elem.event_page.length - 1)
                         }
                         if (!hash[elem.event_page]) {
                             eventPages.push(elem.event_page);
                             hash[elem.event_page] = true;
-                        }else{
+                        } else {
 
                         }
                         eventParams.push({
@@ -429,12 +428,14 @@ define(["./module"], function (ctrs) {
                             event_target: elem.event_target,
                         })
                     })
-                    $rootScope.locUrls = eventPages;
+                    $rootScope.curEventConfs = eventParams;
                     var purl = "/api/transform/getEventPVs?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&queryOptions=" + $scope.es_checkArray + "&events=" + JSON.stringify(eventParams) + "&showType=day" + "&filters=" + $rootScope.getFilters()
                     $http.get(purl).success(function (pvs) {
                         if (pvs != null || pvs != "") {//PV 信息若不存在 则事件信息认为一定不存在
-                            var esurl = "/api/transform/getConvEvents?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&eventPages=" + JSON.stringify(eventParams) + "&showType=day"+ "&filters=" + $rootScope.getFilters()
+                            $rootScope.curEventPVs = pvs
+                            var esurl = "/api/transform/getConvEvents?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&eventPages=" + JSON.stringify(eventParams) + "&showType=day" + "&filters=" + $rootScope.getFilters()
                             $http.get(esurl).success(function (eventInfos) {
+                                $rootScope.curEventInfos = eventInfos
                                 var results = [];
                                 events.forEach(function (event, index) {
                                     var data = pvs[index]
@@ -443,7 +444,7 @@ define(["./module"], function (ctrs) {
                                     data["loc"] = event.event_page
                                     for (var i = 0; i < $scope.es_checkArray.length; i++) {
                                         if ($scope.es_checkArray[i] == "crate") {
-                                            if (eventInfos[event.event_page + "_" + event.event_id] != undefined && Number(data["pv"]) != 0 ) {
+                                            if (eventInfos[event.event_page + "_" + event.event_id] != undefined && Number(data["pv"]) != 0) {
                                                 data["crate"] = (Number(eventInfos[event.event_page + "_" + event.event_id].convCount / Number(data["pv"])) * 100).toFixed(2) + "%";
                                             } else {
                                                 data["crate"] = "0%";
@@ -470,7 +471,7 @@ define(["./module"], function (ctrs) {
 
                                         }
                                         else if ($scope.es_checkArray[i] == "conversions") {
-                                            if (eventInfos[event.event_page + "_" + event.event_id] != undefined ) {
+                                            if (eventInfos[event.event_page + "_" + event.event_id] != undefined) {
                                                 data["conversions"] = eventInfos[event.event_page + "_" + event.event_id].convCount;
                                             } else {
                                                 data["conversions"] = 0;
@@ -496,7 +497,7 @@ define(["./module"], function (ctrs) {
                                             item.value += eventInfos[event.event_page + "_" + event.event_id] != undefined ? eventInfos[event.event_page + "_" + event.event_id].eventCount : 0;
 
                                         } else if (item.label == "conversions") {
-                                            if (eventInfos[event.event_page + "_" + event.event_id] != undefined ) {
+                                            if (eventInfos[event.event_page + "_" + event.event_id] != undefined) {
                                                 item.value += eventInfos[event.event_page + "_" + event.event_id].convCount;
                                             }
                                         } else {
@@ -509,7 +510,7 @@ define(["./module"], function (ctrs) {
                                     //计算全部的PV
                                     tempPv = hashloc[event.event_page] == undefined ? pvs[index]["pv"] : (maxvalues["pv"] < pvs[index]["pv"] ? (item.value + pvs[index]["pv"] - maxvalues["pv"]) : tempPv)
                                     //计算全部的转化次数
-                                    if (eventInfos[event.event_page + "_" + event.event_id] != undefined ) {
+                                    if (eventInfos[event.event_page + "_" + event.event_id] != undefined) {
                                         tempConv += eventInfos[event.event_page + "_" + event.event_id].convCount;
                                     }
                                     if (!hashloc[event.event_page]) {
@@ -559,201 +560,46 @@ define(["./module"], function (ctrs) {
              * @param queryOption　查询条件指标　事件转化：指标："浏览量(pv)", "访客数(uv)", "转化次数(conversions)", "转化率(crate)", "平均转化成本(transformCost)"
              */
             $scope.dataTable = function (isContrastTime, showType, queryOptions, renderLegend) {
-                if (isContrastTime) {
-                    var crate_time = aggs_time($rootScope.start, $rootScope.end, $scope.start, $scope.end);
-                    $http.get("/api/transform/transformAnalysis?start=" + $rootScope.start + "&end=" + $rootScope.end + "&analysisAction=event&type=" + $rootScope.userType + "&searchType=contrastData&showType=" + showType + "&queryOptions=" + queryOptions + "&contrastStart=" + $scope.start + "&contrastEnd=" + $scope.end+ "&filters=" + $rootScope.getFilters()).success(function (contrastData) {
-                        var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
-                        chart.showLoading({
-                            text: "正在努力的读取数据中..."
-                        });
-                        $scope.charts[0].config.chartType = "line";
-                        $scope.charts[0].config.bGap = true;
-                        $scope.charts[0].config.instance = chart;
-                        $scope.charts[0].config.instance = chart;
-                        if (renderLegend)
-                            util.renderLegend(chart, $scope.charts[0].config);
-                        var hasSem = false;
-
-                        var hasEvent = false;
-                        for (var i = 0; i < queryOptions.length; i++) {
-                            if (queryOptions == "crate" || $scope.es_checkedArray[i] == "conversions" || $scope.es_checkedArray[i] == "clickTatol") {
-                                hasEvent = true;
-                                break;
-                            }
-                        }
-                        if (hasEvent) {
-                            $http({
-                                method: "GET",
-                                url: "/api/transform/getConvEvent?start=" + crate_time.start + "&end=" + crate_time.end + "&analysisAction=event&type=" + $rootScope.userType + "&searchType=queryDataByUrl&showType=day"+ "&filters=" + $rootScope.getFilters()
-                            }).success(function (all_urls_data) {
-                                var temporaryContrastData = [];
-                                for (var i = 0; i < contrastData.length; i++) {
-                                    temporaryContrastData = [];
-                                    switch (contrastData[i].label) {
-                                        case "crate":
-                                            for (var l = 0; l < contrastData[i].quota.length; l++) {
-                                                if (Number(contrastData[i].quota[l]) == 0) {
-                                                    temporaryContrastData.push(0);
-                                                } else {
-                                                    for (var p = 0; p < all_urls_data.length; p++) {
-                                                        for (var t = 0; t < contrastData[i].key.length; t++) {
-                                                            if (contrastData[i].key[t] == all_urls_data[p].date_time) {
-                                                                if (Number(all_urls_data[p].crate_pv) == 0) {
-                                                                    temporaryContrastData.push(0);
-                                                                } else {
-                                                                    temporaryContrastData.push((Number(contrastData[i].quota[l]) / Number(all_urls_data[p].crate_pv)));
-                                                                }
-                                                            }
-                                                        }
-
-                                                    }
-                                                }
-                                            }
-                                            contrastData[i].quota = temporaryContrastData;
-                                            break;
-                                        case "crate_contrast":
-                                            for (var l = 0; l < contrastData[i].quota.length; l++) {
-                                                if (Number(contrastData[i].quota[l]) == 0) {
-                                                    temporaryContrastData.push(0);
-                                                } else {
-                                                    for (var p = 0; p < all_urls_data.length; p++) {
-                                                        for (var t = 0; t < contrastData[i].key.length; t++) {
-                                                            if (contrastData[i].key[t] == all_urls_data[p].date_time) {
-                                                                if (Number(all_urls_data[p].crate_pv) == 0) {
-                                                                    temporaryContrastData.push(0);
-                                                                } else {
-                                                                    temporaryContrastData.push((Number(contrastData[i].quota[l]) / Number(all_urls_data[p].crate_pv)));
-                                                                }
-                                                            }
-                                                        }
-
-                                                    }
-                                                }
-                                            }
-                                            contrastData[i].quota = temporaryContrastData;
-                                            break;
-                                    }
-                                }
-                                for (var i = 0; i < contrastData.length; i++) {
-                                    if (contrastData[i].label.split("_").length > 1) {
-                                        contrastData[i].label = "对比数据";
-                                    } else {
-                                        contrastData[i].label = chartUtils.convertChinese(contrastData[i].label);
-                                    }
-                                }
-                                cf.renderChart(contrastData, $scope.charts[0].config);
-                                Custom.initCheckInfo();
-                            });
-                        }
-                        else {
-                            for (var i = 0; i < contrastData.length; i++) {
-                                if (contrastData[i].label.split("_").length > 1) {
-                                    contrastData[i].label = "对比数据";
-                                } else {
-                                    contrastData[i].label = chartUtils.convertChinese(contrastData[i].label);
-                                }
-                            }
-                            cf.renderChart(contrastData, $scope.charts[0].config);
-                            Custom.initCheckInfo();
-                        }
-                        //}
-                    });
-                }
-                else {
-                    var tempOptions = angular.copy(queryOptions)
-                    var falgPv = false;
-                    for (var i = 0; i < tempOptions.length; i++) {
-                        if (queryOptions[i] == "pv") {
-                            falgPv = true;
-                            break;
-                        }
-                    }
-                    if (!falgPv) {
-                        tempOptions.push("pv")
-                    }
-                    $http.get("/api/transform/getDayEventPVs?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&showType=" + showType + "&queryOptions=" + tempOptions + "&urls=" + JSON.stringify($rootScope.locUrls)).success(function (data) {
-                        var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
-                        chart.showLoading({
-                            text: "正在努力的读取数据中..."
-                        });
-                        $scope.charts[0].config.chartType = "line";
-                        $scope.charts[0].config.bGap = true;
-                        $scope.charts[0].config.instance = chart;
-                        util.renderLegend(chart, $scope.charts[0].config);
-                        var hasSem = false;
-                        for (var t = 0; t < queryOptions.length; t++) {
-                            for (var k = 0; k < $scope.sem_checkArray.length; k++) {
-                                if (queryOptions[t] == $scope.sem_checkArray[k]) {
-                                    hasSem = true;
-                                    break;
-                                }
-                            }
-                        }
-                        var hasCrate = false;
-                        for (var i = 0; i < queryOptions.length; i++) {
-                            if (queryOptions[i] == "crate" || queryOptions[i] == "clickTotal" || queryOptions[i] == "conversions") {
-                                hasCrate = true;
-                                break;
-                            }
-                        }
-                        if (hasCrate) {
-                            $http({
-                                method: "GET",
-                                url: "/api/transform/getDayEvents?" +
-                                "&start=" + $rootScope.start +
-                                "&end=" + $rootScope.end +
-                                "&type=" + $rootScope.userType
-                            }).success(function (dataJSON) {
-                                var eventCountArr = dataJSON.eventCountArr;
-                                var convCountArr = dataJSON.convCountArr;
-                                for (var c = 0; c < data.length; c++) {
-                                    if (data[c].label == "crate") {
-                                        var temporaryContrastData = [];
-                                        for (var l = 0; l < data[c].quota.length; l++) {
-                                            if (Number(data[data.length - 1].quota[l]) == 0) {
-                                                temporaryContrastData.push(0)
-                                            } else {
-                                                temporaryContrastData.push(Number(convCountArr[l].convCount.value) / +Number(data[data.length - 1].quota[l]));
-                                            }
-                                        }
-                                        data[c].quota = temporaryContrastData;
-                                    } else if (data[c].label == "clickTotal") {
-                                        var temporaryContrastData = [];
-                                        for (var l = 0; l < data[c].quota.length; l++) {
-                                            temporaryContrastData.push(eventCountArr[l].eventCount);
-                                        }
-                                        data[c].quota = temporaryContrastData;
-                                        ;
-                                    } else if (data[c].label == "conversions") {
-                                        var temporaryContrastData = [];
-                                        for (var l = 0; l < data[c].quota.length; l++) {
-                                            temporaryContrastData.push(convCountArr[l].convCount);
-                                        }
-                                        data[c].quota = temporaryContrastData;
-                                        ;
-                                    }
-                                }
-
-                                var showData = []
-                                for (var i = 0; i < queryOptions.length; i++) {
-                                    showData.push(data[i])
-                                    showData[i].label = chartUtils.convertChinese(showData[i].label);
-                                }
-                                cf.renderChart(showData, $scope.charts[0].config);
-                                Custom.initCheckInfo();
-                            });
-
+                var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
+                util.renderLegend(chart, $scope.charts[0].config);
+                var barDatas =   []
+                var temConvs=[]
+                queryOptions.forEach(function (option, oindex) {
+                    barDatas.push({
+                        label: chartUtils.convertChinese(option),
+                        key: [],
+                        option: option,
+                        quota: [],
+                    })
+                })
+                $rootScope.gridData.forEach(function (gdata, dindex) {
+                    if (gdata.conversions != undefined) {
+                        if (temConvs.length <= 10) {
+                            barDatas.forEach(function (bdata, oindex) {
+                                barDatas[oindex].key.push(gdata.eventName)
+                                barDatas[oindex].quota.push(gdata[bdata.option])
+                                temConvs.push(gdata.conversions)
+                            })
                         } else {
-                            var showData = []
-                            for (var i = 0; i < queryOptions.length; i++) {
-                                showData.push(data[i])
-                                showData[i].label = chartUtils.convertChinese(showData[i].label);
+                            var minIndex = -1
+                            var conversions = gdata.conversions
+                            temConvs.forEach(function(convs,cindex){
+                                if(convs<conversions){
+                                    minIndex=cindex
+                                }
+                            })
+                            if(minIndex>-1){
+                                barDatas.forEach(function (bdata, oindex) {
+                                    barDatas[minIndex].key.push(gdata.eventName)
+                                    barDatas[minIndex].quota.push(gdata[bdata.option])
+                                    temConvs[minIndex](conversions)
+                                })
                             }
-                            cf.renderChart(showData, $scope.charts[0].config);
-                            Custom.initCheckInfo();
                         }
-                    });
-                }
+                    }
+                })
+                cf.renderChart(barDatas, $scope.charts[0].config);
+                Custom.initCheckInfo();
             };
             $scope.targetSearchSpreadTransform = function (isClicked) {
                 $scope.es_checkArray = ["pv", "uv", "vc", "ip", "nuv", "nuvRate", "conversions", "crate", "transformCost", "clickTotal", "visitNum"];

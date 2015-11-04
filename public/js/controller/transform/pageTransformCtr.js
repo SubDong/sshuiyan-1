@@ -647,6 +647,7 @@ define(["./module"], function (ctrs) {
                             for (var i = 0; i < pagePVDatas.length; i++) {
                                 pagePVDatas[i].label = chartUtils.convertChinese(pagePVDatas[i].label);
                             }
+                            console.log(pagePVDatas)
                             cf.renderChart(pagePVDatas, $scope.charts[0].config);
                             Custom.initCheckInfo();
                         })
