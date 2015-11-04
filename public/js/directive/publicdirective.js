@@ -2448,13 +2448,13 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                 var offsetTop = element.offset().top -40;
                  console.log(offsetTop);
                 element.addClass(topClass);
+                $(".fix-to-top").css("width", $(document.body).width() - 155);
+                window.onresize = function () {
+                    $(".fix-to-top").css("width", $(document.body).width() - 155);
+                };
                 $win.on('scroll', function (e) {
                     if ($win.scrollTop() >= offsetTop) {
                         element.addClass("fix-to-show");
-                        $(".fix-to-top").css("width", $(document.body).width() - 155);
-                        window.onresize = function () {
-                            $(".fix-to-top").css("width", $(document.body).width() - 155);
-                        }
                     } else {
                         element.removeClass("fix-to-show");
                     }
