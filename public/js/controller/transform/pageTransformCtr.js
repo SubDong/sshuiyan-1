@@ -626,32 +626,34 @@ define(["./module"], function (ctrs) {
                         }
                     )
                 }).success(function (pageConvConfs, status) {
-                    var pages = [], hash = {}, pageParams = [];
-                    var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
-                    util.renderLegend(chart, $scope.charts[0].config);
-                    pageConvConfs.forEach(function (elem) {
-                        elem.target_urls.forEach(function (turl) {
-                            if (!hash[turl.url]) {
-                                pages.push(turl.url);
-                                hash[turl.url] = true;
-                            }
-                        })
-                    })
-                    $http.get("/api/transform/getDayPagePVs?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&showType=" + showType + "&queryOptions=" + queryOptions + "&urls=" + JSON.stringify(pages) + "&filters=" + $rootScope.getFilters()).success(function (pagePVDatas) {
+                    if(pageConvConfs!=undefined&pageConvConfs.length>0){
+                        var pages = [], hash = {}, pageParams = [];
                         var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
-                        //console.log(pagePVDatas )
-                        chart.showLoading({
-                            text: "正在努力的读取数据中..."
-                        });
-                        for (var i = 0; i < pagePVDatas.length; i++) {
-                            pagePVDatas[i].label = chartUtils.convertChinese(pagePVDatas[i].label);
-                        }
-                        cf.renderChart(pagePVDatas, $scope.charts[0].config);
-                        Custom.initCheckInfo();
-                    })
+                        util.renderLegend(chart, $scope.charts[0].config);
+                        pageConvConfs.forEach(function (elem) {
+                            elem.target_urls.forEach(function (turl) {
+                                if (!hash[turl.url]) {
+                                    pages.push(turl.url);
+                                    hash[turl.url] = true;
+                                }
+                            })
+                        })
+                        $http.get("/api/transform/getDayPagePVs?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&showType=" + showType + "&queryOptions=" + queryOptions + "&urls=" + JSON.stringify(pages) + "&filters=" + $rootScope.getFilters()).success(function (pagePVDatas) {
+                            var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
+                            //console.log(pagePVDatas )
+                            chart.showLoading({
+                                text: "正在努力的读取数据中..."
+                            });
+                            for (var i = 0; i < pagePVDatas.length; i++) {
+                                pagePVDatas[i].label = chartUtils.convertChinese(pagePVDatas[i].label);
+                            }
+                            cf.renderChart(pagePVDatas, $scope.charts[0].config);
+                            Custom.initCheckInfo();
+                        })
+                    }
                 })
             };
-
+            $scope.setShowArray();
             init_transformData();
             $scope.dataTable(true, "day", ["pv", "uv"], false);
             $scope.targetSearchSpreadPage = function (isClicked) {
