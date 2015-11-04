@@ -561,9 +561,23 @@ define(["app"], function (app) {
                 $(o).prop("checked", false);
             });
             $(inputArray[a]).prev("span").css("background-position", "0px -51px");
-            if (a == 0) $rootScope.tableSwitch.tableFilter = "[{\"rf_type\":[3]}]" , $scope.exTerminalSearch = "";
-            if (a == 1) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[0]},{\"rf_type\":[3]}]" , $scope.exTerminalSearch = "计算机";
-            if (a == 2) $rootScope.tableSwitch.tableFilter = "[{\"pm\":[1]},{\"rf_type\":[3]}]" , $scope.exTerminalSearch = "移动设备";
+            var _pmFilter = "";
+            if (a == 0) {
+                $scope.exTerminalSearch = "";
+            }
+            if (a == 1) {
+                _pmFilter = JSON.parse("{\"pm\":[0]}");
+                $scope.exTerminalSearch = "计算机";
+            }
+            if (a == 2) {
+                _pmFilter = JSON.parse("{\"pm\":[1]}");
+                $scope.exTerminalSearch = "移动设备";
+            }
+
+            var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
+            _allFilters = filterUtil.filter(_allFilters,"pm",_pmFilter);
+            $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
+
             $scope.isJudge = false;
             $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.targetSearch();
@@ -583,18 +597,29 @@ define(["app"], function (app) {
                 $(o).prop("checked", false);
             });
             $(inputArray[a]).prev("span").css("background-position", "0px -51px");
+            var _webFilter = "";
             if (a == 0) {
-                $scope.webTypeSearch = ""
+                $scope.webTypeSearch = "";
             }
             if (a == 1) {
-                $scope.webTypeSearch = "社会化媒体"
+                _webFilter = JSON.parse("{\"web_type\":[1]}");
+                $scope.webTypeSearch = "社会化媒体";
             }
             if (a == 2) {
-                $scope.webTypeSearch = "导航网站"
+                _webFilter = JSON.parse("{\"web_type\":[2]}");
+                $scope.webTypeSearch = "导航网站";
             }
             if (a == 3) {
-                $scope.webTypeSearch = "电子邮箱"
+                _webFilter = JSON.parse("{\"web_type\":[3]}");
+                $scope.webTypeSearch = "电子邮箱";
             }
+            var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
+            _allFilters = filterUtil.filter(_allFilters,"web_type",_webFilter);
+            $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
+
+            $scope.isJudge = false;
+            $rootScope.$broadcast("ssh_data_show_refresh");
+            $scope.targetSearch();
         }
         $scope.urlDomain = function (a) {
             var now = +new Date();
