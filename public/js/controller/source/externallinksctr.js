@@ -304,7 +304,8 @@ define(["./module"], function (ctrs) {
                     formUtils.rendererMailData(result, ele);
                 }
             });
-        }
+        };
+
         $scope.sendConfig = function () {
             var formData = formUtils.vaildateSubmit($("ul[name='sen_form']"));
             var result = formUtils.validateEmail(formData.mail_address, formData);
@@ -326,7 +327,39 @@ define(["./module"], function (ctrs) {
                     }
                 });
             }
-        }
+        };
+
+        // 构建PDF数据
+        $scope.generatePDFMakeData = function (cb) {
+            var dataInfo = angular.copy($rootScope.gridApi2.grid.options.data);
+            var dataHeadInfo = angular.copy($rootScope.gridApi2.grid.options.columnDefs);
+            var _tableBody = $rootScope.getPDFTableBody(dataInfo, dataHeadInfo);
+            var docDefinition = {
+                header: {
+                    text: "External Links data report",
+                    style: "header",
+                    alignment: 'center'
+                },
+                content: [
+                    {
+                        table: {
+                            headerRows: 1,
+                            body: _tableBody
+                        }
+                    },
+                    {text: '\nPower by www.best-ad.cn', style: 'header'},
+                ],
+                styles: {
+                    header: {
+                        fontSize: 20,
+                        fontName: "标宋",
+                        alignment: 'justify',
+                        bold: true
+                    }
+                }
+            };
+            cb(docDefinition);
+        };
     });
 
 });
