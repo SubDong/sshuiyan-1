@@ -4,6 +4,7 @@
 define(["./module"], function (ctrs) {
     "use strict";
     ctrs.controller('transformAnalysisctr', function ($scope, $rootScope, $q, requestService, areaService, $http, SEM_API_URL, uiGridConstants, $cookieStore) {
+            $scope.allBrowsers = angular.copy($rootScope.browsers);
             $scope.city.selected = {"name": "全部"};
             $scope.todayClass = true;
             $rootScope.start = 0;
@@ -69,7 +70,7 @@ define(["./module"], function (ctrs) {
                     name: "页面URL",
                     displayName: "页面URL",
                     field: "loc",
-                    footerCellTemplate: "<div class='ui-grid-cell-contents'>--</div>",
+                    footerCellTemplate: "<div class='ui-grid-cell-contents'>--</div>"
                 },
                 {
                     name: "浏览量(PV)",
@@ -965,7 +966,7 @@ define(["./module"], function (ctrs) {
                                 body: _tableBody
                             }
                         },
-                        {text: '\nPower by www.best-ad.cn', style: 'header'},
+                        {text: '\nPower by www.best-ad.cn', style: 'header'}
                     ],
                     styles: {
                         header: {
