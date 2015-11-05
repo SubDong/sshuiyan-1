@@ -767,7 +767,7 @@ define(["./module"], function (ctrs) {
                                     $rootScope.gridOptions.data.forEach(function (data) {
                                         $scope.dateShowArray.forEach(function (attr) {
                                             if (data[attr.label] != undefined)
-                                                attr.value += data[attr.label]
+                                                attr.value += Number(data[attr.label])
                                         })
                                     })
                                     ////console.log( $rootScope.gridOptions.data)
