@@ -516,12 +516,11 @@ define(["./module"], function (ctrs) {
                                     if (!hashloc[event.event_page]) {
                                         hashloc[event.event_page] = true;
                                     }
-                                    //////console.log(" tempPV  "+tempPv +" tempConv "+tempConv)
                                 })
 
                                 $scope.dateShowArray.forEach(function (item) {
                                     if (item.label == "crate" && tempPv != 0) {
-                                        item.value = Number(tempConv / tempPv)
+                                        item.value = Number(tempConv / tempPv).toFixed(2)
                                     }
                                 })
                                 //刷新图表
