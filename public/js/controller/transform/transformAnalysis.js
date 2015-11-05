@@ -781,7 +781,7 @@ define(["./module"], function (ctrs) {
                     });
                     _t_data_arr.push(_obj);
                 }
-                return JSON.stringify(_t_data_arr).replace(/\%/g, "*");
+                return JSON.stringify(_t_data_arr);
             };
 
             $scope.generatePDFMakeData = function (cb) {
