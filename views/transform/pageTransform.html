@@ -25,7 +25,25 @@
                 <li class="ng-isolate-scope" ng-class="{active:tab===1}" ng-click="tab = 1">
                     <a class="ng-binding">自定义指标</a></li>
                 <li class="ng-isolate-scope" ng-class="{active:tab===2}" ng-click="tab = 2">
-                    <a class="ng-binding" data-ng-click="advancedQuery()">高级筛选</a></li>
+                    <a class="ng-binding">高级筛选
+                         <span class="impliedCondition">
+                            <span ng-show="terminalSearch || visitorSearch || areaSearch">（</span>
+                            <span ng-show="terminalSearch" class="advanceSearch">
+                                {{terminalSearch}}<i class="glyphicon glyphicon-remove"
+                                                   data-ng-click="removeTerminalSearch(this);" ng-show="terminalSearch"></i>
+                            </span>
+                            <span ng-show="areaSearch" class="advanceSearch">
+                                {{areaSearch}}<i class="glyphicon glyphicon-remove"
+                                                 data-ng-click="removeAreaSearch(this);" ng-show="areaSearch"></i>
+                            </span>
+                             <span ng-show="visitorSearch" class="advanceSearch">
+                                {{visitorSearch}}<i class="glyphicon glyphicon-remove"
+                                                    data-ng-click="removeVisitorSearch(this);"
+                                                    ng-show="visitorSearch"></i>
+                            </span>
+                            <span ng-show="terminalSearch || visitorSearch || areaSearch">）</span>
+                        </span>
+                    </a></li>
             </ul>
             <div class="tabs_content">
                 <div class="custom_title" ng-show="tab === 1">
@@ -72,7 +90,7 @@
 
                 </div>
                 <div class="custom_title" ng-show="tab === 2">
-                    <div class="chart_top2">
+                    <div class="chart_top2 areaTerm">
                         <ul>
                             <li><span>设备过滤:</span></li>
                             <li><label data-ng-click="setTerminal(0)"><input type="radio" checked="checked"
@@ -111,7 +129,7 @@
                             <li><a href="javascript:void(0)" data-ng-click="setSearchEngineAreaFilter('广州')">广州</a></li>
                         </ul>
                     </div>
-                    <div class="chart_top2">
+                    <div class="chart_top2 areaVisitor" >
                         <ul>
                             <li><span>访客过滤 :</span></li>
                             <li><label data-ng-click="setVisitors(0)"><input type="radio" checked="checked"

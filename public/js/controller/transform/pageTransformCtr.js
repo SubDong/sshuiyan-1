@@ -955,7 +955,7 @@ define(["./module"], function (ctrs) {
                 if ($rootScope.tableSwitch.areaFilter != undefined && $rootScope.tableSwitch.areaFilter != null) {
                     filters.push($rootScope.tableSwitch.areaFilter)
                 }
-                ////console.log("页面转化过滤内容="+JSON.stringify(filters))
+                //console.log("页面转化过滤内容="+JSON.stringify(filters))
                 return JSON.stringify(filters)
             }
             // 配置邮件

@@ -25,26 +25,21 @@
                 <li class="ng-isolate-scope" ng-class="{active:tab===1}" ng-click="tab = 1">
                     <a class="ng-binding">自定义指标</a></li>
                 <li class="ng-isolate-scope" ng-class="{active:tab===2}" ng-click="tab = 2">
-                    <a class="ng-binding" data-ng-click="advancedQuery()">高级筛选
-                    <span class="impliedCondition">
-                            <span ng-show="showSource || showVisitor || showArea||showBrowser">（</span>
-                            <span ng-show="showSource" class="advanceSearch">
-                                {{curSource}}<i class="glyphicon glyphicon-remove"
-                                                data-ng-click="removeSource(this);" ng-show="showSource"></i>
+                    <a class="ng-binding">高级筛选
+                         <span class="impliedCondition">
+                            <span ng-show="sourceSearch || visitorSearch || areaSearch">（</span>
+                            <span ng-show="sourceSearch" class="advanceSearch">
+                                {{sourceSearch}}<i class="glyphicon glyphicon-remove" data-ng-click="removeSourceSearch(this);" ng-show="sourceSearch"></i>
                             </span>
-                         <span ng-show="showBrowser" class="advanceSearch">
-                                {{curBrowser}}<i class="glyphicon glyphicon-remove"
-                                                 data-ng-click="removeBrowser(this);" ng-show="showBrowser"></i>
-                            </span>
-                            <span ng-show="showVisitor" class="advanceSearch">
+                            <span ng-show="visitorSearch" class="advanceSearch">
                                 {{visitorSearch}}<i class="glyphicon glyphicon-remove"
-                                                 data-ng-click="removeVisitor(this);" ng-show="showVisitor"></i>
+                                                    data-ng-click="removeVisitorSearch(this);"
+                                                    ng-show="visitorSearch"></i>
                             </span>
-                            <span ng-show="showArea" class="advanceSearch">
-                                {{curArea}}<i class="glyphicon glyphicon-remove" data-ng-click="removeArea(this);"
-                                              ng-show="showArea"></i>
+                            <span ng-show="areaSearch" class="advanceSearch">
+                                {{areaSearch}}<i class="glyphicon glyphicon-remove" data-ng-click="removeAreaSearch(this);" ng-show="areaSearch"></i>
                             </span>
-                            <span ng-show="showSource || showVisitor || showArea||showBrowser">）</span>
+                            <span ng-show="sourceSearch || visitorSearch || areaSearch">）</span>
                         </span>
                     </a>
                 </li>
