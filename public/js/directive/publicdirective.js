@@ -320,7 +320,9 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     var endTime = pickerTiemTow[0] + Math.abs(pickerTiemTow[1] - pickerTiemTow[0]);
                     $rootScope.tableTimeStart = startTime;
                     $rootScope.tableTimeEnd = endTime;
-                    $rootScope.targetSearchSpread();
+                    if ($rootScope.targetSearchSpread) {
+                            $rootScope.targetSearchSpread();
+                    }
                     $rootScope.startString = (start.format('YYYY-MM-DD') + ' 至 ' + end.format('YYYY-MM-DD'));
                     if (start.format('YYYY-MM-DD') == end.format('YYYY-MM-DD')) {
                         $('#reportrange span').html(start.format('YYYY-MM-DD'));
