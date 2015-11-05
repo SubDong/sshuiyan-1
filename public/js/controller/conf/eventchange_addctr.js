@@ -65,8 +65,8 @@ define(["./module"], function (ctrs) {
             var uid = $cookieStore.get("uid");
             //预览输入URL去空格
             var previewUrl = $scope.preview.url.trim();
-            if(previewUrl.indexOf("?")>-1)
-                previewUrl = previewUrl.substring(0,previewUrl.indexOf("?"))
+            //if(previewUrl.indexOf("?")>-1)
+            //    previewUrl = previewUrl.substring(0,previewUrl.indexOf("?"))
             //当前站点配置的URL
             var configUrl = $rootScope.siteUrl;
             //去掉 www. 的配置URL
@@ -87,6 +87,9 @@ define(["./module"], function (ctrs) {
                return;
            }
             $scope.iframeobj = function (tid) {
+                if(previewUrl.indexOf("http")>4||previewUrl.indexOf("http")<0){
+                    previewUrl="http://"+previewUrl
+                }
                 var strSrc =  previewUrl + "?domain=" + configUrl + "&amp;td=" + tid + "&amp;cuid=" + uid + "&amp;jn=select&amp;type=event";
                 var dialogFlag = false;
                 $scope.urlDialog = ngDialog.open({

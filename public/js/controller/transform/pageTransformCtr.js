@@ -11,34 +11,9 @@ define(["./module"], function (ctrs) {
             $rootScope.tableFormat = null;
             $scope.send = true;//显示发送
             $scope.isCompared = false;
-            //$scope.getRedisConvertData_url = function () {
-            //    var uid = $cookieStore.get("uid");
-            //    $http({
-            //        method: "GET",
-            //        url: "/config/page_conv?type=search&query=" + JSON.stringify({uid: uid})
-            //    }).success(function (data) {
-            //        var url_convert_info = [];
-            //        for (var i = 0; i < data.length; i++) {
-            //            var all_urls = []
-            //            for (var k = 0; k < data[i].target_urls.length; k++) {//获取目标路径
-            //                all_urls.push(data[i].target_urls[k].url);
-            //            }
-            //            for (var k = 0; k < data[i].paths.length; k++) {//以转化路线分组获取url
-            //                for (var c = 0; c < data[i].paths[k].steps.length; c++) {//获取步骤路径
-            //                    for (var l = 0; l < data[i].paths[k].steps[c].step_urls.length; l++) {
-            //                        all_urls.push(data[i].paths[k].steps[c].step_urls[l].url);
-            //                    }
-            //                }
-            //            }
-            //            url_convert_info.push({
-            //                convertName: data[i].target_name,
-            //                all_urls: all_urls
-            //            });
-            //        }
-            //        $scope.convert_url_all = url_convert_info;
-            //    });
-            //};
-            //$scope.getRedisConvertData_url();
+            $rootScope.tableTimeStart = -1;//开始时间
+            $rootScope.tableTimeEnd = -1;//结束时间、
+            $rootScope.tableFormat = null;
             //自定义指标显示
             var init_transformData = function () {
                 $scope.es_checkArray = ["pv", "uv", "vc", "ip", "nuv", "nuvRate", "conversions", "crate", "transformCost", "clickTotal", "visitNum"];
@@ -141,8 +116,8 @@ define(["./module"], function (ctrs) {
                             var urls = []
                             if (data.target_urls != undefined && data.target_urls.length > 0) {
                                 data.target_urls.forEach(function (item) {
-                                    if(item.url!=undefined&&item.url!=""&&item.url[item.url.length-1]=="/"){
-                                        item.url = item.url.substring(0,item.url.length-1)
+                                    if (item.url != undefined && item.url != "" && item.url[item.url.length - 1] == "/") {
+                                        item.url = item.url.substring(0, item.url.length - 1)
                                     }
                                     urls.push(item.url)
                                 })
@@ -208,7 +183,7 @@ define(["./module"], function (ctrs) {
                 });
             }
 
-            $rootScope.searchGridArray = [
+            $rootScope.gridArray = [
                 {
                     name: "xl",
                     displayName: "",
@@ -287,54 +262,54 @@ define(["./module"], function (ctrs) {
                 return true
             };
             $scope.searchIndicators = function (item, entities, number) {
-                $rootScope.searchGridArray.shift();
-                $rootScope.searchGridArray.shift();
-                $rootScope.tableSwitch.number != 0 ? $scope.searchGridArray.shift() : "";
+                $rootScope.gridArray.shift();
+                $rootScope.gridArray.shift();
+                $rootScope.tableSwitch.number != 0 ? $scope.gridArray.shift() : "";
                 $scope.searchGridObj = {};
                 $scope.searchGridObjButton = {};
                 var a = $rootScope.checkedArray.indexOf(item.name);
                 if (a != -1) {
                     $rootScope.checkedArray.splice(a, 1);
-                    $rootScope.searchGridArray.splice(a, 1);
+                    $rootScope.gridArray.splice(a, 1);
 
                     if ($rootScope.tableSwitch.number != 0) {
                         $scope.searchGridObjButton["name"] = " ";
                         $scope.searchGridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
-                        $rootScope.searchGridArray.unshift($scope.searchGridObjButton);
+                        $rootScope.gridArray.unshift($scope.searchGridObjButton);
                     }
-                    $rootScope.searchGridArray.unshift($rootScope.tableSwitch.latitude);
+                    $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude);
                     $scope.gridObjButton = {};
                     $scope.gridObjButton["name"] = "xl";
                     $scope.gridObjButton["displayName"] = "";
                     $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
                     $scope.gridObjButton["maxWidth"] = 10;
-                    $rootScope.searchGridArray.unshift($scope.gridObjButton);
+                    $rootScope.gridArray.unshift($scope.gridObjButton);
                 } else {
                     if ($rootScope.checkedArray.length >= number) {
                         $rootScope.checkedArray.shift();
                         $rootScope.checkedArray.push(item.name);
-                        $rootScope.searchGridArray.shift();
+                        $rootScope.gridArray.shift();
 
                         $scope.searchGridObj["name"] = item.consumption_name;
                         $scope.searchGridObj["displayName"] = item.consumption_name;
                         $scope.searchGridObj["footerCellTemplate"] = "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>";
                         $scope.searchGridObj["field"] = item.name;
 
-                        $rootScope.searchGridArray.push($scope.searchGridObj);
+                        $rootScope.gridArray.push($scope.searchGridObj);
 
                         if ($rootScope.tableSwitch.number != 0) {
                             $scope.searchGridObjButton["name"] = " ";
                             $scope.searchGridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
-                            $rootScope.searchGridArray.unshift($scope.searchGridObjButton);
+                            $rootScope.gridArray.unshift($scope.searchGridObjButton);
                         }
 
-                        $rootScope.searchGridArray.unshift($rootScope.tableSwitch.latitude);
+                        $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude);
                         $scope.gridObjButton = {};
                         $scope.gridObjButton["name"] = "xl";
                         $scope.gridObjButton["displayName"] = "";
                         $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
                         $scope.gridObjButton["maxWidth"] = 10;
-                        $rootScope.searchGridArray.unshift($scope.gridObjButton);
+                        $rootScope.gridArray.unshift($scope.gridObjButton);
                     } else {
                         $rootScope.checkedArray.push(item.name);
 
@@ -342,20 +317,20 @@ define(["./module"], function (ctrs) {
                         $scope.searchGridObj["displayName"] = item.consumption_name;
                         $scope.searchGridObj["footerCellTemplate"] = "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>";
                         $scope.searchGridObj["field"] = item.name;
-                        $rootScope.searchGridArray.push($scope.searchGridObj);
+                        $rootScope.gridArray.push($scope.searchGridObj);
 
                         if ($rootScope.tableSwitch.number != 0) {
                             $scope.searchGridObjButton["name"] = " ";
                             $scope.searchGridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
-                            $rootScope.searchGridArray.unshift($scope.searchGridObjButton);
+                            $rootScope.gridArray.unshift($scope.searchGridObjButton);
                         }
-                        $rootScope.searchGridArray.unshift($rootScope.tableSwitch.latitude);
+                        $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude);
                         $scope.gridObjButton = {};
                         $scope.gridObjButton["name"] = "xl";
                         $scope.gridObjButton["displayName"] = "";
                         $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
                         $scope.gridObjButton["maxWidth"] = 10;
-                        $rootScope.searchGridArray.unshift($scope.gridObjButton);
+                        $rootScope.gridArray.unshift($scope.gridObjButton);
                     }
                 }
                 angular.forEach(entities, function (subscription, index) {
@@ -382,12 +357,12 @@ define(["./module"], function (ctrs) {
                     def.defData($scope.charts[0].config);
                 }
             };
-            $scope.queryOption_all = ["pv", "uv", "vc", "nuv","ip", "conversions", "crate", "avgCost", "benefit",/* "profit",*/ "orderNum"/*, "orderMoney"*/, "orderNumRate"];
+            $scope.queryOption_all = ["pv", "uv", "vc", "nuv", "ip", "conversions", "crate", "avgCost", "benefit", /* "profit",*/ "orderNum"/*, "orderMoney"*/, "orderNumRate"];
             $scope.charts = [
                 {
                     config: {
                         legendId: "indicators_charts_legend",
-                        legendData: ["浏览量(PV)", "访客数(UV)", "访问次数", "新访客数","IP数", "转化次数", "转化率", "平均转化成本(页面)", "收益", /*"利润",*/ "订单数"/*, "订单金额"*/, "订单转化率"],//显示几种数据
+                        legendData: ["浏览量(PV)", "访客数(UV)", "访问次数", "新访客数", "IP数", "转化次数", "转化率", "平均转化成本(页面)", "收益", /*"利润",*/ "订单数"/*, "订单金额"*/, "订单转化率"],//显示几种数据
                         //legendMultiData: $rootScope.lagerMulti,
                         legendAllowCheckCount: 2,
                         legendClickListener: $scope.onLegendClickListener,
@@ -437,14 +412,220 @@ define(["./module"], function (ctrs) {
                 $rootScope.start = time[0];
                 $rootScope.end = time[1];
                 //时间段选择执行数据查询
-                $rootScope.refreshData(true);
+                $rootScope.refreshData(false);
+                init_transformData();
             };
             $rootScope.datepickerClickTow = function (start, end, label) {
+                //console.log("事件 数据对比")
+                $rootScope.gridOptions.showColumnFooter = !$rootScope.gridOptions.showColumnFooter;
+                var gridArrayOld = angular.copy($rootScope.gridArray);
+                var latitudeOld = angular.copy($rootScope.tableSwitch.latitude);
+                $rootScope.gridArray.forEach(function (item, i) {
+                    var a = item["field"];
+                    if (item["cellTemplate"] == undefined) {
+                        item["cellTemplate"] = "<ul class='contrastlist'><li>{{grid.appScope.getContrastInfo(grid, row,0,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,1,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,2,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,3,'" + a + "')}}</li></ul>";
+                        item["footerCellTemplate"] = "<ul class='contrastlist'><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),0)}}</li><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),1)}}</li><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),2)}}</li><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),3)}}</li></ul>";
+                    }
+                });
+                //getSearchFooterData
+                $rootScope.gridOptions.rowHeight = 95;
+                $rootScope.gridOptions.columnFooterHeight = 95;
                 var time = chartUtils.getTimeOffset(start, end);
-                $scope.start = time[0];
-                $scope.end = time[1];
-                $rootScope.refreshData(true);
+                var startTime = time[0];
+                var endTime = time[0] + ($rootScope.tableTimeEnd - $rootScope.tableTimeStart);
+                $rootScope.$broadcast("ssh_load_compare_datashow", startTime, endTime);
+                var dateTime1 = chartUtils.getSetOffTime($rootScope.tableTimeStart, $rootScope.tableTimeEnd);
+                var dateTime2 = chartUtils.getSetOffTime(startTime, endTime);
+                $scope.targetDataContrast(null, null, function (item) {
+                    var target = $rootScope.tableSwitch.latitude.field;
+                    var dataArray = [];
+                    var is = 1;
+                    $scope.targetDataContrast(startTime, endTime, function (contrast) {
+                        item.forEach(function (a, b) {
+                            var dataObj = {};
+                            for (var i = 0; i < contrast.length; i++) {
+                                if (a[target] == contrast[i][target]) {
+                                    $rootScope.checkedArray.forEach(function (tt, aa) {
+                                        var bili = ((parseInt(a[tt] + "".replace("%")) - parseInt((contrast[i][tt] + "").replace("%"))) / (parseInt((contrast[i][tt] + "").replace("%")) == 0 ? parseInt(a[tt] + "".replace("%")) : parseInt((contrast[i][tt] + "").replace("%"))) * 100).toFixed(2);
+                                        dataObj[tt] = (isNaN(bili) ? 0 : bili) + "%";
+                                        a[tt] = "　" + "," + a[tt] + "," + contrast[i][tt] + "," + dataObj[tt]
+                                    });
+                                    a[target] = a[target] + "," + ($rootScope.startString != undefined ? $rootScope.startString : dateTime1[0] == dateTime1[1] ? dateTime1[0] + "," + dateTime2[0] + "," + "变化率" : dateTime1[0] + " 至 " + dateTime1[1]) + "," + (dateTime2[0] + " 至 " + dateTime2[1]) + "," + "变化率";
+
+                                    //console.log(a[target])
+                                    dataArray.push(a);
+                                    is = 0;
+                                    return;
+                                } else {
+                                    is = 1
+                                }
+                            }
+                            if (is == 1) {
+                                $rootScope.checkedArray.forEach(function (tt, aa) {
+                                    dataObj[tt] = "--";
+                                    a[tt] = "　" + "," + a[tt] + "," + "--" + "," + "--"
+                                });
+                                a[target] = a[target] + "," + ($rootScope.startString != undefined ? $rootScope.startString : dateTime1[0] == dateTime1[1] ? dateTime1[0] + "," + dateTime2[0] + "," + "变化率" : dateTime1[0] + " 至 " + dateTime1[1]) + "," + (dateTime2[0] + " 至 " + dateTime2[1]) + "," + "变化率"
+                                dataArray.push(a);
+                            }
+                        });
+                        $rootScope.gridOptions.showColumnFooter = !$rootScope.gridOptions.showColumnFooter;
+                    });
+                    $rootScope.gridOptions.data = dataArray;
+                    $rootScope.tableSwitch.latitude = latitudeOld;
+                    $rootScope.gridArray = gridArrayOld;
+                })
             };
+            $scope.targetDataContrast = function (startInfoTime, endInfoTime, cabk) {
+                $rootScope.gridOpArray = angular.copy($rootScope.gridArray);
+                $rootScope.gridOptions.columnDefs = $rootScope.gridOpArray;
+                if ($rootScope.tableSwitch.isJudge == undefined) $scope.isJudge = true;
+                if ($rootScope.tableSwitch.isJudge) $rootScope.tableSwitch.tableFilter = undefined;
+                var url = "/config/page_conv?type=search&query=" + JSON.stringify({
+                        uid: $cookieStore.get("uid"),
+                        site_id: $rootScope.siteId
+                    });
+                $http({
+                    method: 'GET',
+                    url: url
+                }).success(function (dataConfig, status) {
+                    if (dataConfig != undefined && dataConfig.length > 0) {
+                        var turls = []
+                        dataConfig.forEach(function (data) {
+                            var urls = []
+                            if (data.target_urls != undefined && data.target_urls.length > 0) {
+                                data.target_urls.forEach(function (item) {
+                                    urls.push(item.url)
+                                })
+                            }
+                            turls.push({updateTime: data.update_time, page_urls: urls})
+                        })
+                        var tCheckedArray = ["pv", "uv", "vc", "ip", "nuv", "nuvRate"]
+                        var pvurl = "/api/transform/getPageBasePVs?start=" + (startInfoTime == undefined || startInfoTime == null ? $rootScope.start : startInfoTime) + "&end=" + (endInfoTime == undefined || endInfoTime == null ? $rootScope.end : endInfoTime) + "&type=" + $rootScope.userType + "&queryOptions=" + tCheckedArray + "&pages=" + JSON.stringify(turls) + "&showType=day" + "&filters=" + $rootScope.getFilters()
+                        //console.log(pvurl)
+                        $http.get(pvurl).success(function (pvdatas) {
+                            var isPConv = false;
+                            for (var index = 0; index < $rootScope.checkedArray.length; index++) {
+                                isPConv = true;
+                                $rootScope.bases.forEach(function (base) {
+                                    if (base.name == $rootScope.checkedArray[index]) {
+                                        isPConv = false
+                                    }
+                                })
+                                if (isPConv)
+                                    break;
+                            }
+                            var results = pvdatas
+
+                            //查询转化的数据
+                            var tPageInfoArr = ["conversions", "benefit"]
+                            var pageurl = "/api/transform/getPageBaseInfo?start=" + (startInfoTime == undefined || startInfoTime == null ? $rootScope.start : startInfoTime) + "&end=" + (endInfoTime == undefined || endInfoTime == null ? $rootScope.end : endInfoTime) + "&type=" + $rootScope.userType + "&queryOptions=" + tPageInfoArr + "&pages=" + JSON.stringify(turls) + "&showType=day" + "&filters=" + $rootScope.getFilters()
+                            //console.log(pageurl)
+                            $http.get(pageurl).success(function (pagedatas) {
+                                results.forEach(function (data, index) {
+                                    $rootScope.checkedArray.forEach(function (attr) {
+                                        switch (attr) {
+                                            case "conversions"://转化次数
+                                                data["conversions"] = pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].conversions != undefined ? pagedatas[data.campaignName].conversions.value : 0
+                                                break;
+                                            case "crate"://转化率
+                                                data["crate"] = pagedatas[data.campaignName] != undefined && data.pv > 0 ? (Number(pagedatas[data.campaignName]["conversions"].value) / Number(data.pv)) : 0
+                                                break;
+                                            //case"avgCost"://平均转化成本
+                                            //    $http.get(SEM_API_URL + "/sem/report/account?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end).success(function (SEMDdatas) {
+                                            //        if(SEMDdatas==null){
+                                            //
+                                            //        }
+                                            //    });
+                                            //    break;
+                                            case "benefit"://收益
+                                                data["benefit"] = pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].benefit != undefined ? pagedatas[data.campaignName].benefit.value : 0
+                                                break;
+                                            case "orderNum"://订单数量
+                                                data["orderNum"] = pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].orderNum != undefined ? pagedatas[data.campaignName].orderNum.value : 0
+                                                break;
+                                            case "orderNumRate"://订单转化率
+                                                data["orderNumRate"] = pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].orderNum != undefined && data.pv > 0 ? (Number(pagedatas[data.campaignName].orderNum.value) / Number(data.pv)) : 0
+                                                break;
+                                            default :
+                                                break;
+                                        }
+                                    })
+                                })
+                                cabk(results)
+                            })
+                        })
+                    }
+                });
+            }
+
+            $scope.getCourFooterData = function (a, option, number) {
+                var rast = [0.0, 0.0];
+                var rastString = ["", ""];
+                var bhlString = "";
+                option.forEach(function (items, x) {
+                    var itemSplDatas = (items.entity[a.col.field] + "").split(",");
+                    if (itemSplDatas[3] == "变化率") {
+                        rastString[0] = itemSplDatas[1];
+                        rastString[1] = itemSplDatas[2];
+                        bhlString = "变化率";
+                    } else {
+                        rast[0] += ((itemSplDatas[1] + "").replace("%", "") == "--" || (itemSplDatas[1] + "").replace("%", "") == "　" ? 0.0 : parseFloat(((itemSplDatas[1] + "").replace("%", ""))));
+                        rast[1] += ((itemSplDatas[2] + "").replace("%", "") == "--" || (itemSplDatas[2] + "").replace("%", "") == "　" ? 0.0 : parseFloat(((itemSplDatas[2] + "").replace("%", ""))));
+                    }
+                });
+                var str
+                if (a.renderIndex == 1) {
+                    str = "当页汇总";
+                } else {
+                    str = " ";
+                }
+                if (a.col.field == "pv" || a.col.field == "uv" || a.col.field == "ip" || a.col.field == "vc" || a.col.field == "nuv") {
+                    //
+                } else {
+                    rast[0] = (rast[0] / option.length).toFixed(2) + (a.col.field == "outRate" || a.col.field == "nuvRate" || a.col.field == "arrivedRate" ? "%" : "");
+                    rast[1] = (rast[1] / option.length).toFixed(2) + (a.col.field == "outRate" || a.col.field == "nuvRate" || a.col.field == "arrivedRate" ? "%" : "");
+                }
+
+                var bhl = (((parseFloat(((rast[0] + "").replace("%", ""))) - parseFloat(((rast[1] + "").replace("%", "")))) / parseFloat(((rast[1] + "").replace("%", "")))) * 100 ).toFixed(2) + "%";
+
+                if ((bhl + "").indexOf("NaN") != -1 || (bhl + "").indexOf("Infinity") != -1) {
+                    bhl = "--";
+                }
+
+                switch (number) {
+                    case 0:
+                        return str;
+                    case 1:
+                        return rastString[0] != "" ? (rastString[0] + "").indexOf("NaN") != -1 ? 0 : rastString[0] : (rast[0] + "").indexOf("NaN") != -1 ? 0 : rast[0];
+                    case 2:
+                        return rastString[1] != "" ? (rastString[1] + "").indexOf("NaN") != -1 ? 0 : rastString[1] : (rast[1] + "").indexOf("NaN") != -1 ? 0 : rast[1];
+                    case 3:
+                        return bhlString != "" ? bhlString : bhl;
+                    default :
+                        return "--";
+                }
+            };
+
+            //数据对比分割数据
+            $scope.getContrastInfo = function (grid, row, number, fieldData) {
+                if (fieldData != undefined || fieldData != "undefined") {
+                    var a = (row.entity[fieldData] + "").split(",");
+                    if (number == 0) {
+                        return a[0];
+                    } else if (number == 1) {
+                        return a[1];
+                    } else if (number == 2) {
+                        return a[2];
+                    } else if (number == 3) {
+                        if (a[2] == 0) {
+                            return "--";
+                        }
+                        return a[3];
+                    }
+                }
+            };
+
             function GetDateStr(AddDayCount) {
                 var dd = new Date();
                 dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
@@ -589,7 +770,7 @@ define(["./module"], function (ctrs) {
                                                 attr.value += data[attr.label]
                                         })
                                     })
-                                    //console.log( $rootScope.gridOptions.data)
+                                    ////console.log( $rootScope.gridOptions.data)
                                     //刷新图表
                                     $scope.charts[0].config.legendDefaultChecked = [0, 1];
                                     $scope.charts[0].config.legendAllowCheckCount = 2;
@@ -621,8 +802,8 @@ define(["./module"], function (ctrs) {
             $scope.dataTable = function (isContrastTime, showType, queryOptions, renderLegend) {
                 var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
                 util.renderLegend(chart, $scope.charts[0].config);
-                var barDatas =   []
-                var temConvs=[]
+                var barDatas = []
+                var temConvs = []
                 queryOptions.forEach(function (option, oindex) {
                     barDatas.push({
                         label: chartUtils.convertChinese(option),
@@ -632,28 +813,35 @@ define(["./module"], function (ctrs) {
                     })
                 })
                 $rootScope.gridData.forEach(function (gdata, dindex) {
-                    console.log(gdata)
                     if (gdata.conversions != undefined) {
-                        if (temConvs.length <= 10) {
+                        if (temConvs.length < 10) {
                             barDatas.forEach(function (bdata, oindex) {
-                                barDatas[oindex].key.push(gdata.campaignName)
-                                barDatas[oindex].quota.push(gdata[bdata.option]==undefined?0:gdata[bdata.option])
-                                temConvs.push(gdata.conversions)
+                                bdata.key.push(gdata.campaignName)
+                                if (bdata.option == "crate") {
+                                    bdata.quota.push(gdata[bdata.option] == undefined ? 0 : Number(gdata[bdata.option].replace("%", "")))
+                                } else {
+                                    bdata.quota.push(gdata[bdata.option] == undefined ? 0 : gdata[bdata.option])
+                                }
                             })
+                            temConvs.push(gdata.conversions)
                         } else {
                             var minIndex = -1
                             var conversions = gdata.conversions
-                            temConvs.forEach(function(convs,cindex){
-                                if(convs<conversions){
-                                    minIndex=cindex
+                            temConvs.forEach(function (convs, cindex) {
+                                if (convs < conversions) {
+                                    minIndex = cindex
                                 }
                             })
-                            if(minIndex>-1){
+                            if (minIndex > -1) {
                                 barDatas.forEach(function (bdata, oindex) {
-                                    barDatas[minIndex].key.push(gdata.campaignName)
-                                    barDatas[minIndex].quota.push(gdata[bdata.option]==undefined?0:gdata[bdata.option])
-                                    temConvs[minIndex](conversions)
+                                    bdata.key[minIndex] = gdata.campaignName
+                                    if (bdata.option == "crate") {
+                                        bdata.quota[minIndex] = gdata[bdata.option] == undefined ? 0 : Number(gdata[bdata.option].replace("%", ""))
+                                    } else {
+                                        bdata.quota[minIndex] = gdata[bdata.option] == undefined ? 0 : gdata[bdata.option]
+                                    }
                                 })
+                                temConvs[minIndex] = conversions
                             }
                         }
                     }
@@ -661,11 +849,10 @@ define(["./module"], function (ctrs) {
                 cf.renderChart(barDatas, $scope.charts[0].config);
                 Custom.initCheckInfo();
             };
-            //$scope.setShowArray();
-            //init_transformData();
-            //$scope.dataTable(true, "day", ["pv", "uv"], false);
+
+
             $scope.targetSearchSpreadPage = function (isClicked) {
-                $rootScope.expandInex=1
+                $rootScope.expandInex = 1
                 $scope.es_checkArray = ["pv", "uv", "vc", "ip", "nuv", "nuvRate", "conversions", "crate", "avgCost", "orderNum", "benefit", "profit", "orderNumRate"];
                 $scope.sem_checkArray = ["avgCost", "benefit", "profit", "orderMoney"];
                 $scope.es_checkedArray = [];
@@ -756,19 +943,19 @@ define(["./module"], function (ctrs) {
                 }
             };
 
-            $rootScope.getFilters = function(){
-                var  filters = []
-                //console.log( JSON.stringify($rootScope.tableSwitch.terminalFilter)+"  "+ JSON.stringify($rootScope.tableSwitch.visitorFilter)+" " +JSON.stringify($rootScope.tableSwitch.areaFilter))
-                if($rootScope.tableSwitch.terminalFilter!=undefined&&$rootScope.tableSwitch.terminalFilter!=null){
+            $rootScope.getFilters = function () {
+                var filters = []
+                ////console.log( JSON.stringify($rootScope.tableSwitch.terminalFilter)+"  "+ JSON.stringify($rootScope.tableSwitch.visitorFilter)+" " +JSON.stringify($rootScope.tableSwitch.areaFilter))
+                if ($rootScope.tableSwitch.terminalFilter != undefined && $rootScope.tableSwitch.terminalFilter != null) {
                     filters.push($rootScope.tableSwitch.terminalFilter)
                 }
-                if($rootScope.tableSwitch.visitorFilter!=undefined&&$rootScope.tableSwitch.visitorFilter!=null){
+                if ($rootScope.tableSwitch.visitorFilter != undefined && $rootScope.tableSwitch.visitorFilter != null) {
                     filters.push($rootScope.tableSwitch.visitorFilter)
                 }
-                if($rootScope.tableSwitch.areaFilter!=undefined&&$rootScope.tableSwitch.areaFilter!=null){
-                        filters.push($rootScope.tableSwitch.areaFilter)
+                if ($rootScope.tableSwitch.areaFilter != undefined && $rootScope.tableSwitch.areaFilter != null) {
+                    filters.push($rootScope.tableSwitch.areaFilter)
                 }
-                //console.log("页面转化过滤内容="+JSON.stringify(filters))
+                ////console.log("页面转化过滤内容="+JSON.stringify(filters))
                 return JSON.stringify(filters)
             }
             // 配置邮件

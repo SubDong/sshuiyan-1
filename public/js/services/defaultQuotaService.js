@@ -5,7 +5,7 @@ define(["../app"], function (app) {
 
     'use strict';
 
-    app.service('DefaultQuotaService', ["$rootScope", function ($rootScope) {
+    app.service('DefaultQuotaService', ["$rootScope", "uiGridConstants", function ($rootScope, uiGridConstants) {
 
         var dqObj = {
             "extension": {
@@ -324,29 +324,91 @@ define(["../app"], function (app) {
                 }
                 case "source_searchengine" :
                 {
-                    $rootScope.checkedArray = ["vc", "uv", "nuvRate", "ip", "avgPage"];
+                    $rootScope.checkedArray = ["vc", "uv", "nuvRate", "avgPage", "ip"];
                     $rootScope.gridArray = [
                         {
                             name: "xl",
                             displayName: "",
                             cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
-                            maxWidth: 10
+                            maxWidth: 10,
+                            enableSorting: false
                         },
                         {
-                            name: "来源",
-                            displayName: "来源",
-                            field: "rf",
-                            footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"
+                            name: "搜索引擎",
+                            displayName: "搜索引擎",
+                            field: "se",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                            enableSorting: false
                         },
                         {
                             name: " ",
-                            cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history5' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li><li><a href='javascript:void(0)' ng-click='grid.appScope.showEntryPageLink(row, 2)'>查看入口页链接</a></li></ul></div></div>"
+                            cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history5' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='javascript:void(0)' ng-click='grid.appScope.showEntryPageLink(row, 2)'>查看入口页链接</a></li></ul></div></div>",
+                            enableSorting: false
                         },
                         {
                             name: "访问次数",
                             displayName: "访问次数",
                             field: "vc",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>",
+                            sort: {
+                                direction: uiGridConstants.DESC,
+                                priority: 1
+                            }
+                        },
+                        {
+                            name: "访客数(UV)",
+                            displayName: "访客数(UV)",
+                            field: "uv",
                             footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                        },
+                        {
+                            name: "新访客比率",
+                            displayName: "新访客比率",
+                            field: "nuvRate",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                        },
+                        {
+                            name: "平均访问页数",
+                            displayName: "平均访问页数",
+                            field: "avgPage",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                        },
+                        {
+                            name: "IP数",
+                            displayName: "IP数",
+                            field: "ip",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                        }
+                    ];
+                    break;
+                }
+                case "source_adssearchengine" :
+                {
+                    $rootScope.checkedArray = ["vc", "uv", "nuvRate", "avgPage", "ip"];
+                    $rootScope.gridArray = [
+                        {
+                            name: "xl",
+                            displayName: "",
+                            cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
+                            maxWidth: 10,
+                            enableSorting: false
+                        },
+                        {
+                            name: "来源",
+                            displayName: "来源",
+                            field: "rf",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                            enableSorting: false
+                        },
+                        {
+                            name: "访问次数",
+                            displayName: "访问次数",
+                            field: "vc",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>",
+                            sort: {
+                                direction: uiGridConstants.DESC,
+                                priority: 1
+                            }
                         },
                         {
                             name: "访客数(UV)",
