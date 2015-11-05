@@ -217,13 +217,13 @@ define(["./module"], function (ctrs) {
                     def.defData($scope.charts[0].config);
                 }
             };
-            $scope.queryOption_all = ["pv", "uv", "ip", "vc", "conversions", "crate", "transformCost"];
+            $scope.queryOption_all = ["pv", "uv", "ip", "vc", "conversions", "crate", "transformCost", "clickTotal", "visitNum"];
             $scope.queryOptions = ["pv", "uv"];
             $scope.charts = [
                 {
                     config: {
                         legendId: "indicators_charts_legend",
-                        legendData: ["浏览量(PV)", "访客数(UV)", "IP数", "访问次数", "转化次数", "转化率", "平均转化成本(事件)"],//显示几种数据
+                        legendData: ["浏览量(PV)", "访客数(UV)", "IP数", "访问次数", "转化次数", "转化率", "平均转化成本(事件)","事件点击总数","唯一访客事件数"],//显示几种数据
                         //legendMultiData: $rootScope.lagerMulti,
                         legendAllowCheckCount: 2,
                         legendClickListener: $scope.onLegendClickListener,
@@ -308,13 +308,13 @@ define(["./module"], function (ctrs) {
                 $rootScope.refreshData(false);
                 init_transformData();
             };
-            $rootScope.datepickerClickTow = function (start, end, label) {
-                var time = chartUtils.getTimeOffset(start, end);
-                $scope.start = time[0];
-                $scope.end = time[1];
-                $rootScope.refreshData(false);
-                init_transformData();
-            };
+            //$rootScope.datepickerClickTow = function (start, end, label) {
+            //    var time = chartUtils.getTimeOffset(start, end);
+            //    $scope.start = time[0];
+            //    $scope.end = time[1];
+            //    //$rootScope.refreshData(false);
+            //    //init_transformData();
+            //};
             function GetDateStr(AddDayCount) {
                 var dd = new Date();
                 dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
@@ -378,7 +378,7 @@ define(["./module"], function (ctrs) {
 
             $rootScope.getFilters = function () {
                 var filters = []
-                ////console.log( JSON.stringify($rootScope.tableSwitch.seFilter)+"  "+JSON.stringify($rootScope.tableSwitch.eginFilter)+"  "+ JSON.stringify($rootScope.tableSwitch.visitorFilter)+" " +JSON.stringify($rootScope.tableSwitch.areaFilter))
+                //////console.log( JSON.stringify($rootScope.tableSwitch.seFilter)+"  "+JSON.stringify($rootScope.tableSwitch.eginFilter)+"  "+ JSON.stringify($rootScope.tableSwitch.visitorFilter)+" " +JSON.stringify($rootScope.tableSwitch.areaFilter))
                 if ($rootScope.tableSwitch.eginFilter != undefined && $rootScope.tableSwitch.eginFilter != null) {
                     filters.push($rootScope.tableSwitch.eginFilter)
                 }
@@ -393,7 +393,7 @@ define(["./module"], function (ctrs) {
                 if ($rootScope.tableSwitch.seFilter != undefined && $rootScope.tableSwitch.seFilter != null) {
                         filters.push($rootScope.tableSwitch.seFilter)
                 }
-                //console.log("过滤内容="+JSON.stringify(filters))
+                ////console.log("过滤内容="+JSON.stringify(filters))
                 return JSON.stringify(filters)
             }
             $rootScope.curEventConfs = [];
@@ -516,7 +516,7 @@ define(["./module"], function (ctrs) {
                                     if (!hashloc[event.event_page]) {
                                         hashloc[event.event_page] = true;
                                     }
-                                    ////console.log(" tempPV  "+tempPv +" tempConv "+tempConv)
+                                    //////console.log(" tempPV  "+tempPv +" tempConv "+tempConv)
                                 })
 
                                 $scope.dateShowArray.forEach(function (item) {
@@ -574,12 +574,17 @@ define(["./module"], function (ctrs) {
                 })
                 $rootScope.gridData.forEach(function (gdata, dindex) {
                     if (gdata.conversions != undefined) {
-                        if (temConvs.length <= 10) {
+                        if (temConvs.length < 10) {
                             barDatas.forEach(function (bdata, oindex) {
-                                barDatas[oindex].key.push(gdata.eventName)
-                                barDatas[oindex].quota.push(gdata[bdata.option]==undefined?0:gdata[bdata.option])
-                                temConvs.push(gdata.conversions)
+                                bdata.key.push(gdata.eventName)
+                                if(bdata.option=="crate"){
+                                    bdata.quota.push(gdata[bdata.option]==undefined?0:Number(gdata[bdata.option].replace("%","")))
+                                }else{
+                                    bdata.quota.push(gdata[bdata.option]==undefined?0:gdata[bdata.option])
+                                }
+
                             })
+                            temConvs.push(gdata.conversions)
                         } else {
                             var minIndex = -1
                             var conversions = gdata.conversions
@@ -590,13 +595,18 @@ define(["./module"], function (ctrs) {
                             })
                             if(minIndex>-1){
                                 barDatas.forEach(function (bdata, oindex) {
-                                    barDatas[minIndex].key.push(gdata.eventName)
-                                    barDatas[minIndex].quota.push(gdata[bdata.option]==undefined?0:gdata[bdata.option])
-                                    temConvs[minIndex](conversions)
+                                    bdata.key[minIndex]=gdata.eventName
+                                    if(bdata.option=="crate"){
+                                        bdata.quota[minIndex]=gdata[bdata.option]==undefined?0:Number(gdata[bdata.option].replace("%",""))
+                                    }else{
+                                        bdata.quota[minIndex]=gdata[bdata.option]==undefined?0:gdata[bdata.option]
+                                    }
                                 })
+                                temConvs[minIndex]=conversions
                             }
                         }
                     }
+                    ////console.log(barDatas)
                 })
                 cf.renderChart(barDatas, $scope.charts[0].config);
                 Custom.initCheckInfo();
@@ -697,9 +707,9 @@ define(["./module"], function (ctrs) {
                     });
                 }
                 //$scope.setShowArray();
-                ////console.log($scope.city)
-                ////console.log($scope.souce)
-                ////console.log($scope.visitNum)
+                //////console.log($scope.city)
+                //////console.log($scope.souce)
+                //////console.log($scope.visitNum)
                 //$rootScope.refreshData(true);
             };
 
