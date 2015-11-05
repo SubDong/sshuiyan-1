@@ -46,12 +46,73 @@ define(["./module"], function (ctrs) {
 //            $rootScope.$broadcast("loadAllTerminal");
             obj.sourceSearch = "";
         }
-
         $scope.removeAreaSearch = function (obj) {
             $scope.city.selected = {"name": "全部"};
 //            $rootScope.$broadcast("loadAllArea");
             obj.areaSearch = "";
         }
+
+        //$rootScope.datepickerClickTow = function (start, end, label) {
+        //    console.log("数据对比")
+        //    $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
+        //    var gridArrayOld = angular.copy($rootScope.searchGridArray);
+        //    var latitudeOld = angular.copy($rootScope.tableSwitch.latitude);
+        //    console.log($rootScope.searchGridArray)
+        //    $rootScope.searchGridArray.forEach(function (item, i) {
+        //        var a = item["field"];
+        //        if (item["cellTemplate"] == undefined) {
+        //            item["cellTemplate"] = "<ul class='contrastlist'><li>{{grid.appScope.getContrastInfo(grid, row,0,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,1,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,2,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,3,'" + a + "')}}</li></ul>";
+        //            item["footerCellTemplate"] = "<ul class='contrastlist'><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),0)}}</li><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),1)}}</li><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),2)}}</li><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),3)}}</li></ul>";
+        //        }
+        //    });
+        //    $scope.gridOptions.rowHeight = 95;
+        //    $scope.gridOptions.columnFooterHeight = 95;
+        //    var time = chartUtils.getTimeOffset(start, end);
+        //    var startTime = time[0];
+        //    var endTime = time[0] + ($rootScope.tableTimeEnd - $rootScope.tableTimeStart);
+        //    $rootScope.$broadcast("ssh_load_compare_datashow", startTime, endTime);
+        //    var dateTime1 = chartUtils.getSetOffTime($rootScope.tableTimeStart, $rootScope.tableTimeEnd);
+        //    var dateTime2 = chartUtils.getSetOffTime(startTime, endTime);
+        //    $scope.targetDataContrast(null, null, function (item) {
+        //        //console.log("targetDataContrast")
+        //        var target = $rootScope.tableSwitch.latitude.field;
+        //        var dataArray = [];
+        //        var is = 1;
+        //        $scope.targetDataContrast(startTime, endTime, function (contrast) {
+        //            item.forEach(function (a, b) {
+        //                var dataObj = {};
+        //                for (var i = 0; i < contrast.length; i++) {
+        //                    if (a[target] == contrast[i][target]) {
+        //                        $rootScope.checkedArray.forEach(function (tt, aa) {
+        //                            var bili = ((parseInt(a[tt] + "".replace("%")) - parseInt((contrast[i][tt] + "").replace("%"))) / (parseInt((contrast[i][tt] + "").replace("%")) == 0 ? parseInt(a[tt] + "".replace("%")) : parseInt((contrast[i][tt] + "").replace("%"))) * 100).toFixed(2);
+        //                            dataObj[tt] = (isNaN(bili) ? 0 : bili) + "%";
+        //                            a[tt] = "　" + "," + a[tt] + "," + contrast[i][tt] + "," + dataObj[tt]
+        //                        });
+        //                        a[target] = a[target] + "," + ($rootScope.startString != undefined ? $rootScope.startString : dateTime1[0] == dateTime1[1] ? dateTime1[0] + "," + dateTime2[0] + "," + "变化率" : dateTime1[0] + " 至 " + dateTime1[1]) + "," + (dateTime2[0] + " 至 " + dateTime2[1]) + "," + "变化率";
+        //                        dataArray.push(a);
+        //                        is = 0;
+        //                        return;
+        //                    } else {
+        //                        is = 1
+        //                    }
+        //                }
+        //                if (is == 1) {
+        //                    $rootScope.checkedArray.forEach(function (tt, aa) {
+        //                        dataObj[tt] = "--";
+        //                        a[tt] = "　" + "," + a[tt] + "," + "--" + "," + "--"
+        //                    });
+        //                    a[target] = a[target] + "," + ($rootScope.startString != undefined ? $rootScope.startString : dateTime1[0] == dateTime1[1] ? dateTime1[0] + "," + dateTime2[0] + "," + "变化率" : dateTime1[0] + " 至 " + dateTime1[1]) + "," + (dateTime2[0] + " 至 " + dateTime2[1]) + "," + "变化率"
+        //                    dataArray.push(a);
+        //                }
+        //            });
+        //            $rootScope.gridOptions.showColumnFooter = !$rootScope.gridOptions.showColumnFooter;
+        //        });
+        //        $rootScope.gridOptions.data = dataArray;
+        //        $rootScope.tableSwitch.latitude = latitudeOld;
+        //        $rootScope.gridArray = gridArrayOld;
+        //    })
+        //};
+
 
         var griApihtml = function (gridApi) {
             gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
@@ -61,7 +122,7 @@ define(["./module"], function (ctrs) {
                     enableHorizontalScrollbar: 1,
                     enableVerticalScrollbar: 1,
                     showHeader: false,
-                    columnDefs: $rootScope.searchGridArray
+                    columnDefs: $rootScope.gridArray
                 };
             });
         };
@@ -79,7 +140,7 @@ define(["./module"], function (ctrs) {
                         enableSorting: false,
                         //expandableRowHeight: 30,
                         expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions' class='grid clearfix secondary_table' ui-grid-exporter ui-grid-auto-resize ></div>",
-                        //columnDefs: $rootScope.searchGridArray,
+                        //columnDefs: $rootScope.gridArray,
                         data: []
                     }
                 } else {
@@ -128,7 +189,7 @@ define(["./module"], function (ctrs) {
                         enableSorting: false,
                         expandableRowHeight: 30,
                         showHeader: false,
-                        columnDefs: $rootScope.searchGridArray,
+                        columnDefs: $rootScope.gridArray,
                         expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions' class='grid clearfix secondary_table' ui-grid-exporter ui-grid-auto-resize ></div>",
                         data: []
                     }
@@ -157,7 +218,7 @@ define(["./module"], function (ctrs) {
             }
         };
         $rootScope.targetSearchSpread = function (isClicked) {
-            $scope.gridOpArray = angular.copy($rootScope.searchGridArray);
+            $scope.gridOpArray = angular.copy($rootScope.gridArray);
             $rootScope.gridOptions.columnDefs = $scope.gridOpArray;
         };
 
@@ -256,16 +317,16 @@ define(["./module"], function (ctrs) {
             $(msg)
         });
         $scope.$on("transformData_ui_grid", function (e, msg) {
-            $rootScope.searchGridArray[1].footerCellTemplate = "<div class='ui-grid-cell-contents'>当页汇总</div>";
-            $rootScope.searchGridArray[2].footerCellTemplate = "<div class='ui-grid-cell-contents'>--</div>";
-            $rootScope.searchGridArray[3].footerCellTemplate = "<div class='ui-grid-cell-contents'>--</div>";
+            $rootScope.gridArray[1].footerCellTemplate = "<div class='ui-grid-cell-contents'>当页汇总</div>";
+            $rootScope.gridArray[2].footerCellTemplate = "<div class='ui-grid-cell-contents'>--</div>";
+            $rootScope.gridArray[3].footerCellTemplate = "<div class='ui-grid-cell-contents'>--</div>";
             for (var i = 0; i < msg.checkedArray.length; i++) {
-                $rootScope.searchGridArray[i + 2].displayName = chartUtils.convertChinese(msg.checkedArray[i]);
-                $rootScope.searchGridArray[i + 2].field = msg.checkedArray[i];
-                $rootScope.searchGridArray[i + 2].footerCellTemplate = "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>";
-                $rootScope.searchGridArray[i + 2].name = chartUtils.convertChinese(msg.checkedArray[i]);
+                $rootScope.gridArray[i + 2].displayName = chartUtils.convertChinese(msg.checkedArray[i]);
+                $rootScope.gridArray[i + 2].field = msg.checkedArray[i];
+                $rootScope.gridArray[i + 2].footerCellTemplate = "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>";
+                $rootScope.gridArray[i + 2].name = chartUtils.convertChinese(msg.checkedArray[i]);
             }
-            $scope.gridOpArray = angular.copy($rootScope.searchGridArray);
+            $scope.gridOpArray = angular.copy($rootScope.gridArray);
             $rootScope.gridOptions.columnDefs = $scope.gridOpArray;
             $rootScope.refreshData(msg)
         });
@@ -275,8 +336,6 @@ define(["./module"], function (ctrs) {
 
 
         ////////////过滤////////////
-
-
         //设备过滤
         $rootScope.$on("loadAllTerminal", function () {
             $scope.setTerminal(0);
@@ -286,10 +345,9 @@ define(["./module"], function (ctrs) {
             if (a == 0)
                 $rootScope.tableSwitch.terminalFilter = null
             else
-                $rootScope.tableSwitch.terminalFilter = {pm: a-1}
+                $rootScope.tableSwitch.terminalFilter = {pm: a - 1}
             $rootScope.refreshData()
         };
-
         $scope.setSearchEngineAreaFilter = function (area) {
 
             if (!$rootScope.tableSwitch) {
@@ -316,7 +374,6 @@ define(["./module"], function (ctrs) {
             $scope.allCitys = angular.copy($rootScope.citys);
             $rootScope.refreshData()
         };
-
         //设置访客来源
         $rootScope.$on("loadAllVisitor", function () {
             $scope.setVisitors(0);
