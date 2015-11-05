@@ -415,7 +415,8 @@ define(["./module"], function (ctrs) {
             var query = "/config/adtrack?type=delete&query={\"_id\":\"" + id + "\"}";
             $http({method: 'GET', url: query}).success(function (dataConfig, status) {
                 if (dataConfig == "\"remove\"") {
-                   
+
+                    
                 }
             });
         };
