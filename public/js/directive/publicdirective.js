@@ -99,6 +99,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     scope.compareLastDayClass = false;
                     scope.compareLastWeekClass = false;
                     scope.clearCompareSelect = false;
+                    $rootScope.sshuiyanCompareFlag = false;
                 };
                 scope.reloadByCalendar = function (type) {
                     //console.info("info: now user click the " + type + " button");
