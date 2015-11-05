@@ -968,34 +968,38 @@ define(["app"], function (app) {
         };
 
         $scope.searchBrowser = function (value, segin) {
-            $scope.souce.selected = {"name": "搜索引擎"};
+           /* $scope.souce.selected = {"name": "搜索引擎"};*/
+
             if (segin == "全部") {
-                $scope.curBrowser = "";
-                $scope.showBrowser = false
+                $scope.sourceSearch = "全部引擎";
                 $rootScope.tableSwitch.seFilter = null
             } else {
-                $scope.curBrowser = segin;
-                $scope.showBrowser = true
+                $scope.sourceSearch = segin;
                 $rootScope.tableSwitch.seFilter = {se: segin}
             }
-            $scope.setSearchEngine(value, "搜索引擎")
+            if (segin == "百度" || segin == "Google") {
+                if ($scope.browser.selected != undefined) {
+                    $scope.browser.selected.name = segin;
+                } else {
+                    $scope.browser.selected = {};
+                    $scope.browser.selected["name"] = segin;
+                }
+            }
+            $scope.allBrowsers = angular.copy($rootScope.browsers);
+           /* $scope.setSearchEngine(value, "搜索引擎")*/
         }
         $scope.setSearchEngine = function (value, info) {
-
             if (value == 0) {
-                $scope.curSource = "";
-                $scope.showSource = false
+                $scope.sourceSearch = "";
                 $rootScope.tableSwitch.seFilter = null
                 $rootScope.tableSwitch.eginFilter = null
             } else {
-                $scope.curSource = info;
+                $scope.sourceSearch = info;
                 $scope.showSource = true
                 if (value == 2) {//搜索引擎
                     $scope.browserselect = false;
                 } else {
                     $scope.browserselect = true;
-                    $scope.curBrowser = "";
-                    $scope.showBrowser = false
                 }
                 $rootScope.tableSwitch.eginFilter = {rf_type: value}
             }

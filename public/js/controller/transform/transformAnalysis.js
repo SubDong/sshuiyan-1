@@ -12,6 +12,37 @@ define(["./module"], function (ctrs) {
             $rootScope.tableFormat = null;
             $scope.send = true;//显示发送
             $scope.isCompared = false;
+
+            //        高级搜索提示
+            $scope.sourceSearch = "";
+            $scope.visitorSearch = "";
+            $scope.areaSearch = "";
+            $scope.browserselect = true;
+//        取消显示的高级搜索的条件
+            $scope.removeSourceSearch = function (obj) {
+                $scope.browserselect = true;
+                $scope.souce.selected = {"name": "全部"};
+                $scope.browser.selected = {"name": "全部"};
+                $rootScope.$broadcast("loadAllSource");
+                obj.sourceSearch = "";
+            }
+            $scope.removeVisitorSearch = function (obj) {
+//                $rootScope.$broadcast("loadAllVisitor");
+                var inputArray = $(".chart_top2 .styled");
+                inputArray.each(function (i, o) {
+                    $(o).prev("span").css("background-position", "0px 0px");
+                    $(o).prop("checked", false);
+                });
+                $(inputArray[0]).prev("span").css("background-position", "0px -51px");
+                obj.visitorSearch = "";
+            }
+
+            $scope.removeAreaSearch = function (obj) {
+                $scope.city.selected = {"name": "全部"};
+//                $rootScope.$broadcast("loadAllArea");
+                obj.areaSearch = "";
+            }
+
             //var refushGridData = function () {
             //    var url = "/config/eventchnage_list?type=search&query=" + JSON.stringify(
             //            {uid: $cookieStore.get("uid"), root_url: $rootScope.siteId}
