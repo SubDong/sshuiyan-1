@@ -168,6 +168,11 @@ define(["./module"], function (ctrs) {
             var seriesData = [];
             var myChart = echarts.init(document.getElementById('myChart'));
 
+            var legendData = "所有访客";
+            if($scope.retentionRate) {
+                legendData = "所有新访客";
+            }
+
 
             if($scope.groupTableDataes == null || $scope.groupTableDataes.length <= 0 ) {
                 myChart = null;
@@ -233,7 +238,7 @@ define(["./module"], function (ctrs) {
                     }
                 },
                 legend: {
-                    data: ['所有访客']
+                    data: [legendData]
                 },
                 calculable: true,
                 xAxis: [
@@ -260,7 +265,7 @@ define(["./module"], function (ctrs) {
                 ],
                 series: [
                     {
-                        name: '所有访客',
+                        name: legendData,
                         type: 'line',
                         stack: '总量',
                         data: seriesData
@@ -372,7 +377,7 @@ define(["./module"], function (ctrs) {
                 //表单明细
                 var _tableDetail = [];
                 //日期
-                var _code = trData.code == "所有访客" ? "all" : trData.code;
+                var _code = trData.code == "所有访客" || "所有新访客" ? "all" : trData.code;
                 _tableDetail.push(_code);
                 //汇总
                 _tableDetail.push(trData.data);
