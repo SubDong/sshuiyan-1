@@ -50,6 +50,18 @@ define(["./module"], function (ctrs) {
                 if (dataConfig != null && dataConfig.length > 0) {
                     $scope.time_conv = dataConfig[0].time_conv;
                     $scope.pv_conv = dataConfig[0].pv_conv;
+                    if ($scope.time_conv.status == true) {
+                        $scope.truefalse = false;
+                    }
+                    else {
+                        $scope.truefalse = true;
+                    }
+                    if ($scope.pv_conv.status == true) {
+                        $scope.truefalsenext = false;
+                    }
+                    else {
+                        $scope.truefalsenext = true;
+                    }
                 }
             });
 
