@@ -333,10 +333,19 @@ define(['./module'], function (ctrs) {
                                 result.push(maps[key]);
                             }
                         }
+                        result.forEach(function(item, i){
+                            if(item["avgTime"] == 0){
+                                item["avgTime"] = "00:00:00";
+                            }else{
+                                item["avgTime"] = ad.formatFunc(item["avgTime"],"avgTime")
+                            }
+
+                        })
                         newDataInfo1 = result;
                     } else {
                         newDataInfo1 = data;
                     }
+
                     $scope.$broadcast("history", newDataInfo1);
                     $rootScope.historyJu = "";
                 }).error(function (error) {
