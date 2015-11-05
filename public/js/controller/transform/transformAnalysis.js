@@ -531,7 +531,7 @@ define(["./module"], function (ctrs) {
 
                                 $scope.dateShowArray.forEach(function (item) {
                                     if (item.label == "crate" && tempPv != 0) {
-                                        item.value = Number(tempConv / tempPv).toFixed(2)
+                                        item.value = Number(tempConv / tempPv).toFixed(4)*100+"%"
                                     }
                                 })
                                 //刷新图表
