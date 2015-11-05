@@ -1139,6 +1139,56 @@ define(["../app"], function (app) {
                     ];
                     break;
                 }
+
+                case "provincemap" :
+                {
+                    //配置默认指标
+                    $rootScope.checkedArray = ["pv", "uv", "outRate"];
+                    $rootScope.gridArray = [
+                        {
+                            name: "a",
+                            displayName: "",
+                            cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
+                            maxWidth: 10,
+                            enableSorting: false
+                        },
+                        {
+                            name: "地域",
+                            displayName: "地域",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                            field: "region",
+                            enableSorting: false
+                        },
+                        {
+                            name: " ",
+                            cellTemplate: "<div class='table_box'><a ui-sref='history1' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn' title='查看历史趋势'></a></div>",
+                            enableSorting: false
+                        },
+                        {
+                            name: "浏览量(PV)",
+                            displayName: "浏览量(PV)",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>",
+                            sort: {
+                                direction: uiGridConstants.DESC,
+                                priority: 1
+                            },
+                            field: "pv"
+                        },
+                        {
+                            name: "访客数(UV)",
+                            displayName: "访客数(UV)",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>",
+                            field: "uv"
+                        },
+                        {
+                            name: "跳出率",
+                            displayName: "跳出率",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>",
+                            field: "outRate"
+                        }
+                    ];
+                    break;
+                }
             }
         }
 
