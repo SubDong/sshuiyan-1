@@ -4,7 +4,9 @@
 define(["./module"], function (ctrs) {
     "use strict";
 
-    ctrs.controller('adtrack_add', function ($scope, $rootScope, $http, $cookieStore, $state, ngDialog) {
+    ctrs.controller('adtrack_add', function ($scope, $rootScope, $http, $cookieStore, $state,$stateParams, ngDialog) {
+
+       var vo = $stateParams.vo;
         $scope.ipArea = {
             "tNum": "1",//当前个数？
             "tText": "",//内容
@@ -137,9 +139,37 @@ define(["./module"], function (ctrs) {
             temAdTypes: "", /*暂存的adTypes*/
             planName: "",
             keywords: "",
-            creative: ""
+            creative: "",
+            updateTime:""
         };
 
+        if(vo!=null){
+            $scope.adTrack.targetUrl=vo.targetUrl;
+            $scope.deleteId=vo._id;
+            if(vo.mediaPlatform.trim()=='搜狐' || vo.mediaPlatform.trim()=='新浪' || vo.mediaPlatform.trim()=='网易' || vo.mediaPlatform.trim()=='博客' || vo.mediaPlatform.trim()=='微博'|| vo.mediaPlatform.trim()=='微信'|| vo.mediaPlatform.trim()=='贴吧'|| vo.mediaPlatform.trim()=='论坛/BBS' ){
+                $scope.adTrack.mediaPlatform = vo.mediaPlatform.trim();
+                $scope.mediaPlatformFlagname = vo.mediaPlatform.trim();
+            }else{
+                $scope.adTrack.mediaPlatform = vo.mediaPlatform.trim();
+                $scope.adTrack.temMediaPlatform = vo.mediaPlatform.trim();
+                $scope.mediaPlatformFlagname = '其他';
+            }
+            if(vo.adTypes.trim()=='文字广告' || vo.adTypes.trim()=='图片广告' || vo.adTypes.trim()=='多媒体广告'){
+                $scope.adTrack.adTypes = vo.adTypes.trim();
+            }else{
+                $scope.adTrack.adTypes =  '其他';
+                $scope.adTrack.temAdTypes = vo.adTypes.trim();
+            }
+            $scope.adTrack.keywords=vo.keywords.trim();
+            $scope.adTrack.planName=vo.planName.trim();
+            $scope.adTrack.creative=vo.creative.trim();
+
+
+
+
+        }else{
+            $scope.vo=null;
+        }
         /**
          * 去重
          * @returns {Array}
@@ -161,7 +191,7 @@ define(["./module"], function (ctrs) {
          */
         $scope.allSubmit = function () {
             var kVal = $scope.adTrack.keywords;
-
+            $scope.sureonDelete( $scope.deleteId);
             var includeObj = kVal.indexOf("\\n");
             if (includeObj < -1) {
                 $scope.submit();
@@ -380,6 +410,16 @@ define(["./module"], function (ctrs) {
             return ((domain != null && domain.length>0)?domain[0]:"");
         }
 
+        //刪除
+        $scope.sureonDelete = function (id) {
+            var query = "/config/adtrack?type=delete&query={\"_id\":\"" + id + "\"}";
+            $http({method: 'GET', url: query}).success(function (dataConfig, status) {
+                if (dataConfig == "\"remove\"") {
+                    $scope.refushGridData();
+                }
+            });
+        };
+
         $scope.addfocus = function (obj) {
             obj.help = true;
         };
@@ -392,7 +432,7 @@ define(["./module"], function (ctrs) {
             {name: '博客'},
             {name: '微博'},
             {name: '微信'},
-            {name: '贴吧 '},
+            {name: '贴吧'},
             {name: '论坛/BBS'},
             {name: '其他'}
         ];
