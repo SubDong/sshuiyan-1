@@ -137,6 +137,8 @@ define(['./module'], function (ctrs) {
                 if(rf_index != -1) {
                     _allFilters.remove(rf_index);
                 }
+            } else {
+                _allFilters = [];
             }
 
             //访客过滤条件
@@ -178,6 +180,13 @@ define(['./module'], function (ctrs) {
                 if(rf_index != -1) {
                     _allFilters.remove(rf_index);
                 }
+                // 排除前面的搜索引擎
+                var se_index = _allFilters.elementHasOwnProperty("se");
+                if(se_index != -1) {
+                    _allFilters.remove(se_index);
+                }
+            } else {
+                _allFilters = [];
             }
 
             //来源过滤条件
@@ -212,6 +221,42 @@ define(['./module'], function (ctrs) {
             }
         };
 
+        $scope.setHistoryEngine = function (engine) {
+
+            var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
+            if(_allFilters != null) {
+                // 排除来源过滤
+                var rf_index = _allFilters.elementHasOwnProperty("rf_type");
+                if(rf_index != -1) {
+                    _allFilters.remove(rf_index);
+                }
+                // 排除前面的搜索引擎
+                var se_index = _allFilters.elementHasOwnProperty("se");
+                if(se_index != -1) {
+                    _allFilters.remove(se_index);
+                }
+            } else {
+                _allFilters = [];
+            }
+
+            var _seFilter = "";
+            _seFilter = JSON.parse("{\"se\":[\"" + engine + "\"]}");
+            $scope.sourceSearch = engine;
+
+            if(_seFilter != "") {
+                _allFilters.push(_seFilter);
+            }
+
+            $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
+
+            if ($scope.tableJu == "html") {
+                $rootScope.tableSwitch.tableFilter = "[{\"se\":\"" + engine + "\"}]";
+                getHtmlTableData();
+            } else {
+                $rootScope.$broadcast("ssh_data_show_refresh");
+                $scope.historyInit();
+            }
+        };
 
         $scope.historyInit = function () {
             var getTime = $rootScope.tableTimeStart < -1 ? "day" : "hour";

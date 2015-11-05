@@ -62,7 +62,7 @@ define(["./module"], function (ctrs) {
                                     data["conversions"] = pdata[attr] != undefined ? pdata[attr].value : 0
                                     break;
                                 case "crate"://转化率
-                                    data["crate"] = pdata["conversions"] != undefined && row.entity.pv > 0 ? (Number(pdata["conversions"].value) / Number(row.entity.pv)) : 0
+                                    data["crate"] = pdata["conversions"] != undefined && row.entity.pv > 0 ? (Number(pdata["conversions"].value) / Number(row.entity.pv)).toFixed(2) : 0
                                     break;
                                 case "benefit"://收益
                                     data["benefit"] = pdata[attr] != undefined ? pdata[attr].value : 0
@@ -71,7 +71,7 @@ define(["./module"], function (ctrs) {
                                     data["orderNum"] = pdata[attr] != undefined ? pdata[attr].value : 0
                                     break;
                                 case "orderNumRate"://订单转化率
-                                    data["orderNumRate"] = pdata["orderNum"] != undefined ? (Number(pdata["orderNum"].value) / Number(row.entity.pv)) : 0
+                                    data["orderNumRate"] = pdata["orderNum"] != undefined ? (Number(pdata["orderNum"].value) / Number(row.entity.pv)).toFixed(2) : 0
                                     break;
                                 default :
                                     if (row.entity[attr] != undefined)
@@ -151,7 +151,7 @@ define(["./module"], function (ctrs) {
                                                     data["conversions"] = pagedatas[row.entity.campaignName] != undefined && pagedatas[row.entity.campaignName].conversions != undefined ? pagedatas[row.entity.campaignName].conversions.value : 0
                                                     break;
                                                 case "crate"://转化率
-                                                    data["crate"] = pagedatas[row.entity.campaignName] != undefined && data.pv > 0 ? (Number(pagedatas[row.entity.campaignName]["conversions"].value) / Number(data.pv)) : 0
+                                                    data["crate"] = pagedatas[row.entity.campaignName] != undefined && data.pv > 0 ? (Number(pagedatas[row.entity.campaignName]["conversions"].value) / Number(data.pv)).toFixed(2) : 0
                                                     break;
                                                 case "benefit"://收益
                                                     data["benefit"] = pagedatas[row.entity.campaignName] != undefined && pagedatas[row.entity.campaignName].benefit != undefined ? pagedatas[row.entity.campaignName].benefit.value : 0
@@ -160,7 +160,7 @@ define(["./module"], function (ctrs) {
                                                     data["orderNum"] = pagedatas[row.entity.campaignName] != undefined && pagedatas[row.entity.campaignName].orderNum != undefined ? pagedatas[row.entity.campaignName].orderNum.value : 0
                                                     break;
                                                 case "orderNumRate"://订单转化率
-                                                    data["orderNumRate"] = pagedatas[row.entity.campaignName] != undefined && pagedatas[row.entity.campaignName].orderNum != undefined && data.pv > 0 ? (Number(pagedatas[row.entity.campaignName].orderNum.value) / Number(data.pv)) : 0
+                                                    data["orderNumRate"] = pagedatas[row.entity.campaignName] != undefined && pagedatas[row.entity.campaignName].orderNum != undefined && data.pv > 0 ? (Number(pagedatas[row.entity.campaignName].orderNum.value) / Number(data.pv)).toFixed(2) : 0
                                                     break;
                                                 default :
                                                     break;
@@ -529,7 +529,7 @@ define(["./module"], function (ctrs) {
                                                 data["conversions"] = pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].conversions != undefined ? pagedatas[data.campaignName].conversions.value : 0
                                                 break;
                                             case "crate"://转化率
-                                                data["crate"] = pagedatas[data.campaignName] != undefined && data.pv > 0 ? (Number(pagedatas[data.campaignName]["conversions"].value) / Number(data.pv)) : 0
+                                                data["crate"] = pagedatas[data.campaignName] != undefined && data.pv > 0 ? (Number(pagedatas[data.campaignName]["conversions"].value) / Number(data.pv)).toFixed(2) : 0
                                                 break;
                                             //case"avgCost"://平均转化成本
                                             //    $http.get(SEM_API_URL + "/sem/report/account?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end).success(function (SEMDdatas) {
@@ -545,7 +545,7 @@ define(["./module"], function (ctrs) {
                                                 data["orderNum"] = pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].orderNum != undefined ? pagedatas[data.campaignName].orderNum.value : 0
                                                 break;
                                             case "orderNumRate"://订单转化率
-                                                data["orderNumRate"] = pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].orderNum != undefined && data.pv > 0 ? (Number(pagedatas[data.campaignName].orderNum.value) / Number(data.pv)) : 0
+                                                data["orderNumRate"] = pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].orderNum != undefined && data.pv > 0 ? (Number(pagedatas[data.campaignName].orderNum.value) / Number(data.pv)).toFixed(2) : 0
                                                 break;
                                             default :
                                                 break;
@@ -735,7 +735,7 @@ define(["./module"], function (ctrs) {
                                                     data["conversions"] = pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].conversions != undefined ? pagedatas[data.campaignName].conversions.value : 0
                                                     break;
                                                 case "crate"://转化率
-                                                    data["crate"] = pagedatas[data.campaignName] != undefined && data.pv > 0 ? (Number(pagedatas[data.campaignName]["conversions"].value) / Number(data.pv)) : 0
+                                                    data["crate"] = pagedatas[data.campaignName] != undefined && data.pv > 0 ? (Number(pagedatas[data.campaignName]["conversions"].value) / Number(data.pv)).toFixed(2) : 0
                                                     break;
                                                 //case"avgCost"://平均转化成本
                                                 //    $http.get(SEM_API_URL + "/sem/report/account?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end).success(function (SEMDdatas) {
@@ -754,7 +754,7 @@ define(["./module"], function (ctrs) {
                                                     data["orderNum"] = pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].orderNum != undefined ? pagedatas[data.campaignName].orderNum.value : 0
                                                     break;
                                                 case "orderNumRate"://订单转化率
-                                                    data["orderNumRate"] = pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].orderNum != undefined && data.pv > 0 ? (Number(pagedatas[data.campaignName].orderNum.value) / Number(data.pv)) : 0
+                                                    data["orderNumRate"] = pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].orderNum != undefined && data.pv > 0 ? (Number(pagedatas[data.campaignName].orderNum.value) / Number(data.pv)).toFixed(2) : 0
                                                     break;
                                                 default :
                                                     break;
@@ -955,7 +955,7 @@ define(["./module"], function (ctrs) {
                 if ($rootScope.tableSwitch.areaFilter != undefined && $rootScope.tableSwitch.areaFilter != null) {
                     filters.push($rootScope.tableSwitch.areaFilter)
                 }
-                ////console.log("页面转化过滤内容="+JSON.stringify(filters))
+                //console.log("页面转化过滤内容="+JSON.stringify(filters))
                 return JSON.stringify(filters)
             }
             // 配置邮件

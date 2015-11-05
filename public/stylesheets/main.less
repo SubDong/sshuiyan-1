@@ -3170,9 +3170,11 @@ textarea.tNum {
 
 .ui-grid-render-container-body .ui-grid-viewport {
   height: auto !important;
-
+  overflow: visible !important;
 }
-
+.transfortable .ui-grid-render-container-body .ui-grid-viewport{
+  overflow: hidden !important;
+}
 .ui-grid-viewport {
   min-height: 0px !important;
 }
@@ -3207,9 +3209,9 @@ textarea.tNum {
   height: auto !important;
 }
 
-.ui-grid-viewport {
+/*.ui-grid-viewport {
   overflow: inherit !important;
-}
+}*/
 
 .ui-grid-footer-panel {
   height: 30px;
