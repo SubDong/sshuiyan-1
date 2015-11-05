@@ -1195,7 +1195,12 @@ define(["app"], function (app) {
             }
             $scope.isJudge = false;
             getHtmlTableData();
-        }
+        };
+
+        $scope.$on("RealTimePageRefresh", function () {
+            $scope.realTimeVisit();
+        });
+
         // 搜索词过滤
         $scope.setGjcFilter = function (gjcText) {
             if (!$rootScope.tableSwitch) {
