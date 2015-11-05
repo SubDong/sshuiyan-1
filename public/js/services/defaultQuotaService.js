@@ -382,7 +382,7 @@ define(["../app"], function (app) {
                     ];
                     break;
                 }
-                case "source_adssearchengine" :
+                case "source_adsrfsearchengine" :
                 {
                     $rootScope.checkedArray = ["vc", "uv", "nuvRate", "avgPage", "ip"];
                     $rootScope.gridArray = [
@@ -397,6 +397,228 @@ define(["../app"], function (app) {
                             name: "来源",
                             displayName: "来源",
                             field: "rf",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                            enableSorting: false
+                        },
+                        {
+                            name: "访问次数",
+                            displayName: "访问次数",
+                            field: "vc",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>",
+                            sort: {
+                                direction: uiGridConstants.DESC,
+                                priority: 1
+                            }
+                        },
+                        {
+                            name: "访客数(UV)",
+                            displayName: "访客数(UV)",
+                            field: "uv",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                        },
+                        {
+                            name: "新访客比率",
+                            displayName: "新访客比率",
+                            field: "nuvRate",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                        },
+                        {
+                            name: "平均访问页数",
+                            displayName: "平均访问页数",
+                            field: "avgPage",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                        },
+                        {
+                            name: "IP数",
+                            displayName: "IP数",
+                            field: "ip",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                        }
+                    ];
+                    break;
+                }
+                case "source_adsrkeyfsearchengine" :
+                {
+                    $rootScope.checkedArray = ["vc", "uv", "nuvRate", "avgPage", "ip"];
+                    $rootScope.gridArray = [
+                        {
+                            name: "xl",
+                            displayName: "",
+                            cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
+                            maxWidth: 10,
+                            enableSorting: false
+                        },
+                        {
+                            name: "关键字",
+                            displayName: "关键字",
+                            field: "kwna",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                            enableSorting: false
+                        },
+                        {
+                            name: "访问次数",
+                            displayName: "访问次数",
+                            field: "vc",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>",
+                            sort: {
+                                direction: uiGridConstants.DESC,
+                                priority: 1
+                            }
+                        },
+                        {
+                            name: "访客数(UV)",
+                            displayName: "访客数(UV)",
+                            field: "uv",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                        },
+                        {
+                            name: "新访客比率",
+                            displayName: "新访客比率",
+                            field: "nuvRate",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                        },
+                        {
+                            name: "平均访问页数",
+                            displayName: "平均访问页数",
+                            field: "avgPage",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                        },
+                        {
+                            name: "IP数",
+                            displayName: "IP数",
+                            field: "ip",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                        }
+                    ];
+                    break;
+                }
+
+                case "source_adscreativefsearchengine" :
+                {
+                    $rootScope.checkedArray = ["vc", "uv", "nuvRate", "avgPage", "ip"];
+                    $rootScope.gridArray = [
+                        {
+                            name: "xl",
+                            displayName: "",
+                            cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
+                            maxWidth: 10,
+                            enableSorting: false
+                        },
+                        {
+                            name: "创意",
+                            displayName: "创意",
+                            field: "crt",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                            enableSorting: false
+                        },
+                        {
+                            name: "访问次数",
+                            displayName: "访问次数",
+                            field: "vc",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>",
+                            sort: {
+                                direction: uiGridConstants.DESC,
+                                priority: 1
+                            }
+                        },
+                        {
+                            name: "访客数(UV)",
+                            displayName: "访客数(UV)",
+                            field: "uv",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                        },
+                        {
+                            name: "新访客比率",
+                            displayName: "新访客比率",
+                            field: "nuvRate",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                        },
+                        {
+                            name: "平均访问页数",
+                            displayName: "平均访问页数",
+                            field: "avgPage",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                        },
+                        {
+                            name: "IP数",
+                            displayName: "IP数",
+                            field: "ip",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                        }
+                    ];
+                    break;
+                }
+
+                case "source_adsmediafsearchengine" :
+                {
+                    $rootScope.checkedArray = ["vc", "uv", "nuvRate", "avgPage", "ip"];
+                    $rootScope.gridArray = [
+                        {
+                            name: "xl",
+                            displayName: "",
+                            cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
+                            maxWidth: 10,
+                            enableSorting: false
+                        },
+                        {
+                            name: "媒介",
+                            displayName: "媒介",
+                            field: "media",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                            enableSorting: false
+                        },
+                        {
+                            name: "访问次数",
+                            displayName: "访问次数",
+                            field: "vc",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>",
+                            sort: {
+                                direction: uiGridConstants.DESC,
+                                priority: 1
+                            }
+                        },
+                        {
+                            name: "访客数(UV)",
+                            displayName: "访客数(UV)",
+                            field: "uv",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                        },
+                        {
+                            name: "新访客比率",
+                            displayName: "新访客比率",
+                            field: "nuvRate",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                        },
+                        {
+                            name: "平均访问页数",
+                            displayName: "平均访问页数",
+                            field: "avgPage",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                        },
+                        {
+                            name: "IP数",
+                            displayName: "IP数",
+                            field: "ip",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                        }
+                    ];
+                    break;
+                }
+                case "source_adsplanfsearchengine" :
+                {
+                    $rootScope.checkedArray = ["vc", "uv", "nuvRate", "avgPage", "ip"];
+                    $rootScope.gridArray = [
+                        {
+                            name: "xl",
+                            displayName: "",
+                            cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
+                            maxWidth: 10,
+                            enableSorting: false
+                        },
+                        {
+                            name: "计划",
+                            displayName: "计划",
+                            field: "cpna",
                             footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
                             enableSorting: false
                         },
