@@ -1476,7 +1476,9 @@ define(["app"], function (app) {
                     options.forEach(function (option) {
                         var tempCrate = (option.entity[a.col.field] + "").indexOf("%") < 0 ? option.entity[a.col.field] : option.entity[a.col.field].substring(0, option.entity[a.col.field].length - 2)
                         val = val + Number(tempCrate)
+
                     })
+                    val = Number(val).toFixed(2)
                     val += "%"
                 } else if (a.col.field == "clickTotal") {
                     options.forEach(function (option) {
