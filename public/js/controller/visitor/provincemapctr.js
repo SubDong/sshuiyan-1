@@ -327,6 +327,40 @@ define(["./module"], function (ctrs) {
             $scope.reset();
             $scope.todayClass = true;
         };
+
+        // 构建PDF数据
+        $scope.generatePDFMakeData = function (cb) {
+            var dataInfo = angular.copy($rootScope.gridApi2.grid.options.data);
+            var dataHeadInfo = angular.copy($rootScope.gridApi2.grid.options.columnDefs);
+            var _tableBody = $rootScope.getPDFTableBody(dataInfo, dataHeadInfo);
+            var docDefinition = {
+                header: {
+                    text: "Visitor Province Map Data Report",
+                    style: "header",
+                    alignment: 'center'
+                },
+                content: [
+                    {
+                        table: {
+                            headerRows: 1,
+                            body: _tableBody
+                        }
+                    },
+                    {text: '\nPower by www.best-ad.cn', style: 'header'},
+                ],
+                styles: {
+                    header: {
+                        fontSize: 20,
+                        fontName: "标宋",
+                        alignment: 'justify',
+                        bold: true
+                    }
+                }
+            };
+            cb(docDefinition);
+        };
+
+
     });
 
 });
