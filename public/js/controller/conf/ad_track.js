@@ -51,21 +51,21 @@ define(["./module"], function (ctrs) {
                     maxWidth: 50,
                     cellClass: 'table_admin',
                     enableSorting: false
-                } ,
+                } /*,
                  {
                  name: "x8",
                  displayName: "",
                  cellTemplate: "<div class='table_admin' ng-click='grid.appScope.onUpdate(row.entity)'><a href=''>修改</a></div>",
                  maxWidth: 50,
                  enableSorting: false
-                 }
+                 }*/
             ],
             data: [{}]
         };
-        //跳转到修改界面
+   /*     //跳转到修改界面
         $scope.onUpdate = function (entity) {
             $state.go('adtrack_add', {'vo': entity});
-        };
+        };*/
         /**
          * 刪除
          * @param index
