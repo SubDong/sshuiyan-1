@@ -1101,26 +1101,6 @@ define(["app"], function (app) {
                 obj.showArea = false;
                 $rootScope.refreshData(false)
             }
-            // 搜索词过滤
-            $scope.setGjcFilter = function (gjcText) {
-                if (!$rootScope.tableSwitch) {
-                    return;
-                }
-                var _gicFilter = "";
-                if (undefined == gjcText || "" == gjcText) {
-                    _gicFilter = ""
-                } else {
-                    _gicFilter = JSON.parse("{\"kw\":[\"" + gjcText + "\"]}");
-                }
-                //获取所有过滤条件
-                var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
-                _allFilters = filterUtil.filter(_allFilters, "kw", _gicFilter);
-                $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
-
-                $scope.isJudge = false;
-                $rootScope.$broadcast("ssh_data_show_refresh");
-                $scope.targetSearch();
-            };
             // 输入URL过滤
             $scope.searchURLFilter = function (urlText) {
                 if (!$rootScope.tableSwitch) {
@@ -1182,33 +1162,6 @@ define(["app"], function (app) {
                 $scope.realTimeVisit();
             });
 
-            // 搜索词过滤
-            $scope.setGjcFilter = function (gjcText) {
-                if (!$rootScope.tableSwitch) {
-                    return;
-                }
-                var _gicFilter = "";
-                var _gjcSEMilter = "";
-                if (undefined == gjcText || "" == gjcText) {
-                    _gicFilter = ""
-                    _gjcSEMilter = "";
-                } else {
-                    _gicFilter = JSON.parse("{\"kw\":[\"" + gjcText + "\"]}");
-                    _gjcSEMilter = JSON.parse("{\"kw\":\"" + gjcText + "\"}");
-                }
-                //获取所有过滤条件
-                var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
-                if ($location.path().indexOf("source/searchterm_yq") != -1) {
-                    _allFilters = filterUtil.filter(_allFilters, "kw", _gjcSEMilter);
-                } else {
-                    _allFilters = filterUtil.filter(_allFilters, "kw", _gicFilter);
-                }
-                $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
-
-                $scope.isJudge = false;
-                $rootScope.$broadcast("ssh_data_show_refresh");
-                $scope.targetSearch();
-            };
             // 查看入口页链接
             $scope.showEntryPageLink = function (row, _type) {
                 if (_type == 1) {// 搜索引擎
@@ -1246,34 +1199,6 @@ define(["app"], function (app) {
             $scope.$on("RealTimePageRefresh", function () {
                 $scope.realTimeVisit();
             });
-
-            // 搜索词过滤
-            $scope.setGjcFilter = function (gjcText) {
-                if (!$rootScope.tableSwitch) {
-                    return;
-                }
-                var _gicFilter = "";
-                var _gjcSEMilter = "";
-                if (undefined == gjcText || "" == gjcText) {
-                    _gicFilter = ""
-                    _gjcSEMilter = "";
-                } else {
-                    _gicFilter = JSON.parse("{\"kw\":[\"" + gjcText + "\"]}");
-                    _gjcSEMilter = JSON.parse("{\"kw\":\"" + gjcText + "\"}");
-                }
-                //获取所有过滤条件
-                var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
-                if ($location.path().indexOf("source/searchterm_yq") != -1) {
-                    _allFilters = filterUtil.filter(_allFilters, "kw", _gjcSEMilter);
-                } else {
-                    _allFilters = filterUtil.filter(_allFilters, "kw", _gicFilter);
-                }
-                $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
-
-                $scope.isJudge = false;
-                $rootScope.$broadcast("ssh_data_show_refresh");
-                $scope.targetSearch();
-            };
 
             //事件名称过滤
             $scope.searchGjcText = ""
@@ -1415,11 +1340,24 @@ define(["app"], function (app) {
                 if (!$rootScope.tableSwitch) {
                     return;
                 }
+                var _gicFilter = "";
+                var _gjcSEMilter = "";
                 if (undefined == gjcText || "" == gjcText) {
-                    $rootScope.tableSwitch.tableFilter = null;
+                    _gicFilter = ""
+                    _gjcSEMilter = "";
                 } else {
-                    $rootScope.tableSwitch.tableFilter = "[{\"kw\":[\"" + gjcText + "\"]}]";
+                    _gicFilter = JSON.parse("{\"kw\":[\"" + gjcText + "\"]}");
+                    _gjcSEMilter = JSON.parse("{\"kw\":\"" + gjcText + "\"}");
                 }
+                //获取所有过滤条件
+                var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
+                if ($location.path().indexOf("source/searchterm_yq") != -1) {
+                    _allFilters = filterUtil.filter(_allFilters, "kw", _gjcSEMilter);
+                } else {
+                    _allFilters = filterUtil.filter(_allFilters, "kw", _gicFilter);
+                }
+                $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
+
                 $scope.isJudge = false;
                 $rootScope.$broadcast("ssh_data_show_refresh");
                 $scope.targetSearch();

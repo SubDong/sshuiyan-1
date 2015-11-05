@@ -315,7 +315,9 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     cancelClass: 'btn-default',
                     separator: ' to '
                 }, function (start, end, label) {
-                    $rootScope.datepickerClick(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
+                    if ($rootScope.datepickerClick) {
+                        $rootScope.datepickerClick(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
+                    }
                     var pickerTiemTow = chartUtils.getTimeOffset(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
                     var startTime = pickerTiemTow[0];
                     var endTime = pickerTiemTow[0] + Math.abs(pickerTiemTow[1] - pickerTiemTow[0]);
