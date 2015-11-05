@@ -1963,7 +1963,7 @@ var transform = {
                             var data = {}
                             //data["rf_type"] = pv["key"]
                             data["se"] = pv["key"]
-                            data["campaignName"] = pv["key"] == "-" ? "未知来源" : (pv["key"] == 2 ? "外部链接" : "搜索引擎")
+                            data["campaignName"] = pv["key"] == "-" ? "未知来源" : pv["key"]
                             queryOptions.forEach(function (queryOption) {
                                 switch (queryOption) {
                                     case "nuvRate":
