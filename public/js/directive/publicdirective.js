@@ -1227,7 +1227,11 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                             count++;
                             angular.forEach(scope.dateShowArray, function (q_r) {
                                 var temp = q_r.label;
-                                q_r.cValue += temp != "freq" ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
+                                if (r[temp] == undefined) {
+                                    q_r.cValue += 0;
+                                } else {
+                                    q_r.cValue += temp != "freq" ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
+                                }
                                 q_r.cCount = count;
                             });
                         });
@@ -2398,7 +2402,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
             restrict: 'A',
             link: function (scope, element, attrs) {
                 var topClass = attrs.setClassWhenAtTop;
-                var offsetTop = element.offset().top -40;
+                var offsetTop = element[0].offsetTop - 40;
                 element.addClass(topClass);
                 $(".fix-to-top").css("width", $(document.body).width() - 155);
                 window.onresize = function () {

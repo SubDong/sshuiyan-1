@@ -25,6 +25,9 @@ define(["./module"], function (ctrs) {
                 $scope.browser.selected = {"name": "全部"};
                 $rootScope.$broadcast("loadAllSource");
                 obj.sourceSearch = "";
+                $rootScope.tableSwitch.seFilter = null
+                $rootScope.tableSwitch.eginFilter = null
+                $rootScope.refreshData(false)
             }
             $scope.removeVisitorSearch = function (obj) {
 //                $rootScope.$broadcast("loadAllVisitor");
@@ -35,40 +38,17 @@ define(["./module"], function (ctrs) {
                 });
                 $(inputArray[0]).prev("span").css("background-position", "0px -51px");
                 obj.visitorSearch = "";
+                $rootScope.tableSwitch.visitorFilter = null
+                $rootScope.refreshData(false)
             }
 
             $scope.removeAreaSearch = function (obj) {
                 $scope.city.selected = {"name": "全部"};
 //                $rootScope.$broadcast("loadAllArea");
                 obj.areaSearch = "";
+                $rootScope.tableSwitch.areaFilter = null
+                $rootScope.refreshData(false)
             }
-
-            //var refushGridData = function () {
-            //    var url = "/config/eventchnage_list?type=search&query=" + JSON.stringify(
-            //            {uid: $cookieStore.get("uid"), root_url: $rootScope.siteId}
-            //        );
-            //    $http({
-            //        method: 'GET',
-            //        url: url
-            //    }).success(function (dataConfig, status) {
-            //        var url_convert_info = [];
-            //        for (var i = 0; i < dataConfig.length; i++) {
-            //            if (dataConfig[i].event_target)
-            //                url_convert_info.push({
-            //                    convertName: dataConfig[i].event_name,
-            //                    convertId: dataConfig[i].event_id,
-            //                    all_urls: dataConfig[i].event_page
-            //                });
-            //        }
-            //        var all_url = [];
-            //        for (var k = 0; k < dataConfig.length; k++) {
-            //            all_url.push(dataConfig[k].event_page)
-            //        }
-            //        $scope.all_url = all_url;
-            //        $scope.convert_url_all = url_convert_info;
-            //    });
-            //};
-            //refushGridData();
 
             //sem
             $scope.es_checkArray = ["pv", "uv", "vc", "ip", "nuv", "nuvRate", "conversions", "crate", "transformCost", "clickTotal", "visitNum"];
@@ -424,7 +404,7 @@ define(["./module"], function (ctrs) {
                 if ($rootScope.tableSwitch.seFilter != undefined && $rootScope.tableSwitch.seFilter != null) {
                         filters.push($rootScope.tableSwitch.seFilter)
                 }
-                ////console.log("过滤内容="+JSON.stringify(filters))
+                //console.log("过滤内容="+JSON.stringify(filters))
                 return JSON.stringify(filters)
             }
             $rootScope.curEventConfs = [];
@@ -812,7 +792,7 @@ define(["./module"], function (ctrs) {
                     });
                     _t_data_arr.push(_obj);
                 }
-                return JSON.stringify(_t_data_arr).replace(/\%/g, "*");
+                return JSON.stringify(_t_data_arr);
             };
 
             $scope.generatePDFMakeData = function (cb) {

@@ -5,7 +5,7 @@ define(["./module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.controller("transformSearchPromotion", function ($timeout, $scope, $rootScope, $http, $q, requestService, SEM_API_URL, $cookieStore, uiGridConstants) {
+    ctrs.controller("transformSearchPromotion", function ($timeout, $scope, $rootScope, $http, $q, $location, requestService, SEM_API_URL, $cookieStore, uiGridConstants) {
         $scope.todayClass = true;
         var user = $rootScope.user
         var baiduAccount = $rootScope.baiduAccount;
@@ -37,82 +37,37 @@ define(["./module"], function (ctrs) {
         $scope.terminalSearch = "";
         $scope.areaSearch = "";
 //        取消显示的高级搜索的条件
-        $scope.removeSourceSearch = function (obj) {
-            $scope.souce.selected = {"name": "全部"};
-//            $rootScope.$broadcast("loadAllSource");
-            obj.sourceSearch = "";
-        }
         $scope.removeTerminalSearch = function (obj) {
-//            $rootScope.$broadcast("loadAllTerminal");
-            obj.sourceSearch = "";
+            //$rootScope.$broadcast("loadAllTerminal");
+            var inputArray = $(".areaTerm .styled");
+            inputArray.each(function (i, o) {
+                $(o).prev("span").css("background-position", "0px 0px");
+                $(o).prop("checked", false);
+            });
+            $(inputArray[0]).prev("span").css("background-position", "0px -51px");
+            obj.terminalSearch = "";
+            $rootScope.tableSwitch.terminalFilter = null;
+            $rootScope.refreshData(false)
         }
         $scope.removeAreaSearch = function (obj) {
             $scope.city.selected = {"name": "全部"};
-//            $rootScope.$broadcast("loadAllArea");
+            //$rootScope.$broadcast("loadAllArea");
             obj.areaSearch = "";
+            $rootScope.tableSwitch.areaFilter = null
+            $rootScope.refreshData(false)
         }
-
-        //$rootScope.datepickerClickTow = function (start, end, label) {
-        //    console.log("数据对比")
-        //    $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
-        //    var gridArrayOld = angular.copy($rootScope.searchGridArray);
-        //    var latitudeOld = angular.copy($rootScope.tableSwitch.latitude);
-        //    console.log($rootScope.searchGridArray)
-        //    $rootScope.searchGridArray.forEach(function (item, i) {
-        //        var a = item["field"];
-        //        if (item["cellTemplate"] == undefined) {
-        //            item["cellTemplate"] = "<ul class='contrastlist'><li>{{grid.appScope.getContrastInfo(grid, row,0,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,1,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,2,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,3,'" + a + "')}}</li></ul>";
-        //            item["footerCellTemplate"] = "<ul class='contrastlist'><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),0)}}</li><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),1)}}</li><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),2)}}</li><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),3)}}</li></ul>";
-        //        }
-        //    });
-        //    $scope.gridOptions.rowHeight = 95;
-        //    $scope.gridOptions.columnFooterHeight = 95;
-        //    var time = chartUtils.getTimeOffset(start, end);
-        //    var startTime = time[0];
-        //    var endTime = time[0] + ($rootScope.tableTimeEnd - $rootScope.tableTimeStart);
-        //    $rootScope.$broadcast("ssh_load_compare_datashow", startTime, endTime);
-        //    var dateTime1 = chartUtils.getSetOffTime($rootScope.tableTimeStart, $rootScope.tableTimeEnd);
-        //    var dateTime2 = chartUtils.getSetOffTime(startTime, endTime);
-        //    $scope.targetDataContrast(null, null, function (item) {
-        //        //console.log("targetDataContrast")
-        //        var target = $rootScope.tableSwitch.latitude.field;
-        //        var dataArray = [];
-        //        var is = 1;
-        //        $scope.targetDataContrast(startTime, endTime, function (contrast) {
-        //            item.forEach(function (a, b) {
-        //                var dataObj = {};
-        //                for (var i = 0; i < contrast.length; i++) {
-        //                    if (a[target] == contrast[i][target]) {
-        //                        $rootScope.checkedArray.forEach(function (tt, aa) {
-        //                            var bili = ((parseInt(a[tt] + "".replace("%")) - parseInt((contrast[i][tt] + "").replace("%"))) / (parseInt((contrast[i][tt] + "").replace("%")) == 0 ? parseInt(a[tt] + "".replace("%")) : parseInt((contrast[i][tt] + "").replace("%"))) * 100).toFixed(2);
-        //                            dataObj[tt] = (isNaN(bili) ? 0 : bili) + "%";
-        //                            a[tt] = "　" + "," + a[tt] + "," + contrast[i][tt] + "," + dataObj[tt]
-        //                        });
-        //                        a[target] = a[target] + "," + ($rootScope.startString != undefined ? $rootScope.startString : dateTime1[0] == dateTime1[1] ? dateTime1[0] + "," + dateTime2[0] + "," + "变化率" : dateTime1[0] + " 至 " + dateTime1[1]) + "," + (dateTime2[0] + " 至 " + dateTime2[1]) + "," + "变化率";
-        //                        dataArray.push(a);
-        //                        is = 0;
-        //                        return;
-        //                    } else {
-        //                        is = 1
-        //                    }
-        //                }
-        //                if (is == 1) {
-        //                    $rootScope.checkedArray.forEach(function (tt, aa) {
-        //                        dataObj[tt] = "--";
-        //                        a[tt] = "　" + "," + a[tt] + "," + "--" + "," + "--"
-        //                    });
-        //                    a[target] = a[target] + "," + ($rootScope.startString != undefined ? $rootScope.startString : dateTime1[0] == dateTime1[1] ? dateTime1[0] + "," + dateTime2[0] + "," + "变化率" : dateTime1[0] + " 至 " + dateTime1[1]) + "," + (dateTime2[0] + " 至 " + dateTime2[1]) + "," + "变化率"
-        //                    dataArray.push(a);
-        //                }
-        //            });
-        //            $rootScope.gridOptions.showColumnFooter = !$rootScope.gridOptions.showColumnFooter;
-        //        });
-        //        $rootScope.gridOptions.data = dataArray;
-        //        $rootScope.tableSwitch.latitude = latitudeOld;
-        //        $rootScope.gridArray = gridArrayOld;
-        //    })
-        //};
-
+        $scope.removeVisitorSearch = function (obj) {
+//                $rootScope.$broadcast("loadAllVisitor");
+            var inputArray = $(".areaVisitor .styled");
+            inputArray.each(function (i, o) {
+                $(o).prev("span").css("background-position", "0px 0px");
+                $(o).prop("checked", false);
+            });
+            $(inputArray[0]).prev("span").css("background-position", "0px -51px");
+            obj.visitorSearch = "";
+            $rootScope.tableSwitch.visitorFilter = null
+            $rootScope.refreshData(false)
+        }
 
         var griApihtml = function (gridApi) {
             gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
@@ -336,29 +291,96 @@ define(["./module"], function (ctrs) {
 
 
         ////////////过滤////////////
-        //设备过滤
-        $rootScope.$on("loadAllTerminal", function () {
-            $scope.setTerminal(0);
-        })
-        var terminalStamp = 0;
+        //设置来源终端
+        var evTimeStamp = 0;
         $scope.setTerminal = function (a) {
-            if (a == 0)
-                $rootScope.tableSwitch.terminalFilter = null
-            else
-                $rootScope.tableSwitch.terminalFilter = {pm: a - 1}
-            $rootScope.refreshData()
-        };
-        $scope.setSearchEngineAreaFilter = function (area) {
+            var now = +new Date();
+            if (now - evTimeStamp < 100) {
+                return;
+            }
+            evTimeStamp = now;
+            var inputArray = $(".areaTerm .styled");
+            inputArray.each(function (i, o) {
+                $(o).prev("span").css("background-position", "0px 0px");
+                $(o).prop("checked", false);
+            });
+            $(inputArray[a]).prev("span").css("background-position", "0px -51px");
 
+            var _pmFilter = "";
+            var _pmFilterRealTime = "";
+
+            if (a == 0) {
+                $scope.terminalSearch = "";
+                $rootScope.tableSwitch.terminalFilter = null
+            }
+            if (a == 1) {
+                _pmFilter = JSON.parse("{\"pm\":[0]}");
+                _pmFilterRealTime = JSON.parse("{\"pm\":\"0\"}");
+                $scope.terminalSearch = "计算机";
+                $rootScope.tableSwitch.terminalFilter = {pm: 0}
+            }
+            if (a == 2) {
+                _pmFilter = JSON.parse("{\"pm\":[1]}");
+                _pmFilterRealTime = JSON.parse("{\"pm\":\"1\"}");
+                $scope.terminalSearch = "移动设备";
+                $rootScope.tableSwitch.terminalFilter = {pm: 1}
+            }
+
+
+            $scope.isJudge = false;
+            if ($scope.tableJu == "html") {
+                var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
+                _allFilters = filterUtil.filter(_allFilters, "pm", _pmFilterRealTime);
+                $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
+                getHtmlTableData();
+            } else {
+
+                if ($location.path().indexOf("source/searchterm_yq") != -1) {
+                    var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
+                    _allFilters = filterUtil.filter(_allFilters, "pm", _pmFilterRealTime);
+                    $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
+                } else {
+                    //获取所有过滤条件
+                    var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
+                    _allFilters = filterUtil.filter(_allFilters, "pm", _pmFilter);
+                    $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
+                }
+                $rootScope.$broadcast("ssh_data_show_refresh");
+                $rootScope.refreshData(false)
+            }
+        };
+
+        //设置（搜 索引擎）地域过滤
+        $scope.setSearchEngineAreaFilter = function (area) {
             if (!$rootScope.tableSwitch) {
                 return;
             }
             if ("全部" == area) {
                 $scope.areaSearch = "";
-                $rootScope.tableSwitch.areaFilter = null
+                var _rfFilter = JSON.parse("{\"rf_type\":[2]}");
+
+                //获取所有过滤条件
+                var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
+                _allFilters = filterUtil.filter(_allFilters, "rf_type", _rfFilter);
+                _allFilters = filterUtil.filter(_allFilters, "region", "");
+                $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
+                $rootScope.tableSwitch.areaFilter=null
             } else {
-                $scope.areaSearch = area;
                 $rootScope.tableSwitch.areaFilter = {region: area}
+                $scope.areaSearch = area;
+                var _rfFilter = JSON.parse("{\"rf_type\":[2]}");
+                var _areaFilter = JSON.parse("{\"region\":[\"" + area + "\"]}");
+
+                if ($rootScope.tableSwitch.number == 6) {
+                    $scope.curArea = area;
+                    $scope.showArea = true
+                    $rootScope.tableSwitch.areaFilter = {region: area}
+                }
+                //获取所有过滤条件
+                var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
+                _allFilters = filterUtil.filter(_allFilters, "rf_type", _rfFilter);
+                _allFilters = filterUtil.filter(_allFilters, "region", _areaFilter);
+                $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
             }
             if (area == "北京" || area == "上海" || area == "广州") {
                 if ($scope.city.selected != undefined) {
@@ -371,22 +393,44 @@ define(["./module"], function (ctrs) {
             }
             $scope.isJudge = false;
             $rootScope.$broadcast("ssh_data_show_refresh");
+            $rootScope.refreshData(false)
             $scope.allCitys = angular.copy($rootScope.citys);
-            $rootScope.refreshData()
         };
         //设置访客来源
         $rootScope.$on("loadAllVisitor", function () {
             $scope.setVisitors(0);
         })
-        var visitStamp = 0;
         $scope.setVisitors = function (a) {
-            if (a == 1 || a == 2) {
-                $rootScope.tableSwitch.visitorFilter = {ct: a - 1}
-            } else {
-                $rootScope.tableSwitch.visitorFilter = null
+            var now = +new Date();
+            if (now - evTimeStamp < 100) {
+                return;
             }
+            evTimeStamp = now;
+            var inputArray = $(".areaVisitor .styled");
+            inputArray.each(function (i, o) {
+                $(o).prev("span").css("background-position", "0px 0px");
+                $(o).prop("checked", false);
+            });
+            $(inputArray[a]).prev("span").css("background-position", "0px -51px");
+
+            //访客过滤条件
+            var _viFilter = "";
+            if (a == 0) {
+                $scope.visitorSearch = "", $scope.showVisitor = false
+                $rootScope.tableSwitch.visitorFilter = null
+            } else if (a == 1) {
+                _viFilter = JSON.parse("{\"ct\":[0]}"), $scope.visitorSearch = "新访客", $scope.showVisitor = true
+                $rootScope.tableSwitch.visitorFilter = {ct: 0}
+            } else if (a == 2) {
+                _viFilter = JSON.parse("{\"ct\":[1]}"), $scope.visitorSearch = "老访客", $scope.showVisitor = true
+                $rootScope.tableSwitch.visitorFilter = {ct: 1}
+            }
+            var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
+            //获取所有过滤条件
+            _allFilters = filterUtil.filter(_allFilters, "ct", _viFilter);
+            $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
             $rootScope.$broadcast("ssh_data_show_refresh");
-            $rootScope.refreshData()
+            $rootScope.refreshData(false)
         };
     });
 });
