@@ -30,7 +30,7 @@ define(["./module"], function (ctrs) {
                     maxWidth: 5
                 },
                 {name: "目标URL", displayName: "目标URL", field: "targetUrl"},
-                {name: "生成日期", displayName: "生成日期", field: ""},
+                {name: "生成日期", displayName: "生成日期", field: "updateTime"},
                 {name: "媒体平台", displayName: "媒体平台", field: "mediaPlatform"},
                 {name: "广告类型", displayName: "广告类型", field: "adTypes"},
                 {name: "计划名称", displayName: "计划名称", field: "planName"},
@@ -64,7 +64,7 @@ define(["./module"], function (ctrs) {
         };
         //跳转到修改界面
         $scope.onUpdate = function (entity) {
-            $state.go('adtrack_add', {'id': entity._id});
+            $state.go('adtrack_add', {'vo': entity});
         };
         /**
          * 刪除

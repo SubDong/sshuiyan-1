@@ -528,10 +528,7 @@ define(["app"], function (app) {
                 _pmFilterRealTime = JSON.parse("{\"pm\":\"1\"}");
                 $scope.terminalSearch = "移动设备";
             }
-            //获取所有过滤条件
-            var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
-            _allFilters = filterUtil.filter(_allFilters, "pm", _pmFilter);
-            $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
+
 
             $scope.isJudge = false;
             if ($scope.tableJu == "html") {
@@ -540,6 +537,18 @@ define(["app"], function (app) {
                 $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
                 getHtmlTableData();
             } else {
+
+                if ($location.path().indexOf("source/searchterm_yq") != -1) {
+                    var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
+                    _allFilters = filterUtil.filter(_allFilters, "pm", _pmFilterRealTime);
+                    $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
+                } else {
+                    //获取所有过滤条件
+                    var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
+                    _allFilters = filterUtil.filter(_allFilters, "pm", _pmFilter);
+                    $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
+                }
+
                 $rootScope.$broadcast("ssh_data_show_refresh");
                 $scope.targetSearch();
             }
@@ -818,21 +827,33 @@ define(["app"], function (app) {
             }
 
             if ($scope.tableJu == "html") {
-                _areaFilter = JSON.parse("{\"region\":\"" + area + "\" }");
-                //获取所有过滤条件
-                var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
-                _allFilters = filterUtil.filter(_allFilters, "region", _areaFilter);
-                $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
-            } else {
                 if ("全部" != area) {
-                    _areaFilter = JSON.parse("{\"region\":[\"" + area + "\"]}");
+                    _areaFilter = JSON.parse("{\"region\":\"" + area + "\" }");
                 }
                 //获取所有过滤条件
                 var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
                 _allFilters = filterUtil.filter(_allFilters, "region", _areaFilter);
                 $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
-            }
+            } else {
+                if ($location.path().indexOf("source/searchterm_yq") != -1) {
+                    if ("全部" != area) {
+                        _areaFilter = JSON.parse("{\"region\":\"" + area + "\" }");
+                    }
+                    //获取所有过滤条件
+                    var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
+                    _allFilters = filterUtil.filter(_allFilters, "region", _areaFilter);
+                    $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
+                } else {
+                    if ("全部" != area) {
+                        _areaFilter = JSON.parse("{\"region\":[\"" + area + "\"]}");
+                    }
+                    //获取所有过滤条件
+                    var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
+                    _allFilters = filterUtil.filter(_allFilters, "region", _areaFilter);
+                    $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
+                }
 
+            }
 
             $scope.isJudge = false;
             if ($scope.tableJu == "html") {
@@ -1195,7 +1216,12 @@ define(["app"], function (app) {
             }
             $scope.isJudge = false;
             getHtmlTableData();
-        }
+        };
+
+        $scope.$on("RealTimePageRefresh", function () {
+            $scope.realTimeVisit();
+        });
+
         // 搜索词过滤
         $scope.setGjcFilter = function (gjcText) {
             if (!$rootScope.tableSwitch) {

@@ -11,7 +11,7 @@ define(["./module"], function (ctrs) {
         //table配置
         $rootScope.tableTimeStart = 0;
         $rootScope.tableTimeEnd = 0;
-        $rootScope.checkedArray = 'SS';
+        $rootScope.checkedArray = "SS";
         $rootScope.tableFormat = null;
         $scope.souce.selected = {"name": "全部"};
         $scope.browser.selected = {"name": "全部"};
@@ -198,13 +198,11 @@ define(["./module"], function (ctrs) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
             });
-            //图表
+            // 表格
+            $scope.$broadcast("RealTimePageRefresh");
+            // 图表
             requestService.refresh($scope.charts);
-            //其他页面表格
-            $rootScope.targetSearch(true);
-            //classcurrent
-//                $scope.reset();
-//                $scope.todayClass = true;
+
         };
         // 清除查询条件
         $scope.clearQueryTerms = function () {

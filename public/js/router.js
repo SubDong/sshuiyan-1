@@ -821,6 +821,7 @@ define(["angular", "./app"], function (angular, myApp) {
                 })
                 .state('adtrack_add', {
                     url: '/conf/webcountsite/adtrack_add',
+                    params: {'vo': null},
                     templateUrl: '../conf/webcountsite/adtrack_add.html',
                     resolve: {
                         load: loadDeps([
