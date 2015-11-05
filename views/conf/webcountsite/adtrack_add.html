@@ -11,7 +11,6 @@
                 <li><span class="adtrack_add_tiltle">以下信息必须填写:</span></li>
                 <li>
                     <span>目标URL<p>（在其媒体投放广告时所指向的URL）</p></span>
-
                     <div class="">
                         <input type="text" maxlength="128" x ssh-url id="targetUrl" name="targetUrl"
                                ng-model="adTrack.targetUrl" urlverify data-ng-focus="addfocus(targetUrlHelp)" placeholder="www.mydomain/product.html" required/>
@@ -27,16 +26,14 @@
 
                     <div class="adtrack_add_input">
                         <ul>
-                            <li data-ng-repeat="adtrack_checked in adtrack_checkeds "><input type="radio"
-                                                                                             name="mediaPlatform"
-                                                                                             ng-click="advancedOpt(adtrack_checked,1)"
-                                                                                             value="{{adtrack_checked.name}}"/><span>&nbsp;{{adtrack_checked.name}}</span>
+                            <li data-ng-repeat="adtrack_checked in adtrack_checkeds ">
+                                <input type="radio"  name="mediaPlatform"   ng-click="advancedOpt(adtrack_checked,1)"    value="{{adtrack_checked.name}}" ng-checked="adtrack_checked.name==mediaPlatformFlagname" /><span>&nbsp;{{adtrack_checked.name}}</span>
                             </li>
                         </ul>
                         <ul>
                             <input type="text" maxlength="7" disabled="disabled" data-ng-change="advancedOpt('other',1)"
                                    data-ng-focus="mediaPlatformFocus = true"
-                                   id="mediaPlatform" name="mediaPlatform" data-ng-model="adTrack.temMediaPlatform"/>
+                                   id="mediaPlatform" name="mediaPlatform" data-ng-model="adTrack.temMediaPlatform" />
                             <span style="color:red">
                                 <span ng-show="adTrack.temMediaPlatform.length==0 && mediaPlatformFocus"> 最多7个字符(不能为空)</span>
                             </span>
@@ -53,13 +50,13 @@
                     <div class="adtrack_add_input">
                         <ul style="height: 34px;">
                             <li><input type="radio" disabled class="adTypes" name="adTypes"
-                                       ng-click="advancedOpt('文字广告',2)" value="文字广告"/><span>&nbsp;文字广告</span></li>
+                                       ng-click="advancedOpt('文字广告',2)" value="文字广告"  ng-checked="adTrack.adTypes=='文字广告'"/><span>&nbsp;文字广告</span></li>
                             <li><input type="radio" disabled class="adTypes" name="adTypes"
-                                       ng-click="advancedOpt('图片广告',2)" value="图片广告"/><span>&nbsp;图片广告</span></li>
+                                       ng-click="advancedOpt('图片广告',2)" value="图片广告" ng-checked="adTrack.adTypes=='图片广告'"/><span>&nbsp;图片广告</span></li>
                             <li><input type="radio" disabled class="adTypes" name="adTypes"
-                                       ng-click="advancedOpt('多媒体广告',2)" value="多媒体广告"/><span>&nbsp多媒体广告</span></li>
+                                       ng-click="advancedOpt('多媒体广告',2)" value="多媒体广告" ng-checked="adTrack.adTypes=='多媒体广告'"/><span>&nbsp多媒体广告</span></li>
                             <li><input type="radio" disabled class="adTypes" name="adTypes"
-                                       ng-click="advancedOpt('其他',2)" value="其他"/><span>&nbsp;其他</span></li>
+                                       ng-click="advancedOpt('其他',2)" value="其他" ng-checked="adTrack.adTypes=='其他'"/><span>&nbsp;其他</span></li>
                             <li style="margin-top: 5px;margin-bottom: 0">
                                 <input type="text" maxlength="7" style="width: 145px;
     height: 30px;" disabled id="adTypes" name="adTypes" data-ng-model="adTrack.temAdTypes"
