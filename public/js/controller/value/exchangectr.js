@@ -22,10 +22,11 @@ define(["./module"], function (ctrs) {
                         pv: page.pv,
                         uv: page.uv
                     };
-                    var i = 0;
-                    for (i = 0; i < data.length; i++) {
+                    var index = 0;
+                    for (var i = 0; i < data.length; i++) {
                         var item = data[i];
                         if(item.pathName == page.name){
+                            index = i;
                             break;
                         }
                     }
