@@ -133,7 +133,7 @@ define(["../module"], function (app) {
                     expandableRowHeight: 360,
                     enableColumnMenus: false,
                     enablePaginationControls: true,
-                    enableSorting: false,
+                    enableSorting: true,
                     enableGridMenu: false,
                     columnDefs: $rootScope.gridArray,
                     onRegisterApi: function (gridApi) {
