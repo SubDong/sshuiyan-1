@@ -67,7 +67,7 @@ define(["../app"], function (app) {
                         url: "/api/index_summary/?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&indic=pv&dimension=loc" + "&filerInfo=" + filerInfo
                     }).success(function (data, status) {
                         var obj = JSON.parse(eval('(' + data + ')').toString())
-                        var contentHtml = "<div class='modal-body source_modal_body'><table class='table'><tr><th>排名</th><th>入口页链接</th></tr>";
+                        var contentHtml = "<div class='modal-body source_modal_body'><table class='table'><tr><th style='width: 45px'>排名</th><th>入口页链接</th></tr>";
                         obj.forEach(function (item, i) {
                             item.key.forEach(function (ik_r, _i) {
                                 if (_i == 10) {
@@ -196,10 +196,18 @@ define(["../app"], function (app) {
             });
         }
 
+        /**
+         * 相关热门搜索词
+         */
+        function showRelatedHotKeyword(kw) {
+            // 城市那么空
+        }
+
         return {
             showSourceData: showSourceData,
             showEntryPageData: showEntryPageData,
-            showSourceDistributionData: showSourceDistributionData
+            showSourceDistributionData: showSourceDistributionData,
+            showRelatedHotKeyword: showRelatedHotKeyword
         }
 
     }]);

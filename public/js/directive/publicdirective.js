@@ -324,7 +324,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     $rootScope.tableTimeStart = startTime;
                     $rootScope.tableTimeEnd = endTime;
                     if ($rootScope.targetSearchSpread) {
-                            $rootScope.targetSearchSpread();
+                        $rootScope.targetSearchSpread();
                     }
                     $rootScope.startString = (start.format('YYYY-MM-DD') + ' 至 ' + end.format('YYYY-MM-DD'));
                     if (start.format('YYYY-MM-DD') == end.format('YYYY-MM-DD')) {
@@ -2397,22 +2397,29 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
         }
 
     });
+
     //顶部下拉固定
-    app.directive('setClassWhenAtTop', function ($window,$document) {
+    app.directive('setClassWhenAtTop', function ($window, $document) {
         return {
             restrict: 'A',
             link: function (scope, element, attrs) {
                 element.addClass(attrs["setClassWhenAtTop"]);
+
                 $(".fix-to-top").css("width", $(document.body).width() - 155);
+
                 $window.onresize = function () {
                     $(".fix-to-top").css("width", $(document.body).width() - 155);
                 };
-                $window.onscroll= function (e) {
-                    var offsetTop = element[0].offsetTop - 40;
-                    if ($document.scrollTop() >= offsetTop) {
-                        element.addClass("fix-to-show");
+
+                $window.onscroll = function (e) {
+                    if ($document.scrollTop) {// 防止出错
+                        if ($document.scrollTop() >= (element[0].offsetTop - 40)) {
+                            element.addClass("fix-to-show");
+                        } else {
+                            element.removeClass("fix-to-show");
+                        }
                     } else {
-                        element.removeClass("fix-to-show");
+                        element.addClass("fix-to-show");
                     }
                 };
             }
