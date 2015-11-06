@@ -428,6 +428,7 @@ define(["app"], function (app) {
                     enablePaginationControls: true,
                     enableSorting: true,
                     enableGridMenu: false,
+                    enableScrollbars:false,
                     enableHorizontalScrollbar: 0,
                     enableVerticalScrollbar: 0,
                     onRegisterApi: function (girApi) {
@@ -449,6 +450,7 @@ define(["app"], function (app) {
                     enablePaginationControls: true,
                     enableSorting: true,
                     enableGridMenu: false,
+                    enableScrollbars:false,
                     enableHorizontalScrollbar: 0,
                     enableVerticalScrollbar: 0,
                     onRegisterApi: function (gridApi) {
@@ -1956,7 +1958,7 @@ define(["app"], function (app) {
                                 event_page: elem.event_page,
                                 event_id: elem.event_id,
                                 update_time: elem.update_time,
-                                event_target: elem.event_target,
+                                event_target: elem.event_target
                             })
                         })
                         $rootScope.curEventConfs = eventParams;

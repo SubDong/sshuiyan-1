@@ -92,6 +92,8 @@ define(["../module"], function (app) {
                 enablePaginationControls: true,
                 enableSorting: true,
                 enableGridMenu: false,
+                enableScrollbars:false,
+                enableVerticalScrollbar: 0,
                 enableHorizontalScrollbar: 0,
                 columnDefs: $rootScope.gridArray,
                 showTreeExpandNoChildren: true,
@@ -111,6 +113,8 @@ define(["../module"], function (app) {
                     enablePaginationControls: false,
                     enableSorting: true,
                     enableGridMenu: false,
+                    enableScrollbars:false,
+                    enableVerticalScrollbar: 0,
                     enableHorizontalScrollbar: 0,
                     columnDefs: $rootScope.gridArray,
                     onRegisterApi: function (gridApi) {
@@ -122,6 +126,9 @@ define(["../module"], function (app) {
                 $rootScope.gridOptions = {
                     paginationPageSize: 20,
                     paginationPageSizes: [20, 50, 100],
+                    enableScrollbars:false,
+                    enableVerticalScrollbar: 0,
+                    enableHorizontalScrollbar: 0,
                     expandableRowTemplate:"<div ui-grid='row.entity.subGridOptions' class='grid clearfix secondary_table' ui-grid-expandable ui-grid-exporter ui-grid-auto-resize></div>",
                     expandableRowHeight: 360,
                     enableColumnMenus: false,
