@@ -2106,6 +2106,10 @@ define(["app"], function (app) {
                 $scope.gridOpArray = angular.copy($rootScope.gridArray);
                 gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
                     var dataNumber;
+
+                    if(row.isExpanded && $rootScope.tableSwitch.dimen == false) {
+                        row.isExpanded = false;
+                    }
                     if (row.isExpanded && $rootScope.tableSwitch.dimen != false) {
                         if (row.entity[$rootScope.tableSwitch.latitude.field] == "搜索引擎" && $rootScope.tableSwitch.latitude.field == "rf_type")$rootScope.tableSwitch.dimen = "se";
                         if (row.entity[$rootScope.tableSwitch.latitude.field] == "外部链接" && $rootScope.tableSwitch.latitude.field == "rf_type")$rootScope.tableSwitch.dimen = "rf";
