@@ -30,7 +30,7 @@ define(["./module"], function (ctrs) {
         };
         $scope.record_type_cn = {
             visit_times: "访问次数",
-            pv: "测量PV",
+            pv: "浏览量PV",
             order_conv: "订单转化"
         };
 
@@ -56,7 +56,7 @@ define(["./module"], function (ctrs) {
                 enableSorting: false
             },
             {name: "目标名称", displayName: "目标名称", field: "target_name", enableSorting: false},
-            {name: "生成日期", displayName: "生成日期",field: "update_time_desc", enableSorting: false},
+            {name: "生成日期", displayName: "生成日期",field: "update_time_desc", enableSorting: true},
             {
                 name: "URL",
                 displayName: "URL",
