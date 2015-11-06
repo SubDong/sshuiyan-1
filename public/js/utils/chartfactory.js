@@ -1455,4 +1455,22 @@ var util = {
             chartConfig.instance.resize()
         })
     }
+    ,
+    getExportData : function (gridData) {
+        var resultData = [];
+        gridData.forEach(function (trData) {
+            var trResultData = {};
+            trResultData = trData;
+            resultData.push(trResultData);
+            if(trResultData.hasOwnProperty("subGridOptions")) {
+                if(trResultData.subGridOptions.data != null &&trResultData.subGridOptions.data!="" && trResultData.subGridOptions.data!=undefined) {
+                    trResultData.subGridOptions.data.forEach(function (subTrData) {
+                        resultData.push(subTrData);
+                    });
+                }
+                delete trResultData.subGridOptions;
+            }
+        });
+        return resultData;
+    }
 }

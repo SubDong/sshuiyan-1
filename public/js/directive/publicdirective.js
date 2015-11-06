@@ -618,7 +618,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                 //导出功能
                 scope.fileSave = function (obj) {
                     if (obj.value == "csv") {
-                        var dataInfo = angular.copy($rootScope.gridApi2.grid.options.data);
+                        var dataInfo = util.getExportData(angular.copy($rootScope.gridApi2.grid.options.data));
                         var dataHeadInfo = angular.copy($rootScope.gridApi2.grid.options.columnDefs);
                         if ($location.path().indexOf("changelist") != -1) {
                             var repData = scope.generateCSVData(dataInfo);

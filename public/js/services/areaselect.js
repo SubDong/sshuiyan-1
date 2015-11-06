@@ -162,15 +162,15 @@ define(["../app"], function (app) {
         ];
         $rootScope.equipment = {};
         $rootScope.equipments = [
-            {name: '网络设备类型', field: 'pm'},
-            {name: '网络供应商', field: 'isp'},
-            {name: '浏览器', field: 'br'},
-            {name: '分辨率', field: 'sr'},
-            {name: '屏幕颜色', field: 'sc'},
-            {name: 'flash版本', field: 'fl'},
-            {name: '是否支持java', field: 'ja'},
-            {name: '语言环境', field: 'lg'},
-            {name: '是否支持cookie', field: 'ck'}
+            {name: '网络设备类型', field: 'pm',displayName: "网络设备类型"},
+            {name: '网络供应商', field: 'isp',displayName: "网络供应商"},
+            {name: '浏览器', field: 'br',displayName: "浏览器"},
+            {name: '分辨率', field: 'sr',displayName: "分辨率"},
+            {name: '屏幕颜色', field: 'sc',displayName: "屏幕颜色"},
+            {name: 'flash版本', field: 'fl',displayName: "flash版本"},
+            {name: '是否支持java', field: 'ja',displayName: "是否支持java"},
+            {name: '语言环境', field: 'lg',displayName: "语言环境"},
+            {name: '是否支持cookie', field: 'ck',displayName: "是否支持cookie"}
         ];
         $rootScope.lagerMulti = [
             {label: '点击量', name: 'click'},
