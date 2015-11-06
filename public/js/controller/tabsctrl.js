@@ -1474,7 +1474,7 @@ define(["app"], function (app) {
             $scope.getEventRootData = function (a, options) {
                 var hash = {}
                 var val = 0
-                if (a.col.field == "crate") {
+                if (a.col.field == "crate"||a.col.field=="nuvRate") {
                     options.forEach(function (option) {
                         var tempCrate = (option.entity[a.col.field] + "").indexOf("%") < 0 ? option.entity[a.col.field] : option.entity[a.col.field].substring(0, option.entity[a.col.field].length - 2)
                         val = val + Number(tempCrate)
@@ -1494,11 +1494,11 @@ define(["app"], function (app) {
                 else if (a.col.field == "transformCost") {
                     options.forEach(function (option) {
                         if ((option.entity[a.col.field] + "").indexOf("元") > -1)
-                            val = val + Number(option.entity[a.col.field].substring(0, option.entity[a.col.field].length - 2))
+                            val = val + Number(option.entity[a.col.field].substring(0, option.entity[a.col.field].length - 1))
                         else
                             val = val + option.entity[a.col.field]
                     })
-                    val = val + "元"
+                    val = val.toFixed(2) + "元"
                 } else {
                     options.forEach(function (option) {
                         if (!hash[option.entity.loc]) {
