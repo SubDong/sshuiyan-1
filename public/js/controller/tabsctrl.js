@@ -214,10 +214,7 @@ define(["app"], function (app) {
                         name: '入口页面',
                         displayName: "入口页面",
                         field: "entrance",
-                        cellTemplate: '<a href="{{grid.appScope.getCellDisplayValueEntrance(grid, row)}}" target="_blank" style="color:#0965b8;line-height:30px; display:block; padding:0 10px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;}">{{grid.appScope.getCellDisplayValueEntrance(grid, row)}}</a>',
-                        cellTooltip: function (row, col) {
-                            return row.entity.entrance;
-                        },
+                        cellTemplate: '<a href="{{grid.appScope.getCellDisplayValueEntrance(grid, row)}}" title="{{grid.appScope.getCellDisplayValueEntrance(grid, row)}}" target="_blank" style="color:#0965b8;line-height:30px; display:block; padding:0 10px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;}">{{grid.appScope.getCellDisplayValueEntrance(grid, row)}}</a>',
                         enableSorting: false
                     },
                     {name: '关键词', displayName: "关键词", field: "keyword", enableSorting: false},
@@ -1126,16 +1123,6 @@ define(["app"], function (app) {
                 $rootScope.$broadcast("ssh_data_show_refresh");
                 $scope.targetSearch();
             };
-            // 查看入口页链接
-            $scope.showEntryPageLink = function (row, _type) {
-                if (_type == 1) {// 搜索引擎
-                    popupService.showEntryPageData(row.entity.rf_type);
-                } else if (_type == 2) {
-                    popupService.showEntryPageData(row.entity.se);
-                } else {
-                    popupService.showEntryPageData(row.entity.rf);
-                }
-            };
             // 实时访问输入查询
             $scope.input_gjc = "";
             $scope.input_rky = "";
@@ -1164,16 +1151,6 @@ define(["app"], function (app) {
                 $scope.realTimeVisit();
             });
 
-            // 查看入口页链接
-            $scope.showEntryPageLink = function (row, _type) {
-                if (_type == 1) {// 搜索引擎
-                    popupService.showEntryPageData(row.entity.rf_type);
-                } else if (_type == 2) {
-                    popupService.showEntryPageData(row.entity.se);
-                } else {
-                    popupService.showEntryPageData(row.entity.rf);
-                }
-            };
             // 实时访问输入查询
             $scope.input_gjc = "";
             $scope.input_rky = "";
@@ -1299,16 +1276,6 @@ define(["app"], function (app) {
                 $scope.isJudge = false;
                 $rootScope.$broadcast("ssh_data_show_refresh");
                 $scope.targetSearch();
-            };
-            // 查看入口页链接
-            $scope.showEntryPageLink = function (row, _type) {
-                if (_type == 1) {// 搜索引擎
-                    popupService.showEntryPageData(row.entity.rf_type);
-                } else if (_type == 2) {
-                    popupService.showEntryPageData(row.entity.se);
-                } else {
-                    popupService.showEntryPageData(row.entity.rf);
-                }
             };
             // 实时访问输入查询
             $scope.input_gjc = "";
@@ -1441,7 +1408,7 @@ define(["app"], function (app) {
             // 查看入口页链接
             $scope.showEntryPageLink = function (row, _type) {
                 if (_type == 1) {// 搜索引擎
-                    popupService.showEntryPageData(row.entity.rf_type);
+                    popupService.showEntryPageData(row.entity.rf_type || row.entity.dm);
                 } else if (_type == 2) {
                     popupService.showEntryPageData(row.entity.se);
                 } else {
