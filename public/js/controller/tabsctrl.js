@@ -428,6 +428,7 @@ define(["app"], function (app) {
                     enablePaginationControls: true,
                     enableSorting: true,
                     enableGridMenu: false,
+                    enableScrollbars:false,
                     enableHorizontalScrollbar: 0,
                     enableVerticalScrollbar: 0,
                     onRegisterApi: function (girApi) {
@@ -449,6 +450,7 @@ define(["app"], function (app) {
                     enablePaginationControls: true,
                     enableSorting: true,
                     enableGridMenu: false,
+                    enableScrollbars:false,
                     enableHorizontalScrollbar: 0,
                     enableVerticalScrollbar: 0,
                     onRegisterApi: function (gridApi) {
@@ -1472,7 +1474,7 @@ define(["app"], function (app) {
             $scope.getEventRootData = function (a, options) {
                 var hash = {}
                 var val = 0
-                if (a.col.field == "crate") {
+                if (a.col.field == "crate"||a.col.field=="nuvRate") {
                     options.forEach(function (option) {
                         var tempCrate = (option.entity[a.col.field] + "").indexOf("%") < 0 ? option.entity[a.col.field] : option.entity[a.col.field].substring(0, option.entity[a.col.field].length - 2)
                         val = val + Number(tempCrate)
@@ -1492,11 +1494,11 @@ define(["app"], function (app) {
                 else if (a.col.field == "transformCost") {
                     options.forEach(function (option) {
                         if ((option.entity[a.col.field] + "").indexOf("元") > -1)
-                            val = val + Number(option.entity[a.col.field].substring(0, option.entity[a.col.field].length - 2))
+                            val = val + Number(option.entity[a.col.field].substring(0, option.entity[a.col.field].length - 1))
                         else
                             val = val + option.entity[a.col.field]
                     })
-                    val = val + "元"
+                    val = val.toFixed(2) + "元"
                 } else {
                     options.forEach(function (option) {
                         if (!hash[option.entity.loc]) {
@@ -1956,7 +1958,7 @@ define(["app"], function (app) {
                                 event_page: elem.event_page,
                                 event_id: elem.event_id,
                                 update_time: elem.update_time,
-                                event_target: elem.event_target,
+                                event_target: elem.event_target
                             })
                         })
                         $rootScope.curEventConfs = eventParams;

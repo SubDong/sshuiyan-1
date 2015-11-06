@@ -93,6 +93,9 @@ define(["./module"], function (ctrs) {
             arrayClear: false //是否清空指标array
         };
         //
+        $scope.isShowExpandable = function (e) {
+            return e.pm == "暂无数据";
+        };
 
         $scope.reset = function () {
             $scope.todayClass = false;
