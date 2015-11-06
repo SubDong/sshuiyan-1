@@ -2375,7 +2375,7 @@ define(["app"], function (app) {
                 }
             }
             $scope.getCellDisplayValueEntrance = function (grid, row) {
-                return row.entity.referrer;
+                return row.entity.entrance;
             }
             $scope.getExternalLinksCellValue = function (grid, row, number) {
                 var a = row.entity.rf_type;
