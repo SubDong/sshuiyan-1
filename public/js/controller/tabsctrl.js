@@ -2509,7 +2509,11 @@ define(["app"], function (app) {
                     case "老访客":
                         return 1;
                     case "直接访问":
-                        if (ss == "se" || ss == "rf") return "-"; else return 1;
+                        if (ss == "se" || ss == "rf" || ss == "dm") {
+                            return "-";
+                        } else {
+                            return 1;
+                        }
                     case "搜索引擎":
                         return 2;
                     case "外部链接":
