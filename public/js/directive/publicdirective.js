@@ -1378,7 +1378,13 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                             var count = 0;
                             angular.forEach(r.quota, function (qo, _i) {
                                 var _key = r.key[_i];
+
+                                /*
                                 if (_key != undefined && (_key == "-" || _key == "" || _key == "www" || _key == "null")) {
+                                    return false;
+                                }*/
+                                /*针对访客分析-设备环境-网络设备类型模块， 进行修改。在网络设备类型中，“-”号表示其他。*/
+                                if (_key != null && _key != undefined && (_key == "" || _key == "www" || _key == "null")) {
                                     return false;
                                 }
                                 temp += Number(qo);
