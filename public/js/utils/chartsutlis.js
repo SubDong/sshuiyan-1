@@ -1003,6 +1003,11 @@ var formUtils = {
     rendererMailData: function (docs, ele) {
         if (docs.length) {
             var mailData = docs[0];
+            ele.find("button").each(function (i, o) {
+                if(o.id == "deleteButton") {
+                    $(o).removeAttr("hidden");
+                }
+            });
             ele.find("input[type='text']").each(function (i, o) {
                 var _name = $(o).attr('name');
                 if (_name) {
@@ -1021,8 +1026,6 @@ var formUtils = {
                     }
                 }
             });
-
-
             var radioArray = [];
             ele.find("input[type='radio']").each(function (i, o) {
                 var _name = $(o).attr('name');
@@ -1034,7 +1037,15 @@ var formUtils = {
                 $("input[name='" + item + "']:eq(" + mailData[item] + ")").attr("checked", "checked");
             });
         }
+    },
+    initData: function (ele) {
+            ele.find("button").each(function (i, o) {
+                if(o.id == "deleteButton") {
+                    $(o).attr("hidden","hidden");
+                }
+            });
     }
+
 }
 //去重
 Array.prototype.removal = function () {

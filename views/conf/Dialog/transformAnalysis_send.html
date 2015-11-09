@@ -1,5 +1,6 @@
 <div class="ngdialog-buttons">
     <div class="ngdialog-tilte">发送报告</div>
+
     <ul class="admin-ng-content transformAnalysis_send" name="sen_form">
         <li>
             <label>邮箱地址：</label>
@@ -41,10 +42,14 @@
             <p> 本格式图文并茂，支持数据量较少，体积小便于下载阅读</p>
         </li>
 
+
+        <div class="ng-button-div">
+            <button type="button" class="ngdialog-button ng-button " ng-click="sendConfig()">确认</button>
+            <button type="button" class="ngdialog-button ngdialog-button-secondary " ng-click="closeThisDialog(0)">取消</button>
+            <button type="button" id="deleteButton" hidden="hidden" class="ngdialog-button ng-button " ng-click="deleteConfig()">删除</button>
+        </div>
+
     </ul>
-    <div class="ng-button-div">
-        <button type="button" class="ngdialog-button ng-button " ng-click="sendConfig()">确认</button>
-        <button type="button" class="ngdialog-button ngdialog-button-secondary " ng-click="closeThisDialog(0)">取消
-        </button>
-    </div>
+
+
 </div>

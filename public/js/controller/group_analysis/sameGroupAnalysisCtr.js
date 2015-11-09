@@ -324,6 +324,36 @@ define(["./module"], function (ctrs) {
                 });
             }
         };
+        //删除配置信息
+        $scope.deleteConfig = function () {
+            var formData = formUtils.vaildateSubmit($("ul[name='sen_form']"));
+            var result = formUtils.validateEmail(formData.mail_address, formData);
+            if (result.ec) {
+                alert(result.info);
+            } else {
+                formData.rule_url = $rootScope.mailUrl[11];
+                formData.uid = $cookieStore.get('uid');
+                formData.site_id = $rootScope.siteId;
+                formData.type_id = $rootScope.userType;
+
+                $http.get("api/deleteMailConfig?data=" + JSON.stringify(formData)).success(function (data) {
+                    var result = JSON.parse(eval("(" + data + ")").toString());
+                    if (result.ok == 1) {
+                        alert("操作成功!");
+                        $http.get("api/initSchedule").success(function (result) {
+                            if (result) {
+                                var ele = $("ul[name='sen_form']");
+                                formUtils.initData(ele);
+                            }
+                        });
+                    } else {
+                        alert("操作失败!");
+                    }
+                });
+            }
+        };
+
+
 
         //下载功能-CSV
         $rootScope.gaFormatDataCSV = function () {

@@ -1341,6 +1341,29 @@ api.get('/test', function (req, res) {
     //    }
     //});
 });
+
+api.get("/deleteMailConfig", function (req, res) {
+    var model = "mail_rules_model";
+    var query = url.parse(req.url, true).query;
+    var _id = query._id;
+
+    var existQry = {
+        rule_url: query["rule_url"],
+        uid: query["uid"],
+        type_id: query["type_id"],
+        site_id : query["site_id"]
+    }
+    dao.remove(model, JSON.stringify(existQry), function (err) {
+        if (!err) {
+            datautils.send(res, JSON.stringify({ok: "0"}));
+        } else {
+            datautils.send(res, JSON.stringify({ok: "1"}));
+        }
+    });
+
+});
+
+
 api.get("/saveMailConfig", function (req, res) {
     var model = "mail_rules_model";
     var query = url.parse(req.url, true).query;
