@@ -60,7 +60,9 @@ define(["./module"], function (ctrs) {
                 $rootScope.searchGridArray.unshift($rootScope.tableSwitch.latitude);
                 return
             }
-            $rootScope.tableSwitch.number != 0 ? $scope.searchGridArray.shift() : "";
+            if ($rootScope.tableSwitch.number != 0 && $rootScope.tableSwitch.number != 5) {
+                $scope.searchGridArray.shift()
+            }
             $scope.searchGridObj = {};
             $scope.searchGridObjButton = {};
             var a = $rootScope.checkedArray.indexOf(item.name);
@@ -68,7 +70,7 @@ define(["./module"], function (ctrs) {
                 $rootScope.checkedArray.splice(a, 1);
                 $rootScope.searchGridArray.splice(a, 1);
 
-                if ($rootScope.tableSwitch.number != 0) {
+                if ($rootScope.tableSwitch.number != 0 && $rootScope.tableSwitch.number != 5) {
                     $scope.searchGridObjButton["name"] = " ";
                     $scope.searchGridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
                     $rootScope.searchGridArray.unshift($scope.searchGridObjButton);
@@ -82,6 +84,7 @@ define(["./module"], function (ctrs) {
                 $rootScope.searchGridArray.unshift($scope.gridObjButton);
             } else {
                 if ($rootScope.checkedArray.length >= number) {
+                    // 保证checkedArray数组正确
                     $rootScope.checkedArray.shift();
                     $rootScope.checkedArray.push(item.name);
                     $rootScope.searchGridArray.shift();
@@ -93,7 +96,7 @@ define(["./module"], function (ctrs) {
 
                     $rootScope.searchGridArray.push($scope.searchGridObj);
 
-                    if ($rootScope.tableSwitch.number != 0) {
+                    if ($rootScope.tableSwitch.number != 0 && $rootScope.tableSwitch.number != 5) {
                         $scope.searchGridObjButton["name"] = " ";
                         $scope.searchGridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
                         $rootScope.searchGridArray.unshift($scope.searchGridObjButton);
@@ -115,7 +118,7 @@ define(["./module"], function (ctrs) {
                     $scope.searchGridObj["field"] = item.name;
                     $rootScope.searchGridArray.push($scope.searchGridObj);
 
-                    if ($rootScope.tableSwitch.number != 0) {
+                    if ($rootScope.tableSwitch.number != 0 && $rootScope.tableSwitch.number != 5) {
                         $scope.searchGridObjButton["name"] = " ";
                         $scope.searchGridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
                         $rootScope.searchGridArray.unshift($scope.searchGridObjButton);
@@ -344,42 +347,99 @@ define(["./module"], function (ctrs) {
                     method: 'GET',
                     url: url
                 }).success(function (dataSEM, status) {
-                    $rootScope.$broadcast("LoadDateShowSEMDataFinish", dataSEM);
                     var dataArray = [];
+                    var semReqURLs = [];
+                    var searchIdArray = [];
                     dataSEM.forEach(function (item, i) {
                         var searchId = $rootScope.tableSwitch.promotionSearch.SEMData;
+                        searchIdArray.push(searchId);
 
                         var filter = "[{\"" + getTableFilter(searchId) + "\":[\"" + item[searchId + "Id"] + "\"]}]";
                         var fieldQuery = $rootScope.tableSwitch.latitude.field;
 
                         var turl = '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? ($rootScope.tableSwitch.number == 5 ? fieldQuery : null) : fieldQuery )
                             + "&filerInfo=" + filter + "&promotion=" + JSON.stringify($rootScope.tableSwitch.promotionSearch) + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType;
-                        $http({
-                            method: 'GET',
-                            url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? ($rootScope.tableSwitch.number == 5 ? fieldQuery : null) : fieldQuery )
-                            + "&filerInfo=" + filter + "&promotion=" + JSON.stringify($rootScope.tableSwitch.promotionSearch) + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
-                        }).success(function (data, status) {
+                        semReqURLs.push($http.get(turl));
+//                        $http({
+//                            method: 'GET',
+//                            url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? ($rootScope.tableSwitch.number == 5 ? fieldQuery : null) : fieldQuery )
+//                            + "&filerInfo=" + filter + "&promotion=" + JSON.stringify($rootScope.tableSwitch.promotionSearch) + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
+//                        }).success(function (data, status) {
+//                            var datas = {};
+//                            if ($rootScope.tableSwitch.number == 5) {
+//                                // 初始化表格数据
+//                                datas.des_url = dataSEM[i]["keywordName"];
+//                                $rootScope.checkedArray.forEach(function (x) {
+//                                    datas[x] = dataSEM[i][x] || "--";
+//                                });
+//                                data.forEach(function (item) {
+//                                    $rootScope.checkedArray.forEach(function (x, y) {
+//                                        datas[x] = item[x] != undefined ? item[x] : (data[0] == undefined ? "--" : data[0][x]);
+//                                        if ((x == "ctr" || x == "arrivedRate") && datas[x] != "--") {
+//                                            datas[x] += "%";
+//                                        }
+//                                    });
+//                                });
+//                                dataArray.push(datas);
+//                            } else {
+//                                $rootScope.checkedArray.forEach(function (x, y) {
+////                                datas[x] = item[x] != undefined ? item[x] : (data[0] == undefined ? (x == "avgTime" ? "00:00:00" : 0) : data[0][x]);
+//                                    datas[x] = item[x] != undefined ? item[x] : (data[0] == undefined ? "--" : data[0][x]);
+//                                    if ((x == "ctr" || x == "arrivedRate") && datas[x] != "--") {
+//                                        datas[x] += "%";
+//                                    }
+//                                });
+//                                var field = $rootScope.tableSwitch.latitude.field;
+//                                datas[field] = item[field] + getTableTitle(field, item);
+//                                datas["id"] = item[searchId + "Id"];
+//                                item["impression"] != undefined ? datas["impression"] = item["impression"] : "";
+//                                item["click"] != undefined ? datas["click"] = item["click"] : "";
+//                                item["cost"] != undefined ? datas["cost"] = item["cost"] : "";
+//                                item["cpc"] != undefined ? datas["cpc"] = item["cpc"] : "";
+//                                dataArray.push(datas);
+//                                if ((dataSEM.length - 1) == i) {
+//                                    if (field == "adgroupName" || field == "keywordName") {
+//                                        $scope.gridOptions.rowHeight = 55;
+//                                    } else {
+//                                        if (field == "description1") {
+//                                            $scope.gridOptions.rowHeight = 100;
+//                                        } else {
+//                                            $scope.gridOptions.rowHeight = 32;
+//                                        }
+//                                    }
+//                                    $scope.gridOptions.columnDefs = $scope.gridOpArray;
+//                                }
+//                            }
+//                        }).error(function (error) {
+//                            console.log(error);
+//                        });
+                    });
+
+                    $q.all(semReqURLs).then(function (final_result) {
+                        final_result.forEach(function(_result, i) {
                             var datas = {};
+                            var data = _result["data"];
                             if ($rootScope.tableSwitch.number == 5) {
-                                data.forEach(function (item, i) {
+                                // 初始化表格数据
+                                datas.des_url = dataSEM[i]["keywordName"];
+                                $rootScope.checkedArray.forEach(function (x) {
+                                    if (x == "avgTime") {
+                                        datas[x] = dataSEM[i][x] || "00:00:00";
+                                    } else {
+                                        datas[x] = dataSEM[i][x] || 0;
+                                    }
+                                });
+                                data.forEach(function (item) {
                                     $rootScope.checkedArray.forEach(function (x, y) {
-//                                    datas[x] = item[x] != undefined ? item[x] : (data[0] == undefined ? (x == "avgTime" ? "00:00:00" : 0) : data[0][x]);
                                         datas[x] = item[x] != undefined ? item[x] : (data[0] == undefined ? "--" : data[0][x]);
                                         if ((x == "ctr" || x == "arrivedRate") && datas[x] != "--") {
                                             datas[x] += "%";
                                         }
                                     });
-                                    datas[fieldQuery] = item[fieldQuery] + getTableTitle(fieldQuery, item);
-                                    item["impression"] != undefined ? datas["impression"] = item["impression"] : "";
-                                    item["click"] != undefined ? datas["click"] = item["click"] : "";
-                                    item["cost"] != undefined ? datas["cost"] = item["cost"] : "";
-                                    item["cpc"] != undefined ? datas["cpc"] = item["cpc"] : "";
-                                    dataArray.push(datas);
-                                    if ((dataSEM.length - 1) == i) {
-                                        $scope.gridOptions.data = dataArray;
-                                    }
-                                })
+                                });
+                                dataArray.push(datas);
                             } else {
+                                var item = dataSEM[i];
                                 $rootScope.checkedArray.forEach(function (x, y) {
 //                                datas[x] = item[x] != undefined ? item[x] : (data[0] == undefined ? (x == "avgTime" ? "00:00:00" : 0) : data[0][x]);
                                     datas[x] = item[x] != undefined ? item[x] : (data[0] == undefined ? "--" : data[0][x]);
@@ -389,7 +449,7 @@ define(["./module"], function (ctrs) {
                                 });
                                 var field = $rootScope.tableSwitch.latitude.field;
                                 datas[field] = item[field] + getTableTitle(field, item);
-                                datas["id"] = item[searchId + "Id"];
+                                datas["id"] = item[searchIdArray[i] + "Id"];
                                 item["impression"] != undefined ? datas["impression"] = item["impression"] : "";
                                 item["click"] != undefined ? datas["click"] = item["click"] : "";
                                 item["cost"] != undefined ? datas["cost"] = item["cost"] : "";
@@ -408,13 +468,12 @@ define(["./module"], function (ctrs) {
                                     $scope.gridOptions.columnDefs = $scope.gridOpArray;
                                 }
                             }
-                        }).error(function (error) {
-                            console.log(error);
+                            //if ($rootScope.tableSwitch.number != 5) {
+                            $scope.gridOptions.data = dataArray;
+                            //}
+                            $rootScope.$broadcast("LoadTgurlDataFinish", $rootScope.checkedArray, dataArray);
                         });
                     });
-                    if ($rootScope.tableSwitch.number != 5) {
-                        $scope.gridOptions.data = dataArray;
-                    }
                 });
             }
         };
@@ -432,63 +491,39 @@ define(["./module"], function (ctrs) {
                 + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=ssc&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
             }).success(function (data, status) {
                 var dataArray = [];
-                if (data != null && data.length > 0) {
-                    var semReqURLs = [];
-                    data.forEach(function (item, i) {
+                var semReqURLs = [];
+                data.forEach(function (item, i) {
+                    var variousId = item.kw.split(",");
+                    item.kw = variousId[0];
+                    var url = SEM_API_URL + "/sem/report/" + $rootScope.tableSwitch.promotionSearch.SEMData + "?a=" + user + "&b=" + baiduAccount + "&kwid=" + variousId[3] + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1";
+                    semReqURLs.push($http.get(url));
+                });
+                $q.all(semReqURLs).then(function (final_result) {
+                    console.log(final_result);
+                    final_result.forEach(function (_result, i) {
+                        var item = data[i];
                         var variousId = item.kw.split(",");
                         item.kw = variousId[0];
-                        var url = SEM_API_URL + "/sem/report/" + $rootScope.tableSwitch.promotionSearch.SEMData + "?a=" + user + "&b=" + baiduAccount + "&kwid=" + variousId[3] + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1"
-                        //$http({
-                        //    method: 'GET',
-                        //    url: url
-                        //}).success(function (dataSEM, status) {
-                        //    var datas = {};
-                        //    if (variousId[3] == 0) {
-                        //        $rootScope.checkedArray.forEach(function (x, y) {
-                        //            datas[x] = (item[x] != undefined ? item[x] : "--");
-                        //            var field = $rootScope.tableSwitch.latitude.field
-                        //            datas[field] = item[field] + ",";
-                        //        })
-                        //    } else {
-                        //        $rootScope.checkedArray.forEach(function (x, y) {
-                        //            datas[x] = (item[x] != undefined ? item[x] : dataSEM[0][x]);
-                        //        });
-                        //        var field = $rootScope.tableSwitch.latitude.field
-                        //        datas[field] = item[field] + getTableTitle(field, dataSEM[0]);
-                        //    }
-                        //    dataArray.push(datas);
-                        //    console.log(dataArray.length);
-                        //});
-                        semReqURLs.push($http.get(url));
-                    });
-                    $q.all(semReqURLs).then(function (final_result) {
-                        final_result.forEach(function (_result, i) {
-                            var item = data[i];
-                            var variousId = item.kw.split(",");
-                            item.kw = variousId[0];
-                            var datas = {};
-                            if (variousId[3] == 0) {
-                                $rootScope.checkedArray.forEach(function (x, y) {
-                                    datas[x] = (item[x] != undefined ? item[x] : "--");
-                                    var field = $rootScope.tableSwitch.latitude.field
-                                    datas[field] = item[field] + ",";
-                                })
-                            } else {
-                                $rootScope.checkedArray.forEach(function (x, y) {
-                                    datas[x] = (item[x] != undefined ? item[x] : _result["data"][0][x]);
-                                });
+                        var datas = {};
+                        if (variousId[3] == 0) {
+                            $rootScope.checkedArray.forEach(function (x, y) {
+                                datas[x] = (item[x] != undefined ? item[x] : "--");
                                 var field = $rootScope.tableSwitch.latitude.field
-                                datas[field] = item[field] + getTableTitle(field, _result["data"][0]);
-                            }
-                            dataArray.push(datas);
-                        });
-                        $rootScope.$broadcast("LoadSSCDataFinish", $rootScope.checkedArray, dataArray);
+                                datas[field] = item[field] + ",";
+                            })
+                        } else {
+                            $rootScope.checkedArray.forEach(function (x, y) {
+                                datas[x] = (item[x] != undefined ? item[x] : _result["data"][0][x]);
+                            });
+                            var field = $rootScope.tableSwitch.latitude.field
+                            datas[field] = item[field] + getTableTitle(field, _result["data"][0]);
+                        }
+                        dataArray.push(datas);
                     });
-                }
-
-                $scope.gridOptions.rowHeight = 55;
-                $scope.gridOptions.data = dataArray;
-
+                    $scope.gridOptions.rowHeight = 55;
+                    $scope.gridOptions.data = dataArray;
+                    $rootScope.$broadcast("LoadSSCDataFinish", $rootScope.checkedArray, dataArray);
+                });
             });
         };
 
@@ -788,7 +823,7 @@ define(["./module"], function (ctrs) {
                         tmp = item.entity[a.col.field];
                     }
                     returnData += parseFloat((tmp + "").replace("%", ""));
-                    if (a.col.field == "avgTime") {
+                    if (a.col.field == "") {
                         if (item.entity[a.col.field] != undefined && item.entity[a.col.field] != "--") {
                             spl = (item.entity[a.col.field] + "").split(":");
                             newSpl[0] += parseInt(spl[0]);
@@ -801,14 +836,17 @@ define(["./module"], function (ctrs) {
                     var dataInfoClick = 0;
                     var dataInfoIpmr = 0;
                     var page = option[0].grid.options.paginationCurrentPage;
-                    var pageSize = option[0].grid.options.paginationPageSize
-                    var maxIndex = (page * pageSize) - 1
-                    var minIndex = (page - 1) * pageSize
+                    var pageSize = option[0].grid.options.paginationPageSize;
+                    var maxIndex = (page * pageSize) - 1;
+                    var minIndex = (page - 1) * pageSize;
                     for (var i = minIndex; i <= maxIndex; i++) {
                         if (i < option.length) {
                             dataInfoClick += option[i].entity["click"];
                             dataInfoIpmr += option[i].entity["impression"];
                         }
+                    }
+                    if (isNaN(dataInfoClick) || isNaN(dataInfoIpmr)) {
+                        return "--";
                     }
                     var returnCtr = (dataInfoIpmr == 0 ? "0%" : ((dataInfoClick / dataInfoIpmr)).toFixed(2) + "%");
                     return returnCtr;
@@ -819,7 +857,7 @@ define(["./module"], function (ctrs) {
                 if (a.col.field == "avgPage") {
                     returnData = (returnData / option.length).toFixed(2);
                 }
-                if (a.col.field == "outRate" || a.col.field == "nuvRate") {
+                if ((a.col.field == "outRate" || a.col.field == "nuvRate") && (option[0].entity[a.col.field] + "").indexOf("%") == -1) {
                     returnData = (returnData == "0.00%" ? "0%" : (parseInt(returnData) / option.length).toFixed(2) + "%");
                 }
                 if (a.col.field == "avgTime") {

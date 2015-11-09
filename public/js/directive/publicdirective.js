@@ -2409,6 +2409,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
         return {
             restrict: 'A',
             link: function (scope, element, attrs) {
+                $document.scrollTop(0);
                 element.addClass(attrs["setClassWhenAtTop"]);
 
                 $(".fix-to-top").css("width", $(document.body).width() - 155);

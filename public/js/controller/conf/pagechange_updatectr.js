@@ -7,7 +7,7 @@ define(["./module"], function (ctrs) {
         $scope.target_name = null;
 
         $scope.target_urls = [{url: ""}];//默认存在第一个空的URL 页面显示使用对象数组
-        $scope.record_type = ""//记录方式
+        $scope.record_type = "visit_times"//记录方式
         //收益设置
         $scope.expected_yield = null//预期收益
         $scope.pecent_yield = null//预期收益率

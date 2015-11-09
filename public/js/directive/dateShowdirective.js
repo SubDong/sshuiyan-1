@@ -440,9 +440,77 @@ define(["../app"], function (app) {
                                 obj.value += parseFloat(r[temp].substr(0, r[temp].length - 1));
                             } else if (JSON.stringify(r[temp]).indexOf(":") != -1) {
                                 var _t_array = r[temp].split(":");
-                                obj.value = _t_array[0] * 3600 * 1000 + _t_array[1] * 60 * 1000 + _t_array[2] * 1000;
+                                obj.value += _t_array[0] * 3600 * 1000 + _t_array[1] * 60 * 1000 + _t_array[2] * 1000;
+                            } else if (JSON.stringify(r[temp]).indexOf(".") != -1 && JSON.stringify(r[temp]).indexOf("%") == -1) {
+                                obj.value += parseFloat(r[temp]);
                             } else {
-                                obj.value += r[temp];
+                                obj.value += parseInt(r[temp]);
+                            }
+                            obj.count++;
+                        });
+                    });
+
+                    scope.dateShowArray = $rootScope.copy(_array);
+                };
+            }
+        };
+    });
+
+    /**
+     * Create by wms on 2015-11-09.搜索推广.推广URL
+     */
+    app.directive("sshSstgTgurlDateShow", function ($http, $rootScope, $q, SEM_API_URL) {
+        return {
+            restrict: 'E',
+            templateUrl: '../commons/date_show.html',
+            link: function (scope, element, attris, controller) {
+                // 初始化参数
+
+                scope.isCompared = false;
+                scope.dateShowArray = [];
+                scope.filter = attris.filter;
+                scope.ds_defaultQuotasOption = ["pv", "uv", "ip", "nuv", "outRate", "avgTime"];
+                scope.ds_keyData = [];
+                scope.ds_dateShowQuotasOption = scope.checkedArray ? scope.checkedArray : scope.ds_defaultQuotasOption;
+                scope.setDefaultShowArray = function () {
+                    var tempArray = [];
+                    angular.forEach(scope.ds_dateShowQuotasOption, function (q_r) {
+                        tempArray.push({"label": q_r, "value": 0, "cValue": 0, "count": 0, "cCount": 0});
+                    });
+                    scope.ds_keyData = [];
+                    scope.dateShowArray = $rootScope.copy(tempArray);
+
+                };
+
+                scope.$on("LoadTgurlDataFinish", function (e, msg, data) {
+                    scope.isCompared = false;
+                    var temp = $rootScope.copy(msg);
+                    if (temp.length > 0) {
+                        scope.ds_dateShowQuotasOption = temp;
+                    }
+                    scope.setDefaultShowArray();
+                    scope.pushESAndSE0Data(data);
+                    scope.DateNumber = true;
+                    scope.DateLoading = true;
+                });
+
+                scope.pushESAndSE0Data = function (data) {
+                    scope.DateNumber = false;
+                    scope.DateLoading = false;
+                    var _array = $rootScope.copy(scope.dateShowArray);
+                    angular.forEach(data, function (r) {
+                        angular.forEach(_array, function (obj) {
+                            var temp = obj.label;
+                            if (r[temp] == undefined) {
+                                return false;
+                            }
+                            if (JSON.stringify(r[temp]).indexOf("%") != -1) {
+                                obj.value += parseFloat(r[temp].substr(0, r[temp].length - 1));
+                            } else if (JSON.stringify(r[temp]).indexOf(":") != -1) {
+                                var _t_array = r[temp].split(":");
+                                obj.value += _t_array[0] * 3600 * 1000 + _t_array[1] * 60 * 1000 + _t_array[2] * 1000;
+                            } else {
+                                obj.value += parseInt(r[temp]);
                             }
                             obj.count++;
                         });
@@ -593,7 +661,7 @@ define(["../app"], function (app) {
                     if (value.indexOf && value.indexOf("%") != -1) {// 字符串且存在符号%
                         return value;
                     }
-                    return count ? (value == 0 ? "0" : (value / count).toFixed(2) + "%") : "--";
+                    return count ? (value == 0 ? "0.00%" : (value / count).toFixed(2) + "%") : "--";
                 }
                 case "acp":
                 case "avgPage":

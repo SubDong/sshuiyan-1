@@ -1,10 +1,10 @@
-<div class="middle_containers" ng-controller="alliance_cy_ctr">
+<div class="middle_containers" ng-controller="alliance_network_ctr">
     <div class="date_select" set-class-when-at-top="fix-to-top">
         <div aria-label="First group" role="group" class="btn-group fl">
             <a class="btn btn-default" type="button" data-ng-href="#extension/alliance">计划</a>
             <a class="btn btn-default" type="button" data-ng-href="#extension/alliance_group">组</a>
-            <a class="btn btn-default" type="button" data-ng-href="#extension/alliance_network">投放网络</a>
-            <a class="btn btn-default current" type="button" data-ng-href="#extension/alliance_cy">创意</a>
+            <a class="btn btn-default  current" type="button" data-ng-href="#extension/alliance_network">投放网络</a>
+            <a class="btn btn-default" type="button" data-ng-href="#extension/alliance_cy">创意</a>
             <a class="btn btn-default" type="button" data-ng-href="#extension/alliance_keyword">关键词</a>
         </div>
         <div>
@@ -13,20 +13,22 @@
         </div>
     </div>
     <div class="my_concent">
-        <ssh-wmtg-date-show dimension="region" wm-type="ad" wm_id_type="cid"></ssh-wmtg-date-show>
+        <ssh-wmtg-date-show dimension="region" wm-type="group" wm_id_type="cid"></ssh-wmtg-date-show>
         <div class="index_chart">
-            <div id="indicators_charts" class="gesture" style="height:400px;"></div>
+            <div id="indicators_charts_legend"></div>
+            <div id="indicators_charts" class="gesture" class="gesture" style="height:400px;"></div>
         </div>
         <div class="table_content" ng-controller="SearchPromotion">
             <ul ng-init="tab = 1" class="nav nav-tabs nav-justified">
-                <li class="ng-isolate-scope"  ng-class="{active:tab===1}" ng-click="tab = 1">
+                <li class="ng-isolate-scope" ng-class="{active:tab===1}" ng-click="tab = 1">
                     <a class="ng-binding">自定义指标</a></li>
                 <li class="ng-isolate-scope" ng-class="{active:tab===2}" ng-click="tab = 2">
                     <a class="ng-binding">高级筛选
                          <span class="impliedCondition">
                             <span ng-show="terminalSearch || areaSearch">（</span>
                             <span ng-show="areaSearch" class="advanceSearch">
-                                {{areaSearch}}<i class="glyphicon glyphicon-remove" data-ng-click="removeAreaSearch(this);" ng-show="areaSearch"></i>
+                                {{areaSearch}}<i class="glyphicon glyphicon-remove"
+                                                 data-ng-click="removeAreaSearch(this);" ng-show="areaSearch"></i>
                             </span>
                             <span ng-show="terminalSearch || areaSearch">）</span>
                         </span>
@@ -36,6 +38,7 @@
             <div class="tabs_content">
                 <div class="custom_title" ng-show="tab === 1">
                     <p class="chart_top_title">
+
                     <div class="chart_top chart_default">
                         <ul>
                             <li><a href="javascript:void(0)">系统默认指标</a></li>
@@ -68,7 +71,7 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="chart_top">
+                    <!--<div class="chart_top">
                         <span>转化指标:</span>
                         <ul>
                             <li ng-repeat="item in transform" data-sshy-default defvalue="{{item.name}}"
@@ -77,7 +80,7 @@
                             </li>
                         </ul>
                     </div>
-                    <!--<div class="chart_top">
+                    <div class="chart_top">
                         <span>移动搜索页指标:</span>
                         <ul>
                             <li ng-repeat="item in mobile"
@@ -96,7 +99,7 @@
                         </ul>
                     </div>-->
                     <div class="chart_top chart_noborder">
-                        <button class="btn btn-primary" type="button"  ng-click="targetSearchSpread(true)">确定</button>
+                        <button class="btn btn-primary" type="button" ng-click="targetSearchSpread(true)">确定</button>
                         * 可同时选择6项
                     </div>
 
@@ -108,7 +111,8 @@
                             <li>
                                 <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
                                     <div role="group" class="btn-group">
-                                        <ui-select ng-model="city.selected"theme="select2" reset-search-input="false" class="fl btn-pv" data-ng-change="setAreaFilter(city.selected.name)"
+                                        <ui-select ng-model="city.selected" theme="select2" reset-search-input="false"
+                                                   class="fl btn-pv" data-ng-change="setAreaFilter(city.selected.name)"
                                                    style="width: 80px;">
                                             <ui-select-match placeholder="全部">{{$select.selected.name}}
                                             </ui-select-match>
@@ -142,7 +146,8 @@
                 </div>
             </div>
             <div class="custom_table" ng-class="{hidePageContainer:gridApi2.grid.rows.length<=20}">
-                <div ui-grid="gridOptions" class="grid clearfix" ui-grid-pagination ui-grid-exporter ui-grid-auto-resize></div>
+                <div ui-grid="gridOptions" class="grid clearfix" ui-grid-pagination ui-grid-exporter
+                     ui-grid-auto-resize></div>
                 <gridpage></gridpage>
             </div>
         </div>

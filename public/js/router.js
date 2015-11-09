@@ -154,6 +154,24 @@ define(["angular", "./app"], function (angular, myApp) {
                             'controller/searchpromotion'
                         ])
                     }
+                }).state('alliance_network', {
+                    url: "/extension/alliance_network",
+                    templateUrl: "../extension/alliance_network.html",
+                    resolve: {
+                        load: loadDeps([
+                            'controller/alliance_network_ctr',
+                            'controller/searchpromotion'
+                        ])
+                    }
+                }).state('alliance_keyword', {
+                    url: "/extension/alliance_keyword",
+                    templateUrl: "../extension/alliance_keyword.html",
+                    resolve: {
+                        load: loadDeps([
+                            'controller/alliance_keyword_ctr',
+                            'controller/searchpromotion'
+                        ])
+                    }
                 });
 
             // trend趋向分析

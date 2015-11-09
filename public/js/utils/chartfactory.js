@@ -1018,7 +1018,7 @@ var util = {
                     return xAxis;
                 } else {
                     var _time = [];
-                    if (key[0].toString().length == 13) {
+                    if (key[0] && key[0].toString().length == 13) {
                         key.forEach(function (time) {
                             var t = new Date(time).Format("yyyy-MM-dd hh:mm:ss");
                             _time.push(t.toString().substring(10, 13));
@@ -1027,10 +1027,11 @@ var util = {
                         _time = key;
                     }
                     if (chartConfig.half == undefined) {
-                        if (_time[_time.length - 1].toString().indexOf("/点") == -1) {
+                        if (_time[_time.length - 1] && _time[_time.length - 1].toString().indexOf("/点") == -1) {
                             _time[_time.length - 1] = _time[_time.length - 1] + "/点";
                         }
                     }
+                    console.log(_time);
                     //console.log(key);
                     return _time;
                 }
