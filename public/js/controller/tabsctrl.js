@@ -916,7 +916,6 @@ define(["app"], function (app) {
             };
             //设置（搜 索引擎）地域过滤
             $scope.setSearchEngineAreaFilter = function (area) {
-
                 if (!$rootScope.tableSwitch) {
                     return;
                 }
@@ -992,6 +991,8 @@ define(["app"], function (app) {
                 }
             }
             $scope.setSearchEngine = function (value, info) {
+
+
                 if (value == 0) {
                     $scope.sourceSearch = "";
                     $rootScope.tableSwitch.seFilter = null
@@ -1002,6 +1003,7 @@ define(["app"], function (app) {
                     if (value == 2) {//搜索引擎
                         $scope.browserselect = false;
                     } else {
+                        $rootScope.tableSwitch.seFilter = null
                         $scope.browserselect = true;
                     }
                     $rootScope.tableSwitch.eginFilter = {rf_type: value}
