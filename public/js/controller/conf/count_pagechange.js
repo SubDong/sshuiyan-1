@@ -44,7 +44,7 @@ define(["./module"], function (ctrs) {
         $scope.onUpdate = function (entity) {
             $state.go('pagechange_update', {'id': entity._id});
         };
-        var statusTemplate = "<div class='table_admin' ng-click='grid.appScope.PauseDelete(index,grid,row)' ><a>{{row.entity.event_status == '0' ? '重新启用':'暂停使用' }}</a></div>";
+        var statusTemplate = "<div class='table_admin' ng-click='grid.appScope.PauseDelete(index,grid,row)' ><a>{{row.entity.is_pause ? '重新启用':'暂停使用' }}</a></div>";
         //配置默认指标
         $rootScope.checkedArray = ["target_name", "target_urls", "needPath", "record_type", "conv_tpye", "_id"];
         $rootScope.gridArray = [
@@ -187,9 +187,11 @@ define(["./module"], function (ctrs) {
 
         };
         $scope.PauseDelete = function (index, grid, row, thise) {
+
+            var msg = row.entity.is_pause?"重新启用":"暂停使用"
             $scope.onDeleteDialog = ngDialog.open({
                 template: '' +
-                '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div><ul class="admin-ng-content"><li> 您确定暂停使用这个路径吗？</li></ul>' +
+                '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div><ul class="admin-ng-content"><li> 您确定'+msg+'这个路径吗？</li></ul>' +
                 '<div class="ng-button-div"><button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
                     <button type="button" class="ngdialog-button ng-button" ng-click="surePauseDelete()">确定</button></div></div>',
                 className: 'ngdialog-theme-default admin_ngdialog',
@@ -198,7 +200,13 @@ define(["./module"], function (ctrs) {
             });
             $scope.surePauseDelete = function () {
                 $scope.onDeleteDialog.close();
-
+                var updatePageConv = "/config/page_conv?type=update&query="+JSON.stringify({_id:row.entity._id})+"&updates=" + JSON.stringify({is_pause:!row.entity.is_pause});
+                $http({
+                    method: 'GET',
+                    url: updatePageConv
+                }).success(function (upd, status) {
+                    row.entity.is_pause=!row.entity.is_pause
+                });
             };
         };
         /**

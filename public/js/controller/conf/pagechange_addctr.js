@@ -9,7 +9,7 @@ define(["./module"], function (ctrs) {
         $scope.target_name = null;
 
         $scope.target_urls = [{url: ""}];//默认存在第一个空的URL 页面显示使用对象数组
-        $scope.record_type = ""//记录方式
+        $scope.record_type = "visit_times"//记录方式
         //收益设置
         $scope.expected_yield = null//预期收益
         $scope.pecent_yield = null//预期收益率
@@ -355,6 +355,7 @@ define(["./module"], function (ctrs) {
                         }
                     })
                 }
+
                 if(  flag){
                     var page_conv_entity = {
                         uid: $cookieStore.get("uid"),
@@ -369,7 +370,8 @@ define(["./module"], function (ctrs) {
                         paths: $scope.paths,
                         conv_tpye: $scope.conv_tpye,//转换类型，regist,communicate,place_order,othre_order
                         conv_text:$scope.conv_tpye=="other"?($scope.t_conv_text.trim()==""?menu_conv_type["other"]:$scope.t_conv_text.trim()):menu_conv_type[$scope.conv_tpye],
-                        update_time: new Date().getTime()
+                        update_time: new Date().getTime(),
+                        is_pause:false//新增不暂停
                     }
                     var savePageConv = "/config/page_conv?type=save&entity=" + JSON.stringify(page_conv_entity);
                     $http({
