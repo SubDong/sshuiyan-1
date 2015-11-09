@@ -60,7 +60,9 @@ define(["./module"], function (ctrs) {
                 $rootScope.searchGridArray.unshift($rootScope.tableSwitch.latitude);
                 return
             }
-            $rootScope.tableSwitch.number != 0 ? $scope.searchGridArray.shift() : "";
+            if ($rootScope.tableSwitch.number != 0 && $rootScope.tableSwitch.number != 5) {
+                $scope.searchGridArray.shift()
+            }
             $scope.searchGridObj = {};
             $scope.searchGridObjButton = {};
             var a = $rootScope.checkedArray.indexOf(item.name);
@@ -68,7 +70,7 @@ define(["./module"], function (ctrs) {
                 $rootScope.checkedArray.splice(a, 1);
                 $rootScope.searchGridArray.splice(a, 1);
 
-                if ($rootScope.tableSwitch.number != 0) {
+                if ($rootScope.tableSwitch.number != 0 && $rootScope.tableSwitch.number != 5) {
                     $scope.searchGridObjButton["name"] = " ";
                     $scope.searchGridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
                     $rootScope.searchGridArray.unshift($scope.searchGridObjButton);
@@ -82,6 +84,7 @@ define(["./module"], function (ctrs) {
                 $rootScope.searchGridArray.unshift($scope.gridObjButton);
             } else {
                 if ($rootScope.checkedArray.length >= number) {
+                    // 保证checkedArray数组正确
                     $rootScope.checkedArray.shift();
                     $rootScope.checkedArray.push(item.name);
                     $rootScope.searchGridArray.shift();
@@ -93,7 +96,7 @@ define(["./module"], function (ctrs) {
 
                     $rootScope.searchGridArray.push($scope.searchGridObj);
 
-                    if ($rootScope.tableSwitch.number != 0) {
+                    if ($rootScope.tableSwitch.number != 0 && $rootScope.tableSwitch.number != 5) {
                         $scope.searchGridObjButton["name"] = " ";
                         $scope.searchGridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
                         $rootScope.searchGridArray.unshift($scope.searchGridObjButton);
@@ -115,7 +118,7 @@ define(["./module"], function (ctrs) {
                     $scope.searchGridObj["field"] = item.name;
                     $rootScope.searchGridArray.push($scope.searchGridObj);
 
-                    if ($rootScope.tableSwitch.number != 0) {
+                    if ($rootScope.tableSwitch.number != 0 && $rootScope.tableSwitch.number != 5) {
                         $scope.searchGridObjButton["name"] = " ";
                         $scope.searchGridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
                         $rootScope.searchGridArray.unshift($scope.searchGridObjButton);
@@ -344,8 +347,8 @@ define(["./module"], function (ctrs) {
                     method: 'GET',
                     url: url
                 }).success(function (dataSEM, status) {
-                    $rootScope.$broadcast("LoadDateShowSEMDataFinish", dataSEM);
                     var dataArray = [];
+                    console.log(dataSEM);
                     dataSEM.forEach(function (item, i) {
                         var searchId = $rootScope.tableSwitch.promotionSearch.SEMData;
 
@@ -361,24 +364,20 @@ define(["./module"], function (ctrs) {
                         }).success(function (data, status) {
                             var datas = {};
                             if ($rootScope.tableSwitch.number == 5) {
-                                data.forEach(function (item, i) {
+                                // 初始化表格数据
+                                datas.des_url = dataSEM[i]["keywordName"];
+                                $rootScope.checkedArray.forEach(function (x) {
+                                    datas[x] = dataSEM[i][x] || "--";
+                                });
+                                data.forEach(function (item) {
                                     $rootScope.checkedArray.forEach(function (x, y) {
-//                                    datas[x] = item[x] != undefined ? item[x] : (data[0] == undefined ? (x == "avgTime" ? "00:00:00" : 0) : data[0][x]);
                                         datas[x] = item[x] != undefined ? item[x] : (data[0] == undefined ? "--" : data[0][x]);
                                         if ((x == "ctr" || x == "arrivedRate") && datas[x] != "--") {
                                             datas[x] += "%";
                                         }
                                     });
-                                    datas[fieldQuery] = item[fieldQuery] + getTableTitle(fieldQuery, item);
-                                    item["impression"] != undefined ? datas["impression"] = item["impression"] : "";
-                                    item["click"] != undefined ? datas["click"] = item["click"] : "";
-                                    item["cost"] != undefined ? datas["cost"] = item["cost"] : "";
-                                    item["cpc"] != undefined ? datas["cpc"] = item["cpc"] : "";
-                                    dataArray.push(datas);
-                                    if ((dataSEM.length - 1) == i) {
-                                        $scope.gridOptions.data = dataArray;
-                                    }
-                                })
+                                });
+                                dataArray.push(datas);
                             } else {
                                 $rootScope.checkedArray.forEach(function (x, y) {
 //                                datas[x] = item[x] != undefined ? item[x] : (data[0] == undefined ? (x == "avgTime" ? "00:00:00" : 0) : data[0][x]);
@@ -412,9 +411,10 @@ define(["./module"], function (ctrs) {
                             console.log(error);
                         });
                     });
-                    if ($rootScope.tableSwitch.number != 5) {
+                    //if ($rootScope.tableSwitch.number != 5) {
                         $scope.gridOptions.data = dataArray;
-                    }
+                    //}
+                    $rootScope.$broadcast("LoadTgurlDataFinish", $rootScope.checkedArray, dataArray);
                 });
             }
         };
