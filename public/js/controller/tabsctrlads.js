@@ -1099,6 +1099,8 @@ define(["app"], function (app) {
             $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
             $scope.gridOpArray = angular.copy($rootScope.gridArray);
             $scope.gridOptions.columnDefs = $scope.gridOpArray;
+            var aaaa =  $scope.gridOpArray;
+            var bbbb = $scope.gridOptions.columnDefs;
             $scope.gridOptions.rowHeight = 32;
             $scope.gridOptions.columnFooterHeight = 32;
             $(".custom_table i").css({"display": "block"});
@@ -1112,21 +1114,19 @@ define(["app"], function (app) {
                     _record.sortingAlgorithm = $rootScope.sortNumber;
                 }
             });
-
-
             //if (isClicked) {
             $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
             //}
             if ($rootScope.tableSwitch.latitude != null && $rootScope.tableSwitch.latitude == undefined) {
-                console.error("error: latitude is not defined,Please check whether the parameter the configuration.");
+                //console.error("error: latitude is not defined,Please check whether the parameter the configuration.");
                 return;
             }
             if ($rootScope.tableTimeStart == undefined) {
-                console.error("error: tableTimeStart is not defined,Please check whether the parameter the configuration.");
+                ////console.error("error: tableTimeStart is not defined,Please check whether the parameter the configuration.");
                 return;
             }
             if ($rootScope.tableTimeEnd == undefined) {
-                console.error("error: tableTimeEnd is not defined,Please check whether the parameter the configuration.");
+                //console.error("error: tableTimeEnd is not defined,Please check whether the parameter the configuration.");
                 return;
             }
             if ($rootScope.tableSwitch.isJudge == undefined) $scope.isJudge = true;
@@ -1141,7 +1141,7 @@ define(["app"], function (app) {
                             item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 32px'>--</div>";
                         } else {
                             item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 32px'>" +
-                            "<ul><li>{{grid.appScope.getEventRootData(this,grid.getVisibleRows())}}</li></ul></div>";
+                                "<ul><li>{{grid.appScope.getEventRootData(this,grid.getVisibleRows())}}</li></ul></div>";
                         }
                     }
                 });
@@ -1154,12 +1154,11 @@ define(["app"], function (app) {
                         } else {
 //                        item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 100px'>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),2)}}<br/>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),3)}}<br/>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),4)}}</div>";
                             item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 32px'>" +
-                            "<ul><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),2)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),3)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),4)}}</li></ul></div>";
+                                "<ul><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),2)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),3)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),4)}}</li></ul></div>";
                         }
                     }
                 });
             }
-
             if ($rootScope.tableSwitch.number == 5) {//推广URL速度
                 //var url = SEM_API_URL + "/sem/report/" + (area == "全部" ? $rootScope.tableSwitch.promotionSearch.SEMData : "region") + "?a=" + user + "&b=" + baiduAccount + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1" + (area == "全部" ? "" : "&rgna=" + area);
                 $http({
@@ -1222,11 +1221,16 @@ define(["app"], function (app) {
                 $http({
                     method: 'GET',
                     url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field)
-                    + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat +"&popup=" + $rootScope.tableSwitch.popup + "&type=" + esType
+                    + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
                 }).success(function (data, status) {
                     $rootScope.$broadcast("LoadDateShowDataFinish", data);
                     if ($rootScope.tableSwitch.promotionSearch != undefined && $rootScope.tableSwitch.promotionSearch) {
-                        var url = SEM_API_URL + "/sem/report/account?a=" + user + "&b=" + baiduAccount + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1"
+                        if ($rootScope.areaFilter != "全部" && $location.path() == "/extension/way") {// 推广方式地域过滤不为全部是特殊处理
+                            var url = SEM_API_URL + "/sem/report/region?a=" + user + "&b=" + baiduAccount + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1&rgna=" + $rootScope.areaFilter
+                        } else {
+                            var url = SEM_API_URL + "/sem/report/account?a=" + user + "&b=" + baiduAccount + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1"
+                        }
+
                         $http({
                             method: 'GET',
                             url: url
@@ -1249,7 +1253,11 @@ define(["app"], function (app) {
                             $rootScope.checkedArray.forEach(function (item, i) {
                                 if ($rootScope.tableSwitch.latitude.field == "accountName") {
                                     if (dataSEM[0]) {
-                                        dataObj["accountName"] = "搜索推广 (" + dataSEM[0].accountName + ")";
+                                        if ($rootScope.areaFilter != "全部" && $location.path() == "/extension/way") {// 推广方式地域过滤不为全部是特殊处理
+                                            dataObj["accountName"] = "搜索推广 (" + dataSEM[0].regionName + ")";
+                                        } else {
+                                            dataObj["accountName"] = "搜索推广 (" + dataSEM[0].accountName + ")";
+                                        }
                                     } else {
                                         dataObj["accountName"] = "搜索推广 (暂无数据 )";
                                     }
