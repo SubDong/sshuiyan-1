@@ -25,7 +25,7 @@ define(["./module"], function (ctrs) {
                     var index = 0;
                     for (var i = 0; i < data.length; i++) {
                         var item = data[i];
-                        if(item.pathName == page.name){
+                        if(item.pathName ==(page.prefix + page.name)){
                             index = i;
                             break;
                         }
