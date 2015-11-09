@@ -491,63 +491,39 @@ define(["./module"], function (ctrs) {
                 + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=ssc&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
             }).success(function (data, status) {
                 var dataArray = [];
-                if (data != null && data.length > 0) {
-                    var semReqURLs = [];
-                    data.forEach(function (item, i) {
+                var semReqURLs = [];
+                data.forEach(function (item, i) {
+                    var variousId = item.kw.split(",");
+                    item.kw = variousId[0];
+                    var url = SEM_API_URL + "/sem/report/" + $rootScope.tableSwitch.promotionSearch.SEMData + "?a=" + user + "&b=" + baiduAccount + "&kwid=" + variousId[3] + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1";
+                    semReqURLs.push($http.get(url));
+                });
+                $q.all(semReqURLs).then(function (final_result) {
+                    console.log(final_result);
+                    final_result.forEach(function (_result, i) {
+                        var item = data[i];
                         var variousId = item.kw.split(",");
                         item.kw = variousId[0];
-                        var url = SEM_API_URL + "/sem/report/" + $rootScope.tableSwitch.promotionSearch.SEMData + "?a=" + user + "&b=" + baiduAccount + "&kwid=" + variousId[3] + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1"
-                        //$http({
-                        //    method: 'GET',
-                        //    url: url
-                        //}).success(function (dataSEM, status) {
-                        //    var datas = {};
-                        //    if (variousId[3] == 0) {
-                        //        $rootScope.checkedArray.forEach(function (x, y) {
-                        //            datas[x] = (item[x] != undefined ? item[x] : "--");
-                        //            var field = $rootScope.tableSwitch.latitude.field
-                        //            datas[field] = item[field] + ",";
-                        //        })
-                        //    } else {
-                        //        $rootScope.checkedArray.forEach(function (x, y) {
-                        //            datas[x] = (item[x] != undefined ? item[x] : dataSEM[0][x]);
-                        //        });
-                        //        var field = $rootScope.tableSwitch.latitude.field
-                        //        datas[field] = item[field] + getTableTitle(field, dataSEM[0]);
-                        //    }
-                        //    dataArray.push(datas);
-                        //    console.log(dataArray.length);
-                        //});
-                        semReqURLs.push($http.get(url));
-                    });
-                    $q.all(semReqURLs).then(function (final_result) {
-                        final_result.forEach(function (_result, i) {
-                            var item = data[i];
-                            var variousId = item.kw.split(",");
-                            item.kw = variousId[0];
-                            var datas = {};
-                            if (variousId[3] == 0) {
-                                $rootScope.checkedArray.forEach(function (x, y) {
-                                    datas[x] = (item[x] != undefined ? item[x] : "--");
-                                    var field = $rootScope.tableSwitch.latitude.field
-                                    datas[field] = item[field] + ",";
-                                })
-                            } else {
-                                $rootScope.checkedArray.forEach(function (x, y) {
-                                    datas[x] = (item[x] != undefined ? item[x] : _result["data"][0][x]);
-                                });
+                        var datas = {};
+                        if (variousId[3] == 0) {
+                            $rootScope.checkedArray.forEach(function (x, y) {
+                                datas[x] = (item[x] != undefined ? item[x] : "--");
                                 var field = $rootScope.tableSwitch.latitude.field
-                                datas[field] = item[field] + getTableTitle(field, _result["data"][0]);
-                            }
-                            dataArray.push(datas);
-                        });
-                        $rootScope.$broadcast("LoadSSCDataFinish", $rootScope.checkedArray, dataArray);
+                                datas[field] = item[field] + ",";
+                            })
+                        } else {
+                            $rootScope.checkedArray.forEach(function (x, y) {
+                                datas[x] = (item[x] != undefined ? item[x] : _result["data"][0][x]);
+                            });
+                            var field = $rootScope.tableSwitch.latitude.field
+                            datas[field] = item[field] + getTableTitle(field, _result["data"][0]);
+                        }
+                        dataArray.push(datas);
                     });
-                }
-
-                $scope.gridOptions.rowHeight = 55;
-                $scope.gridOptions.data = dataArray;
-
+                    $scope.gridOptions.rowHeight = 55;
+                    $scope.gridOptions.data = dataArray;
+                    $rootScope.$broadcast("LoadSSCDataFinish", $rootScope.checkedArray, dataArray);
+                });
             });
         };
 
@@ -860,14 +836,17 @@ define(["./module"], function (ctrs) {
                     var dataInfoClick = 0;
                     var dataInfoIpmr = 0;
                     var page = option[0].grid.options.paginationCurrentPage;
-                    var pageSize = option[0].grid.options.paginationPageSize
-                    var maxIndex = (page * pageSize) - 1
-                    var minIndex = (page - 1) * pageSize
+                    var pageSize = option[0].grid.options.paginationPageSize;
+                    var maxIndex = (page * pageSize) - 1;
+                    var minIndex = (page - 1) * pageSize;
                     for (var i = minIndex; i <= maxIndex; i++) {
                         if (i < option.length) {
                             dataInfoClick += option[i].entity["click"];
                             dataInfoIpmr += option[i].entity["impression"];
                         }
+                    }
+                    if (isNaN(dataInfoClick) || isNaN(dataInfoIpmr)) {
+                        return "--";
                     }
                     var returnCtr = (dataInfoIpmr == 0 ? "0%" : ((dataInfoClick / dataInfoIpmr)).toFixed(2) + "%");
                     return returnCtr;
@@ -878,7 +857,7 @@ define(["./module"], function (ctrs) {
                 if (a.col.field == "avgPage") {
                     returnData = (returnData / option.length).toFixed(2);
                 }
-                if (a.col.field == "outRate" || a.col.field == "nuvRate") {
+                if ((a.col.field == "outRate" || a.col.field == "nuvRate") && (option[0].entity[a.col.field] + "").indexOf("%") == -1) {
                     returnData = (returnData == "0.00%" ? "0%" : (parseInt(returnData) / option.length).toFixed(2) + "%");
                 }
                 if (a.col.field == "avgTime") {

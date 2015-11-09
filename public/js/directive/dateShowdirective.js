@@ -440,9 +440,11 @@ define(["../app"], function (app) {
                                 obj.value += parseFloat(r[temp].substr(0, r[temp].length - 1));
                             } else if (JSON.stringify(r[temp]).indexOf(":") != -1) {
                                 var _t_array = r[temp].split(":");
-                                obj.value = _t_array[0] * 3600 * 1000 + _t_array[1] * 60 * 1000 + _t_array[2] * 1000;
+                                obj.value += _t_array[0] * 3600 * 1000 + _t_array[1] * 60 * 1000 + _t_array[2] * 1000;
+                            } else if (JSON.stringify(r[temp]).indexOf(".") != -1 && JSON.stringify(r[temp]).indexOf("%") == -1) {
+                                obj.value += parseFloat(r[temp]);
                             } else {
-                                obj.value += r[temp];
+                                obj.value += parseInt(r[temp]);
                             }
                             obj.count++;
                         });
@@ -506,9 +508,9 @@ define(["../app"], function (app) {
                                 obj.value += parseFloat(r[temp].substr(0, r[temp].length - 1));
                             } else if (JSON.stringify(r[temp]).indexOf(":") != -1) {
                                 var _t_array = r[temp].split(":");
-                                obj.value = _t_array[0] * 3600 * 1000 + _t_array[1] * 60 * 1000 + _t_array[2] * 1000;
+                                obj.value += _t_array[0] * 3600 * 1000 + _t_array[1] * 60 * 1000 + _t_array[2] * 1000;
                             } else {
-                                obj.value += r[temp];
+                                obj.value += parseInt(r[temp]);
                             }
                             obj.count++;
                         });
@@ -659,7 +661,7 @@ define(["../app"], function (app) {
                     if (value.indexOf && value.indexOf("%") != -1) {// 字符串且存在符号%
                         return value;
                     }
-                    return count ? (value == 0 ? "0" : (value / count).toFixed(2) + "%") : "--";
+                    return count ? (value == 0 ? "0.00%" : (value / count).toFixed(2) + "%") : "--";
                 }
                 case "acp":
                 case "avgPage":
