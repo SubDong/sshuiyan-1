@@ -1189,9 +1189,125 @@ define(["../app"], function (app) {
                     ];
                     break;
                 }
+                case "equipment" :
+                {
+                    //配置默认指标
+                    $rootScope.checkedArray = ["pv", "uv", "ip", "outRate", "avgTime"];
+                    $rootScope.gridArray = [
+                        {
+                            name: "xl",
+                            displayName: "",
+                            cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
+                            maxWidth: 10,
+                            enableSorting: false
+                        },
+                        {
+                            name: "网络设备类型",
+                            displayName: "网络设备类型",
+                            field: "pm",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                            enableSorting: false
+                        },
+                        {
+                            name: "浏览量(PV)",
+                            displayName: "浏览量(PV)",
+                            field: "pv",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>",
+                            sort: {
+                                direction: uiGridConstants.DESC,
+                                priority: 1
+                            }
+                        },
+                        {
+                            name: "访客数(UV)",
+                            displayName: "访客数(UV)",
+                            field: "uv",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                        },
+                        {
+                            name: "IP数",
+                            displayName: "IP数",
+                            field: "ip",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>",
+                            enableSorting: false
+                        },
+                        {
+                            name: "跳出率",
+                            displayName: "跳出率",
+                            field: "outRate",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                        },
+                        {
+                            name: "平均访问时长",
+                            displayName: "平均访问时长",
+                            field: "avgTime",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                        }
+                    ];
+                    break;
+                }
+                case "novisitors" :
+                {
+                    $rootScope.checkedArray = ["vc", "uv", "outRate", "avgTime", "avgPage"];
+                    $rootScope.gridArray = [
+                        {
+                            name: "xl",
+                            displayName: "",
+                            cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
+                            maxWidth: 10,
+                            enableSorting: false
+                        },
+                        {
+                            name: "新老访客",
+                            displayName: "新老访客",
+                            field: "ct",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                            enableSorting: false
+                        },
+                        {
+                            name: " ",
+                            cellTemplate: "<div class='table_box'><a ui-sref='history2' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn'  title='查看历史趋势'></a></div>",
+                            enableSorting: false
+                        },
+                        {
+                            name: "访问次数",
+                            displayName: "访问次数",
+                            field: "vc",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>",
+                            sort: {
+                                direction: uiGridConstants.DESC,
+                                priority: 1
+                            }
+                        },
+                        {
+                            name: "访客数(UV)",
+                            displayName: "访客数(UV)",
+                            field: "uv",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                        },
+                        {
+                            name: "跳出率",
+                            displayName: "跳出率",
+                            field: "outRate",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                        },
+                        {
+                            name: "平均访问时长",
+                            displayName: "平均访问时长",
+                            field: "avgTime",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                        },
+                        {
+                            name: "平均访问页数",
+                            displayName: "平均访问页数",
+                            field: "avgPage",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                        }
+                    ];
+                    break;
+                }
             }
         }
-
         return {
             getQuotaByType: getQuotaByType,
             getQuotaGridByType: getQuotaGridByType,
