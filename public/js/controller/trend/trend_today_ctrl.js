@@ -461,7 +461,7 @@ define(["./module"], function (ctrs) {
             }
             var times = chartUtils.getTimeOffset(start, end);
             $scope.todayCalendar = $scope.getDateByDayInt($rootScope.tableTimeStart);
-            $scope.dayOrWeek = end;
+            $scope.dayOrWeek = start;
             $scope.mothselected = true;
             $scope.weekselected = true;
             $scope.choiceClass = true;
@@ -514,10 +514,10 @@ define(["./module"], function (ctrs) {
                 if (e.config.keyFormat == "day") {
                     e.half = true;
                     reqRequestStart = $http.get(e.url + "?type=" + e.types + "&dimension=" + e.dimension + "&start=" + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&userType=" + $rootScope.userType + "&int=-1");
-                    reqRequestEnd = $http.get(e.url + "?type=" + e.types + "&dimension=" + e.dimension + "&start=" + times[1] + "&end=" + times[1] + "&userType=" + $rootScope.userType + "&int=-1");
+                    reqRequestEnd = $http.get(e.url + "?type=" + e.types + "&dimension=" + e.dimension + "&start=" + times[0] + "&end=" + times[1] + "&userType=" + $rootScope.userType + "&int=-1");
                 } else {
-                    reqRequestStart = $http.get(e.url + "?type=" + e.types + "&dimension=" + e.dimension + "&start=" + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&userType=" + $rootScope.userType);
-                    reqRequestEnd = $http.get(e.url + "?type=" + e.types + "&dimension=" + e.dimension + "&start=" + times[1] + "&end=" + times[1] + "&userType=" + $rootScope.userType);
+                    reqRequestStart = $http.get(e.url + "?type=" + e.types + "&dimension=" + e.dimension + "&start=" + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeStart + "&userType=" + $rootScope.userType);
+                    reqRequestEnd = $http.get(e.url + "?type=" + e.types + "&dimension=" + e.dimension + "&start=" + times[0] + "&end=" + times[0] + "&userType=" + $rootScope.userType);
                 }
                 e.config.instance.showLoading({
                     effect: 'whirling',

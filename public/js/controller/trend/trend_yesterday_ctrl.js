@@ -430,8 +430,8 @@ define(["./module"], function (ctrs) {
                 return;
             }
             var times = chartUtils.getTimeOffset(start, end);
-            $scope.todayCalendar = start;
-            $scope.dayOrWeek = end;
+            $scope.todayCalendar = $scope.getDateByDayInt($rootScope.tableTimeStart);
+            $scope.dayOrWeek = start;
             $scope.mothselected = true;
             $scope.weekselected = true;
             $scope.choiceClass = true;
@@ -445,7 +445,20 @@ define(["./module"], function (ctrs) {
             var type = [chartUtils.convertEnglish($scope.charts[0].config.legendData[0])];
             $scope.compare(times, type, true);
             $scope.cancelCheckbox();
-        }
+        };
+        $scope.getDateByDayInt = function (startInt) {
+
+            function GetDateStr(AddDayCount) {
+                var dd = new Date();
+                dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
+                var y = dd.getFullYear();
+                var m = dd.getMonth() + 1;//获取当前月份的日期
+                var d = dd.getDate();
+                return y + "-" + m + "-" + d;
+            }
+
+            return GetDateStr(startInt);
+        };
         $scope.compare = function (times, type, legendRender) {
             $scope.charts.forEach(function (e) {
                 var chart = echarts.init(document.getElementById(e.config.id));
@@ -470,11 +483,11 @@ define(["./module"], function (ctrs) {
                 var reqRequestEnd;
                 if (e.config.keyFormat == "day") {
                     e.half = true;
-                    reqRequestStart = $http.get(e.url + "?type=" + e.types + "&dimension=" + e.dimension + "&start=" + times[0] + "&end=" + times[0] + "&userType=" + $rootScope.userType + "&int=-1");
-                    reqRequestEnd = $http.get(e.url + "?type=" + e.types + "&dimension=" + e.dimension + "&start=" + times[1] + "&end=" + times[1] + "&userType=" + $rootScope.userType + "&int=-1");
+                    reqRequestStart = $http.get(e.url + "?type=" + e.types + "&dimension=" + e.dimension + "&start=" +  $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&userType=" + $rootScope.userType + "&int=-1");
+                    reqRequestEnd = $http.get(e.url + "?type=" + e.types + "&dimension=" + e.dimension + "&start=" + times[0] + "&end=" + times[1] + "&userType=" + $rootScope.userType + "&int=-1");
                 } else {
-                    reqRequestStart = $http.get(e.url + "?type=" + e.types + "&dimension=" + e.dimension + "&start=" + times[0] + "&end=" + times[0] + "&userType=" + $rootScope.userType);
-                    reqRequestEnd = $http.get(e.url + "?type=" + e.types + "&dimension=" + e.dimension + "&start=" + times[1] + "&end=" + times[1] + "&userType=" + $rootScope.userType);
+                    reqRequestStart = $http.get(e.url + "?type=" + e.types + "&dimension=" + e.dimension + "&start=" + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeStart + "&userType=" + $rootScope.userType);
+                    reqRequestEnd = $http.get(e.url + "?type=" + e.types + "&dimension=" + e.dimension + "&start=" + times[0] + "&end=" + times[0] + "&userType=" + $rootScope.userType);
                 }
                 e.config.instance.showLoading({
                     effect: 'whirling',

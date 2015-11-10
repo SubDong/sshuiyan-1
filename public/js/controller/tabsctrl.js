@@ -1728,11 +1728,15 @@ define(["app"], function (app) {
                                 }
                             } else {
                                 var result = [];
-                                var vaNumber = 0;
                                 var maps = {}
                                 var newData = chartUtils.getByHourByDayData(data);
 
                                 newData.forEach(function (info, x) {
+                                    if (info.key.length == 0) {
+                                        for (var j = 0;j < 24;j++) {
+                                            info.key.push(j);
+                                        }
+                                    }
                                     for (var i = 0; i < info.key.length; i++) {
                                         var infoKey = info.key[i];
                                         var obj = maps[infoKey];
@@ -1775,7 +1779,6 @@ define(["app"], function (app) {
                                     resultObj[$rootScope.tableSwitch.latitude.field] = "暂无数据";
                                     result.push(resultObj)
                                 }
-                                ;
                                 $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
                                 $scope.gridOptions.data = result;
                             }
