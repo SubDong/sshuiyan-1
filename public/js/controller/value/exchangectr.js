@@ -205,14 +205,6 @@ define(["./module"], function (ctrs) {
                 $rootScope.interval = 30;
                 $scope.init();
             };
-            function GetDateStr(AddDayCount) {
-                var dd = new Date();
-                dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
-                var y = dd.getFullYear();
-                var m = dd.getMonth() + 1;//获取当前月份的日期
-                var d = dd.getDate();
-                return y + "-" + m + "-" + d;
-            }
             $rootScope.datepickerClick = function (start, end, label) {
                 $scope.reset();
                 $scope.timeClass = true;

@@ -289,14 +289,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     $event.stopPropagation();
                     scope.opens = true;
                 };
-                function GetDateStr(AddDayCount) {
-                    var dd = new Date();
-                    dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
-                    var y = dd.getFullYear();
-                    var m = dd.getMonth() + 1;//获取当前月份的日期
-                    var d = dd.getDate();
-                    return y + "-" + m + "-" + d;
-                }
 
                 $('#reportrange span').html(GetDateStr(0));
                 $('#reportrange').daterangepicker({
@@ -473,14 +465,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
             replace: true,
             //transclude: true,
             link: function (scope, element, attris, controller) {
-                function GetDateStr(AddDayCount) {
-                    var dd = new Date();
-                    dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
-                    var y = dd.getFullYear();
-                    var m = dd.getMonth() + 1;//获取当前月份的日期
-                    var d = dd.getDate();
-                    return y + "-" + m + "-" + d;
-                }
 
                 scope.choicedate = function (ev, picker) {
                     var pickerTiemOne = 0;
@@ -2409,7 +2393,9 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
         return {
             restrict: 'A',
             link: function (scope, element, attrs) {
-                $document.scrollTop(0);
+                if ($document.scrollTop) {
+                    $document.scrollTop(0);
+                }
                 element.addClass(attrs["setClassWhenAtTop"]);
 
                 $(".fix-to-top").css("width", $(document.body).width() - 155);
