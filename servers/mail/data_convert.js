@@ -34,6 +34,9 @@ var data_convert = {
                     case "region":
                         _tmp["地域"] = key;
                         break;
+                    case "pm":
+                        _tmp["网络设备类型"] = key == 0 ? "计算机端" :"移动端";
+                        break;
                     default:
                         switch (rule_url) {
                             case "month":

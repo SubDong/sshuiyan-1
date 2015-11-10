@@ -229,7 +229,8 @@ define(["../app"], function (app) {
             "groupAnalysis",
             "adsTrack",
             "transformAnalysis",
-            "provincemap"
+            "provincemap",
+            "equipment"
         ]
     }]);
 });

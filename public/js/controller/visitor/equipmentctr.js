@@ -5,7 +5,7 @@ define(["./module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.controller('equipmentctr', function ($scope, $rootScope, $q, $http, requestService, areaService, $location,uiGridConstants) {
+    ctrs.controller('equipmentctr', function ($scope, $rootScope, $q, $http, $cookieStore, requestService, areaService, $location,uiGridConstants) {
         //客户端属性初始化
         $scope.equipment.selected = {"name": "网络设备类型", "field": "pm"};
         if($location.url().split("?").length>1) {
@@ -347,6 +347,69 @@ define(["./module"], function (ctrs) {
                 }
             };
             cb(docDefinition);
+        };
+
+
+        //发送邮件功能-初始化数据
+        $rootScope.initMailData = function () {
+            $http.get("api/saveMailConfig?rt=read&rule_url=" + $rootScope.mailUrl[15] + "").success(function (result) {
+                if (result) {
+                    var ele = $("ul[name='sen_form']");
+                    formUtils.rendererMailData(result, ele);
+                }
+            });
+        }
+        //发送邮件功能-确定发送
+        $scope.sendConfig = function () {
+            var formData = formUtils.vaildateSubmit($("ul[name='sen_form']"));
+            var result = formUtils.validateEmail(formData.mail_address, formData);
+            if (result.ec) {
+                alert(result.info);
+            } else {
+                formData.rule_url = $rootScope.mailUrl[15];
+                formData.uid = $cookieStore.get('uid');
+                formData.site_id = $rootScope.siteId;
+                formData.type_id = $rootScope.userType;
+                formData.schedule_date = $scope.mytime.time.Format('hh:mm');
+
+                $http.get("api/saveMailConfig?data=" + JSON.stringify(formData)).success(function (data) {
+                    var result = JSON.parse(eval("(" + data + ")").toString());
+                    if (result.ok == 1) {
+                        alert("操作成功!");
+                        $http.get("/api/initSchedule");
+                    } else {
+                        alert("操作失败!");
+                    }
+                });
+            }
+        };
+        //删除配置信息
+        $scope.deleteConfig = function () {
+            var formData = formUtils.vaildateSubmit($("ul[name='sen_form']"));
+            var result = formUtils.validateEmail(formData.mail_address, formData);
+            if (result.ec) {
+                alert(result.info);
+            } else {
+                formData.rule_url = $rootScope.mailUrl[15];
+                formData.uid = $cookieStore.get('uid');
+                formData.site_id = $rootScope.siteId;
+                formData.type_id = $rootScope.userType;
+
+                $http.get("api/deleteMailConfig?data=" + JSON.stringify(formData)).success(function (data) {
+                    var result = JSON.parse(eval("(" + data + ")").toString());
+                    if (result.ok == 1) {
+                        alert("操作成功!");
+                        $http.get("api/initSchedule").success(function (result) {
+                            if (result) {
+                                var ele = $("ul[name='sen_form']");
+                                formUtils.initData(ele);
+                            }
+                        });
+                    } else {
+                        alert("操作失败!");
+                    }
+                });
+            }
         };
 
 

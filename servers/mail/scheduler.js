@@ -319,6 +319,14 @@ module.exports = function (req) {
                                 timeOffset[1] = 0;
                                 interval = 3600000;
                                 break;
+                            case "equipment":
+                                dimension = "pm";
+                                subject = "附件中含有设备环境数据,请查收!";
+                                title = "网络设备类型今日数据报告!";
+                                timeOffset[0] = 0;
+                                timeOffset[1] = 0;
+                                interval = 3600000;
+                                break;
                             default :
                                 break;
                         }
