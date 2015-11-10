@@ -230,7 +230,8 @@ define(["../app"], function (app) {
             "adsTrack",
             "transformAnalysis",
             "provincemap",
-            "equipment"
+            "equipment",
+            "novisitors"
         ]
     }]);
 });

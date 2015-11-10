@@ -327,6 +327,16 @@ module.exports = function (req) {
                                 timeOffset[1] = 0;
                                 interval = 3600000;
                                 break;
+
+                            case "novisitors":
+                                dimension = "ct";
+                                subject = "附件中含有新老访客数据,请查收!";
+                                title = "新老访客今日数据报告!";
+                                timeOffset[0] = 0;
+                                timeOffset[1] = 0;
+                                interval = 3600000;
+                                break;
+
                             default :
                                 break;
                         }
