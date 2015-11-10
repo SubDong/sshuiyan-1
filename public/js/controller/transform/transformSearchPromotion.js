@@ -222,7 +222,7 @@ define(["./module"], function (ctrs) {
                 if (a.col.field == "avgPage") {
                     returnData = (returnData / option.length).toFixed(2);
                 }
-                if (a.col.field == "outRate" || a.col.field == "nuvRate"||a.col.field == "crate") {
+                if (a.col.field == "outRate" || a.col.field == "nuvRate" || a.col.field == "crate") {
                     returnData = returnData == "0.00%" ? "0%" : (returnData / option.length).toFixed(2) + "%";
                 }
                 if (a.col.field == "avgTime") {
@@ -364,7 +364,7 @@ define(["./module"], function (ctrs) {
                 _allFilters = filterUtil.filter(_allFilters, "rf_type", _rfFilter);
                 _allFilters = filterUtil.filter(_allFilters, "region", "");
                 $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
-                $rootScope.tableSwitch.areaFilter=null
+                $rootScope.tableSwitch.areaFilter = null
             } else {
                 $rootScope.tableSwitch.areaFilter = {region: area}
                 $scope.areaSearch = area;

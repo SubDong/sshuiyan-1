@@ -1098,22 +1098,6 @@ api.get("/transform/getConvEvent", function (req, res) {
     });
 });
 
-api.get("/transform/getDayEvents", function (req, res) {
-    var query = url.parse(req.url, true).query;
-    //组合Index
-    var indexString = [];
-    if (query.start.substring(1, query.start.length).match("-") != null && end.substring(1, query.start.length).match("-") != null) {
-        indexString = date.createIndexsByTime(query.start, query.end, "access-");
-    } else {
-        indexString = date.createIndexes(query.start, query.end, "access-");
-    }
-    //计算开始时间
-    var timeArea = date.getConvertTimeByNumber(query.start, query.end)
-    transform.searchDayConvEvents(req.es, indexString, query.type, query.filters,function (result) {
-        datautils.send(res, result);
-    });
-});
-
 api.get("/transform/pageTransformCtr", function (req, res) {
     var parameters = req.url.split("?")[1].split("&");
     var start = parameters[0].split("=")[1];
