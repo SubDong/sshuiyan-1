@@ -121,15 +121,6 @@ define(["./module"], function (ctrs) {
         this.removeFromSelected = function (dt) {
             this.selectedDates.splice(this.selectedDates.indexOf(dt), 1);
         }
-        function GetDateStr(AddDayCount) {
-            var dd = new Date();
-            dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
-            var y = dd.getFullYear();
-            var m = dd.getMonth() + 1;//获取当前月份的日期
-            var d = dd.getDate();
-            return y + "-" + m + "-" + d;
-        }
-
         $rootScope.initMailData = function () {
             $http.get("api/saveMailConfig?rt=read&rule_url=" + $rootScope.mailUrl[1] + "").success(function (result) {
                 if (result) {
@@ -291,15 +282,6 @@ define(["./module"], function (ctrs) {
             $rootScope.end = time[1];
             $scope.init($rootScope.user, $rootScope.baiduAccount, "campaign", $scope.selectedQuota, $rootScope.start, $rootScope.end);
         }
-        function GetDateStr(AddDayCount) {
-            var dd = new Date();
-            dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
-            var y = dd.getFullYear();
-            var m = dd.getMonth() + 1;//获取当前月份的日期
-            var d = dd.getDate();
-            return y + "-" + m + "-" + d;
-        }
-
         //刷新
         $scope.page_refresh = function () {
 //                $rootScope.tableFormat = null;

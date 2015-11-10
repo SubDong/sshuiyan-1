@@ -2546,11 +2546,39 @@ define(["app"], function (app) {
 
             }, {
                 title: "访问页数目标"
-            }
-            ];
+            }];
+
             $rootScope.changeListInit = function (timeData) {
                 $scope.gridOpArray = angular.copy(timeData.gridArray);
                 $scope.gridOptions.columnDefs = $scope.gridOpArray;
+                function filterDataByType (array, type) {
+                    var _tempData = [];
+                    if (!array) {
+                        return _tempData;
+                    }
+                    if (type == 4) {
+                        _tempData = array;
+                    } else if (type == 1) {
+                        for (var i = 0; i < array.length; i++) {
+                            if (array[i]["percentage"].substring(0, 1) == "+") {
+                                _tempData.push(array[i]);
+                            }
+                        }
+                    } else if (type == 2) {
+                        for (var i = 0; i < array.length; i++) {
+                            if (array[i]["percentage"].substring(0, 1) == "-") {
+                                _tempData.push(array[i]);
+                            }
+                        }
+                    } else if (type == 3) {
+                        for (var i = 0; i < array.length; i++) {
+                            if (array[i]["percentage"].substring(0, 1) != "+" && array[i]["percentage"].substring(0, 1) != "-") {
+                                _tempData.push(array[i]);
+                            }
+                        }
+                    }
+                    return _tempData.splice(0, 100);
+                }
                 $http.get("api/changeList?start=" + timeData.start + "&end=" + timeData.end + "&contrastStart=" + timeData.contrastStart + "&contrastEnd=" + timeData.contrastEnd + "&filterType=" + timeData.filterType + "&type=" + $rootScope.userType).success(function (data) {
                     $rootScope.changeObj = {
                         sum_pv_count: data.sum_pv,
@@ -2558,84 +2586,12 @@ define(["app"], function (app) {
                         all_percentage: data.percentage
                     };
 
-                    $scope.gridOptions.data = data.pv ? data.pv : [];
-                    /*if (data.percentage.substring(0, 1) == '+') {
-                     $rootScope.riseCell = true;
-                     } else if (data.percentage.substring(0, 1) == '-') {
-                     $rootScope.descendCell = true;
-                     } else {
-                     $rootScope.flatCell = true;
-                     }*/
-                    data.pv = data.pv ? data.pv : [];
-                    var _tempData = [];
-                    if (timeData.filterType == 4) {
-                        _tempData = data.pv;
-                    } else if (timeData.filterType == 1) {
-                        for (var i = 0; i < data.pv.length; i++) {
-                            if (data.pv[i]["percentage"].substring(0, 1) == "+") {
-                                _tempData.push(data.pv[i]);
-                            }
-                        }
-                    } else if (timeData.filterType == 2) {
-                        for (var i = 0; i < data.pv.length; i++) {
-                            if (data.pv[i]["percentage"].substring(0, 1) == "-") {
-                                _tempData.push(data.pv[i]);
-                            }
-                        }
-                    } else if (timeData.filterType == 3) {
-                        for (var i = 0; i < data.pv.length; i++) {
-                            if (data.pv[i]["percentage"].substring(0, 1) != "+" && data.pv[i]["percentage"].substring(0, 1) != "-") {
-                                _tempData.push(data.pv[i]);
-                            }
-                        }
-                    }
+                    // 数据过滤
+                    var _tempData = filterDataByType(data.pv, timeData.filterType);
 
-                    //if (_tempData.length > 0) {
-                    //    for (var i = _tempData.length; i < 222; i++) {
-                    //        _tempData[i] = _tempData[0];
-                    //    }
-                    //}
-
-                    while (_tempData.length > 100) {
-                        _tempData.pop();
-                    }
-
-                    //_tempData.push({
-                    //    pathName: "123",
-                    //    pv: 123,
-                    //    contrastPv: 23,
-                    //    percentage: "+100(+434.78%)"
-                    //})
-                    //
-                    //_tempData.push({
-                    //    pathName: "1weims",
-                    //    pv: 12,
-                    //    contrastPv: 2,
-                    //    percentage: "+10(+500%)"
-                    //})
-                    //
-                    //_tempData.push({
-                    //    pathName: "1weimsdfasdfs",
-                    //    pv: 42,
-                    //    contrastPv: 67,
-                    //    percentage: "-25(-37.31%)"
-                    //})
                     $rootScope.changeListData = _tempData;
                     $scope.gridOptions.data = _tempData;
                     $scope.gridOptions.enableSorting = true;
-                    $scope.gridOptions.columnDefs[4].cellClass = function (grid, row, col, rowRenderIndex, colRenderIndex) {
-                        if (grid.getCellValue(row, col)) {
-                            if (grid.getCellValue(row, col).toString().substring(0, 1) == "+") {
-                                return "riseCell";
-                            } else if (grid.getCellValue(row, col).toString().substring(0, 1) == "-") {
-                                return "descendCell";
-                            } else {
-                                return "flatCell";
-                            }
-                        } else {
-                            return "flatCell";
-                        }
-                    }
                 });
             };
 

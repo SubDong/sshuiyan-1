@@ -77,13 +77,23 @@ define(["./module"], function (ctrs) {
                 '</div>',
                 field: "percentage",
                 footerCellTemplate: "<div class='ui-grid-cell-contents' id='summary'>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),5)}}</div>",
-                enableSorting: false
+                enableSorting: false,
+                cellClass: function (grid, row, col, rowRenderIndex, colRenderIndex) {
+                    var cellValue = grid.getCellValue(row, col);
+                    if (cellValue) {
+                        var cellValueFlag = cellValue.toString().substring(0, 1);
+                        return cellValueFlag == "+" ? "riseCell" : cellValueFlag == "-" ? "descendCell" : "flatCell";
+                    } else {
+                        return "flatCell";
+                    }
+                }
             }
-        ]
-        ;
+        ];
+
         $scope.filter_data = function (type) {
             $scope.changeTime(type);
         };
+
         $scope.showSearchUrl = function (row) {
             popupService.showSourceData(row.entity.kw);
         };
@@ -100,15 +110,6 @@ define(["./module"], function (ctrs) {
             //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
             arrayClear: false //是否清空指标array
         };
-
-        function GetDateStr(AddDayCount) {
-            var dd = new Date();
-            dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
-            var y = dd.getFullYear();
-            var m = (dd.getMonth() + 1) < 10 ? "0" + (dd.getMonth() + 1) : (dd.getMonth() + 1);//获取当前月份的日期
-            var d = dd.getDate() < 10 ? "0" + dd.getDate() : dd.getDate();
-            return y + "-" + m + "-" + d;
-        }
 
         $rootScope.datepickerClick1 = function (start, end, flag) {
             var time = chartUtils.getTimeOffset(start, end);

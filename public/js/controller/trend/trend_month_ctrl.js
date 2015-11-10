@@ -460,15 +460,6 @@ define(["./module"], function (ctrs) {
             //requestService.refresh($scope.charts);
         }
         //刷新
-        function GetDateStr(AddDayCount) {
-            var dd = new Date();
-            dd.setDate(dd.getDate() + AddDayCount);//获取AddDayCount天后的日期
-            var y = dd.getFullYear();
-            var m = dd.getMonth() + 1;//获取当前月份的日期
-            var d = dd.getDate();
-            return y + "-" + m + "-" + d;
-        }
-
         $scope.page_refresh = function () {
             $rootScope.start = -29;
             $rootScope.end = 0;
