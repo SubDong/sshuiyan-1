@@ -262,7 +262,7 @@ module.exports = function (req) {
                         } else {
                             console.log("Send mail failed:No data result!");
                         }
-                    } else {
+                    } else { //默认
                         var timeOffset = [-1, -1];
                         var interval = 1;
                         var dimension = "period";
@@ -311,12 +311,21 @@ module.exports = function (req) {
                                 dimension = "loc";
                                 title = "入口页面今日数据报告!";
                                 break;
+                            case "provincemap":
+                                dimension = "region";
+                                subject = "附件中含有访客地图数据,请查收!";
+                                title = "访客地图今日数据报告!";
+                                timeOffset[0] = 0;
+                                timeOffset[1] = 0;
+                                interval = 3600000;
+                                break;
                             default :
                                 break;
                         }
                         var indexes = date.createIndexes(timeOffset[0], timeOffset[1], "access-");//indexs
                         var period = date.period(timeOffset[0], timeOffset[1]);
                         var quotas = ["pv", "uv", "ip", "outRate", "avtTime", "vc", "nuv", "nuvRate", "avgTime", "avgPage"];
+
                         es_request.search(req.es, indexes, mailRule.type_id, quotas, dimension, [0], filters, period[0], period[1], interval, function (data) {
                             if (data.length) {
                                 var result = data_convert.convertData(data, rule_index, dimension);

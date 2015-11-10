@@ -31,6 +31,9 @@ var data_convert = {
                     case "loc":
                         _tmp["受访页面"] = key;
                         break;
+                    case "region":
+                        _tmp["地域"] = key;
+                        break;
                     default:
                         switch (rule_url) {
                             case "month":

@@ -228,7 +228,8 @@ define(["../app"], function (app) {
             "changelist",
             "groupAnalysis",
             "adsTrack",
-            "transformAnalysis"
+            "transformAnalysis",
+            "provincemap"
         ]
     }]);
 });
