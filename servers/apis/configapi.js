@@ -46,6 +46,7 @@ api.get("/eventchnage_list", function (req, res) {
                                     evttag: item.event_name,//事件名称
                                     evpage: item.event_page,//事件页面
                                     evtarget: item.event_target,//是否为转化目标
+                                    evpause:item.event_status==0?true:false,
                                     evtime: item.update_time//转化修改时间
                                 };
                                 confs.push(event_config);
@@ -93,6 +94,7 @@ api.get("/eventchnage_list", function (req, res) {
                                             evttag: item.event_name,//事件名称
                                             evpage: item.event_page,//事件页面
                                             evtarget: item.event_target,//是否为转化目标
+                                            evpause:item.event_status==0?true:false,
                                             evtime: item.update_time//转化修改时间
                                         };
                                         confs.push(event_config);
@@ -137,6 +139,7 @@ api.get("/eventchnage_list", function (req, res) {
                                     eid: item.event_id,//事件ID
                                     evttag: item.event_name,//事件名称
                                     evpage: item.event_page,//事件页面
+                                    evpause:item.event_status==0?true:false,
                                     evtarget: item.event_target//是否为转化目标
                                 };
                                 confs.push(event_config);
