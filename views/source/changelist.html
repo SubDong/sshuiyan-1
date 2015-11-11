@@ -1,5 +1,5 @@
-<div class="middle_containers" ng-controller="changelistctr">
-    <div class="date_select"  set-class-when-at-top="fix-to-top">
+<div class="middle_containers" ng-controller="changeListCtr">
+    <div class="date_select" set-class-when-at-top="fix-to-top">
         <div role="group" class="btn-group fl">
             <button class="btn btn-default" type="button" ng-click="yesterday()" ng-class="{'current':yesterdayClass}">
                 昨天
@@ -41,15 +41,11 @@
                     <th>来访次数</th>
                     <th>{{changeObj.sum_pv_count||'0'}}</th>
                     <th>{{changeObj.contrast_sum_pv_count||'0'}}</th>
-                    <!--<th ng-class="{'riseCell':riseCell,'descendCell':descendCell,'flatCell':flatCell}">-->
-                    <th>
-                        {{changeObj.all_percentage||'0(0%)'}}
-                    </th>
+                    <th>{{changeObj.all_percentage||'0(0.00%)'}}</th>
                 </tr>
             </table>
         </div>
-        <div class="index_chart">
-        </div>
+        <div class="index_chart"></div>
         <div class="table_content" ng-controller="TabsCtrl" data-ng-init="helloKitty()">
             <div class="custom_table" ng-class="{hidePageContainer:gridApi2.grid.rows.length<=20}">
                 <div ui-grid="gridOptions" class="grid clearfix"
