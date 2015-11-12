@@ -44,7 +44,7 @@ define(["./module"], function (ctrs) {
                 enableSorting: false
             }, {
                 name: "浏览量(PV)",
-                displayName: "",
+                displayName: $rootScope.startString,
                 field: "pv",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>",
                 enableSorting: true,
@@ -63,7 +63,7 @@ define(["./module"], function (ctrs) {
                 }
             }, {
                 name: "访问次数",
-                displayName: "",
+                displayName: $rootScope.contrastStartString,
                 field: "contrastPv",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
             }, {
@@ -279,24 +279,6 @@ define(["./module"], function (ctrs) {
             $scope.lastDayClass = false;
             $scope.lastWeekClass = false;
             $scope.yesterdayClass = false;
-        };
-
-        $scope.helloKitty = function () {
-            $rootScope.gridArray[2].displayName = $rootScope.startString;
-            $rootScope.gridArray[3].displayName = $rootScope.contrastStartString;
-            while (true) {
-                if ($rootScope.changeListInit) {
-                    $rootScope.changeListInit({
-                        start: $rootScope.start,
-                        end: $rootScope.end,
-                        contrastStart: $rootScope.contrastStart,
-                        contrastEnd: $rootScope.contrastEnd,
-                        filterType: $rootScope.changeListFilterType,
-                        gridArray: $rootScope.gridArray
-                    });
-                    break;
-                }
-            }
         };
 
         $rootScope.initMailData = function () {
