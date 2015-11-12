@@ -4,17 +4,14 @@
 define(["./module"], function (ctrs) {
 
 
-    ctrs.controller('heaturlctr', function ($cookieStore,$scope, $http, $rootScope, $stateParams,ngDialog) {
-
+    ctrs.controller('heatctr', function ($cookieStore,$scope, $http, $rootScope, $stateParams,ngDialog) {
 
 
             $scope.selectedIndex = 0;
             $rootScope.start = -1;//时间偏移量开始
             $rootScope.end = -1;//时间偏移量结束
-
             $scope.pv = 0;
             $scope.hits = 0;
-
             $scope.urlDialog;
 
             $scope.reset = function () {
@@ -43,17 +40,14 @@ define(["./module"], function (ctrs) {
                 $http.get("/api/heaturl?start=" + $rootScope.start + "&end=" + $rootScope.end + "&rf="+$stateParams.rf+"&type=" + $rootScope.userType).success
                 (function (res) {
 
-
-                   // console.log(res);
-
                     //设置页面浏览量
                     $scope.pv = res.pv.buckets.data.doc_count;
                     //设置页面点击量
                     $scope.hits = res.hits.buckets.data.doc_count;
 
-                    //加载外部网页
-                    var iframe = document.getElementById("foreign_iframe");
-                    iframe.src = "http://localhost:3000/js";
+                    //加载热力外部网页
+                    var iframe = document.getElementById("heat_iframe");
+                    iframe.src = "http://localhost:3000/js2";
                     if (iframe.attachEvent){
                             iframe.attachEvent("onload", function(){
                                 $scope.urlDialog.close();

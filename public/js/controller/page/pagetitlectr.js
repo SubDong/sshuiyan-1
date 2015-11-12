@@ -63,7 +63,7 @@ define(["./module"], function (ctrs) {
                 name: "xl",
                 displayName: "",
                 cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
-                maxWidth: 5,
+                maxWidth: 6,
                 enableSorting: false
             },
             {
@@ -80,13 +80,18 @@ define(["./module"], function (ctrs) {
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>图标名称</div>",
                 enableSorting: false
             },
-
-
             {name: "创建时间", displayName: "创建时间", field: "create_date",cellClass: 'table_admin_color'},
+            {
+                name: "x0",
+                displayName: "",
+                cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.openHeatUrl(row.entity)'>查看链接点击图</a></div>",
+                maxWidth: 120,
+                enableSorting: false
+            },
             {
                 name: "x1",
                 displayName: "",
-                cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.openHeatUrl(row.entity)'>查看链接点击图</a></div>",
+                cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.openHeat(row.entity)'>查看热力图</a></div>",
                 maxWidth: 120,
                 enableSorting: false
             },
@@ -136,17 +141,19 @@ define(["./module"], function (ctrs) {
 
 
 
+        /**打开热力图*/
+        $scope.openHeat = function (entity) {
 
-        /**操作-新窗口下开启地址*/
-        $scope.openHeatUrl = function (entity) {
-
-
-
-            $state.go('heaturl',{ 'rf':entity.page_url});
-
+            $state.go('heat',{ 'rf':entity.page_url});
             //window.open("http://localhost:8000/page/heaturl.html");
 
             //window.open("http://www.jb51.net");
+        }
+
+
+        /**打开热力连接图*/
+        $scope.openHeatUrl = function (entity) {
+            $state.go('heaturl',{ 'rf':entity.page_url});
         }
 
 

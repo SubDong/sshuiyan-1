@@ -1,11 +1,8 @@
-<script type="text/javascript" src="../js/heaturl/heaturl.js"></script>
-
-<div class="middle_containers" ng-controller="heaturlctr">
+<div class="middle_containers" ng-controller="heatctr">
     <style type="text/css">
         .tab-content {
             border-top: 1px solid #e3e3e3;
         }
-
         .custom_table {
             border-top: 1px solid #ffffff;
 
@@ -13,12 +10,6 @@
         .date_select p{
             margin-left:10px;
             line-height:50px;
-        }
-
-        .iframebox {
-            position: relative;
-            height: 100%;
-            width: 100%;
         }
     </style>
     <div class="date_select" set-class-when-at-top="fix-to-top">
@@ -47,10 +38,9 @@
 
     </div>
 
-    <div class="foreign_div" id="div_iframe"  >
+    <div class="iframebox" id="div_iframe"  >
 
-
-        <iframe id="foreign_iframe" frameborder="0"  height="1000px"  width="100%">
+        <iframe id="heat_iframe" frameborder="0" >
         </iframe>
 
 

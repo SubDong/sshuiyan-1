@@ -731,7 +731,6 @@ api.get("/getHeatUrlHeaderData", function (req, res) {
     var _type = req.session.type;
     var _rf = req.session.rf;
     var _startTime = req.session.startTime;
-    ;
     var _endTime = req.session.endTime;
 
     var indexes = date.createIndexes(_startTime, _endTime, "access-");//indexs
