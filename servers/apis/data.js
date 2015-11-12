@@ -847,6 +847,19 @@ api.get("/changeList", function (req, res) {
         datautils.send(res, result);
     });
 });
+api.get("/changeListTwo", function (req, res) {
+    var query = url.parse(req.url, true).query;
+    var start = query["start"];
+    var end = query["end"];
+    var type = query["type"];
+
+    var indexString = date.createIndexes(start, end, "access-");
+    var time = date.getConvertTimeByNumber(start, end);
+
+    changeList_request.searchTwo(req.es, indexString, time, type, function (result) {
+        datautils.send(res, result);
+    });
+});
 //==================================== transform ===============================================
 api.get("/transform/transformAnalysis", function (req, res) {
         var parameters = req.url.split("?")[1].split("&");
