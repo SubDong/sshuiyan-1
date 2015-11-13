@@ -13,6 +13,7 @@ define([
     "./controller/transform/module",
     "./controller/ads/module",
     "./controller/group_analysis/module",
+    "./controller/subcatalog/module",
     "js002",
     "js003",
     "js006",
@@ -33,6 +34,7 @@ define([
         "transform.controllers",
         "ads.controllers",
         "group_analysis.controllers",
+        "subcatalog.controllers",
         'ui.grid',
         'ui.grid.autoResize',
         'ui.grid.grouping',
@@ -53,7 +55,7 @@ define([
     myApp.controller('menuctr', function ($scope, $rootScope, $location) {
         $scope.oneAtATime = true;
         // 项目导航模块。用于页面刷新时，当前选中模块index的获取
-        $scope.array = ["index", "extension", "trend", "source", "page", "visitor", "value", "transform", "ads", "group_analysis"];
+        $scope.array = ["index", "extension", "trend", "source", "page", "visitor", "value", "transform", "ads", "group_analysis", "subcatalog"];
         $scope.selectRestaurant = function (row) {
             $scope.selectedRow = row;
         };
@@ -184,9 +186,9 @@ define([
                     text: '入口页面',
                     sref: '#page/entrancepage'
                 }, {
-                 text: '页面热点图',
-                 sref: '#page/pagetitle'
-                 }/*, {
+                    text: '页面热点图',
+                    sref: '#page/pagetitle'
+                }/*, {
                  text: '离站链接',
                  sref: '#page/offsitelinks'
                  }*/]
@@ -235,6 +237,12 @@ define([
                 icon: 'glyphicon glyphicon-list-alt',
                 stype: 0,
                 sref: '#group_analysis/sameGroupAnalysis'
+            },
+            {
+                title: '子目录',
+                icon: 'glyphicon glyphicon-list',
+                stype: 0,
+                sref: '#subcatalog/subcatalog'
             }
         ];
         $scope.adminmenus = [

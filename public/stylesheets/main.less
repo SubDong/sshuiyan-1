@@ -275,9 +275,9 @@ nav, .navbar-default {
     color: #fff;
     outline: none;
   }
-/*  .btn-group .glyphicon {
-    padding: 0 0 0 8px;
-  }*/
+  /*  .btn-group .glyphicon {
+      padding: 0 0 0 8px;
+    }*/
   .btn-group .glyphicon-refresh {
     padding: 0px;
   }
@@ -3170,11 +3170,13 @@ textarea.tNum {
 
 .ui-grid-render-container-body .ui-grid-viewport {
   height: auto !important;
-  overflow: inherit !important;
+  overflow: initial !important;
 }
-.transfortable .ui-grid-render-container-body .ui-grid-viewport{
-  overflow: hidden !important;
+
+.transfortable .ui-grid-render-container-body .ui-grid-viewport {
+  overflow: initial !important;
 }
+
 .ui-grid-viewport {
   min-height: 0px !important;
 }
@@ -3253,6 +3255,19 @@ textarea.tNum {
 .echarts-tooltip {
   padding: 0px 5px 5px 5px !important;
   overflow: hidden;
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  ul {
+    margin-bottom: 0px;
+    li {
+      padding: 0 5px;
+      line-height: 20px;
+
+    }
+    span {
+      color: #000;
+      float: right;
+    }
+  }
   li:first-child {
     position: absolute;
     background: #f2f2f2;
@@ -3281,6 +3296,7 @@ textarea.tNum {
     display: block;
     width: 100%;
     padding: 0 10px 0 15px;
+    color: #000;
 
   }
   .chartstyle0 {
@@ -3564,6 +3580,15 @@ textarea.tNum {
 .ui-grid-icon-ok:before {
   display: none;
 }
-.my_concent.concent_fix_top{
-  padding-top:14px;
+
+.my_concent.concent_fix_top {
+  padding-top: 14px;
+}
+
+.title_position {
+  position: absolute;
+  top: 30px;
+  right: 0px;
+  z-index: 10;
+
 }

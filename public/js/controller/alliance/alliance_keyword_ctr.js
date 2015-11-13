@@ -1,20 +1,20 @@
 /**
  * Created by john on 2015/4/2.
  */
-define(["./module"], function (ctrs) {
+define(["./../module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.controller('alliance_group_ctr', function ($scope, $rootScope, $q, requestService, areaService, $http, uiGridConstants, $cookieStore,SEM_API_URL ) {
-        //高级搜索提示
+    ctrs.controller('alliance_keyword_ctr', function ($scope, $rootScope, $q, requestService, areaService, $http, uiGridConstants, $cookieStore, SEM_API_URL) {
+        //        高级搜索提示
         $scope.terminalSearch = "";
         $scope.areaSearch = "";
 //        取消显示的高级搜索的条件
-        $scope.removeTerminalSearch = function(obj){
+        $scope.removeTerminalSearch = function (obj) {
             $rootScope.$broadcast("searchLoadAllTerminal");
             obj.terminalSearch = "";
         }
-        $scope.removeAreaSearch = function(obj){
+        $scope.removeAreaSearch = function (obj) {
             $scope.city.selected = {"name": "全部"};
             $rootScope.$broadcast("searchLoadAllArea");
             obj.areaSearch = "";
@@ -37,8 +37,8 @@ define(["./module"], function (ctrs) {
                 enableSorting: false
             },
             {
-                name: "组",
-                displayName: "组",
+                name: "关键词",
+                displayName: "关键词",
                 field: "adgroupName",
                 cellTemplate: "<div><a href='javascript:void(0)' style='color:#0965b8;line-height:30px' ng-click='grid.appScope.getNmsHistoricalTrend(this)'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</div>"
                 , footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
@@ -50,7 +50,6 @@ define(["./module"], function (ctrs) {
                 enableSorting: false
 
             },
-
             {
                 name: "点击量",
                 displayName: "点击量",
@@ -94,9 +93,9 @@ define(["./module"], function (ctrs) {
         ];
         $rootScope.tableSwitch = {
             latitude: {
-                name: "组",
-                displayName: "组",
-                field: "adgroupName"
+                name: "创意",
+                displayName: "创意",
+                field: "adTitle"
             },
             tableFilter: null,
             dimen: false,
@@ -109,7 +108,7 @@ define(["./module"], function (ctrs) {
             promotionSearch: {
                 NMS: true,//是否开启网盟数据
                 //turnOn: true, //是否开始推广中sem数据
-                SEMData: "group" //查询类型
+                SEMData: "ad" //查询类型
             }
         };
         //日历
@@ -118,6 +117,27 @@ define(["./module"], function (ctrs) {
         });
         //
         //$scope.initMap();
+        //点击显示指标
+        $scope.visible = true;
+        $scope.select = function () {
+            $scope.visible = false;
+        };
+        $scope.clear = function () {
+            $scope.page.selected = undefined;
+            $scope.city.selected = undefined;
+            $scope.country.selected = undefined;
+            $scope.continent.selected = undefined;
+        };
+        $scope.page = {};
+        $scope.pages = [
+            {name: '全部页面目标'},
+            {name: '全部事件目标'},
+            {name: '所有页面右上角按钮'},
+            {name: '所有页面底部400按钮'},
+            {name: '详情页右侧按钮'},
+            {name: '时长目标'},
+            {name: '访问页数目标'}
+        ];
         //日历
         this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
         this.type = 'range';
@@ -126,26 +146,6 @@ define(["./module"], function (ctrs) {
         this.removeFromSelected = function (dt) {
             this.selectedDates.splice(this.selectedDates.indexOf(dt), 1);
         }
-        //刷新
-        $scope.page_refresh = function () {
-//            $rootScope.start = -1;
-//            $rootScope.end = -1;
-//            $rootScope.tableTimeStart = -1;//开始时间
-//            $rootScope.tableTimeEnd = -1;//结束时间、
-//            $rootScope.tableFormat = null;
-//            $rootScope.targetSearchSpread();
-//            $scope.init($rootScope.user, $rootScope.baiduAccount, "creative", $scope.selectedQuota, $rootScope.start, $rootScope.end);
-            //图表
-//            requestService.refresh($scope.charts);
-            //其他页面表格
-            //classcurrent
-            $scope.$broadcast("ssh_dateShow_options_time_change");
-            $scope.reloadByCalendar("yesterday");
-            $('#reportrange span').html(GetDateStr(-1));
-            $scope.reset();
-            $scope.yesterdayClass = true;
-        };
-
         $rootScope.initMailData = function () {
             $http.get("api/saveMailConfig?rt=read&rule_url=" + $rootScope.mailUrl[1] + "").success(function (result) {
                 if (result) {
@@ -261,29 +261,6 @@ define(["./module"], function (ctrs) {
 
 
         //$scope.initMap();
-        //点击显示指标
-        $scope.visible = true;
-        $scope.select = function () {
-            $scope.visible = false;
-        };
-        $scope.clear = function () {
-            $scope.page.selected = undefined;
-            $scope.city.selected = undefined;
-            $scope.country.selected = undefined;
-            $scope.continent.selected = undefined;
-        };
-        $scope.page = {};
-        $scope.pages = [
-            {name: '全部页面目标'},
-            {name: '全部事件目标'},
-            {name: '所有页面右上角按钮'},
-            {name: '所有页面底部400按钮'},
-            {name: '详情页右侧按钮'},
-            {name: '时长目标'},
-            {name: '访问页数目标'}
-        ];
-        //日历
-
         this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
         //this.type = 'range';
         /*      this.identity = angular.identity;*/
@@ -325,7 +302,6 @@ define(["./module"], function (ctrs) {
             $scope.reset();
             $scope.yesterdayClass = true;
         };
-
     });
 
 });

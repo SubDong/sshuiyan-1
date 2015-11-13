@@ -1,20 +1,20 @@
 /**
  * Created by john on 2015/4/2.
  */
-define(["./module"], function (ctrs) {
+define(["./../module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.controller('alliance_network_ctr', function ($scope, $rootScope, $q, requestService, areaService, $http, uiGridConstants, $cookieStore, SEM_API_URL) {
-        //        高级搜索提示
+    ctrs.controller('alliance_group_ctr', function ($scope, $rootScope, $q, requestService, areaService, $http, uiGridConstants, $cookieStore,SEM_API_URL ) {
+        //高级搜索提示
         $scope.terminalSearch = "";
         $scope.areaSearch = "";
 //        取消显示的高级搜索的条件
-        $scope.removeTerminalSearch = function (obj) {
+        $scope.removeTerminalSearch = function(obj){
             $rootScope.$broadcast("searchLoadAllTerminal");
             obj.terminalSearch = "";
         }
-        $scope.removeAreaSearch = function (obj) {
+        $scope.removeAreaSearch = function(obj){
             $scope.city.selected = {"name": "全部"};
             $rootScope.$broadcast("searchLoadAllArea");
             obj.areaSearch = "";
@@ -37,13 +37,20 @@ define(["./module"], function (ctrs) {
                 enableSorting: false
             },
             {
-                name: "投放网络",
-                displayName: "投放网络",
+                name: "组",
+                displayName: "组",
                 field: "adgroupName",
                 cellTemplate: "<div><a href='javascript:void(0)' style='color:#0965b8;line-height:30px' ng-click='grid.appScope.getNmsHistoricalTrend(this)'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</div>"
                 , footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
                 enableSorting: false
             },
+            {
+                name: " ",
+                cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn' title='查看历史趋势'></a></div>",
+                enableSorting: false
+
+            },
+
             {
                 name: "点击量",
                 displayName: "点击量",
@@ -84,13 +91,12 @@ define(["./module"], function (ctrs) {
                 field: "conversions",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
             }
-
         ];
         $rootScope.tableSwitch = {
             latitude: {
-                name: "创意",
-                displayName: "创意",
-                field: "adTitle"
+                name: "组",
+                displayName: "组",
+                field: "adgroupName"
             },
             tableFilter: null,
             dimen: false,
@@ -103,7 +109,7 @@ define(["./module"], function (ctrs) {
             promotionSearch: {
                 NMS: true,//是否开启网盟数据
                 //turnOn: true, //是否开始推广中sem数据
-                SEMData: "ad" //查询类型
+                SEMData: "group" //查询类型
             }
         };
         //日历
@@ -112,7 +118,6 @@ define(["./module"], function (ctrs) {
         });
         //
         //$scope.initMap();
-
         //日历
         this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
         this.type = 'range';
@@ -121,6 +126,26 @@ define(["./module"], function (ctrs) {
         this.removeFromSelected = function (dt) {
             this.selectedDates.splice(this.selectedDates.indexOf(dt), 1);
         }
+        //刷新
+        $scope.page_refresh = function () {
+//            $rootScope.start = -1;
+//            $rootScope.end = -1;
+//            $rootScope.tableTimeStart = -1;//开始时间
+//            $rootScope.tableTimeEnd = -1;//结束时间、
+//            $rootScope.tableFormat = null;
+//            $rootScope.targetSearchSpread();
+//            $scope.init($rootScope.user, $rootScope.baiduAccount, "creative", $scope.selectedQuota, $rootScope.start, $rootScope.end);
+            //图表
+//            requestService.refresh($scope.charts);
+            //其他页面表格
+            //classcurrent
+            $scope.$broadcast("ssh_dateShow_options_time_change");
+            $scope.reloadByCalendar("yesterday");
+            $('#reportrange span').html(GetDateStr(-1));
+            $scope.reset();
+            $scope.yesterdayClass = true;
+        };
+
         $rootScope.initMailData = function () {
             $http.get("api/saveMailConfig?rt=read&rule_url=" + $rootScope.mailUrl[1] + "").success(function (result) {
                 if (result) {

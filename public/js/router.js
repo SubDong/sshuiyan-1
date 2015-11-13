@@ -35,8 +35,8 @@ define(["angular", "./app"], function (angular, myApp) {
                     templateUrl: "../extension/search.html",
                     resolve: {
                         load: loadDeps([
-                            'controller/searchctr',
-                            'controller/searchpromotion'
+                            'controller/search/searchctr',
+                            'controller/search/searchpromotion'
                         ])
                     }
                 })
@@ -45,8 +45,8 @@ define(["angular", "./app"], function (angular, myApp) {
                     templateUrl: "../extension/search_dy.html",
                     resolve: {
                         load: loadDeps([
-                            'controller/search_dy_ctr',
-                            'controller/searchpromotion'
+                            'controller/search/search_dy_ctr',
+                            'controller/search/searchpromotion'
                         ])
                     }
                 })
@@ -55,8 +55,8 @@ define(["angular", "./app"], function (angular, myApp) {
                     templateUrl: "../extension/search_gjc.html",
                     resolve: {
                         load: loadDeps([
-                            'controller/search_gjc_ctr',
-                            'controller/searchpromotion'
+                            'controller/search/search_gjc_ctr',
+                            'controller/search/searchpromotion'
                         ])
                     }
                 })
@@ -65,8 +65,8 @@ define(["angular", "./app"], function (angular, myApp) {
                     templateUrl: "../extension/search_cy.html",
                     resolve: {
                         load: loadDeps([
-                            'controller/search_cy_ctr',
-                            'controller/searchpromotion'
+                            'controller/search/search_cy_ctr',
+                            'controller/search/searchpromotion'
                         ])
                     }
                 })
@@ -75,8 +75,8 @@ define(["angular", "./app"], function (angular, myApp) {
                     templateUrl: "../extension/search_ssc.html",
                     resolve: {
                         load: loadDeps([
-                            'controller/search_ssc_ctr',
-                            'controller/searchpromotion'
+                            'controller/search/search_ssc_ctr',
+                            'controller/search/searchpromotion'
                         ])
                     }
                 })
@@ -85,8 +85,8 @@ define(["angular", "./app"], function (angular, myApp) {
                     templateUrl: "../extension/search_tg_url.html",
                     resolve: {
                         load: loadDeps([
-                            'controller/search_tg_ctr',
-                            'controller/searchpromotion'
+                            'controller/search/search_tg_ctr',
+                            'controller/search/searchpromotion'
                         ])
                     }
                 })
@@ -104,7 +104,7 @@ define(["angular", "./app"], function (angular, myApp) {
                     templateUrl: "../extension/urlspeed.html",
                     resolve: {
                         load: loadDeps([
-                            "controller/urlspeedctr"
+                            "controller/url/urlspeedctr"
                         ])
                     }
                 })
@@ -113,7 +113,7 @@ define(["angular", "./app"], function (angular, myApp) {
                     templateUrl: "../extension/urlspeed_m.html",
                     resolve: {
                         load: loadDeps([
-                            "controller/urlspeed_m"
+                            "controller/url/urlspeed_m"
                         ])
                     }
                 })
@@ -122,7 +122,7 @@ define(["angular", "./app"], function (angular, myApp) {
                     templateUrl: "../extension/urlspeed_w.html",
                     resolve: {
                         load: loadDeps([
-                            "controller/urlspeed_w"
+                            "controller/url/urlspeed_w"
                         ])
                     }
                 })
@@ -131,8 +131,8 @@ define(["angular", "./app"], function (angular, myApp) {
                     templateUrl: "../extension/alliance.html",
                     resolve: {
                         load: loadDeps([
-                            "controller/alliancectr",
-                            'controller/searchpromotion'
+                            "controller/alliance/alliancectr",
+                            'controller/search/searchpromotion'
                         ])
                     }
                 }).state('alliance_group', {
@@ -140,9 +140,9 @@ define(["angular", "./app"], function (angular, myApp) {
                     templateUrl: "../extension/alliance_group.html",
                     resolve: {
                         load: loadDeps([
-                            'controller/alliance_group_ctr',
-                            'controller/searchpromotion',
-                            'controller/alliancepromotion'
+                            'controller/alliance/alliance_group_ctr',
+                            'controller/search/searchpromotion',
+                            'controller/alliance/alliancepromotion'
                         ])
                     }
                 }).state('alliance_cy', {
@@ -150,8 +150,8 @@ define(["angular", "./app"], function (angular, myApp) {
                     templateUrl: "../extension/alliance_cy.html",
                     resolve: {
                         load: loadDeps([
-                            'controller/alliance_cy_ctr',
-                            'controller/searchpromotion'
+                            'controller/alliance/alliance_cy_ctr',
+                            'controller/search/searchpromotion'
                         ])
                     }
                 }).state('alliance_network', {
@@ -159,8 +159,8 @@ define(["angular", "./app"], function (angular, myApp) {
                     templateUrl: "../extension/alliance_network.html",
                     resolve: {
                         load: loadDeps([
-                            'controller/alliance_network_ctr',
-                            'controller/searchpromotion'
+                            'controller/alliance/alliance_network_ctr',
+                            'controller/search/searchpromotion'
                         ])
                     }
                 }).state('alliance_keyword', {
@@ -168,8 +168,8 @@ define(["angular", "./app"], function (angular, myApp) {
                     templateUrl: "../extension/alliance_keyword.html",
                     resolve: {
                         load: loadDeps([
-                            'controller/alliance_keyword_ctr',
-                            'controller/searchpromotion'
+                            'controller/alliance/alliance_keyword_ctr',
+                            'controller/search/searchpromotion'
                         ])
                     }
                 });
@@ -870,7 +870,17 @@ define(["angular", "./app"], function (angular, myApp) {
                     url: '/conf/admin/reportsite',
                     templateUrl: '../conf/admin/reportsite.html'
                 });
-
+            //            子目录
+            $stateProvider
+                .state('subcatalog', {
+                    url: '/subcatalog/subcatalog',
+                    templateUrl: '../subcatalog/subcatalog.html',
+                    resolve: {
+                        load: loadDeps([
+                            "controller/subcatalog/SubCatalogCtr"
+                        ])
+                    }
+                });
             // 不能使用下面这句代码：
             // $urlRouterProvider.otherwise( '/index' );
             // 见 http://stackoverflow.com/questions/25065699/why-does-angularjs-with-ui-router-keep-firing-the-statechangestart-event
