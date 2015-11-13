@@ -151,7 +151,6 @@ define(["./module"], function (ctrs) {
         }
         $scope.todayFormat = function (data, config, e) {
             if ($rootScope.interval == 1) {
-                console.log(1)
                 var final_result = chartUtils.getByHourByDayData(data);
                 config["noFormat"] = "noFormat";
                 config["keyFormat"] = "none";
@@ -159,34 +158,13 @@ define(["./module"], function (ctrs) {
                 config["bGap"] = false;//图表类型
                 cf.renderChart(final_result, config);
             } else {
-                console.log(2)
+
                 var json = JSON.parse(eval("(" + data + ")").toString());
                 config["noFormat"] = undefined;
                 config["chartType"] = "scatter";//图表类型
                 config["bGap"] = false;//图表类型
                 chartUtils.getXType(config, $rootScope.interval);
                 cf.renderChart(data, config);
-            }
-        }
-        $scope.todayFormats = function (data, config, e) {
-            if ($rootScope.interval == 1) {
-                console.log(1111111111);
-                var final_result = chartUtils.getByHourByDayData(data);
-                config["noFormat"] = "noFormat";
-                config["keyFormat"] = "none";
-                config["chartType"] = "line";//图表类型
-                cf.renderChart(final_result, config);
-
-            } else {
-                console.log(22222);
-                var json = JSON.parse(eval("(" + data + ")").toString());
-                config["noFormat"] = "noFormat";
-                chartUtils.getXType(config, $rootScope.interval);
-                config["chartType"] = "line";//图表类型
-                config["bGap"] = true;//图表类型
-                chartUtils.noFormatConvertLabel(json);
-                cf.renderChart(json, config);
-
             }
         }
         $scope.charts = [

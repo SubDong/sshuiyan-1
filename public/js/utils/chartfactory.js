@@ -433,8 +433,8 @@ var op = {
     scatterChart: function (data, chartConfig) {
         util.chartResize(chartConfig);//charts 自适应
         if (!chartConfig.instance)return;
-         var chartObj = chartConfig.instance;
-         chartObj.xAxis = [];
+        var chartObj = chartConfig.instance;
+        chartObj.xAxis = [];
         var option = {
             tooltip: {
                 trigger: 'axis',
