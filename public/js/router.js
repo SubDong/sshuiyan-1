@@ -496,7 +496,7 @@ define(["angular", "./app"], function (angular, myApp) {
                     templateUrl: "../page/heatmap.html",
                     resolve: {
                         load: loadDeps([
-                            "controller/page/heatmapctr",
+                            "controller/page/heatmapCtr",
                             "heatmap/heatmap"
                         ])
                     }
