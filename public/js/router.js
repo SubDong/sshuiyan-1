@@ -369,7 +369,7 @@ define(["angular", "./app"], function (angular, myApp) {
                     templateUrl: "../source/changelist.html",
                     resolve: {
                         load: loadDeps([
-                            'controller/source/changeListCtr'
+                            'controller/source/changelistctr'
                         ])
                     }
                 });
