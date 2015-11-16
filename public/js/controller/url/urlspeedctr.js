@@ -6,7 +6,7 @@ define(["./../module"], function (ctrs) {
     "use strict";
 
     ctrs.controller('urlspeedctr', function ($scope, $q, $rootScope, $http, $cookieStore, requestService, messageService, areaService, uiGridConstants) {
-        $scope.yesterdayClass = true;
+        $scope.todayClass = true;
 
         //table配置
         $rootScope.tableTimeStart = -1;
@@ -75,10 +75,6 @@ define(["./../module"], function (ctrs) {
 
         //$scope.initMap();
         //点击显示指标
-        $scope.visible = true;
-        $scope.select = function () {
-            $scope.visible = false;
-        };
         $scope.clear = function () {
             $scope.page.selected = undefined;
             $scope.city.selected = undefined;
@@ -114,10 +110,10 @@ define(["./../module"], function (ctrs) {
             //其他页面表格
             //classcurrent
             $scope.reloadByCalendar("yesterday");
-            $('#reportrange span').html(GetDateStr(-1));
+            $('#reportrange span').html(GetDateStr(0));
             $scope.$broadcast("ssh_dateShow_options_time_change");
             $scope.reset();
-            $scope.yesterdayClass = true;
+            $scope.todayClass = true;
         };
 
         $rootScope.initMailData = function () {

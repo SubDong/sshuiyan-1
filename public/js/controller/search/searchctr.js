@@ -1,8 +1,10 @@
 /**
  * Created by john on 2015/4/2.
  */
-define(["./../module"], function (ctrs) {
-    ctrs.controller('searchctr', function ($scope, $rootScope, $q, $cookieStore, requestService, areaService, $http, SEM_API_URL, uiGridConstants) {
+define(["app"], function (app) {
+
+    "use strict";
+    app.controller('searchctr', function ($scope, $rootScope, $q, $cookieStore, requestService, areaService, $http, SEM_API_URL, uiGridConstants) {
             $scope.allCitys = angular.copy($rootScope.citys);
 //        高级搜索提示
             $scope.terminalSearch = "";
@@ -18,10 +20,9 @@ define(["./../module"], function (ctrs) {
                 obj.areaSearch = "";
             }
             $scope.city.selected = {"name": "全部"};
-            $scope.visible = true;
-            $scope.yesterdayClass = true;
-            $rootScope.tableTimeStart = -1;//开始时间
-            $rootScope.tableTimeEnd = -1;//结束时间、
+            $scope.todayClass = true;
+            $rootScope.tableTimeStart = 0;//开始时间
+            $rootScope.tableTimeEnd = 0;//结束时间、
             $rootScope.tableFormat = null;
             //配置默认指标
             $rootScope.checkedArray = ["impression", "cost", "cpc", "outRate", "avgTime", "nuvRate"]
@@ -140,8 +141,8 @@ define(["./../module"], function (ctrs) {
                 }
             ];
             $scope.initGrid = function (user, baiduAccount, semType, quotas, start, end, renderLegend) {
-                $rootScope.start = -1;
-                $rootScope.end = -1;
+                $rootScope.start = 0;
+                $rootScope.end = 0;
                 $scope.init(user, baiduAccount, semType, quotas, start, end, renderLegend);
             }
             $scope.init = function (user, baiduAccount, semType, quotas, start, end, renderLegend) {
@@ -179,20 +180,13 @@ define(["./../module"], function (ctrs) {
                     });
                 }
             }
-            $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "campaign", $scope.selectedQuota, -1, -1, true);
+            $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "campaign", $scope.selectedQuota, 0, 0, true);
 
             $scope.$on("ssh_refresh_charts", function (e, msg) {
                 $rootScope.targetSearchSpread();
                 $scope.init($rootScope.user, $rootScope.baiduAccount, "campaign", $scope.selectedQuota, $rootScope.start, $rootScope.end);
             });
-
-
             //$scope.initMap();
-            //点击显示指标
-            $scope.visible = true;
-            $scope.select = function () {
-                $scope.visible = false;
-            };
             $scope.clear = function () {
                 $scope.page.selected = undefined;
                 $scope.city.selected = undefined;
@@ -241,16 +235,16 @@ define(["./../module"], function (ctrs) {
 //                $scope.init($rootScope.user, $rootScope.baiduAccount, "campaign", $scope.selectedQuota, $rootScope.start, $rootScope.end);
 //                //图表
 //                requestService.refresh($scope.charts);
-                $rootScope.start = -1;
-                $rootScope.end = -1;
-                $rootScope.tableTimeStart = -1;// 开始时间
-                $rootScope.tableTimeEnd = -1;// 结束时间
-                $scope.reloadByCalendar("yesterday");
-                $('#reportrange span').html(GetDateStr(-1));
+                $rootScope.start = 0;
+                $rootScope.end = 0;
+                $rootScope.tableTimeStart = 0;// 开始时间
+                $rootScope.tableTimeEnd = 0;// 结束时间
+                $scope.reloadByCalendar("today");
+                $('#reportrange span').html(GetDateStr(0));
                 //其他页面表格
                 //classcurrent
                 $scope.reset();
-                $scope.yesterdayClass = true;
+                $scope.todayClass = true;
             };
 
             $rootScope.initMailData = function () {

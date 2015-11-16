@@ -6,7 +6,7 @@ define(["./../module"], function (ctrs) {
     "use strict";
 
     ctrs.controller('search_tg_ctr', function ($scope, $rootScope, $cookieStore, requestService, areaService, $http, uiGridConstants) {
-        $scope.yesterdayClass = true;
+        $scope.todayClass = true;
         //        高级搜索提示
         $scope.areaSearch = "";
         $scope.removeAreaSearch = function(obj){
@@ -133,7 +133,7 @@ define(["./../module"], function (ctrs) {
         });
 
         //点击显示指标
-        $scope.visible = true;
+        $scope.visible = false;
         $scope.select = function () {
             $scope.visible = false;
         };
