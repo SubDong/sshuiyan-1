@@ -91,7 +91,7 @@ define(["./module"], function (ctrs) {
             {
                 name: "x1",
                 displayName: "",
-                cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.openHeat(row.entity)'>查看热力图</a></div>",
+                cellTemplate: "<div class='table_admin'><a href='' data-ng-click='grid.appScope.openHotMap(row.entity)'>查看热力图</a></div>",
                 maxWidth: 120,
                 enableSorting: false
             },
@@ -142,9 +142,9 @@ define(["./module"], function (ctrs) {
 
 
         /**打开热力图*/
-        $scope.openHeat = function (entity) {
+        $scope.openHotMap = function (entity) {
 
-            $state.go('heat',{ 'rf':entity.page_url});
+            $state.go('heatmap',{ 'rf':entity.page_url});
             //window.open("http://localhost:8000/page/heaturl.html");
 
             //window.open("http://www.jb51.net");

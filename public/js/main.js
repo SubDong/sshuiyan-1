@@ -29,17 +29,18 @@ require.config({
             "http://cdn.bootcss.com/ng-dialog/0.3.12/js/ngDialog.min"
         ],
         "js007": [
-            "http://cdn.bootcss.com/echarts/2.2.1/echarts-all"
+            "http://cdn.bootcss.com/echarts/2.2.7/echarts-all"
         ],
         "js008": [
             "http://ui-grid.info/docs/grunt-scripts/vfs_fonts"
-        ],
-        "js009": [
-            "http://xdoc.aliapp.com/xdoc"
-        ],
-        "js010": [
-            "http://xdoc.aliapp.com/baiduTemplate"
         ]
+        //,
+        //"js009": [
+        //    "http://xdoc.aliapp.com/xdoc"
+        //],
+        //"js010": [
+        //    "http://xdoc.aliapp.com/baiduTemplate"
+        //]
     },
     shim: {
         "angular": {
@@ -126,8 +127,8 @@ require.config({
 
 require([
     "js001",
-    "js009",
-    "js010",
+    //"js009",
+    //"js010",
     "./angular-bootstrap",
     "./utils/chartfactory",
     "./utils/chartsMapOrPie",

@@ -1,7 +1,7 @@
 /**
  * Created by john on 2015/3/30.
  */
-define(["./module"], function (ctrs) {
+define(["./../module"], function (ctrs) {
 
     "use strict";
 

@@ -1,7 +1,7 @@
 /**
  * Created by john on 2015/4/2.
  */
-define(["./module"], function (ctrs) {
+define(["./../module"], function (ctrs) {
     ctrs.controller('searchctr', function ($scope, $rootScope, $q, $cookieStore, requestService, areaService, $http, SEM_API_URL, uiGridConstants) {
             $scope.allCitys = angular.copy($rootScope.citys);
 //        高级搜索提示

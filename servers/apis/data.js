@@ -19,7 +19,7 @@ var PDF = require('pdfkit');
 var iconv = require('iconv-lite');
 var uuid = require("node-uuid");
 var async = require("async");
-//var es_position = require('../services/es_position');
+var es_position_request = require('../services/es_position_request');
 var changeList_request = require("../services/changeList_request");
 var transform = require("../services/transform-request");
 var heaturl_request = require("../services/heaturl_request");
@@ -689,13 +689,14 @@ api.get("/exchange", function (req, res) {
 
 api.get("/heatmap", function (req, res) {
     var query = url.parse(req.url, true).query;
-    var _type = query['type'];
+    var _type = query['type'] + "_xy";
     var _startTime = Number(query['start']);
     var _endTime = Number(query['end']);
+    var _loc = query["loc"];
     var indexes = date.createIndexes(_startTime, _endTime, "access-");//indexs
-    //es_position.search(req.es, indexes, _type, function (result) {
-    //    datautils.send(res, result);
-    //});
+    es_position_request.searchTwo(req.es, indexes, _type, _loc, function (result) {
+        datautils.send(res, result);
+    });
 });
 
 /**

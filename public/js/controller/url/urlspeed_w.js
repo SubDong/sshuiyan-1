@@ -1,11 +1,11 @@
 /**
  * Created by john on 2015/4/2.
  */
-define(["./module"], function (ctrs) {
+define(["./../module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.controller('urlspeed_m', function ($scope, $q, $rootScope, $http, $cookieStore, requestService, messageService, areaService, uiGridConstants) {
+    ctrs.controller('urlspeed_w', function ($scope, $q, $rootScope, $http, $cookieStore, requestService, messageService, areaService, uiGridConstants) {
         $scope.yesterdayClass = true;
 
         //table配置
@@ -23,9 +23,9 @@ define(["./module"], function (ctrs) {
                 enableSorting: false
             },
             {
-                name: "地域",
-                displayName: "地域",
-                field: "region",
+                name: "网络提供商",
+                displayName: "网络提供商",
+                field: "isp",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
                 sort: {
                     direction: uiGridConstants.ASC,
@@ -52,7 +52,7 @@ define(["./module"], function (ctrs) {
             }
         ];
         $rootScope.tableSwitch = {
-            latitude: {name: "地域", displayName: "地域", field: "region"},
+            latitude: {name: "网络提供商", displayName: "网络提供商", field: "isp"},
             tableFilter: null,
             dimen: false,
             // 0 不需要btn ，1 无展开项btn ，2 有展开项btn

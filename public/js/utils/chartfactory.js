@@ -11,6 +11,9 @@ var cf = {
             case "line":
                 _self.lineChart(data, chartConfig);
                 break;
+            case"scatter":
+                _self.scatterChart(data, chartConfig);
+                break;
             case"bar":
                 _self.barChart(data, chartConfig);
                 break;
@@ -425,6 +428,93 @@ var op = {
         option.legend.selected = select;
         chartObj.setOption(option);
         chartConfig.legendData = _legendTmp;
+        chartConfig.instance.hideLoading();
+    },
+    scatterChart: function (data, chartConfig) {
+        util.chartResize(chartConfig);//charts 自适应
+        if (!chartConfig.instance)return;
+        var chartObj = chartConfig.instance;
+        chartObj.xAxis = [];
+        var option = {
+            tooltip: {
+                trigger: 'axis',
+                showDelay: 0,
+                formatter: function (value) {
+                    return '<ul>' +
+                        '<li></li>' +
+                        '<li>' + '产品介绍' + '</li>' +
+                        '<li>' + '访客数量：' + '<span>' + value[2][0] + '</span>' + '</li> ' +
+                        '<li>' + '平均访问频次：' + '<span>' + parseFloat(value[2][2]) + '</span>' +
+                        '</li> ' + '<li>' + '平均访问时长：' + '<span>' + value[2][1] + '</span>' +
+                        '</li>' +
+                        '</ul> ';
+                },
+                axisPointer: {
+                    show: true,
+                    type: 'cross',
+                    lineStyle: {
+                        type: 'dashed',
+                        width: 1
+                    }
+                }
+            },
+            toolbox: {
+                show: false
+            },
+            xAxis: [
+                {
+                    type: 'value',
+                    splitNumber: 4,
+                    scale: true
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value',
+                    splitNumber: 4,
+                    scale: true
+                }
+            ],
+            series: []
+        };
+        var symValue = function (value) {
+            return Math.round(value[2] / 1);
+        };
+        var itemValue = {
+            normal: {
+                label: {
+                    show: true,
+                    position: "inside",
+                    formatter: function (name) {
+                        return name.seriesName;
+                    }
+                }
+            }
+        }
+        var serie = [{
+            name: "百思",
+            type: !chartConfig.chartType ? "scatter" : chartConfig.chartType,
+            symbol: 'circle',
+            data: [{value: [15, 10, 20]}],
+            symbolSize: symValue,
+            itemStyle: itemValue
+        }, {
+            name: "慧眼",
+            type: !chartConfig.chartType ? "scatter" : chartConfig.chartType,
+            symbol: 'circle',
+            data: [{value: [20, 8, 25]}],
+            symbolSize: symValue,
+            itemStyle: itemValue
+        }, {
+            name: "百思慧眼",
+            type: !chartConfig.chartType ? "scatter" : chartConfig.chartType,
+            symbol: 'circle',
+            data: [{value: [10, 10, 18]}],
+            symbolSize: symValue,
+            itemStyle: itemValue
+        }]
+        option.series = (serie);
+        chartObj.setOption(option);
         chartConfig.instance.hideLoading();
     },
     barChart: function (data, chartConfig) {
@@ -1031,7 +1121,6 @@ var util = {
                             _time[_time.length - 1] = _time[_time.length - 1] + "/点";
                         }
                     }
-                    console.log(_time);
                     //console.log(key);
                     return _time;
                 }
@@ -1457,14 +1546,14 @@ var util = {
         })
     }
     ,
-    getExportData : function (gridData) {
+    getExportData: function (gridData) {
         var resultData = [];
         gridData.forEach(function (trData) {
             var trResultData = {};
             trResultData = trData;
             resultData.push(trResultData);
-            if(trResultData.hasOwnProperty("subGridOptions")) {
-                if(trResultData.subGridOptions.data != null &&trResultData.subGridOptions.data!="" && trResultData.subGridOptions.data!=undefined) {
+            if (trResultData.hasOwnProperty("subGridOptions")) {
+                if (trResultData.subGridOptions.data != null && trResultData.subGridOptions.data != "" && trResultData.subGridOptions.data != undefined) {
                     trResultData.subGridOptions.data.forEach(function (subTrData) {
                         resultData.push(subTrData);
                     });

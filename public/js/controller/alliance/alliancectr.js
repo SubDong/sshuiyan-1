@@ -1,11 +1,12 @@
 /**
  * Created by john on 2015/4/2.
  */
-define(["./module"], function (ctrs) {
+define(["./../module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.controller('alliance_keyword_ctr', function ($scope, $rootScope, $q, requestService, areaService, $http, uiGridConstants, $cookieStore, SEM_API_URL) {
+    ctrs.controller('alliancectr', function ($scope, $rootScope, $q, requestService, areaService, $http, uiGridConstants, $cookieStore, SEM_API_URL) {
+        //console.log("alliancectr")
         //        高级搜索提示
         $scope.terminalSearch = "";
         $scope.areaSearch = "";
@@ -37,10 +38,10 @@ define(["./module"], function (ctrs) {
                 enableSorting: false
             },
             {
-                name: "关键词",
-                displayName: "关键词",
-                field: "adgroupName",
-                cellTemplate: "<div><a href='javascript:void(0)' style='color:#0965b8;line-height:30px' ng-click='grid.appScope.getNmsHistoricalTrend(this)'>{{grid.appScope.getDataUrlInfo(grid, row,1)}}</a><br/>{{grid.appScope.getDataUrlInfo(grid, row,2)}}</div>"
+                name: "推广计划",
+                displayName: "推广计划",
+                field: "campaignName",
+                cellTemplate: "<div><a href='javascript:void(0)' style='color:#0965b8;line-height:30px' ng-click='grid.appScope.getNmsHistoricalTrend(this)'>{{grid.appScope.getDataUrlInfo(grid, row,3)}}</a></div>"
                 , footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
                 enableSorting: false
             },
@@ -72,6 +73,7 @@ define(["./module"], function (ctrs) {
                 field: "vc",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
             },
+
             {
                 name: "访客数(UV)",
                 displayName: "访客数(UV)",
@@ -93,9 +95,9 @@ define(["./module"], function (ctrs) {
         ];
         $rootScope.tableSwitch = {
             latitude: {
-                name: "创意",
-                displayName: "创意",
-                field: "adTitle"
+                name: "计划",
+                displayName: "计划",
+                field: "campaignName"
             },
             tableFilter: null,
             dimen: false,
@@ -108,7 +110,7 @@ define(["./module"], function (ctrs) {
             promotionSearch: {
                 NMS: true,//是否开启网盟数据
                 //turnOn: true, //是否开始推广中sem数据
-                SEMData: "ad" //查询类型
+                SEMData: "campaign" //查询类型
             }
         };
         //日历
@@ -128,16 +130,7 @@ define(["./module"], function (ctrs) {
             $scope.country.selected = undefined;
             $scope.continent.selected = undefined;
         };
-        $scope.page = {};
-        $scope.pages = [
-            {name: '全部页面目标'},
-            {name: '全部事件目标'},
-            {name: '所有页面右上角按钮'},
-            {name: '所有页面底部400按钮'},
-            {name: '详情页右侧按钮'},
-            {name: '时长目标'},
-            {name: '访问页数目标'}
-        ];
+
         //日历
         this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
         this.type = 'range';
@@ -261,6 +254,29 @@ define(["./module"], function (ctrs) {
 
 
         //$scope.initMap();
+        //点击显示指标
+        $scope.visible = true;
+        $scope.select = function () {
+            $scope.visible = false;
+        };
+        $scope.clear = function () {
+            $scope.page.selected = undefined;
+            $scope.city.selected = undefined;
+            $scope.country.selected = undefined;
+            $scope.continent.selected = undefined;
+        };
+        $scope.page = {};
+        $scope.pages = [
+            {name: '全部页面目标'},
+            {name: '全部事件目标'},
+            {name: '所有页面右上角按钮'},
+            {name: '所有页面底部400按钮'},
+            {name: '详情页右侧按钮'},
+            {name: '时长目标'},
+            {name: '访问页数目标'}
+        ];
+        //日历
+
         this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
         //this.type = 'range';
         /*      this.identity = angular.identity;*/
@@ -302,6 +318,7 @@ define(["./module"], function (ctrs) {
             $scope.reset();
             $scope.yesterdayClass = true;
         };
+
     });
 
 });
