@@ -3,7 +3,7 @@
  */
 define(["./module"], function (ctrs) {
 
-    ctrs.controller('heatmapctr', function ($cookieStore,$scope, $http, $rootScope, $stateParams,ngDialog) {
+    ctrs.controller('heatmapctr', function ($cookieStore, $scope, $http, $rootScope, $stateParams, ngDialog) {
             $scope.selectedIndex = 0;
             $rootScope.start = 0;//时间偏移量开始
             $rootScope.end = 0;//时间偏移量结束
@@ -34,7 +34,7 @@ define(["./module"], function (ctrs) {
                         scope : $scope
                     });
 
-                $http.get("/api/heatmap?start=0&end=0&loc=http://192.168.1.111:3333/&type=4ae166b3563f97e92865ab355a45a78c").success
+                $http.get("/api/heatmap?start=-3&end=-3&loc=http://192.168.1.111:3333/&type=4ae166b3563f97e92865ab355a45a78c").success
                 (function (res) {
                     //设置页面浏览量
                     $scope.pv = 100;
@@ -45,12 +45,12 @@ define(["./module"], function (ctrs) {
                     var iframe = document.getElementById("heat_iframe");
                     iframe.src = "http://www.baidu.com";
                     $scope.hhhhh(res);
-                    if (iframe.attachEvent){
-                            iframe.attachEvent("onload", function(){
-                                $scope.urlDialog.close();
+                    if (iframe.attachEvent) {
+                        iframe.attachEvent("onload", function () {
+                            $scope.urlDialog.close();
                         });
                     } else {
-                        iframe.onload = function(){
+                        iframe.onload = function () {
                             $scope.urlDialog.close();
                         };
                     }
@@ -176,7 +176,7 @@ define(["./module"], function (ctrs) {
 
             $scope.yesterday();
 
-            $scope.page_refresh = function(){
+            $scope.page_refresh = function () {
                 $scope.init();
             }
         }
