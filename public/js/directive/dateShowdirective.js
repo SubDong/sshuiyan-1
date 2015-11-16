@@ -523,6 +523,47 @@ define(["../app"], function (app) {
     });
 
     /**
+     * Create by wms on 2015-11-09.搜索推广.推广URL
+     */
+    app.directive("sshHeatMap", function ($http, $rootScope, $q, SEM_API_URL) {
+        return {
+            restrict: 'C',
+            link: function (scope, element, attris, controller) {
+
+                scope.hhhhh = function (heatData) {
+                    var option = {
+                        title : {
+                            text: '热力图'
+                        },
+                        series : [
+                            {
+                                type : 'heatmap',
+                                data : heatData,
+                                hoverable : false
+                            }
+                        ]
+                    };
+                    element.css({
+                        width: "100%",
+                        height: "1000px"
+                    });
+
+                    var myChart = echarts.init(element[0]);
+                    console.log(myChart)
+                    myChart.showLoading({
+                        text: '正在努力的读取数据中...'    //loading话术
+                    });
+
+                    myChart.hideLoading();
+
+                    myChart.setOption(option)
+                };
+
+            }
+        };
+    });
+
+    /**
      * 指标过滤器
      */
     app.filter("quotaFormat", function () {

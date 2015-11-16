@@ -3,13 +3,10 @@
  */
 define(["./module"], function (ctrs) {
 
-
-    ctrs.controller('heatctr', function ($cookieStore,$scope, $http, $rootScope, $stateParams,ngDialog) {
-
-
+    ctrs.controller('heatmapctr', function ($cookieStore,$scope, $http, $rootScope, $stateParams,ngDialog) {
             $scope.selectedIndex = 0;
-            $rootScope.start = -1;//时间偏移量开始
-            $rootScope.end = -1;//时间偏移量结束
+            $rootScope.start = 0;//时间偏移量开始
+            $rootScope.end = 0;//时间偏移量结束
             $scope.pv = 0;
             $scope.hits = 0;
             $scope.urlDialog;
@@ -37,17 +34,17 @@ define(["./module"], function (ctrs) {
                         scope : $scope
                     });
 
-                $http.get("/api/heaturl?start=" + $rootScope.start + "&end=" + $rootScope.end + "&rf="+$stateParams.rf+"&type=" + $rootScope.userType).success
+                $http.get("/api/heatmap?start=0&end=0&loc=http://192.168.1.111:3333/&type=4ae166b3563f97e92865ab355a45a78c").success
                 (function (res) {
-
                     //设置页面浏览量
-                    $scope.pv = res.pv.buckets.data.doc_count;
+                    $scope.pv = 100;
                     //设置页面点击量
-                    $scope.hits = res.hits.buckets.data.doc_count;
+                    $scope.hits = 100;
 
                     //加载热力外部网页
                     var iframe = document.getElementById("heat_iframe");
-                    iframe.src = "http://localhost:3000/js2";
+                    iframe.src = "http://www.baidu.com";
+                    $scope.hhhhh(res);
                     if (iframe.attachEvent){
                             iframe.attachEvent("onload", function(){
                                 $scope.urlDialog.close();
@@ -60,8 +57,6 @@ define(["./module"], function (ctrs) {
 
                 });
             };
-
-
 
             $scope.yesterday = function () {
                 $scope.reset();
