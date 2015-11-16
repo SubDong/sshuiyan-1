@@ -222,7 +222,7 @@ define(["./module"], function (ctrs) {
                 if (a.col.field == "avgPage") {
                     returnData = (returnData / option.length).toFixed(2);
                 }
-                if (a.col.field == "outRate" || a.col.field == "nuvRate" || a.col.field == "crate") {
+                if (a.col.field == "outRate" || a.col.field == "nuvRate" ) {
                     returnData = returnData == "0.00%" ? "0%" : (returnData / option.length).toFixed(2) + "%";
                 }
                 if (a.col.field == "avgTime") {

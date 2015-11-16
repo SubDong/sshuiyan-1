@@ -62,7 +62,7 @@ define(["./module"], function (ctrs) {
                                     data["conversions"] = pdata[attr] != undefined ? pdata[attr].value : 0
                                     break;
                                 case "crate"://转化率
-                                    data["crate"] = pdata["conversions"] != undefined && row.entity.pv > 0 ? (Number(pdata["conversions"].value) / Number(row.entity.pv)).toFixed(4)*100 : 0
+                                    data["crate"] = (pdata["conversions"] != undefined && row.entity.pv > 0 ? ((Number(pdata["conversions"].value) / Number(row.entity.pv))*100).toFixed(2) : (0).toFixed(2))+"%"
                                     break;
                                 case "benefit"://收益
                                     data["benefit"] = pdata[attr] != undefined ? pdata[attr].value : 0
@@ -71,7 +71,7 @@ define(["./module"], function (ctrs) {
                                     data["orderNum"] = pdata[attr] != undefined ? pdata[attr].value : 0
                                     break;
                                 case "orderNumRate"://订单转化率
-                                    data["orderNumRate"] = pdata["orderNum"] != undefined ? (Number(pdata["orderNum"].value) / Number(row.entity.pv)).toFixed(4)*100 : 0
+                                    data["orderNumRate"] =( pdata["orderNum"] != undefined ? ((Number(pdata["orderNum"].value) / Number(row.entity.pv))*100).toFixed(2) :(0).toFixed(2))+"%"
                                     break;
                                 default :
                                     if (row.entity[attr] != undefined)
@@ -151,7 +151,7 @@ define(["./module"], function (ctrs) {
                                                     data["conversions"] = pagedatas[row.entity.campaignName] != undefined && pagedatas[row.entity.campaignName].conversions != undefined ? pagedatas[row.entity.campaignName].conversions.value : 0
                                                     break;
                                                 case "crate"://转化率
-                                                    data["crate"] = pagedatas[row.entity.campaignName] != undefined && data.pv > 0 ? (Number(pagedatas[row.entity.campaignName]["conversions"].value) / Number(data.pv)).toFixed(4) : 0
+                                                    data["crate"] = (pagedatas[row.entity.campaignName] != undefined && data.pv > 0 ? ((Number(pagedatas[row.entity.campaignName]["conversions"].value) / Number(data.pv))*100).toFixed(2) : (0).toFixed(2))+"%"
                                                     break;
                                                 case "benefit"://收益
                                                     data["benefit"] = pagedatas[row.entity.campaignName] != undefined && pagedatas[row.entity.campaignName].benefit != undefined ? pagedatas[row.entity.campaignName].benefit.value : 0
@@ -160,7 +160,7 @@ define(["./module"], function (ctrs) {
                                                     data["orderNum"] = pagedatas[row.entity.campaignName] != undefined && pagedatas[row.entity.campaignName].orderNum != undefined ? pagedatas[row.entity.campaignName].orderNum.value : 0
                                                     break;
                                                 case "orderNumRate"://订单转化率
-                                                    data["orderNumRate"] = pagedatas[row.entity.campaignName] != undefined && pagedatas[row.entity.campaignName].orderNum != undefined && data.pv > 0 ? (Number(pagedatas[row.entity.campaignName].orderNum.value) / Number(data.pv)).toFixed(4)*100 : 0
+                                                    data["orderNumRate"] = (pagedatas[row.entity.campaignName] != undefined && pagedatas[row.entity.campaignName].orderNum != undefined && data.pv > 0 ? ((Number(pagedatas[row.entity.campaignName].orderNum.value) / Number(data.pv))*100).toFixed(2) :(0).toFixed(2))+"%"
                                                     break;
                                                 default :
                                                     break;
@@ -529,7 +529,7 @@ define(["./module"], function (ctrs) {
                                                 data["conversions"] = pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].conversions != undefined ? pagedatas[data.campaignName].conversions.value : 0
                                                 break;
                                             case "crate"://转化率
-                                                data["crate"] = pagedatas[data.campaignName] != undefined && data.pv > 0 ? (Number(pagedatas[data.campaignName]["conversions"].value) / Number(data.pv)).toFixed(4)*100 : 0
+                                                data["crate"] = (pagedatas[data.campaignName] != undefined && data.pv > 0 ? ((Number(pagedatas[data.campaignName]["conversions"].value) / Number(data.pv))*100).toFixed(2) : (0).toFixed(2))+"%"
                                                 break;
                                             //case"avgCost"://平均转化成本
                                             //    $http.get(SEM_API_URL + "/sem/report/account?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end).success(function (SEMDdatas) {
@@ -545,7 +545,7 @@ define(["./module"], function (ctrs) {
                                                 data["orderNum"] = pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].orderNum != undefined ? pagedatas[data.campaignName].orderNum.value : 0
                                                 break;
                                             case "orderNumRate"://订单转化率
-                                                data["orderNumRate"] = pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].orderNum != undefined && data.pv > 0 ? (Number(pagedatas[data.campaignName].orderNum.value) / Number(data.pv)).toFixed(4)*100 : 0
+                                                data["orderNumRate"] = (pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].orderNum != undefined && data.pv > 0 ? ((Number(pagedatas[data.campaignName].orderNum.value) / Number(data.pv))*100).toFixed(2) :  (0).toFixed(2))+"%"
                                                 break;
                                             default :
                                                 break;
@@ -583,8 +583,8 @@ define(["./module"], function (ctrs) {
                 if (a.col.field == "pv" || a.col.field == "uv" || a.col.field == "ip" || a.col.field == "vc" || a.col.field == "nuv") {
                     //
                 } else {
-                    rast[0] = (rast[0] / option.length).toFixed(4)*100 + (a.col.field == "outRate" || a.col.field == "nuvRate" || a.col.field == "arrivedRate" ? "%" : "");
-                    rast[1] = (rast[1] / option.length).toFixed(4)*100 + (a.col.field == "outRate" || a.col.field == "nuvRate" || a.col.field == "arrivedRate" ? "%" : "");
+                    rast[0] = ((rast[0] / option.length)*100).toFixed(2) + (a.col.field == "outRate" || a.col.field == "nuvRate" || a.col.field == "arrivedRate" ? "%" : "");
+                    rast[1] = ((rast[0] / option.length)*100).toFixed(2) + (a.col.field == "outRate" || a.col.field == "nuvRate" || a.col.field == "arrivedRate" ? "%" : "");
                 }
 
                 var bhl = (((parseFloat(((rast[0] + "").replace("%", ""))) - parseFloat(((rast[1] + "").replace("%", "")))) / parseFloat(((rast[1] + "").replace("%", "")))) * 100 ).toFixed(2) + "%";
@@ -718,6 +718,7 @@ define(["./module"], function (ctrs) {
                                 var tPageInfoArr = ["conversions", "benefit"]
                                 var pageurl = "/api/transform/getPageBaseInfo?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&queryOptions=" + tPageInfoArr + "&pages=" + JSON.stringify(turls) + "&showType=day" + "&filters=" + $rootScope.getFilters()
                                 $http.get(pageurl).success(function (pagedatas) {
+                                    var sumCrate = 0
                                     $rootScope.gridOptions.data.forEach(function (data, index) {
                                         $rootScope.checkedArray.forEach(function (attr) {
                                             switch (attr) {
@@ -725,7 +726,11 @@ define(["./module"], function (ctrs) {
                                                     data["conversions"] = pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].conversions != undefined ? pagedatas[data.campaignName].conversions.value : 0
                                                     break;
                                                 case "crate"://转化率
-                                                    data["crate"] = pagedatas[data.campaignName] != undefined && data.pv > 0 ? (Number(pagedatas[data.campaignName]["conversions"].value) / Number(data.pv)).toFixed(4)*100 : 0+"%"
+                                                    //data["crate"] = (pagedatas[data.campaignName] != undefined && data.pv > 0 ? ((Number(pagedatas[data.campaignName]["conversions"].value) / Number(data.pv))*100).toFixed(2) : (0).toFixed(2))+"%"
+                                                    //console.log("row crate:"+data["crate"])
+                                                    var tCrate = pagedatas[data.campaignName] != undefined && data.pv > 0 ? ((Number(pagedatas[data.campaignName]["conversions"].value) / Number(data.pv))*100) : 0
+                                                    sumCrate +=tCrate
+                                                    data["crate"]= tCrate.toFixed(2)+"%";
                                                     break;
                                                 //case"avgCost"://平均转化成本
                                                 //    $http.get(SEM_API_URL + "/sem/report/account?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end).success(function (SEMDdatas) {
@@ -744,7 +749,7 @@ define(["./module"], function (ctrs) {
                                                     data["orderNum"] = pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].orderNum != undefined ? pagedatas[data.campaignName].orderNum.value : 0
                                                     break;
                                                 case "orderNumRate"://订单转化率
-                                                    data["orderNumRate"] = pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].orderNum != undefined && data.pv > 0 ? (Number(pagedatas[data.campaignName].orderNum.value) / Number(data.pv)).toFixed(4)*100 : 0+"%"
+                                                    data["orderNumRate"] = (pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].orderNum != undefined && data.pv > 0 ? ((Number(pagedatas[data.campaignName].orderNum.value) / Number(data.pv))*100).toFixed(2) : (0).toFixed(2))+"%"
                                                     break;
                                                 default :
                                                     break;
@@ -758,15 +763,13 @@ define(["./module"], function (ctrs) {
                                         $scope.dateShowArray.forEach(function (attr) {
                                             if (data[attr.label] != undefined){
                                                 if(attr.label=="crate"){
-                                                    attr.value =Number(data[attr.label])+Number(attr.value)+"%"
-                                                    console.log("crate"+JSON.stringify(attr))
+                                                    attr.value =sumCrate.toFixed(2)+"%"
                                                 }else{
                                                     attr.value += data[attr.label]
                                                 }
                                             }
                                         })
                                     })
-                                    ////console.log( $rootScope.gridOptions.data)
                                     //刷新图表
                                     $scope.charts[0].config.legendDefaultChecked = [0, 1];
                                     $scope.charts[0].config.legendAllowCheckCount = 2;
