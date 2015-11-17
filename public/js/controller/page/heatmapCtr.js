@@ -3,13 +3,16 @@
  */
 define(["./module"], function (ctrs) {
 
-    ctrs.controller('heatmapctr', function ($cookieStore, $scope, $http, $rootScope, $stateParams, ngDialog) {
+    ctrs.controller('heatmapctr', function ($cookieStore, $scope, $state, $http, $rootScope, $stateParams, ngDialog) {
             $scope.selectedIndex = 0;
-            $rootScope.start = 0;//时间偏移量开始
-            $rootScope.end = 0;//时间偏移量结束
-            $scope.pv = 0;
-            $scope.hits = 0;
-            $scope.urlDialog;
+            $rootScope.start = -1;//时间偏移量开始
+            $rootScope.end = -1;//时间偏移量结束
+            $scope.heatMapRF = $cookieStore.get("heat_map_rf");
+
+            if (!$scope.heatMapRF) {
+                $state.go('pagetitle');
+                return;
+            }
 
             $scope.reset = function () {
                 $scope.yesterdayClass = false;
@@ -23,37 +26,27 @@ define(["./module"], function (ctrs) {
             $scope.init = function () {
 
                 //数据加载框
-                    $scope.urlDialog = ngDialog.open({
-                        template:'\
-              <div class="ngdialog-buttons" >\
-                        <ul>\
-                        <li> 数据加载中，请稍后......</li></ul>   \
-                         </div>',
-                        className: 'ngdialog-theme-default',
-                        plain: true,
-                        scope : $scope
-                    });
+                $scope.urlDialog = ngDialog.open({
+                    template: '<div class="ngdialog-buttons"><ul><li> 数据加载中，请稍后......</li></ul></div>',
+                    className: 'ngdialog-theme-default',
+                    plain: true,
+                    closeByDocument: false,
+                    closeByEscape: false,
+                    showClose: false,
+                    scope: $scope
+                });
 
-                $http.get("/api/heatmap?start=-3&end=-3&loc=http://192.168.1.111:3333/&type=4ae166b3563f97e92865ab355a45a78c").success
-                (function (res) {
+                var url = "/api/heatmap?start=" + $rootScope.start + "&end=" + $rootScope.end + "&loc=http://192.168.1.111:3334/&type=4ae166b3563f97e92865ab355a45a78c";
+
+                $http.get(url).success(function (res) {
                     //设置页面浏览量
                     $scope.pv = 100;
                     //设置页面点击量
-                    $scope.hits = 100;
+                    $scope.hits = res.length;
 
-                    //加载热力外部网页
-                    var iframe = document.getElementById("heat_iframe");
-                    iframe.src = "http://www.baidu.com";
-                    $scope.hhhhh(res);
-                    if (iframe.attachEvent) {
-                        iframe.attachEvent("onload", function () {
-                            $scope.urlDialog.close();
-                        });
-                    } else {
-                        iframe.onload = function () {
-                            $scope.urlDialog.close();
-                        };
-                    }
+                    // 加载热力外部网页
+                    $scope.loadHeatmap(res);
+                    $scope.loadIframe($scope.heatMapRF, $scope.urlDialog);
 
                 });
             };

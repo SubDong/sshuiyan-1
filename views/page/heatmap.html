@@ -16,17 +16,14 @@
             <button id="reportrange" class="btn btn-default pull-right date-picker my_picker" ng-click='timeclick()'
                     ng-hide="datechoice" ng-class="{'current':timeClass}" max="max" ng-model="date">
                 <i class="glyphicon glyphicon-calendar fa fa-calendar"></i><span></span></button>
-
-            &nbsp;&nbsp;
-            <span>浏览量：{{pv}}</span>&nbsp;&nbsp;|&nbsp;&nbsp;
-            <span>页面点击：{{hits}}</span>&nbsp;&nbsp;|&nbsp;&nbsp;
-
+            <span>浏览量：{{pv || 0}}</span>
+            <span>页面点击：{{hits || 0}}</span>
         </div>
 
     </div>
     <div class="my_concent">
         <div class="ssh_heat_map" style="position: absolute"></div>
-        <iframe id="heat_iframe" width="100%" height="800px"></iframe>
+        <div class="ssh_heat_i_frame"></div>
     </div>
 </div>
 
