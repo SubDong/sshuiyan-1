@@ -125,7 +125,9 @@ define(["./module"], function (ctrs) {
         };
         //增删路径
         $scope.addPaths = function (paths) {
-            paths.push(angular.copy(singlePath));
+            var temp =angular.copy(singlePath)
+            temp.steps.push(angular.copy(singleStep))
+            paths.push(temp);
         };
         $scope.removePath = function (paths, _index) {
             $scope.openPathConfirmDialog = ngDialog.openConfirm({
