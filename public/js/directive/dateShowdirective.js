@@ -522,15 +522,12 @@ define(["../app"], function (app) {
         };
     });
 
-    /**
-     * Create by wms on 2015-11-09.搜索推广.推广URL
-     */
     app.directive("sshHeatMap", function ($http, $rootScope, $q, SEM_API_URL) {
         return {
             restrict: 'C',
             link: function (scope, element, attris, controller) {
 
-                scope.hhhhh = function (heatData) {
+                scope.loadHeatmap = function (heatData) {
                     var option = {
                         title : {
                             text: '热力图'
@@ -549,7 +546,7 @@ define(["../app"], function (app) {
                     });
 
                     var myChart = echarts.init(element[0]);
-                    console.log(myChart)
+
                     myChart.showLoading({
                         text: '正在努力的读取数据中...'    //loading话术
                     });
@@ -559,6 +556,38 @@ define(["../app"], function (app) {
                     myChart.setOption(option)
                 };
 
+            }
+        };
+    });
+
+    app.directive("sshHeatIFrame", function ($http, $rootScope, $q, SEM_API_URL) {
+        return {
+            template: "<iframe></iframe>",
+            transclude: true,
+            replace: true,
+            restrict: 'C',
+            link: function (scope, element, attris, controller) {
+
+                scope.loadIframe = function (loc, dialog) {
+
+                    element[0].src = loc.indexOf("http://") != -1 ? loc : "http://hy.best-ad.cn";
+
+                    element.css({
+                        width: "100%",
+                        height: "1000px"
+                    });
+
+                    if (element[0].attachEvent) {
+                        element[0].attachEvent("onload", function () {
+                            dialog.close();
+                        });
+                    } else {
+                        element[0].onload = function () {
+                            dialog.close();
+                        };
+                    }
+
+                };
             }
         };
     });

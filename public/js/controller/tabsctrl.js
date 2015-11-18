@@ -84,6 +84,19 @@ define(["app"], function (app) {
             {consumption_name: "新访客比率", name: "nuvRate"},
             {consumption_name: "IP数", name: "ip"}
         ];
+        $scope.TodayWebs = [
+            {consumption_name: "浏览量(PV)", name: "pv"},
+            {consumption_name: "访客数(UV)", name: "uv"},
+            {consumption_name: "新访客数", name: "nuv"},
+            {consumption_name: "新访客比率", name: "nuvRate"},
+            {consumption_name: "IP数", name: "ip"}
+        ];
+        $scope.Indexflowedse = [
+            {consumption_name: "跳出率", name: "outRate"},
+            {consumption_name: "平均访问时长", name: "avgTime"},
+            {consumption_name: "平均访问页数", name: "avgPage"},
+            {consumption_name: "入口页次数", name: "entrance"}
+        ];
         $scope.Todytransform = [
             {consumption_name: "转化次数", name: "zhuanF"},
             {consumption_name: "转化率", name: "zhuanN"}

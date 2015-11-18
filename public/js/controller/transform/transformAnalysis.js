@@ -444,6 +444,7 @@ define(["./module"], function (ctrs) {
                                 var tempPv = 0;
                                 var tempConv = 0;
 
+                                var tempNuvRate=0;
                                 events.forEach(function (event, index) {
                                     var eventInfo = eventInfos[event.event_page + "_" + event.event_id]
                                     if (eventInfo != undefined) {
@@ -518,7 +519,10 @@ define(["./module"], function (ctrs) {
                                                 if (eventInfo != undefined) {
                                                     item.value += eventInfo.convCount;
                                                 }
-                                            } else {
+                                            } else if(item.label == "nuvRate"){
+                                                console.log("nuvRate:"+pvs[index]["nuvRate"])
+                                                tempNuvRate+=Number(pvs[index]["nuvRate"].replace("%",""))
+                                            }else {
                                                 item.value = hashloc[event.event_page] == undefined ? (pvs[index][item.label] + item.value) : (maxvalues[item.label] < pvs[index][item.label] ? (item.value + pvs[index][item.label] - maxvalues[item.label]) : item.value)
                                                 if (item.label == "pv") {
                                                     tempPv = item.value;
@@ -539,7 +543,9 @@ define(["./module"], function (ctrs) {
 
                                 $scope.dateShowArray.forEach(function (item) {
                                     if (item.label == "crate" && tempPv != 0) {
-                                        item.value = Number(tempConv / tempPv).toFixed(4) * 100 + "%"
+                                        item.value = (Number(tempConv / tempPv)*100).toFixed(2)+"%"
+                                    }else if(item.label == "nuvRate"){
+                                        item.value= tempNuvRate.toFixed(2)+"%"
                                     }
                                 })
                                 //刷新图表

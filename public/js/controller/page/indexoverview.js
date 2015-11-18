@@ -5,7 +5,7 @@ define(["./module"], function (ctrs) {
 
     "use strict";
 
-    ctrs.controller('indexoverview', function ($scope, $rootScope, $cookieStore,$http, areaService, uiGridConstants) {
+    ctrs.controller('indexoverview', function ($scope, $rootScope, $cookieStore, $http, areaService, uiGridConstants) {
         $scope.allBrowsers = angular.copy($rootScope.browsers);
         //        高级搜索提示
         $scope.sourceSearch = "";
@@ -27,7 +27,7 @@ define(["./module"], function (ctrs) {
         $scope.souce.selected = {"name": "全部"};
         $scope.browser.selected = {"name": "全部"};
         //配置默认指标
-        $rootScope.checkedArray = ["vc", "uv", "avgTime"];
+        $rootScope.checkedArray = ["pv", "uv", "entrance"];
         $rootScope.gridArray = [
             {
                 name: "xl",
@@ -52,9 +52,9 @@ define(["./module"], function (ctrs) {
                 enableSorting: false
             },
             {
-                name: "访问次数",
-                displayName: "访问次数",
-                field: "vc",
+                name: "浏览量(PV)",
+                displayName: "浏览量(PV)",
+                field: "pv",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>",
                 sort: {
                     direction: uiGridConstants.DESC,
@@ -68,9 +68,9 @@ define(["./module"], function (ctrs) {
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
             },
             {
-                name: "平均访问时长",
-                displayName: "平均访问时长",
-                field: "avgTime",
+                name: "入口页次数",
+                displayName: "入口页次数",
+                field: "entrance",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
             }
         ];

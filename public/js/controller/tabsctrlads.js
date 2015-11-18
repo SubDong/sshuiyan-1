@@ -1247,7 +1247,7 @@ define(["app"], function (app) {
                             });
                             if (dataSEM.length > 1) {
                                 semDataObj["cpc"] = (semDataObj["cost"] / semDataObj["click"]).toFixed(2);
-                                semDataObj["ctr"] = ((semDataObj["click"] / semDataObj["impression"]).toFixed(4)) * 100;
+                                semDataObj["ctr"] = ((semDataObj["click"] / semDataObj["impression"]) * 100).toFixed(2);
                             }
                             semDataArray.push(semDataObj);
                             $rootScope.checkedArray.forEach(function (item, i) {

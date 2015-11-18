@@ -15,9 +15,9 @@ define(["app"], function (app) {
             obj.areaSearch = "";
         }
         $scope.city.selected = {"name": "全部"};
-        $scope.visible = true;
-        $rootScope.tableTimeStart = -1;//开始时间
-        $rootScope.tableTimeEnd = -1;//结束时间、
+        $scope.visible = false;
+        $rootScope.tableTimeStart = 0;//开始时间
+        $rootScope.tableTimeEnd = 0;//结束时间、
         $scope.compareType = false;//对比标识
         //配置默认指标
         $rootScope.checkedArray = ["click", "cost", "cpc", "pv", "uv", "avgPage"];
@@ -199,15 +199,15 @@ define(["app"], function (app) {
 
 
         }
-        $scope.yesterday = function () {
+        $scope.today = function () {
             $scope.reset();
-            $scope.yesterdayClass = true;
-            $rootScope.start = -1;
-            $rootScope.end = -1;
+            $scope.todayClass = true;
+            $rootScope.start = 0;
+            $rootScope.end = 0;
             $scope.init($rootScope.user, $rootScope.baiduAccount, "account", $scope.selectedQuota, $rootScope.start, $rootScope.end, true);
         };
         // initialize
-        $scope.yesterday();
+        $scope.today();
         //$scope.initMap();
         $scope.disabled = undefined;
         $scope.enable = function () {
@@ -272,18 +272,18 @@ define(["app"], function (app) {
         }
         //刷新
         $scope.page_refresh = function () {
-            $rootScope.start = -1;
-            $rootScope.end = -1;
+            $rootScope.start = 0;
+            $rootScope.end = 0;
 //            $scope.init($rootScope.user, $rootScope.baiduAccount, "account", $scope.selectedQuota, $rootScope.start, $rootScope.end, true);
-            $rootScope.tableTimeStart = -1;
-            $rootScope.tableTimeEnd = -1;
+            $rootScope.tableTimeStart = 0;
+            $rootScope.tableTimeEnd = 0;
 //            //图表
 //            requestService.refresh($scope.charts);
-            $scope.reloadByCalendar("yesterday");
+            $scope.reloadByCalendar("today");
             $('#reportrange span').html(GetDateStr(0));
             //classcurrent
             $scope.reset();
-            $scope.yesterdayClass = true;
+            $scope.todayClass = true;
         };
         $rootScope.datePickerCompare = function (start, end, label) {
             $scope.compareType = true;

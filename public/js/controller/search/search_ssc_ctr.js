@@ -12,7 +12,7 @@ define(["./../module"], function (ctrs) {
             $rootScope.$broadcast("searchLoadAllArea");
             obj.areaSearch = "";
         }
-        $scope.yesterdayClass = true;
+        $scope.todayClass = true;
         $scope.city.selected = {"name": "全部"};
         $rootScope.tableTimeStart = -1;//开始时间
         $rootScope.tableTimeEnd = -1;//结束时间、
@@ -203,7 +203,7 @@ define(["./../module"], function (ctrs) {
         }
 
         //点击显示指标
-        $scope.visible = true;
+        $scope.visible = false;
         $scope.select = function () {
             $scope.visible = false;
         };
@@ -268,12 +268,12 @@ define(["./../module"], function (ctrs) {
             //$scope.init($rootScope.user, $rootScope.baiduAccount, "creative", $scope.selectedQuota, $rootScope.start, $rootScope.end);
             ////图表
             //requestService.refresh($scope.charts);
-            $scope.reloadByCalendar("yesterday");
+            $scope.reloadByCalendar("today");
             $('#reportrange span').html(GetDateStr(-1));
             //其他页面表格
             //classcurrent
             $scope.reset();
-            $scope.yesterdayClass = true;
+            $scope.todayClass = true;
         };
 
         $rootScope.initMailData = function () {

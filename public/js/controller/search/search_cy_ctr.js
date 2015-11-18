@@ -15,9 +15,9 @@ define(["./../module"], function (ctrs) {
             $rootScope.$broadcast("searchLoadAllArea");
             obj.areaSearch = "";
         }
-        $scope.yesterdayClass = true;
-        $rootScope.tableTimeStart = -1;//开始时间
-        $rootScope.tableTimeEnd = -1;//结束时间、
+        $scope.todayClass = true;
+        $rootScope.tableTimeStart = 0;//开始时间
+        $rootScope.tableTimeEnd = 0;//结束时间、
         $rootScope.tableFormat = null;
         //配置默认指标
         $rootScope.checkedArray = ["impression", "cost", "cpc"]
@@ -140,12 +140,12 @@ define(["./../module"], function (ctrs) {
             }
         }
         $scope.initGrid = function (user, baiduAccount, semType, quotas, start, end, renderLegend) {
-            $rootScope.start = -1;
-            $rootScope.end = -1;
+            $rootScope.start = 0;
+            $rootScope.end = 0;
             $scope.init(user, baiduAccount, semType, quotas, start, end, renderLegend);
         }
 
-        $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "creative", $scope.selectedQuota, -1, -1, true);
+        $scope.initGrid($rootScope.user, $rootScope.baiduAccount, "creative", $scope.selectedQuota, 0, 0, true);
 
 
         $scope.$on("ssh_refresh_charts", function (e, msg) {
@@ -154,7 +154,7 @@ define(["./../module"], function (ctrs) {
         });
 
         //点击显示指标
-        $scope.visible = true;
+        $scope.visible = false;
         $scope.select = function () {
             $scope.visible = false;
         };
@@ -219,12 +219,12 @@ define(["./../module"], function (ctrs) {
             //$scope.init($rootScope.user, $rootScope.baiduAccount, "creative", $scope.selectedQuota, $rootScope.start, $rootScope.end);
             ////图表
             //requestService.refresh($scope.charts);
-            $scope.reloadByCalendar("yesterday");
-            $('#reportrange span').html(GetDateStr(-1));
+            $scope.reloadByCalendar("today");
+            $('#reportrange span').html(GetDateStr(0));
             //其他页面表格
             //classcurrent
             $scope.reset();
-            $scope.yesterdayClass = true;
+            $scope.todayClass = true;
         };
 
         $rootScope.initMailData = function () {

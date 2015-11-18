@@ -6,11 +6,11 @@ define(["./../module"], function (ctrs) {
     "use strict";
 
     ctrs.controller('urlspeed_m', function ($scope, $q, $rootScope, $http, $cookieStore, requestService, messageService, areaService, uiGridConstants) {
-        $scope.yesterdayClass = true;
+        $scope.todayClass = true;
 
         //table配置
-        $rootScope.tableTimeStart = -1;
-        $rootScope.tableTimeEnd = -1;
+        $rootScope.tableTimeStart = 0;
+        $rootScope.tableTimeEnd = 0;
         $rootScope.tableFormat = null;
         //配置默认指标
         $rootScope.checkedArray = ["pv", "vc"];
@@ -75,7 +75,7 @@ define(["./../module"], function (ctrs) {
 
         //$scope.initMap();
         //点击显示指标
-        $scope.visible = true;
+        $scope.visible = false;
         $scope.select = function () {
             $scope.visible = false;
         };
@@ -113,11 +113,11 @@ define(["./../module"], function (ctrs) {
 //            requestService.refresh($scope.charts);
             //其他页面表格
             //classcurrent
-            $scope.reloadByCalendar("yesterday");
-            $('#reportrange span').html(GetDateStr(-1));
+            $scope.reloadByCalendar("today");
+            $('#reportrange span').html(GetDateStr(0));
             $scope.$broadcast("ssh_dateShow_options_time_change");
             $scope.reset();
-            $scope.yesterdayClass = true;
+            $scope.today = true;
         };
 
         $rootScope.initMailData = function () {
