@@ -32,6 +32,7 @@
                                data-ng-click="addTargetUrl(target_urls,target_url.url,$index)"
                                data-ng-if="$index == 0 && target_urls.length<5" id="addTargetUrl">添加页面</a>
                         </li>
+                        <span ng-show="target_urls.length>4" class="" style="color: red">目标URL最多添加5个</span> 
                     </ul>
                     <div class="clearfix"></div>
                     <div class="target_way_title">
