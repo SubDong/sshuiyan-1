@@ -308,10 +308,10 @@ if (config != undefined && !config.open) {
             return s + q + o + h + m + c
         };
         d.I = {
-            R: "192.168.1.102:8000",
-            RS: "192.168.1.102:8001",
+            R: "hy.best-ad.cn",
+            RS: "t.best-ad.cn",
             u: config.domain,
-            P: "192.168.100.10:9090",
+            P: "log.best-ad.cn",
             S: "pft.gif",
             protocol: "https:" == document.location.protocol ? "https:" : "http:",
             Q: "os tit br fl pm sr lg ck ja sc dt rf loc tt ct vid u api et cv xy ut duration durPage n v adtrack".split(" "),
@@ -531,15 +531,13 @@ if (config != undefined && !config.open) {
                         var t = document.getElementsByTagName("script")[0];
                         t.parentNode.insertBefore(r, t)
                     }
-                }
-
-                , init: function () {
+                }, init: function () {
                     d.b = this;
                     this.na();
                     this.sm();
                     this.custor();
                     this.getSelectJS();
-                    this.getHeatUrlJS();
+                    this.getHeatUrlJS()
                 }
             };
             return new l
@@ -640,12 +638,12 @@ if (config != undefined && !config.open) {
                         if (m != undefined && m != null) {
                             if (c == null) {
                                 m.onclick = function () {
-                                    _pct.putPar(["_trackEvent", k.eid, k.evttag, k.evtarget])
+                                    _pct.putPar(["_trackEvent", k.eid, k.evttag, k.evtarget?1:0])
                                 }
                             } else {
                                 if (c.nodeValue.indexOf("_pct.putPar") == -1) {
                                     m.onclick = function () {
-                                        _pct.putPar(["_trackEvent", k.eid, k.evttag, k.evtarget])
+                                        _pct.putPar(["_trackEvent", k.eid, k.evttag, k.evtarget?1:0])
                                     }
                                 }
                             }
