@@ -170,6 +170,8 @@ define(["./module"], function (ctrs) {
         //检查路径下的步骤正确性
         //相邻步骤之间不能有重复URL
         var checkSinglePath = function (path, pathIndex) {
+            if (!path.path_mark)
+                return true
             if (path.steps.length == 0) {
                 showInputErrMsg("路径" + pathIndex + " 未添加任何步骤，至少添一个步骤，请返回并完善信息")
                 return false;
