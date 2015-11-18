@@ -315,7 +315,8 @@ if (config != undefined && !config.open) {
             S: "pft.gif",
             protocol: "https:" == document.location.protocol ? "https:" : "http:",
             Q: "os tit br fl pm sr lg ck ja sc dt rf loc tt ct vid u api et cv xy ut duration durPage n v adtrack".split(" "),
-            PQ: "os tit br fl pm sr lg ck ja sc dt rf loc tt ct vid u api p_name p_type p_record p_orderid p_income p_conversionrate".split(" ")
+            PQ: "os tit br fl pm sr lg ck ja sc dt rf loc tt ct vid u api p_name p_type p_record p_orderid p_income p_conversionrate".split(" "),
+            HMQ: "dt tt vid loc xy v".split(" ")
         };
         g.g.getOrderId = function () {
             if (g.g.loc.indexOf("[[[") > 0 && g.g.loc.indexOf("]]]") && g.g.loc.indexOf("[[[") < g.g.loc.indexOf("]]]")) {
@@ -484,6 +485,14 @@ if (config != undefined && !config.open) {
                     }
                     t.set("PFT_PAGE", new Date().getDate());
                     return s
+                }, hotMapPar: function () {
+                    var s = "", r = d.I.HMQ, u = g.g, t = g.cookie;
+                    console.log(r.length);
+                    for (var v = 0; v < r.length; v++) {
+                        u[r[v]] != undefined && u[r[v]] != "" && u[r[v]] != null ? s = s + r[v] + "=" + u[r[v]] + ((r[v] == "v") ? "" : "&") : ""
+                    }
+                    t.set("PFT_HOT_MAP", new Date().getDate());
+                    return s
                 }, custor: function () {
                     g.g.cv = g.cookie.get("PFT_CV_" + j.id);
                     g.g.api = g.cookie.get("PFT_API");
@@ -499,6 +508,10 @@ if (config != undefined && !config.open) {
                 }, pageSm: function (r) {
                     var s = d.I;
                     var t = s.protocol + "//" + s.P + "/" + s.S + "?t=" + j.id + "&" + this.pagePar();
+                    c.log(t)
+                }, hotMapSm: function (r) {
+                    var s = d.I;
+                    var t = s.protocol + "//" + s.P + "/" + s.S + "?t=" + j.id + "&" + this.hotMapPar();
                     c.log(t)
                 }, hbInfo: function () {
                     var s = d.I;
@@ -610,24 +623,24 @@ if (config != undefined && !config.open) {
                 }
             }())
         }
-        if (config.mouse != undefined && config.mouse) {
-            (function () {
-                document.onclick = function (k) {
-                    var m = k || window.event;
-                    var n = document.documentElement.scrollLeft || document.body.scrollLeft;
-                    var l = document.documentElement.scrollTop || document.body.scrollTop;
-                    var h = m.pageX || m.clientX + n;
-                    var o = m.pageY || m.clientY + l;
-                    var c = {x: h, y: o};
-                    e.push(c);
-                    if (e.length >= 5) {
-                        g.g.xy = JSON.stringify(e);
-                        d.b.sm();
-                        e = []
-                    }
+        //if (config.mouse != undefined && config.mouse) {
+        (function () {
+            document.onclick = function (k) {
+                var m = k || window.event;
+                var n = document.documentElement.scrollLeft || document.body.scrollLeft;
+                var l = document.documentElement.scrollTop || document.body.scrollTop;
+                var h = m.pageX || m.clientX + n;
+                var o = m.pageY || m.clientY + l;
+                var c = {x: h, y: o};
+                e.push(c);
+                if (e.length >= 5) {
+                    g.g.xy = JSON.stringify(e);
+                    d.b.hotMapSm();
+                    e = []
                 }
-            })()
-        }
+            }
+        })()
+        //}
         if (config != undefined && config.e != undefined && config.e.length > 0) {
             window.onload = function () {
                 config.e.forEach(function (k, h) {
@@ -638,12 +651,12 @@ if (config != undefined && !config.open) {
                         if (m != undefined && m != null) {
                             if (c == null) {
                                 m.onclick = function () {
-                                    _pct.putPar(["_trackEvent", k.eid, k.evttag, k.evtarget?1:0])
+                                    _pct.putPar(["_trackEvent", k.eid, k.evttag, k.evtarget ? 1 : 0])
                                 }
                             } else {
                                 if (c.nodeValue.indexOf("_pct.putPar") == -1) {
                                     m.onclick = function () {
-                                        _pct.putPar(["_trackEvent", k.eid, k.evttag, k.evtarget?1:0])
+                                        _pct.putPar(["_trackEvent", k.eid, k.evttag, k.evtarget ? 1 : 0])
                                     }
                                 }
                             }
