@@ -414,7 +414,23 @@ var buildRequest = function (indexes, type, quotas, dimension, filters, start, e
         }
 
         if (dimensionScript == "doc['rf_type'].value") {
-            dimensionScript = "doc['rf_type'].value == 0 ? 3 : doc['rf_type'].value";
+            return {
+                "index": indexes.toString(),
+                "type": type,
+                "body": {
+                    "query": buildQuery(filters),
+                    "size": 0,
+                    "aggs": {
+                        "result": {
+                            "terms": {
+                                "field": 'rf_type',
+                                "size": 0
+                            },
+                            "aggs": _aggs
+                        }
+                    }
+                }
+            }
         }
 
         return {
@@ -537,7 +553,7 @@ var outRateFn = function (result) {
         var vc = result[i].out_vc_aggs.value;
         var svc = parseInt(vc) - result[i].single_visitor_aggs.buckets.length;
         keyArr.push(result[i].key);
-        
+
         var outRate = 0;
         if (vc > 0) {
             outRate = (parseFloat(svc) / parseFloat(vc) * 100).toFixed(2);
