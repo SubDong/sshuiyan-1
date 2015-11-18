@@ -15,7 +15,8 @@ var heaturl_request = {
                             "filters": {
                                 "data": {
                                     "term": {
-                                        "rf": "http://www.best-ad.cn/"
+                                        //"rf": "http://www.best-ad.cn/"
+                                        "rf": rf
                                     }
                                 }
                             }
@@ -40,7 +41,8 @@ var heaturl_request = {
                             "filters": {
                                 "data": {
                                     "term": {
-                                        "rf": "http://www.best-ad.cn/"
+                                        //"rf": "http://www.best-ad.cn/"
+                                        "rf": rf
                                     }
                                 }
                             }
@@ -58,7 +60,8 @@ var heaturl_request = {
                             "filters": {
                                 "data": {
                                     "term": {
-                                        "loc": "http://www.best-ad.cn/"
+                                        //"loc": "http://www.best-ad.cn/"
+                                        "loc": rf
                                     }
                                 }
                             }

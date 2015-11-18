@@ -57,6 +57,19 @@ router.get('/select', function (req, resp) {
 
     });
 });
+
+    router.get('/heatUrl', function (req, resp) {
+
+        fs.readFile('./track/heatUrl.js', function (err, data) {
+            resp.set('Content-Type', 'application/javascript');
+            resp.set('Cache-Control', 'max-age=0,must-revalidate');
+            resp.send("var select = " + data);
+        })
+
+});
+
+
+
 /**
  * 统计js 数据初始化
  * @param req
@@ -136,5 +149,15 @@ function flushAddEvent(config, resp) {
     })
 
 }
+
+function flushAddHeatUrlEvent(config, resp) {
+    fs.readFile('./track/heatUrl.js', function (err, data) {
+        resp.set('Content-Type', 'application/javascript')
+        resp.set('Cache-Control', 'max-age=0,must-revalidate');
+        resp.send("var select = ".concat(JSON.stringify(config), ';', data));
+    })
+
+}
+
 
 module.exports = router

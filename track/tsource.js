@@ -522,12 +522,24 @@ if (config != undefined && !config.open) {
                         var t = document.getElementsByTagName("script")[0];
                         t.parentNode.insertBefore(r, t)
                     }
-                }, init: function () {
+                }, getHeatUrlJS: function () {
+                    var s = document.referrer;
+                    if (s.indexOf("http://" + d.I.R) === 0 || s.indexOf("https://" + d.I.R) === 0) {
+                        var r = document.createElement("script");
+                        r.setAttribute("type", "text/javascript");
+                        r.setAttribute("src", d.I.protocol + "//" + d.I.RS + "/t.js/heatUrl");
+                        var t = document.getElementsByTagName("script")[0];
+                        t.parentNode.insertBefore(r, t)
+                    }
+                }
+
+                , init: function () {
                     d.b = this;
                     this.na();
                     this.sm();
                     this.custor();
-                    this.getSelectJS()
+                    this.getSelectJS();
+                    this.getHeatUrlJS();
                 }
             };
             return new l
