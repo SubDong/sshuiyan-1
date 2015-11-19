@@ -44,7 +44,7 @@ define(["./module"], function (ctrs) {
                 (function (res) {
 
 
-                   // console.log(res);
+                    console.log($stateParams.rf);
 
                     //设置页面浏览量
                     $scope.pv = res.pv.buckets.data.doc_count;
@@ -53,7 +53,7 @@ define(["./module"], function (ctrs) {
 
                     //加载外部网页
                     var iframe = document.getElementById("foreign_iframe");
-                    iframe.src = "http://localhost:3000/js";
+                    iframe.src = $stateParams.rf;
                     if (iframe.attachEvent){
                             iframe.attachEvent("onload", function(){
                                 $scope.urlDialog.close();
