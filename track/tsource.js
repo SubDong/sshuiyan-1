@@ -468,9 +468,11 @@ if (config != undefined && !config.open) {
                     if (s == -1) {
                         var r = new Date();
                         r.setTime(r.getTime() * 100);
-                        document.cookie = "vid=" + p.createUUID() + ";expires=" + r.toGMTString() + ";domain=" + g.getDomain() + "; path=/"
+                        g.g.vid = p.createUUID();
+                        document.cookie = "vid=" + g.g.vid + ";expires=" + r.toGMTString() + ";domain=" + g.getDomain() + "; path=/"
+                    }else{
+                        g.g.vid = this.getData('vid')
                     }
-                    g.g.vid = this.getData("vid")
                 }, par: function () {
                     var s = "", r = d.I.Q, u = g.g, t = g.cookie;
                     for (var v = 0; v < r.length; v++) {
@@ -557,7 +559,7 @@ if (config != undefined && !config.open) {
         (function () {
             var c = g.event, h = g.cookie;
             var l = function (n) {
-                var m = performance.timing, o = m[n + "Start"] ? m[n + "Start"] : 0;
+                var m = performance != undefined ? performance.timing:1, o = m[n + "Start"] ? m[n + "Start"] : 0;
                 n = m[n + "End"] ? m[n + "End"] : 0;
                 return {start: o, end: n, value: 0 < n - o ? n - o : 0}
             };
@@ -570,7 +572,7 @@ if (config != undefined && !config.open) {
                     netd: l("domainLookup").value,
                     nttp: l("connect").value,
                     srv: l("response").start - n.start,
-                    dms: performance.timing.domInteractive - performance.timing.fetchStart,
+                    dms: performance != undefined ? performance.timing.domInteractive - performance.timing.fetchStart:1,
                     let: l("loadEvent").end - p.start
                 };
                 var o = h.get("judge");
