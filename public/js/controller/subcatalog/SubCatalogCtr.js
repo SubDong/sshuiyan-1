@@ -60,21 +60,29 @@ define(["./module"], function (ctrs) {
                 enableSorting: false
             },
             {
-                name: "浏览量(PV)",
-                displayName: "浏览量(PV)",
-                field: "pv",
+                name: "子目录",
+                displayName: "子目录",
+                field: "",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
                 cellClass: "table_list_color",
-                enableSorting: false,
-                cellTooltip: function (row, col) {
-                    return row.entity.pv;
-                }
+                enableSorting: false
             },
             {
                 name: " ",
                 cellTemplate: "<div class='table_box'><a ui-sref='history1' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn' title='查看历史趋势'></a></div>",
                 enableSorting: false
             },
+            {
+                name: "浏览量(PV)",
+                displayName: "浏览量(PV)",
+                field: "pv",
+                cellClass: "table_list_color",
+                enableSorting: false,
+                cellTooltip: function (row, col) {
+                    return row.entity.pv;
+                }
+            },
+
             {
                 name: "访客数(UV)",
                 displayName: "访客数(UV)",

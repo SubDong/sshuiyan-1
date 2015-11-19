@@ -32,7 +32,7 @@ var es_aggs = {
     "nuv": {
         "nuv": {
             "sum": {
-                "script": "c = 0; if (doc['ct'].value == 0) { c = 1 }; c"
+                "field": "ct"
             }
         }
     },
@@ -40,7 +40,7 @@ var es_aggs = {
     "nuvRate": {
         "new_visitor_aggs": {
             "sum": {
-                "script": "c = 0; if (doc['ct'].value == 0) { c = 1 }; c"
+                "field": "ct"
             }
         },
         "uv_aggs": {
@@ -1853,6 +1853,8 @@ var transform = {
                     }
                 })
                 var pvs = []
+                //console.log("****************************")
+                //console.log(JSON.stringify(querys[0]))
                 es.search(querys[0], function (error, result) {
                     var datas = []
                     if (result != undefined && result.aggregations != undefined && result.aggregations.pagePVs != undefined && result.aggregations.pagePVs.buckets != undefined) {
@@ -1953,7 +1955,8 @@ var transform = {
                     }
                 })
                 var pvs = []
-
+                //console.log("****************************")
+                //console.log(JSON.stringify(querys[0]))
                 es.search(querys[0], function (error, result) {
                     var datas = []
                     if (result != undefined && result.aggregations != undefined && result.aggregations.pagePVs != undefined && result.aggregations.pagePVs.buckets != undefined) {
@@ -2082,6 +2085,8 @@ var transform = {
                         },
                     }
                 })
+                //console.log("****************************")
+                //console.log(JSON.stringify(querys[0]))
                 es.search(querys[0], function (error, result) {
                     var results = {}
                     if (result != undefined && result.aggregations != undefined && result.aggregations.pagePVs != undefined && result.aggregations.pagePVs.buckets != undefined) {
@@ -2167,6 +2172,8 @@ var transform = {
                         },
                     }
                 }
+                //console.log("****************************")
+                //console.log(JSON.stringify(query))
                 es.search(query, function (error, result) {
                     if (result != undefined && result.aggregations != undefined && result.aggregations.pagePVs != undefined && result.aggregations.pagePVs.buckets != undefined) {
                         var infos = result.aggregations.pagePVs.buckets
@@ -2191,7 +2198,7 @@ var transform = {
                 case "day":
                     for (var i = 0; i < indexs.length; i++) {
                         var boolQuery = []
-                        urls.forEach(function(url){
+                        urls.forEach(function (url) {
                             var filterQuery = []
                             if (filters != undefined && filters.length > 0) {
                                 var jfilters = JSON.parse(filters)
@@ -2227,6 +2234,8 @@ var transform = {
                     break;
             }
             async.map(requests, function (item, callback) {
+                //console.log("****************************")
+                //console.log(JSON.stringify(item))
                 es.search(item, function (error, result) {
                     if (result != undefined && result.aggregations != undefined) {
                         callback(null, result.aggregations);
@@ -2538,7 +2547,6 @@ var transform = {
                         newIndexs.push(indexs[i]);
                     }
                 }
-
                 //查询内容
                 var _aggs = {};
                 var queryOptions = queryOptionsStr.split(",")
@@ -2587,8 +2595,8 @@ var transform = {
                 })
                 var pvs = []
                 async.eachSeries(querys, function (item, callback) {
-                    es.search(item, function (error, result) {
 
+                    es.search(item, function (error, result) {
                         if (result != undefined && result.aggregations != undefined) {
                             pvs.push(result.aggregations)
                             callback(null, result.aggregations);
@@ -2607,7 +2615,7 @@ var transform = {
                                     if (pv.new_visitor_aggs.value == "0") {
                                         data[queryOption] = 0;
                                     } else {
-                                        data[queryOption] = (pv.uv_aggs.value / pv.new_visitor_aggs.value).toFixed(2) + "%";
+                                        data[queryOption] = ((pv.uv_aggs.value / pv.new_visitor_aggs.value) * 100).toFixed(2) + "%";
                                     }
                                     break;
                                 default :
@@ -2619,346 +2627,6 @@ var transform = {
                     })
                     callbackFn(datas);
                 });
-            });
-        },
-        searchDayEventPVs: function (es, indexs, type, showType, queryOptions, urls, filters, callbackFn) {
-            var _aggs = {};
-            queryOptions.forEach(function (queryOption) {
-                for (var key in es_aggs[queryOption]) {
-                    _aggs[key] = es_aggs[queryOption][key];
-                }
-            });
-            var requests = [];
-            switch (showType) {
-                case "hour":
-                    break;
-                case "day":
-                    for (var i = 0; i < indexs.length; i++) {
-                        var boolQuery = []
-                        for (var i = 0; i < urls.length; i++) {
-                            var filterQuery = []
-                            if (filters != undefined && filters.length > 0) {
-                                var jfilters = JSON.parse(filters)
-                                jfilters.forEach(function (filter) {
-                                    filterQuery.push({"match": filter})
-                                })
-                            }
-                            filterQuery.push({"match": {"loc": urls[i]}})
-                            boolQuery.push({
-                                "bool": {
-                                    "must": filterQuery
-                                }
-                            });
-                        }
-                        requests.push({
-                            index: indexs[i],
-                            type: type,
-                            "body": {
-                                "size": 0,
-                                query: {
-                                    bool: {
-                                        "should": boolQuery
-                                    }
-                                },
-                                "aggs": _aggs
-                            }
-                        });
-                    }
-                    break;
-                case "week":
-                    break;
-                case "month":
-                    break;
-            }
-            async.map(requests, function (item, callback) {
-                es.search(item, function (error, result) {
-                    if (result != undefined && result.aggregations != undefined) {
-                        callback(null, result.aggregations);
-                    } else {
-                        callback(null, null);
-                    }
-                });
-            }, function (error, results) {
-                var data = [];
-                var quota_data = {};
-                var keyArr = [];
-                var quotaArry = [];
-                if (results[0] != null) {
-                    for (var i = 0; i < indexs.length; i++) {
-                        keyArr.push(indexs[i].substring(7, indexs[i].length));
-                    }
-                    queryOptions.forEach(function (queryOption) {
-                        quota_data = {};
-                        quotaArry = [];
-                        var i = 0;
-                        var isExit = false;
-                        switch (queryOption) {
-                            case "pv":
-                                for (i = 0; i < results.length; i++) {
-                                    for (var key in results[i]) {
-                                        if (key == queryOption) {
-                                            quotaArry.push(results[i].pv.value);
-                                        }
-                                    }
-
-                                }
-                                quota_data = {
-                                    label: "pv",
-                                    key: keyArr,
-                                    quota: quotaArry
-                                };
-                                break;
-                            case "uv":
-                                for (i = 0; i < results.length; i++) {
-                                    for (var key in results[i]) {
-                                        if (key == queryOption) {
-                                            quotaArry.push(results[i].uv.value);
-                                        }
-                                    }
-                                }
-                                quota_data = {
-                                    label: "uv",
-                                    key: keyArr,
-                                    quota: quotaArry
-                                };
-                                break;
-                            case "vc":
-                                for (i = 0; i < results.length; i++) {
-                                    for (var key in results[i]) {
-                                        if (key == queryOption) {
-                                            quotaArry.push(results[i].vc.value);
-                                        }
-                                    }
-                                }
-                                quota_data = {
-                                    label: "vc",
-                                    key: keyArr,
-                                    quota: quotaArry
-                                };
-                                break;
-
-                            case "ip":
-                                for (i = 0; i < results.length; i++) {
-                                    for (var key in results[i]) {
-                                        if (key == queryOption) {
-                                            quotaArry.push(results[i].ip.value);
-                                        }
-                                    }
-                                }
-                                quota_data = {
-                                    label: "ip",
-                                    key: keyArr,
-                                    quota: quotaArry
-                                };
-                                break;
-                            case "clickTotal":
-                                for (i = 0; i < results.length; i++) {
-                                    for (var key in results[i]) {
-                                        if (key == queryOption) {
-                                            quotaArry.push(results[i].clickTotal.value);
-                                        }
-                                    }
-                                }
-                                quota_data = {
-                                    label: "clickTotal",
-                                    key: keyArr,
-                                    quota: quotaArry
-                                };
-                                break;
-                            case "conversions":
-                                for (i = 0; i < results.length; i++) {
-                                    for (var key in results[i]) {
-                                        if (key == queryOption) {
-                                            quotaArry.push(results[i].conversions.value);
-                                        }
-                                    }
-                                }
-                                quota_data = {
-                                    label: "conversions",
-                                    key: keyArr,
-                                    quota: quotaArry
-                                };
-                                break;
-                            case "nuv":
-                                for (i = 0; i < results.length; i++) {
-                                    for (var key in results[i]) {
-                                        if (key == queryOption) {
-                                            quotaArry.push(results[i].nuv.value);
-                                        }
-                                    }
-                                }
-                                quota_data = {
-                                    label: "nuv",
-                                    key: keyArr,
-                                    quota: quotaArry
-                                };
-                                break;
-                            case "visitNum":
-                                for (i = 0; i < results.length; i++) {
-                                    for (var key in results[i]) {
-                                        if (key == queryOption) {
-                                            quotaArry.push(results[i].visitNum.value);
-                                        }
-                                    }
-                                }
-                                quota_data = {
-                                    label: "visitNum",
-                                    key: keyArr,
-                                    quota: quotaArry
-                                };
-                                break;
-                            case "nuvRate":
-                                for (i = 0; i < results.length; i++) {
-                                    for (var key in results[i]) {
-                                        if (key == queryOption) {
-                                            if (results[i].new_visitor_aggs.value == "0") {
-                                                quotaArry.push(0);
-                                            } else {
-                                                quotaArry.push((results[i].uv_aggs.value / results[i].new_visitor_aggs.value).toFixed(2) + "%");
-                                            }
-                                        }
-                                    }
-                                }
-                                quota_data = {
-                                    label: "nuvRate",
-                                    key: keyArr,
-                                    quota: quotaArry
-                                };
-                                break;
-                            case "crate":
-                                for (i = 0; i < results.length; i++) {
-                                    for (var key in results[i]) {
-                                        if (key == queryOption) {
-                                            quotaArry.push(results[i].crate.value);
-                                        }
-                                    }
-                                }
-                                quota_data = {
-                                    label: "crate",
-                                    key: keyArr,
-                                    quota: quotaArry
-                                };
-                                break;
-                            case "transformCost":
-                                for (i = 0; i < results.length; i++) {
-                                    for (var key in results[i]) {
-                                        if (key == queryOption) {
-                                            quotaArry.push(results[i].transformCost.value);
-                                        }
-                                    }
-                                }
-                                quota_data = {
-                                    label: "transformCost",
-                                    key: keyArr,
-                                    quota: quotaArry
-                                };
-                                break;
-                            case "orderNum":
-                                for (i = 0; i < results.length; i++) {
-                                    for (var key in results[i]) {
-                                        if (key == queryOption) {
-                                            quotaArry.push(results[i].orderNum.value);
-                                        }
-                                    }
-                                }
-                                quota_data = {
-                                    label: "orderNum",
-                                    key: keyArr,
-                                    quota: quotaArry
-                                };
-                                break;
-                            case "benefit":
-                                for (i = 0; i < results.length; i++) {
-                                    for (var key in results[i]) {
-                                        if (key == queryOption) {
-                                            if (results[i].benefit.buckets.length == 0) {
-                                                quotaArry.push("0");//不存在记录
-                                            } else {
-                                                for (i = 0; i < results[i].benefit.buckets.length; i++) {
-                                                    if (results[i].benefit.buckets[i] != "") {
-                                                        quotaArry.push(Number(results[i].benefit.buckets[0].key) * Number(results[i].convertTime.value));
-                                                        isExit = true;
-                                                    }
-                                                }
-                                                if (!isExit) {
-                                                    quotaArry.push("-");//未定义预期收益
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                quota_data = {
-                                    label: "benefit",
-                                    key: keyArr,
-                                    quota: quotaArry
-                                };
-                                break;
-                            case "profit":
-                                for (i = 0; i < results.length; i++) {
-                                    for (var key in results[i]) {
-                                        if (key == queryOption) {
-                                            if (key == queryOption) {
-                                                if (results[i].profit_benefit.buckets.length == 0) {
-                                                    quotaArry.push("0");//不存在记录
-                                                } else {
-                                                    for (i = 0; i < results[i].profit_benefit.buckets.length; i++) {
-                                                        if (results[i].profit_benefit.buckets[i] != "") {
-                                                            quotaArry.push(Number(results[i].profit_benefit.buckets[0].key) * Number(results[i].profit_convertTime.value));
-                                                            isExit = true;
-                                                        }
-                                                    }
-                                                    if (!isExit) {
-                                                        quotaArry.push("-");//未定义预期收益
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                quota_data = {
-                                    label: "profit",
-                                    key: keyArr,
-                                    quota: quotaArry
-                                };
-                                break;
-                            case "orderNumRate":
-                                for (i = 0; i < results.length; i++) {
-                                    for (var key in results[i]) {
-                                        if (key == queryOption) {
-                                            quotaArry.push(Number(results[i].orderNumRate_orderNum.value) / Number(results[i].orderNumRate_convertTime.value));
-                                        }
-                                    }
-                                }
-                                quota_data = {
-                                    label: "orderNumRate",
-                                    key: keyArr,
-                                    quota: quotaArry
-                                };
-                                break;
-                            case "avgCost":
-                                for (i = 0; i < results.length; i++) {
-                                    for (var key in results[i]) {
-                                        if (key == queryOption) {
-                                            quotaArry.push(results[i].avgCost.value);
-                                        }
-                                    }
-                                }
-                                quota_data = {
-                                    label: "avgCost",
-                                    key: keyArr,
-                                    quota: quotaArry
-                                };
-                                break;
-                            default :
-                                break;
-                        }
-                        if (quota_data != null || quota_data != []) {
-                            data.push(quota_data);
-                        }
-
-                    });
-                }
-                callbackFn(data);
             });
         },
         searchConvEvents: function (es, indexs, startNum, endNum, type, eventPages, showType, filters, callback) {
@@ -2983,21 +2651,8 @@ var transform = {
                             newIndexs.push(indexs[i]);
                         }
                     }
-
                     if (newIndexs.length == 0) {//不存在集合
                         var null_data = []
-                        if (showType == "total") {
-                            null_data.push({
-                                crate_pv: 0,
-                                date_time: indexs[0].substring(7, indexs[0].length) + "~" + indexs[indexs.length - 1].substring(7, indexs[indexs.length - 1].length)
-                            });
-                        } else {
-                            for (var k = 0; k < indexs.length; k++) {
-                                null_data.push({
-                                    crate_pv: 0, date_time: indexs[k].substring(7, indexs[k].length)
-                                });
-                            }
-                        }
                         callback(null_data);
                     }
                     else {
@@ -3043,7 +2698,7 @@ var transform = {
                                                     "aggs": {
                                                         "convCount": {
                                                             "sum": {
-                                                                "script": "c = 0; if (doc['et_target'].value=='true') { c = 1 }; c"
+                                                                "field": "et_target"
                                                             }
                                                         },
                                                         "eventCount": {
@@ -3061,6 +2716,8 @@ var transform = {
                         })
                         var pageEvents = {}
                         async.eachSeries(querys, function (item, callback) {
+                                //console.log("*************ConvEvent*****************")
+                                //console.log(JSON.stringify(item))
                                 es.search(item.query, function (error, result) {
                                     if (result != undefined && result.aggregations != undefined) {
                                         if (result.aggregations.etIdTerms.buckets != undefined) {
@@ -3177,6 +2834,8 @@ var transform = {
                                 break;
                         }
                         async.map(requests, function (item, callback) {
+                            //console.log("****************************")
+                            //console.log(JSON.stringify(item))
                             es.search(item, function (error, result) {
                                 if (result != undefined && result.aggregations != undefined) {
                                     callback(null, result.aggregations);

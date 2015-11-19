@@ -1,12 +1,11 @@
 <!--来源分析-外部链接-->
 <div class="middle_containers" ng-controller="externallinksctr">
-    <div class="date_select"  set-class-when-at-top="fix-to-top">
+    <div class="date_select" set-class-when-at-top="fix-to-top">
         <calendar></calendar>
         <dateother></dateother>
         <refresh></refresh>
     </div>
     <div class="my_concent">
-        <!--<ssh-date-show type="today" dimension="rf"></ssh-date-show>-->
         <ssh-e-s-date-show></ssh-e-s-date-show>
         <div class="index_chart">
             <div id="indicators_charts_legend"></div>
@@ -18,7 +17,8 @@
                 <div class="chart-bottom">
                     <ul>
                         <li><span class="chart_box" style="background:#2fabe9;"></span><b id="chartlink"></b></li>
-                        <li><strong>总<b id="chartname" style="font-weight:bold"></b>：</strong><span id="chartnumber"></span></li>
+                        <li><strong>总<b id="chartname" style="font-weight:bold"></b>：</strong><span
+                                id="chartnumber"></span></li>
                         <li><strong>占比：</strong><span id="chartpointe"></span></li>
                     </ul>
                 </div>
@@ -33,10 +33,12 @@
                         <span class="impliedCondition">
                             <span ng-show="webTypeSearch || exTerminalSearch">（</span>
                             <span ng-show="exTerminalSearch" class="advanceSearch">
-                                {{exTerminalSearch}}<i class="glyphicon glyphicon-remove" data-ng-click="removeTerminalSearch(this);"></i>
+                                {{exTerminalSearch}}<i class="glyphicon glyphicon-remove"
+                                                       data-ng-click="removeTerminalSearch(this);"></i>
                             </span>
                             <span ng-show="webTypeSearch" class="advanceSearch">
-                                {{webTypeSearch}}<i class="glyphicon glyphicon-remove" data-ng-click="removeWebTypeSearch(this);"></i>
+                                {{webTypeSearch}}<i class="glyphicon glyphicon-remove"
+                                                    data-ng-click="removeWebTypeSearch(this);"></i>
                             </span>
                             <span ng-show="webTypeSearch || exTerminalSearch">）</span>
                         </span>
@@ -49,7 +51,6 @@
                         <ul>
                             <li><a href="javascript:void(0)" data-ssh-default-quota="source_externallinks">系统默认指标</a>
                             </li>
-                       <!--     <li><a href="javascript:void(0)"> 订单默认指标</a></li>-->
                         </ul>
                     </div>
                     <div class="chart_top">
@@ -70,24 +71,6 @@
                             </li>
                         </ul>
                     </div>
-                    <!--<div class="chart_top">
-                        <span>转化指标:</span>
-                        <ul>
-                            <li ng-repeat="item in Todytransform"
-                                class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
-                                ng-click='indicators(item,Todytransform,6)'>{{item.consumption_name}}
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="chart_top">
-                        <span>订单转化指标:</span>
-                        <ul>
-                            <li ng-repeat="item in Order"
-                                class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
-                                ng-click='indicators(item,Order,6)'>{{item.consumption_name}}
-                            </li>
-                        </ul>
-                    </div>-->
                     <div class="chart_top chart_noborder">
                         <button class="btn btn-primary" type="button" ng-click="targetSearch(true)">确定</button>
                         * 可同时选择6项
@@ -132,7 +115,8 @@
                         </ul>
                     </div>
                     <div class="input-group fl">
-                        <input type="text" class="form-control fl" maxlength="128" placeholder="输入域名…" data-ng-model="searchURLText"
+                        <input type="text" class="form-control fl" maxlength="128" placeholder="输入域名…"
+                               data-ng-model="searchURLText"
                                onfocus="this.setAttribute('placeholder','')"
                                onblur="this.setAttribute('placeholder','输入域名...')">
                                        <span class="input-group-btn fl">
@@ -143,16 +127,6 @@
                                  </button>
                                    </span>
                     </div>
-                    <!--<b></b>转化目标-->
-                    <!--<div role="group" class="btn-group">-->
-                    <!--<ui-select ng-model="extendway.selected" theme="selectize" class="fl"-->
-                    <!--style="width: 120px;">-->
-                    <!--<ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>-->
-                    <!--<ui-select-choices repeat="extendway in extendways">-->
-                    <!--<span ng-bind-html="extendway.name"></span>-->
-                    <!--</ui-select-choices>-->
-                    <!--</ui-select>-->
-                    <!--</div>-->
                 </div>
             </div>
             <div class="custom_table" ng-class="{hidePageContainer:gridApi2.grid.rows.length<=20}">

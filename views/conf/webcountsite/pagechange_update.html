@@ -32,6 +32,7 @@
                                data-ng-click="addTargetUrl(target_urls,target_url.url,$index)"
                                data-ng-if="$index == 0 && target_urls.length<5" id="addTargetUrl">添加页面</a>
                         </li>
+                        <span ng-show="target_urls.length>4" class="" style="color: red">目标URL最多添加5个</span> 
                     </ul>
                     <div class="clearfix"></div>
                     <div class="target_way_title">
@@ -159,7 +160,7 @@
                     <a href="javascript:void(0)" data-ng-if="path.steps.length<10"
                        data-ng-click="addSteps(path.steps)">添加步骤</a>
                 </div>
-                <button class="btn btn-info btn-color" data-ng-if="paths.length<4"
+                <button class="btn btn-info btn-color" data-ng-if="paths.length<5"
                         data-ng-click="addPaths(paths)">添加路径
                 </button>
             </div>

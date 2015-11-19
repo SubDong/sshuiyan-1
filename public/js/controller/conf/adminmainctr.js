@@ -469,7 +469,7 @@ define(["./module"], function (ctrs) {
                             is_top: $scope.dialog_model.is_top, is_use: 1
                         });
                     dataConfig[0].is_use = 1;
-                    dataConfig[0].site_name =  $scope.dialog_model.site_name;
+                    dataConfig[0].site_name = $scope.dialog_model.site_name;
                     if (model.is_top) {//若置顶 先使原来置顶变为False
                         var url = "/config/site_list?type=update&query=" + JSON.stringify({
                                 uid: $cookieStore.get("uid"),
@@ -511,23 +511,17 @@ define(["./module"], function (ctrs) {
         //修改mongodb中状态值与页面上的值
         var changeStatus = function (path, uid, statusNumber) {
             for (var i = 0; i < $scope.gridOptions.data.length; i++) {
-                if ($scope.gridOptions.data[i].site_url == path.split("/")[0]) {
-                    $scope.gridOptions.data[i].track_status_ch = status_ch(statusNumber);
-                    var model = angular.copy($scope.sites_model);
-                    model.site_url = $scope.gridOptions.data[i].site_url;//网站URL 页面输入
-                    model.site_name = $scope.gridOptions.data[i].site_name;//网站名称 页面输入
-                    model.is_top = $scope.dialog_model.is_top;
-                    model.uid = uid;
-                    model.type_id = $scope.gridOptions.data[i].type_id;//更新传入
-                    model.track_id = $scope.gridOptions.data[i].track_id;
-                    model.track_status = statusNumber;//0，１状态值
-                    var url = "/config/site_list?type=update&query={\"uid\":\"" + model.uid + "\",\"site_url\":\"" + path + "\"}&updates=" + JSON.stringify(model);
+                //console.log($scope.gridOptions.data[i].site_url+"   "+path)
+                var tempRow = $scope.gridOptions.data[i]
+                if ($scope.gridOptions.data[i].site_url == path) {
+                    var url = "/config/site_list?type=update&query=" + JSON.stringify({_id: $scope.gridOptions.data[i]._id}) + "&updates=" + JSON.stringify({track_status: statusNumber});
+                    //console.log(url)
                     $http({method: 'GET', url: url}).
                         success(function (data, status) {
                             if (status == "200") {
-                                createDialog(status_ch(statusNumber), "成功");
+                                refushGridData();
                             } else {
-                                createDialog(status_ch(statusNumber), "失败");
+                                //createDialog(status_ch(statusNumber), "失败");
                             }
                         }).
                         error(function (data, status, headers, config) {
@@ -556,11 +550,15 @@ define(["./module"], function (ctrs) {
 
         }
 
-        var userID = $cookieStore.get("uid");
         //代码检查方法
+        $scope.isHomePage = true;
         $scope.codeCheck = function () {
-            var path = $("#web_list_nav_input").prop("value");//输入框获取的path
-            var uid = userID;
+            var path = ""
+            if ($scope.isHomePage)
+                path = $rootScope.siteUrl
+            else
+                path = $("#web_list_nav_input").prop("value");//输入框获取的path
+            var uid = $cookieStore.get("uid")
             if (path.trim().length > 0 && path.trim() != "不能为空") {
                 if (uid == null) {
                     $scope.urlDialog = ngDialog.open({
@@ -571,7 +569,7 @@ define(["./module"], function (ctrs) {
                         scope: $scope
                     });
                 } else {
-                    $http.get("/config/site_list?type=search&query={\"uid\":\"" + uid + "\",\"site_url\":\"" + path + "\"}").success(function (result) {
+                    $http.get("/config/site_list?type=search&query={\"uid\":\"" + $cookieStore.get("uid") + "\",\"site_url\":\"" + path + "\"}").success(function (result) {
                         if (result == "null" || result == "") {
                             $scope.urlDialog = ngDialog.open({
                                 template: '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div><ul class="admin-ng-content"><li>该账户下不存在该路径</li></ul>' + '<div class="ng-button-div">\
@@ -583,7 +581,7 @@ define(["./module"], function (ctrs) {
                         } else {
                             $http.get("cdapi/link?path=" + path).success(function (data) {
                                 if (data == "error") {
-                                    changeCss("网址输入失误");
+                                    changeCss("网址输入错误");
                                 } else {
                                     if (data != null || data != "") {
                                         if (data.match("404 Not Found") == null) {
@@ -592,6 +590,7 @@ define(["./module"], function (ctrs) {
                                                 if (data.toString().split("tid=").length > 1) {
                                                     var tid = data.toString().split("tid=")[1].split("\"")[0];
                                                     $http.get("/config/site_list?type=search&query={\"uid\":\"" + uid + "\",\"track_id\":\"" + tid + "\"}").success(function (result) {
+                                                        //console.log(result)
                                                         if (result == "null" || result == "") {
                                                             $scope.urlDialog = ngDialog.open({
                                                                 template: '\

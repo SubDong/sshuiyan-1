@@ -28,30 +28,37 @@ var es_position_request = {
                 "fields": [
                     "xy.x",
                     "xy.y",
+                    "dh",
                     "loc"
                 ]
             }
         };
-        console.log(request);
         // 改变下计算方法
         es.search(request, function (error, response) {
-            var pointArr = [];
+            var obj = {
+                dh : 1000,
+                pointArr : []
+            };
             if (response != undefined && response.hits != undefined) {
                 var hitsArray = response.hits.hits;
                 hitsArray.forEach(function (item) {
+                    // 获取高度
+                    if (item["fields"]["dh"] && parseInt(item["fields"]["dh"][0]) > obj.dh) {
+                        obj.dh = parseInt(item["fields"]["dh"][0]);
+                    }
                     var xArr = item["fields"]["xy.x"];
                     var yArr = item["fields"]["xy.y"];
                     xArr.forEach(function (_p, i) {
-                        pointArr.push([
+                        obj.pointArr.push([
                             _p,
                             yArr[i],
                             Math.random()
                         ]);
                     });
                 });
-                callbackFn(pointArr);
+                callbackFn(obj);
             } else {
-                callbackFn(pointArr);
+                callbackFn(obj);
             }
         });
     }

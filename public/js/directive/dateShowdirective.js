@@ -535,14 +535,14 @@ define(["../app"], function (app) {
                         series : [
                             {
                                 type : 'heatmap',
-                                data : heatData,
+                                data : heatData.pointArr,
                                 hoverable : false
                             }
                         ]
                     };
                     element.css({
                         width: "100%",
-                        height: "1000px"
+                        height: heatData.dh
                     });
 
                     var myChart = echarts.init(element[0]);
@@ -568,13 +568,13 @@ define(["../app"], function (app) {
             restrict: 'C',
             link: function (scope, element, attris, controller) {
 
-                scope.loadIframe = function (loc, dialog) {
+                scope.loadIframe = function (res, loc, dialog) {
 
                     element[0].src = loc.indexOf("http://") != -1 ? loc : "http://hy.best-ad.cn";
 
                     element.css({
                         width: "100%",
-                        height: "1000px"
+                        height: res.dh
                     });
 
                     if (element[0].attachEvent) {

@@ -1456,7 +1456,7 @@ define(["app"], function (app) {
         $scope.getEventRootData = function (a, options) {
             var hash = {}
             var val = 0
-            if (a.col.field == "crate" || a.col.field == "nuvRate") {
+            if (a.col.field == "crate") {
                 options.forEach(function (option) {
                     var tempCrate = (option.entity[a.col.field] + "").indexOf("%") < 0 ? option.entity[a.col.field] : option.entity[a.col.field].substring(0, option.entity[a.col.field].length - 2)
                     val = val + Number(tempCrate)
@@ -1464,7 +1464,17 @@ define(["app"], function (app) {
                 })
                 val = Number(val).toFixed(2)
                 val += "%"
-            } else if (a.col.field == "clickTotal") {
+            }
+            //else if ( a.col.field == "nuvRate") {
+            //    options.forEach(function (option) {
+            //        var tempCrate = (option.entity[a.col.field] + "").indexOf("%") < 0 ? option.entity[a.col.field] : option.entity[a.col.field].substring(0, option.entity[a.col.field].length - 2)
+            //        val = val + Number(tempCrate)
+            //
+            //    })
+            //    val = Number(val).toFixed(2)
+            //    val += "%"
+            //}
+            else if (a.col.field == "clickTotal") {
                 options.forEach(function (option) {
                     val = val + Number(option.entity[a.col.field])
                 })
@@ -1482,12 +1492,23 @@ define(["app"], function (app) {
                 })
                 val = val.toFixed(2) + "元"
             } else {
+                var flag = false;//是否有%号
+                var temp = 0;
                 options.forEach(function (option) {
-                    if (!hash[option.entity.loc]) {
+                    if (!hash[option.entity.loc]) {//以网页分组统计内容
                         hash[option.entity.loc] = true;
-                        val = val + Number(option.entity[a.col.field])
+                        if ((option.entity[a.col.field] + "").indexOf("%") > -1) {
+                            temp = temp + Number(option.entity[a.col.field].replace("%", ""))
+                            if (!flag)
+                                flag = true
+                        } else {
+                            val = val + Number(option.entity[a.col.field])
+                        }
                     }
                 })
+                if (flag){
+                    val = temp.toFixed(2) + "%"
+                }
             }
             return val
         }
@@ -1550,7 +1571,7 @@ define(["app"], function (app) {
                             item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 32px'>--</div>";
                         } else {
                             item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 32px'>" +
-                            "<ul><li>{{grid.appScope.getEventRootData(this,grid.getVisibleRows())}}</li></ul></div>";
+                                "<ul><li>{{grid.appScope.getEventRootData(this,grid.getVisibleRows())}}</li></ul></div>";
                         }
                     }
                 });
@@ -1563,7 +1584,7 @@ define(["app"], function (app) {
                         } else {
 //                        item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 100px'>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),2)}}<br/>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),3)}}<br/>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),4)}}</div>";
                             item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 32px'>" +
-                            "<ul><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),2)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),3)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),4)}}</li></ul></div>";
+                                "<ul><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),2)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),3)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),4)}}</li></ul></div>";
                         }
                     }
                 });

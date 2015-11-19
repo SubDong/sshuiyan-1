@@ -58,17 +58,17 @@ define(["./module"], function (ctrs) {
             target_urls.push(angular.copy(singleUrl));
         };
 //        确认弹出框
-        $scope.removeTargetUrl = function (target_urls,index) {
+        $scope.removeTargetUrl = function (target_urls, index) {
             $scope.openTargetUrlConfirmDialog = ngDialog.openConfirm({
-                template:'<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自目标URL的消息</div>' +
-                    '<ul class="admin-ng-content">' +
-                    '<li> 你确定删除这个目标URL吗？</li></ul>' +
-                    '<div class="ng-button-div"> <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>' +
-                    '<button type="button" class="ngdialog-button ng-button" ng-click="confirm()">确定</button></div>' +
-                    '</div>',
+                template: '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自目标URL的消息</div>' +
+                '<ul class="admin-ng-content">' +
+                '<li> 你确定删除这个目标URL吗？</li></ul>' +
+                '<div class="ng-button-div"> <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>' +
+                '<button type="button" class="ngdialog-button ng-button" ng-click="confirm()">确定</button></div>' +
+                '</div>',
                 className: 'ngdialog-theme-default admin_ngdialog',
                 plain: true,
-                scope : $scope
+                scope: $scope
             }).then(function () {
                 target_urls.splice(index, 1);
             }, function (reason) {
@@ -79,15 +79,15 @@ define(["./module"], function (ctrs) {
         //增删步骤URL
         $scope.removeStepUrl = function (step_urls, index) {
             $scope.openStepUrlConfirmDialog = ngDialog.openConfirm({
-                template:'<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自路径类型的消息</div>' +
-                    '<ul class="admin-ng-content">' +
-                    '<li> 你确定删除这个步骤URL吗？</li></ul>' +
-                    '<div class="ng-button-div"> <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>' +
-                    '<button type="button" class="ngdialog-button ng-button" ng-click="confirm()">确定</button></div>' +
-                    '</div>',
+                template: '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自路径类型的消息</div>' +
+                '<ul class="admin-ng-content">' +
+                '<li> 你确定删除这个步骤URL吗？</li></ul>' +
+                '<div class="ng-button-div"> <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>' +
+                '<button type="button" class="ngdialog-button ng-button" ng-click="confirm()">确定</button></div>' +
+                '</div>',
                 className: 'ngdialog-theme-default admin_ngdialog',
                 plain: true,
-                scope : $scope
+                scope: $scope
             }).then(function () {
                 step_urls.splice(index, 1);
             }, function (reason) {
@@ -104,19 +104,19 @@ define(["./module"], function (ctrs) {
         };
         $scope.removeSteps = function (steps, _index) {
             $scope.openPathConfirmDialog = ngDialog.openConfirm({
-                template:'<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自路径类型的消息</div>' +
-                    '<ul class="admin-ng-content">' +
-                    '<li> 你确定删除这个步骤吗？</li></ul>' +
-                    '<div class="ng-button-div"> <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>' +
-                    '<button type="button" class="ngdialog-button ng-button" ng-click="confirm()">确定</button></div>' +
-                    '</div>',
+                template: '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自路径类型的消息</div>' +
+                '<ul class="admin-ng-content">' +
+                '<li> 你确定删除这个步骤吗？</li></ul>' +
+                '<div class="ng-button-div"> <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>' +
+                '<button type="button" class="ngdialog-button ng-button" ng-click="confirm()">确定</button></div>' +
+                '</div>',
                 className: 'ngdialog-theme-default admin_ngdialog',
                 plain: true,
-                scope : $scope
+                scope: $scope
             }).then(function () {
-                if(steps.length <= 1){
+                if (steps.length <= 1) {
                     $scope.paths.splice(_index, 1)
-                }else{
+                } else {
                     steps.splice(_index, 1);
                 }
             }, function (reason) {
@@ -125,19 +125,21 @@ define(["./module"], function (ctrs) {
         };
         //增删路径
         $scope.addPaths = function (paths) {
-            paths.push(angular.copy(singlePath));
+            var temp =angular.copy(singlePath)
+            temp.steps.push(angular.copy(singleStep))
+            paths.push(temp);
         };
         $scope.removePath = function (paths, _index) {
             $scope.openPathConfirmDialog = ngDialog.openConfirm({
-                template:'<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自路径类型的消息</div>' +
-                    '<ul class="admin-ng-content">' +
-                    '<li> 你确定删除这个路径吗？</li></ul>' +
-                    '<div class="ng-button-div"> <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>' +
-                    '<button type="button" class="ngdialog-button ng-button" ng-click="confirm()">确定</button></div>' +
-                    '</div>',
+                template: '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自路径类型的消息</div>' +
+                '<ul class="admin-ng-content">' +
+                '<li> 你确定删除这个路径吗？</li></ul>' +
+                '<div class="ng-button-div"> <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>' +
+                '<button type="button" class="ngdialog-button ng-button" ng-click="confirm()">确定</button></div>' +
+                '</div>',
                 className: 'ngdialog-theme-default admin_ngdialog',
                 plain: true,
-                scope : $scope
+                scope: $scope
             }).then(function () {
                 paths.splice(_index, 1);
             }, function (reason) {
@@ -145,10 +147,10 @@ define(["./module"], function (ctrs) {
             });
         };
 
-        $scope.insertOrder = function(){
-            if($scope.radio_record.order_conv){
-                var temp =$scope.target_urls[$scope.target_urls.length-1].url
-                $scope.target_urls[$scope.target_urls.length-1].url = temp==undefined?"目标URL[[[*]]]":(temp+"目标URL[[[*]]]");
+        $scope.insertOrder = function () {
+            if ($scope.radio_record.order_conv) {
+                var temp = $scope.target_urls[$scope.target_urls.length - 1].url
+                $scope.target_urls[$scope.target_urls.length - 1].url = temp == undefined ? "目标URL[[[*]]]" : (temp + "目标URL[[[*]]]");
             }
         }
 
@@ -156,7 +158,7 @@ define(["./module"], function (ctrs) {
             regist: "注册",
             communicate: "沟通",
             place_order: "下单",
-            other:"其他"
+            other: "其他"
         }
         $scope.chooseRecordType = function (curType) {
             //console.
@@ -238,16 +240,17 @@ define(["./module"], function (ctrs) {
         //检查路径下的步骤正确性
         //相邻步骤之间不能有重复URL
         var checkSinglePath = function (path, pathIndex) {
+            if (!path.path_mark)
+                return true
             if (path.steps.length == 0) {
                 //showInputErrMsg("路径" + pathIndex + " 未添加任何步骤，至少添一个步骤，请返回并完善信息")
                 return true;
             }
             if (path.steps.length == 1) {
                 if (!checkAndForceUrls(path.steps[0].step_urls)) {
-                    //$scope.showInputErrMsg("路径" + pathIndex + "-->步骤1 未填写任何步骤URL，至少填写一个步骤URL，请返回并完善信息");
                     return true;
                 }
-            }else{
+            } else {
                 //先check掉第一组StepUrl
                 if (!checkAndForceUrls(path.steps[0].step_urls)) {
                     //$scope.showInputErrMsg("路径" + pathIndex + "-->步骤1 未填写任何步骤URL，至少填写一个步骤URL，请返回并完善信息");
@@ -269,10 +272,10 @@ define(["./module"], function (ctrs) {
                     }
                 }
             }
-            for(var i = 0;i<path.steps[path.steps.length-1].step_urls.length;i++){
-                for(var tindex=0;tindex<$scope.target_urls.length;tindex++){
-                    if(path.steps[path.steps.length-1].step_urls[i].url==$scope.target_urls[tindex].url){
-                        $scope.showInputErrMsg("路径" + pathIndex + "中 最后一步中的URL["+path.steps[path.steps.length-1].step_urls[i].url+"]与目标URL["+$scope.target_urls[tindex].url+"]相同URL，请返回并修改");
+            for (var i = 0; i < path.steps[path.steps.length - 1].step_urls.length; i++) {
+                for (var tindex = 0; tindex < $scope.target_urls.length; tindex++) {
+                    if (path.steps[path.steps.length - 1].step_urls[i].url == $scope.target_urls[tindex].url) {
+                        $scope.showInputErrMsg("路径" + pathIndex + "中 最后一步中的URL[" + path.steps[path.steps.length - 1].step_urls[i].url + "]与目标URL[" + $scope.target_urls[tindex].url + "]相同URL，请返回并修改");
                         return false;
                     }
                 }
@@ -330,23 +333,23 @@ define(["./module"], function (ctrs) {
                 method: 'GET',
                 url: url
             }).success(function (dataConfig, status) {
-                var flag=true
-                if(dataConfig!=undefined&&dataConfig.length>0){
-                    dataConfig.forEach(function(data){
-                        if(data.target_name==$scope.target_name){
+                var flag = true
+                if (dataConfig != undefined && dataConfig.length > 0) {
+                    dataConfig.forEach(function (data) {
+                        if (data.target_name == $scope.target_name) {
                             $scope.showInputErrMsg("存在相同的目标名称，请修改！");
-                            $scope.target_name="";
-                            flag=false
+                            $scope.target_name = "";
+                            flag = false
                             return;
                         }
-                        if(data.target_urls!=null&&$scope.target_urls.length>0){
-                            data.target_urls.forEach(function(durl){
-                                $scope.target_urls.forEach(function(surl){
-                                    if(durl.url==surl.url){
-                                        if(data.target_name==$scope.target_name){
+                        if (data.target_urls != null && $scope.target_urls.length > 0) {
+                            data.target_urls.forEach(function (durl) {
+                                $scope.target_urls.forEach(function (surl) {
+                                    if (durl.url == surl.url) {
+                                        if (data.target_name == $scope.target_name) {
                                             $scope.showInputErrMsg("存在相同的目标URL，已删除，请修改！");
-                                            surl.url="";
-                                            flag=false
+                                            surl.url = "";
+                                            flag = false
                                             return;
                                         }
                                     }
@@ -356,7 +359,7 @@ define(["./module"], function (ctrs) {
                     })
                 }
 
-                if(  flag){
+                if (flag) {
                     var page_conv_entity = {
                         uid: $cookieStore.get("uid"),
                         site_id: $rootScope.siteId,
@@ -369,9 +372,9 @@ define(["./module"], function (ctrs) {
                         //路径类型
                         paths: $scope.paths,
                         conv_tpye: $scope.conv_tpye,//转换类型，regist,communicate,place_order,othre_order
-                        conv_text:$scope.conv_tpye=="other"?($scope.t_conv_text.trim()==""?menu_conv_type["other"]:$scope.t_conv_text.trim()):menu_conv_type[$scope.conv_tpye],
+                        conv_text: $scope.conv_tpye == "other" ? ($scope.t_conv_text.trim() == "" ? menu_conv_type["other"] : $scope.t_conv_text.trim()) : menu_conv_type[$scope.conv_tpye],
                         update_time: new Date().getTime(),
-                        is_pause:false//新增不暂停
+                        is_pause: false//新增不暂停
                     }
                     var savePageConv = "/config/page_conv?type=save&entity=" + JSON.stringify(page_conv_entity);
                     $http({

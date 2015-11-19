@@ -457,7 +457,7 @@ define(["./module"], function (ctrs) {
 });
 
 function filterChangeListData(e, type) {
-    var appElement = document.querySelector('[ng-controller=changelistctr]');
+    var appElement = document.querySelector('[ng-controller=changeListCtr]');
     //然后在获取$scope变量：
     switch (type) {
         case 1:
