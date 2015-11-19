@@ -58,16 +58,15 @@ router.get('/select', function (req, resp) {
     });
 });
 
-    router.get('/heatUrl', function (req, resp) {
+router.get('/heatUrl', function (req, resp) {
 
-        fs.readFile('./track/heatUrl.js', function (err, data) {
-            resp.set('Content-Type', 'application/javascript');
-            resp.set('Cache-Control', 'max-age=0,must-revalidate');
-            resp.send("var select = " + data);
-        })
+    fs.readFile('./track/heatUrl.js', function (err, data) {
+        resp.set('Content-Type', 'application/javascript');
+        resp.set('Cache-Control', 'max-age=0,must-revalidate');
+        resp.send("var select = " + data);
+    })
 
 });
-
 
 
 /**
@@ -79,12 +78,12 @@ router.get('/select', function (req, resp) {
  */
 function getData(req, resp, tid, sitejson) {
     sitejson = JSON.parse(sitejson);
-    var ref = req.header('Referer');
-    if (ref == undefined || ref == '') {
+    var allref = req.header('Referer');
+    if (allref == undefined || allref == '') {
         resp.end();
         return;
     } else {
-        ref = ref.indexOf('?') == -1 ? ref : ref.slice(0, ref.indexOf('?'));
+        var ref = allref.indexOf('?') == -1 ? allref : allref.slice(0, allref.indexOf('?'));
         var config = {
             "trackid": tid,
             "iconNumber": sitejson.icon,
@@ -101,17 +100,28 @@ function getData(req, resp, tid, sitejson) {
          */
         var tasks = ['mouse', 'duration', 'visit', 'e', 'pc'];
         async.eachSeries(tasks, function (item, cb) {
-            ////console.log(ref)
-            var tempRef = ref
-            if (tempRef!=undefined&&tempRef.indexOf("http://") > -1 && tempRef.length > 8)
-                tempRef = tempRef.substring(7, tempRef.length)
-            if (tempRef!=undefined&&tempRef.indexOf("https://") > -1 && tempRef.length > 9)
-                tempRef = tempRef.substring(8, tempRef.length)
-            if(tempRef!=undefined&&tempRef!=""&&tempRef[tempRef.length-1]=="/"){
-                tempRef = tempRef.substring(0,tempRef.length-1)
+            var url
+            if(item == "pc"){
+                var tempRef = allref
+                if (tempRef != undefined && tempRef.indexOf("http://") > -1 && tempRef.length > 8)
+                    tempRef = tempRef.substring(7, tempRef.length)
+                if (tempRef != undefined && tempRef.indexOf("https://") > -1 && tempRef.length > 9)
+                    tempRef = tempRef.substring(8, tempRef.length)
+                if (tempRef != undefined && tempRef != "" && tempRef[tempRef.length - 1] == "/") {
+                    tempRef = tempRef.substring(0, tempRef.length - 1)
+                }
+                 url =  siteid.concat(":", item, ":", tempRef)
+            }else{
+                var tempRef = ref
+                if (tempRef != undefined && tempRef.indexOf("http://") > -1 && tempRef.length > 8)
+                    tempRef = tempRef.substring(7, tempRef.length)
+                if (tempRef != undefined && tempRef.indexOf("https://") > -1 && tempRef.length > 9)
+                    tempRef = tempRef.substring(8, tempRef.length)
+                if (tempRef != undefined && tempRef != "" && tempRef[tempRef.length - 1] == "/") {
+                    tempRef = tempRef.substring(0, tempRef.length - 1)
+                }
+                url = ((item == "mouse" || item == "e" ) ? siteid.concat(":", item, ":", tempRef) : item.concat(":", siteid));
             }
-           // //console.log(tempRef)
-            var url = ((item == "mouse" || item == "e" || item == "pc") ? siteid.concat(":", item, ":", tempRef) : item.concat(":", siteid));
             redis.service().get(url, function (err, val) {
                 if (val != null) {
                     try {

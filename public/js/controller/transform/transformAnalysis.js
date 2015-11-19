@@ -464,17 +464,19 @@ define(["./module"], function (ctrs) {
                                             } else if ($scope.es_checkArray[i] == "transformCost") {
                                                 //var add_i = i;
                                                 var semRequest = "";
-                                                semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end + "&q=cost");
-                                                $q.all([semRequest]).then(function (sem_data) {
-                                                    var cost = 0;
-                                                    for (var k = 0; k < sem_data.length; k++) {
-                                                        for (var c = 0; c < sem_data[k].data.length; c++) {
-                                                            cost += Number(sem_data[k].data[c].cost);
+                                                if($rootScope.baiduAccount!=undefined&&$rootScope.user!=undefined){
+                                                    semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end + "&q=cost");
+                                                    $q.all([semRequest]).then(function (sem_data) {
+                                                        var cost = 0;
+                                                        for (var k = 0; k < sem_data.length; k++) {
+                                                            for (var c = 0; c < sem_data[k].data.length; c++) {
+                                                                cost += Number(sem_data[k].data[c].cost);
+                                                            }
                                                         }
-                                                    }
-                                                    var t = eventInfo.convCount > 0 ? (cost / eventInfo.convCount).toFixed(2).toString() : 0
-                                                    data["transformCost"] = t + "元";
-                                                });
+                                                        var t = eventInfo.convCount > 0 ? (cost / eventInfo.convCount).toFixed(2).toString() : 0
+                                                        data["transformCost"] = t + "元";
+                                                    });
+                                                }
                                             } else if ($scope.es_checkArray[i] == "clickTotal") {
                                                 data["conversions"] = eventInfo.eventCount != undefined ? eventInfo.eventCount : 0;
                                             } else if ($scope.es_checkArray[i] == "conversions") {
@@ -498,22 +500,21 @@ define(["./module"], function (ctrs) {
                                             maxvalues[item.label] = maxvalues[item.label] == undefined ? pvs[index][item.label] : (maxvalues[item.label] > pvs[index][item.label] ? maxvalues[item.label] : pvs[index][item.label])
                                             if (item.label == "crate") {
                                             } else if (item.label == "transformCost") {
-                                                //console.log("Now transformCost"+sumTransformCost)
-                                                //item.value =sumTransformCost;
-                                                //var add_i = i;
-                                                var semRequest = "";
-                                                semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end + "&q=cost");
-                                                $q.all([semRequest]).then(function (sem_data) {
-                                                    var cost = 0;
-                                                    for (var k = 0; k < sem_data.length; k++) {
-                                                        for (var c = 0; c < sem_data[k].data.length; c++) {
-                                                            cost += Number(sem_data[k].data[c].cost);
+                                                if($rootScope.baiduAccount!=undefined&&$rootScope.user!=undefined){
+                                                    var semRequest = "";
+                                                    semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end + "&q=cost");
+                                                    $q.all([semRequest]).then(function (sem_data) {
+                                                        var cost = 0;
+                                                        for (var k = 0; k < sem_data.length; k++) {
+                                                            for (var c = 0; c < sem_data[k].data.length; c++) {
+                                                                cost += Number(sem_data[k].data[c].cost);
+                                                            }
                                                         }
-                                                    }
-                                                    var t = eventInfo.convCount > 0 ? (cost / eventInfo.convCount).toFixed(2) : 0
-                                                    sumTransformCost = Number(sumTransformCost) + Number(t);
-                                                    item.value = sumTransformCost.toFixed(2) + "元"
-                                                });
+                                                        var t = eventInfo.convCount > 0 ? (cost / eventInfo.convCount).toFixed(2) : 0
+                                                        sumTransformCost = Number(sumTransformCost) + Number(t);
+                                                        item.value = sumTransformCost.toFixed(2) + "元"
+                                                    });
+                                                }
                                             } else if (item.label == "clickTotal") {
                                                 item.value += eventInfo != undefined ? eventInfo.eventCount : 0;
                                             } else if (item.label == "conversions") {
