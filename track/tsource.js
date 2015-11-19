@@ -527,9 +527,9 @@ if (config != undefined && !config.open) {
                     s == undefined || s == "" || s == null ? r : s = s * 60 * 1000;
                     var t = s < v ? r : s;
                     var u = setInterval(this.hbInfo, t)
-                }, getSelectJS: function () {
+                },getSelectJS: function () {
                     var s = document.referrer;
-                    if (s.indexOf("http://" + d.I.R) === 0 || s.indexOf("https://" + d.I.R) === 0) {
+                    if (document.location.href.indexOf("jn=select") > -1 && (s.indexOf("http://" + d.I.R) === 0 || s.indexOf("https://" + d.I.R) === 0)) {
                         var r = document.createElement("script");
                         r.setAttribute("type", "text/javascript");
                         r.setAttribute("src", d.I.protocol + "//" + d.I.RS + "/t.js/select?tid=" + j.id);
@@ -538,7 +538,7 @@ if (config != undefined && !config.open) {
                     }
                 }, getHeatUrlJS: function () {
                     var s = document.referrer;
-                    if (s.indexOf("http://" + d.I.R) === 0 || s.indexOf("https://" + d.I.R) === 0) {
+                    if (document.location.href.indexOf("jn=heatUrl") > -1 &&(s.indexOf("http://" + d.I.R) === 0 || s.indexOf("https://" + d.I.R) === 0)) {
                         var r = document.createElement("script");
                         r.setAttribute("type", "text/javascript");
                         r.setAttribute("src", d.I.protocol + "//" + d.I.RS + "/t.js/heatUrl");
@@ -624,7 +624,6 @@ if (config != undefined && !config.open) {
                 }
             }())
         }
-        //if (config.mouse != undefined && config.mouse) {
         (function () {
             document.onclick = function (k) {
                 var m = k || window.event;
@@ -641,8 +640,7 @@ if (config != undefined && !config.open) {
                     e = []
                 }
             }
-        })()
-        //}
+        })();
         if (config != undefined && config.e != undefined && config.e.length > 0) {
             window.onload = function () {
                 config.e.forEach(function (k, h) {

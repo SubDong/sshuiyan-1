@@ -36,17 +36,17 @@ define(["./module"], function (ctrs) {
                     scope: $scope
                 });
 
-                var url = "/api/heatmap?start=" + $rootScope.start + "&end=" + $rootScope.end + "&loc=http://192.168.1.111:3334/&type=4ae166b3563f97e92865ab355a45a78c";
+                var url = "/api/heatmap?start=" + $rootScope.start + "&end=" + $rootScope.end + "&loc=" + $scope.heatMapRF + "&type=4ae166b3563f97e92865ab355a45a78c";
 
                 $http.get(url).success(function (res) {
                     //设置页面浏览量
                     $scope.pv = 100;
                     //设置页面点击量
-                    $scope.hits = res.length;
+                    $scope.hits = res.pointArr.length;
 
                     // 加载热力外部网页
                     $scope.loadHeatmap(res);
-                    $scope.loadIframe($scope.heatMapRF, $scope.urlDialog);
+                    $scope.loadIframe(res, $scope.heatMapRF, $scope.urlDialog);
 
                 });
             };

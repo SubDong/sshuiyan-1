@@ -68,6 +68,11 @@ define(["./module"], function (ctrs) {
                 enableSorting: false
             },
             {
+                name: " ",
+                cellTemplate: "<div class='table_box'><a ui-sref='history1' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn' title='查看历史趋势'></a></div>",
+                enableSorting: false
+            },
+            {
                 name: "浏览量(PV)",
                 displayName: "浏览量(PV)",
                 field: "pv",
@@ -77,11 +82,7 @@ define(["./module"], function (ctrs) {
                     return row.entity.pv;
                 }
             },
-            {
-                name: " ",
-                cellTemplate: "<div class='table_box'><a ui-sref='history1' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn' title='查看历史趋势'></a></div>",
-                enableSorting: false
-            },
+
             {
                 name: "访客数(UV)",
                 displayName: "访客数(UV)",
