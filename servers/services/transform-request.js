@@ -1844,7 +1844,7 @@ var transform = {
                         "aggs": {
                             "pagePVs": {
                                 "terms": {
-                                    "script": "doc['rf_type'].value == 0 ? 3 : doc['rf_type'].value",
+                                    "field": "rf_type",
                                     "size": 0
                                 },
                                 "aggs": _aggs
@@ -1853,7 +1853,7 @@ var transform = {
                     }
                 })
                 var pvs = []
-                //console.log("****************************")
+                //console.log("**************PageBasePvs**************")
                 //console.log(JSON.stringify(querys[0]))
                 es.search(querys[0], function (error, result) {
                     var datas = []
@@ -2061,7 +2061,7 @@ var transform = {
                         "aggs": {
                             "pagePVs": {
                                 "terms": {
-                                    "script": "doc['rf_type'].value == 0 ? 3 : doc['rf_type'].value",
+                                    "field": "rf_type'",
                                     "size": 0
                                 },
                                 "aggs": {
@@ -2072,7 +2072,7 @@ var transform = {
                                     },
                                     "benefit": {
                                         "sum": {
-                                            "script": "doc['p_income'].value"
+                                            "field": "p_income"
                                         }
                                     },
                                     "orderNum": {
@@ -2159,7 +2159,7 @@ var transform = {
                                     },
                                     "benefit": {
                                         "sum": {
-                                            "script": "doc['p_income'].value"
+                                            "field": "p_income"
                                         }
                                     },
                                     "orderNum": {
