@@ -462,7 +462,7 @@ define(["./module"], function (ctrs) {
                                                     data["crate"] = "0%";
                                                 }
                                             } else if ($scope.es_checkArray[i] == "transformCost") {
-                                                var add_i = i;
+                                                //var add_i = i;
                                                 var semRequest = "";
                                                 semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end + "&q=cost");
                                                 $q.all([semRequest]).then(function (sem_data) {
@@ -490,6 +490,7 @@ define(["./module"], function (ctrs) {
                                 //刷新概况信息
 
                                 var sumTransformCost = 0
+                                var hashPage = {};
                                 events.forEach(function (event, index) {
                                     var eventInfo = eventInfos[event.event_page + "_" + event.event_id]
                                     if (eventInfo != undefined) {
@@ -499,7 +500,7 @@ define(["./module"], function (ctrs) {
                                             } else if (item.label == "transformCost") {
                                                 //console.log("Now transformCost"+sumTransformCost)
                                                 //item.value =sumTransformCost;
-                                                var add_i = i;
+                                                //var add_i = i;
                                                 var semRequest = "";
                                                 semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end + "&q=cost");
                                                 $q.all([semRequest]).then(function (sem_data) {
@@ -519,9 +520,9 @@ define(["./module"], function (ctrs) {
                                                 if (eventInfo != undefined) {
                                                     item.value += eventInfo.convCount;
                                                 }
-                                            } else if(item.label == "nuvRate"){
-                                                console.log("nuvRate:"+pvs[index]["nuvRate"])
+                                            } else if(item.label == "nuvRate"&&(hashPage[event.event_page]==undefined||!hashPage[event.event_page])){
                                                 tempNuvRate+=Number(pvs[index]["nuvRate"].replace("%",""))
+                                                hashPage[event.event_page]=true
                                             }else {
                                                 item.value = hashloc[event.event_page] == undefined ? (pvs[index][item.label] + item.value) : (maxvalues[item.label] < pvs[index][item.label] ? (item.value + pvs[index][item.label] - maxvalues[item.label]) : item.value)
                                                 if (item.label == "pv") {
