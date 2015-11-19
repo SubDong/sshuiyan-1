@@ -1853,8 +1853,8 @@ var transform = {
                     }
                 })
                 var pvs = []
-                console.log("****************************")
-                console.log(JSON.stringify(querys[0]))
+                //console.log("****************************")
+                //console.log(JSON.stringify(querys[0]))
                 es.search(querys[0], function (error, result) {
                     var datas = []
                     if (result != undefined && result.aggregations != undefined && result.aggregations.pagePVs != undefined && result.aggregations.pagePVs.buckets != undefined) {
@@ -1955,8 +1955,8 @@ var transform = {
                     }
                 })
                 var pvs = []
-                console.log("****************************")
-                console.log(JSON.stringify(querys[0]))
+                //console.log("****************************")
+                //console.log(JSON.stringify(querys[0]))
                 es.search(querys[0], function (error, result) {
                     var datas = []
                     if (result != undefined && result.aggregations != undefined && result.aggregations.pagePVs != undefined && result.aggregations.pagePVs.buckets != undefined) {
@@ -2085,8 +2085,8 @@ var transform = {
                         },
                     }
                 })
-                console.log("****************************")
-                console.log(JSON.stringify(querys[0]))
+                //console.log("****************************")
+                //console.log(JSON.stringify(querys[0]))
                 es.search(querys[0], function (error, result) {
                     var results = {}
                     if (result != undefined && result.aggregations != undefined && result.aggregations.pagePVs != undefined && result.aggregations.pagePVs.buckets != undefined) {
@@ -2172,8 +2172,8 @@ var transform = {
                         },
                     }
                 }
-                console.log("****************************")
-                console.log(JSON.stringify(query))
+                //console.log("****************************")
+                //console.log(JSON.stringify(query))
                 es.search(query, function (error, result) {
                     if (result != undefined && result.aggregations != undefined && result.aggregations.pagePVs != undefined && result.aggregations.pagePVs.buckets != undefined) {
                         var infos = result.aggregations.pagePVs.buckets
@@ -2234,8 +2234,8 @@ var transform = {
                     break;
             }
             async.map(requests, function (item, callback) {
-                console.log("****************************")
-                console.log(JSON.stringify(item))
+                //console.log("****************************")
+                //console.log(JSON.stringify(item))
                 es.search(item, function (error, result) {
                     if (result != undefined && result.aggregations != undefined) {
                         callback(null, result.aggregations);
@@ -2716,8 +2716,8 @@ var transform = {
                         })
                         var pageEvents = {}
                         async.eachSeries(querys, function (item, callback) {
-                                console.log("*************ConvEvent*****************")
-                                console.log(JSON.stringify(item))
+                                //console.log("*************ConvEvent*****************")
+                                //console.log(JSON.stringify(item))
                                 es.search(item.query, function (error, result) {
                                     if (result != undefined && result.aggregations != undefined) {
                                         if (result.aggregations.etIdTerms.buckets != undefined) {
@@ -2834,8 +2834,8 @@ var transform = {
                                 break;
                         }
                         async.map(requests, function (item, callback) {
-                            console.log("****************************")
-                            console.log(JSON.stringify(item))
+                            //console.log("****************************")
+                            //console.log(JSON.stringify(item))
                             es.search(item, function (error, result) {
                                 if (result != undefined && result.aggregations != undefined) {
                                     callback(null, result.aggregations);
