@@ -316,7 +316,7 @@ if (config != undefined && !config.open) {
             protocol: "https:" == document.location.protocol ? "https:" : "http:",
             Q: "os tit br fl pm sr lg ck ja sc dt rf loc tt ct vid u api et cv xy ut duration durPage n v adtrack".split(" "),
             PQ: "os tit br fl pm sr lg ck ja sc dt rf loc tt ct vid u api p_name p_type p_record p_orderid p_income p_conversionrate".split(" "),
-            HMQ: "dt tt vid loc xy v".split(" ")
+            HMQ: "dt tt vid loc xy dh v".split(" ")
         };
         g.g.getOrderId = function () {
             if (g.g.loc.indexOf("[[[") > 0 && g.g.loc.indexOf("]]]") && g.g.loc.indexOf("[[[") < g.g.loc.indexOf("]]]")) {
@@ -487,7 +487,6 @@ if (config != undefined && !config.open) {
                     return s
                 }, hotMapPar: function () {
                     var s = "", r = d.I.HMQ, u = g.g, t = g.cookie;
-                    console.log(r.length);
                     for (var v = 0; v < r.length; v++) {
                         u[r[v]] != undefined && u[r[v]] != "" && u[r[v]] != null ? s = s + r[v] + "=" + u[r[v]] + ((r[v] == "v") ? "" : "&") : ""
                     }
@@ -635,6 +634,7 @@ if (config != undefined && !config.open) {
                 e.push(c);
                 if (e.length >= 5) {
                     g.g.xy = JSON.stringify(e);
+                    g.g.dh = document.body.scrollHeight;
                     d.b.hotMapSm();
                     e = []
                 }

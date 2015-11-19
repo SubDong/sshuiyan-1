@@ -402,15 +402,18 @@ var buildRequest = function (indexes, type, quotas, dimension, filters, start, e
         var dimensionScript = "";
         if (dimension.split(":").length > 1) {
             var _arr = dimension.split(":");
-
             for (var i = 0, l = _arr.length; i < l; i++) {
-                if (i === l - 1)
-                    dimensionScript += ("doc[\'" + _arr[i] + "\'].value");
-                else
-                    dimensionScript += ("doc[\'" + _arr[i] + "\'].value+\'," + "\'+");
+                if (i === l - 1) {
+                    //dimensionScript += ("doc[\'" + _arr[i] + "\'].value");
+                    dimensionScript += _arr[i];
+                } else {
+                    //dimensionScript += ("doc[\'" + _arr[i] + "\'].value+\'," + "\'+");
+                    dimensionScript += _arr[i];
+                }
             }
         } else {
-            dimensionScript = ("doc[\'" + dimension + "\'].value");
+            //dimensionScript = ("doc[\'" + dimension + "\'].value");
+            dimensionScript = dimension;
         }
 
         if (dimensionScript == "doc['rf_type'].value") {
@@ -442,7 +445,8 @@ var buildRequest = function (indexes, type, quotas, dimension, filters, start, e
                 "aggs": {
                     "result": {
                         "terms": {
-                            "script": dimensionScript,
+                            //"script": dimensionScript,
+                            "field": dimensionScript,
                             "size": 0
                         },
                         "aggs": _aggs
