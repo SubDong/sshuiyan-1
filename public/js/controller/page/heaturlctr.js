@@ -53,7 +53,7 @@ define(["./module"], function (ctrs) {
 
                     //加载外部网页
                     var iframe = document.getElementById("foreign_iframe");
-                    iframe.src = $stateParams.rf;
+                    iframe.src = $stateParams.rf+"/?jn=heatUrl";
                     if (iframe.attachEvent){
                             iframe.attachEvent("onload", function(){
                                 $scope.urlDialog.close();
