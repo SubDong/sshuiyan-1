@@ -8,9 +8,10 @@
             border-top: 1px solid #ffffff;
 
         }
-        .date_select p{
-            margin-left:10px;
-            line-height:50px;
+
+        .date_select p {
+            margin-left: 10px;
+            line-height: 50px;
         }
     </style>
     <div class="date_select">
@@ -19,9 +20,12 @@
     <div class="my_concent concent_fix_top">
         <div class="pagetitle_search">
             <div class="input-group fl">
-                <input type="text" data-ng-model="pageUrl" maxlength="128" placeholder="热力图监控页面…" class="form-control fl" onfocus="this.setAttribute('placeholder','')" onblur="this.setAttribute('placeholder','热力图监控页面...')">
+                <input type="text" data-ng-model="pageUrl" maxlength="128" placeholder="热力图监控页面…"
+                       class="form-control fl" onfocus="this.setAttribute('placeholder','')"
+                       onblur="this.setAttribute('placeholder','热力图监控页面...')">
                     <span class="input-group-btn fl">
-                       <button type="button" class="btn btn-default" data-ng-click="searchGridData()" ><span aria-hidden="true" class="glyphicon glyphicon-search"></span>
+                       <button type="button" class="btn btn-default" data-ng-click="searchGridData()"><span
+                               aria-hidden="true" class="glyphicon glyphicon-search"></span>
                        </button>
                      </span>
             </div>
@@ -31,11 +35,13 @@
             <button class="btn btn-primary" type="button" ng-click="openAddDialog()">手动添加</button>
         </div>
         <!--网站上半部分列表-->
-            <div class="table_content" >
-                <div class="custom_table" ng-class="{hidePageContainer:gridApi2.grid.rows.length<=20}" style=" margin-top:20px;">
-                    <div ui-grid="gridOptions"  class="grid clearfix secondary_table" ui-grid-selection ui-grid-pagination
-                         ui-grid-exporter ui-grid-auto-resize></div>
-                </div>
+        <div class="table_content">
+            <div class="custom_table" ng-class="{hidePageContainer:gridApi2.grid.rows.length<=20}"
+                 style=" margin-top:20px;">
+                <div ui-grid="gridOptions" class="grid clearfix secondary_table transfortables" ui-grid-selection
+                     ui-grid-pagination
+                     ui-grid-exporter ui-grid-auto-resize></div>
             </div>
+        </div>
     </div>
 </div>
