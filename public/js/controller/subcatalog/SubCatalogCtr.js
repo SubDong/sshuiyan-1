@@ -60,10 +60,17 @@ define(["./module"], function (ctrs) {
                 enableSorting: false
             },
             {
+                name: "子目录",
+                displayName: "子目录",
+                field: "",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                cellClass: "table_list_color",
+                enableSorting: false
+            },
+            {
                 name: "浏览量(PV)",
                 displayName: "浏览量(PV)",
                 field: "pv",
-                footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
                 cellClass: "table_list_color",
                 enableSorting: false,
                 cellTooltip: function (row, col) {

@@ -1,4 +1,4 @@
-<div class="middle_containers" ng-controller="changeListCtr" >
+<div class="middle_containers" ng-controller="changeListCtr">
     <div class="date_select" set-class-when-at-top="fix-to-top">
         <div role="group" class="btn-group fl">
             <button class="btn btn-default" type="button" ng-click="yesterday()" ng-class="{'current':yesterdayClass}">
@@ -48,7 +48,7 @@
         <div class="index_chart"></div>
         <div class="table_content" ng-controller="TabsCtrl" data-ng-init="helloKitty()">
             <div class="custom_table" ng-class="{hidePageContainer:gridApi2.grid.rows.length<=20}">
-                <div ui-grid="gridOptions" class="grid clearfix"
+                <div ui-grid="gridOptions" class="grid clearfix transfortables"
                      ui-grid-exporter ui-grid-auto-resize></div>
                 <gridpage></gridpage>
             </div>
