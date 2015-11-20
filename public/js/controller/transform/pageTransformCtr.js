@@ -797,6 +797,7 @@ define(["./module"], function (ctrs) {
 
                         })
                     }else{
+                        $rootScope.gridOptions.data =[]
                         //概况
                         $scope.setShowArray();
                         $rootScope.gridOptions.data.forEach(function (data) {
