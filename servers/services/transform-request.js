@@ -30,16 +30,26 @@ var es_aggs = {
     },
     // 新访客数　事件和页面转化通用
     "nuv": {
-        "nuv": {
+        "old_visitor_aggs": {
             "sum": {
                 "field": "ct"
             }
-        }
+        },
+        "visitor_aggs": {
+            "value_count": {
+                "field": "ct"
+            }
+        },
     },
     // 新访客比率　事件和页面转化通用
     "nuvRate": {
-        "new_visitor_aggs": {
+        "old_visitor_aggs": {
             "sum": {
+                "field": "ct"
+            }
+        },
+        "visitor_aggs": {
+            "value_count": {
                 "field": "ct"
             }
         },
@@ -193,10 +203,10 @@ var transform = {
                             var i = 0;
                             switch (queryOption) {
                                 case "nuvRate":
-                                    if (result.new_visitor_aggs.value == "0") {
+                                    if (result.uv_aggs.value == "0") {
                                         data[queryOption] = 0;
                                     } else {
-                                        data[queryOption] = (result.uv_aggs.value / result.new_visitor_aggs.value).toFixed(2) + "%";
+                                        data[queryOption] = ((result.visitor_aggs.value-result.old_visitor_aggs.value) / pv.uv_aggs.value).toFixed(2) + "%";
 
                                     }
                                     break;
@@ -414,10 +424,10 @@ var transform = {
                                 for (i = 0; i < results.length; i++) {
                                     for (var key in results[i]) {
                                         if (key == queryOption) {
-                                            if (results[i].new_visitor_aggs.value == "0") {
+                                            if (results[i].uv_aggs.value == "0") {
                                                 quotaArry.push(0);
                                             } else {
-                                                quotaArry.push((results[i].uv_aggs.value / results[i].new_visitor_aggs.value).toFixed(2) + "%");
+                                                quotaArry.push(((result.visitor_aggs.value-result.old_visitor_aggs.value) / pv.uv_aggs.value).toFixed(2) + "%");
                                             }
                                         }
                                     }
@@ -673,7 +683,7 @@ var transform = {
                                 case "nuvRate":
                                     for (i = 0; i < result.length; i++) {
                                         dataArry.push({
-                                            nuvRate: (result[i].uv_aggs.value / result[i].new_visitor_aggs.value).toFixed(2) + "%",
+                                            nuvRate: ((result.visitor_aggs.value-result.old_visitor_aggs.value) / pv.uv_aggs.value).toFixed(2) + "%",
                                             campaignName: result[i].key
                                         });
                                     }
@@ -913,7 +923,7 @@ var transform = {
                             case "nuvRate":
                                 for (i = 0; i < result.length; i++) {
                                     dataArry.push({
-                                        nuvRate: (result[i].uv_aggs.value / result[i].new_visitor_aggs.value).toFixed(2) + "%",
+                                        nuvRate: ((result.visitor_aggs.value-result.old_visitor_aggs.value) / pv.uv_aggs.value).toFixed(2) + "%",
                                         campaignName: result[i].key
                                     });
                                 }
@@ -1229,10 +1239,10 @@ var transform = {
                                 results.forEach(function (result) {
                                     for (var key in result) {
                                         if (key == option) {
-                                            if (result.new_visitor_aggs.value) {
+                                            if (result.uv_aggs.value) {
                                                 quotaArry.push(0);
                                             } else {
-                                                quotaArry.push((result.uv_aggs.value / result.new_visitor_aggs.value).toFixed(2) + "%");
+                                                quotaArry.push(((result.visitor_aggs.value-result.old_visitor_aggs.value) / pv.uv_aggs.value).toFixed(2) + "%");
                                             }
                                         }
                                     }
@@ -1853,8 +1863,8 @@ var transform = {
                     }
                 })
                 var pvs = []
-                //console.log("**************PageBasePvs**************")
-                //console.log(JSON.stringify(querys[0]))
+                ////console.log("**************PageBasePvs**************")
+                ////console.log(JSON.stringify(querys[0]))
                 es.search(querys[0], function (error, result) {
                     var datas = []
                     if (result != undefined && result.aggregations != undefined && result.aggregations.pagePVs != undefined && result.aggregations.pagePVs.buckets != undefined) {
@@ -1867,12 +1877,18 @@ var transform = {
                             queryOptions.forEach(function (queryOption) {
                                 switch (queryOption) {
                                     case "nuvRate":
-                                        if (pv.new_visitor_aggs.value == "0") {
+                                        if (pv.uv_aggs.value == "0") {
                                             data[queryOption] = 0;
                                         } else {
-                                            data[queryOption] = (pv.uv_aggs.value / pv.new_visitor_aggs.value).toFixed(2) + "%";
+                                            data[queryOption] = ((result.visitor_aggs.value-result.old_visitor_aggs.value) / pv.uv_aggs.value).toFixed(2) + "%";
                                         }
                                         break;
+                                    case"nuv":
+                                        if (pv.visitor_aggs.value == "0") {
+                                            data[queryOption] = 0;
+                                        } else {
+                                            data[queryOption] =result.visitor_aggs.value-result.old_visitor_aggs.value
+                                        }
                                     default :
                                         if (pv[queryOption] != undefined)
                                             data[queryOption] = pv[queryOption].value;
@@ -1955,8 +1971,8 @@ var transform = {
                     }
                 })
                 var pvs = []
-                //console.log("****************************")
-                //console.log(JSON.stringify(querys[0]))
+                ////console.log("****************************")
+                ////console.log(JSON.stringify(querys[0]))
                 es.search(querys[0], function (error, result) {
                     var datas = []
                     if (result != undefined && result.aggregations != undefined && result.aggregations.pagePVs != undefined && result.aggregations.pagePVs.buckets != undefined) {
@@ -1970,12 +1986,18 @@ var transform = {
                             queryOptions.forEach(function (queryOption) {
                                 switch (queryOption) {
                                     case "nuvRate":
-                                        if (pv.new_visitor_aggs.value == "0") {
+                                        if (pv.uv_aggs.value == "0") {
                                             data[queryOption] = 0;
                                         } else {
-                                            data[queryOption] = (pv.uv_aggs.value / pv.new_visitor_aggs.value).toFixed(2) + "%";
+                                            data[queryOption] = ((result.visitor_aggs.value-result.old_visitor_aggs.value) / pv.uv_aggs.value).toFixed(2) + "%";
                                         }
                                         break;
+                                    case"nuv":
+                                        if (pv.old_visitor_aggs.value == "0") {
+                                            data[queryOption] = 0;
+                                        } else {
+                                            data[queryOption] =result.visitor_aggs.value-result.old_visitor_aggs.value
+                                        }
                                     default :
                                         if (pv[queryOption] != undefined)
                                             data[queryOption] = pv[queryOption].value;
@@ -2085,8 +2107,8 @@ var transform = {
                         },
                     }
                 })
-                //console.log("****************************")
-                //console.log(JSON.stringify(querys[0]))
+                ////console.log("****************************")
+                ////console.log(JSON.stringify(querys[0]))
                 es.search(querys[0], function (error, result) {
                     var results = {}
                     if (result != undefined && result.aggregations != undefined && result.aggregations.pagePVs != undefined && result.aggregations.pagePVs.buckets != undefined) {
@@ -2172,8 +2194,8 @@ var transform = {
                         },
                     }
                 }
-                //console.log("****************************")
-                //console.log(JSON.stringify(query))
+                ////console.log("****************************")
+                ////console.log(JSON.stringify(query))
                 es.search(query, function (error, result) {
                     if (result != undefined && result.aggregations != undefined && result.aggregations.pagePVs != undefined && result.aggregations.pagePVs.buckets != undefined) {
                         var infos = result.aggregations.pagePVs.buckets
@@ -2234,8 +2256,8 @@ var transform = {
                     break;
             }
             async.map(requests, function (item, callback) {
-                //console.log("****************************")
-                //console.log(JSON.stringify(item))
+                ////console.log("****************************")
+                ////console.log(JSON.stringify(item))
                 es.search(item, function (error, result) {
                     if (result != undefined && result.aggregations != undefined) {
                         callback(null, result.aggregations);
@@ -2344,11 +2366,12 @@ var transform = {
                                     quota: quotaArry
                                 };
                                 break;
+
                             case "nuv":
                                 for (i = 0; i < results.length; i++) {
                                     for (var key in results[i]) {
                                         if (key == queryOption) {
-                                            quotaArry.push(results[i].nuv.value);
+                                            quotaArry.push(results[i].visitor_aggs.value-results[i].old_visitor_aggs.value);
                                         }
                                     }
                                 }
@@ -2376,10 +2399,10 @@ var transform = {
                                 for (i = 0; i < results.length; i++) {
                                     for (var key in results[i]) {
                                         if (key == queryOption) {
-                                            if (results[i].new_visitor_aggs.value == "0") {
+                                            if (results[i].uv_aggs.value == "0") {
                                                 quotaArry.push(0);
                                             } else {
-                                                quotaArry.push((results[i].uv_aggs.value / results[i].new_visitor_aggs.value).toFixed(2) + "%");
+                                                data[queryOption] = ((results[i].visitor_aggs.value-results[i].old_visitor_aggs.value) / pv.uv_aggs.value).toFixed(2) + "%";
                                             }
                                         }
                                     }
@@ -2596,6 +2619,8 @@ var transform = {
                 var pvs = []
                 async.eachSeries(querys, function (item, callback) {
 
+                    //console.log("************EventPVs****************")
+                    //console.log(JSON.stringify(item))
                     es.search(item, function (error, result) {
                         if (result != undefined && result.aggregations != undefined) {
                             pvs.push(result.aggregations)
@@ -2612,14 +2637,24 @@ var transform = {
                         queryOptions.forEach(function (queryOption) {
                             switch (queryOption) {
                                 case "nuvRate":
-                                    if (pv.new_visitor_aggs.value == "0") {
+                                    if (pv.uv_aggs.value == "0") {
                                         data[queryOption] = 0;
                                     } else {
-                                        data[queryOption] = ((pv.uv_aggs.value / pv.new_visitor_aggs.value) * 100).toFixed(2) + "%";
+                                        data[queryOption] = ((pv.visitor_aggs.value-pv.old_visitor_aggs.value) / pv.uv_aggs.value).toFixed(2) + "%";
+                                    }
+                                    break;
+                                case"nuv":
+                                    if (pv.old_visitor_aggs.value == "0") {
+                                        data[queryOption] = 0;
+                                    } else {
+                                        data[queryOption] =pv.visitor_aggs.value-pv.old_visitor_aggs.value
                                     }
                                     break;
                                 default :
+                                    if(pv[queryOption]!=undefined)
                                     data[queryOption] = pv[queryOption].value;
+                                    else
+                                    //console.log("______________________________"+queryOption)
                                     break;
                             }
                         })
@@ -2716,8 +2751,8 @@ var transform = {
                         })
                         var pageEvents = {}
                         async.eachSeries(querys, function (item, callback) {
-                                //console.log("*************ConvEvent*****************")
-                                //console.log(JSON.stringify(item))
+                                ////console.log("*************ConvEvent*****************")
+                                ////console.log(JSON.stringify(item))
                                 es.search(item.query, function (error, result) {
                                     if (result != undefined && result.aggregations != undefined) {
                                         if (result.aggregations.etIdTerms.buckets != undefined) {
@@ -2834,8 +2869,8 @@ var transform = {
                                 break;
                         }
                         async.map(requests, function (item, callback) {
-                            //console.log("****************************")
-                            //console.log(JSON.stringify(item))
+                            ////console.log("****************************")
+                            ////console.log(JSON.stringify(item))
                             es.search(item, function (error, result) {
                                 if (result != undefined && result.aggregations != undefined) {
                                     callback(null, result.aggregations);

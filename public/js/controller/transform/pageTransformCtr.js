@@ -687,6 +687,7 @@ define(["./module"], function (ctrs) {
                     method: 'GET',
                     url: url
                 }).success(function (dataConfig, status) {
+
                     if (dataConfig != undefined && dataConfig.length > 0) {
                         var turls = []
                         dataConfig.forEach(function (data) {
@@ -795,6 +796,28 @@ define(["./module"], function (ctrs) {
                             }
 
                         })
+                    }else{
+                        //概况
+                        $scope.setShowArray();
+                        $rootScope.gridOptions.data.forEach(function (data) {
+                            $scope.dateShowArray.forEach(function (attr) {
+                                if (data[attr.label] != undefined){
+                                    if(attr.label=="crate"){
+                                        attr.value =sumCrate.toFixed(2)+"%"
+                                    }else{
+                                        attr.value += data[attr.label]
+                                    }
+                                }
+                            })
+                        })
+                        //刷新图表
+                        $scope.charts[0].config.legendDefaultChecked = [0, 1];
+                        $scope.charts[0].config.legendAllowCheckCount = 2;
+                        $scope.DateNumbertwo = true;
+                        $scope.DateLoading = true;
+                        $scope.DateNumber = true;
+                        $scope.DateLoading = true;
+                        $scope.dataTable(true, "day", ["pv", "uv"], false);
                     }
                 });
             };
