@@ -2402,7 +2402,7 @@ var transform = {
                                             if (results[i].uv_aggs.value == "0") {
                                                 quotaArry.push(0);
                                             } else {
-                                                data[queryOption] = ((results[i].visitor_aggs.value-results[i].old_visitor_aggs.value) / pv.uv_aggs.value).toFixed(2) + "%";
+                                                data[queryOption] = (((pv.visitor_aggs.value-pv.old_visitor_aggs.value) / pv.uv_aggs.value)*100).toFixed(2) + "%";
                                             }
                                         }
                                     }
@@ -2640,7 +2640,7 @@ var transform = {
                                     if (pv.uv_aggs.value == "0") {
                                         data[queryOption] = 0;
                                     } else {
-                                        data[queryOption] = ((pv.visitor_aggs.value-pv.old_visitor_aggs.value) / pv.uv_aggs.value).toFixed(2) + "%";
+                                        data[queryOption] = (((pv.visitor_aggs.value-pv.old_visitor_aggs.value) / pv.uv_aggs.value)*100).toFixed(2) + "%";
                                     }
                                     break;
                                 case"nuv":
