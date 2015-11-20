@@ -1044,8 +1044,8 @@ var es_request = {
                 "aggs": {
                     "direct_result": {
                         "filter": {
-                            "script": {
-                                "script": "doc['rf_type'].value == 1"
+                            "term": {
+                                "rf_type": "1"
                             }
                         },
                         "aggs": {
@@ -1058,8 +1058,8 @@ var es_request = {
                     },
                     "se_result": {
                         "filter": {
-                            "script": {
-                                "script": "doc['rf_type'].value == 2"
+                            "term": {
+                                "rf_type": "2"
                             }
                         },
                         "aggs": {
@@ -1073,8 +1073,8 @@ var es_request = {
                     },
                     "other_result": {
                         "filter": {
-                            "script": {
-                                "script": "doc['rf_type'].value == 3"
+                            "term": {
+                                "rf_type": "3"
                             }
                         },
                         "aggs": {
