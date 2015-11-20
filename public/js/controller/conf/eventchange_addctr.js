@@ -4,7 +4,7 @@
 define(["./module"], function (ctrs) {
     "use strict";
 
-    ctrs.controller('eventchange_addctr', function ($scope, $http, $rootScope, $cookieStore, ngDialog, $state) {
+    ctrs.controller('eventchange_addctr', function ($scope, $http, $rootScope, $cookieStore, ngDialog, $state,$stateParams) {
         $scope.eventChange = {};
         $scope.eventChange.event_id = "";
         $scope.eventChange.event_name = "";
@@ -58,6 +58,7 @@ define(["./module"], function (ctrs) {
         $scope.preview = {
             url: ""
         };
+
         /**
          * 事件转化目标URL验证
          */
@@ -71,10 +72,6 @@ define(["./module"], function (ctrs) {
             var configUrl = $rootScope.siteUrl;
             //去掉 www. 的配置URL
             var localURl = $rootScope.siteUrl.replace(/http:\/\/./g, '').replace(/www./g, '');
-
-            console.log(localURl)
-            console.log(previewUrl)
-            console.log(previewUrl.indexOf(localURl))
             //二级域名验证
            if(previewUrl.indexOf(localURl)<0){
                $scope.urlDialog = ngDialog.open({
@@ -127,5 +124,10 @@ define(["./module"], function (ctrs) {
             $http({method: 'GET', url: url}).success(function (dataConfig) {
             })
         };
+        if($stateParams.url!=undefined){
+            $scope.tab =1;
+            $scope.preview.url = $stateParams.url
+            $scope.sshUrlEvent();
+        }
     })
 });

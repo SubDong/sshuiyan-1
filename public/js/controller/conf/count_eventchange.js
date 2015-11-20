@@ -53,12 +53,17 @@ define(["./module"], function (ctrs ) {
 
         //跳转-修改界面
         $scope.toUpdate= function (entity) {
-            $scope._id = entity._id;
-            $scope.urlDialog = ngDialog.open({
-                template:'../conf/webcountsite/eventchange_update.html',
-                className:'ngdialog-theme-default admin_ngdialog ',
-                scope: $scope
-            });
+            if(entity.event_method=="手动方式"){
+                $scope._id = entity._id;
+                $scope.urlDialog = ngDialog.open({
+                    template:'../conf/webcountsite/eventchange_update.html',
+                    className:'ngdialog-theme-default admin_ngdialog ',
+                    scope: $scope
+                });
+            }else if(entity.event_method=="自动"){
+                $state.go('eventchange_add', {'url': entity.event_page});
+            }
+
         };
         $scope.operationEventTarget = function (entity) {
             entity.event_target = !entity.event_target

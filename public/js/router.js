@@ -807,6 +807,7 @@ define(["angular", "./app"], function (angular, myApp) {
                 })
                 .state('eventchange_add', {
                     url: '/conf/webcountsite/eventchange_add',
+                    params: {'url': null},
                     templateUrl: '../conf/webcountsite/eventchange_add.html',
                     resolve: {
                         load: loadDeps([
