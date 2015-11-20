@@ -525,7 +525,7 @@ if (config != undefined && !config.open) {
                     s == undefined || s == "" || s == null ? r : s = s * 60 * 1000;
                     var t = s < v ? r : s;
                     var u = setInterval(this.hbInfo, t)
-                }, getSelectJS: function () {
+                },getSelectJS: function () {
                     var s = document.referrer;
                     if (document.location.href.indexOf("jn=select") > -1 && (s.indexOf("http://" + d.I.R) === 0 || s.indexOf("https://" + d.I.R) === 0)) {
                         var r = document.createElement("script");
@@ -536,7 +536,7 @@ if (config != undefined && !config.open) {
                     }
                 }, getHeatUrlJS: function () {
                     var s = document.referrer;
-                    if (document.location.href.indexOf("jn=heatUrl") > -1 && (s.indexOf("http://" + d.I.R) === 0 || s.indexOf("https://" + d.I.R) === 0)) {
+                    if (document.location.href.indexOf("jn=heatUrl") > -1 &&(s.indexOf("http://" + d.I.R) === 0 || s.indexOf("https://" + d.I.R) === 0)) {
                         var r = document.createElement("script");
                         r.setAttribute("type", "text/javascript");
                         r.setAttribute("src", d.I.protocol + "//" + d.I.RS + "/t.js/heatUrl");
@@ -642,21 +642,19 @@ if (config != undefined && !config.open) {
         if (config != undefined && config.e != undefined && config.e.length > 0) {
             window.onload = function () {
                 config.e.forEach(function (k, h) {
-                    if(!k.evpause){
-                        var l = document.location.origin + document.location.pathname;
-                        if (l.indexOf(k.evpage) > -1 || k.evpage.indexOf(l) > -1) {
-                            var m = document.getElementById(k.eid);
-                            var c = m.attributes.getNamedItem("onclick");
-                            if (m != undefined && m != null) {
-                                if (c == null) {
+                    var l = document.location.origin + document.location.pathname;
+                    if (l.indexOf(k.evpage) > -1 || k.evpage.indexOf(l) > -1) {
+                        var m = document.getElementById(k.eid);
+                        var c = m.attributes.getNamedItem("onclick");
+                        if (m != undefined && m != null) {
+                            if (c == null) {
+                                m.onclick = function () {
+                                    _pct.putPar(["_trackEvent", k.eid, k.evttag, k.evtarget ? 1 : 0])
+                                }
+                            } else {
+                                if (c.nodeValue.indexOf("_pct.putPar") == -1) {
                                     m.onclick = function () {
                                         _pct.putPar(["_trackEvent", k.eid, k.evttag, k.evtarget ? 1 : 0])
-                                    }
-                                } else {
-                                    if (c.nodeValue.indexOf("_pct.putPar") == -1) {
-                                        m.onclick = function () {
-                                            _pct.putPar(["_trackEvent", k.eid, k.evttag, k.evtarget ? 1 : 0])
-                                        }
                                     }
                                 }
                             }
