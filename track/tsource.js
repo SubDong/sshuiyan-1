@@ -642,7 +642,7 @@ if (config != undefined && !config.open) {
         if (config != undefined && config.e != undefined && config.e.length > 0) {
             window.onload = function () {
                 config.e.forEach(function (k, h) {
-                    if(!k.evpause){
+                    if (!k.evpause) {
                         var l = document.location.origin + document.location.pathname;
                         if (l.indexOf(k.evpage) > -1 || k.evpage.indexOf(l) > -1) {
                             var m = document.getElementById(k.eid);
@@ -710,6 +710,9 @@ if (config != undefined && !config.open) {
             }
         }
         if (config != undefined && config.pc != undefined) {
+            if (config.pc.pause == undefined || config.pc.pause) {
+                return
+            }
             if (config.pc.paths == undefined || config.pc.paths.length == 0) {
                 g.g.p_name = config.pc.target_name;
                 g.g.p_record = config.pc.record_type;

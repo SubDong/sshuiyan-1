@@ -493,6 +493,7 @@ api.get("/page_conv", function (req, res) {
                         expected_yield: ins.expected_yield,
                         pecent_yield: ins.pecent_yield,
                         update_time : ins.update_time,
+                        pause:ins.is_pause,
                         paths: tpaths,
                     }
                     ins.target_urls.forEach(function (target_url) {
@@ -548,6 +549,7 @@ api.get("/page_conv", function (req, res) {
                                     expected_yield: config.expected_yield,
                                     pecent_yield: config.pecent_yield,
                                     update_time : config.update_time,
+                                    pause:config.is_pause,
                                     paths: tpaths,
                                 }
                                 config.target_urls.forEach(function (target_url) {
