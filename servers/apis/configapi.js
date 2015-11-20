@@ -1020,7 +1020,8 @@ api.get("/select", function (req, res) {
                         var existQry = {//用户 站点 页面 为查询条件
                             uid: uid,
                             event_path: query["eventPath"],
-                            root_url: sitejson.siteid
+                            root_url: sitejson.siteid,
+                            event_method:"自动"
                         }
                         dao.find(schema_name, JSON.stringify(existQry), null, {}, function (err, docs) {//查询所有配置
                             if (docs != null) {//存在配置

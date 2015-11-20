@@ -311,14 +311,14 @@ define([
             $rootScope.perfectUser = userObj;
             $rootScope.user = userObj;
             $rootScope.usites = $cookieStore.get('usites');
-            $rootScope.default = $rootScope.usites ? $rootScope.usites[0].site_name : '用户信息加载失败，请重新刷新页面！';     // default site
-            $rootScope.defaultType = $rootScope.usites ? $rootScope.usites[0].type_id : '暂无';   // default site id
+            $rootScope.default = $rootScope.usites!=undefined&&$rootScope.usites.length>0 ? $rootScope.usites[0].site_name : '用户信息加载失败，请重新刷新页面！';     // default site
+            $rootScope.defaultType = $rootScope.usites!=undefined&&$rootScope.usites.length>0 ? $rootScope.usites[0].type_id : '暂无';   // default site id
             $http.get("/api/initSchedule");
         }
         $scope.initPerfectAccount();
         $scope.siteselect = {};
         $scope.siteselects = $rootScope.usites;
-        if ($rootScope.usites) {
+        if ($rootScope.usites!=undefined&&$rootScope.usites.length>0) {
             $rootScope.baiduAccount = $rootScope.usites[0].bd_name;//baidu-perfect2151880
             $rootScope.userType = $rootScope.usites[0].type_id;//www.perfect-cn.cn
             $rootScope.siteId = $rootScope.usites[0].site_id;
