@@ -14,7 +14,7 @@ var _new_visitor_aggs = {
     "aggs": {
         "nuv_aggs": {
             "sum": {
-                "script": "c=0; if (doc['ct'].value == 0) {c = 1}; c"
+                "field": "ct"
             }
         }
     }
@@ -576,10 +576,10 @@ var nuvFn = function (result) {
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
+        var total = result[i].new_visitor_aggs.doc_count;
         var nuv = result[i].new_visitor_aggs.nuv_aggs.value;
         keyArr.push(result[i].key);
-
-        quotaArr.push(nuv);
+        quotaArr.push(total - nuv);
     }
 
     return {
