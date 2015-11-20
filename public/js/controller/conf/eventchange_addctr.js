@@ -100,11 +100,11 @@ define(["./module"], function (ctrs) {
                             <iframe id="" name="" marginwidth="0" marginheight="0" width="100%" height=700 frameborder="0" src=' + strSrc + '></iframe>\
                                 </div>\
                                 <div class="ng-button-div">\
-                                <button  class="ngdialog-button ngdialog-button-secondary">确定</button>\
-                                <button  class="ngdialog-button ng-button" data-ng-click="closeThisDialog()">取消</button>\
+                                <button  class="ngdialog-button ng-button" type="submit" data-ng-click="closeThisDialog()">确定</button>\
                                 </div>\
                             </div>\
                         </div>',
+                    //<button  class="ngdialog-button ng-button" data-ng-click="closeThisDialog()">取消</button>\
                     className: 'ngdialog-theme-default admin_ngdialog iframeBox',
                     plain: true,
                     closeByDocument: false,

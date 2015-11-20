@@ -478,7 +478,7 @@ define(["./module"], function (ctrs) {
                                                     });
                                                 }
                                             } else if ($scope.es_checkArray[i] == "clickTotal") {
-                                                data["conversions"] = eventInfo.eventCount != undefined ? eventInfo.eventCount : 0;
+                                                data["clickTotal"] = eventInfo.eventCount != undefined ? eventInfo.eventCount : 0;
                                             } else if ($scope.es_checkArray[i] == "conversions") {
                                                 data["conversions"] = eventInfo.convCount != undefined ? eventInfo.convCount : 0;
                                             }
