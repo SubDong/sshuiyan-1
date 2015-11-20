@@ -132,10 +132,12 @@ define(["./module"], function (ctrs) {
                 var tempData = [];
                 //修改数据
                 dataConfig.forEach(function (item, i) {
-                    if (item.paths == null || item.paths.length == 0) {
-                        item.needPath = "否";
-                    } else {
-                        item.needPath = "是";
+                    item.needPath = "否";
+                    if (item.paths != null && item.paths.length> 0) {
+                        item.paths.forEach(function(path){
+                            if(path.path_mark&&item.needPath == "否")
+                                item.needPath = "是";
+                        })
                     }
                     if (item.target_urls != null && item.target_urls.length > 0) {
                         var url = "";
