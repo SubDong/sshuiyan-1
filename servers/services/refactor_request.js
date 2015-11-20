@@ -117,18 +117,6 @@ var es_aggs = {
     // 新访客比率
     "nuvRate": {
         "new_visitor_aggs": _new_visitor_aggs,
-        //"uv_filter": {
-        //    "filter": {
-        //        "term": {"entrance": "1"}
-        //    },
-        //    "aggs": {
-        //        "uv_aggs": {
-        //            "cardinality": {
-        //                "field": "_ucv"
-        //            }
-        //        }
-        //    }
-        //}
         "uv_aggs": {
             "cardinality": {
                 "field": "_ucv"
@@ -594,14 +582,14 @@ var nuvRateFn = function (result) {
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
+        var total = result[i].new_visitor_aggs.doc_count;
         var nuv = result[i].new_visitor_aggs.nuv_aggs.value;
         var uv = result[i].uv_aggs.value;
-        //var uv = result[i].uv_filter.uv_aggs.value;
         keyArr.push(result[i].key);
 
         var nuvRate = 0;
         if (uv > 0) {
-            nuvRate = (parseFloat(nuv) / parseFloat(uv) * 100).toFixed(2);
+            nuvRate = (parseFloat(total - nuv) / parseFloat(uv) * 100).toFixed(2);
         }
 
         quotaArr.push(nuvRate);
@@ -619,7 +607,6 @@ var ipFn = function (result) {
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
-        //var ip_count = result[i].ip_aggs.value;
         var ip_count = result[i].ip_aggs.ip_aggs1.value;
         keyArr.push(result[i].key);
 
