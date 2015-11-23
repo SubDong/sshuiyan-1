@@ -182,7 +182,6 @@ define(["./module"], function (ctrs) {
             pagevalue.pagination.seek(Number($scope.page));
         };
         $rootScope.targetSearchSpread(true);
-
         //得到表格底部数据
         $scope.getSearchFooterData = function (a, option, number) {
             var returnData = 0;
@@ -222,7 +221,7 @@ define(["./module"], function (ctrs) {
                 if (a.col.field == "avgPage") {
                     returnData = (returnData / option.length).toFixed(2);
                 }
-                if (a.col.field == "outRate" || a.col.field == "nuvRate" ) {
+                if (a.col.field == "outRate") {
                     returnData = returnData == "0.00%" ? "0%" : (returnData / option.length).toFixed(2) + "%";
                 }
                 if (a.col.field == "avgTime") {
@@ -233,6 +232,30 @@ define(["./module"], function (ctrs) {
                 }
                 if (a.col.field == "cpc" || a.col.field == "cost") {
                     returnData = (returnData + "").substring(0, (returnData + "").indexOf(".") + 3);
+                }
+                if (a.col.field == "nuvRate") {
+                    var sumNuv= 0,sumUv =0
+                    option.forEach(function (item) {
+                        sumNuv+= item.entity["nuv"]==undefined?0: item.entity["nuv"]
+                        sumUv+= item.entity["uv"]==undefined?0: item.entity["uv"]
+                    })
+                    returnData = sumNuv>0?(((sumNuv/sumUv)*100).toFixed(2)+"%"):"0.00%"
+                }
+                if (a.col.field == "crate") {
+                    var sumNuv= 0,sumpv =0
+                    option.forEach(function (item) {
+                        sumNuv+= item.entity["conversions"]==undefined?0: item.entity["conversions"]
+                        sumpv+= item.entity["pv"]==undefined?0: item.entity["pv"]
+                    })
+                    returnData = sumpv>0?(((sumNuv/sumpv)*100).toFixed(2)+"%"):"0.00%"
+                }
+                if (a.col.field == "orderNumRate") {
+                    var sumOrder= 0,sumpv =0
+                    option.forEach(function (item) {
+                        sumOrder+= item.entity["orderNum"]==undefined?0: item.entity["orderNum"]
+                        sumpv+= item.entity["pv"]==undefined?0: item.entity["pv"]
+                    })
+                    returnData = sumpv>0?(((sumOrder/sumpv)*100).toFixed(2)+"%"):"0.00%"
                 }
             } else {
                 returnData = "--"

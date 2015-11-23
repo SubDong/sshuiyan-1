@@ -204,7 +204,7 @@ var transform = {
                             switch (queryOption) {
                                 case "nuvRate":
                                     if (result.uv_aggs.value == "0") {
-                                        data[queryOption] = 0;
+                                        data[queryOption] = "0.00%";
                                     } else {
                                         data[queryOption] = ((result.visitor_aggs.value-result.old_visitor_aggs.value) / pv.uv_aggs.value).toFixed(2) + "%";
 
@@ -425,7 +425,7 @@ var transform = {
                                     for (var key in results[i]) {
                                         if (key == queryOption) {
                                             if (results[i].uv_aggs.value == "0") {
-                                                quotaArry.push(0);
+                                                quotaArry.push("0.00%");
                                             } else {
                                                 quotaArry.push(((result.visitor_aggs.value-result.old_visitor_aggs.value) / pv.uv_aggs.value).toFixed(2) + "%");
                                             }
@@ -1830,10 +1830,14 @@ var transform = {
                         if (filters != undefined && filters.length > 0) {
                             var jfilters = JSON.parse(filters)
                             jfilters.forEach(function (filter) {
-                                filterQuery.push({"match": filter})
+                                filterQuery.push({"term": filter})
                             })
                         }
-                        filterQuery.push({"match": {"loc": page.page_urls[i]}});
+                        var tempUrl = page.page_urls[i]
+                        if(tempUrl!=undefined&&tempUrl!=""&&tempUrl[tempUrl.length-1]=="/"){
+                            tempUrl = tempUrl.substring(0,tempUrl.length-1)
+                        }
+                        filterQuery.push({"term": {"loc": tempUrl}});
                         boolQuery.push({
                             "bool": {
                                 "must": filterQuery
@@ -1863,8 +1867,8 @@ var transform = {
                     }
                 })
                 var pvs = []
-                ////console.log("**************PageBasePvs**************")
-                ////console.log(JSON.stringify(querys[0]))
+                //console.log("**************PageBasePvs**************")
+                //console.log(JSON.stringify(querys[0]))
                 es.search(querys[0], function (error, result) {
                     var datas = []
                     if (result != undefined && result.aggregations != undefined && result.aggregations.pagePVs != undefined && result.aggregations.pagePVs.buckets != undefined) {
@@ -1878,10 +1882,12 @@ var transform = {
                                 switch (queryOption) {
                                     case "nuvRate":
                                         if (pv.uv_aggs.value == "0") {
-                                            data[queryOption] = 0;
+                                            data[queryOption] = "0.00%";
                                         } else {
-                                            data[queryOption] = ((pv.visitor_aggs.value-pv.old_visitor_aggs.value) / pv.uv_aggs.value).toFixed(2) + "%";
+                                            data[queryOption] = (((pv.visitor_aggs.value-pv.old_visitor_aggs.value) / pv.uv_aggs.value)*100).toFixed(2) + "%";
                                         }
+                                        data["nuv"] = (pv.visitor_aggs.value-pv.old_visitor_aggs.value)
+                                        data["uv"] = pv.uv_aggs.value
                                         break;
                                     case"nuv":
                                         if (pv.visitor_aggs.value == "0") {
@@ -1938,11 +1944,15 @@ var transform = {
                         if (filters != undefined && filters.length > 0) {
                             var jfilters = JSON.parse(filters)
                             jfilters.forEach(function (filter) {
-                                filterQuery.push({"match": filter})
+                                filterQuery.push({"term": filter})
                             })
                         }
-                        filterQuery.push({"match": {"rf_type": rfType}})
-                        filterQuery.push({"match": {"loc": page.page_urls[i]}})
+                        filterQuery.push({"term": {"rf_type": rfType}})
+                        var tempUrl = page.page_urls[i]
+                        if(tempUrl!=undefined&&tempUrl!=""&&tempUrl[tempUrl.length-1]=="/"){
+                            tempUrl = tempUrl.substring(0,tempUrl.length-1)
+                        }
+                        filterQuery.push({"term": {"loc": tempUrl}})
                         boolQuery.push({
                             "bool": {
                                 "must": filterQuery
@@ -1987,10 +1997,12 @@ var transform = {
                                 switch (queryOption) {
                                     case "nuvRate":
                                         if (pv.uv_aggs.value == "0") {
-                                            data[queryOption] = 0;
+                                            data[queryOption] = "0.00%";
                                         } else {
-                                            data[queryOption] = ((pv.visitor_aggs.value-pv.old_visitor_aggs.value) / pv.uv_aggs.value).toFixed(2) + "%";
+                                            data[queryOption] = (((pv.visitor_aggs.value-pv.old_visitor_aggs.value) / pv.uv_aggs.value)*100).toFixed(2) + "%";
                                         }
+                                        data["nuv"] = (pv.visitor_aggs.value-pv.old_visitor_aggs.value)
+                                        data["uv"] = pv.uv_aggs.value
                                         break;
                                     case"nuv":
                                         if (pv.old_visitor_aggs.value == "0") {
@@ -2059,10 +2071,14 @@ var transform = {
                         if (filters != undefined && filters.length > 0) {
                             var jfilters = JSON.parse(filters)
                             jfilters.forEach(function (filter) {
-                                filterQuery.push({"match": filter})
+                                filterQuery.push({"term": filter})
                             })
                         }
-                        filterQuery.push({"match": {"loc": page.page_urls[i]}})
+                        var tempUrl = page.page_urls[i]
+                        if(tempUrl!=undefined&&tempUrl!=""&&tempUrl[tempUrl.length-1]=="/"){
+                            tempUrl = tempUrl.substring(0,tempUrl.length-1)
+                        }
+                        filterQuery.push({"term": {"loc": tempUrl}})
                         boolQuery.push({
                             "bool": {
                                 "must": filterQuery
@@ -2083,7 +2099,7 @@ var transform = {
                         "aggs": {
                             "pagePVs": {
                                 "terms": {
-                                    "field": "rf_type'",
+                                    "field": "rf_type",
                                     "size": 0
                                 },
                                 "aggs": {
@@ -2153,11 +2169,15 @@ var transform = {
                 if (filters != undefined && filters.length > 0) {
                     var jfilters = JSON.parse(filters)
                     jfilters.forEach(function (filter) {
-                        filterQuery.push({"match": filter})
+                        filterQuery.push({"term": filter})
                     })
                 }
-                filterQuery.push({"match": {"rf_type": rfType}})
-                filterQuery.push({"match": {"loc": page.page_urls[i]}})
+                filterQuery.push({"term": {"rf_type": rfType}})
+                var tempUrl = page.page_urls[i]
+                if(tempUrl!=undefined&&tempUrl!=""&&tempUrl[tempUrl.length-1]=="/"){
+                    tempUrl = tempUrl.substring(0,tempUrl.length-1)
+                }
+                filterQuery.push({"term": {"loc":tempUrl}})
                 var query = {
                     "index": newIndexs,
                     "type": type + "_page",
@@ -2225,10 +2245,14 @@ var transform = {
                             if (filters != undefined && filters.length > 0) {
                                 var jfilters = JSON.parse(filters)
                                 jfilters.forEach(function (filter) {
-                                    filterQuery.push({"match": filter})
+                                    filterQuery.push({"term": filter})
                                 })
                             }
-                            filterQuery.push({"match": {"loc": url}})
+                            var tempUrl = url
+                            if(tempUrl!=undefined&&tempUrl!=""&&tempUrl[tempUrl.length-1]=="/"){
+                                tempUrl = tempUrl.substring(0,tempUrl.length-1)
+                            }
+                            filterQuery.push({"term": {"loc": tempUrl}})
                             boolQuery.push({
                                 "bool": {
                                     "must": filterQuery
@@ -2400,7 +2424,7 @@ var transform = {
                                     for (var key in results[i]) {
                                         if (key == queryOption) {
                                             if (results[i].uv_aggs.value == "0") {
-                                                quotaArry.push(0);
+                                                quotaArry.push("0.00%");
                                             } else {
                                                 data[queryOption] = (((pv.visitor_aggs.value-pv.old_visitor_aggs.value) / pv.uv_aggs.value)*100).toFixed(2) + "%";
                                             }
@@ -2638,10 +2662,12 @@ var transform = {
                             switch (queryOption) {
                                 case "nuvRate":
                                     if (pv.uv_aggs.value == "0") {
-                                        data[queryOption] = 0;
+                                        data[queryOption] = "0.00%";
                                     } else {
                                         data[queryOption] = (((pv.visitor_aggs.value-pv.old_visitor_aggs.value) / pv.uv_aggs.value)*100).toFixed(2) + "%";
                                     }
+                                    data["nuv"] = (pv.visitor_aggs.value-pv.old_visitor_aggs.value)
+                                    data["uv"] = pv.uv_aggs.value
                                     break;
                                 case"nuv":
                                     if (pv.old_visitor_aggs.value == "0") {
