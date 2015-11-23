@@ -1830,10 +1830,10 @@ var transform = {
                         if (filters != undefined && filters.length > 0) {
                             var jfilters = JSON.parse(filters)
                             jfilters.forEach(function (filter) {
-                                filterQuery.push({"match": filter})
+                                filterQuery.push({"term": filter})
                             })
                         }
-                        filterQuery.push({"match": {"loc": page.page_urls[i]}});
+                        filterQuery.push({"term": {"loc": page.page_urls[i]}});
                         boolQuery.push({
                             "bool": {
                                 "must": filterQuery
@@ -1863,8 +1863,8 @@ var transform = {
                     }
                 })
                 var pvs = []
-                ////console.log("**************PageBasePvs**************")
-                ////console.log(JSON.stringify(querys[0]))
+                //console.log("**************PageBasePvs**************")
+                //console.log(JSON.stringify(querys[0]))
                 es.search(querys[0], function (error, result) {
                     var datas = []
                     if (result != undefined && result.aggregations != undefined && result.aggregations.pagePVs != undefined && result.aggregations.pagePVs.buckets != undefined) {
@@ -1938,11 +1938,11 @@ var transform = {
                         if (filters != undefined && filters.length > 0) {
                             var jfilters = JSON.parse(filters)
                             jfilters.forEach(function (filter) {
-                                filterQuery.push({"match": filter})
+                                filterQuery.push({"term": filter})
                             })
                         }
-                        filterQuery.push({"match": {"rf_type": rfType}})
-                        filterQuery.push({"match": {"loc": page.page_urls[i]}})
+                        filterQuery.push({"term": {"rf_type": rfType}})
+                        filterQuery.push({"term": {"loc": page.page_urls[i]}})
                         boolQuery.push({
                             "bool": {
                                 "must": filterQuery
@@ -2059,10 +2059,10 @@ var transform = {
                         if (filters != undefined && filters.length > 0) {
                             var jfilters = JSON.parse(filters)
                             jfilters.forEach(function (filter) {
-                                filterQuery.push({"match": filter})
+                                filterQuery.push({"term": filter})
                             })
                         }
-                        filterQuery.push({"match": {"loc": page.page_urls[i]}})
+                        filterQuery.push({"term": {"loc": page.page_urls[i]}})
                         boolQuery.push({
                             "bool": {
                                 "must": filterQuery
@@ -2153,11 +2153,11 @@ var transform = {
                 if (filters != undefined && filters.length > 0) {
                     var jfilters = JSON.parse(filters)
                     jfilters.forEach(function (filter) {
-                        filterQuery.push({"match": filter})
+                        filterQuery.push({"term": filter})
                     })
                 }
-                filterQuery.push({"match": {"rf_type": rfType}})
-                filterQuery.push({"match": {"loc": page.page_urls[i]}})
+                filterQuery.push({"term": {"rf_type": rfType}})
+                filterQuery.push({"term": {"loc": page.page_urls[i]}})
                 var query = {
                     "index": newIndexs,
                     "type": type + "_page",
@@ -2225,10 +2225,10 @@ var transform = {
                             if (filters != undefined && filters.length > 0) {
                                 var jfilters = JSON.parse(filters)
                                 jfilters.forEach(function (filter) {
-                                    filterQuery.push({"match": filter})
+                                    filterQuery.push({"term": filter})
                                 })
                             }
-                            filterQuery.push({"match": {"loc": url}})
+                            filterQuery.push({"term": {"loc": url}})
                             boolQuery.push({
                                 "bool": {
                                     "must": filterQuery
