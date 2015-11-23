@@ -241,6 +241,14 @@ define(["./module"], function (ctrs) {
                     })
                     returnData = sumNuv>0?(((sumNuv/sumUv)*100).toFixed(2)+"%"):"0.00%"
                 }
+                if (a.col.field == "crate") {
+                    var sumNuv= 0,sumUv =0
+                    option.forEach(function (item) {
+                        sumNuv+= item.entity["conversions"]==undefined?0: item.entity["conversions"]
+                        sumUv+= item.entity["pv"]==undefined?0: item.entity["pv"]
+                    })
+                    returnData = sumUv>0?(((sumNuv/sumUv)*100).toFixed(2)+"%"):"0.00%"
+                }
             } else {
                 returnData = "--"
             }
