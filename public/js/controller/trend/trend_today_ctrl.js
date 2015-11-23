@@ -525,7 +525,7 @@ define(["./module"], function (ctrs) {
                 });
                 $q.all([reqRequestStart, reqRequestEnd]).then(function (data) {
                     var final_result = [];
-                    data.forEach(function (q) {
+                    data.forEach(function (q, _iiiii) {
                         var json = JSON.parse(eval("(" + q.data + ")").toString());
                         json.forEach(function (item) {
                             if (item.key.length) {
@@ -542,6 +542,13 @@ define(["./module"], function (ctrs) {
                                     _key.push(k);
                                 });
                                 item.key = _key;
+                                item.label = _label;
+                            } else {// 当没有数据的时候，格式化提示框的显示信息
+                                if (_iiiii == 0) {
+                                    var _label = $scope.todayCalendar + ":" + chartUtils.convertChinese(item.label);
+                                } else {
+                                    var _label = $scope.dayOrWeek + ":" + chartUtils.convertChinese(item.label);
+                                }
                                 item.label = _label;
                             }
                         });

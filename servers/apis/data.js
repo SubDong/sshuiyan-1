@@ -310,7 +310,7 @@ api.get('/indextable', function (req, res) {
     var _startTime = Number(query["start"]);//开始时间
     var _endTime = Number(query["end"]);//结束时间query
     var _indic = query["indic"].split(",");//统计指标
-    _indic.push("pv");
+    _indic.push("pv");//添加PV统计指标，用于判断是否为有效数据
     var _lati = query["dimension"] == "null" ? null : query["dimension"];//统计纬度
     if (_lati == "kwsid") _lati = "kw:cid:agid:kwid";
     var _type = query["type"];

@@ -487,7 +487,7 @@ define(["./module"], function (ctrs) {
                     reqRequestEnd = $http.get(e.url + "?type=" + e.types + "&dimension=" + e.dimension + "&start=" + times[0] + "&end=" + times[1] + "&userType=" + $rootScope.userType + "&int=-1");
                 } else {
                     reqRequestStart = $http.get(e.url + "?type=" + e.types + "&dimension=" + e.dimension + "&start=" + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeStart + "&userType=" + $rootScope.userType);
-                    reqRequestEnd = $http.get(e.url + "?type=" + e.types + "&dimension=" + e.dimension + "&start=" + times[0] + "&end=" + times[0] + "&userType=" + $rootScope.userType);
+                    reqRequestEnd = $http.get(e.url + "?type=" + e.types + "&dimension=" + e.dimension + "&start=" + times[1] + "&end=" + times[1] + "&userType=" + $rootScope.userType);
                 }
                 e.config.instance.showLoading({
                     effect: 'whirling',
@@ -495,7 +495,7 @@ define(["./module"], function (ctrs) {
                 });
                 $q.all([reqRequestStart, reqRequestEnd]).then(function (data) {
                     var final_result = [];
-                    data.forEach(function (q) {
+                    data.forEach(function (q, _iiiii) {
                         var json = JSON.parse(eval("(" + q.data + ")").toString());
                         json.forEach(function (item) {
                             if (item.key.length) {
@@ -512,6 +512,13 @@ define(["./module"], function (ctrs) {
                                     _key.push(k);
                                 });
                                 item.key = _key;
+                                item.label = _label;
+                            } else {// 当没有数据的时候，格式化提示框的显示信息
+                                if (_iiiii == 0) {
+                                    var _label = $scope.todayCalendar + ":" + chartUtils.convertChinese(item.label);
+                                } else {
+                                    var _label = $scope.dayOrWeek + ":" + chartUtils.convertChinese(item.label);
+                                }
                                 item.label = _label;
                             }
                         });
