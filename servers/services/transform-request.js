@@ -2083,7 +2083,7 @@ var transform = {
                         "aggs": {
                             "pagePVs": {
                                 "terms": {
-                                    "field": "rf_type'",
+                                    "field": "rf_type",
                                     "size": 0
                                 },
                                 "aggs": {
