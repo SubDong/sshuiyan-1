@@ -42,7 +42,7 @@ define(["./module"], function (ctrs) {
                     convert_url_all: $scope.convert_url_all
                 });
             };
-            $scope.es_checkArray = ["pv", "uv", "vc", "ip", "nuv", "nuvRate", "conversions", "crate", "avgCost", "orderNum", "benefit", "profit", "orderNum", "orderNumRate"];
+            $scope.es_checkArray = ["pv", "uv", "vc", "ip", "nuv", "nuvRate", "conversions", "crate", /*"avgCost",*/ "orderNum", /*"benefit", "profit",*/ "orderNum", "orderNumRate"];
             $scope.sem_checkArray = ["avgCost", "profit", "orderMoney"];
             //配置默认指标
             $rootScope.checkedArray = ["pv", "uv", "ip", "conversions"/*, "vc", "crate"*/];
@@ -357,12 +357,12 @@ define(["./module"], function (ctrs) {
                     def.defData($scope.charts[0].config);
                 }
             };
-            $scope.queryOption_all = ["pv", "uv", "vc", "nuv", "ip", "conversions", "crate", "avgCost", "benefit", /* "profit",*/ "orderNum"/*, "orderMoney"*/, "orderNumRate"];
+            $scope.queryOption_all = ["pv", "uv", "vc", "nuv", "ip", "conversions", "crate", "nuvRate", /*"avgCost",*/ "benefit", /* "profit",*/ "orderNum"/*, "orderMoney"*/, "orderNumRate"];
             $scope.charts = [
                 {
                     config: {
                         legendId: "indicators_charts_legend",
-                        legendData: ["浏览量(PV)", "访客数(UV)", "访问次数", "新访客数", "IP数", "转化次数", "转化率", "平均转化成本(页面)", "收益", /*"利润",*/ "订单数"/*, "订单金额"*/, "订单转化率"],//显示几种数据
+                        legendData: ["浏览量(PV)", "访客数(UV)", "访问次数", "新访客数", "IP数", "转化次数", "转化率", "新访客比率", /*"平均转化成本(页面)",*/ "收益", /*"利润",*/ "订单数"/*, "订单金额"*/, "订单转化率"],//显示几种数据
                         //legendMultiData: $rootScope.lagerMulti,
                         legendAllowCheckCount: 2,
                         legendClickListener: $scope.onLegendClickListener,
@@ -699,7 +699,7 @@ define(["./module"], function (ctrs) {
                             }
                             turls.push({updateTime: data.update_time, page_urls: urls})
                         })
-                        var tCheckedArray = ["pv", "uv", "vc", "ip", "nuv", "nuvRate"]
+                        var tCheckedArray = $scope.queryOption_all
                         var pvurl = "/api/transform/getPageBasePVs?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&queryOptions=" + tCheckedArray + "&pages=" + JSON.stringify(turls) + "&showType=day" + "&filters=" + $rootScope.getFilters()
                         $http.get(pvurl).success(function (pvdatas) {
                             var isPConv = false;
@@ -760,14 +760,14 @@ define(["./module"], function (ctrs) {
                                     $rootScope.gridData = $rootScope.gridOptions.data
                                     //概况
                                     $scope.setShowArray();
-                                    var sumNuv = 0, sumUv = 0,sumPv= 0,sumConv=0
+                                    var sumNuv = 0, sumUv = 0, sumPv = 0, sumConv = 0,sumOrder=0
                                     $rootScope.gridOptions.data.forEach(function (data, index) {
                                         $scope.dateShowArray.forEach(function (attr) {
                                             if (data[attr.label] != undefined) {
+                                                sumPv += data["pv"] == undefined ? 0 : data["pv"]
                                                 if (attr.label == "crate") {
                                                     //attr.value = sumCrate.toFixed(2) + "%"
                                                     sumConv += data["conversions"] == undefined ? 0 : data["conversions"]
-                                                    sumPv += data["pv"] == undefined ? 0 : data["pv"]
                                                     //if(index==($rootScope.gridOptions.data.length-1)){
                                                     attr.value = sumPv > 0 ? (((sumConv / sumPv) * 100).toFixed(2) + "%") : "0.00%"
                                                     //}
@@ -776,6 +776,11 @@ define(["./module"], function (ctrs) {
                                                     sumUv += data["uv"] == undefined ? 0 : data["uv"]
                                                     //if(index==($rootScope.gridOptions.data.length-1)){
                                                     attr.value = sumUv > 0 ? (((sumNuv / sumUv) * 100).toFixed(2) + "%") : "0.00%"
+                                                    //}
+                                                } else if (attr.label == "orderNumRate") {
+                                                    sumOrder += data["orderNum"] == undefined ? 0 : data["orderNum"]
+                                                    //if(index==($rootScope.gridOptions.data.length-1)){
+                                                    attr.value = sumPv > 0 ? (((sumOrder / sumPv) * 100).toFixed(2) + "%") : "0.00%"
                                                     //}
                                                 }
                                                 else {
@@ -817,7 +822,7 @@ define(["./module"], function (ctrs) {
                             $scope.dateShowArray.forEach(function (attr) {
                                 if (data[attr.label] != undefined) {
                                     if (attr.label == "crate") {
-                                        attr.value = sumCrate.toFixed(2) + "%"
+                                        attr.value = Number(data[attr.label]) + Number(attr.value) + "%"
                                     } else {
                                         attr.value += data[attr.label]
                                     }
@@ -858,8 +863,8 @@ define(["./module"], function (ctrs) {
                         if (temConvs.length < 10) {
                             barDatas.forEach(function (bdata, oindex) {
                                 bdata.key.push(gdata.campaignName)
-                                if (bdata.option == "crate") {
-                                    bdata.quota.push(gdata[bdata.option] == undefined ? 0 : Number(gdata[bdata.option].replace("%", "")))
+                                if (bdata.option == "crate" || bdata.option == "nuvRate" || bdata.option == "orderNumRate") {
+                                    bdata.quota.push(gdata[bdata.option] == undefined ? 0 : Number((gdata[bdata.option] + "").replace("%", "")))
                                 } else {
                                     bdata.quota.push(gdata[bdata.option] == undefined ? 0 : gdata[bdata.option])
                                 }
@@ -876,7 +881,7 @@ define(["./module"], function (ctrs) {
                             if (minIndex > -1) {
                                 barDatas.forEach(function (bdata, oindex) {
                                     bdata.key[minIndex] = gdata.campaignName
-                                    if (bdata.option == "crate") {
+                                    if (bdata.option == "crate" || bdata.option == "nuvRate" || bdata.option == "orderNumRate") {
                                         bdata.quota[minIndex] = gdata[bdata.option] == undefined ? 0 : Number(gdata[bdata.option].replace("%", ""))
                                     } else {
                                         bdata.quota[minIndex] = gdata[bdata.option] == undefined ? 0 : gdata[bdata.option]
