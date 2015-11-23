@@ -1833,7 +1833,11 @@ var transform = {
                                 filterQuery.push({"term": filter})
                             })
                         }
-                        filterQuery.push({"term": {"loc": page.page_urls[i]}});
+                        var tempUrl = page.page_urls[i]
+                        if(tempUrl!=undefined&&tempUrl!=""&&tempUrl[tempUrl.length-1]=="/"){
+                            tempUrl = tempUrl.substring(0,tempUrl.length-1)
+                        }
+                        filterQuery.push({"term": {"loc": tempUrl}});
                         boolQuery.push({
                             "bool": {
                                 "must": filterQuery
@@ -1942,7 +1946,11 @@ var transform = {
                             })
                         }
                         filterQuery.push({"term": {"rf_type": rfType}})
-                        filterQuery.push({"term": {"loc": page.page_urls[i]}})
+                        var tempUrl = page.page_urls[i]
+                        if(tempUrl!=undefined&&tempUrl!=""&&tempUrl[tempUrl.length-1]=="/"){
+                            tempUrl = tempUrl.substring(0,tempUrl.length-1)
+                        }
+                        filterQuery.push({"term": {"loc": tempUrl}})
                         boolQuery.push({
                             "bool": {
                                 "must": filterQuery
@@ -2062,7 +2070,11 @@ var transform = {
                                 filterQuery.push({"term": filter})
                             })
                         }
-                        filterQuery.push({"term": {"loc": page.page_urls[i]}})
+                        var tempUrl = page.page_urls[i]
+                        if(tempUrl!=undefined&&tempUrl!=""&&tempUrl[tempUrl.length-1]=="/"){
+                            tempUrl = tempUrl.substring(0,tempUrl.length-1)
+                        }
+                        filterQuery.push({"term": {"loc": tempUrl}})
                         boolQuery.push({
                             "bool": {
                                 "must": filterQuery
@@ -2157,7 +2169,11 @@ var transform = {
                     })
                 }
                 filterQuery.push({"term": {"rf_type": rfType}})
-                filterQuery.push({"term": {"loc": page.page_urls[i]}})
+                var tempUrl = page.page_urls[i]
+                if(tempUrl!=undefined&&tempUrl!=""&&tempUrl[tempUrl.length-1]=="/"){
+                    tempUrl = tempUrl.substring(0,tempUrl.length-1)
+                }
+                filterQuery.push({"term": {"loc":tempUrl}})
                 var query = {
                     "index": newIndexs,
                     "type": type + "_page",
@@ -2228,7 +2244,11 @@ var transform = {
                                     filterQuery.push({"term": filter})
                                 })
                             }
-                            filterQuery.push({"term": {"loc": url}})
+                            var tempUrl = url
+                            if(tempUrl!=undefined&&tempUrl!=""&&tempUrl[tempUrl.length-1]=="/"){
+                                tempUrl = tempUrl.substring(0,tempUrl.length-1)
+                            }
+                            filterQuery.push({"term": {"loc": tempUrl}})
                             boolQuery.push({
                                 "bool": {
                                     "must": filterQuery
