@@ -204,7 +204,7 @@ var transform = {
                             switch (queryOption) {
                                 case "nuvRate":
                                     if (result.uv_aggs.value == "0") {
-                                        data[queryOption] = 0;
+                                        data[queryOption] = "0.00%";
                                     } else {
                                         data[queryOption] = ((result.visitor_aggs.value-result.old_visitor_aggs.value) / pv.uv_aggs.value).toFixed(2) + "%";
 
@@ -425,7 +425,7 @@ var transform = {
                                     for (var key in results[i]) {
                                         if (key == queryOption) {
                                             if (results[i].uv_aggs.value == "0") {
-                                                quotaArry.push(0);
+                                                quotaArry.push("0.00%");
                                             } else {
                                                 quotaArry.push(((result.visitor_aggs.value-result.old_visitor_aggs.value) / pv.uv_aggs.value).toFixed(2) + "%");
                                             }
@@ -1882,7 +1882,7 @@ var transform = {
                                 switch (queryOption) {
                                     case "nuvRate":
                                         if (pv.uv_aggs.value == "0") {
-                                            data[queryOption] = 0;
+                                            data[queryOption] = "0.00%";
                                         } else {
                                             data[queryOption] = (((pv.visitor_aggs.value-pv.old_visitor_aggs.value) / pv.uv_aggs.value)*100).toFixed(2) + "%";
                                         }
@@ -1997,7 +1997,7 @@ var transform = {
                                 switch (queryOption) {
                                     case "nuvRate":
                                         if (pv.uv_aggs.value == "0") {
-                                            data[queryOption] = 0;
+                                            data[queryOption] = "0.00%";
                                         } else {
                                             data[queryOption] = (((pv.visitor_aggs.value-pv.old_visitor_aggs.value) / pv.uv_aggs.value)*100).toFixed(2) + "%";
                                         }
@@ -2424,7 +2424,7 @@ var transform = {
                                     for (var key in results[i]) {
                                         if (key == queryOption) {
                                             if (results[i].uv_aggs.value == "0") {
-                                                quotaArry.push(0);
+                                                quotaArry.push("0.00%");
                                             } else {
                                                 data[queryOption] = (((pv.visitor_aggs.value-pv.old_visitor_aggs.value) / pv.uv_aggs.value)*100).toFixed(2) + "%";
                                             }
@@ -2662,7 +2662,7 @@ var transform = {
                             switch (queryOption) {
                                 case "nuvRate":
                                     if (pv.uv_aggs.value == "0") {
-                                        data[queryOption] = 0;
+                                        data[queryOption] = "0.00%";
                                     } else {
                                         data[queryOption] = (((pv.visitor_aggs.value-pv.old_visitor_aggs.value) / pv.uv_aggs.value)*100).toFixed(2) + "%";
                                     }
