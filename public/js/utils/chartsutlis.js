@@ -374,6 +374,9 @@ var chartUtils = {
             b = t
         }
         return a.map(function (v, i) {
+            if (b[i] == "--") {
+                return "--";
+            }
             return v + (b[i] || 0)
         })
     },
@@ -435,16 +438,32 @@ var chartUtils = {
                 for (var j = i * 24; j < (i + 1) * 24; j++) {
                     switch (data.label) {
                         case "avgTime":
-                            _tmp.push(parseInt(data.quota[j] / length));
+                            if (data.quota[j] == "--") {
+                                _tmp.push("--");
+                            } else {
+                                _tmp.push(parseInt(data.quota[j] / length));
+                            }
                             break;
                         case "outRate":
-                            _tmp.push(parseInt(data.quota[j] / length));
+                            if (data.quota[j] == "--") {
+                                _tmp.push("--");
+                            } else {
+                                _tmp.push(parseInt(data.quota[j] / length));
+                            }
                             break;
                         case "nuvRate":
-                            _tmp.push(parseInt(data.quota[j] / length));
+                            if (data.quota[j] == "--") {
+                                _tmp.push("--");
+                            } else {
+                                _tmp.push(parseInt(data.quota[j] / length));
+                            }
                             break;
                         default :
-                            _tmp.push(parseInt(data.quota[j]));
+                            if (data.quota[j] == "--") {
+                                _tmp.push("--");
+                            } else {
+                                _tmp.push(parseInt(data.quota[j]));
+                            }
                             break;
                     }
 
@@ -607,7 +626,6 @@ var chartUtils = {
     addSemData: function (esJson, semJson, semType) {
         var _tmp = {};
         var _value = [];
-        //console.log(semJson.data.length);
         if (semJson.data.length > 0 && esJson.length) {
             esJson[0].key.forEach(function (esItem, index) {
                 _value.push(semJson.data[index][semType]);
@@ -812,7 +830,6 @@ var chartUtils = {
                         var _tmp = {};
                         var semCount = 0;
                         if (res[0].data.indexOf('[') == -1) {
-                            //console.log(res[0].data);
                             res[0].data.forEach(function (i) {
                                 semCount += i[quota];
                             });
@@ -875,7 +892,6 @@ var chartUtils = {
         var _semData = {};
         var esJson = JSON.parse(eval("(" + final_result[1].data + ")").toString());
         var esDate = !esJson.length ? null : esJson[0].key[0];
-        //console.log(esJson);
         if (final_result[0].data.length) {
             if (quota == "impression") {
                 tmp.push(final_result[0].data[0][quota]);

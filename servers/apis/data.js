@@ -310,6 +310,7 @@ api.get('/indextable', function (req, res) {
     var _startTime = Number(query["start"]);//开始时间
     var _endTime = Number(query["end"]);//结束时间query
     var _indic = query["indic"].split(",");//统计指标
+    _indic.push("pv");
     var _lati = query["dimension"] == "null" ? null : query["dimension"];//统计纬度
     if (_lati == "kwsid") _lati = "kw:cid:agid:kwid";
     var _type = query["type"];
@@ -424,7 +425,59 @@ api.get('/indextable', function (req, res) {
             }
             datautils.send(res, result);
         } else {
-            datautils.send(res, JSON.stringify(data));
+            // 初始化结果对象
+            var result_obj = [];
+            var size = 1;
+            data.forEach(function (item) {
+                var obj = {
+                    label : item.label,
+                    key: [],
+                    quota : []
+                }
+                for (var i = 0;i < 24; i++) {
+                    obj.key.push(item.key[i]);
+                    obj.quota.push(0);
+                }
+                item.quota.forEach(function (value, index) {
+                    var _index = index % 24;
+                    if (value && (value + "").indexOf(".") != -1) {
+                        obj.quota[_index] += parseFloat(value);
+                    } else {
+                        obj.quota[_index] += value;
+                    }
+                });
+                size = item.quota.length / 24;
+                result_obj.push(obj);
+            });
+
+
+            // 定义并获取无效值数组
+            var invalidArray = "#";
+            result_obj.forEach(function (_obj) {
+                if (_obj.label == "pv") {
+                    _obj.quota.forEach(function (v, i) {
+                        if (v == 0) {
+                            invalidArray += i + "#"
+                        }
+                    });
+                }
+            });
+
+            // 过滤无效值
+            result_obj.forEach(function (_obj) {
+                _obj.quota.forEach(function (v, i) {
+                    if (v == 0 && invalidArray.indexOf("#" + i + "#") != -1) {
+                        _obj.quota.splice(i, 1, "--");
+                    } else {
+                        var temp = "#outRate#nuvRate#arrivedRate#";
+                        if (temp.indexOf(_obj.label) != -1) {
+                            var t_v = _obj.quota[i] / size;
+                            _obj.quota.splice(i, 1, t_v);
+                        }
+                    }
+                });
+            });
+            datautils.send(res, JSON.stringify(result_obj));
         }
 
     })
@@ -632,6 +685,7 @@ api.post("/downPDF", function (req, res) {
  */
 api.get("/index_summary", function (req, res) {
     var query = url.parse(req.url, true).query;
+    var _promotion = query["promotion"];
     var dimension = query['dimension'] == "null" ? null : query['dimension'];
     if (dimension == "period") {
         dimension = null;
@@ -646,7 +700,36 @@ api.get("/index_summary", function (req, res) {
     // 指标数组
     var quotasArray = quotas.split(",");
     es_request.search(req.es, indexes, type, quotasArray, dimension, [0], _filter, period[0], period[1], -1, function (result) {
-        datautils.send(res, JSON.stringify(result));
+        var base = JSON.stringify(result);
+        try {
+            result.forEach(function (item) {
+                if (item.key) {
+                    item.key.forEach(function (key_item, i) {
+                        if (dimension == "rf" && _filter != null && _filter[0]["rf_type"][0] && key_item == "-") {
+                            item.key.splice(i, 1);
+                            item.quota.splice(i, 1);
+                        }
+
+                        if (_promotion == "ssc" || dimension == "kw") {
+                            if (key_item != undefined && (key_item == "-" || key_item == "--" || key_item == "" || key_item == "www" || key_item == "null" || key_item.length >= 40)) {
+                                item.key.splice(i, 1);
+                                item.quota.splice(i, 1);
+                            }
+                        }
+
+                        if (dimension == "se") {
+                            if (key_item != undefined && key_item == "-") {
+                                item.key.splice(i, 1);
+                                item.quota.splice(i, 1);
+                            }
+                        }
+                    });
+                }
+            });
+            datautils.send(res, JSON.stringify(result));
+        } catch (e) {
+            datautils.send(res, base);
+        }
     });
 });
 /**

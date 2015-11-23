@@ -517,7 +517,7 @@ define(["./module"], function (ctrs) {
                     reqRequestEnd = $http.get(e.url + "?type=" + e.types + "&dimension=" + e.dimension + "&start=" + times[0] + "&end=" + times[1] + "&userType=" + $rootScope.userType + "&int=-1");
                 } else {
                     reqRequestStart = $http.get(e.url + "?type=" + e.types + "&dimension=" + e.dimension + "&start=" + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeStart + "&userType=" + $rootScope.userType);
-                    reqRequestEnd = $http.get(e.url + "?type=" + e.types + "&dimension=" + e.dimension + "&start=" + times[0] + "&end=" + times[0] + "&userType=" + $rootScope.userType);
+                    reqRequestEnd = $http.get(e.url + "?type=" + e.types + "&dimension=" + e.dimension + "&start=" + times[1] + "&end=" + times[1] + "&userType=" + $rootScope.userType);
                 }
                 e.config.instance.showLoading({
                     effect: 'whirling',

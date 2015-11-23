@@ -1772,7 +1772,6 @@ define(["app"], function (app) {
                             var result = [];
                             var maps = {}
                             var newData = chartUtils.getByHourByDayData(data);
-
                             newData.forEach(function (info, x) {
                                 if (info.key.length == 0) {
                                     for (var j = 0; j < 24; j++) {
@@ -1793,10 +1792,18 @@ define(["app"], function (app) {
                                         obj["avgTime"] = ad.formatFunc(info.quota[i], "avgTime");
                                     } else {
                                         if (info.label == "跳出率") {
-                                            obj[chartUtils.convertEnglish(info.label)] = info.quota[i] + "%";
+                                            if (info.quota[i] == "--") {
+                                                obj[chartUtils.convertEnglish(info.label)] = "--";
+                                            } else {
+                                                obj[chartUtils.convertEnglish(info.label)] = info.quota[i] + "%";
+                                            }
                                         } else {
                                             if (info.label == "新访客比率") {
-                                                obj[chartUtils.convertEnglish(info.label)] = info.quota[i] + "%";
+                                                if (info.quota[i] == "--") {
+                                                    obj[chartUtils.convertEnglish(info.label)] = "--";
+                                                } else {
+                                                    obj[chartUtils.convertEnglish(info.label)] = info.quota[i] + "%";
+                                                }
                                             } else {
                                                 obj[chartUtils.convertEnglish(info.label)] = info.quota[i];
                                             }
@@ -2481,6 +2488,15 @@ define(["app"], function (app) {
                     if (a.col.field == "avgPage" || a.col.field == "click") {
 //                        returnData[0] = (returnData[0] / option.length).toFixed(2);
                         returnData[0] = returnData[0] == "0" ? "0" : (returnData[0] / option.length).toFixed(2);
+                    }
+                    if (a.col.field == "outRate") {
+                        var _ll = 0;
+                        for (var _i = 0; _i < option.length; _i++) {
+                            if (option[_i].entity.outRate != "--") {
+                                _ll++;
+                            }
+                        }
+                        returnData[0] = (returnData[0] / (_ll == 0 ? 1 : _ll)).toFixed(2) + "%";
                     }
                     if (a.col.field == "avgTime") {
                         var _ll = 0;
