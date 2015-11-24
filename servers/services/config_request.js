@@ -36,7 +36,7 @@ var config_request = {
                         pvpause: false,
                         pvtimes: 3
                     }
-                    reut = {};//返回值
+                    var reut = {};//返回值
                     redis_client.multi().set("typeid:".concat(item.track_id), item.type_id)//
                         .set("ts:" + item.track_id, item._id)//
                         .set("st:" + item._id, item.track_id)//
@@ -103,7 +103,7 @@ var config_request = {
                     }
                     dao.find("page_title_model", JSON.stringify(pqry), null, {}, function (err, pdocs) {
                         //存储时长转化和PV转化到Redsi
-                        reut = {};//返回值
+                        var reut = {};//返回值
                         if (pdocs != null && pdocs.length == 1) {
                             var page_title = {
                                 page_url: pdocs[0].page_url,
@@ -145,38 +145,54 @@ var config_request = {
         dao.find("sites_model", JSON.stringify(qry), null, {}, function (err, docs) {
             if (docs != null && docs.length > 0) {
                 //console.log("重写")
-                docs.forEach(function (item) {
+                docs.forEach(function (site) {
                     var pqry = {
-                        root_url: item._id,
-                        uid: item.uid,
-                        event_page: event_page
+                        root_url: site._id,
                     }
                     dao.find("event_change_model", JSON.stringify(pqry), null, {}, function (err, edocs) {
-                        //存储时长转化和PV转化到Redsi
                         if (edocs != null && edocs.length > 0) {//存在配置
                             var confs = [];
-                            reut = {};//返回值
-                            edocs.forEach(function (ev) {
+                            var reut = {};//返回值
+                            var hash={}
+                            var configs=[]
+                            edocs.forEach(function (item) {
                                 var event_config = {
-                                    eid: ev.event_id,//事件ID
-                                    evttag: ev.event_name,//事件名称
-                                    evpage: ev.event_page//事件页面
+                                    eid: item.event_id,//事件ID
+                                    evttag: item.event_name,//事件名称
+                                    evpage: item.event_page,//事件页面
+                                    evtarget: item.event_target,//是否为转化目标
+                                    evpause:item.event_status==0?true:false,
+                                    evtime: item.update_time//转化修改时间
                                 };
-                                confs.push(event_config);
+                                if(hash[item.event_page]==undefined){
+                                    hash[item.event_page] = configs.length
+                                    var sconf = {}
+                                    sconf["page"]= item.event_page
+                                    sconf["config"]=[]
+                                    sconf["config"].push(event_config);
+                                    configs.push(sconf)
+                                }else{
+                                    configs[hash[item.event_page]]["config"].push(event_config);
+                                }
                             });
-                            //console.log(item)
-                            //console.log("重写"+(item._id + ":e:" + event_page)+"-->"+JSON.stringify(confs))
-                            var tempRef = event_page
-                            if (tempRef!=undefined&&tempRef.indexOf("http://") > -1 && tempRef.length > 8)
-                                tempRef = tempRef.substring(7, tempRef.length)
-                            if (tempRef!=undefined&&tempRef.indexOf("https://") > -1 && tempRef.length > 9)
-                                tempRef = tempRef.substring(8, tempRef.length)
-                            if(tempRef!=undefined&&tempRef!=""&&tempRef[tempRef.length-1]=="/"){
-                                tempRef = tempRef.substring(0,tempRef.length-1)
+                            if(configs!=null&&configs.length>0){
+                                configs.forEach(function(confItem){
+                                    var tempRef = confItem.page
+                                    if (tempRef!=undefined&&tempRef.indexOf("http://") > -1 && tempRef.length > 8)
+                                        tempRef = tempRef.substring(7, tempRef.length)
+                                    if (tempRef!=undefined&&tempRef.indexOf("https://") > -1 && tempRef.length > 9)
+                                        tempRef = tempRef.substring(8, tempRef.length)
+                                    if(tempRef!=undefined&&tempRef!=""&&tempRef[tempRef.length-1]=="/"){
+                                        tempRef = tempRef.substring(0,tempRef.length-1)
+                                    }
+                                    //console.log("重树 刷新Redis：" + site._id + ":e:" + tempRef + " = " + JSON.stringify(confItem))
+                                    redis_client.multi().set(site._id + ":e:" + tempRef, JSON.stringify(confItem)).exec();
+                                    //redis_client.multi().set(site._id + ":e:" + tempRef, JSON.stringify(confs)).exec();
+                                    reut[site._id + ":e:" + tempRef] = JSON.stringify(confItem);
+                                })
+                                return reut;
                             }
-                            redis_client.multi().set(item._id + ":evt:" + tempRef, JSON.stringify(confs)).exec();
-                            reut[item._id + ":evt:" + tempRef] = JSON.stringify(confs);
-                            return reut;
+                            return null
                         }
 
                     });
@@ -186,8 +202,80 @@ var config_request = {
             }
             // TODO 为什么要去差redis
         });
+    },
 
+    refreshPageConvRedis: function (redis_client, trackid, event_page) {
+        //由track_id查询站点配置
+        var qry = {
+            track_id: trackid
+        }
+        dao.find("sites_model", JSON.stringify(qry), null, {}, function (err, docs) {
+            if (docs != null && docs.length > 0) {
+                //console.log("重写")
+                docs.forEach(function (site) {
+                    var pqry = {
+                        site_id: site._id,
+                    }
+                    console.log(pqry)
+                    dao.find("page_conv_model", JSON.stringify(pqry), null, {}, function (err, pdocs) {
+                        console.log(pdocs)
+                        if (pdocs != null && pdocs.length > 0) {//存在配置
+                            var reut = {};//返回值
+                            pdocs.forEach(function (item) {
+                                if (item._id != undefined) {
+                                    var tpaths = [];
+                                    item.paths.forEach(function (path, index) {
+                                        if (path.path_mark) {
+                                            var pathsteps = []
+                                            path.steps.forEach(function (step) {
+                                                var stepurls = []
+                                                step.step_urls.forEach(function (step_url) {
+                                                    stepurls.push(step_url.url)
+                                                })
+                                                pathsteps.push(stepurls)
+                                            })
+                                            var tpath = {
+                                                path_num: index + 1,
+                                                steps: pathsteps
+                                            }
+                                            tpaths.push(tpath)
+                                        }
+                                    })
+                                    var conf = {
+                                        target_name: item.target_name,
+                                        record_type: item.record_type,
+                                        expected_yield: item.expected_yield,
+                                        pecent_yield: item.pecent_yield,
+                                        update_time : item.update_time,
+                                        pause:item.is_pause,
+                                        paths: tpaths,
+                                    }
+                                    item.target_urls.forEach(function (target_url) {
+                                        var tempRef = target_url.url
+                                        if (tempRef!=undefined&&tempRef.indexOf("http://") > -1 && tempRef.length > 8)
+                                            tempRef = tempRef.substring(7, tempRef.length)
+                                        if (tempRef!=undefined&&tempRef.indexOf("https://") > -1 && tempRef.length > 9)
+                                            tempRef = tempRef.substring(8, tempRef.length)
+                                        if(tempRef!=undefined&&tempRef!=""&&tempRef[tempRef.length-1]=="/"){
+                                            tempRef = tempRef.substring(0,tempRef.length-1)
+                                        }
+                                        //console.log("重树 page_conv 刷新Redis：" + site._id + ":pc:" + tempRef + " = " + JSON.stringify(conf))
+                                        redis_client.multi().set(site._id + ":pc:" + tempRef, JSON.stringify(conf)).exec()
+                                        reut[site._id + ":pc:" + tempRef] = JSON.stringify(conf);
+                                    })
+                                }
 
+                            });
+                            return reut
+                        }
+
+                    });
+                });
+            }else{
+                return null;
+            }
+            // TODO 为什么要去差redis
+        });
     },
 
     /**

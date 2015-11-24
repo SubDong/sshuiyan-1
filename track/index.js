@@ -9,6 +9,15 @@ config_request = require('../servers/services/config_request');
 
 router.get('/', function (req, resp) {
     var tid = req.query["tid"];
+    //console.log(tid)
+    //config_request.refreshPageConvRedis(redis.service(), tid, function (err, item) {
+    //    resp.set('Content-Type', 'application/javascript')
+    //    resp.set('Cache-Control', 'max-age=0,must-revalidate');
+    //    resp.send("var config = ".concat(JSON.stringify(item), ';'));
+    //    console.log(item)
+    //    resp.end();
+    //    return;
+    //})
     redis.service().get('tsj:'.concat(tid), function (err, sitejson) {
         var ref = req.header('Referer');
         //判断redis是否存在sitejson
@@ -27,6 +36,10 @@ router.get('/', function (req, resp) {
                 function (res1, cb2) {
                     config_request.refreshEventRedis(redis.service(), tid, ref);
                     cb2(err, res1)
+                },
+                function (res1, cb3) {
+                    config_request.refreshPageConvRedis(redis.service(), tid, ref);
+                    cb3(err, res1)
                 }
             ], function (err, result) {
                 if (err || result == null) {
@@ -130,7 +143,7 @@ function getData(req, resp, tid, sitejson) {
                         config[item] = val;
                     }
                 }
-                console.log("new获取Redis参数：" + url + "   ===  " + val)
+                //console.log("new获取Redis参数：" + url + "   ===  " + val)
                 cb();
             })
         }, function (err) {
