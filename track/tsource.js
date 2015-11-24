@@ -314,7 +314,7 @@ if (config != undefined && !config.open) {
             P: "log.best-ad.cn",
             S: "pft.gif",
             protocol: "https:" == document.location.protocol ? "https:" : "http:",
-            Q: "os tit br fl pm sr lg ck ja sc dt rf loc tt ct vid u api et cv xy ut duration durPage n v adtrack".split(" "),
+            Q: "os tit br fl pm sr lg ck ja sc dt rf loc tt ct vid u api et cv ut duration durPage n v adtrack".split(" "),
             PQ: "os tit br fl pm sr lg ck ja sc dt rf loc tt ct vid u api p_name p_type p_record p_orderid p_income p_conversionrate".split(" "),
             HMQ: "dt tt vid loc xy dh v".split(" ")
         };
