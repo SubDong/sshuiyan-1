@@ -44,6 +44,9 @@ define(["./module"], function (ctrs) {
                 shardD = "http://" + $rootScope.siteUrl + "/";
             }
             $http.get("api/trafficmap?start=" + $scope.start + ",end=" + $scope.end + ",targetPathName=" + shardD).success(function (data) {
+                if(data == null || data == undefined || data== "") {
+                    return ;
+                }
                 if (data.length == 0) {
                     $scope.links = [];
                     $scope.targetPathData = {
@@ -58,6 +61,11 @@ define(["./module"], function (ctrs) {
                     };
                     return;
                 } else {
+
+                    if(data.data == null || data.data == undefined || data.data == "") {
+                        return ;
+                    }
+
                     for (var i = 0; i < data.data.length; i++) {
                         if (data.data[i].pathName == "-") {
                             data.data[i].pathName = "直接输入网址或书签";
