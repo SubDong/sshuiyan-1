@@ -19,7 +19,7 @@ var config_request = {
         }
         dao.find("sites_model", JSON.stringify(qry), null, {}, function (err, docs) {
             if (docs != null && docs.length > 0) {
-                //console.log("查询到站点结果");
+                ////console.log("查询到站点结果");
                 docs.forEach(function (item) {
                     var siteconfig = {
                         siteid: item._id.toString(),//站点ID 对应MongoDb _id
@@ -56,7 +56,7 @@ var config_request = {
                         uid: item.uid,
                         site_id: item._id
                     }
-                    //console.log("查询时长转化");
+                    ////console.log("查询时长转化");
                     dao.find("converts_model", JSON.stringify(cqry), null, {}, function (err, docs) {
                         if (docs != null && docs.length > 0) {//有更新 刷新配置
                             if (docs != null && docs.length > 0) {
@@ -112,7 +112,7 @@ var config_request = {
                             }
                             //通过site_id trackid
                             if (pdocs[0].site_id != null && pdocs[0].page_url != null) {
-                                //console.log("重写"+(pdocs[0].site_id + ":mouse:" + pdocs[0].page_url)+"-->"+JSON.stringify(page_title))
+                                ////console.log("重写"+(pdocs[0].site_id + ":mouse:" + pdocs[0].page_url)+"-->"+JSON.stringify(page_title))
                                 var tempRef = pdocs[0].page_url
                                 if (tempRef!=undefined&&tempRef.indexOf("http://") > -1 && tempRef.length > 8)
                                     tempRef = tempRef.substring(7, tempRef.length)
@@ -144,7 +144,7 @@ var config_request = {
         }
         dao.find("sites_model", JSON.stringify(qry), null, {}, function (err, docs) {
             if (docs != null && docs.length > 0) {
-                //console.log("重写")
+                ////console.log("重写")
                 docs.forEach(function (site) {
                     var pqry = {
                         root_url: site._id,
@@ -185,7 +185,7 @@ var config_request = {
                                     if(tempRef!=undefined&&tempRef!=""&&tempRef[tempRef.length-1]=="/"){
                                         tempRef = tempRef.substring(0,tempRef.length-1)
                                     }
-                                    //console.log("重树 刷新Redis：" + site._id + ":e:" + tempRef + " = " + JSON.stringify(confItem))
+                                    ////console.log("重树 刷新Redis：" + site._id + ":e:" + tempRef + " = " + JSON.stringify(confItem))
                                     redis_client.multi().set(site._id + ":e:" + tempRef, JSON.stringify(confItem)).exec();
                                     //redis_client.multi().set(site._id + ":e:" + tempRef, JSON.stringify(confs)).exec();
                                     reut[site._id + ":e:" + tempRef] = JSON.stringify(confItem);
@@ -211,14 +211,14 @@ var config_request = {
         }
         dao.find("sites_model", JSON.stringify(qry), null, {}, function (err, docs) {
             if (docs != null && docs.length > 0) {
-                //console.log("重写")
+                ////console.log("重写")
                 docs.forEach(function (site) {
                     var pqry = {
                         site_id: site._id,
                     }
-                    console.log(pqry)
+                    //console.log(pqry)
                     dao.find("page_conv_model", JSON.stringify(pqry), null, {}, function (err, pdocs) {
-                        console.log(pdocs)
+                        //console.log(pdocs)
                         if (pdocs != null && pdocs.length > 0) {//存在配置
                             var reut = {};//返回值
                             pdocs.forEach(function (item) {
@@ -259,7 +259,7 @@ var config_request = {
                                         if(tempRef!=undefined&&tempRef!=""&&tempRef[tempRef.length-1]=="/"){
                                             tempRef = tempRef.substring(0,tempRef.length-1)
                                         }
-                                        //console.log("重树 page_conv 刷新Redis：" + site._id + ":pc:" + tempRef + " = " + JSON.stringify(conf))
+                                        ////console.log("重树 page_conv 刷新Redis：" + site._id + ":pc:" + tempRef + " = " + JSON.stringify(conf))
                                         redis_client.multi().set(site._id + ":pc:" + tempRef, JSON.stringify(conf)).exec()
                                         reut[site._id + ":pc:" + tempRef] = JSON.stringify(conf);
                                     })
