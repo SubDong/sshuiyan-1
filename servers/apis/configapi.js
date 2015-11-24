@@ -60,7 +60,7 @@ api.get("/eventchnage_list", function (req, res) {
                             if(tempRef!=undefined&&tempRef!=""&&tempRef[tempRef.length-1]=="/"){
                                 tempRef = tempRef.substring(0,tempRef.length-1)
                             }
-                            console.log("save 刷新Redis：" + ins.root_url + ":e:" + tempRef + " = " + JSON.stringify(confs))
+                            //consolelog("save 刷新Redis：" + ins.root_url + ":e:" + tempRef + " = " + JSON.stringify(confs))
                             req.redisclient.multi().set(ins.root_url + ":e:" + tempRef, JSON.stringify(confs)).exec();
                         }
                     });
@@ -107,7 +107,7 @@ api.get("/eventchnage_list", function (req, res) {
                                     if(tempRef!=undefined&&tempRef!=""&&tempRef[tempRef.length-1]=="/"){
                                         tempRef = tempRef.substring(0,tempRef.length-1)
                                     }
-                                    console.log("1 update 刷新Redis：" + sres[0].root_url + ":e:" + tempRef + " = " + JSON.stringify(confs))
+                                    //consolelog("1 update 刷新Redis：" + sres[0].root_url + ":e:" + tempRef + " = " + JSON.stringify(confs))
                                     req.redisclient.multi().set(sres[0].root_url + ":e:" + tempRef, JSON.stringify(confs)).exec();
                                 }
                                 datautils.send(res, docs);
@@ -152,7 +152,7 @@ api.get("/eventchnage_list", function (req, res) {
                             if(tempRef!=undefined&&tempRef!=""&&tempRef[tempRef.length-1]=="/"){
                                 tempRef = tempRef.substring(0,tempRef.length-1)
                             }
-                            console.log("delete 刷新Redis：" + jsonqry.root_url + ":e:" + tempRef + " = " + JSON.stringify(confs))
+                            //consolelog("delete 刷新Redis：" + jsonqry.root_url + ":e:" + tempRef + " = " + JSON.stringify(confs))
                             req.redisclient.multi().set(jsonqry.root_url + ":e:" + tempRef, JSON.stringify(confs)).exec();
                             datautils.send(res, docs);
                         });
@@ -459,13 +459,12 @@ api.get("/conf", function (req, res) {
 api.get("/page_conv", function (req, res) {
 
     var query = url.parse(req.url, true).query;
-    var type = query['type'];
     var schema_name = "page_conv_model";
     switch (type) {
         case "save":
             var entity = JSON.parse(query['entity']);
             entity.update_time = new Date().getTime();
-            //console.log(JSON.stringify(entity))
+            ////consolelog(JSON.stringify(entity))
             dao.save(schema_name, entity, function (ins, err) {
                 datautils.send(res, ins);
                 if (ins._id != undefined) {
@@ -505,7 +504,7 @@ api.get("/page_conv", function (req, res) {
                         if(tempRef!=undefined&&tempRef!=""&&tempRef[tempRef.length-1]=="/"){
                             tempRef = tempRef.substring(0,tempRef.length-1)
                         }
-                        console.log("save page_conv 刷新Redis：" + ins.site_id + ":pc:" + tempRef + " = " + JSON.stringify(conf))
+                        //consolelog("save page_conv 刷新Redis：" + ins.site_id + ":pc:" + tempRef + " = " + JSON.stringify(conf))
                         req.redisclient.multi().set(ins.site_id + ":pc:" + tempRef, JSON.stringify(conf)).exec()
                     })
                 }
@@ -561,7 +560,7 @@ api.get("/page_conv", function (req, res) {
                                     if(tempRef!=undefined&&tempRef!=""&&tempRef[tempRef.length-1]=="/"){
                                         tempRef = tempRef.substring(0,tempRef.length-1)
                                     }
-                                    console.log("update page_conv 刷新Redis：" + config.site_id + ":pc:" + tempRef + " = " + JSON.stringify(conf))
+                                    //consolelog("update page_conv 刷新Redis：" + config.site_id + ":pc:" + tempRef + " = " + JSON.stringify(conf))
                                     req.redisclient.multi().set(config.site_id + ":pc:" + tempRef, JSON.stringify(conf)).exec()
                                 })
                             }
@@ -599,7 +598,7 @@ api.get("/page_conv_urls", function (req, res) {
         case "saveAll":
             var entitys = JSON.parse(query['entitys']);
 
-            //console.log(entitys.length)
+            ////consolelog(entitys.length)
             if (entitys.length > 0) {
                 dao.saveAll(schema_name, entitys, function () {
                     datautils.send(res, "SUCCESS");
@@ -612,7 +611,7 @@ api.get("/page_conv_urls", function (req, res) {
                             redisPageUrls.push(entitys[index]);
                             if (index == (entitys.length - 1)) {
                                 var key = tempPathMark.page_conv_id + ":pcu:" + tempPathMark.path;
-                                console.log("save page_conv_urls 刷新Redis：" + key + " = " + JSON.stringify(redisPageUrls))
+                                //consolelog("save page_conv_urls 刷新Redis：" + key + " = " + JSON.stringify(redisPageUrls))
                                 bulk.set(key, JSON.stringify(redisPageUrls));
                                 break;
                             }
@@ -626,7 +625,7 @@ api.get("/page_conv_urls", function (req, res) {
 
                                 var key = tempPathMark.page_conv_id + ":pcu:" + tempPathMark.path;
 
-                                console.log("save page_conv_urls 刷新Redis：" + key + " = " + JSON.stringify(redisPageUrls))
+                                //consolelog("save page_conv_urls 刷新Redis：" + key + " = " + JSON.stringify(redisPageUrls))
                                 bulk.set(key, JSON.stringify(redisPageUrls));
                                 break;
                             }
@@ -929,7 +928,7 @@ api.get("/select", function (req, res) {
                                 root_url: sitejson.siteid,
                             }
                             if (docs == null || docs.length == 0) {//存在配置
-                                //console.log("*******该事件配置不存在 插入********")
+                                ////consolelog("*******该事件配置不存在 插入********")
                                 eventData.event_status = 1
                                 eventData.event_method = "自动"
                                 eventData.event_target = false
@@ -964,7 +963,7 @@ api.get("/select", function (req, res) {
                                                 if(tempRef!=undefined&&tempRef!=""&&tempRef[tempRef.length-1]=="/"){
                                                     tempRef = tempRef.substring(0,tempRef.length-1)
                                                 }
-                                                console.log("saveTips 刷新Redis：" + docs[0].root_url + ":e:" + tempRef + " = " + JSON.stringify(confs))
+                                                //consolelog("saveTips 刷新Redis：" + docs[0].root_url + ":e:" + tempRef + " = " + JSON.stringify(confs))
                                                 req.redisclient.multi().set(docs[0].root_url + ":e:" + tempRef, JSON.stringify(confs)).exec();
                                             }
                                             datautils.send(res, docs);
@@ -972,7 +971,7 @@ api.get("/select", function (req, res) {
                                     }
                                 });
                             } else {
-                                //console.log("*******该事件配置已存在 更新********")
+                                ////consolelog("*******该事件配置已存在 更新********")
                                 dao.update(schema_name, JSON.stringify({
                                     uid: uid,
                                     event_page: entityJson["monUrl"],
@@ -1006,7 +1005,7 @@ api.get("/select", function (req, res) {
                                             if(tempRef!=undefined&&tempRef!=""&&tempRef[tempRef.length-1]=="/"){
                                                 tempRef = tempRef.substring(0,tempRef.length-1)
                                             }
-                                            console.log("updateTips 刷新Redis：" + docs[0].root_url + ":e:" + tempRef + " = " + JSON.stringify(confs))
+                                            //consolelog("updateTips 刷新Redis：" + docs[0].root_url + ":e:" + tempRef + " = " + JSON.stringify(confs))
                                             req.redisclient.multi().set(docs[0].root_url + ":e:" + tempRef, JSON.stringify(confs)).exec();
                                         }
                                         datautils.send(res, docs);
@@ -1064,7 +1063,7 @@ api.get("/select", function (req, res) {
                                 if(tempRef!=undefined&&tempRef!=""&&tempRef[tempRef.length-1]=="/"){
                                     tempRef = tempRef.substring(0,tempRef.length-1)
                                 }
-                                console.log("deleteTips 刷新Redis：" + existQry.root_url + ":e:" + tempRef + " = " + JSON.stringify(confs))
+                                //consolelog("deleteTips 刷新Redis：" + existQry.root_url + ":e:" + tempRef + " = " + JSON.stringify(confs))
                                 req.redisclient.multi().set(existQry.root_url + ":e:" + tempRef, JSON.stringify(confs)).exec();
                                 datautils.send(res, docs);
                             });
@@ -1106,7 +1105,7 @@ api.get("/test", function (req, res) {
     switch (type) {
         case "search":
             daoutil.find(schema_name, JSON.stringify({}), null, {}, function (err, up) {
-                //console.log(up)
+                ////consolelog(up)
                 datautils.send(res, up);
                 // TODO 为什么要去差redis
             });
