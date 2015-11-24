@@ -555,35 +555,37 @@ if (config != undefined && !config.open) {
             return new l
         })();
         (function () {
-            var c = g.event, h = g.cookie;
-            var l = function (n) {
-                var m = performance.timing, o = m[n + "Start"] ? m[n + "Start"] : 0;
-                n = m[n + "End"] ? m[n + "End"] : 0;
-                return {start: o, end: n, value: 0 < n - o ? n - o : 0}
-            };
-            var k = function () {
-                var m, n, p;
-                p = l("navigation");
-                n = l("request");
-                m = {
-                    nett: n.start - p.start,
-                    netd: l("domainLookup").value,
-                    nttp: l("connect").value,
-                    srv: l("response").start - n.start,
-                    dms: performance.timing.domInteractive - performance.timing.fetchStart,
-                    let: l("loadEvent").end - p.start
+            if (performance != undefined) {
+                var c = g.event, h = g.cookie;
+                var l = function (n) {
+                    var m = performance.timing, o = m[n + "Start"] ? m[n + "Start"] : 0;
+                    n = m[n + "End"] ? m[n + "End"] : 0;
+                    return {start: o, end: n, value: 0 < n - o ? n - o : 0}
                 };
-                var o = h.get("judge");
-                if (o != h.get("PFT_" + j.id)) {
-                    h.set("judge", g.g.tt);
-                    g.g.ut = JSON.stringify(m);
-                    d.b.sm();
-                    g.g.ut = null
-                }
-            };
-            c.e(window, "load", function () {
-                setTimeout(k, 400)
-            })
+                var k = function () {
+                    var m, n, p;
+                    p = l("navigation");
+                    n = l("request");
+                    m = {
+                        nett: n.start - p.start,
+                        netd: l("domainLookup").value,
+                        nttp: l("connect").value,
+                        srv: l("response").start - n.start,
+                        dms: performance.timing.domInteractive - performance.timing.fetchStart,
+                        let: l("loadEvent").end - p.start
+                    };
+                    var o = h.get("judge");
+                    if (o != h.get("PFT_" + j.id)) {
+                        h.set("judge", g.g.tt);
+                        g.g.ut = JSON.stringify(m);
+                        d.b.sm();
+                        g.g.ut = null
+                    }
+                };
+                c.e(window, "load", function () {
+                    setTimeout(k, 400)
+                })
+            }
         })();
         if (config.duration != undefined && config.duration.ttpause) {
             (function () {
