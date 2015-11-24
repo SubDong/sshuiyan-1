@@ -465,7 +465,7 @@ api.get("/page_conv", function (req, res) {
         case "save":
             var entity = JSON.parse(query['entity']);
             entity.update_time = new Date().getTime();
-            console.log(JSON.stringify(entity))
+            //console.log(JSON.stringify(entity))
             dao.save(schema_name, entity, function (ins, err) {
                 datautils.send(res, ins);
                 if (ins._id != undefined) {
@@ -497,7 +497,6 @@ api.get("/page_conv", function (req, res) {
                         paths: tpaths,
                     }
                     ins.target_urls.forEach(function (target_url) {
-
                         var tempRef = target_url.url
                         if (tempRef!=undefined&&tempRef.indexOf("http://") > -1 && tempRef.length > 8)
                             tempRef = tempRef.substring(7, tempRef.length)
