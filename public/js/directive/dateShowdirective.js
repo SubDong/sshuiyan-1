@@ -654,8 +654,8 @@ define(["../app"], function (app) {
         quotaObject.nuv = "一天的独立访客中，历史第一次访问您网站的访客数。";
         quotaObject.nuvRate = "新访客比率=新访客数/访客数。";
         quotaObject.arrivedRate = "抵达率=访问次数/点击量。即访客点击广告到完全打开网站次数的比例。";
-        quotaObject.pageConversion = "页面转化";
-        quotaObject.eventConversion = "事件转化";
+        quotaObject.pageConversion = "如果您认为网站上的某个页面特别重要(如表单提交后出现的“提交成功”页面)，到达了该页面表示访客完成了您的期望，您可以将到达您设定的目标作为一种转化来统计。";
+        quotaObject.eventConversion = "客户点击您期望触发的事件，并且这个事件被设置为转化目标，那么这样的用户操作就是一次事件转化。";
         quotaObject.avgTime = "访客在一次访问中，平均打开网站的时长。即每次访问中，打开第一个页面到关闭最后一个页面的平均值，打开一个页面时计算打开关闭的时间差。";
         quotaObject.avgPage = "平均每次访问浏览的页面数量，平均访问页数=浏览量/访问次数。";
         quotaObject.cost = "推广被点击后产生的费用。";
@@ -664,8 +664,8 @@ define(["../app"], function (app) {
         quotaObject.ctr = "点击率＝点击量/展现量，较高的点击率反映了网民对您的推广结果更感兴趣、更为认可。点击率是影响关键词质量度的重要因素。";
         quotaObject.acp = "平均每次点击产生的消费。平均点击价格=消费金额/点击次数。";
         quotaObject.cpc = "平均每次点击产生的消费。平均点击价格=消费金额/点击次数。";
-        quotaObject.cpm = "千次展现消费";
-        quotaObject.conversion = "转化";
+        quotaObject.cpm = "获得一千次展现机会所付出的推广费用";
+        quotaObject.conversion = "即指潜在客户完成一次您期望的行动。";
         quotaObject.entrance = "作为访问会话的入口页面（也称着陆页面）的次数。";
         quotaObject.contribution = "指以该页面作为入口产生的浏览量（PV）总计。";
         quotaObject.freq = "访客点击搜索结果到达您网站的次数。";
