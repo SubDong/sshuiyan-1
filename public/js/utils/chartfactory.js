@@ -109,6 +109,7 @@ var op = {
         }
         var count = 0;
         json.forEach(function (j) {
+            if (j == undefined) {return false;}
             j.quota.forEach(function (q) {
                 count += Number(q);
             });
