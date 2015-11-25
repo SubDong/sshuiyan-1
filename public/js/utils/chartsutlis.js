@@ -448,14 +448,14 @@ var chartUtils = {
                             if (data.quota[j] == "--") {
                                 _tmp.push("--");
                             } else {
-                                _tmp.push(parseFloat(data.quota[j] / length).toFixed(2));
+                                _tmp.push(parseFloat(data.quota[j] / length));
                             }
                             break;
                         case "nuvRate":
                             if (data.quota[j] == "--") {
                                 _tmp.push("--");
                             } else {
-                                _tmp.push(parseFloat(data.quota[j] / length).toFixed(2));
+                                _tmp.push(parseFloat(data.quota[j] / length));
                             }
                             break;
                         default :
