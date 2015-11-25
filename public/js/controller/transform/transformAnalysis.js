@@ -459,7 +459,7 @@ define(["./module"], function (ctrs) {
                                                 if (eventInfo.convCount != undefined && Number(data["pv"]) != 0) {
                                                     data["crate"] = (Number(eventInfo.convCount / Number(data["pv"])) * 100).toFixed(2) + "%";
                                                 } else {
-                                                    data["crate"] = "0%";
+                                                    data["crate"] = "0.00%";
                                                 }
                                             } else if ($scope.es_checkArray[i] == "transformCost") {
                                                 //var add_i = i;
