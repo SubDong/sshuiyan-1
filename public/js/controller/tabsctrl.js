@@ -2502,19 +2502,16 @@ define(["app"], function (app) {
                         }
                         returnData[0] = returnData[0] == "0" ? "0" : (returnData[0] / (_ll == 0 ? 1 : _ll)).toFixed(2);
                     }
-                    if (a.col.field == "outRate") {
+                    if (a.col.field == "outRate" && (returnData[0] + "").indexOf("%") == -1) {
                         var _ll = 0;
                         for (var _i = 0; _i < option.length; _i++) {
                             if (option[_i].entity.outRate != "--") {
                                 _ll++;
                             }
                         }
-                        console.log(returnData[0]);
-                        console.log("returnData[0] = (returnData[0] / (_ll == 0 ? 1 : _ll)).toFixed(2) + %");
                         returnData[0] = (returnData[0] / (_ll == 0 ? 1 : _ll)).toFixed(2) + "%";
-                        console.log(returnData[0]);
                     }
-                    if (a.col.field == "nuvRate") {
+                    if (a.col.field == "nuvRate" && (returnData[0] + "").indexOf("%") == -1) {
                         var _ll = 0;
                         for (var _i = 0; _i < option.length; _i++) {
                             if (option[_i].entity.nuvRate != "--") {
