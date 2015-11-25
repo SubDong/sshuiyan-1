@@ -45,8 +45,7 @@ define(["./module"], function (ctrs) {
             $scope.es_checkArray = ["pv", "uv", "vc", "ip", "nuv", "nuvRate", "conversions", "crate", /*"avgCost",*/ "orderNum", /*"benefit", "profit",*/ "orderNum", "orderNumRate"];
             $scope.sem_checkArray = ["avgCost", "profit", "orderMoney"];
             //配置默认指标
-            $rootScope.checkedArray = ["pv", "uv", "ip", "conversions"/*, "vc", "crate"*/];
-
+            $rootScope.checkedArray = ["pv", "uv", "vc", "ip", "conversions","crate"]
             $rootScope.showPageConvDetail = function (row) {
                 //return [row.entity]
                 //查询转化的数据
@@ -216,6 +215,12 @@ define(["./module"], function (ctrs) {
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
                 },
                 {
+                    name: "访问次数",
+                    displayName: "访问次数",
+                    field: "vc",
+                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                },
+                {
                     name: "IP数",
                     displayName: "IP数",
                     field: "ip",
@@ -227,18 +232,12 @@ define(["./module"], function (ctrs) {
                     field: "conversions",
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
                 },
-                //{
-                //    name: "访问次数",
-                //    displayName: "访问次数",
-                //    field: "vc",
-                //    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
-                //},
-                //{
-                //    name: "转化率",
-                //    displayName: "转化率",
-                //    field: "crate",
-                //    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
-                //}
+                {
+                    name: "转化率",
+                    displayName: "转化率",
+                    field: "crate",
+                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                }
             ];
 
             $rootScope.tableSwitch = {
