@@ -186,9 +186,9 @@ var config_request = {
                                         tempRef = tempRef.substring(0,tempRef.length-1)
                                     }
                                     ////console.log("重树 刷新Redis：" + site._id + ":e:" + tempRef + " = " + JSON.stringify(confItem))
-                                    redis_client.multi().set(site._id + ":e:" + tempRef, JSON.stringify(confItem)).exec();
+                                    redis_client.multi().set(site._id + ":e:" + tempRef, JSON.stringify(confItem.config)).exec();
                                     //redis_client.multi().set(site._id + ":e:" + tempRef, JSON.stringify(confs)).exec();
-                                    reut[site._id + ":e:" + tempRef] = JSON.stringify(confItem);
+                                    reut[site._id + ":e:" + tempRef] = JSON.stringify(confItem.config);
                                 })
                                 return reut;
                             }
