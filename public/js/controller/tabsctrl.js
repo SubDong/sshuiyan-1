@@ -1458,7 +1458,7 @@ define(["app"], function (app) {
             var val = 0
             if (a.col.field == "crate") {
                 options.forEach(function (option) {
-                    var tempCrate = (option.entity[a.col.field] + "").indexOf("%") < 0 ? option.entity[a.col.field] : option.entity[a.col.field].substring(0, option.entity[a.col.field].length - 2)
+                    var tempCrate = (option.entity[a.col.field] + "").indexOf("%") < 0 ? option.entity[a.col.field] : option.entity[a.col.field].substring(0, option.entity[a.col.field].length - 1)
                     val = val + Number(tempCrate)
 
                 })
@@ -2000,7 +2000,7 @@ define(["app"], function (app) {
                                             if (eventInfos[event.event_page + "_" + event.event_id] != undefined && Number(data["pv"]) != 0) {
                                                 data["crate"] = (Number(eventInfos[event.event_page + "_" + event.event_id].convCount / Number(data["pv"])) * 100).toFixed(2) + "%";
                                             } else {
-                                                data["crate"] = "0%";
+                                                data["crate"] = "0.00%";
                                             }
                                         } else if ($scope.es_checkArray[i] == "transformCost") {
                                             //var add_i = i;
@@ -2013,7 +2013,7 @@ define(["app"], function (app) {
                                             //            cost += Number(sem_data[k].data[c].cost);
                                             //        }
                                             //    }
-                                            data["transformCost"] = /*(cost / Number(data["transformCost"])).toFixed(2).toString() +*/ "0元";
+                                            data["transformCost"] = /*(cost / Number(data["transformCost"])).toFixed(2).toString() +*/ "0.00元";
                                             //});
                                         } else if ($scope.es_checkArray[i] == "clickTotal") {
                                             if (eventInfos[event.event_page + "_" + event.event_id] != undefined) {

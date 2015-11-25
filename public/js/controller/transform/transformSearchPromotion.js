@@ -212,7 +212,7 @@ define(["./module"], function (ctrs) {
                             dataInfoIpmr += option[i].entity["impression"];
                         }
                     }
-                    var returnCtr = (dataInfoIpmr == 0 ? "0%" : ((dataInfoClick / dataInfoIpmr) * 100).toFixed(2) + "%");
+                    var returnCtr = (dataInfoIpmr == 0 ? "0.00%" : ((dataInfoClick / dataInfoIpmr) * 100).toFixed(2) + "%");
                     return returnCtr;
                 }
                 if ((option[0].entity[a.col.field] + "").indexOf("%") != -1) {
