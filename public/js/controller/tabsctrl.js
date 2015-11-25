@@ -2509,7 +2509,10 @@ define(["app"], function (app) {
                                 _ll++;
                             }
                         }
+                        console.log(returnData[0]);
+                        console.log("returnData[0] = (returnData[0] / (_ll == 0 ? 1 : _ll)).toFixed(2) + %");
                         returnData[0] = (returnData[0] / (_ll == 0 ? 1 : _ll)).toFixed(2) + "%";
+                        console.log(returnData[0]);
                     }
                     if (a.col.field == "nuvRate") {
                         var _ll = 0;
