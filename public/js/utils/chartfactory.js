@@ -855,7 +855,10 @@ var ad = {
     formatFunc: function (value, formatType) {
         switch (formatType) {
             case "avgTime":
-                if (value == 0 || value == "--") {
+                if (value == 0) {
+                    return "00:00:00";
+                }
+                if (value == "--") {
                     return "--";
                 }
                 var days = Math.floor(value / 1440 / 60);
