@@ -1829,7 +1829,12 @@ define(["app"], function (app) {
                                 result.push(resultObj)
                             }
                             $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
+                            // 今日统计按时特殊处理
+                            if ($rootScope.tableTimeStart == 0 && $rootScope.tableTimeEnd == 0 && $scope.hourcheckClass == true && result.length == 24) {
+                                result = result.slice(0, new Date().getHours());
+                            }
                             $scope.gridOptions.data = result;
+
                         }
                     }
 
