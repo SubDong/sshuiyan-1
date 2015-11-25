@@ -99,6 +99,10 @@ var op = {
             def.defData(chartConfig);
             return;
         }
+        if (data.length == 2 && (data[0] == undefined || data[1] == undefined)) {
+            def.defData(chartConfig);
+            return;
+        }
         var json, labelData = [], labelDataText = [];
         if (chartConfig.noFormat) {
             json = data;
@@ -109,7 +113,6 @@ var op = {
         }
         var count = 0;
         json.forEach(function (j) {
-            if (j == undefined) {return false;}
             j.quota.forEach(function (q) {
                 count += Number(q);
             });
