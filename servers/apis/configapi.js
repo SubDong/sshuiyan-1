@@ -457,8 +457,8 @@ api.get("/conf", function (req, res) {
  * 页面转化规则单独剥离 路由
  */
 api.get("/page_conv", function (req, res) {
-
     var query = url.parse(req.url, true).query;
+    var type = query['type'];
     var schema_name = "page_conv_model";
     switch (type) {
         case "save":
