@@ -339,7 +339,15 @@ define(['./module'], function (ctrs) {
                             }else{
                                 item["avgTime"] = ad.formatFunc(item["avgTime"],"avgTime")
                             }
-
+                            if (item["outRate"] && item["outRate"] != 0 && item["outRate"] != "--") {
+                                item["outRate"] = item["outRate"] + "%";
+                            }
+                            if (item["nuvRate"] && item["nuvRate"] != 0 && item["nuvRate"] != "--") {
+                                item["nuvRate"] = item["nuvRate"] + "%";
+                            }
+                            if (item["arrivedRate"] && item["arrivedRate"] != 0 && item["arrivedRate"] != "--") {
+                                item["arrivedRate"] = item["arrivedRate"] + "%";
+                            }
                         })
                         newDataInfo1 = result;
                     } else {
