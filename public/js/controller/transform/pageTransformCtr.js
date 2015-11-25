@@ -762,15 +762,16 @@ define(["./module"], function (ctrs) {
                                     $scope.setShowArray();
                                     var sumNuv = 0, sumUv = 0, sumPv = 0, sumConv = 0,sumOrder=0
                                     $rootScope.gridOptions.data.forEach(function (data, index) {
+                                        sumPv += data["pv"] == undefined ? 0 : data["pv"]
                                         $scope.dateShowArray.forEach(function (attr) {
                                             if (data[attr.label] != undefined) {
-                                                sumPv += data["pv"] == undefined ? 0 : data["pv"]
                                                 if (attr.label == "crate") {
                                                     //attr.value = sumCrate.toFixed(2) + "%"
                                                     sumConv += data["conversions"] == undefined ? 0 : data["conversions"]
-                                                    //if(index==($rootScope.gridOptions.data.length-1)){
+                                                    if(index==($rootScope.gridOptions.data.length-1)){
                                                     attr.value = sumPv > 0 ? (((sumConv / sumPv) * 100).toFixed(2) + "%") : "0.00%"
-                                                    //}
+                                                        console.log(attr.value)
+                                                    }
                                                 } else if (attr.label == "nuvRate") {
                                                     sumNuv += data["nuv"] == undefined ? 0 : data["nuv"]
                                                     sumUv += data["uv"] == undefined ? 0 : data["uv"]
