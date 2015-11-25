@@ -381,7 +381,7 @@ api.get('/indextable', function (req, res) {
                                     }
                                     break;
                                 case "se":
-                                    obj[dimensionInfo] = (infoKey == "-" ? "直接访问" : infoKey);
+                                    obj[dimensionInfo] = (infoKey == "-" ? "其他搜索引擎" : infoKey);
                                     break;
                                 case "pm":
                                     obj[dimensionInfo] = (infoKey == 0 ? "计算机端" : "移动端");
