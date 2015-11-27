@@ -262,7 +262,7 @@ module.exports = function (req) {
                         } else {
                             console.log("Send mail failed:No data result!");
                         }
-                    } else if (rule_index == "transformAnalysis") {// 页面转化
+                    } else if (rule_index == "pageTransform") {// 页面转化
                         var subject = "附件中含有页面转化数据,请查收!";
                         var title = "转化分析-页面转化数据报告!";
                         var data = mailRule["result_data"];
