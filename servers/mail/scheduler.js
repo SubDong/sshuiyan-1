@@ -267,7 +267,7 @@ module.exports = function (req) {
                         var title = "转化分析-页面转化数据报告!";
                         var data = mailRule["result_data"];
                         var dataHead = mailRule["result_head_data"];
-                        if (data.length) {
+                        if (data) {
                             var result = data_convert.convertSjzhData(data, dataHead);
                             csvApi.json2csv(result, function (err, csv) {
                                 var buffer = new Buffer(csv);
