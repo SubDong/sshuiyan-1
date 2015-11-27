@@ -6,16 +6,14 @@
 var cacheutils = require('../utils/cacheutils');
 
 var _new_visitor_aggs = {
-    "filter": {
-        "term": {
-            "ct": "1"
+    "sum_uv_aggs": {
+        "value_count": {
+            "field": "ct"
         }
     },
-    "aggs": {
-        "nuv_aggs": {
-            "value_count": {
-                "field": "ct"
-            }
+    "old_uv_aggs": {
+        "sum": {
+            "field": "ct"
         }
     }
 };
@@ -112,12 +110,7 @@ var es_aggs = {
     },
     // 新访客数
     "nuv": {
-        "new_visitor_aggs": _new_visitor_aggs,
-        "uv_aggs": {
-            "cardinality": {
-                "field": "_ucv"
-            }
-        }
+        "new_visitor_aggs": _new_visitor_aggs
     },
     // 新访客比率
     "nuvRate": {
@@ -569,11 +562,10 @@ var nuvFn = function (result) {
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
-        var total = result[i].new_visitor_aggs.doc_count;
-        var nuv = result[i].new_visitor_aggs.nuv_aggs.value;
-        var uv = result[i].uv_aggs.value;
+        var total = result[i].new_visitor_aggs.sum_uv_aggs.value;
+        var o_nuv = result[i].new_visitor_aggs.old_uv_aggs.value;
         keyArr.push(result[i].key);
-        quotaArr.push(uv - nuv);
+        quotaArr.push(total - o_nuv);
     }
 
     return {
@@ -588,14 +580,14 @@ var nuvRateFn = function (result) {
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
-        var total = result[i].new_visitor_aggs.doc_count;
-        var nuv = result[i].new_visitor_aggs.nuv_aggs.value;
+        var total = result[i].new_visitor_aggs.sum_uv_aggs.value;
+        var o_nuv = result[i].new_visitor_aggs.old_uv_aggs.value;
         var uv = result[i].uv_aggs.value;
         keyArr.push(result[i].key);
 
         var nuvRate = 0;
         if (uv > 0) {
-            nuvRate = (parseFloat(uv - nuv) / parseFloat(uv) * 100).toFixed(2);
+            nuvRate = (parseFloat(total - o_nuv) / parseFloat(uv) * 100).toFixed(2);
         }
 
         quotaArr.push(nuvRate);
