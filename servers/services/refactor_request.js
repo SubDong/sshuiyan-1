@@ -112,7 +112,12 @@ var es_aggs = {
     },
     // 新访客数
     "nuv": {
-        "new_visitor_aggs": _new_visitor_aggs
+        "new_visitor_aggs": _new_visitor_aggs,
+        "uv_aggs": {
+            "cardinality": {
+                "field": "_ucv"
+            }
+        }
     },
     // 新访客比率
     "nuvRate": {
@@ -566,8 +571,9 @@ var nuvFn = function (result) {
     for (var i = 0, l = result.length; i < l; i++) {
         var total = result[i].new_visitor_aggs.doc_count;
         var nuv = result[i].new_visitor_aggs.nuv_aggs.value;
+        var uv = result[i].uv_aggs.value;
         keyArr.push(result[i].key);
-        quotaArr.push(total - nuv);
+        quotaArr.push(uv - nuv);
     }
 
     return {
@@ -589,7 +595,7 @@ var nuvRateFn = function (result) {
 
         var nuvRate = 0;
         if (uv > 0) {
-            nuvRate = (parseFloat(total - nuv) / parseFloat(uv) * 100).toFixed(2);
+            nuvRate = (parseFloat(uv - nuv) / parseFloat(uv) * 100).toFixed(2);
         }
 
         quotaArr.push(nuvRate);
