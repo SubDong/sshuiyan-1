@@ -110,11 +110,31 @@ var es_aggs = {
     },
     // 新访客数
     "nuv": {
-        "new_visitor_aggs": _new_visitor_aggs
+        //"new_visitor_aggs": _new_visitor_aggs
+        "sum_uv_aggs": {
+            "value_count": {
+                "field": "ct"
+            }
+        },
+        "old_uv_aggs": {
+            "sum": {
+                "field": "ct"
+            }
+        }
     },
     // 新访客比率
     "nuvRate": {
-        "new_visitor_aggs": _new_visitor_aggs,
+        //"new_visitor_aggs": _new_visitor_aggs,
+        "sum_uv_aggs": {
+            "value_count": {
+                "field": "ct"
+            }
+        },
+        "old_uv_aggs": {
+            "sum": {
+                "field": "ct"
+            }
+        },
         "uv_aggs": {
             "cardinality": {
                 "field": "_ucv"
@@ -562,8 +582,8 @@ var nuvFn = function (result) {
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
-        var total = result[i].new_visitor_aggs.sum_uv_aggs.value;
-        var o_nuv = result[i].new_visitor_aggs.old_uv_aggs.value;
+        var total = result[i].sum_uv_aggs.value;
+        var o_nuv = result[i].old_uv_aggs.value;
         keyArr.push(result[i].key);
         quotaArr.push(total - o_nuv);
     }
@@ -580,8 +600,8 @@ var nuvRateFn = function (result) {
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
-        var total = result[i].new_visitor_aggs.sum_uv_aggs.value;
-        var o_nuv = result[i].new_visitor_aggs.old_uv_aggs.value;
+        var total = result[i].sum_uv_aggs.value;
+        var o_nuv = result[i].old_uv_aggs.value;
         var uv = result[i].uv_aggs.value;
         keyArr.push(result[i].key);
 
