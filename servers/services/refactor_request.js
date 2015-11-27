@@ -8,12 +8,12 @@ var cacheutils = require('../utils/cacheutils');
 var _new_visitor_aggs = {
     "filter": {
         "term": {
-            "entrance": "1"
+            "ct": "1"
         }
     },
     "aggs": {
         "nuv_aggs": {
-            "sum": {
+            "value_count": {
                 "field": "ct"
             }
         }
