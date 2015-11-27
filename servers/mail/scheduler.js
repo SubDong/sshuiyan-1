@@ -95,7 +95,7 @@ module.exports = function (req) {
                             time.push(contrastTime[i]);
                         }
                         changeList_request.search(req.es, indexString, time, typeId, null, function (data) {
-                            if (data) {
+                            if (data && data["pv"]) {
                                 var subject = "附件中含有数据统计,请查收!";
                                 var title = startString + "与" + contrastStartString + "来源变化榜数据报告";
                                 var result = data_convert.convertChangeListData(data, startString, contrastStartString);
@@ -219,6 +219,52 @@ module.exports = function (req) {
                     } else if (rule_index == "transformAnalysis") {// 事件转化
                         var subject = "附件中含有事件转化数据,请查收!";
                         var title = "转化分析-事件转化数据报告!";
+                        var data = mailRule["result_data"];
+                        var dataHead = mailRule["result_head_data"];
+                        if (data.length) {
+                            var result = data_convert.convertSjzhData(data, dataHead);
+                            csvApi.json2csv(result, function (err, csv) {
+                                var buffer = new Buffer(csv);
+                                var fileSuffix = new Date().getTime();
+                                fs.writeFile("servers/filetmp/" + fileSuffix + ".csv", buffer, function (error) {
+                                    if (error) {
+                                        console.error(error);
+                                        return;
+                                    } else {
+                                        var mailOptions = {
+                                            from: '百思慧眼<70285622@qq.com> ', // sender address
+                                            to: mailRule.mail_address.toString(), // list of receivers
+                                            subject: title, // Subject line
+                                            text: 'Hello world', // plaintext body
+                                            html: '<b>' + subject + '</b>',// html body
+                                            attachments: [
+                                                {
+                                                    filename: fileSuffix + '.txt',
+                                                    path: "servers/filetmp/" + fileSuffix + ".csv"
+                                                }
+                                            ]
+                                        };
+                                        mail.send(mailOptions, function (error, info) {
+                                            if (error) {
+                                                console.error(error);
+                                            } else {
+                                                console.log('Message sent: ' + info.response + "at " + new Date());
+                                                fs.exists('servers/filetmp/' + fileSuffix + '.csv', function (exists) {
+                                                    if (exists) {
+                                                        fs.unlinkSync('servers/filetmp/' + fileSuffix + '.csv');
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }
+                                });
+                            });
+                        } else {
+                            console.log("Send mail failed:No data result!");
+                        }
+                    } else if (rule_index == "transformAnalysis") {// 页面转化
+                        var subject = "附件中含有页面转化数据,请查收!";
+                        var title = "转化分析-页面转化数据报告!";
                         var data = mailRule["result_data"];
                         var dataHead = mailRule["result_head_data"];
                         if (data.length) {

@@ -609,7 +609,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                         } else if ($location.path().indexOf("sameGroupAnalysis") != -1) {
                             //同类群组分析-下载CSV格式。
                             var repData = $rootScope.gaFormatDataCSV();
-                        } else if ($location.path().indexOf("transform/transformAnalysis") != -1) {
+                        } else if ($location.path().indexOf("transform/transformAnalysis") != -1 || $location.path().indexOf("transform/pageTransform") != -1) {
                             //事件转化-下载CSV格式。
                             var repData = scope.generateCSVData(dataHeadInfo, dataInfo);
                         } else {

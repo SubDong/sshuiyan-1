@@ -231,7 +231,8 @@ define(["../app"], function (app) {
             "transformAnalysis",
             "provincemap",
             "equipment",
-            "novisitors"
+            "novisitors",
+            "pageTransform"
         ]
     }]);
 });
