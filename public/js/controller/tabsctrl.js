@@ -1457,13 +1457,18 @@ define(["app"], function (app) {
             var hash = {}
             var val = 0
             if (a.col.field == "crate") {
+                var sumConv = 0, sumUv = 0
+                var flag = false;//是否有%号
+                var temp = 0;
+                var cratehash = {}
                 options.forEach(function (option) {
-                    var tempCrate = (option.entity[a.col.field] + "").indexOf("%") < 0 ? option.entity[a.col.field] : option.entity[a.col.field].substring(0, option.entity[a.col.field].length - 1)
-                    val = val + Number(tempCrate)
-
+                    sumConv += option.entity["conversions"] == undefined ? 0 : option.entity["conversions"]
+                    if (!cratehash[option.entity.loc]) {//以网页分组统计内容
+                        cratehash[option.entity.loc] = true;
+                        sumUv = sumUv + Number(option.entity["vc"])
+                    }
                 })
-                val = Number(val).toFixed(2)
-                val += "%"
+                val = sumUv > 0 ? (((sumConv / sumUv) * 100).toFixed(2) + "%") : "0.00%"
             }
             //else if ( a.col.field == "nuvRate") {
             //    options.forEach(function (option) {
@@ -1506,7 +1511,7 @@ define(["app"], function (app) {
                         }
                     }
                 })
-                if (flag){
+                if (flag) {
                     val = temp.toFixed(2) + "%"
                 }
             }
@@ -1908,6 +1913,7 @@ define(["app"], function (app) {
                         } else {
                             for (var i = 0; i < contrast.length; i++) {
                                 if (a[target] == contrast[i][target]) {
+                                    console.log(a[target] + " ===  " + contrast[i][target])
                                     $rootScope.checkedArray.forEach(function (tt, aa) {
                                         var bili = ((parseInt(a[tt] + "".replace("%")) - parseInt((contrast[i][tt] + "").replace("%"))) / (parseInt((contrast[i][tt] + "").replace("%")) == 0 ? parseInt(a[tt] + "".replace("%")) : parseInt((contrast[i][tt] + "").replace("%"))) * 100).toFixed(2);
                                         dataObj[tt] = (isNaN(bili) ? 0 : bili) + "%";
@@ -1935,8 +1941,6 @@ define(["app"], function (app) {
                     $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
                 });
                 $scope.gridOptions.data = dataArray;
-                //console.log("我日尼玛")
-                //console.log($scope.gridOptions.data )
                 $rootScope.tableSwitch.latitude = latitudeOld;
                 $rootScope.gridArray = gridArrayOld;
             })
@@ -2002,8 +2006,8 @@ define(["app"], function (app) {
                                     data["loc"] = event.event_page
                                     for (var i = 0; i < $scope.es_checkArray.length; i++) {
                                         if ($scope.es_checkArray[i] == "crate") {
-                                            if (eventInfos[event.event_page + "_" + event.event_id] != undefined && Number(data["pv"]) != 0) {
-                                                data["crate"] = (Number(eventInfos[event.event_page + "_" + event.event_id].convCount / Number(data["pv"])) * 100).toFixed(2) + "%";
+                                            if (eventInfos[event.event_page + "_" + event.event_id] != undefined && Number(data["uv"]) != 0) {
+                                                data["crate"] = (Number(eventInfos[event.event_page + "_" + event.event_id].convCount / Number(data["uv"])) * 100).toFixed(2) + "%";
                                             } else {
                                                 data["crate"] = "0.00%";
                                             }

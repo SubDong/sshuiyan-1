@@ -884,6 +884,9 @@ var ad = {
             case "nuvRate":
                 return value + "%";
                 break;
+            case "crate":
+                return value + "%";
+                break;
             case "arrivedRate":
                 return value + "%";
                 break;
@@ -894,6 +897,9 @@ var ad = {
                 return value + "%";
                 break;
             case "新访客比率":
+                return value + "%";
+                break;
+            case "转化率":
                 return value + "%";
                 break;
             case "跳出率":
@@ -926,6 +932,15 @@ var ad = {
             case "nuvRate":
                 option.yAxis[index]["axisLabel"] = {
                     formatter: function (value) {
+                        console.log("fomat nuvRate")
+                        return value + "%";
+                    }
+                };
+                break;
+            case "crate":
+                option.yAxis[index]["axisLabel"] = {
+                    formatter: function (value) {
+                        console.log("crete renderFormat ="+value + "%")
                         return value + "%";
                     }
                 };
@@ -959,6 +974,13 @@ var ad = {
                 };
                 break;
             case "新访客比率":
+                option.yAxis[index]["axisLabel"] = {
+                    formatter: function (value) {
+                        return value + "%";
+                    }
+                };
+                break;
+            case "转化率":
                 option.yAxis[index]["axisLabel"] = {
                     formatter: function (value) {
                         return value + "%";
@@ -1093,7 +1115,6 @@ var def = {
             ]
         };
         charObj.setOption(option);
-        //console.log(option);
         util.chartEmpty(chartConfig);
     }
 }
@@ -1128,7 +1149,6 @@ var util = {
                             _time[_time.length - 1] = _time[_time.length - 1] + "/点";
                         }
                     }
-                    //console.log(key);
                     return _time;
                 }
             }

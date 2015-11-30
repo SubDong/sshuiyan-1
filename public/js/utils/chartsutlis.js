@@ -231,6 +231,9 @@ var chartUtils = {
             case "新访客比率":
                 return {label: str, type: 'percent'}
                 break;
+            case "转化率":
+                return {label: str, type: 'percent'}
+                break;
             case "平均访问时长":
                 return {label: str, type: 'time'}
                 break;

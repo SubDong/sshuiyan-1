@@ -228,13 +228,13 @@ define(["./module"], function (ctrs) {
                     def.defData($scope.charts[0].config);
                 }
             };
-            $scope.queryOption_all = ["pv", "uv", "ip", "vc", "conversions", "crate", "transformCost", "clickTotal", "visitNum"];
+            $scope.queryOption_all = ["pv", "uv", /*"ip",*/ "vc","nuv", "conversions", "crate", "transformCost", "clickTotal", "visitNum"];
             $scope.queryOptions = ["pv", "uv"];
             $scope.charts = [
                 {
                     config: {
                         legendId: "indicators_charts_legend",
-                        legendData: ["浏览量(PV)", "访客数(UV)", "IP数", "访问次数", "转化次数", "转化率", "平均转化成本(事件)", "事件点击总数", "唯一访客事件数"],//显示几种数据
+                        legendData: ["浏览量(PV)", "访客数(UV)",/* "IP数",*/ "访问次数","新访客数", "转化次数", "转化率", "平均转化成本(事件)", "事件点击总数", "唯一访客事件数"],//显示几种数据
                         //legendMultiData: $rootScope.lagerMulti,
                         legendAllowCheckCount: 2,
                         legendClickListener: $scope.onLegendClickListener,
@@ -441,7 +441,7 @@ define(["./module"], function (ctrs) {
                                 var results = [];
                                 var hashloc = {}, maxvalues = {}
                                 $scope.setShowArray();
-                                var tempPv = 0;
+                                var tempVc = 0;
                                 var tempConv = 0;
 
                                 var tempNuvRate=0;
@@ -456,8 +456,8 @@ define(["./module"], function (ctrs) {
                                             maxvalues[$scope.es_checkArray[i]] = maxvalues[$scope.es_checkArray[i]] == undefined ? pvs[index][$scope.es_checkArray[i]] :
                                                 (maxvalues[$scope.es_checkArray[i]] > pvs[index][$scope.es_checkArray[i]] ? maxvalues[$scope.es_checkArray[i]] : pvs[index][$scope.es_checkArray[i]])
                                             if ($scope.es_checkArray[i] == "crate") {
-                                                if (eventInfo.convCount != undefined && Number(data["pv"]) != 0) {
-                                                    data["crate"] = (Number(eventInfo.convCount / Number(data["pv"])) * 100).toFixed(2) + "%";
+                                                if (eventInfo.convCount != undefined && Number(data["vc"]) != 0) {
+                                                    data["crate"] = (Number(eventInfo.convCount / Number(data["vc"])) * 100).toFixed(2) + "%";
                                                 } else {
                                                     data["crate"] = "0.00%";
                                                 }
@@ -526,13 +526,13 @@ define(["./module"], function (ctrs) {
                                                 hashPage[event.event_page]=true
                                             }else {
                                                 item.value = hashloc[event.event_page] == undefined ? (pvs[index][item.label] + item.value) : (maxvalues[item.label] < pvs[index][item.label] ? (item.value + pvs[index][item.label] - maxvalues[item.label]) : item.value)
-                                                if (item.label == "pv") {
-                                                    tempPv = item.value;
+                                                if (item.label == "vc") {
+                                                    tempVc = item.value;
                                                 }
                                             }
                                         })
                                         //计算全部的PV
-                                        tempPv = hashloc[event.event_page] == undefined ? pvs[index]["pv"] : (maxvalues["pv"] < pvs[index]["pv"] ? (item.value + pvs[index]["pv"] - maxvalues["pv"]) : tempPv)
+                                        tempVc = hashloc[event.event_page] == undefined ? pvs[index]["vc"] : (maxvalues["vc"] < pvs[index]["vc"] ? (item.value + pvs[index]["vc"] - maxvalues["vc"]) : tempVc)
                                         //计算全部的转化次数
                                         if (eventInfo != undefined) {
                                             tempConv += eventInfos[event.event_page + "_" + event.event_id].convCount;
@@ -544,8 +544,8 @@ define(["./module"], function (ctrs) {
                                 })
 
                                 $scope.dateShowArray.forEach(function (item) {
-                                    if (item.label == "crate" && tempPv != 0) {
-                                        item.value = (Number(tempConv / tempPv)*100).toFixed(2)+"%"
+                                    if (item.label == "crate" && tempVc != 0) {
+                                        item.value = (Number(tempConv / tempVc)*100).toFixed(2)+"%"
                                     }else if(item.label == "nuvRate"){
                                         item.value= tempNuvRate.toFixed(2)+"%"
                                     }
