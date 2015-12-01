@@ -351,7 +351,7 @@ var chartUtils = {
     getAggs: function (buc, aggs) {
         switch (aggs) {
             case "nuv":
-                return buc.sum_uv_aggs.value - buc.old_uv_aggs.value;
+                return buc.new_visitor_aggs.new_visitor_aggs.value;
                 break;
             case "uv":
                 return buc.uv_aggs.value;
