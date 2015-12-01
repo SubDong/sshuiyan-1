@@ -443,7 +443,7 @@ api.get('/indextable', function (req, res) {
                     if (value && (value + "").indexOf(".") != -1) {
                         obj.quota[_index] += parseFloat(value);
                     } else {
-                        obj.quota[_index] += value;
+                        obj.quota[_index] += parseInt(value);
                     }
                 });
                 size = item.quota.length / 24;
@@ -470,7 +470,7 @@ api.get('/indextable', function (req, res) {
                         _obj.quota.splice(i, 1, "--");
                     } else {
                         var temp = "#outRate#nuvRate#arrivedRate#";
-                        if (temp.indexOf(_obj.label) != -1) {
+                        if (temp.indexOf("#" + _obj.label +"#") != -1) {
                             var t_v = _obj.quota[i] / size;
                             _obj.quota.splice(i, 1, t_v);
                         }
