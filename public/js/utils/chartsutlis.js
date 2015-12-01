@@ -79,6 +79,9 @@ var chartUtils = {
             case "订单转化率":
                 return "orderNumRate";
                 break;
+            case "跳出数":
+                return "svc";
+                break;
             default :
                 return "pv";
         }
@@ -147,6 +150,9 @@ var chartUtils = {
                 break;
             case "orderNumRate":
                 return "订单转化率";
+                break;
+            case "svc":
+                return "跳出数";
                 break;
             default :
                 return "浏览量(PV)";

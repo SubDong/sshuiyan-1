@@ -84,6 +84,15 @@ var es_aggs = {
         },
         "vc_aggs": _vc_aggs
     },
+    "svc": {
+        "single_visitor_aggs": {
+            "terms": {
+                "field": "tt",
+                "size": 0,
+                "min_doc_count": 2
+            }
+        }
+    },
     // 平均访问时长
     "avgTime": {
         "tvt_aggs": {
@@ -572,6 +581,26 @@ var outRateFn = function (result) {
     };
 };
 
+var svcFn = function (result) {
+    var keyArr = [];
+    var keyAsStringArr = [];
+    var quotaArr = [];
+
+    for (var i = 0, l = result.length; i < l; i++) {
+        var svc = result[i].single_visitor_aggs.buckets.length;
+        keyArr.push(result[i].key);
+        keyAsStringArr.push(result[i].key_as_string);
+
+        quotaArr.push(svc);
+    }
+    return {
+        "label": "svc",
+        "key": keyArr,
+        "key_as_string": keyAsStringArr,
+        "quota": quotaArr
+    };
+}
+
 var nuvFn = function (result) {
     var keyArr = [];
     var keyAsStringArr = [];
@@ -875,6 +904,9 @@ var es_request = {
                                     break;
                                 case "outRate":
                                     data.push(outRateFn(result));
+                                    break;
+                                case "svc":
+                                    data.push(svcFn(result));
                                     break;
                                 case "arrivedRate":
                                     data.push(arrivedRateFn(result));

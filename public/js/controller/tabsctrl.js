@@ -2512,22 +2512,48 @@ define(["app"], function (app) {
                         returnData[0] = returnData[0] == "0" ? "0" : (returnData[0] / (_ll == 0 ? 1 : _ll)).toFixed(2);
                     }
                     if (a.col.field == "outRate" && (returnData[0] + "").indexOf("%") == -1) {
-                        var _ll = 0;
-                        for (var _i = 0; _i < option.length; _i++) {
-                            if (option[_i].entity.outRate != "--") {
-                                _ll++;
+                        //var _ll = 0;
+                        //for (var _i = 0; _i < option.length; _i++) {
+                        //    if (option[_i].entity.outRate != "--") {
+                        //        _ll++;
+                        //    }
+                        //}
+                        //returnData[0] = (returnData[0] / (_ll == 0 ? 1 : _ll)).toFixed(2) + "%";
+                        var t_vc = 0;
+                        var t_svc = 0;
+                        option.forEach(function (_row) {
+                            console.log(_row);
+                            var _entity = _row.entity;
+                            if (_entity.vc != "--") {
+                                t_vc += _entity.vc;
                             }
-                        }
-                        returnData[0] = (returnData[0] / (_ll == 0 ? 1 : _ll)).toFixed(2) + "%";
+                            if (_entity.svc != "--") {
+                                t_svc += _entity.svc;
+                            }
+                        });
+                        returnData[0] = ((t_vc - t_svc) * 100 / (t_vc == 0 ? 1 : t_vc)).toFixed(2) + "%";
                     }
                     if (a.col.field == "nuvRate" && (returnData[0] + "").indexOf("%") == -1) {
-                        var _ll = 0;
-                        for (var _i = 0; _i < option.length; _i++) {
-                            if (option[_i].entity.nuvRate != "--") {
-                                _ll++;
+                        //var _ll = 0;
+                        //for (var _i = 0; _i < option.length; _i++) {
+                        //    if (option[_i].entity.nuvRate != "--") {
+                        //        _ll++;
+                        //    }
+                        //}
+                        //returnData[0] = (returnData[0] / (_ll == 0 ? 1 : _ll)).toFixed(2) + "%";
+                        // 新访客比率算法。通过总的新访客数除以总的访客数
+                        var t_uv = 0;
+                        var t_nuv = 0;
+                        option.forEach(function (_row) {
+                            var _entity = _row.entity;
+                            if (_entity.uv != "--") {
+                                t_uv += _entity.uv;
                             }
-                        }
-                        returnData[0] = (returnData[0] / (_ll == 0 ? 1 : _ll)).toFixed(2) + "%";
+                            if (_entity.nuv != "--") {
+                                t_nuv += _entity.nuv;
+                            }
+                        });
+                        returnData[0] = (t_nuv * 100 / (t_uv == 0 ? 1 : t_uv)).toFixed(2) + "%";
                     }
                     if (a.col.field == "avgTime") {
                         var _ll = 0;
