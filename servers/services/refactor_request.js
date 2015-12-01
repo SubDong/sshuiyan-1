@@ -38,7 +38,7 @@ var es_aggs = {
     "pv": {
         "pv_aggs": {
             "value_count": {
-                "field": "loc"
+                "field": "_type"
             }
         }
     },
@@ -470,14 +470,14 @@ var pvFn = function (result) {
 
     for (var i = 0, l = result.length; i < l; i++) {
         Array.prototype.push.call(keyArr, result[i].key);
-        Array.prototype.push.call(keyArr, result[i].key_as_string);
+        //Array.prototype.push.call(keyArr, result[i].key_as_string);
         Array.prototype.push.call(quotaArr, result[i].pv_aggs.value);
     }
 
     return {
         "label": "pv",
         "key": keyArr,
-        "key_as_string": keyAsStringArr,
+        //"key_as_string": keyAsStringArr,
         "quota": quotaArr
     };
 };
