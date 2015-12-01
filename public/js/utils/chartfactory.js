@@ -879,10 +879,10 @@ var ad = {
                 return this.getDoubleInteger(hours) + ":" + this.getDoubleInteger(minutes) + ":" + this.getDoubleInteger(seconds);
                 break;
             case "outRate":
-                return value + "%";
+                return parseFloat(value).toFixed(2) + "%";
                 break;
             case "nuvRate":
-                return value + "%";
+                return parseFloat(value).toFixed(2) + "%";
                 break;
             case "crate":
                 return value + "%";
@@ -897,13 +897,13 @@ var ad = {
                 return value + "%";
                 break;
             case "新访客比率":
-                return value + "%";
+                return parseFloat(value).toFixed(2) + "%";
                 break;
             case "转化率":
                 return value + "%";
                 break;
             case "跳出率":
-                return value + "%";
+                return parseFloat(value).toFixed(2) + "%";
                 break;
             case "抵达率":
                 return value + "%";
