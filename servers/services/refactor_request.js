@@ -63,7 +63,7 @@ var es_aggs = {
     "uv": {
         "uv_aggs": {
             "cardinality": {
-                "field": "_ucv"
+                "field": "tt"
             }
         }
     },
@@ -137,7 +137,7 @@ var es_aggs = {
         },
         "uv_aggs": {
             "cardinality": {
-                "field": "_ucv"
+                "field": "tt"
             }
         }
     },
@@ -465,72 +465,84 @@ var buildRequest = function (indexes, type, quotas, dimension, filters, start, e
 
 var pvFn = function (result) {
     var keyArr = [];
+    var keyAsStringArr = [];
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
         Array.prototype.push.call(keyArr, result[i].key);
+        Array.prototype.push.call(keyArr, result[i].key_as_string);
         Array.prototype.push.call(quotaArr, result[i].pv_aggs.value);
     }
 
     return {
         "label": "pv",
         "key": keyArr,
+        "key_as_string": keyAsStringArr,
         "quota": quotaArr
     };
 };
 
 var contributionFn = function (result) {
     var keyArr = [];
+    var keyAsStringArr = [];
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
         Array.prototype.push.call(keyArr, result[i].key);
+        Array.prototype.push.call(keyAsStringArr, result[i].key_as_string);
         Array.prototype.push.call(quotaArr, result[i].cpv_aggs.cpv_aggs.value);
     }
 
     return {
         "label": "contribution",
         "key": keyArr,
+        "key_as_string": keyAsStringArr,
         "quota": quotaArr
     };
 };
 
 var uvFn = function (result) {
     var keyArr = [];
+    var keyAsStringArr = [];
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
         keyArr.push(result[i].key);
+        keyAsStringArr.push(result[i].key_as_string);
         quotaArr.push(result[i].uv_aggs.value);
     }
 
     return {
         "label": "uv",
         "key": keyArr,
+        "key_as_string": keyAsStringArr,
         "quota": quotaArr
     };
 };
 
 var vcFn = function (result) {
     var keyArr = [];
+    var keyAsStringArr = [];
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
         var vc = result[i].vc_aggs.vc_aggs.value;
         keyArr.push(result[i].key);
-
+        keyAsStringArr.push(result[i].key_as_string);
         quotaArr.push(vc);
     }
 
     return {
         "label": "vc",
         "key": keyArr,
+        "key_as_string": keyAsStringArr,
         "quota": quotaArr
     };
 };
 
 var avgTimeFn = function (result) {
     var keyArr = [];
+    var keyAsStringArr = [];
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
@@ -541,6 +553,7 @@ var avgTimeFn = function (result) {
         }
         var vc = result[i].vc_aggs.vc_aggs.value;
         keyArr.push(result[i].key);
+        keyAsStringArr.push(result[i].key_as_string);
         var avgTime = 0;
         if (vc > 0) {
             avgTime = Math.ceil(parseFloat(tvt) / 1000 / parseFloat((vc)));
@@ -551,18 +564,21 @@ var avgTimeFn = function (result) {
     return {
         "label": "avgTime",
         "key": keyArr,
+        "key_as_string": keyAsStringArr,
         "quota": quotaArr
     };
 };
 
 var outRateFn = function (result) {
     var keyArr = [];
+    var keyAsStringArr = [];
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
         var vc = result[i].out_vc_aggs.value;
         var svc = parseInt(vc) - result[i].single_visitor_aggs.buckets.length;
         keyArr.push(result[i].key);
+        keyAsStringArr.push(result[i].key_as_string);
 
         var outRate = 0;
         if (vc > 0) {
@@ -573,30 +589,35 @@ var outRateFn = function (result) {
     return {
         "label": "outRate",
         "key": keyArr,
+        "key_as_string": keyAsStringArr,
         "quota": quotaArr
     };
 };
 
 var nuvFn = function (result) {
     var keyArr = [];
+    var keyAsStringArr = [];
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
         var total = result[i].sum_uv_aggs.value;
         var o_nuv = result[i].old_uv_aggs.value;
         keyArr.push(result[i].key);
+        keyAsStringArr.push(result[i].key_as_string);
         quotaArr.push(total - o_nuv);
     }
 
     return {
         "label": "nuv",
         "key": keyArr,
+        "key_as_string": keyAsStringArr,
         "quota": quotaArr
     };
 };
 
 var nuvRateFn = function (result) {
     var keyArr = [];
+    var keyAsStringArr = [];
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
@@ -604,6 +625,7 @@ var nuvRateFn = function (result) {
         var o_nuv = result[i].old_uv_aggs.value;
         var uv = result[i].uv_aggs.value;
         keyArr.push(result[i].key);
+        keyAsStringArr.push(result[i].key_as_string);
 
         var nuvRate = 0;
         if (uv > 0) {
@@ -616,17 +638,20 @@ var nuvRateFn = function (result) {
     return {
         "label": "nuvRate",
         "key": keyArr,
+        "key_as_string": keyAsStringArr,
         "quota": quotaArr
     };
 };
 
 var ipFn = function (result) {
     var keyArr = [];
+    var keyAsStringArr = [];
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
         var ip_count = result[i].ip_aggs.ip_aggs1.value;
         keyArr.push(result[i].key);
+        keyAsStringArr.push(result[i].key_as_string);
 
         quotaArr.push(ip_count);
     }
@@ -634,17 +659,20 @@ var ipFn = function (result) {
     return {
         "label": "ip",
         "key": keyArr,
+        "key_as_string": keyAsStringArr,
         "quota": quotaArr
     };
 };
 
 var avgPageFn = function (result) {
     var keyArr = [];
+    var keyAsStringArr = [];
     var quotaArr = [];
     for (var i = 0, l = result.length; i < l; i++) {
         var pv = result[i].pv_aggs.value;
         var uv = result[i].vc_aggs.vc_aggs.value;
         keyArr.push(result[i].key);
+        keyAsStringArr.push(result[i].key_as_string);
         var avgPage = 0;
         if (uv > 0) {
             avgPage = (parseFloat(pv) / parseFloat(uv)).toFixed(2);
@@ -655,17 +683,20 @@ var avgPageFn = function (result) {
     return {
         "label": "avgPage",
         "key": keyArr,
+        "key_as_string": keyAsStringArr,
         "quota": quotaArr
     };
 };
 
 var arrivedRateFn = function (result) {
     var keyArr = [];
+    var keyAsStringArr = [];
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
         var vc = result[i].vc_aggs.value;
         keyArr.push(result[i].key);
+        keyAsStringArr.push(result[i].key_as_string);
 
         quotaArr.push(vc);
     }
@@ -673,17 +704,20 @@ var arrivedRateFn = function (result) {
     return {
         "label": "arrivedRate",
         "key": keyArr,
+        "key_as_string": keyAsStringArr,
         "quota": quotaArr
     };
 };
 
 var conversionsFn = function (result) {
     var keyArr = [];
+    var keyAsStringArr = [];
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
         var doc_count = result[i].doc_count;
         keyArr.push(result[i].key);
+        keyAsStringArr.push(result[i].key_as_string);
 
         quotaArr.push(doc_count);
     }
@@ -691,12 +725,14 @@ var conversionsFn = function (result) {
     return {
         "label": "conversions",
         "key": keyArr,
+        "key_as_string": keyAsStringArr,
         "quota": quotaArr
     };
 };
 
 var eventConversionFn = function (result) {
     var keyArr = [];
+    var keyAsStringArr = [];
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
@@ -705,6 +741,7 @@ var eventConversionFn = function (result) {
     return {
         "label": "eventConversion",
         "key": keyArr,
+        "key_as_string": keyAsStringArr,
         "quota": quotaArr
     };
 };
@@ -712,6 +749,7 @@ var eventConversionFn = function (result) {
 
 var pageConversionFn = function (result) {
     var keyArr = [];
+    var keyAsStringArr = [];
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
@@ -720,6 +758,7 @@ var pageConversionFn = function (result) {
     return {
         "label": "pageConversion",
         "key": keyArr,
+        "key_as_string": keyAsStringArr,
         "quota": quotaArr
     };
 };
@@ -892,8 +931,9 @@ var es_request = {
                         callbackFn(data);
                     }
                 }
-            } else
+            } else {
                 callbackFn(data);
+            }
         });
     },
     // 获取近30分钟的访问数据
