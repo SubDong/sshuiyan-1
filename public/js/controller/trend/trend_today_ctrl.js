@@ -496,6 +496,7 @@ define(["./module"], function (ctrs) {
                 e.config.legendAllowCheckCount = 1;
                 e.config.legendDefaultChecked = undefined;
                 e.config.noFormat = true;
+                e.config.compare = true;
                 if (e.config.chartType == "line") {
                     e.config.bGap = false;
                 } else {
@@ -555,6 +556,7 @@ define(["./module"], function (ctrs) {
                         final_result.push(json[0]);
                     });
                     cf.renderChart(final_result, e.config);
+                    e.config.compare = false;
                 });
             });
         }

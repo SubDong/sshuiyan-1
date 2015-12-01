@@ -472,6 +472,7 @@ define(["./module"], function (ctrs) {
                     e.config.bGap = true;
                 }
                 e.config.noFormat = "none";
+                e.config.compare = true;
                 e.config.compareCustom = true;
                 e.types = type;
                 if (legendRender) {
@@ -525,6 +526,7 @@ define(["./module"], function (ctrs) {
                         final_result.push(json[0]);
                     });
                     cf.renderChart(final_result, e.config);
+                    e.config.compare = false;
                 });
             });
         }
