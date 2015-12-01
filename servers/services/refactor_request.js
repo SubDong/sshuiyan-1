@@ -6,17 +6,15 @@
 var cacheutils = require('../utils/cacheutils');
 
 var _new_visitor_aggs = {
-    "new_visitor_aggs": {
-        "filter": {
-            "term": {
-                "ct": 0
-            }
-        },
-        "aggs": {
-            "new_visitor_aggs": {
-                "cardinality": {
-                    "field": "tt"
-                }
+    "filter": {
+        "term": {
+            "ct": 0
+        }
+    },
+    "aggs": {
+        "new_visitor_aggs": {
+            "cardinality": {
+                "field": "tt"
             }
         }
     }
