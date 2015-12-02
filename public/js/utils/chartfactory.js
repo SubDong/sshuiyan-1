@@ -266,6 +266,7 @@ var op = {
             yAxis: [
                 {
                     type: !chartConfig.yType ? "value" : chartConfig.yType,
+                    name: labelData[0].label,
                     splitLine: {
                         lineStyle: {
                             color: '#F0F0F0',
@@ -283,7 +284,8 @@ var op = {
                     }
                 },
                 {
-                    'type': !chartConfig.yType ? "value" : chartConfig.yType
+                    type: !chartConfig.yType ? "value" : chartConfig.yType,
+                    name: labelData.length > 1 ? labelData[1].label : ""
                 }
             ],
             series: []
@@ -391,18 +393,9 @@ var op = {
             option.series.push(serie);
         });
         if (!chartConfig.twoYz) {
-            var legendType = false;
-            if (labelData.length > 1) {
-                if (labelData[0].type == labelData[1].type) {
-                    legendType = true;
-                }
-            }
             for (var i = 0; i < labelData.length; i++) {
                 var formatType = labelData[i].label;
-                if (!legendType)
-                    option.series[i]["yAxisIndex"] = i;
-                else
-                    option.series[i]["yAxisIndex"] = 0;
+                option.series[i]["yAxisIndex"] = i;
 
                 option.yAxis[i]["axisLine"] = {
                     lineStyle: {
