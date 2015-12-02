@@ -450,7 +450,7 @@ define(["./module"], function (ctrs) {
             }
             pushObj(_dataInfo, "全站统计", sum_pv, contrast_sum_pv, percentage + _t_percentage);
             pushObj(_dataInfo, "Power by best-ad.cn", "", "", "");
-            return JSON.stringify(_dataInfo).replace(/\%/g, "*");
+            return JSON.stringify(_dataInfo);
         };
 
     });

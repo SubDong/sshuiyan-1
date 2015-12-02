@@ -602,7 +602,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                 //导出功能
                 scope.fileSave = function (obj) {
                     if (obj.value == "csv") {
-                        var dataInfo = util.getExportData(angular.copy($rootScope.gridApi2.grid.options.data));
+                        var dataInfo = angular.copy(util.getExportData(angular.copy($rootScope.gridApi2.grid.options.data)));
                         var dataHeadInfo = angular.copy($rootScope.gridApi2.grid.options.columnDefs);
                         if ($location.path().indexOf("changelist") != -1) {
                             var repData = scope.generateCSVData(dataInfo);
@@ -620,7 +620,15 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                                     })
                                 }
                             });
-                            var repData = JSON.stringify(dataInfo).replace(/\%/g, "*");
+                            // 下载前，过滤掉多余的指标数据
+                            dataInfo.forEach(function (_df) {
+                                delete _df.pv;
+                                delete _df.uv;
+                                delete _df.nuv;
+                                delete _df.vc;
+                                delete _df.svc;
+                            });
+                            var repData = JSON.stringify(dataInfo);
                         }
                         $http({
                             method: 'POST',
