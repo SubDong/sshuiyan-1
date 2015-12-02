@@ -2515,7 +2515,6 @@ define(["app"], function (app) {
                         var t_vc = 0;
                         var t_svc = 0;
                         option.forEach(function (_row) {
-                            console.log(_row);
                             var _entity = _row.entity;
                             if (_entity.vc != "--") {
                                 t_vc += _entity.vc;

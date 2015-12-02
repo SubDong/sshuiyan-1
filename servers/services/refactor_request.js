@@ -610,7 +610,7 @@ var svcFn = function (result) {
         var svc = parseInt(vc) - result[i].single_visitor_aggs.single_visitor_aggs.buckets.length;
         keyArr.push(result[i].key);
         keyAsStringArr.push(result[i].key_as_string);
-        quotaArr.push(vc - svc);
+        quotaArr.push(svc);
     }
     return {
         "label": "svc",
