@@ -76,22 +76,41 @@ var es_aggs = {
     // 跳出率
     "outRate": {
         "single_visitor_aggs": {
-            "terms": {
-                "field": "tt",
-                "size": 0,
-                "min_doc_count": 2
+            "filter": {
+                "term": {
+                    "entrance": "1"
+                }
+            },
+            "aggs": {
+                "single_visitor_aggs": {
+                    "terms": {
+                        "field": "tt",
+                        "size": 0,
+                        "min_doc_count": 2
+                    }
+                }
             }
         },
         "vc_aggs": _vc_aggs
     },
     "svc": {
         "single_visitor_aggs": {
-            "terms": {
-                "field": "tt",
-                "size": 0,
-                "min_doc_count": 2
+            "filter": {
+                "term": {
+                    "entrance": "1"
+                }
+            },
+            "aggs": {
+                "single_visitor_aggs": {
+                    "terms": {
+                        "field": "tt",
+                        "size": 0,
+                        "min_doc_count": 2
+                    }
+                }
             }
-        }
+        },
+        "vc_aggs": _vc_aggs
     },
     // 平均访问时长
     "avgTime": {
@@ -563,7 +582,7 @@ var outRateFn = function (result) {
 
     for (var i = 0, l = result.length; i < l; i++) {
         var vc = result[i].vc_aggs.vc_aggs.value;
-        var svc = parseInt(vc) - result[i].single_visitor_aggs.buckets.length;
+        var svc = parseInt(vc) - result[i].single_visitor_aggs.single_visitor_aggs.buckets.length;
         keyArr.push(result[i].key);
         keyAsStringArr.push(result[i].key_as_string);
 
@@ -587,11 +606,11 @@ var svcFn = function (result) {
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
-        var svc = result[i].single_visitor_aggs.buckets.length;
+        var vc = result[i].vc_aggs.vc_aggs.value;
+        var svc = parseInt(vc) - result[i].single_visitor_aggs.single_visitor_aggs.buckets.length;
         keyArr.push(result[i].key);
         keyAsStringArr.push(result[i].key_as_string);
-
-        quotaArr.push(svc);
+        quotaArr.push(vc - svc);
     }
     return {
         "label": "svc",

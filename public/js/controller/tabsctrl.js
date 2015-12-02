@@ -2512,13 +2512,6 @@ define(["app"], function (app) {
                         returnData[0] = returnData[0] == "0" ? "0" : (returnData[0] / (_ll == 0 ? 1 : _ll)).toFixed(2);
                     }
                     if (a.col.field == "outRate" && (returnData[0] + "").indexOf("%") == -1) {
-                        //var _ll = 0;
-                        //for (var _i = 0; _i < option.length; _i++) {
-                        //    if (option[_i].entity.outRate != "--") {
-                        //        _ll++;
-                        //    }
-                        //}
-                        //returnData[0] = (returnData[0] / (_ll == 0 ? 1 : _ll)).toFixed(2) + "%";
                         var t_vc = 0;
                         var t_svc = 0;
                         option.forEach(function (_row) {
@@ -2531,16 +2524,9 @@ define(["app"], function (app) {
                                 t_svc += _entity.svc;
                             }
                         });
-                        returnData[0] = ((t_vc - t_svc) * 100 / (t_vc == 0 ? 1 : t_vc)).toFixed(2) + "%";
+                        returnData[0] = (t_svc * 100 / (t_vc == 0 ? 1 : t_vc)).toFixed(2) + "%";
                     }
                     if (a.col.field == "nuvRate" && (returnData[0] + "").indexOf("%") == -1) {
-                        //var _ll = 0;
-                        //for (var _i = 0; _i < option.length; _i++) {
-                        //    if (option[_i].entity.nuvRate != "--") {
-                        //        _ll++;
-                        //    }
-                        //}
-                        //returnData[0] = (returnData[0] / (_ll == 0 ? 1 : _ll)).toFixed(2) + "%";
                         // 新访客比率算法。通过总的新访客数除以总的访客数
                         var t_uv = 0;
                         var t_nuv = 0;
