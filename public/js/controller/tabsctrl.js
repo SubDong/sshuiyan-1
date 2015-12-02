@@ -1576,7 +1576,7 @@ define(["app"], function (app) {
                             item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 32px'>--</div>";
                         } else {
                             item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 32px'>" +
-                                "<ul><li>{{grid.appScope.getEventRootData(this,grid.getVisibleRows())}}</li></ul></div>";
+                            "<ul><li>{{grid.appScope.getEventRootData(this,grid.getVisibleRows())}}</li></ul></div>";
                         }
                     }
                 });
@@ -1589,7 +1589,7 @@ define(["app"], function (app) {
                         } else {
 //                        item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 100px'>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),2)}}<br/>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),3)}}<br/>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),4)}}</div>";
                             item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 32px'>" +
-                                "<ul><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),2)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),3)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),4)}}</li></ul></div>";
+                            "<ul><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),2)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),3)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),4)}}</li></ul></div>";
                         }
                     }
                 });
@@ -1832,6 +1832,25 @@ define(["app"], function (app) {
                                 });
                                 resultObj[$rootScope.tableSwitch.latitude.field] = "暂无数据";
                                 result.push(resultObj)
+                            } else {
+                                // 改变跳出率和新访客比率
+                                for (var i = 0; i < result.length; i++) {
+                                    var _obj = result[i];
+                                    var _outRate = "--";
+                                    if (_obj["vc"] != "--" && _obj["svc"] != "--") {
+                                        if (_obj["vc"] == 0) {
+                                            _outRate = "0.00%";
+                                        } else {
+                                            _outRate = (_obj["svc"] * 100 / _obj["vc"]).toFixed(2) + "%";
+                                        }
+                                        _obj.outRate = _outRate;
+                                    }
+                                    var _nuvRate = "--";
+                                    if (_obj["uv"] != "--" && _obj["nuv"] != "--") {
+                                        _nuvRate = (_obj["nuv"] * 100 / _obj["uv"]).toFixed(2) + "%";
+                                        _obj.nuvRate = _nuvRate;
+                                    }
+                                }
                             }
                             $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
                             // 今日统计按时特殊处理
