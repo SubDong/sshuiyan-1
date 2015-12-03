@@ -2398,8 +2398,38 @@ define(["app"], function (app) {
             if (a.col.field == "pv" || a.col.field == "uv" || a.col.field == "ip" || a.col.field == "vc" || a.col.field == "nuv") {
                 //
             } else {
-                rast[0] = (rast[0] / option.length).toFixed(2) + (a.col.field == "outRate" || a.col.field == "nuvRate" || a.col.field == "arrivedRate" ? "%" : "");
-                rast[1] = (rast[1] / option.length).toFixed(2) + (a.col.field == "outRate" || a.col.field == "nuvRate" || a.col.field == "arrivedRate" ? "%" : "");
+
+                if (a.col.field == "nuvRate") {// 新访客比率
+                    var _t_nuv = [0, 0];
+                    var _t_uv = [0, 0];
+                    option.forEach(function (items, x) {
+                        var nuvDatas = (items.entity["nuv"] + "").split(",");
+                        var uvDatas = (items.entity["uv"] + "").split(",");
+                        _t_nuv[0] += nuvDatas[1] == "--" ? 0 : parseInt(nuvDatas[1]);
+                        _t_nuv[1] += nuvDatas[2] == "--" ? 0 : parseInt(nuvDatas[2]);
+                        _t_uv[0] += uvDatas[1] == "--" ? 0 : parseInt(uvDatas[1]);
+                        _t_uv[1] += uvDatas[2] == "--" ? 0 : parseInt(uvDatas[2]);
+                    });
+                    rast[0] = _t_nuv[0] * 100 / (_t_uv[0] == 0 ? 1 : _t_uv[0]) + "%";
+                    rast[1] = _t_nuv[1] * 100 / (_t_uv[1] == 0 ? 1 : _t_uv[1]) + "%";
+                } else if (a.col.field == "nuvRate") {// 跳出率
+                    var _t_svc = [0, 0];
+                    var _t_vc = [0, 0];
+                    option.forEach(function (items, x) {
+                        var svcDatas = (items.entity["svc"] + "").split(",");
+                        var vcDatas = (items.entity["vc"] + "").split(",");
+                        _t_svc[0] += svcDatas[1] == "--" ? 0 : parseInt(svcDatas[1]);
+                        _t_svc[1] += svcDatas[2] == "--" ? 0 : parseInt(svcDatas[2]);
+                        _t_vc[0] += vcDatas[1] == "--" ? 0 : parseInt(vcDatas[1]);
+                        _t_vc[1] += vcDatas[2] == "--" ? 0 : parseInt(vcDatas[2]);
+                    });
+                    rast[0] = _t_svc[0] * 100 / (_t_vc[0] == 0 ? 1 : _t_vc[0]) + "%";
+                    rast[1] = _t_svc[1] * 100 / (_t_vc[1] == 0 ? 1 : _t_vc[1]) + "%";
+                } else {
+                    rast[0] = (rast[0] / option.length).toFixed(2) + (a.col.field == "outRate" || a.col.field == "nuvRate" || a.col.field == "arrivedRate" ? "%" : "");
+                    rast[1] = (rast[1] / option.length).toFixed(2) + (a.col.field == "outRate" || a.col.field == "nuvRate" || a.col.field == "arrivedRate" ? "%" : "");
+                }
+
             }
 
             var bhl = (((parseFloat(((rast[0] + "").replace("%", ""))) - parseFloat(((rast[1] + "").replace("%", "")))) / parseFloat(((rast[1] + "").replace("%", "")))) * 100 ).toFixed(2) + "%";
