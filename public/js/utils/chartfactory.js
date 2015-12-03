@@ -393,8 +393,11 @@ var op = {
         if (!chartConfig.twoYz) {
             for (var i = 0; i < labelData.length; i++) {
                 var formatType = labelData[i].label;
-                option.series[i]["yAxisIndex"] = i;
-
+                if (chartConfig.compare) {// 纵坐标显示
+                    option.series[i]["yAxisIndex"] = 0;
+                } else {
+                    option.series[i]["yAxisIndex"] = i;
+                }
                 option.yAxis[i]["axisLine"] = {
                     lineStyle: {
                         color: '#01AFEF',
