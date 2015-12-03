@@ -349,7 +349,7 @@ api.get('/indextable', function (req, res) {
                             if (_promotion == "ssc" || _lati == "kw") {
                                 if (infoKey != undefined && (infoKey == "-" || infoKey == "--" || infoKey == "" || infoKey == "www" || infoKey == "null" || infoKey.length >= 40)) continue;
                             }
-                            if (dimensionInfo == "se" && _lati == "se") {
+                            if (dimensionInfo == "se" && _lati != "se") {
                                 if (infoKey != undefined && infoKey == "-") continue;
                             }
                         }

@@ -398,19 +398,21 @@ var op = {
                 } else {
                     option.series[i]["yAxisIndex"] = i;
                 }
-                option.yAxis[i]["axisLine"] = {
-                    lineStyle: {
-                        color: '#01AFEF',
-                        type: 'solid',
-                        width: 1
-                    }
-                };
-                option.yAxis[i]["splitNumber"] = 5;
-                option.yAxis[i]["splitLine"] = {
-                    lineStyle: {
-                        color: '#F0F0F0',
-                        type: 'solid',
-                        width: 1
+                if (option.yAxis[i]) {// 避免出错
+                    option.yAxis[i]["axisLine"] = {
+                        lineStyle: {
+                            color: '#01AFEF',
+                            type: 'solid',
+                            width: 1
+                        }
+                    };
+                    option.yAxis[i]["splitNumber"] = 5;
+                    option.yAxis[i]["splitLine"] = {
+                        lineStyle: {
+                            color: '#F0F0F0',
+                            type: 'solid',
+                            width: 1
+                        }
                     }
                 }
                 if (chartConfig.compare) {
