@@ -1769,6 +1769,16 @@ define(["app"], function (app) {
                                     $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
                                     $scope.gridOptions.data = resultData;
                                 } else {
+                                    // 按日
+                                    for (var i = 0; i < data.length; i++) {
+                                        var _obj = data[i];
+                                        // 特殊处理一些数据
+                                        if (_obj.pv == 0) {
+                                            $rootScope.checkedArray.forEach(function (item, a) {
+                                                _obj[item] = "--";
+                                            });
+                                        }
+                                    }
                                     $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
                                     $scope.gridOptions.data = data;
                                 }
@@ -1932,7 +1942,6 @@ define(["app"], function (app) {
                         } else {
                             for (var i = 0; i < contrast.length; i++) {
                                 if (a[target] == contrast[i][target]) {
-                                    console.log(a[target] + " ===  " + contrast[i][target])
                                     $rootScope.checkedArray.forEach(function (tt, aa) {
                                         var bili = ((parseInt(a[tt] + "".replace("%")) - parseInt((contrast[i][tt] + "").replace("%"))) / (parseInt((contrast[i][tt] + "").replace("%")) == 0 ? parseInt(a[tt] + "".replace("%")) : parseInt((contrast[i][tt] + "").replace("%"))) * 100).toFixed(2);
                                         dataObj[tt] = (isNaN(bili) ? 0 : bili) + "%";
@@ -2530,31 +2539,31 @@ define(["app"], function (app) {
                         }
                         returnData[0] = returnData[0] == "0" ? "0" : (returnData[0] / (_ll == 0 ? 1 : _ll)).toFixed(2);
                     }
-                    if (a.col.field == "outRate" && (returnData[0] + "").indexOf("%") == -1) {
+                    if (a.col.field == "outRate") {
                         var t_vc = 0;
                         var t_svc = 0;
                         option.forEach(function (_row) {
                             var _entity = _row.entity;
                             if (_entity.vc != "--") {
-                                t_vc += _entity.vc;
+                                t_vc += parseInt(_entity.vc);
                             }
                             if (_entity.svc != "--") {
-                                t_svc += _entity.svc;
+                                t_svc += parseInt(_entity.svc);
                             }
                         });
                         returnData[0] = (t_svc * 100 / (t_vc == 0 ? 1 : t_vc)).toFixed(2) + "%";
                     }
-                    if (a.col.field == "nuvRate" && (returnData[0] + "").indexOf("%") == -1) {
+                    if (a.col.field == "nuvRate") {
                         // 新访客比率算法。通过总的新访客数除以总的访客数
                         var t_uv = 0;
                         var t_nuv = 0;
                         option.forEach(function (_row) {
                             var _entity = _row.entity;
                             if (_entity.uv != "--") {
-                                t_uv += _entity.uv;
+                                t_uv += parseInt(_entity.uv);
                             }
                             if (_entity.nuv != "--") {
-                                t_nuv += _entity.nuv;
+                                t_nuv += parseInt(_entity.nuv);
                             }
                         });
                         returnData[0] = (t_nuv * 100 / (t_uv == 0 ? 1 : t_uv)).toFixed(2) + "%";

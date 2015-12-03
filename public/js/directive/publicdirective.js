@@ -465,81 +465,78 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
             replace: true,
             //transclude: true,
             link: function (scope, element, attris, controller) {
+                var pickerTiemOne = 0;
 
                 scope.choicedate = function (ev, picker) {
-                    var pickerTiemOne = 0;
                     var startDate = $('#reportrange span').html().split("至")[0];
                     var endDate = $('#reportrange span').html().split("至")[1] == undefined ? startDate : $('#reportrange span').html().split("至")[1];
                     pickerTiemOne = startDate == endDate ? 0 : chartUtils.getTimeOffset(startDate, endDate);
-                    $('#choicetrange').on('apply.daterangepicker', function (ev, picker) {
-                        var pickerTiemTow = chartUtils.getTimeOffset(picker.startDate.format('YYYY-MM-DD'), picker.endDate.format('YYYY-MM-DD'));
-                        var startTime = pickerTiemTow[0];
-                        var endTime = pickerTiemTow[0] + Math.abs(pickerTiemOne[1] - pickerTiemOne[0]);
-                        var dateTime = chartUtils.getSetOffTime(startTime, endTime);
-                        if (pickerTiemOne == 0) {
-                            $('#choicetrange span').html(dateTime[0]);
-                            $('#choicetrange').data('daterangepicker').setStartDate(dateTime[0]);
-                            $('#choicetrange').data('daterangepicker').setEndDate(dateTime[0]);
-                        } else {
-                            $('#choicetrange span').html(dateTime[0] + "至" + dateTime[1]);
-                            $('#choicetrange').data('daterangepicker').setStartDate(dateTime[0]);
-                            $('#choicetrange').data('daterangepicker').setEndDate(dateTime[1]);
-                        }
-                    });
                 };
+
+                $('#choicetrange').on('apply.daterangepicker', function (ev, picker) {
+                    var pickerTiemTow = chartUtils.getTimeOffset(picker.startDate.format('YYYY-MM-DD'), picker.endDate.format('YYYY-MM-DD'));
+                    var startTime = pickerTiemTow[0];
+                    var endTime = pickerTiemTow[0] + Math.abs(pickerTiemOne[1] - pickerTiemOne[0]);
+                    var dateTime = chartUtils.getSetOffTime(startTime, endTime);
+                    if (pickerTiemOne == 0) {
+                        $('#choicetrange span').html(dateTime[0]);
+                        $('#choicetrange').data('daterangepicker').setStartDate(dateTime[0]);
+                        $('#choicetrange').data('daterangepicker').setEndDate(dateTime[0]);
+                        $rootScope.sshuiyanCompareStart = dateTime[0];
+                        $rootScope.sshuiyanCompareEnd = dateTime[0];
+                        $rootScope.sshuiyanCompareFlag = true;
+                        $rootScope.startDateString = dateTime[0];
+                        $rootScope.endDateString = dateTime[0];
+
+                        $rootScope.datepickerClickTow(dateTime[0], dateTime[0], undefined);
+                        scope.datePickerCompare(dateTime[0], dateTime[0], undefined);
+
+                    } else {
+                        $('#choicetrange span').html(dateTime[0] + "至" + dateTime[1]);
+                        $('#choicetrange').data('daterangepicker').setStartDate(dateTime[0]);
+                        $('#choicetrange').data('daterangepicker').setEndDate(dateTime[1]);
+                        $rootScope.sshuiyanCompareStart = dateTime[0];
+                        $rootScope.sshuiyanCompareEnd = dateTime[0];
+                        $rootScope.sshuiyanCompareFlag = true;
+                        $rootScope.startDateString = dateTime[0];
+                        $rootScope.endDateString = dateTime[0];
+
+                        $rootScope.datepickerClickTow(dateTime[0], dateTime[1], undefined);
+                        scope.datePickerCompare(dateTime[0], dateTime[0], undefined);
+                    }
+                });
+
                 $('#choicetrange span').html("与其他时间段对比");
                 $('#choicetrange').daterangepicker({
-                        format: 'YYYY-MM-DD',
-                        maxDate: GetDateStr(0),
-                        minDate: GetDateStr(-43),
-                        showDropdowns: true,
-                        showWeekNumbers: false,
-                        timePicker: false,
-                        timePickerIncrement: 1,
-                        timePicker12Hour: false,
-                        opens: 'left',
-                        drops: 'down',
-                        timeZone: true,
-                        buttonClasses: ['btn', 'btn-sm'],
-                        applyClass: 'btn-primary',
-                        cancelClass: 'btn-default',
-                        separator: ' to '
-                    },
-                    function (start, end, label) {
-                        //if(){
-                        $rootScope.sshuiyanCompareStart = start.format('YYYY-MM-DD');
-                        $rootScope.sshuiyanCompareEnd = end.format('YYYY-MM-DD');
-                        $rootScope.sshuiyanCompareFlag = true;
-                        $rootScope.startDateString = start.format('YYYY-MM-DD');
-                        $rootScope.endDateString = end.format('YYYY-MM-DD');
-                        $rootScope.datepickerClickTow(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
-                        scope.datePickerCompare(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
-                        //if (!$rootScope.datePickerCompare) {
-                        //    $rootScope.datePickerCompare = function (a, b, c) {
-                        //    }
-                        //} else {
-                        //    $rootScope.datePickerCompare(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
-                        //}
-                        /*if (start.format('YYYY-MM-DD') == end.format('YYYY-MM-DD')) {
-                         scope.datePickerCompare(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
-                         //if (!$rootScope.datePickerCompare) {
-                         //    $rootScope.datePickerCompare = function (a, b, c) {
-                         //    }
-                         //} else {
-                         //    $rootScope.datePickerCompare(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
-                         //}
-                         if (start.format('YYYY-MM-DD') == end.format('YYYY-MM-DD')) {
-                         $('#choicetrange span').html(start.format('YYYY-MM-DD'));
-                         }else {
-                         $('#choicetrange span').html(start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD'));
-                         }*/
-                    });
+                    format: 'YYYY-MM-DD',
+                    maxDate: GetDateStr(0),
+                    minDate: GetDateStr(-43),
+                    showDropdowns: true,
+                    showWeekNumbers: false,
+                    timePicker: false,
+                    timePickerIncrement: 1,
+                    timePicker12Hour: false,
+                    opens: 'left',
+                    drops: 'down',
+                    timeZone: true,
+                    buttonClasses: ['btn', 'btn-sm'],
+                    applyClass: 'btn-primary',
+                    cancelClass: 'btn-default',
+                    separator: ' to '
+                }, function (start, end, label) {
+                    //$rootScope.sshuiyanCompareStart = start.format('YYYY-MM-DD');
+                    //$rootScope.sshuiyanCompareEnd = end.format('YYYY-MM-DD');
+                    //$rootScope.sshuiyanCompareFlag = true;
+                    //$rootScope.startDateString = start.format('YYYY-MM-DD');
+                    //$rootScope.endDateString = end.format('YYYY-MM-DD');
+                    //console.log(start.format('YYYY-MM-DD'));
+                    //console.log(end.format('YYYY-MM-DD'));
+                    //console.log(label);
+                    //
+                    //$rootScope.datepickerClickTow(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
+                    //scope.datePickerCompare(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'), label);
+                });
             }
-            //,
-            //controller: function($scope, $element) {
-            //    $scope.ctrl = !!$element.controller('ngModel');
-            //}
-
         };
         return option;
     });
