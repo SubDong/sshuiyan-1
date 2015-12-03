@@ -624,6 +624,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                                 delete _df.nuv;
                                 delete _df.vc;
                                 delete _df.svc;
+                                delete _df.conversions;
                             });
                             var repData = JSON.stringify(dataInfo);
                         }
