@@ -266,7 +266,6 @@ var op = {
             yAxis: [
                 {
                     type: !chartConfig.yType ? "value" : chartConfig.yType,
-                    name: labelData[0].label,
                     splitLine: {
                         lineStyle: {
                             color: '#F0F0F0',
@@ -284,8 +283,7 @@ var op = {
                     }
                 },
                 {
-                    type: !chartConfig.yType ? "value" : chartConfig.yType,
-                    name: labelData.length > 1 ? labelData[1].label : ""
+                    type: !chartConfig.yType ? "value" : chartConfig.yType
                 }
             ],
             series: []
