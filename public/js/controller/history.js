@@ -393,7 +393,8 @@ define(['./module'], function (ctrs) {
             } else {
                 chart.config.keyFormat = "day";
             }
-            var getTime = $rootScope.tableTimeStart < -1 ? "day" : "hour";
+            //var getTime = $rootScope.tableTimeStart < -1 ? "day" : "hour";
+            var getTime = "day";
             var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
             $scope.charts[0].config.instance = chart;
             chart.showLoading({
@@ -450,7 +451,8 @@ define(['./module'], function (ctrs) {
             $scope.charts[0].config.legendData = customLegendData;
             $scope.radioCheckVal = [$rootScope.checkedArray[0]];
             var quota = [$rootScope.checkedArray[0]];
-            var getTime = $rootScope.tableTimeStart < -1 ? "day" : "hour";
+            //var getTime = $rootScope.tableTimeStart < -1 ? "day" : "hour";
+            var getTime = "day";
             $http({
                 method: 'GET',
                 url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + quota + "&dimension=" + $rootScope.tableSwitch.latitude.field
