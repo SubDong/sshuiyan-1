@@ -430,7 +430,7 @@ define(["./module"], function (ctrs) {
             switch (compareType) {
                 case 0:
                     $scope.compareType = 1;
-                    var times = [$rootScope.tableTimeStart, $rootScope.tableTimeStart - 1];
+                    var times = [$rootScope.tableTimeStart - 1, $rootScope.tableTimeEnd - 1];
                     var timesFormat = chartUtils.getSetOffTime(times[0], times[1]);
                     $scope.todayCalendar = timesFormat[0];
                     $scope.dayOrWeek = timesFormat[1];
@@ -439,7 +439,7 @@ define(["./module"], function (ctrs) {
                     break;
                 case 1:
                     $scope.compareType = 2;
-                    var times = [$rootScope.tableTimeStart, $rootScope.tableTimeStart - 7];
+                    var times = [$rootScope.tableTimeStart - 7, $rootScope.tableTimeEnd - 7];
                     var timesFormat = chartUtils.getSetOffTime(times[0], times[1]);
                     $scope.todayCalendar = timesFormat[0];
                     $scope.dayOrWeek = timesFormat[1];
