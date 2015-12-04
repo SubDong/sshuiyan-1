@@ -418,7 +418,7 @@ define(['./module'], function (ctrs) {
                             _item[quota[0]] = _tttt;
                         });
                     }
-                    $scope.charts[0].config.noFormat = undefined;
+                    $scope.charts[0].config.noFormat = true;
                     cf.renderChart(data, $scope.charts[0].config);
                 } else {
                     $scope.charts[0].config.noFormat = true;
