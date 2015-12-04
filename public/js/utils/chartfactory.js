@@ -391,6 +391,7 @@ var op = {
             option.series.push(serie);
         });
         if (!chartConfig.twoYz) {
+            console.log("labelData.length = " + labelData.length);
             for (var i = 0; i < labelData.length; i++) {
                 var formatType = labelData[i].label;
                 if (chartConfig.compare) {// 纵坐标显示
@@ -414,14 +415,13 @@ var op = {
                             width: 1
                         }
                     }
+                    if (chartConfig.compare) {
+                        var baseSerieName = formatType.split(":");
+                        ad.renderFormat(option, i, baseSerieName[1]);
+                    } else {
+                        ad.renderFormat(option, i, formatType);
+                    }
                 }
-                if (chartConfig.compare) {
-                    var baseSerieName = formatType.split(":");
-                    ad.renderFormat(option, i, baseSerieName[1]);
-                } else {
-                    ad.renderFormat(option, i, formatType);
-                }
-
             }
         }
         option.xAxis[0].data = xData[0];

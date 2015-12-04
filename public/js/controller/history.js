@@ -259,7 +259,8 @@ define(['./module'], function (ctrs) {
         };
 
         $scope.historyInit = function () {
-            var getTime = $rootScope.tableTimeStart < -1 ? "day" : "hour";
+            //var getTime = $rootScope.tableTimeStart < -1 ? "day" : "hour";
+            var getTime = "day";
             if ($rootScope.tableSwitch.number == 4) {
                 var searchUrl = SEM_API_URL + "search_word/" + esType + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd;
                 $http({
