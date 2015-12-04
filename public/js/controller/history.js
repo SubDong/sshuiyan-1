@@ -406,25 +406,25 @@ define(['./module'], function (ctrs) {
                 url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + quota + "&dimension=" + $rootScope.tableSwitch.latitude.field
                 + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&formartInfo=" + getTime + "&type=" + esType
             }).success(function (data, status) {
-                if ($rootScope.tableTimeStart >= -1) {
-                    if (data) {// 规避一些不需要的数据
-                        data.forEach(function (_item) {
-                            var _tttt = _item[quota[0]];
-                            delete _item.pv;
-                            delete _item.uv;
-                            delete _item.nuv;
-                            delete _item.vc;
-                            delete _item.svc;
-                            _item[quota[0]] = _tttt;
-                        });
-                    }
-                    $scope.charts[0].config.noFormat = true;
-                    cf.renderChart(data, $scope.charts[0].config);
-                } else {
+                //if ($rootScope.tableTimeStart >= -1) {
+                //    if (data) {// 规避一些不需要的数据
+                //        data.forEach(function (_item) {
+                //            var _tttt = _item[quota[0]];
+                //            delete _item.pv;
+                //            delete _item.uv;
+                //            delete _item.nuv;
+                //            delete _item.vc;
+                //            delete _item.svc;
+                //            _item[quota[0]] = _tttt;
+                //        });
+                //    }
+                    //$scope.charts[0].config.noFormat = true;
+                    //cf.renderChart(data, $scope.charts[0].config);
+                //} else {
                     $scope.charts[0].config.noFormat = true;
                     var final_result = chartUtils.getHistoryData(data, quota);
                     cf.renderChart(final_result, $scope.charts[0].config);
-                }
+                //}
             });
         }
 
