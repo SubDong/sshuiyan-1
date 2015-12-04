@@ -432,7 +432,8 @@ define(["./module"], function (ctrs) {
                     $scope.compareType = 1;
                     var times = [$rootScope.tableTimeStart - 1, $rootScope.tableTimeEnd - 1];
                     var timesFormat = chartUtils.getSetOffTime(times[0], times[1]);
-                    $scope.todayCalendar = timesFormat[0];
+                    var beginTimesFormat = chartUtils.getSetOffTime($rootScope.tableTimeStart, $rootScope.tableTimeEnd);
+                    $scope.todayCalendar = beginTimesFormat[0];
                     $scope.dayOrWeek = timesFormat[1];
                     $scope.compare(times, type, true);
                     $rootScope.datepickerClickTow(timesFormat[1], timesFormat[1], undefined);
@@ -441,7 +442,8 @@ define(["./module"], function (ctrs) {
                     $scope.compareType = 2;
                     var times = [$rootScope.tableTimeStart - 7, $rootScope.tableTimeEnd - 7];
                     var timesFormat = chartUtils.getSetOffTime(times[0], times[1]);
-                    $scope.todayCalendar = timesFormat[0];
+                    var beginTimesFormat = chartUtils.getSetOffTime($rootScope.tableTimeStart, $rootScope.tableTimeEnd);
+                    $scope.todayCalendar = beginTimesFormat[0];
                     $scope.dayOrWeek = timesFormat[1];
                     $scope.compare(times, type, true);
                     $rootScope.datepickerClickTow(timesFormat[1], timesFormat[1], undefined);
