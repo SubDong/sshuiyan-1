@@ -125,11 +125,11 @@ define(["./module"], function (ctrs) {
             if ($scope.compareType) {
                 switch ($scope.compareType) {
                     case 1:
-                        var times = [$rootScope.tableTimeStart, $rootScope.tableTimeStart - 1];
+                        var times = [$rootScope.tableTimeStart - 1, $rootScope.tableTimeEnd - 1];
                         $scope.compare(times, checkedVal);
                         break;
                     case 2:
-                        var times = [$rootScope.tableTimeStart, $rootScope.tableTimeStart - 7];
+                        var times = [$rootScope.tableTimeStart - 7, $rootScope.tableTimeEnd - 7];
                         $scope.compare(times, checkedVal);
                         break;
                     default :
