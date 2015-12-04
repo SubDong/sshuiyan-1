@@ -256,11 +256,11 @@ define(["./module"], function (ctrs) {
                 var type = [chartUtils.convertEnglish($scope.charts[0].config.legendData[0])];
                 switch ($scope.compareType) {
                     case 1:
-                        var times = [0, -1];
+                        var times = [$rootScope.tableTimeStart - 1, $rootScope.tableTimeEnd - 1];
                         $scope.compare(times, type, true);
                         break;
                     case 2:
-                        var times = [0, -7];
+                        var times = [$rootScope.tableTimeStart - 7, $rootScope.tableTimeEnd - 7];
                         $scope.compare(times, type, true);
                         break;
                     default :
@@ -268,7 +268,8 @@ define(["./module"], function (ctrs) {
                         $scope.compare(times, type, true);
                         break;
                 }
-                $rootScope.datepickerClickTow($rootScope.startDateString, $rootScope.endDateString);
+                var timesFormat = chartUtils.getSetOffTime(times[0], times[1]);
+                $rootScope.datepickerClickTow(timesFormat[1], timesFormat[1]);
                 return;
             }
             $scope.charts.forEach(function (e) {
@@ -308,11 +309,11 @@ define(["./module"], function (ctrs) {
                 var type = [chartUtils.convertEnglish($scope.charts[0].config.legendData[0])];
                 switch ($scope.compareType) {
                     case 1:
-                        var times = [0, -1];
+                        var times = [$rootScope.tableTimeStart - 1, $rootScope.tableTimeEnd - 1];
                         $scope.compare(times, type, true);
                         break;
                     case 2:
-                        var times = [0, -7];
+                        var times = [$rootScope.tableTimeStart - 7, $rootScope.tableTimeEnd - 7];
                         $scope.compare(times, type, true);
                         break;
                     default :
@@ -320,7 +321,8 @@ define(["./module"], function (ctrs) {
                         $scope.compare(times, type, true);
                         break;
                 }
-                $rootScope.datepickerClickTow($rootScope.startDateString, $rootScope.endDateString);
+                var timesFormat = chartUtils.getSetOffTime(times[0], times[1]);
+                $rootScope.datepickerClickTow(timesFormat[1], timesFormat[1]);
                 return;
             }
             $scope.charts.forEach(function (e) {
