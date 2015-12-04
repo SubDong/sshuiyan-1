@@ -433,6 +433,7 @@ define(["./module"], function (ctrs) {
                     $scope.todayCalendar = timesFormat[0];
                     $scope.dayOrWeek = timesFormat[1];
                     $scope.compare(times, type, true);
+                    $rootScope.datepickerClickTow(timesFormat[1], timesFormat[1], undefined);
                     break;
                 case 1:
                     $scope.compareType = 2;
@@ -441,6 +442,7 @@ define(["./module"], function (ctrs) {
                     $scope.todayCalendar = timesFormat[0];
                     $scope.dayOrWeek = timesFormat[1];
                     $scope.compare(times, type, true);
+                    $rootScope.datepickerClickTow(timesFormat[1], timesFormat[1], undefined);
                     break;
                 default:
                     $scope.resetC(true);
