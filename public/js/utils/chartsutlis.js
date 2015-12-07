@@ -437,47 +437,67 @@ var chartUtils = {
                     }
                 }
             }
+            //var length = data.quota.length / 24;
+            //var final_tmp = [];
+            //for (var i = 0; i < 24; i++) {
+            //    final_tmp.push(0);
+            //}
+            //for (var i = 0; i < length; i++) {
+            //    var _tmp = [];
+            //    for (var j = i * 24; j < (i + 1) * 24; j++) {
+            //        switch (data.label) {
+            //            case "avgTime":
+            //                if (data.quota[j] == "--") {
+            //                    _tmp.push("--");
+            //                } else {
+            //                    _tmp.push(parseInt(data.quota[j] / length));
+            //                }
+            //                break;
+            //            case "outRate":
+            //                if (data.quota[j] == "--") {
+            //                    _tmp.push("--");
+            //                } else {
+            //                    _tmp.push(parseFloat((data.quota[j] / length).toFixed(2)));
+            //                }
+            //                break;
+            //            case "nuvRate":
+            //                if (data.quota[j] == "--") {
+            //                    _tmp.push("--");
+            //                } else {
+            //                    _tmp.push(parseFloat((data.quota[j] / length).toFixed(2)));
+            //                }
+            //                break;
+            //            default :
+            //                if (data.quota[j] == "--") {
+            //                    _tmp.push("--");
+            //                } else {
+            //                    _tmp.push(parseInt(data.quota[j]));
+            //                }
+            //                break;
+            //        }
+            //
+            //    }
+            //    final_tmp = chartUtils.arrayMerge(final_tmp, _tmp);
+            //}
             var length = data.quota.length / 24;
             var final_tmp = [];
-            for (var i = 0; i < 24; i++) {
-                final_tmp.push(0);
-            }
-            for (var i = 0; i < length; i++) {
-                var _tmp = [];
-                for (var j = i * 24; j < (i + 1) * 24; j++) {
-                    switch (data.label) {
-                        case "avgTime":
-                            if (data.quota[j] == "--") {
-                                _tmp.push("--");
-                            } else {
-                                _tmp.push(parseInt(data.quota[j] / length));
-                            }
-                            break;
-                        case "outRate":
-                            if (data.quota[j] == "--") {
-                                _tmp.push("--");
-                            } else {
-                                _tmp.push(parseFloat((data.quota[j] / length).toFixed(2)));
-                            }
-                            break;
-                        case "nuvRate":
-                            if (data.quota[j] == "--") {
-                                _tmp.push("--");
-                            } else {
-                                _tmp.push(parseFloat((data.quota[j] / length).toFixed(2)));
-                            }
-                            break;
-                        default :
-                            if (data.quota[j] == "--") {
-                                _tmp.push("--");
-                            } else {
-                                _tmp.push(parseInt(data.quota[j]));
-                            }
-                            break;
-                    }
 
+            for (var i = 0; i < data.quota.length; i++) {
+                var _y = i % 24;
+                if (final_tmp[_y] == undefined) {
+                    final_tmp[_y] = 0;
                 }
-                final_tmp = chartUtils.arrayMerge(final_tmp, _tmp);
+                if (data.quota[i] != "--") {
+                    final_tmp[_y] += parseFloat(quota[i]);
+                }
+            }
+
+            for (var i = 0; i < final_tmp.length; i++) {
+                if (data.label == "avgTime" || data.label == "outRate" || data.label == "nuvRate") {
+                    final_tmp[i] = (parseFloat(final_tmp[i]) / length).toFixed(2);
+                } else {
+                    final_tmp[i] = parseInt(final_tmp[i]);
+                }
             }
             tmp["label"] = chartUtils.convertChinese(data.label);
             tmp["key"] = time;
