@@ -503,6 +503,7 @@ define(['./module'], function (ctrs) {
             $scope.charts[0].config.keyFormat = "day";
             $scope.refreshChart();
             $scope.historyInit();
+            $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
         };
         $scope.generatePDFMakeData = function (cb) {
             var dataInfo = angular.copy($rootScope.gridApi2.grid.options.data);
