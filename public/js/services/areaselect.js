@@ -205,14 +205,16 @@ define(["../app"], function (app) {
         ];
         $rootScope.browser = {};
         $rootScope.browsers = [
-            {name: '全部', value: '全部'},
-            {name: '百度', value: '百度'},
-            {name: 'Google', value: 'Google'},
-            {name: '搜狗', value: '搜狗'},
-            {name: '好搜', value: '好搜'},
-            {name: '必应', value: '必应'},
-            {name: '其他', value: '其他'}
+            {name: '全部', value: '全部',key :'-1'},
+            {name: '百度', value: '百度',key :'1'},
+            {name: 'Google', value: 'Google',key :'2'},
+            {name: '搜狗', value: '搜狗',key :'3'},
+            {name: '好搜', value: '好搜',key :'4'},
+            {name: '必应', value: '必应',key :'5'},
+            {name: '其他', value: '其他',key :'6'}
         ];
+
+        $rootScope.browsersKeyMap = {全部:-1,百度:1,Google:2,搜狗:3,好搜:4,必应:5,其他:6};
 
         $rootScope.mailUrl = [
             "index",

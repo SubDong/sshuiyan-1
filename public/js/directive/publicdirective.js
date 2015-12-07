@@ -1288,11 +1288,50 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     scope.DateLoading = false;
                     scope.setDefaultShowArray();
                     var esRequest = $http.get('/api/index_summary/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field) + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
+
                     $q.all([esRequest]).then(function (final_result) {
                         // 初始化对比数据
                         scope.pushESData(final_result[0].data);
                         scope.DateNumber = true;
                         scope.DateLoading = true;
+                        if(scope.dateShowArray.elementHasOwnPropertyValue("label","ec") != -1) { //查询退出次数
+
+                            var filters =  JSON.parse($rootScope.tableSwitch.tableFilter);
+                            var rf_type = -1;
+                            var se = -1;
+                            var isNew = -1;
+                            if(filters != null) {
+                                var index;
+                                rf_type = (index = filters.elementHasOwnProperty("rf_type"))  == -1 ? -1 :filters[index].rf_type[0];
+                                se = (index = filters.elementHasOwnProperty("se"))  == -1 ? -1 :filters[index].se[0];
+                                if( se != -1) {
+                                    se = $rootScope.browsersKeyMap[se];
+                                }
+                                isNew = (index = filters.elementHasOwnProperty("ct"))  == -1 ? -1 :filters[index].ct[0];
+                            }
+                            var parameter = {
+                                type: $rootScope.userType,
+                                rf_type: rf_type,
+                                se: se,
+                                isNew:isNew,
+                                start: $rootScope.start,
+                                end: $rootScope.end
+                            };
+                            var url = "/gacache/queryECDataSummary?query=" + JSON.stringify(parameter);
+                            $http({
+                                method: 'GET',
+                                url: url
+                            }).success(function (data) {
+                                if(data.hasOwnProperty("ecSummary")) {
+                                    var index = scope.dateShowArray.elementHasOwnPropertyValue("label","ec");
+                                    console.log(scope.dateShowArray[index]);
+                                    scope.dateShowArray[index].count = data.ecSummary;
+                                    scope.dateShowArray[index].value = data.ecSummary;
+                                    scope.dateShowArray[index].cCount = data.ecSummary;
+                                    scope.dateShowArray[index].cValue = data.ecSummary;
+                                }
+                            });
+                        }
                     });
                 };
                 // 获取对比数据
