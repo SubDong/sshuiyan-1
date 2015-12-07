@@ -215,7 +215,7 @@ define(["../app"], function (app) {
         ];
 
         $rootScope.mailUrl = [
-            "index",
+            "index",// 0
             "today",
             "yesterday",
             "month",
@@ -232,7 +232,8 @@ define(["../app"], function (app) {
             "provincemap",
             "equipment",
             "novisitors",
-            "pageTransform"
+            "pageTransform",
+            "history"// 18
         ]
     }]);
 });

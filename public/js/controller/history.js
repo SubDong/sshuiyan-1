@@ -505,6 +505,49 @@ define(['./module'], function (ctrs) {
             $scope.historyInit();
             $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
         };
+        // 邮件配置
+        $rootScope.initMailData = function () {
+            $http.get("api/saveMailConfig?rt=read&rule_url=" + $rootScope.mailUrl[18] + "").success(function (result) {
+                if (result) {
+                    var ele = $("ul[name='sen_form']");
+                    formUtils.rendererMailData(result, ele);
+                }
+            });
+        };
+        $scope.sendConfig = function () {
+            var formData = formUtils.vaildateSubmit($("ul[name='sen_form']"));
+            var result = formUtils.validateEmail(formData.mail_address, formData);
+            if (result.ec) {
+                alert(result.info);
+            } else {
+                formData.rule_url = $rootScope.mailUrl[18];
+                formData.uid = $cookieStore.get('uid');
+                formData.site_id = $rootScope.siteId;
+                formData.type_id = $rootScope.userType;
+                formData.schedule_date = $scope.mytime.time.Format('hh:mm');
+                formData.result_data = angular.copy($rootScope.gridApi2.grid.options.data);
+                formData.result_head_data = angular.copy($rootScope.gridApi2.grid.options.columnDefs);
+                $http({
+                    method: 'POST',
+                    url: 'api/saveMailConfig',
+                    headers: {
+                        'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+                        'Content-type': 'text/csv; charset=utf-8'
+                    },
+                    data: {
+                        data: formData
+                    }
+                }).success(function (data, status, headers, config) {
+                    var result = JSON.parse(eval("(" + data + ")").toString());
+                    if (result.ok == 1) {
+                        alert("操作成功!");
+                        $http.get("/api/initSchedule");
+                    } else {
+                        alert("操作失败!");
+                    }
+                });
+            }
+        };
         $scope.generatePDFMakeData = function (cb) {
             var dataInfo = angular.copy($rootScope.gridApi2.grid.options.data);
             var dataHeadInfo = angular.copy($rootScope.gridApi2.grid.options.columnDefs);

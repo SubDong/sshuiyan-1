@@ -391,7 +391,7 @@ var op = {
             option.series.push(serie);
         });
         if (!chartConfig.twoYz) {
-            console.log("labelData.length = " + labelData.length);
+            //console.log("labelData.length = " + labelData.length);
             for (var i = 0; i < labelData.length; i++) {
                 var formatType = labelData[i].label;
                 if (chartConfig.compare) {// 纵坐标显示

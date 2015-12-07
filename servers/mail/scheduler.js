@@ -308,6 +308,52 @@ module.exports = function (req) {
                         } else {
                             console.log("Send mail failed:No data result!");
                         }
+                    }  else if (rule_index == "history") {// 历史记录。
+                        var subject = "附件中含有历史记录数据,请查收!";
+                        var title = "历史记录-数据报告!";
+                        var data = mailRule["result_data"];
+                        var dataHead = mailRule["result_head_data"];
+                        if (data) {
+                            var result = data_convert.convertSjzhData(data, dataHead);
+                            csvApi.json2csv(result, function (err, csv) {
+                                var buffer = new Buffer(csv);
+                                var fileSuffix = new Date().getTime();
+                                fs.writeFile("servers/filetmp/" + fileSuffix + ".csv", buffer, function (error) {
+                                    if (error) {
+                                        console.error(error);
+                                        return;
+                                    } else {
+                                        var mailOptions = {
+                                            from: '百思慧眼<70285622@qq.com> ', // sender address
+                                            to: mailRule.mail_address.toString(), // list of receivers
+                                            subject: title, // Subject line
+                                            text: 'Hello world', // plaintext body
+                                            html: '<b>' + subject + '</b>',// html body
+                                            attachments: [
+                                                {
+                                                    filename: fileSuffix + '.txt',
+                                                    path: "servers/filetmp/" + fileSuffix + ".csv"
+                                                }
+                                            ]
+                                        };
+                                        mail.send(mailOptions, function (error, info) {
+                                            if (error) {
+                                                console.error(error);
+                                            } else {
+                                                console.log('Message sent: ' + info.response + "at " + new Date());
+                                                fs.exists('servers/filetmp/' + fileSuffix + '.csv', function (exists) {
+                                                    if (exists) {
+                                                        fs.unlinkSync('servers/filetmp/' + fileSuffix + '.csv');
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }
+                                });
+                            });
+                        } else {
+                            console.log("Send mail failed:No data result!");
+                        }
                     } else { //默认
                         var timeOffset = [-1, -1];
                         var interval = 1;
