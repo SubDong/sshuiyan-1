@@ -1735,8 +1735,6 @@ define(["app"], function (app) {
                         }
                         if ($rootScope.tableFormat != "hour") {
                             if ($rootScope.tableFormat == "week") {
-
-
                                 data.forEach(function (item, i) {
                                     item.period = util.getYearWeekState(item.period);
                                 });
@@ -1756,7 +1754,6 @@ define(["app"], function (app) {
                                     $scope.gridOptions.data = data;
                                 }
                             } else {
-
 
                                 if (data.length == 0) {
                                     var resultData = [];
@@ -1814,6 +1811,18 @@ define(["app"], function (app) {
                                         $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
                                         $scope.gridOptions.data = data;
                                     }
+                                    // 按日
+                                    for (var i = 0; i < data.length; i++) {
+                                        var _obj = data[i];
+                                        // 特殊处理一些数据
+                                        if (_obj.pv == 0) {
+                                            $rootScope.checkedArray.forEach(function (item, a) {
+                                                _obj[item] = "--";
+                                            });
+                                        }
+                                    }
+                                    $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
+                                    $scope.gridOptions.data = data;
                                 }
                             }
                         } else {

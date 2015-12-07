@@ -217,7 +217,7 @@ define(["../app"], function (app) {
         $rootScope.browsersKeyMap = {全部:-1,百度:1,Google:2,搜狗:3,好搜:4,必应:5,其他:6};
 
         $rootScope.mailUrl = [
-            "index",
+            "index",// 0
             "today",
             "yesterday",
             "month",
@@ -234,7 +234,8 @@ define(["../app"], function (app) {
             "provincemap",
             "equipment",
             "novisitors",
-            "pageTransform"
+            "pageTransform",
+            "history"// 18
         ]
     }]);
 });

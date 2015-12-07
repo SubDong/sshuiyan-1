@@ -259,7 +259,8 @@ define(['./module'], function (ctrs) {
         };
 
         $scope.historyInit = function () {
-            var getTime = $rootScope.tableTimeStart < -1 ? "day" : "hour";
+            //var getTime = $rootScope.tableTimeStart < -1 ? "day" : "hour";
+            var getTime = "day";
             if ($rootScope.tableSwitch.number == 4) {
                 var searchUrl = SEM_API_URL + "search_word/" + esType + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd;
                 $http({
@@ -392,7 +393,8 @@ define(['./module'], function (ctrs) {
             } else {
                 chart.config.keyFormat = "day";
             }
-            var getTime = $rootScope.tableTimeStart < -1 ? "day" : "hour";
+            //var getTime = $rootScope.tableTimeStart < -1 ? "day" : "hour";
+            var getTime = "day";
             var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
             $scope.charts[0].config.instance = chart;
             chart.showLoading({
@@ -404,14 +406,25 @@ define(['./module'], function (ctrs) {
                 url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + quota + "&dimension=" + $rootScope.tableSwitch.latitude.field
                 + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&formartInfo=" + getTime + "&type=" + esType
             }).success(function (data, status) {
-                if ($rootScope.tableTimeStart >= -1) {
-                    $scope.charts[0].config.noFormat = undefined;
-                    cf.renderChart(data, $scope.charts[0].config);
-                } else {
+                //if ($rootScope.tableTimeStart >= -1) {
+                //    if (data) {// 规避一些不需要的数据
+                //        data.forEach(function (_item) {
+                //            var _tttt = _item[quota[0]];
+                //            delete _item.pv;
+                //            delete _item.uv;
+                //            delete _item.nuv;
+                //            delete _item.vc;
+                //            delete _item.svc;
+                //            _item[quota[0]] = _tttt;
+                //        });
+                //    }
+                    //$scope.charts[0].config.noFormat = true;
+                    //cf.renderChart(data, $scope.charts[0].config);
+                //} else {
                     $scope.charts[0].config.noFormat = true;
                     var final_result = chartUtils.getHistoryData(data, quota);
                     cf.renderChart(final_result, $scope.charts[0].config);
-                }
+                //}
             });
         }
 
@@ -449,7 +462,8 @@ define(['./module'], function (ctrs) {
             $scope.charts[0].config.legendData = customLegendData;
             $scope.radioCheckVal = [$rootScope.checkedArray[0]];
             var quota = [$rootScope.checkedArray[0]];
-            var getTime = $rootScope.tableTimeStart < -1 ? "day" : "hour";
+            //var getTime = $rootScope.tableTimeStart < -1 ? "day" : "hour";
+            var getTime = "day";
             $http({
                 method: 'GET',
                 url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + quota + "&dimension=" + $rootScope.tableSwitch.latitude.field
@@ -489,7 +503,81 @@ define(['./module'], function (ctrs) {
             $scope.charts[0].config.keyFormat = "day";
             $scope.refreshChart();
             $scope.historyInit();
-        }
+            $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
+        };
+        // 邮件配置
+        $rootScope.initMailData = function () {
+            $http.get("api/saveMailConfig?rt=read&rule_url=" + $rootScope.mailUrl[18] + "").success(function (result) {
+                if (result) {
+                    var ele = $("ul[name='sen_form']");
+                    formUtils.rendererMailData(result, ele);
+                }
+            });
+        };
+        $scope.sendConfig = function () {
+            var formData = formUtils.vaildateSubmit($("ul[name='sen_form']"));
+            var result = formUtils.validateEmail(formData.mail_address, formData);
+            if (result.ec) {
+                alert(result.info);
+            } else {
+                formData.rule_url = $rootScope.mailUrl[18];
+                formData.uid = $cookieStore.get('uid');
+                formData.site_id = $rootScope.siteId;
+                formData.type_id = $rootScope.userType;
+                formData.schedule_date = $scope.mytime.time.Format('hh:mm');
+                formData.result_data = angular.copy($rootScope.gridApi2.grid.options.data);
+                formData.result_head_data = angular.copy($rootScope.gridApi2.grid.options.columnDefs);
+                $http({
+                    method: 'POST',
+                    url: 'api/saveMailConfig',
+                    headers: {
+                        'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+                        'Content-type': 'text/csv; charset=utf-8'
+                    },
+                    data: {
+                        data: formData
+                    }
+                }).success(function (data, status, headers, config) {
+                    var result = JSON.parse(eval("(" + data + ")").toString());
+                    if (result.ok == 1) {
+                        alert("操作成功!");
+                        $http.get("/api/initSchedule");
+                    } else {
+                        alert("操作失败!");
+                    }
+                });
+            }
+        };
+        $scope.generatePDFMakeData = function (cb) {
+            var dataInfo = angular.copy($rootScope.gridApi2.grid.options.data);
+            var dataHeadInfo = angular.copy($rootScope.gridApi2.grid.options.columnDefs);
+            var _tableBody = $rootScope.getPDFTableBody(dataInfo, dataHeadInfo);
+            var docDefinition = {
+                header: {
+                    text: "history data report",
+                    style: "header",
+                    alignment: 'center'
+                },
+                content: [
+                    {
+                        table: {
+                            headerRows: 1,
+                            body: _tableBody
+                        }
+                    },
+                    {text: '\nPower by www.best-ad.cn', style: 'header'},
+                ],
+                styles: {
+                    header: {
+                        fontSize: 20,
+                        fontName: "标宋",
+                        alignment: 'justify',
+                        bold: true
+                    }
+                }
+            };
+            cb(docDefinition);
+        };
         //日历
         this.selectedDates = [new Date().setHours(0, 0, 0, 0)];
 

@@ -391,32 +391,37 @@ var op = {
             option.series.push(serie);
         });
         if (!chartConfig.twoYz) {
+            //console.log("labelData.length = " + labelData.length);
             for (var i = 0; i < labelData.length; i++) {
                 var formatType = labelData[i].label;
-                option.series[i]["yAxisIndex"] = i;
-
-                option.yAxis[i]["axisLine"] = {
-                    lineStyle: {
-                        color: '#01AFEF',
-                        type: 'solid',
-                        width: 1
-                    }
-                };
-                option.yAxis[i]["splitNumber"] = 5;
-                option.yAxis[i]["splitLine"] = {
-                    lineStyle: {
-                        color: '#F0F0F0',
-                        type: 'solid',
-                        width: 1
-                    }
-                }
-                if (chartConfig.compare) {
-                    var baseSerieName = formatType.split(":");
-                    ad.renderFormat(option, i, baseSerieName[1]);
+                if (chartConfig.compare) {// 纵坐标显示
+                    option.series[i]["yAxisIndex"] = 0;
                 } else {
-                    ad.renderFormat(option, i, formatType);
+                    option.series[i]["yAxisIndex"] = i;
                 }
-
+                if (option.yAxis[i]) {// 避免出错
+                    option.yAxis[i]["axisLine"] = {
+                        lineStyle: {
+                            color: '#01AFEF',
+                            type: 'solid',
+                            width: 1
+                        }
+                    };
+                    option.yAxis[i]["splitNumber"] = 5;
+                    option.yAxis[i]["splitLine"] = {
+                        lineStyle: {
+                            color: '#F0F0F0',
+                            type: 'solid',
+                            width: 1
+                        }
+                    }
+                    if (chartConfig.compare) {
+                        var baseSerieName = formatType.split(":");
+                        ad.renderFormat(option, i, baseSerieName[1]);
+                    } else {
+                        ad.renderFormat(option, i, formatType);
+                    }
+                }
             }
         }
         option.xAxis[0].data = xData[0];
