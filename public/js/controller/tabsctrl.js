@@ -1769,6 +1769,48 @@ define(["app"], function (app) {
                                     $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
                                     $scope.gridOptions.data = resultData;
                                 } else {
+                                    var filters =  JSON.parse($rootScope.tableSwitch.tableFilter);
+                                    if($location.path() == "/page/indexoverview_ep") { //退出模块
+                                        var rf_type = -1;
+                                        var se = -1;
+                                        var isNew = -1;
+                                        if(filters != null) {
+                                            var index;
+                                            rf_type = (index = filters.elementHasOwnProperty("rf_type"))  == -1 ? -1 :filters[index].rf_type[0];
+                                            se = (index = filters.elementHasOwnProperty("se"))  == -1 ? -1 :filters[index].se[0];
+                                            if( se != -1) {
+                                                se = $rootScope.browsersKeyMap[se];
+                                            }
+                                            isNew = (index = filters.elementHasOwnProperty("ct"))  == -1 ? -1 :filters[index].ct[0];
+                                        }
+                                        var parameter = {
+                                            type: $rootScope.userType,
+                                            rf_type: rf_type,
+                                            se: se,
+                                            isNew:isNew,
+                                            start: $rootScope.start,
+                                            end: $rootScope.end
+                                        };
+                                        var url = "/gacache/queryECData?query=" + JSON.stringify(parameter);
+
+                                        $http({
+                                            method: 'GET',
+                                            url: url
+                                        }).success(function (exitCountDatas) {
+                                            $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
+                                            data.forEach(function (trData) {
+                                                if(exitCountDatas.hasOwnProperty(trData.loc) ) {
+                                                    trData.ec = exitCountDatas[trData.loc];
+                                                } else {
+                                                    trData.ec = "0";
+                                                }
+                                            });
+                                            $scope.gridOptions.data = data;
+                                        });
+                                    } else {
+                                        $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
+                                        $scope.gridOptions.data = data;
+                                    }
                                     // 按日
                                     for (var i = 0; i < data.length; i++) {
                                         var _obj = data[i];
@@ -1942,6 +1984,7 @@ define(["app"], function (app) {
                         } else {
                             for (var i = 0; i < contrast.length; i++) {
                                 if (a[target] == contrast[i][target]) {
+                                    console.log(a[target] + " ===  " + contrast[i][target])
                                     $rootScope.checkedArray.forEach(function (tt, aa) {
                                         var bili = ((parseInt(a[tt] + "".replace("%")) - parseInt((contrast[i][tt] + "").replace("%"))) / (parseInt((contrast[i][tt] + "").replace("%")) == 0 ? parseInt(a[tt] + "".replace("%")) : parseInt((contrast[i][tt] + "").replace("%"))) * 100).toFixed(2);
                                         dataObj[tt] = (isNaN(bili) ? 0 : bili) + "%";
@@ -2398,38 +2441,8 @@ define(["app"], function (app) {
             if (a.col.field == "pv" || a.col.field == "uv" || a.col.field == "ip" || a.col.field == "vc" || a.col.field == "nuv") {
                 //
             } else {
-
-                if (a.col.field == "nuvRate") {// 新访客比率
-                    var _t_nuv = [0, 0];
-                    var _t_uv = [0, 0];
-                    option.forEach(function (items, x) {
-                        var nuvDatas = (items.entity["nuv"] + "").split(",");
-                        var uvDatas = (items.entity["uv"] + "").split(",");
-                        _t_nuv[0] += nuvDatas[1] == "--" ? 0 : parseInt(nuvDatas[1]);
-                        _t_nuv[1] += nuvDatas[2] == "--" ? 0 : parseInt(nuvDatas[2]);
-                        _t_uv[0] += uvDatas[1] == "--" ? 0 : parseInt(uvDatas[1]);
-                        _t_uv[1] += uvDatas[2] == "--" ? 0 : parseInt(uvDatas[2]);
-                    });
-                    rast[0] = _t_nuv[0] * 100 / (_t_uv[0] == 0 ? 1 : _t_uv[0]) + "%";
-                    rast[1] = _t_nuv[1] * 100 / (_t_uv[1] == 0 ? 1 : _t_uv[1]) + "%";
-                } else if (a.col.field == "nuvRate") {// 跳出率
-                    var _t_svc = [0, 0];
-                    var _t_vc = [0, 0];
-                    option.forEach(function (items, x) {
-                        var svcDatas = (items.entity["svc"] + "").split(",");
-                        var vcDatas = (items.entity["vc"] + "").split(",");
-                        _t_svc[0] += svcDatas[1] == "--" ? 0 : parseInt(svcDatas[1]);
-                        _t_svc[1] += svcDatas[2] == "--" ? 0 : parseInt(svcDatas[2]);
-                        _t_vc[0] += vcDatas[1] == "--" ? 0 : parseInt(vcDatas[1]);
-                        _t_vc[1] += vcDatas[2] == "--" ? 0 : parseInt(vcDatas[2]);
-                    });
-                    rast[0] = _t_svc[0] * 100 / (_t_vc[0] == 0 ? 1 : _t_vc[0]) + "%";
-                    rast[1] = _t_svc[1] * 100 / (_t_vc[1] == 0 ? 1 : _t_vc[1]) + "%";
-                } else {
-                    rast[0] = (rast[0] / option.length).toFixed(2) + (a.col.field == "outRate" || a.col.field == "nuvRate" || a.col.field == "arrivedRate" ? "%" : "");
-                    rast[1] = (rast[1] / option.length).toFixed(2) + (a.col.field == "outRate" || a.col.field == "nuvRate" || a.col.field == "arrivedRate" ? "%" : "");
-                }
-
+                rast[0] = (rast[0] / option.length).toFixed(2) + (a.col.field == "outRate" || a.col.field == "nuvRate" || a.col.field == "arrivedRate" ? "%" : "");
+                rast[1] = (rast[1] / option.length).toFixed(2) + (a.col.field == "outRate" || a.col.field == "nuvRate" || a.col.field == "arrivedRate" ? "%" : "");
             }
 
             var bhl = (((parseFloat(((rast[0] + "").replace("%", ""))) - parseFloat(((rast[1] + "").replace("%", "")))) / parseFloat(((rast[1] + "").replace("%", "")))) * 100 ).toFixed(2) + "%";
@@ -2569,31 +2582,31 @@ define(["app"], function (app) {
                         }
                         returnData[0] = returnData[0] == "0" ? "0" : (returnData[0] / (_ll == 0 ? 1 : _ll)).toFixed(2);
                     }
-                    if (a.col.field == "outRate") {
+                    if (a.col.field == "outRate" && (returnData[0] + "").indexOf("%") == -1) {
                         var t_vc = 0;
                         var t_svc = 0;
                         option.forEach(function (_row) {
                             var _entity = _row.entity;
                             if (_entity.vc != "--") {
-                                t_vc += parseInt(_entity.vc);
+                                t_vc += _entity.vc;
                             }
                             if (_entity.svc != "--") {
-                                t_svc += parseInt(_entity.svc);
+                                t_svc += _entity.svc;
                             }
                         });
                         returnData[0] = (t_svc * 100 / (t_vc == 0 ? 1 : t_vc)).toFixed(2) + "%";
                     }
-                    if (a.col.field == "nuvRate") {
+                    if (a.col.field == "nuvRate" && (returnData[0] + "").indexOf("%") == -1) {
                         // 新访客比率算法。通过总的新访客数除以总的访客数
                         var t_uv = 0;
                         var t_nuv = 0;
                         option.forEach(function (_row) {
                             var _entity = _row.entity;
                             if (_entity.uv != "--") {
-                                t_uv += parseInt(_entity.uv);
+                                t_uv += _entity.uv;
                             }
                             if (_entity.nuv != "--") {
-                                t_nuv += parseInt(_entity.nuv);
+                                t_nuv += _entity.nuv;
                             }
                         });
                         returnData[0] = (t_nuv * 100 / (t_uv == 0 ? 1 : t_uv)).toFixed(2) + "%";

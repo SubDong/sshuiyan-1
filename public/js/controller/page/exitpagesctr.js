@@ -25,7 +25,7 @@ define(["./module"], function (ctrs) {
         $rootScope.tableTimeEnd = 0;
         $rootScope.tableFormat = null;
         //配置默认指标
-        $rootScope.checkedArray = ["pv", "uv"];
+        $rootScope.checkedArray = ["pv", "uv","ec"];
         $rootScope.gridArray = [
             {
                 name: "xl",
@@ -61,6 +61,12 @@ define(["./module"], function (ctrs) {
                 name: "访客数(UV)",
                 displayName: '访客数(UV)',
                 field: "uv",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+            },
+            {
+                name: "退出次数",
+                displayName: '退出次数',
+                field: "ec",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
             }
         ];
