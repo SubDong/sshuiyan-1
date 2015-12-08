@@ -1899,7 +1899,11 @@ define(["app"], function (app) {
                                     }
                                     var _nuvRate = "--";
                                     if (_obj["uv"] != "--" && _obj["nuv"] != "--") {
-                                        _nuvRate = (_obj["nuv"] * 100 / _obj["uv"]).toFixed(2) + "%";
+                                        if (_obj["uv"] == 0) {
+                                            _nuvRate = "0.00%";
+                                        } else {
+                                            _nuvRate = (_obj["nuv"] * 100 / _obj["uv"]).toFixed(2) + "%";
+                                        }
                                         _obj.nuvRate = _nuvRate;
                                     }
                                 }

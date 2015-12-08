@@ -485,14 +485,21 @@ var chartUtils = {
             for (var i = 0; i < data.quota.length; i++) {
                 var _y = i % 24;
                 if (final_tmp[_y] == undefined) {
-                    final_tmp[_y] = 0;
+                    final_tmp[_y] = "--";
                 }
                 if (data.quota[i] != "--") {
-                    final_tmp[_y] += parseFloat(data.quota[i]);
+                    if (final_tmp[_y] == "--") {
+                        final_tmp[_y] = parseFloat(data.quota[i]);
+                    } else {
+                        final_tmp[_y] += parseFloat(data.quota[i]);
+                    }
                 }
             }
 
             for (var i = 0; i < final_tmp.length; i++) {
+                if (final_tmp[i] == "--") {
+                    continue;
+                }
                 if (data.label == "avgTime" || data.label == "outRate" || data.label == "nuvRate") {
                     final_tmp[i] = (parseFloat(final_tmp[i]) / length).toFixed(2);
                 } else {
