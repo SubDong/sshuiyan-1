@@ -1808,21 +1808,19 @@ define(["app"], function (app) {
                                             $scope.gridOptions.data = data;
                                         });
                                     } else {
+                                        // 按日
+                                        for (var i = 0; i < data.length; i++) {
+                                            var _obj = data[i];
+                                            // 特殊处理一些数据
+                                            if (_obj.pv == 0) {
+                                                $rootScope.checkedArray.forEach(function (item, a) {
+                                                    _obj[item] = "--";
+                                                });
+                                            }
+                                        }
                                         $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
                                         $scope.gridOptions.data = data;
                                     }
-                                    // 按日
-                                    for (var i = 0; i < data.length; i++) {
-                                        var _obj = data[i];
-                                        // 特殊处理一些数据
-                                        if (_obj.pv == 0) {
-                                            $rootScope.checkedArray.forEach(function (item, a) {
-                                                _obj[item] = "--";
-                                            });
-                                        }
-                                    }
-                                    $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
-                                    $scope.gridOptions.data = data;
                                 }
                             }
                         } else {
