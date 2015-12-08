@@ -116,11 +116,11 @@ define(["./module"], function (ctrs) {
             if ($scope.compareType) {
                 switch ($scope.compareType) {
                     case 1:
-                        var times = [-1, -2];
+                        var times = [$rootScope.tableTimeStart - 1, $rootScope.tableTimeEnd - 1];
                         $scope.compare(times, checkedVal);
                         break;
                     case 2:
-                        var times = [-1 - 8];
+                        var times = [$rootScope.tableTimeStart - 7, $rootScope.tableTimeEnd - 7];
                         $scope.compare(times, checkedVal);
                         break;
                     default :
@@ -245,11 +245,11 @@ define(["./module"], function (ctrs) {
                 var type = [chartUtils.convertEnglish($scope.charts[0].config.legendData[0])];
                 switch ($scope.compareType) {
                     case 1:
-                        var times = [-1, -2];
+                        var times = [$rootScope.tableTimeStart - 1, $rootScope.tableTimeEnd - 1];
                         $scope.compare(times, type, true);
                         break;
                     case 2:
-                        var times = [-1, -8];
+                        var times = [$rootScope.tableTimeStart - 7, $rootScope.tableTimeEnd - 7];
                         $scope.compare(times, type, true);
                         break;
                     default :
@@ -257,6 +257,8 @@ define(["./module"], function (ctrs) {
                         $scope.compare(times, type, true);
                         break;
                 }
+                var timesFormat = chartUtils.getSetOffTime(times[0], times[1]);
+                $rootScope.datepickerClickTow(timesFormat[1], timesFormat[1]);
                 return;
             }
             $scope.charts.forEach(function (e) {
@@ -295,11 +297,11 @@ define(["./module"], function (ctrs) {
                 var type = [chartUtils.convertEnglish($scope.charts[0].config.legendData[0])];
                 switch ($scope.compareType) {
                     case 1:
-                        var times = [-1, -2];
+                        var times = [$rootScope.tableTimeStart - 1, $rootScope.tableTimeEnd - 1];
                         $scope.compare(times, type, true);
                         break;
                     case 2:
-                        var times = [-1, -8];
+                        var times = [$rootScope.tableTimeStart - 7, $rootScope.tableTimeEnd - 7];
                         $scope.compare(times, type, true);
                         break;
                     default :
@@ -307,6 +309,8 @@ define(["./module"], function (ctrs) {
                         $scope.compare(times, type, true);
                         break;
                 }
+                var timesFormat = chartUtils.getSetOffTime(times[0], times[1]);
+                $rootScope.datepickerClickTow(timesFormat[1], timesFormat[1]);
                 return;
             }
             $scope.charts.forEach(function (e) {
@@ -397,20 +401,38 @@ define(["./module"], function (ctrs) {
             var type = [chartUtils.convertEnglish($scope.charts[0].config.legendData[0])];
             switch (compareType) {
                 case 0:
+                    //$scope.compareType = 1;
+                    //var times = [$rootScope.tableTimeStart - 0, $rootScope.tableTimeStart - 1];
+                    //var timesFormat = chartUtils.getSetOffTime(times[0], times[1]);
+                    //$scope.todayCalendar = timesFormat[0];
+                    //$scope.dayOrWeek = timesFormat[1];
+                    //$scope.compare(times, type, true);
+                    //---------------------------------------
                     $scope.compareType = 1;
-                    var times = [$rootScope.tableTimeStart - 0, $rootScope.tableTimeStart - 1];
+                    var times = [$rootScope.tableTimeStart - 1, $rootScope.tableTimeEnd - 1];
                     var timesFormat = chartUtils.getSetOffTime(times[0], times[1]);
-                    $scope.todayCalendar = timesFormat[0];
+                    var beginTimesFormat = chartUtils.getSetOffTime($rootScope.tableTimeStart, $rootScope.tableTimeEnd);
+                    $scope.todayCalendar = beginTimesFormat[0];
                     $scope.dayOrWeek = timesFormat[1];
                     $scope.compare(times, type, true);
+                    $rootScope.datepickerClickTow(timesFormat[1], timesFormat[1], undefined);
                     break;
                 case 1:
+                    //$scope.compareType = 2;
+                    //var times = [$rootScope.tableTimeStart - 0, $rootScope.tableTimeStart - 7];
+                    //var timesFormat = chartUtils.getSetOffTime(times[0], times[1]);
+                    //$scope.todayCalendar = timesFormat[0];
+                    //$scope.dayOrWeek = timesFormat[1];
+                    //$scope.compare(times, type, true);
+                    //--------------------------------------------
                     $scope.compareType = 2;
-                    var times = [$rootScope.tableTimeStart - 0, $rootScope.tableTimeStart - 7];
+                    var times = [$rootScope.tableTimeStart - 7, $rootScope.tableTimeEnd - 7];
                     var timesFormat = chartUtils.getSetOffTime(times[0], times[1]);
-                    $scope.todayCalendar = timesFormat[0];
+                    var beginTimesFormat = chartUtils.getSetOffTime($rootScope.tableTimeStart, $rootScope.tableTimeEnd);
+                    $scope.todayCalendar = beginTimesFormat[0];
                     $scope.dayOrWeek = timesFormat[1];
                     $scope.compare(times, type, true);
+                    $rootScope.datepickerClickTow(timesFormat[1], timesFormat[1], undefined);
                     break;
                 default:
                     $scope.resetC(true);
