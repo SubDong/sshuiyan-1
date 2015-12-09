@@ -116,7 +116,7 @@ define([
             }, {
                 title: '百度推广',
                 icon: 'glyphicon glyphicon-asterisk',
-                stype: 1,
+                stype: 2,
                 sref: 'extension',
                 child: [{
                     text: '推广概况',
@@ -241,7 +241,7 @@ define([
             {
                 title: '子目录',
                 icon: 'glyphicon glyphicon-list',
-                stype: 0,
+                stype: 2,
                 sref: '#subcatalog/subcatalog'
             }
         ];

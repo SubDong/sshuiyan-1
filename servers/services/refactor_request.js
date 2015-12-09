@@ -718,7 +718,7 @@ var arrivedRateFn = function (result) {
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
-        var vc = result[i].vc_aggs.value;
+        var vc = result[i].vc_aggs.vc_aggs.value;
         keyArr.push(result[i].key);
         keyAsStringArr.push(result[i].key_as_string);
 

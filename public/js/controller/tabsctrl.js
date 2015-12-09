@@ -1808,21 +1808,19 @@ define(["app"], function (app) {
                                             $scope.gridOptions.data = data;
                                         });
                                     } else {
+                                        // 按日
+                                        for (var i = 0; i < data.length; i++) {
+                                            var _obj = data[i];
+                                            // 特殊处理一些数据
+                                            if (_obj.pv == 0) {
+                                                $rootScope.checkedArray.forEach(function (item, a) {
+                                                    _obj[item] = "--";
+                                                });
+                                            }
+                                        }
                                         $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
                                         $scope.gridOptions.data = data;
                                     }
-                                    // 按日
-                                    for (var i = 0; i < data.length; i++) {
-                                        var _obj = data[i];
-                                        // 特殊处理一些数据
-                                        if (_obj.pv == 0) {
-                                            $rootScope.checkedArray.forEach(function (item, a) {
-                                                _obj[item] = "--";
-                                            });
-                                        }
-                                    }
-                                    $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
-                                    $scope.gridOptions.data = data;
                                 }
                             }
                         } else {
@@ -1899,7 +1897,11 @@ define(["app"], function (app) {
                                     }
                                     var _nuvRate = "--";
                                     if (_obj["uv"] != "--" && _obj["nuv"] != "--") {
-                                        _nuvRate = (_obj["nuv"] * 100 / _obj["uv"]).toFixed(2) + "%";
+                                        if (_obj["uv"] == 0) {
+                                            _nuvRate = "0.00%";
+                                        } else {
+                                            _nuvRate = (_obj["nuv"] * 100 / _obj["uv"]).toFixed(2) + "%";
+                                        }
                                         _obj.nuvRate = _nuvRate;
                                     }
                                 }

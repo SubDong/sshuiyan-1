@@ -555,7 +555,9 @@ if (config != undefined && !config.open) {
             return new l
         })();
         (function () {
-            if (performance != undefined) {
+            //判定浏览器兼容性问题，IE8.0以下包括IE8.0 不支持
+            var h = /MS(IE) (\d+\.\d+)/.exec(c);
+            if (h!=undefined&&h!=""&&h!="IE6.0"&&h!="IE7.0"&&h!="IE8.0"&&performance != undefined) {
                 var c = g.event, h = g.cookie;
                 var l = function (n) {
                     var m = performance.timing, o = m[n + "Start"] ? m[n + "Start"] : 0;
