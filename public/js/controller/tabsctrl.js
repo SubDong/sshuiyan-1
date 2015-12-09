@@ -1975,7 +1975,11 @@ define(["app"], function (app) {
                                 try {
                                     var bili = ((parseInt(a[tt] + "".replace("%")) - parseInt((contrast[b][tt] + "").replace("%"))) / (parseInt((contrast[b][tt] + "").replace("%")) == 0 ? parseInt(a[tt] + "".replace("%")) : parseInt((contrast[b][tt] + "").replace("%"))) * 100).toFixed(2);
                                     dataObj[tt] = (isNaN(bili) ? 0 : bili) + "%";
-                                    a[tt] = "　" + "," + a[tt] + "," + contrast[b][tt] + "," + dataObj[tt]
+                                    if (tt == "nuvRate" || tt == "outRate") {
+                                        a[tt] = "　" + "," + a[tt] + "%," + contrast[b][tt] + "%," + dataObj[tt]
+                                    } else {
+                                        a[tt] = "　" + "," + a[tt] + "," + contrast[b][tt] + "," + dataObj[tt];
+                                    }
                                 } catch (e) {
                                     a[tt] = "　" + "," + a[tt] + "," + "--" + "," + "--"
                                 }
@@ -1986,11 +1990,15 @@ define(["app"], function (app) {
                         } else {
                             for (var i = 0; i < contrast.length; i++) {
                                 if (a[target] == contrast[i][target]) {
-                                    console.log(a[target] + " ===  " + contrast[i][target])
+                                    console.log(a[target] + " ===  " + contrast[i][target]);
                                     $rootScope.checkedArray.forEach(function (tt, aa) {
                                         var bili = ((parseInt(a[tt] + "".replace("%")) - parseInt((contrast[i][tt] + "").replace("%"))) / (parseInt((contrast[i][tt] + "").replace("%")) == 0 ? parseInt(a[tt] + "".replace("%")) : parseInt((contrast[i][tt] + "").replace("%"))) * 100).toFixed(2);
                                         dataObj[tt] = (isNaN(bili) ? 0 : bili) + "%";
-                                        a[tt] = "　" + "," + a[tt] + "," + contrast[i][tt] + "," + dataObj[tt]
+                                        if (tt == "nuvRate" || tt == "outRate") {
+                                            a[tt] = "　" + "," + a[tt] + "%," + contrast[i][tt] + "%," + dataObj[tt];
+                                        } else {
+                                            a[tt] = "　" + "," + a[tt] + "," + contrast[i][tt] + "," + dataObj[tt];
+                                        }
                                     });
                                     a[target] = a[target] + "," + ($rootScope.startString != undefined ? $rootScope.startString : dateTime1[0] == dateTime1[1] ? dateTime1[0] + "," + dateTime2[0] + "," + "变化率" : dateTime1[0] + " 至 " + dateTime1[1]) + "," + (dateTime2[0] + " 至 " + dateTime2[1]) + "," + "变化率";
                                     dataArray.push(a);
