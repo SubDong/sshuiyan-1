@@ -1976,7 +1976,9 @@ define(["app"], function (app) {
                                     var bili = ((parseInt(a[tt] + "".replace("%")) - parseInt((contrast[b][tt] + "").replace("%"))) / (parseInt((contrast[b][tt] + "").replace("%")) == 0 ? parseInt(a[tt] + "".replace("%")) : parseInt((contrast[b][tt] + "").replace("%"))) * 100).toFixed(2);
                                     dataObj[tt] = (isNaN(bili) ? 0 : bili) + "%";
                                     if (tt == "nuvRate" || tt == "outRate") {
-                                        a[tt] = "　" + "," + a[tt] + "%," + contrast[b][tt] + "%," + dataObj[tt]
+                                        a[tt] = "　" + "," + getRateValue(a[tt]) + "," + getRateValue(contrast[b][tt]) + "," + dataObj[tt];
+                                    } else if (tt == "avgTime") {
+                                        a[tt] = "　" + "," + MillisecondToDate(a[tt]) + "," + MillisecondToDate(contrast[b][tt]) + "," + dataObj[tt];
                                     } else {
                                         a[tt] = "　" + "," + a[tt] + "," + contrast[b][tt] + "," + dataObj[tt];
                                     }
@@ -1995,7 +1997,9 @@ define(["app"], function (app) {
                                         var bili = ((parseInt(a[tt] + "".replace("%")) - parseInt((contrast[i][tt] + "").replace("%"))) / (parseInt((contrast[i][tt] + "").replace("%")) == 0 ? parseInt(a[tt] + "".replace("%")) : parseInt((contrast[i][tt] + "").replace("%"))) * 100).toFixed(2);
                                         dataObj[tt] = (isNaN(bili) ? 0 : bili) + "%";
                                         if (tt == "nuvRate" || tt == "outRate") {
-                                            a[tt] = "　" + "," + a[tt] + "%," + contrast[i][tt] + "%," + dataObj[tt];
+                                            a[tt] = "　" + "," + getRateValue(a[tt]) + "," + getRateValue(contrast[i][tt]) + "," + dataObj[tt];
+                                        } else if (tt == "avgTime") {
+                                            a[tt] = "　" + "," + MillisecondToDate(a[tt]) + "," + MillisecondToDate(contrast[i][tt]) + "," + dataObj[tt];
                                         } else {
                                             a[tt] = "　" + "," + a[tt] + "," + contrast[i][tt] + "," + dataObj[tt];
                                         }
@@ -2026,6 +2030,17 @@ define(["app"], function (app) {
                 $rootScope.gridArray = gridArrayOld;
             })
         };
+        function getRateValue(_value) {
+            if (_value == undefined) {
+                return "--";
+            }
+            if (_value != "--") {
+                if ((_value + "").indexOf("%") == -1) {
+                    return _value + "%";
+                }
+            }
+            return _value;
+        }
         //数据对比实现方法
         $scope.targetDataContrast = function (startInfoTime, endInfoTime, cabk) {
             $scope.gridOpArray = angular.copy($rootScope.gridArray);

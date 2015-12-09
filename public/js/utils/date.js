@@ -107,11 +107,16 @@ Date.prototype.Format = function (fmt) {
 /**
  * create by wms on 2015-04-22.一天内的毫秒数转时分秒
  * @param msd
- * @returns {number}
  * @constructor
  */
 function MillisecondToDate(msd) {
-    var time = parseFloat(msd / 1000);
+    if (msd == undefined || msd == "--") {
+        return "--";
+    }
+    if ((msd + "").indexOf(":") != -1) {
+        return msd;
+    }
+    var time = parseFloat(msd);
     if (null!= time && ""!= time) {
         if (time > 60 && time < 60*60) {
             time = "00:" + myParseInt(time / 60) + ":" + myParseInt(time % 60);
