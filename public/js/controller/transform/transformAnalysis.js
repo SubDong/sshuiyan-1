@@ -511,8 +511,9 @@ define(["./module"], function (ctrs) {
                                                             }
                                                         }
                                                         var t = eventInfo.convCount > 0 ? (cost / eventInfo.convCount).toFixed(2) : 0
-                                                        sumTransformCost = Number(sumTransformCost) + Number(t);
-                                                        item.value = sumTransformCost.toFixed(2) + "元"
+                                                        sumTransformCost = (Number(sumTransformCost) + Number(t));
+                                                        if( (events.length-1)==index)
+                                                            item.value = (sumTransformCost/events.length).toFixed(2) + "元"
                                                     });
                                                 }
                                             } else if (item.label == "clickTotal") {

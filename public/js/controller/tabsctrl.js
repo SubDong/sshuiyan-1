@@ -1495,6 +1495,8 @@ define(["app"], function (app) {
                     else
                         val = val + option.entity[a.col.field]
                 })
+                if(options.length>0)
+                    val = val/options.length
                 val = val.toFixed(2) + "元"
             } else {
                 var flag = false;//是否有%号
