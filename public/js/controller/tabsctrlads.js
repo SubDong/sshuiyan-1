@@ -1221,7 +1221,7 @@ define(["app"], function (app) {
                 $http({
                     method: 'GET',
                     url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field)
-                    + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
+                    + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat+"&popup=" + $rootScope.tableSwitch.popup  + "&type=" + esType
                 }).success(function (data, status) {
                     $rootScope.$broadcast("LoadDateShowDataFinish", data);
                     if ($rootScope.tableSwitch.promotionSearch != undefined && $rootScope.tableSwitch.promotionSearch) {
@@ -1609,7 +1609,7 @@ define(["app"], function (app) {
                         method: 'GET',
                         async: false,
                         url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + $rootScope.tableSwitch.dimen
-                        + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&type=" + esType
+                        + "&filerInfo=" + $rootScope.tableSwitch.tableFilter +"&popup=" + $rootScope.tableSwitch.popup + "&type=" + esType
                     }).success(function (data, status) {
                         var reg = new RegExp($rootScope.tableSwitch.dimen, "g");
                         if (data != undefined && data.length != 0) {
