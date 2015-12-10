@@ -622,26 +622,20 @@ var op = {
             itemStyle: {
                 normal: {
                     label: {
-                        position: 'inner',
-                        show: true,
-                        textStyle: {
-                            color: "rgba(255,255,255,1)"
-                        }
+                        position: 'outer',
+                        show: true
                     },
                     labelLine: {
-                        show: false
+                        show: true
                     }
                 },
                 emphasis: {
-                    borderWidth: 2,
+                    borderWidth: 0,
                     borderColor: "#fdf9f9",
                     label: {
-                        position: 'outer',
+                        position: 'inner',
                         show: true,
-                        formatter: "{d}%",
-                        textStyle: {
-                            color: "rgba(0,0,0,1)"
-                        }
+                        formatter: "{d}%"
                     },
                     labelLine: {
                         show: true,
@@ -651,7 +645,7 @@ var op = {
                         var zrColor = zrender.tool.color;
                         return zrColor.getRadialGradient(
                             650, 200, 80, 650, 200, 120,
-                            [[0, 'rgba(0,0,0,0)'], [1, 'rgba(0,0,0,0)']]
+                            [[0, 'rgba(0,0,0,0.1)'], [1, 'rgba(0,0,0,0.1)']]
                         )
                     })
                 }
@@ -936,7 +930,7 @@ var ad = {
             case "crate":
                 option.yAxis[index]["axisLabel"] = {
                     formatter: function (value) {
-                        console.log("crete renderFormat ="+value + "%")
+                        console.log("crete renderFormat =" + value + "%")
                         return value + "%";
                     }
                 };
