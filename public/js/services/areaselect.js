@@ -25,7 +25,7 @@ define(["../app"], function (app) {
             {name: '全部'},
             {name: '北京'},
             {name: '上海'},
-            {name: '天津'},
+            {name: '天津市'},
             {name: '重庆'},
             {name: '河北'},
             {name: '山西'},

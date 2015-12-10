@@ -1643,6 +1643,13 @@ define(["app"], function (app) {
                         var infoKey = item["word"];
                         if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null" || infoKey.length >= 40)) {
                         } else {
+                            // 保留2位有效数字
+                            for (var _p in item) {
+                                if (_p != "word" && _p != "freq") {
+                                    var value = item[_p];
+                                    item[_p] = parseFloat(value.substring(0, value.length - 1)).toFixed(2) + "%";
+                                }
+                            }
                             result.push(item);
                         }
                     });
