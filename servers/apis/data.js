@@ -1115,7 +1115,7 @@ api.get("/transform/getPageConvInfo", function (req, res) {
     //计算开始时间
     var timeArea = date.getConvertTimeByNumber(query.start, query.end)
     //计算计算时间
-    transform.searchPageConvInfo(req.es, indexString, timeArea[0], timeArea[1], query.type,query.rfType, query.se, query.queryOptions,query.filters, function (result) {
+    transform.searchPageConvInfo(req.es, indexString, timeArea[0], timeArea[1], query.type,JSON.parse(query.pages),query.rfType, query.se, query.queryOptions,query.filters, function (result) {
         datautils.send(res, result);
     });
 });

@@ -206,7 +206,7 @@ var transform = {
                                     if (result.uv_aggs.value == "0") {
                                         data[queryOption] = "0.00%";
                                     } else {
-                                        data[queryOption] = ((result.visitor_aggs.value-result.old_visitor_aggs.value) / pv.uv_aggs.value).toFixed(2) + "%";
+                                        data[queryOption] = ((result.visitor_aggs.value - result.old_visitor_aggs.value) / pv.uv_aggs.value).toFixed(2) + "%";
 
                                     }
                                     break;
@@ -427,7 +427,7 @@ var transform = {
                                             if (results[i].uv_aggs.value == "0") {
                                                 quotaArry.push("0.00%");
                                             } else {
-                                                quotaArry.push(((result.visitor_aggs.value-result.old_visitor_aggs.value) / pv.uv_aggs.value).toFixed(2) + "%");
+                                                quotaArry.push(((result.visitor_aggs.value - result.old_visitor_aggs.value) / pv.uv_aggs.value).toFixed(2) + "%");
                                             }
                                         }
                                     }
@@ -683,7 +683,7 @@ var transform = {
                                 case "nuvRate":
                                     for (i = 0; i < result.length; i++) {
                                         dataArry.push({
-                                            nuvRate: ((result.visitor_aggs.value-result.old_visitor_aggs.value) / pv.uv_aggs.value).toFixed(2) + "%",
+                                            nuvRate: ((result.visitor_aggs.value - result.old_visitor_aggs.value) / pv.uv_aggs.value).toFixed(2) + "%",
                                             campaignName: result[i].key
                                         });
                                     }
@@ -923,7 +923,7 @@ var transform = {
                             case "nuvRate":
                                 for (i = 0; i < result.length; i++) {
                                     dataArry.push({
-                                        nuvRate: ((result.visitor_aggs.value-result.old_visitor_aggs.value) / pv.uv_aggs.value).toFixed(2) + "%",
+                                        nuvRate: ((result.visitor_aggs.value - result.old_visitor_aggs.value) / pv.uv_aggs.value).toFixed(2) + "%",
                                         campaignName: result[i].key
                                     });
                                 }
@@ -1242,7 +1242,7 @@ var transform = {
                                             if (result.uv_aggs.value) {
                                                 quotaArry.push(0);
                                             } else {
-                                                quotaArry.push(((result.visitor_aggs.value-result.old_visitor_aggs.value) / pv.uv_aggs.value).toFixed(2) + "%");
+                                                quotaArry.push(((result.visitor_aggs.value - result.old_visitor_aggs.value) / pv.uv_aggs.value).toFixed(2) + "%");
                                             }
                                         }
                                     }
@@ -1816,11 +1816,12 @@ var transform = {
                 var _aggs = {};
                 var queryOptions = queryOptionsStr.split(",")
                 queryOptions.forEach(function (queryOption) {
+                    //console.log(queryOption)
                     for (var key in es_aggs[queryOption]) {
                         _aggs[key] = es_aggs[queryOption][key];
                     }
                 });
-                var querys = []
+                //var querys = []
                 var boolQuery = [];
 
 
@@ -1834,10 +1835,18 @@ var transform = {
                             })
                         }
                         var tempUrl = page.page_urls[i]
-                        if(tempUrl!=undefined&&tempUrl!=""&&tempUrl[tempUrl.length-1]=="/"){
-                            tempUrl = tempUrl.substring(0,tempUrl.length-1)
+                        if (tempUrl != undefined && tempUrl != "" && tempUrl[tempUrl.length - 1] == "/") {
+                            tempUrl = tempUrl.substring(0, tempUrl.length - 1)
                         }
                         filterQuery.push({"term": {"loc": tempUrl}});
+                        filterQuery.push({
+                            "range": {
+                                "utime": {
+                                    "from": (startNum > page.updateTime ? startNum : page.updateTime ),
+                                    "to": endNum
+                                }//开始时间取大的
+                            }
+                        })
                         boolQuery.push({
                             "bool": {
                                 "must": filterQuery
@@ -1845,7 +1854,7 @@ var transform = {
                         });
                     }
                 })
-                querys.push({
+                var query = {
                     "index": newIndexs,
                     "type": type,
                     "body": {
@@ -1865,11 +1874,11 @@ var transform = {
                             }
                         },
                     }
-                })
+                }
                 var pvs = []
-                //console.log("**************PageBasePvs**************")
-                //console.log(JSON.stringify(querys[0]))
-                es.search(querys[0], function (error, result) {
+                ////console.log("**************PageBasePvs**************")
+                ////console.log(JSON.stringify(query))
+                es.search(query, function (error, result) {
                     var datas = []
                     if (result != undefined && result.aggregations != undefined && result.aggregations.pagePVs != undefined && result.aggregations.pagePVs.buckets != undefined) {
                         var pvs = result.aggregations.pagePVs.buckets
@@ -1884,16 +1893,17 @@ var transform = {
                                         if (pv.uv_aggs.value == "0") {
                                             data[queryOption] = "0.00%";
                                         } else {
-                                            data[queryOption] = (((pv.visitor_aggs.value-pv.old_visitor_aggs.value) / pv.uv_aggs.value)*100).toFixed(2) + "%";
+                                            data[queryOption] = (((pv.visitor_aggs.value - pv.old_visitor_aggs.value) / pv.uv_aggs.value) * 100).toFixed(2) + "%";
+                                            //console.log(pv.visitor_aggs.value+" - "+pv.old_visitor_aggs.value+" / "+pv.uv_aggs.value+"nuvRate = "+ data[queryOption])
                                         }
-                                        data["nuv"] = (pv.visitor_aggs.value-pv.old_visitor_aggs.value)
+                                        data["nuv"] = (pv.visitor_aggs.value - pv.old_visitor_aggs.value)
                                         data["uv"] = pv.uv_aggs.value
                                         break;
                                     case"nuv":
                                         if (pv.visitor_aggs.value == "0") {
                                             data[queryOption] = 0;
                                         } else {
-                                            data[queryOption] =pv.visitor_aggs.value-pv.old_visitor_aggs.value
+                                            data[queryOption] = pv.visitor_aggs.value - pv.old_visitor_aggs.value
                                         }
                                     default :
                                         if (pv[queryOption] != undefined)
@@ -1949,10 +1959,18 @@ var transform = {
                         }
                         filterQuery.push({"term": {"rf_type": rfType}})
                         var tempUrl = page.page_urls[i]
-                        if(tempUrl!=undefined&&tempUrl!=""&&tempUrl[tempUrl.length-1]=="/"){
-                            tempUrl = tempUrl.substring(0,tempUrl.length-1)
+                        if (tempUrl != undefined && tempUrl != "" && tempUrl[tempUrl.length - 1] == "/") {
+                            tempUrl = tempUrl.substring(0, tempUrl.length - 1)
                         }
                         filterQuery.push({"term": {"loc": tempUrl}})
+                        filterQuery.push({
+                            "range": {
+                                "utime": {
+                                    "from": (startNum > page.updateTime ? startNum : page.updateTime ),
+                                    "to": endNum
+                                }//开始时间取大的
+                            }
+                        })
                         boolQuery.push({
                             "bool": {
                                 "must": filterQuery
@@ -1981,8 +1999,8 @@ var transform = {
                     }
                 })
                 var pvs = []
-                ////console.log("****************************")
-                ////console.log(JSON.stringify(querys[0]))
+                //////console.log("****************************")
+                //////console.log(JSON.stringify(querys[0]))
                 es.search(querys[0], function (error, result) {
                     var datas = []
                     if (result != undefined && result.aggregations != undefined && result.aggregations.pagePVs != undefined && result.aggregations.pagePVs.buckets != undefined) {
@@ -1999,16 +2017,16 @@ var transform = {
                                         if (pv.uv_aggs.value == "0") {
                                             data[queryOption] = "0.00%";
                                         } else {
-                                            data[queryOption] = (((pv.visitor_aggs.value-pv.old_visitor_aggs.value) / pv.uv_aggs.value)*100).toFixed(2) + "%";
+                                            data[queryOption] = (((pv.visitor_aggs.value - pv.old_visitor_aggs.value) / pv.uv_aggs.value) * 100).toFixed(2) + "%";
                                         }
-                                        data["nuv"] = (pv.visitor_aggs.value-pv.old_visitor_aggs.value)
+                                        data["nuv"] = (pv.visitor_aggs.value - pv.old_visitor_aggs.value)
                                         data["uv"] = pv.uv_aggs.value
                                         break;
                                     case"nuv":
                                         if (pv.old_visitor_aggs.value == "0") {
                                             data[queryOption] = 0;
                                         } else {
-                                            data[queryOption] =pv.visitor_aggs.value-pv.old_visitor_aggs.value
+                                            data[queryOption] = pv.visitor_aggs.value - pv.old_visitor_aggs.value
                                         }
                                     default :
                                         if (pv[queryOption] != undefined)
@@ -2075,10 +2093,18 @@ var transform = {
                             })
                         }
                         var tempUrl = page.page_urls[i]
-                        if(tempUrl!=undefined&&tempUrl!=""&&tempUrl[tempUrl.length-1]=="/"){
-                            tempUrl = tempUrl.substring(0,tempUrl.length-1)
+                        if (tempUrl != undefined && tempUrl != "" && tempUrl[tempUrl.length - 1] == "/") {
+                            tempUrl = tempUrl.substring(0, tempUrl.length - 1)
                         }
                         filterQuery.push({"term": {"loc": tempUrl}})
+                        filterQuery.push({
+                            "range": {
+                                "utime": {
+                                    "from": (startNum > page.updateTime ? startNum : page.updateTime ),
+                                    "to": endNum
+                                }//开始时间取大的
+                            }
+                        })
                         boolQuery.push({
                             "bool": {
                                 "must": filterQuery
@@ -2123,8 +2149,8 @@ var transform = {
                         },
                     }
                 })
-                ////console.log("****************************")
-                ////console.log(JSON.stringify(querys[0]))
+                //////console.log("****************************")
+                //////console.log(JSON.stringify(querys[0]))
                 es.search(querys[0], function (error, result) {
                     var results = {}
                     if (result != undefined && result.aggregations != undefined && result.aggregations.pagePVs != undefined && result.aggregations.pagePVs.buckets != undefined) {
@@ -2139,7 +2165,7 @@ var transform = {
             });
         },
 
-        searchPageConvInfo: function (es, indexs, startNum, endNum, type, rfType, se, queryOptionsStr, filters, callbackFn) {
+        searchPageConvInfo: function (es, indexs, startNum, endNum, type,pages, rfType, se, queryOptionsStr, filters, callbackFn) {
             var requests = [];
             for (var i = 0; i < indexs.length; i++) {
                 requests.push({
@@ -2165,19 +2191,39 @@ var transform = {
                         _aggs[key] = es_aggs[queryOption][key];
                     }
                 });
-                var filterQuery = []
-                if (filters != undefined && filters.length > 0) {
-                    var jfilters = JSON.parse(filters)
-                    jfilters.forEach(function (filter) {
-                        filterQuery.push({"term": filter})
+                var boolQuery = []
+                pages.forEach(function (page) {
+                    //console.log(JSON.stringify(page))
+                    var filterQuery = []
+                    if (filters != undefined && filters.length > 0) {
+                        var jfilters = JSON.parse(filters)
+                        jfilters.forEach(function (filter) {
+                            filterQuery.push({"term": filter})
+                        })
+                    }
+                    filterQuery.push({"term": {"rf_type": rfType}})
+                    filterQuery.push({"term": {"se": se}})
+                    filterQuery.push({
+                        "range": {
+                            "utime": {
+                                "from": (startNum > page.updateTime ? startNum : page.updateTime ),
+                                "to": endNum
+                            }//开始时间取大的
+                        }
                     })
-                }
-                filterQuery.push({"term": {"rf_type": rfType}})
-                var tempUrl = page.page_urls[i]
-                if(tempUrl!=undefined&&tempUrl!=""&&tempUrl[tempUrl.length-1]=="/"){
-                    tempUrl = tempUrl.substring(0,tempUrl.length-1)
-                }
-                filterQuery.push({"term": {"loc":tempUrl}})
+                    for (var i = 0; i < page.page_urls.length; i++) {
+                        var tempUrl = page.page_urls[i]
+                        if (tempUrl != undefined && tempUrl != "" && tempUrl[tempUrl.length - 1] == "/") {
+                            tempUrl = tempUrl.substring(0, tempUrl.length - 1)
+                        }
+                        filterQuery.push({"term": {"loc": tempUrl}})
+                    }
+                    boolQuery.push({
+                        "bool": {
+                            "must": filterQuery
+                        }
+                    });
+                })
                 var query = {
                     "index": newIndexs,
                     "type": type + "_page",
@@ -2185,7 +2231,7 @@ var transform = {
                         "size": 0,
                         query: {
                             "bool": {
-                                "must": filterQuery
+                                "should": boolQuery
                             }
                         },
                         "aggs": {
@@ -2215,7 +2261,7 @@ var transform = {
                     }
                 }
                 ////console.log("****************************")
-                ////console.log(JSON.stringify(query))
+                //console.log(JSON.stringify(query))
                 es.search(query, function (error, result) {
                     if (result != undefined && result.aggregations != undefined && result.aggregations.pagePVs != undefined && result.aggregations.pagePVs.buckets != undefined) {
                         var infos = result.aggregations.pagePVs.buckets
@@ -2249,8 +2295,8 @@ var transform = {
                                 })
                             }
                             var tempUrl = url
-                            if(tempUrl!=undefined&&tempUrl!=""&&tempUrl[tempUrl.length-1]=="/"){
-                                tempUrl = tempUrl.substring(0,tempUrl.length-1)
+                            if (tempUrl != undefined && tempUrl != "" && tempUrl[tempUrl.length - 1] == "/") {
+                                tempUrl = tempUrl.substring(0, tempUrl.length - 1)
                             }
                             filterQuery.push({"term": {"loc": tempUrl}})
                             boolQuery.push({
@@ -2280,8 +2326,8 @@ var transform = {
                     break;
             }
             async.map(requests, function (item, callback) {
-                ////console.log("****************************")
-                ////console.log(JSON.stringify(item))
+                //////console.log("****************************")
+                //////console.log(JSON.stringify(item))
                 es.search(item, function (error, result) {
                     if (result != undefined && result.aggregations != undefined) {
                         callback(null, result.aggregations);
@@ -2395,7 +2441,7 @@ var transform = {
                                 for (i = 0; i < results.length; i++) {
                                     for (var key in results[i]) {
                                         if (key == queryOption) {
-                                            quotaArry.push(results[i].visitor_aggs.value-results[i].old_visitor_aggs.value);
+                                            quotaArry.push(results[i].visitor_aggs.value - results[i].old_visitor_aggs.value);
                                         }
                                     }
                                 }
@@ -2426,7 +2472,7 @@ var transform = {
                                             if (results[i].uv_aggs.value == "0") {
                                                 quotaArry.push("0.00%");
                                             } else {
-                                                data[queryOption] = (((pv.visitor_aggs.value-pv.old_visitor_aggs.value) / pv.uv_aggs.value)*100).toFixed(2) + "%";
+                                                data[queryOption] = (((pv.visitor_aggs.value - pv.old_visitor_aggs.value) / pv.uv_aggs.value) * 100).toFixed(2) + "%";
                                             }
                                         }
                                     }
@@ -2643,8 +2689,8 @@ var transform = {
                 var pvs = []
                 async.eachSeries(querys, function (item, callback) {
 
-                    //console.log("************EventPVs****************")
-                    //console.log(JSON.stringify(item))
+                    ////console.log("************EventPVs****************")
+                    ////console.log(JSON.stringify(item))
                     es.search(item, function (error, result) {
                         if (result != undefined && result.aggregations != undefined) {
                             pvs.push(result.aggregations)
@@ -2664,24 +2710,24 @@ var transform = {
                                     if (pv.uv_aggs.value == "0") {
                                         data[queryOption] = "0.00%";
                                     } else {
-                                        data[queryOption] = (((pv.visitor_aggs.value-pv.old_visitor_aggs.value) / pv.uv_aggs.value)*100).toFixed(2) + "%";
+                                        data[queryOption] = (((pv.visitor_aggs.value - pv.old_visitor_aggs.value) / pv.uv_aggs.value) * 100).toFixed(2) + "%";
                                     }
-                                    data["nuv"] = (pv.visitor_aggs.value-pv.old_visitor_aggs.value)
+                                    data["nuv"] = (pv.visitor_aggs.value - pv.old_visitor_aggs.value)
                                     data["uv"] = pv.uv_aggs.value
                                     break;
                                 case"nuv":
                                     if (pv.old_visitor_aggs.value == "0") {
                                         data[queryOption] = 0;
                                     } else {
-                                        data[queryOption] =pv.visitor_aggs.value-pv.old_visitor_aggs.value
+                                        data[queryOption] = pv.visitor_aggs.value - pv.old_visitor_aggs.value
                                     }
                                     break;
                                 default :
-                                    if(pv[queryOption]!=undefined)
-                                    data[queryOption] = pv[queryOption].value;
+                                    if (pv[queryOption] != undefined)
+                                        data[queryOption] = pv[queryOption].value;
                                     else
-                                    //console.log("______________________________"+queryOption)
-                                    break;
+                                    ////console.log("______________________________"+queryOption)
+                                        break;
                             }
                         })
                         datas.push(data)
@@ -2777,8 +2823,8 @@ var transform = {
                         })
                         var pageEvents = {}
                         async.eachSeries(querys, function (item, callback) {
-                                ////console.log("*************ConvEvent*****************")
-                                ////console.log(JSON.stringify(item))
+                                //////console.log("*************ConvEvent*****************")
+                                //////console.log(JSON.stringify(item))
                                 es.search(item.query, function (error, result) {
                                     if (result != undefined && result.aggregations != undefined) {
                                         if (result.aggregations.etIdTerms.buckets != undefined) {
@@ -2895,8 +2941,8 @@ var transform = {
                                 break;
                         }
                         async.map(requests, function (item, callback) {
-                            ////console.log("****************************")
-                            ////console.log(JSON.stringify(item))
+                            //////console.log("****************************")
+                            //////console.log(JSON.stringify(item))
                             es.search(item, function (error, result) {
                                 if (result != undefined && result.aggregations != undefined) {
                                     callback(null, result.aggregations);

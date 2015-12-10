@@ -32,6 +32,7 @@ define(["./module"], function (ctrs) {
             {consumption_name: "订单转化率", name: "orderNumRate"}
         ];
 
+        $rootScope.extendways = [{index:0,name:"全部页面转化目标"}]
         //        高级搜索提示
         $scope.sourceSearch = "";
         $scope.terminalSearch = "";
@@ -47,14 +48,14 @@ define(["./module"], function (ctrs) {
             $(inputArray[0]).prev("span").css("background-position", "0px -51px");
             obj.terminalSearch = "";
             $rootScope.tableSwitch.terminalFilter = null;
-            $rootScope.refreshData(false)
+            $rootScope.initPageConfig(false)
         }
         $scope.removeAreaSearch = function (obj) {
             $scope.city.selected = {"name": "全部"};
             //$rootScope.$broadcast("loadAllArea");
             obj.areaSearch = "";
             $rootScope.tableSwitch.areaFilter = null
-            $rootScope.refreshData(false)
+            $rootScope.initPageConfig(false)
         }
         $scope.removeVisitorSearch = function (obj) {
 //                $rootScope.$broadcast("loadAllVisitor");
@@ -66,21 +67,21 @@ define(["./module"], function (ctrs) {
             $(inputArray[0]).prev("span").css("background-position", "0px -51px");
             obj.visitorSearch = "";
             $rootScope.tableSwitch.visitorFilter = null
-            $rootScope.refreshData(false)
+            $rootScope.initPageConfig(false)
         }
 
-        var griApihtml = function (gridApi) {
-            gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
-                row.entity.subGridOptions = {
-                    appScopeProvider: $scope.subGridScope,
-                    expandableRowHeight: 360,
-                    enableHorizontalScrollbar: 1,
-                    enableVerticalScrollbar: 1,
-                    showHeader: false,
-                    columnDefs: $rootScope.gridArray
-                };
-            });
-        };
+        //var griApihtml = function (gridApi) {
+        //    gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
+        //        row.entity.subGridOptions = {
+        //            appScopeProvider: $scope.subGridScope,
+        //            expandableRowHeight: 360,
+        //            enableHorizontalScrollbar: 1,
+        //            enableVerticalScrollbar: 1,
+        //            showHeader: false,
+        //            columnDefs: $rootScope.gridArray
+        //        };
+        //    });
+        //};
         $rootScope.expandInex = 1
         $rootScope.expandRowData = function (pGridApi) {
             //展开操作
@@ -93,47 +94,64 @@ define(["./module"], function (ctrs) {
                         enableGridMenu: false,
                         enableHorizontalScrollbar: 0,
                         enableSorting: false,
-                        //expandableRowHeight: 30,
                         expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions' class='grid clearfix secondary_table' ui-grid-exporter ui-grid-auto-resize ></div>",
-                        //columnDefs: $rootScope.gridArray,
                         data: []
                     }
                 } else {
-                    var tPageInfoArr = ["conversions", "benefit"]
-                    var pageurl = "/api/transform/getPageConvInfo?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&rfType=" + pRow.entity.rf_type + "&se=" + pRow.entity.se + "&queryOptions=" + tPageInfoArr
-                    $http.get(pageurl).success(function (pagedatas) {
-                        var datas = []
-                        pagedatas.forEach(function (pdata, index) {
-                            var data = angular.copy(pRow.entity)
-                            $rootScope.checkedArray.forEach(function (attr) {
-                                switch (attr) {
-                                    case "conversions"://转化次数
-                                        data["conversions"] = pdata[attr] != undefined ? pdata[attr].value : 0
-                                        break;
-                                    case "crate"://转化率
-                                        data["crate"] = pdata["conversions"] != undefined && pRow.entity.pv > 0 ? (Number(pdata["conversions"].value) / Number(pRow.entity.pv)).toFixed(2) : 0
-                                        break;
-                                    case "benefit"://收益
-                                        data["benefit"] = pdata[attr] != undefined ? pdata[attr].value : 0
-                                        break;
-                                    case "orderNum"://订单数量
-                                        data["orderNum"] = pdata[attr] != undefined ? pdata[attr].value : 0
-                                        break;
-                                    case "orderNumRate"://订单转化率
-                                        data["orderNumRate"] = pdata["orderNum"] != undefined ? (Number(pdata["orderNum"].value) / Number(pRow.entity.pv)).toFixed(2) : 0
-                                        break;
-                                    default :
-                                        if (pRow.entity[attr] != undefined)
-                                            data[attr] = pRow.entity[attr]
-                                        break;
-
+                    //查询转化的数据
+                    if ($rootScope.pageConfigs != undefined && $rootScope.pageConfigs.length > 0) {
+                        var filterPageConf = []
+                        if ( $rootScope.selectedPageConvIndex == 0 ) {
+                            filterPageConf = $rootScope.pageConfigs
+                        } else {
+                            $rootScope.pageConfigs.forEach(function (conf) {
+                                if (conf.targetName == $rootScope.extendways[$rootScope.selectedPageConvIndex]["name"]) {
+                                    filterPageConf.push(conf)
                                 }
                             })
-                            data["campaignName"] = pdata["key"]
-                            datas.push(data)
+                        }
+                        var tPageInfoArr = ["conversions", "benefit"]
+                        var pageurl = "/api/transform/getPageConvInfo?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&rfType=" + $rootScope.rowEntity.rf_type + "&se=" + pRow.entity.se + "&queryOptions=" + tPageInfoArr+"&pages=" + JSON.stringify(filterPageConf)+ "&filters=" + $rootScope.getFilters()
+                        $http.get(pageurl).success(function (pagedatas) {
+                            if(pagedatas!=undefined&&pagedatas.length>0){
+                                var datas = []
+                                pagedatas.forEach(function (pdata, index) {
+                                    var data = angular.copy(pRow.entity)
+                                    $rootScope.checkedArray.forEach(function (attr) {
+                                        switch (attr) {
+                                            case "conversions"://转化次数
+                                                data["conversions"] = pdata[attr] != undefined ? pdata[attr].value : 0
+                                                break;
+                                            case "crate"://转化率
+                                                data["crate"] = (pdata["conversions"] != undefined && pRow.entity.pv > 0 ? ((Number(pdata["conversions"].value) / Number(pRow.entity.pv)) * 100).toFixed(2) : (0).toFixed(2)) + "%"
+                                                break;
+                                            case "benefit"://收益
+                                                data["benefit"] = pdata[attr] != undefined ? pdata[attr].value : 0
+                                                break;
+                                            case "orderNum"://订单数量
+                                                data["orderNum"] = pdata[attr] != undefined ? pdata[attr].value : 0
+                                                break;
+                                            case "orderNumRate"://订单转化率
+                                                data["orderNumRate"] = ( pdata["orderNum"] != undefined ? ((Number(pdata["orderNum"].value) / Number(pRow.entity.pv)) * 100).toFixed(2) : (0).toFixed(2)) + "%"
+                                                break;
+                                            default :
+                                                if (pRow.entity[attr] != undefined)
+                                                    data[attr] = pRow.entity[attr]
+                                                break;
+
+                                        }
+                                    })
+                                    data["campaignName"] = pdata["key"]
+                                    datas.push(data)
+                                })
+                                pRow.entity.subGridOptions.data = datas
+                            }else{
+                                pRow.entity.subGridOptions.data = []
+                            }
                         })
-                        pRow.entity.subGridOptions.data = datas
-                    })
+                    }
+
+
                     pRow.entity.subGridOptions = {
                         enableColumnMenus: false,
                         enablePaginationControls: false,
@@ -144,7 +162,7 @@ define(["./module"], function (ctrs) {
                         enableSorting: false,
                         expandableRowHeight: 30,
                         showHeader: false,
-                        columnDefs: $rootScope.gridArray,
+                        columnDefs: $rootScope.subGridArray,
                         expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions' class='grid clearfix secondary_table' ui-grid-exporter ui-grid-auto-resize ></div>",
                         data: []
                     }
@@ -290,7 +308,7 @@ define(["./module"], function (ctrs) {
             }
         };
         //初始化数据
-        $rootScope.refreshData()
+        $rootScope.initPageConfig()//初始化查询ES
         $scope.$on("transformData", function (e, msg) {
             $(msg)
         });
@@ -306,7 +324,7 @@ define(["./module"], function (ctrs) {
             }
             $scope.gridOpArray = angular.copy($rootScope.gridArray);
             $rootScope.gridOptions.columnDefs = $scope.gridOpArray;
-            $rootScope.refreshData(msg)
+            $rootScope.initPageConfig(msg)
         });
         $scope.$on("transformAdvancedData_ui_grid", function (e, msg) {
             $scope.advancedInit(msg)
@@ -369,7 +387,7 @@ define(["./module"], function (ctrs) {
                     $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
                 }
                 $rootScope.$broadcast("ssh_data_show_refresh");
-                $rootScope.refreshData(false)
+                $rootScope.initPageConfig(false)
             }
         };
 
@@ -416,7 +434,7 @@ define(["./module"], function (ctrs) {
             }
             $scope.isJudge = false;
             $rootScope.$broadcast("ssh_data_show_refresh");
-            $rootScope.refreshData(false)
+            $rootScope.initPageConfig()
             $scope.allCitys = angular.copy($rootScope.citys);
         };
         //设置访客来源
@@ -453,7 +471,8 @@ define(["./module"], function (ctrs) {
             _allFilters = filterUtil.filter(_allFilters, "ct", _viFilter);
             $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
             $rootScope.$broadcast("ssh_data_show_refresh");
-            $rootScope.refreshData(false)
+            //$rootScope.showPageSeDetail=0
+            $rootScope.initPageConfig()
         };
     });
 });

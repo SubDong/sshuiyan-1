@@ -156,10 +156,10 @@
                     转化目标
                     <div role="group" class="btn-group">
                         <ui-select ng-model="extendway.selected" theme="select2" reset-search-input="false" class="fl"
-                                   style="width: 120px;">
-                            <ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>
+                                   style="width: 150px;" data-ng-change="choosePageConv($select.selected.index,$select.selected.name)">
+                            <ui-select-match placeholder="全部页面转化目标">{{$select.selected.name}}</ui-select-match>
                             <ui-select-choices repeat="extendway in extendways">
-                                <span ng-bind-html="extendway.name"></span>
+                                <span ng-bind-html="extendway.name" ></span>
                             </ui-select-choices>
                         </ui-select>
                     </div>
