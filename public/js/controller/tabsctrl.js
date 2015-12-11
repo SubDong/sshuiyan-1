@@ -1977,61 +1977,148 @@ define(["app"], function (app) {
                 $scope.targetDataContrast(startTime, endTime, function (contrast) {
                     //console.log("contrast")
                     //console.log(contrast)
-                    item.forEach(function (a, b) {
-                        var dataObj = {};
-                        if (target == "period" && $location.$$path == "/trend/today" && $rootScope.tableFormat == "day") {// 今日统计按日统计时特殊处理
-                            $rootScope.checkedArray.forEach(function (tt, aa) {
-                                try {
-                                    var bili = ((parseInt(a[tt] + "".replace("%")) - parseInt((contrast[b][tt] + "").replace("%"))) / (parseInt((contrast[b][tt] + "").replace("%")) == 0 ? parseInt(a[tt] + "".replace("%")) : parseInt((contrast[b][tt] + "").replace("%"))) * 100).toFixed(2);
-                                    dataObj[tt] = (isNaN(bili) ? 0 : bili) + "%";
-                                    if (tt == "nuvRate" || tt == "outRate") {
-                                        a[tt] = "　" + "," + getRateValue(a[tt]) + "," + getRateValue(contrast[b][tt]) + "," + dataObj[tt];
-                                    } else if (tt == "avgTime") {
-                                        a[tt] = "　" + "," + MillisecondToDate(a[tt]) + "," + MillisecondToDate(contrast[b][tt]) + "," + dataObj[tt];
-                                    } else {
-                                        a[tt] = "　" + "," + a[tt] + "," + contrast[b][tt] + "," + dataObj[tt];
-                                    }
-                                } catch (e) {
-                                    a[tt] = "　" + "," + a[tt] + "," + "--" + "," + "--"
-                                }
-                            });
-                            a[target] = a[target] + "," + ($rootScope.startString != undefined ? $rootScope.startString : dateTime1[0] == dateTime1[1] ? dateTime1[0] + "," + dateTime2[0] + "," + "变化率" : dateTime1[0] + " 至 " + dateTime1[1]) + "," + (dateTime2[0] + " 至 " + dateTime2[1]) + "," + "变化率";
-                            dataArray.push(a);
-                            is = 0;
-                        } else {
-                            for (var i = 0; i < contrast.length; i++) {
-                                if (a[target] == contrast[i][target]) {
-                                    console.log(a[target] + " ===  " + contrast[i][target]);
-                                    $rootScope.checkedArray.forEach(function (tt, aa) {
-                                        var bili = ((parseInt(a[tt] + "".replace("%")) - parseInt((contrast[i][tt] + "").replace("%"))) / (parseInt((contrast[i][tt] + "").replace("%")) == 0 ? parseInt(a[tt] + "".replace("%")) : parseInt((contrast[i][tt] + "").replace("%"))) * 100).toFixed(2);
-                                        dataObj[tt] = (isNaN(bili) ? 0 : bili) + "%";
-                                        if (tt == "nuvRate" || tt == "outRate") {
-                                            a[tt] = "　" + "," + getRateValue(a[tt]) + "," + getRateValue(contrast[i][tt]) + "," + dataObj[tt];
-                                        } else if (tt == "avgTime") {
-                                            a[tt] = "　" + "," + MillisecondToDate(a[tt]) + "," + MillisecondToDate(contrast[i][tt]) + "," + dataObj[tt];
+                    if ($rootScope.tableSwitch.number == 4) {//
+                        var wordArray = [];// 搜索词数组
+                        var aaaArray = [];
+                        var bbbArray = [];
+                        //item = [{"word":"","freq":1,"baidu":"100.0%","sougou":"0%","haosou":"0%","bing":"0%","other":"0%"},{"word":"百思 搜客","freq":1,"baidu":"0%","sougou":"100.0%","haosou":"0%","bing":"0%","other":"0%"}]
+                        //contrast = [{"word":"","freq":1,"baidu":"100.0%","sougou":"0%","haosou":"0%","bing":"0%","other":"0%"},{"word":"SEM网销系统","freq":1,"baidu":"100.0%","sougou":"0%","haosou":"0%","bing":"0%","other":"0%"},{"word":"SEM管理系统","freq":2,"baidu":"100.0%","sougou":"0%","haosou":"0%","bing":"0%","other":"0%"},{"word":"百思买官网","freq":2,"baidu":"100.0%","sougou":"0%","haosou":"0%","bing":"0%","other":"0%"}];
+                        item.forEach(function (_record) {
+                            aaaArray.push(_record["word"]);
+                            wordArray.push(_record["word"]);
+                        });
+                        contrast.forEach(function (_record) {
+                            bbbArray.push(_record["word"]);
+                            if (wordArray.indexOf(_record["word"]) == -1) {// 判断搜索词是否已存在
+                                wordArray.push(_record["word"]);
+                            }
+                        });
+
+                        for (var i = 0; i < wordArray.length; i++) {
+                            if (wordArray[i] != undefined && (wordArray[i] == "-" || wordArray[i] == "" || wordArray[i] == "www" || wordArray[i] == "null" || wordArray[i].length >= 40)) {
+                                continue;
+                            }
+                            var a_i = aaaArray.indexOf(wordArray[i]);
+                            var b_i = bbbArray.indexOf(wordArray[i]);
+                            if (a_i != -1 && b_i != -1) {
+                                var obj = {
+                                    "word": wordArray[i] + "," + getContrastLabel(dateTime1) + "," + getContrastLabel(dateTime2) + ",变化率",
+                                    "freq": "　" + "," + item[a_i].freq + "," + contrast[b_i].freq + "," + parseFloat((item[a_i].freq - contrast[b_i].freq) / contrast[b_i].freq).toFixed(2) + "%"
+                                };
+                                var _item_obj = item[a_i];
+                                var _contrast_obj = contrast[b_i];
+                                for (var _p in _item_obj) {
+                                    if (_p != "word" && _p != "freq") {
+                                        var value_a = parseFloat(_item_obj[_p].substring(0, _item_obj[_p].length - 1));
+                                        var value_b = parseFloat(_contrast_obj[_p].substring(0, _contrast_obj[_p].length - 1));
+                                        if (value_b == 0) {
+                                            obj[_p] = "　" + "," + value_a.toFixed(2) + "%," + value_b.toFixed(2) + "%,--";
                                         } else {
-                                            a[tt] = "　" + "," + a[tt] + "," + contrast[i][tt] + "," + dataObj[tt];
+                                            obj[_p] = "　" + "," + value_a.toFixed(2) + "%," + value_b.toFixed(2) + "%," + ((value_a - value_b) / value_b).toFixed(2) + "%";
                                         }
-                                    });
-                                    a[target] = a[target] + "," + ($rootScope.startString != undefined ? $rootScope.startString : dateTime1[0] == dateTime1[1] ? dateTime1[0] + "," + dateTime2[0] + "," + "变化率" : dateTime1[0] + " 至 " + dateTime1[1]) + "," + (dateTime2[0] + " 至 " + dateTime2[1]) + "," + "变化率";
-                                    dataArray.push(a);
-                                    is = 0;
-                                    return;
-                                } else {
-                                    is = 1
+                                    }
                                 }
+                                dataArray.push(obj);
+                            }
+                            if (a_i != -1 && b_i == -1) {
+                                var obj = {
+                                    "word": wordArray[i] + "," + getContrastLabel(dateTime1) + "," + getContrastLabel(dateTime2) + ",变化率",
+                                    "freq": "　" + "," + item[a_i].freq + ",--,--"
+                                };
+                                var _item_obj = item[a_i];
+                                for (var _p in _item_obj) {
+                                    if (_p != "word" && _p != "freq") {
+                                        var value = _item_obj[_p];
+                                        obj[_p] = "　" + "," + parseFloat(value.substring(0, value.length - 1)).toFixed(2) + "%,--,--";
+                                    }
+                                }
+                                dataArray.push(obj);
+                            }
+                            if (a_i == -1 && b_i != -1) {
+                                var obj = {
+                                    "word": wordArray[i] + "," + getContrastLabel(dateTime1) + "," + getContrastLabel(dateTime2) + ",变化率",
+                                    "freq": "　" + "," + "--," + contrast[b_i].freq + ",--"
+                                };
+                                var _contrast_obj = contrast[b_i];
+                                for (var _p in _contrast_obj) {
+                                    if (_p != "word" && _p != "freq") {
+                                        var value = _contrast_obj[_p];
+                                        obj[_p] = "　" + ",--," + parseFloat(value.substring(0, value.length - 1)).toFixed(2) + "%,--";
+                                    }
+                                }
+                                dataArray.push(obj);
                             }
                         }
-
-                        if (is == 1) {
-                            $rootScope.checkedArray.forEach(function (tt, aa) {
-                                dataObj[tt] = "--";
-                                a[tt] = "　" + "," + a[tt] + "," + "--" + "," + "--"
-                            });
-                            a[target] = a[target] + "," + ($rootScope.startString != undefined ? $rootScope.startString : dateTime1[0] == dateTime1[1] ? dateTime1[0] + "," + dateTime2[0] + "," + "变化率" : dateTime1[0] + " 至 " + dateTime1[1]) + "," + (dateTime2[0] + " 至 " + dateTime2[1]) + "," + "变化率"
-                            dataArray.push(a);
+                        if (dataArray.length == 0) {
+                            var obj = {
+                                "word": "暂无数据," + getContrastLabel(dateTime1) + "," + getContrastLabel(dateTime2) + ",变化率",
+                                "freq": "　" + ",--,--,--",
+                                "baidu": "　" + ",--,--,--",
+                                "sougou": "　" + ",--,--,--",
+                                "haosou": "　" + ",--,--,--",
+                                "bing": "　" + ",--,--,--",
+                                "other": "　" + ",--,--,--"
+                            };
+                            dataArray.push(obj);
                         }
-                    });
+                        $rootScope.$broadcast("LoadCompareDateShowDataFinish", item, contrast);
+                    } else {
+                        item.forEach(function (a, b) {
+                            var dataObj = {};
+                            if (target == "period" && $location.$$path == "/trend/today" && $rootScope.tableFormat == "day") {// 今日统计按日统计时特殊处理
+                                $rootScope.checkedArray.forEach(function (tt, aa) {
+                                    try {
+                                        var bili = ((parseInt(a[tt] + "".replace("%")) - parseInt((contrast[b][tt] + "").replace("%"))) / (parseInt((contrast[b][tt] + "").replace("%")) == 0 ? parseInt(a[tt] + "".replace("%")) : parseInt((contrast[b][tt] + "").replace("%"))) * 100).toFixed(2);
+                                        dataObj[tt] = (isNaN(bili) ? 0 : bili) + "%";
+                                        if (tt == "nuvRate" || tt == "outRate") {
+                                            a[tt] = "　" + "," + getRateValue(a[tt]) + "," + getRateValue(contrast[b][tt]) + "," + dataObj[tt];
+                                        } else if (tt == "avgTime") {
+                                            a[tt] = "　" + "," + MillisecondToDate(a[tt]) + "," + MillisecondToDate(contrast[b][tt]) + "," + dataObj[tt];
+                                        } else {
+                                            a[tt] = "　" + "," + a[tt] + "," + contrast[b][tt] + "," + dataObj[tt];
+                                        }
+                                    } catch (e) {
+                                        a[tt] = "　" + "," + a[tt] + "," + "--" + "," + "--"
+                                    }
+                                });
+                                a[target] = a[target] + "," + ($rootScope.startString != undefined ? $rootScope.startString : dateTime1[0] == dateTime1[1] ? dateTime1[0] + "," + dateTime2[0] + "," + "变化率" : dateTime1[0] + " 至 " + dateTime1[1]) + "," + (dateTime2[0] + " 至 " + dateTime2[1]) + "," + "变化率";
+                                dataArray.push(a);
+                                is = 0;
+                            } else {
+                                for (var i = 0; i < contrast.length; i++) {
+                                    if (a[target] == contrast[i][target]) {
+                                        console.log(a[target] + " ===  " + contrast[i][target]);
+                                        $rootScope.checkedArray.forEach(function (tt, aa) {
+                                            var bili = ((parseInt(a[tt] + "".replace("%")) - parseInt((contrast[i][tt] + "").replace("%"))) / (parseInt((contrast[i][tt] + "").replace("%")) == 0 ? parseInt(a[tt] + "".replace("%")) : parseInt((contrast[i][tt] + "").replace("%"))) * 100).toFixed(2);
+                                            dataObj[tt] = (isNaN(bili) ? 0 : bili) + "%";
+                                            if (tt == "nuvRate" || tt == "outRate") {
+                                                a[tt] = "　" + "," + getRateValue(a[tt]) + "," + getRateValue(contrast[i][tt]) + "," + dataObj[tt];
+                                            } else if (tt == "avgTime") {
+                                                a[tt] = "　" + "," + MillisecondToDate(a[tt]) + "," + MillisecondToDate(contrast[i][tt]) + "," + dataObj[tt];
+                                            } else {
+                                                a[tt] = "　" + "," + a[tt] + "," + contrast[i][tt] + "," + dataObj[tt];
+                                            }
+                                        });
+                                        a[target] = a[target] + "," + ($rootScope.startString != undefined ? $rootScope.startString : dateTime1[0] == dateTime1[1] ? dateTime1[0] + "," + dateTime2[0] + "," + "变化率" : dateTime1[0] + " 至 " + dateTime1[1]) + "," + (dateTime2[0] + " 至 " + dateTime2[1]) + "," + "变化率";
+                                        dataArray.push(a);
+                                        is = 0;
+                                        return;
+                                    } else {
+                                        is = 1
+                                    }
+                                }
+                            }
+
+                            if (is == 1) {
+                                $rootScope.checkedArray.forEach(function (tt, aa) {
+                                    dataObj[tt] = "--";
+                                    a[tt] = "　" + "," + a[tt] + "," + "--" + "," + "--"
+                                });
+                                a[target] = a[target] + "," + ($rootScope.startString != undefined ? $rootScope.startString : dateTime1[0] == dateTime1[1] ? dateTime1[0] + "," + dateTime2[0] + "," + "变化率" : dateTime1[0] + " 至 " + dateTime1[1]) + "," + (dateTime2[0] + " 至 " + dateTime2[1]) + "," + "变化率"
+                                dataArray.push(a);
+                            }
+                        });
+                    }
                     $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
                 });
                 $scope.gridOptions.data = dataArray;
@@ -2039,6 +2126,15 @@ define(["app"], function (app) {
                 $rootScope.gridArray = gridArrayOld;
             })
         };
+        function getContrastLabel(dateTimeArray) {
+            if (undefined == dateTimeArray || null == dateTimeArray) {
+                return "";
+            }
+            if (dateTimeArray[0] == dateTimeArray[1]) {
+                return dateTimeArray[0];
+            }
+            return dateTimeArray[0] + "至" + dateTimeArray[1];
+        }
         function getRateValue(_value) {
             if (_value == undefined) {
                 return "--";
@@ -2063,7 +2159,8 @@ define(["app"], function (app) {
                     url: searchUrl
                 }).success(function (data, status) {
                     cabk(data);
-                })
+                });
+                return;
             }
             if ($rootScope.tableSwitch.number == 6) {
                 $http({

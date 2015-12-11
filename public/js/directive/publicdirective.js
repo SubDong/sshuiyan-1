@@ -1206,43 +1206,34 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     });
                 };
 
-                scope.loadCompareDataShow = function (startTime, endTime) {
-                    var semRequest = $http.get(SEM_API_URL + "/search_word/" + $rootScope.userType
-                    + "/?startOffset=" + startTime + "&endOffset=" + endTime);
+                scope.pushCompareESData = function (data1, data2) {
                     var count = 0;
-                    $q.all([semRequest]).then(function (final_result) {
-                        angular.forEach(final_result[0].data, function (r) {
-                            var infokey = r.word;
-                            if (infokey != undefined && (infokey == "-" || infokey == "" || infokey == "www" || infokey == "null" || infokey.length >= 40)) {
-                                return;
-                            }
-                            count++;
-                            angular.forEach(scope.dateShowArray, function (q_r) {
-                                var temp = q_r.label;
-                                if (r[temp] == undefined) {
-                                    q_r.cValue += 0;
-                                } else {
-                                    q_r.cValue += temp != "freq" ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
-                                }
-                                q_r.cCount = count;
-                            });
+                    angular.forEach(data1, function (r) {
+                        var infokey = r.word;
+                        if (infokey != undefined && (infokey == "-" || infokey == "" || infokey == "www" || infokey == "null" || infokey.length >= 40)) {
+                            return;
+                        }
+                        count++;
+                        angular.forEach(scope.dateShowArray, function (q_r) {
+                            var temp = q_r.label;
+                            q_r.value += temp != "freq" ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
+                            q_r.count = count;
+                        });
+                    });
+                    var count = 0;
+                    angular.forEach(data2, function (r) {
+                        var infokey = r.word;
+                        if (infokey != undefined && (infokey == "-" || infokey == "" || infokey == "www" || infokey == "null" || infokey.length >= 40)) {
+                            return;
+                        }
+                        count++;
+                        angular.forEach(scope.dateShowArray, function (q_r) {
+                            var temp = q_r.label;
+                            q_r.cValue += temp != "freq" ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
+                            q_r.cCount = count;
                         });
                     });
                 };
-
-                // 对比刷新
-                scope.$on("ssh_load_compare_datashow", function (e, startTime, endTime) {
-                    scope.DateNumber = false;
-                    scope.DateLoading = false;
-                    scope.isCompared = true;
-                    // 初始化对比数据
-                    angular.forEach(scope.dateShowArray, function (q_r) {
-                        q_r.cValue = q_r.cCount = 0;
-                    });
-                    scope.loadCompareDataShow(startTime, endTime);
-                    scope.DateNumber = true;
-                    scope.DateLoading = true;
-                });
 
                 scope.$on("LoadDateShowDataFinish", function (e, msg) {
                     scope.DateNumber = false;
@@ -1251,6 +1242,18 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     scope.initDefaultShowArray();
                     scope.pushESData(msg);
                     scope.DateNumber = true;
+                    scope.DateLoading = true;
+                });
+
+                scope.$on("LoadCompareDateShowDataFinish", function (e, msg1, msg2) {
+                    scope.DateNumber = false;
+                    scope.DateNumbertwo = false;
+                    scope.DateLoading = false;
+                    scope.isCompared = true;
+                    scope.initDefaultShowArray();
+                    scope.pushCompareESData(msg1, msg2);
+                    scope.DateNumber = true;
+                    scope.DateNumbertwo = true;
                     scope.DateLoading = true;
                 });
             }
