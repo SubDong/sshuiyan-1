@@ -64,7 +64,7 @@
                     <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
                         <div role="group" class="btn-group">
                             <ui-select ng-model="grid.selected" theme="select2" reset-search-input="false" class="fl"
-                                       ng-change="searchChange(grid.selected)" style="min-width: 80px;">
+                                       ng-change="searchChange(grid.selected)" style="min-width: 105px;">
                                 <ui-select-match placeholder="浏览量(PV)">{{$select.selected.name}}</ui-select-match>
                                 <ui-select-choices repeat="grid in rootSelects" class="fzp20">
                                     <span ng-bind-html="grid.name"></span>

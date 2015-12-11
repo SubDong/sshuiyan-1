@@ -120,7 +120,7 @@ define(["./module"], function (ctrs) {
                 num += (i + 1) + "\r\n";
             }
             $scope.IPtishi = function (content) {
-                if (content == "") {
+                if ($('.tishi').text() == "") {
                     $scope.IPshow = false;
                 } else {
                     $scope.IPshow = true;

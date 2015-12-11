@@ -54,12 +54,12 @@
                     <span>排除IP地址 <p>（请输入IP地址，每行一个，最多可设置20个）</p><br/>
                     提示：当前登录IP为：113.45.225.145， 请注意若为动态IP则下次登录IP会变化。</span>
 
-                            <div class="fzk">
+                            <div class="">
                                 <textarea data-ng-model="ex_ips_area.tNum" class="tNum" disabled></textarea>
                                   <textarea data-ng-keyup="addIP($event, ex_ips_area,this)" wrap="off" name="exceptIP" sshUrl
                                             data-ng-focus="myFocus(ex_ips_area)"
                                             data-ng-blur="myBlur(ex_ips_area)" class="tText"></textarea>
-                                <span  style="color: red"></span>
+                                <span class="tishi"  style="color: red"></span>
                             </div>
                         </div>
 
@@ -86,7 +86,7 @@
                                       data-ng-focus="myFocus(ex_refer_urls_area)"
                                       data-ng-blur="myBlur(ex_refer_urls_area)" class="tText"></textarea>
 
-                                <span  style="color: red"></span>
+                                <span class="tishi"  style="color: red"></span>
                             </div>
                         </div>
 
@@ -114,7 +114,7 @@
                                       data-ng-focus="myFocus(ex_urls_area)"
                                       data-ng-blur="myBlur(ex_urls_area)" class="tText"></textarea>
 
-                               <span  style="color: red"></span>
+                               <span class="tishi"  style="color: red"></span>
                             </div>
                         </div>
 
@@ -144,7 +144,7 @@
                                       data-ng-focus="myFocus(cross_sites_area)"
                                       data-ng-blur="myBlur(cross_sites_area)" class="tText"></textarea>
 
-                                <span  style="color: red"></span>
+                                <span  class="tishi" style="color: red"></span>
                             </div>
                         </div>
 
@@ -194,7 +194,7 @@
                 ng-disabled="rulesForm.$error.sshUrl || errorMsg || IPshow"
                 ng-click="onSubmitClickListener()">确定
         </button>
-        <button class="btn btn-default count_content_button ">取消</button>
+        <button onclick="window.location.reload();" class="btn btn-default count_content_button ">取消</button>
     </div>
 
 </div>
