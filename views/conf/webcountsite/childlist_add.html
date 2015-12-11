@@ -79,14 +79,17 @@
                     <p>（目录中加入通配符*，表示包含该目录下所有页面）</p>
 
                     <div data-ng-repeat="page in pages">
-                        <input type="text" maxlength="128" class="form-control childlist_add_input" ng-model="page.url"
+                        <input type="text" maxlength="128" class="form-control childlist_add_input" ng-model="page.url" sshUrl
                                placeholder="url.com/a.html" onfocus="this.setAttribute('placeholder','');" data-ng-click="page.correcturl=true"
+                               name="pageUrl{{$index}}"
+                               data-ng-class="{'form-default':rulesForm.pageUrl{{$index}}.$error.sshUrl}"
                                onblur="this.setAttribute('placeholder','url.com/a.html')"/>
                         <button class="glyphicon glyphicon-remove" data-ng-click="deletePage(pages)"></button>
                         <div data-ng-show="page.url!=''&&!page.correcturl" class="errorMsg">{{page.errmsg}}</div>
                     </div>
                     <a href="javascript:void(0)" data-ng-click="addPage(pages)" class="adtrack_add_tz"
                        data-ng-if="pages.length<10">新增URL</a>
+                    <!--<span class="tishi" data-ng-show=""  style="color: red">您设置的URL格式错误</span>-->
                     <div data-ng-show="null_pages" class="errorMsg">请您输入要分析的子目录URL</div>
                     <div data-ng-show="pages.length > 9" class="errorMsg">您最多可输入10个</div>
                 </li>

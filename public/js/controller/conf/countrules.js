@@ -115,12 +115,13 @@ define(["./module"], function (ctrs) {
             var s = d.split("\n").length;
             var g = d.split("\n");
             var num = "";
-            var reg = /((https|http|ftp|rtsp|mms):\/\/)?(([0-9a-z_!~*'().&=+$%-]+:)?[0-9a-z_!~*'().&=+$%-]+@)?(([0-9]{1,3}\.){3}[0-9]{1,3}|([0-9a-z_!~*'()-]+\.)*([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\.[a-z]{2,6})(:[0-9]{1,4})?((\/?)|(\/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+\/?)/g;
+            var reg = /((?:(?:25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))\.){3}(?:25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d))))/g;
+
             for (var i = 0; i < s; i++) {
                 num += (i + 1) + "\r\n";
             }
             $scope.IPtishi = function (content) {
-                if ($('.tishi').text() == "") {
+                if (content == "") {
                     $scope.IPshow = false;
                 } else {
                     $scope.IPshow = true;
@@ -137,7 +138,7 @@ define(["./module"], function (ctrs) {
                     break;
                 } else {
                     if (!c.match(reg)) {
-                        $scope.IPtishi("您设置的URL格式错误");
+                        $scope.IPtishi("您设置的IP格式错误");
                         break;
                     }
                     else {
