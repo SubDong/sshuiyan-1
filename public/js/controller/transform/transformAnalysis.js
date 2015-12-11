@@ -228,13 +228,13 @@ define(["./module"], function (ctrs) {
                     def.defData($scope.charts[0].config);
                 }
             };
-            $scope.queryOption_all = ["pv", "uv", /*"ip",*/ "vc","nuv", "conversions", "crate", "transformCost", "clickTotal", "visitNum"];
+            $scope.queryOption_all = ["pv", "uv", /*"ip",*/ "vc", "nuv", "conversions", "crate", "transformCost", "clickTotal", "visitNum"];
             $scope.queryOptions = ["pv", "uv"];
             $scope.charts = [
                 {
                     config: {
                         legendId: "indicators_charts_legend",
-                        legendData: ["浏览量(PV)", "访客数(UV)",/* "IP数",*/ "访问次数","新访客数", "转化次数", "转化率", "平均转化成本(事件)", "事件点击总数", "唯一访客事件数"],//显示几种数据
+                        legendData: ["浏览量(PV)", "访客数(UV)", /* "IP数",*/ "访问次数", "新访客数", "转化次数", "转化率", "平均转化成本(事件)", "事件点击总数", "唯一访客事件数"],//显示几种数据
                         //legendMultiData: $rootScope.lagerMulti,
                         legendAllowCheckCount: 2,
                         legendClickListener: $scope.onLegendClickListener,
@@ -444,7 +444,7 @@ define(["./module"], function (ctrs) {
                                 var tempVc = 0;
                                 var tempConv = 0;
 
-                                var tempNuvRate=0;
+                                var tempNuvRate = 0;
                                 events.forEach(function (event, index) {
                                     var eventInfo = eventInfos[event.event_page + "_" + event.event_id]
                                     if (eventInfo != undefined) {
@@ -464,7 +464,7 @@ define(["./module"], function (ctrs) {
                                             } else if ($scope.es_checkArray[i] == "transformCost") {
                                                 //var add_i = i;
                                                 var semRequest = "";
-                                                if($rootScope.baiduAccount!=undefined&&$rootScope.user!=undefined){
+                                                if ($rootScope.baiduAccount != undefined && $rootScope.user != undefined) {
                                                     semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end + "&q=cost");
                                                     $q.all([semRequest]).then(function (sem_data) {
                                                         var cost = 0;
@@ -486,8 +486,25 @@ define(["./module"], function (ctrs) {
                                         results.push(data)
                                     }
                                 })
-                                $rootScope.gridData = results;
-                                $rootScope.targetSearch(true)
+                                if ($rootScope.checkedArray.length > 0 && results.length > 0) {
+
+                                    var attr = $rootScope.checkedArray[0]
+                                    for (var i = 0; i < results.length-1; i++) {
+                                        for (var k = i + 1; k < results.length; k++) {
+                                            if(results[i][attr]<results[k][attr]){
+                                                var temp  = results[k]
+                                                results[k] = results[i]
+                                                results[i] = temp;
+                                            }
+                                        }
+                                    }
+                                    $rootScope.gridData = results;
+                                    $rootScope.targetSearch(true)
+                                } else {
+                                    $rootScope.gridData = [];
+                                    $rootScope.targetSearch(true)
+                                }
+
 
                                 //刷新概况信息
 
@@ -500,7 +517,7 @@ define(["./module"], function (ctrs) {
                                             maxvalues[item.label] = maxvalues[item.label] == undefined ? pvs[index][item.label] : (maxvalues[item.label] > pvs[index][item.label] ? maxvalues[item.label] : pvs[index][item.label])
                                             if (item.label == "crate") {
                                             } else if (item.label == "transformCost") {
-                                                if($rootScope.baiduAccount!=undefined&&$rootScope.user!=undefined){
+                                                if ($rootScope.baiduAccount != undefined && $rootScope.user != undefined) {
                                                     var semRequest = "";
                                                     semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end + "&q=cost");
                                                     $q.all([semRequest]).then(function (sem_data) {
@@ -512,8 +529,8 @@ define(["./module"], function (ctrs) {
                                                         }
                                                         var t = eventInfo.convCount > 0 ? (cost / eventInfo.convCount).toFixed(2) : 0
                                                         sumTransformCost = (Number(sumTransformCost) + Number(t));
-                                                        if( (events.length-1)==index)
-                                                            item.value = (sumTransformCost/events.length).toFixed(2) + "元"
+                                                        if ((events.length - 1) == index)
+                                                            item.value = (sumTransformCost / events.length).toFixed(2) + "元"
                                                     });
                                                 }
                                             } else if (item.label == "clickTotal") {
@@ -522,10 +539,10 @@ define(["./module"], function (ctrs) {
                                                 if (eventInfo != undefined) {
                                                     item.value += eventInfo.convCount;
                                                 }
-                                            } else if(item.label == "nuvRate"&&(hashPage[event.event_page]==undefined||!hashPage[event.event_page])){
-                                                tempNuvRate+=Number(pvs[index]["nuvRate"].replace("%",""))
-                                                hashPage[event.event_page]=true
-                                            }else {
+                                            } else if (item.label == "nuvRate" && (hashPage[event.event_page] == undefined || !hashPage[event.event_page])) {
+                                                tempNuvRate += Number(pvs[index]["nuvRate"].replace("%", ""))
+                                                hashPage[event.event_page] = true
+                                            } else {
                                                 item.value = hashloc[event.event_page] == undefined ? (pvs[index][item.label] + item.value) : (maxvalues[item.label] < pvs[index][item.label] ? (item.value + pvs[index][item.label] - maxvalues[item.label]) : item.value)
                                                 if (item.label == "vc") {
                                                     tempVc = item.value;
@@ -546,9 +563,9 @@ define(["./module"], function (ctrs) {
 
                                 $scope.dateShowArray.forEach(function (item) {
                                     if (item.label == "crate" && tempVc != 0) {
-                                        item.value = (Number(tempConv / tempVc)*100).toFixed(2)+"%"
-                                    }else if(item.label == "nuvRate"){
-                                        item.value= tempNuvRate.toFixed(2)+"%"
+                                        item.value = (Number(tempConv / tempVc) * 100).toFixed(2) + "%"
+                                    } else if (item.label == "nuvRate") {
+                                        item.value = tempNuvRate.toFixed(2) + "%"
                                     }
                                 })
                                 //刷新图表
