@@ -1981,8 +1981,8 @@ define(["app"], function (app) {
                         var wordArray = [];// 搜索词数组
                         var aaaArray = [];
                         var bbbArray = [];
-                        item = [{"word":"","freq":1,"baidu":"100.0%","sougou":"0%","haosou":"0%","bing":"0%","other":"0%"},{"word":"百思 搜客","freq":1,"baidu":"0%","sougou":"100.0%","haosou":"0%","bing":"0%","other":"0%"}]
-                        contrast = [{"word":"","freq":1,"baidu":"100.0%","sougou":"0%","haosou":"0%","bing":"0%","other":"0%"},{"word":"SEM网销系统","freq":1,"baidu":"100.0%","sougou":"0%","haosou":"0%","bing":"0%","other":"0%"},{"word":"SEM管理系统","freq":2,"baidu":"100.0%","sougou":"0%","haosou":"0%","bing":"0%","other":"0%"},{"word":"百思买官网","freq":2,"baidu":"100.0%","sougou":"0%","haosou":"0%","bing":"0%","other":"0%"}];
+                        //item = [{"word":"","freq":1,"baidu":"100.0%","sougou":"0%","haosou":"0%","bing":"0%","other":"0%"},{"word":"百思 搜客","freq":1,"baidu":"0%","sougou":"100.0%","haosou":"0%","bing":"0%","other":"0%"}]
+                        //contrast = [{"word":"","freq":1,"baidu":"100.0%","sougou":"0%","haosou":"0%","bing":"0%","other":"0%"},{"word":"SEM网销系统","freq":1,"baidu":"100.0%","sougou":"0%","haosou":"0%","bing":"0%","other":"0%"},{"word":"SEM管理系统","freq":2,"baidu":"100.0%","sougou":"0%","haosou":"0%","bing":"0%","other":"0%"},{"word":"百思买官网","freq":2,"baidu":"100.0%","sougou":"0%","haosou":"0%","bing":"0%","other":"0%"}];
                         item.forEach(function (_record) {
                             aaaArray.push(_record["word"]);
                             wordArray.push(_record["word"]);
