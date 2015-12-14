@@ -107,7 +107,7 @@ api.get("/eventchnage_list", function (req, res) {
                                     if(tempRef!=undefined&&tempRef!=""&&tempRef[tempRef.length-1]=="/"){
                                         tempRef = tempRef.substring(0,tempRef.length-1)
                                     }
-                                    //consolelog("1 update 刷新Redis：" + sres[0].root_url + ":e:" + tempRef + " = " + JSON.stringify(confs))
+                                    console.log("1 update 刷新Redis：" + sres[0].root_url + ":e:" + tempRef + " = " + JSON.stringify(confs))
                                     req.redisclient.multi().set(sres[0].root_url + ":e:" + tempRef, JSON.stringify(confs)).exec();
                                 }
                                 datautils.send(res, docs);
@@ -925,13 +925,15 @@ api.get("/select", function (req, res) {
                                 event_id: entityJson["id"],
                                 event_name: entityJson["name"],
                                 event_page: entityJson["monUrl"],
+                                event_target: entityJson["isTarget"]==undefined|| entityJson["isTarget"]=="false"|| entityJson["isTarget"]==""?false:true,
                                 root_url: sitejson.siteid,
                             }
+                            console.log(JSON.stringify(eventData))
                             if (docs == null || docs.length == 0) {//存在配置
                                 ////consolelog("*******该事件配置不存在 插入********")
                                 eventData.event_status = 1
                                 eventData.event_method = "自动"
-                                eventData.event_target = false
+                                //eventData.event_target = false
                                 eventData.update_time = new Date().getTime();
                                 dao.save(schema_name, eventData, function (ins) {
                                     if (ins != null) {
@@ -976,6 +978,7 @@ api.get("/select", function (req, res) {
                                     uid: uid,
                                     event_page: entityJson["monUrl"],
                                     event_name: entityJson["name"],
+                                    event_target: entityJson["isTarget"]==undefined|| entityJson["isTarget"]=="false"|| entityJson["isTarget"]==""?false:true,
                                     root_url: sitejson.siteid,
 
                                 }), JSON.stringify({

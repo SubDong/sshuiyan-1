@@ -2,7 +2,7 @@
     var msgs = {title: "你好"};
     var tips = [];
     var p = {
-        flashUrl: "192.168.1.102:8000",
+        flashUrl: "hy.best-ad.cn",
         urlPath: "config/select",
         protocol: "https:" == document.location.protocol ? "https:" : "http:",
         webroot: "http://tongji.baidu.com/hm-web",
@@ -91,6 +91,8 @@
     var h = "EventTarget" + randName(8);
     var path_url = "EventTarget" + randName(8);
     var Q = "EventSubmit" + randName(8);
+    //CheckeRadio
+    var RD = "EventChecked" + randName(8);
     var cancelBtn = "EventCancel" + randName(8);
     var deleteBtn = "EventDelete" + randName(8);
     var S = "EventPanelTitle" + randName(8);
@@ -476,11 +478,13 @@
                 var eventId = rtips[i]["event_id"];
                 var eventName = rtips[i]["event_name"];
                 var eventPage = rtips[i]["event_page"];
+                var eventTarget = rtips[i]["event_target"];
                 var doc = forcedoc(eventId);
                 if (doc != null) {
                     doc.setAttribute("HY_transId", eventId);
                     doc.setAttribute("HY_eventTargetName", decodeURIComponent(eventName));
                     doc.setAttribute("HY_eventDomain", eventPage);
+                    doc.setAttribute("HY_checked", eventTarget);
                     tipContent.showTip(doc.id);
                     tips.push(rtips[i])
                 }
@@ -582,6 +586,7 @@
         },
         bindPanelEvent: function () {
             attachEvent(Q, "click", panelcont.submitPanel);
+            attachEvent(RD, "click", panelcont.checkPanel);
             attachEvent(cancelBtn, "click", panelcont.canelPanel);
             attachEvent(deleteBtn, "click", panelcont.deletePanel)
         },
@@ -593,6 +598,13 @@
             G.innerHTML = Y;
             G.title = ab;
             forcedoc(h).value = X
+            var ET = aa.getAttribute("HY_checked");
+            var RG = forcedoc(RD);
+            if(ET==undefined||ET==""||ET=="false"){
+                RG.removeAttribute("checked");
+            }else{
+                RG.setAttribute("checked","true");
+            }
         },
         fixedPosition: function (ag, Z, aa) {
             var aj = g(aa, "dispaly", "none") || g(aa, "visibility", "hidden");
@@ -656,8 +668,10 @@
             var ad = addPanel.getAttribute("HY_panelTarget");
             var Z = addPanel.getAttribute("HY_eventType");
             var Y = addPanel.getAttribute("HY_transId");
+            var T = addPanel.getAttribute("HY_checked");
+
             var ac = Y ? Y : "";
-            var evenData = {name: encodeURIComponent(G), id: ad, eventType: Z, targetId: ac, monUrl: ab};
+            var evenData = {name: encodeURIComponent(G), id: ad, eventType: Z, targetId: ac, monUrl: ab,isTarget:T==undefined?"false":T};
             var url = server_base_path + "?type=saveTips&entity=" + JSON.stringify(evenData);
             crossDomainSendData(url, function (index, resData) {
                 if (resData.val.code == 1) {
@@ -676,6 +690,17 @@
                     }
                 }
             })
+        },
+        checkPanel: function () {
+            var G = createElem();
+            var c= G.getAttribute("HY_checked");
+            if(c==undefined){
+                G.setAttribute("HY_checked","true")
+            }else if(c=="true"){
+                G.setAttribute("HY_checked","false")
+            }else {
+                G.setAttribute("HY_checked","true")
+            }
         },
         canelPanel: function () {
             var G = createElem();
@@ -737,8 +762,21 @@
             G.push("</label>");
             G.push("</td>");
             G.push("</tr>");
+            //G.push("<tr>");
+            //G.push('<input type="checkbox" name="设置为事件转化目标" onclick="console.log("test..................")"/>');
+            //G.push('<span style="color: red"><strong>设置为事件转化目标</strong></span>');
+            //G.push("</tr>");
+            //<div class="form-group">
+            //        <!--<input type="checkbox"   name="设置为转化目标" data-ng-model="eventChange.event_target" />-->
+            //    <div class="col-sm-4">
+            //    <input type="checkbox" name="设置为事件转化目标"
+            //data-ng-model="eventChange.event_target"/><span style="color: red"><strong>设置为事件转化目标</strong></span>
+            //</div>
+            //</div>
             G.push("<tr>");
-            G.push('<td height="30" colspan="3"><span style="color:#999;text-align:left;  font-size:12px; ">( 可以在URL首或尾使用*匹配任意长度字符，直接填写*代表事件作用目标为整个网站)</span></td>');
+            G.push('<td height="30" colspan="3"><input id="'+RD+'" type="checkbox" name="设置为事件转化目标" />');
+            G.push('<span style="color: #ff0000"><strong>设置为事件转化目标</strong></span></td>');
+            //G.push('<td height="30" colspan="3"><span style="color:#999;text-align:left;  font-size:12px; ">( 可以在URL首或尾使用*匹配任意长度字符，直接填写*代表事件作用目标为整个网站)</span></td>');
             G.push("</tr>");
             G.push("<tr>");
             G.push('<td height="30">');
@@ -776,6 +814,7 @@
                 X.setAttribute("HY_eventTargetName", decodeURIComponent(data.name));
                 X.setAttribute("HY_eventType", data.eventType);
                 X.setAttribute("HY_eventDomain", data.monUrl);
+                X.setAttribute("HY_checked", data.isTarget);
                 tipContent.showTip(Y);
                 tips.push({event_id: data.id, event_page: data.monUrl})
             }
@@ -819,6 +858,7 @@
                         aa.setAttribute("HY_transId", Z);
                         aa.setAttribute("HY_eventTargetName", decodeURIComponent(Y.name));
                         aa.setAttribute("HY_eventDomain", Y.monUrl);
+                        aa.setAttribute("HY_checked", Y.isTarget);
                         tipContent.showTip(Y.id);
                         X.splice(G, 1)
                     }
@@ -992,6 +1032,7 @@
                 Y.removeAttribute("HY_transId");
                 Y.removeAttribute("HY_EventId");
                 Y.removeAttribute("HY_eventDomain");
+                Y.removeAttribute("HY_checked");
                 X.parentNode.removeChild(X)
             }
             panelcont.canelPanel()
