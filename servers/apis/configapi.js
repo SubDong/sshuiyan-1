@@ -928,9 +928,9 @@ api.get("/select", function (req, res) {
                                 event_target: entityJson["isTarget"]==undefined|| entityJson["isTarget"]=="false"|| entityJson["isTarget"]==""?false:true,
                                 root_url: sitejson.siteid,
                             }
-                            console.log(JSON.stringify(eventData))
+                            //console.log(JSON.stringify(eventData))
                             if (docs == null || docs.length == 0) {//存在配置
-                                ////consolelog("*******该事件配置不存在 插入********")
+                                //console.log("*******该事件配置不存在 插入********")
                                 eventData.event_status = 1
                                 eventData.event_method = "自动"
                                 //eventData.event_target = false
@@ -972,18 +972,19 @@ api.get("/select", function (req, res) {
                                         });
                                     }
                                 });
-                            } else {
-                                ////consolelog("*******该事件配置已存在 更新********")
+                            }
+                            else {
+                                //console.log("*******该事件配置已存在 更新********")
+                                //console.log( entityJson["isTarget"])
                                 dao.update(schema_name, JSON.stringify({
                                     uid: uid,
                                     event_page: entityJson["monUrl"],
                                     event_name: entityJson["name"],
-                                    event_target: entityJson["isTarget"]==undefined|| entityJson["isTarget"]=="false"|| entityJson["isTarget"]==""?false:true,
                                     root_url: sitejson.siteid,
 
                                 }), JSON.stringify({
                                     event_name: entityJson["name"],
-                                    //update_time: new Date().getTime()
+                                    event_target: entityJson["isTarget"]==undefined|| entityJson["isTarget"]=="false"|| entityJson["isTarget"]==""?false:true,
                                 }), function (err, docs) {
                                     res.write("crossDomainCallback({code:2,state:'Update Success'}," + query["index"] + ");");
                                     res.end();
