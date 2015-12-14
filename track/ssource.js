@@ -2,7 +2,7 @@
     var msgs = {title: "你好"};
     var tips = [];
     var p = {
-        flashUrl: "hy.best-ad.cn",
+        flashUrl: "192.168.1.104:8000",
         urlPath: "config/select",
         protocol: "https:" == document.location.protocol ? "https:" : "http:",
         webroot: "http://tongji.baidu.com/hm-web",
@@ -91,7 +91,6 @@
     var h = "EventTarget" + randName(8);
     var path_url = "EventTarget" + randName(8);
     var Q = "EventSubmit" + randName(8);
-    //CheckeRadio
     var RD = "EventChecked" + randName(8);
     var cancelBtn = "EventCancel" + randName(8);
     var deleteBtn = "EventDelete" + randName(8);
@@ -597,13 +596,16 @@
             var G = forcedoc(y);
             G.innerHTML = Y;
             G.title = ab;
-            forcedoc(h).value = X
+            forcedoc(h).value = X;
             var ET = aa.getAttribute("HY_checked");
             var RG = forcedoc(RD);
-            if(ET==undefined||ET==""||ET=="false"){
-                RG.removeAttribute("checked");
-            }else{
-                RG.setAttribute("checked","true");
+            if (ET == undefined || ET == "" || ET == "false") {
+                RG.removeAttribute("checked")
+                RG.setAttribute("checked", "false")
+                aa.setAttribute("HY_checked","false");
+            } else {
+                RG.setAttribute("checked", "true")
+                aa.setAttribute("HY_checked","true");
             }
         },
         fixedPosition: function (ag, Z, aa) {
@@ -669,9 +671,15 @@
             var Z = addPanel.getAttribute("HY_eventType");
             var Y = addPanel.getAttribute("HY_transId");
             var T = addPanel.getAttribute("HY_checked");
-
             var ac = Y ? Y : "";
-            var evenData = {name: encodeURIComponent(G), id: ad, eventType: Z, targetId: ac, monUrl: ab,isTarget:T==undefined?"false":T};
+            var evenData = {
+                name: encodeURIComponent(G),
+                id: ad,
+                eventType: Z,
+                targetId: ac,
+                monUrl: ab,
+                isTarget: T == undefined ? "false" : T
+            };
             var url = server_base_path + "?type=saveTips&entity=" + JSON.stringify(evenData);
             crossDomainSendData(url, function (index, resData) {
                 if (resData.val.code == 1) {
@@ -693,13 +701,15 @@
         },
         checkPanel: function () {
             var G = createElem();
-            var c= G.getAttribute("HY_checked");
-            if(c==undefined){
-                G.setAttribute("HY_checked","true")
-            }else if(c=="true"){
-                G.setAttribute("HY_checked","false")
-            }else {
-                G.setAttribute("HY_checked","true")
+            var c = G.getAttribute("HY_checked");
+            if (c == undefined) {
+                G.setAttribute("HY_checked", "false")
+            } else {
+                if (c == "true") {
+                    G.setAttribute("HY_checked", "false")
+                } else {
+                    G.setAttribute("HY_checked", "true")
+                }
             }
         },
         canelPanel: function () {
@@ -762,21 +772,9 @@
             G.push("</label>");
             G.push("</td>");
             G.push("</tr>");
-            //G.push("<tr>");
-            //G.push('<input type="checkbox" name="设置为事件转化目标" onclick="console.log("test..................")"/>');
-            //G.push('<span style="color: red"><strong>设置为事件转化目标</strong></span>');
-            //G.push("</tr>");
-            //<div class="form-group">
-            //        <!--<input type="checkbox"   name="设置为转化目标" data-ng-model="eventChange.event_target" />-->
-            //    <div class="col-sm-4">
-            //    <input type="checkbox" name="设置为事件转化目标"
-            //data-ng-model="eventChange.event_target"/><span style="color: red"><strong>设置为事件转化目标</strong></span>
-            //</div>
-            //</div>
             G.push("<tr>");
-            G.push('<td height="30" colspan="3"><input id="'+RD+'" type="checkbox" name="设置为事件转化目标" />');
+            G.push('<td height="30" colspan="3"><input id="' + RD + '" type="checkbox" name="设置为事件转化目标" />');
             G.push('<span style="color: #ff0000"><strong>设置为事件转化目标</strong></span></td>');
-            //G.push('<td height="30" colspan="3"><span style="color:#999;text-align:left;  font-size:12px; ">( 可以在URL首或尾使用*匹配任意长度字符，直接填写*代表事件作用目标为整个网站)</span></td>');
             G.push("</tr>");
             G.push("<tr>");
             G.push('<td height="30">');
