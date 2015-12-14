@@ -762,8 +762,8 @@ api.get("/exchange", function (req, res) {
     } else {
         indexString = date.createIndexes(start, end, "access-");
     }
-    var pathUp = "path0";
-    var pathDown = "path1";
+    var pathUp = "paths.path0";
+    var pathDown = "paths.path1";
     pathUp = Parameters[3].split("=")[1];
     pathDown = Parameters[4].split("=")[1];
     var address = Parameters[5].split("=")[1];

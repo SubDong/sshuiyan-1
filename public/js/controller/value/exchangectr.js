@@ -13,7 +13,7 @@ define(["./module"], function (ctrs) {
             $scope.exchange = {};
             //对应域名的点击时间，获取该域名下的层级下数据
             $scope.itemClicked = function (page, $index) {
-                $http.get("api/exchange?start=" + $rootScope.start + ",end=" + $rootScope.end + ",type=" + page.id + ",pathUp=path0,pathDown=path1" + ",address=" + null).success(function (data) {
+                $http.get("api/exchange?start=" + $rootScope.start + ",end=" + $rootScope.end + ",type=" + page.id + ",pathUp=paths.path0,pathDown=paths.path1" + ",address=" + null).success(function (data) {
                     //注：data里面的数据在name、id、pv和uv与page对象的值不同，数据混乱
                     //原因是type的数量与数据查出来的域名数量不符合，数据库有问题
                     $scope.exchange = {
@@ -60,7 +60,7 @@ define(["./module"], function (ctrs) {
 
             $scope.init = function () {
 
-                $http.get("api/exchange?start=" + $rootScope.start + ",end=" + $rootScope.end + ",type=" + $rootScope.userType + ",pathUp=path0,pathDown=path1" + ",address=" + null).success(function (data) {
+                $http.get("api/exchange?start=" + $rootScope.start + ",end=" + $rootScope.end + ",type=" + $rootScope.userType + ",pathUp=paths.path0,pathDown=paths.path1" + ",address=" + null).success(function (data) {
                     if (data.length == 0) {
                         $scope.exchanges = null;
                         $scope.exchange = null;
