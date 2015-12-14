@@ -634,15 +634,13 @@ api.get('/provincemap', function (req, res) {
 
 //csv下载功能
 api.post("/downCSV", function (req, res) {
-    var requestData = "";
+    var requestData = [];
     req.addListener("data", function (postDataChunk) {
-        requestData = postDataChunk + "";
+        requestData = JSON.parse(JSON.parse(postDataChunk + "").dataInfo);
     });
 
     req.addListener("end",function(){
-        var _requestData = JSON.parse(requestData);
-        var jsonData = JSON.parse(_requestData.dataInfo);
-        csvApi.json2csv(jsonData, function (err, csv) {
+        csvApi.json2csv(requestData, function (err, csv) {
             if (err) throw err;
             var buffer = new Buffer(csv);
             //需要转换字符集
