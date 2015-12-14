@@ -344,8 +344,8 @@ var access_request = {
                             },
                             "aggs": {
                                 "pv": {
-                                    "sum": {
-                                        "script": "1"
+                                    "value_count": {
+                                        "field": "_type"
                                     }
                                 },
                                 "uv": {
