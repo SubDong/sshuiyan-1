@@ -46,7 +46,7 @@
                     <div class="chart_top">
                         <span>网站基础指标 :</span>
                         <ul>
-                            <li ng-repeat="item in TodayWebs" data-sshy-default defvalue="{{item.name}}"
+                            <li ng-repeat="item in indexoverviewTodayWebs" data-sshy-default defvalue="{{item.name}}"
                                 class="{{checkedArray.indexOf(item.name) != -1?classInfo:0}}"
                                 ng-click='indicators(item,TodayWebs,6)'>{{item.consumption_name}}
                             </li>

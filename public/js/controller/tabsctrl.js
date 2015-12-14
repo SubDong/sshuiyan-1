@@ -91,6 +91,12 @@ define(["app"], function (app) {
             {consumption_name: "新访客比率", name: "nuvRate"},
             {consumption_name: "IP数", name: "ip"}
         ];
+        $scope.indexoverviewTodayWebs = [
+            {consumption_name: "浏览量(PV)", name: "pv"},
+            {consumption_name: "访客数(UV)", name: "uv"},
+            {consumption_name: "新访客比率", name: "nuvRate"},
+            {consumption_name: "IP数", name: "ip"}
+        ];
         $scope.Indexflowedse = [
             {consumption_name: "跳出率", name: "outRate"},
             {consumption_name: "平均访问时长", name: "avgTime"},
