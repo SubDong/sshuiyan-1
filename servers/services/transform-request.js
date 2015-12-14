@@ -1816,7 +1816,7 @@ var transform = {
                 var _aggs = {};
                 var queryOptions = queryOptionsStr.split(",")
                 queryOptions.forEach(function (queryOption) {
-                    //console.log(queryOption)
+                   //console..log(queryOption)
                     for (var key in es_aggs[queryOption]) {
                         _aggs[key] = es_aggs[queryOption][key];
                     }
@@ -1876,8 +1876,8 @@ var transform = {
                     }
                 }
                 var pvs = []
-                ////console.log("**************PageBasePvs**************")
-                ////console.log(JSON.stringify(query))
+                //////console.log("**************PageBasePvs**************")
+                //////console.log(JSON.stringify(query))
                 es.search(query, function (error, result) {
                     var datas = []
                     if (result != undefined && result.aggregations != undefined && result.aggregations.pagePVs != undefined && result.aggregations.pagePVs.buckets != undefined) {
@@ -1894,7 +1894,7 @@ var transform = {
                                             data[queryOption] = "0.00%";
                                         } else {
                                             data[queryOption] = (((pv.visitor_aggs.value - pv.old_visitor_aggs.value) / pv.uv_aggs.value) * 100).toFixed(2) + "%";
-                                            //console.log(pv.visitor_aggs.value+" - "+pv.old_visitor_aggs.value+" / "+pv.uv_aggs.value+"nuvRate = "+ data[queryOption])
+                                           //console..log(pv.visitor_aggs.value+" - "+pv.old_visitor_aggs.value+" / "+pv.uv_aggs.value+"nuvRate = "+ data[queryOption])
                                         }
                                         data["nuv"] = (pv.visitor_aggs.value - pv.old_visitor_aggs.value)
                                         data["uv"] = pv.uv_aggs.value
@@ -1999,8 +1999,8 @@ var transform = {
                     }
                 })
                 var pvs = []
-                //////console.log("****************************")
-                //////console.log(JSON.stringify(querys[0]))
+                ////////console.log("****************************")
+                ////////console.log(JSON.stringify(querys[0]))
                 es.search(querys[0], function (error, result) {
                     var datas = []
                     if (result != undefined && result.aggregations != undefined && result.aggregations.pagePVs != undefined && result.aggregations.pagePVs.buckets != undefined) {
@@ -2149,8 +2149,8 @@ var transform = {
                         },
                     }
                 })
-                //////console.log("****************************")
-                //////console.log(JSON.stringify(querys[0]))
+                ////////console.log("****************************")
+                ////////console.log(JSON.stringify(querys[0]))
                 es.search(querys[0], function (error, result) {
                     var results = {}
                     if (result != undefined && result.aggregations != undefined && result.aggregations.pagePVs != undefined && result.aggregations.pagePVs.buckets != undefined) {
@@ -2193,7 +2193,7 @@ var transform = {
                 });
                 var boolQuery = []
                 pages.forEach(function (page) {
-                    //console.log(JSON.stringify(page))
+                   //console..log(JSON.stringify(page))
                     var filterQuery = []
                     if (filters != undefined && filters.length > 0) {
                         var jfilters = JSON.parse(filters)
@@ -2260,8 +2260,8 @@ var transform = {
                         },
                     }
                 }
-                ////console.log("****************************")
-                //console.log(JSON.stringify(query))
+                //////console.log("****************************")
+               //console..log(JSON.stringify(query))
                 es.search(query, function (error, result) {
                     if (result != undefined && result.aggregations != undefined && result.aggregations.pagePVs != undefined && result.aggregations.pagePVs.buckets != undefined) {
                         var infos = result.aggregations.pagePVs.buckets
@@ -2326,8 +2326,8 @@ var transform = {
                     break;
             }
             async.map(requests, function (item, callback) {
-                //////console.log("****************************")
-                //////console.log(JSON.stringify(item))
+                ////////console.log("****************************")
+                ////////console.log(JSON.stringify(item))
                 es.search(item, function (error, result) {
                     if (result != undefined && result.aggregations != undefined) {
                         callback(null, result.aggregations);
@@ -2689,8 +2689,8 @@ var transform = {
                 var pvs = []
                 async.eachSeries(querys, function (item, callback) {
 
-                    ////console.log("************EventPVs****************")
-                    ////console.log(JSON.stringify(item))
+                    //console.log("************EventPVs****************")
+                    //console.log(JSON.stringify(item))
                     es.search(item, function (error, result) {
                         if (result != undefined && result.aggregations != undefined) {
                             pvs.push(result.aggregations)
@@ -2726,7 +2726,7 @@ var transform = {
                                     if (pv[queryOption] != undefined)
                                         data[queryOption] = pv[queryOption].value;
                                     else
-                                    ////console.log("______________________________"+queryOption)
+                                    //////console.log("______________________________"+queryOption)
                                         break;
                             }
                         })
@@ -2812,6 +2812,11 @@ var transform = {
                                                             "value_count": {
                                                                 "field": "et_category"
                                                             }
+                                                        },
+                                                        "visitNum": {
+                                                            "cardinality": {
+                                                                "field": "tt"
+                                                            }
                                                         }
                                                     }
                                                 }
@@ -2823,8 +2828,8 @@ var transform = {
                         })
                         var pageEvents = {}
                         async.eachSeries(querys, function (item, callback) {
-                                //////console.log("*************ConvEvent*****************")
-                                //////console.log(JSON.stringify(item))
+                                //console.log("*************ConvEvent*****************")
+                                //console.log(JSON.stringify(item))
                                 es.search(item.query, function (error, result) {
                                     if (result != undefined && result.aggregations != undefined) {
                                         if (result.aggregations.etIdTerms.buckets != undefined) {
@@ -2832,7 +2837,8 @@ var transform = {
                                                 var res = {}
                                                 pageEvents[item.eventPage + "_" + buck.key] = {
                                                     eventCount: buck.eventCount == undefined ? 0 : buck.eventCount.value,
-                                                    convCount: buck.convCount == undefined ? 0 : buck.convCount.value
+                                                    convCount: buck.convCount == undefined ? 0 : buck.convCount.value,
+                                                    visitNum: buck.visitNum == undefined ? 0 : buck.visitNum.value
                                                 }
                                             })
                                         }
@@ -2941,8 +2947,8 @@ var transform = {
                                 break;
                         }
                         async.map(requests, function (item, callback) {
-                            //////console.log("****************************")
-                            //////console.log(JSON.stringify(item))
+                            ////////console.log("****************************")
+                            ////////console.log(JSON.stringify(item))
                             es.search(item, function (error, result) {
                                 if (result != undefined && result.aggregations != undefined) {
                                     callback(null, result.aggregations);

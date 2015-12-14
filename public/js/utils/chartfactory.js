@@ -874,6 +874,9 @@ var ad = {
             case "nuvRate":
                 return parseFloat(value).toFixed(2) + "%";
                 break;
+            case "transformCost":
+                return parseFloat(value).toFixed(2) + "元";
+                break;
             case "crate":
                 return value + "%";
                 break;
@@ -897,6 +900,9 @@ var ad = {
                 break;
             case "抵达率":
                 return value + "%";
+                break;
+            case "平均转化成本(事件)":
+                return value + "元";
                 break;
             default :
                 return value;
@@ -924,6 +930,14 @@ var ad = {
                     formatter: function (value) {
                         console.log("fomat nuvRate")
                         return value + "%";
+                    }
+                };
+                break;
+            case "transformCost":
+                option.yAxis[index]["axisLabel"] = {
+                    formatter: function (value) {
+                        console.log("fomat nuvRate")
+                        return value + "元";
                     }
                 };
                 break;
@@ -967,6 +981,13 @@ var ad = {
                 option.yAxis[index]["axisLabel"] = {
                     formatter: function (value) {
                         return value + "%";
+                    }
+                };
+                break;
+            case "平均转化成本(事件)":
+                option.yAxis[index]["axisLabel"] = {
+                    formatter: function (value) {
+                        return value + "元";
                     }
                 };
                 break;

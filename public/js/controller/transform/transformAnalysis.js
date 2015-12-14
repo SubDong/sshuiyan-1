@@ -481,6 +481,8 @@ define(["./module"], function (ctrs) {
                                                 data["clickTotal"] = eventInfo.eventCount != undefined ? eventInfo.eventCount : 0;
                                             } else if ($scope.es_checkArray[i] == "conversions") {
                                                 data["conversions"] = eventInfo.convCount != undefined ? eventInfo.convCount : 0;
+                                            } else if ($scope.es_checkArray[i] == "visitNum") {
+                                                data["visitNum"] = eventInfo.visitNum != undefined ? eventInfo.visitNum : 0;
                                             }
                                         }
                                         results.push(data)
@@ -624,6 +626,8 @@ define(["./module"], function (ctrs) {
                                 bdata.key.push(gdata.eventName)
                                 if (bdata.option == "crate") {
                                     bdata.quota.push(gdata[bdata.option] == undefined ? 0 : Number(gdata[bdata.option].replace("%", "")))
+                                }  else if (bdata.option == "transformCost") {
+                                    bdata.quota.push(gdata[bdata.option] == undefined ? 0 : Number(gdata[bdata.option].replace("元", "")))
                                 } else {
                                     bdata.quota.push(gdata[bdata.option] == undefined ? 0 : gdata[bdata.option])
                                 }
@@ -643,6 +647,10 @@ define(["./module"], function (ctrs) {
                                     bdata.key[minIndex] = gdata.eventName
                                     if (bdata.option == "crate") {
                                         bdata.quota[minIndex] = gdata[bdata.option] == undefined ? 0 : Number(gdata[bdata.option].replace("%", ""))
+                                    } else if (bdata.option == "transformCost") {
+                                        console.log(gdata[bdata.option])
+                                        console.log(gdata[bdata.option].replace("元", ""))
+                                        bdata.quota[minIndex] = gdata[bdata.option] == undefined ? 0 : Number(gdata[bdata.option].replace("元", ""))
                                     } else {
                                         bdata.quota[minIndex] = gdata[bdata.option] == undefined ? 0 : gdata[bdata.option]
                                     }
