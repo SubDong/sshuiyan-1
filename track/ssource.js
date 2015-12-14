@@ -601,7 +601,6 @@
             var RG = forcedoc(RD);
             if (ET == undefined || ET == "" || ET == "false") {
                 RG.removeAttribute("checked")
-                RG.setAttribute("checked", "false")
                 aa.setAttribute("HY_checked","false");
             } else {
                 RG.setAttribute("checked", "true")
