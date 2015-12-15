@@ -241,7 +241,7 @@ define([
             {
                 title: '子目录',
                 icon: 'glyphicon glyphicon-list',
-                stype: 2,
+                stype: 0,
                 sref: '#subcatalog/subcatalog'
             }
         ];
