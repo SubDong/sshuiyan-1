@@ -670,8 +670,10 @@ var chartUtils = {
             _tmp["key"] = esJson[0].key;
             _tmp["quota"] = _value;
             esJson.push(_tmp);
-        }
-        else {
+        } else {
+            if (esJson.length == 0) {
+                return;
+            }
             var key = [];
             esJson[0].key.forEach(function (esItem, index) {
                 _value.push(0);
