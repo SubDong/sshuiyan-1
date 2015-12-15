@@ -2761,6 +2761,7 @@ define(["app"], function (app) {
                         var atime1 = parseInt(newSpl[0]) * 3600 * 1000;
                         var atime2 = parseInt(newSpl[1]) * 60 * 1000;
                         var atime3 = parseInt(newSpl[2]) * 1000;
+                        _ll = _ll * 1000;
                         returnData[0] = MillisecondToDate(parseInt((atime1 + atime2 + atime3) / _ll));
                     }
                 }
