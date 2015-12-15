@@ -1,23 +1,29 @@
 <div class="middle_containers" ng-controller="count_childlist">
     <div class="web_list">
         <!--网站导航-->
+
         <div class="web_list_nav">
-            <p>  <span ng-bind-html="userTypeName"></span> -子目录管理</p>
+            <p><span ng-bind-html="userTypeName"></span> -子目录管理</p>
+            <div class="web_list_nav_right">
+                <ul>
+                    <li><a href="#conf/webcountsite/childlist_add" class="btn btn-info nav_btn ">新增子目录</a>
+                    </li>
+                    <li><a href="#/transform/pageTransform" class="btn btn-info nav_btn ">查看报告 </a></li>
+                </ul>
+            </div>
         </div>
         <!--网站上部列表部分-->
-
         <div class="web_list_up" >
             <div class="table_content" >
                 <div class="custom_table" ng-class="{hidePageContainer:gridApiAdmin.grid.rows.length<=20}">
                     <div ui-grid="gridOptions"  class="grid clearfix secondary_table transfortable" ui-grid-selection ui-grid-pagination
                          ui-grid-exporter ui-grid-auto-resize></div>
                 </div>
+                <gridpageht>
+                </gridpageht>
             </div>
         </div>
         <!--网站底部列表-->
-        <div class="web_list_down">
-            <a href="#conf/webcountsite/childlist_add" class="btn btn-default">+&nbsp;新增子目录</a>
-        </div>
     </div>
 </div>
 

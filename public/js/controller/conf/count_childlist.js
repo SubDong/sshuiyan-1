@@ -126,14 +126,19 @@ define(["./module"], function (ctrs) {
         };
 
         $scope.gridOptions = {
-            paginationPageSize: 25,
+            paginationPageSize: 20,
+            paginationPageSizes: [20, 50, 100],
             expandableRowTemplate: "<div ui-grid='row.entity.subGridOptions'></div>",
             expandableRowHeight: 360,
             enableColumnMenus: false,
-            enablePaginationControls: false,
-            enableSorting: true,
+            enablePaginationControls: true,
+            enableSorting: false,
             enableGridMenu: false,
             enableHorizontalScrollbar: 0,
+            onRegisterApi: function (girApi) {
+                $rootScope.gridApiAdmin = girApi;
+                //adminGriApihtml(girApi);
+            },
             columnDefs: $rootScope.gridArray
         };
 
