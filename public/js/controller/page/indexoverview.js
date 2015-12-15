@@ -27,7 +27,7 @@ define(["./module"], function (ctrs) {
         $scope.souce.selected = {"name": "全部"};
         $scope.browser.selected = {"name": "全部"};
         //配置默认指标
-        $rootScope.checkedArray = ["pv", "uv", "entrance"];
+        $rootScope.checkedArray = ["pv", "uv", "vc"];
         $rootScope.gridArray = [
             {
                 name: "xl",
@@ -70,7 +70,7 @@ define(["./module"], function (ctrs) {
             {
                 name: "入口页次数",
                 displayName: "入口页次数",
-                field: "entrance",
+                field: "vc",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
             }
         ];
