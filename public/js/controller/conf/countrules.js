@@ -133,10 +133,13 @@ define(["./module"], function (ctrs) {
                 var c = g[z];
                 if (s > 20) {
                     $scope.IPtishi("您最多可输入20个");
-                } else if (c == "") {
-                    $scope.IPtishi("不能为空");
+                }else if(g[z]=="" && g[z+1]=="") {
+                    $scope.IPtishi("请依次输入IP");
                     break;
-                } else {
+                }  else if (g[z] == ""  ) {
+                    $scope.IPtishi("");
+                }
+                else {
                     if (!c.match(reg)) {
                         $scope.IPtishi("您设置的IP格式错误");
                         break;
@@ -145,6 +148,7 @@ define(["./module"], function (ctrs) {
                         $scope.IPtishi("");
                     }
                 }
+
             }
 
             obj.count = s;

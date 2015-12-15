@@ -45,9 +45,9 @@ define(["../app"], function (app) {
                     var _data = [];
                     if (json[0]) {
                         if (json[0].quota.length) {
-                            if (json[0].quota.length > 11) {
-                                json[0].key = json[0].key.slice(0, 11);
-                                json[0].quota = json[0].quota.slice(0, 11);
+                            if (json[0].quota.length > 12) {
+                                json[0].key = json[0].key.slice(0, 12);
+                                json[0].quota = json[0].quota.slice(0, 12);
                             }
                         }
                         json.forEach(function (item) {
