@@ -2558,6 +2558,8 @@ define(["app"], function (app) {
             var rast = [0.0, 0.0];
             var rastString = ["", ""];
             var bhlString = "";
+            var _c_field = a.col.field;
+            var perFieldArray = ["outRate", "nuvRate", "arrivedRate", "baidu", "sougou", "haosou", "bing", "other"]; // 显示百分比的指标数组
             option.forEach(function (items, x) {
                 var itemSplDatas = (items.entity[a.col.field] + "").split(",");
                 if (itemSplDatas[3] == "变化率") {
@@ -2569,19 +2571,17 @@ define(["app"], function (app) {
                     rast[1] += ((itemSplDatas[2] + "").replace("%", "") == "--" || (itemSplDatas[2] + "").replace("%", "") == "　" ? 0.0 : parseFloat(((itemSplDatas[2] + "").replace("%", ""))));
                 }
             });
-            var str
+
+            var str = " ";
             if (a.renderIndex == 1) {
                 str = "当页汇总";
-            } else {
-                str = " ";
             }
-            if (a.col.field == "pv" || a.col.field == "uv" || a.col.field == "ip" || a.col.field == "vc" || a.col.field == "nuv") {
+            if (a.col.field == "pv" || a.col.field == "uv" || a.col.field == "ip" || a.col.field == "vc" || a.col.field == "nuv" || a.col.field == "freq") {
                 //
             } else {
-                rast[0] = (rast[0] / option.length).toFixed(2) + (a.col.field == "outRate" || a.col.field == "nuvRate" || a.col.field == "arrivedRate" ? "%" : "");
-                rast[1] = (rast[1] / option.length).toFixed(2) + (a.col.field == "outRate" || a.col.field == "nuvRate" || a.col.field == "arrivedRate" ? "%" : "");
+                rast[0] = (rast[0] / option.length).toFixed(2) + (perFieldArray.indexOf(_c_field) != -1 ? "%" : "");
+                rast[1] = (rast[1] / option.length).toFixed(2) + (perFieldArray.indexOf(_c_field) != -1 ? "%" : "");
             }
-
             var bhl = (((parseFloat(((rast[0] + "").replace("%", ""))) - parseFloat(((rast[1] + "").replace("%", "")))) / parseFloat(((rast[1] + "").replace("%", "")))) * 100 ).toFixed(2) + "%";
 
             if ((bhl + "").indexOf("NaN") != -1 || (bhl + "").indexOf("Infinity") != -1) {
