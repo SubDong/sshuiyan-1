@@ -185,7 +185,7 @@ module.exports = function (req) {
                                             return;
                                         } else {
                                             var mailOptions = {
-                                                from: '百思慧眼< sshuiyanhost@126.com>', // sender address
+                                                from: '百思慧眼< sshuiyanhost@126.com >', // sender address
                                                 to: mailRule.mail_address.toString(), // list of receivers
                                                 subject: title, // Subject line
                                                 text: 'Hello world', // plaintext body
@@ -232,7 +232,7 @@ module.exports = function (req) {
                                         return;
                                     } else {
                                         var mailOptions = {
-                                            from: '百思慧眼< sshuiyanhost@126.com>', // sender address
+                                            from: '百思慧眼< sshuiyanhost@126.com >', // sender address
                                             to: mailRule.mail_address.toString(), // list of receivers
                                             subject: title, // Subject line
                                             text: 'Hello world', // plaintext body
@@ -278,7 +278,7 @@ module.exports = function (req) {
                                         return;
                                     } else {
                                         var mailOptions = {
-                                            from: '百思慧眼< sshuiyanhost@126.com>', // sender address
+                                            from: '百思慧眼< sshuiyanhost@126.com >', // sender address
                                             to: mailRule.mail_address.toString(), // list of receivers
                                             subject: title, // Subject line
                                             text: 'Hello world', // plaintext body
@@ -324,7 +324,7 @@ module.exports = function (req) {
                                         return;
                                     } else {
                                         var mailOptions = {
-                                            from: '百思慧眼< sshuiyanhost@126.com>', // sender address
+                                            from: '百思慧眼< sshuiyanhost@126.com >', // sender address
                                             to: mailRule.mail_address.toString(), // list of receivers
                                             subject: title, // Subject line
                                             text: 'Hello world', // plaintext body
@@ -448,7 +448,7 @@ module.exports = function (req) {
                                             return;
                                         } else {
                                             var mailOptions = {
-                                                from: '百思慧眼< sshuiyanhost@126.com>', // sender address
+                                                from: '百思慧眼< sshuiyanhost@126.com >', // sender address
                                                 to: mailRule.mail_address.toString(), // list of receivers
                                                 subject: title, // Subject line
                                                 text: 'Hello world', // plaintext body
