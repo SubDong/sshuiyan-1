@@ -53,7 +53,8 @@ define(["./module"], function (ctrs) {
 
                     //加载外部网页
                     var iframe = document.getElementById("foreign_iframe");
-                    iframe.src = "http://localhost:3000/js";
+                    //iframe.src = "http://localhost:3000/js";
+                    iframe.src = $stateParams.rf;
                     if (iframe.attachEvent){
                             iframe.attachEvent("onload", function(){
                                 $scope.urlDialog.close();
