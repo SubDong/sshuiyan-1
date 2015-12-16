@@ -190,9 +190,17 @@ var buildMustQuery = function (filters) {
 
     if (filters != null) {
         filters.forEach(function (filter) {
-            mustQuery.push({
-                "terms": filter
-            });
+            if(JSON.stringify(filter)=="{\"entrance\":\"entrancetrue\"}"){
+                mustQuery.push({
+                    "term": {
+                        "entrance": 1
+                    }
+                });
+            }else{
+                mustQuery.push({
+                    "terms": filter
+                });
+            }
         });
     }
 
