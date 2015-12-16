@@ -12,9 +12,9 @@ var daos = require('../db/daos'),
     date = require('../utils/date'),
     data_convert = require('../mail/data_convert'),
     csvApi = require('json-2-csv'),
-    fs = require("file-system")
+    fs = require("file-system");
 
-mailIntervalIds = [];
+var mailIntervalIds = [];
 
 var getScaleName = function (scale) {
     switch (scale) {
@@ -109,7 +109,7 @@ module.exports = function (req) {
                                             return;
                                         } else {
                                             var mailOptions = {
-                                                from: '百思慧眼<70285622@qq.com> ', // sender address
+                                                from: '百思慧眼< sshuiyanhost@126.com >', // sender address
                                                 to: mailRule.mail_address.toString(), // list of receivers
                                                 subject: title, // Subject line
                                                 text: 'Hello world', // plaintext body
@@ -185,7 +185,7 @@ module.exports = function (req) {
                                             return;
                                         } else {
                                             var mailOptions = {
-                                                from: '百思慧眼<70285622@qq.com> ', // sender address
+                                                from: '百思慧眼< sshuiyanhost@126.com>', // sender address
                                                 to: mailRule.mail_address.toString(), // list of receivers
                                                 subject: title, // Subject line
                                                 text: 'Hello world', // plaintext body
@@ -232,7 +232,7 @@ module.exports = function (req) {
                                         return;
                                     } else {
                                         var mailOptions = {
-                                            from: '百思慧眼<70285622@qq.com> ', // sender address
+                                            from: '百思慧眼< sshuiyanhost@126.com>', // sender address
                                             to: mailRule.mail_address.toString(), // list of receivers
                                             subject: title, // Subject line
                                             text: 'Hello world', // plaintext body
@@ -278,7 +278,7 @@ module.exports = function (req) {
                                         return;
                                     } else {
                                         var mailOptions = {
-                                            from: '百思慧眼<70285622@qq.com> ', // sender address
+                                            from: '百思慧眼< sshuiyanhost@126.com>', // sender address
                                             to: mailRule.mail_address.toString(), // list of receivers
                                             subject: title, // Subject line
                                             text: 'Hello world', // plaintext body
@@ -324,7 +324,7 @@ module.exports = function (req) {
                                         return;
                                     } else {
                                         var mailOptions = {
-                                            from: '百思慧眼<70285622@qq.com> ', // sender address
+                                            from: '百思慧眼< sshuiyanhost@126.com>', // sender address
                                             to: mailRule.mail_address.toString(), // list of receivers
                                             subject: title, // Subject line
                                             text: 'Hello world', // plaintext body
@@ -448,7 +448,7 @@ module.exports = function (req) {
                                             return;
                                         } else {
                                             var mailOptions = {
-                                                from: '百思慧眼<70285622@qq.com> ', // sender address
+                                                from: '百思慧眼< sshuiyanhost@126.com>', // sender address
                                                 to: mailRule.mail_address.toString(), // list of receivers
                                                 subject: title, // Subject line
                                                 text: 'Hello world', // plaintext body

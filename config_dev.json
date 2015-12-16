@@ -1,6 +1,6 @@
 {
   "es": {
-    "host": "192.168.100.10:9200",
+    "host": "192.168.100.10:29200",
     "sniffOnStart": false,
     "sniffOnConnectionFault": false,
     "keepAlive": true,
@@ -15,17 +15,17 @@
     "sessiondb": 10
   },
   "mongo": {
-    "url": "mongodb://192.168.100.5:27017/conf"
+    "url": "mongodb://192.168.100.10:23135/conf"
   },
   "mongourls": {
     "urls": [
       {
-        "url": "mongodb://192.168.100.5:27017/",
+        "url": "mongodb://192.168.100.10:23135/",
         "db": "user_perfect2015",
         "module_names":["tg_url"]
       },
       {
-        "url": "mongodb://192.168.100.5:27017/",
+        "url": "mongodb://192.168.100.10:23135/",
         "db": "conf",
         "module_names":["config"]
       }
@@ -38,12 +38,12 @@
   },
   "mail": {
     "auth": {
-      "user": "70285622@qq.com",
-      "pass": "1987924a.."
+      "user": "sshuiyanhost@126.com",
+      "pass": "uqllbevsxlsucfhv"
     }
   },
   "cache" : {
-     "ip" :"192.168.100.10",
+    "ip" :"192.168.100.10",
     "port":"8083"
   }
 }
