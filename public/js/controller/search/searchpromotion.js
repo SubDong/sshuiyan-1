@@ -226,62 +226,83 @@ define(["./../module"], function (ctrs) {
                 url: url
             }).success(function (dataSEM, status) {
                 var dataArray = [];
+                var esReqUrl = [];
+                var searchIdArray = [];
+                var fieldQueryArray = [];
+                // 构建此次所有的ES请求
                 dataSEM.forEach(function (item, i) {
                     var searchId = $rootScope.tableSwitch.promotionSearch.SEMData;
+                    searchIdArray.push(searchId);
+
                     var filter = "[{\"" + getTableFilter(searchId) + "\":[\"" + item[searchId + "Id"] + "\"]}]";
                     var fieldQuery = $rootScope.tableSwitch.latitude.field;
-                    var esurl = '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? ($rootScope.tableSwitch.number == 5 ? fieldQuery : null) : fieldQuery )
+                    fieldQueryArray.push(fieldQuery);
+
+                    var esUrl = '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? ($rootScope.tableSwitch.number == 5 ? fieldQuery : null) : fieldQuery )
                         + "&filerInfo=" + filter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType;
-                    $http({
-                        method: 'GET',
-                        url: esurl
-                    }).success(function (data, status) {
-                        var datas = {};
-                        if ($rootScope.tableSwitch.number == 5) {
-                            data.forEach(function (item, i) {
-                                $rootScope.checkedArray.forEach(function (x, y) {
-                                    datas[x] = item[x] != undefined ? item[x] : data[0][x];
+                    esReqUrl.push($http.get(esUrl));
+                });
+
+                $q.all(esReqUrl).then(function (final_result) {
+                    final_result.forEach(function (_result) {
+                        var data = _result["data"];
+                        final_result.forEach(function (_result, i) {
+                            var datas = {};
+                            var data = _result["data"];
+                            if ($rootScope.tableSwitch.number == 5) {
+                                data.forEach(function (item) {
+                                    $rootScope.checkedArray.forEach(function (x, y) {
+                                        datas[x] = item[x] != undefined ? item[x] : (data[0] == undefined ? "--" : data[0][x]);
+                                        if ((x == "ctr" || x == "arrivedRate") && datas[x] != "--") {
+                                            datas[x] += "%";
+                                        }
+                                    });
+
+                                    datas[fieldQueryArray[i]] = item[fieldQueryArray[i]] + getTableTitle(fieldQueryArray[i], item);
+                                    item["impression"] != undefined ? datas["impression"] = item["impression"] : "";
+                                    item["click"] != undefined ? datas["click"] = item["click"] : "";
+                                    item["cost"] != undefined ? datas["cost"] = item["cost"] : "";
+                                    item["cpc"] != undefined ? datas["cpc"] = item["cpc"] : "";
+                                    dataArray.push(datas);
                                 });
-                                datas[fieldQuery] = item[fieldQuery] + getTableTitle(fieldQuery, item);
+                            } else {
+                                var item = dataSEM[i];
+                                $rootScope.checkedArray.forEach(function (x, y) {
+//                                datas[x] = item[x] != undefined ? item[x] : (data[0] == undefined ? (x == "avgTime" ? "00:00:00" : 0) : data[0][x]);
+                                    datas[x] = item[x] != undefined ? item[x] : (data[0] == undefined ? "--" : data[0][x]);
+                                    if ((x == "ctr" || x == "arrivedRate") && datas[x] != "--") {
+                                        datas[x] += "%";
+                                    }
+                                });
+                                var field = $rootScope.tableSwitch.latitude.field;
+                                datas[field] = item[field] + getTableTitle(field, item);
+                                datas["id"] = item[searchIdArray[i] + "Id"];
                                 item["impression"] != undefined ? datas["impression"] = item["impression"] : "";
                                 item["click"] != undefined ? datas["click"] = item["click"] : "";
                                 item["cost"] != undefined ? datas["cost"] = item["cost"] : "";
                                 item["cpc"] != undefined ? datas["cpc"] = item["cpc"] : "";
                                 dataArray.push(datas);
                                 if ((dataSEM.length - 1) == i) {
-                                    $scope.gridOptions.data = dataArray;
-                                }
-                            })
-                        } else {
-                            $rootScope.checkedArray.forEach(function (x, y) {
-                                datas[x] = item[x] != undefined ? item[x] : data[0][x];
-                            });
-                            var field = $rootScope.tableSwitch.latitude.field;
-                            datas[field] = item[field] + getTableTitle(field, item);
-                            datas["id"] = item[searchId + "Id"];
-                            item["impression"] != undefined ? datas["impression"] = item["impression"] : "";
-                            item["click"] != undefined ? datas["click"] = item["click"] : "";
-                            item["cost"] != undefined ? datas["cost"] = item["cost"] : "";
-                            item["cpc"] != undefined ? datas["cpc"] = item["cpc"] : "";
-                            dataArray.push(datas);
-                            if ((dataSEM.length - 1) == i) {
-                                if (field == "adgroupName" || field == "keywordName") {
-                                    $scope.gridOptions.rowHeight = 55;
-                                } else {
-                                    if (field == "description1") {
-                                        $scope.gridOptions.rowHeight = 100;
+                                    if (field == "adgroupName" || field == "keywordName") {
+                                        $scope.gridOptions.rowHeight = 55;
                                     } else {
-                                        $scope.gridOptions.rowHeight = 32;
+                                        if (field == "description1") {
+                                            $scope.gridOptions.rowHeight = 100;
+                                        } else {
+                                            $scope.gridOptions.rowHeight = 32;
+                                        }
                                     }
+                                    $scope.gridOptions.columnDefs = $scope.gridOpArray;
                                 }
-                                $scope.gridOptions.columnDefs = $scope.gridOpArray;
-                                $scope.gridOptions.data = dataArray;
                             }
-                        }
-                    }).error(function (error) {
-                        console.log(error);
+                            //if ($rootScope.tableSwitch.number != 5) {
+                            $scope.gridOptions.data = dataArray;
+                            //}
+                            $rootScope.$broadcast("LoadTgurlDataFinish", $rootScope.checkedArray, dataArray);
+                        });
                     });
                 });
+
             });
         };
 
