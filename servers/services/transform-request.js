@@ -1886,7 +1886,7 @@ var transform = {
                         pvs.forEach(function (pv) {
                             var data = {}
                             data["rf_type"] = pv["key"]
-                            data["campaignName"] = pv["key"] == 1 ? "直接访问" : (pv["key"] == 2 ? "外部链接" : "搜索引擎")
+                            data["campaignName"] = pv["key"] == 1 ? "直接访问" : (pv["key"] == 2 ? "搜索引擎" : "外部链接")
                             queryOptions.forEach(function (queryOption) {
                                 switch (queryOption) {
                                     case "nuvRate":
@@ -1991,7 +1991,7 @@ var transform = {
                         "aggs": {
                             "pagePVs": {
                                 "terms": {
-                                    "field": "se",
+                                    "field": rfType==3?"rf_type":"se",
                                 },
                                 "aggs": _aggs
                             }
@@ -1999,18 +1999,18 @@ var transform = {
                     }
                 })
                 var pvs = []
-                //console.log("**************searchPageSePVs**************")
-                //console.log(JSON.stringify(querys[0]))
+                console.log("**************searchPageSePVs**************")
+                console.log(JSON.stringify(querys[0]))
                 es.search(querys[0], function (error, result) {
                     var datas = []
                     if (result != undefined && result.aggregations != undefined && result.aggregations.pagePVs != undefined && result.aggregations.pagePVs.buckets != undefined) {
                         var pvs = result.aggregations.pagePVs.buckets
-
+                        console.log(JSON.stringify(result.aggregations.pagePVs))
                         pvs.forEach(function (pv) {
                             var data = {}
                             //data["rf_type"] = pv["key"]
                             data["se"] = pv["key"]
-                            data["campaignName"] = pv["key"] == "-" ? "未知来源" : pv["key"]
+                            data["campaignName"] = pv["key"] == "-" ||rfType==3? "未知来源" : pv["key"]
                             queryOptions.forEach(function (queryOption) {
                                 switch (queryOption) {
                                     case "nuvRate":
@@ -2156,7 +2156,7 @@ var transform = {
                     if (result != undefined && result.aggregations != undefined && result.aggregations.pagePVs != undefined && result.aggregations.pagePVs.buckets != undefined) {
                         var infos = result.aggregations.pagePVs.buckets
                         infos.forEach(function (info) {
-                            var key = info["key"] == 1 ? "直接访问" : (info["key"] == 2 ? "外部链接" : "搜索引擎")
+                            var key = info["key"] == 1 ? "直接访问" : (info["key"] == 2 ? "搜索引擎" : "外部链接")
                             results[key] = info
                         })
                     }
@@ -2235,7 +2235,7 @@ var transform = {
                         "aggs": {
                             "pagePVs": {
                                 "terms": {
-                                    "field": "se"
+                                    "field": rfType==3?"rf_type":"se"
                                 },
                                 "aggs": {
                                     "conversions": {
@@ -2267,7 +2267,7 @@ var transform = {
                         //console.log("**************Result**************")
                         //console.log(JSON.stringify( result.aggregations.pagePVs))
                         infos.forEach(function (info) {
-                            var key = info["key"] == "-" ? "未知来源" : info["key"]
+                            var key = info["key"] == "-"|| rfType==3 ? "未知来源" : info["key"]
                             results[key] = info
                         })
                         console.log(JSON.stringify(infos))
@@ -2314,7 +2314,9 @@ var transform = {
                         })
                     }
                     filterQuery.push({"term": {"rf_type": rfType}})
-                    filterQuery.push({"term": {"se": se}})
+                    if(rfType!=3){
+                        filterQuery.push({"term": {"se": se}})
+                    }
                     filterQuery.push({
                         "range": {
                             "utime": {
