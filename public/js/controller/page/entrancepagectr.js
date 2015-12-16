@@ -65,7 +65,8 @@ define(["./module"], function (ctrs) {
         ];
         $rootScope.tableSwitch = {
             latitude: {name: "页面url", displayName: "页面url", field: "loc"},
-            tableFilter: null,
+            tableFilter :"[{\"entrance\":\"entrancetrue\"}]",
+            //tableFilter:null,
             dimen: false,
             // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
             number: 2,
@@ -187,6 +188,7 @@ define(["./module"], function (ctrs) {
                 },
                 types: ["uv"],
                 dimension: ["period,loc"],
+                filter:"[{\"entrance\":\"entrancetrue\"}]",
                 interval: $rootScope.interval,
                 url: "/api/charts",
                 cb: $scope.mainFormat
