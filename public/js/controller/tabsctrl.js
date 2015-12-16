@@ -1289,20 +1289,27 @@ define(["app"], function (app) {
             var _rfilter = "";
             var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
 
-
             if (undefined == urlText || "" == urlText) {
                 var _rfFilter = JSON.parse("{\"rf_type\": [\"3\"]}");
             } else {
                 var _rfFilter = JSON.parse("{\"rf_type\": [\"3\"]}");
-                var _rfilter = JSON.parse("{\"rf\":[\"" + urlText + "\"]}");
+                if ($rootScope.myRfDm && $rootScope.myRfDm == "dm") {
+                    var _rfilter = JSON.parse("{\"dm\":[\"" + urlText + "\"]}");
+                    _allFilters = filterUtil.filter(_allFilters, "dm", _rfilter);
+                    _allFilters = filterUtil.filter(_allFilters, "rf", "");
+                } else {
+                    var _rfilter = JSON.parse("{\"rf\":[\"" + urlText + "\"]}");
+                    _allFilters = filterUtil.filter(_allFilters, "rf", _rfilter);
+                    _allFilters = filterUtil.filter(_allFilters, "dm", "");
+                }
             }
 
             _allFilters = filterUtil.filter(_allFilters, "rf_type", _rfFilter);
-            _allFilters = filterUtil.filter(_allFilters, "rf", _rfilter);
+
             $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
             $scope.isJudge = false;
             $rootScope.$broadcast("ssh_data_show_refresh");
-            $scope.targetSearch();
+            $scope.targetSearch("rf_dm");
         };
         // 实时访问输入查询
         $scope.input_gjc = "";
@@ -1391,6 +1398,7 @@ define(["app"], function (app) {
         };
         // 按url，按域名过滤
         $scope.setURLDomain = function (urlText) {
+            $rootScope.myRfDm = urlText;
             var b = "";
             if (urlText == "rf") {
                 b = 0;
@@ -1417,20 +1425,6 @@ define(["app"], function (app) {
             $scope.isJudge = false;
             $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.targetSearch("rf_dm");
-        };
-        // 外部链接搜索
-        $scope.searchURLFilterBySourceEl = function (urlText) {
-            if (!$rootScope.tableSwitch) {
-                return;
-            }
-            if (undefined == urlText || "" == urlText) {
-                $rootScope.tableSwitch.tableFilter = "[{\"rf_type\": [\"3\"]}]";
-            } else {
-                $rootScope.tableSwitch.tableFilter = "[{\"rf_type\": [\"3\"]}, {\"rf\":[\"" + urlText + "\"]}]";
-            }
-            $scope.isJudge = false;
-            $rootScope.$broadcast("ssh_data_show_refresh");
-            $scope.targetSearch();
         };
         // 查看入口页链接
         $scope.showEntryPageLink = function (row, _type) {
