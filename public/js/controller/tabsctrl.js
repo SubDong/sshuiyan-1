@@ -2566,6 +2566,8 @@ define(["app"], function (app) {
             var bhlString = "";
             var _c_field = a.col.field;
             var perFieldArray = ["outRate", "nuvRate", "arrivedRate", "baidu", "sougou", "haosou", "bing", "other"]; // 显示百分比的指标数组
+            var yqFieldArray = ["baidu", "sougou", "haosou", "bing", "other"];
+            var yqLengthArray = [0, 0];
             option.forEach(function (items, x) {
                 var itemSplDatas = (items.entity[a.col.field] + "").split(",");
                 if (itemSplDatas[3] == "变化率") {
@@ -2573,7 +2575,13 @@ define(["app"], function (app) {
                     rastString[1] = itemSplDatas[2];
                     bhlString = "变化率";
                 } else {
+                    if (itemSplDatas[1] != "--") {
+                        yqLengthArray[0]++;
+                    }
                     rast[0] += ((itemSplDatas[1] + "").replace("%", "") == "--" || (itemSplDatas[1] + "").replace("%", "") == "　" ? 0.0 : parseFloat(((itemSplDatas[1] + "").replace("%", ""))));
+                    if (itemSplDatas[2] != "--") {
+                        yqLengthArray[1]++;
+                    }
                     rast[1] += ((itemSplDatas[2] + "").replace("%", "") == "--" || (itemSplDatas[2] + "").replace("%", "") == "　" ? 0.0 : parseFloat(((itemSplDatas[2] + "").replace("%", ""))));
                 }
             });
@@ -2585,8 +2593,13 @@ define(["app"], function (app) {
             if (a.col.field == "pv" || a.col.field == "uv" || a.col.field == "ip" || a.col.field == "vc" || a.col.field == "nuv" || a.col.field == "freq") {
                 //
             } else {
-                rast[0] = (rast[0] / option.length).toFixed(2) + (perFieldArray.indexOf(_c_field) != -1 ? "%" : "");
-                rast[1] = (rast[1] / option.length).toFixed(2) + (perFieldArray.indexOf(_c_field) != -1 ? "%" : "");
+                if (yqFieldArray.indexOf(_c_field) != -1) {// 搜索词-按照搜索引擎
+                    rast[0] = (rast[0] / (yqLengthArray[0] == 0 ? 1 : yqLengthArray[0])).toFixed(2) + "%";
+                    rast[1] = (rast[1] / (yqLengthArray[1] == 0 ? 1 : yqLengthArray[1])).toFixed(2) + "%";
+                } else {
+                    rast[0] = (rast[0] / option.length).toFixed(2) + (perFieldArray.indexOf(_c_field) != -1 ? "%" : "");
+                    rast[1] = (rast[1] / option.length).toFixed(2) + (perFieldArray.indexOf(_c_field) != -1 ? "%" : "");
+                }
             }
             var bhl = (((parseFloat(((rast[0] + "").replace("%", ""))) - parseFloat(((rast[1] + "").replace("%", "")))) / parseFloat(((rast[1] + "").replace("%", "")))) * 100 ).toFixed(2) + "%";
 
