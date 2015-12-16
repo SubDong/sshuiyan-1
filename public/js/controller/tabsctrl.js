@@ -2165,7 +2165,7 @@ define(["app"], function (app) {
             if ($rootScope.tableSwitch.isJudge == undefined) $scope.isJudge = true;
             if ($rootScope.tableSwitch.isJudge) $rootScope.tableSwitch.tableFilter = undefined;
             if ($rootScope.tableSwitch.number == 4) {
-                var searchUrl = SEM_API_URL + "/es/search_word?tid=" + trackid + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd;
+                var searchUrl = SEM_API_URL + "/es/search_word?tid=" + trackid + "&startOffset=" + (startInfoTime == null ? $rootScope.tableTimeStart : startInfoTime) + "&endOffset=" + (endInfoTime == null ? $rootScope.tableTimeEnd : endInfoTime);
                 $http({
                     method: 'GET',
                     url: searchUrl
