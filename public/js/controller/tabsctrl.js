@@ -1291,6 +1291,8 @@ define(["app"], function (app) {
 
             if (undefined == urlText || "" == urlText) {
                 var _rfFilter = JSON.parse("{\"rf_type\": [\"3\"]}");
+                _allFilters = filterUtil.filter(_allFilters, "rf", "");
+                _allFilters = filterUtil.filter(_allFilters, "dm", "");
             } else {
                 var _rfFilter = JSON.parse("{\"rf_type\": [\"3\"]}");
                 if ($rootScope.myRfDm && $rootScope.myRfDm == "dm") {
