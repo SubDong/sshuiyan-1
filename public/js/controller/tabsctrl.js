@@ -2496,13 +2496,20 @@ define(["app"], function (app) {
                     var vtimeHtml = "";
                     var urlHtml = "";
 
-
                     datas.record.forEach(function (vtime, i) {
                         utimeHtml = utimeHtml + "<li><span>" + (new Date(parseInt(vtime.otime)).Format("hh:mm:ss")) + "</span></li>";
                         var a = (Math.round(parseInt(vtime.vtime) / 1000));
                         vtimeHtml = vtimeHtml + "<li><span>" + (datas.record.length - 1 == i ? "--" : (parseInt(a / 60) + "\'" + (a % 60) + "\"")) + "</span></li>";
                         urlHtml = urlHtml + "<li><span><a href='" + vtime.loc + "' target='_blank'>" + vtime.loc + "</a></span></li>"
                     });
+
+                    var lastTime = "";
+
+                    if (datas.ct == 0) {
+                        lastTime = datas.last != "首次访问" ? new Date(parseInt(datas.last)).Format("yyyy-MM-dd hh:mm:ss") : datas.last;
+                    } else {
+                        lastTime = datas.last != "首次访问" ? new Date(parseInt(datas.last)).Format("yyyy-MM-dd hh:mm:ss") : "--";
+                    }
 
                     var classInfo = "windows";
                     var classbr = "firefox";
@@ -2520,7 +2527,7 @@ define(["app"], function (app) {
                         "<li>是否支持JAVA:<span>" + (datas.ja == "0" ? " 支持" : " 不支持") + "</span></li></ul></div></div></div><div class='trend_right'>" +
                         "<ul><li>访问类型：<span>" + (datas.ct == 0 ? " 新访客" : " 老访客") + "</span></li>" +
                         "<li>当天访问频次：<span>" + datas.vfreq + "</span></li>" +
-                        "<li>上一次访问时间：<span>" + (datas.last != "首次访问" ? new Date(parseInt(datas.last)).Format("yyyy-MM-dd hh:mm:ss") : datas.last) + "</span></li>" +
+                        "<li>上一次访问时间：<span>" + lastTime + "</span></li>" +
                         "<li>本次来路:<span>" + (datas.se == "-" || datas.se == undefined || datas.se == "" ? " 直接访问" : "<a href='" + datas.rf + "' target='_blank'>" + datas.se + "( 搜索词:" + datas.kw + ")</a>") + "</span></li>" +
                         "<li>入口页面：<span><a href='" + datas.loc + "' target='_blank'>" + datas.loc + "</a></span></li>" +
                         "<li>最后停留在:<span><a href='" + datas.record[datas.record.length - 1]["loc"] + "' target='_blank'>" + datas.record[datas.record.length - 1]["loc"] + "</a></span></li></ul>" +
