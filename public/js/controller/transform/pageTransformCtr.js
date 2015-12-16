@@ -78,7 +78,7 @@ define(["./module"], function (ctrs) {
                         name: "来源",
                         displayName: "来源",
                         field: "campaignName",
-                        //cellTemplate: "<div><a href='javascript:void(0)' style='color:#0965b8;line-height:30px'>{{grid.appScope.getDataUrlInfo(grid, row,3)}}</a></div>",
+                        cellTemplate: "<div><a href='javascript:void(0)' style='color:#0965b8;line-height:30px'>{{grid.appScope.getDataUrlInfo(grid, row,3)}}</a></div>",
                         footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
                         enableSorting: false
                     }
@@ -400,7 +400,8 @@ define(["./module"], function (ctrs) {
                 }
             ];
             $scope.$on("ssh_refresh_charts", function (e, msg) {
-                $rootScope.initPageConfig();
+                $scope.targetSearchSpreadPage(true)
+                //$rootScope.initPageConfig();
             });
             //点击显示指标
             $scope.select = function () {
@@ -422,6 +423,16 @@ define(["./module"], function (ctrs) {
                 $scope.startOffset = (startTime - today_start()) / 86400000;
                 $scope.endOffset = (endTime - today_start()) / 86400000;
             });
+
+            $scope.reset = function () {
+                $scope.todayClass = false;
+                $scope.yesterdayClass = false;
+                $scope.sevenDayClass = false;
+                $scope.monthClass = false;
+                $scope.definClass = false;
+                $scope.hourcheckClass = false;
+            };
+
             $rootScope.datepickerClick = function (start, end, label) {
                 $scope.charts[0].config.legendDefaultChecked = [0, 1];
                 var time = chartUtils.getTimeOffset(start, end);
@@ -694,7 +705,6 @@ define(["./module"], function (ctrs) {
 
             $rootScope.pageConfigs = [];
             $rootScope.initPageConfig = function () {
-
                 var url = "/config/page_conv?type=search&query=" + JSON.stringify({
                         uid: $cookieStore.get("uid"),
                         site_id: $rootScope.siteId
@@ -725,7 +735,18 @@ define(["./module"], function (ctrs) {
                     }
                 })
             }
+
             $rootScope.refreshData = function (selectedPageConv) {
+                $rootScope.gridArray[1]=
+
+                    {
+                        name: "来源",
+                        displayName: "来源",
+                        field: "campaignName",
+                        cellTemplate: "<div><a href='javascript:void(0)' style='color:#0965b8;line-height:30px' ng-click='grid.appScope.showPageSeDetail(grid.options.data,row)'>{{grid.appScope.getDataUrlInfo(grid, row,3)}}</a></div>",
+                        footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                        enableSorting: false
+                    }
                 if ($rootScope.pageConfigs != undefined && $rootScope.pageConfigs.length > 0) {
                     var filterPageConf = []
                     if (selectedPageConv == undefined || selectedPageConv == "") {
