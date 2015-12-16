@@ -1999,8 +1999,8 @@ var transform = {
                     }
                 })
                 var pvs = []
-                ////////console.log("****************************")
-                ////////console.log(JSON.stringify(querys[0]))
+                //console.log("**************searchPageSePVs**************")
+                //console.log(JSON.stringify(querys[0]))
                 es.search(querys[0], function (error, result) {
                     var datas = []
                     if (result != undefined && result.aggregations != undefined && result.aggregations.pagePVs != undefined && result.aggregations.pagePVs.buckets != undefined) {
@@ -2159,6 +2159,118 @@ var transform = {
                             var key = info["key"] == 1 ? "直接访问" : (info["key"] == 2 ? "外部链接" : "搜索引擎")
                             results[key] = info
                         })
+                    }
+                    callbackFn(results)
+                });
+            });
+        },
+        searchPageSeBaseInfo: function (es, indexs, startNum, endNum, type, pages,rfType, queryOptionsStr, filters, callbackFn) {
+            var requests = [];
+            for (var i = 0; i < indexs.length; i++) {
+                requests.push({
+                    index: indexs[i]
+                });
+            }
+            async.map(requests, function (item, callback) {
+                es.indices.exists(item, function (error, exists) {
+                    callback(null, exists);
+                });
+            }, function (error, results) {
+                var newIndexs = [];
+                for (var i = 0; i < indexs.length; i++) {
+                    if (results[i] == true) {
+                        newIndexs.push(indexs[i]);
+                    }
+                }
+                //查询内容
+                var _aggs = {};
+                var queryOptions = queryOptionsStr.split(",")
+                queryOptions.forEach(function (queryOption) {
+                    for (var key in es_aggs[queryOption]) {
+                        _aggs[key] = es_aggs[queryOption][key];
+                    }
+                });
+                var querys = []
+                var boolQuery = [];
+                pages.forEach(function (page) {
+                    for (var i = 0; i < page.page_urls.length; i++) {
+                        var filterQuery = []
+                        if (filters != undefined && filters.length > 0) {
+                            var jfilters = JSON.parse(filters)
+                            jfilters.forEach(function (filter) {
+                                filterQuery.push({"term": filter})
+                            })
+                        }
+                        var tempUrl = page.page_urls[i]
+                        if (tempUrl != undefined && tempUrl != "" && tempUrl[tempUrl.length - 1] == "/") {
+                            tempUrl = tempUrl.substring(0, tempUrl.length - 1)
+                        }
+                        filterQuery.push({"term": {"loc": tempUrl}})
+                        filterQuery.push({"term": {"rf_type": rfType}})
+                        filterQuery.push({
+                            "range": {
+                                "utime": {
+                                    "from": (startNum > page.updateTime ? startNum : page.updateTime ),
+                                    "to": endNum
+                                }//开始时间取大的
+                            }
+                        })
+                        boolQuery.push({
+                            "bool": {
+                                "must": filterQuery
+                            }
+                        });
+                    }
+                })
+                querys.push({
+                    "index": newIndexs,
+                    "type": type + "_page",
+                    "body": {
+                        "size": 0,
+                        query: {
+                            "bool": {
+                                "should": boolQuery
+                            }
+                        },
+                        "aggs": {
+                            "pagePVs": {
+                                "terms": {
+                                    "field": "se"
+                                },
+                                "aggs": {
+                                    "conversions": {
+                                        "value_count": {
+                                            "field": "_type"
+                                        }
+                                    },
+                                    "benefit": {
+                                        "sum": {
+                                            "field": "p_income"
+                                        }
+                                    },
+                                    "orderNum": {
+                                        "value_count": {
+                                            "field": "p_orderid"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                    }
+                })
+                //console.log("**************searchPageSeBaseInfo**************")
+                //console.log(JSON.stringify(querys[0]))
+                es.search(querys[0], function (error, result) {
+                    var results = {}
+                    if (result != undefined && result.aggregations != undefined && result.aggregations.pagePVs != undefined && result.aggregations.pagePVs.buckets != undefined) {
+                        var infos = result.aggregations.pagePVs.buckets
+                        //console.log("**************Result**************")
+                        //console.log(JSON.stringify( result.aggregations.pagePVs))
+                        infos.forEach(function (info) {
+                            var key = info["key"] == "-" ? "未知来源" : info["key"]
+                            results[key] = info
+                        })
+                        console.log(JSON.stringify(infos))
                     }
                     callbackFn(results)
                 });
@@ -2721,12 +2833,12 @@ var transform = {
                                     } else {
                                         data[queryOption] = pv.visitor_aggs.value - pv.old_visitor_aggs.value
                                     }
+                                    console.log(pv.old_visitor_aggs.value+"   *********************       "+pv.visitor_aggs.value)
                                     break;
                                 default :
                                     if (pv[queryOption] != undefined)
                                         data[queryOption] = pv[queryOption].value;
                                     else
-                                    //////console.log("______________________________"+queryOption)
                                         break;
                             }
                         })
@@ -2828,7 +2940,7 @@ var transform = {
                         })
                         var pageEvents = {}
                         async.eachSeries(querys, function (item, callback) {
-                                //console.log("*************ConvEvent*****************")
+                                //console.log("*************ConvEvents*****************")
                                 //console.log(JSON.stringify(item))
                                 es.search(item.query, function (error, result) {
                                     if (result != undefined && result.aggregations != undefined) {
@@ -2947,8 +3059,8 @@ var transform = {
                                 break;
                         }
                         async.map(requests, function (item, callback) {
-                            ////////console.log("****************************")
-                            ////////console.log(JSON.stringify(item))
+                            //console.log("*************searchConvEvent***************")
+                            //console.log(JSON.stringify(item))
                             es.search(item, function (error, result) {
                                 if (result != undefined && result.aggregations != undefined) {
                                     callback(null, result.aggregations);

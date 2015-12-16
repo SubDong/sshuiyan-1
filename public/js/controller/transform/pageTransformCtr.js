@@ -100,26 +100,25 @@ define(["./module"], function (ctrs) {
                         if (isPConv) {
                             //查询转化的数据
                             var tPageInfoArr = ["conversions", "benefit"]
-                            var pageurl = "/api/transform/getPageBaseInfo?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&rfType=" + $rootScope.rowEntity.rf_type + "&queryOptions=" + tPageInfoArr + "&pages=" + JSON.stringify(filterPageConf) + "&showType=day" + "&filters=" + $rootScope.getFilters()
-
-                            $http.get(pageurl).success(function (pagedatas) {
+                            var pageurl = "/api/transform/getPageSeBaseInfo?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&rfType=" + $rootScope.rowEntity.rf_type + "&queryOptions=" + tPageInfoArr + "&pages=" + JSON.stringify(filterPageConf) + "&showType=day" + "&filters=" + $rootScope.getFilters()
+                            $http.get(pageurl).success(function (sepagedatas) {
                                 $rootScope.gridOptions.data.forEach(function (data, index) {
                                     $rootScope.checkedArray.forEach(function (attr) {
                                         switch (attr) {
                                             case "conversions"://转化次数
-                                                data["conversions"] = pagedatas[$rootScope.rowEntity.campaignName] != undefined && pagedatas[$rootScope.rowEntity.campaignName].conversions != undefined ? pagedatas[$rootScope.rowEntity.campaignName].conversions.value : 0
+                                                data["conversions"] = sepagedatas[data.campaignName] != undefined && sepagedatas[data.campaignName].conversions != undefined ? sepagedatas[data.campaignName].conversions.value : 0
                                                 break;
                                             case "crate"://转化率
-                                                data["crate"] = (pagedatas[$rootScope.rowEntity.campaignName] != undefined && data.pv > 0 ? ((Number(pagedatas[$rootScope.rowEntity.campaignName]["conversions"].value) / Number(data.pv)) * 100).toFixed(2) : (0).toFixed(2)) + "%"
+                                                data["crate"] = (sepagedatas[data.campaignName] != undefined && data.pv > 0 ? ((Number(sepagedatas[data.campaignName]["conversions"].value) / Number(data.pv)) * 100).toFixed(2) : (0).toFixed(2)) + "%"
                                                 break;
                                             case "benefit"://收益
-                                                data["benefit"] = pagedatas[$rootScope.rowEntity.campaignName] != undefined && pagedatas[$rootScope.rowEntity.campaignName].benefit != undefined ? pagedatas[$rootScope.rowEntity.campaignName].benefit.value : 0
+                                                data["benefit"] = sepagedatas[data.campaignName] != undefined && sepagedatas[data.campaignName].benefit != undefined ? sepagedatas[data.campaignName].benefit.value : 0
                                                 break;
                                             case "orderNum"://订单数量
-                                                data["orderNum"] = pagedatas[$rootScope.rowEntity.campaignName] != undefined && pagedatas[$rootScope.rowEntity.campaignName].orderNum != undefined ? pagedatas[$rootScope.rowEntity.campaignName].orderNum.value : 0
+                                                data["orderNum"] = sepagedatas[data.campaignName] != undefined && sepagedatas[data.campaignName].orderNum != undefined ? sepagedatas[data.campaignName].orderNum.value : 0
                                                 break;
                                             case "orderNumRate"://订单转化率
-                                                data["orderNumRate"] = (pagedatas[$rootScope.rowEntity.campaignName] != undefined && pagedatas[$rootScope.rowEntity.campaignName].orderNum != undefined && data.pv > 0 ? ((Number(pagedatas[$rootScope.rowEntity.campaignName].orderNum.value) / Number(data.pv)) * 100).toFixed(2) : (0).toFixed(2)) + "%"
+                                                data["orderNumRate"] = (sepagedatas[data.campaignName] != undefined && sesepagedatas[data.campaignName].orderNum != undefined && data.pv > 0 ? ((Number(sepagedatas[data.campaignName].orderNum.value) / Number(data.pv)) * 100).toFixed(2) : (0).toFixed(2)) + "%"
                                                 break;
                                             default :
                                                 break;
