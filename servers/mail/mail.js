@@ -3,10 +3,12 @@
  */
 var nodemail = require('nodemailer');
 
-var config = require("../../config.json");
 var transporter = nodemail.createTransport({
     service: '126',
-    auth: config["mail"]["auth"]
+    "auth": {
+        "user": "sshuiyanhost@126.com",
+        "pass": "uqllbevsxlsucfhv"
+    }
 });
 
 var mail = {
