@@ -43,8 +43,8 @@ define(["./module"], function (ctrs) {
         };
         $scope.dateshows = false;
         //table配置
-        $rootScope.tableTimeStart = -30;
-        $rootScope.tableTimeEnd = -1;
+        $rootScope.tableTimeStart = -29;
+        $rootScope.tableTimeEnd = 0;
         $rootScope.tableFormat = "hour";
         //配置默认指标
         $rootScope.checkedArray = ["pv", "uv", "ip", "outRate", "avgTime"];
@@ -187,8 +187,8 @@ define(["./module"], function (ctrs) {
             }];
         $scope.compareLegendData = [];
         $scope.init = function () {
-            $rootScope.start = -30;
-            $rootScope.end = -1;
+            $rootScope.start = -29;
+            $rootScope.end = 0;
             $rootScope.interval = 1;
             $scope.charts.forEach(function (e) {
                 $scope.compareLegendData = e.config.legendData;
