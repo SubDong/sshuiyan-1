@@ -105,6 +105,16 @@ var initial = {
      */
     chartData: function (es, index, type, areas, property, chartFilter, callbackFn) {
         var queryFilter = {"match_all": {}};
+        var ctqueryFilter = {
+         "bool": {
+            "must": [
+                {
+                    "term": {
+                        "ct": 0
+                    }
+                }
+            ]
+        }};
         if (chartFilter != 'null') {
             queryFilter = {
                 'bool': {
@@ -128,7 +138,7 @@ var initial = {
                 "index": index.toString(),
                 "type": type,
                 "body": {
-                    "query": queryFilter,
+                    "query": ctqueryFilter,
                     "size": 0,
                     "aggs": {
                         "areas": {
@@ -140,8 +150,8 @@ var initial = {
                             },
                             "aggs": {
                                 "data_count": {
-                                    "sum": {
-                                        "script": "v1=0; if (doc['ct'].value == 0) { v1 +=1;};v1"
+                                    "value_count": {
+                                        "field": "ct"
                                     }
                                 }
                             }
