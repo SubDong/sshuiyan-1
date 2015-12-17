@@ -150,8 +150,14 @@ define(["./module"], function (ctrs) {
                             }
                         })
                     }
-
-
+                    $rootScope.subGridArray = angular.copy($rootScope.gridArray)
+                    $rootScope.subGridArray[1] = {
+                        name: "来源",
+                        displayName: "来源",
+                        field: "campaignName",
+                        footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                        enableSorting: false
+                    }
                     pRow.entity.subGridOptions = {
                         enableColumnMenus: false,
                         enablePaginationControls: false,

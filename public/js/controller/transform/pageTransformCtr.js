@@ -53,9 +53,9 @@ define(["./module"], function (ctrs) {
              * @param row
              */
 
-            $rootScope.rowEntity =null;
-            $rootScope.showPageSeDetail = function(grid,row){
-                if( $rootScope.expandInex != 2){
+            $rootScope.rowEntity = null;
+            $rootScope.showPageSeDetail = function (grid, row) {
+                if ($rootScope.expandInex != 2) {
                     $rootScope.rowEntity = row.entity
                     $rootScope.initPageSeDetail()
                 }
@@ -63,7 +63,7 @@ define(["./module"], function (ctrs) {
             $rootScope.initPageSeDetail = function (selectedPageConv) {
                 if ($rootScope.pageConfigs != undefined && $rootScope.pageConfigs.length > 0) {
                     var filterPageConf = []
-                    if (  $rootScope.selectedPageConvIndex == 0) {
+                    if ($rootScope.selectedPageConvIndex == 0) {
                         filterPageConf = $rootScope.pageConfigs
                     } else {
                         $rootScope.pageConfigs.forEach(function (conf) {
@@ -118,7 +118,7 @@ define(["./module"], function (ctrs) {
                                                 data["orderNum"] = sepagedatas[data.campaignName] != undefined && sepagedatas[data.campaignName].orderNum != undefined ? sepagedatas[data.campaignName].orderNum.value : 0
                                                 break;
                                             case "orderNumRate"://订单转化率
-                                                data["orderNumRate"] = (sepagedatas[data.campaignName] != undefined && sesepagedatas[data.campaignName].orderNum != undefined && data.pv > 0 ? ((Number(sepagedatas[data.campaignName].orderNum.value) / Number(data.pv)) * 100).toFixed(2) : (0).toFixed(2)) + "%"
+                                                data["orderNumRate"] = (sepagedatas[data.campaignName] != undefined && sepagedatas[data.campaignName].orderNum != undefined && data.pv > 0 ? ((Number(sepagedatas[data.campaignName].orderNum.value) / Number(data.pv)) * 100).toFixed(2) : (0).toFixed(2)) + "%"
                                                 break;
                                             default :
                                                 break;
@@ -198,62 +198,14 @@ define(["./module"], function (ctrs) {
                 }
             ];
 
-            $rootScope.subGridArray = [
-                {
-                    name: "xl",
-                    displayName: "",
-                    cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
-                    maxWidth: 10,
-                    enableSorting: false
-                },
-                {
-                    name: "来源",
-                    displayName: "来源",
-                    field: "campaignName",
-                    footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
-                    enableSorting: false
-                },
-                {
-                    name: "浏览量(PV)",
-                    displayName: "浏览量(PV)",
-                    field: "pv",
-                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>",
-                    sort: {
-                        direction: uiGridConstants.ASC,
-                        priority: 0
-                    }
-                },
-                {
-                    name: "访客数(UV)",
-                    displayName: "访客数(UV)",
-                    field: "uv",
-                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
-                },
-                {
-                    name: "访问次数",
-                    displayName: "访问次数",
-                    field: "vc",
-                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
-                },
-                {
-                    name: "IP数",
-                    displayName: "IP数",
-                    field: "ip",
-                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
-                },
-                {
-                    name: "转化次数",
-                    displayName: "转化次数",
-                    field: "conversions",
-                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
-                },
-                {
-                    name: "转化率",
-                    displayName: "转化率",
-                    field: "crate",
-                    footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
-                }
-            ];
+            $rootScope.subGridArray = angular.copy($rootScope.gridArray)
+            $rootScope.subGridArray[1] = {
+                name: "来源",
+                displayName: "来源",
+                field: "campaignName",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                enableSorting: false
+            }
 
             $rootScope.tableSwitch = {
                 latitude: {
@@ -261,6 +213,14 @@ define(["./module"], function (ctrs) {
                     displayName: "来源",
                     field: "campaignName",
                     cellTemplate: "<div><a href='javascript:void(0)' style='color:#0965b8;line-height:30px' ng-click='grid.appScope.showPageSeDetail(grid.options.data,row)'>{{grid.appScope.getDataUrlInfo(grid, row,3)}}</a></div>",
+                    footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                    enableSorting: false
+                },
+                sublatitude: {
+                    name: "来源",
+                    displayName: "来源",
+                    field: "campaignName",
+                    //cellTemplate: "<div><a href='javascript:void(0)' style='color:#0965b8;line-height:30px' ng-click='grid.appScope.showPageSeDetail(grid.options.data,row)'>{{grid.appScope.getDataUrlInfo(grid, row,3)}}</a></div>",
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
                     enableSorting: false
                 },
@@ -286,7 +246,6 @@ define(["./module"], function (ctrs) {
                 if (a != -1) {
                     $rootScope.checkedArray.splice(a, 1);
                     $rootScope.gridArray.splice(a, 1);
-
                     if ($rootScope.tableSwitch.number != 0) {
                         $scope.searchGridObjButton["name"] = " ";
                         $scope.searchGridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
@@ -299,17 +258,17 @@ define(["./module"], function (ctrs) {
                     $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
                     $scope.gridObjButton["maxWidth"] = 10;
                     $rootScope.gridArray.unshift($scope.gridObjButton);
+
                 } else {
                     if ($rootScope.checkedArray.length >= number) {
                         $rootScope.checkedArray.shift();
                         $rootScope.checkedArray.push(item.name);
-                        $rootScope.gridArray.shift();
+                        $rootScope.gridArray.shift();//移除第一个
 
                         $scope.searchGridObj["name"] = item.consumption_name;
                         $scope.searchGridObj["displayName"] = item.consumption_name;
                         $scope.searchGridObj["footerCellTemplate"] = "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>";
                         $scope.searchGridObj["field"] = item.name;
-
                         $rootScope.gridArray.push($scope.searchGridObj);
 
                         if ($rootScope.tableSwitch.number != 0) {
@@ -333,6 +292,7 @@ define(["./module"], function (ctrs) {
                         $scope.searchGridObj["footerCellTemplate"] = "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>";
                         $scope.searchGridObj["field"] = item.name;
                         $rootScope.gridArray.push($scope.searchGridObj);
+
 
                         if ($rootScope.tableSwitch.number != 0) {
                             $scope.searchGridObjButton["name"] = " ";
@@ -714,8 +674,8 @@ define(["./module"], function (ctrs) {
                     url: url
                 }).success(function (dataConfig, status) {
                     if (dataConfig != undefined && dataConfig.length > 0) {
-                        $rootScope.selectedPageConvIndex=0
-                        $rootScope.extendways = [{index:0,name:"全部页面转化目标"}]
+                        $rootScope.selectedPageConvIndex = 0
+                        $rootScope.extendways = [{index: 0, name: "全部页面转化目标"}]
                         $rootScope.pageConfigs = [];
                         dataConfig.forEach(function (data, i) {
                             var urls = []
@@ -737,16 +697,16 @@ define(["./module"], function (ctrs) {
             }
 
             $rootScope.refreshData = function (selectedPageConv) {
-                $rootScope.gridArray[1]=
+                $rootScope.gridArray[1] =
 
-                    {
-                        name: "来源",
-                        displayName: "来源",
-                        field: "campaignName",
-                        cellTemplate: "<div><a href='javascript:void(0)' style='color:#0965b8;line-height:30px' ng-click='grid.appScope.showPageSeDetail(grid.options.data,row)'>{{grid.appScope.getDataUrlInfo(grid, row,3)}}</a></div>",
-                        footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
-                        enableSorting: false
-                    }
+                {
+                    name: "来源",
+                    displayName: "来源",
+                    field: "campaignName",
+                    cellTemplate: "<div><a href='javascript:void(0)' style='color:#0965b8;line-height:30px' ng-click='grid.appScope.showPageSeDetail(grid.options.data,row)'>{{grid.appScope.getDataUrlInfo(grid, row,3)}}</a></div>",
+                    footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                    enableSorting: false
+                }
                 if ($rootScope.pageConfigs != undefined && $rootScope.pageConfigs.length > 0) {
                     var filterPageConf = []
                     if (selectedPageConv == undefined || selectedPageConv == "") {
@@ -1027,7 +987,7 @@ define(["./module"], function (ctrs) {
             };
 
             $rootScope.choosePageConv = function (index, sname) {
-                $rootScope.selectedPageConvIndex=index
+                $rootScope.selectedPageConvIndex = index
                 if ($rootScope.expandInex == undefined || $rootScope.expandInex == 1)
                     $rootScope.refreshData(index == 0 ? "" : sname)
                 else
