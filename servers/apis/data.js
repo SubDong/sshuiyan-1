@@ -743,8 +743,9 @@ api.get("/fwlywz", function (req, res) {
     var ct = query['ct'];
     var startOffset = Number(query['start']);
     var endOffset = Number(query['end']);
+    var _filters = query["filerInfo"] != null && query["filerInfo"] != 'null' ? JSON.parse(query["filerInfo"]) : query["filerInfo"] == 'null' ? null : query["filerInfo"];//过滤器;
     var indexes = date.createIndexes(startOffset, endOffset, "access-");
-    es_request.top5visit(req.es, indexes, type, ct, function (result) {//es, indexes, type, ct, callbackFn
+    es_request.top5visit(req.es, indexes, type, ct, _filters, function (result) {//es, indexes, type, ct, callbackFn
         datautils.send(res, result);
     });
 });

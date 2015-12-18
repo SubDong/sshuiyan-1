@@ -1110,18 +1110,35 @@ var es_request = {
                 callbackFn([]);
         });
     },
-    top5visit: function (es, indexes, type, ct, callbackFn) {
+    top5visit: function (es, indexes, type, ct, filters, callbackFn) {
+        var mustQuery = [];
+        mustQuery.push({
+            "term": {
+                "ct": ct
+            }
+        });
+        if (filters != null) {
+            filters.forEach(function (filter) {
+                if(JSON.stringify(filter)=="{\"entrance\":\"entrancetrue\"}"){
+                    mustQuery.push({
+                        "term": {
+                            "entrance": 1
+                        }
+                    });
+                }else{
+                    mustQuery.push({
+                        "terms": filter
+                    });
+                }
+            });
+        }
         var request = {
             "index": indexes.toString(),
             "type": type,
             "body": {
                 "query": {
                     "bool": {
-                        "must": {
-                            "term": {
-                                "ct": ct
-                            }
-                        }
+                        "must": mustQuery// 加入filters
                     }
                 },
                 "size": 0,

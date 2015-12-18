@@ -1518,9 +1518,17 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
 
                 scope.loadData = function () {
                     // 访问来源网站
-                    var fwlywzRequest = $http.get('/api/fwlywz/?type=' + $rootScope.userType + '&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=pv&ct=' + scope._ctValue);
+                    var fwlywzRequest = $http.get('/api/fwlywz/?type=' + $rootScope.userType + '&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=pv&ct=' + scope._ctValue + "&filerInfo=" + $rootScope.tableSwitch.tableFilter);
                     // 访问入口页TOP5
-                    var fwrkyRequest = $http.get('/api/indextable/?type=' + $rootScope.userType + '&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=vc&dimension=loc&filerInfo=[{"ct": ["' + scope._ctValue + '"]},{"entrance":[1]}]');
+                    if ($rootScope.tableSwitch.tableFilter) {
+                        var temp = angular.copy($rootScope.tableSwitch.tableFilter);
+                        temp = JSON.parse(temp);
+                        temp.push({"ct": [scope._ctValue]});
+                        temp.push({"entrance":[1]});
+                        var fwrkyRequest = $http.get('/api/indextable/?type=' + $rootScope.userType + '&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=vc&dimension=loc&filerInfo=' + JSON.stringify(temp));
+                    } else {
+                        var fwrkyRequest = $http.get('/api/indextable/?type=' + $rootScope.userType + '&start=' + $rootScope.tableTimeStart + '&end=' + $rootScope.tableTimeEnd + '&indic=vc&dimension=loc&filerInfo=[{"ct": ["' + scope._ctValue + '"]},{"entrance":[1]}]');
+                    }
                     $q.all([fwlywzRequest, fwrkyRequest]).then(function (final_result) {
                         scope.fwlywzTop5 = final_result[0].data;
                         scope.fwrkyTop5 = final_result[1].data.length > 5 ? final_result[1].data.slice(0, 5) : final_result[1].data;
