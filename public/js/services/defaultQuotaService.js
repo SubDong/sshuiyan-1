@@ -1319,6 +1319,14 @@ define(["../app"], function (app) {
                 {
                     //配置默认指标
                     $rootScope.checkedArray = ["pv", "uv", "ip", "outRate", "avgTime"];
+                    var equipment = $rootScope.equipment.selected;
+                    var obj = {
+                        name: equipment.name,
+                        displayName: equipment.displayName,
+                        field: equipment.field,
+                        footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                        enableSorting: false
+                    };
                     $rootScope.gridArray = [
                         {
                             name: "xl",
@@ -1327,13 +1335,7 @@ define(["../app"], function (app) {
                             maxWidth: 10,
                             enableSorting: false
                         },
-                        {
-                            name: "网络设备类型",
-                            displayName: "网络设备类型",
-                            field: "pm",
-                            footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
-                            enableSorting: false
-                        },
+                        obj,
                         {
                             name: "浏览量(PV)",
                             displayName: "浏览量(PV)",
