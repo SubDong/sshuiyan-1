@@ -862,6 +862,7 @@ define(["./module"], function (ctrs) {
                     }
                 }
                 if (isClicked) {
+                    $scope.setShowArray()
                     $scope.$broadcast("transformData_ui_grid", {
                         start: $rootScope.start,
                         end: $rootScope.end,
