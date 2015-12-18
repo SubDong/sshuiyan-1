@@ -231,10 +231,10 @@ define(["./module"], function (ctrs) {
             var type = [chartUtils.convertEnglish($scope.charts[0].config.legendData[0])];
             $rootScope.start = times[0];
             $rootScope.end = times[1];
-            if ($rootScope.start == $rootScope.end) {
-                alert("请选择正确的对比时间");
-                return;
-            }
+            //if ($rootScope.start == $rootScope.end) {
+            //    alert("请选择正确的对比时间");
+            //    return;
+            //}
             $scope.compare(times, type, true);
             $scope.reset();
             $scope.choiceClass = true;

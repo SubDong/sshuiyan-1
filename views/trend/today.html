@@ -144,6 +144,64 @@
                                 <li><a href="javascript:void(0)" data-ng-click="setAreaFilter('广州')">广州</a></li>
                             </ul>
                         </div>
+                        <div class="chart_top2" data-ng-show="hourcheckClass">
+                            <ul>
+                                <li><span>时段过滤: </span></li>
+                                <li>
+                                    <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
+                                        <div role="group" class="btn-group">
+                                            <ui-select ng-model="time.selected" theme="select2" reset-search-input="false"  class="fl btn-pv"
+                                                       data-ng-change="setTimeFilter(time.selected.name)"
+                                                       style="width: 120px;">
+                                                <ui-select-match placeholder="全部">{{$select.selected.name}}
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="time in times">
+                                                    <span ng-bind-html="time.name"></span>
+                                                </ui-select-choices>
+                                            </ui-select>
+
+                                        </div>
+                                    </div>
+                                </li>
+
+                                <li data-ng-if="time.selected.name==null || time.selected.name=='全部'">
+                                    00:00-23:59
+                                </li> <li data-ng-if="time.selected.name=='工作时段'">
+                                9:00-11:59 13:00-17:59
+                            </li><li data-ng-if="time.selected.name=='非工作时段'">
+                                0:00-08:59 12:00-12:59 18:00-23:59
+                            </li>
+                                <li data-ng-if="time.selected.name=='自定义时段'" data-ng-repeat="sitetime in sitetimes">
+                                    <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
+                                        <div role="group" class="btn-group">
+                                            <ui-select ng-model="sitetime.hour.selected" theme="select2" reset-search-input="false"  class="fl btn-pv"
+                                                       style="width: 80px;">
+                                                <ui-select-match placeholder="00:00">{{$select.selected.name}}
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="hour in hours">
+                                                    <span ng-bind-html="hour.name"></span>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>-
+                                    <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
+                                        <div role="group" class="btn-group">
+                                            <ui-select ng-model="sitetime.hour1.selected" theme="select2" reset-search-input="false"  class="fl btn-pv"
+                                                       style="width: 80px;">
+                                                <ui-select-match placeholder="00:59">{{$select.selected.name}}
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="hour1 in hours1">
+                                                    <span ng-bind-html="hour1.name"></span>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li data-ng-if="time.selected.name=='自定义时段' && sitetimes.length<3 " data-ng-click="sitetimesadd()">
+                                    <a  href="javascript:void(0)" style="font-size: 20px; font-weight: bold ">+</a>
+                                </li>
+                            </ul>
+                        </div>
                    </div>
 
                 </div>
