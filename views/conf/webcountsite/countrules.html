@@ -1,3 +1,7 @@
+
+<!--<script type="text/javascript">
+    document.write(returnCitySN["cip"]+','+returnCitySN["cname"])
+</script>-->
 <div class="middle_containers" ng-controller="countrules">
     <div class="count">
         <!--标题-->
@@ -52,8 +56,7 @@
                     <li>
                         <div class="time_content_left  count_left">  <!--排除IP地址  左-->
                     <span>排除IP地址 <p>（请输入IP地址，每行一个，最多可设置20个）</p><br/>
-                    提示：当前登录IP为：113.45.225.145， 请注意若为动态IP则下次登录IP会变化。</span>
-
+                    提示：当前登录IP为：{{curIp}}， 请注意若为动态IP则下次登录IP会变化。</span>
                             <div class="">
                                 <textarea data-ng-model="ex_ips_area.tNum" class="tNum" disabled></textarea>
                                   <textarea data-ng-keyup="addIP($event, ex_ips_area,this)" wrap="off" name="exceptIP" sshUrl

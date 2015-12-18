@@ -3,6 +3,8 @@ define(["./module"], function (ctrs) {
 
     ctrs.controller('countrules', function ($scope, $http, $rootScope, $cookieStore, ngDialog) {
 
+        //当前IP
+        $scope.curIp = returnCitySN["cip"]
 
         //规则IP
         $scope.rules = [{
@@ -133,10 +135,10 @@ define(["./module"], function (ctrs) {
                 var c = g[z];
                 if (s > 20) {
                     $scope.IPtishi("您最多可输入20个");
-                }else if(g[z]=="" && g[z+1]=="") {
+                } else if (g[z] == "" && g[z + 1] == "") {
                     $scope.IPtishi("请依次输入IP");
                     break;
-                }  else if (g[z] == ""  ) {
+                } else if (g[z] == "") {
                     $scope.IPtishi("");
                 }
                 else {
