@@ -237,77 +237,40 @@ define(["./module"], function (ctrs) {
              return true
              };*/
             $scope.searchIndicators = function (item, entities, number) {
+
                 $rootScope.gridArray.shift();
                 $rootScope.gridArray.shift();
-                $rootScope.tableSwitch.number != 0 ? $scope.gridArray.shift() : "";
+                //$rootScope.tableSwitch.number != 0 ? $scope.gridArray.shift() : "";
                 $scope.searchGridObj = {};
                 $scope.searchGridObjButton = {};
                 var a = $rootScope.checkedArray.indexOf(item.name);
                 if (a != -1) {
+                    //if($rootScope.checkedArray.length>2){
                     $rootScope.checkedArray.splice(a, 1);
                     $rootScope.gridArray.splice(a, 1);
-                    if ($rootScope.tableSwitch.number != 0) {
-                        $scope.searchGridObjButton["name"] = " ";
-                        $scope.searchGridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
-                        $rootScope.gridArray.unshift($scope.searchGridObjButton);
-                    }
-                    $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude);
-                    $scope.gridObjButton = {};
-                    $scope.gridObjButton["name"] = "xl";
-                    $scope.gridObjButton["displayName"] = "";
-                    $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
-                    $scope.gridObjButton["maxWidth"] = 10;
-                    $rootScope.gridArray.unshift($scope.gridObjButton);
-
+                    //}
                 } else {
+                    //满了情况下移除第一个
                     if ($rootScope.checkedArray.length >= number) {
                         $rootScope.checkedArray.shift();
-                        $rootScope.checkedArray.push(item.name);
                         $rootScope.gridArray.shift();//移除第一个
-
-                        $scope.searchGridObj["name"] = item.consumption_name;
-                        $scope.searchGridObj["displayName"] = item.consumption_name;
-                        $scope.searchGridObj["footerCellTemplate"] = "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>";
-                        $scope.searchGridObj["field"] = item.name;
-                        $rootScope.gridArray.push($scope.searchGridObj);
-
-                        if ($rootScope.tableSwitch.number != 0) {
-                            $scope.searchGridObjButton["name"] = " ";
-                            $scope.searchGridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
-                            $rootScope.gridArray.unshift($scope.searchGridObjButton);
-                        }
-
-                        $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude);
-                        $scope.gridObjButton = {};
-                        $scope.gridObjButton["name"] = "xl";
-                        $scope.gridObjButton["displayName"] = "";
-                        $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
-                        $scope.gridObjButton["maxWidth"] = 10;
-                        $rootScope.gridArray.unshift($scope.gridObjButton);
-                    } else {
-                        $rootScope.checkedArray.push(item.name);
-
-                        $scope.searchGridObj["name"] = item.consumption_name;
-                        $scope.searchGridObj["displayName"] = item.consumption_name;
-                        $scope.searchGridObj["footerCellTemplate"] = "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>";
-                        $scope.searchGridObj["field"] = item.name;
-                        $rootScope.gridArray.push($scope.searchGridObj);
-
-
-                        if ($rootScope.tableSwitch.number != 0) {
-                            $scope.searchGridObjButton["name"] = " ";
-                            $scope.searchGridObjButton["cellTemplate"] = $scope.gridBtnDivObj;
-                            $rootScope.gridArray.unshift($scope.searchGridObjButton);
-                        }
-                        $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude);
-                        $scope.gridObjButton = {};
-                        $scope.gridObjButton["name"] = "xl";
-                        $scope.gridObjButton["displayName"] = "";
-                        $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
-                        $scope.gridObjButton["maxWidth"] = 10;
-                        $rootScope.gridArray.unshift($scope.gridObjButton);
                     }
+                    $rootScope.checkedArray.push(item.name);
+                    $scope.searchGridObj["name"] = item.consumption_name;
+                    $scope.searchGridObj["displayName"] = item.consumption_name;
+                    $scope.searchGridObj["footerCellTemplate"] = "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>";
+                    $scope.searchGridObj["field"] = item.name;
+                    $rootScope.gridArray.push($scope.searchGridObj);
+
                 }
+                $rootScope.gridArray.unshift($rootScope.tableSwitch.latitude);
+                $scope.gridObjButton = {};
+                $scope.gridObjButton["name"] = "xl";
+                $scope.gridObjButton["displayName"] = "";
+                $scope.gridObjButton["cellTemplate"] = "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>";
+                $scope.gridObjButton["maxWidth"] = 10;
+                $rootScope.gridArray.unshift($scope.gridObjButton);
+
                 angular.forEach(entities, function (subscription, index) {
                     if (subscription.name == item.name) {
                         $scope.classInfo = 'current';
@@ -844,44 +807,42 @@ define(["./module"], function (ctrs) {
                     })
                 })
                 $rootScope.gridData.forEach(function (gdata, dindex) {
-                    if (gdata.conversions != undefined) {
-                        if (temConvs.length < 10) {
-                            barDatas.forEach(function (bdata, oindex) {
-                                bdata.key.push(gdata.campaignName)
-                                if (bdata.option == "crate" || bdata.option == "nuvRate" || bdata.option == "orderNumRate") {
-                                    bdata.quota.push((gdata[bdata.option] == undefined ? 0 : Number((gdata[bdata.option] + "").replace("%", ""))).toFixed(2))
-                                } else {
-                                    bdata.quota.push(gdata[bdata.option] == undefined ? 0 : gdata[bdata.option])
-                                }
-                            })
-                            temConvs.push(gdata.conversions)
-                        } else {
-                            var minIndex = -1
-                            var conversions = gdata.conversions
-                            temConvs.forEach(function (convs, cindex) {
-                                if (convs < conversions) {
-                                    minIndex = cindex
-                                }
-                            })
-                            if (minIndex > -1) {
-                                barDatas.forEach(function (bdata, oindex) {
-                                    bdata.key[minIndex] = gdata.campaignName
-                                    if (bdata.option == "crate" || bdata.option == "nuvRate" || bdata.option == "orderNumRate") {
-                                        bdata.quota[minIndex] = (gdata[bdata.option] == undefined ? 0 : Number((gdata[bdata.option] + "").replace("%", ""))).toFixed(2)
-                                    } else {
-                                        bdata.quota[minIndex] = gdata[bdata.option] == undefined ? 0 : gdata[bdata.option]
-                                    }
-                                })
-                                temConvs[minIndex] = conversions
+                    //if (gdata.conversions != undefined) {
+                    if (temConvs.length < 10) {
+                        barDatas.forEach(function (bdata, oindex) {
+                            bdata.key.push(gdata.campaignName)
+                            if (bdata.option == "crate" || bdata.option == "nuvRate" || bdata.option == "orderNumRate") {
+                                bdata.quota.push((gdata[bdata.option] == undefined ? 0 : Number((gdata[bdata.option] + "").replace("%", ""))).toFixed(2))
+                            } else {
+                                bdata.quota.push(gdata[bdata.option] == undefined ? 0 : gdata[bdata.option])
                             }
+                        })
+                        temConvs.push(gdata.conversions)
+                    } else {
+                        var minIndex = -1
+                        var conversions = gdata.conversions
+                        temConvs.forEach(function (convs, cindex) {
+                            if (convs < conversions) {
+                                minIndex = cindex
+                            }
+                        })
+                        if (minIndex > -1) {
+                            barDatas.forEach(function (bdata, oindex) {
+                                bdata.key[minIndex] = gdata.campaignName
+                                if (bdata.option == "crate" || bdata.option == "nuvRate" || bdata.option == "orderNumRate") {
+                                    bdata.quota[minIndex] = (gdata[bdata.option] == undefined ? 0 : Number((gdata[bdata.option] + "").replace("%", ""))).toFixed(2)
+                                } else {
+                                    bdata.quota[minIndex] = gdata[bdata.option] == undefined ? 0 : gdata[bdata.option]
+                                }
+                            })
+                            temConvs[minIndex] = conversions
                         }
                     }
+                    //}
                 })
                 cf.renderChart(barDatas, $scope.charts[0].config);
                 Custom.initCheckInfo();
             };
-
-
             $scope.targetSearchSpreadPage = function (isClicked) {
                 $rootScope.expandInex = 1
                 $scope.es_checkArray = ["pv", "uv", "vc", "ip", "nuv", "nuvRate", "conversions", "crate", "avgCost", "orderNum", "benefit", "profit", "orderNumRate"];
@@ -901,7 +862,6 @@ define(["./module"], function (ctrs) {
                     }
                 }
                 if (isClicked) {
-                    $rootScope.initPageConfig("")
                     $scope.$broadcast("transformData_ui_grid", {
                         start: $rootScope.start,
                         end: $rootScope.end,
@@ -1115,4 +1075,5 @@ define(["./module"], function (ctrs) {
             };
         }
     );
-});
+})
+;

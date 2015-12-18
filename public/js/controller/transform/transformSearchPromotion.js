@@ -320,8 +320,8 @@ define(["./module"], function (ctrs) {
         });
         $scope.$on("transformData_ui_grid", function (e, msg) {
             $rootScope.gridArray[1].footerCellTemplate = "<div class='ui-grid-cell-contents'>当页汇总</div>";
-            $rootScope.gridArray[2].footerCellTemplate = "<div class='ui-grid-cell-contents'>--</div>";
-            $rootScope.gridArray[3].footerCellTemplate = "<div class='ui-grid-cell-contents'>--</div>";
+            //$rootScope.gridArray[2].footerCellTemplate = "<div class='ui-grid-cell-contents'>--</div>";
+            //$rootScope.gridArray[3].footerCellTemplate = "<div class='ui-grid-cell-contents'>--</div>";
             for (var i = 0; i < msg.checkedArray.length; i++) {
                 $rootScope.gridArray[i + 2].displayName = chartUtils.convertChinese(msg.checkedArray[i]);
                 $rootScope.gridArray[i + 2].field = msg.checkedArray[i];
