@@ -362,7 +362,16 @@ define([
         $rootScope.getIndex = function (b) {
             return b.$parent.$parent.rowRenderIndex + 1;
         };
-
+        // 获取通用表格的PDF长度
+        $rootScope.getPDFTableWidths = function (dataHeadInfo) {
+            var tableHeadObj = [];
+            for (var i = 0; i < dataHeadInfo.length; i++) {
+                if (dataHeadInfo[i].field != undefined) {
+                    tableHeadObj.push(i == 0 ? 100 : "auto");
+                }
+            }
+            return tableHeadObj;
+        };
         // 获取通用表格的PDF下载数据
         $rootScope.getPDFTableBody = function (dataInfo, dataHeadInfo) {
             var _tableBody = [];
@@ -374,14 +383,23 @@ define([
             }
             _tableBody.push(tableHeadObj);
             for (var i = 0; i < dataInfo.length; i++) {
+                var _obj = dataInfo[i];
                 var _array = [];
                 for (var j = 0; j < dataHeadInfo.length; j++) {
                     if (dataHeadInfo[j].field != undefined) {
-                        var _t = dataInfo[i][dataHeadInfo[j].field];
+                        var _t = _obj[dataHeadInfo[j].field];
                         if (_t["text"]) {
-                            _array.push(dataInfo[i][dataHeadInfo[j].field]["text"] + "");
+                            var arr = (_t["text"] + "").split('');
+                            for (var i = 9; i < arr.length; i += 10) {
+                                arr[i] += ' ';
+                            }
+                            _array.push(arr.join(""));
                         } else {
-                            _array.push(dataInfo[i][dataHeadInfo[j].field] + "");
+                            var arr = (_t + "").split('');
+                            for (var i = 9; i < arr.length; i += 10) {
+                                arr[i] += ' ';
+                            }
+                            _array.push(arr.join(""));
                         }
                     }
                 }
