@@ -597,6 +597,8 @@ var outRateFn = function (result) {
         var outRate = 0;
         if (vc > 0) {
             outRate = (parseFloat(svc) / parseFloat(vc) * 100).toFixed(2);
+        } else {
+            outRate = "0.00"
         }
         quotaArr.push(outRate);
     }
@@ -662,6 +664,8 @@ var nuvRateFn = function (result) {
         var nuvRate = 0;
         if (uv > 0) {
             nuvRate = (parseFloat(o_nuv) / parseFloat(uv) * 100).toFixed(2);
+        } else {
+            nuvRate = "0.00";
         }
 
         quotaArr.push(nuvRate);

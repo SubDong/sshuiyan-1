@@ -2722,7 +2722,7 @@ define(["app"], function (app) {
                             if ($rootScope.tableSwitch.number == 4) {// 搜索词，按照搜索引擎特殊处理
                                 returnData[0] = returnData[0] == "0" ? "0.00%" : (returnData[0] / option.length).toFixed(2) + "%";
                             } else {
-                                returnData[0] = returnData[0] == "0" ? "0(0.00%)" : (returnData[0] / option.length).toFixed(2) + "%";
+                                returnData[0] = returnData[0] == "0" ? "0.00%" : (returnData[0] / option.length).toFixed(2) + "%";
                             }
                         }
                     }
