@@ -196,16 +196,10 @@ define(["./module"], function (ctrs) {
                 $rootScope.expandRowData(gridApi)
             }
         };
-        $rootScope.targetSearchSpread = function (isClicked) {
-            $scope.gridOpArray = angular.copy($rootScope.gridArray);
-            $rootScope.gridOptions.columnDefs = $scope.gridOpArray;
-        };
-
         $scope.page = "";
         $scope.pagego = function (pagevalue) {
             pagevalue.pagination.seek(Number($scope.page));
         };
-        $rootScope.targetSearchSpread(true);
         //得到表格底部数据
         $scope.getSearchFooterData = function (a, option, number) {
             var returnData = 0;
@@ -319,6 +313,7 @@ define(["./module"], function (ctrs) {
             $(msg)
         });
         $scope.$on("transformData_ui_grid", function (e, msg) {
+            //console.log("transformData_ui_grid")
             $rootScope.gridArray[1].footerCellTemplate = "<div class='ui-grid-cell-contents'>当页汇总</div>";
             //$rootScope.gridArray[2].footerCellTemplate = "<div class='ui-grid-cell-contents'>--</div>";
             //$rootScope.gridArray[3].footerCellTemplate = "<div class='ui-grid-cell-contents'>--</div>";
@@ -336,7 +331,213 @@ define(["./module"], function (ctrs) {
             $scope.advancedInit(msg)
         });
 
+        $rootScope.datepickerClickTow = function (start, end, label) {
+            $rootScope.gridOptions.showColumnFooter = !$rootScope.gridOptions.showColumnFooter;
+            var gridArrayOld = angular.copy($rootScope.gridArray);
+            var latitudeOld = angular.copy($rootScope.tableSwitch.latitude);
+            $rootScope.gridArray.forEach(function (item, i) {
+                var a = item["field"];
+                if (item["cellTemplate"] == undefined) {
+                    item["cellTemplate"] = "<ul class='contrastlist'><li>{{grid.appScope.getContrastInfo(grid, row,0,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,1,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,2,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,3,'" + a + "')}}</li></ul>";
+                    //console.log(item["cellTemplate"])
+                    item["footerCellTemplate"] = "<ul class='contrastlist'><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),0)}}</li><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),1)}}</li><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),2)}}</li><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),3)}}</li></ul>";
+                }
+            });
+            //getSearchFooterData
+            $rootScope.gridOptions.rowHeight = 95;
+            $rootScope.gridOptions.columnFooterHeight = 95;
+            var time = chartUtils.getTimeOffset(start, end);
+            var startTime = time[0];
+            var endTime = time[0] + ($rootScope.tableTimeEnd - $rootScope.tableTimeStart);
+            $rootScope.$broadcast("ssh_load_compare_datashow", startTime, endTime);
+            var dateTime1 = chartUtils.getSetOffTime($rootScope.tableTimeStart, $rootScope.tableTimeEnd);
+            var dateTime2 = chartUtils.getSetOffTime(startTime, endTime);
+            $scope.targetDataContrast(null, null, function (item) {
+                var target = $rootScope.tableSwitch.latitude.field;
+                var dataArray = [];
+                var is = 1;
+                $scope.targetDataContrast(startTime, endTime, function (contrast) {
+                    item.forEach(function (a, b) {
+                        var dataObj = {};
+                        for (var i = 0; i < contrast.length; i++) {
+                            if (a[target] == contrast[i][target]) {
+                                $rootScope.checkedArray.forEach(function (tt, aa) {
+                                    var bili = ((parseInt(a[tt] + "".replace("%")) - parseInt((contrast[i][tt] + "").replace("%"))) / (parseInt((contrast[i][tt] + "").replace("%")) == 0 ? parseInt(a[tt] + "".replace("%")) : parseInt((contrast[i][tt] + "").replace("%"))) * 100).toFixed(2);
+                                    dataObj[tt] = (isNaN(bili) ? 0 : bili) + "%";
+                                    a[tt] = "　" + "," + a[tt] + "," + contrast[i][tt] + "," + dataObj[tt]
+                                });
+                                a[target] = a[target] + "," + ($rootScope.startString != undefined ? $rootScope.startString : dateTime1[0] == dateTime1[1] ? dateTime1[0] + "," + dateTime2[0] + "," + "变化率" : dateTime1[0] + " 至 " + dateTime1[1]) + "," + (dateTime2[0] + " 至 " + dateTime2[1]) + "," + "变化率";
 
+                                dataArray.push(a);
+                                is = 0;
+                                return;
+                            } else {
+                                is = 1
+                            }
+                        }
+                        if (is == 1) {
+                            $rootScope.checkedArray.forEach(function (tt, aa) {
+                                dataObj[tt] = "--";
+                                a[tt] = "　" + "," + a[tt] + "," + "--" + "," + "--"
+                            });
+                            a[target] = a[target] + "," + ($rootScope.startString != undefined ? $rootScope.startString : dateTime1[0] == dateTime1[1] ? dateTime1[0] + "," + dateTime2[0] + "," + "变化率" : dateTime1[0] + " 至 " + dateTime1[1]) + "," + (dateTime2[0] + " 至 " + dateTime2[1]) + "," + "变化率"
+                            dataArray.push(a);
+                        }
+                    });
+                    $rootScope.gridOptions.showColumnFooter = !$rootScope.gridOptions.showColumnFooter;
+                });
+                $rootScope.gridOptions.data = dataArray;
+                $rootScope.tableSwitch.latitude = latitudeOld;
+                $rootScope.gridArray = gridArrayOld;
+                //
+            })
+        };
+
+        $scope.targetDataContrast = function (startInfoTime, endInfoTime, cabk) {
+            $rootScope.gridOpArray = angular.copy($rootScope.gridArray);
+            $rootScope.gridOptions.columnDefs = $rootScope.gridOpArray;
+            if ($rootScope.tableSwitch.isJudge == undefined) $scope.isJudge = true;
+            if ($rootScope.tableSwitch.isJudge) $rootScope.tableSwitch.tableFilter = undefined;
+            if ($rootScope.pageConfigs != undefined && $rootScope.pageConfigs.length > 0) {
+                var filterPageConf = []
+                if ($rootScope.extendways[$rootScope.selectedPageConvIndex].name == undefined || $rootScope.extendways[$rootScope.selectedPageConvIndex].name == ""||$rootScope.selectedPageConvIndex==0) {
+                    filterPageConf = $rootScope.pageConfigs
+                } else {
+                    $rootScope.pageConfigs.forEach(function (conf) {
+                        if (conf.targetName == $rootScope.extendways[$rootScope.selectedPageConvIndex].name) {
+                            filterPageConf.push(conf)
+                        }
+                    })
+                }
+                if (filterPageConf.length > 0) {
+                    var tCheckedArray = ["pv", "uv", "vc", "ip", "nuv", "nuvRate"];
+                    var pvurl = "/api/transform/getPageBasePVs?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&queryOptions=" + tCheckedArray + "&pages=" + JSON.stringify(filterPageConf) + "&showType=day" + "&filters=" + $rootScope.getFilters()
+                    $http.get(pvurl).success(function (pvdatas) {
+                        var isPConv = false;
+                        for (var index = 0; index < $rootScope.checkedArray.length; index++) {
+                            isPConv = true;
+                            $rootScope.bases.forEach(function (base) {
+                                if (base.name == $rootScope.checkedArray[index]) {
+                                    isPConv = false
+                                }
+                            })
+                            if (isPConv)
+                                break;
+                        }
+                        if (isPConv) {
+                            //查询转化的数据
+                            var tPageInfoArr = ["conversions", "benefit"]
+                            var pageurl = "/api/transform/getPageBaseInfo?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&queryOptions=" + tPageInfoArr + "&pages=" + JSON.stringify(filterPageConf) + "&showType=day" + "&filters=" + $rootScope.getFilters()
+                            $http.get(pageurl).success(function (pagedatas) {
+                                var sumCrate = 0
+                                pvdatas.forEach(function (data, index) {
+                                    $rootScope.checkedArray.forEach(function (attr) {
+                                        switch (attr) {
+                                            case "conversions"://转化次数
+                                                data["conversions"] = pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].conversions != undefined ? pagedatas[data.campaignName].conversions.value : 0
+                                                break;
+                                            case "crate"://转化率
+                                                var tCrate = pagedatas[data.campaignName] != undefined && data.vc > 0 ? ((Number(pagedatas[data.campaignName]["conversions"].value) / Number(data.vc)) * 100) : 0
+                                                sumCrate += tCrate
+                                                data["crate"] = tCrate.toFixed(2) + "%";
+                                                break;
+                                            case "benefit"://收益
+                                                data["benefit"] = pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].benefit != undefined ? pagedatas[data.campaignName].benefit.value : 0
+                                                break;
+                                            case "orderNum"://订单数量
+                                                data["orderNum"] = pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].orderNum != undefined ? pagedatas[data.campaignName].orderNum.value : 0
+                                                break;
+                                            case "orderNumRate"://订单转化率
+                                                data["orderNumRate"] = (pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].orderNum != undefined && data.vc > 0 ? ((Number(pagedatas[data.campaignName].orderNum.value) / Number(data.vc)) * 100).toFixed(2) : (0).toFixed(2)) + "%"
+                                                break;
+                                            default :
+                                                break;
+                                        }
+                                    })
+                                })
+                                cabk(pvdatas)
+                            })
+                        }
+                        else{
+                            cabk([])
+                        }
+                    })
+                }else{
+                    cabk([])
+                }
+            }
+        }
+
+
+        $scope.getCourFooterData = function (a, option, number) {
+            var rast = [0.0, 0.0];
+            var rastString = ["", ""];
+            var bhlString = "";
+            option.forEach(function (items, x) {
+                var itemSplDatas = (items.entity[a.col.field] + "").split(",");
+                if (itemSplDatas[3] == "变化率") {
+                    rastString[0] = itemSplDatas[1];
+                    rastString[1] = itemSplDatas[2];
+                    bhlString = "变化率";
+                } else {
+                    rast[0] += ((itemSplDatas[1] + "").replace("%", "") == "--" || (itemSplDatas[1] + "").replace("%", "") == "　" ? 0.0 : parseFloat(((itemSplDatas[1] + "").replace("%", ""))));
+                    rast[1] += ((itemSplDatas[2] + "").replace("%", "") == "--" || (itemSplDatas[2] + "").replace("%", "") == "　" ? 0.0 : parseFloat(((itemSplDatas[2] + "").replace("%", ""))));
+                }
+            });
+            var str
+            if (a.renderIndex == 1) {
+                str = "当页汇总";
+            } else {
+                str = " ";
+            }
+            if (a.col.field == "pv" || a.col.field == "uv" || a.col.field == "ip" || a.col.field == "vc" || a.col.field == "nuv"|| a.col.field == "conversions"|| a.col.field == "benefit"|| a.col.field == "orderNum") {
+                //
+            } else {
+                rast[0] = ((rast[0] / option.length) ).toFixed(2) + (a.col.field == "crate" || a.col.field == "nuvRate" || a.col.field == "orderNumRate" ? "%" : "");
+                //console.log(rast[0])
+                rast[1] = ((rast[1] / option.length) ).toFixed(2) + (a.col.field == "crate" || a.col.field == "nuvRate" || a.col.field == "orderNumRate" ? "%" : "");
+                //console.log(rast[1])
+            }
+
+            if(a.col.field == "orderNumRate")
+            //console.log("orderNumRate")
+            var bhl = parseFloat(((rast[1] + "").replace("%", ""))) == 0?"0.00%":(((parseFloat(((rast[0] + "").replace("%", ""))) - parseFloat(((rast[1] + "").replace("%", "")))) / parseFloat(((rast[1] + "").replace("%", "")))) * 100 ).toFixed(2) + "%";
+
+            if ((bhl + "").indexOf("NaN") != -1 || (bhl + "").indexOf("Infinity") != -1) {
+                bhl = "--";
+            }
+
+            switch (number) {
+                case 0:
+                    return str;
+                case 1:
+                    return rastString[0] != "" ? (rastString[0] + "").indexOf("NaN") != -1 ? 0 : rastString[0] : (rast[0] + "").indexOf("NaN") != -1 ? 0 : rast[0];
+                case 2:
+                    return rastString[1] != "" ? (rastString[1] + "").indexOf("NaN") != -1 ? 0 : rastString[1] : (rast[1] + "").indexOf("NaN") != -1 ? 0 : rast[1];
+                case 3:
+                    return bhlString != "" ? bhlString : bhl;
+                default :
+                    return "--";
+            }
+        };
+        //数据对比分割数据
+        $scope.getContrastInfo = function (grid, row, number, fieldData) {
+            if (fieldData != undefined || fieldData != "undefined") {
+                var a = (row.entity[fieldData] + "").split(",");
+                if (number == 0) {
+                    return a[0];
+                } else if (number == 1) {
+                    return a[1];
+                } else if (number == 2) {
+                    return a[2];
+                } else if (number == 3) {
+                    if (a[2] == 0) {
+                        return "--";
+                    }
+                    return a[3];
+                }
+            }
+        };
         ////////////过滤////////////
         //设置来源终端
         var evTimeStamp = 0;
