@@ -308,10 +308,11 @@ if (config != undefined && !config.open) {
             return s + q + o + h + m + c
         };
         d.I = {
-            R: "hy.best-ad.cn",
-            RS: "t.best-ad.cn",
+
+            R: "192.168.1.104:8000",
+            RS: "192.168.1.104:8001",
             u: config.domain,
-            P: "log.best-ad.cn",
+            P: "192.168.100.10:9090",
             S: "pft.gif",
             protocol: "https:" == document.location.protocol ? "https:" : "http:",
             Q: "os tit br fl pm sr lg ck ja sc dt rf loc tt ct vid u api et cv ut duration durPage n v adtrack".split(" "),
@@ -644,30 +645,35 @@ if (config != undefined && !config.open) {
             }
         })();
         if (config != undefined && config.e != undefined && config.e.length > 0) {
-            window.onload = function () {
-                config.e.forEach(function (k, h) {
-                    if (!k.evpause) {
-                        var l = document.location.origin + document.location.pathname;
-                        if (l.indexOf(k.evpage) > -1 || k.evpage.indexOf(l) > -1) {
-                            var m = document.getElementById(k.eid);
-                            var c = m.attributes.getNamedItem("onclick");
-                            if (m != undefined && m != null) {
-                                if (c == null) {
+            //window.onload = function () {
+            config.e.forEach(function (k, h) {
+                if (!k.evpause) {
+                    var l =""
+                    if(g.g.br.indexOf("IE")>-1){
+                        l = document.location.toString();
+                    }else{
+                        l = document.location.href
+                    }
+                    if (l.indexOf(k.evpage) > -1 || k.evpage.indexOf(l) > -1) {
+                        var m = document.getElementById(k.eid);
+                        var c = m.attributes.getNamedItem("onclick");
+                        if (m != undefined && m != null) {
+                            if (c == null) {
+                                m.onclick = function () {
+                                    _pct.putPar(["_trackEvent", k.eid, k.evttag, k.evtarget ? 1 : 0])
+                                }
+                            } else {
+                                if (c.nodeValue.indexOf("_pct.putPar") == -1) {
                                     m.onclick = function () {
                                         _pct.putPar(["_trackEvent", k.eid, k.evttag, k.evtarget ? 1 : 0])
-                                    }
-                                } else {
-                                    if (c.nodeValue.indexOf("_pct.putPar") == -1) {
-                                        m.onclick = function () {
-                                            _pct.putPar(["_trackEvent", k.eid, k.evttag, k.evtarget ? 1 : 0])
-                                        }
                                     }
                                 }
                             }
                         }
                     }
-                })
-            }
+                }
+            })
+            //}
         }
         if (config != undefined) {
             if (g.g.loc.indexOf("www.farmer.com.cn") < 0) {
@@ -718,7 +724,7 @@ if (config != undefined && !config.open) {
                 return
             }
             if (config.pc.paths == undefined || config.pc.paths.length == 0) {
-                g.g.p_name = config.pc.target_name;
+                g.g.p_name =encodeURIComponent( config.pc.target_name);
                 g.g.p_record = config.pc.record_type;
                 g.g.p_orderid = g.g.getOrderId();
                 g.g.p_income = config.pc.expected_yield;
@@ -752,7 +758,7 @@ if (config != undefined && !config.open) {
                                     last[0] = "1";
                                     rmarr[rmarr.length - 1] = last.join("*");
                                     g.cookie.set("RF_map" + j.id, rmarr.join("|"));
-                                    g.g.p_name = config.pc.target_name;
+                                    g.g.p_name = encodeURIComponent( config.pc.target_name);
                                     g.g.p_record = config.pc.record_type;
                                     g.g.p_orderid = g.g.getOrderId();
                                     g.g.p_income = config.pc.expected_yield;

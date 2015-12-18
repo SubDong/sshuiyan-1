@@ -1816,7 +1816,7 @@ var transform = {
                 var _aggs = {};
                 var queryOptions = queryOptionsStr.split(",")
                 queryOptions.forEach(function (queryOption) {
-                   //console..log(queryOption)
+                    //console..log(queryOption)
                     for (var key in es_aggs[queryOption]) {
                         _aggs[key] = es_aggs[queryOption][key];
                     }
@@ -1876,13 +1876,12 @@ var transform = {
                     }
                 }
                 var pvs = []
-                //////console.log("**************PageBasePvs**************")
-                //////console.log(JSON.stringify(query))
+                //console.log("**************PageBasePvs**************")
+                //console.log(JSON.stringify(query))
                 es.search(query, function (error, result) {
                     var datas = []
                     if (result != undefined && result.aggregations != undefined && result.aggregations.pagePVs != undefined && result.aggregations.pagePVs.buckets != undefined) {
                         var pvs = result.aggregations.pagePVs.buckets
-
                         pvs.forEach(function (pv) {
                             var data = {}
                             data["rf_type"] = pv["key"]
@@ -1894,7 +1893,7 @@ var transform = {
                                             data[queryOption] = "0.00%";
                                         } else {
                                             data[queryOption] = (((pv.visitor_aggs.value - pv.old_visitor_aggs.value) / pv.uv_aggs.value) * 100).toFixed(2) + "%";
-                                           //console..log(pv.visitor_aggs.value+" - "+pv.old_visitor_aggs.value+" / "+pv.uv_aggs.value+"nuvRate = "+ data[queryOption])
+                                            //console..log(pv.visitor_aggs.value+" - "+pv.old_visitor_aggs.value+" / "+pv.uv_aggs.value+"nuvRate = "+ data[queryOption])
                                         }
                                         data["nuv"] = (pv.visitor_aggs.value - pv.old_visitor_aggs.value)
                                         data["uv"] = pv.uv_aggs.value
@@ -1991,7 +1990,7 @@ var transform = {
                         "aggs": {
                             "pagePVs": {
                                 "terms": {
-                                    "field": rfType==3?"rf_type":"se",
+                                    "field": rfType == 3 ? "rf_type" : "se",
                                 },
                                 "aggs": _aggs
                             }
@@ -1999,18 +1998,17 @@ var transform = {
                     }
                 })
                 var pvs = []
-                console.log("**************searchPageSePVs**************")
-                console.log(JSON.stringify(querys[0]))
+                //console.log("**************searchPageSePVs**************")
+                //console.log(JSON.stringify(querys[0]))
                 es.search(querys[0], function (error, result) {
                     var datas = []
                     if (result != undefined && result.aggregations != undefined && result.aggregations.pagePVs != undefined && result.aggregations.pagePVs.buckets != undefined) {
                         var pvs = result.aggregations.pagePVs.buckets
-                        console.log(JSON.stringify(result.aggregations.pagePVs))
                         pvs.forEach(function (pv) {
                             var data = {}
                             //data["rf_type"] = pv["key"]
                             data["se"] = pv["key"]
-                            data["campaignName"] = pv["key"] == "-" ||rfType==3? "未知来源" : pv["key"]
+                            data["campaignName"] = pv["key"] == "-" || rfType == 3 ? "未知来源" : pv["key"]
                             queryOptions.forEach(function (queryOption) {
                                 switch (queryOption) {
                                     case "nuvRate":
@@ -2164,7 +2162,7 @@ var transform = {
                 });
             });
         },
-        searchPageSeBaseInfo: function (es, indexs, startNum, endNum, type, pages,rfType, queryOptionsStr, filters, callbackFn) {
+        searchPageSeBaseInfo: function (es, indexs, startNum, endNum, type, pages, rfType, queryOptionsStr, filters, callbackFn) {
             var requests = [];
             for (var i = 0; i < indexs.length; i++) {
                 requests.push({
@@ -2235,7 +2233,7 @@ var transform = {
                         "aggs": {
                             "pagePVs": {
                                 "terms": {
-                                    "field": rfType==3?"rf_type":"se"
+                                    "field": rfType == 3 ? "rf_type" : "se"
                                 },
                                 "aggs": {
                                     "conversions": {
@@ -2267,17 +2265,16 @@ var transform = {
                         //console.log("**************Result**************")
                         //console.log(JSON.stringify( result.aggregations.pagePVs))
                         infos.forEach(function (info) {
-                            var key = info["key"] == "-"|| rfType==3 ? "未知来源" : info["key"]
+                            var key = info["key"] == "-" || rfType == 3 ? "未知来源" : info["key"]
                             results[key] = info
                         })
-                        console.log(JSON.stringify(infos))
                     }
                     callbackFn(results)
                 });
             });
         },
 
-        searchPageConvInfo: function (es, indexs, startNum, endNum, type,pages, rfType, se, queryOptionsStr, filters, callbackFn) {
+        searchPageConvInfo: function (es, indexs, startNum, endNum, type, pages, rfType, se, queryOptionsStr, filters, callbackFn) {
             var requests = [];
             for (var i = 0; i < indexs.length; i++) {
                 requests.push({
@@ -2305,7 +2302,7 @@ var transform = {
                 });
                 var boolQuery = []
                 pages.forEach(function (page) {
-                   //console..log(JSON.stringify(page))
+                    //console..log(JSON.stringify(page))
                     var filterQuery = []
                     if (filters != undefined && filters.length > 0) {
                         var jfilters = JSON.parse(filters)
@@ -2314,7 +2311,7 @@ var transform = {
                         })
                     }
                     filterQuery.push({"term": {"rf_type": rfType}})
-                    if(rfType!=3){
+                    if (rfType != 3) {
                         filterQuery.push({"term": {"se": se}})
                     }
                     filterQuery.push({
@@ -2374,8 +2371,8 @@ var transform = {
                         },
                     }
                 }
-                //////console.log("****************************")
-               //console..log(JSON.stringify(query))
+                //console.log("************PageConvInfo****************")
+                //console.log(JSON.stringify(query))
                 es.search(query, function (error, result) {
                     if (result != undefined && result.aggregations != undefined && result.aggregations.pagePVs != undefined && result.aggregations.pagePVs.buckets != undefined) {
                         var infos = result.aggregations.pagePVs.buckets
@@ -2440,8 +2437,8 @@ var transform = {
                     break;
             }
             async.map(requests, function (item, callback) {
-                ////////console.log("****************************")
-                ////////console.log(JSON.stringify(item))
+                //console.log("****************************")
+                //console.log(JSON.stringify(item))
                 es.search(item, function (error, result) {
                     if (result != undefined && result.aggregations != undefined) {
                         callback(null, result.aggregations);
@@ -2835,7 +2832,6 @@ var transform = {
                                     } else {
                                         data[queryOption] = pv.visitor_aggs.value - pv.old_visitor_aggs.value
                                     }
-                                    console.log(pv.old_visitor_aggs.value+"   *********************       "+pv.visitor_aggs.value)
                                     break;
                                 default :
                                     if (pv[queryOption] != undefined)
