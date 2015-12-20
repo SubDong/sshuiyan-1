@@ -70,18 +70,6 @@ define(["./module"], function (ctrs) {
             $rootScope.initPageConfig(false)
         }
 
-        //var griApihtml = function (gridApi) {
-        //    gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
-        //        row.entity.subGridOptions = {
-        //            appScopeProvider: $scope.subGridScope,
-        //            expandableRowHeight: 360,
-        //            enableHorizontalScrollbar: 1,
-        //            enableVerticalScrollbar: 1,
-        //            showHeader: false,
-        //            columnDefs: $rootScope.gridArray
-        //        };
-        //    });
-        //};
         $rootScope.expandInex = 1
         $rootScope.expandRowData = function (pGridApi) {
             //展开操作
@@ -340,14 +328,23 @@ define(["./module"], function (ctrs) {
             $rootScope.gridOptions.showColumnFooter = !$rootScope.gridOptions.showColumnFooter;
             var gridArrayOld = angular.copy($rootScope.gridArray);
             var latitudeOld = angular.copy($rootScope.tableSwitch.latitude);
+            $rootScope.gridArray[1] = {
+                name: "来源",
+                displayName: "来源",
+                field: "campaignName",
+                cellTemplate: "<div>{{grid.appScope.getDataUrlInfo(grid, row,3)}}</div>",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                enableSorting: false
+            }
             $rootScope.gridArray.forEach(function (item, i) {
                 var a = item["field"];
                 if (item["cellTemplate"] == undefined) {
                     item["cellTemplate"] = "<ul class='contrastlist'><li>{{grid.appScope.getContrastInfo(grid, row,0,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,1,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,2,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,3,'" + a + "')}}</li></ul>";
-                    //console.log(item["cellTemplate"])
                     item["footerCellTemplate"] = "<ul class='contrastlist'><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),0)}}</li><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),1)}}</li><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),2)}}</li><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),3)}}</li></ul>";
                 }
             });
+            $rootScope.gridOpArray = angular.copy($rootScope.gridArray);
+            $rootScope.gridOptions.columnDefs = $rootScope.gridOpArray;
             //getSearchFooterData
             $rootScope.gridOptions.rowHeight = 95;
             $rootScope.gridOptions.columnFooterHeight = 95;
@@ -362,8 +359,6 @@ define(["./module"], function (ctrs) {
                 var dataArray = [];
                 var is = 1;
                 $scope.targetDataContrast(startTime, endTime, function (contrast) {
-                    console.log(item)
-
                     item.forEach(function (a, b) {
                         var dataObj = {};
                         for (var i = 0; i < contrast.length; i++) {
@@ -401,8 +396,6 @@ define(["./module"], function (ctrs) {
         };
 
         $scope.targetDataContrast = function (startInfoTime, endInfoTime, cabk) {
-            $rootScope.gridOpArray = angular.copy($rootScope.gridArray);
-            $rootScope.gridOptions.columnDefs = $rootScope.gridOpArray;
             if ($rootScope.tableSwitch.isJudge == undefined) $scope.isJudge = true;
             if ($rootScope.tableSwitch.isJudge) $rootScope.tableSwitch.tableFilter = undefined;
             if ($rootScope.pageConfigs != undefined && $rootScope.pageConfigs.length > 0) {

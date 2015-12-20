@@ -496,7 +496,6 @@ define(["./module"], function (ctrs) {
                                     break;
                             }
                             $rootScope.gridOptions.data = pvdatas
-                            ////console.log( $rootScope.gridOptions.data)
                             if (isPConv) {
                                 //查询转化的数据
                                 var tPageInfoArr = ["conversions", "benefit"]
@@ -537,7 +536,6 @@ define(["./module"], function (ctrs) {
                                         $scope.dateShowArray.forEach(function (attr) {
                                             if (data[attr.label] != undefined) {
                                                 if (attr.label == "crate") {
-                                                    //attr.value = sumCrate.toFixed(2) + "%"
                                                     sumConv += data["conversions"] == undefined ? 0 : data["conversions"]
                                                     if (index == ($rootScope.gridOptions.data.length - 1)) {
                                                         attr.value = sumPv > 0 ? (((sumConv / sumPv) * 100).toFixed(2) + "%") : "0.00%"
@@ -545,14 +543,10 @@ define(["./module"], function (ctrs) {
                                                 } else if (attr.label == "nuvRate") {
                                                     sumNuv += data["nuv"] == undefined ? 0 : data["nuv"]
                                                     sumUv += data["uv"] == undefined ? 0 : data["uv"]
-                                                    //if(index==($rootScope.gridOptions.data.length-1)){
                                                     attr.value = sumUv > 0 ? (((sumNuv / sumUv) * 100).toFixed(2) + "%") : "0.00%"
-                                                    //}
                                                 } else if (attr.label == "orderNumRate") {
                                                     sumOrder += data["orderNum"] == undefined ? 0 : data["orderNum"]
-                                                    //if(index==($rootScope.gridOptions.data.length-1)){
                                                     attr.value = sumPv > 0 ? (((sumOrder / sumPv) * 100).toFixed(2) + "%") : "0.00%"
-                                                    //}
                                                 }
                                                 else {
                                                     attr.value += data[attr.label]
@@ -571,17 +565,37 @@ define(["./module"], function (ctrs) {
                                 })
                             }
                             else {
-                                $rootScope.gridOptions.data.forEach(function (data) {
+                                var sumNuv = 0, sumUv = 0, sumPv = 0, sumConv = 0, sumOrder = 0
+                                $rootScope.gridOptions.data.forEach(function (data, index) {
+                                    sumPv += data["pv"] == undefined ? 0 : data["pv"]
                                     $scope.dateShowArray.forEach(function (attr) {
                                         if (data[attr.label] != undefined) {
                                             if (attr.label == "crate") {
-                                                attr.value = Number(data[attr.label]) + Number(attr.value) + "%"
-                                            } else {
+                                                sumConv += data["conversions"] == undefined ? 0 : data["conversions"]
+                                                if (index == ($rootScope.gridOptions.data.length - 1)) {
+                                                    attr.value = sumPv > 0 ? (((sumConv / sumPv) * 100).toFixed(2) + "%") : "0.00%"
+                                                }
+                                            } else if (attr.label == "nuvRate") {
+                                                sumNuv += data["nuv"] == undefined ? 0 : data["nuv"]
+                                                sumUv += data["uv"] == undefined ? 0 : data["uv"]
+                                                attr.value = sumUv > 0 ? (((sumNuv / sumUv) * 100).toFixed(2) + "%") : "0.00%"
+                                            } else if (attr.label == "orderNumRate") {
+                                                sumOrder += data["orderNum"] == undefined ? 0 : data["orderNum"]
+                                                attr.value = sumPv > 0 ? (((sumOrder / sumPv) * 100).toFixed(2) + "%") : "0.00%"
+                                            }
+                                            else {
                                                 attr.value += data[attr.label]
                                             }
                                         }
                                     })
                                 })
+                                //刷新图 表
+                                //$scope.charts[0].config.legendDefaultChecked = [0, 1];
+                                //$scope.charts[0].config.legendAllowCheckCount = 2;
+                                //$scope.DateNumbertwo = true;
+                                //$scope.DateLoading = true;
+                                //$scope.DateNumber = true;
+                                //$scope.DateLoading = true;
                                 $scope.dataTable(true, "day", ["pv", "uv"], false);
                             }
                         })
