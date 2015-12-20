@@ -1432,7 +1432,8 @@ define(["app"], function (app) {
                 var dataArray = [];
                 var is = 1;
                 $scope.targetDataContrast(startTime, endTime, function (contrast) {
-                    item.forEach(function (a, b) {
+                    var newitem =   $scope.mergeArray (item,contrast,latitudeOld);
+                    newitem.forEach(function (a, b) {
                         var dataObj = {};
                         if (target == "period" && $location.$$path == "/trend/today" && $rootScope.tableFormat == "day") {// 今日统计按日统计时特殊处理
                             $rootScope.checkedArray.forEach(function (tt, aa) {
@@ -1481,6 +1482,20 @@ define(["app"], function (app) {
                 $rootScope.gridArray = gridArrayOld;
             })
         };
+        //合并数组
+        $scope.mergeArray = function(arr1, arr2,quotaobj){
+            var quota = quotaobj.field;
+            var _arr = [];
+            for (var i = 0; i < arr1.length; i++) {
+                for(var j = 0; j < arr2.length; j++){
+                    if(arr1[i].quota != arr2[j].quota){
+                        _arr.push(arr2[j]);
+                    }
+                }
+                _arr.push(arr1[i]);
+            }
+        }
+
         //数据对比实现方法
         $scope.targetDataContrast = function (startInfoTime, endInfoTime, cabk) {
             $scope.gridOpArray = angular.copy($rootScope.gridArray);
