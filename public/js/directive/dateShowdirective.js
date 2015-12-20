@@ -705,7 +705,7 @@ define(["../app"], function (app) {
                     if (value.indexOf && value.indexOf("%") != -1) {// 缓存中的数据使用
                         return value;
                     }
-                    return count ? (value == 0 ? "0%" : (value / count).toFixed(2) + "%") : "0%";
+                    return count ? (value == 0 ? "0.00%" : (value / count).toFixed(2) + "%") : "0.00%";
                 }
                 case "avgTime":
                 {
@@ -732,6 +732,9 @@ define(["../app"], function (app) {
                 case "ctr":
                 {
                     if (value.indexOf && value.indexOf("%") != -1) {// 字符串且存在符号%
+                        if (value == "0%") {
+                            return "0.00%";
+                        }
                         return value;
                     }
                     return count ? (value == 0 ? "0.00%" : (value / count).toFixed(2) + "%") : "--";

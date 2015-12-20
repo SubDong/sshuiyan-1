@@ -1400,16 +1400,24 @@ define(["app"], function (app) {
         };
         // 按url，按域名过滤
         $scope.setURLDomain = function (urlText) {
+            var now = +new Date();
+            if (now - evTimeStamp < 100) {
+                return;
+            }/*阻止冒泡，执行两次*/
             $rootScope.myRfDm = urlText;
             var b = "";
             if (urlText == "rf") {
                 b = 0;
+                $("#externallinksInput").attr('placeholder','输入URL...')
+                $("#externallinksInput").blur(function(){
+                    $(this).attr('placeholder','输入URL...')
+                })
             } else {
                 b = 1;
-            }
-            var now = +new Date();
-            if (now - evTimeStamp < 100) {
-                return;
+                $("#externallinksInput").attr('placeholder','输入域名...')
+                $("#externallinksInput").blur (function(){
+                    $(this).attr('placeholder','输入域名...')
+                })
             }
             evTimeStamp = now;
             var inputArray = $(".custom_select .styled");
