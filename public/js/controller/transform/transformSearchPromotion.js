@@ -314,9 +314,14 @@ define(["./module"], function (ctrs) {
         });
         $scope.$on("transformData_ui_grid", function (e, msg) {
             //console.log("transformData_ui_grid")
-            $rootScope.gridArray[1].footerCellTemplate = "<div class='ui-grid-cell-contents'>当页汇总</div>";
-            //$rootScope.gridArray[2].footerCellTemplate = "<div class='ui-grid-cell-contents'>--</div>";
-            //$rootScope.gridArray[3].footerCellTemplate = "<div class='ui-grid-cell-contents'>--</div>";
+            $rootScope.gridArray[1] = {
+                name: "来源",
+                displayName: "来源",
+                field: "campaignName",
+                cellTemplate: "<div><a href='javascript:void(0)' style='color:#0965b8;line-height:30px' ng-click='grid.appScope.showPageSeDetail(grid.options.data,row)'>{{grid.appScope.getDataUrlInfo(grid, row,3)}}</a></div>",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                enableSorting: false
+            }
             for (var i = 0; i < msg.checkedArray.length; i++) {
                 $rootScope.gridArray[i + 2].displayName = chartUtils.convertChinese(msg.checkedArray[i]);
                 $rootScope.gridArray[i + 2].field = msg.checkedArray[i];
