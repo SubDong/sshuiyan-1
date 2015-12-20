@@ -1488,12 +1488,23 @@ define(["app"], function (app) {
             var _arr = [];
             for (var i = 0; i < arr1.length; i++) {
                 for(var j = 0; j < arr2.length; j++){
-                    if(arr1[i].quota != arr2[j].quota){
-                        _arr.push(arr2[j]);
+                    var value_1 = arr1[i].getAttribute(quota);
+                    var value_2 =  arr2[j].getAttribute(quota);
+                    if(value_1 != value_2){
+                        var nullObject = new Object();
+                        for (prop in  arr2[j]){
+                            if( prop == quota){
+                                nullObject.prop = arr2[j][prop];
+                            }else{
+                                nullObject.prop = '--';
+                            }
+                        }
+                        _arr.pus(nullObject)
                     }
                 }
                 _arr.push(arr1[i]);
             }
+            return quota;
         }
 
         //数据对比实现方法
