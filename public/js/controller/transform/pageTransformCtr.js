@@ -32,13 +32,14 @@ define(["./module"], function (ctrs) {
                         }
                     }
                 }
-                $scope.$broadcast("transformData", {
+                $scope.setShowArray()
+                $scope.$broadcast("transformData_ui_grid", {
                     start: $rootScope.start,
                     end: $rootScope.end,
                     checkedArray: $scope.es_checkedArray,
                     sem_checkedArray: $scope.sem_checkedArray,
                     all_checked: $rootScope.checkedArray,
-                    analysisAction: "event",
+                    analysisAction: "pageConversion",
                     convert_url_all: $scope.convert_url_all
                 });
             };
