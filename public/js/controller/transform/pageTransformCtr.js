@@ -366,7 +366,7 @@ define(["./module"], function (ctrs) {
                 $rootScope.start = time[0];
                 $rootScope.end = time[1];
                 //时间段选择执行数据查询
-                init_transformData();
+                $rootScope.targetSearchSpreadPage(true)
             };
 
             //刷新
