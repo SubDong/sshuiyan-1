@@ -307,7 +307,7 @@ define(['./module'], function (ctrs) {
                 $http({
                     method: 'GET',
                     url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + $rootScope.tableSwitch.latitude.field
-                    + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&formartInfo=" + getTime + "&type=" + esType
+                    + "&filerInfo=" + encodeURIComponent($rootScope.tableSwitch.tableFilter) + "&formartInfo=" + getTime + "&type=" + esType
                 }).success(function (data, status) {
                     var newDataInfo1 = "";
                     if (getTime == "hour") {
@@ -404,7 +404,7 @@ define(['./module'], function (ctrs) {
             $http({
                 method: 'GET',
                 url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + quota + "&dimension=" + $rootScope.tableSwitch.latitude.field
-                + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&formartInfo=" + getTime + "&type=" + esType
+                + "&filerInfo=" + encodeURIComponent($rootScope.tableSwitch.tableFilter) + "&formartInfo=" + getTime + "&type=" + esType
             }).success(function (data, status) {
                 //if ($rootScope.tableTimeStart >= -1) {
                 //    if (data) {// 规避一些不需要的数据
@@ -467,7 +467,7 @@ define(['./module'], function (ctrs) {
             $http({
                 method: 'GET',
                 url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + quota + "&dimension=" + $rootScope.tableSwitch.latitude.field
-                + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&formartInfo=" + getTime + "&type=" + esType
+                + "&filerInfo=" + encodeURIComponent($rootScope.tableSwitch.tableFilter) + "&formartInfo=" + getTime + "&type=" + esType
             }).success(function (data, status) {
                 var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
                 chart.showLoading({
