@@ -362,6 +362,8 @@ define(["./module"], function (ctrs) {
                 var dataArray = [];
                 var is = 1;
                 $scope.targetDataContrast(startTime, endTime, function (contrast) {
+                    console.log(item)
+
                     item.forEach(function (a, b) {
                         var dataObj = {};
                         for (var i = 0; i < contrast.length; i++) {
@@ -416,7 +418,8 @@ define(["./module"], function (ctrs) {
                 }
                 if (filterPageConf.length > 0) {
                     var tCheckedArray = ["pv", "uv", "vc", "ip", "nuv", "nuvRate"];
-                    var pvurl = "/api/transform/getPageBasePVs?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&queryOptions=" + tCheckedArray + "&pages=" + JSON.stringify(filterPageConf) + "&showType=day" + "&filters=" + $rootScope.getFilters()
+                    //(startInfoTime == null ? $rootScope.tableTimeStart : startInfoTime) + "&endOffset=" + (endInfoTime == null ? $rootScope.tableTimeEnd : endInfoTime)
+                    var pvurl = "/api/transform/getPageBasePVs?start=" +(startInfoTime == null ? $rootScope.tableTimeStart : startInfoTime) + "&end=" +(endInfoTime == null ? $rootScope.tableTimeEnd : endInfoTime) + "&type=" + $rootScope.userType + "&queryOptions=" + tCheckedArray + "&pages=" + JSON.stringify(filterPageConf) + "&showType=day" + "&filters=" + $rootScope.getFilters()
                     $http.get(pvurl).success(function (pvdatas) {
                         var isPConv = false;
                         for (var index = 0; index < $rootScope.checkedArray.length; index++) {
@@ -432,7 +435,7 @@ define(["./module"], function (ctrs) {
                         if (isPConv) {
                             //查询转化的数据
                             var tPageInfoArr = ["conversions", "benefit"]
-                            var pageurl = "/api/transform/getPageBaseInfo?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&queryOptions=" + tPageInfoArr + "&pages=" + JSON.stringify(filterPageConf) + "&showType=day" + "&filters=" + $rootScope.getFilters()
+                            var pageurl = "/api/transform/getPageBaseInfo?start=" + (startInfoTime == null ? $rootScope.tableTimeStart : startInfoTime) + "&end=" + (endInfoTime == null ? $rootScope.tableTimeEnd : endInfoTime)+ "&type=" + $rootScope.userType + "&queryOptions=" + tPageInfoArr + "&pages=" + JSON.stringify(filterPageConf) + "&showType=day" + "&filters=" + $rootScope.getFilters()
                             $http.get(pageurl).success(function (pagedatas) {
                                 var sumCrate = 0
                                 pvdatas.forEach(function (data, index) {
