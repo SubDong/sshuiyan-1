@@ -718,6 +718,13 @@ define(["../app"], function (app) {
                 case "source_externallinks" :
                 {
                     $rootScope.checkedArray = ["uv", "nuv", "nuvRate"];
+
+                    if ($rootScope.myRfDm && $rootScope.myRfDm == "dm") {
+                        var obj = {name: "外部链接", displayName: "外部链接", field: "dm"};
+                    } else {
+                        var obj = {name: "外部链接", displayName: "外部链接", field: "rf"};
+                    }
+
                     $rootScope.gridArray = [
                         {
                             name: "xl",
@@ -725,7 +732,7 @@ define(["../app"], function (app) {
                             cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
                             maxWidth: 10
                         },
-                        {name: "外部连接", displayName: "外部连接", field: "rf"},
+                        obj,
                         {
                             name: " ",
                             cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' onmouseout='hiddenMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul><li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li></ul></div></div>"

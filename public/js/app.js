@@ -351,6 +351,7 @@ define([
             $rootScope.datePickerCompare = function () {
                 // 处理datePickerCompare方法不存在的问题
             }
+            $rootScope.timeFilter = null;
         });
 
         $rootScope.copy = function (obj) {

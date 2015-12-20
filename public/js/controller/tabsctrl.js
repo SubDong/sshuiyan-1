@@ -916,21 +916,31 @@ define(["app"], function (app) {
             if (!$rootScope.tableSwitch) {
                 return;
             }
-            var _dateFilter = "";
-            if ("全部" == time) {
-                _dateFilter = "";
-            } else {
-                time = (time == "00:00 - 00:59" ? time + "" : time);
-                if ($scope.tableJu == "html") {
-                    $rootScope.tableSwitch.tableFilter = "[{\"period\":\"" + time + "\"}]";
-                } else {
-                    _dateFilter = JSON.parse("{\"period\":[\"" + time + "\"]}");
-                }
-            }
+            //var _dateFilter = "";
+            //if ("全部" == time) {
+            //    _dateFilter = "";
+            //} else {
+            //    time = (time == "00:00 - 00:59" ? time + "" : time);
+            //    if ($scope.tableJu == "html") {
+            //        $rootScope.tableSwitch.tableFilter = "[{\"period\":\"" + time + "\"}]";
+            //    } else {
+            //        _dateFilter = JSON.parse("{\"period\":[\"" + time + "\"]}");
+            //    }
+            //}
             //获取所有过滤条件
-            var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
-            _allFilters = filterUtil.filter(_allFilters, "period", _dateFilter);
-            $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
+            //var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
+            //_allFilters = filterUtil.filter(_allFilters, "period", _dateFilter);
+            //$rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
+            // 设置过滤时间段
+            if (time == "全部") {
+                $rootScope.timeFilter = null;
+            } else if (time == "工作时段") {
+                $rootScope.timeFilter = [9, 10, 11, 13, 14, 15, 16 ,17];
+            } else if (time == "非工作时段") {
+                $rootScope.timeFilter = [0, 1, 2, 3, 4, 5, 6, 7, 8, 12, 18, 19, 20, 21, 22, 23];
+            } else {// 自定义时段
+                $rootScope.timeFilter = [];
+            }
             $scope.isJudge = false;
             if ($scope.tableJu == "html") {
                 getHtmlTableData();
@@ -1222,35 +1232,6 @@ define(["app"], function (app) {
                 $scope.gridOptions.data = $rootScope.gridData
             }
         }
-        // 按url，按域名过滤
-        $scope.setURLDomain = function (urlText) {
-            var b = "";
-            if (urlText == "rf") {
-                b = 0;
-            } else {
-                b = 1;
-            }
-            var now = +new Date();
-            if (now - evTimeStamp < 100) {
-                return;
-            }
-            evTimeStamp = now;
-            var inputArray = $(".custom_select .styled");
-            inputArray.each(function (i, o) {
-                $(o).prev("span").css("background-position", "0px 0px");
-                $(o).prop("checked", false);
-            });
-            $(inputArray[b]).prev("span").css("background-position", "0px -51px");
-            if (undefined == urlText || "" == urlText) {
-                $rootScope.tableSwitch.latitude.field = null;
-            } else {
-                $rootScope.gridArray[1].field = urlText;
-                $rootScope.tableSwitch.latitude.field = urlText;
-            }
-            $scope.isJudge = false;
-            $rootScope.$broadcast("ssh_data_show_refresh");
-            $scope.targetSearch("rf_dm");
-        };
         // 按url，按域名过滤
         $scope.setURLDomain = function (urlText) {
             var b = "";
@@ -1936,8 +1917,12 @@ define(["app"], function (app) {
                             if ($rootScope.tableTimeStart == 0 && $rootScope.tableTimeEnd == 0 && $scope.hourcheckClass == true && result.length == 24) {
                                 result = result.slice(0, new Date().getHours() + 1);
                             }
+                            // 时间段过滤
+                            // ------------------------------
+                            if ($rootScope.timeFilter) {
+                                    console.log("===================");
+                            }
                             $scope.gridOptions.data = result;
-
                         }
                     }
 
