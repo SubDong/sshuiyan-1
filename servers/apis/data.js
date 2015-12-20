@@ -345,12 +345,21 @@ api.get('/indextable', function (req, res) {
                             infoKey = info.key[i]
                         }
                         if (popFlag != 1) {
-                            if (_lati == "rf" && _filter != null && _filter[0]["rf_type"][0] && infoKey == "-") continue
+                            if (_lati == "rf" && _filter != null && _filter[0]["rf_type"][0] && infoKey == "-") {
+                                continue;
+                            }
+                            if (_lati == "dm" && _filter != null && _filter[0]["rf_type"][0] && infoKey == "-") {
+                                continue;
+                            }
                             if (_promotion == "ssc" || _lati == "kw") {
-                                if (infoKey != undefined && (infoKey == "-" || infoKey == "--" || infoKey == "" || infoKey == "www" || infoKey == "null" || infoKey.length >= 40)) continue;
+                                if (infoKey != undefined && (infoKey == "-" || infoKey == "--" || infoKey == "" || infoKey == "www" || infoKey == "null" || infoKey.length >= 40)) {
+                                    continue;
+                                }
                             }
                             if (_lati == "se" && _filter != null && _filter[0]["rf_type"] && _filter[0]["rf_type"][0]) {
-                                if (infoKey != undefined && infoKey == "-") continue;
+                                if (infoKey != undefined && infoKey == "-") {
+                                    continue;
+                                }
                             }
                         }
                         var infoKey = info.key[i];
