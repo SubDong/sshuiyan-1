@@ -390,14 +390,14 @@ define([
                         var _t = _obj[dataHeadInfo[j].field];
                         if (_t["text"]) {
                             var arr = (_t["text"] + "").split('');
-                            for (var i = 9; i < arr.length; i += 10) {
-                                arr[i] += ' ';
+                            for (var m = 9; m < arr.length; m += 10) {
+                                arr[m] += ' ';
                             }
                             _array.push(arr.join(""));
                         } else {
                             var arr = (_t + "").split('');
-                            for (var i = 9; i < arr.length; i += 10) {
-                                arr[i] += ' ';
+                            for (var m = 9; m < arr.length; m += 10) {
+                                arr[m] += ' ';
                             }
                             _array.push(arr.join(""));
                         }

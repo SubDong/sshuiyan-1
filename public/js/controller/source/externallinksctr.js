@@ -325,6 +325,7 @@ define(["./module"], function (ctrs) {
             var dataInfo = angular.copy($rootScope.gridApi2.grid.options.data);
             var dataHeadInfo = angular.copy($rootScope.gridApi2.grid.options.columnDefs);
             var _tableBody = $rootScope.getPDFTableBody(dataInfo, dataHeadInfo);
+            var _tableWidths = $rootScope.getPDFTableWidths(dataHeadInfo);
             var docDefinition = {
                 header: {
                     text: "External Links data report",
@@ -335,6 +336,7 @@ define(["./module"], function (ctrs) {
                     {
                         table: {
                             headerRows: 1,
+                            widths: _tableWidths,
                             body: _tableBody
                         }
                     },
