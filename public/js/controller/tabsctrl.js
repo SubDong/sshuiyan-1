@@ -1910,6 +1910,15 @@ define(["app"], function (app) {
                                         }
                                         _obj.nuvRate = _nuvRate;
                                     }
+                                    var _avgPage = "--";
+                                    if (_obj["vc"] != "--" && _obj["pv"] != "--") {
+                                        if (_obj["vc"] == 0) {
+                                            _avgPage = "0.00";
+                                        } else {
+                                            _avgPage = (_obj["pv"] / _obj["vc"]).toFixed(2);
+                                        }
+                                        _obj.avgPage = _avgPage;
+                                    }
                                 }
                             }
                             $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;

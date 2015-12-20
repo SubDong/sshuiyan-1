@@ -151,7 +151,7 @@ var es_aggs = {
     "avgPage": {
         "pv_aggs": {
             "value_count": {
-                "field": "loc"
+                "field": "_type"
             }
         },
         "vc_aggs": _vc_aggs
