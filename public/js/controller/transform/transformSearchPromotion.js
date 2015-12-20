@@ -308,12 +308,12 @@ define(["./module"], function (ctrs) {
             }
         };
         //初始化数据
-        $rootScope.initPageConfig()//初始化查询ES
+        //$rootScope.initPageConfig()//初始化查询ES
+
         $scope.$on("transformData", function (e, msg) {
             $(msg)
         });
         $scope.$on("transformData_ui_grid", function (e, msg) {
-            //console.log("transformData_ui_grid")
             $rootScope.gridArray[1] = {
                 name: "来源",
                 displayName: "来源",
@@ -680,5 +680,95 @@ define(["./module"], function (ctrs) {
             //$rootScope.showPageSeDetail=0
             $rootScope.initPageConfig()
         };
+        $rootScope.targetSearchSpreadPage = function (isClicked) {
+            $rootScope.expandInex = 1
+            $scope.es_checkArray = ["pv", "uv", "vc", "ip", "nuv", "nuvRate", "conversions", "crate", "avgCost", "orderNum", "benefit", "profit", "orderNumRate"];
+            $scope.sem_checkArray = ["avgCost", "benefit", "profit", "orderMoney"];
+            $scope.es_checkedArray = [];
+            $scope.sem_checkedArray = [];
+            for (var i = 0; i < $rootScope.checkedArray.length; i++) {
+                for (var k = 0; k < $scope.es_checkArray.length; k++) {
+                    if ($rootScope.checkedArray[i] == $scope.es_checkArray[k]) {
+                        $scope.es_checkedArray.push($rootScope.checkedArray[i]);
+                    }
+                }
+                for (var k = 0; k < $scope.sem_checkArray.length; k++) {
+                    if ($rootScope.checkedArray[i] == $scope.sem_checkArray[k]) {
+                        $scope.sem_checkedArray.push($rootScope.checkedArray[i]);
+                    }
+                }
+            }
+            if (isClicked) {
+                $scope.setShowArray()
+                $scope.$broadcast("transformData_ui_grid", {
+                    start: $rootScope.start,
+                    end: $rootScope.end,
+                    checkedArray: $scope.es_checkedArray,
+                    sem_checkedArray: $scope.sem_checkedArray,
+                    all_checked: $rootScope.checkedArray,
+                    analysisAction: "pageConversion",
+                    convert_url_all: $scope.convert_url_all
+                });
+            } else {
+                //访客过滤数据获取
+                var input_uv_Array = $(".chart_top2 .uv_class");
+                input_uv_Array.each(function (i, o) {
+                    if ($(o).prop("checked")) {
+                        $scope.uv_selected = $(o).prop("value");
+                    }
+                });
+                var input_terminal_Array = $(".chart_top2 .terminal_class");
+                input_terminal_Array.each(function (i, o) {
+                    if ($(o).prop("checked")) {
+                        $scope.terminal_selected = $(o).prop("value");
+                    }
+                });
+                var checkedData = [];
+                if ($scope.terminal_selected != "全部") {
+                    checkedData.push({
+                        field: "terminal_type",
+                        name: $scope.terminal_selected
+                    });
+                } else {
+                    checkedData.push({
+                        field: "terminal_type",
+                        name: "所有设备"
+                    });
+                }
+                if ($scope.uv_selected != "全部") {
+                    checkedData.push({
+                        field: "uv_type",
+                        name: $scope.uv_selected
+                    });
+                } else {
+                    checkedData.push({
+                        field: "uv_type",
+                        name: "所有访客"
+                    });
+                }
+                if ($scope.city.selected != "") {
+                    checkedData.push({
+                        field: "city",
+                        name: $scope.city.selected.name
+                    });
+                } else {
+                    checkedData.push({
+                        field: "city",
+                        name: "所有地域"
+                    });
+                }
+                $scope.$broadcast("transformAdvancedData_ui_grid", {
+                    start: $rootScope.start,
+                    end: $rootScope.end,
+                    checkedData: checkedData,
+                    checkedArray: $scope.es_checkedArray,
+                    sem_checkedArray: $scope.sem_checkedArray,
+                    all_checked: $rootScope.checkedArray,
+                    analysisAction: "pageConversion",
+                    convert_url_all: $scope.convert_url_all
+                });
+            }
+        };
+        $rootScope.targetSearchSpreadPage(true)
     });
 });
