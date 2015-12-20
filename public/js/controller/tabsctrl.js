@@ -779,6 +779,7 @@ define(["app"], function (app) {
         };
         //设置来源网站
         $scope.setWebSite = function (a) {
+            $rootScope.webSite = a;
             var now = +new Date();
             if (now - evTimeStamp < 100) {
                 return;
