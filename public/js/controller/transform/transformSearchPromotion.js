@@ -494,19 +494,13 @@ define(["./module"], function (ctrs) {
                 //
             } else {
                 rast[0] = ((rast[0] / option.length) ).toFixed(2) + (a.col.field == "crate" || a.col.field == "nuvRate" || a.col.field == "orderNumRate" ? "%" : "");
-                //console.log(rast[0])
                 rast[1] = ((rast[1] / option.length) ).toFixed(2) + (a.col.field == "crate" || a.col.field == "nuvRate" || a.col.field == "orderNumRate" ? "%" : "");
-                //console.log(rast[1])
             }
-
-            if(a.col.field == "orderNumRate")
-            //console.log("orderNumRate")
             var bhl = parseFloat(((rast[1] + "").replace("%", ""))) == 0?"0.00%":(((parseFloat(((rast[0] + "").replace("%", ""))) - parseFloat(((rast[1] + "").replace("%", "")))) / parseFloat(((rast[1] + "").replace("%", "")))) * 100 ).toFixed(2) + "%";
 
             if ((bhl + "").indexOf("NaN") != -1 || (bhl + "").indexOf("Infinity") != -1) {
                 bhl = "--";
             }
-
             switch (number) {
                 case 0:
                     return str;
