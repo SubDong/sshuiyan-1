@@ -940,8 +940,31 @@ define(["app"], function (app) {
             } else if (time == "非工作时段") {
                 $rootScope.timeFilter = [0, 1, 2, 3, 4, 5, 6, 7, 8, 12, 18, 19, 20, 21, 22, 23];
             } else {// 自定义时段
-                $rootScope.timeFilter = [];
+                $rootScope.timeFilter = [0];
             }
+            $scope.isJudge = false;
+            if ($scope.tableJu == "html") {
+                getHtmlTableData();
+            } else {
+                $rootScope.$broadcast("ssh_data_show_refresh");
+                $scope.targetSearch();
+            }
+        };
+        $scope.setZdyTimeFilter = function (siteTimes) {
+            if (!$rootScope.tableSwitch) {
+                return;
+            }
+
+            $rootScope.timeFilter = [];
+            siteTimes.forEach(function (_st) {
+                var _st_h_s = _st.hour.selected.name;
+                var _st_h_e = _st.hour1.selected.name;
+                for (var i = parseInt(_st_h_s.split(":")[0]); i <= parseInt(_st_h_e.split(":")[0]); i++) {
+                    if ($rootScope.timeFilter.indexOf(i) == -1) {
+                        $rootScope.timeFilter.push(i);
+                    }
+                }
+            });
             $scope.isJudge = false;
             if ($scope.tableJu == "html") {
                 getHtmlTableData();

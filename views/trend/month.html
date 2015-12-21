@@ -149,7 +149,7 @@
                         <li>
                             <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
                                 <div role="group" class="btn-group">
-                                    <ui-select ng-model="time.selected" theme="select2" reset-search-input="false"  class="fl btn-pv"
+                                    <ui-select ng-model="time.selected" theme="select2" reset-search-input="false" class="fl btn-pv"
                                                data-ng-change="setTimeFilter(time.selected.name)"
                                                style="width: 120px;">
                                         <ui-select-match placeholder="全部">{{$select.selected.name}}
@@ -173,8 +173,8 @@
                         <li data-ng-if="time.selected.name=='自定义时段'" data-ng-repeat="sitetime in sitetimes">
                             <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
                                 <div role="group" class="btn-group">
-                                    <ui-select ng-model="sitetime.hour.selected" theme="select2" reset-search-input="false"  class="fl btn-pv"
-                                               style="width: 80px;">
+                                    <ui-select ng-model="sitetime.hour.selected" theme="select2" reset-search-input="false" class="fl btn-pv"
+                                               style="width: 80px;" data-ng-change="setZdyTimeFilter(sitetimes)">
                                         <ui-select-match placeholder="00:00">{{$select.selected.name}}
                                         </ui-select-match>
                                         <ui-select-choices repeat="hour in hours">
@@ -185,8 +185,8 @@
                             </div>-
                             <div aria-label="Button group with nested dropdown" role="group" class="btn-group">
                                 <div role="group" class="btn-group">
-                                    <ui-select ng-model="sitetime.hour1.selected" theme="select2" reset-search-input="false"  class="fl btn-pv"
-                                               style="width: 80px;">
+                                    <ui-select ng-model="sitetime.hour1.selected" theme="select2" reset-search-input="false" class="fl btn-pv"
+                                               style="width: 80px;" data-ng-change="setZdyTimeFilter(sitetimes)">
                                         <ui-select-match placeholder="00:59">{{$select.selected.name}}
                                         </ui-select-match>
                                         <ui-select-choices repeat="hour1 in hours1">
@@ -196,8 +196,8 @@
                                 </div>
                             </div>
                         </li>
-                        <li data-ng-if="time.selected.name=='自定义时段' && sitetimes.length<3 " data-ng-click="sitetimesadd()">
-                            <a  href="javascript:void(0)" style="font-size: 20px; font-weight: bold ">+</a>
+                        <li data-ng-if="time.selected.name == '自定义时段' && sitetimes.length < 3" data-ng-click="sitetimesadd()">
+                            <a href="javascript:void(0)" style="font-size: 20px; font-weight: bold ">+</a>
                         </li>
                     </ul>
                 </div>
