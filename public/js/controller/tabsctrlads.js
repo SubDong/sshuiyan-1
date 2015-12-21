@@ -1432,8 +1432,8 @@ define(["app"], function (app) {
                 var dataArray = [];
                 var is = 1;
                 $scope.targetDataContrast(startTime, endTime, function (contrast) {
-                    var newitem =   $scope.mergeArray (item,contrast,latitudeOld);
-                    newitem.forEach(function (a, b) {
+                 //   var newitem =   $scope.mergeArray (item,contrast,latitudeOld);
+                    item.forEach(function (a, b) {
                         var dataObj = {};
                         if (target == "period" && $location.$$path == "/trend/today" && $rootScope.tableFormat == "day") {// 今日统计按日统计时特殊处理
                             $rootScope.checkedArray.forEach(function (tt, aa) {
@@ -1482,19 +1482,35 @@ define(["app"], function (app) {
                 $rootScope.gridArray = gridArrayOld;
             })
         };
-        //合并数组
+      /*  //合并数组
         $scope.mergeArray = function(arr1, arr2,quotaobj){
-            var quota = quotaobj.field;
             var _arr = [];
+            var value_1;
+            var value_2;
+            var index = 0;
             for (var i = 0; i < arr1.length; i++) {
                 for(var j = 0; j < arr2.length; j++){
-                    var value_1 = arr1[i].getAttribute(quota);
-                    var value_2 =  arr2[j].getAttribute(quota);
+                    if(quotaobj.field=="rf"){
+                         value_1 = arr1[i].rf;
+                         value_2 =  arr2[j].rf;
+                    }else if(quotaobj.field=="media"){
+                         value_1 = arr1[i].media;
+                         value_2 =  arr2[j].media;
+                    }else if(quotaobj.field=="cpan"){
+                         value_1 = arr1[i].cpan;
+                         value_2 =  arr2[j].cpan;
+                    }else if(quotaobj.field=="kwna"){
+                         value_1 = arr1[i].kwna;
+                         value_2 =  arr2[j].kwna;
+                    }else if(quotaobj.field=="crt"){
+                         value_1 = arr1[i].crt;
+                         value_2 =  arr2[j].crt;
+                    }
                     if(value_1 != value_2){
                         var nullObject = new Object();
-                        for (prop in  arr2[j]){
-                            if( prop == quota){
-                                nullObject.prop = arr2[j][prop];
+                        for (var prop in  arr1[i]){
+                            if( prop == "rf" || prop == "media"|| prop == "cpan"||prop == "kwna"|| prop == "crt"){
+                                nullObject.prop = arr2[j].prop;
                             }else{
                                 nullObject.prop = '--';
                             }
@@ -1504,8 +1520,8 @@ define(["app"], function (app) {
                 }
                 _arr.push(arr1[i]);
             }
-            return quota;
-        }
+            return _arr;
+        }*/
 
         //数据对比实现方法
         $scope.targetDataContrast = function (startInfoTime, endInfoTime, cabk) {
