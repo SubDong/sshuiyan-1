@@ -562,7 +562,6 @@ define(["./module"], function (ctrs) {
                                     })
 
                                     $rootScope.gridOptions.showColumnFooter = !$rootScope.showColumnFooter;
-                                    console.log("显示后 "+$rootScope.gridOptions.showColumnFooter)
                                     //$rootScope.targetSearch()
                                     //刷新图 表
                                     $scope.charts[0].config.legendDefaultChecked = [0, 1];
