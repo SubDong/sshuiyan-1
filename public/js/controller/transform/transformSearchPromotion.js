@@ -474,37 +474,41 @@ define(["./module"], function (ctrs) {
                             var tPageInfoArr = ["conversions", "benefit"]
                             var pageurl = "/api/transform/getPageBaseInfo?start=" + (startInfoTime == null ? $rootScope.tableTimeStart : startInfoTime) + "&end=" + (endInfoTime == null ? $rootScope.tableTimeEnd : endInfoTime) + "&type=" + $rootScope.userType + "&queryOptions=" + tPageInfoArr + "&pages=" + JSON.stringify(filterPageConf) + "&showType=day" + "&filters=" + $rootScope.getFilters()
                             $http.get(pageurl).success(function (pagedatas) {
-                                var sumCrate = 0
-                                pvdatas.forEach(function (data, index) {
-                                    $rootScope.checkedArray.forEach(function (attr) {
-                                        switch (attr) {
-                                            case "conversions"://转化次数
-                                                data["conversions"] = pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].conversions != undefined ? pagedatas[data.campaignName].conversions.value : 0
-                                                break;
-                                            case "crate"://转化率
-                                                var tCrate = pagedatas[data.campaignName] != undefined && data.vc > 0 ? ((Number(pagedatas[data.campaignName]["conversions"].value) / Number(data.vc)) * 100) : 0
-                                                sumCrate += tCrate
-                                                data["crate"] = tCrate.toFixed(2) + "%";
-                                                break;
-                                            case "benefit"://收益
-                                                data["benefit"] = pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].benefit != undefined ? pagedatas[data.campaignName].benefit.value : 0
-                                                break;
-                                            case "orderNum"://订单数量
-                                                data["orderNum"] = pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].orderNum != undefined ? pagedatas[data.campaignName].orderNum.value : 0
-                                                break;
-                                            case "orderNumRate"://订单转化率
-                                                data["orderNumRate"] = (pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].orderNum != undefined && data.vc > 0 ? ((Number(pagedatas[data.campaignName].orderNum.value) / Number(data.vc)) * 100).toFixed(2) : (0).toFixed(2)) + "%"
-                                                break;
-                                            default :
-                                                break;
-                                        }
+                                if(pagedatas==undefined||pagedatas.length==0){
+                                    cabk([])
+                                }else{
+                                    var sumCrate = 0
+                                    pvdatas.forEach(function (data, index) {
+                                        $rootScope.checkedArray.forEach(function (attr) {
+                                            switch (attr) {
+                                                case "conversions"://转化次数
+                                                    data["conversions"] = pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].conversions != undefined ? pagedatas[data.campaignName].conversions.value : 0
+                                                    break;
+                                                case "crate"://转化率
+                                                    var tCrate = pagedatas[data.campaignName] != undefined && data.vc > 0 ? ((Number(pagedatas[data.campaignName]["conversions"].value) / Number(data.vc)) * 100) : 0
+                                                    sumCrate += tCrate
+                                                    data["crate"] = tCrate.toFixed(2) + "%";
+                                                    break;
+                                                case "benefit"://收益
+                                                    data["benefit"] = pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].benefit != undefined ? pagedatas[data.campaignName].benefit.value : 0
+                                                    break;
+                                                case "orderNum"://订单数量
+                                                    data["orderNum"] = pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].orderNum != undefined ? pagedatas[data.campaignName].orderNum.value : 0
+                                                    break;
+                                                case "orderNumRate"://订单转化率
+                                                    data["orderNumRate"] = (pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].orderNum != undefined && data.vc > 0 ? ((Number(pagedatas[data.campaignName].orderNum.value) / Number(data.vc)) * 100).toFixed(2) : (0).toFixed(2)) + "%"
+                                                    break;
+                                                default :
+                                                    break;
+                                            }
+                                        })
                                     })
-                                })
-                                cabk(pvdatas)
+                                    cabk(pvdatas)
+                                }
                             })
                         }
                         else {
-                            cabk([])
+                            cabk(pvdatas)
                         }
                     })
                 } else {
