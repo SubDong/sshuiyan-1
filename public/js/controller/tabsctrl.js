@@ -2233,62 +2233,57 @@ define(["app"], function (app) {
                     $rootScope.curEventConfs = eventParams;
                     var purl = "/api/transform/getEventPVs?start=" + (startInfoTime == null ? $rootScope.tableTimeStart : startInfoTime) + "&end=" + (endInfoTime == null ? $rootScope.tableTimeEnd : endInfoTime) + "&type=" + $rootScope.userType + "&queryOptions=" + $scope.es_checkArray + "&events=" + JSON.stringify(eventParams) + "&showType=day" + "&filters=" + $rootScope.getFilters()
                     //console.log(purl)
-                    $http.get(purl).success(function (pvs) {
-                        if (pvs != null || pvs != "") {//PV 信息若不存在 则事件信息认为一定不存在
-                            $rootScope.curEventPVs = pvs
-                            var esurl = "/api/transform/getConvEvents?start=" + (startInfoTime == null ? $rootScope.tableTimeStart : startInfoTime) + "&end=" + (endInfoTime == null ? $rootScope.tableTimeEnd : endInfoTime) + "&type=" + $rootScope.userType + "&eventPages=" + JSON.stringify(eventParams) + "&showType=day" + "&filters=" + $rootScope.getFilters()
-                            //console.log(esurl)
-                            $http.get(esurl).success(function (eventInfos) {
-                                $rootScope.curEventInfos = eventInfos
-                                var results = [];
-                                events.forEach(function (event, index) {
-                                    var data = pvs[index]
-                                    data["eventName"] = event.event_name
-                                    data["eventId"] = event.event_id
-                                    data["loc"] = event.event_page
-                                    for (var i = 0; i < $scope.es_checkArray.length; i++) {
-                                        if ($scope.es_checkArray[i] == "crate") {
-                                            if (eventInfos[event.event_page + "_" + event.event_id] != undefined && Number(data["uv"]) != 0) {
-                                                data["crate"] = (Number(eventInfos[event.event_page + "_" + event.event_id].convCount / Number(data["uv"])) * 100).toFixed(2) + "%";
-                                            } else {
-                                                data["crate"] = "0.00%";
-                                            }
-                                        } else if ($scope.es_checkArray[i] == "transformCost") {
-                                            //var add_i = i;
-                                            //var semRequest = "";
-                                            //semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + (startInfoTime == null ? $rootScope.tableTimeStart : startInfoTime) + "&endOffset=" + (endInfoTime == null ? $rootScope.tableTimeEnd : endInfoTime) + "&q=cost");
-                                            //$q.all([semRequest]).then(function (sem_data) {
-                                            //    var cost = 0;
-                                            //    for (var k = 0; k < sem_data.length; k++) {
-                                            //        for (var c = 0; c < sem_data[k].data.length; c++) {
-                                            //            cost += Number(sem_data[k].data[c].cost);
-                                            //        }
-                                            //    }
-                                            data["transformCost"] = /*(cost / Number(data["transformCost"])).toFixed(2).toString() +*/ "0.00元";
-                                            //});
-                                        } else if ($scope.es_checkArray[i] == "clickTotal") {
-                                            if (eventInfos[event.event_page + "_" + event.event_id] != undefined) {
-                                                data["clickTotal"] = eventInfos[event.event_page + "_" + event.event_id].eventCount;
-                                            } else {
-                                                data["clickTotal"] = 0
-                                            }
-
+                    events.forEach(function (event, index) {
+                        var data = pvs[index]
+                        data["eventName"] = event.event_name
+                        data["eventId"] = event.event_id
+                        data["loc"] = event.event_page
+                    })
+                    if (pvs != null || pvs != "") {//PV 信息若不存在 则事件信息认为一定不存在
+                        $rootScope.curEventPVs = pvs
+                        var esurl = "/api/transform/getConvEvents?start=" + (startInfoTime == null ? $rootScope.tableTimeStart : startInfoTime) + "&end=" + (endInfoTime == null ? $rootScope.tableTimeEnd : endInfoTime) + "&type=" + $rootScope.userType + "&eventPages=" + JSON.stringify(eventParams) + "&showType=day" + "&filters=" + $rootScope.getFilters()
+                        $http.get(esurl).success(function (eventInfos) {
+                            $rootScope.curEventInfos = eventInfos
+                            var results = [];
+                            events.forEach(function (event, index) {
+                                var data = pvs[index]
+                                data["eventName"] = event.event_name
+                                data["eventId"] = event.event_id
+                                data["loc"] = event.event_page
+                                for (var i = 0; i < $scope.es_checkArray.length; i++) {
+                                    if ($scope.es_checkArray[i] == "crate") {
+                                        if (eventInfos[event.event_page + "_" + event.event_id] != undefined && Number(data["uv"]) != 0) {
+                                            data["crate"] = (Number(eventInfos[event.event_page + "_" + event.event_id].convCount / Number(data["uv"])) * 100).toFixed(2) + "%";
+                                        } else {
+                                            data["crate"] = "0.00%";
                                         }
-                                        else if ($scope.es_checkArray[i] == "conversions") {
-                                            if (eventInfos[event.event_page + "_" + event.event_id] != undefined) {
-                                                data["conversions"] = eventInfos[event.event_page + "_" + event.event_id].convCount;
-                                            } else {
-                                                data["conversions"] = 0;
-                                            }
+                                    } else if ($scope.es_checkArray[i] == "transformCost") {
+                                        data["transformCost"] = /*(cost / Number(data["transformCost"])).toFixed(2).toString() +*/ "0.00元";
+                                    } else if ($scope.es_checkArray[i] == "clickTotal") {
+                                        if (eventInfos[event.event_page + "_" + event.event_id] != undefined) {
+                                            data["clickTotal"] = eventInfos[event.event_page + "_" + event.event_id].eventCount;
+                                        } else {
+                                            data["clickTotal"] = 0
+                                        }
+
+                                    }
+                                    else if ($scope.es_checkArray[i] == "conversions") {
+                                        if (eventInfos[event.event_page + "_" + event.event_id] != undefined) {
+                                            data["conversions"] = eventInfos[event.event_page + "_" + event.event_id].convCount;
+                                        } else {
+                                            data["conversions"] = 0;
                                         }
                                     }
-                                    ////console.log("对比查询数据")
-                                    results.push(data)
-                                })
-                                cabk(results)
+                                }
+                                ////console.log("对比查询数据")
+                                results.push(data)
                             })
-                        }
-                    });
+                            cabk(results)
+                        })
+                    }
+                    else{
+                        cabk([])
+                    }
                 })
             } else {
                 $http({
