@@ -254,42 +254,20 @@ define(["./module"], function (ctrs) {
         };
 
         $scope.generatePDFMakeData = function (cb) {
+            var dataInfo = angular.copy($rootScope.gridApi2.grid.options.data);
+            var dataHeadInfo = angular.copy($rootScope.gridApi2.grid.options.columnDefs);
+            var _tableBody = $rootScope.getPDFTableBody(dataInfo, dataHeadInfo);
             var d = new Date();
             var str = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
-
-            var _tableBody = [];
-            _tableBody.push(["pv", "uv","ip", "Jump out rate","Average access time"]);
-
-            var datas =  $scope.dateShowArray;
-            var pv =datas[0].value+"";
-            var uv =datas[1].value+"";
-            var ip =datas[2].value+"";
-            if(datas.length>0){
-                var rate =datas[3].value/datas[3].count.toFixed(2)+"%";
-            }else{
-                var rate =datas[3].value.length+"%";
-            }
-            if(datas.length>0){
-                var averagetime =  $scope.formatSeconds(datas[4].value/datas[4].count/1000)+"";
-            }else{
-                var averagetime =  $scope.formatSeconds(datas[4].value)+"";
-            }
-
-
-
-            _tableBody.push([pv, uv,ip, rate,averagetime]);
-
             var docDefinition = {
                 header: {
-                    text:  str+ " Ad's tracking Report",
+                    text: str +"Ad's tracking Report",
                     style: "header",
                     alignment: 'center'
                 },
                 content: [
                     {
                         table: {
-                            // headers are automatically repeated if the table spans over multiple pages
-                            // you can declare how many rows should be treated as headers
                             headerRows: 1,
                             body: _tableBody
                         }
