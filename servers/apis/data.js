@@ -645,10 +645,24 @@ api.get('/provincemap', function (req, res) {
 api.post("/downCSV", function (req, res) {
     var requestData = [];
     req.addListener("data", function (postDataChunk) {
-        requestData = JSON.parse(JSON.parse(postDataChunk + "").dataInfo);
+        try {
+            requestData = JSON.parse(JSON.parse(postDataChunk + "").dataInfo);
+        } catch (e) {
+            console.error("下载csv异常。解析csv数据异常");
+        }
     });
 
     req.addListener("end",function(){
+        try {
+            // 处理 Not all documents have the same schema.
+            requestData.forEach(function (d) {
+                for(var dp in d) {
+                    d[dp] = d[dp] + "";
+                }
+            })
+        } catch (e) {
+            console.error("下载csv异常。解析csv数据异常");
+        }
         csvApi.json2csv(requestData, function (err, csv) {
             if (err) throw err;
             var buffer = new Buffer(csv);
