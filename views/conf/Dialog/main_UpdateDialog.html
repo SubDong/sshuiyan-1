@@ -11,6 +11,24 @@
                        data-ng-blur="site_name_focus =false" data-ng-model="dialog_model.site_name"
                        class="form-control"/></li>
             <li data-ng-show="site_name_focus && !dialog_model.site_name" style="color: red;">不能为空</li>
+
+            <li>百度帐号</li>
+            <li><input type="text" maxlength="128"
+                       data-ng-model="dialog_model.bname" class="form-control"/></li>
+            <!--<li data-ng-show="bname_focus && !dialog_model.bname" style="color: red;">不能为空</li>-->
+            <br>
+
+            <li>百度密码</li>
+            <li><input type="text" maxlength="128"
+                       data-ng-model="dialog_model.bpasswd" class="form-control"/></li>
+            <!--<li data-ng-show="bpasswd_focus && !dialog_model.bpasswd" style="color: red;">不能为空</li>-->
+            <br>
+
+            <li>百度备注</li>
+            <li><input type="text" maxlength="128"
+                       data-ng-model="dialog_model.rname" class="form-control"/></li>
+            <!--<li data-ng-show="rname_focus && !dialog_model.rname" style="color: red;">不能为空</li>-->
+            <br>
             <br>
             <li style="color: black;"><input type="checkbox" name="置顶" data-ng-model="dialog_model.is_top"/>
                 <span>设置站点是否置顶</span></li>
