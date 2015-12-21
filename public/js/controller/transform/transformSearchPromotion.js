@@ -32,7 +32,7 @@ define(["./module"], function (ctrs) {
             {consumption_name: "订单转化率", name: "orderNumRate"}
         ];
 
-        $rootScope.extendways = [{index:0,name:"全部页面转化目标"}]
+        $rootScope.extendways = [{index: 0, name: "全部页面转化目标"}]
         //        高级搜索提示
         $scope.sourceSearch = "";
         $scope.terminalSearch = "";
@@ -89,7 +89,7 @@ define(["./module"], function (ctrs) {
                     //查询转化的数据
                     if ($rootScope.pageConfigs != undefined && $rootScope.pageConfigs.length > 0) {
                         var filterPageConf = []
-                        if ( $rootScope.selectedPageConvIndex == 0 ) {
+                        if ($rootScope.selectedPageConvIndex == 0) {
                             filterPageConf = $rootScope.pageConfigs
                         } else {
                             $rootScope.pageConfigs.forEach(function (conf) {
@@ -99,9 +99,9 @@ define(["./module"], function (ctrs) {
                             })
                         }
                         var tPageInfoArr = ["conversions", "benefit"]
-                        var pageurl = "/api/transform/getPageConvInfo?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&rfType=" + $rootScope.rowEntity.rf_type + "&se=" + pRow.entity.se + "&queryOptions=" + tPageInfoArr+"&pages=" + JSON.stringify(filterPageConf)+ "&filters=" + $rootScope.getFilters()
+                        var pageurl = "/api/transform/getPageConvInfo?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&rfType=" + $rootScope.rowEntity.rf_type + "&se=" + pRow.entity.se + "&queryOptions=" + tPageInfoArr + "&pages=" + JSON.stringify(filterPageConf) + "&filters=" + $rootScope.getFilters()
                         $http.get(pageurl).success(function (pagedatas) {
-                            if(pagedatas!=undefined&&pagedatas.length>0){
+                            if (pagedatas != undefined && pagedatas.length > 0) {
                                 var datas = []
                                 pagedatas.forEach(function (pdata, index) {
                                     var data = angular.copy(pRow.entity)
@@ -133,7 +133,7 @@ define(["./module"], function (ctrs) {
                                     datas.push(data)
                                 })
                                 pRow.entity.subGridOptions.data = datas
-                            }else{
+                            } else {
                                 pRow.entity.subGridOptions.data = []
                             }
                         })
@@ -240,28 +240,28 @@ define(["./module"], function (ctrs) {
                     returnData = (returnData + "").substring(0, (returnData + "").indexOf(".") + 3);
                 }
                 if (a.col.field == "nuvRate") {
-                    var sumNuv= 0,sumUv =0
+                    var sumNuv = 0, sumUv = 0
                     option.forEach(function (item) {
-                        sumNuv+= item.entity["nuv"]==undefined?0: item.entity["nuv"]
-                        sumUv+= item.entity["uv"]==undefined?0: item.entity["uv"]
+                        sumNuv += item.entity["nuv"] == undefined ? 0 : item.entity["nuv"]
+                        sumUv += item.entity["uv"] == undefined ? 0 : item.entity["uv"]
                     })
-                    returnData = sumNuv>0?(((sumNuv/sumUv)*100).toFixed(2)+"%"):"0.00%"
+                    returnData = sumNuv > 0 ? (((sumNuv / sumUv) * 100).toFixed(2) + "%") : "0.00%"
                 }
                 if (a.col.field == "crate") {
-                    var sumNuv= 0,sumpv =0
+                    var sumNuv = 0, sumpv = 0
                     option.forEach(function (item) {
-                        sumNuv+= item.entity["conversions"]==undefined?0: item.entity["conversions"]
-                        sumpv+= item.entity["pv"]==undefined?0: item.entity["pv"]
+                        sumNuv += item.entity["conversions"] == undefined ? 0 : item.entity["conversions"]
+                        sumpv += item.entity["pv"] == undefined ? 0 : item.entity["pv"]
                     })
-                    returnData = sumpv>0?(((sumNuv/sumpv)*100).toFixed(2)+"%"):"0.00%"
+                    returnData = sumpv > 0 ? (((sumNuv / sumpv) * 100).toFixed(2) + "%") : "0.00%"
                 }
                 if (a.col.field == "orderNumRate") {
-                    var sumOrder= 0,sumpv =0
+                    var sumOrder = 0, sumpv = 0
                     option.forEach(function (item) {
-                        sumOrder+= item.entity["orderNum"]==undefined?0: item.entity["orderNum"]
-                        sumpv+= item.entity["pv"]==undefined?0: item.entity["pv"]
+                        sumOrder += item.entity["orderNum"] == undefined ? 0 : item.entity["orderNum"]
+                        sumpv += item.entity["pv"] == undefined ? 0 : item.entity["pv"]
                     })
-                    returnData = sumpv>0?(((sumOrder/sumpv)*100).toFixed(2)+"%"):"0.00%"
+                    returnData = sumpv > 0 ? (((sumOrder / sumpv) * 100).toFixed(2) + "%") : "0.00%"
                 }
             } else {
                 returnData = "--"
@@ -301,6 +301,49 @@ define(["./module"], function (ctrs) {
         $scope.$on("transformData", function (e, msg) {
             $(msg)
         });
+
+
+        $rootScope.targetSearch = function () {
+            $rootScope.gridOptions.showColumnFooter = !$rootScope.gridOptions.showColumnFooter;
+            $rootScope.gridOpArray = angular.copy($rootScope.gridArray);
+            $rootScope.gridOptions.columnDefs = $rootScope.gridOpArray;
+            $rootScope.gridOptions.rowHeight = 30;
+            $rootScope.gridOptions.columnFooterHeight = 30;
+            $(".custom_table i").css({"display": "block"});
+
+            //默认指标设置排序类型
+            angular.forEach($scope.gridOptions.columnDefs, function (_record, index) {
+                if (_record.name == "新访客比率" || _record.name == "跳出率") {
+                    _record.sortingAlgorithm = $rootScope.sortPercent;
+                } else if (_record.field == "vc" || _record.field == "uv" || _record.field == "pv"
+                    || _record.field == "nuv" || _record.field == "ip" || _record.field == "avgPage") {
+                    _record.sortingAlgorithm = $rootScope.sortNumber;
+                }
+            });
+            //if (isClicked) {
+            $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
+            //}
+            if ($rootScope.tableSwitch.latitude != null && $rootScope.tableSwitch.latitude == undefined) {
+                return;
+            }
+            if ($rootScope.tableTimeStart == undefined) {
+                return;
+            }
+            if ($rootScope.tableTimeEnd == undefined) {
+                return;
+            }
+            $scope.gridOpArray.forEach(function (item, i) {
+                if (item["cellTemplate"] == undefined) {
+                    var a = $rootScope.tableSwitch.latitude.field;
+                    if (a != undefined && a == item["field"]) {
+                        item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 30px'>当页汇总</div>";
+                    } else {
+                        item["footerCellTemplate"] = "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                    }
+                }
+            });
+        };
+
         $scope.$on("transformData_ui_grid", function (e, msg) {
             $rootScope.gridArray[1] = {
                 name: "来源",
@@ -318,6 +361,7 @@ define(["./module"], function (ctrs) {
             }
             $scope.gridOpArray = angular.copy($rootScope.gridArray);
             $rootScope.gridOptions.columnDefs = $scope.gridOpArray;
+            $rootScope.targetSearch()
             $rootScope.initPageConfig(msg)
         });
         $scope.$on("transformAdvancedData_ui_grid", function (e, msg) {
@@ -400,7 +444,7 @@ define(["./module"], function (ctrs) {
             if ($rootScope.tableSwitch.isJudge) $rootScope.tableSwitch.tableFilter = undefined;
             if ($rootScope.pageConfigs != undefined && $rootScope.pageConfigs.length > 0) {
                 var filterPageConf = []
-                if ($rootScope.extendways[$rootScope.selectedPageConvIndex].name == undefined || $rootScope.extendways[$rootScope.selectedPageConvIndex].name == ""||$rootScope.selectedPageConvIndex==0) {
+                if ($rootScope.extendways[$rootScope.selectedPageConvIndex].name == undefined || $rootScope.extendways[$rootScope.selectedPageConvIndex].name == "" || $rootScope.selectedPageConvIndex == 0) {
                     filterPageConf = $rootScope.pageConfigs
                 } else {
                     $rootScope.pageConfigs.forEach(function (conf) {
@@ -412,7 +456,7 @@ define(["./module"], function (ctrs) {
                 if (filterPageConf.length > 0) {
                     var tCheckedArray = ["pv", "uv", "vc", "ip", "nuv", "nuvRate"];
                     //(startInfoTime == null ? $rootScope.tableTimeStart : startInfoTime) + "&endOffset=" + (endInfoTime == null ? $rootScope.tableTimeEnd : endInfoTime)
-                    var pvurl = "/api/transform/getPageBasePVs?start=" +(startInfoTime == null ? $rootScope.tableTimeStart : startInfoTime) + "&end=" +(endInfoTime == null ? $rootScope.tableTimeEnd : endInfoTime) + "&type=" + $rootScope.userType + "&queryOptions=" + tCheckedArray + "&pages=" + JSON.stringify(filterPageConf) + "&showType=day" + "&filters=" + $rootScope.getFilters()
+                    var pvurl = "/api/transform/getPageBasePVs?start=" + (startInfoTime == null ? $rootScope.tableTimeStart : startInfoTime) + "&end=" + (endInfoTime == null ? $rootScope.tableTimeEnd : endInfoTime) + "&type=" + $rootScope.userType + "&queryOptions=" + tCheckedArray + "&pages=" + JSON.stringify(filterPageConf) + "&showType=day" + "&filters=" + $rootScope.getFilters()
                     $http.get(pvurl).success(function (pvdatas) {
                         var isPConv = false;
                         for (var index = 0; index < $rootScope.checkedArray.length; index++) {
@@ -428,7 +472,7 @@ define(["./module"], function (ctrs) {
                         if (isPConv) {
                             //查询转化的数据
                             var tPageInfoArr = ["conversions", "benefit"]
-                            var pageurl = "/api/transform/getPageBaseInfo?start=" + (startInfoTime == null ? $rootScope.tableTimeStart : startInfoTime) + "&end=" + (endInfoTime == null ? $rootScope.tableTimeEnd : endInfoTime)+ "&type=" + $rootScope.userType + "&queryOptions=" + tPageInfoArr + "&pages=" + JSON.stringify(filterPageConf) + "&showType=day" + "&filters=" + $rootScope.getFilters()
+                            var pageurl = "/api/transform/getPageBaseInfo?start=" + (startInfoTime == null ? $rootScope.tableTimeStart : startInfoTime) + "&end=" + (endInfoTime == null ? $rootScope.tableTimeEnd : endInfoTime) + "&type=" + $rootScope.userType + "&queryOptions=" + tPageInfoArr + "&pages=" + JSON.stringify(filterPageConf) + "&showType=day" + "&filters=" + $rootScope.getFilters()
                             $http.get(pageurl).success(function (pagedatas) {
                                 var sumCrate = 0
                                 pvdatas.forEach(function (data, index) {
@@ -459,11 +503,11 @@ define(["./module"], function (ctrs) {
                                 cabk(pvdatas)
                             })
                         }
-                        else{
+                        else {
                             cabk([])
                         }
                     })
-                }else{
+                } else {
                     cabk([])
                 }
             }
@@ -491,13 +535,13 @@ define(["./module"], function (ctrs) {
             } else {
                 str = " ";
             }
-            if (a.col.field == "pv" || a.col.field == "uv" || a.col.field == "ip" || a.col.field == "vc" || a.col.field == "nuv"|| a.col.field == "conversions"|| a.col.field == "benefit"|| a.col.field == "orderNum") {
+            if (a.col.field == "pv" || a.col.field == "uv" || a.col.field == "ip" || a.col.field == "vc" || a.col.field == "nuv" || a.col.field == "conversions" || a.col.field == "benefit" || a.col.field == "orderNum") {
                 //
             } else {
                 rast[0] = ((rast[0] / option.length) ).toFixed(2) + (a.col.field == "crate" || a.col.field == "nuvRate" || a.col.field == "orderNumRate" ? "%" : "");
                 rast[1] = ((rast[1] / option.length) ).toFixed(2) + (a.col.field == "crate" || a.col.field == "nuvRate" || a.col.field == "orderNumRate" ? "%" : "");
             }
-            var bhl = parseFloat(((rast[1] + "").replace("%", ""))) == 0?"0.00%":(((parseFloat(((rast[0] + "").replace("%", ""))) - parseFloat(((rast[1] + "").replace("%", "")))) / parseFloat(((rast[1] + "").replace("%", "")))) * 100 ).toFixed(2) + "%";
+            var bhl = parseFloat(((rast[1] + "").replace("%", ""))) == 0 ? "0.00%" : (((parseFloat(((rast[0] + "").replace("%", ""))) - parseFloat(((rast[1] + "").replace("%", "")))) / parseFloat(((rast[1] + "").replace("%", "")))) * 100 ).toFixed(2) + "%";
 
             if ((bhl + "").indexOf("NaN") != -1 || (bhl + "").indexOf("Infinity") != -1) {
                 bhl = "--";

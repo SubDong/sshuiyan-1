@@ -99,6 +99,7 @@ define(["./module"], function (ctrs) {
                                 break;
                         }
                         $rootScope.gridOptions.data = pvdatas
+
                         if (isPConv) {
                             //查询转化的数据
                             var tPageInfoArr = ["conversions", "benefit"]
@@ -128,8 +129,11 @@ define(["./module"], function (ctrs) {
                                     })
                                     data["rf_type"] = $rootScope.rowEntity.rf_type
                                 })
+                                $rootScope.gridOptions.showColumnFooter = !$rootScope.showColumnFooter;
+                                console.log("显示后 "+$rootScope.gridOptions.showColumnFooter)
                             })
                         } else {
+
                             $rootScope.gridOptions.data.forEach(function (data) {
                                 $scope.dateShowArray.forEach(function (attr) {
                                     if (data[attr.label] != undefined)
@@ -137,6 +141,8 @@ define(["./module"], function (ctrs) {
                                 })
                                 data["rf_type"] = $rootScope.rowEntity.rf_type
                             })
+                            $rootScope.gridOptions.showColumnFooter = !$rootScope.showColumnFooter;
+                            console.log("显示后 "+$rootScope.gridOptions.showColumnFooter)
                         }
                     })
                 }
@@ -457,18 +463,18 @@ define(["./module"], function (ctrs) {
             }
 
             $rootScope.refreshData = function (selectedPageConv) {
-                $rootScope.gridArray[1] =
-
-                {
-                    name: "来源",
-                    displayName: "来源",
-                    field: "campaignName",
-                    cellTemplate: "<div><a href='javascript:void(0)' style='color:#0965b8;line-height:30px' ng-click='grid.appScope.showPageSeDetail(grid.options.data,row)'>{{grid.appScope.getDataUrlInfo(grid, row,3)}}</a></div>",
-                    footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
-                    enableSorting: false
-                }
-                $rootScope.gridOptions.rowHeight = 30;
-                $rootScope.gridOptions.columnFooterHeight = 30;
+                //$rootScope.gridArray[1] =
+                //
+                //{
+                //    name: "来源",
+                //    displayName: "来源",
+                //    field: "campaignName",
+                //    cellTemplate: "<div><a href='javascript:void(0)' style='color:#0965b8;line-height:30px' ng-click='grid.appScope.showPageSeDetail(grid.options.data,row)'>{{grid.appScope.getDataUrlInfo(grid, row,3)}}</a></div>",
+                //    footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                //    enableSorting: false
+                //}
+                //$rootScope.gridOptions.rowHeight = 30;
+                //$rootScope.gridOptions.columnFooterHeight = 30;
                 if ($rootScope.pageConfigs != undefined && $rootScope.pageConfigs.length > 0) {
                     var filterPageConf = []
                     if (selectedPageConv == undefined || selectedPageConv == "") {
@@ -554,6 +560,9 @@ define(["./module"], function (ctrs) {
                                             }
                                         })
                                     })
+
+                                    $rootScope.gridOptions.showColumnFooter = !$rootScope.showColumnFooter;
+                                    //$rootScope.targetSearch()
                                     //刷新图 表
                                     $scope.charts[0].config.legendDefaultChecked = [0, 1];
                                     $scope.charts[0].config.legendAllowCheckCount = 2;
@@ -589,6 +598,8 @@ define(["./module"], function (ctrs) {
                                         }
                                     })
                                 })
+                                $rootScope.gridOptions.showColumnFooter = !$rootScope.showColumnFooter;
+                                console.log("显示后 "+$rootScope.gridOptions.showColumnFooter)
                                 //刷新图 表
                                 //$scope.charts[0].config.legendDefaultChecked = [0, 1];
                                 //$scope.charts[0].config.legendAllowCheckCount = 2;
