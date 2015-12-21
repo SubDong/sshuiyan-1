@@ -2720,7 +2720,6 @@ define(["app"], function (app) {
                 });
                 var itemSplDataTow = (option[0].entity[a.col.field] + "").split(",");
                 if (itemSplDataTow.length >= 4) {
-                    console.log("1111");
                     //var itemSplData = (s.entity[a.col.field] + "").split(",");
                     if (a.col.field == "outRate") {
                         newitemSplData.forEach(function (tts, i) {
@@ -2733,7 +2732,6 @@ define(["app"], function (app) {
                     }
                     returnData = newitemSplData;
                 } else {
-                    console.log("22222");
                     if ((option[0].entity[a.col.field] + "").indexOf("%") != -1 || (option[0].entity[a.col.field] + "").indexOf("(-)") != -1) {
 //                        returnData[0] = (returnData[0] / option.length).toFixed(2) + "%";
                         if (window.location.href.split("/")[window.location.href.split("/").length - 1] == "changelist") {
@@ -2763,18 +2761,15 @@ define(["app"], function (app) {
                     if (a.col.field == "avgPage") {
                         var t_vc = 0;
                         var t_pv = 0;
-                        console.log(option.length);
                         option.forEach(function (_row) {
                             var _entity = _row.entity;
                             if (_entity.vc != "--") {
-                                t_vc += _entity.vc;
+                                t_vc += parseInt(_entity.vc);
                             }
                             if (_entity.pv != "--") {
-                                t_pv += _entity.pv;
+                                t_pv += parseInt(_entity.pv);
                             }
                         });
-                        console.log("t_pv : " + t_pv);
-                        console.log("t_vc : " + t_vc);
                         returnData[0] = (t_pv / (t_vc == 0 ? 1 : t_vc)).toFixed(2);
                     }
                     if (a.col.field == "click") {
