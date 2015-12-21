@@ -661,6 +661,7 @@ api.post("/downCSV", function (req, res) {
                 }
             })
         } catch (e) {
+            requestData = [];
             console.error("下载csv异常。解析csv数据异常");
         }
         csvApi.json2csv(requestData, function (err, csv) {

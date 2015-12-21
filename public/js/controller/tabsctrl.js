@@ -1917,7 +1917,7 @@ define(["app"], function (app) {
                                 for (var i = 0; i < result.length; i++) {
                                     var _obj = result[i];
                                     var _outRate = "--";
-                                    if (_obj["vc"] != "--" && _obj["svc"] != "--") {
+                                    if ($rootScope.checkedArray.indexOf("outRate") != -1 && _obj["vc"] != "--" && _obj["svc"] != "--") {
                                         if (_obj["vc"] == 0) {
                                             _outRate = "0.00%";
                                         } else {
@@ -1926,7 +1926,7 @@ define(["app"], function (app) {
                                         _obj.outRate = _outRate;
                                     }
                                     var _nuvRate = "--";
-                                    if (_obj["uv"] != "--" && _obj["nuv"] != "--") {
+                                    if ($rootScope.checkedArray.indexOf("nuvRate") != -1 && _obj["uv"] != "--" && _obj["nuv"] != "--") {
                                         if (_obj["uv"] == 0) {
                                             _nuvRate = "0.00%";
                                         } else {
@@ -1935,7 +1935,7 @@ define(["app"], function (app) {
                                         _obj.nuvRate = _nuvRate;
                                     }
                                     var _avgPage = "--";
-                                    if (_obj["vc"] != "--" && _obj["pv"] != "--") {
+                                    if ($rootScope.checkedArray.indexOf("avgPage") != -1 && _obj["vc"] != "--" && _obj["pv"] != "--") {
                                         if (_obj["vc"] == 0) {
                                             _avgPage = "0.00";
                                         } else {
