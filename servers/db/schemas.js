@@ -93,9 +93,13 @@ var schemas = {
             site_name: String, // site name 设置的URL
             site_pause: Boolean,//配置暂停 true：暂停 false：使用
             track_status: Number,// track code status
-            icon: Number,
-            is_top: Boolean,
-            is_use: Number
+            icon: Number,//图标编号
+            is_top: Boolean,//是否置顶
+            is_use: Number,//是否使用 1使用 0停用 逻辑删除
+            //百度推广信息
+            bname:String,//百度帐号
+            bpasswd:String,//百度帐号 密码
+            rname:String//备注
         }
     },
 // 站点统计规则
