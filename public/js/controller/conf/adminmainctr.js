@@ -63,7 +63,10 @@ define(["./module"], function (ctrs) {
             "site_name": "",
             is_top: true,
             readOnly: "",
-            add_update: ""
+            add_update: "",
+            bname: "",
+            bpasswd: "",
+            rname: ""
         };
         //table配置
         $rootScope.adminSetHtml = "<div class='mid_left'> <div class=\"ngdialog-tilte\">复制代码</div ><div class='copycode_content'><div id='base_code' class='mid_left_code'>" +
@@ -227,10 +230,15 @@ define(["./module"], function (ctrs) {
             });
             $scope.submitUpdate = function () {
                 var updateurl = "/config/site_list?type=update&query=" + JSON.stringify({_id: row.entity._id}) + "&updates=" + JSON.stringify({
-                        site_name: $scope.dialog_model.site_name,
-                        is_top: $scope.dialog_model.is_top,
-                        icon: $scope.choosedIconNum
-                    });
+                                site_name: $scope.dialog_model.site_name,
+                                is_top: $scope.dialog_model.is_top,
+                                icon: $scope.choosedIconNum,
+                                bname : $scope.dialog_model.bname,
+                                bpasswd : $scope.dialog_model.bpasswd,
+                                rname : $scope.dialog_model.rname,
+                                }
+                        )
+                    ;
                 if ($scope.dialog_model.is_top && $rootScope.gridOptions.data.length > 1) {//若置顶 先使原来置顶变为False
                     $rootScope.gridOptions.data[0].is_top = false;
                     row.entity.is_top = true;
@@ -424,6 +432,9 @@ define(["./module"], function (ctrs) {
             model.is_top = $scope.dialog_model.is_top;
             model.uid = $cookieStore.get("uid");
             model.icon = $scope.choosedIconNum;
+            model.bname = $scope.dialog_model.bname;
+            model.bpasswd = $scope.dialog_model.bpasswd;
+            model.rname = $scope.dialog_model.rname;
 
             //用户ID+url 确定该用户对某个网站是否进行配置
             var query = "/config/site_list?type=search&query=" + JSON.stringify({
