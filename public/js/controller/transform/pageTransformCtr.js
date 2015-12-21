@@ -43,7 +43,7 @@ define(["./module"], function (ctrs) {
                     convert_url_all: $scope.convert_url_all
                 });
             };
-            $scope.es_checkArray = ["pv", "uv", "vc", "ip", "nuv", "nuvRate", "conversions", "crate", /*"avgCost",*/ "benefit",/* "profit",*/ "orderNum", "orderNumRate"];
+            $scope.es_checkArray = ["pv", "uv", "vc", "ip", "nuv", "nuvRate", "conversions", "crate", /*"avgCost",*/ "benefit", /* "profit",*/ "orderNum", "orderNumRate"];
             $scope.sem_checkArray = ["avgCost", "profit", "orderMoney"];
             //配置默认指标
             $rootScope.checkedArray = ["pv", "uv", "vc", "ip", "conversions", "crate"]
@@ -130,7 +130,6 @@ define(["./module"], function (ctrs) {
                                     data["rf_type"] = $rootScope.rowEntity.rf_type
                                 })
                                 $rootScope.gridOptions.showColumnFooter = !$rootScope.showColumnFooter;
-                                console.log("显示后 "+$rootScope.gridOptions.showColumnFooter)
                             })
                         } else {
 
@@ -142,7 +141,6 @@ define(["./module"], function (ctrs) {
                                 data["rf_type"] = $rootScope.rowEntity.rf_type
                             })
                             $rootScope.gridOptions.showColumnFooter = !$rootScope.showColumnFooter;
-                            console.log("显示后 "+$rootScope.gridOptions.showColumnFooter)
                         }
                     })
                 }
@@ -507,32 +505,38 @@ define(["./module"], function (ctrs) {
                                 var tPageInfoArr = ["conversions", "benefit"]
                                 var pageurl = "/api/transform/getPageBaseInfo?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&queryOptions=" + tPageInfoArr + "&pages=" + JSON.stringify(filterPageConf) + "&showType=day" + "&filters=" + $rootScope.getFilters()
                                 $http.get(pageurl).success(function (pagedatas) {
-                                    var sumCrate = 0
-                                    $rootScope.gridOptions.data.forEach(function (data, index) {
-                                        $rootScope.checkedArray.forEach(function (attr) {
-                                            switch (attr) {
-                                                case "conversions"://转化次数
-                                                    data["conversions"] = pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].conversions != undefined ? pagedatas[data.campaignName].conversions.value : 0
-                                                    break;
-                                                case "crate"://转化率
-                                                    var tCrate = pagedatas[data.campaignName] != undefined && data.vc > 0 ? ((Number(pagedatas[data.campaignName]["conversions"].value) / Number(data.vc)) * 100) : 0
-                                                    sumCrate += tCrate
-                                                    data["crate"] = tCrate.toFixed(2) + "%";
-                                                    break;
-                                                case "benefit"://收益
-                                                    data["benefit"] = pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].benefit != undefined ? pagedatas[data.campaignName].benefit.value : 0
-                                                    break;
-                                                case "orderNum"://订单数量
-                                                    data["orderNum"] = pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].orderNum != undefined ? pagedatas[data.campaignName].orderNum.value : 0
-                                                    break;
-                                                case "orderNumRate"://订单转化率
-                                                    data["orderNumRate"] = (pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].orderNum != undefined && data.vc > 0 ? ((Number(pagedatas[data.campaignName].orderNum.value) / Number(data.vc)) * 100).toFixed(2) : (0).toFixed(2)) + "%"
-                                                    break;
-                                                default :
-                                                    break;
-                                            }
+                                    if (pagedatas == undefined || pagedatas.length == 0) {
+                                        $rootScope.gridOptions.data = []
+                                    } else {
+
+
+                                        var sumCrate = 0
+                                        $rootScope.gridOptions.data.forEach(function (data, index) {
+                                            $rootScope.checkedArray.forEach(function (attr) {
+                                                switch (attr) {
+                                                    case "conversions"://转化次数
+                                                        data["conversions"] = pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].conversions != undefined ? pagedatas[data.campaignName].conversions.value : 0
+                                                        break;
+                                                    case "crate"://转化率
+                                                        var tCrate = pagedatas[data.campaignName] != undefined && data.vc > 0 ? ((Number(pagedatas[data.campaignName]["conversions"].value) / Number(data.vc)) * 100) : 0
+                                                        sumCrate += tCrate
+                                                        data["crate"] = tCrate.toFixed(2) + "%";
+                                                        break;
+                                                    case "benefit"://收益
+                                                        data["benefit"] = pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].benefit != undefined ? pagedatas[data.campaignName].benefit.value : 0
+                                                        break;
+                                                    case "orderNum"://订单数量
+                                                        data["orderNum"] = pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].orderNum != undefined ? pagedatas[data.campaignName].orderNum.value : 0
+                                                        break;
+                                                    case "orderNumRate"://订单转化率
+                                                        data["orderNumRate"] = (pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].orderNum != undefined && data.vc > 0 ? ((Number(pagedatas[data.campaignName].orderNum.value) / Number(data.vc)) * 100).toFixed(2) : (0).toFixed(2)) + "%"
+                                                        break;
+                                                    default :
+                                                        break;
+                                                }
+                                            })
                                         })
-                                    })
+                                    }
                                     $rootScope.gridData = $rootScope.gridOptions.data
                                     //概况
                                     $scope.setShowArray();
@@ -599,7 +603,6 @@ define(["./module"], function (ctrs) {
                                     })
                                 })
                                 $rootScope.gridOptions.showColumnFooter = !$rootScope.showColumnFooter;
-                                console.log("显示后 "+$rootScope.gridOptions.showColumnFooter)
                                 //刷新图 表
                                 //$scope.charts[0].config.legendDefaultChecked = [0, 1];
                                 //$scope.charts[0].config.legendAllowCheckCount = 2;
