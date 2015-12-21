@@ -2730,13 +2730,25 @@ define(["app"], function (app) {
                         }
                     }
                     if (a.col.field == "avgPage") {
-                        var _ll = 0;
-                        for (var _i = 0; _i < option.length; _i++) {
-                            if (option[_i].entity.avgPage != "--") {
-                                _ll++;
+                        //var _ll = 0;
+                        //for (var _i = 0; _i < option.length; _i++) {
+                        //    if (option[_i].entity.avgPage != "--") {
+                        //        _ll++;
+                        //    }
+                        //}
+                        //returnData[0] = returnData[0] == "0" ? "0" : (returnData[0] / (_ll == 0 ? 1 : _ll)).toFixed(2);
+                        var t_vc = 0;
+                        var t_pv = 0;
+                        option.forEach(function (_row) {
+                            var _entity = _row.entity;
+                            if (_entity.vc != "--") {
+                                t_vc += _entity.vc;
                             }
-                        }
-                        returnData[0] = returnData[0] == "0" ? "0" : (returnData[0] / (_ll == 0 ? 1 : _ll)).toFixed(2);
+                            if (_entity.pv != "--") {
+                                t_pv += _entity.pv;
+                            }
+                        });
+                        returnData[0] = (t_pv / (t_vc == 0 ? 1 : t_vc)).toFixed(2);
                     }
                     if (a.col.field == "click") {
                         var _ll = 0;
