@@ -1928,11 +1928,17 @@ define(["app"], function (app) {
                                 result = result.slice(0, new Date().getHours() + 1);
                             }
                             // 时间段过滤
-                            // ------------------------------
                             if ($rootScope.timeFilter) {
-                                    console.log("===================");
+                                var resultArray = [];
+                                $rootScope.timeFilter.forEach(function (e) {
+                                    if (result[e]) {
+                                        resultArray.push(result[e]);
+                                    }
+                                });
+                                $scope.gridOptions.data = resultArray;
+                            } else {
+                                $scope.gridOptions.data = result;
                             }
-                            $scope.gridOptions.data = result;
                         }
                     }
 
@@ -2730,13 +2736,6 @@ define(["app"], function (app) {
                         }
                     }
                     if (a.col.field == "avgPage") {
-                        //var _ll = 0;
-                        //for (var _i = 0; _i < option.length; _i++) {
-                        //    if (option[_i].entity.avgPage != "--") {
-                        //        _ll++;
-                        //    }
-                        //}
-                        //returnData[0] = returnData[0] == "0" ? "0" : (returnData[0] / (_ll == 0 ? 1 : _ll)).toFixed(2);
                         var t_vc = 0;
                         var t_pv = 0;
                         option.forEach(function (_row) {

@@ -743,7 +743,6 @@ define(["../app"], function (app) {
                 case "avgPage":
                 {
                     return count ? (value == 0 ? "0" : (value / count).toFixed(2)) : "0";
-//                    return count ? (value / count).toFixed(2) : "0";
                 }
                 default :
                 {
