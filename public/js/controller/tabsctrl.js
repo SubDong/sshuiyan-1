@@ -493,8 +493,6 @@ define(["app"], function (app) {
         $scope.$on("ssh_refresh_charts", function (e, msg) {
             $scope.charts[0].config.legendDefaultChecked = [0, 1];
             $scope.targetSearch()
-            console.log("ssh_refresh_charts")
-            //$rootScope.refreshData(false);
         });
         $scope.page = "";
         $scope.pagego = function (pagevalue) {
@@ -942,7 +940,7 @@ define(["app"], function (app) {
             if (time == "全部") {
                 $rootScope.timeFilter = null;
             } else if (time == "工作时段") {
-                $rootScope.timeFilter = [9, 10, 11, 13, 14, 15, 16 ,17];
+                $rootScope.timeFilter = [9, 10, 11, 13, 14, 15, 16, 17];
             } else if (time == "非工作时段") {
                 $rootScope.timeFilter = [0, 1, 2, 3, 4, 5, 6, 7, 8, 12, 18, 19, 20, 21, 22, 23];
             } else {// 自定义时段
@@ -1414,20 +1412,21 @@ define(["app"], function (app) {
             var now = +new Date();
             if (now - evTimeStamp < 100) {
                 return;
-            }/*阻止冒泡，执行两次*/
+            }
+            /*阻止冒泡，执行两次*/
             $rootScope.myRfDm = urlText;
             var b = "";
             if (urlText == "rf") {
                 b = 0;
-                $("#externallinksInput").attr('placeholder','输入URL...')
-                $("#externallinksInput").blur(function(){
-                    $(this).attr('placeholder','输入URL...')
+                $("#externallinksInput").attr('placeholder', '输入URL...')
+                $("#externallinksInput").blur(function () {
+                    $(this).attr('placeholder', '输入URL...')
                 })
             } else {
                 b = 1;
-                $("#externallinksInput").attr('placeholder','输入域名...')
-                $("#externallinksInput").blur (function(){
-                    $(this).attr('placeholder','输入域名...')
+                $("#externallinksInput").attr('placeholder', '输入域名...')
+                $("#externallinksInput").blur(function () {
+                    $(this).attr('placeholder', '输入域名...')
                 })
             }
             evTimeStamp = now;
@@ -1522,8 +1521,8 @@ define(["app"], function (app) {
                     else
                         val = val + option.entity[a.col.field]
                 })
-                if(options.length>0)
-                    val = val/options.length
+                if (options.length > 0)
+                    val = val / options.length
                 val = val.toFixed(2) + "元"
             } else {
                 var flag = false;//是否有%号
@@ -1548,10 +1547,10 @@ define(["app"], function (app) {
         }
 
 
-        $rootScope.refreshGridData = function(){
-            $scope.gridOptions.data= $rootScope.gridData
+        $rootScope.refreshGridData = function () {
+            $scope.gridOptions.data = $rootScope.gridData
         }
-        $rootScope.changeFooterShow =function(){
+        $rootScope.changeFooterShow = function () {
             $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
         }
         //前端ui-grid通用查询方法
@@ -1611,7 +1610,7 @@ define(["app"], function (app) {
                             item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 32px'>--</div>";
                         } else {
                             item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 32px'>" +
-                            "<ul><li>{{grid.appScope.getEventRootData(this,grid.getVisibleRows())}}</li></ul></div>";
+                                "<ul><li>{{grid.appScope.getEventRootData(this,grid.getVisibleRows())}}</li></ul></div>";
                         }
                     }
                 });
@@ -1624,7 +1623,7 @@ define(["app"], function (app) {
                         } else {
 //                        item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 100px'>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),2)}}<br/>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),3)}}<br/>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),4)}}</div>";
                             item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 32px'>" +
-                            "<ul><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),2)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),3)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),4)}}</li></ul></div>";
+                                "<ul><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),2)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),3)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),4)}}</li></ul></div>";
                         }
                     }
                 });
@@ -1810,25 +1809,25 @@ define(["app"], function (app) {
                                     $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
                                     $scope.gridOptions.data = resultData;
                                 } else {
-                                    var filters =  JSON.parse($rootScope.tableSwitch.tableFilter);
-                                    if($location.path() == "/page/indexoverview_ep") { //退出模块
+                                    var filters = JSON.parse($rootScope.tableSwitch.tableFilter);
+                                    if ($location.path() == "/page/indexoverview_ep") { //退出模块
                                         var rf_type = -1;
                                         var se = -1;
                                         var isNew = -1;
-                                        if(filters != null) {
+                                        if (filters != null) {
                                             var index;
-                                            rf_type = (index = filters.elementHasOwnProperty("rf_type"))  == -1 ? -1 :filters[index].rf_type[0];
-                                            se = (index = filters.elementHasOwnProperty("se"))  == -1 ? -1 :filters[index].se[0];
-                                            if( se != -1) {
+                                            rf_type = (index = filters.elementHasOwnProperty("rf_type")) == -1 ? -1 : filters[index].rf_type[0];
+                                            se = (index = filters.elementHasOwnProperty("se")) == -1 ? -1 : filters[index].se[0];
+                                            if (se != -1) {
                                                 se = $rootScope.browsersKeyMap[se];
                                             }
-                                            isNew = (index = filters.elementHasOwnProperty("ct"))  == -1 ? -1 :filters[index].ct[0];
+                                            isNew = (index = filters.elementHasOwnProperty("ct")) == -1 ? -1 : filters[index].ct[0];
                                         }
                                         var parameter = {
                                             type: $rootScope.userType,
                                             rf_type: rf_type,
                                             se: se,
-                                            isNew:isNew,
+                                            isNew: isNew,
                                             start: $rootScope.start,
                                             end: $rootScope.end
                                         };
@@ -1840,7 +1839,7 @@ define(["app"], function (app) {
                                         }).success(function (exitCountDatas) {
                                             $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
                                             data.forEach(function (trData) {
-                                                if(exitCountDatas.hasOwnProperty(trData.loc) ) {
+                                                if (exitCountDatas.hasOwnProperty(trData.loc)) {
                                                     trData.ec = exitCountDatas[trData.loc];
                                                 } else {
                                                     trData.ec = "0";
@@ -2003,13 +2002,25 @@ define(["app"], function (app) {
             $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
             var gridArrayOld = angular.copy($rootScope.gridArray);
             var latitudeOld = angular.copy($rootScope.tableSwitch.latitude);
-            $rootScope.gridArray.forEach(function (item, i) {
-                var a = item["field"];
-                if (item["cellTemplate"] == undefined) {
-                    item["cellTemplate"] = "<ul class='contrastlist'><li>{{grid.appScope.getContrastInfo(grid, row,0,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,1,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,2,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,3,'" + a + "')}}</li></ul>";
-                    item["footerCellTemplate"] = "<ul class='contrastlist'><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),0)}}</li><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),1)}}</li><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),2)}}</li><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),3)}}</li></ul>";
-                }
-            });
+            if ($rootScope.tableSwitch.number == 6) {
+                $rootScope.gridArray.forEach(function (item, i) {
+                    var a = item["field"];
+                    if (item["cellTemplate"] == undefined) {
+                        item["cellTemplate"] = "<ul class='contrastlist'><li>{{grid.appScope.getContrastInfo(grid, row,0,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,1,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,2,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,3,'" + a + "')}}</li></ul>";
+                        item["footerCellTemplate"] = "<ul class='contrastlist'><li>{{grid.appScope.getEventCourFooterData(this,grid.getVisibleRows(),0)}}</li><li>{{grid.appScope.getEventCourFooterData(this,grid.getVisibleRows(),1)}}</li><li>{{grid.appScope.getEventCourFooterData(this,grid.getVisibleRows(),2)}}</li></ul>";
+
+                    }
+                });
+            } else {
+                $rootScope.gridArray.forEach(function (item, i) {
+                    var a = item["field"];
+                    if (item["cellTemplate"] == undefined) {
+                        item["cellTemplate"] = "<ul class='contrastlist'><li>{{grid.appScope.getContrastInfo(grid, row,0,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,1,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,2,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,3,'" + a + "')}}</li></ul>";
+                        item["footerCellTemplate"] = "<ul class='contrastlist'><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),0)}}</li><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),1)}}</li><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),2)}}</li><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),3)}}</li></ul>";
+                    }
+                });
+            }
+
             $scope.gridOptions.rowHeight = 95;
             $scope.gridOptions.columnFooterHeight = 95;
             var time = chartUtils.getTimeOffset(start, end);
@@ -2138,7 +2149,6 @@ define(["app"], function (app) {
                             } else {
                                 for (var i = 0; i < contrast.length; i++) {
                                     if (a[target] == contrast[i][target]) {
-                                        console.log(a[target] + " ===  " + contrast[i][target]);
                                         $rootScope.checkedArray.forEach(function (tt, aa) {
                                             var bili = ((parseInt(a[tt] + "".replace("%")) - parseInt((contrast[i][tt] + "").replace("%"))) / (parseInt((contrast[i][tt] + "").replace("%")) == 0 ? parseInt(a[tt] + "".replace("%")) : parseInt((contrast[i][tt] + "").replace("%"))) * 100).toFixed(2);
                                             dataObj[tt] = (isNaN(bili) ? 0 : bili) + "%";
@@ -2186,6 +2196,7 @@ define(["app"], function (app) {
             }
             return dateTimeArray[0] + "至" + dateTimeArray[1];
         }
+
         function getRateValue(_value) {
             if (_value == undefined) {
                 return "--";
@@ -2197,6 +2208,7 @@ define(["app"], function (app) {
             }
             return _value;
         }
+
         //数据对比实现方法
         $scope.targetDataContrast = function (startInfoTime, endInfoTime, cabk) {
             $scope.gridOpArray = angular.copy($rootScope.gridArray);
@@ -2287,7 +2299,7 @@ define(["app"], function (app) {
                                 cabk(results)
                             })
                         }
-                        else{
+                        else {
                             cabk([])
                         }
                     })
@@ -2597,6 +2609,68 @@ define(["app"], function (app) {
             }
         };
         // 对比时的底部显示
+        $scope.getEventCourFooterData = function (a, option, number) {
+            var strs = ["","",""]
+            var chashloc = {}
+            var cmax = []
+            var ohashloc = {}
+            var omax = []
+            if (a.renderIndex == 1) {
+                strs[2] = "当页汇总";
+            } else if (a.renderIndex == 2) {
+            } else {
+                if (a.col.field == "pv" || a.col.field == "uv" || a.col.field == "ip" || a.col.field == "vc" || a.col.field == "nuv" || a.col.field == "nuvRate") {
+                    option.forEach(function (item, x) {
+                        var itemSplDatas = (item.entity[a.col.field] + "").split(",");
+                        if (chashloc[item.entity["loc"]] == undefined) {
+                            chashloc[item.entity["loc"]] = cmax.length
+                            cmax.push(itemSplDatas[1])
+                        } else {
+                            if(cmax[chashloc[item.entity["loc"]]]<itemSplDatas[1]){
+                                cmax.push(itemSplDatas[1])
+                            }
+                        }
+                        if (ohashloc[item.entity["loc"]] == undefined) {
+                            ohashloc[item.entity["loc"]] = omax.length
+                            omax.push(itemSplDatas[2])
+                        } else {
+                            if(omax[ohashloc[item.entity["loc"]]]<itemSplDatas[2]){
+                                omax.push(itemSplDatas[2])
+                            }
+                        }
+                    });
+                } else {
+                    option.forEach(function (item, x) {
+                        var itemSplDatas = (item.entity[a.col.field] + "").split(",");
+                        cmax.push(itemSplDatas[1])
+                        omax.push(itemSplDatas[2])
+                    });
+                }
+                var ctemp= 0,otemp= 0,ptemp =0
+                cmax.forEach(function(c){
+                    if(c!=undefined)
+                    ctemp+=Number(c.indexOf("%")||c.indexOf("元")>=0? c.replace("%","").replace("元",""):c)
+                })
+                omax.forEach(function(o){
+                    if(0!=undefined)
+                    otemp+=Number(o.indexOf("%")||o.indexOf("元")>=0? o.replace("%","").replace("元",""):0)
+                })
+                strs[0] = ctemp
+                strs[1] = otemp
+                strs[2] = otemp==0?"--":(((ctemp-otemp)/otemp)*100).toFixed(2)+"%"
+            }
+            switch (number) {
+                case 0:
+                    return strs[0];
+                case 1:
+                    return strs[1];
+                case 2:
+                    return strs[2];
+                default :
+                    return "--";
+            }
+
+        };
         $scope.getCourFooterData = function (a, option, number) {
             var rast = [0.0, 0.0];
             var rastString = ["", ""];
