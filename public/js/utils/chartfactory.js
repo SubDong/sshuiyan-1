@@ -1173,8 +1173,13 @@ var util = {
                 } else {
                     var _time = [];
                     key.forEach(function (time) {
-                        var t = new Date(time).Format("yyyy-MM-dd hh:mm:ss");
-                        _time.push(t.toString().substr(0, 10));
+                        if ((time + "").indexOf("00:00:00") == -1) {
+                            var t = new Date(time).Format("yyyy-MM-dd hh:mm:ss");
+                            _time.push(t.toString().substr(0, 10));
+                        } else {
+                            var t = new Date(time.substr(0, 10)).Format("yyyy-MM-dd hh:mm:ss");
+                            _time.push(t.toString().substr(0, 10));
+                        }
                     });
                 }
             } else if (chartConfig.keyFormat == "week") {
