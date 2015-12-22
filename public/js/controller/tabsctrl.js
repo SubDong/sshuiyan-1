@@ -491,7 +491,10 @@ define(["app"], function (app) {
         ;
 
         $scope.$on("ssh_refresh_charts", function (e, msg) {
-            $scope.charts[0].config.legendDefaultChecked = [0, 1];
+            if ($scope.charts && $scope.charts[0]) {
+                $scope.charts[0].config.legendDefaultChecked = [0, 1];
+            }
+
             if ($location.path().indexOf("history") == -1) {
                 $scope.targetSearch()
             }
