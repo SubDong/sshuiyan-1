@@ -330,7 +330,7 @@ define(["app"], function (app) {
                     var tempButton = {};
                     tempButton["name"] = "页面URL";
                     tempButton["displayName"] = "页面URL";
-                    tempButton["field"] = "eventId";
+                    tempButton["field"] = "loc";
                     tempButton["footerCellTemplate"] = "<div class='ui-grid-cell-contents'>--</div>"
                     $rootScope.gridArray.unshift(tempButton);
                 }
@@ -2245,12 +2245,6 @@ define(["app"], function (app) {
                     var purl = "/api/transform/getEventPVs?start=" + (startInfoTime == null ? $rootScope.tableTimeStart : startInfoTime) + "&end=" + (endInfoTime == null ? $rootScope.tableTimeEnd : endInfoTime) + "&type=" + $rootScope.userType + "&queryOptions=" + $scope.es_checkArray + "&events=" + JSON.stringify(eventParams) + "&showType=day" + "&filters=" + $rootScope.getFilters()
                     //console.log(purl)
                     $http.get(purl).success(function (pvs) {
-                        events.forEach(function (event, index) {
-                            var data = pvs[index]
-                            data["eventName"] = event.event_name
-                            data["eventId"] = event.event_id
-                            data["loc"] = event.event_page
-                        })
                         if (pvs != null || pvs != "") {//PV 信息若不存在 则事件信息认为一定不存在
                             $rootScope.curEventPVs = pvs
                             var esurl = "/api/transform/getConvEvents?start=" + (startInfoTime == null ? $rootScope.tableTimeStart : startInfoTime) + "&end=" + (endInfoTime == null ? $rootScope.tableTimeEnd : endInfoTime) + "&type=" + $rootScope.userType + "&eventPages=" + JSON.stringify(eventParams) + "&showType=day" + "&filters=" + $rootScope.getFilters()
