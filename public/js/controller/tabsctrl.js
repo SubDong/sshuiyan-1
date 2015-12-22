@@ -776,7 +776,7 @@ define(["app"], function (app) {
             $rootScope.$broadcast("ssh_data_show_refresh");
             if ($rootScope.tableSwitch.number == 6) {
                 $scope.targetSearch();
-                //$rootScope.refreshData(false)
+                //$rootScope.targetSearch(false)
             } else {
                 $scope.targetSearch();
             }
@@ -1024,7 +1024,7 @@ define(["app"], function (app) {
             $scope.isJudge = false;
             $rootScope.$broadcast("ssh_data_show_refresh");
             if ($rootScope.tableSwitch.number == 6) {
-                $rootScope.refreshData(false)
+                $rootScope.targetSearch()(false)
             } else {
                 $scope.targetSearch();
             }
@@ -1050,7 +1050,7 @@ define(["app"], function (app) {
             $scope.allBrowsers = angular.copy($rootScope.browsers);
             $rootScope.tableSwitch.eginFilter = {rf_type: 2}
             if ($rootScope.tableSwitch.number == 6) {
-                $rootScope.refreshData(false)
+                $rootScope.targetSearch(false)
             }
         }
         $scope.setSearchEngine = function (value, info) {
@@ -1072,7 +1072,7 @@ define(["app"], function (app) {
                 $rootScope.tableSwitch.eginFilter = {rf_type: value}
             }
             if ($rootScope.tableSwitch.number == 6) {
-                $rootScope.refreshData(false)
+                $rootScope.targetSearch(false)
             }
         }
         ;
@@ -1141,7 +1141,7 @@ define(["app"], function (app) {
             obj.curBrowser = "";
             obj.showBrowser = false;
             $scope.browserselect = true;//隐藏浏览器
-            $rootScope.refreshData(false)
+            $rootScope.targetSearch(false)
         }
         $scope.removeBrowser = function (obj) {
             ////console.log("删除搜索")
@@ -1149,13 +1149,13 @@ define(["app"], function (app) {
             $scope.browser.selected = {"name": "全部"};
             obj.curBrowser = "";
             obj.showBrowser = false;
-            $rootScope.refreshData(false)
+            $rootScope.targetSearch(false)
         }
         $scope.removeVisitor = function (obj) {
             $rootScope.tableSwitch.visitorFilter = null
             obj.visitorSearch = "";
             obj.showVisitor = false;
-            $rootScope.refreshData(false)
+            $rootScope.targetSearch(false)
 
         }
         $scope.removeArea = function (obj) {
@@ -1163,7 +1163,7 @@ define(["app"], function (app) {
             $scope.city.selected = {"name": "全部"};
             obj.curArea = "";
             obj.showArea = false;
-            $rootScope.refreshData(false)
+            $rootScope.targetSearch(false)
         }
         // 输入URL过滤
         $scope.searchURLFilter = function (urlText) {
