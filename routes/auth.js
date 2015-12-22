@@ -1,4 +1,4 @@
-var ignore_url = /^\/token/
+var ignore_url = /^\/token|\/site_list/
 
 var redirect = "http://sem.best-ad.cn/login?url=";
 
