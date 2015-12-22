@@ -2123,7 +2123,8 @@ define(["app"], function (app) {
                             dataArray.push(obj);
                         }
                         $rootScope.$broadcast("LoadCompareDateShowDataFinish", item, contrast);
-                    } else {
+                    }
+                    else {
                         item.forEach(function (a, b) {
                             var dataObj = {};
                             if (target == "period" && $location.$$path == "/trend/today" && $rootScope.tableFormat == "day") {// 今日统计按日统计时特殊处理
@@ -2294,6 +2295,7 @@ define(["app"], function (app) {
                                     ////console.log("对比查询数据")
                                     results.push(data)
                                 })
+                                $rootScope.setShowArray(events, eventInfos, pvs, true)
                                 cabk(results)
                             })
                         }
@@ -2607,11 +2609,14 @@ define(["app"], function (app) {
         };
         // 对比时的底部显示
         $scope.getEventCourFooterData = function (a, option, number) {
-            var strs = ["","",""]
+            var strs = ["", "", ""]
             var chashloc = {}
             var cmax = []
             var ohashloc = {}
             var omax = []
+
+            var cconversions = 0
+            var oconversions = 0
             if (a.renderIndex == 1) {
                 strs[2] = "当页汇总";
             } else if (a.renderIndex == 2) {
@@ -2623,7 +2628,7 @@ define(["app"], function (app) {
                             chashloc[item.entity["loc"]] = cmax.length
                             cmax.push(itemSplDatas[1])
                         } else {
-                            if(cmax[chashloc[item.entity["loc"]]]<itemSplDatas[1]){
+                            if (cmax[chashloc[item.entity["loc"]]] < itemSplDatas[1]) {
                                 cmax.push(itemSplDatas[1])
                             }
                         }
@@ -2631,30 +2636,76 @@ define(["app"], function (app) {
                             ohashloc[item.entity["loc"]] = omax.length
                             omax.push(itemSplDatas[2])
                         } else {
-                            if(omax[ohashloc[item.entity["loc"]]]<itemSplDatas[2]){
+                            if (omax[ohashloc[item.entity["loc"]]] < itemSplDatas[2]) {
                                 omax.push(itemSplDatas[2])
                             }
                         }
                     });
-                } else {
+                }
+                //else if(a.col.field == "crate"){//转化率计算
+                //    option.forEach(function (item, x) {
+                //        var itemSplDatas = (item.entity["vc"] + "").split(",");
+                //        var convSplDatas = (item.entity["conversions"] + "").split(",");
+                //
+                //        if (chashloc[item.entity["loc"]] == undefined) {
+                //            chashloc[item.entity["loc"]] = cmax.length
+                //            cmax.push(itemSplDatas[1])
+                //        } else {
+                //            if (cmax[chashloc[item.entity["loc"]]] < itemSplDatas[1]) {
+                //                cmax.push(itemSplDatas[1])
+                //            }
+                //        }
+                //        cconversions+=convSplDatas[1]
+                //
+                //        if (ohashloc[item.entity["loc"]] == undefined) {
+                //            ohashloc[item.entity["loc"]] = omax.length
+                //            omax.push(itemSplDatas[2])
+                //        } else {
+                //            if (omax[ohashloc[item.entity["loc"]]] < itemSplDatas[2]) {
+                //                omax.push(itemSplDatas[2])
+                //            }
+                //        }
+                //        oconversions+=convSplDatas[2]
+                //    });
+                //    console.log(cmax)
+                //}
+                else {
                     option.forEach(function (item, x) {
                         var itemSplDatas = (item.entity[a.col.field] + "").split(",");
                         cmax.push(itemSplDatas[1])
                         omax.push(itemSplDatas[2])
                     });
                 }
-                var ctemp= 0,otemp= 0,ptemp =0
-                cmax.forEach(function(c){
-                    if(c!=undefined)
-                    ctemp+=Number(c.indexOf("%")||c.indexOf("元")>=0? c.replace("%","").replace("元",""):c)
+                var ctemp = 0, otemp = 0, ptemp = 0
+                cmax.forEach(function (c) {
+                    if (c != undefined)
+                        ctemp += Number(c.indexOf("%") || c.indexOf("元") >= 0 ? c.replace("%", "").replace("元", "") : c)
                 })
-                omax.forEach(function(o){
-                    if(0!=undefined)
-                    otemp+=Number(o.indexOf("%")||o.indexOf("元")>=0? o.replace("%","").replace("元",""):0)
+                omax.forEach(function (o) {
+                    if (o != undefined)
+                        otemp += Number(o.indexOf("%") || o.indexOf("元") >= 0 ? o.replace("%", "").replace("元", "") : 0)
                 })
-                strs[0] = ctemp
-                strs[1] = otemp
-                strs[2] = otemp==0?"--":(((ctemp-otemp)/otemp)*100).toFixed(2)+"%"
+
+                if (a.col.field == "nuvRate"||a.col.field == "crate") {
+                    strs[0] = ctemp.toFixed(2)+"%"
+                    strs[1] = otemp.toFixed(2)+"%"
+                    strs[2] = otemp == 0 ? "--" : (((ctemp - otemp) / otemp) * 100).toFixed(2) + "%"
+                }
+                //else if(a.col.field == "crate"){
+                //    console.log("****************************")
+                //    console.log(JSON.stringify(cmax))
+                //    strs[0] = ctemp==0?"0.00":((cconversions/ctemp)*100).toFixed(2)+"%"
+                //    strs[1] = otemp==0?"0.00":((oconversions/otemp)*100).toFixed(2)+"%"
+                //    //strs[2] = "---"
+                //    console.log(JSON.stringify(strs))
+                //    strs[2] = (otemp.toFixed(2)==0?0:((oconversions/otemp)*100).toFixed(2))==0?"--":(((( ctemp.toFixed(2)==0?0:(cconversions/ctemp)*100)-( otemp.toFixed(2)==0?0:(oconversions/otemp)*100))/( otemp.toFixed(2)==0?0:(oconversions/otemp)*100)).toFixed(2))+"%"
+                //}
+                else {
+                    strs[0] = ctemp
+                    strs[1] = otemp
+                    strs[2] = otemp == 0 ? "--" : (((ctemp - otemp) / otemp) * 100).toFixed(2) + "%"
+                }
+
             }
             switch (number) {
                 case 0:

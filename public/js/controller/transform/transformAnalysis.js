@@ -261,14 +261,151 @@ define(["./module"], function (ctrs) {
                 $scope.reset();
                 $scope.todayClass = true;
             };
-            $scope.setShowArray = function () {
-                var tempArray = [];
-                angular.forEach($scope.checkedArray, function (q_r) {
-                    tempArray.push({"label": q_r, "value": 0, "cValue": 0, "count": 0, "cCount": 0});
-                });
-                $scope.dateShowArray = $rootScope.copy(tempArray);
+            $rootScope.setShowArray = function (events, eventInfos,pvs, isCompare) {
+
+                var tempVc = 0;
+                var tempConv = 0;
+                var hashloc = {}
+                var tempNuvRate = 0;
+                var maxvalues = {}
+                //刷新概况信息
+                var sumTransformCost = 0
+                var hashPage = {};
+                if (isCompare) {
+                    $scope.isCompared = true;
+                    $scope.DateNumbertwo = true;
+                    events.forEach(function (event, index) {
+                        var eventInfo = eventInfos[event.event_page + "_" + event.event_id]
+                        if (eventInfo != undefined) {
+                            $scope.dateShowArray.forEach(function (item) {
+                                maxvalues[item.label] = maxvalues[item.label] == undefined ? pvs[index][item.label] : (maxvalues[item.label] > pvs[index][item.label] ? maxvalues[item.label] : pvs[index][item.label])
+                                if (item.label == "crate") {
+                                } else if (item.label == "transformCost") {
+                                    if ($rootScope.baiduAccount != undefined && $rootScope.user != undefined) {
+                                        var semRequest = "";
+                                        semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end + "&q=cost");
+                                        $q.all([semRequest]).then(function (sem_data) {
+                                            var cost = 0;
+                                            for (var k = 0; k < sem_data.length; k++) {
+                                                for (var c = 0; c < sem_data[k].data.length; c++) {
+                                                    cost += Number(sem_data[k].data[c].cost);
+                                                }
+                                            }
+                                            var t = eventInfo.convCount > 0 ? (cost / eventInfo.convCount).toFixed(2) : 0
+                                            sumTransformCost = (Number(sumTransformCost) + Number(t));
+                                            if ((events.length - 1) == index)
+                                                item.cValue = (sumTransformCost / events.length).toFixed(2) + "元"
+                                        });
+                                    }
+                                } else if (item.label == "clickTotal") {
+                                    item.cValue += eventInfo != undefined ? eventInfo.eventCount : 0;
+                                } else if (item.label == "conversions") {
+                                    if (eventInfo != undefined) {
+                                        item.cValue += eventInfo.convCount;
+                                    }
+                                } else if (item.label == "nuvRate" && (hashPage[event.event_page] == undefined || !hashPage[event.event_page])) {
+                                    tempNuvRate += Number(pvs[index]["nuvRate"].replace("%", ""))
+                                    hashPage[event.event_page] = true
+                                } else {
+                                    item.cValue = hashloc[event.event_page] == undefined ? (pvs[index][item.label] + item.cValue) : (maxvalues[item.label] < pvs[index][item.label] ? (item.cValue + pvs[index][item.label] - maxvalues[item.label]) : item.cValue)
+                                    if (item.label == "vc") {
+                                        tempVc = item.cValue;
+                                    }
+                                }
+                            })
+                            //计算全部的PV
+                            tempVc = hashloc[event.event_page] == undefined ? pvs[index]["vc"] : (maxvalues["vc"] < pvs[index]["vc"] ? (item.cValue + pvs[index]["vc"] - maxvalues["vc"]) : tempVc)
+                            //计算全部的转化次数
+                            if (eventInfo != undefined) {
+                                tempConv += eventInfos[event.event_page + "_" + event.event_id].convCount;
+                            }
+                            if (!hashloc[event.event_page]) {
+                                hashloc[event.event_page] = true;
+                            }
+                        }
+                    })
+
+                    $scope.dateShowArray.forEach(function (item) {
+                        if (item.label == "crate" && tempVc != 0) {
+                            item.cValue = (Number(tempConv / tempVc) * 100).toFixed(2) + "%"
+                        } else if (item.label == "nuvRate") {
+                            item.cValue = tempNuvRate.toFixed(2) + "%"
+                        }
+                    })
+                } else {
+
+                    var tempArray = [];
+                    angular.forEach($scope.checkedArray, function (q_r) {
+                        tempArray.push({"label": q_r, "value": 0, "cValue": 0, "count": 0, "cCount": 0});
+                    });
+                    $scope.dateShowArray = $rootScope.copy(tempArray);
+
+
+                    $scope.isCompared = false;
+                    $scope.DateNumbertwo = false
+
+                    events.forEach(function (event, index) {
+                        var eventInfo = eventInfos[event.event_page + "_" + event.event_id]
+                        if (eventInfo != undefined) {
+                            $scope.dateShowArray.forEach(function (item) {
+                                maxvalues[item.label] = maxvalues[item.label] == undefined ? pvs[index][item.label] : (maxvalues[item.label] > pvs[index][item.label] ? maxvalues[item.label] : pvs[index][item.label])
+                                if (item.label == "crate") {
+                                } else if (item.label == "transformCost") {
+                                    if ($rootScope.baiduAccount != undefined && $rootScope.user != undefined) {
+                                        var semRequest = "";
+                                        semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end + "&q=cost");
+                                        $q.all([semRequest]).then(function (sem_data) {
+                                            var cost = 0;
+                                            for (var k = 0; k < sem_data.length; k++) {
+                                                for (var c = 0; c < sem_data[k].data.length; c++) {
+                                                    cost += Number(sem_data[k].data[c].cost);
+                                                }
+                                            }
+                                            var t = eventInfo.convCount > 0 ? (cost / eventInfo.convCount).toFixed(2) : 0
+                                            sumTransformCost = (Number(sumTransformCost) + Number(t));
+                                            if ((events.length - 1) == index)
+                                                item.value = (sumTransformCost / events.length).toFixed(2) + "元"
+                                        });
+                                    }
+                                } else if (item.label == "clickTotal") {
+                                    item.value += eventInfo != undefined ? eventInfo.eventCount : 0;
+                                } else if (item.label == "conversions") {
+                                    if (eventInfo != undefined) {
+                                        item.value += eventInfo.convCount;
+                                    }
+                                } else if (item.label == "nuvRate" && (hashPage[event.event_page] == undefined || !hashPage[event.event_page])) {
+                                    tempNuvRate += Number(pvs[index]["nuvRate"].replace("%", ""))
+                                    hashPage[event.event_page] = true
+                                } else {
+                                    item.value = hashloc[event.event_page] == undefined ? (pvs[index][item.label] + item.value) : (maxvalues[item.label] < pvs[index][item.label] ? (item.value + pvs[index][item.label] - maxvalues[item.label]) : item.value)
+                                    if (item.label == "vc") {
+                                        tempVc = item.value;
+                                    }
+                                }
+                            })
+                            //计算全部的PV
+                            tempVc = hashloc[event.event_page] == undefined ? pvs[index]["vc"] : (maxvalues["vc"] < pvs[index]["vc"] ? (item.value + pvs[index]["vc"] - maxvalues["vc"]) : tempVc)
+                            //计算全部的转化次数
+                            if (eventInfo != undefined) {
+                                tempConv += eventInfos[event.event_page + "_" + event.event_id].convCount;
+                            }
+                            if (!hashloc[event.event_page]) {
+                                hashloc[event.event_page] = true;
+                            }
+                        }
+                    })
+
+                    $scope.dateShowArray.forEach(function (item) {
+                        if (item.label == "crate" && tempVc != 0) {
+                            item.value = (Number(tempConv / tempVc) * 100).toFixed(2) + "%"
+                        } else if (item.label == "nuvRate") {
+                            item.value = tempNuvRate.toFixed(2) + "%"
+                        }
+                    })
+
+
+                }
             };
-            $scope.setShowArray();
 
             var init_transformData = function () {
                 $scope.es_checkArray = ["pv", "uv", "vc", "ip", "nuv", "nuvRate", "conversions", "crate", "transformCost", "clickTotal", "visitNum"];
@@ -324,6 +461,7 @@ define(["./module"], function (ctrs) {
             $rootScope.curEventInfos = []
 
             $rootScope.refreshData = function (isContrastDataByTime) {//isContrastDataByTime 是否按时间对比
+
                 $rootScope.gridData = []
                 $rootScope.refreshGridData()
                 $http({
@@ -362,12 +500,7 @@ define(["./module"], function (ctrs) {
                             $http.get(esurl).success(function (eventInfos) {
                                 $rootScope.curEventInfos = eventInfos
                                 var results = [];
-                                var hashloc = {}, maxvalues = {}
-                                $scope.setShowArray();
-                                var tempVc = 0;
-                                var tempConv = 0;
-
-                                var tempNuvRate = 0;
+                                var maxvalues = {}
                                 events.forEach(function (event, index) {
                                     var eventInfo = eventInfos[event.event_page + "_" + event.event_id]
                                     if (eventInfo != undefined) {
@@ -413,10 +546,10 @@ define(["./module"], function (ctrs) {
                                 })
                                 if ($rootScope.checkedArray.length > 0 && results.length > 0) {
                                     var attr = $rootScope.checkedArray[0]
-                                    for (var i = 0; i < results.length-1; i++) {
+                                    for (var i = 0; i < results.length - 1; i++) {
                                         for (var k = i + 1; k < results.length; k++) {
-                                            if(results[i][attr]<results[k][attr]){
-                                                var temp  = results[k]
+                                            if (results[i][attr] < results[k][attr]) {
+                                                var temp = results[k]
                                                 results[k] = results[i]
                                                 results[i] = temp;
                                             }
@@ -429,67 +562,8 @@ define(["./module"], function (ctrs) {
                                     $rootScope.gridData = [];
                                     $rootScope.refreshGridData()
                                 }
-                                //刷新概况信息
-                                var sumTransformCost = 0
-                                var hashPage = {};
-                                events.forEach(function (event, index) {
-                                    var eventInfo = eventInfos[event.event_page + "_" + event.event_id]
-                                    if (eventInfo != undefined) {
-                                        $scope.dateShowArray.forEach(function (item) {
-                                            maxvalues[item.label] = maxvalues[item.label] == undefined ? pvs[index][item.label] : (maxvalues[item.label] > pvs[index][item.label] ? maxvalues[item.label] : pvs[index][item.label])
-                                            if (item.label == "crate") {
-                                            } else if (item.label == "transformCost") {
-                                                if ($rootScope.baiduAccount != undefined && $rootScope.user != undefined) {
-                                                    var semRequest = "";
-                                                    semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + $rootScope.start + "&endOffset=" + $rootScope.end + "&q=cost");
-                                                    $q.all([semRequest]).then(function (sem_data) {
-                                                        var cost = 0;
-                                                        for (var k = 0; k < sem_data.length; k++) {
-                                                            for (var c = 0; c < sem_data[k].data.length; c++) {
-                                                                cost += Number(sem_data[k].data[c].cost);
-                                                            }
-                                                        }
-                                                        var t = eventInfo.convCount > 0 ? (cost / eventInfo.convCount).toFixed(2) : 0
-                                                        sumTransformCost = (Number(sumTransformCost) + Number(t));
-                                                        if ((events.length - 1) == index)
-                                                            item.value = (sumTransformCost / events.length).toFixed(2) + "元"
-                                                    });
-                                                }
-                                            } else if (item.label == "clickTotal") {
-                                                item.value += eventInfo != undefined ? eventInfo.eventCount : 0;
-                                            } else if (item.label == "conversions") {
-                                                if (eventInfo != undefined) {
-                                                    item.value += eventInfo.convCount;
-                                                }
-                                            } else if (item.label == "nuvRate" && (hashPage[event.event_page] == undefined || !hashPage[event.event_page])) {
-                                                tempNuvRate += Number(pvs[index]["nuvRate"].replace("%", ""))
-                                                hashPage[event.event_page] = true
-                                            } else {
-                                                item.value = hashloc[event.event_page] == undefined ? (pvs[index][item.label] + item.value) : (maxvalues[item.label] < pvs[index][item.label] ? (item.value + pvs[index][item.label] - maxvalues[item.label]) : item.value)
-                                                if (item.label == "vc") {
-                                                    tempVc = item.value;
-                                                }
-                                            }
-                                        })
-                                        //计算全部的PV
-                                        tempVc = hashloc[event.event_page] == undefined ? pvs[index]["vc"] : (maxvalues["vc"] < pvs[index]["vc"] ? (item.value + pvs[index]["vc"] - maxvalues["vc"]) : tempVc)
-                                        //计算全部的转化次数
-                                        if (eventInfo != undefined) {
-                                            tempConv += eventInfos[event.event_page + "_" + event.event_id].convCount;
-                                        }
-                                        if (!hashloc[event.event_page]) {
-                                            hashloc[event.event_page] = true;
-                                        }
-                                    }
-                                })
 
-                                $scope.dateShowArray.forEach(function (item) {
-                                    if (item.label == "crate" && tempVc != 0) {
-                                        item.value = (Number(tempConv / tempVc) * 100).toFixed(2) + "%"
-                                    } else if (item.label == "nuvRate") {
-                                        item.value = tempNuvRate.toFixed(2) + "%"
-                                    }
-                                })
+                                $rootScope.setShowArray(events, eventInfos, pvs,false)
                                 //刷新图表
                                 if (isContrastDataByTime) {
                                     $scope.DateNumbertwo = false;
@@ -511,7 +585,7 @@ define(["./module"], function (ctrs) {
                                 $rootScope.changeFooterShow()
                             })
                         }
-                        else{
+                        else {
                             $rootScope.changeFooterShow()
                         }
                     });
@@ -548,7 +622,7 @@ define(["./module"], function (ctrs) {
                                 bdata.key.push(gdata.eventName)
                                 if (bdata.option == "crate") {
                                     bdata.quota.push(gdata[bdata.option] == undefined ? 0 : Number(gdata[bdata.option].replace("%", "")))
-                                }  else if (bdata.option == "transformCost") {
+                                } else if (bdata.option == "transformCost") {
                                     bdata.quota.push(gdata[bdata.option] == undefined ? 0 : Number(gdata[bdata.option].replace("元", "")))
                                 } else {
                                     bdata.quota.push(gdata[bdata.option] == undefined ? 0 : gdata[bdata.option])
@@ -601,19 +675,7 @@ define(["./module"], function (ctrs) {
                     }
                 }
                 if (isClicked) {
-
-                    $scope.setShowArray();
                     init_transformData()
-                    //$rootScope.refreshData(false);
-                    //$scope.$broadcast("ssh_refresh_charts", {
-                    //    start: $rootScope.start,
-                    //    end: $rootScope.end,
-                    //    checkedArray: $scope.es_checkedArray,
-                    //    sem_checkedArray: $scope.sem_checkedArray,
-                    //    all_checked: $rootScope.checkedArray,
-                    //    analysisAction: "event",
-                    //    convert_url_all: $scope.convert_url_all
-                    //});
                 }
                 else {
                     //访客过滤数据获取

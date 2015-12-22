@@ -2339,60 +2339,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     scope.pushESData(data, true);
                 };
                 scope.pushESData = function (result, flag) {
-                    var _array = $rootScope.copy(scope.dateShowArray);
-                    var _count = 0;
-                    angular.forEach(result, function (r) {
-                        var infoKey = r[$rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field];
-                        //if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null")) {
-                        //    return false;
-                        //}
-                        if (infoKey == undefined) {
-                            return false;
-                        }
-                        if (!flag) {
-                            scope.ds_keyData.push(infoKey);
-                        }
-                        if (flag && scope.ds_keyData.targetIndexOf(infoKey) == -1) {
-                            return false;
-                        }
-                        _count++;
-                        angular.forEach(_array, function (obj) {
-                            var temp = obj.label;
-                            if (r[temp] == undefined) {
-                                return false;
-                            }
-                            if (flag) {
-                                if (obj.label == "avgTime") {
-                                    var hour = Number(r[temp].split(":")[0]);
-                                    var min = Number(r[temp].split(":")[1]);
-                                    var sec = Number(r[temp].split(":")[2]);
-                                    var count = (((hour * 60) * 60) + (min * 60) + sec);
-                                    obj.cValue += count;
-                                } else {
-                                    obj.cValue += (r[temp].indexOf("%") != -1) ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
-                                }
-                            } else {
-                                if (obj.label == "avgTime") {
-                                    var hour = Number(r[temp].split(":")[0]);
-                                    var min = Number(r[temp].split(":")[1]);
-                                    var sec = Number(r[temp].split(":")[2]);
-                                    var count = (((hour * 60) * 60) + (min * 60) + sec);
-                                    obj.value += count;
-                                } else {
-                                    obj.value += (r[temp].indexOf("%") != -1) ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
-                                }
-                            }
-                        });
-                    });
-                    // 设置_count
-                    angular.forEach(_array, function (obj) {
-                        if (flag) {
-                            obj.cCount = _count;
-                        } else {
-                            obj.count = _count;
-                        }
-                    });
-                    scope.dateShowArray = $rootScope.copy(_array);
+                    console.log("scope.pushESData")
                 };
             }
         };

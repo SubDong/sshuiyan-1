@@ -349,6 +349,8 @@ api.get("/site_list", function (req, res) {
                     dao.remove(schema_name, qry, function (del) {
                         datautils.send(res, "success");
                     });
+                }else{
+                    datautils.send(res, "fail");
                 }
             });
             break;
@@ -397,6 +399,8 @@ api.get("/site_list", function (req, res) {
                     dao.update(schema_name, query['query'], JSON.stringify({is_use: 0}), function (err, up) {//逻辑删除置is_use=0
                         datautils.send(res, "success");
                     });
+                }else{
+                    datautils.send(res, "fail");
                 }
             });
             break;
