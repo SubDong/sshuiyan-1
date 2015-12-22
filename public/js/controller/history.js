@@ -259,46 +259,13 @@ define(['./module'], function (ctrs) {
         };
 
         $scope.historyInit = function () {
-            //var getTime = $rootScope.tableTimeStart < -1 ? "day" : "hour";
-            var getTime = "day";
             if ($rootScope.tableSwitch.number == 4) {
                 var searchUrl = SEM_API_URL + "search_word/" + esType + "/?startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd;
                 $http({
                     method: 'GET',
                     url: searchUrl
                 }).success(function (data, status) {
-                    var newDataInfo = "";
-                    if (getTime == "hour") {
-                        var result = [];
-                        var vaNumber = 0;
-                        var maps = {}
-                        var newData = chartUtils.getByHourByDayData(data);
-                        newData.forEach(function (info, x) {
-                            for (var i = 0; i < info.key.length; i++) {
-                                var infoKey = info.key[i];
-                                var obj = maps[infoKey];
-                                if (!obj) {
-                                    obj = {};
-                                    var dataString = (infoKey.toString().length >= 2 ? "" : "0")
-                                    obj["period"] = dataString + infoKey + ":00 - " + dataString + infoKey + ":59";
-                                    maps[infoKey] = obj;
-                                }
-                                obj[chartUtils.convertEnglish(info.label)] = info.quota[i]
-                                maps[infoKey] = obj;
-                            }
-                        });
-                        for (var key in maps) {
-                            if (key != null) {
-                                result.push(maps[key]);
-                            }
-                        }
-                        newDataInfo = result;
-                    } else {
-                        newDataInfo = data;
-                    }
-
-
-                    $scope.$broadcast("history", newDataInfo);
+                    $scope.$broadcast("history", data);
                     $rootScope.historyJu = "";
 
                 })
@@ -307,55 +274,9 @@ define(['./module'], function (ctrs) {
                 $http({
                     method: 'GET',
                     url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + $rootScope.tableSwitch.latitude.field
-                    + "&filerInfo=" + encodeURIComponent($rootScope.tableSwitch.tableFilter) + "&formartInfo=" + getTime + "&type=" + esType
+                    + "&filerInfo=" + encodeURIComponent($rootScope.tableSwitch.tableFilter) + "&formartInfo=day&type=" + esType
                 }).success(function (data, status) {
-                    var newDataInfo1 = "";
-                    if (getTime == "hour") {
-                        var result = [];
-                        var vaNumber = 0;
-                        var maps = {}
-                        var newData = chartUtils.getByHourByDayData(data);
-                        newData.forEach(function (info, x) {
-                            for (var i = 0; i < info.key.length; i++) {
-                                var infoKey = info.key[i];
-                                var obj = maps[infoKey];
-                                if (!obj) {
-                                    obj = {};
-                                    var dataString = (infoKey.toString().length >= 2 ? "" : "0")
-                                    obj["period"] = dataString + infoKey + ":00 - " + dataString + infoKey + ":59";
-                                    maps[infoKey] = obj;
-                                }
-                                obj[chartUtils.convertEnglish(info.label)] = info.quota[i]
-                                maps[infoKey] = obj;
-                            }
-                        });
-                        for (var key in maps) {
-                            if (key != null) {
-                                result.push(maps[key]);
-                            }
-                        }
-                        result.forEach(function(item, i){
-                            if(item["avgTime"] == 0){
-                                item["avgTime"] = "00:00:00";
-                            }else{
-                                item["avgTime"] = ad.formatFunc(item["avgTime"],"avgTime")
-                            }
-                            if (item["outRate"] && item["outRate"] != 0 && item["outRate"] != "--") {
-                                item["outRate"] = item["outRate"] + "%";
-                            }
-                            if (item["nuvRate"] && item["nuvRate"] != 0 && item["nuvRate"] != "--") {
-                                item["nuvRate"] = item["nuvRate"] + "%";
-                            }
-                            if (item["arrivedRate"] && item["arrivedRate"] != 0 && item["arrivedRate"] != "--") {
-                                item["arrivedRate"] = item["arrivedRate"] + "%";
-                            }
-                        })
-                        newDataInfo1 = result;
-                    } else {
-                        newDataInfo1 = data;
-                    }
-
-                    $scope.$broadcast("history", newDataInfo1);
+                    $scope.$broadcast("history", data);
                     $rootScope.historyJu = "";
                 }).error(function (error) {
                     console.log(error);
@@ -393,8 +314,6 @@ define(['./module'], function (ctrs) {
             } else {
                 chart.config.keyFormat = "day";
             }
-            //var getTime = $rootScope.tableTimeStart < -1 ? "day" : "hour";
-            var getTime = "day";
             var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
             $scope.charts[0].config.instance = chart;
             chart.showLoading({
@@ -404,27 +323,11 @@ define(['./module'], function (ctrs) {
             $http({
                 method: 'GET',
                 url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + quota + "&dimension=" + $rootScope.tableSwitch.latitude.field
-                + "&filerInfo=" + encodeURIComponent($rootScope.tableSwitch.tableFilter) + "&formartInfo=" + getTime + "&type=" + esType
+                + "&filerInfo=" + encodeURIComponent($rootScope.tableSwitch.tableFilter) + "&formartInfo=day&type=" + esType
             }).success(function (data, status) {
-                //if ($rootScope.tableTimeStart >= -1) {
-                //    if (data) {// 规避一些不需要的数据
-                //        data.forEach(function (_item) {
-                //            var _tttt = _item[quota[0]];
-                //            delete _item.pv;
-                //            delete _item.uv;
-                //            delete _item.nuv;
-                //            delete _item.vc;
-                //            delete _item.svc;
-                //            _item[quota[0]] = _tttt;
-                //        });
-                //    }
-                    //$scope.charts[0].config.noFormat = true;
-                    //cf.renderChart(data, $scope.charts[0].config);
-                //} else {
-                    $scope.charts[0].config.noFormat = true;
-                    var final_result = chartUtils.getHistoryData(data, quota);
-                    cf.renderChart(final_result, $scope.charts[0].config);
-                //}
+                $scope.charts[0].config.noFormat = true;
+                var final_result = chartUtils.getHistoryData(data, quota);
+                cf.renderChart(final_result, $scope.charts[0].config);
             });
         }
 
@@ -462,12 +365,10 @@ define(['./module'], function (ctrs) {
             $scope.charts[0].config.legendData = customLegendData;
             $scope.radioCheckVal = [$rootScope.checkedArray[0]];
             var quota = [$rootScope.checkedArray[0]];
-            //var getTime = $rootScope.tableTimeStart < -1 ? "day" : "hour";
-            var getTime = "day";
             $http({
                 method: 'GET',
                 url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + quota + "&dimension=" + $rootScope.tableSwitch.latitude.field
-                + "&filerInfo=" + encodeURIComponent($rootScope.tableSwitch.tableFilter) + "&formartInfo=" + getTime + "&type=" + esType
+                + "&filerInfo=" + encodeURIComponent($rootScope.tableSwitch.tableFilter) + "&formartInfo=day&type=" + esType
             }).success(function (data, status) {
                 var chart = echarts.init(document.getElementById($scope.charts[0].config.id));
                 chart.showLoading({
@@ -487,12 +388,12 @@ define(['./module'], function (ctrs) {
                 cf.renderChart(final_result, $scope.charts[0].config);
             });
         }
+
         $scope.init();
 
         $scope.$on("ssh_refresh_charts", function (e, msg) {
             $scope.historyInit();
             $scope.refreshChart();
-            $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
         });
         $rootScope.datepickerClick = function (start, end, label) {
             $scope.timeClass = true;
@@ -503,7 +404,6 @@ define(['./module'], function (ctrs) {
             $scope.charts[0].config.keyFormat = "day";
             $scope.refreshChart();
             $scope.historyInit();
-            $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
         };
         // 邮件配置
         $rootScope.initMailData = function () {

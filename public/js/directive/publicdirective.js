@@ -47,7 +47,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                      $('#reportrange').data('daterangepicker').setStartDate(StartTimes);
                      $('#reportrange').data('daterangepicker').setEndDate(EndTimes);
                      $rootScope.targetSearch();
-                     scope.$broadcast("ssh_dateShow_options_time_change");
                      if (isChart == "/visitor/equipment") {
                      scope.charts.forEach(function (e) {
                      var chart = echarts.init(document.getElementById(e.config.id));
@@ -104,7 +103,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                 scope.reloadByCalendar = function (type) {
                     //console.info("info: now user click the " + type + " button");
                     $rootScope.$broadcast("ssh_refresh_charts");
-                    $rootScope.$broadcast("ssh_dateShow_options_time_change", type);
                 };
                 scope.today = function () {
                     scope.isShowCalendar = false;
@@ -433,7 +431,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                             $('#reportrange').data('daterangepicker').setStartDate(StartTimes);
                             $('#reportrange').data('daterangepicker').setEndDate(EndTimes);
 //                            $rootScope.targetSearch();
-//                            scope.$broadcast("ssh_dateShow_options_time_change");
 //                            if (isChart == "/visitor/equipment") {
 //                                scope.charts.forEach(function (e) {
 //                                    var chart = echarts.init(document.getElementById(e.config.id));

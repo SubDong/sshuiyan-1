@@ -492,7 +492,9 @@ define(["app"], function (app) {
 
         $scope.$on("ssh_refresh_charts", function (e, msg) {
             $scope.charts[0].config.legendDefaultChecked = [0, 1];
-            $scope.targetSearch()
+            if ($location.path().indexOf("history") == -1) {
+                $scope.targetSearch()
+            }
         });
         $scope.page = "";
         $scope.pagego = function (pagevalue) {
@@ -1087,7 +1089,6 @@ define(["app"], function (app) {
                 $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
                 $scope.sourceSearch = "全部引擎";
             } else {
-                //////console.log("搜索引擎 ifno "+info)
                 var _seFilter = JSON.parse("{\"se\":[\"" + info + "\"]}");
                 //获取所有过滤条件
                 var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
@@ -1131,7 +1132,7 @@ define(["app"], function (app) {
 
 
         $scope.removeSource = function (obj) {
-            ////console.log("删除来源");
+            //console.log("删除来源");
             $rootScope.tableSwitch.eginFilter = null
             $rootScope.tableSwitch.seFilter = null
             $scope.souce.selected = {"name": "全部"};
@@ -1144,7 +1145,7 @@ define(["app"], function (app) {
             $rootScope.targetSearch(false)
         }
         $scope.removeBrowser = function (obj) {
-            ////console.log("删除搜索")
+            //console.log("删除搜索")
             $rootScope.tableSwitch.seFilter = null
             $scope.browser.selected = {"name": "全部"};
             obj.curBrowser = "";
@@ -2250,7 +2251,6 @@ define(["app"], function (app) {
                     })
                     $rootScope.curEventConfs = eventParams;
                     var purl = "/api/transform/getEventPVs?start=" + (startInfoTime == null ? $rootScope.tableTimeStart : startInfoTime) + "&end=" + (endInfoTime == null ? $rootScope.tableTimeEnd : endInfoTime) + "&type=" + $rootScope.userType + "&queryOptions=" + $scope.es_checkArray + "&events=" + JSON.stringify(eventParams) + "&showType=day" + "&filters=" + $rootScope.getFilters()
-                    //console.log(purl)
                     $http.get(purl).success(function (pvs) {
                         if (pvs != null || pvs != "") {//PV 信息若不存在 则事件信息认为一定不存在
                             $rootScope.curEventPVs = pvs
@@ -2443,7 +2443,6 @@ define(["app"], function (app) {
         $scope.getSubColumnDefs = function (gridOpArray) {
             var _t_arr = [];
             for (var i = 0; i < gridOpArray.length; i++) {
-                //////console.log(gridOpArray[i]["name"]);
                 if (gridOpArray[i]["name"] == " ") {
                     _t_arr.push({
                         name: gridOpArray[i]["name"],

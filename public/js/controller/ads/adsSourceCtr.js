@@ -237,7 +237,6 @@ define(["./module"], function (ctrs) {
             $rootScope.tableTimeStart = time[0];
             $rootScope.tableTimeEnd = time[1];
             $rootScope.targetSearch();
-            $scope.$broadcast("ssh_dateShow_options_time_change");
         }
         /**
          * 刷新

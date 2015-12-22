@@ -79,31 +79,6 @@
                     </div>
                 </div>
             </div>
-            <!--            <div class="custom_secendtitle">
-                            <div class="custom_select" style="margin-top:15px;">
-                                转化目标
-                                <div role="group" class="btn-group">
-                                    <ui-select ng-change="extendwayChange(extendway)" ng-model="extendway.selected" theme="select2" reset-search-input="false"
-                                               class="fl"
-                                               style="width: 120px;">
-                                        <ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>
-                                        <ui-select-choices repeat="extendway in extendways">
-                                            <span ng-bind-html="extendway.name"  ></span>
-                                        </ui-select-choices>
-                                    </ui-select>
-
-                                    <ui-select  ng-change="childrenExtendwayChange(childrenExtendway)" ng-model="childrenExtendway.selected" theme="select2" reset-search-input="false"
-                                                class="fl"
-                                                style="width: 120px;">
-                                        <ui-select-match placeholder="请选择">{{$select.selected.name}}</ui-select-match>
-
-                                        <ui-select-choices repeat="childrenExtendway in childrenExtendways">
-                                            <span ng-bind-html="childrenExtendway.name"  ></span>
-                                        </ui-select-choices>
-                                    </ui-select>
-                                </div>
-                            </div>
-                        </div>-->
             <div class="custom_table" ng-class="{hidePageContainer:gridApi2.grid.rows.length<=20}">
                 <div ui-grid="gridOptions" class="grid clearfix transfortables" ui-grid-pagination
                      ui-grid-exporter ui-grid-auto-resize></div>
