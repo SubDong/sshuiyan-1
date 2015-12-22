@@ -107,7 +107,7 @@ define(["app"], function (app) {
             {consumption_name: "跳出率", name: "outRate"},
             {consumption_name: "平均访问时长", name: "avgTime"},
             {consumption_name: "平均访问页数", name: "avgPage"},
-            {consumption_name: "入口页次数", name: "vc"}
+            {consumption_name: "入口页次数", name: "entrance"}
         ];
         $scope.Todytransform = [
             {consumption_name: "转化次数", name: "zhuanF"},

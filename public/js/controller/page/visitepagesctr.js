@@ -65,7 +65,7 @@ define(["./module"], function (ctrs) {
             },
             {
                 name: "入口页次数",
-                field: "vc",
+                field: "entrance",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
             }
         ];
