@@ -362,7 +362,7 @@ define(["app"], function (app) {
                         var tempButton = {};
                         tempButton["name"] = "页面URL";
                         tempButton["displayName"] = "页面URL";
-                        tempButton["field"] = "eventId";
+                        tempButton["field"] = "loc";
                         tempButton["footerCellTemplate"] = "<div class='ui-grid-cell-contents'>--</div>"
                         $rootScope.gridArray.unshift(tempButton);
                     }
@@ -2030,15 +2030,10 @@ define(["app"], function (app) {
             var dateTime1 = chartUtils.getSetOffTime($rootScope.tableTimeStart, $rootScope.tableTimeEnd);
             var dateTime2 = chartUtils.getSetOffTime(startTime, endTime);
             $scope.targetDataContrast(null, null, function (item) {
-                //console.log("item")
-                //console.log(item)
-                ////console.log("targetDataContrast")
                 var target = $rootScope.tableSwitch.latitude.field;
                 var dataArray = [];
                 var is = 1;
                 $scope.targetDataContrast(startTime, endTime, function (contrast) {
-                    //console.log("contrast")
-                    //console.log(contrast)
                     if ($rootScope.tableSwitch.number == 4) {//
                         var wordArray = [];// 搜索词数组
                         var aaaArray = [];
