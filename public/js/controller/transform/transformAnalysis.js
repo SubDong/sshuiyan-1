@@ -201,11 +201,11 @@ define(["./module"], function (ctrs) {
                 }
             };
 
-            $scope.$on("ssh_refresh_charts", function (e, msg) {
-                $scope.charts[0].config.legendDefaultChecked = [0, 1];
-                $scope.refreshData(false);
-                init_transformData();
-            });
+            //$scope.$on("ssh_refresh_charts", function (e, msg) {
+            //    $scope.charts[0].config.legendDefaultChecked = [0, 1];
+            //    $scope.refreshData(false);
+            //    init_transformData();
+            //});
             //$scope.initMap();
             //点击显示指标
             $scope.select = function () {
@@ -287,7 +287,7 @@ define(["./module"], function (ctrs) {
                         }
                     }
                 }
-                $scope.$broadcast("transformData", {
+                $scope.$broadcast("ssh_refresh_charts", {
                     start: $rootScope.start,
                     end: $rootScope.end,
                     checkedArray: $scope.es_checkedArray,
@@ -324,6 +324,8 @@ define(["./module"], function (ctrs) {
             $rootScope.curEventInfos = []
 
             $rootScope.refreshData = function (isContrastDataByTime) {//isContrastDataByTime 是否按时间对比
+                $rootScope.gridData = []
+                $rootScope.refreshGridData()
                 $http({
                     method: 'GET',
                     url: "/config/eventchnage_list?type=search&query=" + JSON.stringify({
@@ -410,7 +412,6 @@ define(["./module"], function (ctrs) {
                                     }
                                 })
                                 if ($rootScope.checkedArray.length > 0 && results.length > 0) {
-
                                     var attr = $rootScope.checkedArray[0]
                                     for (var i = 0; i < results.length-1; i++) {
                                         for (var k = i + 1; k < results.length; k++) {
@@ -422,15 +423,13 @@ define(["./module"], function (ctrs) {
                                         }
                                     }
                                     $rootScope.gridData = results;
-                                    $rootScope.targetSearch(true)
-                                } else {
-                                    $rootScope.gridData = [];
-                                    $rootScope.targetSearch(true)
+                                    $rootScope.refreshGridData()
                                 }
-
-
+                                else {
+                                    $rootScope.gridData = [];
+                                    $rootScope.refreshGridData()
+                                }
                                 //刷新概况信息
-
                                 var sumTransformCost = 0
                                 var hashPage = {};
                                 events.forEach(function (event, index) {
@@ -509,9 +508,11 @@ define(["./module"], function (ctrs) {
                                 }
                                 $scope.DateNumber = true;
                                 $scope.DateLoading = true;
-
+                                $rootScope.changeFooterShow()
                             })
-
+                        }
+                        else{
+                            $rootScope.changeFooterShow()
                         }
                     });
                 })
@@ -569,8 +570,6 @@ define(["./module"], function (ctrs) {
                                     if (bdata.option == "crate") {
                                         bdata.quota[minIndex] = gdata[bdata.option] == undefined ? 0 : Number(gdata[bdata.option].replace("%", ""))
                                     } else if (bdata.option == "transformCost") {
-                                        console.log(gdata[bdata.option])
-                                        console.log(gdata[bdata.option].replace("元", ""))
                                         bdata.quota[minIndex] = gdata[bdata.option] == undefined ? 0 : Number(gdata[bdata.option].replace("元", ""))
                                     } else {
                                         bdata.quota[minIndex] = gdata[bdata.option] == undefined ? 0 : gdata[bdata.option]
@@ -580,7 +579,6 @@ define(["./module"], function (ctrs) {
                             }
                         }
                     }
-                    ////console.log(barDatas)
                 })
                 cf.renderChart(barDatas, $scope.charts[0].config);
                 Custom.initCheckInfo();
@@ -603,10 +601,11 @@ define(["./module"], function (ctrs) {
                     }
                 }
                 if (isClicked) {
-                    init_transformData()
+
                     $scope.setShowArray();
-                    $rootScope.refreshData(false);
-                    //$scope.$broadcast("transformData_ui_grid", {
+                    init_transformData()
+                    //$rootScope.refreshData(false);
+                    //$scope.$broadcast("ssh_refresh_charts", {
                     //    start: $rootScope.start,
                     //    end: $rootScope.end,
                     //    checkedArray: $scope.es_checkedArray,
@@ -680,15 +679,10 @@ define(["./module"], function (ctrs) {
                         convert_url_all: $scope.convert_url_all
                     });
                 }
-                //$scope.setShowArray();
-                //////console.log($scope.city)
-                //////console.log($scope.souce)
-                //////console.log($scope.visitNum)
-                //$rootScope.refreshData(true);
             };
 
-            init_transformData();
-            $rootScope.refreshData(false);
+            //init_transformData();
+            //$rootScope.refreshData(false);
 
             // 配置邮件
             $rootScope.initMailData = function () {

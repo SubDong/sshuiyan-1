@@ -493,6 +493,7 @@ define(["app"], function (app) {
         $scope.$on("ssh_refresh_charts", function (e, msg) {
             $scope.charts[0].config.legendDefaultChecked = [0, 1];
             $scope.targetSearch()
+            console.log("ssh_refresh_charts")
             //$rootScope.refreshData(false);
         });
         $scope.page = "";
@@ -776,7 +777,8 @@ define(["app"], function (app) {
             //$scope.isJudge = false;
             $rootScope.$broadcast("ssh_data_show_refresh");
             if ($rootScope.tableSwitch.number == 6) {
-                $rootScope.refreshData(false)
+                $scope.targetSearch();
+                //$rootScope.refreshData(false)
             } else {
                 $scope.targetSearch();
             }
