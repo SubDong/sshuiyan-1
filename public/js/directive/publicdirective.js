@@ -617,15 +617,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                                     })
                                 }
                             });
-                            // 下载前，过滤掉多余的指标数据
-                            dataInfo.forEach(function (_df) {
-                                delete _df.pv;
-                                delete _df.uv;
-                                delete _df.nuv;
-                                delete _df.vc;
-                                delete _df.svc;
-                                delete _df.conversions;
-                            });
                             var repData = JSON.stringify(dataInfo);
                         }
                         $http({

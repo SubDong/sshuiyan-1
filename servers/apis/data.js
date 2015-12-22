@@ -653,22 +653,28 @@ api.post("/downCSV", function (req, res) {
     });
 
     req.addListener("end",function(){
-        try {
-            // 处理 Not all documents have the same schema.
-            requestData.forEach(function (d) {
-                for(var dp in d) {
-                    d[dp] = d[dp] + "";
-                }
-            })
-        } catch (e) {
-            requestData = [];
-            console.error("下载csv异常。解析csv数据异常");
-        }
+
+        // 处理 Not all documents have the same schema.
+        requestData.forEach(function (d) {
+            for(var dp in d) {
+                d[dp] = d[dp] + "";
+            }
+            delete d.pv;
+            delete d.nuv;
+            delete d.uv;
+            delete d.vc;
+            delete d.svc;
+            delete d.conversions;
+            delete d.outRate;
+            delete d.avgPage;
+            delete d.nuvRate;
+        })
         csvApi.json2csv(requestData, function (err, csv) {
-            if (err) throw err;
-            var buffer = new Buffer(csv);
-            //需要转换字符集
-            var uid = uuid.v1();
+            if (err) {
+                var buffer = new Buffer("下载csv异常。解析csv数据异常");
+            } else {
+                var buffer = new Buffer(csv);
+            }
             var str = iconv.encode(buffer, 'utf-8');
             res.send(str);
         });
