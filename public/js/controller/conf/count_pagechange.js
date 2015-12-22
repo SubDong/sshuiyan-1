@@ -56,7 +56,7 @@ define(["./module"], function (ctrs) {
                 enableSorting: false
             },
             {name: "目标名称", displayName: "目标名称", field: "target_name", enableSorting: false},
-            {name: "生成日期", displayName: "生成日期",field: "update_time_desc", enableSorting: true},
+            {name: "生成日期", displayName: "生成日期", field: "update_time_desc", enableSorting: true},
             {
                 name: "URL",
                 displayName: "URL",
@@ -68,7 +68,7 @@ define(["./module"], function (ctrs) {
             {
                 name: "路径名称",
                 displayName: "路径名称",
-                field: "target_urls",
+                field: "paths_desc",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>URL</div>",
                 cellClass: "table_list_color",
                 enableSorting: false
@@ -133,11 +133,16 @@ define(["./module"], function (ctrs) {
                 //修改数据
                 dataConfig.forEach(function (item, i) {
                     item.needPath = "否";
-                    if (item.paths != null && item.paths.length> 0) {
-                        item.paths.forEach(function(path){
-                            if(path.path_mark&&item.needPath == "否")
+                    if (item.paths != null && item.paths.length > 0) {
+                        var pdes = "";
+                        item.paths.forEach(function (path) {
+                            if (path.path_mark && item.needPath == "否")
                                 item.needPath = "是";
+                            if (path.path_mark)
+                                pdes = pdes + path.path_name;
                         })
+                        console.log(pdes)
+                        $rootScope.gridOptions.data[i].paths_desc = pdes;
                     }
                     if (item.target_urls != null && item.target_urls.length > 0) {
                         var url = "";
@@ -190,10 +195,10 @@ define(["./module"], function (ctrs) {
         };
         $scope.PauseDelete = function (index, grid, row, thise) {
 
-            var msg = row.entity.is_pause?"重新启用":"暂停使用"
+            var msg = row.entity.is_pause ? "重新启用" : "暂停使用"
             $scope.onDeleteDialog = ngDialog.open({
                 template: '' +
-                '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div><ul class="admin-ng-content"><li> 您确定'+msg+'这个路径吗？</li></ul>' +
+                '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div><ul class="admin-ng-content"><li> 您确定' + msg + '这个路径吗？</li></ul>' +
                 '<div class="ng-button-div"><button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
                     <button type="button" class="ngdialog-button ng-button" ng-click="surePauseDelete()">确定</button></div></div>',
                 className: 'ngdialog-theme-default admin_ngdialog',
@@ -202,12 +207,12 @@ define(["./module"], function (ctrs) {
             });
             $scope.surePauseDelete = function () {
                 $scope.onDeleteDialog.close();
-                var updatePageConv = "/config/page_conv?type=update&query="+JSON.stringify({_id:row.entity._id})+"&updates=" + JSON.stringify({is_pause:!row.entity.is_pause});
+                var updatePageConv = "/config/page_conv?type=update&query=" + JSON.stringify({_id: row.entity._id}) + "&updates=" + JSON.stringify({is_pause: !row.entity.is_pause});
                 $http({
                     method: 'GET',
                     url: updatePageConv
                 }).success(function (upd, status) {
-                    row.entity.is_pause=!row.entity.is_pause
+                    row.entity.is_pause = !row.entity.is_pause
                 });
             };
         };
