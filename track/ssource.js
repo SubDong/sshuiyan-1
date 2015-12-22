@@ -14,14 +14,14 @@
     };
     var server_base_path = p.protocol + "//" + p.flashUrl + "/" + p.urlPath;
     var errIdMsg = {
-        defaultTargetName: "事件目标",
+        defaultTargetName: "事件",
         disable: "该对象没有ID，无法监控，请修改网页源代码，为该对象添加ID.",
         Delete: "删除后，将不再跟踪统计该目标，该目标的历史数据会被删除且无法恢复。是否立即删除？",
         DUPLICATE_ID: function (G) {
             return "该网页中有该对象重复的ID，请修改网页源代码保证ID唯一。"
         },
         EDIT_DUPLICATE_ID: function (G, X) {
-            return '"' + decodeURIComponent(G) + '"（id=' + X + ")的id在当前页面中不唯一，请调整页面代码保证该事件目标id唯一性。"
+            return '"' + decodeURIComponent(G) + '"（id=' + X + ")的id在当前页面中不唯一，请调整页面代码保证该事件id唯一性。"
         },
         OBJECT: "无法监控。"
     };
@@ -567,10 +567,10 @@
             panelcont.updateInfo(elem.id);
             if (Z) {
                 forcedoc(deleteBtn).style.display = "block";
-                forcedoc(S).innerHTML = "编辑事件目标"
+                forcedoc(S).innerHTML = "编辑事件"
             } else {
                 forcedoc(deleteBtn).style.display = "none";
-                forcedoc(S).innerHTML = "添加事件目标"
+                forcedoc(S).innerHTML = "添加事件"
             }
         },
         showDisablePanel: function (elem, contText) {
@@ -655,7 +655,7 @@
             var G = a(forcedoc(h).value);
             var ab = a(forcedoc(path_url).value);
             if (G == "") {
-                alert("事件目标名称不能为空!");
+                alert("事件名称不能为空!");
                 return
             }
             if (ab == "") {
@@ -663,7 +663,7 @@
                 return
             }
             if (ckeckEventName(G)) {
-                alert("事件目标名称是非法的!");
+                alert("事件名称是非法的!");
                 return
             }
             var ad = addPanel.getAttribute("HY_panelTarget");
@@ -748,7 +748,7 @@
             var G = [];
             G.push('<table width="100%" border="0" cellspacing="0" cellpadding="0">');
             G.push("<tr>");
-            G.push('<td  height="28" id="' + S + '" valign="middle" style="margin:0; padding:0; border:0; font-size:12px; color:#000">添加事件目标</td>');
+            G.push('<td  height="28" id="' + S + '" valign="middle" style="margin:0; padding:0; border:0; font-size:12px; color:#000">添加事件</td>');
             G.push('<td  height="28" colspan="2" id="' + A + '" valign="middle"><div style="float:right;style="margin:0; padding:0; border:0; font-size:12px; color:#000"><a href="http://support.baidu.com/tongji/?module=default&controller=index&action=detail&nodeid=4791" target="_blank" style="font-size:12px; color:#00c; ">如何设置事件作用页面或目录</a></div></td>');
             G.push("</tr>");
             G.push("<tr>");
