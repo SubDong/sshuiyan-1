@@ -1266,7 +1266,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
     app.directive("sshESDateShow", function ($http, $rootScope, $q, $location) {
         return {
             restrict: 'E',
-            templateUrl: '../commons/date_show.html',
+            templateUrl: '../page/date_show.html',
             link: function (scope, element, attris, controller) {
                 // 初始化参数
                 scope.isCompared = false;
