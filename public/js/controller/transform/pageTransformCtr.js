@@ -461,18 +461,6 @@ define(["./module"], function (ctrs) {
             }
 
             $rootScope.refreshData = function (selectedPageConv) {
-                //$rootScope.gridArray[1] =
-                //
-                //{
-                //    name: "来源",
-                //    displayName: "来源",
-                //    field: "campaignName",
-                //    cellTemplate: "<div><a href='javascript:void(0)' style='color:#0965b8;line-height:30px' ng-click='grid.appScope.showPageSeDetail(grid.options.data,row)'>{{grid.appScope.getDataUrlInfo(grid, row,3)}}</a></div>",
-                //    footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
-                //    enableSorting: false
-                //}
-                //$rootScope.gridOptions.rowHeight = 30;
-                //$rootScope.gridOptions.columnFooterHeight = 30;
                 if ($rootScope.pageConfigs != undefined && $rootScope.pageConfigs.length > 0) {
                     var filterPageConf = []
                     if (selectedPageConv == undefined || selectedPageConv == "") {
