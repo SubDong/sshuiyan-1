@@ -30,7 +30,7 @@ define(["./module"], function (ctrs) {
                     maxWidth: 5
                 },
                 {name: "目标URL", displayName: "目标URL", field: "targetUrl"},
-                {name: "生成日期", displayName: "生成日期", field: "updateTime"},
+            /*    {name: "生成日期", displayName: "生成日期", field: "updateTime"},*/
                 {name: "媒体平台", displayName: "媒体平台", field: "mediaPlatform"},
                 {name: "广告类型", displayName: "广告类型", field: "adTypes"},
                 {name: "计划名称", displayName: "计划名称", field: "planName"},
