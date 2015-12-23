@@ -99,7 +99,9 @@ var schemas = {
             //百度推广信息
             bname:String,//百度帐号
             bpasswd:String,//百度帐号 密码
-            rname:String//备注
+            rname:String,//备注
+            ctime:Number,//创建时间
+            token:String,//用户token
         }
     },
 // 站点统计规则
