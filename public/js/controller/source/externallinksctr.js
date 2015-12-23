@@ -44,7 +44,7 @@ define(["./module"], function (ctrs) {
             },
             {
                 name: " ",
-                cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history7' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='javascript:void(0)' ng-click='grid.appScope.showEntryPageLink(row)'>查看入口页链接</a></li></ul></div></div>",
+                cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ng-click='grid.appScope.getHistoricalTrend(this, \"history7\")' target='_parent'>查看历史趋势</a></li><li><a href='javascript:void(0)' ng-click='grid.appScope.showEntryPageLink(row)'>查看入口页链接</a></li></ul></div></div>",
                 enableSorting: false
             },
             {
@@ -77,7 +77,7 @@ define(["./module"], function (ctrs) {
             // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
             number: 2,
             //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
-            coding: "<li><a ui-sref='history7' ng-click='grid.appScope.getHistoricalTrend(this)'>查看历史趋势</a></li><li><a href='javascript:void(0)' ng-click='grid.appScope.showEntryPageLink(this)'>查看入口页链接</a></li>",
+            coding: "<li><a ng-click='grid.appScope.getHistoricalTrend(this, \"history7\")' target='_parent'>查看历史趋势</a></li><li><a href='javascript:void(0)' ng-click='grid.appScope.showEntryPageLink(this)'>查看入口页链接</a></li>",
             //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
             arrayClear: false, //是否清空指标array
             isJudge: false //是否清空filter 默认为清空
@@ -92,6 +92,14 @@ define(["./module"], function (ctrs) {
             var chartArray = [$scope.charts[1]];
             requestService.refresh(chartArray);
         }
+        $scope.refreshChartByTable = function (type) {
+            var chart = echarts.init(document.getElementById($scope.charts[1].config.id));
+            $scope.charts[1].config.instance = chart;
+            util.renderLegend(chart, $scope.charts[1].config);
+            var arrayChart = [$scope.charts[1]];
+            arrayChart[0]["dimension"] = ["period," + type];
+            requestService.refresh(arrayChart);
+        };
         $scope.pieFormat = function (data, config) {
             var json = JSON.parse(eval("(" + data + ")").toString());
             var tmpData = [];
@@ -325,6 +333,7 @@ define(["./module"], function (ctrs) {
             var dataInfo = angular.copy($rootScope.gridApi2.grid.options.data);
             var dataHeadInfo = angular.copy($rootScope.gridApi2.grid.options.columnDefs);
             var _tableBody = $rootScope.getPDFTableBody(dataInfo, dataHeadInfo);
+            var _tableWidths = $rootScope.getPDFTableWidths(dataHeadInfo);
             var docDefinition = {
                 header: {
                     text: "External Links data report",
@@ -335,6 +344,7 @@ define(["./module"], function (ctrs) {
                     {
                         table: {
                             headerRows: 1,
+                            widths: _tableWidths,
                             body: _tableBody
                         }
                     },

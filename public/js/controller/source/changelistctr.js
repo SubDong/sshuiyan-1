@@ -106,7 +106,7 @@ define(["./module"], function (ctrs) {
             //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
             coding: "<li><a>查看相关热门搜索词</a></li>" +
             "<li><a ng-click='grid.appScope.showSearchUrl()'>查看搜索来路URL</a></li>" +
-            "<li><a ui-sref='history6' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent'>查看历史趋势</a></li>",
+            "<li><a ng-click='grid.appScope.getHistoricalTrend(this, \"history6\")' target='_parent'>查看历史趋势</a></li>",
             //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
             arrayClear: false //是否清空指标array
         };

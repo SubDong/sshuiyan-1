@@ -47,7 +47,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                      $('#reportrange').data('daterangepicker').setStartDate(StartTimes);
                      $('#reportrange').data('daterangepicker').setEndDate(EndTimes);
                      $rootScope.targetSearch();
-                     scope.$broadcast("ssh_dateShow_options_time_change");
                      if (isChart == "/visitor/equipment") {
                      scope.charts.forEach(function (e) {
                      var chart = echarts.init(document.getElementById(e.config.id));
@@ -104,7 +103,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                 scope.reloadByCalendar = function (type) {
                     //console.info("info: now user click the " + type + " button");
                     $rootScope.$broadcast("ssh_refresh_charts");
-                    $rootScope.$broadcast("ssh_dateShow_options_time_change", type);
                 };
                 scope.today = function () {
                     scope.isShowCalendar = false;
@@ -433,7 +431,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                             $('#reportrange').data('daterangepicker').setStartDate(StartTimes);
                             $('#reportrange').data('daterangepicker').setEndDate(EndTimes);
 //                            $rootScope.targetSearch();
-//                            scope.$broadcast("ssh_dateShow_options_time_change");
 //                            if (isChart == "/visitor/equipment") {
 //                                scope.charts.forEach(function (e) {
 //                                    var chart = echarts.init(document.getElementById(e.config.id));
@@ -617,15 +614,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                                     })
                                 }
                             });
-                            // 下载前，过滤掉多余的指标数据
-                            dataInfo.forEach(function (_df) {
-                                delete _df.pv;
-                                delete _df.uv;
-                                delete _df.nuv;
-                                delete _df.vc;
-                                delete _df.svc;
-                                delete _df.conversions;
-                            });
                             var repData = JSON.stringify(dataInfo);
                         }
                         $http({
@@ -639,6 +627,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                                 dataInfo: repData
                             }
                         }).success(function (data, status, headers, config) {
+                            console.log(data);
                             var hiddenElement = document.createElement('a');
                             var dateTime = new Date();
                             var dateString = dateTime.Format("yyyyMdhmsS");
@@ -882,7 +871,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     scope.DateNumber = false;
                     scope.DateLoading = false;
                     scope.setDefaultShowArray();
-                    var esRequest = $http.get('/api/index_summary/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field) + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
+                    var esRequest = $http.get('/api/index_summary/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field) + "&filerInfo=" + encodeURIComponent($rootScope.tableSwitch.tableFilter) + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
                     var seoQuotas = scope.getSEOQuotas();
                     if (seoQuotas.length > 0) {
                         if ($rootScope.areaFilter != "全部" && $location.path() == "/extension/way") {// 推广方式地域过滤不为全部是特殊处理
@@ -903,7 +892,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                 scope.loadCompareDataShow = function (startTime, endTime) {
                     scope.DateNumber = false;
                     scope.DateLoading = false;
-                    var esRequest = $http.get('/api/index_summary/?start=' + startTime + "&end=" + endTime + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field) + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
+                    var esRequest = $http.get('/api/index_summary/?start=' + startTime + "&end=" + endTime + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field) + "&filerInfo=" + encodeURIComponent($rootScope.tableSwitch.tableFilter) + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
                     var seoQuotas = scope.getSEOQuotas();
                     if (seoQuotas.length > 0) {
                         if ($rootScope.areaFilter != "全部" && $location.path() == "/extension/way") {// 推广方式地域过滤不为全部是特殊处理
@@ -1266,7 +1255,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
     app.directive("sshESDateShow", function ($http, $rootScope, $q, $location) {
         return {
             restrict: 'E',
-            templateUrl: '../commons/date_show.html',
+            templateUrl: '../page/date_show.html',
             link: function (scope, element, attris, controller) {
                 // 初始化参数
                 scope.isCompared = false;
@@ -1288,7 +1277,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     scope.DateNumber = false;
                     scope.DateLoading = false;
                     scope.setDefaultShowArray();
-                    var esRequest = $http.get('/api/index_summary/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field) + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
+                    var esRequest = $http.get('/api/index_summary/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field) + "&filerInfo=" + encodeURIComponent($rootScope.tableSwitch.tableFilter) + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
 
                     $q.all([esRequest]).then(function (final_result) {
                         // 初始化对比数据
@@ -1339,7 +1328,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                 scope.loadCompareDataShow = function (startTime, endTime) {
                     scope.DateNumbertwo = false;
                     scope.DateLoading = false;
-                    var esRequest = $http.get('/api/index_summary/?start=' + startTime + "&end=" + endTime + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field) + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
+                    var esRequest = $http.get('/api/index_summary/?start=' + startTime + "&end=" + endTime + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field) + "&filerInfo=" + encodeURIComponent($rootScope.tableSwitch.tableFilter) + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + $rootScope.userType);
                     $q.all([esRequest]).then(function (final_result) {
                         // 初始化对比数据
                         scope.pushESData(final_result[0].data, true);
@@ -2351,60 +2340,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     scope.pushESData(data, true);
                 };
                 scope.pushESData = function (result, flag) {
-                    var _array = $rootScope.copy(scope.dateShowArray);
-                    var _count = 0;
-                    angular.forEach(result, function (r) {
-                        var infoKey = r[$rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field];
-                        //if (infoKey != undefined && (infoKey == "-" || infoKey == "" || infoKey == "www" || infoKey == "null")) {
-                        //    return false;
-                        //}
-                        if (infoKey == undefined) {
-                            return false;
-                        }
-                        if (!flag) {
-                            scope.ds_keyData.push(infoKey);
-                        }
-                        if (flag && scope.ds_keyData.targetIndexOf(infoKey) == -1) {
-                            return false;
-                        }
-                        _count++;
-                        angular.forEach(_array, function (obj) {
-                            var temp = obj.label;
-                            if (r[temp] == undefined) {
-                                return false;
-                            }
-                            if (flag) {
-                                if (obj.label == "avgTime") {
-                                    var hour = Number(r[temp].split(":")[0]);
-                                    var min = Number(r[temp].split(":")[1]);
-                                    var sec = Number(r[temp].split(":")[2]);
-                                    var count = (((hour * 60) * 60) + (min * 60) + sec);
-                                    obj.cValue += count;
-                                } else {
-                                    obj.cValue += (r[temp].indexOf("%") != -1) ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
-                                }
-                            } else {
-                                if (obj.label == "avgTime") {
-                                    var hour = Number(r[temp].split(":")[0]);
-                                    var min = Number(r[temp].split(":")[1]);
-                                    var sec = Number(r[temp].split(":")[2]);
-                                    var count = (((hour * 60) * 60) + (min * 60) + sec);
-                                    obj.value += count;
-                                } else {
-                                    obj.value += (r[temp].indexOf("%") != -1) ? Number(r[temp].substring(0, r[temp].indexOf("%"))) : Number(r[temp]);
-                                }
-                            }
-                        });
-                    });
-                    // 设置_count
-                    angular.forEach(_array, function (obj) {
-                        if (flag) {
-                            obj.cCount = _count;
-                        } else {
-                            obj.count = _count;
-                        }
-                    });
-                    scope.dateShowArray = $rootScope.copy(_array);
+                    console.log("scope.pushESData")
                 };
             }
         };

@@ -44,7 +44,7 @@ define(["./module"], function (ctrs) {
             },
             {
                 name: " ",
-                cellTemplate: "<div class='table_box'><a ui-sref='history14' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn' title='查看历史趋势'></a></div>",
+                cellTemplate: "<div class='table_box'><a ng-click='grid.appScope.getHistoricalTrend(this, \"history14\")' target='_parent' class='table_nextbtn' title='查看历史趋势'></a></div>",
                 enableSorting: false
             },
             {
@@ -64,8 +64,8 @@ define(["./module"], function (ctrs) {
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
             },
             {
-                name: "退出次数",
-                displayName: '退出次数',
+                name: "退出页次数",
+                displayName: '退出页次数',
                 field: "ec",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
             }

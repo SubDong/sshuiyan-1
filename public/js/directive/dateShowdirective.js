@@ -522,6 +522,71 @@ define(["../app"], function (app) {
         };
     });
 
+    /**
+     * Create by wms on 2015-12-23.历史趋势
+     */
+    app.directive("sshHistoryDateShow", function ($rootScope) {
+        return {
+            restrict: 'E',
+            templateUrl: '../commons/date_show.html',
+            link: function (scope, element, attris, controller) {
+                console.log("-------history--------");
+                // 初始化参数
+                scope.isCompared = false;
+                scope.dateShowArray = [];
+                scope.filter = attris.filter;
+                scope.ds_defaultQuotasOption = ["pv", "uv", "ip", "nuv", "outRate", "avgTime"];
+                scope.ds_keyData = [];
+                scope.ds_dateShowQuotasOption = scope.checkedArray ? scope.checkedArray : scope.ds_defaultQuotasOption;
+                scope.setDefaultShowArray = function () {
+                    var tempArray = [];
+                    angular.forEach(scope.ds_dateShowQuotasOption, function (q_r) {
+                        tempArray.push({"label": q_r, "value": 0, "cValue": 0, "count": 0, "cCount": 0});
+                    });
+                    scope.ds_keyData = [];
+                    scope.dateShowArray = $rootScope.copy(tempArray);
+                };
+
+                scope.$on("LoadHistoryDataFinish", function (e, msg, data) {
+                    scope.isCompared = false;
+                    var temp = $rootScope.copy(msg);
+                    if (temp.length > 0) {
+                        scope.ds_dateShowQuotasOption = temp;
+                    }
+                    scope.setDefaultShowArray();
+                    scope.pushESAndSE0Data(data);
+                    scope.DateNumber = true;
+                    scope.DateLoading = true;
+                });
+
+                scope.pushESAndSE0Data = function (data) {
+                    scope.DateNumber = false;
+                    scope.DateLoading = false;
+                    var _array = $rootScope.copy(scope.dateShowArray);
+                    angular.forEach(data, function (r) {
+                        angular.forEach(_array, function (obj) {
+                            var temp = obj.label;
+                            if (r[temp] == undefined) {
+                                return false;
+                            }
+                            if (JSON.stringify(r[temp]).indexOf("%") != -1) {
+                                obj.value += parseFloat(r[temp].substr(0, r[temp].length - 1));
+                            } else if (JSON.stringify(r[temp]).indexOf(":") != -1) {
+                                var _t_array = r[temp].split(":");
+                                obj.value += _t_array[0] * 3600 * 1000 + _t_array[1] * 60 * 1000 + _t_array[2] * 1000;
+                            } else {
+                                obj.value += parseInt(r[temp]);
+                            }
+                            obj.count++;
+                        });
+                    });
+
+                    scope.dateShowArray = $rootScope.copy(_array);
+                };
+            }
+        };
+    });
+
     app.directive("sshHeatMap", function ($http, $rootScope, $q, SEM_API_URL) {
         return {
             restrict: 'C',
@@ -636,7 +701,7 @@ define(["../app"], function (app) {
         quotaObject.orderNum = "订单数";
         quotaObject.orderMoney = "订单金额";
         quotaObject.orderNumRate = "订单转化率";
-        quotaObject.ec = "退出次数";
+        quotaObject.ec = "退出页次数";
         return function (key) {
             return quotaObject[key] || "未定义的指标KEY";
         };
@@ -678,9 +743,11 @@ define(["../app"], function (app) {
         quotaObject.conversions = "访客到达转化目标页面的次数。";
         quotaObject.clickTotal = "事件点击总数";
         quotaObject.crate = "转化率=转化次数/访问次数。";
+        quotaObject.benefit = "预期每次转化收益*转化次数。";
+        quotaObject.orderNumRate = "订单转化数/访问次数。";
         quotaObject.visitNum = "一个用户进行一次操作记录一次唯一访客事件数，但同一个用户多次点击同一个按钮不重复计算。";
         quotaObject.clickTotal = "操作发生的次数。";
-        quotaObject.ec = "用户退出网站的次数.";
+        quotaObject.ec = "作为访问会话最后一个浏览页面（即退出页面）的次数。.";
         quotaObject.transformCost = "平均转化成本=消费/转化次数";
         return function (key) {
             return quotaObject[key] || "未定义的指标KEY";
@@ -705,7 +772,7 @@ define(["../app"], function (app) {
                     if (value.indexOf && value.indexOf("%") != -1) {// 缓存中的数据使用
                         return value;
                     }
-                    return count ? (value == 0 ? "0%" : (value / count).toFixed(2) + "%") : "0%";
+                    return count ? (value == 0 ? "0.00%" : (value / count).toFixed(2) + "%") : "0.00%";
                 }
                 case "avgTime":
                 {
@@ -732,6 +799,9 @@ define(["../app"], function (app) {
                 case "ctr":
                 {
                     if (value.indexOf && value.indexOf("%") != -1) {// 字符串且存在符号%
+                        if (value == "0%") {
+                            return "0.00%";
+                        }
                         return value;
                     }
                     return count ? (value == 0 ? "0.00%" : (value / count).toFixed(2) + "%") : "--";
@@ -740,7 +810,6 @@ define(["../app"], function (app) {
                 case "avgPage":
                 {
                     return count ? (value == 0 ? "0" : (value / count).toFixed(2)) : "0";
-//                    return count ? (value / count).toFixed(2) : "0";
                 }
                 default :
                 {

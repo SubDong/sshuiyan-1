@@ -41,12 +41,7 @@ define(["app"], function (app) {
                     cellTemplate: "<div><a href='javascript:void(0)' style='color:#0965b8;line-height:30px' ng-click='grid.appScope.getHistoricalTrend(this)'>{{grid.appScope.getDataUrlInfo(grid, row,3)}}</a></div>"
                     , footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
                     enableSorting: false
-                }, /*
-                 {
-                 name: " ",
-                 displayName: " ",
-                 cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
-                 },*/
+                },
                 {
                     name: "展现量",
                     displayName: "展现量",

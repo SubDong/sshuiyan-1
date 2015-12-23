@@ -151,7 +151,7 @@ var es_aggs = {
     "avgPage": {
         "pv_aggs": {
             "value_count": {
-                "field": "loc"
+                "field": "_type"
             }
         },
         "vc_aggs": _vc_aggs
@@ -179,6 +179,15 @@ var es_aggs = {
     },
     // 转化次数
     "conversions": {},
+    "entrance": {
+        "entrance": {
+            "filter": {
+                "term": {
+                    "entrance": "1"
+                }
+            }
+        }
+    },
     // TODO 页面转化
     "pageConversion": {},
     // TODO 事件转化
@@ -679,6 +688,29 @@ var nuvRateFn = function (result) {
     };
 };
 
+var entranceFn = function (result) {
+
+    console.log(result);
+    var keyArr = [];
+    var keyAsStringArr = [];
+    var quotaArr = [];
+
+    for (var i = 0, l = result.length; i < l; i++) {
+        var entrance_count = result[i].entrance["doc_count"];
+        keyArr.push(result[i].key);
+        keyAsStringArr.push(result[i].key_as_string);
+
+        quotaArr.push(entrance_count);
+    }
+
+    return {
+        "label": "entrance",
+        "key": keyArr,
+        "key_as_string": keyAsStringArr,
+        "quota": quotaArr
+    };
+};
+
 var ipFn = function (result) {
     var keyArr = [];
     var keyAsStringArr = [];
@@ -962,6 +994,9 @@ var es_request = {
                                     break;
                                 case "nuvRate":
                                     data.push(nuvRateFn(result));
+                                    break;
+                                case "entrance":
+                                    data.push(entranceFn(result));
                                     break;
                                 default :
                                     break;

@@ -29,7 +29,6 @@ define(["./module"], function (ctrs) {
         $rootScope.tableTimeEnd = 0;
         //配置默认指标
         $rootScope.checkedArray = ["pv", "uv", "ip", "outRate", "avgTime"];
-        //ng-click='grid.appScope.getHistoricalTrend(this)'
         $rootScope.gridArray = [
             {
                 name: "xl",

@@ -345,12 +345,21 @@ api.get('/indextable', function (req, res) {
                             infoKey = info.key[i]
                         }
                         if (popFlag != 1) {
-                            if (_lati == "rf" && _filter != null && _filter[0]["rf_type"][0] && infoKey == "-") continue
+                            if (_lati == "rf" && _filter != null && _filter[0]["rf_type"][0] && infoKey == "-") {
+                                continue;
+                            }
+                            if (_lati == "dm" && _filter != null && _filter[0]["rf_type"][0] && infoKey == "-") {
+                                continue;
+                            }
                             if (_promotion == "ssc" || _lati == "kw") {
-                                if (infoKey != undefined && (infoKey == "-" || infoKey == "--" || infoKey == "" || infoKey == "www" || infoKey == "null" || infoKey.length >= 40)) continue;
+                                if (infoKey != undefined && (infoKey == "-" || infoKey == "--" || infoKey == "" || infoKey == "www" || infoKey == "null" || infoKey.length >= 40)) {
+                                    continue;
+                                }
                             }
                             if (_lati == "se" && _filter != null && _filter[0]["rf_type"] && _filter[0]["rf_type"][0]) {
-                                if (infoKey != undefined && infoKey == "-") continue;
+                                if (infoKey != undefined && infoKey == "-") {
+                                    continue;
+                                }
                             }
                         }
                         var infoKey = info.key[i];
@@ -636,15 +645,36 @@ api.get('/provincemap', function (req, res) {
 api.post("/downCSV", function (req, res) {
     var requestData = [];
     req.addListener("data", function (postDataChunk) {
-        requestData = JSON.parse(JSON.parse(postDataChunk + "").dataInfo);
+        try {
+            requestData = JSON.parse(JSON.parse(postDataChunk + "").dataInfo);
+        } catch (e) {
+            console.error("下载csv异常。解析csv数据异常");
+        }
     });
 
     req.addListener("end",function(){
+
+        // 处理 Not all documents have the same schema.
+        requestData.forEach(function (d) {
+            for(var dp in d) {
+                d[dp] = d[dp] + "";
+            }
+            delete d.pv;
+            delete d.nuv;
+            delete d.uv;
+            delete d.vc;
+            delete d.svc;
+            delete d.conversions;
+            delete d.outRate;
+            delete d.avgPage;
+            delete d.nuvRate;
+        })
         csvApi.json2csv(requestData, function (err, csv) {
-            if (err) throw err;
-            var buffer = new Buffer(csv);
-            //需要转换字符集
-            var uid = uuid.v1();
+            if (err) {
+                var buffer = new Buffer("下载csv异常。解析csv数据异常");
+            } else {
+                var buffer = new Buffer(csv);
+            }
             var str = iconv.encode(buffer, 'utf-8');
             res.send(str);
         });

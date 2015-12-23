@@ -32,7 +32,7 @@ define(["./module"], function (ctrs) {
             {consumption_name: "订单转化率", name: "orderNumRate"}
         ];
 
-        $rootScope.extendways = [{index:0,name:"全部页面转化目标"}]
+        $rootScope.extendways = [{index: 0, name: "全部页面转化目标"}]
         //        高级搜索提示
         $scope.sourceSearch = "";
         $scope.terminalSearch = "";
@@ -70,18 +70,6 @@ define(["./module"], function (ctrs) {
             $rootScope.initPageConfig(false)
         }
 
-        //var griApihtml = function (gridApi) {
-        //    gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
-        //        row.entity.subGridOptions = {
-        //            appScopeProvider: $scope.subGridScope,
-        //            expandableRowHeight: 360,
-        //            enableHorizontalScrollbar: 1,
-        //            enableVerticalScrollbar: 1,
-        //            showHeader: false,
-        //            columnDefs: $rootScope.gridArray
-        //        };
-        //    });
-        //};
         $rootScope.expandInex = 1
         $rootScope.expandRowData = function (pGridApi) {
             //展开操作
@@ -101,7 +89,7 @@ define(["./module"], function (ctrs) {
                     //查询转化的数据
                     if ($rootScope.pageConfigs != undefined && $rootScope.pageConfigs.length > 0) {
                         var filterPageConf = []
-                        if ( $rootScope.selectedPageConvIndex == 0 ) {
+                        if ($rootScope.selectedPageConvIndex == 0) {
                             filterPageConf = $rootScope.pageConfigs
                         } else {
                             $rootScope.pageConfigs.forEach(function (conf) {
@@ -111,9 +99,9 @@ define(["./module"], function (ctrs) {
                             })
                         }
                         var tPageInfoArr = ["conversions", "benefit"]
-                        var pageurl = "/api/transform/getPageConvInfo?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&rfType=" + $rootScope.rowEntity.rf_type + "&se=" + pRow.entity.se + "&queryOptions=" + tPageInfoArr+"&pages=" + JSON.stringify(filterPageConf)+ "&filters=" + $rootScope.getFilters()
+                        var pageurl = "/api/transform/getPageConvInfo?start=" + $rootScope.start + "&end=" + $rootScope.end + "&type=" + $rootScope.userType + "&rfType=" + $rootScope.rowEntity.rf_type + "&se=" + pRow.entity.se + "&queryOptions=" + tPageInfoArr + "&pages=" + JSON.stringify(filterPageConf) + "&filters=" + $rootScope.getFilters()
                         $http.get(pageurl).success(function (pagedatas) {
-                            if(pagedatas!=undefined&&pagedatas.length>0){
+                            if (pagedatas != undefined && pagedatas.length > 0) {
                                 var datas = []
                                 pagedatas.forEach(function (pdata, index) {
                                     var data = angular.copy(pRow.entity)
@@ -145,7 +133,7 @@ define(["./module"], function (ctrs) {
                                     datas.push(data)
                                 })
                                 pRow.entity.subGridOptions.data = datas
-                            }else{
+                            } else {
                                 pRow.entity.subGridOptions.data = []
                             }
                         })
@@ -196,16 +184,10 @@ define(["./module"], function (ctrs) {
                 $rootScope.expandRowData(gridApi)
             }
         };
-        $rootScope.targetSearchSpread = function (isClicked) {
-            $scope.gridOpArray = angular.copy($rootScope.gridArray);
-            $rootScope.gridOptions.columnDefs = $scope.gridOpArray;
-        };
-
         $scope.page = "";
         $scope.pagego = function (pagevalue) {
             pagevalue.pagination.seek(Number($scope.page));
         };
-        $rootScope.targetSearchSpread(true);
         //得到表格底部数据
         $scope.getSearchFooterData = function (a, option, number) {
             var returnData = 0;
@@ -258,28 +240,28 @@ define(["./module"], function (ctrs) {
                     returnData = (returnData + "").substring(0, (returnData + "").indexOf(".") + 3);
                 }
                 if (a.col.field == "nuvRate") {
-                    var sumNuv= 0,sumUv =0
+                    var sumNuv = 0, sumUv = 0
                     option.forEach(function (item) {
-                        sumNuv+= item.entity["nuv"]==undefined?0: item.entity["nuv"]
-                        sumUv+= item.entity["uv"]==undefined?0: item.entity["uv"]
+                        sumNuv += item.entity["nuv"] == undefined ? 0 : item.entity["nuv"]
+                        sumUv += item.entity["uv"] == undefined ? 0 : item.entity["uv"]
                     })
-                    returnData = sumNuv>0?(((sumNuv/sumUv)*100).toFixed(2)+"%"):"0.00%"
+                    returnData = sumNuv > 0 ? (((sumNuv / sumUv) * 100).toFixed(2) + "%") : "0.00%"
                 }
                 if (a.col.field == "crate") {
-                    var sumNuv= 0,sumpv =0
+                    var sumNuv = 0, sumpv = 0
                     option.forEach(function (item) {
-                        sumNuv+= item.entity["conversions"]==undefined?0: item.entity["conversions"]
-                        sumpv+= item.entity["pv"]==undefined?0: item.entity["pv"]
+                        sumNuv += item.entity["conversions"] == undefined ? 0 : item.entity["conversions"]
+                        sumpv += item.entity["pv"] == undefined ? 0 : item.entity["pv"]
                     })
-                    returnData = sumpv>0?(((sumNuv/sumpv)*100).toFixed(2)+"%"):"0.00%"
+                    returnData = sumpv > 0 ? (((sumNuv / sumpv) * 100).toFixed(2) + "%") : "0.00%"
                 }
                 if (a.col.field == "orderNumRate") {
-                    var sumOrder= 0,sumpv =0
+                    var sumOrder = 0, sumpv = 0
                     option.forEach(function (item) {
-                        sumOrder+= item.entity["orderNum"]==undefined?0: item.entity["orderNum"]
-                        sumpv+= item.entity["pv"]==undefined?0: item.entity["pv"]
+                        sumOrder += item.entity["orderNum"] == undefined ? 0 : item.entity["orderNum"]
+                        sumpv += item.entity["pv"] == undefined ? 0 : item.entity["pv"]
                     })
-                    returnData = sumpv>0?(((sumOrder/sumpv)*100).toFixed(2)+"%"):"0.00%"
+                    returnData = sumpv > 0 ? (((sumOrder / sumpv) * 100).toFixed(2) + "%") : "0.00%"
                 }
             } else {
                 returnData = "--"
@@ -314,14 +296,64 @@ define(["./module"], function (ctrs) {
             }
         };
         //初始化数据
-        $rootScope.initPageConfig()//初始化查询ES
+        //$rootScope.initPageConfig()//初始化查询ES
+
         $scope.$on("transformData", function (e, msg) {
+            console.log("transformData")
             $(msg)
         });
+
+
+        $rootScope.targetSearch = function () {
+            $rootScope.gridOptions.showColumnFooter = !$rootScope.gridOptions.showColumnFooter;
+            $rootScope.gridOpArray = angular.copy($rootScope.gridArray);
+            $rootScope.gridOptions.columnDefs = $rootScope.gridOpArray;
+            $rootScope.gridOptions.rowHeight = 30;
+            $rootScope.gridOptions.columnFooterHeight = 30;
+            $(".custom_table i").css({"display": "block"});
+
+            //默认指标设置排序类型
+            angular.forEach($scope.gridOptions.columnDefs, function (_record, index) {
+                if (_record.name == "新访客比率" || _record.name == "跳出率") {
+                    _record.sortingAlgorithm = $rootScope.sortPercent;
+                } else if (_record.field == "vc" || _record.field == "uv" || _record.field == "pv"
+                    || _record.field == "nuv" || _record.field == "ip" || _record.field == "avgPage") {
+                    _record.sortingAlgorithm = $rootScope.sortNumber;
+                }
+            });
+            //if (isClicked) {
+            $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
+            //}
+            if ($rootScope.tableSwitch.latitude != null && $rootScope.tableSwitch.latitude == undefined) {
+                return;
+            }
+            if ($rootScope.tableTimeStart == undefined) {
+                return;
+            }
+            if ($rootScope.tableTimeEnd == undefined) {
+                return;
+            }
+            $scope.gridOpArray.forEach(function (item, i) {
+                if (item["cellTemplate"] == undefined) {
+                    var a = $rootScope.tableSwitch.latitude.field;
+                    if (a != undefined && a == item["field"]) {
+                        item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 30px'>当页汇总</div>";
+                    } else {
+                        item["footerCellTemplate"] = "<div class='ui-grid-cell-contents'>{{grid.appScope.getSearchFooterData(this,grid.getVisibleRows())}}</div>"
+                    }
+                }
+            });
+        };
+
         $scope.$on("transformData_ui_grid", function (e, msg) {
-            $rootScope.gridArray[1].footerCellTemplate = "<div class='ui-grid-cell-contents'>当页汇总</div>";
-            //$rootScope.gridArray[2].footerCellTemplate = "<div class='ui-grid-cell-contents'>--</div>";
-            //$rootScope.gridArray[3].footerCellTemplate = "<div class='ui-grid-cell-contents'>--</div>";
+            $rootScope.gridArray[1] = {
+                name: "来源",
+                displayName: "来源",
+                field: "campaignName",
+                cellTemplate: "<div><a href='javascript:void(0)' style='color:#0965b8;line-height:30px' ng-click='grid.appScope.showPageSeDetail(grid.options.data,row)'>{{grid.appScope.getDataUrlInfo(grid, row,3)}}</a></div>",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                enableSorting: false
+            }
             for (var i = 0; i < msg.checkedArray.length; i++) {
                 $rootScope.gridArray[i + 2].displayName = chartUtils.convertChinese(msg.checkedArray[i]);
                 $rootScope.gridArray[i + 2].field = msg.checkedArray[i];
@@ -330,13 +362,229 @@ define(["./module"], function (ctrs) {
             }
             $scope.gridOpArray = angular.copy($rootScope.gridArray);
             $rootScope.gridOptions.columnDefs = $scope.gridOpArray;
+            $rootScope.targetSearch()
             $rootScope.initPageConfig(msg)
         });
         $scope.$on("transformAdvancedData_ui_grid", function (e, msg) {
             $scope.advancedInit(msg)
         });
 
+        $rootScope.datepickerClickTow = function (start, end, label) {
+            $rootScope.gridOptions.showColumnFooter = !$rootScope.gridOptions.showColumnFooter;
+            var gridArrayOld = angular.copy($rootScope.gridArray);
+            var latitudeOld = angular.copy($rootScope.tableSwitch.latitude);
+            $rootScope.gridArray[1] = {
+                name: "来源",
+                displayName: "来源",
+                field: "campaignName",
+                cellTemplate: "<div>{{grid.appScope.getDataUrlInfo(grid, row,3)}}</div>",
+                footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
+                enableSorting: false
+            }
+            $rootScope.gridArray.forEach(function (item, i) {
+                var a = item["field"];
+                if (item["cellTemplate"] == undefined) {
+                    item["cellTemplate"] = "<ul class='contrastlist'><li>{{grid.appScope.getContrastInfo(grid, row,0,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,1,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,2,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,3,'" + a + "')}}</li></ul>";
+                    item["footerCellTemplate"] = "<ul class='contrastlist'><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),0)}}</li><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),1)}}</li><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),2)}}</li><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),3)}}</li></ul>";
+                }
+            });
+            $rootScope.gridOpArray = angular.copy($rootScope.gridArray);
+            $rootScope.gridOptions.columnDefs = $rootScope.gridOpArray;
+            //getSearchFooterData
+            $rootScope.gridOptions.rowHeight = 95;
+            $rootScope.gridOptions.columnFooterHeight = 95;
+            var time = chartUtils.getTimeOffset(start, end);
+            var startTime = time[0];
+            var endTime = time[0] + ($rootScope.tableTimeEnd - $rootScope.tableTimeStart);
+            $rootScope.$broadcast("ssh_load_compare_datashow", startTime, endTime);
+            var dateTime1 = chartUtils.getSetOffTime($rootScope.tableTimeStart, $rootScope.tableTimeEnd);
+            var dateTime2 = chartUtils.getSetOffTime(startTime, endTime);
+            $scope.targetDataContrast(null, null, false,function (item) {
+                var target = $rootScope.tableSwitch.latitude.field;
+                var dataArray = [];
+                var is = 1;
 
+                $scope.targetDataContrast(startTime, endTime, true,function (contrast) {
+                    item.forEach(function (a, b) {
+                        var dataObj = {};
+                        for (var i = 0; i < contrast.length; i++) {
+                            if (a[target] == contrast[i][target]) {
+                                $rootScope.checkedArray.forEach(function (tt, aa) {
+                                    var bili = ((parseInt(a[tt] + "".replace("%")) - parseInt((contrast[i][tt] + "").replace("%"))) / (parseInt((contrast[i][tt] + "").replace("%")) == 0 ? parseInt(a[tt] + "".replace("%")) : parseInt((contrast[i][tt] + "").replace("%"))) * 100).toFixed(2);
+                                    dataObj[tt] = (isNaN(bili) ? 0 : bili) + "%";
+                                    a[tt] = "　" + "," + a[tt] + "," + contrast[i][tt] + "," + dataObj[tt]
+                                });
+                                a[target] = a[target] + "," + ($rootScope.startString != undefined ? $rootScope.startString : dateTime1[0] == dateTime1[1] ? dateTime1[0] + "," + dateTime2[0] + "," + "变化率" : dateTime1[0] + " 至 " + dateTime1[1]) + "," + (dateTime2[0] + " 至 " + dateTime2[1]) + "," + "变化率";
+
+                                dataArray.push(a);
+                                is = 0;
+                                return;
+                            } else {
+                                is = 1
+                            }
+                        }
+                        if (is == 1) {
+                            $rootScope.checkedArray.forEach(function (tt, aa) {
+                                dataObj[tt] = "--";
+                                a[tt] = "　" + "," + a[tt] + "," + "--" + "," + "--"
+                            });
+                            a[target] = a[target] + "," + ($rootScope.startString != undefined ? $rootScope.startString : dateTime1[0] == dateTime1[1] ? dateTime1[0] + "," + dateTime2[0] + "," + "变化率" : dateTime1[0] + " 至 " + dateTime1[1]) + "," + (dateTime2[0] + " 至 " + dateTime2[1]) + "," + "变化率"
+                            dataArray.push(a);
+                        }
+                    });
+                    $rootScope.gridOptions.showColumnFooter = !$rootScope.gridOptions.showColumnFooter;
+                });
+                $rootScope.gridOptions.data = dataArray;
+                $rootScope.tableSwitch.latitude = latitudeOld;
+                $rootScope.gridArray = gridArrayOld;
+                //
+            })
+        };
+
+        $scope.targetDataContrast = function (startInfoTime, endInfoTime,isCompared, cabk) {
+            if ($rootScope.tableSwitch.isJudge == undefined) $scope.isJudge = true;
+            if ($rootScope.tableSwitch.isJudge) $rootScope.tableSwitch.tableFilter = undefined;
+            if ($rootScope.pageConfigs != undefined && $rootScope.pageConfigs.length > 0) {
+                var filterPageConf = []
+                if ($rootScope.extendways[$rootScope.selectedPageConvIndex].name == undefined || $rootScope.extendways[$rootScope.selectedPageConvIndex].name == "" || $rootScope.selectedPageConvIndex == 0) {
+                    filterPageConf = $rootScope.pageConfigs
+                } else {
+                    $rootScope.pageConfigs.forEach(function (conf) {
+                        if (conf.targetName == $rootScope.extendways[$rootScope.selectedPageConvIndex].name) {
+                            filterPageConf.push(conf)
+                        }
+                    })
+                }
+                if (filterPageConf.length > 0) {
+                    var tCheckedArray = ["pv", "uv", "vc", "ip", "nuv", "nuvRate"];
+                    //(startInfoTime == null ? $rootScope.tableTimeStart : startInfoTime) + "&endOffset=" + (endInfoTime == null ? $rootScope.tableTimeEnd : endInfoTime)
+                    var pvurl = "/api/transform/getPageBasePVs?start=" + (startInfoTime == null ? $rootScope.tableTimeStart : startInfoTime) + "&end=" + (endInfoTime == null ? $rootScope.tableTimeEnd : endInfoTime) + "&type=" + $rootScope.userType + "&queryOptions=" + tCheckedArray + "&pages=" + JSON.stringify(filterPageConf) + "&showType=day" + "&filters=" + $rootScope.getFilters()
+                    $http.get(pvurl).success(function (pvdatas) {
+                        var isPConv = false;
+                        for (var index = 0; index < $rootScope.checkedArray.length; index++) {
+                            isPConv = true;
+                            $rootScope.bases.forEach(function (base) {
+                                if (base.name == $rootScope.checkedArray[index]) {
+                                    isPConv = false
+                                }
+                            })
+                            if (isPConv)
+                                break;
+                        }
+                        if (isPConv) {
+                            //查询转化的数据
+                            var tPageInfoArr = ["conversions", "benefit"]
+                            var pageurl = "/api/transform/getPageBaseInfo?start=" + (startInfoTime == null ? $rootScope.tableTimeStart : startInfoTime) + "&end=" + (endInfoTime == null ? $rootScope.tableTimeEnd : endInfoTime) + "&type=" + $rootScope.userType + "&queryOptions=" + tPageInfoArr + "&pages=" + JSON.stringify(filterPageConf) + "&showType=day" + "&filters=" + $rootScope.getFilters()
+                            $http.get(pageurl).success(function (pagedatas) {
+                                if(pagedatas==undefined||pagedatas.length==0){
+                                    cabk([])
+                                }else{
+                                    var sumCrate = 0
+                                    pvdatas.forEach(function (data, index) {
+                                        $rootScope.checkedArray.forEach(function (attr) {
+                                            switch (attr) {
+                                                case "conversions"://转化次数
+                                                    data["conversions"] = pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].conversions != undefined ? pagedatas[data.campaignName].conversions.value : 0
+                                                    break;
+                                                case "crate"://转化率
+                                                    var tCrate = pagedatas[data.campaignName] != undefined && data.vc > 0 ? ((Number(pagedatas[data.campaignName]["conversions"].value) / Number(data.vc)) * 100) : 0
+                                                    sumCrate += tCrate
+                                                    data["crate"] = tCrate.toFixed(2) + "%";
+                                                    break;
+                                                case "benefit"://收益
+                                                    data["benefit"] = pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].benefit != undefined ? pagedatas[data.campaignName].benefit.value : 0
+                                                    break;
+                                                case "orderNum"://订单数量
+                                                    data["orderNum"] = pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].orderNum != undefined ? pagedatas[data.campaignName].orderNum.value : 0
+                                                    break;
+                                                case "orderNumRate"://订单转化率
+                                                    data["orderNumRate"] = (pagedatas[data.campaignName] != undefined && pagedatas[data.campaignName].orderNum != undefined && data.vc > 0 ? ((Number(pagedatas[data.campaignName].orderNum.value) / Number(data.vc)) * 100).toFixed(2) : (0).toFixed(2)) + "%"
+                                                    break;
+                                                default :
+                                                    break;
+                                            }
+                                        })
+                                    })
+                                    $rootScope.setShowArray(pvdatas,isCompared)
+                                    cabk(pvdatas)
+                                }
+                            })
+                        }
+                        else {
+                            $rootScope.setShowArray(pvdatas,isCompared)
+                            cabk(pvdatas)
+                        }
+                    })
+                } else {
+                    cabk([])
+                }
+            }
+        }
+
+
+        $scope.getCourFooterData = function (a, option, number) {
+            var rast = [0.0, 0.0];
+            var rastString = ["", ""];
+            var bhlString = "";
+            option.forEach(function (items, x) {
+                var itemSplDatas = (items.entity[a.col.field] + "").split(",");
+                if (itemSplDatas[3] == "变化率") {
+                    rastString[0] = itemSplDatas[1];
+                    rastString[1] = itemSplDatas[2];
+                    bhlString = "变化率";
+                } else {
+                    rast[0] += ((itemSplDatas[1] + "").replace("%", "") == "--" || (itemSplDatas[1] + "").replace("%", "") == "　" ? 0.0 : parseFloat(((itemSplDatas[1] + "").replace("%", ""))));
+                    rast[1] += ((itemSplDatas[2] + "").replace("%", "") == "--" || (itemSplDatas[2] + "").replace("%", "") == "　" ? 0.0 : parseFloat(((itemSplDatas[2] + "").replace("%", ""))));
+                }
+            });
+            var str
+            if (a.renderIndex == 1) {
+                str = "当页汇总";
+            } else {
+                str = " ";
+            }
+            if (a.col.field == "pv" || a.col.field == "uv" || a.col.field == "ip" || a.col.field == "vc" || a.col.field == "nuv" || a.col.field == "conversions" || a.col.field == "benefit" || a.col.field == "orderNum") {
+                //
+            } else {
+                rast[0] = ((rast[0] / option.length) ).toFixed(2) + (a.col.field == "crate" || a.col.field == "nuvRate" || a.col.field == "orderNumRate" ? "%" : "");
+                rast[1] = ((rast[1] / option.length) ).toFixed(2) + (a.col.field == "crate" || a.col.field == "nuvRate" || a.col.field == "orderNumRate" ? "%" : "");
+            }
+            var bhl = parseFloat(((rast[1] + "").replace("%", ""))) == 0 ? "0.00%" : (((parseFloat(((rast[0] + "").replace("%", ""))) - parseFloat(((rast[1] + "").replace("%", "")))) / parseFloat(((rast[1] + "").replace("%", "")))) * 100 ).toFixed(2) + "%";
+
+            if ((bhl + "").indexOf("NaN") != -1 || (bhl + "").indexOf("Infinity") != -1) {
+                bhl = "--";
+            }
+            switch (number) {
+                case 0:
+                    return str;
+                case 1:
+                    return rastString[0] != "" ? (rastString[0] + "").indexOf("NaN") != -1 ? 0 : rastString[0] : (rast[0] + "").indexOf("NaN") != -1 ? 0 : rast[0];
+                case 2:
+                    return rastString[1] != "" ? (rastString[1] + "").indexOf("NaN") != -1 ? 0 : rastString[1] : (rast[1] + "").indexOf("NaN") != -1 ? 0 : rast[1];
+                case 3:
+                    return bhlString != "" ? bhlString : bhl;
+                default :
+                    return "--";
+            }
+        };
+        //数据对比分割数据
+        $scope.getContrastInfo = function (grid, row, number, fieldData) {
+            if (fieldData != undefined || fieldData != "undefined") {
+                var a = (row.entity[fieldData] + "").split(",");
+                if (number == 0) {
+                    return a[0];
+                } else if (number == 1) {
+                    return a[1];
+                } else if (number == 2) {
+                    return a[2];
+                } else if (number == 3) {
+                    if (a[2] == 0) {
+                        return "--";
+                    }
+                    return a[3];
+                }
+            }
+        };
         ////////////过滤////////////
         //设置来源终端
         var evTimeStamp = 0;
@@ -480,5 +728,95 @@ define(["./module"], function (ctrs) {
             //$rootScope.showPageSeDetail=0
             $rootScope.initPageConfig()
         };
+        $rootScope.targetSearchSpreadPage = function (isClicked) {
+            $rootScope.expandInex = 1
+            $scope.es_checkArray = ["pv", "uv", "vc", "ip", "nuv", "nuvRate", "conversions", "crate", "avgCost", "orderNum", "benefit", "profit", "orderNumRate"];
+            $scope.sem_checkArray = ["avgCost", "benefit", "profit", "orderMoney"];
+            $scope.es_checkedArray = [];
+            $scope.sem_checkedArray = [];
+            for (var i = 0; i < $rootScope.checkedArray.length; i++) {
+                for (var k = 0; k < $scope.es_checkArray.length; k++) {
+                    if ($rootScope.checkedArray[i] == $scope.es_checkArray[k]) {
+                        $scope.es_checkedArray.push($rootScope.checkedArray[i]);
+                    }
+                }
+                for (var k = 0; k < $scope.sem_checkArray.length; k++) {
+                    if ($rootScope.checkedArray[i] == $scope.sem_checkArray[k]) {
+                        $scope.sem_checkedArray.push($rootScope.checkedArray[i]);
+                    }
+                }
+            }
+            if (isClicked) {
+                $scope.$broadcast("transformData_ui_grid", {
+                    start: $rootScope.start,
+                    end: $rootScope.end,
+                    checkedArray: $scope.es_checkedArray,
+                    sem_checkedArray: $scope.sem_checkedArray,
+                    all_checked: $rootScope.checkedArray,
+                    analysisAction: "pageConversion",
+                    convert_url_all: $scope.convert_url_all
+                });
+            } else {
+                //访客过滤数据获取
+                var input_uv_Array = $(".chart_top2 .uv_class");
+                input_uv_Array.each(function (i, o) {
+                    if ($(o).prop("checked")) {
+                        $scope.uv_selected = $(o).prop("value");
+                    }
+                });
+                var input_terminal_Array = $(".chart_top2 .terminal_class");
+                input_terminal_Array.each(function (i, o) {
+                    if ($(o).prop("checked")) {
+                        $scope.terminal_selected = $(o).prop("value");
+                    }
+                });
+                var checkedData = [];
+                if ($scope.terminal_selected != "全部") {
+                    checkedData.push({
+                        field: "terminal_type",
+                        name: $scope.terminal_selected
+                    });
+                } else {
+                    checkedData.push({
+                        field: "terminal_type",
+                        name: "所有设备"
+                    });
+                }
+                if ($scope.uv_selected != "全部") {
+                    checkedData.push({
+                        field: "uv_type",
+                        name: $scope.uv_selected
+                    });
+                } else {
+                    checkedData.push({
+                        field: "uv_type",
+                        name: "所有访客"
+                    });
+                }
+                if ($scope.city.selected != "") {
+                    checkedData.push({
+                        field: "city",
+                        name: $scope.city.selected.name
+                    });
+                } else {
+                    checkedData.push({
+                        field: "city",
+                        name: "所有地域"
+                    });
+                }
+                $scope.$broadcast("transformAdvancedData_ui_grid", {
+                    start: $rootScope.start,
+                    end: $rootScope.end,
+                    checkedData: checkedData,
+                    checkedArray: $scope.es_checkedArray,
+                    sem_checkedArray: $scope.sem_checkedArray,
+                    all_checked: $rootScope.checkedArray,
+                    analysisAction: "pageConversion",
+                    convert_url_all: $scope.convert_url_all
+                });
+            }
+        };
+
+        $rootScope.targetSearchSpreadPage(true)
     });
 });

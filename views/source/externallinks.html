@@ -115,10 +115,9 @@
                         </ul>
                     </div>
                     <div class="input-group fl">
-                        <input type="text" class="form-control fl" maxlength="128" placeholder="输入域名…"
+                        <input type="text" class="form-control fl" id="externallinksInput" maxlength="128" placeholder="输入URL..."
                                data-ng-model="searchURLText"
-                               onfocus="this.setAttribute('placeholder','')"
-                               onblur="this.setAttribute('placeholder','输入域名...')">
+                               onfocus="this.setAttribute('placeholder','')">
                                        <span class="input-group-btn fl">
                                  <button class="btn btn-default" type="button"
                                          data-ng-click="searchURLFilterBySourceEl(searchURLText)"><span

@@ -393,7 +393,7 @@ module.exports = function (req) {
                             case "ext":
                                 dimension = "rf";
                                 filters = [{"rf_type": ["3"]}];
-                                title = "外部连接今日数据报告!";
+                                title = "外部链接今日数据报告!";
                                 break;
                             case "indexoverview":
                                 dimension = "loc";

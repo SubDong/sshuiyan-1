@@ -5,7 +5,7 @@ define(["app"], function (app) {
 
     "use strict";
 
-    app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, requestService, SEM_API_URL, $cookieStore, $location, popupService, uiGridConstants) {
+    app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, requestService, SEM_API_URL, $cookieStore, $location, $state, popupService, uiGridConstants) {
         $scope.todayClass = true;
         $scope.browserselect = true;
         var user = $rootScope.user;
@@ -107,7 +107,7 @@ define(["app"], function (app) {
             {consumption_name: "跳出率", name: "outRate"},
             {consumption_name: "平均访问时长", name: "avgTime"},
             {consumption_name: "平均访问页数", name: "avgPage"},
-            {consumption_name: "入口页次数", name: "vc"}
+            {consumption_name: "入口页次数", name: "entrance"}
         ];
         $scope.Todytransform = [
             {consumption_name: "转化次数", name: "zhuanF"},
@@ -261,7 +261,7 @@ define(["app"], function (app) {
         }
         //table Button 配置 table_nextbtn
         if ($rootScope.tableSwitch.number == 1) {
-            $scope.gridBtnDivObj = "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn test'  title='查看历史趋势'></a></div>";
+            $scope.gridBtnDivObj = "<div class='table_box'><a ng-click='grid.appScope.getHistoricalTrend(this, \"history\")' target='_parent' class='table_nextbtn test'  title='查看历史趋势'></a></div>";
         } else if ($rootScope.tableSwitch.number == 2) {
             $scope.gridBtnDivObj = "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'>" + $rootScope.tableSwitch.coding + "</ul></div></div>";
         }
@@ -330,7 +330,7 @@ define(["app"], function (app) {
                     var tempButton = {};
                     tempButton["name"] = "页面URL";
                     tempButton["displayName"] = "页面URL";
-                    tempButton["field"] = "eventId";
+                    tempButton["field"] = "loc";
                     tempButton["footerCellTemplate"] = "<div class='ui-grid-cell-contents'>--</div>"
                     $rootScope.gridArray.unshift(tempButton);
                 }
@@ -362,7 +362,7 @@ define(["app"], function (app) {
                         var tempButton = {};
                         tempButton["name"] = "页面URL";
                         tempButton["displayName"] = "页面URL";
-                        tempButton["field"] = "eventId";
+                        tempButton["field"] = "loc";
                         tempButton["footerCellTemplate"] = "<div class='ui-grid-cell-contents'>--</div>"
                         $rootScope.gridArray.unshift(tempButton);
                     }
@@ -490,7 +490,15 @@ define(["app"], function (app) {
         }
         ;
 
+        $scope.$on("ssh_refresh_charts", function (e, msg) {
+            if ($scope.charts && $scope.charts[0]) {
+                $scope.charts[0].config.legendDefaultChecked = [0, 1];
+            }
 
+            if ($location.path().indexOf("history") == -1) {
+                $scope.targetSearch()
+            }
+        });
         $scope.page = "";
         $scope.pagego = function (pagevalue) {
             pagevalue.pagination.seek(Number($scope.page));
@@ -772,13 +780,15 @@ define(["app"], function (app) {
             //$scope.isJudge = false;
             $rootScope.$broadcast("ssh_data_show_refresh");
             if ($rootScope.tableSwitch.number == 6) {
-                $rootScope.refreshData(false)
+                $scope.targetSearch();
+                //$rootScope.targetSearch(false)
             } else {
                 $scope.targetSearch();
             }
         };
         //设置来源网站
         $scope.setWebSite = function (a) {
+            $rootScope.webSite = a;
             var now = +new Date();
             if (now - evTimeStamp < 100) {
                 return;
@@ -916,21 +926,54 @@ define(["app"], function (app) {
             if (!$rootScope.tableSwitch) {
                 return;
             }
-            var _dateFilter = "";
-            if ("全部" == time) {
-                _dateFilter = "";
-            } else {
-                time = (time == "00:00 - 00:59" ? time + "" : time);
-                if ($scope.tableJu == "html") {
-                    $rootScope.tableSwitch.tableFilter = "[{\"period\":\"" + time + "\"}]";
-                } else {
-                    _dateFilter = JSON.parse("{\"period\":[\"" + time + "\"]}");
-                }
-            }
+            //var _dateFilter = "";
+            //if ("全部" == time) {
+            //    _dateFilter = "";
+            //} else {
+            //    time = (time == "00:00 - 00:59" ? time + "" : time);
+            //    if ($scope.tableJu == "html") {
+            //        $rootScope.tableSwitch.tableFilter = "[{\"period\":\"" + time + "\"}]";
+            //    } else {
+            //        _dateFilter = JSON.parse("{\"period\":[\"" + time + "\"]}");
+            //    }
+            //}
             //获取所有过滤条件
-            var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
-            _allFilters = filterUtil.filter(_allFilters, "period", _dateFilter);
-            $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
+            //var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
+            //_allFilters = filterUtil.filter(_allFilters, "period", _dateFilter);
+            //$rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
+            // 设置过滤时间段
+            if (time == "全部") {
+                $rootScope.timeFilter = null;
+            } else if (time == "工作时段") {
+                $rootScope.timeFilter = [9, 10, 11, 13, 14, 15, 16, 17];
+            } else if (time == "非工作时段") {
+                $rootScope.timeFilter = [0, 1, 2, 3, 4, 5, 6, 7, 8, 12, 18, 19, 20, 21, 22, 23];
+            } else {// 自定义时段
+                $rootScope.timeFilter = [0];
+            }
+            $scope.isJudge = false;
+            if ($scope.tableJu == "html") {
+                getHtmlTableData();
+            } else {
+                $rootScope.$broadcast("ssh_data_show_refresh");
+                $scope.targetSearch();
+            }
+        };
+        $scope.setZdyTimeFilter = function (siteTimes) {
+            if (!$rootScope.tableSwitch) {
+                return;
+            }
+
+            $rootScope.timeFilter = [];
+            siteTimes.forEach(function (_st) {
+                var _st_h_s = _st.hour.selected.name;
+                var _st_h_e = _st.hour1.selected.name;
+                for (var i = parseInt(_st_h_s.split(":")[0]); i <= parseInt(_st_h_e.split(":")[0]); i++) {
+                    if ($rootScope.timeFilter.indexOf(i) == -1) {
+                        $rootScope.timeFilter.push(i);
+                    }
+                }
+            });
             $scope.isJudge = false;
             if ($scope.tableJu == "html") {
                 getHtmlTableData();
@@ -986,7 +1029,7 @@ define(["app"], function (app) {
             $scope.isJudge = false;
             $rootScope.$broadcast("ssh_data_show_refresh");
             if ($rootScope.tableSwitch.number == 6) {
-                $rootScope.refreshData(false)
+                $rootScope.targetSearch()(false)
             } else {
                 $scope.targetSearch();
             }
@@ -1012,7 +1055,7 @@ define(["app"], function (app) {
             $scope.allBrowsers = angular.copy($rootScope.browsers);
             $rootScope.tableSwitch.eginFilter = {rf_type: 2}
             if ($rootScope.tableSwitch.number == 6) {
-                $rootScope.refreshData(false)
+                $rootScope.targetSearch(false)
             }
         }
         $scope.setSearchEngine = function (value, info) {
@@ -1034,7 +1077,7 @@ define(["app"], function (app) {
                 $rootScope.tableSwitch.eginFilter = {rf_type: value}
             }
             if ($rootScope.tableSwitch.number == 6) {
-                $rootScope.refreshData(false)
+                $rootScope.targetSearch(false)
             }
         }
         ;
@@ -1049,7 +1092,6 @@ define(["app"], function (app) {
                 $rootScope.tableSwitch.tableFilter = JSON.stringify(_allFilters);
                 $scope.sourceSearch = "全部引擎";
             } else {
-                //////console.log("搜索引擎 ifno "+info)
                 var _seFilter = JSON.parse("{\"se\":[\"" + info + "\"]}");
                 //获取所有过滤条件
                 var _allFilters = JSON.parse($rootScope.tableSwitch.tableFilter);
@@ -1093,7 +1135,7 @@ define(["app"], function (app) {
 
 
         $scope.removeSource = function (obj) {
-            ////console.log("删除来源");
+            //console.log("删除来源");
             $rootScope.tableSwitch.eginFilter = null
             $rootScope.tableSwitch.seFilter = null
             $scope.souce.selected = {"name": "全部"};
@@ -1103,21 +1145,21 @@ define(["app"], function (app) {
             obj.curBrowser = "";
             obj.showBrowser = false;
             $scope.browserselect = true;//隐藏浏览器
-            $rootScope.refreshData(false)
+            $rootScope.targetSearch(false)
         }
         $scope.removeBrowser = function (obj) {
-            ////console.log("删除搜索")
+            //console.log("删除搜索")
             $rootScope.tableSwitch.seFilter = null
             $scope.browser.selected = {"name": "全部"};
             obj.curBrowser = "";
             obj.showBrowser = false;
-            $rootScope.refreshData(false)
+            $rootScope.targetSearch(false)
         }
         $scope.removeVisitor = function (obj) {
             $rootScope.tableSwitch.visitorFilter = null
             obj.visitorSearch = "";
             obj.showVisitor = false;
-            $rootScope.refreshData(false)
+            $rootScope.targetSearch(false)
 
         }
         $scope.removeArea = function (obj) {
@@ -1125,7 +1167,7 @@ define(["app"], function (app) {
             $scope.city.selected = {"name": "全部"};
             obj.curArea = "";
             obj.showArea = false;
-            $rootScope.refreshData(false)
+            $rootScope.targetSearch(false)
         }
         // 输入URL过滤
         $scope.searchURLFilter = function (urlText) {
@@ -1222,64 +1264,6 @@ define(["app"], function (app) {
                 $scope.gridOptions.data = $rootScope.gridData
             }
         }
-        // 按url，按域名过滤
-        $scope.setURLDomain = function (urlText) {
-            var b = "";
-            if (urlText == "rf") {
-                b = 0;
-            } else {
-                b = 1;
-            }
-            var now = +new Date();
-            if (now - evTimeStamp < 100) {
-                return;
-            }
-            evTimeStamp = now;
-            var inputArray = $(".custom_select .styled");
-            inputArray.each(function (i, o) {
-                $(o).prev("span").css("background-position", "0px 0px");
-                $(o).prop("checked", false);
-            });
-            $(inputArray[b]).prev("span").css("background-position", "0px -51px");
-            if (undefined == urlText || "" == urlText) {
-                $rootScope.tableSwitch.latitude.field = null;
-            } else {
-                $rootScope.gridArray[1].field = urlText;
-                $rootScope.tableSwitch.latitude.field = urlText;
-            }
-            $scope.isJudge = false;
-            $rootScope.$broadcast("ssh_data_show_refresh");
-            $scope.targetSearch("rf_dm");
-        };
-        // 按url，按域名过滤
-        $scope.setURLDomain = function (urlText) {
-            var b = "";
-            if (urlText == "rf") {
-                b = 0;
-            } else {
-                b = 1;
-            }
-            var now = +new Date();
-            if (now - evTimeStamp < 100) {
-                return;
-            }
-            evTimeStamp = now;
-            var inputArray = $(".custom_select .styled");
-            inputArray.each(function (i, o) {
-                $(o).prev("span").css("background-position", "0px 0px");
-                $(o).prop("checked", false);
-            });
-            $(inputArray[b]).prev("span").css("background-position", "0px -51px");
-            if (undefined == urlText || "" == urlText) {
-                $rootScope.tableSwitch.latitude.field = null;
-            } else {
-                $rootScope.gridArray[1].field = urlText;
-                $rootScope.tableSwitch.latitude.field = urlText;
-            }
-            $scope.isJudge = false;
-            $rootScope.$broadcast("ssh_data_show_refresh");
-            $scope.targetSearch("rf_dm");
-        };
         // 外部链接搜索
         $scope.searchURLFilterBySourceEl = function (urlText) {
             if (!$rootScope.tableSwitch) {
@@ -1400,16 +1384,25 @@ define(["app"], function (app) {
         };
         // 按url，按域名过滤
         $scope.setURLDomain = function (urlText) {
+            var now = +new Date();
+            if (now - evTimeStamp < 100) {
+                return;
+            }
+            /*阻止冒泡，执行两次*/
             $rootScope.myRfDm = urlText;
             var b = "";
             if (urlText == "rf") {
                 b = 0;
+                $("#externallinksInput").attr('placeholder', '输入URL...')
+                $("#externallinksInput").blur(function () {
+                    $(this).attr('placeholder', '输入URL...')
+                })
             } else {
                 b = 1;
-            }
-            var now = +new Date();
-            if (now - evTimeStamp < 100) {
-                return;
+                $("#externallinksInput").attr('placeholder', '输入域名...')
+                $("#externallinksInput").blur(function () {
+                    $(this).attr('placeholder', '输入域名...')
+                })
             }
             evTimeStamp = now;
             var inputArray = $(".custom_select .styled");
@@ -1427,6 +1420,7 @@ define(["app"], function (app) {
             $scope.isJudge = false;
             $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.targetSearch("rf_dm");
+            $scope.refreshChartByTable(urlText);
         };
         // 查看入口页链接
         $scope.showEntryPageLink = function (row, _type) {
@@ -1503,8 +1497,8 @@ define(["app"], function (app) {
                     else
                         val = val + option.entity[a.col.field]
                 })
-                if(options.length>0)
-                    val = val/options.length
+                if (options.length > 0)
+                    val = val / options.length
                 val = val.toFixed(2) + "元"
             } else {
                 var flag = false;//是否有%号
@@ -1529,6 +1523,12 @@ define(["app"], function (app) {
         }
 
 
+        $rootScope.refreshGridData = function () {
+            $scope.gridOptions.data = $rootScope.gridData
+        }
+        $rootScope.changeFooterShow = function () {
+            $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
+        }
         //前端ui-grid通用查询方法
         $rootScope.targetSearch = function (isClicked) {
             if (window.location.href.split("/")[window.location.href.split("/").length - 1] == "changelist") {
@@ -1586,7 +1586,7 @@ define(["app"], function (app) {
                             item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 32px'>--</div>";
                         } else {
                             item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 32px'>" +
-                            "<ul><li>{{grid.appScope.getEventRootData(this,grid.getVisibleRows())}}</li></ul></div>";
+                                "<ul><li>{{grid.appScope.getEventRootData(this,grid.getVisibleRows())}}</li></ul></div>";
                         }
                     }
                 });
@@ -1599,7 +1599,7 @@ define(["app"], function (app) {
                         } else {
 //                        item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 100px'>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),2)}}<br/>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),3)}}<br/>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),4)}}</div>";
                             item["footerCellTemplate"] = "<div class='ui-grid-cell-contents' style='height: 32px'>" +
-                            "<ul><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),2)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),3)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),4)}}</li></ul></div>";
+                                "<ul><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),2)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),3)}}</li><li>{{grid.appScope.getFooterData(this,grid.getVisibleRows(),4)}}</li></ul></div>";
                         }
                     }
                 });
@@ -1667,13 +1667,12 @@ define(["app"], function (app) {
                     $scope.gridOptions.data = result;
                 })
             } else if ($rootScope.tableSwitch.number == 6) {//来源分析搜索词-搜索
-                $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
-                $scope.gridOptions.data = $rootScope.gridData;
+                $rootScope.refreshData(false)
             } else {
                 $http({
                     method: 'GET',
                     url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field)
-                    + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
+                    + "&filerInfo=" + encodeURIComponent($rootScope.tableSwitch.tableFilter) + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat + "&type=" + esType
                 }).success(function (data, status) {
                     $rootScope.$broadcast("LoadDateShowDataFinish", data);
                     if ($rootScope.tableSwitch.promotionSearch != undefined && $rootScope.tableSwitch.promotionSearch) {
@@ -1786,25 +1785,25 @@ define(["app"], function (app) {
                                     $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
                                     $scope.gridOptions.data = resultData;
                                 } else {
-                                    var filters =  JSON.parse($rootScope.tableSwitch.tableFilter);
-                                    if($location.path() == "/page/indexoverview_ep") { //退出模块
+                                    var filters = JSON.parse($rootScope.tableSwitch.tableFilter);
+                                    if ($location.path() == "/page/indexoverview_ep") { //退出模块
                                         var rf_type = -1;
                                         var se = -1;
                                         var isNew = -1;
-                                        if(filters != null) {
+                                        if (filters != null) {
                                             var index;
-                                            rf_type = (index = filters.elementHasOwnProperty("rf_type"))  == -1 ? -1 :filters[index].rf_type[0];
-                                            se = (index = filters.elementHasOwnProperty("se"))  == -1 ? -1 :filters[index].se[0];
-                                            if( se != -1) {
+                                            rf_type = (index = filters.elementHasOwnProperty("rf_type")) == -1 ? -1 : filters[index].rf_type[0];
+                                            se = (index = filters.elementHasOwnProperty("se")) == -1 ? -1 : filters[index].se[0];
+                                            if (se != -1) {
                                                 se = $rootScope.browsersKeyMap[se];
                                             }
-                                            isNew = (index = filters.elementHasOwnProperty("ct"))  == -1 ? -1 :filters[index].ct[0];
+                                            isNew = (index = filters.elementHasOwnProperty("ct")) == -1 ? -1 : filters[index].ct[0];
                                         }
                                         var parameter = {
                                             type: $rootScope.userType,
                                             rf_type: rf_type,
                                             se: se,
-                                            isNew:isNew,
+                                            isNew: isNew,
                                             start: $rootScope.start,
                                             end: $rootScope.end
                                         };
@@ -1816,7 +1815,7 @@ define(["app"], function (app) {
                                         }).success(function (exitCountDatas) {
                                             $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
                                             data.forEach(function (trData) {
-                                                if(exitCountDatas.hasOwnProperty(trData.loc) ) {
+                                                if (exitCountDatas.hasOwnProperty(trData.loc)) {
                                                     trData.ec = exitCountDatas[trData.loc];
                                                 } else {
                                                     trData.ec = "0";
@@ -1904,7 +1903,7 @@ define(["app"], function (app) {
                                 for (var i = 0; i < result.length; i++) {
                                     var _obj = result[i];
                                     var _outRate = "--";
-                                    if (_obj["vc"] != "--" && _obj["svc"] != "--") {
+                                    if ($rootScope.checkedArray.indexOf("outRate") != -1 && _obj["vc"] != "--" && _obj["svc"] != "--") {
                                         if (_obj["vc"] == 0) {
                                             _outRate = "0.00%";
                                         } else {
@@ -1913,13 +1912,22 @@ define(["app"], function (app) {
                                         _obj.outRate = _outRate;
                                     }
                                     var _nuvRate = "--";
-                                    if (_obj["uv"] != "--" && _obj["nuv"] != "--") {
+                                    if ($rootScope.checkedArray.indexOf("nuvRate") != -1 && _obj["uv"] != "--" && _obj["nuv"] != "--") {
                                         if (_obj["uv"] == 0) {
                                             _nuvRate = "0.00%";
                                         } else {
                                             _nuvRate = (_obj["nuv"] * 100 / _obj["uv"]).toFixed(2) + "%";
                                         }
                                         _obj.nuvRate = _nuvRate;
+                                    }
+                                    var _avgPage = "--";
+                                    if ($rootScope.checkedArray.indexOf("avgPage") != -1 && _obj["vc"] != "--" && _obj["pv"] != "--") {
+                                        if (_obj["vc"] == 0) {
+                                            _avgPage = "0.00";
+                                        } else {
+                                            _avgPage = (_obj["pv"] / _obj["vc"]).toFixed(2);
+                                        }
+                                        _obj.avgPage = _avgPage;
                                     }
                                 }
                             }
@@ -1928,8 +1936,18 @@ define(["app"], function (app) {
                             if ($rootScope.tableTimeStart == 0 && $rootScope.tableTimeEnd == 0 && $scope.hourcheckClass == true && result.length == 24) {
                                 result = result.slice(0, new Date().getHours() + 1);
                             }
-                            $scope.gridOptions.data = result;
-
+                            // 时间段过滤
+                            if ($rootScope.timeFilter) {
+                                var resultArray = [];
+                                $rootScope.timeFilter.forEach(function (e) {
+                                    if (result[e]) {
+                                        resultArray.push(result[e]);
+                                    }
+                                });
+                                $scope.gridOptions.data = resultArray;
+                            } else {
+                                $scope.gridOptions.data = result;
+                            }
                         }
                     }
 
@@ -1960,13 +1978,25 @@ define(["app"], function (app) {
             $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
             var gridArrayOld = angular.copy($rootScope.gridArray);
             var latitudeOld = angular.copy($rootScope.tableSwitch.latitude);
-            $rootScope.gridArray.forEach(function (item, i) {
-                var a = item["field"];
-                if (item["cellTemplate"] == undefined) {
-                    item["cellTemplate"] = "<ul class='contrastlist'><li>{{grid.appScope.getContrastInfo(grid, row,0,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,1,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,2,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,3,'" + a + "')}}</li></ul>";
-                    item["footerCellTemplate"] = "<ul class='contrastlist'><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),0)}}</li><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),1)}}</li><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),2)}}</li><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),3)}}</li></ul>";
-                }
-            });
+            if ($rootScope.tableSwitch.number == 6) {
+                $rootScope.gridArray.forEach(function (item, i) {
+                    var a = item["field"];
+                    if (item["cellTemplate"] == undefined) {
+                        item["cellTemplate"] = "<ul class='contrastlist'><li>{{grid.appScope.getContrastInfo(grid, row,0,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,1,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,2,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,3,'" + a + "')}}</li></ul>";
+                        item["footerCellTemplate"] = "<ul class='contrastlist'><li>{{grid.appScope.getEventCourFooterData(this,grid.getVisibleRows(),0)}}</li><li>{{grid.appScope.getEventCourFooterData(this,grid.getVisibleRows(),1)}}</li><li>{{grid.appScope.getEventCourFooterData(this,grid.getVisibleRows(),2)}}</li></ul>";
+
+                    }
+                });
+            } else {
+                $rootScope.gridArray.forEach(function (item, i) {
+                    var a = item["field"];
+                    if (item["cellTemplate"] == undefined) {
+                        item["cellTemplate"] = "<ul class='contrastlist'><li>{{grid.appScope.getContrastInfo(grid, row,0,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,1,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,2,'" + a + "')}}</li><li>{{grid.appScope.getContrastInfo(grid, row,3,'" + a + "')}}</li></ul>";
+                        item["footerCellTemplate"] = "<ul class='contrastlist'><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),0)}}</li><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),1)}}</li><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),2)}}</li><li>{{grid.appScope.getCourFooterData(this,grid.getVisibleRows(),3)}}</li></ul>";
+                    }
+                });
+            }
+
             $scope.gridOptions.rowHeight = 95;
             $scope.gridOptions.columnFooterHeight = 95;
             var time = chartUtils.getTimeOffset(start, end);
@@ -1975,16 +2005,11 @@ define(["app"], function (app) {
             $rootScope.$broadcast("ssh_load_compare_datashow", startTime, endTime);
             var dateTime1 = chartUtils.getSetOffTime($rootScope.tableTimeStart, $rootScope.tableTimeEnd);
             var dateTime2 = chartUtils.getSetOffTime(startTime, endTime);
-            $scope.targetDataContrast(null, null, function (item) {
-                //console.log("item")
-                //console.log(item)
-                ////console.log("targetDataContrast")
+            $scope.targetDataContrast(null, null, false,function (item) {
                 var target = $rootScope.tableSwitch.latitude.field;
                 var dataArray = [];
                 var is = 1;
-                $scope.targetDataContrast(startTime, endTime, function (contrast) {
-                    //console.log("contrast")
-                    //console.log(contrast)
+                $scope.targetDataContrast(startTime, endTime,true, function (contrast) {
                     if ($rootScope.tableSwitch.number == 4) {//
                         var wordArray = [];// 搜索词数组
                         var aaaArray = [];
@@ -2070,7 +2095,8 @@ define(["app"], function (app) {
                             dataArray.push(obj);
                         }
                         $rootScope.$broadcast("LoadCompareDateShowDataFinish", item, contrast);
-                    } else {
+                    }
+                    else {
                         item.forEach(function (a, b) {
                             var dataObj = {};
                             if (target == "period" && $location.$$path == "/trend/today" && $rootScope.tableFormat == "day") {// 今日统计按日统计时特殊处理
@@ -2095,7 +2121,6 @@ define(["app"], function (app) {
                             } else {
                                 for (var i = 0; i < contrast.length; i++) {
                                     if (a[target] == contrast[i][target]) {
-                                        console.log(a[target] + " ===  " + contrast[i][target]);
                                         $rootScope.checkedArray.forEach(function (tt, aa) {
                                             var bili = ((parseInt(a[tt] + "".replace("%")) - parseInt((contrast[i][tt] + "").replace("%"))) / (parseInt((contrast[i][tt] + "").replace("%")) == 0 ? parseInt(a[tt] + "".replace("%")) : parseInt((contrast[i][tt] + "").replace("%"))) * 100).toFixed(2);
                                             dataObj[tt] = (isNaN(bili) ? 0 : bili) + "%";
@@ -2143,6 +2168,7 @@ define(["app"], function (app) {
             }
             return dateTimeArray[0] + "至" + dateTimeArray[1];
         }
+
         function getRateValue(_value) {
             if (_value == undefined) {
                 return "--";
@@ -2154,8 +2180,9 @@ define(["app"], function (app) {
             }
             return _value;
         }
+
         //数据对比实现方法
-        $scope.targetDataContrast = function (startInfoTime, endInfoTime, cabk) {
+        $scope.targetDataContrast = function (startInfoTime, endInfoTime, isComparedData,cabk) {
             $scope.gridOpArray = angular.copy($rootScope.gridArray);
             $scope.gridOptions.columnDefs = $scope.gridOpArray;
             if ($rootScope.tableSwitch.isJudge == undefined) $scope.isJudge = true;
@@ -2200,12 +2227,10 @@ define(["app"], function (app) {
                     })
                     $rootScope.curEventConfs = eventParams;
                     var purl = "/api/transform/getEventPVs?start=" + (startInfoTime == null ? $rootScope.tableTimeStart : startInfoTime) + "&end=" + (endInfoTime == null ? $rootScope.tableTimeEnd : endInfoTime) + "&type=" + $rootScope.userType + "&queryOptions=" + $scope.es_checkArray + "&events=" + JSON.stringify(eventParams) + "&showType=day" + "&filters=" + $rootScope.getFilters()
-                    //console.log(purl)
                     $http.get(purl).success(function (pvs) {
                         if (pvs != null || pvs != "") {//PV 信息若不存在 则事件信息认为一定不存在
                             $rootScope.curEventPVs = pvs
                             var esurl = "/api/transform/getConvEvents?start=" + (startInfoTime == null ? $rootScope.tableTimeStart : startInfoTime) + "&end=" + (endInfoTime == null ? $rootScope.tableTimeEnd : endInfoTime) + "&type=" + $rootScope.userType + "&eventPages=" + JSON.stringify(eventParams) + "&showType=day" + "&filters=" + $rootScope.getFilters()
-                            //console.log(esurl)
                             $http.get(esurl).success(function (eventInfos) {
                                 $rootScope.curEventInfos = eventInfos
                                 var results = [];
@@ -2222,18 +2247,7 @@ define(["app"], function (app) {
                                                 data["crate"] = "0.00%";
                                             }
                                         } else if ($scope.es_checkArray[i] == "transformCost") {
-                                            //var add_i = i;
-                                            //var semRequest = "";
-                                            //semRequest = $http.get(SEM_API_URL + "/sem/report/campaign?a=" + $rootScope.user + "&b=" + $rootScope.baiduAccount + "&startOffset=" + (startInfoTime == null ? $rootScope.tableTimeStart : startInfoTime) + "&endOffset=" + (endInfoTime == null ? $rootScope.tableTimeEnd : endInfoTime) + "&q=cost");
-                                            //$q.all([semRequest]).then(function (sem_data) {
-                                            //    var cost = 0;
-                                            //    for (var k = 0; k < sem_data.length; k++) {
-                                            //        for (var c = 0; c < sem_data[k].data.length; c++) {
-                                            //            cost += Number(sem_data[k].data[c].cost);
-                                            //        }
-                                            //    }
                                             data["transformCost"] = /*(cost / Number(data["transformCost"])).toFixed(2).toString() +*/ "0.00元";
-                                            //});
                                         } else if ($scope.es_checkArray[i] == "clickTotal") {
                                             if (eventInfos[event.event_page + "_" + event.event_id] != undefined) {
                                                 data["clickTotal"] = eventInfos[event.event_page + "_" + event.event_id].eventCount;
@@ -2253,10 +2267,14 @@ define(["app"], function (app) {
                                     ////console.log("对比查询数据")
                                     results.push(data)
                                 })
+                                $rootScope.setShowArray(events, eventInfos, pvs, isComparedData)
                                 cabk(results)
                             })
                         }
-                    });
+                        else {
+                            cabk([])
+                        }
+                    })
                 })
             } else {
                 $http({
@@ -2402,7 +2420,6 @@ define(["app"], function (app) {
         $scope.getSubColumnDefs = function (gridOpArray) {
             var _t_arr = [];
             for (var i = 0; i < gridOpArray.length; i++) {
-                //////console.log(gridOpArray[i]["name"]);
                 if (gridOpArray[i]["name"] == " ") {
                     _t_arr.push({
                         name: gridOpArray[i]["name"],
@@ -2433,8 +2450,8 @@ define(["app"], function (app) {
 
         //子表格方法通用
         $scope.subGridScope = {
-            getHistoricalTrend: function (b) {
-                $scope.getHistoricalTrend(b, true);
+            getHistoricalTrend: function (b, sta) {
+                $scope.getHistoricalTrend(b, sta, true);
             },
             showEntryPageLink: function (row, number) {
                 $scope.showEntryPageLink(row, number);
@@ -2544,7 +2561,7 @@ define(["app"], function (app) {
             });
         };
         // table 历史趋势
-        $scope.getHistoricalTrend = function (b, x) {
+        $scope.getHistoricalTrend = function (b, sta, x) {
             if ($rootScope.tableSwitch.isJudge == undefined)$scope.isJudge = true;
             if ($rootScope.tableSwitch.isJudge)$rootScope.tableSwitch.tableFilter = undefined;
             var a = b.$parent.$parent.row.entity[$rootScope.tableSwitch.latitude.field];
@@ -2561,8 +2578,120 @@ define(["app"], function (app) {
             } else {
                 $rootScope.tableSwitch.tableFilter = "[{\"" + $rootScope.tableSwitch.latitude.field + "\":[\"" + getField(a, $rootScope.tableSwitch.latitude.field) + "\"]}" + newFileter + "]";
             }
+            $state.go(sta);
         };
         // 对比时的底部显示
+        $scope.getEventCourFooterData = function (a, option, number) {
+            var strs = ["", "", ""]
+            var chashloc = {}
+            var cmax = []
+            var ohashloc = {}
+            var omax = []
+
+            var cconversions = 0
+            var oconversions = 0
+            if (a.renderIndex == 1) {
+                strs[2] = "当页汇总";
+            } else if (a.renderIndex == 2) {
+            } else {
+                if (a.col.field == "pv" || a.col.field == "uv" || a.col.field == "ip" || a.col.field == "vc" || a.col.field == "nuv" || a.col.field == "nuvRate") {
+                    option.forEach(function (item, x) {
+                        var itemSplDatas = (item.entity[a.col.field] + "").split(",");
+                        if (chashloc[item.entity["loc"]] == undefined) {
+                            chashloc[item.entity["loc"]] = cmax.length
+                            cmax.push(itemSplDatas[1])
+                        } else {
+                            if (cmax[chashloc[item.entity["loc"]]] < itemSplDatas[1]) {
+                                cmax.push(itemSplDatas[1])
+                            }
+                        }
+                        if (ohashloc[item.entity["loc"]] == undefined) {
+                            ohashloc[item.entity["loc"]] = omax.length
+                            omax.push(itemSplDatas[2])
+                        } else {
+                            if (omax[ohashloc[item.entity["loc"]]] < itemSplDatas[2]) {
+                                omax.push(itemSplDatas[2])
+                            }
+                        }
+                    });
+                }
+                //else if(a.col.field == "crate"){//转化率计算
+                //    option.forEach(function (item, x) {
+                //        var itemSplDatas = (item.entity["vc"] + "").split(",");
+                //        var convSplDatas = (item.entity["conversions"] + "").split(",");
+                //
+                //        if (chashloc[item.entity["loc"]] == undefined) {
+                //            chashloc[item.entity["loc"]] = cmax.length
+                //            cmax.push(itemSplDatas[1])
+                //        } else {
+                //            if (cmax[chashloc[item.entity["loc"]]] < itemSplDatas[1]) {
+                //                cmax.push(itemSplDatas[1])
+                //            }
+                //        }
+                //        cconversions+=convSplDatas[1]
+                //
+                //        if (ohashloc[item.entity["loc"]] == undefined) {
+                //            ohashloc[item.entity["loc"]] = omax.length
+                //            omax.push(itemSplDatas[2])
+                //        } else {
+                //            if (omax[ohashloc[item.entity["loc"]]] < itemSplDatas[2]) {
+                //                omax.push(itemSplDatas[2])
+                //            }
+                //        }
+                //        oconversions+=convSplDatas[2]
+                //    });
+                //    console.log(cmax)
+                //}
+                else {
+                    option.forEach(function (item, x) {
+                        var itemSplDatas = (item.entity[a.col.field] + "").split(",");
+                        cmax.push(itemSplDatas[1])
+                        omax.push(itemSplDatas[2])
+                    });
+                }
+                var ctemp = 0, otemp = 0, ptemp = 0
+                cmax.forEach(function (c) {
+                    if (c != undefined)
+                        ctemp += Number(c.indexOf("%") || c.indexOf("元") >= 0 ? c.replace("%", "").replace("元", "") : c)
+                })
+                omax.forEach(function (o) {
+                    if (o != undefined)
+                        otemp += Number(o.indexOf("%") || o.indexOf("元") >= 0 ? o.replace("%", "").replace("元", "") : 0)
+                })
+
+                if (a.col.field == "nuvRate"||a.col.field == "crate") {
+                    strs[0] = ctemp.toFixed(2)+"%"
+                    strs[1] = otemp.toFixed(2)+"%"
+                    strs[2] = otemp == 0 ? "--" : (((ctemp - otemp) / otemp) * 100).toFixed(2) + "%"
+                }
+                //else if(a.col.field == "crate"){
+                //    console.log("****************************")
+                //    console.log(JSON.stringify(cmax))
+                //    strs[0] = ctemp==0?"0.00":((cconversions/ctemp)*100).toFixed(2)+"%"
+                //    strs[1] = otemp==0?"0.00":((oconversions/otemp)*100).toFixed(2)+"%"
+                //    //strs[2] = "---"
+                //    console.log(JSON.stringify(strs))
+                //    strs[2] = (otemp.toFixed(2)==0?0:((oconversions/otemp)*100).toFixed(2))==0?"--":(((( ctemp.toFixed(2)==0?0:(cconversions/ctemp)*100)-( otemp.toFixed(2)==0?0:(oconversions/otemp)*100))/( otemp.toFixed(2)==0?0:(oconversions/otemp)*100)).toFixed(2))+"%"
+                //}
+                else {
+                    strs[0] = ctemp
+                    strs[1] = otemp
+                    strs[2] = otemp == 0 ? "--" : (((ctemp - otemp) / otemp) * 100).toFixed(2) + "%"
+                }
+
+            }
+            switch (number) {
+                case 0:
+                    return strs[0];
+                case 1:
+                    return strs[1];
+                case 2:
+                    return strs[2];
+                default :
+                    return "--";
+            }
+
+        };
         $scope.getCourFooterData = function (a, option, number) {
             var rast = [0.0, 0.0];
             var rastString = ["", ""];
@@ -2727,13 +2856,18 @@ define(["app"], function (app) {
                         }
                     }
                     if (a.col.field == "avgPage") {
-                        var _ll = 0;
-                        for (var _i = 0; _i < option.length; _i++) {
-                            if (option[_i].entity.avgPage != "--") {
-                                _ll++;
+                        var t_vc = 0;
+                        var t_pv = 0;
+                        option.forEach(function (_row) {
+                            var _entity = _row.entity;
+                            if (_entity.vc != "--") {
+                                t_vc += parseInt(_entity.vc);
                             }
-                        }
-                        returnData[0] = returnData[0] == "0" ? "0" : (returnData[0] / (_ll == 0 ? 1 : _ll)).toFixed(2);
+                            if (_entity.pv != "--") {
+                                t_pv += parseInt(_entity.pv);
+                            }
+                        });
+                        returnData[0] = (t_pv / (t_vc == 0 ? 1 : t_vc)).toFixed(2);
                     }
                     if (a.col.field == "click") {
                         var _ll = 0;

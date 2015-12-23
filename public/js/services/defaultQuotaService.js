@@ -133,7 +133,7 @@ define(["../app"], function (app) {
                         },
                         {
                             name: " ",
-                            cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn' title='查看历史趋势'></a></div>"
+                            cellTemplate: "<div class='table_box'><a ng-click='grid.appScope.getHistoricalTrend(this, \"history\")' target='_parent' class='table_nextbtn' title='查看历史趋势'></a></div>"
                         },
                         {
                             name: "点击量",
@@ -284,6 +284,11 @@ define(["../app"], function (app) {
                 case "source_source" :
                 {
                     $rootScope.checkedArray = ["vc", "nuvRate", "ip"];
+                    if ($rootScope.webSite && $rootScope.webSite == 1) {
+                        var obj = {name: "来源网站", displayName: "来源网站", field: "dm", footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"}
+                    } else {
+                        var obj = {name: "来源类型", displayName: "来源类型", field: "rf_type", footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"}
+                    }
                     $rootScope.gridArray = [
                         {
                             name: "xl",
@@ -291,15 +296,10 @@ define(["../app"], function (app) {
                             cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
                             maxWidth: 10
                         },
-                        {
-                            name: "来源类型",
-                            displayName: "来源类型",
-                            field: "rf_type",
-                            footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>"
-                        },
+                        obj,
                         {
                             name: " ",
-                            cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li><li><a href='javascript:void(0)' ng-click='grid.appScope.showEntryPageLink(row, 1)'>查看入口页链接</a></li></ul></div></div>"
+                            cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ng-click='grid.appScope.getHistoricalTrend(this, \"history\")' target='_parent'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li><li><a href='javascript:void(0)' ng-click='grid.appScope.showEntryPageLink(row, 1)'>查看入口页链接</a></li></ul></div></div>"
                         },
                         {
                             name: "访问次数",
@@ -342,7 +342,7 @@ define(["../app"], function (app) {
                         },
                         {
                             name: " ",
-                            cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ui-sref='history5' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='javascript:void(0)' ng-click='grid.appScope.showEntryPageLink(row, 2)'>查看入口页链接</a></li></ul></div></div>",
+                            cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'><li><a ng-click='grid.appScope.getHistoricalTrend(this, \"history5\")' target='_parent'>查看历史趋势</a></li><li><a href='javascript:void(0)' ng-click='grid.appScope.showEntryPageLink(row, 2)'>查看入口页链接</a></li></ul></div></div>",
                             enableSorting: false
                         },
                         {
@@ -683,7 +683,7 @@ define(["../app"], function (app) {
                             "<ul style='color: #45b1ec'>" +
                             "<li><a>查看相关热门搜索词</a></li>" +
                             "<li><a ng-click='grid.appScope.showSearchUrl(row)'>查看搜索来路URL</a></li>" +
-                            "<li><a ui-sref='history6' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li>" +
+                            "<li><a ng-click='grid.appScope.getHistoricalTrend(this, \"history6\")' target='_parent'>查看历史趋势</a></li>" +
                             "</ul>" +
                             "</div>" +
                             "</div>"
@@ -718,6 +718,13 @@ define(["../app"], function (app) {
                 case "source_externallinks" :
                 {
                     $rootScope.checkedArray = ["uv", "nuv", "nuvRate"];
+
+                    if ($rootScope.myRfDm && $rootScope.myRfDm == "dm") {
+                        var obj = {name: "外部链接", displayName: "外部链接", field: "dm"};
+                    } else {
+                        var obj = {name: "外部链接", displayName: "外部链接", field: "rf"};
+                    }
+
                     $rootScope.gridArray = [
                         {
                             name: "xl",
@@ -725,10 +732,10 @@ define(["../app"], function (app) {
                             cellTemplate: "<div class='table_xlh'>{{grid.appScope.getIndex(this)}}</div>",
                             maxWidth: 10
                         },
-                        {name: "外部连接", displayName: "外部连接", field: "rf"},
+                        obj,
                         {
                             name: " ",
-                            cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' onmouseout='hiddenMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul><li><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li></ul></div></div>"
+                            cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' onmouseout='hiddenMyButton(this)' class='table_nextbtn'></button><div class='table_win'><ul><li><a ng-click='grid.appScope.getHistoricalTrend(this, \"history\")' target='_parent'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看来源分布</a></li></ul></div></div>"
                         },
                         {name: "访客数(UV)", displayName: "访客数(UV)", field: "uv"},
                         {name: "新访客数", displayName: "新访客数", field: "nuv"},
@@ -754,7 +761,7 @@ define(["../app"], function (app) {
                         },
                         {
                             name: " ",
-                            cellTemplate: "<div class='table_box'><a ui-sref='history3' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn' title='查看历史趋势'></a></div>"
+                            cellTemplate: "<div class='table_box'><a ng-click='grid.appScope.getHistoricalTrend(this, \"history3\")' target='_parent' class='table_nextbtn' title='查看历史趋势'></a></div>"
                         },
                         {
                             name: "访问次数",
@@ -797,7 +804,7 @@ define(["../app"], function (app) {
                             name: " ",
                             cellTemplate: "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'>" +
                             "<ul style='color: #45b1ec'>" +
-                            "<li><a ui-sref='history4' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' target='_blank'>查看历史趋势</a></li>" +
+                            "<li><a ng-click='grid.appScope.getHistoricalTrend(this, \"history4\")' target='_parent' target='_blank'>查看历史趋势</a></li>" +
                             "<li><a ng-click='grid.appScope.showSourceDistribution(row)'>查看来源分布</a></li>" +
                             "</ul></div></div>"
                         },
@@ -1287,7 +1294,7 @@ define(["../app"], function (app) {
                         },
                         {
                             name: " ",
-                            cellTemplate: "<div class='table_box'><a ui-sref='history1' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn' title='查看历史趋势'></a></div>",
+                            cellTemplate: "<div class='table_box'><a ng-click='grid.appScope.getHistoricalTrend(this, \"history1\")' target='_parent' class='table_nextbtn' title='查看历史趋势'></a></div>",
                             enableSorting: false
                         },
                         {
@@ -1394,7 +1401,7 @@ define(["../app"], function (app) {
                         },
                         {
                             name: " ",
-                            cellTemplate: "<div class='table_box'><a ui-sref='history2' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn'  title='查看历史趋势'></a></div>",
+                            cellTemplate: "<div class='table_box'><a ng-click='grid.appScope.getHistoricalTrend(this, \"history2\")' target='_parent' class='table_nextbtn'  title='查看历史趋势'></a></div>",
                             enableSorting: false
                         },
                         {

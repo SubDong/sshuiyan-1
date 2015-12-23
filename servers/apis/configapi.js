@@ -237,6 +237,7 @@ api.get("/site_list", function (req, res) {
             var temp = JSON.parse(entity);
             temp.type_id = randstring.rand_string();
             temp.track_id = randstring.rand_string();
+            temp.ctime  =  new Date().getTime();
             dao.save(schema_name, temp, function (ins) {
                 datautils.send(res, ins);
                 // 参考 https://github.com/zerocoolys/suiyan/wiki/%E9%85%8D%E7%BD%AE%E5%8F%82%E6%95%B0%5Bredis-key-%E8%A7%84%E8%8C%83%5D
@@ -349,6 +350,8 @@ api.get("/site_list", function (req, res) {
                     dao.remove(schema_name, qry, function (del) {
                         datautils.send(res, "success");
                     });
+                }else{
+                    datautils.send(res, "fail");
                 }
             });
             break;
@@ -397,6 +400,8 @@ api.get("/site_list", function (req, res) {
                     dao.update(schema_name, query['query'], JSON.stringify({is_use: 0}), function (err, up) {//逻辑删除置is_use=0
                         datautils.send(res, "success");
                     });
+                }else{
+                    datautils.send(res, "fail");
                 }
             });
             break;
@@ -876,7 +881,7 @@ api.get("/adtrack", function (req, res) {
             });
             break;
         case "search":
-            dao.find(schema_name, query['query'], null, {}, function (err, docs) {
+            dao.sortbyid(schema_name, query['query'], null, {}, function (err, docs) {
                 datautils.send(res, docs);
             });
             break;
@@ -930,7 +935,6 @@ api.get("/select", function (req, res) {
                             }
                             //console.log(JSON.stringify(eventData))
                             if (docs == null || docs.length == 0) {//存在配置
-                                //console.log("*******该事件配置不存在 插入********")
                                 eventData.event_status = 1
                                 eventData.event_method = "自动"
                                 //eventData.event_target = false
@@ -975,13 +979,8 @@ api.get("/select", function (req, res) {
                             }
                             else {
                                 //console.log("*******该事件配置已存在 更新********")
-                                //console.log( entityJson["isTarget"])
                                 dao.update(schema_name, JSON.stringify({
-                                    uid: uid,
-                                    event_page: entityJson["monUrl"],
-                                    event_name: entityJson["name"],
-                                    root_url: sitejson.siteid,
-
+                                    _id: docs[0]._id,
                                 }), JSON.stringify({
                                     event_name: entityJson["name"],
                                     event_target: entityJson["isTarget"]==undefined|| entityJson["isTarget"]=="false"|| entityJson["isTarget"]==""?false:true,
