@@ -299,6 +299,7 @@ define(["./module"], function (ctrs) {
         //$rootScope.initPageConfig()//初始化查询ES
 
         $scope.$on("transformData", function (e, msg) {
+            console.log("transformData")
             $(msg)
         });
 
@@ -398,11 +399,12 @@ define(["./module"], function (ctrs) {
             $rootScope.$broadcast("ssh_load_compare_datashow", startTime, endTime);
             var dateTime1 = chartUtils.getSetOffTime($rootScope.tableTimeStart, $rootScope.tableTimeEnd);
             var dateTime2 = chartUtils.getSetOffTime(startTime, endTime);
-            $scope.targetDataContrast(null, null, function (item) {
+            $scope.targetDataContrast(null, null, false,function (item) {
                 var target = $rootScope.tableSwitch.latitude.field;
                 var dataArray = [];
                 var is = 1;
-                $scope.targetDataContrast(startTime, endTime, function (contrast) {
+
+                $scope.targetDataContrast(startTime, endTime, true,function (contrast) {
                     item.forEach(function (a, b) {
                         var dataObj = {};
                         for (var i = 0; i < contrast.length; i++) {
@@ -439,7 +441,7 @@ define(["./module"], function (ctrs) {
             })
         };
 
-        $scope.targetDataContrast = function (startInfoTime, endInfoTime, cabk) {
+        $scope.targetDataContrast = function (startInfoTime, endInfoTime,isCompared, cabk) {
             if ($rootScope.tableSwitch.isJudge == undefined) $scope.isJudge = true;
             if ($rootScope.tableSwitch.isJudge) $rootScope.tableSwitch.tableFilter = undefined;
             if ($rootScope.pageConfigs != undefined && $rootScope.pageConfigs.length > 0) {
@@ -503,11 +505,13 @@ define(["./module"], function (ctrs) {
                                             }
                                         })
                                     })
+                                    $rootScope.setShowArray(pvdatas,isCompared)
                                     cabk(pvdatas)
                                 }
                             })
                         }
                         else {
+                            $rootScope.setShowArray(pvdatas,isCompared)
                             cabk(pvdatas)
                         }
                     })
@@ -743,7 +747,6 @@ define(["./module"], function (ctrs) {
                 }
             }
             if (isClicked) {
-                $scope.setShowArray()
                 $scope.$broadcast("transformData_ui_grid", {
                     start: $rootScope.start,
                     end: $rootScope.end,
@@ -813,6 +816,7 @@ define(["./module"], function (ctrs) {
                 });
             }
         };
+
         $rootScope.targetSearchSpreadPage(true)
     });
 });

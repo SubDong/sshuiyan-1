@@ -32,7 +32,7 @@ define(["./module"], function (ctrs) {
                         }
                     }
                 }
-                $scope.setShowArray()
+                $rootScope.setShowArray(true)
                 $scope.$broadcast("transformData_ui_grid", {
                     start: $rootScope.start,
                     end: $rootScope.end,
@@ -132,14 +132,6 @@ define(["./module"], function (ctrs) {
                                 $rootScope.gridOptions.showColumnFooter = !$rootScope.showColumnFooter;
                             })
                         } else {
-
-                            $rootScope.gridOptions.data.forEach(function (data) {
-                                $scope.dateShowArray.forEach(function (attr) {
-                                    if (data[attr.label] != undefined)
-                                        attr.value += data[attr.label]
-                                })
-                                data["rf_type"] = $rootScope.rowEntity.rf_type
-                            })
                             $rootScope.gridOptions.showColumnFooter = !$rootScope.showColumnFooter;
                         }
                     })
@@ -330,7 +322,6 @@ define(["./module"], function (ctrs) {
             ];
             $scope.$on("ssh_refresh_charts", function (e, msg) {
                 $rootScope.targetSearchSpreadPage(true)
-                //$rootScope.initPageConfig();
             });
             //点击显示指标
             $scope.select = function () {
@@ -386,14 +377,83 @@ define(["./module"], function (ctrs) {
                 $scope.reset();
                 $scope.todayClass = true;
             };
-            $scope.setShowArray = function () {
-                var tempArray = [];
-                angular.forEach($scope.checkedArray, function (q_r) {
-                    tempArray.push({"label": q_r, "value": 0, "cValue": 0, "count": 0, "cCount": 0});
-                });
-                $scope.dateShowArray = $rootScope.copy(tempArray);
+            $rootScope.setShowArray = function (datas,isCompare) {
+
+                var sumNuv = 0, sumUv = 0, sumPv = 0, sumConv = 0, sumOrder = 0
+                if (isCompare) {
+                    $scope.isCompared = true;
+                    $scope.DateNumbertwo = true;
+
+                    datas.forEach(function (data, index) {
+                        sumPv += data["pv"] == undefined ? 0 : data["pv"]
+                        $scope.dateShowArray.forEach(function (attr) {
+                            if (data[attr.label] != undefined) {
+                                if (attr.label == "crate") {
+                                    sumConv += data["conversions"] == undefined ? 0 : data["conversions"]
+                                    if (index == (datas.length - 1)) {
+                                        attr.cValue = sumPv > 0 ? (((sumConv / sumPv) * 100).toFixed(2) + "%") : "0.00%"
+                                    }
+                                } else if (attr.label == "nuvRate") {
+                                    sumNuv += data["nuv"] == undefined ? 0 : data["nuv"]
+                                    sumUv += data["uv"] == undefined ? 0 : data["uv"]
+                                    attr.cValue = sumUv > 0 ? (((sumNuv / sumUv) * 100).toFixed(2) + "%") : "0.00%"
+                                } else if (attr.label == "orderNumRate") {
+                                    sumOrder += data["orderNum"] == undefined ? 0 : data["orderNum"]
+                                    attr.cValue = sumPv > 0 ? (((sumOrder / sumPv) * 100).toFixed(2) + "%") : "0.00%"
+                                }
+                                else {
+                                    attr.cValue += data[attr.label]
+                                }
+                            }
+                        })
+                        //datas.forEach(function (data) {
+                        //    $scope.dateShowArray.forEach(function (attr) {
+                        //        if (data[attr.label] != undefined)
+                        //            attr.cValue += data[attr.label]
+                        //    })
+                        //})
+                    })
+                }else{
+                    $scope.isCompared = false;
+                    $scope.DateNumbertwo = false;
+
+                    var tempArray = [];
+                    angular.forEach($scope.checkedArray, function (q_r) {
+                        tempArray.push({"label": q_r, "value": 0, "cValue": 0, "count": 0, "cCount": 0});
+                    });
+                    $scope.dateShowArray = $rootScope.copy(tempArray);
+                    datas.forEach(function (data, index) {
+                        sumPv += data["pv"] == undefined ? 0 : data["pv"]
+                        $scope.dateShowArray.forEach(function (attr) {
+                            if (data[attr.label] != undefined) {
+                                if (attr.label == "crate") {
+                                    sumConv += data["conversions"] == undefined ? 0 : data["conversions"]
+                                    if (index == (datas.length - 1)) {
+                                        attr.value = sumPv > 0 ? (((sumConv / sumPv) * 100).toFixed(2) + "%") : "0.00%"
+                                    }
+                                } else if (attr.label == "nuvRate") {
+                                    sumNuv += data["nuv"] == undefined ? 0 : data["nuv"]
+                                    sumUv += data["uv"] == undefined ? 0 : data["uv"]
+                                    attr.value = sumUv > 0 ? (((sumNuv / sumUv) * 100).toFixed(2) + "%") : "0.00%"
+                                } else if (attr.label == "orderNumRate") {
+                                    sumOrder += data["orderNum"] == undefined ? 0 : data["orderNum"]
+                                    attr.value = sumPv > 0 ? (((sumOrder / sumPv) * 100).toFixed(2) + "%") : "0.00%"
+                                }
+                                else {
+                                    attr.value += data[attr.label]
+                                }
+                            }
+                        })
+                    })
+                    //datas.forEach(function (data) {
+                    //    $scope.dateShowArray.forEach(function (attr) {
+                    //        if (data[attr.label] != undefined||)
+                    //            attr.value += data[attr.label]
+                    //    })
+                    //})
+                }
+
             };
-            $scope.setShowArray();
             $scope.setAreaFilterTran = function (area) {
                 $scope.areaSearch = area == "全部" ? "" : area;
                 if (area == "北京" || area == "上海" || area == "广州") {
@@ -457,6 +517,19 @@ define(["./module"], function (ctrs) {
                         })
                         $rootScope.refreshData("")
                     }
+                    else{
+                        $rootScope.gridOptions.data = $rootScope.gridData = []
+                        $rootScope.gridOptions.showColumnFooter = !$rootScope.showColumnFooter;
+                        //$rootScope.targetSearch()
+                        //刷新图 表
+                        $scope.charts[0].config.legendDefaultChecked = [0, 1];
+                        $scope.charts[0].config.legendAllowCheckCount = 2;
+                        $scope.DateNumbertwo = true;
+                        $scope.DateLoading = true;
+                        $scope.DateNumber = true;
+                        $scope.DateLoading = true;
+                        $scope.dataTable(true, "day", ["pv", "uv"], false);
+                    }
                 })
             }
 
@@ -487,7 +560,7 @@ define(["./module"], function (ctrs) {
                                 if (isPConv)
                                     break;
                             }
-                            $rootScope.gridOptions.data = pvdatas
+                            $rootScope.gridData =  $rootScope.gridOptions.data = pvdatas
                             if (isPConv) {
                                 //查询转化的数据
                                 var tPageInfoArr = ["conversions", "benefit"]
@@ -496,8 +569,6 @@ define(["./module"], function (ctrs) {
                                     if (pagedatas == undefined || pagedatas.length == 0) {
                                         $rootScope.gridOptions.data = []
                                     } else {
-
-
                                         var sumCrate = 0
                                         $rootScope.gridOptions.data.forEach(function (data, index) {
                                             $rootScope.checkedArray.forEach(function (attr) {
@@ -527,34 +598,8 @@ define(["./module"], function (ctrs) {
                                     }
                                     $rootScope.gridData = $rootScope.gridOptions.data
                                     //概况
-                                    $scope.setShowArray();
-                                    var sumNuv = 0, sumUv = 0, sumPv = 0, sumConv = 0, sumOrder = 0
-                                    $rootScope.gridOptions.data.forEach(function (data, index) {
-                                        sumPv += data["pv"] == undefined ? 0 : data["pv"]
-                                        $scope.dateShowArray.forEach(function (attr) {
-                                            if (data[attr.label] != undefined) {
-                                                if (attr.label == "crate") {
-                                                    sumConv += data["conversions"] == undefined ? 0 : data["conversions"]
-                                                    if (index == ($rootScope.gridOptions.data.length - 1)) {
-                                                        attr.value = sumPv > 0 ? (((sumConv / sumPv) * 100).toFixed(2) + "%") : "0.00%"
-                                                    }
-                                                } else if (attr.label == "nuvRate") {
-                                                    sumNuv += data["nuv"] == undefined ? 0 : data["nuv"]
-                                                    sumUv += data["uv"] == undefined ? 0 : data["uv"]
-                                                    attr.value = sumUv > 0 ? (((sumNuv / sumUv) * 100).toFixed(2) + "%") : "0.00%"
-                                                } else if (attr.label == "orderNumRate") {
-                                                    sumOrder += data["orderNum"] == undefined ? 0 : data["orderNum"]
-                                                    attr.value = sumPv > 0 ? (((sumOrder / sumPv) * 100).toFixed(2) + "%") : "0.00%"
-                                                }
-                                                else {
-                                                    attr.value += data[attr.label]
-                                                }
-                                            }
-                                        })
-                                    })
-
+                                    $rootScope.setShowArray($rootScope.gridData,false)
                                     $rootScope.gridOptions.showColumnFooter = !$rootScope.showColumnFooter;
-                                    //$rootScope.targetSearch()
                                     //刷新图 表
                                     $scope.charts[0].config.legendDefaultChecked = [0, 1];
                                     $scope.charts[0].config.legendAllowCheckCount = 2;
@@ -566,30 +611,7 @@ define(["./module"], function (ctrs) {
                                 })
                             }
                             else {
-                                var sumNuv = 0, sumUv = 0, sumPv = 0, sumConv = 0, sumOrder = 0
-                                $rootScope.gridOptions.data.forEach(function (data, index) {
-                                    sumPv += data["pv"] == undefined ? 0 : data["pv"]
-                                    $scope.dateShowArray.forEach(function (attr) {
-                                        if (data[attr.label] != undefined) {
-                                            if (attr.label == "crate") {
-                                                sumConv += data["conversions"] == undefined ? 0 : data["conversions"]
-                                                if (index == ($rootScope.gridOptions.data.length - 1)) {
-                                                    attr.value = sumPv > 0 ? (((sumConv / sumPv) * 100).toFixed(2) + "%") : "0.00%"
-                                                }
-                                            } else if (attr.label == "nuvRate") {
-                                                sumNuv += data["nuv"] == undefined ? 0 : data["nuv"]
-                                                sumUv += data["uv"] == undefined ? 0 : data["uv"]
-                                                attr.value = sumUv > 0 ? (((sumNuv / sumUv) * 100).toFixed(2) + "%") : "0.00%"
-                                            } else if (attr.label == "orderNumRate") {
-                                                sumOrder += data["orderNum"] == undefined ? 0 : data["orderNum"]
-                                                attr.value = sumPv > 0 ? (((sumOrder / sumPv) * 100).toFixed(2) + "%") : "0.00%"
-                                            }
-                                            else {
-                                                attr.value += data[attr.label]
-                                            }
-                                        }
-                                    })
-                                })
+                                $rootScope.setShowArray($rootScope.gridData,false)
                                 $rootScope.gridOptions.showColumnFooter = !$rootScope.showColumnFooter;
                                 //刷新图 表
                                 //$scope.charts[0].config.legendDefaultChecked = [0, 1];
@@ -602,6 +624,17 @@ define(["./module"], function (ctrs) {
                             }
                         })
                     }
+                }else{
+                    $rootScope.gridOptions.data = $rootScope.gridData =[]
+                    $rootScope.gridOptions.showColumnFooter = !$rootScope.showColumnFooter;
+                    //刷新图 表
+                    $scope.charts[0].config.legendDefaultChecked = [0, 1];
+                    $scope.charts[0].config.legendAllowCheckCount = 2;
+                    $scope.DateNumbertwo = true;
+                    $scope.DateLoading = true;
+                    $scope.DateNumber = true;
+                    $scope.DateLoading = true;
+                    $scope.dataTable(true, "day", ["pv", "uv"], false);
                 }
             };
             /**
