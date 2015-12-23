@@ -43,7 +43,7 @@ define(["app"], function (app) {
             },
             {
                 name: " ",
-                cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn' title='查看历史趋势'></a></div>",
+                cellTemplate: "<div class='table_box'><a ng-click='grid.appScope.getHistoricalTrend(this, \"history\")' target='_parent' class='table_nextbtn' title='查看历史趋势'></a></div>",
                 enableSorting: false
 
             },

@@ -239,7 +239,7 @@ define(["app"], function (app) {
         }
         //table Button 配置 table_nextbtn
         if ($rootScope.tableSwitch.number == 1) {
-            $scope.gridBtnDivObj = "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn test'  title='查看历史趋势'></a></div>";
+            $scope.gridBtnDivObj = "<div class='table_box'><a ng-click='grid.appScope.getHistoricalTrend(this, \"history\")' target='_parent' class='table_nextbtn test' title='查看历史趋势'></a></div>";
         } else if ($rootScope.tableSwitch.number == 2) {
             $scope.gridBtnDivObj = "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'>" + $rootScope.tableSwitch.coding + "</ul></div></div>";
         }

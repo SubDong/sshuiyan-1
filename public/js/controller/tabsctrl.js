@@ -5,7 +5,7 @@ define(["app"], function (app) {
 
     "use strict";
 
-    app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, requestService, SEM_API_URL, $cookieStore, $location, popupService, uiGridConstants) {
+    app.controller("TabsCtrl", function ($timeout, $scope, $rootScope, $http, $q, requestService, SEM_API_URL, $cookieStore, $location, $state, popupService, uiGridConstants) {
         $scope.todayClass = true;
         $scope.browserselect = true;
         var user = $rootScope.user;
@@ -261,7 +261,7 @@ define(["app"], function (app) {
         }
         //table Button 配置 table_nextbtn
         if ($rootScope.tableSwitch.number == 1) {
-            $scope.gridBtnDivObj = "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_nextbtn test'  title='查看历史趋势'></a></div>";
+            $scope.gridBtnDivObj = "<div class='table_box'><a ng-click='grid.appScope.getHistoricalTrend(this, \"history\")' target='_parent' class='table_nextbtn test'  title='查看历史趋势'></a></div>";
         } else if ($rootScope.tableSwitch.number == 2) {
             $scope.gridBtnDivObj = "<div class='table_box'><button onmousemove='getMyButton(this)' class='table_btn'></button><div class='table_win'><ul style='color: #45b1ec'>" + $rootScope.tableSwitch.coding + "</ul></div></div>";
         }
@@ -2478,8 +2478,8 @@ define(["app"], function (app) {
 
         //子表格方法通用
         $scope.subGridScope = {
-            getHistoricalTrend: function (b) {
-                $scope.getHistoricalTrend(b, true);
+            getHistoricalTrend: function (b, sta) {
+                $scope.getHistoricalTrend(b, sta, true);
             },
             showEntryPageLink: function (row, number) {
                 $scope.showEntryPageLink(row, number);
@@ -2589,7 +2589,7 @@ define(["app"], function (app) {
             });
         };
         // table 历史趋势
-        $scope.getHistoricalTrend = function (b, x) {
+        $scope.getHistoricalTrend = function (b, sta, x) {
             if ($rootScope.tableSwitch.isJudge == undefined)$scope.isJudge = true;
             if ($rootScope.tableSwitch.isJudge)$rootScope.tableSwitch.tableFilter = undefined;
             var a = b.$parent.$parent.row.entity[$rootScope.tableSwitch.latitude.field];
@@ -2606,6 +2606,7 @@ define(["app"], function (app) {
             } else {
                 $rootScope.tableSwitch.tableFilter = "[{\"" + $rootScope.tableSwitch.latitude.field + "\":[\"" + getField(a, $rootScope.tableSwitch.latitude.field) + "\"]}" + newFileter + "]";
             }
+            $state.go(sta);
         };
         // 对比时的底部显示
         $scope.getEventCourFooterData = function (a, option, number) {

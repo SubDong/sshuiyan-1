@@ -34,12 +34,7 @@ define(["./../module"], function (ctrs) {
                 field: "des_url",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
                 enableSorting: false
-            }, /*
-             {
-             name: " ",
-             displayName: " ",
-             cellTemplate: "<div class='table_box'><a ui-sref='history' ng-click='grid.appScope.getHistoricalTrend(this)' target='_parent' class='table_btn'></a></div>"
-             },*/
+            },
             {
                 name: "展现",
                 displayName: "展现",

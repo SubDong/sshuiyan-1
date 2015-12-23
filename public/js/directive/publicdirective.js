@@ -627,6 +627,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                                 dataInfo: repData
                             }
                         }).success(function (data, status, headers, config) {
+                            console.log(data);
                             var hiddenElement = document.createElement('a');
                             var dateTime = new Date();
                             var dateString = dateTime.Format("yyyyMdhmsS");
