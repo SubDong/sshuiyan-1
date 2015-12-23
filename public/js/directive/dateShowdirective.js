@@ -636,7 +636,7 @@ define(["../app"], function (app) {
         quotaObject.orderNum = "订单数";
         quotaObject.orderMoney = "订单金额";
         quotaObject.orderNumRate = "订单转化率";
-        quotaObject.ec = "退出次数";
+        quotaObject.ec = "退出页次数";
         return function (key) {
             return quotaObject[key] || "未定义的指标KEY";
         };
@@ -678,9 +678,11 @@ define(["../app"], function (app) {
         quotaObject.conversions = "访客到达转化目标页面的次数。";
         quotaObject.clickTotal = "事件点击总数";
         quotaObject.crate = "转化率=转化次数/访问次数。";
+        quotaObject.benefit = "预期每次转化收益*转化次数。";
+        quotaObject.orderNumRate = "订单转化数/访问次数。";
         quotaObject.visitNum = "一个用户进行一次操作记录一次唯一访客事件数，但同一个用户多次点击同一个按钮不重复计算。";
         quotaObject.clickTotal = "操作发生的次数。";
-        quotaObject.ec = "用户退出网站的次数.";
+        quotaObject.ec = "作为访问会话最后一个浏览页面（即退出页面）的次数。.";
         quotaObject.transformCost = "平均转化成本=消费/转化次数";
         return function (key) {
             return quotaObject[key] || "未定义的指标KEY";

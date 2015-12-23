@@ -64,8 +64,8 @@ define(["./module"], function (ctrs) {
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
             },
             {
-                name: "退出次数",
-                displayName: '退出次数',
+                name: "退出页次数",
+                displayName: '退出页次数',
                 field: "ec",
                 footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
             }
