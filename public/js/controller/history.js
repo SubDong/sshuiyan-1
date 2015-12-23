@@ -266,6 +266,7 @@ define(['./module'], function (ctrs) {
                     url: searchUrl
                 }).success(function (data, status) {
                     $scope.$broadcast("history", data);
+                    $scope.$broadcast("LoadHistoryDataFinish", $rootScope.checkedArray, data);
                     $rootScope.historyJu = "";
 
                 })
@@ -277,6 +278,7 @@ define(['./module'], function (ctrs) {
                     + "&filerInfo=" + encodeURIComponent($rootScope.tableSwitch.tableFilter) + "&formartInfo=day&type=" + esType
                 }).success(function (data, status) {
                     $scope.$broadcast("history", data);
+                    $scope.$broadcast("LoadHistoryDataFinish", $rootScope.checkedArray, data);
                     $rootScope.historyJu = "";
                 }).error(function (error) {
                     console.log(error);
