@@ -881,7 +881,7 @@ api.get("/adtrack", function (req, res) {
             });
             break;
         case "search":
-            dao.find(schema_name, query['query'], null, {}, function (err, docs) {
+            dao.sortbyid(schema_name, query['query'], null, {}, function (err, docs) {
                 datautils.send(res, docs);
             });
             break;

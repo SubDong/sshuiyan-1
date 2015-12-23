@@ -65,6 +65,13 @@ var daos = {
         var instance = this.createmodel(schema);
         instance.find(JSON.parse(qry), fields, options, cb);
     },
+    sortbyid: function (schema, qry, fields, options, cb) {
+        if (qry.uid) {
+            return this.uiderror();
+        }
+        var instance = this.createmodel(schema);
+        instance.find(JSON.parse(qry), fields, options, cb).sort({'_id':-1});
+    },
     findById: function (schema, qry, fields, options, cb) {
         if (qry._id) {
             return this.uiderror();
