@@ -2888,6 +2888,9 @@ var transform = {
                                 "term": {"loc": eventPage.event_page}
                             })
                             filterQuery.push({
+                                "term": {"et_category": eventPage.event_id}
+                            })
+                            filterQuery.push({
                                 "range": {
                                     "utime": {
                                         "from": (startNum > eventPage.update_time ? startNum : eventPage.update_time ),
@@ -2897,6 +2900,7 @@ var transform = {
                             })
                             querys.push({
                                     eventPage: eventPage.event_page,
+                                    eventId: eventPage.event_id,
                                     query: {
                                         "index": newIndexs,
                                         "type": type + "_event",
@@ -2908,28 +2912,28 @@ var transform = {
                                                 }
                                             },
                                             "aggs": {
-                                                "etIdTerms": {
-                                                    "terms": {
+                                                //"etIdTerms": {
+                                                //    "terms": {
+                                                //        "field": "et_category"
+                                                //    },
+                                                //    "aggs": {
+                                                "convCount": {
+                                                    "sum": {
+                                                        "field": "et_target"
+                                                    }
+                                                },
+                                                "eventCount": {
+                                                    "value_count": {
                                                         "field": "et_category"
-                                                    },
-                                                    "aggs": {
-                                                        "convCount": {
-                                                            "sum": {
-                                                                "field": "et_target"
-                                                            }
-                                                        },
-                                                        "eventCount": {
-                                                            "value_count": {
-                                                                "field": "et_category"
-                                                            }
-                                                        },
-                                                        "visitNum": {
-                                                            "cardinality": {
-                                                                "field": "tt"
-                                                            }
-                                                        }
+                                                    }
+                                                },
+                                                "visitNum": {
+                                                    "cardinality": {
+                                                        "field": "tt"
                                                     }
                                                 }
+                                                //}
+                                                //}
                                             }
                                         }
                                     }
@@ -2942,15 +2946,12 @@ var transform = {
                                 //console.log(JSON.stringify(item))
                                 es.search(item.query, function (error, result) {
                                     if (result != undefined && result.aggregations != undefined) {
-                                        if (result.aggregations.etIdTerms.buckets != undefined) {
-                                            result.aggregations.etIdTerms.buckets.forEach(function (buck) {
-                                                var res = {}
-                                                pageEvents[item.eventPage + "_" + buck.key] = {
-                                                    eventCount: buck.eventCount == undefined ? 0 : buck.eventCount.value,
-                                                    convCount: buck.convCount == undefined ? 0 : buck.convCount.value,
-                                                    visitNum: buck.visitNum == undefined ? 0 : buck.visitNum.value
-                                                }
-                                            })
+                                        //console.log(result.aggregations)
+                                        //console.log("******************************" + item.eventPage + "_" + item.eventId)
+                                        pageEvents[item.eventPage + "_" + item.eventId] = {
+                                            eventCount: result.aggregations.eventCount == undefined ? 0 : result.aggregations.eventCount.value,
+                                            convCount: result.aggregations.convCount == undefined ? 0 : result.aggregations.convCount.value,
+                                            visitNum: result.aggregations.visitNum == undefined ? 0 : result.aggregations.visitNum.value
                                         }
                                         callback(null, result);
                                     }
