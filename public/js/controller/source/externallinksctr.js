@@ -92,6 +92,14 @@ define(["./module"], function (ctrs) {
             var chartArray = [$scope.charts[1]];
             requestService.refresh(chartArray);
         }
+        $scope.refreshChartByTable = function (type) {
+            var chart = echarts.init(document.getElementById($scope.charts[1].config.id));
+            $scope.charts[1].config.instance = chart;
+            util.renderLegend(chart, $scope.charts[1].config);
+            var arrayChart = [$scope.charts[1]];
+            arrayChart[0]["dimension"] = ["period," + type];
+            requestService.refresh(arrayChart);
+        };
         $scope.pieFormat = function (data, config) {
             var json = JSON.parse(eval("(" + data + ")").toString());
             var tmpData = [];

@@ -1264,35 +1264,6 @@ define(["app"], function (app) {
                 $scope.gridOptions.data = $rootScope.gridData
             }
         }
-        // 按url，按域名过滤
-        $scope.setURLDomain = function (urlText) {
-            var b = "";
-            if (urlText == "rf") {
-                b = 0;
-            } else {
-                b = 1;
-            }
-            var now = +new Date();
-            if (now - evTimeStamp < 100) {
-                return;
-            }
-            evTimeStamp = now;
-            var inputArray = $(".custom_select .styled");
-            inputArray.each(function (i, o) {
-                $(o).prev("span").css("background-position", "0px 0px");
-                $(o).prop("checked", false);
-            });
-            $(inputArray[b]).prev("span").css("background-position", "0px -51px");
-            if (undefined == urlText || "" == urlText) {
-                $rootScope.tableSwitch.latitude.field = null;
-            } else {
-                $rootScope.gridArray[1].field = urlText;
-                $rootScope.tableSwitch.latitude.field = urlText;
-            }
-            $scope.isJudge = false;
-            $rootScope.$broadcast("ssh_data_show_refresh");
-            $scope.targetSearch("rf_dm");
-        };
         // 外部链接搜索
         $scope.searchURLFilterBySourceEl = function (urlText) {
             if (!$rootScope.tableSwitch) {
@@ -1449,6 +1420,7 @@ define(["app"], function (app) {
             $scope.isJudge = false;
             $rootScope.$broadcast("ssh_data_show_refresh");
             $scope.targetSearch("rf_dm");
+            $scope.refreshChartByTable(urlText);
         };
         // 查看入口页链接
         $scope.showEntryPageLink = function (row, _type) {
