@@ -2005,11 +2005,11 @@ define(["app"], function (app) {
             $rootScope.$broadcast("ssh_load_compare_datashow", startTime, endTime);
             var dateTime1 = chartUtils.getSetOffTime($rootScope.tableTimeStart, $rootScope.tableTimeEnd);
             var dateTime2 = chartUtils.getSetOffTime(startTime, endTime);
-            $scope.targetDataContrast(null, null, function (item) {
+            $scope.targetDataContrast(null, null, false,function (item) {
                 var target = $rootScope.tableSwitch.latitude.field;
                 var dataArray = [];
                 var is = 1;
-                $scope.targetDataContrast(startTime, endTime, function (contrast) {
+                $scope.targetDataContrast(startTime, endTime,true, function (contrast) {
                     if ($rootScope.tableSwitch.number == 4) {//
                         var wordArray = [];// 搜索词数组
                         var aaaArray = [];
@@ -2182,7 +2182,7 @@ define(["app"], function (app) {
         }
 
         //数据对比实现方法
-        $scope.targetDataContrast = function (startInfoTime, endInfoTime, cabk) {
+        $scope.targetDataContrast = function (startInfoTime, endInfoTime, isComparedData,cabk) {
             $scope.gridOpArray = angular.copy($rootScope.gridArray);
             $scope.gridOptions.columnDefs = $scope.gridOpArray;
             if ($rootScope.tableSwitch.isJudge == undefined) $scope.isJudge = true;
@@ -2267,7 +2267,7 @@ define(["app"], function (app) {
                                     ////console.log("对比查询数据")
                                     results.push(data)
                                 })
-                                $rootScope.setShowArray(events, eventInfos, pvs, true)
+                                $rootScope.setShowArray(events, eventInfos, pvs, isComparedData)
                                 cabk(results)
                             })
                         }
