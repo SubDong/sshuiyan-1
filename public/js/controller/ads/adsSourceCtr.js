@@ -102,7 +102,6 @@ define(["./module"], function (ctrs) {
         };
         // 数据转化
         $scope.dataFormat = function (data, chartConfig, e) {
-            console.log("*************dataFormat****************")
             // 将json格式的字符串data转为json对象
             var dataObj = JSON.parse(eval("(" + data + ")").toString());
             var topData = [];
@@ -122,7 +121,6 @@ define(["./module"], function (ctrs) {
             // 是否为双轴
             //chartConfig['twoYz'] = "false";
             // 图表渲染
-            console.log(topData)
             cf.renderChart(topData, $scope.charts[0].config);
         };
 

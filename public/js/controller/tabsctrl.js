@@ -2237,15 +2237,17 @@ define(["app"], function (app) {
                     $http.get(purl).success(function (pvs) {
                         if (pvs != null || pvs != "") {//PV 信息若不存在 则事件信息认为一定不存在
                             $rootScope.curEventPVs = pvs
+                            events.forEach(function (event, index) {
+                                pvs[index]["eventName"] = event.event_name
+                                pvs[index]["eventId"] = event.event_id
+                                pvs[index]["loc"] = event.event_page
+                            })
                             var esurl = "/api/transform/getConvEvents?start=" + (startInfoTime == null ? $rootScope.tableTimeStart : startInfoTime) + "&end=" + (endInfoTime == null ? $rootScope.tableTimeEnd : endInfoTime) + "&type=" + $rootScope.userType + "&eventPages=" + JSON.stringify(eventParams) + "&showType=day" + "&filters=" + $rootScope.getFilters()
                             $http.get(esurl).success(function (eventInfos) {
                                 $rootScope.curEventInfos = eventInfos
                                 var results = [];
                                 events.forEach(function (event, index) {
                                     var data = pvs[index]
-                                    data["eventName"] = event.event_name
-                                    data["eventId"] = event.event_id
-                                    data["loc"] = event.event_page
                                     for (var i = 0; i < $scope.es_checkArray.length; i++) {
                                         if ($scope.es_checkArray[i] == "crate") {
                                             if (eventInfos[event.event_page + "_" + event.event_id] != undefined && Number(data["uv"]) != 0) {
@@ -2888,7 +2890,6 @@ define(["app"], function (app) {
                     }
                     returnData = newitemSplData;
                 } else {
-                    console.log("222222222");
                     if ((option[0].entity[a.col.field] + "").indexOf("%") != -1 || (option[0].entity[a.col.field] + "").indexOf("(-)") != -1) {
 //                        returnData[0] = (returnData[0] / option.length).toFixed(2) + "%";
                         if (window.location.href.split("/")[window.location.href.split("/").length - 1] == "changelist") {

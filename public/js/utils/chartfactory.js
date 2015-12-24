@@ -5,7 +5,6 @@ var checked = [0, 1];
 var cf = {
     renderChart: function (data, chartConfig) {
         var _self = op;
-        if (!chartConfig)console.error("chartConfig is required");
         var chartType = !chartConfig.chartType ? "line" : chartConfig.chartType;
         switch (chartType) {
             case "line":
@@ -935,7 +934,6 @@ var ad = {
             case "transformCost":
                 option.yAxis[index]["axisLabel"] = {
                     formatter: function (value) {
-                        console.log("fomat nuvRate")
                         return value + "元";
                     }
                 };
