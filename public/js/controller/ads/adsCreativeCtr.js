@@ -119,7 +119,7 @@ define(["./module"], function (ctrs) {
             // 是否转化
             chartConfig['noFormat'] = true;
             // 是否为双轴
-            chartConfig['twoYz'] = "none";
+            //chartConfig['twoYz'] = "none";
             // 图表渲染
             cf.renderChart(topData, chartConfig);
         };

@@ -102,6 +102,7 @@ define(["./module"], function (ctrs) {
         };
         // 数据转化
         $scope.dataFormat = function (data, chartConfig, e) {
+            console.log("*************dataFormat****************")
             // 将json格式的字符串data转为json对象
             var dataObj = JSON.parse(eval("(" + data + ")").toString());
             var topData = [];
@@ -119,9 +120,10 @@ define(["./module"], function (ctrs) {
             // 是否转化
             chartConfig['noFormat'] = true;
             // 是否为双轴
-            chartConfig['twoYz'] = "none";
+            //chartConfig['twoYz'] = "false";
             // 图表渲染
-            cf.renderChart(topData, chartConfig);
+            console.log(topData)
+            cf.renderChart(topData, $scope.charts[0].config);
         };
 
         // echarts 图例配置
@@ -147,10 +149,13 @@ define(["./module"], function (ctrs) {
                     // 图表类型
                     chartType: "bar",
                     keyFormat: 'eq',
+                    noFormat: true,
+                    auotHidex: true,
                     // 传入数据的key值
                     dataKey: "key",
                     // 传入数据的value值
-                    dataValue: "quota"
+                    dataValue: "quota",
+                    //twoYz:false
                 },
                 // 默认图例勾选的指标值
                 types: ["pv", "vc"],
