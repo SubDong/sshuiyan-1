@@ -911,21 +911,21 @@ var ad = {
     renderFormat: function (option, index, matchType) {
         switch (matchType) {
             case "avgTime":
-                option.yAxis[index]["avgTime"] = {
+                option.yAxis[index]["axisLabel"] = {
                     formatter: function (value) {
                         return ad.formatFunc(value, "avgTime");
                     }
                 };
                 break;
             case "outRate":
-                option.yAxis[index]["outRate"] = {
+                option.yAxis[index]["axisLabel"] = {
                     formatter: function (value) {
                         return value + "%";
                     }
                 };
                 break;
             case "nuvRate":
-                option.yAxis[index]["nuvRate"] = {
+                option.yAxis[index]["axisLabel"] = {
                     formatter: function (value) {
                         return value + "%";
                     }
@@ -939,7 +939,7 @@ var ad = {
                 };
                 break;
             case "crate":
-                option.yAxis[index]["crate"] = {
+                option.yAxis[index]["axisLabel"] = {
                     formatter: function (value) {
                         return value + "%";
                     }
@@ -953,42 +953,42 @@ var ad = {
                 };
                 break;
             case "ctr":
-                option.yAxis[index]["ctr"] = {
+                option.yAxis[index]["axisLabel"] = {
                     formatter: function (value) {
                         return value + "%";
                     }
                 };
                 break;
             case "平均访问时长":
-                option.yAxis[index]["avgTime"] = {
+                option.yAxis[index]["axisLabel"] = {
                     formatter: function (value) {
                         return ad.formatFunc(value, "平均访问时长");
                     }
                 };
                 break;
             case "跳出率":
-                option.yAxis[index]["outRate"] = {
+                option.yAxis[index]["axisLabel"] = {
                     formatter: function (value) {
                         return value + "%";
                     }
                 };
                 break;
             case "新访客比率":
-                option.yAxis[index]["nuvRate"] = {
+                option.yAxis[index]["axisLabel"] = {
                     formatter: function (value) {
                         return value + "%";
                     }
                 };
                 break;
             case "平均转化成本(事件)":
-                option.yAxis[index]["transformCost"] = {
+                option.yAxis[index]["axisLabel"] = {
                     formatter: function (value) {
                         return value + "元";
                     }
                 };
                 break;
             case "转化率":
-                option.yAxis[index]["crate"] = {
+                option.yAxis[index]["axisLabel"] = {
                     formatter: function (value) {
                         return value + "%";
                     }
@@ -1002,7 +1002,7 @@ var ad = {
                 };
                 break;
             case "点击率":
-                option.yAxis[index]["ctr"] = {
+                option.yAxis[index]["axisLabel"] = {
                     formatter: function (value) {
                         return value + "%";
                     }
