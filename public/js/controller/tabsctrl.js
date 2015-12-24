@@ -390,7 +390,7 @@ define(["app"], function (app) {
                         var tempButton = {};
                         tempButton["name"] = "页面URL";
                         tempButton["displayName"] = "页面URL";
-                        tempButton["field"] = "eventId";
+                        tempButton["field"] = "loc";
                         tempButton["footerCellTemplate"] = "<div class='ui-grid-cell-contents'>--</div>"
                         $rootScope.gridArray.unshift(tempButton);
                     }
