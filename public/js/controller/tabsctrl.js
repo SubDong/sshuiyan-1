@@ -2791,7 +2791,6 @@ define(["app"], function (app) {
         }
         //得到表格底部数据
         $scope.getFooterData = function (a, option, number) {
-            console.log("-------------------------------------------------------------------------------------------------------------------------------");
             var returnData = [0, 0, 0, 0];
             var spl = 0;
             var newSpl = [0, 0, 0];
@@ -2893,10 +2892,10 @@ define(["app"], function (app) {
                         option.forEach(function (_row) {
                             var _entity = _row.entity;
                             if (_entity.vc != "--") {
-                                t_vc += _entity.vc;
+                                t_vc += parseInt(_entity.vc);
                             }
                             if (_entity.svc != "--") {
-                                t_svc += _entity.svc;
+                                t_svc += parseInt(_entity.svc);
                             }
                         });
                         returnData[0] = (t_svc * 100 / (t_vc == 0 ? 1 : t_vc)).toFixed(2) + "%";
@@ -2908,14 +2907,13 @@ define(["app"], function (app) {
                         option.forEach(function (_row) {
                             var _entity = _row.entity;
                             if (_entity.uv != "--") {
-                                t_uv += _entity.uv;
+                                t_uv += parseInt(_entity.uv);
                             }
                             if (_entity.nuv != "--") {
-                                t_nuv += _entity.nuv;
+                                t_nuv += parseInt(_entity.nuv);
                             }
                         });
                         returnData[0] = (t_nuv * 100 / (t_uv == 0 ? 1 : t_uv)).toFixed(2) + "%";
-                        console.log(returnData[0]);
                     }
                     if (a.col.field == "avgTime") {
                         var _ll = 0;
