@@ -204,7 +204,6 @@ define(["app"], function (app) {
                     $scope.gridOptions.data = data;
                 }
             }).error(function (error) {
-                //////console.log(error);
             });
         };
         if (typeof($rootScope.checkedArray) != undefined && $rootScope.checkedArray == "SS") {
@@ -2005,11 +2004,11 @@ define(["app"], function (app) {
             $rootScope.$broadcast("ssh_load_compare_datashow", startTime, endTime);
             var dateTime1 = chartUtils.getSetOffTime($rootScope.tableTimeStart, $rootScope.tableTimeEnd);
             var dateTime2 = chartUtils.getSetOffTime(startTime, endTime);
-            $scope.targetDataContrast(null, null, false,function (item) {
+            $scope.targetDataContrast(null, null, false, function (item) {
                 var target = $rootScope.tableSwitch.latitude.field;
                 var dataArray = [];
                 var is = 1;
-                $scope.targetDataContrast(startTime, endTime,true, function (contrast) {
+                $scope.targetDataContrast(startTime, endTime, true, function (contrast) {
                     if ($rootScope.tableSwitch.number == 4) {//
                         var wordArray = [];// 搜索词数组
                         var aaaArray = [];
@@ -2190,7 +2189,7 @@ define(["app"], function (app) {
         }
 
         //数据对比实现方法
-        $scope.targetDataContrast = function (startInfoTime, endInfoTime, isComparedData,cabk) {
+        $scope.targetDataContrast = function (startInfoTime, endInfoTime, isComparedData, cabk) {
             $scope.gridOpArray = angular.copy($rootScope.gridArray);
             $scope.gridOptions.columnDefs = $scope.gridOpArray;
             if ($rootScope.tableSwitch.isJudge == undefined) $scope.isJudge = true;
@@ -2667,9 +2666,9 @@ define(["app"], function (app) {
                         otemp += Number(o.indexOf("%") || o.indexOf("元") >= 0 ? o.replace("%", "").replace("元", "") : 0)
                 })
 
-                if (a.col.field == "nuvRate"||a.col.field == "crate") {
-                    strs[0] = ctemp.toFixed(2)+"%"
-                    strs[1] = otemp.toFixed(2)+"%"
+                if (a.col.field == "nuvRate" || a.col.field == "crate") {
+                    strs[0] = ctemp.toFixed(2) + "%"
+                    strs[1] = otemp.toFixed(2) + "%"
                     strs[2] = otemp == 0 ? "--" : (((ctemp - otemp) / otemp) * 100).toFixed(2) + "%"
                 }
                 //else if(a.col.field == "crate"){
@@ -2734,6 +2733,9 @@ define(["app"], function (app) {
             }
             if (a.col.field == "pv" || a.col.field == "uv" || a.col.field == "ip" || a.col.field == "vc" || a.col.field == "nuv" || a.col.field == "freq") {
                 //
+                //if(a.col.field == "uv"&&option.length>0&&option[0].entity["all_uv"]!=undefined){
+                //
+                //}
             } else {
                 if (yqFieldArray.indexOf(_c_field) != -1) {// 搜索词-按照搜索引擎
                     rast[0] = (rast[0] / (yqLengthArray[0] == 0 ? 1 : yqLengthArray[0])).toFixed(2) + "%";
@@ -2936,7 +2938,11 @@ define(["app"], function (app) {
                         }
                         returnData[0] = returnData[0] == "0" ? "0" : (returnData[0] / (_ll == 0 ? 1 : _ll)).toFixed(2);
                     }
-                    if (a.col.field == "outRate") {
+                    if(a.col.field == "uv"&&option[0].entity["all_uv"]!=undefined){
+                        returnData[0] = option[0].entity["all_uv"]
+                    }
+                    if (a.col.field == "outRate" && (returnData[0] + "").indexOf("%") == -1) {
+
                         var t_vc = 0;
                         var t_svc = 0;
                         option.forEach(function (_row) {

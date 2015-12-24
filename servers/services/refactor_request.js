@@ -199,13 +199,13 @@ var buildMustQuery = function (filters) {
 
     if (filters != null) {
         filters.forEach(function (filter) {
-            if(JSON.stringify(filter)=="{\"entrance\":\"entrancetrue\"}"){
+            if (JSON.stringify(filter) == "{\"entrance\":\"entrancetrue\"}") {
                 mustQuery.push({
                     "term": {
                         "entrance": 1
                     }
                 });
-            }else{
+            } else {
                 mustQuery.push({
                     "terms": filter
                 });
@@ -689,8 +689,6 @@ var nuvRateFn = function (result) {
 };
 
 var entranceFn = function (result) {
-
-    console.log(result);
     var keyArr = [];
     var keyAsStringArr = [];
     var quotaArr = [];
@@ -835,7 +833,6 @@ var es_request = {
     search: function (es, indexes, type, quotas, dimension, topN, filters, start, end, interval, callbackFn) {
         var request = null;
         var _aggs = null;
-
         switch (topN[0]) {
             case "-1":  // circle topN, 适用于单一指标
                 var mustQuery = buildMustQuery(filters);
@@ -928,10 +925,12 @@ var es_request = {
                 request = buildRequest(indexes, type, quotas, dimension, filters, start, end, interval);
                 break;
         }
-
+        request.body.aggs["all_uv"] = {
+            "cardinality": {
+                "field": "tt"
+            }
+        }
         var cacheKey = cacheutils.fixCacheKey(request);
-        console.log("cacheKey : " + cacheKey);
-
         es.search(request, function (error, response) {
             var data = [];
             if (response != undefined && response.aggregations != undefined && response.aggregations.result != undefined) {
@@ -941,7 +940,6 @@ var es_request = {
                     result = [];
                     result.push(response.aggregations.result);
                 }
-
                 if (dimension == null && interval == 0) {
                     callbackFn(result);
                 } else {
@@ -957,7 +955,9 @@ var es_request = {
                                     data.push(contributionFn(result));
                                     break;
                                 case "uv":
-                                    data.push(uvFn(result));
+                                    var tempuv = uvFn(result)
+                                    tempuv["all_uv"] = response.aggregations.all_uv.value
+                                    data.push(tempuv);
                                     break;
                                 case "vc":
                                     data.push(vcFn(result));
@@ -1154,13 +1154,13 @@ var es_request = {
         });
         if (filters != null) {
             filters.forEach(function (filter) {
-                if(JSON.stringify(filter)=="{\"entrance\":\"entrancetrue\"}"){
+                if (JSON.stringify(filter) == "{\"entrance\":\"entrancetrue\"}") {
                     mustQuery.push({
                         "term": {
                             "entrance": 1
                         }
                     });
-                }else{
+                } else {
                     mustQuery.push({
                         "terms": filter
                     });
