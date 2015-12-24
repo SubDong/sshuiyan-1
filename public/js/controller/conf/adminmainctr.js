@@ -573,7 +573,7 @@ define(["./module"], function (ctrs) {
             if (path.trim().length > 0 && path.trim() != "不能为空") {
                 if (uid == null) {
                     $scope.urlDialog = ngDialog.open({
-                        template: '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div><ul class="admin-ng-content"><li>该账户错误</li></ul>' + '<div class="ng-button-div">\
+                        template: '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">系统提示</div><ul class="admin-ng-content"><li>该账户错误</li></ul>' + '<div class="ng-button-div">\
                   <button type="button" class="ngdialog-button ngdialog-button-secondary " ng-click="closeThisDialog(0)">返回</button></div></div>',
                         className: 'ngdialog-theme-default admin_ngdialog',
                         plain: true,
@@ -583,7 +583,7 @@ define(["./module"], function (ctrs) {
                     $http.get("/config/site_list?type=search&query={\"uid\":\"" + $cookieStore.get("uid") + "\",\"site_url\":\"" + path + "\"}").success(function (result) {
                         if (result == "null" || result == "") {
                             $scope.urlDialog = ngDialog.open({
-                                template: '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div><ul class="admin-ng-content"><li>该账户下不存在该路径</li></ul>' + '<div class="ng-button-div">\
+                                template: '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">系统提示</div><ul class="admin-ng-content"><li>该账户下不存在该路径</li></ul>' + '<div class="ng-button-div">\
                   <button type="button" class="ngdialog-button ngdialog-button-secondary " ng-click="closeThisDialog(0)">返回</button></div></div>',
                                 className: 'ngdialog-theme-default admin_ngdialog',
                                 plain: true,

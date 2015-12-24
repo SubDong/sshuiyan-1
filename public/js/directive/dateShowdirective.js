@@ -747,7 +747,7 @@ define(["../app"], function (app) {
         quotaObject.orderNumRate = "订单转化数/访问次数。";
         quotaObject.visitNum = "一个用户进行一次操作记录一次唯一访客事件数，但同一个用户多次点击同一个按钮不重复计算。";
         quotaObject.clickTotal = "操作发生的次数。";
-        quotaObject.ec = "作为访问会话最后一个浏览页面（即退出页面）的次数。.";
+        quotaObject.ec = "作为访问会话最后一个浏览页面（即退出页面）的次数。";
         quotaObject.transformCost = "平均转化成本=消费/转化次数";
         return function (key) {
             return quotaObject[key] || "未定义的指标KEY";

@@ -96,7 +96,7 @@ define(["./module"], function (ctrs) {
                 });
             }
             $scope.urlDialog = ngDialog.open({
-                template: '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div><ul class="admin-ng-content" ><li>' + content + '</li></ul>' +
+                template: '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">系统提示</div><ul class="admin-ng-content" ><li>' + content + '</li></ul>' +
                 ' <div class="ng-button-div"><button type="button" class="ngdialog-button ng-button" ng-click="closeThisDialog()">确定</button></div></div>',
                 className: 'ngdialog-theme-default admin_ngdialog',
                 plain: true,

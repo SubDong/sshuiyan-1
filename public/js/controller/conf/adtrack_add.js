@@ -288,7 +288,7 @@ define(["./module"], function (ctrs) {
          */
         $scope.clear = function () {
             $scope.urlDialog = ngDialog.open({
-                template: '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div><ul class="admin-ng-content"><li>  您确认要清空当前填写的内容吗？</li></ul>' + '<div class="ng-button-div"><button type="button" class="ngdialog-button ng-button " ng-click="sureClear()">确认</button>\
+                template: '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">系统提示</div><ul class="admin-ng-content"><li>  您确认要清空当前填写的内容吗？</li></ul>' + '<div class="ng-button-div"><button type="button" class="ngdialog-button ng-button " ng-click="sureClear()">确认</button>\
                   <button type="button" class="ngdialog-button ngdialog-button-secondary " ng-click="closeThisDialog(0)">取消</button></div></div>',
                 className: 'ngdialog-theme-default admin_ngdialog',
                 plain: true,
