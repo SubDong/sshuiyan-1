@@ -2700,7 +2700,9 @@ define(["app"], function (app) {
             }
 
         };
+        // 对比时底部汇总数据计算方法
         $scope.getCourFooterData = function (a, option, number) {
+            console.log("++++++++++++++++++++++++++++++++++++++++");
             var rast = [0.0, 0.0];
             var rastString = ["", ""];
             var bhlString = "";
@@ -2736,6 +2738,52 @@ define(["app"], function (app) {
                 if (yqFieldArray.indexOf(_c_field) != -1) {// 搜索词-按照搜索引擎
                     rast[0] = (rast[0] / (yqLengthArray[0] == 0 ? 1 : yqLengthArray[0])).toFixed(2) + "%";
                     rast[1] = (rast[1] / (yqLengthArray[1] == 0 ? 1 : yqLengthArray[1])).toFixed(2) + "%";
+                } else if (_c_field == "nuvRate") {
+                    console.log("---weims---");
+                    //if (a.col.field == "avgPage") {
+                    //    var t_vc = 0;
+                    //    var t_pv = 0;
+                    //    option.forEach(function (_row) {
+                    //        var _entity = _row.entity;
+                    //        if (_entity.vc != "--") {
+                    //            t_vc += parseInt(_entity.vc);
+                    //        }
+                    //        if (_entity.pv != "--") {
+                    //            t_pv += parseInt(_entity.pv);
+                    //        }
+                    //    });
+                    //    returnData[0] = (t_pv / (t_vc == 0 ? 1 : t_vc)).toFixed(2);
+                    //}
+                    //if (a.col.field == "outRate") {
+                    //    var t_vc = 0;
+                    //    var t_svc = 0;
+                    //    option.forEach(function (_row) {
+                    //        var _entity = _row.entity;
+                    //        if (_entity.vc != "--") {
+                    //            t_vc += parseInt(_entity.vc);
+                    //        }
+                    //        if (_entity.svc != "--") {
+                    //            t_svc += parseInt(_entity.svc);
+                    //        }
+                    //    });
+                    //    returnData[0] = (t_svc * 100 / (t_vc == 0 ? 1 : t_vc)).toFixed(2) + "%";
+                    //}
+                    if (a.col.field == "nuvRate") {
+                        // 新访客比率算法。通过总的新访客数除以总的访客数
+                        var t_uv = 0;
+                        var t_nuv = 0;
+                        option.forEach(function (_row) {
+                            var _entity = _row.entity;
+                            if (_entity.uv != "--") {
+                                t_uv += parseInt(_entity.uv);
+                            }
+                            if (_entity.nuv != "--") {
+                                t_nuv += parseInt(_entity.nuv);
+                            }
+                        });
+                        rast[0] = (t_nuv * 100 / (t_uv == 0 ? 1 : t_uv)).toFixed(2) + "%";
+                    }
+
                 } else {
                     rast[0] = (rast[0] / option.length).toFixed(2) + (perFieldArray.indexOf(_c_field) != -1 ? "%" : "");
                     rast[1] = (rast[1] / option.length).toFixed(2) + (perFieldArray.indexOf(_c_field) != -1 ? "%" : "");
@@ -2825,6 +2873,7 @@ define(["app"], function (app) {
                 });
                 var itemSplDataTow = (option[0].entity[a.col.field] + "").split(",");
                 if (itemSplDataTow.length >= 4) {
+                    console.log("1111111111111");
                     //var itemSplData = (s.entity[a.col.field] + "").split(",");
                     if (a.col.field == "outRate") {
                         newitemSplData.forEach(function (tts, i) {
@@ -2837,6 +2886,7 @@ define(["app"], function (app) {
                     }
                     returnData = newitemSplData;
                 } else {
+                    console.log("222222222");
                     if ((option[0].entity[a.col.field] + "").indexOf("%") != -1 || (option[0].entity[a.col.field] + "").indexOf("(-)") != -1) {
 //                        returnData[0] = (returnData[0] / option.length).toFixed(2) + "%";
                         if (window.location.href.split("/")[window.location.href.split("/").length - 1] == "changelist") {
@@ -3053,21 +3103,6 @@ define(["app"], function (app) {
                 }
                 return _tempData.splice(0, 100);
             }
-
-            //$http.get("api/changeList?start=" + timeData.start + "&end=" + timeData.end + "&contrastStart=" + timeData.contrastStart + "&contrastEnd=" + timeData.contrastEnd + "&filterType=" + timeData.filterType + "&type=" + $rootScope.userType).success(function (data) {
-            //    $rootScope.changeObj = {
-            //        sum_pv_count: data.sum_pv,
-            //        contrast_sum_pv_count: data.contrast_sum_pv,
-            //        all_percentage: data.percentage
-            //    };
-            //
-            //    // 数据过滤
-            //    var _tempData = filterDataByType(data.pv, timeData.filterType);
-            //
-            //    $rootScope.changeListData = _tempData;
-            //    $scope.gridOptions.data = _tempData;
-            //    $scope.gridOptions.enableSorting = true;
-            //});
 
             var requestArray = [];
             requestArray.push($http.get("api/changeListTwo?start=" + timeData.start + "&end=" + timeData.end + "&type=" + $rootScope.userType));
