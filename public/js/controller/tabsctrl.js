@@ -2009,6 +2009,26 @@ define(["app"], function (app) {
                 var dataArray = [];
                 var is = 1;
                 $scope.targetDataContrast(startTime, endTime, true, function (contrast) {
+                    item.forEach(function (a, b) {
+                        // 求出总和
+                        a.con_a_pv = a.con_a_vc = a.con_a_svc = a.con_a_uv = a.con_a_nuv = 0;
+                        a.con_b_pv = a.con_b_vc = a.con_b_svc = a.con_b_uv = a.con_b_nuv = 0;
+                        item.forEach(function (item_item) {
+                            a.con_a_pv += parseInt(item_item["pv"] == "--" ? 0 : item_item["pv"]);
+                            a.con_a_vc += parseInt(item_item["vc"] == "--" ? 0 : item_item["vc"]);
+                            a.con_a_svc += parseInt(item_item["svc"] == "--" ? 0 : item_item["svc"]);
+                            a.con_a_uv += parseInt(item_item["uv"] == "--" ? 0 : item_item["uv"]);
+                            a.con_a_nuv += parseInt(item_item["nuv"] == "--" ? 0 : item_item["nuv"]);
+                        });
+                        contrast.forEach(function (con_item) {
+                            // 保留计算需要的参数原始值
+                            a.con_b_pv += parseInt(con_item["pv"] == "--" ? 0 : con_item["pv"]);
+                            a.con_b_vc += parseInt(con_item["vc"] == "--" ? 0 : con_item["vc"]);
+                            a.con_b_svc += parseInt(con_item["svc"] == "--" ? 0 : con_item["svc"]);
+                            a.con_b_uv += parseInt(con_item["uv"] == "--" ? 0 : con_item["uv"]);
+                            a.con_b_nuv += parseInt(con_item["nuv"] == "--" ? 0 : con_item["nuv"]);
+                        });
+                    });
                     if ($rootScope.tableSwitch.number == 4) {//
                         var wordArray = [];// 搜索词数组
                         var aaaArray = [];
@@ -2094,8 +2114,7 @@ define(["app"], function (app) {
                             dataArray.push(obj);
                         }
                         $rootScope.$broadcast("LoadCompareDateShowDataFinish", item, contrast);
-                    }
-                    else {
+                    } else {
                         item.forEach(function (a, b) {
                             var dataObj = {};
                             if (target == "period" && $location.$$path == "/trend/today" && $rootScope.tableFormat == "day") {// 今日统计按日统计时特殊处理
@@ -2161,6 +2180,7 @@ define(["app"], function (app) {
                     }
                     $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
                 });
+                console.log(dataArray);
                 $scope.gridOptions.data = dataArray;
                 $rootScope.tableSwitch.latitude = latitudeOld;
                 $rootScope.gridArray = gridArrayOld;
@@ -2703,7 +2723,6 @@ define(["app"], function (app) {
         };
         // 对比时底部汇总数据计算方法
         $scope.getCourFooterData = function (a, option, number) {
-            console.log("++++++++++++++++++++++++++++++++++++++++");
             var rast = [0.0, 0.0];
             var rastString = ["", ""];
             var bhlString = "";
@@ -2742,52 +2761,24 @@ define(["app"], function (app) {
                 if (yqFieldArray.indexOf(_c_field) != -1) {// 搜索词-按照搜索引擎
                     rast[0] = (rast[0] / (yqLengthArray[0] == 0 ? 1 : yqLengthArray[0])).toFixed(2) + "%";
                     rast[1] = (rast[1] / (yqLengthArray[1] == 0 ? 1 : yqLengthArray[1])).toFixed(2) + "%";
-                } else if (_c_field == "nuvRate") {
-                    console.log("---weims---");
-                    //if (a.col.field == "avgPage") {
-                    //    var t_vc = 0;
-                    //    var t_pv = 0;
-                    //    option.forEach(function (_row) {
-                    //        var _entity = _row.entity;
-                    //        if (_entity.vc != "--") {
-                    //            t_vc += parseInt(_entity.vc);
-                    //        }
-                    //        if (_entity.pv != "--") {
-                    //            t_pv += parseInt(_entity.pv);
-                    //        }
-                    //    });
-                    //    returnData[0] = (t_pv / (t_vc == 0 ? 1 : t_vc)).toFixed(2);
-                    //}
-                    //if (a.col.field == "outRate") {
-                    //    var t_vc = 0;
-                    //    var t_svc = 0;
-                    //    option.forEach(function (_row) {
-                    //        var _entity = _row.entity;
-                    //        if (_entity.vc != "--") {
-                    //            t_vc += parseInt(_entity.vc);
-                    //        }
-                    //        if (_entity.svc != "--") {
-                    //            t_svc += parseInt(_entity.svc);
-                    //        }
-                    //    });
-                    //    returnData[0] = (t_svc * 100 / (t_vc == 0 ? 1 : t_vc)).toFixed(2) + "%";
-                    //}
-                    if (a.col.field == "nuvRate") {
-                        // 新访客比率算法。通过总的新访客数除以总的访客数
-                        var t_uv = 0;
-                        var t_nuv = 0;
-                        option.forEach(function (_row) {
-                            var _entity = _row.entity;
-                            if (_entity.uv != "--") {
-                                t_uv += parseInt(_entity.uv);
-                            }
-                            if (_entity.nuv != "--") {
-                                t_nuv += parseInt(_entity.nuv);
-                            }
-                        });
-                        rast[0] = (t_nuv * 100 / (t_uv == 0 ? 1 : t_uv)).toFixed(2) + "%";
+                } else if (_c_field == "nuvRate" || _c_field == "outRate" ) {
+                    if (_c_field == "outRate") {
+                        var t_a_vc = option[0] ? option[0]["entity"]["con_a_vc"] : 0;
+                        var t_b_vc = option[0] ? option[0]["entity"]["con_b_vc"] : 0;
+                        var t_a_svc = option[0] ? option[0]["entity"]["con_a_svc"] : 0;
+                        var t_b_svc = option[0] ? option[0]["entity"]["con_b_svc"] : 0;
+                        rast[0] = (t_a_svc * 100 / (t_a_vc == 0 ? 1 : t_a_vc)).toFixed(2) + "%";
+                        rast[1] = (t_b_svc * 100 / (t_b_vc == 0 ? 1 : t_b_vc)).toFixed(2) + "%";
                     }
-
+                    if (_c_field == "nuvRate") {
+                        // 新访客比率算法。通过总的新访客数除以总的访客数
+                        var t_a_uv = option[0] ? option[0]["entity"]["con_a_uv"] : 0;
+                        var t_b_uv = option[0] ? option[0]["entity"]["con_b_uv"] : 0;
+                        var t_a_nuv = option[0] ? option[0]["entity"]["con_a_nuv"] : 0;
+                        var t_b_nuv = option[0] ? option[0]["entity"]["con_b_nuv"] : 0;
+                        rast[0] = (t_a_nuv * 100 / (t_a_uv == 0 ? 1 : t_a_uv)).toFixed(2) + "%";
+                        rast[1] = (t_b_nuv * 100 / (t_b_uv == 0 ? 1 : t_b_uv)).toFixed(2) + "%";
+                    }
                 } else {
                     rast[0] = (rast[0] / option.length).toFixed(2) + (perFieldArray.indexOf(_c_field) != -1 ? "%" : "");
                     rast[1] = (rast[1] / option.length).toFixed(2) + (perFieldArray.indexOf(_c_field) != -1 ? "%" : "");
