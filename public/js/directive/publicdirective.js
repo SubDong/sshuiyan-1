@@ -588,7 +588,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
 
                 scope.ismeridian = true;
                 scope.sure = function () {
-                    console.log(111);
                 };
 
 
@@ -627,7 +626,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                                 dataInfo: repData
                             }
                         }).success(function (data, status, headers, config) {
-                            console.log(data);
                             var hiddenElement = document.createElement('a');
                             var dateTime = new Date();
                             var dateString = dateTime.Format("yyyyMdhmsS");
@@ -1314,7 +1312,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                             }).success(function (data) {
                                 if(data.hasOwnProperty("ecSummary")) {
                                     var index = scope.dateShowArray.elementHasOwnPropertyValue("label","ec");
-                                    console.log(scope.dateShowArray[index]);
                                     scope.dateShowArray[index].count = data.ecSummary;
                                     scope.dateShowArray[index].value = data.ecSummary;
                                     scope.dateShowArray[index].cCount = data.ecSummary;
@@ -1415,11 +1412,21 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                             angular.forEach(_array, function (_array_r) {
                                 if (_array_r.label == dateShowObject.label) {
                                     if (flag) {
-                                        _array_r.cCount = count;
-                                        _array_r.cValue = temp
+                                        if(_array_r.label == "uv"){
+                                            _array_r.cCount = 1;
+                                            _array_r.cValue = r.all_uv
+                                        }else{
+                                            _array_r.cCount = count;
+                                            _array_r.cValue = temp
+                                        }
                                     } else {
-                                        _array_r.count = count;
-                                        _array_r.value = temp
+                                        if(_array_r.label == "uv"){
+                                            _array_r.count = 1;
+                                            _array_r.value = r.all_uv
+                                        }else{
+                                            _array_r.count = count;
+                                            _array_r.value = temp
+                                        }
                                     }
                                 }
                             });
@@ -2329,7 +2336,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                 // 刷新加载时设置默认指标
                 scope.setDefaultShowArray();
                 scope.load = function (isCompared, data) {
-                    console.log(scope.isCompared);
                     //scope.isCompared = true;
                     //var i = 0;
                     //angular.forEach(scope.dateShowArray, function (dsa) {
@@ -2340,7 +2346,6 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     scope.pushESData(data, true);
                 };
                 scope.pushESData = function (result, flag) {
-                    console.log("scope.pushESData")
                 };
             }
         };

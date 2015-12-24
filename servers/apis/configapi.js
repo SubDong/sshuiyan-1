@@ -238,6 +238,7 @@ api.get("/site_list", function (req, res) {
             temp.type_id = randstring.rand_string();
             temp.track_id = randstring.rand_string();
             temp.ctime  =  new Date().getTime();
+            temp.token = temp.token==undefined?"":temp.token
             dao.save(schema_name, temp, function (ins) {
                 datautils.send(res, ins);
                 // 参考 https://github.com/zerocoolys/suiyan/wiki/%E9%85%8D%E7%BD%AE%E5%8F%82%E6%95%B0%5Bredis-key-%E8%A7%84%E8%8C%83%5D

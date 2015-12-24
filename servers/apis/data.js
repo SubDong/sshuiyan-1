@@ -415,7 +415,7 @@ api.get('/indextable', function (req, res) {
                                     obj[dimensionInfo] = (infoKey == "-" ? "直接访问" : infoKey);
                                     break;
                                 default :
-                                    obj[dimensionInfo] = infoKey;
+                                        obj[dimensionInfo] = infoKey;
                                     break;
                             }
                         }
@@ -424,17 +424,22 @@ api.get('/indextable', function (req, res) {
                         } else {
                             obj[info.label] = info.quota[i] + (valueData.indexOf(info.label) != -1 ? "%" : "");
                         }
+
+                        if(info.label == "uv"){
+                            obj["all_uv"] = info["all_uv"]
+                        }
                         maps[infoKey] = obj;
                     }
                     vidx++;
                 });
+
                 for (var key in maps) {
                     if (key != null) {
                         result.push(maps[key]);
                     }
                 }
             } catch (e) {
-                console.error(e.stack);
+                //console.error(e.stack);
             }
             datautils.send(res, result);
         } else {
@@ -544,7 +549,7 @@ api.get('/realTimeHtml', function (req, res) {
                         "<ul><li>页面地址</li>" + urlHtml + "</ul></div></div>";
                     returnData = {"htmlData": result};
                 } catch (e) {
-                    console.error(e.stack);
+                    //console.error(e.stack);
                     returnData = {"htmlData": "<div class='trendbox'>暂无数据</div>"};
                 }
                 datautils.send(res, returnData);
@@ -648,7 +653,7 @@ api.post("/downCSV", function (req, res) {
         try {
             requestData = JSON.parse(JSON.parse(postDataChunk + "").dataInfo);
         } catch (e) {
-            console.error("下载csv异常。解析csv数据异常");
+            //console.error("下载csv异常。解析csv数据异常");
         }
     });
 
@@ -698,7 +703,7 @@ api.post("/downPDF", function (req, res) {
         var str = iconv.encode(buffer, 'utf-8');
         res.send(str);
     } catch (e) {
-        console.log(e);
+        //console.log(e);
     }
 
     //csvApi.json2csv(jsonData, function (err, csv) {
@@ -878,7 +883,7 @@ api.get("/heaturl", function (req, res) {
     var indexes = date.createIndexes(_startTime, _endTime, "access-");
     heaturl_request.searchHeaderData(req.es, indexes, _type, _rf, function (result) {
 
-        //console.log(result);
+        ////console.log(result);
         datautils.send(res, result);
     });
 
@@ -1145,7 +1150,7 @@ api.get("/transform/getPageSeBaseInfo", function (req, res) {
     var timeArea = date.getConvertTimeByNumber(query.start, query.end)
     //计算计算时间
     transform.searchPageSeBaseInfo(req.es, indexString, timeArea[0], timeArea[1], query.type, JSON.parse(query.pages),query.rfType, query.queryOptions,query.filters, function (result) {
-        console.log(result)
+        //console.log(result)
         datautils.send(res, result);
     });
 });
@@ -1179,7 +1184,7 @@ api.get("/transform/getDayPagePVs", function (req, res) {
     }
     //计算开始时间
     var timeArea = date.getConvertTimeByNumber(query.start, query.end)
-    console.log(query)
+    //console.log(query)
     transform.searchDayPagePVs(req.es, indexString, query.type, query.showType, query.queryOptions.split(","),JSON.parse(query.urls), query.filters,function (result) {
         datautils.send(res, result);
     });
@@ -1393,7 +1398,7 @@ api.get('/test', function (req, res) {
         if (data.length) {
 
             var result = data_convert.convertData(data, rule_index, dimension)
-            //console.log(result);
+            ////console.log(result);
             //csvApi.json2csv(result, function (err, csv) {
             //    var buffer = new Buffer(csv);
             //    var fileSuffix = new Date().getTime();
@@ -1403,7 +1408,7 @@ api.get('/test', function (req, res) {
             //});
             datautils.send(res, {status: 'success', info: 'Message sent: '});
         } else {
-            //console.log("No data result");
+            ////console.log("No data result");
         }
     });
 
@@ -1413,7 +1418,7 @@ api.get('/test', function (req, res) {
     //    var fileSuffix = new Date().getTime();
     //    fs.writeFile("servers/filetmp/" + fileSuffix + ".csv", buffer, function (error) {
     //        if (error) {
-    //            console.error(error);
+    //            //console.error(error);
     //            datautils.send(res, {status: 'error', info: error});
     //        } else {
     //            var mailOptions = {
@@ -1431,7 +1436,7 @@ api.get('/test', function (req, res) {
     //            };
     //            mail.send(mailOptions, function (error, info) {
     //                if (error) {
-    //                    console.log(error);
+    //                    //console.log(error);
     //                    datautils.send(res, {status: 'error', info: error});
     //                } else {
     //                    datautils.send(res, {status: 'success', info: 'Message sent: ' + info.response});
@@ -1465,7 +1470,7 @@ api.get('/test', function (req, res) {
     //};
     //mail.send(mailOptions, function (error, info) {
     //    if (error) {
-    //        console.log(error);
+    //        //console.log(error);
     //        datautils.send(res, {status: 'error', info: error});
     //    } else {
     //        datautils.send(res, {status: 'success', info: 'Message sent: ' + info.response});
@@ -1504,7 +1509,7 @@ api.get("/saveMailConfig", function (req, res) {
         var jsonData = JSON.parse(dataInfo);
         dao.find(model, JSON.stringify({rule_url: jsonData.rule_url}), null, {}, function (err, docs) {
             if (err)
-                return console.error(err);
+                return //console.error(err);
             if (docs.length) {
                 dao.update(model, JSON.stringify({rule_url: jsonData.rule_url}), JSON.stringify(jsonData), function (err, result) {
                     datautils.send(res, JSON.stringify(result));
@@ -1521,7 +1526,7 @@ api.get("/saveMailConfig", function (req, res) {
         var rule_url = query.rule_url;
         dao.find(model, JSON.stringify({rule_url: rule_url}), null, {}, function (err, docs) {
             if (err)
-                return console.error(err);
+                return //console.error(err);
             datautils.send(res, docs);
         });
     }
@@ -1537,7 +1542,7 @@ api.post("/saveMailConfig", function (req, res) {
         var jsonData = JSON.parse(requestData).data;
         dao.find(model, JSON.stringify({rule_url: jsonData.rule_url}), null, {}, function (err, docs) {
             if (err) {
-                return console.error(err);
+                return //console.error(err);
             }
             if (docs.length) {
                 dao.update(model, JSON.stringify({rule_url: jsonData.rule_url}), JSON.stringify(jsonData), function (err, result) {
