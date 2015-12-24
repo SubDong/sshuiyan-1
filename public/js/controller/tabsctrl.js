@@ -2938,10 +2938,10 @@ define(["app"], function (app) {
                         }
                         returnData[0] = returnData[0] == "0" ? "0" : (returnData[0] / (_ll == 0 ? 1 : _ll)).toFixed(2);
                     }
-                    if(a.col.field == "uv"&&option[0].entity["all_uv"]!=undefined){
+                    if(a.col.field == "uv" && option[0].entity["all_uv"] != undefined){
                         returnData[0] = option[0].entity["all_uv"]
                     }
-                    if (a.col.field == "outRate" && (returnData[0] + "").indexOf("%") == -1) {
+                    if (a.col.field == "outRate") {
 
                         var t_vc = 0;
                         var t_svc = 0;
