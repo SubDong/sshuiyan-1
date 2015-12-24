@@ -2103,7 +2103,11 @@ define(["app"], function (app) {
                                 $rootScope.checkedArray.forEach(function (tt, aa) {
                                     try {
                                         var bili = ((parseInt(a[tt] + "".replace("%")) - parseInt((contrast[b][tt] + "").replace("%"))) / (parseInt((contrast[b][tt] + "").replace("%")) == 0 ? parseInt(a[tt] + "".replace("%")) : parseInt((contrast[b][tt] + "").replace("%"))) * 100).toFixed(2);
-                                        dataObj[tt] = (isNaN(bili) ? 0 : bili) + "%";
+                                        if (isNaN(bili)) {
+                                            dataObj[tt] = "0.00%";
+                                        } else {
+                                            dataObj[tt] = bili + "%";
+                                        }
                                         if (tt == "nuvRate" || tt == "outRate") {
                                             a[tt] = "　" + "," + getRateValue(a[tt]) + "," + getRateValue(contrast[b][tt]) + "," + dataObj[tt];
                                         } else if (tt == "avgTime") {
@@ -2123,7 +2127,11 @@ define(["app"], function (app) {
                                     if (a[target] == contrast[i][target]) {
                                         $rootScope.checkedArray.forEach(function (tt, aa) {
                                             var bili = ((parseInt(a[tt] + "".replace("%")) - parseInt((contrast[i][tt] + "").replace("%"))) / (parseInt((contrast[i][tt] + "").replace("%")) == 0 ? parseInt(a[tt] + "".replace("%")) : parseInt((contrast[i][tt] + "").replace("%"))) * 100).toFixed(2);
-                                            dataObj[tt] = (isNaN(bili) ? 0 : bili) + "%";
+                                            if (isNaN(bili)) {
+                                                dataObj[tt] = "0.00%";
+                                            } else {
+                                                dataObj[tt] = bili + "%";
+                                            }
                                             if (tt == "nuvRate" || tt == "outRate") {
                                                 a[tt] = "　" + "," + getRateValue(a[tt]) + "," + getRateValue(contrast[i][tt]) + "," + dataObj[tt];
                                             } else if (tt == "avgTime") {
@@ -2821,7 +2829,7 @@ define(["app"], function (app) {
                     if (a.col.field == "outRate") {
                         newitemSplData.forEach(function (tts, i) {
 //                            newitemSplData[i] = (tts / option.length).toFixed(2) + "%"
-                            newitemSplData[0] = newitemSplData[0] == "0" ? "0%" : (newitemSplData[0] / option.length).toFixed(2) + "%";
+                            newitemSplData[0] = newitemSplData[0] == "0" ? "0.00%" : (newitemSplData[0] / option.length).toFixed(2) + "%";
                         })
                     }
                     if (a.col.field == "avgPage" || a.col.field == "click") {
