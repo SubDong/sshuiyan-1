@@ -148,7 +148,7 @@ define(["./module"], function (ctrs) {
                     preCloseCallback: function () {
                         $state.go('childlist');
                     },
-                    template: '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div><ul class="admin-ng-content"><li>保存成功</li></ul>' + '<div class="ng-button-div">\
+                    template: '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">系统提示</div><ul class="admin-ng-content"><li>保存成功</li></ul>' + '<div class="ng-button-div">\
                   <button type="button" class="ngdialog-button ng-button " ng-click="closeThisDialog(0)">确定</button></div></div>',
                     className: 'ngdialog-theme-default admin_ngdialog',
                     plain: true,
