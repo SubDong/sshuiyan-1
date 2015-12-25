@@ -79,7 +79,8 @@ define(["./module"], function (ctrs) {
             //当number等于2时需要用到coding参数 用户配置弹出层的显示html 其他情况给false
             coding: false,
             //coding:"<li><a href='http://www.best-ad.cn'>查看历史趋势</a></li><li><a href='http://www.best-ad.cn'>查看入口页连接</a></li>"
-            arrayClear: false //是否清空指标array
+            arrayClear: false, //是否清空指标array
+            uv_repeat:false//统计时UV 是否保留重复 true　保留 false 去重
         };
 
         $scope.$on("ssh_refresh_charts", function (e, msg) {
