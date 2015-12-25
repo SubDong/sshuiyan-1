@@ -726,7 +726,6 @@ define(["../app"], function (app) {
                 });
 
                 scope.$on("LoadAdCompareDateShowFinish", function (e, field, data, con_data) {
-                    console.log("123123123123");
                     scope.dateShowArray.forEach(function (_obj) {
                         if (field == _obj["label"]) {
                             _obj.value = data;
