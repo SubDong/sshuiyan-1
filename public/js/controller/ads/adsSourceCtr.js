@@ -152,8 +152,7 @@ define(["./module"], function (ctrs) {
                     // 传入数据的key值
                     dataKey: "key",
                     // 传入数据的value值
-                    dataValue: "quota",
-                    //twoYz:false
+                    dataValue: "quota"
                 },
                 // 默认图例勾选的指标值
                 types: ["pv", "vc"],
@@ -199,23 +198,6 @@ define(["./module"], function (ctrs) {
             //var time_url= "/config/time_conv?type=search&query={\"uid\":\""+uid+"\"}";
             var event_request = $http.get(event_url);
             var page_request = $http.get(page_url);
-            //$http({method: 'GET', url: page_url}).success(function (dataConfig) {
-            //    dataConfig.forEach(function (item) {
-            //        $scope.pages.push({name: item.target_name, obj: item});
-            //    });
-            //});
-            //
-            //$http({method: 'GET', url: event_url}).success(function (dataConfig) {
-            //    dataConfig.forEach(function (item) {
-            //        $scope.events.push({name: item.event_name, obj: item});
-            //    });
-            //});
-
-            //$http({method: 'GET', url: time_url}).success(function (dataConfig) {
-            //    dataConfig.forEach(function (item) {
-            //        $scope.pages.push({time: item._id});
-            //    });
-            //});
 
             $q.all([event_request, page_request]).then(function (final_result) {
                 final_result.forEach(function (_result, _i) {

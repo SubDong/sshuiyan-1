@@ -530,7 +530,6 @@ define(["../app"], function (app) {
             restrict: 'E',
             templateUrl: '../commons/date_show.html',
             link: function (scope, element, attris, controller) {
-                console.log("-------history--------");
                 // 初始化参数
                 scope.isCompared = false;
                 scope.dateShowArray = [];
@@ -583,6 +582,58 @@ define(["../app"], function (app) {
 
                     scope.dateShowArray = $rootScope.copy(_array);
                 };
+            }
+        };
+    });
+
+    /**
+     * Create by wms on 2015-12-25.指定广告跟踪
+     */
+    app.directive("sshAdDateShow", function ($rootScope) {
+        return {
+            restrict: 'E',
+            templateUrl: '../commons/date_show.html',
+            link: function (scope, element, attris, controller) {
+                // 初始化参数
+                scope.isCompared = false;
+                scope.dateShowArray = [];
+                scope.filter = attris.filter;
+                scope.ds_defaultQuotasOption = ["pv", "uv", "ip", "nuv", "outRate", "avgTime"];
+                scope.ds_keyData = [];
+                scope.ds_dateShowQuotasOption = scope.checkedArray ? scope.checkedArray : scope.ds_defaultQuotasOption;
+                scope.setDefaultShowArray = function () {
+                    var tempArray = [];
+                    angular.forEach(scope.ds_dateShowQuotasOption, function (q_r) {
+                        tempArray.push({"label": q_r, "value": 0, "cValue": 0, "count": 0, "cCount": 0});
+                    });
+                    scope.ds_keyData = [];
+                    scope.dateShowArray = $rootScope.copy(tempArray);
+                };
+
+                scope.setDefaultShowArray();
+
+                scope.$on("LoadAdDateShowStart", function (e, msg) {
+                    scope.isCompared = false;
+                    var temp = $rootScope.copy(msg);
+                    if (temp.length > 0) {
+                        scope.ds_dateShowQuotasOption = temp;
+                    }
+                    scope.setDefaultShowArray();
+                    scope.DateNumber = false;
+                    scope.DateLoading = false;
+                });
+
+                scope.$on("LoadAdDateShowFinish", function (e, field, data) {
+                    scope.dateShowArray.forEach(function (_obj) {
+                        if (field == _obj["label"]) {
+                            _obj.value = data;
+                            _obj.count = 1;
+                        }
+                    });
+                    scope.DateNumber = true;
+                    scope.DateLoading = true;
+                });
+
             }
         };
     });

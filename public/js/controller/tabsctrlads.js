@@ -1218,182 +1218,105 @@ define(["app"], function (app) {
                 $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
                 $scope.gridOptions.data = $rootScope.gridData;
             } else {
+                $rootScope.$broadcast("LoadAdDateShowStart", $rootScope.checkedArray);
                 $http({
                     method: 'GET',
                     url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field)
                     + "&filerInfo=" + $rootScope.tableSwitch.tableFilter + "&promotion=" + $rootScope.tableSwitch.promotionSearch + "&formartInfo=" + $rootScope.tableFormat+"&popup=" + $rootScope.tableSwitch.popup  + "&type=" + esType
                 }).success(function (data, status) {
-                    $rootScope.$broadcast("LoadDateShowDataFinish", data);
-                    if ($rootScope.tableSwitch.promotionSearch != undefined && $rootScope.tableSwitch.promotionSearch) {
-                        if ($rootScope.areaFilter != "全部" && $location.path() == "/extension/way") {// 推广方式地域过滤不为全部是特殊处理
-                            var url = SEM_API_URL + "/sem/report/region?a=" + user + "&b=" + baiduAccount + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1&rgna=" + $rootScope.areaFilter
-                        } else {
-                            var url = SEM_API_URL + "/sem/report/account?a=" + user + "&b=" + baiduAccount + "&startOffset=" + $rootScope.tableTimeStart + "&endOffset=" + $rootScope.tableTimeEnd + "&device=-1"
-                        }
-
-                        $http({
-                            method: 'GET',
-                            url: url
-                        }).success(function (dataSEM, status) {
-                            $rootScope.$broadcast("LoadDateShowSEMDataFinish", dataSEM);
-                            var dataArray = []
-                            var dataObj = {};
-                            var semDataArray = [];
-                            var semDataObj = {};
-                            $scope.target.forEach(function (array, b) {
-                                dataSEM.forEach(function (items, a) {
-                                    if (items[array.name] != undefined) if (semDataObj[array.name] == undefined) semDataObj[array.name] = items[array.name]; else semDataObj[array.name] += items[array.name];
-                                });
+                    if ($rootScope.tableFormat != "hour") {
+                        if ($rootScope.tableFormat == "week") {
+                            data.forEach(function (item, i) {
+                                item.period = util.getYearWeekState(item.period);
                             });
-                            if (dataSEM.length > 1) {
-                                semDataObj["cpc"] = (semDataObj["cost"] / semDataObj["click"]).toFixed(2);
-                                semDataObj["ctr"] = ((semDataObj["click"] / semDataObj["impression"]) * 100).toFixed(2);
-                            }
-                            semDataArray.push(semDataObj);
-                            $rootScope.checkedArray.forEach(function (item, i) {
-                                if ($rootScope.tableSwitch.latitude.field == "accountName") {
-                                    if (dataSEM[0]) {
-                                        if ($rootScope.areaFilter != "全部" && $location.path() == "/extension/way") {// 推广方式地域过滤不为全部是特殊处理
-                                            dataObj["accountName"] = "搜索推广 (" + dataSEM[0].regionName + ")";
-                                        } else {
-                                            dataObj["accountName"] = "搜索推广 (" + dataSEM[0].accountName + ")";
-                                        }
-                                    } else {
-                                        dataObj["accountName"] = "搜索推广 (暂无数据 )";
-                                    }
-                                }
-                                semDataArray.forEach(function (sem, i) {
-                                    if (dataObj[item] == undefined) {
-                                        if (item == "ctr") {
-                                            dataObj[item] = sem[item] + "%"
-                                        } else {
-                                            dataObj[item] = parseFloat(sem[item]).toFixed(2);
-                                        }
-                                    }
-                                });
-                                if (data.length > 0) {
-                                    data.forEach(function (es, i) {
-                                        if (isNaN(dataObj[item]) || dataObj[item] == undefined) {
-                                            dataObj[item] = es[item] != undefined ? es[item] : "--"
-                                        }
-                                    });
-                                } else {
-                                    if (isNaN(dataObj[item]) || dataObj[item] == undefined) {
-                                        dataObj[item] = "--"
-                                    }
-                                }
-
-                            });
-                            $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
-                            dataArray.push(dataObj);
-                            $scope.gridOptions.data = dataArray;
-                        });
-                    } else {
-                        if (isClicked == "rf_dm") {
-                            data.forEach(function (item, o) {
-                                if (item["dm"]) {
-                                    item["rf"] = item["dm"];
-                                } else {
-                                    item["dm"] = item["rf"];
-                                }
-                            })
-                        }
-                        if ($rootScope.tableFormat != "hour") {
-                            if ($rootScope.tableFormat == "week") {
-                                data.forEach(function (item, i) {
-                                    item.period = util.getYearWeekState(item.period);
-                                });
-                                if (data.length == 0) {
-                                    var resultData = [];
-                                    var resultObj = {};
-                                    $rootScope.checkedArray.forEach(function (item, a) {
-                                        resultObj[item] = "--";
-                                    });
-
-                                    resultObj[$rootScope.tableSwitch.latitude.field] = "暂无数据";
-                                    resultData.push(resultObj);
-                                    $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
-                                    $scope.gridOptions.data = resultData;
-                                } else {
-                                    $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
-                                    $scope.gridOptions.data = data;
-                                }
-                            } else {
-
-                                if (data.length == 0) {
-                                    var resultData = [];
-                                    var resultObj = {};
-                                    if ($rootScope.checkedArray != undefined) {
-                                        $rootScope.checkedArray.forEach(function (item, a) {
-                                            resultObj[item] = "--";
-                                        });
-                                    }
-                                    resultObj[$rootScope.tableSwitch.latitude.field] = "暂无数据";
-                                    $(".custom_table i").css({"display": "none"});
-                                    resultData.push(resultObj);
-                                    $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
-                                    $scope.gridOptions.data = resultData;
-                                } else {
-                                    $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
-                                    $scope.gridOptions.data = data;
-                                }
-                            }
-                        } else {
-                            var result = [];
-                            var vaNumber = 0;
-                            var maps = {}
-                            var newData = chartUtils.getByHourByDayData(data);
-
-                            newData.forEach(function (info, x) {
-                                for (var i = 0; i < info.key.length; i++) {
-                                    var infoKey = info.key[i];
-                                    var obj = maps[infoKey];
-                                    if (!obj) {
-                                        obj = {};
-                                        var dataString = (infoKey.toString().length >= 2 ? "" : "0")
-                                        obj["period"] = dataString + infoKey + ":00 - " + dataString + infoKey + ":59";
-                                        maps[infoKey] = obj;
-
-                                    }
-                                    if (info.label == "平均访问时长") {
-                                        obj["avgTime"] = ad.formatFunc(info.quota[i], "avgTime");
-                                    } else {
-                                        if (info.label == "跳出率") {
-                                            obj[chartUtils.convertEnglish(info.label)] = info.quota[i] + "%";
-                                        } else {
-                                            if (info.label == "新访客比率") {
-                                                obj[chartUtils.convertEnglish(info.label)] = info.quota[i] + "%";
-                                            } else {
-                                                obj[chartUtils.convertEnglish(info.label)] = info.quota[i];
-                                            }
-                                        }
-                                    }
-                                    maps[infoKey] = obj;
-                                }
-                            });
-
-                            var jupey = 0
-                            for (var key in maps) {
-                                jupey = 1;
-                                if (key != null) {
-                                    result.push(maps[key]);
-                                }
-                            }
-                            if (jupey == 0) {
+                            if (data.length == 0) {
+                                var resultData = [];
                                 var resultObj = {};
                                 $rootScope.checkedArray.forEach(function (item, a) {
                                     resultObj[item] = "--";
                                 });
+
                                 resultObj[$rootScope.tableSwitch.latitude.field] = "暂无数据";
-                                result.push(resultObj)
+                                resultData.push(resultObj);
+                                $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
+                                $scope.gridOptions.data = resultData;
+                            } else {
+                                $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
+                                $scope.gridOptions.data = data;
                             }
-                            ;
-                            $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
-                            $scope.gridOptions.data = result;
+                        } else {
+
+                            if (data.length == 0) {
+                                var resultData = [];
+                                var resultObj = {};
+                                if ($rootScope.checkedArray != undefined) {
+                                    $rootScope.checkedArray.forEach(function (item, a) {
+                                        resultObj[item] = "--";
+                                    });
+                                }
+                                resultObj[$rootScope.tableSwitch.latitude.field] = "暂无数据";
+                                $(".custom_table i").css({"display": "none"});
+                                resultData.push(resultObj);
+                                $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
+                                $scope.gridOptions.data = resultData;
+                            } else {
+                                $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
+                                $scope.gridOptions.data = data;
+                            }
                         }
+                    } else {
+                        var result = [];
+                        var vaNumber = 0;
+                        var maps = {}
+                        var newData = chartUtils.getByHourByDayData(data);
+
+                        newData.forEach(function (info, x) {
+                            for (var i = 0; i < info.key.length; i++) {
+                                var infoKey = info.key[i];
+                                var obj = maps[infoKey];
+                                if (!obj) {
+                                    obj = {};
+                                    var dataString = (infoKey.toString().length >= 2 ? "" : "0")
+                                    obj["period"] = dataString + infoKey + ":00 - " + dataString + infoKey + ":59";
+                                    maps[infoKey] = obj;
+
+                                }
+                                if (info.label == "平均访问时长") {
+                                    obj["avgTime"] = ad.formatFunc(info.quota[i], "avgTime");
+                                } else {
+                                    if (info.label == "跳出率") {
+                                        obj[chartUtils.convertEnglish(info.label)] = info.quota[i] + "%";
+                                    } else {
+                                        if (info.label == "新访客比率") {
+                                            obj[chartUtils.convertEnglish(info.label)] = info.quota[i] + "%";
+                                        } else {
+                                            obj[chartUtils.convertEnglish(info.label)] = info.quota[i];
+                                        }
+                                    }
+                                }
+                                maps[infoKey] = obj;
+                            }
+                        });
+
+                        var jupey = 0
+                        for (var key in maps) {
+                            jupey = 1;
+                            if (key != null) {
+                                result.push(maps[key]);
+                            }
+                        }
+                        if (jupey == 0) {
+                            var resultObj = {};
+                            $rootScope.checkedArray.forEach(function (item, a) {
+                                resultObj[item] = "--";
+                            });
+                            resultObj[$rootScope.tableSwitch.latitude.field] = "暂无数据";
+                            result.push(resultObj)
+                        }
+                        $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
+                        $scope.gridOptions.data = result;
                     }
 
-                }).error(function (error) {
                 });
             }
         };
@@ -1946,48 +1869,23 @@ define(["app"], function (app) {
                             }
                         }
                     }
-
                 });
                 var itemSplDataTow = (option[0].entity[a.col.field] + "").split(",");
                 if (itemSplDataTow.length >= 4) {
-                    //var itemSplData = (s.entity[a.col.field] + "").split(",");
                     if (a.col.field == "outRate") {
                         newitemSplData.forEach(function (tts, i) {
-//                            newitemSplData[i] = (tts / option.length).toFixed(2) + "%"
                             newitemSplData[0] = newitemSplData[0] == "0" ? "0%" : (newitemSplData[0] / option.length).toFixed(2) + "%";
                         })
                     }
                     if (a.col.field == "avgPage" || a.col.field == "click") {
-//                        newitemSplData[0] = (newitemSplData[0] / option.length).toFixed(2);
                         newitemSplData[0] = newitemSplData[0] == "0" ? "0" : (newitemSplData[0] / option.length).toFixed(2);
                     }
                     returnData = newitemSplData;
                 } else {
                     if ((option[0].entity[a.col.field] + "").indexOf("%") != -1 || (option[0].entity[a.col.field] + "").indexOf("(-)") != -1) {
-//                        returnData[0] = (returnData[0] / option.length).toFixed(2) + "%";
-                        if (window.location.href.split("/")[window.location.href.split("/").length - 1] == "changelist") {
-                            var contrastPv = 0;
-                            for (var c = 0; c < option.length; c++) {
-                                contrastPv += option[c].entity["contrastPv"];
-                            }
-                            if (contrastPv == 0) {
-                                if (returnData[0] > 0) {
-                                    returnData[0] = "+" + returnData[0] + "(-)";
-                                } else if (returnData[0] < 0) {
-                                    returnData[0] = "-" + returnData[0] + "(-)";
-                                } else {
-                                    returnData[0] = returnData[0] + "(-)";
-                                }
-                            } else {
-                                returnData[0] = returnData[0] == "0" ? "0%" : (returnData[0] > 0 ? ("+" + returnData[0]) : returnData[0]) + "(" + (returnData[0] * 100 / contrastPv).toFixed(2) + "%)";
-                            }
-                        } else {
-                            returnData[0] = returnData[0] == "0" ? "0%" : (returnData[0] / option.length).toFixed(2) + "%";
-                        }
-
+                        returnData[0] = returnData[0] == "0" ? "0%" : (returnData[0] / option.length).toFixed(2) + "%";
                     }
                     if (a.col.field == "avgPage" || a.col.field == "click") {
-//                        returnData[0] = (returnData[0] / option.length).toFixed(2);
                         returnData[0] = returnData[0] == "0" ? "0" : (returnData[0] / option.length).toFixed(2);
                     }
                     if (a.col.field == "avgTime") {
@@ -2009,6 +1907,7 @@ define(["app"], function (app) {
                 if (option[0].entity.period == "暂无数据" || option[0].entity.rf_type == "暂无数据" || option[0].entity.se == "暂无数据" || option[0].entity.kw == "暂无数据" || option[0].entity.rf == "暂无数据" || option[0].entity.loc == "暂无数据" || option[0].entity.region == "暂无数据" || option[0].entity.pm == "暂无数据" || option[0].entity.ct == "暂无数据" || option[0].entity.city == "暂无数据" || option[0].entity.accountName == "搜索推广 (暂无数据 )") {
                     returnData = ["--", "--", "--", "--"]
                 }
+                $rootScope.$broadcast("LoadAdDateShowFinish", a.col.field, returnData[0]);
                 switch (number) {
                     case 1:
                         return returnData[0];
@@ -2018,20 +1917,6 @@ define(["app"], function (app) {
                         return returnData[2];
                     case 4:
                         return returnData[3];
-                    case 5:
-                        /*仅用于来源变化棒中当页汇总出现的颜色变化*/
-                        if (returnData[0] != "--" && returnData[0] != undefined) {
-                            if (returnData[0].toString().substring(0, 1) == "+") {
-                                document.getElementById("summary").style.color = "#ea1414";
-                            } else if (returnData[0].toString().substring(0, 1) == "-") {
-                                document.getElementById("summary").style.color = "#07cd2c";
-                            } else if (returnData[0] == "0%" || returnData[0] == "0") {
-                                document.getElementById("summary").style.color = "#01aeef";
-                            } else {
-                                document.getElementById("summary").style.color = "#ea1414";
-                            }
-                        }
-                        return returnData[0];
                     default :
                         return returnData[0];
                 }
