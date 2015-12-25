@@ -140,6 +140,8 @@ api.get('/adscharts', function (req, res) {
         dimension = null;
     }
     es_request.search(req.es, indexes, userType+"_ad_track", quotas, dimension, topN, filter, period[0], period[1], interval, function (result) {
+        console.log("********************************")
+        console.log(result)
         datautils.send(res, JSON.stringify(result));
     });
 });
@@ -613,7 +615,7 @@ api.get('/provincemap', function (req, res) {
     } else {
         var indexes = date.createIndexes(_startTime, _endTime, "access-");
     }
-    initial.chartData(req.es, indexes, type, areas, property, chartFilter, function (data) {
+    initial.chartVisitorMapData(req.es, indexes, type, areas, property, chartFilter, function (data) {
         var result = {};
         var chart_data_array = new Array();
         var data_name = new Array();

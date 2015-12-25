@@ -106,15 +106,16 @@ var initial = {
     chartData: function (es, index, type, areas, property, chartFilter, callbackFn) {
         var queryFilter = {"match_all": {}};
         var ctqueryFilter = {
-         "bool": {
-            "must": [
-                {
-                    "term": {
-                        "ct": 0
+            "bool": {
+                "must": [
+                    {
+                        "term": {
+                            "ct": 0
+                        }
                     }
-                }
-            ]
-        }};
+                ]
+            }
+        };
         if (chartFilter != 'null') {
             queryFilter = {
                 'bool': {
@@ -186,6 +187,154 @@ var initial = {
                 }
             };
         }
+        es.search(mapRequest, function (err, response) {
+            var data = [];
+            if (response != undefined && response.aggregations != undefined && response.aggregations.areas != undefined) {
+                data = response.aggregations.areas.buckets;
+                callbackFn(data);
+            } else {
+                console.log(err)
+                callbackFn(data);
+            }
+
+        });
+    },
+    chartVisitorMapData: function (es, index, type, areas, property, chartFilter, callbackFn) {
+        var queryFilter = { 'bool': {
+            'must': []}};
+        var ctqueryFilter = {
+            "bool": {
+                "must": [
+                    {
+                        "term": {
+                            "ct": 0
+                        }
+                    }
+                ]
+            }
+        };
+        if (chartFilter != 'null') {
+            queryFilter = {
+                'bool': {
+                    'must': [
+                        {
+                            "terms": {
+                                "region": [
+                                    chartFilter
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        } else {
+            queryFilter = { 'bool': {
+                'must': []}}
+        }
+        var taggs = {}
+        switch (property) {
+            case "loc":
+                taggs = {
+                    "data_count": {
+                        "value_count": {
+                            "field": property
+                        }
+                    }
+
+                }
+                break;
+            case "tt":
+                queryFilter.bool.must.push({
+                    "term": {
+                        "entrance": "1"
+                    }
+                })
+                taggs = {
+                    "data_count": {
+                        "value_count": {
+                            "field": "tt"
+                        }
+                    }
+                }
+                break;
+            case "_uvc":
+                taggs = {
+                    "data_count": {
+                        "cardinality": {
+                            "field": "tt"
+                        }
+                    }
+                }
+                break;
+            case "ct":
+                taggs = {
+                    "data_count": {
+                        "cardinality": {
+                            "field": "tt"
+                        }
+                    }
+                }
+                break;
+            case "remote":
+                queryFilter.bool.must.push({
+                    "term": {
+                        "ip_dupli": 1
+                    }
+                })
+                taggs = {
+                    "data_count": {
+                        "value_count": {
+                            "field": "remote"
+                        }
+                    }
+                }
+                break;
+        }
+
+        var mapRequest = {};
+        if (property == 'ct') {
+            mapRequest = {
+                "index": index.toString(),
+                "type": type,
+                "body": {
+                    "query": ctqueryFilter,
+                    "size": 0,
+                    "aggs": {
+                        "areas": {
+                            "terms": {
+                                "field": "region",
+                                "order": {
+                                    "data_count": "desc"
+                                }
+                            },
+                            "aggs": taggs
+                        }
+                    }
+                }
+            }
+        } else {
+            mapRequest = {
+                "index": index.toString(),
+                "type": type,
+                "body": {
+                    "query": queryFilter,
+                    "size": 0,
+                    "aggs": {
+                        "areas": {
+                            "terms": {
+                                "field": areas,
+                                "order": {
+                                    "data_count": "desc"
+                                }
+                            },
+                            "aggs": taggs
+                        }
+                    }
+                }
+            };
+        }
+        console.log("&***************************")
+        console.log(JSON.stringify(mapRequest))
         es.search(mapRequest, function (err, response) {
             var data = [];
             if (response != undefined && response.aggregations != undefined && response.aggregations.areas != undefined) {
@@ -277,9 +426,9 @@ var initial = {
                 "Host": [trackId]
             }
         }];
-        if(filters != null){
-            filters.forEach(function(filter){
-                newfilter.push({"terms":filter})
+        if (filters != null) {
+            filters.forEach(function (filter) {
+                newfilter.push({"terms": filter})
             });
         }
         var request = {
@@ -288,7 +437,7 @@ var initial = {
             "body": {
                 "query": {
                     "bool": {
-                        "must":newfilter
+                        "must": newfilter
                     }
                 },
                 "size": 0,
