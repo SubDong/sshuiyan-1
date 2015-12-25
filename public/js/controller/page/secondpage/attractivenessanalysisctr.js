@@ -58,7 +58,7 @@ define(["./../module"], function (ctrs) {
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
                 },
                 {
-                    name: "平均访问页面",
+                    name: "平均访问页数",
                     field: "avgPage",
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
                 }
