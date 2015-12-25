@@ -257,7 +257,7 @@ var initial = {
                     }
                 }
                 break;
-            case "_uvc":
+            case "_ucv":
                 taggs = {
                     "data_count": {
                         "cardinality": {
@@ -333,8 +333,8 @@ var initial = {
                 }
             };
         }
-        console.log("&***************************")
-        console.log(JSON.stringify(mapRequest))
+        //console.log("&***************************"+property)
+        //console.log(JSON.stringify(mapRequest))
         es.search(mapRequest, function (err, response) {
             var data = [];
             if (response != undefined && response.aggregations != undefined && response.aggregations.areas != undefined) {
