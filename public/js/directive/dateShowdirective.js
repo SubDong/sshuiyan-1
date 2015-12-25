@@ -810,6 +810,9 @@ define(["../app"], function (app) {
      */
     app.filter("quotaDataFormat", function () {
         return function (value, label, count) {
+            if (value == "--") { // 处理特殊数据
+                return value;
+            }
             switch (label) {
                 case "nuvRate":
                 case "outRate":
