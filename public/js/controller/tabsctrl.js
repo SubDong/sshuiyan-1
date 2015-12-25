@@ -1134,7 +1134,7 @@ define(["app"], function (app) {
 
 
         $scope.removeSource = function (obj) {
-            //console.log("删除来源");
+            //consolelog("删除来源");
             $rootScope.tableSwitch.eginFilter = null
             $rootScope.tableSwitch.seFilter = null
             $scope.souce.selected = {"name": "全部"};
@@ -1147,7 +1147,7 @@ define(["app"], function (app) {
             $rootScope.targetSearch(false)
         }
         $scope.removeBrowser = function (obj) {
-            //console.log("删除搜索")
+            //consolelog("删除搜索")
             $rootScope.tableSwitch.seFilter = null
             $scope.browser.selected = {"name": "全部"};
             obj.curBrowser = "";
@@ -1562,15 +1562,15 @@ define(["app"], function (app) {
             $rootScope.$broadcast("ssh_dateShow_options_quotas_change", $rootScope.checkedArray);
             //}
             if ($rootScope.tableSwitch.latitude != null && $rootScope.tableSwitch.latitude == undefined) {
-                //console.error("error: latitude is not defined,Please check whether the parameter the configuration.");
+                //consoleerror("error: latitude is not defined,Please check whether the parameter the configuration.");
                 return;
             }
             if ($rootScope.tableTimeStart == undefined) {
-                ////console.error("error: tableTimeStart is not defined,Please check whether the parameter the configuration.");
+                //consoleerror("error: tableTimeStart is not defined,Please check whether the parameter the configuration.");
                 return;
             }
             if ($rootScope.tableTimeEnd == undefined) {
-                //console.error("error: tableTimeEnd is not defined,Please check whether the parameter the configuration.");
+                //consoleerror("error: tableTimeEnd is not defined,Please check whether the parameter the configuration.");
                 return;
             }
             if ($rootScope.tableSwitch.isJudge == undefined) $scope.isJudge = true;
@@ -1738,7 +1738,8 @@ define(["app"], function (app) {
                             dataArray.push(dataObj);
                             $scope.gridOptions.data = dataArray;
                         });
-                    } else {
+                    }
+                    else {
                         if (isClicked == "rf_dm") {
                             data.forEach(function (item, o) {
                                 if (item["dm"]) {
@@ -1973,7 +1974,7 @@ define(["app"], function (app) {
         });
         //数据对比
         $rootScope.datepickerClickTow = function (start, end, label) {
-            //console.log("事件 数据对比")
+            //consolelog("事件 数据对比")
             $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
             var gridArrayOld = angular.copy($rootScope.gridArray);
             var latitudeOld = angular.copy($rootScope.tableSwitch.latitude);
@@ -2180,7 +2181,6 @@ define(["app"], function (app) {
                     }
                     $scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
                 });
-                console.log(dataArray);
                 $scope.gridOptions.data = dataArray;
                 $rootScope.tableSwitch.latitude = latitudeOld;
                 $rootScope.gridArray = gridArrayOld;
@@ -2293,7 +2293,7 @@ define(["app"], function (app) {
                                             }
                                         }
                                     }
-                                    ////console.log("对比查询数据")
+                                    //consolelog("对比查询数据")
                                     results.push(data)
                                 })
                                 $rootScope.setShowArray(events, eventInfos, pvs, isComparedData)
@@ -2305,7 +2305,8 @@ define(["app"], function (app) {
                         }
                     })
                 })
-            } else {
+            }
+            else {
                 $http({
                     method: 'GET',
                     url: '/api/indextable/?start=' + (startInfoTime == null ? $rootScope.tableTimeStart : startInfoTime) + "&end=" + (endInfoTime == null ? $rootScope.tableTimeEnd : endInfoTime) + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field)
@@ -2343,46 +2344,125 @@ define(["app"], function (app) {
                             }
                             cabk(dataArray);
                         });
-                    } else {
-                        if ($rootScope.tableFormat != "hour") {
-                            if ($rootScope.tableFormat == "week") {
-                                data.forEach(function (item, i) {
-                                    item.period = util.getYearWeekState(item.period);
-                                });
-
-                                cabk(data);
-                            } else {
-                                cabk(data);
+                    }
+                    else {
+                        var filters = JSON.parse($rootScope.tableSwitch.tableFilter);
+                        if ($location.path() == "/page/indexoverview_ep") { //退出模块
+                            var rf_type = -1;
+                            var se = -1;
+                            var isNew = -1;
+                            if (filters != null) {
+                                var index;
+                                rf_type = (index = filters.elementHasOwnProperty("rf_type")) == -1 ? -1 : filters[index].rf_type[0];
+                                se = (index = filters.elementHasOwnProperty("se")) == -1 ? -1 : filters[index].se[0];
+                                if (se != -1) {
+                                    se = $rootScope.browsersKeyMap[se];
+                                }
+                                isNew = (index = filters.elementHasOwnProperty("ct")) == -1 ? -1 : filters[index].ct[0];
                             }
-                        } else {
-                            var result = [];
-                            var maps = {};
-                            var newData = chartUtils.getByHourByDayData(data);
-                            newData.forEach(function (info, x) {
-                                for (var i = 0; i < info.key.length; i++) {
-                                    var infoKey = info.key[i];
-                                    var obj = maps[infoKey];
-                                    if (!obj) {
-                                        obj = {};
-                                        var dataString = (infoKey.toString()
-                                            .length >= 2 ? "" : "0");
-                                        obj["period"] = dataString + infoKey + ":00 - " + dataString + infoKey + ":59";
-                                        maps[infoKey] = obj;
+                            var parameter = {
+                                type: $rootScope.userType,
+                                rf_type: rf_type,
+                                se: se,
+                                isNew: isNew,
+                                start:(startInfoTime == null ? $rootScope.tableTimeStart : startInfoTime),
+                                end: (endInfoTime == null ? $rootScope.tableTimeEnd : endInfoTime)
+                            };
+                            var url = "/gacache/queryECData?query=" + JSON.stringify(parameter);
+
+                            $http({
+                                method: 'GET',
+                                url: url
+                            }).success(function (exitCountDatas) {
+                                //$scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
+                                data.forEach(function (trData) {
+                                    if (exitCountDatas.hasOwnProperty(trData.loc)) {
+                                        trData.ec = exitCountDatas[trData.loc];
+                                    } else {
+                                        trData.ec = "0";
                                     }
-                                    obj[chartUtils.convertEnglish(info.label)] = info.quota[i];
-                                    maps[infoKey] = obj;
+                                });
+                                if ($rootScope.tableFormat != "hour") {
+                                    if ($rootScope.tableFormat == "week") {
+                                        data.forEach(function (item, i) {
+                                            item.period = util.getYearWeekState(item.period);
+                                        });
+
+                                        cabk(data);
+                                    } else {
+                                        cabk(data);
+                                    }
+                                } else {
+                                    var result = [];
+                                    var maps = {};
+                                    var newData = chartUtils.getByHourByDayData(data);
+                                    newData.forEach(function (info, x) {
+                                        for (var i = 0; i < info.key.length; i++) {
+                                            var infoKey = info.key[i];
+                                            var obj = maps[infoKey];
+                                            if (!obj) {
+                                                obj = {};
+                                                var dataString = (infoKey.toString()
+                                                    .length >= 2 ? "" : "0");
+                                                obj["period"] = dataString + infoKey + ":00 - " + dataString + infoKey + ":59";
+                                                maps[infoKey] = obj;
+                                            }
+                                            obj[chartUtils.convertEnglish(info.label)] = info.quota[i];
+                                            maps[infoKey] = obj;
+                                        }
+                                    });
+                                    for (var key in maps) {
+                                        if (key != null) {
+                                            result.push(maps[key]);
+                                        }
+                                    }
+                                    cabk(result);
                                 }
                             });
-                            for (var key in maps) {
-                                if (key != null) {
-                                    result.push(maps[key]);
+                        }else{
+                            if ($rootScope.tableFormat != "hour") {
+                                if ($rootScope.tableFormat == "week") {
+                                    data.forEach(function (item, i) {
+                                        item.period = util.getYearWeekState(item.period);
+                                    });
+
+                                    cabk(data);
+                                } else {
+                                    cabk(data);
                                 }
+                            } else {
+
+                                var result = [];
+                                var maps = {};
+                                var newData = chartUtils.getByHourByDayData(data);
+                                newData.forEach(function (info, x) {
+                                    for (var i = 0; i < info.key.length; i++) {
+                                        var infoKey = info.key[i];
+                                        var obj = maps[infoKey];
+                                        if (!obj) {
+                                            obj = {};
+                                            var dataString = (infoKey.toString()
+                                                .length >= 2 ? "" : "0");
+                                            obj["period"] = dataString + infoKey + ":00 - " + dataString + infoKey + ":59";
+                                            maps[infoKey] = obj;
+                                        }
+                                        obj[chartUtils.convertEnglish(info.label)] = info.quota[i];
+                                        maps[infoKey] = obj;
+                                    }
+                                });
+                                for (var key in maps) {
+                                    if (key != null) {
+                                        result.push(maps[key]);
+                                    }
+                                }
+                                cabk(result);
+
                             }
-                            cabk(result);
                         }
+
                     }
                 }).error(function (error) {
-                    ////////console.log(error);
+                    //consolelog(error);
                 });
             }
         };
@@ -2440,7 +2520,7 @@ define(["app"], function (app) {
                         }
                         $rootScope.tableSwitch.tableFilter = returnFilter;
                     }).error(function (error) {
-                        //////console.log(error);
+                        //consolelog(error);
                     });
                 }
             });
@@ -2585,7 +2665,7 @@ define(["app"], function (app) {
                     htmlData.push(res);
                     row.entity.subGridOptions.data = [{"info": " "}];
                 }).error(function (error) {
-                    //////console.log(error);
+                    //consolelog(error);
                 });
             });
         };
@@ -2623,7 +2703,7 @@ define(["app"], function (app) {
                 strs[2] = "当页汇总";
             } else if (a.renderIndex == 2) {
             } else {
-                if (a.col.field == "pv" || a.col.field == "uv" || a.col.field == "ip" || a.col.field == "vc" || a.col.field == "nuv" || a.col.field == "nuvRate") {
+                if (a.col.field == "pv" || a.col.field == "uv" || a.col.field == "ip" || a.col.field == "vc" || a.col.field == "nuv" || a.col.field == "nuvRate"||a.col.field == "ec") {
                     option.forEach(function (item, x) {
                         var itemSplDatas = (item.entity[a.col.field] + "").split(",");
                         if (chashloc[item.entity["loc"]] == undefined) {
@@ -2669,7 +2749,7 @@ define(["app"], function (app) {
                 //        }
                 //        oconversions+=convSplDatas[2]
                 //    });
-                //    console.log(cmax)
+                //    //consolelog(cmax)
                 //}
                 else {
                     option.forEach(function (item, x) {
@@ -2694,12 +2774,12 @@ define(["app"], function (app) {
                     strs[2] = otemp == 0 ? "--" : (((ctemp - otemp) / otemp) * 100).toFixed(2) + "%"
                 }
                 //else if(a.col.field == "crate"){
-                //    console.log("****************************")
-                //    console.log(JSON.stringify(cmax))
+                //    //consolelog("****************************")
+                //    //consolelog(JSON.stringify(cmax))
                 //    strs[0] = ctemp==0?"0.00":((cconversions/ctemp)*100).toFixed(2)+"%"
                 //    strs[1] = otemp==0?"0.00":((oconversions/otemp)*100).toFixed(2)+"%"
                 //    //strs[2] = "---"
-                //    console.log(JSON.stringify(strs))
+                //    //consolelog(JSON.stringify(strs))
                 //    strs[2] = (otemp.toFixed(2)==0?0:((oconversions/otemp)*100).toFixed(2))==0?"--":(((( ctemp.toFixed(2)==0?0:(cconversions/ctemp)*100)-( otemp.toFixed(2)==0?0:(oconversions/otemp)*100))/( otemp.toFixed(2)==0?0:(oconversions/otemp)*100)).toFixed(2))+"%"
                 //}
                 else {
@@ -2721,6 +2801,7 @@ define(["app"], function (app) {
             }
 
         };
+        // 对比时底部汇总数据计算方法
         // 对比时底部汇总数据计算方法
         $scope.getCourFooterData = function (a, option, number) {
             var rast = [0.0, 0.0];
@@ -2752,7 +2833,7 @@ define(["app"], function (app) {
             if (a.renderIndex == 1) {
                 str = "当页汇总";
             }
-            if (a.col.field == "pv" || a.col.field == "uv" || a.col.field == "ip" || a.col.field == "vc" || a.col.field == "nuv" || a.col.field == "freq") {
+            if (a.col.field == "pv" || a.col.field == "uv" || a.col.field == "ip" || a.col.field == "vc" || a.col.field == "nuv" || a.col.field == "freq"||a.col.field == "ec") {
                 //
                 //if(a.col.field == "uv"&&option.length>0&&option[0].entity["all_uv"]!=undefined){
                 //
@@ -2868,7 +2949,6 @@ define(["app"], function (app) {
                 });
                 var itemSplDataTow = (option[0].entity[a.col.field] + "").split(",");
                 if (itemSplDataTow.length >= 4) {
-                    console.log("1111111111111");
                     //var itemSplData = (s.entity[a.col.field] + "").split(",");
                     if (a.col.field == "outRate") {
                         newitemSplData.forEach(function (tts, i) {
@@ -2930,7 +3010,7 @@ define(["app"], function (app) {
                         }
                         returnData[0] = returnData[0] == "0" ? "0" : (returnData[0] / (_ll == 0 ? 1 : _ll)).toFixed(2);
                     }
-                    if(a.col.field == "uv"&&option[0].entity["all_uv"]!=undefined&&$rootScope.tableSwitch.uv_repeat!=undefined&&!$rootScope.tableSwitch.uv_repeat){
+                    if (a.col.field == "uv" && option[0].entity["all_uv"] != undefined && $rootScope.tableSwitch.uv_repeat != undefined && !$rootScope.tableSwitch.uv_repeat) {
                         returnData[0] = option[0].entity["all_uv"]
                     }
                     if (a.col.field == "outRate") {
