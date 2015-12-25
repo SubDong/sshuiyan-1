@@ -1350,12 +1350,33 @@ define(["app"], function (app) {
             $rootScope.$broadcast("ssh_load_compare_datashow", startTime, endTime);
             var dateTime1 = chartUtils.getSetOffTime($rootScope.tableTimeStart, $rootScope.tableTimeEnd);
             var dateTime2 = chartUtils.getSetOffTime(startTime, endTime);
+            $rootScope.$broadcast("LoadAdCompareDateShowStart", $rootScope.checkedArray);
             $scope.targetDataContrast(null, null, function (item) {
                 var target = $rootScope.tableSwitch.latitude.field;
                 var dataArray = [];
                 var is = 1;
                 $scope.targetDataContrast(startTime, endTime, function (contrast) {
                  //   var newitem =   $scope.mergeArray (item,contrast,latitudeOld);
+                    item.forEach(function (a, b) {
+                        // 求出总和
+                        a.con_a_pv = a.con_a_vc = a.con_a_svc = a.con_a_uv = a.con_a_nuv = 0;
+                        a.con_b_pv = a.con_b_vc = a.con_b_svc = a.con_b_uv = a.con_b_nuv = 0;
+                        item.forEach(function (item_item) {
+                            a.con_a_pv += parseInt(item_item["pv"] == "--" ? 0 : item_item["pv"]);
+                            a.con_a_vc += parseInt(item_item["vc"] == "--" ? 0 : item_item["vc"]);
+                            a.con_a_svc += parseInt(item_item["svc"] == "--" ? 0 : item_item["svc"]);
+                            a.con_a_uv += parseInt(item_item["uv"] == "--" ? 0 : item_item["uv"]);
+                            a.con_a_nuv += parseInt(item_item["nuv"] == "--" ? 0 : item_item["nuv"]);
+                        });
+                        contrast.forEach(function (con_item) {
+                            // 保留计算需要的参数原始值
+                            a.con_b_pv += parseInt(con_item["pv"] == "--" ? 0 : con_item["pv"]);
+                            a.con_b_vc += parseInt(con_item["vc"] == "--" ? 0 : con_item["vc"]);
+                            a.con_b_svc += parseInt(con_item["svc"] == "--" ? 0 : con_item["svc"]);
+                            a.con_b_uv += parseInt(con_item["uv"] == "--" ? 0 : con_item["uv"]);
+                            a.con_b_nuv += parseInt(con_item["nuv"] == "--" ? 0 : con_item["nuv"]);
+                        });
+                    });
                     item.forEach(function (a, b) {
                         var dataObj = {};
                         if (target == "period" && $location.$$path == "/trend/today" && $rootScope.tableFormat == "day") {// 今日统计按日统计时特殊处理
@@ -1765,6 +1786,7 @@ define(["app"], function (app) {
             var rast = [0.0, 0.0];
             var rastString = ["", ""];
             var bhlString = "";
+            var _c_field = a.col.field;
             option.forEach(function (items, x) {
                 var itemSplDatas = (items.entity[a.col.field] + "").split(",");
                 if (itemSplDatas[3] == "变化率") {
@@ -1784,6 +1806,24 @@ define(["app"], function (app) {
             }
             if (a.col.field == "pv" || a.col.field == "uv" || a.col.field == "ip" || a.col.field == "vc" || a.col.field == "nuv") {
                 //
+            } else if (_c_field == "nuvRate" || _c_field == "outRate" ) {
+                if (_c_field == "outRate") {
+                    var t_a_vc = option[0] ? option[0]["entity"]["con_a_vc"] : 0;
+                    var t_b_vc = option[0] ? option[0]["entity"]["con_b_vc"] : 0;
+                    var t_a_svc = option[0] ? option[0]["entity"]["con_a_svc"] : 0;
+                    var t_b_svc = option[0] ? option[0]["entity"]["con_b_svc"] : 0;
+                    rast[0] = (t_a_svc * 100 / (t_a_vc == 0 ? 1 : t_a_vc)).toFixed(2) + "%";
+                    rast[1] = (t_b_svc * 100 / (t_b_vc == 0 ? 1 : t_b_vc)).toFixed(2) + "%";
+                }
+                if (_c_field == "nuvRate") {
+                    // 新访客比率算法。通过总的新访客数除以总的访客数
+                    var t_a_uv = option[0] ? option[0]["entity"]["con_a_uv"] : 0;
+                    var t_b_uv = option[0] ? option[0]["entity"]["con_b_uv"] : 0;
+                    var t_a_nuv = option[0] ? option[0]["entity"]["con_a_nuv"] : 0;
+                    var t_b_nuv = option[0] ? option[0]["entity"]["con_b_nuv"] : 0;
+                    rast[0] = (t_a_nuv * 100 / (t_a_uv == 0 ? 1 : t_a_uv)).toFixed(2) + "%";
+                    rast[1] = (t_b_nuv * 100 / (t_b_uv == 0 ? 1 : t_b_uv)).toFixed(2) + "%";
+                }
             } else {
                 rast[0] = (rast[0] / option.length).toFixed(2) + (a.col.field == "outRate" || a.col.field == "nuvRate" || a.col.field == "arrivedRate" ? "%" : "");
                 rast[1] = (rast[1] / option.length).toFixed(2) + (a.col.field == "outRate" || a.col.field == "nuvRate" || a.col.field == "arrivedRate" ? "%" : "");
@@ -1794,6 +1834,8 @@ define(["app"], function (app) {
             if ((bhl + "").indexOf("NaN") != -1 || (bhl + "").indexOf("Infinity") != -1) {
                 bhl = "--";
             }
+
+            $rootScope.$broadcast("LoadAdCompareDateShowFinish", a.col.field, rast[0], rast[1]);
 
             switch (number) {
                 case 0:
