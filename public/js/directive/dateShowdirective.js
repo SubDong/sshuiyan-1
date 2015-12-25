@@ -587,6 +587,84 @@ define(["../app"], function (app) {
     });
 
     /**
+     * Create by wms on 2015-12-25.共用表格汇总数据
+     */
+    app.directive("sshCommonDateShow", function ($rootScope) {
+        return {
+            restrict: 'E',
+            templateUrl: '../commons/date_show.html',
+            link: function (scope, element, attris, controller) {
+                // 初始化参数
+                scope.isCompared = false;
+                scope.dateShowArray = [];
+                scope.filter = attris.filter;
+                scope.ds_defaultQuotasOption = ["pv", "uv", "ip", "nuv", "outRate", "avgTime"];
+                scope.ds_keyData = [];
+                scope.ds_dateShowQuotasOption = scope.checkedArray ? scope.checkedArray : scope.ds_defaultQuotasOption;
+                scope.setDefaultShowArray = function () {
+                    var tempArray = [];
+                    angular.forEach(scope.ds_dateShowQuotasOption, function (q_r) {
+                        tempArray.push({"label": q_r, "value": 0, "cValue": 0, "count": 0, "cCount": 0});
+                    });
+                    scope.ds_keyData = [];
+                    scope.dateShowArray = $rootScope.copy(tempArray);
+                };
+
+                scope.setDefaultShowArray();
+
+                scope.$on("LoadDateShowStart", function (e, msg) {
+                    scope.isCompared = false;
+                    scope.DateNumbertwo = false;
+                    var temp = $rootScope.copy(msg);
+                    if (temp.length > 0) {
+                        scope.ds_dateShowQuotasOption = temp;
+                    }
+                    scope.setDefaultShowArray();
+                    scope.DateNumber = false;
+                    scope.DateLoading = false;
+                });
+
+                scope.$on("LoadDateShowFinish", function (e, field, data) {
+                    scope.dateShowArray.forEach(function (_obj) {
+                        if (field == _obj["label"]) {
+                            _obj.value = data;
+                            _obj.count = 1;
+                        }
+                    });
+                    scope.DateNumber = true;
+                    scope.DateLoading = true;
+                });
+
+                scope.$on("LoadCompareDateShowStart", function (e, msg) {
+                    scope.isCompared = true;
+                    scope.DateNumbertwo = true;
+                    var temp = $rootScope.copy(msg);
+                    if (temp.length > 0) {
+                        scope.ds_dateShowQuotasOption = temp;
+                    }
+                    scope.setDefaultShowArray();
+                    scope.DateNumber = false;
+                    scope.DateLoading = false;
+                });
+
+                scope.$on("LoadCompareDateShowFinish", function (e, field, data, con_data) {
+                    scope.dateShowArray.forEach(function (_obj) {
+                        if (field == _obj["label"]) {
+                            _obj.value = data;
+                            _obj.count = 1;
+                            _obj.cValue = con_data;
+                            _obj.cCount = 1;
+                        }
+                    });
+                    scope.DateNumber = true;
+                    scope.DateLoading = true;
+                });
+
+            }
+        };
+    });
+
+    /**
      * Create by wms on 2015-12-25.指定广告跟踪
      */
     app.directive("sshAdDateShow", function ($rootScope) {

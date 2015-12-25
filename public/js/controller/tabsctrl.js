@@ -1668,6 +1668,7 @@ define(["app"], function (app) {
             } else if ($rootScope.tableSwitch.number == 6) {//来源分析搜索词-搜索
                 $rootScope.refreshData(false)
             } else {
+                $rootScope.$broadcast("LoadDateShowStart", $rootScope.checkedArray);
                 $http({
                     method: 'GET',
                     url: '/api/indextable/?start=' + $rootScope.tableTimeStart + "&end=" + $rootScope.tableTimeEnd + "&indic=" + $rootScope.checkedArray + "&dimension=" + ($rootScope.tableSwitch.promotionSearch ? null : $rootScope.tableSwitch.latitude.field)
@@ -2005,6 +2006,7 @@ define(["app"], function (app) {
             $rootScope.$broadcast("ssh_load_compare_datashow", startTime, endTime);
             var dateTime1 = chartUtils.getSetOffTime($rootScope.tableTimeStart, $rootScope.tableTimeEnd);
             var dateTime2 = chartUtils.getSetOffTime(startTime, endTime);
+            $rootScope.$broadcast("LoadCompareDateShowStart", $rootScope.checkedArray);
             $scope.targetDataContrast(null, null, false, function (item) {
                 var target = $rootScope.tableSwitch.latitude.field;
                 var dataArray = [];
@@ -2871,6 +2873,8 @@ define(["app"], function (app) {
                 bhl = "--";
             }
 
+            $rootScope.$broadcast("LoadCompareDateShowFinish", a.col.field, rast[0], rast[1]);
+
             switch (number) {
                 case 0:
                     return str;
@@ -3060,6 +3064,9 @@ define(["app"], function (app) {
                 if (option[0].entity.period == "暂无数据" || option[0].entity.rf_type == "暂无数据" || option[0].entity.se == "暂无数据" || option[0].entity.kw == "暂无数据" || option[0].entity.rf == "暂无数据" || option[0].entity.loc == "暂无数据" || option[0].entity.region == "暂无数据" || option[0].entity.pm == "暂无数据" || option[0].entity.ct == "暂无数据" || option[0].entity.city == "暂无数据" || option[0].entity.accountName == "搜索推广 (暂无数据 )") {
                     returnData = ["--", "--", "--", "--"]
                 }
+
+                $rootScope.$broadcast("LoadDateShowFinish", a.col.field, returnData[0]);
+
                 switch (number) {
                     case 1:
                         return returnData[0];
