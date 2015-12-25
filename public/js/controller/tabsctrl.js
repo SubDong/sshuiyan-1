@@ -2949,10 +2949,8 @@ define(["app"], function (app) {
                 });
                 var itemSplDataTow = (option[0].entity[a.col.field] + "").split(",");
                 if (itemSplDataTow.length >= 4) {
-                    //var itemSplData = (s.entity[a.col.field] + "").split(",");
                     if (a.col.field == "outRate") {
                         newitemSplData.forEach(function (tts, i) {
-//                            newitemSplData[i] = (tts / option.length).toFixed(2) + "%"
                             newitemSplData[0] = newitemSplData[0] == "0" ? "0.00%" : (newitemSplData[0] / option.length).toFixed(2) + "%";
                         })
                     }
@@ -2962,7 +2960,6 @@ define(["app"], function (app) {
                     returnData = newitemSplData;
                 } else {
                     if ((option[0].entity[a.col.field] + "").indexOf("%") != -1 || (option[0].entity[a.col.field] + "").indexOf("(-)") != -1) {
-//                        returnData[0] = (returnData[0] / option.length).toFixed(2) + "%";
                         if (window.location.href.split("/")[window.location.href.split("/").length - 1] == "changelist") {
                             var contrastPv = 0;
                             for (var c = 0; c < option.length; c++) {

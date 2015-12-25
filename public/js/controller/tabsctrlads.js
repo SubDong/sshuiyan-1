@@ -1885,8 +1885,65 @@ define(["app"], function (app) {
                     if ((option[0].entity[a.col.field] + "").indexOf("%") != -1 || (option[0].entity[a.col.field] + "").indexOf("(-)") != -1) {
                         returnData[0] = returnData[0] == "0" ? "0%" : (returnData[0] / option.length).toFixed(2) + "%";
                     }
-                    if (a.col.field == "avgPage" || a.col.field == "click") {
-                        returnData[0] = returnData[0] == "0" ? "0" : (returnData[0] / option.length).toFixed(2);
+                    if (a.col.field == "avgPage") {
+                        var t_vc = 0;
+                        var t_pv = 0;
+                        option.forEach(function (_row) {
+                            var _entity = _row.entity;
+                            if (_entity.vc != "--") {
+                                t_vc += parseInt(_entity.vc);
+                            }
+                            if (_entity.pv != "--") {
+                                t_pv += parseInt(_entity.pv);
+                            }
+                        });
+                        returnData[0] = (t_pv / (t_vc == 0 ? 1 : t_vc)).toFixed(2);
+                    }
+                    if (a.col.field == "click") {
+                        var _ll = 0;
+                        for (var _i = 0; _i < option.length; _i++) {
+                            if (option[_i].entity.click != "--") {
+                                _ll++;
+                            }
+                        }
+                        returnData[0] = returnData[0] == "0" ? "0" : (returnData[0] / (_ll == 0 ? 1 : _ll)).toFixed(2);
+                    }
+                    if (a.col.field == "outRate") {
+                        var t_vc = 0;
+                        var t_svc = 0;
+                        option.forEach(function (_row) {
+                            var _entity = _row.entity;
+                            if (_entity.vc && _entity.vc != "--") {
+                                t_vc += parseInt(_entity.vc);
+                            }
+                            if (_entity.svc && _entity.svc != "--") {
+                                t_svc += parseInt(_entity.svc);
+                            }
+                        });
+                        if (t_vc == 0) {
+                            returnData[0] = "--";
+                        } else {
+                            returnData[0] = (t_svc * 100 / t_vc).toFixed(2) + "%";
+                        }
+                    }
+                    if (a.col.field == "nuvRate") {
+                        // 新访客比率算法。通过总的新访客数除以总的访客数
+                        var t_uv = 0;
+                        var t_nuv = 0;
+                        option.forEach(function (_row) {
+                            var _entity = _row.entity;
+                            if (_entity.uv && _entity.uv != "--") {
+                                t_uv += parseInt(_entity.uv);
+                            }
+                            if (_entity.nuv && _entity.nuv != "--") {
+                                t_nuv += parseInt(_entity.nuv);
+                            }
+                        });
+                        if (t_uv == 0) {
+                            returnData[0] = "--";
+                        } else {
+                            returnData[0] = (t_nuv * 100 / t_uv).toFixed(2) + "%";
+                        }
                     }
                     if (a.col.field == "avgTime") {
                         var _ll = 0;
@@ -1898,16 +1955,20 @@ define(["app"], function (app) {
                         if (_ll == 0) {
                             _ll = 1;
                         }
-                        var atime1 = parseInt(newSpl[0] / _ll) + "";
-                        var atime2 = parseInt(newSpl[1] / _ll) + "";
-                        var atime3 = parseInt(newSpl[2] / _ll) + "";
-                        returnData[0] = (atime1.length == 1 ? "0" + atime1 : atime1) + ":" + (atime2.length == 1 ? "0" + atime2 : atime2) + ":" + (atime3.length == 1 ? "0" + atime3 : atime3);
+                        var atime1 = parseInt(newSpl[0]) * 3600 * 1000;
+                        var atime2 = parseInt(newSpl[1]) * 60 * 1000;
+                        var atime3 = parseInt(newSpl[2]) * 1000;
+                        _ll = _ll * 1000;
+                        returnData[0] = MillisecondToDate(parseInt((atime1 + atime2 + atime3) / _ll));
                     }
                 }
-                if (option[0].entity.period == "暂无数据" || option[0].entity.rf_type == "暂无数据" || option[0].entity.se == "暂无数据" || option[0].entity.kw == "暂无数据" || option[0].entity.rf == "暂无数据" || option[0].entity.loc == "暂无数据" || option[0].entity.region == "暂无数据" || option[0].entity.pm == "暂无数据" || option[0].entity.ct == "暂无数据" || option[0].entity.city == "暂无数据" || option[0].entity.accountName == "搜索推广 (暂无数据 )") {
+
+                if (option[0].entity.rf == "暂无数据" || option[0].entity.media == "暂无数据" || option[0].entity.cpna == "暂无数据" || option[0].entity.kwna == "暂无数据" || option[0].entity.crt == "暂无数据") {
                     returnData = ["--", "--", "--", "--"]
                 }
+
                 $rootScope.$broadcast("LoadAdDateShowFinish", a.col.field, returnData[0]);
+
                 switch (number) {
                     case 1:
                         return returnData[0];
