@@ -1314,8 +1314,8 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                                     var index = scope.dateShowArray.elementHasOwnPropertyValue("label","ec");
                                     scope.dateShowArray[index].count = data.ecSummary;
                                     scope.dateShowArray[index].value = data.ecSummary;
-                                    scope.dateShowArray[index].cCount = data.ecSummary;
-                                    scope.dateShowArray[index].cValue = data.ecSummary;
+                                    //scope.dateShowArray[index].cCount = data.ecSummary;
+                                    //scope.dateShowArray[index].cValue = data.ecSummary;
                                 }
                             });
                         }
@@ -1352,8 +1352,8 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                                 rf_type: rf_type,
                                 se: se,
                                 isNew:isNew,
-                                start: $rootScope.start,
-                                end: $rootScope.end
+                                start: startTime,
+                                end: endTime
                             };
                             var url = "/gacache/queryECDataSummary?query=" + JSON.stringify(parameter);
                             $http({
@@ -1362,8 +1362,8 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                             }).success(function (data) {
                                 if(data.hasOwnProperty("ecSummary")) {
                                     var index = scope.dateShowArray.elementHasOwnPropertyValue("label","ec");
-                                    scope.dateShowArray[index].count = data.ecSummary;
-                                    scope.dateShowArray[index].value = data.ecSummary;
+                                    //scope.dateShowArray[index].count = data.ecSummary;
+                                    //scope.dateShowArray[index].value = data.ecSummary;
                                     scope.dateShowArray[index].cCount = data.ecSummary;
                                     scope.dateShowArray[index].cValue = data.ecSummary;
                                 }

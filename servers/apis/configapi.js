@@ -239,6 +239,7 @@ api.get("/site_list", function (req, res) {
             temp.track_id = randstring.rand_string();
             temp.ctime  =  new Date().getTime();
             temp.token = temp.token==undefined?"":temp.token
+            temp.is_top = temp.is_top==undefined?false:temp.is_top
             dao.save(schema_name, temp, function (ins) {
                 datautils.send(res, ins);
                 // 参考 https://github.com/zerocoolys/suiyan/wiki/%E9%85%8D%E7%BD%AE%E5%8F%82%E6%95%B0%5Bredis-key-%E8%A7%84%E8%8C%83%5D
@@ -275,6 +276,8 @@ api.get("/site_list", function (req, res) {
             break;
         case "update":
             var update = query['updates'];
+            console.log(query)
+            console.log(update)
             dao.update(schema_name, query['query'], query['updates'], function (err, up) {
                 datautils.send(res, up);
                 if (up.nModified > 0) {//有更新 刷新配置
