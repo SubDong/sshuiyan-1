@@ -75,7 +75,7 @@ define(["./module"], function (ctrs) {
         $scope.onDelete = function (index, grid, row) {
             $scope.onDeleteDialog = ngDialog.open({
                 template: '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">系统提示</div><ul class="admin-ng-content" ><li> 确认删除这条广告跟踪吗？</li></ul>' +
-                ' <div class="ng-button-div"><button type="button" class="ngdialog-button ng-button" ng-click="closeThisDialog()">确定</button></div></div>',
+                ' <div class="ng-button-div"><button type="button" class="ngdialog-button ng-button" ng-click="sureonDelete()">确定</button></div></div>',
                 className: 'ngdialog-theme-default admin_ngdialog',
                 plain: true,
                 scope: $scope
