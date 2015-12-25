@@ -241,7 +241,20 @@ define(["./module"], function (ctrs) {
                 formData.site_id = $rootScope.siteId;
                 formData.type_id = $rootScope.userType;
                 formData.schedule_date = $scope.mytime.time.Format('hh:mm');
-                $http.get("api/saveMailConfig?data=" + JSON.stringify(formData)).success(function (data) {
+                formData.result_data = angular.copy($rootScope.gridApi2.grid.options.data);
+                formData.result_head_data = angular.copy($rootScope.gridApi2.grid.options.columnDefs);
+                formData.title="广告跟踪-计划-数据报告";
+                $http({
+                    method: 'POST',
+                    url: 'api/saveMailConfig',
+                    headers: {
+                        'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+                        'Content-type': 'text/csv; charset=utf-8'
+                    },
+                    data: {
+                        data: formData
+                    }
+                }).success(function (data) {
                     var result = JSON.parse(eval("(" + data + ")").toString());
                     if (result.ok == 1) {
                         alert("操作成功!");
