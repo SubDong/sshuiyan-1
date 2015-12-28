@@ -2872,20 +2872,22 @@ define(["app"], function (app) {
                             var aaaa = itemSplDatas[1];
                             var bbbb = itemSplDatas[2];
                             if (aaaa != "--") {
+                                aaaa = itemSplDatas[1].split(":")
                                 _sum_a[0] = _sum_a[0] + parseInt(aaaa[0]) * 3600 * 1000;
                                 _sum_a[1] = _sum_a[1] + parseInt(aaaa[1]) * 60 * 1000;
                                 _sum_a[2] = _sum_a[2] + parseInt(aaaa[2]) * 1000;
                                 _l_a++;
                             }
                             if (bbbb != "--") {
+                                bbbb = itemSplDatas[2].split(":")
                                 _sum_b[0] = _sum_b[0] + parseInt(bbbb[0]) * 3600 * 1000;
                                 _sum_b[1] = _sum_b[1] + parseInt(bbbb[1]) * 60 * 1000;
                                 _sum_b[2] = _sum_b[2] + parseInt(bbbb[2]) * 1000;
                                 _l_b++;
                             }
                         }
-                        _l_a = _l_a == 0 ? 1 : (_l_a)
-                        _l_b = _l_b == 0 ? 1 : (_l_b);
+                        _l_a = _l_a == 0 ? 1000 : (_l_a * 1000)
+                        _l_b = _l_b == 0 ? 1000 : (_l_b * 1000);
                         rast[0] = MillisecondToDate(parseInt((_sum_a[0] + _sum_a[1] + _sum_a[2]) / _l_a));
                         rast[1] = MillisecondToDate(parseInt((_sum_b[0] + _sum_b[1] + _sum_b[2]) / _l_b));
                     }
