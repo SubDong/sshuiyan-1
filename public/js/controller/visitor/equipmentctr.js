@@ -212,11 +212,6 @@ define(["./module"], function (ctrs) {
                 var chart = echarts.init(document.getElementById(e.config.id));
                 e.config.instance = chart;
             })
-            if ($rootScope.start <= -1) {
-                $scope.charts[0].config.keyFormat = "day";
-            } else {
-                $scope.charts[0].config.keyFormat = "hour";
-            }
             requestService.refresh($scope.charts);
             $rootScope.tableTimeStart = time[0];
             $rootScope.tableTimeEnd = time[1];
