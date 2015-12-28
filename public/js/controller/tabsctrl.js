@@ -2680,7 +2680,7 @@ define(["app"], function (app) {
             var s = a.split(",");
             s.length > 0 ? a = s[0] : "";
             var fileteran = $rootScope.tableSwitch.tableFilter;
-            var newFileter = fileteran != undefined && fileteran != "undefined" && fileteran != null ? "," + fileteran : "";
+            var newFileter = (fileteran != undefined && fileteran != "undefined" && fileteran != null && fileteran != "[]") ? "," + fileteran : "";
             newFileter = newFileter.toString().replace("[", "").replace(/]$/gi, "");
             if (x) {
                 var f = $rootScope.tableSwitch.dimen;
