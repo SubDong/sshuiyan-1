@@ -2884,11 +2884,11 @@ define(["app"], function (app) {
                                 _l_b++;
                             }
                         }
+                        _l_a = _l_a == 0 ? 1000 : (_l_a * 1000)
+                        _l_b = _l_b == 0 ? 1000 : (_l_b * 1000);
+                        rast[0] = MillisecondToDate(parseInt((_sum_a[0] + _sum_a[1] + _sum_a[2]) / _l_a));
+                        rast[1] = MillisecondToDate(parseInt((_sum_b[0] + _sum_b[1] + _sum_b[2]) / _l_b));
                     }
-                    _l_a = _l_a == 0 ? 1000 : (_l_a * 1000)
-                    _l_b = _l_b == 0 ? 1000 : (_l_b * 1000);
-                    rast[0] = MillisecondToDate(parseInt((_sum_a[0] + _sum_a[1] + _sum_a[2]) / _l_a));
-                    rast[1] = MillisecondToDate(parseInt((_sum_b[0] + _sum_b[1] + _sum_b[2]) / _l_b));
                 } else {
                     rast[0] = (rast[0] / option.length).toFixed(2) + (perFieldArray.indexOf(_c_field) != -1 ? "%" : "");
                     rast[1] = (rast[1] / option.length).toFixed(2) + (perFieldArray.indexOf(_c_field) != -1 ? "%" : "");
