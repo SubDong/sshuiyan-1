@@ -471,8 +471,8 @@ define(["./module"], function (ctrs) {
             $scope.mothselected = true;
             $scope.weekselected = true;
             $scope.choiceClass = true;
-            $scope.dayClass = false;
-            $scope.hourcheckClass = true;
+            //$scope.dayClass = false;
+            //$scope.hourcheckClass = true;
             $rootScope.start = times[0];
             $rootScope.end = times[1];
             $rootScope.interval = -1;
@@ -534,6 +534,9 @@ define(["./module"], function (ctrs) {
                     var final_result = [];
                     data.forEach(function (q, _iiiii) {
                         var json = JSON.parse(eval("(" + q.data + ")").toString());
+                        console.log("-------------------------------");
+                        console.log(json);
+                        console.log("-------------------------------");
                         json.forEach(function (item) {
                             if (item.key.length) {
                                 var _timeBase = new Date(item.key[0]).Format("yyyy-MM-dd hh:mm:ss");

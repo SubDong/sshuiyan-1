@@ -499,7 +499,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                         $rootScope.endDateString = dateTime[0];
 
                         $rootScope.datepickerClickTow(dateTime[0], dateTime[1], undefined);
-                        scope.datePickerCompare(dateTime[0], dateTime[0], undefined);
+                        scope.datePickerCompare(dateTime[0], dateTime[1], undefined);
                     }
                 });
 
