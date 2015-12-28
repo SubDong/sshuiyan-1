@@ -2835,6 +2835,7 @@ define(["app"], function (app) {
             if (a.renderIndex == 1) {
                 str = "当页汇总";
             }
+            var bhl = "";
             if (a.col.field == "pv" || a.col.field == "uv" || a.col.field == "ip" || a.col.field == "vc" || a.col.field == "nuv" || a.col.field == "freq"||a.col.field == "ec") {
                 //
                 //if(a.col.field == "uv"&&option.length>0&&option[0].entity["all_uv"]!=undefined){
@@ -2890,13 +2891,16 @@ define(["app"], function (app) {
                         _l_b = _l_b == 0 ? 1000 : (_l_b * 1000);
                         rast[0] = MillisecondToDate(parseInt((_sum_a[0] + _sum_a[1] + _sum_a[2]) / _l_a));
                         rast[1] = MillisecondToDate(parseInt((_sum_b[0] + _sum_b[1] + _sum_b[2]) / _l_b));
+                        bhl = ((parseInt((_sum_a[0] + _sum_a[1] + _sum_a[2]) / _l_a) - parseInt((_sum_b[0] + _sum_b[1] + _sum_b[2]) / _l_b)) / parseInt((_sum_b[0] + _sum_b[1] + _sum_b[2]) / _l_b)).toFixed(2) + "%";
                     }
                 } else {
                     rast[0] = (rast[0] / option.length).toFixed(2) + (perFieldArray.indexOf(_c_field) != -1 ? "%" : "");
                     rast[1] = (rast[1] / option.length).toFixed(2) + (perFieldArray.indexOf(_c_field) != -1 ? "%" : "");
                 }
             }
-            var bhl = (((parseFloat(((rast[0] + "").replace("%", ""))) - parseFloat(((rast[1] + "").replace("%", "")))) / parseFloat(((rast[1] + "").replace("%", "")))) * 100 ).toFixed(2) + "%";
+            if (_c_field != "avgTime") {
+                bhl = (((parseFloat(((rast[0] + "").replace("%", ""))) - parseFloat(((rast[1] + "").replace("%", "")))) / parseFloat(((rast[1] + "").replace("%", "")))) * 100 ).toFixed(2) + "%";
+            }
 
             if ((bhl + "").indexOf("NaN") != -1 || (bhl + "").indexOf("Infinity") != -1) {
                 bhl = "--";
