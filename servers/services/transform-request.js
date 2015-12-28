@@ -16,48 +16,57 @@ var es_aggs = {
     "uv": {
         "uv": {
             "cardinality": {
-                "field": "tt"
+                "field": "_ucv"
             }
         }
     },
     // 访问次数　事件和页面转化通用
     "vc": {
         "vc": {
-            "value_count": {
+            "cardinality": {
                 "field": "tt"
             }
         }
     },
     // 新访客数　事件和页面转化通用
     "nuv": {
-        "old_visitor_aggs": {
-            "sum": {
-                "field": "ct"
+        "nuv_aggs": {
+            "filter": {
+                "term": {
+                    "ct": 0
+                }
+            },
+            "aggs": {
+                "new_visitor": {
+                    "cardinality": {
+                        "field": "_ucv"
+                    }
+                }
             }
-        },
-        "visitor_aggs": {
-            "value_count": {
-                "field": "ct"
-            }
-        },
+        }
     },
     // 新访客比率　事件和页面转化通用
     "nuvRate": {
-        "old_visitor_aggs": {
-            "sum": {
-                "field": "ct"
+        "nuv_aggs": {
+            "filter": {
+                "term": {
+                    "ct": 0
+                }
+            },
+            "aggs": {
+                "new_visitor": {
+                    "cardinality": {
+                        "field": "_ucv"
+                    }
+                }
             }
         },
-        "visitor_aggs": {
-            "value_count": {
-                "field": "ct"
-            }
-        },
-        "uv_aggs": {
+        "uv": {
             "cardinality": {
-                "field": "tt"
+                "field": "_ucv"
             }
         }
+
     },
     // IP数 事件和页面转化通用
     "ip": {
@@ -1824,7 +1833,6 @@ var transform = {
                 //var querys = []
                 var boolQuery = [];
 
-
                 pages.forEach(function (page) {
                     for (var i = 0; i < page.page_urls.length; i++) {
                         var filterQuery = []
@@ -1876,8 +1884,8 @@ var transform = {
                     }
                 }
                 var pvs = []
-                //console.log("**************PageBasePvs**************")
-                //console.log(JSON.stringify(query))
+                console.log("**************PageBasePvs**************")
+                console.log(JSON.stringify(query))
                 es.search(query, function (error, result) {
                     var datas = []
                     if (result != undefined && result.aggregations != undefined && result.aggregations.pagePVs != undefined && result.aggregations.pagePVs.buckets != undefined) {
@@ -1889,21 +1897,21 @@ var transform = {
                             queryOptions.forEach(function (queryOption) {
                                 switch (queryOption) {
                                     case "nuvRate":
-                                        if (pv.uv_aggs.value == "0") {
+                                        if (pv.uv==undefined||pv.uv.value == "0"||pv.nuv_aggs==undefined||pv.nuv_aggs.new_visitor==undefined) {
                                             data[queryOption] = "0.00%";
                                         } else {
-                                            data[queryOption] = (((pv.visitor_aggs.value - pv.old_visitor_aggs.value) / pv.uv_aggs.value) * 100).toFixed(2) + "%";
-                                            //console..log(pv.visitor_aggs.value+" - "+pv.old_visitor_aggs.value+" / "+pv.uv_aggs.value+"nuvRate = "+ data[queryOption])
+                                            data[queryOption] = ((pv.nuv_aggs.new_visitor.value / pv.uv.value) * 100).toFixed(2) + "%";
                                         }
-                                        data["nuv"] = (pv.visitor_aggs.value - pv.old_visitor_aggs.value)
-                                        data["uv"] = pv.uv_aggs.value
+                                        data["nuv"] = pv.nuv_aggs.new_visitor.value
+                                        data["uv"] = pv.uv.value
                                         break;
                                     case"nuv":
-                                        if (pv.visitor_aggs.value == "0") {
+                                        if (pv.nuv_aggs == undefined || pv.nuv_aggs.new_visitor == undefined) {
                                             data[queryOption] = 0;
                                         } else {
-                                            data[queryOption] = pv.visitor_aggs.value - pv.old_visitor_aggs.value
+                                            data["nuv"] = pv.nuv_aggs.new_visitor.value
                                         }
+                                        break;
                                     default :
                                         if (pv[queryOption] != undefined)
                                             data[queryOption] = pv[queryOption].value;
@@ -2012,20 +2020,21 @@ var transform = {
                             queryOptions.forEach(function (queryOption) {
                                 switch (queryOption) {
                                     case "nuvRate":
-                                        if (pv.uv_aggs.value == "0") {
+                                        if (pv.uv==undefined||pv.uv.value == "0"||pv.nuv_aggs==undefined||pv.nuv_aggs.new_visitor==undefined) {
                                             data[queryOption] = "0.00%";
                                         } else {
-                                            data[queryOption] = (((pv.visitor_aggs.value - pv.old_visitor_aggs.value) / pv.uv_aggs.value) * 100).toFixed(2) + "%";
+                                            data[queryOption] = ((pv.nuv_aggs.new_visitor.value / pv.uv.value) * 100).toFixed(2) + "%";
                                         }
-                                        data["nuv"] = (pv.visitor_aggs.value - pv.old_visitor_aggs.value)
-                                        data["uv"] = pv.uv_aggs.value
+                                        data["nuv"] = pv.nuv_aggs.new_visitor.value
+                                        data["uv"] = pv.uv.value
                                         break;
                                     case"nuv":
-                                        if (pv.old_visitor_aggs.value == "0") {
+                                        if (pv.nuv_aggs == undefined || pv.nuv_aggs.new_visitor == undefined) {
                                             data[queryOption] = 0;
                                         } else {
-                                            data[queryOption] = pv.visitor_aggs.value - pv.old_visitor_aggs.value
+                                            data["nuv"] = pv.nuv_aggs.new_visitor.value
                                         }
+                                        break;
                                     default :
                                         if (pv[queryOption] != undefined)
                                             data[queryOption] = pv[queryOption].value;
@@ -2041,7 +2050,6 @@ var transform = {
                 });
             });
         },
-
         /**
          * 查询页面转化的基础信息 按照rf_type 分组
          * @param es
@@ -2382,7 +2390,6 @@ var transform = {
                 });
             });
         },
-
         searchDayPagePVs: function (es, indexs, type, showType, queryOptions, urls, filters, callbackFn) {
             var _aggs = {};
             queryOptions.forEach(function (queryOption) {
@@ -2730,8 +2737,6 @@ var transform = {
                 callbackFn(data);
             });
         },
-
-
         /////////////////////////MrDeng 新增 事件转化部分查询
         searchEventPVs: function (es, indexs, startNum, endNum, type, events, queryOptionsStr, filters, callbackFn) {
             var requests = [];
@@ -2773,7 +2778,7 @@ var transform = {
                     }
                     filterQuery.push({
                         "range": {
-                            "utime": {
+                            "ctime": {
                                 "from": (startNum > event.update_time ? startNum : event.update_time ),
                                 "to": endNum
                             }//开始时间取大的
@@ -2799,12 +2804,12 @@ var transform = {
                 })
                 var pvs = []
                 async.eachSeries(querys, function (item, callback) {
-
                     //console.log("************EventPVs****************")
                     //console.log(JSON.stringify(item))
                     es.search(item, function (error, result) {
                         if (result != undefined && result.aggregations != undefined) {
                             pvs.push(result.aggregations)
+                            console.log(result.aggregations)
                             callback(null, result.aggregations);
                         } else {
                             callback(null, null);
@@ -2818,19 +2823,19 @@ var transform = {
                         queryOptions.forEach(function (queryOption) {
                             switch (queryOption) {
                                 case "nuvRate":
-                                    if (pv.uv_aggs.value == "0") {
+                                    if (pv.uv==undefined||pv.uv.value == "0"||pv.nuv_aggs==undefined||pv.nuv_aggs.new_visitor==undefined) {
                                         data[queryOption] = "0.00%";
                                     } else {
-                                        data[queryOption] = (((pv.visitor_aggs.value - pv.old_visitor_aggs.value) / pv.uv_aggs.value) * 100).toFixed(2) + "%";
+                                        data[queryOption] = ((pv.nuv_aggs.new_visitor.value / pv.uv.value) * 100).toFixed(2) + "%";
                                     }
-                                    data["nuv"] = (pv.visitor_aggs.value - pv.old_visitor_aggs.value)
-                                    data["uv"] = pv.uv_aggs.value
+                                    data["nuv"] = pv.nuv_aggs.new_visitor.value
+                                    data["uv"] = pv.uv.value
                                     break;
                                 case"nuv":
-                                    if (pv.old_visitor_aggs.value == "0") {
+                                    if (pv.nuv_aggs == undefined || pv.nuv_aggs.new_visitor == undefined) {
                                         data[queryOption] = 0;
                                     } else {
-                                        data[queryOption] = pv.visitor_aggs.value - pv.old_visitor_aggs.value
+                                        data["nuv"] = pv.nuv_aggs.new_visitor.value
                                     }
                                     break;
                                 default :

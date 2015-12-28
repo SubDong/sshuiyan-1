@@ -251,7 +251,7 @@ define(["./module"], function (ctrs) {
                     var sumNuv = 0, sumpv = 0
                     option.forEach(function (item) {
                         sumNuv += item.entity["conversions"] == undefined ? 0 : item.entity["conversions"]
-                        sumpv += item.entity["pv"] == undefined ? 0 : item.entity["pv"]
+                        sumpv += item.entity["vc"] == undefined ? 0 : item.entity["vc"]
                     })
                     returnData = sumpv > 0 ? (((sumNuv / sumpv) * 100).toFixed(2) + "%") : "0.00%"
                 }

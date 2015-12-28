@@ -112,7 +112,7 @@ define(["./module"], function (ctrs) {
                                                 data["conversions"] = sepagedatas[data.campaignName] != undefined && sepagedatas[data.campaignName].conversions != undefined ? sepagedatas[data.campaignName].conversions.value : 0
                                                 break;
                                             case "crate"://转化率
-                                                data["crate"] = (sepagedatas[data.campaignName] != undefined && data.pv > 0 ? ((Number(sepagedatas[data.campaignName]["conversions"].value) / Number(data.pv)) * 100).toFixed(2) : (0).toFixed(2)) + "%"
+                                                data["crate"] = (sepagedatas[data.campaignName] != undefined && data.vc > 0 ? ((Number(sepagedatas[data.campaignName]["conversions"].value) / Number(data.vc)) * 100).toFixed(2) : (0).toFixed(2)) + "%"
                                                 break;
                                             case "benefit"://收益
                                                 data["benefit"] = sepagedatas[data.campaignName] != undefined && sepagedatas[data.campaignName].benefit != undefined ? sepagedatas[data.campaignName].benefit.value : 0
@@ -379,19 +379,19 @@ define(["./module"], function (ctrs) {
             };
             $rootScope.setShowArray = function (datas,isCompare) {
 
-                var sumNuv = 0, sumUv = 0, sumPv = 0, sumConv = 0, sumOrder = 0
+                var sumNuv = 0, sumUv = 0, sumVc = 0, sumConv = 0, sumOrder = 0
                 if (isCompare) {
                     $scope.isCompared = true;
                     $scope.DateNumbertwo = true;
 
                     datas.forEach(function (data, index) {
-                        sumPv += data["pv"] == undefined ? 0 : data["pv"]
+                        sumVc += data["vc"] == undefined ? 0 : data["vc"]
                         $scope.dateShowArray.forEach(function (attr) {
                             if (data[attr.label] != undefined) {
                                 if (attr.label == "crate") {
                                     sumConv += data["conversions"] == undefined ? 0 : data["conversions"]
                                     if (index == (datas.length - 1)) {
-                                        attr.cValue = sumPv > 0 ? (((sumConv / sumPv) * 100).toFixed(2) + "%") : "0.00%"
+                                        attr.cValue = sumVc > 0 ? (((sumConv / sumVc) * 100).toFixed(2) + "%") : "0.00%"
                                     }
                                 } else if (attr.label == "nuvRate") {
                                     sumNuv += data["nuv"] == undefined ? 0 : data["nuv"]
@@ -399,19 +399,13 @@ define(["./module"], function (ctrs) {
                                     attr.cValue = sumUv > 0 ? (((sumNuv / sumUv) * 100).toFixed(2) + "%") : "0.00%"
                                 } else if (attr.label == "orderNumRate") {
                                     sumOrder += data["orderNum"] == undefined ? 0 : data["orderNum"]
-                                    attr.cValue = sumPv > 0 ? (((sumOrder / sumPv) * 100).toFixed(2) + "%") : "0.00%"
+                                    attr.cValue = sumVc > 0 ? (((sumOrder / sumVc) * 100).toFixed(2) + "%") : "0.00%"
                                 }
                                 else {
                                     attr.cValue += data[attr.label]
                                 }
                             }
                         })
-                        //datas.forEach(function (data) {
-                        //    $scope.dateShowArray.forEach(function (attr) {
-                        //        if (data[attr.label] != undefined)
-                        //            attr.cValue += data[attr.label]
-                        //    })
-                        //})
                     })
                 }else{
                     $scope.isCompared = false;
@@ -423,13 +417,13 @@ define(["./module"], function (ctrs) {
                     });
                     $scope.dateShowArray = $rootScope.copy(tempArray);
                     datas.forEach(function (data, index) {
-                        sumPv += data["pv"] == undefined ? 0 : data["pv"]
+                        sumVc += data["vc"] == undefined ? 0 : data["vc"]
                         $scope.dateShowArray.forEach(function (attr) {
                             if (data[attr.label] != undefined) {
                                 if (attr.label == "crate") {
                                     sumConv += data["conversions"] == undefined ? 0 : data["conversions"]
                                     if (index == (datas.length - 1)) {
-                                        attr.value = sumPv > 0 ? (((sumConv / sumPv) * 100).toFixed(2) + "%") : "0.00%"
+                                        attr.value = sumVc > 0 ? (((sumConv / sumVc) * 100).toFixed(2) + "%") : "0.00%"
                                     }
                                 } else if (attr.label == "nuvRate") {
                                     sumNuv += data["nuv"] == undefined ? 0 : data["nuv"]
@@ -437,7 +431,7 @@ define(["./module"], function (ctrs) {
                                     attr.value = sumUv > 0 ? (((sumNuv / sumUv) * 100).toFixed(2) + "%") : "0.00%"
                                 } else if (attr.label == "orderNumRate") {
                                     sumOrder += data["orderNum"] == undefined ? 0 : data["orderNum"]
-                                    attr.value = sumPv > 0 ? (((sumOrder / sumPv) * 100).toFixed(2) + "%") : "0.00%"
+                                    attr.value = sumVc > 0 ? (((sumOrder / sumVc) * 100).toFixed(2) + "%") : "0.00%"
                                 }
                                 else {
                                     attr.value += data[attr.label]
@@ -445,12 +439,6 @@ define(["./module"], function (ctrs) {
                             }
                         })
                     })
-                    //datas.forEach(function (data) {
-                    //    $scope.dateShowArray.forEach(function (attr) {
-                    //        if (data[attr.label] != undefined||)
-                    //            attr.value += data[attr.label]
-                    //    })
-                    //})
                 }
 
             };
@@ -569,7 +557,6 @@ define(["./module"], function (ctrs) {
                                     if (pagedatas == undefined || pagedatas.length == 0) {
                                         $rootScope.gridOptions.data = []
                                     } else {
-                                        var sumCrate = 0
                                         $rootScope.gridOptions.data.forEach(function (data, index) {
                                             $rootScope.checkedArray.forEach(function (attr) {
                                                 switch (attr) {
@@ -578,7 +565,6 @@ define(["./module"], function (ctrs) {
                                                         break;
                                                     case "crate"://转化率
                                                         var tCrate = pagedatas[data.campaignName] != undefined && data.vc > 0 ? ((Number(pagedatas[data.campaignName]["conversions"].value) / Number(data.vc)) * 100) : 0
-                                                        sumCrate += tCrate
                                                         data["crate"] = tCrate.toFixed(2) + "%";
                                                         break;
                                                     case "benefit"://收益
