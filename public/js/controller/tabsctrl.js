@@ -2844,7 +2844,7 @@ define(["app"], function (app) {
                 if (yqFieldArray.indexOf(_c_field) != -1) {// 搜索词-按照搜索引擎
                     rast[0] = (rast[0] / (yqLengthArray[0] == 0 ? 1 : yqLengthArray[0])).toFixed(2) + "%";
                     rast[1] = (rast[1] / (yqLengthArray[1] == 0 ? 1 : yqLengthArray[1])).toFixed(2) + "%";
-                } else if (_c_field == "nuvRate" || _c_field == "outRate" ) {
+                } else if (_c_field == "nuvRate" || _c_field == "outRate" || _c_field  == "avgTime") {
                     if (_c_field == "outRate") {
                         var t_a_vc = option[0] ? option[0]["entity"]["con_a_vc"] : 0;
                         var t_b_vc = option[0] ? option[0]["entity"]["con_b_vc"] : 0;
@@ -2862,6 +2862,33 @@ define(["app"], function (app) {
                         rast[0] = (t_a_nuv * 100 / (t_a_uv == 0 ? 1 : t_a_uv)).toFixed(2) + "%";
                         rast[1] = (t_b_nuv * 100 / (t_b_uv == 0 ? 1 : t_b_uv)).toFixed(2) + "%";
                     }
+                    if (_c_field == "avgTime") {
+                        var _l_a = 0;
+                        var _sum_a = [0, 0, 0];
+                        var _l_b = 0;
+                        var _sum_b = [0, 0, 0];
+                        for (var _i = 0; _i < option.length; _i++) {
+                            var itemSplDatas = (option[_i].entity[a.col.field] + "").split(",");
+                            var aaaa = itemSplDatas[1];
+                            var bbbb = itemSplDatas[2];
+                            if (aaaa != "--") {
+                                _sum_a[0] = _sum_a[0] + parseInt(aaaa[0]) * 3600 * 1000;
+                                _sum_a[1] = _sum_a[1] + parseInt(aaaa[1]) * 60 * 1000;
+                                _sum_a[2] = _sum_a[2] + parseInt(aaaa[2]) * 1000;
+                                _l_a++;
+                            }
+                            if (bbbb != "--") {
+                                _sum_b[0] = _sum_b[0] + parseInt(bbbb[0]) * 3600 * 1000;
+                                _sum_b[1] = _sum_b[1] + parseInt(bbbb[1]) * 60 * 1000;
+                                _sum_b[2] = _sum_b[2] + parseInt(bbbb[2]) * 1000;
+                                _l_b++;
+                            }
+                        }
+                    }
+                    _l_a = _l_a == 0 ? 1000 : (_l_a * 1000)
+                    _l_b = _l_b == 0 ? 1000 : (_l_b * 1000);
+                    rast[0] = MillisecondToDate(parseInt((_sum_a[0] + _sum_a[1] + _sum_a[2]) / _l_a));
+                    rast[1] = MillisecondToDate(parseInt((_sum_b[0] + _sum_b[1] + _sum_b[2]) / _l_b));
                 } else {
                     rast[0] = (rast[0] / option.length).toFixed(2) + (perFieldArray.indexOf(_c_field) != -1 ? "%" : "");
                     rast[1] = (rast[1] / option.length).toFixed(2) + (perFieldArray.indexOf(_c_field) != -1 ? "%" : "");
