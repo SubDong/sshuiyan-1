@@ -102,6 +102,7 @@ var schemas = {
             rname:String,//备注
             ctime:Number,//创建时间
             token:String,//用户token
+            account_id:Number//百度帐号ID
         }
     },
 // 站点统计规则

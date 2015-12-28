@@ -240,6 +240,7 @@ api.get("/site_list", function (req, res) {
             temp.ctime  =  new Date().getTime();
             temp.token = temp.token==undefined?"":temp.token
             temp.is_top = temp.is_top==undefined?false:temp.is_top
+            temp.account_id = temp.account_id==undefined?0:temp.account_id
             dao.save(schema_name, temp, function (ins) {
                 datautils.send(res, ins);
                 // 参考 https://github.com/zerocoolys/suiyan/wiki/%E9%85%8D%E7%BD%AE%E5%8F%82%E6%95%B0%5Bredis-key-%E8%A7%84%E8%8C%83%5D
