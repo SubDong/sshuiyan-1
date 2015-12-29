@@ -1434,21 +1434,27 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
 
                             var temp = 0;
                             var count = 0;
-                            angular.forEach(r.quota, function (qo, _i) {
-                                var _key = r.key[_i];
-
-                                /*
-                                if (_key != undefined && (_key == "-" || _key == "" || _key == "www" || _key == "null")) {
-                                    return false;
-                                }*/
-                                /*针对访客分析-设备环境-网络设备类型模块， 进行修改。在网络设备类型中，“-”号表示其他。*/
-                                if (_key == null || _key == undefined || _key === "" || _key === "www" || _key === "null") {
-                                    return false;
+                            if( $rootScope.tableSwitch.uv_repeat != undefined && !$rootScope.tableSwitch.uv_repeat&& (r.label=="uv"|| r.label=="nuvRate")){
+                                if(r.label=="nuvRate"){
+                                    temp = r.all_uv==0?(0).toFixed(2):(r.all_nuv*100/r.all_uv).toFixed(2)
+                                    count=1
+                                }else if(r.label=="uv"){
+                                    temp = r.all_uv
+                                    count=1
                                 }
+                            }else{
+                                angular.forEach(r.quota, function (qo, _i) {
+                                    var _key = r.key[_i];
+                                    /*针对访客分析-设备环境-网络设备类型模块， 进行修改。在网络设备类型中，“-”号表示其他。*/
+                                    if (_key == null || _key == undefined || _key === "" || _key === "www" || _key === "null") {
+                                        return false;
+                                    }
 
-                                temp += Number(qo);
-                                count++;
-                            });
+                                    temp += Number(qo);
+                                    count++;
+                                });
+                            }
+
                             angular.forEach(_array, function (_array_r) {
                                 if (_array_r.label == dateShowObject.label) {
                                     if (flag) {

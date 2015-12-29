@@ -439,7 +439,8 @@ api.get('/indextable', function (req, res) {
                             obj[info.label] = info.quota[i] + (valueData.indexOf(info.label) != -1 ? "%" : "");
                         }
 
-                        if(info.label == "uv"){
+                        if(info.label == "uv"||info.label == "nuvRate"){
+                            console.log(info.label)
                             obj["all_uv"] = info["all_uv"]
                         }
                         maps[infoKey] = obj;

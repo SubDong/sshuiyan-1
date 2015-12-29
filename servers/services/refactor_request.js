@@ -23,10 +23,10 @@ var _new_visitor_aggs = {
 var _vc_aggs = {
     //"aggs": {
     //    "vc_aggs": {
-            "cardinality": {
-                "field": "tt"
-            }
-        //}
+    "cardinality": {
+        "field": "tt"
+    }
+    //}
     //}
 };
 
@@ -138,7 +138,7 @@ var es_aggs = {
         "new_visitor_aggs": _new_visitor_aggs,
         "uv_aggs": {
             "cardinality": {
-                "field": "tt"
+                "field": "_ucv"
             }
         }
     },
@@ -194,14 +194,14 @@ var buildMustQuery = function (filters) {
 
     if (filters != null) {
         filters.forEach(function (filter) {
-            if(filter["loc"]!=undefined){//bug #832改成模糊查询
+            if (filter["loc"] != undefined) {//bug #832改成模糊查询
                 var value = filter["loc"];
                 mustQuery.push({
                     "wildcard": {
-                        "loc": "*"+JSON.stringify(value[0]).replace(/\"/g,"")+"*"
+                        "loc": "*" + JSON.stringify(value[0]).replace(/\"/g, "") + "*"
                     }
                 });
-            }else{
+            } else {
 
                 if (JSON.stringify(filter) == "{\"entrance\":\"entrancetrue\"}") {
                     mustQuery.push({
@@ -885,6 +885,7 @@ var es_request = {
                         "field": "_ucv"
                     }
                 }
+                request.body.aggs["all_nuv"] = _new_visitor_aggs
                 break;
             case "-2":  // period topN, 适用于单一指标, 结果由调用者处理
                 for (var _key in es_aggs[quotas[0]]) {
@@ -935,6 +936,7 @@ var es_request = {
                         "field": "_ucv"
                     }
                 }
+                request.body.aggs.result.aggs["all_nuv"] = _new_visitor_aggs
                 break;
             default :
                 request = buildRequest(indexes, type, quotas, dimension, filters, start, end, interval);
@@ -943,6 +945,8 @@ var es_request = {
                         "field": "_ucv"
                     }
                 }
+                request.body.aggs["all_nuv"] = _new_visitor_aggs
+
                 break;
         }
 
@@ -975,6 +979,7 @@ var es_request = {
                                 case "uv":
                                     var tempuv = uvFn(result)
                                     tempuv["all_uv"] = response.aggregations.all_uv.value
+                                    tempuv["all_nuv"] = response.aggregations.all_nuv.new_visitor_aggs.value
                                     data.push(tempuv);
                                     break;
                                 case "vc":
@@ -1011,7 +1016,10 @@ var es_request = {
                                     data.push(nuvFn(result));
                                     break;
                                 case "nuvRate":
-                                    data.push(nuvRateFn(result));
+                                    var temp = nuvRateFn(result)
+                                    temp["all_uv"] = response.aggregations.all_uv.value
+                                    temp["all_nuv"] = response.aggregations.all_nuv.new_visitor_aggs.value
+                                    data.push(temp);
                                     break;
                                 case "entrance":
                                     data.push(entranceFn(result));
