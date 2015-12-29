@@ -160,10 +160,10 @@ if (config.app.mode == 'cluster') {
         //});
 
     } else {
-        app.listen(8120);
+        app.listen(8000);
     }
 } else {
-    app.listen(8120);
+    app.listen(8000);
 }
 
 
