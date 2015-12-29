@@ -128,7 +128,7 @@ var access_request = {
                             },
                             "uv_aggs": {
                                 "cardinality": {
-                                    "field": "tt"
+                                    "field": "_ucv"
                                 }
                             },
                             "entrance_aggs": {
@@ -255,7 +255,7 @@ var access_request = {
                                                 },
                                                 "uv": {
                                                     "cardinality": {
-                                                        "field": "tt"
+                                                        "field": "_ucv"
                                                     }
                                                 }
                                             }
@@ -267,7 +267,7 @@ var access_request = {
                                         },
                                         "uv": {
                                             "cardinality": {
-                                                "field": "tt"
+                                                "field": "_ucv"
                                             }
                                         }
                                     }
@@ -350,14 +350,14 @@ var access_request = {
                                 },
                                 "uv": {
                                     "cardinality": {
-                                        "field": "tt"
+                                        "field": "_ucv"
                                     }
                                 }
                             }
                         },
                         "all_uv": {
                             "cardinality": {
-                                "field": "tt"
+                                "field": "_ucv"
                             }
                         },
                         "target_pv_uv": {
@@ -397,7 +397,7 @@ var access_request = {
                                 },
                                 "uv": {
                                     "cardinality": {
-                                        "field": "tt"
+                                        "field": "_ucv"
                                     }
                                 }
                             }

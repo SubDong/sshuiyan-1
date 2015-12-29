@@ -5,10 +5,10 @@ var config = {
     pv: "pv_aggs.value",
     contribution: "cpv_aggs.cpv_aggs.value",
     uv: "uv_aggs.value",
-    vc: "vc_aggs.vc_aggs.value",
+    vc: "vc_aggs.value",
     avgTime: {
         tvt: "max_aggs.value - min_aggs.value",
-        vc: "vc_aggs.vc_aggs.value",
+        vc: "vc_aggs.value",
         avgTime: "Math.ceil(parseFloat(tvt) / 1000 / parseFloat((vc)))"
     },
     outRate: {
@@ -20,7 +20,7 @@ var config = {
     arrivedRate: "vc_aggs.value",
     avgPage: {
         pv: "pv_aggs.value",
-        uv: "vc_aggs.vc_aggs.value",
+        uv: "vc_aggs.value",
         avgPage: "(parseFloat(pv) / parseFloat(uv)).toFixed(2)"
     },
     conversions: "doc_count",

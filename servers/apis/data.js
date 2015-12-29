@@ -23,7 +23,6 @@ var es_position_request = require('../services/es_position_request');
 var changeList_request = require("../services/changeList_request");
 var transform = require("../services/transform-request");
 var heaturl_request = require("../services/heaturl_request");
-var ad_request = require("../services/ad_request");
 var mail = require('../mail/mail');
 var scheduler = require("../mail/scheduler");
 var path = require('path');

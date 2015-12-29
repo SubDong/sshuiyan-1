@@ -925,8 +925,8 @@ var es_request = {
                 "field": "tt"
             }
         }
-        var cacheKey = cacheutils.fixCacheKey(request);
-        console.log("********************refactor request*********************")
+        //var cacheKey = cacheutils.fixCacheKey(request);
+        //console.log("********************refactor request*********************")
         console.log(JSON.stringify(request))
         es.search(request, function (error, response) {
             var data = [];

@@ -363,7 +363,7 @@ var chartUtils = {
                 return buc.uv_aggs.value;
                 break;
             case "vc":
-                return buc.vc_aggs.vc_aggs.value;
+                return buc.vc_aggs.value;
                 break;
             case "ip":
                 return buc.ip_aggs.ip_aggs1.value;
