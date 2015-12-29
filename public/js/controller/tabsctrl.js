@@ -2162,7 +2162,13 @@ define(["app"], function (app) {
                                                 a[tt] = "　" + "," + a[tt] + "," + contrast[i][tt] + "," + dataObj[tt];
                                             }
                                         });
-                                        a[target] = a[target] + "," + ($rootScope.startString != undefined ? $rootScope.startString : dateTime1[0] == dateTime1[1] ? dateTime1[0] + "," + dateTime2[0] + "," + "变化率" : dateTime1[0] + " 至 " + dateTime1[1]) + "," + (dateTime2[0] + " 至 " + dateTime2[1]) + "," + "变化率";
+
+                                        if ($rootScope.tableTimeStart == $rootScope.tableTimeEnd) {
+                                            a[target] = a[target] + "," + dateTime1[0] + "," + dateTime2[0] + ",变化率";
+                                        } else {
+                                            a[target] = a[target] + "," + dateTime1[0] + " 至 " + dateTime1[1] + "," + dateTime2[0] + " 至 " + dateTime2[1] + ",变化率"
+                                        }
+                                        
                                         dataArray.push(a);
                                         is = 0;
                                         return;
@@ -2177,7 +2183,12 @@ define(["app"], function (app) {
                                     dataObj[tt] = "--";
                                     a[tt] = "　" + "," + a[tt] + "," + "--" + "," + "--"
                                 });
-                                a[target] = a[target] + "," + ($rootScope.startString != undefined ? $rootScope.startString : dateTime1[0] == dateTime1[1] ? dateTime1[0] + "," + dateTime2[0] + "," + "变化率" : dateTime1[0] + " 至 " + dateTime1[1]) + "," + (dateTime2[0] + " 至 " + dateTime2[1]) + "," + "变化率"
+                                if ($rootScope.tableTimeStart == $rootScope.tableTimeEnd) {
+                                    a[target] = a[target] + "," + dateTime1[0] + "," + dateTime2[0] + ",变化率";
+                                } else {
+                                    a[target] = a[target] + "," + dateTime1[0] + " 至 " + dateTime1[1] + "," + dateTime2[0] + " 至 " + dateTime2[1] + ",变化率"
+                                }
+                                //a[target] = a[target] + "," + ($rootScope.startString != undefined ? $rootScope.startString : dateTime1[0] == dateTime1[1] ? dateTime1[0] + "," + dateTime2[0] + "," + "变化率" : dateTime1[0] + " 至 " + dateTime1[1]) + "," + (dateTime2[0] + " 至 " + dateTime2[1]) + "," + "变化率"
                                 dataArray.push(a);
                             }
                         });
