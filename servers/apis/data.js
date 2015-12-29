@@ -82,6 +82,19 @@ api.get('/charts', function (req, res) {
         dimension = null;
     }
     es_request.search(req.es, indexes, userType, quotas, dimension, topN, filter, period[0], period[1], interval, function (result) {
+
+        // 今日统计。未到的时间段特殊处理
+        if (start == 0 && start == end && dimension == "period") {
+            var nh = new Date().getHours();
+            result.forEach(function (_obj) {
+                _obj.quota.forEach(function (_o_q, n) {
+                    if (n > nh) {
+                        _obj.quota[n] = "--";
+                    }
+                });
+            });
+        }
+
         datautils.send(res, JSON.stringify(result));
     });
 });

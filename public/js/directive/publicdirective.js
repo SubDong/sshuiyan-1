@@ -240,7 +240,7 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     var pickerTiemOne = 0;
                     scope.reset();
                     scope.isShowCalendar = false;
-                    scope.hiddenSeven = true;
+                    //scope.hiddenSeven = true;
                     scope.timeClass = true;
                     if (dateID) {
                         $('#choicetrange span').html("与其他时间段对比");
@@ -320,8 +320,10 @@ define(["../app", "../ZeroClipboard/ZeroClipboard-AMD"], function (app, ZeroClip
                     if (start.format('YYYY-MM-DD') == end.format('YYYY-MM-DD')) {
                         $('#reportrange span').html(start.format('YYYY-MM-DD'));
                         $rootScope.startString = (start.format('YYYY-MM-DD'));
+                        scope.hiddenSeven = false;
                     } else {
                         $('#reportrange span').html(start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD'));
+                        scope.hiddenSeven = true;
                     }
                 });
 
