@@ -43,7 +43,7 @@ define(["./module"], function (ctrs) {
             if (shardD == null) {
                 shardD = "http://" + $rootScope.siteUrl + "/";
             }
-            $http.get("api/trafficmap?start=" + $scope.start + ",end=" + $scope.end + ",targetPathName=" + shardD).success(function (data) {
+            $http.get("api/trafficmap?start=" + $scope.start + ",end=" + $scope.end + ",targetPathName=" + shardD+",type="+$rootScope.userType).success(function (data) {
                 if(data == null || data == undefined || data== "") {
                     return ;
                 }

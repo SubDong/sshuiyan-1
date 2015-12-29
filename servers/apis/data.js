@@ -900,6 +900,8 @@ api.get("/trafficmap", function (req, res) {
     var start = parameters[0].split("=")[1];
     var end = parameters[1].split("=")[1];
     var targetPathName = parameters[2].split("=")[1];
+    var type = parameters[3].split("=")[1];
+
 
     var indexString = [];
     //start与end传过时间偏移量或者时间，调用creatIndexs()或createIndexsByTime()方法，把access-与时间拼接起来组成索引值
@@ -908,7 +910,7 @@ api.get("/trafficmap", function (req, res) {
     } else {
         indexString = date.createIndexes(start, end, "access-");
     }
-    access_request.trafficmapSearch(req.es, indexString, targetPathName, function (result) {
+    access_request.trafficmapSearch(req.es,type, indexString, targetPathName, function (result) {
         datautils.send(res, result);
 
     });

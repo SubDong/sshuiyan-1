@@ -314,7 +314,7 @@ var access_request = {
             });
         });
     },
-    trafficmapSearch: function (es, indexs, targetPathName, callbackFn) {
+    trafficmapSearch: function (es, indexs,type, targetPathName, callbackFn) {
         var requests = [];
         for (var i = 0; i < indexs.length; i++) {
             requests.push({
@@ -334,7 +334,7 @@ var access_request = {
             }
             var request = {
                 index: newIndexs,
-                type: null,
+                type: type,
                 body: {
                     "size": 0,
                     "aggs": {
