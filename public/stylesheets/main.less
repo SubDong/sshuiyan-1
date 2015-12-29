@@ -642,7 +642,7 @@ nav, .navbar-default {
     color: #aaaaaa;
   }
   .chart_top ul li {
-    color: #727272;
+    color: #666;
     text-align: left;
     border: @border-width solid #f6f5f5;
     padding: 3px 8px;
@@ -691,14 +691,14 @@ nav, .navbar-default {
     ul li {
       display: @block;
       .fl;
-      color: #727272;
+      color: #666;
       margin-right: 15px;
       span {
         /* text-align: right;*/
 
       }
       a {
-        line-height: 25px;
+        line-height: 28px;
         color: #2fabe9;
       }
       label {
@@ -2874,14 +2874,20 @@ select.styled {
 .select2-container .select2-choice {
   background-image: none;
   border: 1px solid #e6e4e5;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
   border-radius: 4px;
-  line-height: 25px;
+  line-height: 28px;
 
 }
 
 .select2-container .select2-choice .select2-arrow {
   background: none;
   border: none;
+  border-left: 1px solid #ddd;
+  background-color: #fafafa;
 }
 
 .select2-container-active .select2-choice, .select2-container-active .select2-choices {
@@ -2942,8 +2948,7 @@ select.styled {
     .select2-choice {
       span {
         font-weight: normal;
-        color: #727272;
-
+        color: #666;
       }
 
     }
@@ -3038,7 +3043,7 @@ select.styled {
 }
 
 .select2-results .select2-result-label {
-  padding: 4px 7px;
+  padding: 2px 7px;
 }
 
 .select2-dropdown-open .select2-choice {
