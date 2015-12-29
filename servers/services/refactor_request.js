@@ -194,16 +194,27 @@ var buildMustQuery = function (filters) {
 
     if (filters != null) {
         filters.forEach(function (filter) {
-            if (JSON.stringify(filter) == "{\"entrance\":\"entrancetrue\"}") {
+            if(filter["loc"]!=undefined){//bug #832改成模糊查询
+                var value = filter["loc"];
                 mustQuery.push({
-                    "term": {
-                        "entrance": 1
+                    "wildcard": {
+                        "loc": "*"+JSON.stringify(value[0]).replace(/\"/g,"")+"*"
                     }
                 });
-            } else {
-                mustQuery.push({
-                    "terms": filter
-                });
+            }else{
+
+                if (JSON.stringify(filter) == "{\"entrance\":\"entrancetrue\"}") {
+                    mustQuery.push({
+                        "term": {
+                            "entrance": 1
+                        }
+                    });
+                } else {
+                    mustQuery.push({
+                        "terms": filter
+                    });
+                }
+
             }
         });
     }
