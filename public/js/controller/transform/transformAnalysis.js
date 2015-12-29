@@ -75,7 +75,7 @@ define(["./module"], function (ctrs) {
                     displayName: "事件名称",
                     field: "eventName",
                     footerCellTemplate: "<div class='ui-grid-cell-contents'>当页汇总</div>",
-                    maxWidth: 150
+                    maxWidth: 200
                 },
                 {
                     name: "页面URL",
