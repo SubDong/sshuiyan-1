@@ -2848,7 +2848,7 @@ define(["app"], function (app) {
                 str = "当页汇总";
             }
             var bhl = "";
-            if (a.col.field == "pv" || a.col.field == "uv" || a.col.field == "ip" || a.col.field == "vc" || a.col.field == "nuv" || a.col.field == "freq"||a.col.field == "ec") {
+            if (a.col.field == "pv" || a.col.field == "uv" || a.col.field == "ip" || a.col.field == "vc" || a.col.field == "nuv" || a.col.field == "freq" || a.col.field == "ec" || a.col.field == "contribution" || a.col.field == "entrance") {
                 //
                 //if(a.col.field == "uv"&&option.length>0&&option[0].entity["all_uv"]!=undefined){
                 //
