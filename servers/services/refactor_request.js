@@ -869,6 +869,11 @@ var es_request = {
                         }
                     }
                 };
+                request.body.aggs["all_uv"] = {
+                    "cardinality": {
+                        "field": "_ucv"
+                    }
+                }
                 break;
             case "-2":  // period topN, 适用于单一指标, 结果由调用者处理
                 for (var _key in es_aggs[quotas[0]]) {
@@ -876,7 +881,6 @@ var es_request = {
                         "top_hit": es_aggs[quotas[0]][_key]
                     };
                 }
-
                 request = {
                     "index": indexes,
                     "type": type,
@@ -915,19 +919,25 @@ var es_request = {
                         }
                     }
                 };
+                request.body.aggs.result.aggs["all_uv"] = {
+                    "cardinality": {
+                        "field": "_ucv"
+                    }
+                }
                 break;
             default :
                 request = buildRequest(indexes, type, quotas, dimension, filters, start, end, interval);
+                request.body.aggs["all_uv"] = {
+                    "cardinality": {
+                        "field": "_ucv"
+                    }
+                }
                 break;
         }
-        request.body.aggs["all_uv"] = {
-            "cardinality": {
-                "field": "tt"
-            }
-        }
+
         //var cacheKey = cacheutils.fixCacheKey(request);
         //console.log("********************refactor request*********************")
-        console.log(JSON.stringify(request))
+        //console.log(JSON.stringify(request))
         es.search(request, function (error, response) {
             var data = [];
             if (response != undefined && response.aggregations != undefined && response.aggregations.result != undefined) {
