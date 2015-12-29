@@ -72,7 +72,7 @@ define(["./../module"], function (ctrs) {
         ];
         $rootScope.tableSwitch = {
             latitude: {name: "页面url", displayName: "页面url", field: "loc"},
-            tableFilter: null,
+            tableFilter :"[{\"entrance\":\"entrancetrue\"}]",
             dimen: false,
             // 0 不需要btn ，1 无展开项btn ，2 有展开项btn
             number: 0,

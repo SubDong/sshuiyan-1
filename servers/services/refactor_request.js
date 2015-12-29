@@ -202,8 +202,7 @@ var buildMustQuery = function (filters) {
                     }
                 });
             } else {
-
-                if (JSON.stringify(filter) == "{\"entrance\":\"entrancetrue\"}") {
+                if (JSON.stringify(filter) == "{\"entrance\":\"entrancetrue\"}"||JSON.stringify(filter) == "[{\"entrance\":\"entrancetrue\"},{\"ct\": [0]}]") {
                     mustQuery.push({
                         "term": {
                             "entrance": 1
@@ -1180,7 +1179,7 @@ var es_request = {
         });
         if (filters != null) {
             filters.forEach(function (filter) {
-                if (JSON.stringify(filter) == "{\"entrance\":\"entrancetrue\"}") {
+                if (JSON.stringify(filter) == "{\"entrance\":\"entrancetrue\"}"||JSON.stringify(filter) == "[{\"entrance\":\"entrancetrue\"},{\"ct\": [0]}]") {
                     mustQuery.push({
                         "term": {
                             "entrance": 1
