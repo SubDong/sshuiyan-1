@@ -314,7 +314,7 @@ var access_request = {
             });
         });
     },
-    trafficmapSearch: function (es, indexs,type, targetPathName, callbackFn) {
+    trafficmapSearch: function (es, type,indexs, targetPathName, callbackFn) {
         var requests = [];
         for (var i = 0; i < indexs.length; i++) {
             requests.push({
