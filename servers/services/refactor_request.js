@@ -14,25 +14,20 @@ var _new_visitor_aggs = {
     "aggs": {
         "new_visitor_aggs": {
             "cardinality": {
-                "field": "tt"
+                "field": "_ucv"
             }
         }
     }
 };
 
 var _vc_aggs = {
-    "filter": {
-        "term": {
-            "entrance": "1"
-        }
-    },
-    "aggs": {
-        "vc_aggs": {
-            "value_count": {
+    //"aggs": {
+    //    "vc_aggs": {
+            "cardinality": {
                 "field": "tt"
             }
-        }
-    }
+        //}
+    //}
 };
 
 var es_aggs = {
@@ -65,7 +60,7 @@ var es_aggs = {
     "uv": {
         "uv_aggs": {
             "cardinality": {
-                "field": "tt"
+                "field": "_ucv"
             }
         }
     },
@@ -549,7 +544,7 @@ var vcFn = function (result) {
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
-        var vc = result[i].vc_aggs.vc_aggs.value;
+        var vc = result[i].vc_aggs.value;
         keyArr.push(result[i].key);
         keyAsStringArr.push(result[i].key_as_string);
         quotaArr.push(vc);
@@ -574,7 +569,7 @@ var avgTimeFn = function (result) {
         if (_tvt_aggs_result.length > 0) {
             tvt = parseInt(_tvt_aggs_result[0].max_aggs.value) - parseInt(_tvt_aggs_result[0].min_aggs.value);
         }
-        var vc = result[i].vc_aggs.vc_aggs.value;
+        var vc = result[i].vc_aggs.value;
         keyArr.push(result[i].key);
         keyAsStringArr.push(result[i].key_as_string);
         var avgTime = 0;
@@ -598,7 +593,7 @@ var outRateFn = function (result) {
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
-        var vc = result[i].vc_aggs.vc_aggs.value;
+        var vc = result[i].vc_aggs.value;
         var svc = parseInt(vc) - result[i].single_visitor_aggs.single_visitor_aggs.buckets.length;
         keyArr.push(result[i].key);
         keyAsStringArr.push(result[i].key_as_string);
@@ -625,7 +620,7 @@ var svcFn = function (result) {
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
-        var vc = result[i].vc_aggs.vc_aggs.value;
+        var vc = result[i].vc_aggs.value;
         var svc = parseInt(vc) - result[i].single_visitor_aggs.single_visitor_aggs.buckets.length;
         keyArr.push(result[i].key);
         keyAsStringArr.push(result[i].key_as_string);
@@ -736,7 +731,7 @@ var avgPageFn = function (result) {
     var quotaArr = [];
     for (var i = 0, l = result.length; i < l; i++) {
         var pv = result[i].pv_aggs.value;
-        var uv = result[i].vc_aggs.vc_aggs.value;
+        var uv = result[i].vc_aggs.value;
         keyArr.push(result[i].key);
         keyAsStringArr.push(result[i].key_as_string);
         var avgPage = 0;
@@ -760,7 +755,7 @@ var arrivedRateFn = function (result) {
     var quotaArr = [];
 
     for (var i = 0, l = result.length; i < l; i++) {
-        var vc = result[i].vc_aggs.vc_aggs.value;
+        var vc = result[i].vc_aggs.value;
         keyArr.push(result[i].key);
         keyAsStringArr.push(result[i].key_as_string);
 
@@ -931,6 +926,8 @@ var es_request = {
             }
         }
         var cacheKey = cacheutils.fixCacheKey(request);
+        console.log("********************refactor request*********************")
+        console.log(JSON.stringify(request))
         es.search(request, function (error, response) {
             var data = [];
             if (response != undefined && response.aggregations != undefined && response.aggregations.result != undefined) {
