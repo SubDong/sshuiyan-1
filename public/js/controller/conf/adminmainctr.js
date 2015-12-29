@@ -288,7 +288,7 @@ define(["./module"], function (ctrs) {
          * @param row
          */
         $scope.onDelete = function (rootGrid, grid, row) {
-            $scope.tip = '<li> 删除后，百思慧眼将不在跟踪统计该目标，该目标的  历史数据会被删除且无法恢复。<br/><br/>您希望现在删除吗？</li>';
+            $scope.tip = '<li class="fl warningImg"><img src="../../../img/remove_warning.png"></li><li class="fl warningWord"> 删除后，百思慧眼将不在跟踪统计该目标，该目标的  历史数据会被删除且无法恢复。<br><br>您希望现在删除吗？</li>';
             $scope.onDeleteDialog = ngDialog.open({
                 template: './conf/Dialog/common_diaolg.html',
                 className: 'ngdialog-theme-default admin_ngdialog',
@@ -338,7 +338,7 @@ define(["./module"], function (ctrs) {
             if (row.entity.site_pause) {
                 $scope.tip = "确定重新启用？";
             } else {
-                $scope.tip = "<li>注意</li><li>暂停后，您将不再分析该网站，直至您重新启用，你确定现在暂停使用吗？</li>"
+                $scope.tip = "<li class='fl warningImg'><img src='../../../img/remove_warning.png'></li><li class='fl warningWord' style='line-height: 34px'>注意：暂停后，您将不再分析该网站，直至您重新启用，你确定现在暂停使用吗？</li>"
             }
 
             $scope.urlDialog = ngDialog.open({

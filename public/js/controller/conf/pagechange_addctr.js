@@ -62,7 +62,7 @@ define(["./module"], function (ctrs) {
             $scope.openTargetUrlConfirmDialog = ngDialog.openConfirm({
                 template: '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自目标URL的消息</div>' +
                 '<ul class="admin-ng-content">' +
-                '<li> 你确定删除这个目标URL吗？</li></ul>' +
+                '<li class="fl warningImg"><img src="../../../img/remove_warning.png"></li><li class="fl warningWord" style="line-height: 34px"> 你确定删除这个目标URL吗？</li></ul>' +
                 '<div class="ng-button-div"> <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>' +
                 '<button type="button" class="ngdialog-button ng-button" ng-click="confirm()">确定</button></div>' +
                 '</div>',
@@ -81,7 +81,7 @@ define(["./module"], function (ctrs) {
             $scope.openStepUrlConfirmDialog = ngDialog.openConfirm({
                 template: '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自路径类型的消息</div>' +
                 '<ul class="admin-ng-content">' +
-                '<li> 你确定删除这个步骤URL吗？</li></ul>' +
+                '<li class="fl warningImg"><img src="../../../img/remove_warning.png"></li><li class="fl warningWord" style="line-height: 34px"> 你确定删除这个步骤URL吗？</li></ul>' +
                 '<div class="ng-button-div"> <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>' +
                 '<button type="button" class="ngdialog-button ng-button" ng-click="confirm()">确定</button></div>' +
                 '</div>',
@@ -106,7 +106,7 @@ define(["./module"], function (ctrs) {
             $scope.openPathConfirmDialog = ngDialog.openConfirm({
                 template: '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自路径类型的消息</div>' +
                 '<ul class="admin-ng-content">' +
-                '<li> 你确定删除这个步骤吗？</li></ul>' +
+                '<li class="fl warningImg"><img src="../../../img/remove_warning.png"></li><li class="fl warningWord" style="line-height: 34px">你确定删除这个步骤吗？</li></ul>' +
                 '<div class="ng-button-div"> <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>' +
                 '<button type="button" class="ngdialog-button ng-button" ng-click="confirm()">确定</button></div>' +
                 '</div>',
@@ -133,7 +133,7 @@ define(["./module"], function (ctrs) {
             $scope.openPathConfirmDialog = ngDialog.openConfirm({
                 template: '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自路径类型的消息</div>' +
                 '<ul class="admin-ng-content">' +
-                '<li> 你确定删除这个路径吗？</li></ul>' +
+                '<li class="fl warningImg"><img src="../../../img/remove_warning.png"></li><li class="fl warningWord" style="line-height: 34px"> 你确定删除这个路径吗？</li></ul>' +
                 '<div class="ng-button-div"> <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>' +
                 '<button type="button" class="ngdialog-button ng-button" ng-click="confirm()">确定</button></div>' +
                 '</div>',
@@ -196,7 +196,7 @@ define(["./module"], function (ctrs) {
 
         $scope.showInputErrMsg = function (errMsg) {
             if (errMsg != "") {
-                var template = '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">输入项信息错误</div><ul class="admin-ng-content"><li>' + errMsg + '</li></ul>'
+                var template = '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">输入项信息错误</div><ul class="admin-ng-content"><li class="fl warningImg"><img src="../../../img/remove_warning.png"></li><li class="fl warningWord" style="line-height: 34px">' + errMsg + '</li></ul>'
                     + '<div class="ng-button-div"><button type="button" class="ngdialog-button ng-button " \
                   <button type="button" class="ngdialog-button ngdialog-button-secondary " ng-click="closeThisDialog(0)">返回</button></div></div>';
                 $scope.showMsg(template);

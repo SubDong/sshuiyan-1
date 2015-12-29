@@ -7,6 +7,7 @@ token.get("/", tokener)
 function tokener(req, res, next) {
 
     var tokenid = req.query['tokenid'];
+    tokenid = tokenid.split("").reverse().join("");
 
     if (!validate(tokenid)) {
         res.send("tokenid is invalidate.");

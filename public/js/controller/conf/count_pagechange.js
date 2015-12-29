@@ -170,7 +170,7 @@ define(["./module"], function (ctrs) {
         $scope.onDelete = function (index, grid, row) {
             $scope.onDeleteDialog = ngDialog.open({
                 template: '' +
-                '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">系统提示</div><ul class="admin-ng-content"><li> 您确定删除这个路径吗？</li></ul>' +
+                '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">系统提示</div><ul class="admin-ng-content"><li class="fl warningImg"><img src="../../../img/remove_warning.png"></li><li class="fl warningWord" style="line-height: 34px"> 您确定删除这个路径吗？</li></ul>' +
                 '<div class="ng-button-div"><button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
                     <button type="button" class="ngdialog-button ng-button" ng-click="sureonDelete()">确定</button></div></div>',
 
@@ -198,7 +198,7 @@ define(["./module"], function (ctrs) {
             var msg = row.entity.is_pause ? "重新启用" : "暂停使用"
             $scope.onDeleteDialog = ngDialog.open({
                 template: '' +
-                '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div><ul class="admin-ng-content"><li> 您确定' + msg + '这个路径吗？</li></ul>' +
+                '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">系统提示</div><ul class="admin-ng-content"><li class="fl warningImg"><img src="../../../img/remove_warning.png"></li><li class="fl warningWord" style="line-height: 34px"> 您确定' + msg + '这个路径吗？</li></ul>' +
                 '<div class="ng-button-div"><button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
                     <button type="button" class="ngdialog-button ng-button" ng-click="surePauseDelete()">确定</button></div></div>',
                 className: 'ngdialog-theme-default admin_ngdialog',

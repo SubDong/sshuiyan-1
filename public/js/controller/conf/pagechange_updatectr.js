@@ -55,11 +55,39 @@ define(["./module"], function (ctrs) {
             target_urls.push(angular.copy(singleUrl));
         };
         $scope.removeTargetUrl = function (target_urls, index) {
-            target_urls.splice(index, 1);
+            $scope.openTargetUrlConfirmDialog = ngDialog.openConfirm({
+                template: '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自目标URL的消息</div>' +
+                    '<ul class="admin-ng-content">' +
+                    '<li class="fl warningImg"><img src="../../../img/remove_warning.png"></li><li class="fl warningWord" style="line-height: 34px"> 你确定删除这个目标URL吗？</li></ul>' +
+                    '<div class="ng-button-div"> <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>' +
+                    '<button type="button" class="ngdialog-button ng-button" ng-click="confirm()">确定</button></div>' +
+                    '</div>',
+                className: 'ngdialog-theme-default admin_ngdialog',
+                plain: true,
+                scope: $scope
+            }).then(function () {
+                target_urls.splice(index, 1);
+            }, function (reason) {
+                return;
+            });
         };
         //增删步骤URL
         $scope.removeStepUrl = function (step_urls, index) {
-            step_urls.splice(index, 1);
+            $scope.openStepUrlConfirmDialog = ngDialog.openConfirm({
+                template: '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自路径类型的消息</div>' +
+                    '<ul class="admin-ng-content">' +
+                    '<li class="fl warningImg"><img src="../../../img/remove_warning.png"></li><li class="fl warningWord" style="line-height: 34px">你确定删除这个步骤URL吗？</li></ul>' +
+                    '<div class="ng-button-div"> <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>' +
+                    '<button type="button" class="ngdialog-button ng-button" ng-click="confirm()">确定</button></div>' +
+                    '</div>',
+                className: 'ngdialog-theme-default admin_ngdialog',
+                plain: true,
+                scope: $scope
+            }).then(function () {
+                step_urls.splice(index, 1);
+            }, function (reason) {
+                return;
+            });
         };
         $scope.addStepUrl = function (step_urls, step_url, index) {
             checkAndForceUrls(step_urls);
@@ -69,14 +97,49 @@ define(["./module"], function (ctrs) {
         $scope.addSteps = function (steps) {
             steps.push(angular.copy(singleStep));
         };
+        $scope.removeSteps = function (steps, _index) {
+            $scope.openPathConfirmDialog = ngDialog.openConfirm({
+                template: '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自路径类型的消息</div>' +
+                    '<ul class="admin-ng-content">' +
+                    '<li class="fl warningImg"><img src="../../../img/remove_warning.png"></li><li class="fl warningWord" style="line-height: 34px">你确定删除这个步骤吗？</li></ul>' +
+                    '<div class="ng-button-div"> <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>' +
+                    '<button type="button" class="ngdialog-button ng-button" ng-click="confirm()">确定</button></div>' +
+                    '</div>',
+                className: 'ngdialog-theme-default admin_ngdialog',
+                plain: true,
+                scope: $scope
+            }).then(function () {
+                if (steps.length <= 1) {
+                    $scope.paths.splice(_index, 1)
+                } else {
+                    steps.splice(_index, 1);
+                }
+            }, function (reason) {
+                return;
+            });
+        };
         //增删路径
         $scope.addPaths = function (paths) {
             var temp =angular.copy(singlePath)
             temp.steps.push(angular.copy(singleStep))
             paths.push(temp);
         };
-        $scope.removePath = function (steps, _index) {
-            steps.splice(_index, 1);
+        $scope.removePath = function (paths, _index) {
+            $scope.openPathConfirmDialog = ngDialog.openConfirm({
+                template: '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自路径类型的消息</div>' +
+                    '<ul class="admin-ng-content">' +
+                    '<li class="fl warningImg"><img src="../../../img/remove_warning.png"></li><li class="fl warningWord" style="line-height: 34px"> 你确定删除这个路径吗？</li></ul>' +
+                    '<div class="ng-button-div"> <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>' +
+                    '<button type="button" class="ngdialog-button ng-button" ng-click="confirm()">确定</button></div>' +
+                    '</div>',
+                className: 'ngdialog-theme-default admin_ngdialog',
+                plain: true,
+                scope: $scope
+            }).then(function () {
+                paths.splice(_index, 1);
+            }, function (reason) {
+                return;
+            });
         };
 
         $scope.insertOrder = function(){
@@ -128,7 +191,7 @@ define(["./module"], function (ctrs) {
 
         $scope.showInputErrMsg = function (errMsg) {
             if (errMsg != "") {
-                var template = '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">输入项信息错误</div><ul class="admin-ng-content"><li>' + errMsg + '</li></ul>'
+                var template = '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">输入项信息错误</div><ul class="admin-ng-content"><li class="fl warningImg"><img src="../../../img/remove_warning.png"></li><li class="fl warningImg" style="line-height: 34px">' + errMsg + '</li></ul>'
                     + '<div class="ng-button-div"><button type="button" class="ngdialog-button ng-button " \
                   <button type="button" class="ngdialog-button ngdialog-button-secondary " ng-click="closeThisDialog(0)">返回</button></div></div>';
                 $scope.showMsg(template);

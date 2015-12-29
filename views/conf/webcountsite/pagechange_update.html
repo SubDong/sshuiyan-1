@@ -153,6 +153,7 @@
                                 <i class="glyphicon glyphicon-remove"></i></span>
                                 <a href="javascript:void(0)" data-ng-if="$index==0 && step.step_urls.length < 5"
                                    data-ng-click="addStepUrl(step.step_urls,step_url.url, $index)">添加页面</a>
+                                <span data-ng-if="$index==0 && step.step_urls.length < 5"><i class="glyphicon glyphicon-remove remove" data-ng-click="removeSteps(path.steps,$parent.$parent.$index)"></i></span>
                             </li>
                         </ul>
                     </div>

@@ -102,7 +102,7 @@ define(["./module"], function (ctrs) {
             if (elements.length == 0) {
                 $scope.onAlertDialog = ngDialog.open({
                     template: '' +
-                    '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">系统提示</div><ul class="admin-ng-content" ><li>请勾选要删除的配置项</li></ul> <div class="ng-button-div"><button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
+                    '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">系统提示</div><ul class="admin-ng-content" ><li class="fl warningImg"><img src="../../../img/remove_warning.png"></li><li class="fl warningWord" style="line-height: 34px">请勾选要删除的配置项</li></ul> <div class="ng-button-div"><button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
                     </div></div>',
                     className: 'ngdialog-theme-default admin_ngdialog',
                     plain: true,
@@ -114,7 +114,7 @@ define(["./module"], function (ctrs) {
 
             $scope.onDeleteDialog = ngDialog.open({
                 template: '' +
-                '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">系统提示</div><ul class="admin-ng-content" ><li>您想批量删除已选择的指定广告跟踪吗？</li></ul> <div class="ng-button-div"><button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
+                '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">系统提示</div><ul class="admin-ng-content" ><li class="fl warningImg"><img src="../../../img/remove_warning.png"></li><li class="fl warningWord" style="line-height: 34px">您想批量删除已选择的指定广告跟踪吗？</li></ul> <div class="ng-button-div"><button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
                   <button type="button" class="ngdialog-button ng-button" ng-click="batchDelete()">确定</button></div></div>',
                 className: 'ngdialog-theme-default admin_ngdialog',
                 plain: true,

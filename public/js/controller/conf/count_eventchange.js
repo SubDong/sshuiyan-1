@@ -40,7 +40,7 @@ define(["./module"], function (ctrs ) {
                 template:'\
               <div class="ngdialog-buttons" ><div class="ngdialog-tilte">系统提示</div>\
                         <ul class="admin-ng-content">\
-                        <li>选择删除，此事件的全部历史数据将被清空，不再显示，您确定删除吗？</li></ul>   \
+                        <li class="fl warningImg"><img src="../../../img/remove_warning.png"></li><li class="fl warningWord">选择删除，此事件的全部历史数据将被清空，不再显示，您确定删除吗？</li></ul>   \
                    <div class="ng-button-div"> <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
                     <button type="button" class="ngdialog-button ng-button" ng-click=" deleteGridData()  ">确定</button></div>\
                 </div>',
@@ -183,7 +183,7 @@ define(["./module"], function (ctrs ) {
 
             $scope.onDeleteDialog = ngDialog.open({
                 template: '' +
-                '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">来自网页的消息</div><ul class="admin-ng-content" ><li>您想批量删除已选择的事件转化目标吗？</li></ul> <div class="ng-button-div"><button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
+                '<div class="ngdialog-buttons" ><div class="ngdialog-tilte">系统提示</div><ul class="admin-ng-content" ><li class="fl warningImg"><img src="../../../img/remove_warning.png"></li><li class="fl warningWord" style="line-height: 34px">您想批量删除已选择的事件转化目标吗？</li></ul> <div class="ng-button-div"><button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog(0)">返回</button>\
                   <button type="button" class="ngdialog-button ng-button" ng-click="batchDelete()">确定</button></div></div>',
                 className: 'ngdialog-theme-default admin_ngdialog',
                 plain: true,
