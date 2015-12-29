@@ -745,7 +745,7 @@ define(["../app"], function (app) {
                 }
                 case "page_indexoverview" :
                 {
-                    $rootScope.checkedArray = ["vc", "uv", "avgTime"];
+                    $rootScope.checkedArray = ["pv", "uv", "entrance"];
                     $rootScope.gridArray = [
                         {
                             name: "xl",
@@ -764,10 +764,14 @@ define(["../app"], function (app) {
                             cellTemplate: "<div class='table_box'><a ng-click='grid.appScope.getHistoricalTrend(this, \"history3\")' target='_parent' class='table_nextbtn' title='查看历史趋势'></a></div>"
                         },
                         {
-                            name: "访问次数",
-                            displayName: "访问次数",
-                            field: "vc",
-                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
+                            name: "浏览量(PV)",
+                            displayName: "浏览量(PV)",
+                            field: "pv",
+                            footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>",
+                            sort: {
+                                direction: uiGridConstants.DESC,
+                                priority: 1
+                            }
                         },
                         {
                             name: "访客数(UV)",
@@ -776,9 +780,9 @@ define(["../app"], function (app) {
                             footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
                         },
                         {
-                            name: "平均访问时长",
-                            displayName: "平均访问时长",
-                            field: "avgTime",
+                            name: "入口页次数",
+                            displayName: "入口页次数",
+                            field: "entrance",
                             footerCellTemplate: "<div class='ui-grid-cell-contents'>{{grid.appScope.getFooterData(this,grid.getVisibleRows())}}</div>"
                         }
                     ];
