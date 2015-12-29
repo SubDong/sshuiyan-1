@@ -121,7 +121,7 @@ define(["./module"], function (ctrs) {
                                                 data["orderNum"] = sepagedatas[data.campaignName] != undefined && sepagedatas[data.campaignName].orderNum != undefined ? sepagedatas[data.campaignName].orderNum.value : 0
                                                 break;
                                             case "orderNumRate"://订单转化率
-                                                data["orderNumRate"] = (sepagedatas[data.campaignName] != undefined && sepagedatas[data.campaignName].orderNum != undefined && data.pv > 0 ? ((Number(sepagedatas[data.campaignName].orderNum.value) / Number(data.pv)) * 100).toFixed(2) : (0).toFixed(2)) + "%"
+                                                data["orderNumRate"] = (sepagedatas[data.campaignName] != undefined && sepagedatas[data.campaignName].orderNum != undefined && data.vc > 0 ? ((Number(sepagedatas[data.campaignName].orderNum.value) / Number(data.vc)) * 100).toFixed(2) : (0).toFixed(2)) + "%"
                                                 break;
                                             default :
                                                 break;

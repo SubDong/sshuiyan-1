@@ -111,7 +111,7 @@ define(["./module"], function (ctrs) {
                                                 data["conversions"] = pdata[attr] != undefined ? pdata[attr].value : 0
                                                 break;
                                             case "crate"://转化率
-                                                data["crate"] = (pdata["conversions"] != undefined && pRow.entity.pv > 0 ? ((Number(pdata["conversions"].value) / Number(pRow.entity.pv)) * 100).toFixed(2) : (0).toFixed(2)) + "%"
+                                                data["crate"] = (pdata["conversions"] != undefined && pRow.entity.vc > 0 ? ((Number(pdata["conversions"].value) / Number(pRow.entity.vc)) * 100).toFixed(2) : (0).toFixed(2)) + "%"
                                                 break;
                                             case "benefit"://收益
                                                 data["benefit"] = pdata[attr] != undefined ? pdata[attr].value : 0
@@ -120,7 +120,7 @@ define(["./module"], function (ctrs) {
                                                 data["orderNum"] = pdata[attr] != undefined ? pdata[attr].value : 0
                                                 break;
                                             case "orderNumRate"://订单转化率
-                                                data["orderNumRate"] = ( pdata["orderNum"] != undefined ? ((Number(pdata["orderNum"].value) / Number(pRow.entity.pv)) * 100).toFixed(2) : (0).toFixed(2)) + "%"
+                                                data["orderNumRate"] = ( pdata["orderNum"] != undefined ? ((Number(pdata["orderNum"].value) / Number(pRow.entity.vc)) * 100).toFixed(2) : (0).toFixed(2)) + "%"
                                                 break;
                                             default :
                                                 if (pRow.entity[attr] != undefined)

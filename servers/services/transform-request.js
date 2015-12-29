@@ -2324,7 +2324,7 @@ var transform = {
                     }
                     filterQuery.push({
                         "range": {
-                            "utime": {
+                            "ctime": {
                                 "from": (startNum > page.updateTime ? startNum : page.updateTime ),
                                 "to": endNum
                             }//开始时间取大的
