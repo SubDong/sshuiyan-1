@@ -912,8 +912,8 @@ api.get("/trafficmap", function (req, res) {
 
     var start = parameters[0].split("=")[1];
     var end = parameters[1].split("=")[1];
-    var targetPathName = parameters[2].split("=")[1];
-    var type = parameters[3].split("=")[1];
+    var type = parameters[2].split("=")[1];
+    var targetPathName = parameters[3].split("=")[1];
 
 
     var indexString = [];
