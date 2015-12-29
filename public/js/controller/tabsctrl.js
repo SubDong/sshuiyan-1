@@ -3069,18 +3069,31 @@ define(["app"], function (app) {
                     }
                     if (a.col.field == "nuvRate") {
                         // 新访客比率算法。通过总的新访客数除以总的访客数
-                        var t_uv = 0;
-                        var t_nuv = 0;
-                        option.forEach(function (_row) {
-                            var _entity = _row.entity;
-                            if (_entity.uv != "--") {
-                                t_uv += parseInt(_entity.uv);
-                            }
-                            if (_entity.nuv != "--") {
-                                t_nuv += parseInt(_entity.nuv);
-                            }
-                        });
-                        returnData[0] = (t_nuv * 100 / (t_uv == 0 ? 1 : t_uv)).toFixed(2) + "%";
+                        if ( option[0].entity["all_uv"] != undefined && $rootScope.tableSwitch.uv_repeat != undefined && !$rootScope.tableSwitch.uv_repeat) {
+                            returnData[0] = option[0].entity["all_uv"]
+                            var t_uv = 0;
+                            var t_nuv = 0;
+                            option.forEach(function (_row) {
+                                var _entity = _row.entity;
+                                if (_entity.nuv != "--") {
+                                    t_nuv += parseInt(_entity.nuv);
+                                }
+                            });
+                            returnData[0] = option[0].entity["all_uv"]==0?"0.00":(t_nuv * 100 / option[0].entity["all_uv"]).toFixed(2) + "%";
+                        }else{
+                            var t_uv = 0;
+                            var t_nuv = 0;
+                            option.forEach(function (_row) {
+                                var _entity = _row.entity;
+                                if (_entity.uv != "--") {
+                                    t_uv += parseInt(_entity.uv);
+                                }
+                                if (_entity.nuv != "--") {
+                                    t_nuv += parseInt(_entity.nuv);
+                                }
+                            });
+                            returnData[0] = (t_nuv * 100 / (t_uv == 0 ? 1 : t_uv)).toFixed(2) + "%";
+                        }
                     }
                     if (a.col.field == "avgTime") {
                         var _ll = 0;
