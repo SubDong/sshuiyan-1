@@ -1805,8 +1805,8 @@ define(["app"], function (app) {
                                             rf_type: rf_type,
                                             se: se,
                                             isNew: isNew,
-                                            start: $rootScope.start,
-                                            end: $rootScope.end
+                                            start: $rootScope.tableTimeStart,
+                                            end: $rootScope.tableTimeEnd
                                         };
                                         var url = "/gacache/queryECData?query=" + JSON.stringify(parameter);
 

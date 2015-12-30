@@ -1,65 +1,67 @@
 <!--页面分析-入口页面-流浪分析-->
 <div class="middle_containers" ng-controller="flowanalysisctr">
-                <div class="date_select" set-class-when-at-top="fix-to-top">
-                    <div aria-label="First group" role="group" class="btn-group fl">
-                        <a class="fl btn btn-default" data-ng-href="#page/entrancepage"> 指标概览</a>
-                        <a class="fl btn btn-default current" data-ng-href="#page/entrancepage_fa"> 流量分析</a>
-                        <a class="fl btn btn-default" data-ng-href="#page/entrancepage_nv"> 新访客分析</a>
-                        <a class="fl btn btn-default" data-ng-href="#page/entrancepage_as">吸引力分析</a>
-                        <a class="fl btn btn-default" data-ng-href="#page/entrancepage_af">转化分析</a>
-                    </div>
-                    <calendar></calendar>
-                    <dateother></dateother>
-                    <refresh></refresh>
+    <div class="date_select" set-class-when-at-top="fix-to-top">
+        <div aria-label="First group" role="group" class="btn-group fl">
+            <a class="fl btn btn-default" data-ng-href="#page/entrancepage"> 指标概览</a>
+            <a class="fl btn btn-default current" data-ng-href="#page/entrancepage_fa"> 流量分析</a>
+            <a class="fl btn btn-default" data-ng-href="#page/entrancepage_nv"> 新访客分析</a>
+            <a class="fl btn btn-default" data-ng-href="#page/entrancepage_as">吸引力分析</a>
+            <a class="fl btn btn-default" data-ng-href="#page/entrancepage_af">转化分析</a>
+        </div>
+        <calendar></calendar>
+        <dateother></dateother>
+        <refresh></refresh>
+    </div>
+    <div class="my_concent">
+        <ssh-common-date-show></ssh-common-date-show>
+        <div class="index_chart">
+            <div id="indicators_charts_legend"></div>
+            <div class="pin_chart">
+                <div id="sourse_charts" class="chart_height"></div>
+            </div>
+            <div class="line_chart">
+                <div id="indicators_charts" class="chart_height"></div>
+                <div class="chart-bottom">
+                    <ul>
+                        <li><span class="chart_box" style="background:#2fabe9;"></span><b id="chartlink"></b></li>
+                        <li>总<b id="chartname"></b>：<span id="chartnumber"></span></li>
+                        <li>占比：<span id="chartpointe"></span></li>
+                    </ul>
                 </div>
-                <div class="my_concent">
-                    <!--<ssh-date-show type="today" dimension="loc"></ssh-date-show>-->
-                    <ssh-e-s-date-show></ssh-e-s-date-show>
-                    <div class="index_chart">
-                        <div id="indicators_charts_legend"></div>
-                        <div class="pin_chart">
-                            <div id="sourse_charts" class="chart_height" ></div>
-                        </div>
-                        <div  class="line_chart">
-                            <div id="indicators_charts" class="chart_height"></div>
-                            <div class="chart-bottom">
-                                <ul>
-                                    <li><span class="chart_box" style="background:#2fabe9;"></span><b id="chartlink"></b></li>
-                                    <li>总<b id="chartname"></b>：<span id="chartnumber"></span></li>
-                                    <li>占比：<span id="chartpointe"></span></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="table_content" ng-controller="TabsCtrl">
-
-                        <div class="custom_secendtitle">
-                            <div class="custom_select custom_select_way ">
-                                <div class="input-group input-group-en fl">
-                                    <input type="text" maxlength="128" placeholder="输入URL…" data-ng-model="searchURLText" class="form-control fl" onfocus="this.setAttribute('placeholder','')" onblur="this.setAttribute('placeholder','输入URL...')">
-                                       <span class="input-group-btn fl">
-                                 <button type="button" class="btn btn-default" data-ng-click="searchURLFilter(searchURLText)"><span aria-hidden="true"
-                                                                                     class="glyphicon glyphicon-search"></span>
+            </div>
+        </div>
+        <div class="table_content" ng-controller="TabsCtrl">
+            <div class="custom_secendtitle">
+                <div class="custom_select custom_select_way ">
+                    <div class="input-group input-group-en fl">
+                        <input type="text" maxlength="128" placeholder="输入URL…" data-ng-model="searchURLText"
+                               class="form-control fl" onfocus="this.setAttribute('placeholder','')"
+                               onblur="this.setAttribute('placeholder','输入URL...')">
+                        <span class="input-group-btn fl">
+                                 <button type="button" class="btn btn-default"
+                                         data-ng-click="searchURLFilter(searchURLText)"><span aria-hidden="true"
+                                                                                              class="glyphicon glyphicon-search"></span>
                                  </button>
-                                   </span>
-                                </div>
-                                <b></b>
-                                转化目标
-                                <div role="group" class="btn-group">
-                                    <ui-select ng-model="extendway.selected" theme="select2" reset-search-input="false"  class="fl"
-                                               style="width: 120px;">
-                                        <ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>
-                                        <ui-select-choices repeat="extendway in extendways">
-                                            <span ng-bind-html="extendway.name"></span>
-                                        </ui-select-choices>
-                                    </ui-select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="custom_table" ng-class="{hidePageContainer:gridApi2.grid.rows.length<=20}">
-                            <div ui-grid="gridOptions" class="grid clearfix" ui-grid-pagination  ui-grid-exporter ui-grid-auto-resize></div>
-                            <gridpage></gridpage>
-                        </div>
+                        </span>
+                    </div>
+                    <b></b>
+                    转化目标
+                    <div role="group" class="btn-group">
+                        <ui-select ng-model="extendway.selected" theme="select2" reset-search-input="false" class="fl"
+                                   style="width: 120px;">
+                            <ui-select-match placeholder="全部页面目标">{{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices repeat="extendway in extendways">
+                                <span ng-bind-html="extendway.name"></span>
+                            </ui-select-choices>
+                        </ui-select>
                     </div>
                 </div>
             </div>
+            <div class="custom_table" ng-class="{hidePageContainer:gridApi2.grid.rows.length<=20}">
+                <div ui-grid="gridOptions" class="grid clearfix" ui-grid-pagination ui-grid-exporter
+                     ui-grid-auto-resize></div>
+                <gridpage></gridpage>
+            </div>
+        </div>
+    </div>
+</div>
