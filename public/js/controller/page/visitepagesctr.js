@@ -25,7 +25,7 @@ define(["./module"], function (ctrs) {
         $rootScope.tableTimeEnd = 0;
         $rootScope.tableFormat = null;
         //配置默认指标
-        $rootScope.checkedArray = ["pv", "uv", "vc"];
+        $rootScope.checkedArray = ["pv", "uv", "entrance"];
         $rootScope.gridArray = [
             {
                 name: "xl",
