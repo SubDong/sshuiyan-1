@@ -27,11 +27,11 @@ define(["./module"], function (ctrs) {
                     $scope.offsitelinks = data;
                 }
                 if (shard == null) {
-                    $scope.offsite_links = {id: 1, name: "http://" + $rootScope.siteUrl + "/"};
-                    shardD = "http://" + $rootScope.siteUrl + "/";
-                    shard = "http://" + $rootScope.siteUrl + "/";
+                    $scope.offsite_links = {id: 1, name: "http://" + $rootScope.siteUrl };
+                    shardD = "http://" + $rootScope.siteUrl ;
+                    shard = "http://" + $rootScope.siteUrl;
                 } else if (shard != $rootScope.siteUrl) {
-                    shardD = "http://" + $rootScope.siteUrl + "/";
+                    shardD = "http://" + $rootScope.siteUrl ;
                     shard = shardD;
                 }
                 $scope.init();
@@ -41,7 +41,7 @@ define(["./module"], function (ctrs) {
         $scope.init = function () {
             var linkData = [];
             if (shardD == null) {
-                shardD = "http://" + $rootScope.siteUrl + "/";
+                shardD = "http://" + $rootScope.siteUrl ;
             }
             $http.get("api/trafficmap?start=" + $scope.start + ",end=" + $scope.end+",type="+$rootScope.userType + ",targetPathName=" + shardD).success(function (data) {
                 if(data == null || data == undefined || data== "") {
